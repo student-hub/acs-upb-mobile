@@ -35,6 +35,13 @@ class MessageLookup extends MessageLookupByLibrary {
     "drawerItemTimetable" : MessageLookupByLibrary.simpleMessage("Timetable"),
     "drawerItemWebsites" : MessageLookupByLibrary.simpleMessage("Websites"),
     "hello" : m0,
+    "settingsItemDarkMode" : MessageLookupByLibrary.simpleMessage("Dark mode"),
+    "settingsItemLanguage" : MessageLookupByLibrary.simpleMessage("Language"),
+    "settingsItemLanguageAuto" : MessageLookupByLibrary.simpleMessage("Auto"),
+    "settingsItemLanguageEnglish" : MessageLookupByLibrary.simpleMessage("English"),
+    "settingsItemLanguageRomanian" : MessageLookupByLibrary.simpleMessage("Romanian"),
+    "settingsTitleLocalization" : MessageLookupByLibrary.simpleMessage("Localization"),
+    "settingsTitlePersonalization" : MessageLookupByLibrary.simpleMessage("Personalization"),
     "title" : MessageLookupByLibrary.simpleMessage("ACS UPB")
   };
 }

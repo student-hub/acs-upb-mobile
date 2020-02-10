@@ -1,11 +1,19 @@
+import 'package:acs_upb_mobile/module/settings/settings_page.dart';
 import 'package:flutter/material.dart';
 import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:preferences/preferences.dart';
 
 import 'generated/l10n.dart';
 import 'module/home/home_page.dart';
+import 'routes/routes.dart';
 
-void main() => runApp(MyApp());
+main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await PrefService.init(prefix: 'pref_');
+  PrefService.setDefaultValues({'language': 'auto'});
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -14,7 +22,6 @@ class MyApp extends StatelessWidget {
     return DynamicTheme(
         defaultBrightness: Brightness.dark,
         data: (brightness) => ThemeData(
-              primarySwatch: Colors.indigo,
               brightness: brightness,
             ),
         themedWidgetBuilder: (context, theme) {
@@ -26,6 +33,10 @@ class MyApp extends StatelessWidget {
               ],
               supportedLocales: S.delegate.supportedLocales,
               theme: theme,
+              routes: {
+                Routes.home: (context) => HomePage(),
+                Routes.settings: (context) => SettingsPage(),
+              },
               home: HomePage());
         });
   }

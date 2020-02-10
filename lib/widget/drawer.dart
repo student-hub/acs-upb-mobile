@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:acs_upb_mobile/generated/l10n.dart';
+import 'package:acs_upb_mobile/routes/routes.dart';
 
 class AppDrawer extends StatelessWidget {
   @override
@@ -12,6 +13,7 @@ class AppDrawer extends StatelessWidget {
           _createHeader(
             icon: Icons.home,
             text: S.of(context).drawerHeaderHome,
+            onTap: () => Navigator.pushReplacementNamed(context, Routes.home),
           ),
           _createDrawerItem(
             icon: Icons.public,
@@ -45,6 +47,8 @@ class AppDrawer extends StatelessWidget {
           _createDrawerItem(
               icon: Icons.settings,
               text: S.of(context).drawerItemSettings,
+              onTap: () =>
+                  Navigator.pushReplacementNamed(context, Routes.settings),
               dense: true),
           _createDrawerItem(
             icon: Icons.help,

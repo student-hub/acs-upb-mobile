@@ -11,5 +11,12 @@
   "drawerItemNotes": "Notes",
   "drawerItemSettings": "Settings",
   "drawerItemHelp": "Help",
-  "drawerItemContribute": "Contribute"
+  "drawerItemContribute": "Contribute",
+  "settingsTitlePersonalization": "Personalization",
+  "settingsItemDarkMode": "Dark mode",
+  "settingsTitleLocalization": "Localization",
+  "settingsItemLanguage": "Language",
+  "settingsItemLanguageEnglish": "English",
+  "settingsItemLanguageRomanian": "Romanian",
+  "settingsItemLanguageAuto": "Auto"
 }

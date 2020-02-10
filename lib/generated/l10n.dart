@@ -145,6 +145,69 @@ class S {
       args: [],
     );
   }
+
+  String get settingsTitlePersonalization {
+    return Intl.message(
+      'Personalization',
+      name: 'settingsTitlePersonalization',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get settingsItemDarkMode {
+    return Intl.message(
+      'Dark mode',
+      name: 'settingsItemDarkMode',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get settingsTitleLocalization {
+    return Intl.message(
+      'Localization',
+      name: 'settingsTitleLocalization',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get settingsItemLanguage {
+    return Intl.message(
+      'Language',
+      name: 'settingsItemLanguage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get settingsItemLanguageEnglish {
+    return Intl.message(
+      'English',
+      name: 'settingsItemLanguageEnglish',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get settingsItemLanguageRomanian {
+    return Intl.message(
+      'Romanian',
+      name: 'settingsItemLanguageRomanian',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get settingsItemLanguageAuto {
+    return Intl.message(
+      'Auto',
+      name: 'settingsItemLanguageAuto',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {
