@@ -46,6 +46,105 @@ class S {
       args: [name],
     );
   }
+
+  String get drawerHeaderHome {
+    return Intl.message(
+      'Home',
+      name: 'drawerHeaderHome',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get drawerItemWebsites {
+    return Intl.message(
+      'Websites',
+      name: 'drawerItemWebsites',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get drawerItemTimetable {
+    return Intl.message(
+      'Timetable',
+      name: 'drawerItemTimetable',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get drawerItemClasses {
+    return Intl.message(
+      'Classes',
+      name: 'drawerItemClasses',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get drawerItemNews {
+    return Intl.message(
+      'News',
+      name: 'drawerItemNews',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get drawerItemMap {
+    return Intl.message(
+      'Map',
+      name: 'drawerItemMap',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get drawerItemPeople {
+    return Intl.message(
+      'People',
+      name: 'drawerItemPeople',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get drawerItemNotes {
+    return Intl.message(
+      'Notes',
+      name: 'drawerItemNotes',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get drawerItemSettings {
+    return Intl.message(
+      'Settings',
+      name: 'drawerItemSettings',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get drawerItemHelp {
+    return Intl.message(
+      'Help',
+      name: 'drawerItemHelp',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get drawerItemContribute {
+    return Intl.message(
+      'Contribute',
+      name: 'drawerItemContribute',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

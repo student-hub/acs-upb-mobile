@@ -1,4 +1,15 @@
 {
   "title": "ACS UPB",
-  "hello": "Bună, {name}!"
+  "hello": "Bună, {name}!",
+  "drawerHeaderHome": "Acasă",
+  "drawerItemWebsites": "Platforme",
+  "drawerItemTimetable": "Orar",
+  "drawerItemClasses": "Materii",
+  "drawerItemNews": "Noutăți",
+  "drawerItemMap": "Hartă",
+  "drawerItemPeople": "Persoane",
+  "drawerItemNotes": "Note",
+  "drawerItemSettings": "Setări",
+  "drawerItemHelp": "Ajutor",
+  "drawerItemContribute": "Contribuie"
 }

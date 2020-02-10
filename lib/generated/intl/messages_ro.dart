@@ -23,6 +23,17 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
+    "drawerHeaderHome" : MessageLookupByLibrary.simpleMessage("Acasă"),
+    "drawerItemClasses" : MessageLookupByLibrary.simpleMessage("Materii"),
+    "drawerItemContribute" : MessageLookupByLibrary.simpleMessage("Contribuie"),
+    "drawerItemHelp" : MessageLookupByLibrary.simpleMessage("Ajutor"),
+    "drawerItemMap" : MessageLookupByLibrary.simpleMessage("Hartă"),
+    "drawerItemNews" : MessageLookupByLibrary.simpleMessage("Noutăți"),
+    "drawerItemNotes" : MessageLookupByLibrary.simpleMessage("Note"),
+    "drawerItemPeople" : MessageLookupByLibrary.simpleMessage("Persoane"),
+    "drawerItemSettings" : MessageLookupByLibrary.simpleMessage("Setări"),
+    "drawerItemTimetable" : MessageLookupByLibrary.simpleMessage("Orar"),
+    "drawerItemWebsites" : MessageLookupByLibrary.simpleMessage("Platforme"),
     "hello" : m0,
     "title" : MessageLookupByLibrary.simpleMessage("ACS UPB")
   };

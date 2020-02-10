@@ -1,4 +1,15 @@
 {
   "title": "ACS UPB",
-  "hello": "Hello, {name}!"
+  "hello": "Hello, {name}!",
+  "drawerHeaderHome": "Home",
+  "drawerItemWebsites": "Websites",
+  "drawerItemTimetable": "Timetable",
+  "drawerItemClasses": "Classes",
+  "drawerItemNews": "News",
+  "drawerItemMap": "Map",
+  "drawerItemPeople": "People",
+  "drawerItemNotes": "Notes",
+  "drawerItemSettings": "Settings",
+  "drawerItemHelp": "Help",
+  "drawerItemContribute": "Contribute"
 }

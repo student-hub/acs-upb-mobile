@@ -3,6 +3,7 @@ import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'generated/l10n.dart';
+import 'module/home/home_page.dart';
 
 void main() => runApp(MyApp());
 
@@ -25,27 +26,7 @@ class MyApp extends StatelessWidget {
               ],
               supportedLocales: S.delegate.supportedLocales,
               theme: theme,
-              home: MyHomePage());
+              home: HomePage());
         });
-  }
-}
-
-class MyHomePage extends StatelessWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
-  final String title;
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(S.of(context).title),
-      ),
-      body: Center(
-        child: Text(
-          S.of(context).hello('Ioana'),
-          style: Theme.of(context).textTheme.headline4,
-        ),
-      ),
-    );
   }
 }

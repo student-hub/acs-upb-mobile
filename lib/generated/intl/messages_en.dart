@@ -23,6 +23,17 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
+    "drawerHeaderHome" : MessageLookupByLibrary.simpleMessage("Home"),
+    "drawerItemClasses" : MessageLookupByLibrary.simpleMessage("Classes"),
+    "drawerItemContribute" : MessageLookupByLibrary.simpleMessage("Contribute"),
+    "drawerItemHelp" : MessageLookupByLibrary.simpleMessage("Help"),
+    "drawerItemMap" : MessageLookupByLibrary.simpleMessage("Map"),
+    "drawerItemNews" : MessageLookupByLibrary.simpleMessage("News"),
+    "drawerItemNotes" : MessageLookupByLibrary.simpleMessage("Notes"),
+    "drawerItemPeople" : MessageLookupByLibrary.simpleMessage("People"),
+    "drawerItemSettings" : MessageLookupByLibrary.simpleMessage("Settings"),
+    "drawerItemTimetable" : MessageLookupByLibrary.simpleMessage("Timetable"),
+    "drawerItemWebsites" : MessageLookupByLibrary.simpleMessage("Websites"),
     "hello" : m0,
     "title" : MessageLookupByLibrary.simpleMessage("ACS UPB")
   };
