@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info/package_info.dart';
 
@@ -139,6 +140,9 @@ class AppDrawerState extends State<AppDrawer> {
       String text,
       GestureTapCallback onTap,
       bool dense = false}) {
+    if (onTap == null && kReleaseMode) {
+      return Container(width: 0, height: 0);
+    }
     return ListTile(
       title: Row(
         children: <Widget>[
