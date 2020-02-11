@@ -118,6 +118,7 @@ class AppDrawer extends StatelessWidget {
       ),
       dense: dense,
       onTap: onTap,
+      enabled: onTap != null,
     );
   }
 }
