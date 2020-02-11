@@ -4,11 +4,16 @@ import 'package:preferences/preferences.dart';
 
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/widget/drawer.dart';
-import 'package:acs_upb_mobile/routes/routes.dart';
 
-class SettingsPage extends StatelessWidget {
+class SettingsPage extends StatefulWidget {
   static const String routeName = '/settings';
 
+  @override
+  State<StatefulWidget> createState() => SettingsPageState();
+
+}
+
+class SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
@@ -43,8 +48,7 @@ class SettingsPage extends StatelessWidget {
         ]));
   }
 
-  RadioPreference getLanguageRadioPreference(
-      BuildContext context, String preference) {
+  RadioPreference getLanguageRadioPreference(BuildContext context, String preference) {
     return RadioPreference(
       getLanguagePrefString(context, preference),
       preference,
@@ -52,7 +56,7 @@ class SettingsPage extends StatelessWidget {
       onSelect: () {
         S.load(getLocale(context, preference));
         // Reload settings page
-        Navigator.pushReplacementNamed(context, Routes.settings);
+        setState(() {});
       },
     );
   }
