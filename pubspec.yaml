@@ -11,7 +11,7 @@ description: A mobile application for students at ACS UPB.
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 0.0.2+1
+version: 0.0.2+2
 
 environment:
   sdk: ">=2.1.0 <3.0.0"
@@ -43,6 +43,9 @@ dev_dependencies:
 
   # Simplifies updating the launcher icon
   flutter_launcher_icons: ^0.7.4
+
+  # Simplifies updating the launcher name
+  flutter_launcher_name: ^0.0.1
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -85,3 +88,6 @@ flutter_icons:
   android: true
   ios: true
   image_path: "assets/icons/acs_logo.png"
+
+flutter_launcher_name:
+  name: "ACS UPB"
