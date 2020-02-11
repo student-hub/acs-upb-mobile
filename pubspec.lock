@@ -246,7 +246,7 @@ packages:
     source: hosted
     version: "2.4.0"
   preferences:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: preferences
       url: "https://pub.dartlang.org"

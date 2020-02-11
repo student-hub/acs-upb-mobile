@@ -31,15 +31,15 @@ dependencies:
   flutter_localizations:
     sdk: flutter
 
+  # Used to create preference screens
+  preferences: ^5.1.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
   # Helps with generating Dart code with the messages from `.arb` files
   intl_translation: ^0.17.1
-
-  # Used to create preference screens
-  preferences: ^5.1.0
 
   # Simplifies updating the launcher icon
   flutter_launcher_icons: ^0.7.4
