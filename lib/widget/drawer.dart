@@ -1,9 +1,35 @@
 import 'package:flutter/material.dart';
+import 'package:package_info/package_info.dart';
 
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/routes/routes.dart';
 
-class AppDrawer extends StatelessWidget {
+class AppDrawer extends StatefulWidget {
+  @override
+  AppDrawerState createState() => AppDrawerState();
+}
+
+class AppDrawerState extends State<AppDrawer> {
+  PackageInfo _packageInfo = PackageInfo(
+    appName: 'Unknown',
+    packageName: 'Unknown',
+    version: 'Unknown',
+    buildNumber: 'Unknown',
+  );
+
+  @override
+  void initState() {
+    super.initState();
+    _initPackageInfo();
+  }
+
+  Future<void> _initPackageInfo() async {
+    final PackageInfo info = await PackageInfo.fromPlatform();
+    setState(() {
+      _packageInfo = info;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -60,6 +86,13 @@ class AppDrawer extends StatelessWidget {
             text: S.of(context).drawerItemContribute,
             dense: true,
           ),
+          Divider(),
+          Padding(
+              padding: EdgeInsets.only(left: 20, top: 5, bottom: 10),
+              child: Text(
+                _packageInfo.version,
+                style: TextStyle(color: Theme.of(context).disabledColor),
+              )),
         ],
       ),
     );
