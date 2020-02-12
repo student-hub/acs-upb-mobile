@@ -1,6 +1,6 @@
 import 'package:acs_upb_mobile/module/settings/settings_page.dart';
-import 'package:flutter/material.dart';
 import 'package:dynamic_theme/dynamic_theme.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:preferences/preferences.dart';
 
@@ -26,6 +26,7 @@ class MyApp extends StatelessWidget {
             ),
         themedWidgetBuilder: (context, theme) {
           return MaterialApp(
+              title: "ACS UPB Mobile",
               localizationsDelegates: [
                 GlobalMaterialLocalizations.delegate,
                 GlobalWidgetsLocalizations.delegate,
