@@ -86,13 +86,25 @@ class AppDrawerState extends State<AppDrawer> {
             text: S.of(context).drawerItemContribute,
             dense: true,
           ),
-          Divider(),
-          Padding(
-              padding: EdgeInsets.only(left: 20, top: 5, bottom: 10),
-              child: Text(
-                _packageInfo.version,
-                style: TextStyle(color: Theme.of(context).disabledColor),
-              )),
+          _packageInfo.version == 'Unknown'
+              ? Container(
+            width: 0,
+            height: 0,
+          ) // If PackageInfo is not supported (i.e. on web), don't display
+              : Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Divider(),
+                Padding(
+                    padding: EdgeInsets.only(left: 20, top: 5, bottom: 10),
+                    child: Text(
+                      _packageInfo.version,
+                      style:
+                      TextStyle(color: Theme
+                          .of(context)
+                          .disabledColor),
+                    ))
+              ]),
         ],
       ),
     );
