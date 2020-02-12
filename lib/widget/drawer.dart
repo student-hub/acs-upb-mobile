@@ -1,9 +1,8 @@
+import 'package:acs_upb_mobile/generated/l10n.dart';
+import 'package:acs_upb_mobile/routes/routes.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info/package_info.dart';
-
-import 'package:acs_upb_mobile/generated/l10n.dart';
-import 'package:acs_upb_mobile/routes/routes.dart';
 
 class AppDrawer extends StatefulWidget {
   @override
@@ -108,7 +107,7 @@ class AppDrawerState extends State<AppDrawer> {
                 alignment: Alignment.centerRight,
                 fit: BoxFit.fill,
                 image:
-                    AssetImage('assets/images/drawer_header_backgroud.jpg'))),
+                AssetImage('assets/images/drawer_header_backgroud.jpg'))),
         child: Stack(children: <Widget>[
           Positioned(
             bottom: 12.0,
@@ -135,11 +134,10 @@ class AppDrawerState extends State<AppDrawer> {
         ]));
   }
 
-  Widget _createDrawerItem(
-      {IconData icon,
-      String text,
-      GestureTapCallback onTap,
-      bool dense = false}) {
+  Widget _createDrawerItem({IconData icon,
+    String text,
+    GestureTapCallback onTap,
+    bool dense = false}) {
     if (onTap == null && kReleaseMode) {
       return Container(width: 0, height: 0);
     }

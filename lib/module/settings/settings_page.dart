@@ -1,16 +1,14 @@
+import 'package:acs_upb_mobile/generated/l10n.dart';
+import 'package:acs_upb_mobile/widget/drawer.dart';
 import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:preferences/preferences.dart';
-
-import 'package:acs_upb_mobile/generated/l10n.dart';
-import 'package:acs_upb_mobile/widget/drawer.dart';
 
 class SettingsPage extends StatefulWidget {
   static const String routeName = '/settings';
 
   @override
   State<StatefulWidget> createState() => SettingsPageState();
-
 }
 
 class SettingsPageState extends State<SettingsPage> {
@@ -48,7 +46,8 @@ class SettingsPageState extends State<SettingsPage> {
         ]));
   }
 
-  RadioPreference getLanguageRadioPreference(BuildContext context, String preference) {
+  RadioPreference getLanguageRadioPreference(BuildContext context,
+      String preference) {
     return RadioPreference(
       getLanguagePrefString(context, preference),
       preference,
