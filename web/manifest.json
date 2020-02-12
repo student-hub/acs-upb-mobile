@@ -1,6 +1,6 @@
 {
-    "name": "acs_upb_mobile",
-    "short_name": "acs_upb_mobile",
+    "name": "ACS UPB Mobile",
+    "short_name": "ACS Mobile",
     "start_url": ".",
     "display": "minimal-ui",
     "background_color": "#0175C2",
