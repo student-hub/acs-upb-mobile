@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/widget/drawer.dart';
 import 'package:dynamic_theme/dynamic_theme.dart';
@@ -68,6 +70,11 @@ class SettingsPageState extends State<SettingsPage> {
         return S.of(context).settingsItemLanguageRomanian;
       case 'auto':
         return S.of(context).settingsItemLanguageAuto;
+      default:
+        stderr.writeln("Invalid preference string: $preference");
+        return S
+            .of(context)
+            .settingsItemLanguageAuto;
     }
   }
 
@@ -79,6 +86,11 @@ class SettingsPageState extends State<SettingsPage> {
         return Locale('ro', 'RO');
       case 'auto':
         return getLocale(context, S.of(context).localeName);
+      default:
+        stderr.writeln("Invalid preference string: $preference");
+        return getLocale(context, S
+            .of(context)
+            .localeName);
     }
   }
 }
