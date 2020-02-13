@@ -84,7 +84,13 @@ following mentions:
 * Android Studio (IntelliJ) with the `dartfmt` tool is used to automatically format the code,
 including the order of imports.  
 * For consistency, the `new` keyword (which is optional in Dart) should **not** be used.  
-* Where necessary, comments should use Markdown formatting (e.g. backticks - ` - for code snippets).  
+* Where necessary, comments should use Markdown formatting (e.g. backticks - ` - for code snippets).
+* Use only single apostrophes - ' - for strings (e.g. `'hello'` instead of `"hello"`)
+* All strings that are visible to the user should be internationalised and set in the corresponding
+`.arb` files within the `l10n` folder. The
+[Flutter Intl](https://plugins.jetbrains.com/plugin/13666-flutter-intl) Android Studio plugin does
+all the hard work for you if you set it up, it generates the code when you save an `.arb` file.
+Strings can then be accessed using `S.of(context).stringID`.
 
 ### License  
 
