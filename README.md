@@ -36,26 +36,26 @@ flutter pub get
 
 * Install and run an emulator in Android Studio (using AVD Manager), or connect a physical Android
 device (make sure USB debugging is enabled).
-* Select your device from the dropdown list and hit the play button (*Shift+F10*/*^R*).
+* Select your device from the dropdown list and hit the play button (*Shift+F10* / *^R*).
 
 #### Building for iOS (MacOS only)
 
 * Make sure you have Xcode installed and up to date (it is free on the App Store).
 * Connect a physical iOS device or select *Open iOS Simulator* from the device drop-down menu to
 power on Xcode's simulator.
-* Select your device from the dropdown list and hit the play button (*Shift+F10*/*^R*).
+* Select your device from the dropdown list and hit the play button (*Shift+F10* / *^R*).
 
 #### Building for Web
 
 * You need to have *Chrome* installed in order to be able to run the web version of the app.
-* Select *Chrome* from the dropdown list and hit the play button (*Shift+F10*/*^R*).
+* Select *Chrome* from the dropdown list and hit the play button (*Shift+F10* / *^R*).
 
 #### Not working?
 
 Possible fixes could be:
 * Run `flutter doctor` and fix any issues that may come up.
 * Run `flutter clean` to delete the `build` directory and then build again.
-* Restart Android Studio using `File > Invalidate Caches / Restart`.
+* Restart Android Studio using *File > Invalidate Caches / Restart*.
 
 Test your setup by creating and running a new Flutter project (Android Studio provides a sample). If
 that works but this project doesn't, feel free to
@@ -66,13 +66,13 @@ problem.
 
 * Make sure you have the *Project* view open in the *Project* tab on the left in Android Studio (not
 *Android*).
-* Flutter comes with *Hot Reload* (the lightning icon, or *Ctrl+\\*/*⌘\\*), which allows you to load
-changes in the code quickly into an already running app, without you needing to reinstall it. It's a
-very handy feature, but it doesn't work all the time - if you change the code, use Hot Reload but
-don't see the expected changes, or see some weird behaviour, you may need to close and restart the
-app (or even reinstall).
+* Flutter comes with *Hot Reload* (the lightning icon, or *Ctrl+\\* / *⌘\\*), which allows you to
+load changes in the code quickly into an already running app, without you needing to reinstall it.
+It's a very handy feature, but it doesn't work all the time - if you change the code, use Hot Reload
+but don't see the expected changes, or see some weird behaviour, you may need to close and restart
+the app (or even reinstall).
 * If running on web doesn't give the expected results after changing some code, you may need to
-clear the cache (in *Chrome*: *Ctrl+Shift+C*/*⌘+Shift+C* to open the Inspect menu, then right-click
+clear the cache (in *Chrome*: *Ctrl+Shift+C* / *⌘+Shift+C* to open the Inspect menu, then right-click
 the *Refresh* button, and select *Empty cache and Hard reload*.)
 
 ### Style guide  
@@ -89,10 +89,12 @@ including the order of imports.
 * All strings that are visible to the user should be internationalised and set in the corresponding
 `.arb` files within the `l10n` folder. The
 [Flutter Intl](https://plugins.jetbrains.com/plugin/13666-flutter-intl) Android Studio plugin does
-all the hard work for you if you set it up, it generates the code when you save an `.arb` file.
-Strings can then be accessed using `S.of(context).stringID`.
+all the hard work for you by generating the code when you save an `.arb` file. Strings can then be
+accessed using `S.of(context).stringID`.
 
 ### License  
 
-This project is under the **MIT License**, which means that you can do whatever you want with it, as
-long as you add a copy of the original MIT license and copyright notice to your work.
+This project is under the
+[MIT License](https://github.com/IoanaAlexandru/acs_upb_mobile/blob/master/LICENSE.txt), which means
+that you can do whatever you want with it, as long as you add a copy of the original MIT license and
+copyright notice to your work.
