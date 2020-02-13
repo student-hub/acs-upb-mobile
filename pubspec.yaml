@@ -11,7 +11,7 @@ description: A mobile application for students at ACS UPB.
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 0.0.2+10
+version: 0.0.3+1
 
 environment:
   sdk: ">=2.1.0 <3.0.0"
@@ -36,6 +36,12 @@ dependencies:
 
   # Allows querying the app version number
   package_info: ^0.4.0+13
+
+  # Enables connecting to Firebase
+  firebase_core: 0.4.3+3
+
+  # Firebase products
+  firebase_analytics: ^5.0.2
 
 dev_dependencies:
   flutter_test:
