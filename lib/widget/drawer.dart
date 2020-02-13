@@ -36,11 +36,7 @@ class AppDrawerState extends State<AppDrawer> {
       child: ListView(
         padding: EdgeInsets.zero,
         children: <Widget>[
-          _createHeader(
-            icon: Icons.home,
-            text: S.of(context).drawerHeaderHome,
-            onTap: () => Navigator.pushReplacementNamed(context, Routes.home),
-          ),
+          _createHeader(),
           _createDrawerItem(
             icon: Icons.public,
             text: S.of(context).drawerItemWebsites,
@@ -91,26 +87,24 @@ class AppDrawerState extends State<AppDrawer> {
             width: 0,
             height: 0,
           ) // If PackageInfo is not supported (i.e. on web), don't display
-              : Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Divider(),
-                Padding(
-                    padding: EdgeInsets.only(left: 20, top: 5, bottom: 10),
-                    child: Text(
-                      _packageInfo.version,
-                      style:
-                      TextStyle(color: Theme
-                          .of(context)
-                          .disabledColor),
-                    ))
-              ]),
+              : Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Divider(),
+            Padding(
+                padding: EdgeInsets.only(left: 20, top: 5, bottom: 10),
+                child: Text(
+                  _packageInfo.version,
+                  style:
+                  TextStyle(color: Theme
+                      .of(context)
+                      .disabledColor),
+                ))
+          ]),
         ],
       ),
     );
   }
 
-  Widget _createHeader({IconData icon, String text, GestureTapCallback onTap}) {
+  Widget _createHeader() {
     return DrawerHeader(
         margin: EdgeInsets.zero,
         padding: EdgeInsets.zero,
@@ -128,21 +122,37 @@ class AppDrawerState extends State<AppDrawer> {
               child: Row(
                 children: <Widget>[
                   Icon(
-                    icon,
+                    Icons.home,
                     size: 40,
                   ),
                   Padding(
                     padding: EdgeInsets.only(left: 8.0),
                     child: Text(
-                      text,
+                      S
+                          .of(context)
+                          .drawerHeaderHome,
                       style: TextStyle(fontSize: 30),
                     ),
                   ),
                 ],
               ),
-              onTap: onTap,
+              onTap: () => Navigator.pushReplacementNamed(context, Routes.home),
             ),
           ),
+          Positioned(
+            top: 12.0,
+            right: 12.0,
+            child: IconButton(
+              iconSize: 40,
+              tooltip: S
+                  .of(context)
+                  .drawerHeaderProfile,
+              icon: Icon(Icons.person_pin),
+              onPressed: () {
+                // TODO
+              },
+            ),
+          )
         ]));
   }
 

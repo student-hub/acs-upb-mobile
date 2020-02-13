@@ -2,6 +2,7 @@
   "title": "ACS UPB",
   "hello": "Bună, {name}!",
   "drawerHeaderHome": "Acasă",
+  "drawerHeaderProfile": "Profil",
   "drawerItemWebsites": "Platforme",
   "drawerItemTimetable": "Orar",
   "drawerItemClasses": "Materii",

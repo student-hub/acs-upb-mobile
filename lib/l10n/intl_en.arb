@@ -2,6 +2,7 @@
   "title": "ACS UPB",
   "hello": "Hello, {name}!",
   "drawerHeaderHome": "Home",
+  "drawerHeaderProfile": "Profile",
   "drawerItemWebsites": "Websites",
   "drawerItemTimetable": "Timetable",
   "drawerItemClasses": "Classes",

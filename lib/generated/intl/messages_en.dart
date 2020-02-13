@@ -24,6 +24,7 @@ class MessageLookup extends MessageLookupByLibrary {
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
     "drawerHeaderHome" : MessageLookupByLibrary.simpleMessage("Home"),
+    "drawerHeaderProfile": MessageLookupByLibrary.simpleMessage("Profile"),
     "drawerItemClasses" : MessageLookupByLibrary.simpleMessage("Classes"),
     "drawerItemContribute" : MessageLookupByLibrary.simpleMessage("Contribute"),
     "drawerItemHelp" : MessageLookupByLibrary.simpleMessage("Help"),
