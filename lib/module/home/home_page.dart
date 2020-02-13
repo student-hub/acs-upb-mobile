@@ -8,9 +8,7 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
-        title: S
-            .of(context)
-            .drawerHeaderHome,
+        title: S.of(context).drawerHeaderHome,
         body: Center(child: Text(S.of(context).drawerHeaderHome)));
   }
 }

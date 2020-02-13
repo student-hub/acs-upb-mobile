@@ -17,9 +17,7 @@ class SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
-        title: S
-            .of(context)
-            .drawerItemSettings,
+        title: S.of(context).drawerItemSettings,
         body: PreferencePage([
           PreferenceTitle(S.of(context).settingsTitlePersonalization),
           SwitchPreference(
@@ -47,8 +45,8 @@ class SettingsPageState extends State<SettingsPage> {
         ]));
   }
 
-  RadioPreference getLanguageRadioPreference(BuildContext context,
-      String preference) {
+  RadioPreference getLanguageRadioPreference(
+      BuildContext context, String preference) {
     return RadioPreference(
       getLanguagePrefString(context, preference),
       preference,
@@ -71,9 +69,7 @@ class SettingsPageState extends State<SettingsPage> {
         return S.of(context).settingsItemLanguageAuto;
       default:
         stderr.writeln("Invalid preference string: $preference");
-        return S
-            .of(context)
-            .settingsItemLanguageAuto;
+        return S.of(context).settingsItemLanguageAuto;
     }
   }
 
@@ -87,9 +83,7 @@ class SettingsPageState extends State<SettingsPage> {
         return getLocale(context, S.of(context).localeName);
       default:
         stderr.writeln("Invalid preference string: $preference");
-        return getLocale(context, S
-            .of(context)
-            .localeName);
+        return getLocale(context, S.of(context).localeName);
     }
   }
 }

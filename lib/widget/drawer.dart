@@ -88,23 +88,19 @@ class AppDrawerState extends State<AppDrawer> {
           ),
           _packageInfo.version == 'Unknown'
               ? Container(
-            width: 0,
-            height: 0,
-          ) // If PackageInfo is not supported (i.e. on web), don't display
-              : Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Divider(),
-                Padding(
-                    padding: EdgeInsets.only(left: 20, top: 5, bottom: 10),
-                    child: Text(
-                      _packageInfo.version,
-                      style:
-                      TextStyle(color: Theme
-                          .of(context)
-                          .disabledColor),
-                    ))
-              ]),
+                  width: 0,
+                  height: 0,
+                ) // If PackageInfo is not supported (i.e. on web), don't display
+              : Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  Divider(),
+                  Padding(
+                      padding: EdgeInsets.only(left: 20, top: 5, bottom: 10),
+                      child: Text(
+                        _packageInfo.version,
+                        style:
+                            TextStyle(color: Theme.of(context).disabledColor),
+                      ))
+                ]),
         ],
       ),
     );
@@ -119,7 +115,7 @@ class AppDrawerState extends State<AppDrawer> {
                 alignment: Alignment.centerRight,
                 fit: BoxFit.fill,
                 image:
-                AssetImage('assets/images/drawer_header_backgroud.jpg'))),
+                    AssetImage('assets/images/drawer_header_backgroud.jpg'))),
         child: Stack(children: <Widget>[
           Positioned(
             bottom: 12.0,
@@ -146,10 +142,11 @@ class AppDrawerState extends State<AppDrawer> {
         ]));
   }
 
-  Widget _createDrawerItem({IconData icon,
-    String text,
-    GestureTapCallback onTap,
-    bool dense = false}) {
+  Widget _createDrawerItem(
+      {IconData icon,
+      String text,
+      GestureTapCallback onTap,
+      bool dense = false}) {
     if (onTap == null && kReleaseMode) {
       return Container(width: 0, height: 0);
     }
