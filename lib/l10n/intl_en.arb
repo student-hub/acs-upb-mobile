@@ -1,6 +1,7 @@
 {
   "title": "ACS UPB",
   "hello": "Hello, {name}!",
+  "drawerTooltip": "Navigation menu",
   "drawerHeaderHome": "Home",
   "drawerItemWebsites": "Websites",
   "drawerItemTimetable": "Timetable",

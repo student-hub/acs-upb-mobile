@@ -34,6 +34,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "drawerItemSettings" : MessageLookupByLibrary.simpleMessage("Settings"),
     "drawerItemTimetable" : MessageLookupByLibrary.simpleMessage("Timetable"),
     "drawerItemWebsites" : MessageLookupByLibrary.simpleMessage("Websites"),
+    "drawerTooltip": MessageLookupByLibrary.simpleMessage("Navigation menu"),
     "hello" : m0,
     "settingsItemDarkMode" : MessageLookupByLibrary.simpleMessage("Dark mode"),
     "settingsItemLanguage" : MessageLookupByLibrary.simpleMessage("Language"),

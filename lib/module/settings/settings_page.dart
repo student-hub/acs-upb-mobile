@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:acs_upb_mobile/generated/l10n.dart';
-import 'package:acs_upb_mobile/widget/drawer.dart';
+import 'package:acs_upb_mobile/widget/scaffold.dart';
 import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:preferences/preferences.dart';
@@ -16,11 +16,10 @@ class SettingsPage extends StatefulWidget {
 class SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-        appBar: AppBar(
-          title: Text(S.of(context).drawerItemSettings),
-        ),
-        drawer: AppDrawer(),
+    return AppScaffold(
+        title: S
+            .of(context)
+            .drawerItemSettings,
         body: PreferencePage([
           PreferenceTitle(S.of(context).settingsTitlePersonalization),
           SwitchPreference(

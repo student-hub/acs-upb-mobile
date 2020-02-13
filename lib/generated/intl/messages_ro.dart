@@ -34,6 +34,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "drawerItemSettings" : MessageLookupByLibrary.simpleMessage("Setări"),
     "drawerItemTimetable" : MessageLookupByLibrary.simpleMessage("Orar"),
     "drawerItemWebsites" : MessageLookupByLibrary.simpleMessage("Platforme"),
+    "drawerTooltip": MessageLookupByLibrary.simpleMessage("Meniu navigare"),
     "hello" : m0,
     "settingsItemDarkMode" : MessageLookupByLibrary.simpleMessage("Dark mode"),
     "settingsItemLanguage" : MessageLookupByLibrary.simpleMessage("Limbă"),

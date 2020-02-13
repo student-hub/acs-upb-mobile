@@ -1,6 +1,7 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+
 import 'intl/messages_all.dart';
 
 // **************************************************************************
@@ -44,6 +45,15 @@ class S {
       name: 'hello',
       desc: '',
       args: [name],
+    );
+  }
+
+  String get drawerTooltip {
+    return Intl.message(
+      'Navigation menu',
+      name: 'drawerTooltip',
+      desc: '',
+      args: [],
     );
   }
 
