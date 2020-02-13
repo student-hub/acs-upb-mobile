@@ -30,24 +30,6 @@ class S {
 
   final String localeName;
 
-  String get title {
-    return Intl.message(
-      'ACS UPB',
-      name: 'title',
-      desc: '',
-      args: [],
-    );
-  }
-
-  String hello(dynamic name) {
-    return Intl.message(
-      'Hello, $name!',
-      name: 'hello',
-      desc: '',
-      args: [name],
-    );
-  }
-
   String get drawerTooltip {
     return Intl.message(
       'Navigation menu',

@@ -19,8 +19,6 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'en';
 
-  static m0(name) => "Hello, ${name}!";
-
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
     "drawerHeaderHome" : MessageLookupByLibrary.simpleMessage("Home"),
@@ -35,14 +33,13 @@ class MessageLookup extends MessageLookupByLibrary {
     "drawerItemTimetable" : MessageLookupByLibrary.simpleMessage("Timetable"),
     "drawerItemWebsites" : MessageLookupByLibrary.simpleMessage("Websites"),
     "drawerTooltip": MessageLookupByLibrary.simpleMessage("Navigation menu"),
-    "hello" : m0,
     "settingsItemDarkMode" : MessageLookupByLibrary.simpleMessage("Dark mode"),
     "settingsItemLanguage" : MessageLookupByLibrary.simpleMessage("Language"),
     "settingsItemLanguageAuto" : MessageLookupByLibrary.simpleMessage("Auto"),
     "settingsItemLanguageEnglish" : MessageLookupByLibrary.simpleMessage("English"),
     "settingsItemLanguageRomanian" : MessageLookupByLibrary.simpleMessage("Romanian"),
     "settingsTitleLocalization" : MessageLookupByLibrary.simpleMessage("Localization"),
-    "settingsTitlePersonalization" : MessageLookupByLibrary.simpleMessage("Personalization"),
-    "title" : MessageLookupByLibrary.simpleMessage("ACS UPB")
+    "settingsTitlePersonalization": MessageLookupByLibrary.simpleMessage(
+        "Personalization")
   };
 }

@@ -1,6 +1,4 @@
 {
-  "title": "ACS UPB",
-  "hello": "Bună, {name}!",
   "drawerTooltip": "Meniu navigare",
   "drawerHeaderHome": "Acasă",
   "drawerItemWebsites": "Platforme",

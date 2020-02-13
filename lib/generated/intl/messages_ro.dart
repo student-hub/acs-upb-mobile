@@ -19,8 +19,6 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'ro';
 
-  static m0(name) => "Bună, ${name}!";
-
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
     "drawerHeaderHome" : MessageLookupByLibrary.simpleMessage("Acasă"),
@@ -35,14 +33,13 @@ class MessageLookup extends MessageLookupByLibrary {
     "drawerItemTimetable" : MessageLookupByLibrary.simpleMessage("Orar"),
     "drawerItemWebsites" : MessageLookupByLibrary.simpleMessage("Platforme"),
     "drawerTooltip": MessageLookupByLibrary.simpleMessage("Meniu navigare"),
-    "hello" : m0,
     "settingsItemDarkMode" : MessageLookupByLibrary.simpleMessage("Dark mode"),
     "settingsItemLanguage" : MessageLookupByLibrary.simpleMessage("Limbă"),
     "settingsItemLanguageAuto" : MessageLookupByLibrary.simpleMessage("Auto"),
     "settingsItemLanguageEnglish" : MessageLookupByLibrary.simpleMessage("Engleză"),
     "settingsItemLanguageRomanian" : MessageLookupByLibrary.simpleMessage("Română"),
     "settingsTitleLocalization" : MessageLookupByLibrary.simpleMessage("Localizare"),
-    "settingsTitlePersonalization" : MessageLookupByLibrary.simpleMessage("Personalizare"),
-    "title" : MessageLookupByLibrary.simpleMessage("ACS UPB")
+    "settingsTitlePersonalization": MessageLookupByLibrary.simpleMessage(
+        "Personalizare")
   };
 }
