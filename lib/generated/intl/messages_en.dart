@@ -32,14 +32,13 @@ class MessageLookup extends MessageLookupByLibrary {
     "drawerItemSettings" : MessageLookupByLibrary.simpleMessage("Settings"),
     "drawerItemTimetable" : MessageLookupByLibrary.simpleMessage("Timetable"),
     "drawerItemWebsites" : MessageLookupByLibrary.simpleMessage("Websites"),
-    "drawerTooltip": MessageLookupByLibrary.simpleMessage("Navigation menu"),
+    "drawerTooltip" : MessageLookupByLibrary.simpleMessage("Navigation menu"),
     "settingsItemDarkMode" : MessageLookupByLibrary.simpleMessage("Dark mode"),
     "settingsItemLanguage" : MessageLookupByLibrary.simpleMessage("Language"),
     "settingsItemLanguageAuto" : MessageLookupByLibrary.simpleMessage("Auto"),
     "settingsItemLanguageEnglish" : MessageLookupByLibrary.simpleMessage("English"),
     "settingsItemLanguageRomanian" : MessageLookupByLibrary.simpleMessage("Romanian"),
     "settingsTitleLocalization" : MessageLookupByLibrary.simpleMessage("Localization"),
-    "settingsTitlePersonalization": MessageLookupByLibrary.simpleMessage(
-        "Personalization")
+    "settingsTitlePersonalization" : MessageLookupByLibrary.simpleMessage("Personalization")
   };
 }

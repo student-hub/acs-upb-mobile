@@ -32,14 +32,13 @@ class MessageLookup extends MessageLookupByLibrary {
     "drawerItemSettings" : MessageLookupByLibrary.simpleMessage("Setări"),
     "drawerItemTimetable" : MessageLookupByLibrary.simpleMessage("Orar"),
     "drawerItemWebsites" : MessageLookupByLibrary.simpleMessage("Platforme"),
-    "drawerTooltip": MessageLookupByLibrary.simpleMessage("Meniu navigare"),
+    "drawerTooltip" : MessageLookupByLibrary.simpleMessage("Meniu navigare"),
     "settingsItemDarkMode" : MessageLookupByLibrary.simpleMessage("Dark mode"),
     "settingsItemLanguage" : MessageLookupByLibrary.simpleMessage("Limbă"),
     "settingsItemLanguageAuto" : MessageLookupByLibrary.simpleMessage("Auto"),
     "settingsItemLanguageEnglish" : MessageLookupByLibrary.simpleMessage("Engleză"),
     "settingsItemLanguageRomanian" : MessageLookupByLibrary.simpleMessage("Română"),
     "settingsTitleLocalization" : MessageLookupByLibrary.simpleMessage("Localizare"),
-    "settingsTitlePersonalization": MessageLookupByLibrary.simpleMessage(
-        "Personalizare")
+    "settingsTitlePersonalization" : MessageLookupByLibrary.simpleMessage("Personalizare")
   };
 }
