@@ -19,12 +19,19 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'ro';
 
-  static m0(name) => "Bună, ${name}!";
+  static m1(name) => "Bună, ${name}!";
+
+  static m2(email) => "Urmați instrucțiunile primite la adresa ${email} pentru a vă recupera parola";
+
+  static m3(provider) => "Conectare cu ${provider}";
+
+  static m4(name) => "Bine ai venit, ${name}!";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
+    "cancelButtonLabel" : MessageLookupByLibrary.simpleMessage("Anulare"),
     "drawerHeaderHome" : MessageLookupByLibrary.simpleMessage("Acasă"),
-    "drawerHeaderProfile": MessageLookupByLibrary.simpleMessage("Profil"),
+    "drawerHeaderProfile" : MessageLookupByLibrary.simpleMessage("Profil"),
     "drawerItemClasses" : MessageLookupByLibrary.simpleMessage("Materii"),
     "drawerItemContribute" : MessageLookupByLibrary.simpleMessage("Contribuie"),
     "drawerItemHelp" : MessageLookupByLibrary.simpleMessage("Ajutor"),
@@ -35,7 +42,21 @@ class MessageLookup extends MessageLookupByLibrary {
     "drawerItemSettings" : MessageLookupByLibrary.simpleMessage("Setări"),
     "drawerItemTimetable" : MessageLookupByLibrary.simpleMessage("Orar"),
     "drawerItemWebsites" : MessageLookupByLibrary.simpleMessage("Platforme"),
-    "hello" : m0,
+    "emailLabel" : MessageLookupByLibrary.simpleMessage("Email"),
+    "errorOccurred" : MessageLookupByLibrary.simpleMessage("A apărut o eroare"),
+    "hello" : m1,
+    "incorrectPassword" : MessageLookupByLibrary.simpleMessage("Parola introdusă nu este corectă"),
+    "nameLabel" : MessageLookupByLibrary.simpleMessage("Nume & prenume"),
+    "nextButtonLabel" : MessageLookupByLibrary.simpleMessage("Următorul"),
+    "passwordCheckError" : MessageLookupByLibrary.simpleMessage("Cele două parole diferă"),
+    "passwordCheckLabel" : MessageLookupByLibrary.simpleMessage("Confirmare parolă"),
+    "passwordLabel" : MessageLookupByLibrary.simpleMessage("Parolă"),
+    "passwordLengthWarning" : MessageLookupByLibrary.simpleMessage("Parola trebuie să aibă cel puțin 6 caractere"),
+    "recoverPassword" : MessageLookupByLibrary.simpleMessage("Recuperare parolă"),
+    "recoverPasswordDialog" : m2,
+    "recoverPasswordInstructions" : MessageLookupByLibrary.simpleMessage("Urmați instrucțiunile primite prin mail pentru a vă recupera parola"),
+    "saveLabel" : MessageLookupByLibrary.simpleMessage("Salvare"),
+    "sendLabel" : MessageLookupByLibrary.simpleMessage("Trimitere"),
     "settingsItemDarkMode" : MessageLookupByLibrary.simpleMessage("Dark mode"),
     "settingsItemLanguage" : MessageLookupByLibrary.simpleMessage("Limbă"),
     "settingsItemLanguageAuto" : MessageLookupByLibrary.simpleMessage("Auto"),
@@ -43,6 +64,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "settingsItemLanguageRomanian" : MessageLookupByLibrary.simpleMessage("Română"),
     "settingsTitleLocalization" : MessageLookupByLibrary.simpleMessage("Localizare"),
     "settingsTitlePersonalization" : MessageLookupByLibrary.simpleMessage("Personalizare"),
-    "title" : MessageLookupByLibrary.simpleMessage("ACS UPB")
+    "signInLabel" : MessageLookupByLibrary.simpleMessage("Conectare"),
+    "signInWith" : m3,
+    "signUpLabel" : MessageLookupByLibrary.simpleMessage("Înregistrare"),
+    "title" : MessageLookupByLibrary.simpleMessage("ACS UPB"),
+    "troubleSigningInLabel" : MessageLookupByLibrary.simpleMessage("Probleme la conectare?"),
+    "welcomeName" : m4,
+    "welcomeSimple" : MessageLookupByLibrary.simpleMessage("Bine ai venit!")
   };
 }

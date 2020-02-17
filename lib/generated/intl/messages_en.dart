@@ -19,12 +19,21 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'en';
 
-  static m0(name) => "Hello, ${name}!";
+  static m0(email, provider) => "There is already an account associated with ${email}. Please log in with ${provider} to continue.";
+
+  static m1(name) => "Hello, ${name}!";
+
+  static m2(email) => "Follow the instructions sent to ${email} to find out how to reset your password";
+
+  static m3(provider) => "Sign in with ${provider}";
+
+  static m4(name) => "Welcome, ${name}!";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
+    "cancelButtonLabel" : MessageLookupByLibrary.simpleMessage("Cancel"),
     "drawerHeaderHome" : MessageLookupByLibrary.simpleMessage("Home"),
-    "drawerHeaderProfile": MessageLookupByLibrary.simpleMessage("Profile"),
+    "drawerHeaderProfile" : MessageLookupByLibrary.simpleMessage("Profile"),
     "drawerItemClasses" : MessageLookupByLibrary.simpleMessage("Classes"),
     "drawerItemContribute" : MessageLookupByLibrary.simpleMessage("Contribute"),
     "drawerItemHelp" : MessageLookupByLibrary.simpleMessage("Help"),
@@ -35,7 +44,22 @@ class MessageLookup extends MessageLookupByLibrary {
     "drawerItemSettings" : MessageLookupByLibrary.simpleMessage("Settings"),
     "drawerItemTimetable" : MessageLookupByLibrary.simpleMessage("Timetable"),
     "drawerItemWebsites" : MessageLookupByLibrary.simpleMessage("Websites"),
-    "hello" : m0,
+    "emailInUseMessage" : m0,
+    "emailLabel" : MessageLookupByLibrary.simpleMessage("Email"),
+    "errorOccurred" : MessageLookupByLibrary.simpleMessage("An error occured"),
+    "hello" : m1,
+    "incorrectPassword" : MessageLookupByLibrary.simpleMessage("The password you entered is incorrect"),
+    "nameLabel" : MessageLookupByLibrary.simpleMessage("Last & first name"),
+    "nextButtonLabel" : MessageLookupByLibrary.simpleMessage("Next"),
+    "passwordCheckError" : MessageLookupByLibrary.simpleMessage("The two passwords are different"),
+    "passwordCheckLabel" : MessageLookupByLibrary.simpleMessage("Confirm password"),
+    "passwordLabel" : MessageLookupByLibrary.simpleMessage("Password"),
+    "passwordLengthWarning" : MessageLookupByLibrary.simpleMessage("The password must be 6 characters long or more"),
+    "recoverPassword" : MessageLookupByLibrary.simpleMessage("Recover password"),
+    "recoverPasswordDialog" : m2,
+    "recoverPasswordInstructions" : MessageLookupByLibrary.simpleMessage("Follow the instructions sent to your e-mail to find out how to reset your password"),
+    "saveLabel" : MessageLookupByLibrary.simpleMessage("Save"),
+    "sendLabel" : MessageLookupByLibrary.simpleMessage("Send"),
     "settingsItemDarkMode" : MessageLookupByLibrary.simpleMessage("Dark mode"),
     "settingsItemLanguage" : MessageLookupByLibrary.simpleMessage("Language"),
     "settingsItemLanguageAuto" : MessageLookupByLibrary.simpleMessage("Auto"),
@@ -43,6 +67,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "settingsItemLanguageRomanian" : MessageLookupByLibrary.simpleMessage("Romanian"),
     "settingsTitleLocalization" : MessageLookupByLibrary.simpleMessage("Localization"),
     "settingsTitlePersonalization" : MessageLookupByLibrary.simpleMessage("Personalization"),
-    "title" : MessageLookupByLibrary.simpleMessage("ACS UPB")
+    "signInLabel" : MessageLookupByLibrary.simpleMessage("Sign in"),
+    "signInWith" : m3,
+    "signUpLabel" : MessageLookupByLibrary.simpleMessage("Sign up"),
+    "title" : MessageLookupByLibrary.simpleMessage("ACS UPB"),
+    "troubleSigningInLabel" : MessageLookupByLibrary.simpleMessage("Trouble signing in?"),
+    "welcomeName" : m4,
+    "welcomeSimple" : MessageLookupByLibrary.simpleMessage("Welcome!")
   };
 }

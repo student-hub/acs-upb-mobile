@@ -1,3 +1,4 @@
+import 'package:acs_upb_mobile/module/home/landing_page.dart';
 import 'package:acs_upb_mobile/module/settings/settings_page.dart';
 import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/material.dart';
@@ -38,7 +39,7 @@ class MyApp extends StatelessWidget {
                 Routes.home: (context) => HomePage(),
                 Routes.settings: (context) => SettingsPage(),
               },
-              home: HomePage());
+              home: LandingPage());
         });
   }
 }
