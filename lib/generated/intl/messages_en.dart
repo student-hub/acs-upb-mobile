@@ -23,8 +23,7 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static m1(name) => "Hello, ${name}!";
 
-  static m2(email) =>
-      "Follow the instructions sent to ${email} to find out how to reset your password.";
+  static m2(email) => "Follow the instructions sent to ${email} to find out how to reset your password.";
 
   static m3(provider) => "Sign in with ${provider}";
 
@@ -47,22 +46,19 @@ class MessageLookup extends MessageLookupByLibrary {
     "drawerItemWebsites" : MessageLookupByLibrary.simpleMessage("Websites"),
     "emailInUseMessage" : m0,
     "emailLabel" : MessageLookupByLibrary.simpleMessage("Email"),
-    "errorOccurred": MessageLookupByLibrary.simpleMessage("An error occured."),
+    "errorOccurred" : MessageLookupByLibrary.simpleMessage("An error occured."),
     "hello" : m1,
-    "incorrectPassword": MessageLookupByLibrary.simpleMessage(
-        "The password you entered is incorrect."),
+    "incorrectPassword" : MessageLookupByLibrary.simpleMessage("The password you entered is incorrect."),
+    "internetConnectionWarning" : MessageLookupByLibrary.simpleMessage("Please make sure you are connected to the internet."),
     "nameLabel" : MessageLookupByLibrary.simpleMessage("Last & first name"),
     "nextButtonLabel" : MessageLookupByLibrary.simpleMessage("Next"),
-    "passwordCheckError": MessageLookupByLibrary.simpleMessage(
-        "The two passwords differ."),
+    "passwordCheckError" : MessageLookupByLibrary.simpleMessage("The two passwords differ."),
     "passwordCheckLabel" : MessageLookupByLibrary.simpleMessage("Confirm password"),
     "passwordLabel" : MessageLookupByLibrary.simpleMessage("Password"),
-    "passwordLengthWarning": MessageLookupByLibrary.simpleMessage(
-        "The password must be 6 characters long or more."),
+    "passwordLengthWarning" : MessageLookupByLibrary.simpleMessage("The password must be 6 characters long or more."),
     "recoverPassword" : MessageLookupByLibrary.simpleMessage("Recover password"),
     "recoverPasswordDialog" : m2,
-    "recoverPasswordInstructions": MessageLookupByLibrary.simpleMessage(
-        "Enter your e-mai in order to be able to reset your password."),
+    "recoverPasswordInstructions" : MessageLookupByLibrary.simpleMessage("Enter your e-mai in order to be able to reset your password."),
     "saveLabel" : MessageLookupByLibrary.simpleMessage("Save"),
     "sendLabel" : MessageLookupByLibrary.simpleMessage("Send"),
     "settingsItemDarkMode" : MessageLookupByLibrary.simpleMessage("Dark mode"),
@@ -75,6 +71,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "signInLabel" : MessageLookupByLibrary.simpleMessage("Sign in"),
     "signInWith" : m3,
     "signUpLabel" : MessageLookupByLibrary.simpleMessage("Sign up"),
+    "somethingWentWrong" : MessageLookupByLibrary.simpleMessage("Something went wrong."),
     "title" : MessageLookupByLibrary.simpleMessage("ACS UPB"),
     "troubleSigningInLabel" : MessageLookupByLibrary.simpleMessage("Trouble signing in?"),
     "welcomeName" : m4,

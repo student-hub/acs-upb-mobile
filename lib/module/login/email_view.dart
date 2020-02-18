@@ -20,12 +20,9 @@ class _EmailViewState extends State<EmailView> {
   final TextEditingController _controllerEmail = new TextEditingController();
 
   @override
-  Widget build(BuildContext context) =>
-      new Scaffold(
+  Widget build(BuildContext context) => new Scaffold(
         appBar: new AppBar(
-          title: new Text(S
-              .of(context)
-              .welcomeSimple),
+          title: new Text(S.of(context).welcomeSimple),
           elevation: 4.0,
         ),
         body: new Builder(
@@ -41,9 +38,7 @@ class _EmailViewState extends State<EmailView> {
                     keyboardType: TextInputType.emailAddress,
                     autocorrect: false,
                     decoration: new InputDecoration(
-                        labelText: S
-                            .of(context)
-                            .emailLabel),
+                        labelText: S.of(context).emailLabel),
                   ),
                 ],
               ),
@@ -59,9 +54,7 @@ class _EmailViewState extends State<EmailView> {
                   onPressed: () => _connect(context),
                   child: new Row(
                     children: <Widget>[
-                      new Text(S
-                          .of(context)
-                          .nextButtonLabel),
+                      new Text(S.of(context).nextButtonLabel),
                     ],
                   )),
             ],
@@ -77,7 +70,7 @@ class _EmailViewState extends State<EmailView> {
     try {
       final FirebaseAuth auth = widget.auth;
       List<String> providers =
-      await auth.fetchSignInMethodsForEmail(email: _controllerEmail.text);
+          await auth.fetchSignInMethodsForEmail(email: _controllerEmail.text);
       print(providers);
 
       if (providers == null || providers.isEmpty) {
@@ -107,6 +100,11 @@ class _EmailViewState extends State<EmailView> {
         }
       }
     } catch (exception) {
+      await showErrorDialog(
+          context,
+          S.of(context).somethingWentWrong +
+              " " +
+              S.of(context).internetConnectionWarning);
       print(exception);
     }
   }
@@ -116,38 +114,35 @@ class _EmailViewState extends State<EmailView> {
     return showDialog<String>(
       context: context,
       barrierDismissible: false, // user must tap button!
-      builder: (BuildContext context) =>
-      new AlertDialog(
+      builder: (BuildContext context) => new AlertDialog(
         content: new SingleChildScrollView(
             child: new ListBody(
-              children: <Widget>[
-                new Text(S.of(context).emailInUseMessage(email, providerName)),
-                new SizedBox(
-                  height: 16.0,
-                ),
-                new Column(
-                  children: providers.map((String p) {
-                    return new RaisedButton(
-                      child: new Row(
-                        children: <Widget>[
-                          new Text(_providerStringToButton(p)),
-                        ],
-                      ),
-                      onPressed: () {
-                        Navigator.of(context).pop(p);
-                      },
-                    );
-                  }).toList(),
-                )
-              ],
-            )),
+          children: <Widget>[
+            new Text(S.of(context).emailInUseMessage(email, providerName)),
+            new SizedBox(
+              height: 16.0,
+            ),
+            new Column(
+              children: providers.map((String p) {
+                return new RaisedButton(
+                  child: new Row(
+                    children: <Widget>[
+                      new Text(_providerStringToButton(p)),
+                    ],
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pop(p);
+                  },
+                );
+              }).toList(),
+            )
+          ],
+        )),
         actions: <Widget>[
           new FlatButton(
             child: new Row(
               children: <Widget>[
-                new Text(S
-                    .of(context)
-                    .cancelButtonLabel),
+                new Text(S.of(context).cancelButtonLabel),
               ],
             ),
             onPressed: () {

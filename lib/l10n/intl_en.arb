@@ -19,6 +19,8 @@
   "passwordCheckError": "The two passwords differ.",
   "incorrectPassword": "The password you entered is incorrect.",
   "errorOccurred": "An error occured.",
+  "somethingWentWrong": "Something went wrong.",
+  "internetConnectionWarning": "Please make sure you are connected to the internet.",
   "recoverPassword": "Recover password",
   "recoverPasswordInstructions": "Enter your e-mai in order to be able to reset your password.",
   "recoverPasswordDialog": "Follow the instructions sent to {email} to find out how to reset your password.",

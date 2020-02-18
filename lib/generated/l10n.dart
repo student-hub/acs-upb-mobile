@@ -210,6 +210,24 @@ class S {
     );
   }
 
+  String get somethingWentWrong {
+    return Intl.message(
+      'Something went wrong.',
+      name: 'somethingWentWrong',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get internetConnectionWarning {
+    return Intl.message(
+      'Please make sure you are connected to the internet.',
+      name: 'internetConnectionWarning',
+      desc: '',
+      args: [],
+    );
+  }
+
   String get recoverPassword {
     return Intl.message(
       'Recover password',

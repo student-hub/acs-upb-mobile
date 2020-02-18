@@ -19,6 +19,8 @@
   "passwordCheckError": "Cele două parole diferă.",
   "incorrectPassword": "Parola introdusă nu este corectă.",
   "errorOccurred": "A apărut o eroare.",
+  "somethingWentWrong": "A apărut o problemă.",
+  "internetConnectionWarning": "Asigurați-vă că sunteți conectat la internet.",
   "recoverPassword": "Recuperare parolă",
   "recoverPasswordInstructions": "Introduceți mail-ul pentru a afla cum să vă resetați parola.",
   "recoverPasswordDialog": "Urmați instrucțiunile primite la adresa {email} pentru a vă reseta parola.",
