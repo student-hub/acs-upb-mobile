@@ -176,7 +176,7 @@ class S {
 
   String get passwordLengthWarning {
     return Intl.message(
-      'The password must be 6 characters long or more',
+      'The password must be 6 characters long or more.',
       name: 'passwordLengthWarning',
       desc: '',
       args: [],
@@ -185,7 +185,7 @@ class S {
 
   String get passwordCheckError {
     return Intl.message(
-      'The two passwords are different',
+      'The two passwords differ.',
       name: 'passwordCheckError',
       desc: '',
       args: [],
@@ -194,7 +194,7 @@ class S {
 
   String get incorrectPassword {
     return Intl.message(
-      'The password you entered is incorrect',
+      'The password you entered is incorrect.',
       name: 'incorrectPassword',
       desc: '',
       args: [],
@@ -203,7 +203,7 @@ class S {
 
   String get errorOccurred {
     return Intl.message(
-      'An error occured',
+      'An error occured.',
       name: 'errorOccurred',
       desc: '',
       args: [],
@@ -221,7 +221,7 @@ class S {
 
   String get recoverPasswordInstructions {
     return Intl.message(
-      'Follow the instructions sent to your e-mail to find out how to reset your password',
+      'Enter your e-mai in order to be able to reset your password.',
       name: 'recoverPasswordInstructions',
       desc: '',
       args: [],
@@ -230,7 +230,7 @@ class S {
 
   String recoverPasswordDialog(dynamic email) {
     return Intl.message(
-      'Follow the instructions sent to $email to find out how to reset your password',
+      'Follow the instructions sent to $email to find out how to reset your password.',
       name: 'recoverPasswordDialog',
       desc: '',
       args: [email],

@@ -21,7 +21,8 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static m1(name) => "Bună, ${name}!";
 
-  static m2(email) => "Urmați instrucțiunile primite la adresa ${email} pentru a vă recupera parola";
+  static m2(email) =>
+      "Urmați instrucțiunile primite la adresa ${email} pentru a vă reseta parola.";
 
   static m3(provider) => "Conectare cu ${provider}";
 
@@ -43,18 +44,22 @@ class MessageLookup extends MessageLookupByLibrary {
     "drawerItemTimetable" : MessageLookupByLibrary.simpleMessage("Orar"),
     "drawerItemWebsites" : MessageLookupByLibrary.simpleMessage("Platforme"),
     "emailLabel" : MessageLookupByLibrary.simpleMessage("Email"),
-    "errorOccurred" : MessageLookupByLibrary.simpleMessage("A apărut o eroare"),
+    "errorOccurred": MessageLookupByLibrary.simpleMessage("A apărut o eroare."),
     "hello" : m1,
-    "incorrectPassword" : MessageLookupByLibrary.simpleMessage("Parola introdusă nu este corectă"),
+    "incorrectPassword": MessageLookupByLibrary.simpleMessage(
+        "Parola introdusă nu este corectă."),
     "nameLabel" : MessageLookupByLibrary.simpleMessage("Nume & prenume"),
     "nextButtonLabel" : MessageLookupByLibrary.simpleMessage("Următorul"),
-    "passwordCheckError" : MessageLookupByLibrary.simpleMessage("Cele două parole diferă"),
+    "passwordCheckError": MessageLookupByLibrary.simpleMessage(
+        "Cele două parole diferă."),
     "passwordCheckLabel" : MessageLookupByLibrary.simpleMessage("Confirmare parolă"),
     "passwordLabel" : MessageLookupByLibrary.simpleMessage("Parolă"),
-    "passwordLengthWarning" : MessageLookupByLibrary.simpleMessage("Parola trebuie să aibă cel puțin 6 caractere"),
+    "passwordLengthWarning": MessageLookupByLibrary.simpleMessage(
+        "Parola trebuie să aibă cel puțin 6 caractere."),
     "recoverPassword" : MessageLookupByLibrary.simpleMessage("Recuperare parolă"),
     "recoverPasswordDialog" : m2,
-    "recoverPasswordInstructions" : MessageLookupByLibrary.simpleMessage("Urmați instrucțiunile primite prin mail pentru a vă recupera parola"),
+    "recoverPasswordInstructions": MessageLookupByLibrary.simpleMessage(
+        "Introduceți mail-ul pentru a afla cum să vă resetați parola."),
     "saveLabel" : MessageLookupByLibrary.simpleMessage("Salvare"),
     "sendLabel" : MessageLookupByLibrary.simpleMessage("Trimitere"),
     "settingsItemDarkMode" : MessageLookupByLibrary.simpleMessage("Dark mode"),
