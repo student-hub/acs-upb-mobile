@@ -19,9 +19,19 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'en';
 
+  static m0(email, provider) => "There is already an account associated with ${email}. Please log in with ${provider} to continue.";
+
+  static m1(email) => "Follow the instructions sent to ${email} to find out how to reset your password.";
+
+  static m2(provider) => "Sign in with ${provider}";
+
+  static m3(name) => "Welcome, ${name}!";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
+    "cancelButtonLabel" : MessageLookupByLibrary.simpleMessage("Cancel"),
     "drawerHeaderHome" : MessageLookupByLibrary.simpleMessage("Home"),
+    "drawerHeaderProfile" : MessageLookupByLibrary.simpleMessage("Profile"),
     "drawerItemClasses" : MessageLookupByLibrary.simpleMessage("Classes"),
     "drawerItemContribute" : MessageLookupByLibrary.simpleMessage("Contribute"),
     "drawerItemHelp" : MessageLookupByLibrary.simpleMessage("Help"),
@@ -33,12 +43,35 @@ class MessageLookup extends MessageLookupByLibrary {
     "drawerItemTimetable" : MessageLookupByLibrary.simpleMessage("Timetable"),
     "drawerItemWebsites" : MessageLookupByLibrary.simpleMessage("Websites"),
     "drawerTooltip" : MessageLookupByLibrary.simpleMessage("Navigation menu"),
+    "emailInUseMessage" : m0,
+    "emailLabel" : MessageLookupByLibrary.simpleMessage("Email"),
+    "errorOccurred" : MessageLookupByLibrary.simpleMessage("An error occured."),
+    "incorrectPassword" : MessageLookupByLibrary.simpleMessage("The password you entered is incorrect."),
+    "internetConnectionWarning" : MessageLookupByLibrary.simpleMessage("Please make sure you are connected to the internet."),
+    "nameLabel" : MessageLookupByLibrary.simpleMessage("Last & first name"),
+    "nextButtonLabel" : MessageLookupByLibrary.simpleMessage("Next"),
+    "passwordCheckError" : MessageLookupByLibrary.simpleMessage("The two passwords differ."),
+    "passwordCheckLabel" : MessageLookupByLibrary.simpleMessage("Confirm password"),
+    "passwordLabel" : MessageLookupByLibrary.simpleMessage("Password"),
+    "passwordLengthWarning" : MessageLookupByLibrary.simpleMessage("The password must be 6 characters long or more."),
+    "recoverPassword" : MessageLookupByLibrary.simpleMessage("Recover password"),
+    "recoverPasswordDialog" : m1,
+    "recoverPasswordInstructions" : MessageLookupByLibrary.simpleMessage("Enter your e-mai in order to be able to reset your password."),
+    "saveLabel" : MessageLookupByLibrary.simpleMessage("Save"),
+    "sendLabel" : MessageLookupByLibrary.simpleMessage("Send"),
     "settingsItemDarkMode" : MessageLookupByLibrary.simpleMessage("Dark mode"),
     "settingsItemLanguage" : MessageLookupByLibrary.simpleMessage("Language"),
     "settingsItemLanguageAuto" : MessageLookupByLibrary.simpleMessage("Auto"),
     "settingsItemLanguageEnglish" : MessageLookupByLibrary.simpleMessage("English"),
     "settingsItemLanguageRomanian" : MessageLookupByLibrary.simpleMessage("Romanian"),
     "settingsTitleLocalization" : MessageLookupByLibrary.simpleMessage("Localization"),
-    "settingsTitlePersonalization" : MessageLookupByLibrary.simpleMessage("Personalization")
+    "settingsTitlePersonalization" : MessageLookupByLibrary.simpleMessage("Personalization"),
+    "signInLabel" : MessageLookupByLibrary.simpleMessage("Sign in"),
+    "signInWith" : m2,
+    "signUpLabel" : MessageLookupByLibrary.simpleMessage("Sign up"),
+    "somethingWentWrong" : MessageLookupByLibrary.simpleMessage("Something went wrong."),
+    "troubleSigningInLabel" : MessageLookupByLibrary.simpleMessage("Trouble signing in?"),
+    "welcomeName" : m3,
+    "welcomeSimple" : MessageLookupByLibrary.simpleMessage("Welcome!")
   };
 }

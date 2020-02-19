@@ -39,10 +39,235 @@ class S {
     );
   }
 
+  String get welcomeSimple {
+    return Intl.message(
+      'Welcome!',
+      name: 'welcomeSimple',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String welcomeName(dynamic name) {
+    return Intl.message(
+      'Welcome, $name!',
+      name: 'welcomeName',
+      desc: '',
+      args: [name],
+    );
+  }
+
+  String get emailLabel {
+    return Intl.message(
+      'Email',
+      name: 'emailLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get passwordLabel {
+    return Intl.message(
+      'Password',
+      name: 'passwordLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get passwordCheckLabel {
+    return Intl.message(
+      'Confirm password',
+      name: 'passwordCheckLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get nameLabel {
+    return Intl.message(
+      'Last & first name',
+      name: 'nameLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get signUpLabel {
+    return Intl.message(
+      'Sign up',
+      name: 'signUpLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get signInLabel {
+    return Intl.message(
+      'Sign in',
+      name: 'signInLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get saveLabel {
+    return Intl.message(
+      'Save',
+      name: 'saveLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get sendLabel {
+    return Intl.message(
+      'Send',
+      name: 'sendLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get troubleSigningInLabel {
+    return Intl.message(
+      'Trouble signing in?',
+      name: 'troubleSigningInLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get nextButtonLabel {
+    return Intl.message(
+      'Next',
+      name: 'nextButtonLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get cancelButtonLabel {
+    return Intl.message(
+      'Cancel',
+      name: 'cancelButtonLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String signInWith(dynamic provider) {
+    return Intl.message(
+      'Sign in with $provider',
+      name: 'signInWith',
+      desc: '',
+      args: [provider],
+    );
+  }
+
+  String get passwordLengthWarning {
+    return Intl.message(
+      'The password must be 6 characters long or more.',
+      name: 'passwordLengthWarning',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get passwordCheckError {
+    return Intl.message(
+      'The two passwords differ.',
+      name: 'passwordCheckError',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get incorrectPassword {
+    return Intl.message(
+      'The password you entered is incorrect.',
+      name: 'incorrectPassword',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get errorOccurred {
+    return Intl.message(
+      'An error occured.',
+      name: 'errorOccurred',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get somethingWentWrong {
+    return Intl.message(
+      'Something went wrong.',
+      name: 'somethingWentWrong',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get internetConnectionWarning {
+    return Intl.message(
+      'Please make sure you are connected to the internet.',
+      name: 'internetConnectionWarning',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get recoverPassword {
+    return Intl.message(
+      'Recover password',
+      name: 'recoverPassword',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get recoverPasswordInstructions {
+    return Intl.message(
+      'Enter your e-mai in order to be able to reset your password.',
+      name: 'recoverPasswordInstructions',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String recoverPasswordDialog(dynamic email) {
+    return Intl.message(
+      'Follow the instructions sent to $email to find out how to reset your password.',
+      name: 'recoverPasswordDialog',
+      desc: '',
+      args: [email],
+    );
+  }
+
+  String emailInUseMessage(dynamic email, dynamic provider) {
+    return Intl.message(
+      'There is already an account associated with $email. Please log in with $provider to continue.',
+      name: 'emailInUseMessage',
+      desc: '',
+      args: [email, provider],
+    );
+  }
+
   String get drawerHeaderHome {
     return Intl.message(
       'Home',
       name: 'drawerHeaderHome',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get drawerHeaderProfile {
+    return Intl.message(
+      'Profile',
+      name: 'drawerHeaderProfile',
       desc: '',
       args: [],
     );

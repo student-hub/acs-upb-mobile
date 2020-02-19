@@ -11,10 +11,10 @@ description: A mobile application for students at ACS UPB.
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 0.0.3+2
+version: 0.0.4+1
 
 environment:
-  sdk: ">=2.1.0 <3.0.0"
+  sdk: ">=2.6.0 <3.0.0"
 
 dependencies:
   flutter:
@@ -42,6 +42,10 @@ dependencies:
 
   # Firebase products
   firebase_analytics: ^5.0.2
+  firebase_auth: ^0.15.4
+
+  # Dart helper methods
+  basic_utils: ^1.2.0
 
 dev_dependencies:
   flutter_test:
@@ -71,6 +75,7 @@ flutter:
   uses-material-design: true
 
   assets:
+    - assets/icons/
     - assets/images/
 
   # To add custom fonts to your application, add a fonts section here,
