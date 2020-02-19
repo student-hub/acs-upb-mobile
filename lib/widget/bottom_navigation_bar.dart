@@ -1,6 +1,6 @@
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/module/home/home_page.dart';
-import 'package:acs_upb_mobile/module/home/landing_page.dart';
+import 'package:acs_upb_mobile/module/login/profile_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -19,7 +19,7 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar> {
       AppScaffold(title: S.of(context).drawerItemTimetable), // TODO: Timetable
       AppScaffold(title: S.of(context).drawerItemWebsites), // TODO: Websites
       AppScaffold(title: S.of(context).drawerItemMap), // TODO: Map
-      LandingPage(), // TODO: Profile
+      ProfilePage(title: S.of(context).drawerHeaderProfile), // TODO: Profile
     ];
     var provider = Provider.of<BottomNavigationBarProvider>(context);
 

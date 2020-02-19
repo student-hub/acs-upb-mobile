@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 
 import 'generated/l10n.dart';
 import 'module/home/home_page.dart';
+import 'module/login/auth_provider.dart';
 import 'routes/routes.dart';
 import 'widget/bottom_navigation_bar.dart';
 
@@ -27,7 +28,13 @@ class MyApp extends StatelessWidget {
               brightness: brightness,
             ),
         themedWidgetBuilder: (context, theme) {
-          return MaterialApp(
+          return MultiProvider(
+            providers: [
+              ChangeNotifierProvider<AuthProvider>(
+                  create: (_) => AuthProvider()
+              )
+            ],
+            child: MaterialApp(
               title: "ACS UPB Mobile",
               localizationsDelegates: [
                 GlobalMaterialLocalizations.delegate,
@@ -43,7 +50,9 @@ class MyApp extends StatelessWidget {
               home: ChangeNotifierProvider<BottomNavigationBarProvider>(
                 child: AppBottomNavigationBar(),
                 create: (BuildContext context) => BottomNavigationBarProvider(),
-              ),);
+              ),
+            ),
+          );
         });
   }
 }
