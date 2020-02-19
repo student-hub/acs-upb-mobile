@@ -20,10 +20,6 @@ void main() {
 
       expect(find.byType(HomePage), findsOneWidget);
 
-      // Open navigation drawer
-      await tester.tap(find.byIcon(Icons.menu));
-      await tester.pumpAndSettle();
-
       // Open home
       await tester.tap(find.byIcon(Icons.home));
       await tester.pumpAndSettle();
@@ -35,12 +31,8 @@ void main() {
       await tester.pumpWidget(MyApp());
       await tester.pumpAndSettle();
 
-      // Open navigation drawer
-      await tester.tap(find.byIcon(Icons.menu));
-      await tester.pumpAndSettle();
-
       // Open settings
-      await tester.tap(find.text('Settings'));
+      await tester.tap(find.byIcon(Icons.settings));
       await tester.pumpAndSettle();
 
       expect(find.byType(SettingsPage), findsOneWidget);

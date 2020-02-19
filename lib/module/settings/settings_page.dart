@@ -18,6 +18,7 @@ class SettingsPageState extends State<SettingsPage> {
   Widget build(BuildContext context) {
     return AppScaffold(
         title: S.of(context).drawerItemSettings,
+        settingsAction: false,
         body: PreferencePage([
           PreferenceTitle(S.of(context).settingsTitlePersonalization),
           SwitchPreference(

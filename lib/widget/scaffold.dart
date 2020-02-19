@@ -1,30 +1,40 @@
-import 'package:acs_upb_mobile/generated/l10n.dart';
-import 'package:acs_upb_mobile/widget/drawer.dart';
+import 'package:acs_upb_mobile/routes/routes.dart';
 import 'package:flutter/material.dart';
 
 class AppScaffold extends StatelessWidget {
   final Widget body;
   final String title;
+  final bool settingsAction;
 
-  AppScaffold({this.body, this.title});
+  AppScaffold({this.body, this.title, this.settingsAction = true});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: body,
-      appBar: AppBar(
-        title: Text(title),
-        leading: Builder(builder: (BuildContext context) {
-          return IconButton(
-            icon: Icon(Icons.menu),
-            onPressed: () {
-              Scaffold.of(context).openDrawer();
-            },
-            tooltip: S.of(context).drawerTooltip,
-          );
-        }),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(40.0),
+        child: AppBar(
+          title: Text(title),
+          centerTitle: true,
+          toolbarOpacity: 0.8,
+          actions: <Widget>[
+            settingsAction
+                ? Padding(
+                    padding: EdgeInsets.only(right: 20.0),
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.pushNamed(context, Routes.settings);
+                      },
+                      child: Icon(
+                        Icons.settings,
+                        size: 26.0,
+                      ),
+                    ))
+                : Container(),
+          ],
+        ),
       ),
-      drawer: AppDrawer(),
     );
   }
 }

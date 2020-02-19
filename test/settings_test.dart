@@ -21,12 +21,8 @@ void main() {
       MaterialApp app = find.byType(MaterialApp).evaluate().first.widget;
       expect(app.theme.brightness, equals(Brightness.dark));
 
-      // Open navigation drawer
-      await tester.tap(find.byIcon(Icons.menu));
-      await tester.pumpAndSettle();
-
       // Open settings
-      await tester.tap(find.text('Settings'));
+      await tester.tap(find.byIcon(Icons.settings));
       await tester.pumpAndSettle();
 
       // Toggle dark mode
@@ -56,12 +52,8 @@ void main() {
           .widget;
       expect(app.theme.brightness, equals(Brightness.dark));
 
-      // Open navigation drawer
-      await tester.tap(find.byIcon(Icons.menu));
-      await tester.pumpAndSettle();
-
       // Open settings
-      await tester.tap(find.text('Settings'));
+      await tester.tap(find.byIcon(Icons.settings));
       await tester.pumpAndSettle();
 
       expect(find.text("Auto"), findsOneWidget);
