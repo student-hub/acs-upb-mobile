@@ -66,6 +66,9 @@ dev_dependencies:
   # Using Provider for state management
   provider: ^4.0.4
 
+  # Useful for adapting screen and font sizes
+  flutter_screenutil: ^1.0.2
+
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
@@ -79,6 +82,7 @@ flutter:
 
   assets:
     - assets/icons/
+    - assets/illustrations/
     - assets/images/
 
   fonts:

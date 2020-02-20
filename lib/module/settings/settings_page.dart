@@ -4,6 +4,7 @@ import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/widget/scaffold.dart';
 import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:preferences/preferences.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -16,34 +17,59 @@ class SettingsPage extends StatefulWidget {
 class SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
+    ScreenUtil.init(context, width: 1080, height: 2160, allowFontScaling: true);
+
     return AppScaffold(
         title: S.of(context).drawerItemSettings,
         settingsAction: false,
-        body: PreferencePage([
-          PreferenceTitle(S.of(context).settingsTitlePersonalization),
-          SwitchPreference(
-            S.of(context).settingsItemDarkMode,
-            "dark_mode",
-            onEnable: () {
-              DynamicTheme.of(context).setBrightness(Brightness.dark);
-            },
-            onDisable: () {
-              DynamicTheme.of(context).setBrightness(Brightness.light);
-            },
-            defaultVal: true,
-          ),
-          PreferenceTitle(S.of(context).settingsTitleLocalization),
-          PreferenceDialogLink(S.of(context).settingsItemLanguage,
-              desc: getLanguagePrefString(context, PrefService.get('language')),
-              dialog: PreferenceDialog(
-                [
-                  getLanguageRadioPreference(context, 'ro'),
-                  getLanguageRadioPreference(context, 'en'),
-                  getLanguageRadioPreference(context, 'auto'),
-                ],
-                onlySaveOnSubmit: false,
-              ))
-        ]));
+        body: Builder(
+          builder: (BuildContext context) {
+            return Column(
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.only(top: 10.0),
+                  child: Container(
+                      height: ScreenUtil().setHeight(800),
+                      child: Image.asset(
+                          'assets/illustrations/undraw_settings.png')),
+                ),
+                Expanded(
+                  child: PreferencePage(
+                    [
+                      PreferenceTitle(
+                          S.of(context).settingsTitlePersonalization),
+                      SwitchPreference(
+                        S.of(context).settingsItemDarkMode,
+                        "dark_mode",
+                        onEnable: () {
+                          DynamicTheme.of(context)
+                              .setBrightness(Brightness.dark);
+                        },
+                        onDisable: () {
+                          DynamicTheme.of(context)
+                              .setBrightness(Brightness.light);
+                        },
+                        defaultVal: true,
+                      ),
+                      PreferenceTitle(S.of(context).settingsTitleLocalization),
+                      PreferenceDialogLink(S.of(context).settingsItemLanguage,
+                          desc: getLanguagePrefString(
+                              context, PrefService.get('language')),
+                          dialog: PreferenceDialog(
+                            [
+                              getLanguageRadioPreference(context, 'ro'),
+                              getLanguageRadioPreference(context, 'en'),
+                              getLanguageRadioPreference(context, 'auto'),
+                            ],
+                            onlySaveOnSubmit: false,
+                          ))
+                    ],
+                  ),
+                ),
+              ],
+            );
+          },
+        ));
   }
 
   RadioPreference getLanguageRadioPreference(
