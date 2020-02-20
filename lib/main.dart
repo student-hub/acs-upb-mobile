@@ -19,20 +19,24 @@ main() async {
 }
 
 class MyApp extends StatelessWidget {
+  final Color _accentColor = Color.fromARGB(255, 67, 172, 205);
+  
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return DynamicTheme(
         defaultBrightness: Brightness.dark,
         data: (brightness) => ThemeData(
-              brightness: brightness,
-            ),
+            brightness: brightness,
+            accentColor: _accentColor,
+            toggleableActiveColor: _accentColor,
+            appBarTheme: brightness == Brightness.light ?
+                 AppBarTheme(color: _accentColor): AppBarTheme()),
         themedWidgetBuilder: (context, theme) {
           return MultiProvider(
             providers: [
               ChangeNotifierProvider<AuthProvider>(
-                  create: (_) => AuthProvider()
-              )
+                  create: (_) => AuthProvider())
             ],
             child: MaterialApp(
               title: "ACS UPB Mobile",

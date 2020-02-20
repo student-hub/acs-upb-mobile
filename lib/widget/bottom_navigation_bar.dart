@@ -57,7 +57,6 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar> {
         selectedItemColor: Theme.of(context).accentColor,
         selectedFontSize: 13.0,
         unselectedFontSize: 13.0,
-        backgroundColor: Theme.of(context).appBarTheme.color,
       ),
     );
   }
