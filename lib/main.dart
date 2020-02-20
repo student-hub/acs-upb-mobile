@@ -20,7 +20,7 @@ main() async {
 
 class MyApp extends StatelessWidget {
   final Color _accentColor = Color.fromARGB(255, 67, 172, 205);
-  
+
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -30,8 +30,10 @@ class MyApp extends StatelessWidget {
             brightness: brightness,
             accentColor: _accentColor,
             toggleableActiveColor: _accentColor,
-            appBarTheme: brightness == Brightness.light ?
-                 AppBarTheme(color: _accentColor): AppBarTheme()),
+            appBarTheme: brightness == Brightness.light
+                ? AppBarTheme(color: _accentColor)
+                : AppBarTheme(),
+            fontFamily: 'Montserrat'),
         themedWidgetBuilder: (context, theme) {
           return MultiProvider(
             providers: [
