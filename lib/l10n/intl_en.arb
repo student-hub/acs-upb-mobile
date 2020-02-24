@@ -42,5 +42,9 @@
   "settingsItemLanguage": "Language",
   "settingsItemLanguageEnglish": "English",
   "settingsItemLanguageRomanian": "Romanian",
-  "settingsItemLanguageAuto": "Auto"
+  "settingsItemLanguageAuto": "Auto",
+  "loginLabel": "Log in",
+  "loginAnonymouslyLabel": "Log in anonymously",
+  "socialLoginLabel": "Social login",
+  "newUserLabel":"New user?"
 }

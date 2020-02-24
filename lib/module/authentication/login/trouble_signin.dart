@@ -2,7 +2,7 @@ import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import 'utils.dart';
+import '../utils.dart';
 
 class TroubleSignIn extends StatefulWidget {
   final String email;

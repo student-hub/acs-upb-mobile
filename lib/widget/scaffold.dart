@@ -1,4 +1,4 @@
-import 'package:acs_upb_mobile/routes/routes.dart';
+import 'package:acs_upb_mobile/navigation/routes.dart';
 import 'package:flutter/material.dart';
 
 class AppScaffold extends StatelessWidget {

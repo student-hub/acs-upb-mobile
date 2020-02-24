@@ -1,7 +1,6 @@
+import 'package:acs_upb_mobile/module/authentication/auth_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
-import 'auth_provider.dart';
 
 class ProfilePage extends StatelessWidget {
   ProfilePage({Key key, this.title}) : super(key: key);

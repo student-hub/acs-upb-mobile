@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import 'utils.dart';
+import '../utils.dart';
 
 class SignUpView extends StatefulWidget {
   final String email;

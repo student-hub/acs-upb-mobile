@@ -42,5 +42,9 @@
   "settingsItemLanguage": "Limbă",
   "settingsItemLanguageEnglish": "Engleză",
   "settingsItemLanguageRomanian": "Română",
-  "settingsItemLanguageAuto": "Auto"
+  "settingsItemLanguageAuto": "Auto",
+  "loginLabel": "Conectare",
+  "loginAnonymouslyLabel": "Conectare anonimă",
+  "socialLoginLabel": "Rețele sociale",
+  "newUserLabel":"Utilizator nou?"
 }

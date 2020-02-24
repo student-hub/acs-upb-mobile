@@ -1,10 +1,10 @@
 import 'package:acs_upb_mobile/generated/l10n.dart';
+import 'package:acs_upb_mobile/module/authentication/login/profile_page.dart';
 import 'package:acs_upb_mobile/module/home/home_page.dart';
-import 'package:acs_upb_mobile/module/login/profile_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'scaffold.dart';
+import '../widget/scaffold.dart';
 
 class AppBottomNavigationBar extends StatefulWidget {
   @override

@@ -1,4 +1,5 @@
 import 'package:acs_upb_mobile/module/settings/settings_page.dart';
+import 'package:acs_upb_mobile/navigation/navigator.dart';
 import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -6,10 +7,9 @@ import 'package:preferences/preferences.dart';
 import 'package:provider/provider.dart';
 
 import 'generated/l10n.dart';
+import 'module/authentication/auth_provider.dart';
 import 'module/home/home_page.dart';
-import 'module/login/auth_provider.dart';
-import 'routes/routes.dart';
-import 'widget/bottom_navigation_bar.dart';
+import 'navigation/routes.dart';
 
 main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -53,10 +53,7 @@ class MyApp extends StatelessWidget {
                 Routes.home: (context) => HomePage(),
                 Routes.settings: (context) => SettingsPage(),
               },
-              home: ChangeNotifierProvider<BottomNavigationBarProvider>(
-                child: AppBottomNavigationBar(),
-                create: (BuildContext context) => BottomNavigationBarProvider(),
-              ),
+              home: AppNavigator()
             ),
           );
         });

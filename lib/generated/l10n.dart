@@ -1,7 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-
 import 'intl/messages_all.dart';
 
 // **************************************************************************
@@ -421,6 +420,42 @@ class S {
     return Intl.message(
       'Auto',
       name: 'settingsItemLanguageAuto',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get loginLabel {
+    return Intl.message(
+      'Log in',
+      name: 'loginLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get loginAnonymouslyLabel {
+    return Intl.message(
+      'Log in anonymously',
+      name: 'loginAnonymouslyLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get socialLoginLabel {
+    return Intl.message(
+      'Social login',
+      name: 'socialLoginLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get newUserLabel {
+    return Intl.message(
+      'New user?',
+      name: 'newUserLabel',
       desc: '',
       args: [],
     );
