@@ -1,4 +1,5 @@
 import 'package:acs_upb_mobile/module/authentication/auth_provider.dart';
+import 'package:acs_upb_mobile/widget/scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -41,12 +42,8 @@ class ProfilePage extends StatelessWidget {
         ],
       );
     }
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        title: Text(title),
-        centerTitle: true,
-      ),
+    return AppScaffold(
+      title: title,
       body: body,
       floatingActionButton: Column(
         mainAxisAlignment: MainAxisAlignment.end,
