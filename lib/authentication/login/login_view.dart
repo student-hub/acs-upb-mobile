@@ -12,7 +12,7 @@ class LoginView extends StatefulWidget {
   LoginView();
 
   @override
-  _LoginViewState createState() => new _LoginViewState();
+  _LoginViewState createState() => _LoginViewState();
 }
 
 class _LoginViewState extends State<LoginView> {
@@ -31,7 +31,6 @@ class _LoginViewState extends State<LoginView> {
     AuthProvider authProvider = Provider.of(context);
 
     return Scaffold(
-      resizeToAvoidBottomPadding: false,
       body: Stack(
         fit: StackFit.expand,
         children: <Widget>[
@@ -39,29 +38,33 @@ class _LoginViewState extends State<LoginView> {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: <Widget>[
               Padding(
-                padding: EdgeInsets.only(right: 10.0),
-                child: Container(
-                    height: ScreenUtil().setHeight(400),
+                padding: EdgeInsets.only(top: 5.0, right: 10.0),
+                child: ConstrainedBox(
+                    constraints: BoxConstraints(
+                      maxWidth: ScreenUtil.screenWidth / 4.85,
+                      maxHeight: ScreenUtil.screenHeight / 3,
+                    ),
                     child: Image.asset(
                         "assets/illustrations/undraw_digital_nomad.png")),
               ),
               Expanded(
-                child: Container(),
-              ),
-              Image.asset("assets/images/city_doodle.png",
-                  color: Theme.of(context).primaryColor)
+                  child: Image.asset("assets/images/city_doodle.png",
+                      color: Theme.of(context).primaryColor))
             ],
           ),
           SingleChildScrollView(
             child: Padding(
-              padding: EdgeInsets.only(left: 28.0, right: 28.0, top: 135.0),
+              padding: EdgeInsets.only(left: 28.0, right: 28.0, bottom: 8.0),
               child: IntrinsicHeight(
                 child: Column(
                   children: <Widget>[
+                    SizedBox(
+                      height: ScreenUtil().setHeight(250),
+                    ),
                     Row(
                       children: <Widget>[
                         Padding(
-                          padding: const EdgeInsets.only(bottom: 8.0),
+                          padding: const EdgeInsets.only(bottom: 4.0),
                           child: Row(
                             children: <Widget>[
                               Image.asset("assets/icons/acs_logo.png",
