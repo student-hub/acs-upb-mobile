@@ -78,7 +78,7 @@ class _LoginViewState extends State<LoginView> {
                       ],
                     ),
                     Expanded(child: FormCard()),
-                    SizedBox(height: ScreenUtil().setHeight(40)),
+                    SizedBox(height: ScreenUtil().setSp(30)),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[

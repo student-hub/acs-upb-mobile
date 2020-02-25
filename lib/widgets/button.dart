@@ -24,7 +24,7 @@ class AppButton extends StatelessWidget {
     return InkWell(
       child: Container(
         width: ScreenUtil().setWidth(300),
-        height: ScreenUtil().setHeight(90),
+        height: ScreenUtil().setSp(70),
         decoration: BoxDecoration(
             gradient: LinearGradient(colors: _colors),
             borderRadius: BorderRadius.circular(6.0),
@@ -48,7 +48,7 @@ class AppButton extends StatelessWidget {
                         color: textColor ??
                             Theme.of(context).textTheme.button.color,
                         fontWeight: FontWeight.bold,
-                        fontSize: 18,
+                        fontSize: ScreenUtil().setSp(26),
                         letterSpacing: 1.0)),
               ),
             ),
