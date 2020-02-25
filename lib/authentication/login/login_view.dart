@@ -1,9 +1,9 @@
+import 'package:acs_upb_mobile/authentication/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
-import 'package:acs_upb_mobile/module/authentication/auth_provider.dart';
 import 'package:acs_upb_mobile/resources/custom_icons.dart';
-import 'package:acs_upb_mobile/widget/button.dart';
-import 'package:acs_upb_mobile/widget/form_card.dart';
-import 'package:acs_upb_mobile/widget/social_icon.dart';
+import 'package:acs_upb_mobile/widgets/button.dart';
+import 'package:acs_upb_mobile/widgets/form_card.dart';
+import 'package:acs_upb_mobile/widgets/social_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';

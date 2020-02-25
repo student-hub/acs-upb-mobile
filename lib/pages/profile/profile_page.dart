@@ -1,5 +1,5 @@
-import 'package:acs_upb_mobile/module/authentication/auth_provider.dart';
-import 'package:acs_upb_mobile/widget/scaffold.dart';
+import 'package:acs_upb_mobile/authentication/auth_provider.dart';
+import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

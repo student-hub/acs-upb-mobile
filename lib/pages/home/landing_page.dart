@@ -1,8 +1,9 @@
 import 'dart:async';
 
+import 'package:acs_upb_mobile/authentication/login/flutter_firebase_ui.dart';
+import 'package:acs_upb_mobile/authentication/utils.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
-import 'package:acs_upb_mobile/module/authentication/login/flutter_firebase_ui.dart';
-import 'package:acs_upb_mobile/module/home/home_page.dart';
+import 'package:acs_upb_mobile/pages/home/home_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 

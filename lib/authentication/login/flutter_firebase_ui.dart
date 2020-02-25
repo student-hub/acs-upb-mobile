@@ -1,12 +1,7 @@
-library flutter_firebase_ui;
-
+import 'package:acs_upb_mobile/authentication/login/login_view.dart';
+import 'package:acs_upb_mobile/authentication/utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
-import '../utils.dart';
-import 'login_view.dart';
-
-export '../utils.dart';
 
 class SignInScreen extends StatefulWidget {
   SignInScreen({
@@ -62,7 +57,7 @@ class _SignInScreenState extends State<SignInScreen> {
 //                    providers: _providers,
 //                    passwordCheck: _passwordCheck,
 //                    auth: widget.auth ?? FirebaseAuth.instance,
-                  )),
+                          )),
                   _footer
                 ],
               ));

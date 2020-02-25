@@ -1,9 +1,8 @@
-import 'package:acs_upb_mobile/module/authentication/auth_provider.dart';
-import 'package:acs_upb_mobile/module/authentication/login/login_view.dart';
+import 'package:acs_upb_mobile/authentication/auth_provider.dart';
+import 'package:acs_upb_mobile/authentication/login/login_view.dart';
+import 'package:acs_upb_mobile/navigation/bottom_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
-import 'bottom_navigation_bar.dart';
 
 class AppNavigator extends StatefulWidget {
   @override

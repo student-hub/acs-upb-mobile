@@ -1,8 +1,7 @@
+import 'package:acs_upb_mobile/authentication/utils.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
-import '../utils.dart';
 
 class TroubleSignIn extends StatefulWidget {
   final String email;
@@ -41,8 +40,8 @@ class _TroubleSignInState extends State<TroubleSignIn> {
                   controller: _controllerEmail,
                   keyboardType: TextInputType.emailAddress,
                   autocorrect: false,
-                  decoration: new InputDecoration(
-                      labelText: S.of(context).emailLabel),
+                  decoration:
+                      new InputDecoration(labelText: S.of(context).emailLabel),
                 ),
                 new SizedBox(height: 16.0),
                 new Container(
@@ -84,7 +83,7 @@ class _TroubleSignInState extends State<TroubleSignIn> {
       showErrorDialog(context, exception);
     }
 
-    showErrorDialog(context,
-        S.of(context).recoverPasswordDialog(_controllerEmail.text));
+    showErrorDialog(
+        context, S.of(context).recoverPasswordDialog(_controllerEmail.text));
   }
 }

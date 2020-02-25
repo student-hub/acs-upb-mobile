@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:acs_upb_mobile/generated/l10n.dart';
-import 'package:acs_upb_mobile/widget/scaffold.dart';
+import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

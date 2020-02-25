@@ -1,15 +1,14 @@
-import 'package:acs_upb_mobile/module/settings/settings_page.dart';
+import 'package:acs_upb_mobile/authentication/auth_provider.dart';
+import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/navigation/navigator.dart';
+import 'package:acs_upb_mobile/navigation/routes.dart';
+import 'package:acs_upb_mobile/pages/home/home_page.dart';
+import 'package:acs_upb_mobile/pages/settings/settings_page.dart';
 import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:preferences/preferences.dart';
 import 'package:provider/provider.dart';
-
-import 'generated/l10n.dart';
-import 'module/authentication/auth_provider.dart';
-import 'module/home/home_page.dart';
-import 'navigation/routes.dart';
 
 main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -41,20 +40,19 @@ class MyApp extends StatelessWidget {
                   create: (_) => AuthProvider())
             ],
             child: MaterialApp(
-              title: "ACS UPB Mobile",
-              localizationsDelegates: [
-                GlobalMaterialLocalizations.delegate,
-                GlobalWidgetsLocalizations.delegate,
-                S.delegate
-              ],
-              supportedLocales: S.delegate.supportedLocales,
-              theme: theme,
-              routes: {
-                Routes.home: (context) => HomePage(),
-                Routes.settings: (context) => SettingsPage(),
-              },
-              home: AppNavigator()
-            ),
+                title: "ACS UPB Mobile",
+                localizationsDelegates: [
+                  GlobalMaterialLocalizations.delegate,
+                  GlobalWidgetsLocalizations.delegate,
+                  S.delegate
+                ],
+                supportedLocales: S.delegate.supportedLocales,
+                theme: theme,
+                routes: {
+                  Routes.home: (context) => HomePage(),
+                  Routes.settings: (context) => SettingsPage(),
+                },
+                home: AppNavigator()),
           );
         });
   }
