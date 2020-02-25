@@ -5,9 +5,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class FormCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return new Container(
+    return Container(
       width: double.infinity,
-      height: ScreenUtil().setHeight(500),
       decoration: BoxDecoration(
           color: Theme.of(context).backgroundColor,
           borderRadius: BorderRadius.circular(8.0),
@@ -22,7 +21,8 @@ class FormCard extends StatelessWidget {
                 blurRadius: 10.0),
           ]),
       child: Padding(
-        padding: EdgeInsets.only(left: 16.0, right: 16.0, top: 16.0),
+        padding:
+            EdgeInsets.only(left: 16.0, right: 16.0, top: 16.0, bottom: 16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
@@ -70,6 +70,12 @@ class FormCard extends StatelessWidget {
                       fontSize: ScreenUtil().setSp(28)),
                 )
               ],
+            ),
+            // If the following is missing, the Column overflows for some reason
+            Expanded(
+              child: SizedBox(
+                height: 12,
+              ),
             )
           ],
         ),
