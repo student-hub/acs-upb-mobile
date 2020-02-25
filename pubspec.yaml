@@ -37,12 +37,10 @@ dependencies:
   # Allows querying the app version number
   package_info: ^0.4.0+13
 
-  # Enables connecting to Firebase
-  firebase_core: 0.4.3+3
-
   # Firebase products
   firebase_analytics: ^5.0.2
-  firebase_auth: ^0.15.4
+  firebase_auth:
+  firebase_auth_web:
 
   # Dart helper methods
   basic_utils: ^1.2.0
