@@ -46,5 +46,7 @@
   "loginLabel": "Conectare",
   "loginAnonymouslyLabel": "Conectare anonimă",
   "socialLoginLabel": "Rețele sociale",
-  "newUserLabel":"Utilizator nou?"
+  "newUserLabel":"Utilizator nou?",
+
+  "fileAcsBanner": "assets/images/acs_banner_ro.png"
 }

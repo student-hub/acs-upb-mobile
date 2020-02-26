@@ -46,6 +46,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "emailInUseMessage" : m0,
     "emailLabel" : MessageLookupByLibrary.simpleMessage("Email"),
     "errorOccurred" : MessageLookupByLibrary.simpleMessage("An error occured."),
+    "fileAcsBanner" : MessageLookupByLibrary.simpleMessage("assets/images/acs_banner_en.png"),
     "incorrectPassword" : MessageLookupByLibrary.simpleMessage("The password you entered is incorrect."),
     "internetConnectionWarning" : MessageLookupByLibrary.simpleMessage("Please make sure you are connected to the internet."),
     "loginAnonymouslyLabel" : MessageLookupByLibrary.simpleMessage("Log in anonymously"),

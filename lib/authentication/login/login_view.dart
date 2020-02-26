@@ -78,10 +78,12 @@ class _LoginViewState extends State<LoginView> {
                                 padding: const EdgeInsets.only(bottom: 4.0),
                                 child: Row(
                                   children: <Widget>[
-                                    Image.asset("assets/icons/acs_logo.png",
-                                        height: ScreenUtil().setWidth(150)),
                                     Image.asset(
-                                      "assets/images/acs_banner.png",
+                                      "assets/icons/acs_logo.png",
+                                      height: ScreenUtil().setWidth(150),
+                                    ),
+                                    Image.asset(
+                                      S.of(context).fileAcsBanner,
                                       color: Theme.of(context)
                                           .textTheme
                                           .headline6

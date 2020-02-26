@@ -46,5 +46,7 @@
   "loginLabel": "Log in",
   "loginAnonymouslyLabel": "Log in anonymously",
   "socialLoginLabel": "Social login",
-  "newUserLabel":"New user?"
+  "newUserLabel":"New user?",
+
+  "fileAcsBanner": "assets/images/acs_banner_en.png"
 }

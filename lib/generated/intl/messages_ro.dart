@@ -43,6 +43,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "drawerTooltip" : MessageLookupByLibrary.simpleMessage("Meniu navigare"),
     "emailLabel" : MessageLookupByLibrary.simpleMessage("Email"),
     "errorOccurred" : MessageLookupByLibrary.simpleMessage("A apărut o eroare."),
+    "fileAcsBanner" : MessageLookupByLibrary.simpleMessage("assets/images/acs_banner_ro.png"),
     "incorrectPassword" : MessageLookupByLibrary.simpleMessage("Parola introdusă nu este corectă."),
     "internetConnectionWarning" : MessageLookupByLibrary.simpleMessage("Asigurați-vă că sunteți conectat la internet."),
     "loginAnonymouslyLabel" : MessageLookupByLibrary.simpleMessage("Conectare anonimă"),
