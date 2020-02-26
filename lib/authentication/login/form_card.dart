@@ -1,6 +1,9 @@
+import 'package:acs_upb_mobile/authentication/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
+import 'package:acs_upb_mobile/resources/custom_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
 
 class FormCard extends StatefulWidget {
   final TextEditingController emailController;
@@ -17,8 +20,20 @@ class FormCard extends StatefulWidget {
 }
 
 class _FormCardState extends State<FormCard> {
+  Future<bool> canSignInWithPassword;
+  FocusNode passwordFocusNode;
+
+  @override
+  void initState() {
+    super.initState();
+    canSignInWithPassword = Future<bool>(() => null);
+    passwordFocusNode = FocusNode();
+  }
+
   @override
   Widget build(BuildContext context) {
+    AuthProvider authProvider = Provider.of(context);
+
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
@@ -54,9 +69,33 @@ class _FormCardState extends State<FormCard> {
                     fontSize: ScreenUtil().setSp(26))),
             TextField(
               controller: widget.emailController,
+              onChanged: (email) => setState(() {
+                canSignInWithPassword =
+                    authProvider.canSignInWithPassword(email: email);
+              }),
+              onSubmitted: (_) =>
+                  FocusScope.of(context).requestFocus(passwordFocusNode),
               decoration: InputDecoration(
-                  hintText: S.of(context).emailLabel.toLowerCase(),
-                  hintStyle: TextStyle(fontSize: ScreenUtil().setSp(22))),
+                hintText: S.of(context).emailLabel.toLowerCase(),
+                hintStyle: TextStyle(fontSize: ScreenUtil().setSp(22)),
+                suffixIcon: FutureBuilder(
+                  future: canSignInWithPassword,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.done) {
+                      if (snapshot.data == null) {
+                        // Display transparent icon
+                        return CustomIcons.empty;
+                      } else {
+                        return snapshot.data
+                            ? CustomIcons.valid
+                            : CustomIcons.invalid;
+                      }
+                    } else {
+                      return CustomIcons.empty;
+                    }
+                  },
+                ),
+              ),
             ),
             SizedBox(
               height: ScreenUtil().setHeight(30),
@@ -68,6 +107,9 @@ class _FormCardState extends State<FormCard> {
             TextField(
               obscureText: true,
               controller: widget.passwordController,
+              focusNode: passwordFocusNode,
+              onSubmitted: (password) => authProvider.signIn(
+                  email: widget.emailController.text, password: password),
               decoration: InputDecoration(
                   hintText: S.of(context).passwordLabel.toLowerCase(),
                   hintStyle: TextStyle(fontSize: ScreenUtil().setSp(22))),

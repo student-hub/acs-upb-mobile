@@ -56,4 +56,20 @@ class AuthProvider with ChangeNotifier {
   void signOut() {
     FirebaseAuth.instance.signOut();
   }
+
+  Future<bool> canSignInWithPassword({String email}) async {
+    if (email == null || email == "") {
+      return null;
+    }
+
+    List<String> providers = [];
+    try {
+      providers =
+          await FirebaseAuth.instance.fetchSignInMethodsForEmail(email: email);
+    } catch (e) {
+      return false;
+    }
+
+    return providers?.contains('password');
+  }
 }
