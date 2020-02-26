@@ -44,17 +44,17 @@ class AuthProvider with ChangeNotifier {
     return user != null;
   }
 
-  void signInAnonymously() {
-    FirebaseAuth.instance.signInAnonymously();
+  Future<AuthResult> signInAnonymously() {
+    return FirebaseAuth.instance.signInAnonymously();
   }
 
-  void signIn({String email, String password}) {
-    FirebaseAuth.instance
+  Future<AuthResult> signIn({String email, String password}) {
+    return FirebaseAuth.instance
         .signInWithEmailAndPassword(email: email, password: password);
   }
 
-  void signOut() {
-    FirebaseAuth.instance.signOut();
+  Future<void> signOut() {
+    return FirebaseAuth.instance.signOut();
   }
 
   Future<bool> canSignInWithPassword({String email}) async {

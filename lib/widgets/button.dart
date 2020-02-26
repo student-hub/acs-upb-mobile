@@ -2,18 +2,43 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class AppButton extends StatelessWidget {
+class AppButton extends StatefulWidget {
   final Color color;
   final String text;
   final Color textColor;
-  final void Function() onTap;
+  final Future<dynamic> Function() onTap;
 
   AppButton({this.color, this.text, this.textColor, this.onTap});
 
   @override
+  _AppButtonState createState() => _AppButtonState();
+}
+
+class _AppButtonState extends State<AppButton> {
+  Future<dynamic> future;
+
+  @override
+  void initState() {
+    super.initState();
+    future = Future(() => null);
+  }
+
+  Widget _getTextWidget() {
+    return AutoSizeText(widget.text ?? "",
+        textAlign: TextAlign.center,
+        minFontSize: 0,
+        style: TextStyle(
+          color: widget.textColor ?? Theme.of(context).textTheme.button.color,
+          fontWeight: FontWeight.bold,
+          fontSize: ScreenUtil().setSp(26),
+          letterSpacing: 1.0,
+        ));
+  }
+
+  @override
   Widget build(BuildContext context) {
     // Set default color if none is set
-    var _color = color ?? Theme.of(context).backgroundColor;
+    var _color = widget.color ?? Theme.of(context).backgroundColor;
 
     return InkWell(
       child: Container(
@@ -29,20 +54,29 @@ class AppButton extends StatelessWidget {
                   blurRadius: 8.0)
             ]),
         child: InkWell(
-          onTap: onTap,
+          onTap: () => setState(() {
+            future = widget.onTap();
+          }),
           child: Center(
             child: Padding(
               padding: const EdgeInsets.all(5.0),
-              child: AutoSizeText(text ?? "",
-                  textAlign: TextAlign.center,
-                  minFontSize: 0,
-                  style: TextStyle(
-                    color:
-                        textColor ?? Theme.of(context).textTheme.button.color,
-                    fontWeight: FontWeight.bold,
-                    fontSize: ScreenUtil().setSp(26),
-                    letterSpacing: 1.0,
-                  )),
+              child: FutureBuilder(
+                future: future,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState != ConnectionState.done) {
+                    return SizedBox(
+                        height: ScreenUtil().setSp(28),
+                        width: ScreenUtil().setSp(28),
+                        child: CircularProgressIndicator(
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                              widget.textColor ??
+                                  Theme.of(context).textTheme.button.color),
+                        ));
+                  } else {
+                    return _getTextWidget();
+                  }
+                },
+              ),
             ),
           ),
         ),
