@@ -2,7 +2,21 @@ import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class FormCard extends StatelessWidget {
+class FormCard extends StatefulWidget {
+  final TextEditingController emailController;
+  final TextEditingController passwordController;
+
+  FormCard(
+      {TextEditingController emailController,
+      TextEditingController passwordController})
+      : this.emailController = emailController ?? TextEditingController(),
+        this.passwordController = passwordController ?? TextEditingController();
+
+  @override
+  _FormCardState createState() => _FormCardState();
+}
+
+class _FormCardState extends State<FormCard> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -39,6 +53,7 @@ class FormCard extends StatelessWidget {
                     fontWeight: FontWeight.w500,
                     fontSize: ScreenUtil().setSp(26))),
             TextField(
+              controller: widget.emailController,
               decoration: InputDecoration(
                   hintText: S.of(context).emailLabel.toLowerCase(),
                   hintStyle: TextStyle(fontSize: ScreenUtil().setSp(22))),
@@ -52,6 +67,7 @@ class FormCard extends StatelessWidget {
                     fontSize: ScreenUtil().setSp(26))),
             TextField(
               obscureText: true,
+              controller: widget.passwordController,
               decoration: InputDecoration(
                   hintText: S.of(context).passwordLabel.toLowerCase(),
                   hintStyle: TextStyle(fontSize: ScreenUtil().setSp(22))),

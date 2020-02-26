@@ -1,8 +1,8 @@
 import 'package:acs_upb_mobile/authentication/auth_provider.dart';
+import 'package:acs_upb_mobile/authentication/login/form_card.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/resources/custom_icons.dart';
 import 'package:acs_upb_mobile/widgets/button.dart';
-import 'package:acs_upb_mobile/widgets/form_card.dart';
 import 'package:acs_upb_mobile/widgets/social_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -30,6 +30,8 @@ class _LoginViewState extends State<LoginView> {
     ScreenUtil.init(context, width: 750, height: 1334, allowFontScaling: true);
     AuthProvider authProvider = Provider.of(context);
 
+    FormCard formCard = FormCard();
+
     return Scaffold(
       body: Stack(
         fit: StackFit.expand,
@@ -52,8 +54,7 @@ class _LoginViewState extends State<LoginView> {
             alignment: FractionalOffset.bottomRight,
             child: ConstrainedBox(
               constraints: BoxConstraints(
-                maxHeight: MediaQuery.of(context).size.height / 4
-              ),
+                  maxHeight: MediaQuery.of(context).size.height / 4),
               child: Image.asset("assets/images/city_doodle.png",
                   color: Theme.of(context).primaryColor),
             ),
@@ -95,7 +96,7 @@ class _LoginViewState extends State<LoginView> {
                         ],
                       ),
                     ),
-                    Expanded(child: FormCard()),
+                    Expanded(child: formCard),
                     SizedBox(height: ScreenUtil().setSp(30)),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -107,6 +108,9 @@ class _LoginViewState extends State<LoginView> {
                         AppButton(
                           color: Theme.of(context).accentColor,
                           text: S.of(context).loginLabel,
+                          onTap: () => authProvider.signIn(
+                              email: formCard.emailController.text,
+                              password: formCard.passwordController.text),
                         ),
                       ],
                     ),

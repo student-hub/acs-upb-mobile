@@ -48,6 +48,11 @@ class AuthProvider with ChangeNotifier {
     FirebaseAuth.instance.signInAnonymously();
   }
 
+  void signIn({String email, String password}) {
+    FirebaseAuth.instance
+        .signInWithEmailAndPassword(email: email, password: password);
+  }
+
   void signOut() {
     FirebaseAuth.instance.signOut();
   }
