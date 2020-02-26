@@ -105,7 +105,7 @@ class _LoginViewState extends State<LoginView> {
                           onTap: () => authProvider.signInAnonymously(),
                         ),
                         AppButton(
-                          colors: [Color(0xFF4DB4E4), Color(0xFF292562)],
+                          color: Theme.of(context).accentColor,
                           text: S.of(context).loginLabel,
                         ),
                       ],
