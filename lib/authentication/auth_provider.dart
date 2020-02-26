@@ -54,6 +54,9 @@ class AuthProvider with ChangeNotifier {
   }
 
   Future<void> signOut() {
+    if (isAnonymous) {
+      user.delete();
+    }
     return FirebaseAuth.instance.signOut();
   }
 
