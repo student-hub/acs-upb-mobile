@@ -41,7 +41,7 @@ class FormCard extends StatelessWidget {
             TextField(
               decoration: InputDecoration(
                   hintText: S.of(context).emailLabel.toLowerCase(),
-                  hintStyle: TextStyle(fontSize: 12.0)),
+                  hintStyle: TextStyle(fontSize: ScreenUtil().setSp(22))),
             ),
             SizedBox(
               height: ScreenUtil().setHeight(30),
@@ -54,7 +54,7 @@ class FormCard extends StatelessWidget {
               obscureText: true,
               decoration: InputDecoration(
                   hintText: S.of(context).passwordLabel.toLowerCase(),
-                  hintStyle: TextStyle(fontSize: 12.0)),
+                  hintStyle: TextStyle(fontSize: ScreenUtil().setSp(22))),
             ),
             SizedBox(
               height: ScreenUtil().setHeight(35),
@@ -74,7 +74,7 @@ class FormCard extends StatelessWidget {
             // If the following is missing, the Column overflows for some reason
             Expanded(
               child: SizedBox(
-                height: 12,
+                height: ScreenUtil().setSp(28),
               ),
             )
           ],

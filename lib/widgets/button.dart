@@ -30,27 +30,27 @@ class AppButton extends StatelessWidget {
             borderRadius: BorderRadius.circular(6.0),
             boxShadow: [
               BoxShadow(
-                  color: Color.lerp(_colors[0], _colors[_colors.length - 1], 0.5)
-                      .withOpacity(.1),
+                  color:
+                      Color.lerp(_colors[0], _colors[_colors.length - 1], 0.5)
+                          .withOpacity(.1),
                   offset: Offset(0.0, 8.0),
                   blurRadius: 8.0)
             ]),
-        child: Material(
-          color: Colors.transparent,
-          child: InkWell(
-            onTap: onTap,
-            child: Center(
-              child: Padding(
-                padding: const EdgeInsets.all(5.0),
-                child: AutoSizeText(text ?? "",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                        color: textColor ??
-                            Theme.of(context).textTheme.button.color,
-                        fontWeight: FontWeight.bold,
-                        fontSize: ScreenUtil().setSp(26),
-                        letterSpacing: 1.0)),
-              ),
+        child: InkWell(
+          onTap: onTap,
+          child: Center(
+            child: Padding(
+              padding: const EdgeInsets.all(5.0),
+              child: AutoSizeText(text ?? "",
+                  textAlign: TextAlign.center,
+                  minFontSize: 0,
+                  style: TextStyle(
+                    color:
+                        textColor ?? Theme.of(context).textTheme.button.color,
+                    fontWeight: FontWeight.bold,
+                    fontSize: ScreenUtil().setSp(26),
+                    letterSpacing: 1.0,
+                  )),
             ),
           ),
         ),

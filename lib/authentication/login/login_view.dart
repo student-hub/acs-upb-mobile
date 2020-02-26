@@ -34,23 +34,29 @@ class _LoginViewState extends State<LoginView> {
       body: Stack(
         fit: StackFit.expand,
         children: <Widget>[
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: <Widget>[
-              Padding(
-                padding: EdgeInsets.only(top: 5.0, right: 10.0),
-                child: ConstrainedBox(
-                    constraints: BoxConstraints(
-                      maxWidth: ScreenUtil.screenWidth / 4.85,
-                      maxHeight: ScreenUtil.screenHeight / 3,
-                    ),
-                    child: Image.asset(
-                        "assets/illustrations/undraw_digital_nomad.png")),
+          Align(
+            alignment: FractionalOffset.topRight,
+            child: Padding(
+              padding: EdgeInsets.only(top: 5.0, right: 10.0),
+              child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    maxWidth: MediaQuery.of(context).size.width / 1.4,
+                    maxHeight: MediaQuery.of(context).size.height -
+                        ScreenUtil().setHeight(380),
+                  ),
+                  child: Image.asset(
+                      "assets/illustrations/undraw_digital_nomad.png")),
+            ),
+          ),
+          Align(
+            alignment: FractionalOffset.bottomRight,
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                maxHeight: MediaQuery.of(context).size.height / 4
               ),
-              Expanded(
-                  child: Image.asset("assets/images/city_doodle.png",
-                      color: Theme.of(context).primaryColor))
-            ],
+              child: Image.asset("assets/images/city_doodle.png",
+                  color: Theme.of(context).primaryColor),
+            ),
           ),
           SingleChildScrollView(
             child: Padding(
@@ -59,26 +65,35 @@ class _LoginViewState extends State<LoginView> {
                 child: Column(
                   children: <Widget>[
                     SizedBox(
-                      height: ScreenUtil().setHeight(250),
-                    ),
-                    Row(
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 4.0),
-                          child: Row(
+                      height: ScreenUtil.screenWidth > ScreenUtil.screenHeight
+                          ? MediaQuery.of(context).size.height / 2
+                          : MediaQuery.of(context).size.width / 1.62,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: <Widget>[
+                          Row(
                             children: <Widget>[
-                              Image.asset("assets/icons/acs_logo.png",
-                                  height: ScreenUtil().setWidth(150)),
-                              Image.asset(
-                                "assets/images/acs_banner.png",
-                                color:
-                                    Theme.of(context).textTheme.headline6.color,
-                                height: ScreenUtil().setWidth(85),
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 4.0),
+                                child: Row(
+                                  children: <Widget>[
+                                    Image.asset("assets/icons/acs_logo.png",
+                                        height: ScreenUtil().setWidth(150)),
+                                    Image.asset(
+                                      "assets/images/acs_banner.png",
+                                      color: Theme.of(context)
+                                          .textTheme
+                                          .headline6
+                                          .color,
+                                      height: ScreenUtil().setWidth(85),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ],
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                     Expanded(child: FormCard()),
                     SizedBox(height: ScreenUtil().setSp(30)),
