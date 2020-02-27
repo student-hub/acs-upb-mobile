@@ -19,6 +19,10 @@ main() async {
 
 class MyApp extends StatelessWidget {
   final Color _accentColor = Color.fromARGB(255, 67, 172, 205);
+  final AuthProvider authProvider;
+
+  MyApp({AuthProvider authProvider})
+      : this.authProvider = authProvider ?? AuthProvider();
 
   // This widget is the root of your application.
   @override
@@ -36,8 +40,7 @@ class MyApp extends StatelessWidget {
         themedWidgetBuilder: (context, theme) {
           return MultiProvider(
             providers: [
-              ChangeNotifierProvider<AuthProvider>(
-                  create: (_) => AuthProvider())
+              ChangeNotifierProvider<AuthProvider>(create: (_) => authProvider)
             ],
             child: MaterialApp(
                 title: "ACS UPB Mobile",

@@ -73,6 +73,9 @@ dev_dependencies:
   # Useful for adapting screen and font sizes
   flutter_screenutil: ^1.0.2
 
+  # Mocking utility used for testing
+  mockito: ^4.1.1
+
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
