@@ -1,3 +1,4 @@
+import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/navigation/routes.dart';
 import 'package:flutter/material.dart';
 
@@ -27,13 +28,16 @@ class AppScaffold extends StatelessWidget {
             settingsAction
                 ? Padding(
                     padding: EdgeInsets.only(right: 20.0),
-                    child: GestureDetector(
-                      onTap: () {
-                        Navigator.pushNamed(context, Routes.settings);
-                      },
-                      child: Icon(
-                        Icons.settings,
-                        size: 26.0,
+                    child: Tooltip(
+                      message: S.of(context).navigationSettings,
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.pushNamed(context, Routes.settings);
+                        },
+                        child: Icon(
+                          Icons.settings,
+                          size: 26.0,
+                        ),
                       ),
                     ))
                 : Container(),
