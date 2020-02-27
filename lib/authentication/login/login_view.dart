@@ -1,8 +1,10 @@
 import 'package:acs_upb_mobile/authentication/auth_provider.dart';
-import 'package:acs_upb_mobile/authentication/login/form_card.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
+import 'package:acs_upb_mobile/resources/banner.dart';
 import 'package:acs_upb_mobile/resources/custom_icons.dart';
 import 'package:acs_upb_mobile/widgets/button.dart';
+import 'package:acs_upb_mobile/widgets/form_card.dart';
+import 'package:acs_upb_mobile/widgets/form_text_field.dart';
 import 'package:acs_upb_mobile/widgets/social_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -16,6 +18,12 @@ class LoginView extends StatefulWidget {
 }
 
 class _LoginViewState extends State<LoginView> {
+  var emailController = TextEditingController();
+  var passwordController = TextEditingController();
+
+  var canSignInWithPassword = Future<bool>(() => null);
+  var passwordFocusNode = FocusNode();
+
   Widget horizontalLine() => Padding(
         padding: EdgeInsets.symmetric(horizontal: 16.0),
         child: Container(
@@ -25,12 +33,76 @@ class _LoginViewState extends State<LoginView> {
         ),
       );
 
+  Widget formCard() {
+    AuthProvider authProvider = Provider.of(context);
+
+    return FormCard(
+      title: S.of(context).loginLabel,
+      children: <Widget>[
+        FormTextField(
+          label: S.of(context).emailLabel,
+          controller: emailController,
+          onChanged: (email) => setState(() {
+            canSignInWithPassword =
+                authProvider.canSignInWithPassword(email: email);
+          }),
+          onSubmitted: (_) =>
+              FocusScope.of(context).requestFocus(passwordFocusNode),
+          suffixIcon: FutureBuilder(
+            future: canSignInWithPassword,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.done) {
+                if (snapshot.data == null) {
+                  // Display transparent icon
+                  return CustomIcons.empty;
+                } else {
+                  return snapshot.data
+                      ? CustomIcons.valid
+                      : CustomIcons.invalid;
+                }
+              } else {
+                return CustomIcons.empty;
+              }
+            },
+          ),
+        ),
+        FormTextField(
+          label: S.of(context).passwordLabel,
+          obscureText: true,
+          controller: passwordController,
+          focusNode: passwordFocusNode,
+          onSubmitted: (password) => authProvider.signIn(
+              email: emailController.text, password: password),
+        ),
+        SizedBox(
+          height: ScreenUtil().setHeight(35),
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: <Widget>[
+            Text(
+              S.of(context).recoverPassword,
+              style: TextStyle(
+                  color: Theme.of(context).accentColor,
+                  fontWeight: FontWeight.w500,
+                  fontSize: ScreenUtil().setSp(28)),
+            )
+          ],
+        ),
+        // If the following is missing, the Column overflows for some reason
+        Expanded(
+          child: SizedBox(
+            height: ScreenUtil().setSp(28),
+          ),
+        )
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     ScreenUtil.init(context, width: 750, height: 1334, allowFontScaling: true);
     AuthProvider authProvider = Provider.of(context);
-
-    FormCard formCard = FormCard();
 
     return Scaffold(
       body: Stack(
@@ -72,33 +144,11 @@ class _LoginViewState extends State<LoginView> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: <Widget>[
-                          Row(
-                            children: <Widget>[
-                              Padding(
-                                padding: const EdgeInsets.only(bottom: 4.0),
-                                child: Row(
-                                  children: <Widget>[
-                                    Image.asset(
-                                      "assets/icons/acs_logo.png",
-                                      height: ScreenUtil().setWidth(150),
-                                    ),
-                                    Image.asset(
-                                      S.of(context).fileAcsBanner,
-                                      color: Theme.of(context)
-                                          .textTheme
-                                          .headline6
-                                          .color,
-                                      height: ScreenUtil().setWidth(85),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
+                          UniBanner(),
                         ],
                       ),
                     ),
-                    Expanded(child: formCard),
+                    Expanded(child: formCard()),
                     SizedBox(height: ScreenUtil().setSp(30)),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -111,8 +161,8 @@ class _LoginViewState extends State<LoginView> {
                           color: Theme.of(context).accentColor,
                           text: S.of(context).loginLabel,
                           onTap: () => authProvider.signIn(
-                              email: formCard.emailController.text,
-                              password: formCard.passwordController.text),
+                              email: emailController.text,
+                              password: passwordController.text),
                         ),
                       ],
                     ),
