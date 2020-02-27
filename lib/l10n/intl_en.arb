@@ -8,7 +8,7 @@
   "labelPassword": "Password",
   "labelConfirmPassword": "Confirm password",
   "labelName": "Last & first name",
-  
+
   "actionSignUp": "Sign up",
   "actionLogIn": "Log in",
   "actionLogInAnonymously": "Log in anonymously",
@@ -19,10 +19,17 @@
   "errorSomethingWentWrong": "Something went wrong.",
   "errorPasswordsDiffer": "The two passwords differ.",
   "errorIncorrectPassword": "The password you entered is incorrect.",
-  
+  "errorNoPassword": "You need to provide a password.",
+  "errorInvalidEmail": "You need to provide a valid e-mail address.",
+  "errorEmailNotFound": "An account associated with that e-mail could not be found. Please sign up instead.",
+  "errorAccountDisabled": "The account has been disabled.",
+  "errorTooManyRequests": "There have been too many unsuccessful login attempts from this device.",
+
   "warningInternetConnection": "Please make sure you are connected to the internet.",
   "warningPasswordLength": "The password must be 6 characters long or more.",
-  "warningEmailInUse": "There is already an account associated with {email}. Please log in with {provider} to continue.",
+  "warningEmailInUse": "There is already an account associated with {email}.",
+  "warningUseProvider": "Please log in with {provider} to continue.",
+  "warningTryAgainLater": "Please try again later.",
 
   "navigationHome": "Home",
   "navigationTimetable": "Timetable",

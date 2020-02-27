@@ -23,7 +23,9 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static m1(name) => "Welcome, ${name}!";
 
-  static m2(email, provider) => "There is already an account associated with ${email}. Please log in with ${provider} to continue.";
+  static m2(email) => "There is already an account associated with ${email}.";
+
+  static m3(provider) => "Please log in with ${provider} to continue.";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
@@ -37,9 +39,14 @@ class MessageLookup extends MessageLookupByLibrary {
     "buttonNext" : MessageLookupByLibrary.simpleMessage("Next"),
     "buttonSave" : MessageLookupByLibrary.simpleMessage("Save"),
     "buttonSend" : MessageLookupByLibrary.simpleMessage("Send"),
+    "errorAccountDisabled" : MessageLookupByLibrary.simpleMessage("The account has been disabled."),
+    "errorEmailNotFound" : MessageLookupByLibrary.simpleMessage("An account associated with that e-mail could not be found. Please sign up instead."),
     "errorIncorrectPassword" : MessageLookupByLibrary.simpleMessage("The password you entered is incorrect."),
+    "errorInvalidEmail" : MessageLookupByLibrary.simpleMessage("You need to provide a valid e-mail address."),
+    "errorNoPassword" : MessageLookupByLibrary.simpleMessage("You need to provide a password."),
     "errorPasswordsDiffer" : MessageLookupByLibrary.simpleMessage("The two passwords differ."),
     "errorSomethingWentWrong" : MessageLookupByLibrary.simpleMessage("Something went wrong."),
+    "errorTooManyRequests" : MessageLookupByLibrary.simpleMessage("There have been too many unsuccessful login attempts from this device."),
     "fileAcsBanner" : MessageLookupByLibrary.simpleMessage("assets/images/acs_banner_en.png"),
     "labelConfirmPassword" : MessageLookupByLibrary.simpleMessage("Confirm password"),
     "labelEmail" : MessageLookupByLibrary.simpleMessage("Email"),
@@ -64,6 +71,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "settingsTitlePersonalization" : MessageLookupByLibrary.simpleMessage("Personalization"),
     "warningEmailInUse" : m2,
     "warningInternetConnection" : MessageLookupByLibrary.simpleMessage("Please make sure you are connected to the internet."),
-    "warningPasswordLength" : MessageLookupByLibrary.simpleMessage("The password must be 6 characters long or more.")
+    "warningPasswordLength" : MessageLookupByLibrary.simpleMessage("The password must be 6 characters long or more."),
+    "warningTryAgainLater" : MessageLookupByLibrary.simpleMessage("Please try again later."),
+    "warningUseProvider" : m3
   };
 }

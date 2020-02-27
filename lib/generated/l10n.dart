@@ -1,7 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-
 import 'intl/messages_all.dart';
 
 // **************************************************************************
@@ -183,6 +182,51 @@ class S {
     );
   }
 
+  String get errorNoPassword {
+    return Intl.message(
+      'You need to provide a password.',
+      name: 'errorNoPassword',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get errorInvalidEmail {
+    return Intl.message(
+      'You need to provide a valid e-mail address.',
+      name: 'errorInvalidEmail',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get errorEmailNotFound {
+    return Intl.message(
+      'An account associated with that e-mail could not be found. Please sign up instead.',
+      name: 'errorEmailNotFound',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get errorAccountDisabled {
+    return Intl.message(
+      'The account has been disabled.',
+      name: 'errorAccountDisabled',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get errorTooManyRequests {
+    return Intl.message(
+      'There have been too many unsuccessful login attempts from this device.',
+      name: 'errorTooManyRequests',
+      desc: '',
+      args: [],
+    );
+  }
+
   String get warningInternetConnection {
     return Intl.message(
       'Please make sure you are connected to the internet.',
@@ -201,12 +245,30 @@ class S {
     );
   }
 
-  String warningEmailInUse(dynamic email, dynamic provider) {
+  String warningEmailInUse(dynamic email) {
     return Intl.message(
-      'There is already an account associated with $email. Please log in with $provider to continue.',
+      'There is already an account associated with $email.',
       name: 'warningEmailInUse',
       desc: '',
-      args: [email, provider],
+      args: [email],
+    );
+  }
+
+  String warningUseProvider(dynamic provider) {
+    return Intl.message(
+      'Please log in with $provider to continue.',
+      name: 'warningUseProvider',
+      desc: '',
+      args: [provider],
+    );
+  }
+
+  String get warningTryAgainLater {
+    return Intl.message(
+      'Please try again later.',
+      name: 'warningTryAgainLater',
+      desc: '',
+      args: [],
     );
   }
 

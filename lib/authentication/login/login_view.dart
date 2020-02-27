@@ -72,7 +72,9 @@ class _LoginViewState extends State<LoginView> {
           controller: passwordController,
           focusNode: passwordFocusNode,
           onSubmitted: (password) => authProvider.signIn(
-              email: emailController.text, password: password),
+              email: emailController.text,
+              password: password,
+              context: context),
         ),
         SizedBox(
           height: ScreenUtil().setHeight(35),
@@ -162,7 +164,8 @@ class _LoginViewState extends State<LoginView> {
                           text: S.of(context).actionLogIn,
                           onTap: () => authProvider.signIn(
                               email: emailController.text,
-                              password: passwordController.text),
+                              password: passwordController.text,
+                              context: context),
                         ),
                       ],
                     ),

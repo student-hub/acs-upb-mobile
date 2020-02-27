@@ -19,10 +19,17 @@
   "errorSomethingWentWrong": "A apărut o problemă.",
   "errorPasswordsDiffer": "Cele două parole diferă.",
   "errorIncorrectPassword": "Parola introdusă nu este corectă.",
-  
+  "errorNoPassword": "Trebuie să introduceți parola.",
+  "errorInvalidEmail": "Trebuie să introduceți un e-mail valid.",
+  "errorEmailNotFound": "Nu am putut găsi un cont asociat cu adresa de mail. Vă rugăm să vă înregistrați.",
+  "errorAccountDisabled": "Contul a fost dezactivat.",
+  "errorTooManyRequests": "Au fost prea multe încercări de conectare nereușite.",
+
   "warningInternetConnection": "Asigurați-vă că sunteți conectat la internet.",
   "warningPasswordLength": "Parola trebuie să aibă cel puțin 6 caractere.",
-  "warningEmailInUse": "Există deja un cont asociat cu adresa {email}. Folosiți {provider} pentru a vă conecta.",
+  "warningEmailInUse": "Există deja un cont asociat cu adresa {email}.",
+  "warningUseProvider": "Folosiți {provider} pentru a vă conecta.",
+  "warningTryAgainLater": "Încercați mai târziu.",
 
   "navigationHome": "Acasă",
   "navigationTimetable": "Orar",

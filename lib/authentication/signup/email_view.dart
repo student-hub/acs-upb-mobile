@@ -117,7 +117,7 @@ class _EmailViewState extends State<EmailView> {
         content: new SingleChildScrollView(
             child: new ListBody(
           children: <Widget>[
-            new Text(S.of(context).warningEmailInUse(email, providerName)),
+            new Text(S.of(context).warningEmailInUse(email) + ' ' + S.of(context).warningUseProvider(providerName)),
             new SizedBox(
               height: 16.0,
             ),

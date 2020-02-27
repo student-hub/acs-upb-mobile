@@ -23,7 +23,9 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static m1(name) => "Bine ai venit, ${name}!";
 
-  static m2(email, provider) => "Există deja un cont asociat cu adresa ${email}. Folosiți ${provider} pentru a vă conecta.";
+  static m2(email) => "Există deja un cont asociat cu adresa ${email}.";
+
+  static m3(provider) => "Folosiți ${provider} pentru a vă conecta.";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
@@ -37,9 +39,14 @@ class MessageLookup extends MessageLookupByLibrary {
     "buttonNext" : MessageLookupByLibrary.simpleMessage("Următorul"),
     "buttonSave" : MessageLookupByLibrary.simpleMessage("Salvare"),
     "buttonSend" : MessageLookupByLibrary.simpleMessage("Trimitere"),
+    "errorAccountDisabled" : MessageLookupByLibrary.simpleMessage("Contul a fost dezactivat."),
+    "errorEmailNotFound" : MessageLookupByLibrary.simpleMessage("Nu am putut găsi un cont asociat cu adresa de mail. Vă rugăm să vă înregistrați."),
     "errorIncorrectPassword" : MessageLookupByLibrary.simpleMessage("Parola introdusă nu este corectă."),
+    "errorInvalidEmail" : MessageLookupByLibrary.simpleMessage("Trebuie să introduceți un e-mail valid."),
+    "errorNoPassword" : MessageLookupByLibrary.simpleMessage("Trebuie să introduceți parola."),
     "errorPasswordsDiffer" : MessageLookupByLibrary.simpleMessage("Cele două parole diferă."),
     "errorSomethingWentWrong" : MessageLookupByLibrary.simpleMessage("A apărut o problemă."),
+    "errorTooManyRequests" : MessageLookupByLibrary.simpleMessage("Au fost prea multe încercări de conectare nereușite."),
     "fileAcsBanner" : MessageLookupByLibrary.simpleMessage("assets/images/acs_banner_ro.png"),
     "labelConfirmPassword" : MessageLookupByLibrary.simpleMessage("Confirmare parolă"),
     "labelEmail" : MessageLookupByLibrary.simpleMessage("Email"),
@@ -64,6 +71,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "settingsTitlePersonalization" : MessageLookupByLibrary.simpleMessage("Personalizare"),
     "warningEmailInUse" : m2,
     "warningInternetConnection" : MessageLookupByLibrary.simpleMessage("Asigurați-vă că sunteți conectat la internet."),
-    "warningPasswordLength" : MessageLookupByLibrary.simpleMessage("Parola trebuie să aibă cel puțin 6 caractere.")
+    "warningPasswordLength" : MessageLookupByLibrary.simpleMessage("Parola trebuie să aibă cel puțin 6 caractere."),
+    "warningTryAgainLater" : MessageLookupByLibrary.simpleMessage("Încercați mai târziu."),
+    "warningUseProvider" : m3
   };
 }
