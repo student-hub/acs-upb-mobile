@@ -46,7 +46,7 @@ class _SignUpViewState extends State<SignUpView> {
     _controllerEmail.text = widget.email;
     return new Scaffold(
       appBar: new AppBar(
-        title: new Text(S.of(context).signUpLabel),
+        title: new Text(S.of(context).actionSignUp),
         elevation: 4.0,
       ),
       body: new Builder(
@@ -61,7 +61,7 @@ class _SignUpViewState extends State<SignUpView> {
                   autocorrect: false,
                   onSubmitted: _submit,
                   decoration: new InputDecoration(
-                      labelText: S.of(context).emailLabel),
+                      labelText: S.of(context).labelEmail),
                 ),
                 const SizedBox(height: 8.0),
                 new TextField(
@@ -72,7 +72,7 @@ class _SignUpViewState extends State<SignUpView> {
                   onChanged: _checkValid,
                   onSubmitted: _submitDisplayName,
                   decoration: new InputDecoration(
-                      labelText: S.of(context).nameLabel),
+                      labelText: S.of(context).labelName),
                 ),
                 const SizedBox(height: 8.0),
                 new TextField(
@@ -82,7 +82,7 @@ class _SignUpViewState extends State<SignUpView> {
                   onSubmitted: _submit,
                   focusNode: _focusPassword,
                   decoration: new InputDecoration(
-                      labelText: S.of(context).passwordLabel),
+                      labelText: S.of(context).labelPassword),
                 ),
                 !widget.passwordCheck
                     ? new Container()
@@ -92,7 +92,7 @@ class _SignUpViewState extends State<SignUpView> {
                         autocorrect: false,
                         decoration: new InputDecoration(
                             labelText: S.of(context)
-                                .passwordCheckLabel),
+                                .errorPasswordsDiffer),
                       ),
               ],
             ),
@@ -108,7 +108,7 @@ class _SignUpViewState extends State<SignUpView> {
                 onPressed: _valid ? () => _connexion(context) : null,
                 child: new Row(
                   children: <Widget>[
-                    new Text(S.of(context).saveLabel),
+                    new Text(S.of(context).buttonSave),
                   ],
                 )),
           ],
@@ -128,7 +128,7 @@ class _SignUpViewState extends State<SignUpView> {
   _connexion(BuildContext context) async {
     if (widget.passwordCheck &&
         _controllerPassword.text != _controllerCheckPassword.text) {
-      showErrorDialog(context, S.of(context).passwordCheckError);
+      showErrorDialog(context, S.of(context).errorPasswordsDiffer);
       return;
     }
 
@@ -150,7 +150,7 @@ class _SignUpViewState extends State<SignUpView> {
     } on PlatformException catch (e) {
       print(e.details);
       //TODO improve errors catching
-      String msg = S.of(context).passwordLengthWarning;
+      String msg = S.of(context).warningPasswordLength;
       showErrorDialog(context, msg);
     }
   }

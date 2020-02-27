@@ -12,10 +12,10 @@ class HomePage extends StatelessWidget {
     AuthProvider authProvider = Provider.of(context);
 
     return AppScaffold(
-        title: S.of(context).drawerHeaderHome,
+        title: S.of(context).navigationHome,
         body: Center(
             child: Text(authProvider.isAnonymous
-                ? S.of(context).welcomeSimple
-                : S.of(context).welcomeName(authProvider.user.displayName))));
+                ? S.of(context).messageWelcomeSimple
+                : S.of(context).messageWelcomeName(authProvider.user.displayName))));
   }
 }

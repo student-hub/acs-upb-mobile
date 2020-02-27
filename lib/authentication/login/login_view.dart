@@ -37,10 +37,10 @@ class _LoginViewState extends State<LoginView> {
     AuthProvider authProvider = Provider.of(context);
 
     return FormCard(
-      title: S.of(context).loginLabel,
+      title: S.of(context).actionLogIn,
       children: <Widget>[
         FormTextField(
-          label: S.of(context).emailLabel,
+          label: S.of(context).labelEmail,
           controller: emailController,
           onChanged: (email) => setState(() {
             canSignInWithPassword =
@@ -67,7 +67,7 @@ class _LoginViewState extends State<LoginView> {
           ),
         ),
         FormTextField(
-          label: S.of(context).passwordLabel,
+          label: S.of(context).labelPassword,
           obscureText: true,
           controller: passwordController,
           focusNode: passwordFocusNode,
@@ -81,7 +81,7 @@ class _LoginViewState extends State<LoginView> {
           mainAxisAlignment: MainAxisAlignment.end,
           children: <Widget>[
             Text(
-              S.of(context).recoverPassword,
+              S.of(context).actionRecoverPassword,
               style: TextStyle(
                   color: Theme.of(context).accentColor,
                   fontWeight: FontWeight.w500,
@@ -154,12 +154,12 @@ class _LoginViewState extends State<LoginView> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
                         AppButton(
-                          text: S.of(context).loginAnonymouslyLabel,
+                          text: S.of(context).actionLogInAnonymously,
                           onTap: () => authProvider.signInAnonymously(),
                         ),
                         AppButton(
                           color: Theme.of(context).accentColor,
-                          text: S.of(context).loginLabel,
+                          text: S.of(context).actionLogIn,
                           onTap: () => authProvider.signIn(
                               email: emailController.text,
                               password: passwordController.text),
@@ -173,7 +173,7 @@ class _LoginViewState extends State<LoginView> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         horizontalLine(),
-                        Text(S.of(context).socialLoginLabel,
+                        Text(S.of(context).actionSocialLogin,
                             style: TextStyle(
                                 fontSize: 16.0, fontWeight: FontWeight.w500)),
                         horizontalLine()
@@ -204,12 +204,12 @@ class _LoginViewState extends State<LoginView> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         Text(
-                          S.of(context).newUserLabel + " ",
+                          S.of(context).messageNewUser + " ",
                           style: TextStyle(fontWeight: FontWeight.w500),
                         ),
                         InkWell(
                           onTap: () {},
-                          child: Text(S.of(context).signUpLabel,
+                          child: Text(S.of(context).actionSignUp,
                               style: TextStyle(
                                   color: Theme.of(context).accentColor,
                                   fontWeight: FontWeight.bold)),

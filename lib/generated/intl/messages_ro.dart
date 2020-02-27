@@ -19,47 +19,42 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'ro';
 
-  static m1(email) => "Urmați instrucțiunile primite la adresa ${email} pentru a vă reseta parola.";
+  static m0(provider) => "Conectare cu ${provider}";
 
-  static m2(provider) => "Conectare cu ${provider}";
+  static m1(name) => "Bine ai venit, ${name}!";
 
-  static m3(name) => "Bine ai venit, ${name}!";
+  static m2(email, provider) => "Există deja un cont asociat cu adresa ${email}. Folosiți ${provider} pentru a vă conecta.";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
-    "cancelButtonLabel" : MessageLookupByLibrary.simpleMessage("Anulare"),
-    "drawerHeaderHome" : MessageLookupByLibrary.simpleMessage("Acasă"),
-    "drawerHeaderProfile" : MessageLookupByLibrary.simpleMessage("Profil"),
-    "drawerItemClasses" : MessageLookupByLibrary.simpleMessage("Materii"),
-    "drawerItemContribute" : MessageLookupByLibrary.simpleMessage("Contribuie"),
-    "drawerItemHelp" : MessageLookupByLibrary.simpleMessage("Ajutor"),
-    "drawerItemMap" : MessageLookupByLibrary.simpleMessage("Hartă"),
-    "drawerItemNews" : MessageLookupByLibrary.simpleMessage("Noutăți"),
-    "drawerItemNotes" : MessageLookupByLibrary.simpleMessage("Note"),
-    "drawerItemPeople" : MessageLookupByLibrary.simpleMessage("Persoane"),
-    "drawerItemSettings" : MessageLookupByLibrary.simpleMessage("Setări"),
-    "drawerItemTimetable" : MessageLookupByLibrary.simpleMessage("Orar"),
-    "drawerItemWebsites" : MessageLookupByLibrary.simpleMessage("Platforme"),
-    "drawerTooltip" : MessageLookupByLibrary.simpleMessage("Meniu navigare"),
-    "emailLabel" : MessageLookupByLibrary.simpleMessage("Email"),
-    "errorOccurred" : MessageLookupByLibrary.simpleMessage("A apărut o eroare."),
+    "actionLogIn" : MessageLookupByLibrary.simpleMessage("Conectare"),
+    "actionLogInAnonymously" : MessageLookupByLibrary.simpleMessage("Conectare anonimă"),
+    "actionRecoverPassword" : MessageLookupByLibrary.simpleMessage("Recuperare parolă"),
+    "actionSignInWith" : m0,
+    "actionSignUp" : MessageLookupByLibrary.simpleMessage("Înregistrare"),
+    "actionSocialLogin" : MessageLookupByLibrary.simpleMessage("Rețele sociale"),
+    "buttonCancel" : MessageLookupByLibrary.simpleMessage("Anulare"),
+    "buttonNext" : MessageLookupByLibrary.simpleMessage("Următorul"),
+    "buttonSave" : MessageLookupByLibrary.simpleMessage("Salvare"),
+    "buttonSend" : MessageLookupByLibrary.simpleMessage("Trimitere"),
+    "errorIncorrectPassword" : MessageLookupByLibrary.simpleMessage("Parola introdusă nu este corectă."),
+    "errorPasswordsDiffer" : MessageLookupByLibrary.simpleMessage("Cele două parole diferă."),
+    "errorSomethingWentWrong" : MessageLookupByLibrary.simpleMessage("A apărut o problemă."),
     "fileAcsBanner" : MessageLookupByLibrary.simpleMessage("assets/images/acs_banner_ro.png"),
-    "incorrectPassword" : MessageLookupByLibrary.simpleMessage("Parola introdusă nu este corectă."),
-    "internetConnectionWarning" : MessageLookupByLibrary.simpleMessage("Asigurați-vă că sunteți conectat la internet."),
-    "loginAnonymouslyLabel" : MessageLookupByLibrary.simpleMessage("Conectare anonimă"),
-    "loginLabel" : MessageLookupByLibrary.simpleMessage("Conectare"),
-    "nameLabel" : MessageLookupByLibrary.simpleMessage("Nume & prenume"),
-    "newUserLabel" : MessageLookupByLibrary.simpleMessage("Utilizator nou?"),
-    "nextButtonLabel" : MessageLookupByLibrary.simpleMessage("Următorul"),
-    "passwordCheckError" : MessageLookupByLibrary.simpleMessage("Cele două parole diferă."),
-    "passwordCheckLabel" : MessageLookupByLibrary.simpleMessage("Confirmare parolă"),
-    "passwordLabel" : MessageLookupByLibrary.simpleMessage("Parolă"),
-    "passwordLengthWarning" : MessageLookupByLibrary.simpleMessage("Parola trebuie să aibă cel puțin 6 caractere."),
-    "recoverPassword" : MessageLookupByLibrary.simpleMessage("Recuperare parolă"),
-    "recoverPasswordDialog" : m1,
-    "recoverPasswordInstructions" : MessageLookupByLibrary.simpleMessage("Introduceți mail-ul pentru a afla cum să vă resetați parola."),
-    "saveLabel" : MessageLookupByLibrary.simpleMessage("Salvare"),
-    "sendLabel" : MessageLookupByLibrary.simpleMessage("Trimitere"),
+    "labelConfirmPassword" : MessageLookupByLibrary.simpleMessage("Confirmare parolă"),
+    "labelEmail" : MessageLookupByLibrary.simpleMessage("Email"),
+    "labelName" : MessageLookupByLibrary.simpleMessage("Nume & prenume"),
+    "labelPassword" : MessageLookupByLibrary.simpleMessage("Parolă"),
+    "messageNewUser" : MessageLookupByLibrary.simpleMessage("Utilizator nou?"),
+    "messageRecoverPassword" : MessageLookupByLibrary.simpleMessage("Introduceți mail-ul pentru a afla cum să vă resetați parola."),
+    "messageWelcomeName" : m1,
+    "messageWelcomeSimple" : MessageLookupByLibrary.simpleMessage("Bine ai venit!"),
+    "navigationHome" : MessageLookupByLibrary.simpleMessage("Acasă"),
+    "navigationMap" : MessageLookupByLibrary.simpleMessage("Hartă"),
+    "navigationProfile" : MessageLookupByLibrary.simpleMessage("Profil"),
+    "navigationSettings" : MessageLookupByLibrary.simpleMessage("Setări"),
+    "navigationTimetable" : MessageLookupByLibrary.simpleMessage("Orar"),
+    "navigationWebsites" : MessageLookupByLibrary.simpleMessage("Platforme"),
     "settingsItemDarkMode" : MessageLookupByLibrary.simpleMessage("Dark mode"),
     "settingsItemLanguage" : MessageLookupByLibrary.simpleMessage("Limbă"),
     "settingsItemLanguageAuto" : MessageLookupByLibrary.simpleMessage("Auto"),
@@ -67,13 +62,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "settingsItemLanguageRomanian" : MessageLookupByLibrary.simpleMessage("Română"),
     "settingsTitleLocalization" : MessageLookupByLibrary.simpleMessage("Localizare"),
     "settingsTitlePersonalization" : MessageLookupByLibrary.simpleMessage("Personalizare"),
-    "signInLabel" : MessageLookupByLibrary.simpleMessage("Conectare"),
-    "signInWith" : m2,
-    "signUpLabel" : MessageLookupByLibrary.simpleMessage("Înregistrare"),
-    "socialLoginLabel" : MessageLookupByLibrary.simpleMessage("Rețele sociale"),
-    "somethingWentWrong" : MessageLookupByLibrary.simpleMessage("A apărut o problemă."),
-    "troubleSigningInLabel" : MessageLookupByLibrary.simpleMessage("Probleme la conectare?"),
-    "welcomeName" : m3,
-    "welcomeSimple" : MessageLookupByLibrary.simpleMessage("Bine ai venit!")
+    "warningEmailInUse" : m2,
+    "warningInternetConnection" : MessageLookupByLibrary.simpleMessage("Asigurați-vă că sunteți conectat la internet."),
+    "warningPasswordLength" : MessageLookupByLibrary.simpleMessage("Parola trebuie să aibă cel puțin 6 caractere.")
   };
 }

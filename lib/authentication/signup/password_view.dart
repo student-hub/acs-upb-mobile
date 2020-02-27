@@ -30,7 +30,7 @@ class _PasswordViewState extends State<PasswordView> {
     _controllerEmail.text = widget.email;
     return new Scaffold(
       appBar: new AppBar(
-        title: new Text(S.of(context).signInLabel),
+        title: new Text(S.of(context).actionLogIn),
         elevation: 4.0,
       ),
       body: new Builder(
@@ -44,7 +44,7 @@ class _PasswordViewState extends State<PasswordView> {
                   keyboardType: TextInputType.emailAddress,
                   autocorrect: false,
                   decoration: new InputDecoration(
-                      labelText: S.of(context).emailLabel),
+                      labelText: S.of(context).labelEmail),
                 ),
                 //const SizedBox(height: 5.0),
                 new TextField(
@@ -54,14 +54,14 @@ class _PasswordViewState extends State<PasswordView> {
                   obscureText: true,
                   autocorrect: false,
                   decoration: new InputDecoration(
-                      labelText: S.of(context).passwordLabel),
+                      labelText: S.of(context).labelPassword),
                 ),
                 new SizedBox(height: 16.0),
                 new Container(
                     alignment: Alignment.centerLeft,
                     child: new InkWell(
                         child: new Text(
-                          S.of(context).troubleSigningInLabel,
+                          S.of(context).actionRecoverPassword,
                           style: Theme.of(context).textTheme.caption,
                         ),
                         onTap: _handleLostPassword)),
@@ -79,7 +79,7 @@ class _PasswordViewState extends State<PasswordView> {
                 onPressed: () => _connect(context),
                 child: new Row(
                   children: <Widget>[
-                    new Text(S.of(context).signInLabel),
+                    new Text(S.of(context).actionLogIn),
                   ],
                 )),
           ],
@@ -109,7 +109,7 @@ class _PasswordViewState extends State<PasswordView> {
       print(user);
     } catch (exception) {
       //TODO improve errors catching
-      String msg = S.of(context).incorrectPassword;
+      String msg = S.of(context).errorIncorrectPassword;
       showErrorDialog(context, msg);
     }
 

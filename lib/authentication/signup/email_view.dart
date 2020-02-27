@@ -21,7 +21,7 @@ class _EmailViewState extends State<EmailView> {
   @override
   Widget build(BuildContext context) => new Scaffold(
         appBar: new AppBar(
-          title: new Text(S.of(context).welcomeSimple),
+          title: new Text(S.of(context).messageWelcomeSimple),
           elevation: 4.0,
         ),
         body: new Builder(
@@ -37,7 +37,7 @@ class _EmailViewState extends State<EmailView> {
                     keyboardType: TextInputType.emailAddress,
                     autocorrect: false,
                     decoration: new InputDecoration(
-                        labelText: S.of(context).emailLabel),
+                        labelText: S.of(context).labelEmail),
                   ),
                 ],
               ),
@@ -53,7 +53,7 @@ class _EmailViewState extends State<EmailView> {
                   onPressed: () => _connect(context),
                   child: new Row(
                     children: <Widget>[
-                      new Text(S.of(context).nextButtonLabel),
+                      new Text(S.of(context).buttonNext),
                     ],
                   )),
             ],
@@ -101,9 +101,9 @@ class _EmailViewState extends State<EmailView> {
     } catch (exception) {
       await showErrorDialog(
           context,
-          S.of(context).somethingWentWrong +
+          S.of(context).errorSomethingWentWrong +
               " " +
-              S.of(context).internetConnectionWarning);
+              S.of(context).warningInternetConnection);
       print(exception);
     }
   }
@@ -117,7 +117,7 @@ class _EmailViewState extends State<EmailView> {
         content: new SingleChildScrollView(
             child: new ListBody(
           children: <Widget>[
-            new Text(S.of(context).emailInUseMessage(email, providerName)),
+            new Text(S.of(context).warningEmailInUse(email, providerName)),
             new SizedBox(
               height: 16.0,
             ),
@@ -141,7 +141,7 @@ class _EmailViewState extends State<EmailView> {
           new FlatButton(
             child: new Row(
               children: <Widget>[
-                new Text(S.of(context).cancelButtonLabel),
+                new Text(S.of(context).buttonCancel),
               ],
             ),
             onPressed: () {

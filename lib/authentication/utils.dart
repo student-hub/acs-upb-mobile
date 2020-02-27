@@ -88,7 +88,7 @@ ButtonDescription _providerButton(
   return ButtonDescription(
       color: const Color.fromRGBO(59, 87, 157, 1.0),
       logo: "${provider.toShortString()}-logo.png",
-      label: S.of(context).signInWith(provider.toCapitalizedShortString()),
+      label: S.of(context).actionSignInWith(provider.toCapitalizedShortString()),
       name: provider.toCapitalizedShortString(),
       labelColor: Colors.white);
 }
@@ -114,7 +114,7 @@ Future<Null> showErrorDialog(BuildContext context, String message,
       content: new SingleChildScrollView(
         child: new ListBody(
           children: <Widget>[
-            new Text(message ?? S.of(context).errorOccurred),
+            new Text(message ?? S.of(context).errorSomethingWentWrong),
           ],
         ),
       ),
@@ -122,7 +122,7 @@ Future<Null> showErrorDialog(BuildContext context, String message,
         new FlatButton(
           child: new Row(
             children: <Widget>[
-              new Text(S.of(context).cancelButtonLabel),
+              new Text(S.of(context).buttonCancel),
             ],
           ),
           onPressed: () {

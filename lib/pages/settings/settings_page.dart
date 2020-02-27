@@ -20,7 +20,7 @@ class SettingsPageState extends State<SettingsPage> {
     ScreenUtil.init(context, width: 1080, height: 2160, allowFontScaling: true);
 
     return AppScaffold(
-        title: S.of(context).drawerItemSettings,
+        title: S.of(context).navigationSettings,
         settingsAction: false,
         body: Builder(
           builder: (BuildContext context) {

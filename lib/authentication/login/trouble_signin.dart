@@ -27,7 +27,7 @@ class _TroubleSignInState extends State<TroubleSignIn> {
     _controllerEmail.text = widget.email;
     return new Scaffold(
       appBar: new AppBar(
-        title: new Text(S.of(context).recoverPassword),
+        title: new Text(S.of(context).messageRecoverPassword),
         elevation: 4.0,
       ),
       body: new Builder(
@@ -41,13 +41,13 @@ class _TroubleSignInState extends State<TroubleSignIn> {
                   keyboardType: TextInputType.emailAddress,
                   autocorrect: false,
                   decoration:
-                      new InputDecoration(labelText: S.of(context).emailLabel),
+                      new InputDecoration(labelText: S.of(context).labelEmail),
                 ),
                 new SizedBox(height: 16.0),
                 new Container(
                     alignment: Alignment.centerLeft,
                     child: new Text(
-                      S.of(context).recoverPasswordInstructions,
+                      S.of(context).messageRecoverPassword,
                       style: Theme.of(context).textTheme.caption,
                     )),
                 //const SizedBox(height: 5.0),
@@ -65,7 +65,7 @@ class _TroubleSignInState extends State<TroubleSignIn> {
                 onPressed: () => _send(context),
                 child: new Row(
                   children: <Widget>[
-                    new Text(S.of(context).sendLabel),
+                    new Text(S.of(context).buttonSend),
                   ],
                 )),
           ],
@@ -84,6 +84,6 @@ class _TroubleSignInState extends State<TroubleSignIn> {
     }
 
     showErrorDialog(
-        context, S.of(context).recoverPasswordDialog(_controllerEmail.text));
+        context, S.of(context).messageRecoverPassword);
   }
 }
