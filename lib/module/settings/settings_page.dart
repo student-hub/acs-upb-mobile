@@ -80,6 +80,7 @@ class SettingsPageState extends State<SettingsPage> {
       'language',
       onSelect: () {
         S.load(getLocale(context, preference));
+        Navigator.of(context).pop();
         // Reload settings page
         setState(() {});
       },

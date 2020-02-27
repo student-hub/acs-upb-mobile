@@ -65,11 +65,6 @@ void main() {
       await tester.tap(find.text('Romanian'));
       await tester.pumpAndSettle();
 
-      // Tap aside to close popup
-      // TODO: Make popup close automatically when choosing an option
-      await tester.tapAt(Offset(1, 1));
-      await tester.pumpAndSettle();
-
       expect(find.text("Setări"), findsOneWidget);
       expect(find.text("Română"), findsOneWidget);
 
@@ -80,9 +75,6 @@ void main() {
       await tester.tap(find.text('Engleză'));
       await tester.pumpAndSettle();
 
-      await tester.tapAt(Offset(1, 1));
-      await tester.pumpAndSettle();
-
       expect(find.text("Settings"), findsOneWidget);
       expect(find.text("English"), findsOneWidget);
 
@@ -91,9 +83,6 @@ void main() {
       await tester.pumpAndSettle();
 
       await tester.tap(find.text('Auto'));
-      await tester.pumpAndSettle();
-
-      await tester.tapAt(Offset(1, 1));
       await tester.pumpAndSettle();
 
       expect(find.text("Settings"), findsOneWidget);
