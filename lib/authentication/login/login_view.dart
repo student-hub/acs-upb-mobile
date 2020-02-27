@@ -191,7 +191,7 @@ class _LoginViewState extends State<LoginView> {
                           onPressed: () {},
                         ),
                         SocialIcon(
-                          color: Color(0xFF1A1A1A),
+                          color: Color(0xFFDB4437),
                           iconData: CustomIcons.google,
                           onPressed: () {},
                         ),
