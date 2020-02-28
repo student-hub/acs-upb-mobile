@@ -157,7 +157,8 @@ class _LoginViewState extends State<LoginView> {
                       children: <Widget>[
                         AppButton(
                           text: S.of(context).actionLogInAnonymously,
-                          onTap: () => authProvider.signInAnonymously(),
+                          onTap: () =>
+                              authProvider.signInAnonymously(context: context),
                         ),
                         AppButton(
                           color: Theme.of(context).accentColor,

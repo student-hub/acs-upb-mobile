@@ -75,8 +75,10 @@ class AuthProvider with ChangeNotifier {
     return user != null;
   }
 
-  Future<AuthResult> signInAnonymously() {
-    return FirebaseAuth.instance.signInAnonymously();
+  Future<AuthResult> signInAnonymously({BuildContext context}) async {
+    return FirebaseAuth.instance.signInAnonymously().catchError((e) {
+      _errorHandler(e, context);
+    });
   }
 
   Future<AuthResult> signIn(
