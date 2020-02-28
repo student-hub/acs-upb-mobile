@@ -5,8 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatelessWidget {
-  static const String routeName = '/home';
-
   @override
   Widget build(BuildContext context) {
     AuthProvider authProvider = Provider.of(context);
@@ -14,7 +12,7 @@ class HomePage extends StatelessWidget {
     return AppScaffold(
         title: S.of(context).navigationHome,
         body: Center(
-            child: Text(authProvider.isAnonymous
+            child: Text(!authProvider.isAuthenticated || authProvider.isAnonymous
                 ? S.of(context).messageWelcomeSimple
                 : S.of(context).messageWelcomeName(authProvider.user.displayName))));
   }

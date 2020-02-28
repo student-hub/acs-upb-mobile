@@ -1,8 +1,8 @@
 import 'package:acs_upb_mobile/authentication/auth_provider.dart';
+import 'package:acs_upb_mobile/authentication/login/login_view.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
-import 'package:acs_upb_mobile/navigation/navigator.dart';
+import 'package:acs_upb_mobile/navigation/bottom_navigation_bar.dart';
 import 'package:acs_upb_mobile/navigation/routes.dart';
-import 'package:acs_upb_mobile/pages/home/home_page.dart';
 import 'package:acs_upb_mobile/pages/settings/settings_page.dart';
 import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/material.dart';
@@ -19,7 +19,7 @@ main() async {
 }
 
 class MyApp extends StatelessWidget {
-  final Color _accentColor = Color.fromARGB(255, 67, 172, 205);
+  final Color _accentColor = Color(0xFF43ADCD);
   final AuthProvider authProvider;
 
   MyApp({AuthProvider authProvider})
@@ -68,11 +68,17 @@ class MyApp extends StatelessWidget {
                     ],
                     supportedLocales: S.delegate.supportedLocales,
                     theme: theme,
+                    initialRoute: authProvider.isAuthenticated
+                        ? Routes.home
+                        : Routes.login,
                     routes: {
-                      Routes.home: (context) => HomePage(),
-                      Routes.settings: (context) => SettingsPage(),
-                    },
-                    home: AppNavigator()),
+                      Routes.home: (_) =>
+                          ChangeNotifierProvider<BottomNavigationBarProvider>(
+                              child: AppBottomNavigationBar(),
+                              create: (_) => BottomNavigationBarProvider()),
+                      Routes.settings: (_) => SettingsPage(),
+                      Routes.login: (_) => LoginView()
+                    }),
               ),
             ),
           );

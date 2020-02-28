@@ -1,4 +1,5 @@
 import 'package:acs_upb_mobile/authentication/auth_provider.dart';
+import 'package:acs_upb_mobile/navigation/routes.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -58,8 +59,9 @@ class ProfilePage extends StatelessWidget {
             ),
           if (authProvider.isAuthenticated)
             FloatingActionButton(
-              onPressed: () {
+              onPressed: () async {
                 authProvider.signOut();
+                Navigator.popAndPushNamed(context, Routes.login);
               },
               tooltip: 'Sign Out',
               child: Icon(Icons.exit_to_app),

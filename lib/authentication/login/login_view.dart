@@ -1,6 +1,7 @@
 import 'package:acs_upb_mobile/authentication/auth_provider.dart';
 import 'package:acs_upb_mobile/authentication/login/recover_password_dialog.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
+import 'package:acs_upb_mobile/navigation/routes.dart';
 import 'package:acs_upb_mobile/resources/banner.dart';
 import 'package:acs_upb_mobile/resources/custom_icons.dart';
 import 'package:acs_upb_mobile/widgets/button.dart';
@@ -12,6 +13,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
 class LoginView extends StatefulWidget {
+  static const String routeName = '/login';
+
   LoginView();
 
   @override
@@ -88,23 +91,22 @@ class _LoginViewState extends State<LoginView> {
           mainAxisAlignment: MainAxisAlignment.end,
           children: <Widget>[
             InkWell(
-              child: Text(
-                S.of(context).actionResetPassword,
-                style: Theme.of(context)
-                    .accentTextTheme
-                    .subtitle1
-                    .copyWith(fontWeight: FontWeight.w500),
-              ),
-              onTap: () {
-                ResetPassword.show(
-                    context: context, email: emailController.text);
-                // Remove text field from focus if necessary
-                FocusScopeNode currentFocus = FocusScope.of(context);
-                if (!currentFocus.hasPrimaryFocus) {
-                  currentFocus.unfocus();
-                }
-              }
-            )
+                child: Text(
+                  S.of(context).actionResetPassword,
+                  style: Theme.of(context)
+                      .accentTextTheme
+                      .subtitle1
+                      .copyWith(fontWeight: FontWeight.w500),
+                ),
+                onTap: () {
+                  ResetPassword.show(
+                      context: context, email: emailController.text);
+                  // Remove text field from focus if necessary
+                  FocusScopeNode currentFocus = FocusScope.of(context);
+                  if (!currentFocus.hasPrimaryFocus) {
+                    currentFocus.unfocus();
+                  }
+                })
           ],
         ),
       ],
@@ -168,8 +170,11 @@ class _LoginViewState extends State<LoginView> {
                         Expanded(
                           child: AppButton(
                             text: S.of(context).actionLogInAnonymously,
-                            onTap: () =>
-                                authProvider.signInAnonymously(context: context),
+                            onTap: () async {
+                              await authProvider.signInAnonymously(
+                                  context: context);
+                              Navigator.popAndPushNamed(context, Routes.home);
+                            },
                           ),
                         ),
                         SizedBox(width: ScreenUtil().setWidth(30)),
@@ -177,10 +182,13 @@ class _LoginViewState extends State<LoginView> {
                           child: AppButton(
                             color: Theme.of(context).accentColor,
                             text: S.of(context).actionLogIn,
-                            onTap: () => authProvider.signIn(
-                                email: emailController.text,
-                                password: passwordController.text,
-                                context: context),
+                            onTap: () async {
+                              authProvider.signIn(
+                                  email: emailController.text,
+                                  password: passwordController.text,
+                                  context: context);
+                              Navigator.popAndPushNamed(context, Routes.home);
+                            },
                           ),
                         ),
                       ],
