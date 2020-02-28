@@ -1,9 +1,9 @@
 import 'dart:async';
 
 import 'package:acs_upb_mobile/generated/l10n.dart';
+import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
 class AuthProvider with ChangeNotifier {
   FirebaseUser user;
@@ -34,25 +34,24 @@ class AuthProvider with ChangeNotifier {
       switch (e.code) {
         case 'ERROR_INVALID_EMAIL':
         case 'ERROR_INVALID_CREDENTIAL':
-          Fluttertoast.showToast(msg: S.of(context).errorInvalidEmail);
+          AppToast.show(S.of(context).errorInvalidEmail);
           break;
         case 'ERROR_WRONG_PASSWORD':
-          Fluttertoast.showToast(msg: S.of(context).errorIncorrectPassword);
+          AppToast.show(S.of(context).errorIncorrectPassword);
           break;
         case 'ERROR_USER_NOT_FOUND':
-          Fluttertoast.showToast(msg: S.of(context).errorEmailNotFound);
+          AppToast.show(S.of(context).errorEmailNotFound);
           break;
         case 'ERROR_USER_DISABLED':
-          Fluttertoast.showToast(msg: S.of(context).errorAccountDisabled);
+          AppToast.show(S.of(context).errorAccountDisabled);
           break;
         case 'ERROR_TOO_MANY_REQUESTS':
-          Fluttertoast.showToast(
-              msg: S.of(context).errorTooManyRequests +
-                  ' ' +
-                  S.of(context).warningTryAgainLater);
+          AppToast.show(S.of(context).errorTooManyRequests +
+              ' ' +
+              S.of(context).warningTryAgainLater);
           break;
         default:
-          Fluttertoast.showToast(msg: S.of(context).errorSomethingWentWrong);
+          AppToast.show(S.of(context).errorSomethingWentWrong);
       }
     }
   }
@@ -84,10 +83,10 @@ class AuthProvider with ChangeNotifier {
   Future<AuthResult> signIn(
       {String email, String password, BuildContext context}) async {
     if (email == null || email == "") {
-      Fluttertoast.showToast(msg: S.of(context).errorInvalidEmail);
+      AppToast.show(S.of(context).errorInvalidEmail);
       return null;
     } else if (password == null || password == "") {
-      Fluttertoast.showToast(msg: S.of(context).errorNoPassword);
+      AppToast.show(S.of(context).errorNoPassword);
       return null;
     }
 
@@ -104,8 +103,7 @@ class AuthProvider with ChangeNotifier {
 
     // User has an account with a different provider
     if (providers.isNotEmpty && !providers.contains('password')) {
-      Fluttertoast.showToast(
-          msg: S.of(context).warningUseProvider(providers[0]));
+      AppToast.show(S.of(context).warningUseProvider(providers[0]));
       return null;
     }
 

@@ -7,6 +7,7 @@ import 'package:acs_upb_mobile/pages/settings/settings_page.dart';
 import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:oktoast/oktoast.dart';
 import 'package:preferences/preferences.dart';
 import 'package:provider/provider.dart';
 
@@ -42,20 +43,25 @@ class MyApp extends StatelessWidget {
             providers: [
               ChangeNotifierProvider<AuthProvider>(create: (_) => authProvider)
             ],
-            child: MaterialApp(
-                title: "ACS UPB Mobile",
-                localizationsDelegates: [
-                  GlobalMaterialLocalizations.delegate,
-                  GlobalWidgetsLocalizations.delegate,
-                  S.delegate
-                ],
-                supportedLocales: S.delegate.supportedLocales,
-                theme: theme,
-                routes: {
-                  Routes.home: (context) => HomePage(),
-                  Routes.settings: (context) => SettingsPage(),
-                },
-                home: AppNavigator()),
+            child: OKToast(
+              textStyle: theme.textTheme.button,
+              backgroundColor: theme.accentColor.withOpacity(.8),
+              position: ToastPosition.bottom,
+              child: MaterialApp(
+                  title: "ACS UPB Mobile",
+                  localizationsDelegates: [
+                    GlobalMaterialLocalizations.delegate,
+                    GlobalWidgetsLocalizations.delegate,
+                    S.delegate
+                  ],
+                  supportedLocales: S.delegate.supportedLocales,
+                  theme: theme,
+                  routes: {
+                    Routes.home: (context) => HomePage(),
+                    Routes.settings: (context) => SettingsPage(),
+                  },
+                  home: AppNavigator()),
+            ),
           );
         });
   }
