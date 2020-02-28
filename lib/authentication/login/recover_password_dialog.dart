@@ -26,7 +26,7 @@ class ResetPassword {
                     TextField(
                       controller: emailController,
                       decoration: InputDecoration(
-                          hintText: S.of(context).labelEmail.toLowerCase()),
+                          hintText: S.of(context).hintEmail),
                     )
                   ],
                 ),

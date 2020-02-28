@@ -40,10 +40,12 @@ class _LoginViewState extends State<LoginView> {
       items: <FormItem>[
         FormItem(
             label: S.of(context).labelEmail,
+            hint: S.of(context).hintEmail,
             controller: emailController,
             check: (email) => authProvider.canSignInWithPassword(email: email)),
         FormItem(
           label: S.of(context).labelPassword,
+          hint: S.of(context).hintPassword,
           obscureText: true,
         ),
       ],
