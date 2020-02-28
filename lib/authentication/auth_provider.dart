@@ -132,4 +132,19 @@ class AuthProvider with ChangeNotifier {
     }
     return providers.contains('password');
   }
+
+  Future<bool> sendPasswordResetEmail(
+      {String email, BuildContext context}) async {
+    try {
+      await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+
+      if (context != null) {
+        AppToast.show(S.of(context).infoPasswordResetEmailSent);
+      }
+      return true;
+    } catch(e) {
+      _errorHandler(e, context);
+      return false;
+    }
+  }
 }

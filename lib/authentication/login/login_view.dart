@@ -1,4 +1,5 @@
 import 'package:acs_upb_mobile/authentication/auth_provider.dart';
+import 'package:acs_upb_mobile/authentication/login/recover_password_dialog.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/resources/banner.dart';
 import 'package:acs_upb_mobile/resources/custom_icons.dart';
@@ -86,12 +87,23 @@ class _LoginViewState extends State<LoginView> {
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: <Widget>[
-            Text(
-              S.of(context).actionRecoverPassword,
-              style: Theme.of(context)
-                  .accentTextTheme
-                  .subtitle1
-                  .copyWith(fontWeight: FontWeight.w500),
+            InkWell(
+              child: Text(
+                S.of(context).actionResetPassword,
+                style: Theme.of(context)
+                    .accentTextTheme
+                    .subtitle1
+                    .copyWith(fontWeight: FontWeight.w500),
+              ),
+              onTap: () {
+                ResetPassword.show(
+                    context: context, email: emailController.text);
+                // Remove text field from focus if necessary
+                FocusScopeNode currentFocus = FocusScope.of(context);
+                if (!currentFocus.hasPrimaryFocus) {
+                  currentFocus.unfocus();
+                }
+              }
             )
           ],
         ),
@@ -153,19 +165,23 @@ class _LoginViewState extends State<LoginView> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
-                        AppButton(
-                          text: S.of(context).actionLogInAnonymously,
-                          onTap: () =>
-                              authProvider.signInAnonymously(context: context),
+                        Expanded(
+                          child: AppButton(
+                            text: S.of(context).actionLogInAnonymously,
+                            onTap: () =>
+                                authProvider.signInAnonymously(context: context),
+                          ),
                         ),
                         SizedBox(width: ScreenUtil().setWidth(30)),
-                        AppButton(
-                          color: Theme.of(context).accentColor,
-                          text: S.of(context).actionLogIn,
-                          onTap: () => authProvider.signIn(
-                              email: emailController.text,
-                              password: passwordController.text,
-                              context: context),
+                        Expanded(
+                          child: AppButton(
+                            color: Theme.of(context).accentColor,
+                            text: S.of(context).actionLogIn,
+                            onTap: () => authProvider.signIn(
+                                email: emailController.text,
+                                password: passwordController.text,
+                                context: context),
+                          ),
                         ),
                       ],
                     ),

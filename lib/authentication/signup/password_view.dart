@@ -61,7 +61,7 @@ class _PasswordViewState extends State<PasswordView> {
                     alignment: Alignment.centerLeft,
                     child: new InkWell(
                         child: new Text(
-                          S.of(context).actionRecoverPassword,
+                          S.of(context).actionResetPassword,
                           style: Theme.of(context).textTheme.caption,
                         ),
                         onTap: _handleLostPassword)),

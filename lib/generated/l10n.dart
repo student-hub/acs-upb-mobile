@@ -1,6 +1,7 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+
 import 'intl/messages_all.dart';
 
 // **************************************************************************
@@ -146,10 +147,19 @@ class S {
     );
   }
 
-  String get actionRecoverPassword {
+  String get actionResetPassword {
     return Intl.message(
-      'Recover password',
-      name: 'actionRecoverPassword',
+      'Reset password',
+      name: 'actionResetPassword',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get actionSendEmail {
+    return Intl.message(
+      'Send e-mail',
+      name: 'actionSendEmail',
       desc: '',
       args: [],
     );
@@ -416,10 +426,19 @@ class S {
     );
   }
 
-  String get messageRecoverPassword {
+  String get messageResetPassword {
     return Intl.message(
-      'Enter your e-mai in order to be able to reset your password.',
-      name: 'messageRecoverPassword',
+      'Enter your e-mai in order to receive instructions on how to reset your password.',
+      name: 'messageResetPassword',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get infoPasswordResetEmailSent {
+    return Intl.message(
+      'Please check your inbox for the password reset e-mail.',
+      name: 'infoPasswordResetEmailSent',
       desc: '',
       args: [],
     );
