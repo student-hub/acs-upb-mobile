@@ -51,20 +51,29 @@ class MyApp extends StatelessWidget {
               textStyle: theme.textTheme.button,
               backgroundColor: theme.accentColor.withOpacity(.8),
               position: ToastPosition.bottom,
-              child: MaterialApp(
-                  title: "ACS UPB Mobile",
-                  localizationsDelegates: [
-                    GlobalMaterialLocalizations.delegate,
-                    GlobalWidgetsLocalizations.delegate,
-                    S.delegate
-                  ],
-                  supportedLocales: S.delegate.supportedLocales,
-                  theme: theme,
-                  routes: {
-                    Routes.home: (context) => HomePage(),
-                    Routes.settings: (context) => SettingsPage(),
-                  },
-                  home: AppNavigator()),
+              child: GestureDetector(
+                onTap: () {
+                  // Remove current focus on tap
+                  FocusScopeNode currentFocus = FocusScope.of(context);
+                  if (!currentFocus.hasPrimaryFocus) {
+                    currentFocus.unfocus();
+                  }
+                },
+                child: MaterialApp(
+                    title: "ACS UPB Mobile",
+                    localizationsDelegates: [
+                      GlobalMaterialLocalizations.delegate,
+                      GlobalWidgetsLocalizations.delegate,
+                      S.delegate
+                    ],
+                    supportedLocales: S.delegate.supportedLocales,
+                    theme: theme,
+                    routes: {
+                      Routes.home: (context) => HomePage(),
+                      Routes.settings: (context) => SettingsPage(),
+                    },
+                    home: AppNavigator()),
+              ),
             ),
           );
         });
