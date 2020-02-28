@@ -43,8 +43,12 @@ class _LoginViewState extends State<LoginView> {
           label: S.of(context).labelEmail,
           controller: emailController,
           onChanged: (email) => setState(() {
-            canSignInWithPassword =
-                authProvider.canSignInWithPassword(email: email);
+            if (email == null || email == "") {
+              canSignInWithPassword = Future<bool>(() => null);
+            } else {
+              canSignInWithPassword =
+                  authProvider.canSignInWithPassword(email: email);
+            }
           }),
           onSubmitted: (_) =>
               FocusScope.of(context).requestFocus(passwordFocusNode),
