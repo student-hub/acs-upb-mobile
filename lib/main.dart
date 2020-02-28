@@ -33,6 +33,10 @@ class MyApp extends StatelessWidget {
         data: (brightness) => ThemeData(
             brightness: brightness,
             accentColor: _accentColor,
+            accentTextTheme: ThemeData().accentTextTheme.apply(
+                fontFamily: 'Montserrat',
+                bodyColor: _accentColor,
+                displayColor: _accentColor),
             toggleableActiveColor: _accentColor,
             appBarTheme: brightness == Brightness.light
                 ? AppBarTheme(color: _accentColor)

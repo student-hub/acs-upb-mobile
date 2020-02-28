@@ -88,26 +88,20 @@ class _LoginViewState extends State<LoginView> {
           children: <Widget>[
             Text(
               S.of(context).actionRecoverPassword,
-              style: TextStyle(
-                  color: Theme.of(context).accentColor,
-                  fontWeight: FontWeight.w500,
-                  fontSize: ScreenUtil().setSp(28)),
+              style: Theme.of(context)
+                  .accentTextTheme
+                  .subtitle1
+                  .copyWith(fontWeight: FontWeight.w500),
             )
           ],
         ),
-        // If the following is missing, the Column overflows for some reason
-        Expanded(
-          child: SizedBox(
-            height: ScreenUtil().setSp(28),
-          ),
-        )
       ],
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    ScreenUtil.init(context, width: 750, height: 1334, allowFontScaling: true);
+    ScreenUtil.init(context, width: 750, height: 1334, allowFontScaling: false);
     AuthProvider authProvider = Provider.of(context);
 
     return Scaffold(
@@ -134,7 +128,7 @@ class _LoginViewState extends State<LoginView> {
               constraints: BoxConstraints(
                   maxHeight: MediaQuery.of(context).size.height / 4),
               child: Image.asset("assets/images/city_doodle.png",
-                  color: Theme.of(context).primaryColor),
+                  color: Theme.of(context).primaryColor.withOpacity(0.4)),
             ),
           ),
           SingleChildScrollView(
@@ -155,7 +149,7 @@ class _LoginViewState extends State<LoginView> {
                       ),
                     ),
                     Expanded(child: formCard()),
-                    SizedBox(height: ScreenUtil().setSp(30)),
+                    SizedBox(height: ScreenUtil().setHeight(40)),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
@@ -164,6 +158,7 @@ class _LoginViewState extends State<LoginView> {
                           onTap: () =>
                               authProvider.signInAnonymously(context: context),
                         ),
+                        SizedBox(width: ScreenUtil().setWidth(30)),
                         AppButton(
                           color: Theme.of(context).accentColor,
                           text: S.of(context).actionLogIn,
@@ -175,15 +170,17 @@ class _LoginViewState extends State<LoginView> {
                       ],
                     ),
                     SizedBox(
-                      height: ScreenUtil().setHeight(40),
+                      height: ScreenUtil().setHeight(50),
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         horizontalLine(),
                         Text(S.of(context).actionSocialLogin,
-                            style: TextStyle(
-                                fontSize: 16.0, fontWeight: FontWeight.w500)),
+                            style: Theme.of(context)
+                                .textTheme
+                                .subtitle1
+                                .copyWith(fontWeight: FontWeight.w500)),
                         horizontalLine()
                       ],
                     ),
@@ -213,14 +210,18 @@ class _LoginViewState extends State<LoginView> {
                       children: <Widget>[
                         Text(
                           S.of(context).messageNewUser + " ",
-                          style: TextStyle(fontWeight: FontWeight.w500),
+                          style: Theme.of(context)
+                              .textTheme
+                              .subtitle1
+                              .copyWith(fontWeight: FontWeight.w400),
                         ),
                         InkWell(
                           onTap: () {},
                           child: Text(S.of(context).actionSignUp,
-                              style: TextStyle(
-                                  color: Theme.of(context).accentColor,
-                                  fontWeight: FontWeight.bold)),
+                              style: Theme.of(context)
+                                  .accentTextTheme
+                                  .subtitle1
+                                  .copyWith(fontWeight: FontWeight.w500)),
                         )
                       ],
                     )
