@@ -5,8 +5,7 @@ import 'package:acs_upb_mobile/navigation/routes.dart';
 import 'package:acs_upb_mobile/resources/banner.dart';
 import 'package:acs_upb_mobile/resources/custom_icons.dart';
 import 'package:acs_upb_mobile/widgets/button.dart';
-import 'package:acs_upb_mobile/widgets/form_card.dart';
-import 'package:acs_upb_mobile/widgets/form_text_field.dart';
+import 'package:acs_upb_mobile/widgets/form/form.dart';
 import 'package:acs_upb_mobile/widgets/social_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -23,10 +22,6 @@ class LoginView extends StatefulWidget {
 
 class _LoginViewState extends State<LoginView> {
   var emailController = TextEditingController();
-  var passwordController = TextEditingController();
-
-  var canSignInWithPassword = Future<bool>(() => null);
-  var passwordFocusNode = FocusNode();
 
   Widget horizontalLine() => Padding(
         padding: EdgeInsets.symmetric(horizontal: 16.0),
@@ -37,53 +32,27 @@ class _LoginViewState extends State<LoginView> {
         ),
       );
 
-  Widget formCard() {
+  AppForm buildForm() {
     AuthProvider authProvider = Provider.of(context);
 
-    return FormCard(
+    return AppForm(
       title: S.of(context).actionLogIn,
-      children: <Widget>[
-        FormTextField(
-          label: S.of(context).labelEmail,
-          controller: emailController,
-          onChanged: (email) => setState(() {
-            if (email == null || email == "") {
-              canSignInWithPassword = Future<bool>(() => null);
-            } else {
-              canSignInWithPassword =
-                  authProvider.canSignInWithPassword(email: email);
-            }
-          }),
-          onSubmitted: (_) =>
-              FocusScope.of(context).requestFocus(passwordFocusNode),
-          suffixIcon: FutureBuilder(
-            future: canSignInWithPassword,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.done) {
-                if (snapshot.data == null) {
-                  // Display transparent icon
-                  return CustomIcons.empty;
-                } else {
-                  return snapshot.data
-                      ? CustomIcons.valid
-                      : CustomIcons.invalid;
-                }
-              } else {
-                return CustomIcons.empty;
-              }
-            },
-          ),
-        ),
-        FormTextField(
+      items: <FormItem>[
+        FormItem(
+            label: S.of(context).labelEmail,
+            controller: emailController,
+            check: (email) => authProvider.canSignInWithPassword(email: email)),
+        FormItem(
           label: S.of(context).labelPassword,
           obscureText: true,
-          controller: passwordController,
-          focusNode: passwordFocusNode,
-          onSubmitted: (password) => authProvider.signIn(
-              email: emailController.text,
-              password: password,
-              context: context),
         ),
+      ],
+      onSubmitted: (Map<String, String> fields) => authProvider.signIn(
+        email: fields[S.of(context).labelEmail],
+        password: fields[S.of(context).labelPassword],
+        context: context,
+      ),
+      trailing: <Widget>[
         SizedBox(
           height: ScreenUtil().setHeight(35),
         ),
@@ -117,6 +86,7 @@ class _LoginViewState extends State<LoginView> {
   Widget build(BuildContext context) {
     ScreenUtil.init(context, width: 750, height: 1334, allowFontScaling: false);
     AuthProvider authProvider = Provider.of(context);
+    AppForm form = buildForm();
 
     return Scaffold(
       body: Stack(
@@ -162,7 +132,7 @@ class _LoginViewState extends State<LoginView> {
                         ],
                       ),
                     ),
-                    Expanded(child: formCard()),
+                    Expanded(child: form),
                     SizedBox(height: ScreenUtil().setHeight(40)),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -171,9 +141,11 @@ class _LoginViewState extends State<LoginView> {
                           child: AppButton(
                             text: S.of(context).actionLogInAnonymously,
                             onTap: () async {
-                              await authProvider.signInAnonymously(
+                              var result = await authProvider.signInAnonymously(
                                   context: context);
-                              Navigator.popAndPushNamed(context, Routes.home);
+                              if (result != null) {
+                                Navigator.popAndPushNamed(context, Routes.home);
+                              }
                             },
                           ),
                         ),
@@ -183,11 +155,10 @@ class _LoginViewState extends State<LoginView> {
                             color: Theme.of(context).accentColor,
                             text: S.of(context).actionLogIn,
                             onTap: () async {
-                              authProvider.signIn(
-                                  email: emailController.text,
-                                  password: passwordController.text,
-                                  context: context);
-                              Navigator.popAndPushNamed(context, Routes.home);
+                              var result = await form.submit();
+                              if (result != null) {
+                                Navigator.popAndPushNamed(context, Routes.home);
+                              }
                             },
                           ),
                         ),

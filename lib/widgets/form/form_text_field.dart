@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 class FormTextField extends StatefulWidget {
   final String label;
+  final String hint;
   final bool obscureText;
   final TextEditingController controller;
   final FocusNode focusNode;
@@ -11,6 +12,7 @@ class FormTextField extends StatefulWidget {
 
   FormTextField(
       {this.label,
+      this.hint,
       this.obscureText = false,
       this.controller,
       this.focusNode,
@@ -30,7 +32,8 @@ class _FormTextFieldState extends State<FormTextField> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           // The following prevents the text field from overflowing
-          Expanded(child: SizedBox(
+          Expanded(
+              child: SizedBox(
             height: 6,
           )),
           Padding(
@@ -45,7 +48,7 @@ class _FormTextFieldState extends State<FormTextField> {
             onChanged: widget.onChanged,
             onSubmitted: widget.onSubmitted,
             decoration: InputDecoration(
-              hintText: widget.label.toLowerCase(),
+              hintText: widget.hint ?? widget.label.toLowerCase(),
               suffixIcon: widget.suffixIcon,
             ),
           ),
