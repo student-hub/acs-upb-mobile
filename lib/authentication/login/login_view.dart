@@ -211,7 +211,9 @@ class _LoginViewState extends State<LoginView> {
                               .copyWith(fontWeight: FontWeight.w400),
                         ),
                         InkWell(
-                          onTap: () {},
+                          onTap: () {
+                            Navigator.pushNamed(context, Routes.signUp);
+                          },
                           child: Text(S.of(context).actionSignUp,
                               style: Theme.of(context)
                                   .accentTextTheme

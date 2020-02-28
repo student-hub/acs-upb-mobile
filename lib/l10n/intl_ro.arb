@@ -7,7 +7,15 @@
   "labelEmail": "Email",
   "labelPassword": "Parolă",
   "labelConfirmPassword": "Confirmare parolă",
-  "labelName": "Nume & prenume",
+  "labelFirstName": "Prenume",
+  "labelLastName": "Nume",
+  "labelGroup": "Grupa",
+
+  "hintEmail": "john.doe@stud.acs.upb.ro",
+  "hintPassword": "····················",
+  "hintFirstName": "John",
+  "hintLastName": "Doe",
+  "hintGroup": "314CB",
   
   "actionSignUp": "Înregistrare",
   "actionLogIn": "Conectare",

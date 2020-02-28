@@ -35,7 +35,8 @@ class AppForm extends StatefulWidget {
   /// Widgets to be added at the end of the form
   final List<Widget> trailing;
 
-  AppForm({this.title, this.items, this.onSubmitted, this.trailing});
+  AppForm({this.title, this.items, this.onSubmitted, List<Widget> trailing})
+      : this.trailing = trailing ?? <Widget>[];
 
   @override
   _AppFormState createState() => _AppFormState();
@@ -51,52 +52,53 @@ class _AppFormState extends State<AppForm> {
     return FormCard(
         title: widget.title,
         children: widget.items.asMap().entries.map<Widget>((e) {
-              int i = e.key;
-              FormItem field = e.value;
+                  int i = e.key;
+                  FormItem field = e.value;
 
-              return FormTextField(
-                label: field.label,
-                hint: field.hint,
-                obscureText: field.obscureText,
-                controller: field.controller,
-                focusNode: field.focusNode,
-                onChanged: (text) => setState(() {
-                  if (text == null || text == "") {
-                    field.valid = Future<bool>(() => null);
-                  } else {
-                    field.valid = field.check(text);
-                  }
-                }),
-                suffixIcon: field.check == null
-                    ? null
-                    : FutureBuilder(
-                        future: field.valid,
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.done) {
-                            if (snapshot.data == null) {
-                              // Display transparent icon
-                              return CustomIcons.empty;
-                            } else {
-                              return snapshot.data
-                                  ? CustomIcons.valid
-                                  : CustomIcons.invalid;
-                            }
-                          } else {
-                            return CustomIcons.empty;
-                          }
-                        },
-                      ),
-                onSubmitted: (_) {
-                  if (i < widget.items.length - 1) {
-                    FocusScope.of(context)
-                        .requestFocus(widget.items[i + 1].focusNode);
-                  } else {
-                    widget.submit();
-                  }
-                },
-              );
-            }).toList() +
-            widget.trailing);
+                  return FormTextField(
+                    label: field.label,
+                    hint: field.hint,
+                    obscureText: field.obscureText,
+                    controller: field.controller,
+                    focusNode: field.focusNode,
+                    onChanged: (text) => setState(() {
+                      if (text == null || text == "") {
+                        field.valid = Future<bool>(() => null);
+                      } else {
+                        field.valid = field.check(text);
+                      }
+                    }),
+                    suffixIcon: field.check == null
+                        ? null
+                        : FutureBuilder(
+                            future: field.valid,
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.done) {
+                                if (snapshot.data == null) {
+                                  // Display transparent icon
+                                  return CustomIcons.empty;
+                                } else {
+                                  return snapshot.data
+                                      ? CustomIcons.valid
+                                      : CustomIcons.invalid;
+                                }
+                              } else {
+                                return CustomIcons.empty;
+                              }
+                            },
+                          ),
+                    onSubmitted: (_) {
+                      if (i < widget.items.length - 1) {
+                        FocusScope.of(context)
+                            .requestFocus(widget.items[i + 1].focusNode);
+                      } else {
+                        widget.submit();
+                      }
+                    },
+                  );
+                }).toList() +
+                widget.trailing ??
+            <Widget>[]);
   }
 }

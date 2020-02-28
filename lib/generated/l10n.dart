@@ -93,10 +93,73 @@ class S {
     );
   }
 
-  String get labelName {
+  String get labelFirstName {
     return Intl.message(
-      'Last & first name',
-      name: 'labelName',
+      'First name',
+      name: 'labelFirstName',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get labelLastName {
+    return Intl.message(
+      'Last name',
+      name: 'labelLastName',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get labelGroup {
+    return Intl.message(
+      'Group',
+      name: 'labelGroup',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get hintEmail {
+    return Intl.message(
+      'john.doe@stud.acs.upb.ro',
+      name: 'hintEmail',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get hintPassword {
+    return Intl.message(
+      '····················',
+      name: 'hintPassword',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get hintFirstName {
+    return Intl.message(
+      'John',
+      name: 'hintFirstName',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get hintLastName {
+    return Intl.message(
+      'Doe',
+      name: 'hintLastName',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get hintGroup {
+    return Intl.message(
+      '314CB',
+      name: 'hintGroup',
       desc: '',
       args: [],
     );

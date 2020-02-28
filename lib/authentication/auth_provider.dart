@@ -133,6 +133,18 @@ class AuthProvider with ChangeNotifier {
     return providers.contains('password');
   }
 
+  Future<bool> canSignUpWithEmail({String email}) async {
+    List<String> providers = [];
+    try {
+      providers =
+      await FirebaseAuth.instance.fetchSignInMethodsForEmail(email: email);
+    } catch (e) {
+      _errorHandler(e, null);
+      return false;
+    }
+    return providers.isEmpty;
+  }
+
   Future<bool> sendPasswordResetEmail(
       {String email, BuildContext context}) async {
     try {
