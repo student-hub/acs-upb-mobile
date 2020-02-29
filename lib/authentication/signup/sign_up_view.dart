@@ -18,16 +18,9 @@ class SignUpView extends StatefulWidget {
 }
 
 class _SignUpViewState extends State<SignUpView> {
-  Widget horizontalLine() => Padding(
-        padding: EdgeInsets.symmetric(horizontal: 16.0),
-        child: Container(
-          width: ScreenUtil().setWidth(120),
-          height: 1.0,
-          color: Colors.black26.withOpacity(.2),
-        ),
-      );
+  AppForm appForm;
 
-  AppForm buildForm() {
+  AppForm _buildForm() {
     TextEditingController passwordController = TextEditingController();
     AuthProvider authProvider = Provider.of(context);
 
@@ -78,7 +71,9 @@ class _SignUpViewState extends State<SignUpView> {
   @override
   Widget build(BuildContext context) {
     ScreenUtil.init(context, width: 750, height: 1334, allowFontScaling: false);
-    AppForm form = buildForm();
+    if (appForm == null) {
+      appForm = _buildForm();  // only build form once
+    }
 
     return Scaffold(
       body: Stack(
@@ -115,7 +110,7 @@ class _SignUpViewState extends State<SignUpView> {
                         ],
                       ),
                     ),
-                    Expanded(child: form),
+                    Expanded(child: appForm),
                     SizedBox(height: ScreenUtil().setHeight(40)),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -125,7 +120,7 @@ class _SignUpViewState extends State<SignUpView> {
                             color: Theme.of(context).accentColor,
                             text: S.of(context).actionSignUp,
                             onTap: () async {
-                              var result = await form.submit();
+                              var result = await appForm.submit();
                               if (result != null) {
                                 Navigator.popAndPushNamed(context, Routes.home);
                               }

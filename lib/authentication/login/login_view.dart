@@ -22,6 +22,7 @@ class LoginView extends StatefulWidget {
 
 class _LoginViewState extends State<LoginView> {
   var emailController = TextEditingController();
+  AppForm appForm;
 
   Widget horizontalLine() => Padding(
         padding: EdgeInsets.symmetric(horizontal: 16.0),
@@ -32,7 +33,7 @@ class _LoginViewState extends State<LoginView> {
         ),
       );
 
-  AppForm buildForm() {
+  AppForm _buildForm() {
     AuthProvider authProvider = Provider.of(context);
 
     return AppForm(
@@ -88,7 +89,9 @@ class _LoginViewState extends State<LoginView> {
   Widget build(BuildContext context) {
     ScreenUtil.init(context, width: 750, height: 1334, allowFontScaling: false);
     AuthProvider authProvider = Provider.of(context);
-    AppForm form = buildForm();
+    if (appForm == null) {
+      appForm = _buildForm();  // only build form once
+    }
 
     return Scaffold(
       body: Stack(
@@ -134,7 +137,7 @@ class _LoginViewState extends State<LoginView> {
                         ],
                       ),
                     ),
-                    Expanded(child: form),
+                    Expanded(child: appForm),
                     SizedBox(height: ScreenUtil().setHeight(40)),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -157,7 +160,7 @@ class _LoginViewState extends State<LoginView> {
                             color: Theme.of(context).accentColor,
                             text: S.of(context).actionLogIn,
                             onTap: () async {
-                              var result = await form.submit();
+                              var result = await appForm.submit();
                               if (result != null) {
                                 Navigator.popAndPushNamed(context, Routes.home);
                               }
