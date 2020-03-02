@@ -1,8 +1,7 @@
 import 'package:acs_upb_mobile/resources/custom_icons.dart';
 import 'package:acs_upb_mobile/widgets/form/form_card.dart';
+import 'package:acs_upb_mobile/widgets/form/form_text_field.dart';
 import 'package:flutter/cupertino.dart';
-
-import 'file:///C:/Users/sako_/StudioProjects/acs-upb-mobile/lib/widgets/form/form_text_field.dart';
 
 class FormItem {
   final String label;
@@ -42,7 +41,7 @@ class AppForm extends StatefulWidget {
   _AppFormState createState() => _AppFormState();
 
   dynamic submit() {
-    onSubmitted({for (var field in items) field.label: field.controller.text});
+    return onSubmitted({for (var field in items) field.label: field.controller.text});
   }
 }
 
@@ -100,5 +99,13 @@ class _AppFormState extends State<AppForm> {
                 }).toList() +
                 widget.trailing ??
             <Widget>[]);
+  }
+
+  @override void dispose() {
+    widget.items.forEach((field) {
+      field.controller.dispose();
+      field.focusNode.dispose();
+    });
+    super.dispose();
   }
 }

@@ -1,5 +1,5 @@
-import 'package:acs_upb_mobile/authentication/login/login_view.dart';
-import 'package:acs_upb_mobile/authentication/signup/sign_up_view.dart';
+import 'package:acs_upb_mobile/authentication/view/login_view.dart';
+import 'package:acs_upb_mobile/authentication/view/sign_up_view.dart';
 import 'package:acs_upb_mobile/pages/settings/settings_page.dart';
 
 class Routes {

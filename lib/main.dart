@@ -1,6 +1,6 @@
 import 'package:acs_upb_mobile/authentication/auth_provider.dart';
-import 'package:acs_upb_mobile/authentication/login/login_view.dart';
-import 'package:acs_upb_mobile/authentication/signup/sign_up_view.dart';
+import 'package:acs_upb_mobile/authentication/view/login_view.dart';
+import 'package:acs_upb_mobile/authentication/view/sign_up_view.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/navigation/bottom_navigation_bar.dart';
 import 'package:acs_upb_mobile/navigation/routes.dart';

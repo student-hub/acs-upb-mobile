@@ -273,6 +273,33 @@ class S {
     );
   }
 
+  String get errorMissingFirstName {
+    return Intl.message(
+      'Please provide your first name(s).',
+      name: 'errorMissingFirstName',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get errorMissingLastName {
+    return Intl.message(
+      'Please provide your last name(s).',
+      name: 'errorMissingLastName',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get errorEmailInUse {
+    return Intl.message(
+      'There is already an account associated with this e-mail address',
+      name: 'errorEmailInUse',
+      desc: '',
+      args: [],
+    );
+  }
+
   String get errorEmailNotFound {
     return Intl.message(
       'An account associated with that e-mail could not be found. Please sign up instead.',
@@ -311,8 +338,17 @@ class S {
 
   String get warningPasswordLength {
     return Intl.message(
-      'The password must be 6 characters long or more.',
+      'The password must be 8 characters long or more.',
       name: 'warningPasswordLength',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get warningPasswordCharacters {
+    return Intl.message(
+      'The password must include lowercase and uppercase letters and at least one number and special character (!@#\$&*~).',
+      name: 'warningPasswordCharacters',
       desc: '',
       args: [],
     );
@@ -484,6 +520,15 @@ class S {
     return Intl.message(
       'New user?',
       name: 'messageNewUser',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get messageAccountCreated {
+    return Intl.message(
+      'Account created successfully.',
+      name: 'messageAccountCreated',
       desc: '',
       args: [],
     );

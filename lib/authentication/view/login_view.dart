@@ -1,5 +1,5 @@
 import 'package:acs_upb_mobile/authentication/auth_provider.dart';
-import 'package:acs_upb_mobile/authentication/login/recover_password_dialog.dart';
+import 'package:acs_upb_mobile/authentication/view/recover_password_dialog.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/navigation/routes.dart';
 import 'package:acs_upb_mobile/resources/banner.dart';
@@ -22,7 +22,7 @@ class LoginView extends StatefulWidget {
 
 class _LoginViewState extends State<LoginView> {
   var emailController = TextEditingController();
-  AppForm appForm;
+  List<FormItem> formItems;
 
   Widget horizontalLine() => Padding(
         padding: EdgeInsets.symmetric(horizontal: 16.0),
@@ -33,28 +33,44 @@ class _LoginViewState extends State<LoginView> {
         ),
       );
 
-  AppForm _buildForm() {
+  List<FormItem> _buildFormItems() {
+    // Only build them once to avoid the cursor staying everywhere
+    if (formItems != null) {
+      return formItems;
+    }
+
+    AuthProvider authProvider = Provider.of(context);
+    formItems =  <FormItem>[
+      FormItem(
+          label: S.of(context).labelEmail,
+          hint: S.of(context).hintEmail,
+          controller: emailController,
+          check: (email) => authProvider.canSignInWithPassword(email: email)),
+      FormItem(
+        label: S.of(context).labelPassword,
+        hint: S.of(context).hintPassword,
+        obscureText: true,
+      ),
+    ];
+    return formItems;
+  }
+
+  AppForm _buildForm(BuildContext context) {
     AuthProvider authProvider = Provider.of(context);
 
     return AppForm(
       title: S.of(context).actionLogIn,
-      items: <FormItem>[
-        FormItem(
-            label: S.of(context).labelEmail,
-            hint: S.of(context).hintEmail,
-            controller: emailController,
-            check: (email) => authProvider.canSignInWithPassword(email: email)),
-        FormItem(
-          label: S.of(context).labelPassword,
-          hint: S.of(context).hintPassword,
-          obscureText: true,
-        ),
-      ],
-      onSubmitted: (Map<String, String> fields) => authProvider.signIn(
-        email: fields[S.of(context).labelEmail],
-        password: fields[S.of(context).labelPassword],
-        context: context,
-      ),
+      items: _buildFormItems(),
+      onSubmitted: (Map<String, String> fields) async {
+        var result = await authProvider.signIn(
+          email: fields[S.of(context).labelEmail],
+          password: fields[S.of(context).labelPassword],
+          context: context,
+        );
+        if (result != null) {
+          Navigator.popAndPushNamed(context, Routes.home);
+        }
+      },
       trailing: <Widget>[
         SizedBox(
           height: ScreenUtil().setHeight(35),
@@ -89,9 +105,7 @@ class _LoginViewState extends State<LoginView> {
   Widget build(BuildContext context) {
     ScreenUtil.init(context, width: 750, height: 1334, allowFontScaling: false);
     AuthProvider authProvider = Provider.of(context);
-    if (appForm == null) {
-      appForm = _buildForm();  // only build form once
-    }
+    AppForm loginForm = _buildForm(context);
 
     return Scaffold(
       body: Stack(
@@ -137,7 +151,7 @@ class _LoginViewState extends State<LoginView> {
                         ],
                       ),
                     ),
-                    Expanded(child: appForm),
+                    Expanded(child: loginForm),
                     SizedBox(height: ScreenUtil().setHeight(40)),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -159,12 +173,7 @@ class _LoginViewState extends State<LoginView> {
                           child: AppButton(
                             color: Theme.of(context).accentColor,
                             text: S.of(context).actionLogIn,
-                            onTap: () async {
-                              var result = await appForm.submit();
-                              if (result != null) {
-                                Navigator.popAndPushNamed(context, Routes.home);
-                              }
-                            },
+                            onTap: () => loginForm.submit(),
                           ),
                         ),
                       ],

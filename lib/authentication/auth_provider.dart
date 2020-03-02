@@ -1,7 +1,9 @@
 import 'dart:async';
 
+import 'package:acs_upb_mobile/authentication/model/user.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -50,8 +52,11 @@ class AuthProvider with ChangeNotifier {
               ' ' +
               S.of(context).warningTryAgainLater);
           break;
+        case 'ERROR_EMAIL_ALREADY_IN_USE':
+          AppToast.show(S.of(context).errorEmailInUse);
+          break;
         default:
-          AppToast.show(S.of(context).errorSomethingWentWrong);
+          AppToast.show(e.message);
       }
     }
   }
@@ -60,9 +65,9 @@ class AuthProvider with ChangeNotifier {
     assert(user != null);
     bool isAnonymousUser = true;
     for (UserInfo info in user.providerData) {
-      if (info.providerId == "facebook.com" ||
-          info.providerId == "google.com" ||
-          info.providerId == "password") {
+      if (info.providerId == 'facebook.com' ||
+          info.providerId == 'google.com' ||
+          info.providerId == 'password') {
         isAnonymousUser = false;
         break;
       }
@@ -74,18 +79,25 @@ class AuthProvider with ChangeNotifier {
     return user != null;
   }
 
+  Future<User> getCurrentUser() async {
+    DocumentSnapshot snapshot =
+        await Firestore.instance.collection('users').document(user.uid).get();
+    return User.fromSnapshot(snapshot);
+  }
+
   Future<AuthResult> signInAnonymously({BuildContext context}) async {
     return FirebaseAuth.instance.signInAnonymously().catchError((e) {
       _errorHandler(e, context);
+      return null;
     });
   }
 
   Future<AuthResult> signIn(
       {String email, String password, BuildContext context}) async {
-    if (email == null || email == "") {
+    if (email == null || email == '') {
       AppToast.show(S.of(context).errorInvalidEmail);
       return null;
-    } else if (password == null || password == "") {
+    } else if (password == null || password == '') {
       AppToast.show(S.of(context).errorNoPassword);
       return null;
     }
@@ -94,6 +106,7 @@ class AuthProvider with ChangeNotifier {
         .fetchSignInMethodsForEmail(email: email)
         .catchError((e) {
       _errorHandler(e, context);
+      return null;
     });
 
     // An error occurred (and was already handled)
@@ -111,12 +124,17 @@ class AuthProvider with ChangeNotifier {
         .signInWithEmailAndPassword(email: email, password: password)
         .catchError((e) {
       _errorHandler(e, context);
+      return null;
     });
   }
 
   Future<void> signOut() {
     if (isAnonymous) {
-      user.delete();
+      try {
+        user.delete();
+      } catch (e) {
+        _errorHandler(e, null);
+      }
     }
     return FirebaseAuth.instance.signOut();
   }
@@ -137,7 +155,7 @@ class AuthProvider with ChangeNotifier {
     List<String> providers = [];
     try {
       providers =
-      await FirebaseAuth.instance.fetchSignInMethodsForEmail(email: email);
+          await FirebaseAuth.instance.fetchSignInMethodsForEmail(email: email);
     } catch (e) {
       _errorHandler(e, null);
       return false;
@@ -154,9 +172,94 @@ class AuthProvider with ChangeNotifier {
         AppToast.show(S.of(context).infoPasswordResetEmailSent);
       }
       return true;
-    } catch(e) {
+    } catch (e) {
       _errorHandler(e, context);
       return false;
+    }
+  }
+
+  Future<bool> isStrongPassword({String password, BuildContext context}) async {
+    if (password.length < 8) {
+      if (context != null) {
+        AppToast.show(S.of(context).warningPasswordLength);
+      }
+      return false;
+    }
+    String pattern =
+        r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$';
+    RegExp regExp = new RegExp(pattern);
+    if (!regExp.hasMatch(password)) {
+      if (context != null) {
+        AppToast.show(S.of(context).warningPasswordCharacters);
+      }
+      return false;
+    }
+    return true;
+  }
+
+  /// Create a new user with the data in [info].
+  Future<User> signUp({Map<String, String> info, BuildContext context}) async {
+    String email = info[S.of(context).labelEmail];
+    String password = info[S.of(context).labelPassword];
+    String confirmPassword = info[S.of(context).labelConfirmPassword];
+    String firstName = info[S.of(context).labelFirstName];
+    String lastName = info[S.of(context).labelLastName];
+    String group = info[S.of(context).labelGroup];
+
+    if (email == null || email == '') {
+      AppToast.show(S.of(context).errorInvalidEmail);
+      return null;
+    } else if (password == null || password == '') {
+      AppToast.show(S.of(context).errorNoPassword);
+      return null;
+    }
+    if (confirmPassword == null || confirmPassword != password) {
+      AppToast.show(S.of(context).errorPasswordsDiffer);
+      return null;
+    }
+    if (firstName == null || firstName == '') {
+      AppToast.show(S.of(context).errorMissingFirstName);
+      return null;
+    }
+    if (lastName == null || lastName == '') {
+      AppToast.show(S.of(context).errorMissingLastName);
+      return null;
+    }
+    if (!await isStrongPassword(password: password, context: context)) {
+      return null;
+    }
+
+    try {
+      // Create user
+      AuthResult res = await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(email: email, password: password);
+
+      // Update display name
+      try {
+        var userUpdateInfo = new UserUpdateInfo();
+        userUpdateInfo.displayName = firstName + ' ' + lastName;
+        await res.user.updateProfile(userUpdateInfo);
+        Navigator.pop(context, true);
+      } catch (e) {
+        _errorHandler(e, context);
+      }
+
+      // Create document in 'users'
+      var user = User(
+          uid: res.user.uid,
+          firstName: firstName,
+          lastName: lastName,
+          group: group);
+
+      DocumentReference ref =
+          Firestore.instance.collection('users').document(user.uid);
+      ref.setData(user.toData());
+
+      AppToast.show(S.of(context).messageAccountCreated);
+      return user;
+    } catch (e) {
+      _errorHandler(e, context);
+      return null;
     }
   }
 }

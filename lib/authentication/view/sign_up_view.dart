@@ -18,62 +18,82 @@ class SignUpView extends StatefulWidget {
 }
 
 class _SignUpViewState extends State<SignUpView> {
-  AppForm appForm;
+  List<FormItem> formItems;
 
-  AppForm _buildForm() {
+  List<FormItem> _buildFormItems() {
+    // Only build them once to avoid the cursor staying everywhere
+    if (formItems != null) {
+      return formItems;
+    }
+
     TextEditingController passwordController = TextEditingController();
+    AuthProvider authProvider = Provider.of(context);
+
+    formItems = <FormItem>[
+      FormItem(
+        label: S.of(context).labelEmail,
+        hint: S.of(context).hintEmail,
+        check: (email) => authProvider.canSignUpWithEmail(email: email),
+      ),
+      FormItem(
+        label: S.of(context).labelPassword,
+        hint: S.of(context).hintPassword,
+        controller: passwordController,
+        obscureText: true,
+        check: (password) =>
+            authProvider.isStrongPassword(password: password),
+      ),
+      FormItem(
+        label: S.of(context).labelConfirmPassword,
+        hint: S.of(context).hintPassword,
+        obscureText: true,
+        check: (password) async {
+          return password == passwordController.text;
+        },
+      ),
+      FormItem(
+        label: S.of(context).labelFirstName,
+        hint: S.of(context).hintFirstName,
+      ),
+      FormItem(
+        label: S.of(context).labelLastName,
+        hint: S.of(context).hintLastName,
+      ),
+      FormItem(
+        label: S.of(context).labelGroup,
+        hint: S.of(context).hintGroup,
+        check: (group) async {
+          return group.length == 5 && group[0] == '3';
+        },
+      ),
+    ];
+    return formItems;
+  }
+
+
+  AppForm _buildForm(BuildContext context) {
     AuthProvider authProvider = Provider.of(context);
 
     return AppForm(
       title: S.of(context).actionSignUp,
-      items: <FormItem>[
-        FormItem(
-            label: S.of(context).labelEmail,
-            hint: S.of(context).hintEmail,
-            check: (email) => authProvider.canSignUpWithEmail(email: email)),
-        FormItem(
-          label: S.of(context).labelPassword,
-          hint: S.of(context).hintPassword,
-          controller: passwordController,
-          obscureText: true,
-        ),
-        FormItem(
-            label: S.of(context).labelConfirmPassword,
-            hint: S.of(context).hintPassword,
-            obscureText: true,
-            check: (password) async {
-              return password == passwordController.text;
-            }),
-        FormItem(
-          label: S.of(context).labelFirstName,
-          hint: S.of(context).hintFirstName,
-        ),
-        FormItem(
-          label: S.of(context).labelLastName,
-          hint: S.of(context).hintLastName,
-        ),
-        FormItem(
-          label: S.of(context).labelGroup,
-          hint: S.of(context).hintGroup,
-          check: (group) async {
-            return group.length == 5 && group[0] == '3';
-          }
-        ),
-      ],
-      onSubmitted: (Map<String, String> fields) => authProvider.signIn(
-        email: fields[S.of(context).labelEmail],
-        password: fields[S.of(context).labelPassword],
-        context: context,
-      ),
+      items: _buildFormItems(),
+      onSubmitted: (Map<String, String> fields) async {
+        var user = await authProvider.signUp(
+          info: fields,
+          context: context,
+        );
+        if (user != null) {
+          // Remove all routes below and push home page
+          Navigator.pushNamedAndRemoveUntil(context, Routes.home, (route) => false);
+        }
+      },
     );
   }
 
   @override
   Widget build(BuildContext context) {
     ScreenUtil.init(context, width: 750, height: 1334, allowFontScaling: false);
-    if (appForm == null) {
-      appForm = _buildForm();  // only build form once
-    }
+    AppForm signUpForm = _buildForm(context);
 
     return Scaffold(
       body: Stack(
@@ -110,21 +130,25 @@ class _SignUpViewState extends State<SignUpView> {
                         ],
                       ),
                     ),
-                    Expanded(child: appForm),
+                    Expanded(child: signUpForm),
                     SizedBox(height: ScreenUtil().setHeight(40)),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
                         Expanded(
                           child: AppButton(
+                            text: S.of(context).buttonCancel,
+                            onTap: () async {
+                              return Navigator.pop(context);
+                            },
+                          ),
+                        ),
+                        SizedBox(width: ScreenUtil().setWidth(30)),
+                        Expanded(
+                          child: AppButton(
                             color: Theme.of(context).accentColor,
                             text: S.of(context).actionSignUp,
-                            onTap: () async {
-                              var result = await appForm.submit();
-                              if (result != null) {
-                                Navigator.popAndPushNamed(context, Routes.home);
-                              }
-                            },
+                            onTap: () => signUpForm.submit(),
                           ),
                         ),
                       ],
