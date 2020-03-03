@@ -11,41 +11,11 @@ class ProfilePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    AuthProvider authProvider = Provider.of(context);
+    AuthProvider authProvider = Provider.of<AuthProvider>(context);
 
-    Widget body;
-    if (authProvider.isAuthenticated) {
-      body = Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Image.asset('assets/images/welcome.png'),
-          SizedBox(
-            height: 32,
-          ),
-          Text(
-            "Welcome to the world\nClick on floating action autton to sign out.",
-            textAlign: TextAlign.center,
-          ),
-        ],
-      );
-    } else {
-      body = Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Image.asset('assets/images/login.png'),
-          SizedBox(
-            height: 32,
-          ),
-          Text(
-            "Login to continue\nClick on floating action button to sign in anonymously.",
-            textAlign: TextAlign.center,
-          ),
-        ],
-      );
-    }
     return AppScaffold(
       title: title,
-      body: body,
+      body: Container(),
       floatingActionButton: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: <Widget>[
