@@ -1,7 +1,8 @@
+import 'package:acs_upb_mobile/authentication/auth_provider.dart';
+import 'package:acs_upb_mobile/navigation/routes.dart';
+import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
-import 'auth_provider.dart';
 
 class ProfilePage extends StatelessWidget {
   ProfilePage({Key key, this.title}) : super(key: key);
@@ -42,12 +43,8 @@ class ProfilePage extends StatelessWidget {
         ],
       );
     }
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        title: Text(title),
-        centerTitle: true,
-      ),
+    return AppScaffold(
+      title: title,
       body: body,
       floatingActionButton: Column(
         mainAxisAlignment: MainAxisAlignment.end,
@@ -62,8 +59,9 @@ class ProfilePage extends StatelessWidget {
             ),
           if (authProvider.isAuthenticated)
             FloatingActionButton(
-              onPressed: () {
+              onPressed: () async {
                 authProvider.signOut();
+                Navigator.popAndPushNamed(context, Routes.login);
               },
               tooltip: 'Sign Out',
               child: Icon(Icons.exit_to_app),

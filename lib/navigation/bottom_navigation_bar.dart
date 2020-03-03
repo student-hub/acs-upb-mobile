@@ -1,10 +1,9 @@
 import 'package:acs_upb_mobile/generated/l10n.dart';
-import 'package:acs_upb_mobile/module/home/home_page.dart';
-import 'package:acs_upb_mobile/module/login/profile_page.dart';
+import 'package:acs_upb_mobile/pages/home/home_page.dart';
+import 'package:acs_upb_mobile/pages/profile/profile_page.dart';
+import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
-import 'scaffold.dart';
 
 class AppBottomNavigationBar extends StatefulWidget {
   @override
@@ -16,10 +15,10 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar> {
   Widget build(BuildContext context) {
     var currentTab = [
       HomePage(),
-      AppScaffold(title: S.of(context).drawerItemTimetable), // TODO: Timetable
-      AppScaffold(title: S.of(context).drawerItemWebsites), // TODO: Websites
-      AppScaffold(title: S.of(context).drawerItemMap), // TODO: Map
-      ProfilePage(title: S.of(context).drawerHeaderProfile), // TODO: Profile
+      AppScaffold(title: S.of(context).navigationTimetable), // TODO: Timetable
+      AppScaffold(title: S.of(context).navigationWebsites), // TODO: Websites
+      AppScaffold(title: S.of(context).navigationMap), // TODO: Map
+      ProfilePage(title: S.of(context).navigationProfile), // TODO: Profile
     ];
     var provider = Provider.of<BottomNavigationBarProvider>(context);
 
@@ -34,23 +33,23 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar> {
         items: [
           BottomNavigationBarItem(
             icon: new Icon(Icons.home),
-            title: new Text(S.of(context).drawerHeaderHome),
+            title: new Text(S.of(context).navigationHome),
           ),
           BottomNavigationBarItem(
             icon: new Icon(Icons.calendar_today),
-            title: new Text(S.of(context).drawerItemTimetable),
+            title: new Text(S.of(context).navigationTimetable),
           ),
           BottomNavigationBarItem(
             icon: new Icon(Icons.public),
-            title: new Text(S.of(context).drawerItemWebsites),
+            title: new Text(S.of(context).navigationWebsites),
           ),
           BottomNavigationBarItem(
             icon: new Icon(Icons.map),
-            title: new Text(S.of(context).drawerItemMap),
+            title: new Text(S.of(context).navigationMap),
           ),
           BottomNavigationBarItem(
             icon: new Icon(Icons.person),
-            title: new Text(S.of(context).drawerHeaderProfile),
+            title: new Text(S.of(context).navigationProfile),
           ),
         ],
         showUnselectedLabels: true,

@@ -1,50 +1,72 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8">
-  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
-  <meta name="description" content="A mobile application for students at ACS UPB.">
+    <meta charset="UTF-8">
+    <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+    <meta name="description" content="A mobile application for students at ACS UPB.">
 
-  <!-- iOS meta tags & icons -->
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-status-bar-style" content="black">
-  <meta content="ACS UPB Mobile" name="apple-mobile-web-app-title">
+    <!-- iOS meta tags & icons -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-status-bar-style" content="black">
+    <meta content="ACS UPB Mobile" name="apple-mobile-web-app-title">
 
-  <title>ACS UPB Mobile</title>
-  <link rel="manifest" href="/manifest.json">
+    <title>ACS UPB Mobile</title>
+    <link rel="manifest" href="/manifest.json">
 
-  <!-- Favicon -->
-  <link href="/icons/apple-touch-icon.png" rel="apple-touch-icon" sizes="180x180">
-  <link href="/icons/favicon-32x32.png" rel="icon" sizes="32x32" type="image/png">
-  <link href="/icons/favicon-16x16.png" rel="icon" sizes="16x16" type="image/png">
-  <link color="#5bbad5" href="/icons/safari-pinned-tab.svg" rel="mask-icon">
-  <link href="/icons/favicon.ico" rel="shortcut icon">
-  <meta content="ACS UPB Mobile" name="application-name">
-  <meta content="#2b5797" name="msapplication-TileColor">
-  <meta content="/browserconfig.xml" name="msapplication-config">
-  <meta content="#ffffff" name="theme-color">
+    <!-- Favicon -->
+    <link href="/icons/apple-touch-icon.png" rel="apple-touch-icon" sizes="180x180">
+    <link href="/icons/favicon-32x32.png" rel="icon" sizes="32x32" type="image/png">
+    <link href="/icons/favicon-16x16.png" rel="icon" sizes="16x16" type="image/png">
+    <link color="#5bbad5" href="/icons/safari-pinned-tab.svg" rel="mask-icon">
+    <link href="/icons/favicon.ico" rel="shortcut icon">
+    <meta content="ACS UPB Mobile" name="application-name">
+    <meta content="#2b5797" name="msapplication-TileColor">
+    <meta content="/browserconfig.xml" name="msapplication-config">
+    <meta content="#ffffff" name="theme-color">
+
+    <!-- Verify ownership for Norton SafeWeb -->
+    <meta name="norton-safeweb-site-verification"
+          content="f5j4iu-3ci2969eehgx9av87gi4dr8x0os0f1lj-4qj5qg-prszzs2gei63gxtrti-e2subyfqakx2041dbahrhfu43uijdy-gbryzh6byx0jwff2eu8w9tj5l47ej-j"/>
 </head>
 <body>
 <!-- The core Firebase JS SDK is always required and must be listed first -->
-<script src="/__/firebase/7.8.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.9.2/firebase-app.js"></script>
 
 <!-- SDKs for Firebase products
      https://firebase.google.com/docs/web/setup#available-libraries -->
-<script src="/__/firebase/7.8.1/firebase-analytics.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.9.2/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.9.2/firebase-analytics.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.9.2/firebase-firestore.js"></script>
 
-<!-- Initialize Firebase -->
-<script src="/__/firebase/init.js"></script>
+<script>
+  // Your web app's Firebase configuration
+  var firebaseConfig = {
+    apiKey: "AIzaSyC6-BEfdxQHSOTdpOfqLUB8_j7CGu4DvV0",
+    authDomain: "acs-upb-mobile.firebaseapp.com",
+    databaseURL: "https://acs-upb-mobile.firebaseio.com",
+    projectId: "acs-upb-mobile",
+    storageBucket: "acs-upb-mobile.appspot.com",
+    messagingSenderId: "611150208061",
+    appId: "1:611150208061:web:b62a7862a75930f48a1e54",
+    measurementId: "G-S7BTKYBV5T"
+  };
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  firebase.analytics();
+
+</script>
 
 <!-- This script installs service_worker.js to provide PWA functionality to
      application. For more information, see:
      https://developers.google.com/web/fundamentals/primers/service-workers -->
-  <script>
+<script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', function () {
         navigator.serviceWorker.register('/flutter_service_worker.js');
       });
     }
-  </script>
-  <script src="main.dart.js" type="application/javascript"></script>
+
+</script>
+<script src="main.dart.js" type="application/javascript"></script>
 </body>
 </html>

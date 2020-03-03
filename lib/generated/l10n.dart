@@ -30,334 +30,406 @@ class S {
 
   final String localeName;
 
-  String get drawerTooltip {
-    return Intl.message(
-      'Navigation menu',
-      name: 'drawerTooltip',
-      desc: '',
-      args: [],
-    );
-  }
-
-  String get welcomeSimple {
-    return Intl.message(
-      'Welcome!',
-      name: 'welcomeSimple',
-      desc: '',
-      args: [],
-    );
-  }
-
-  String welcomeName(dynamic name) {
-    return Intl.message(
-      'Welcome, $name!',
-      name: 'welcomeName',
-      desc: '',
-      args: [name],
-    );
-  }
-
-  String get emailLabel {
-    return Intl.message(
-      'Email',
-      name: 'emailLabel',
-      desc: '',
-      args: [],
-    );
-  }
-
-  String get passwordLabel {
-    return Intl.message(
-      'Password',
-      name: 'passwordLabel',
-      desc: '',
-      args: [],
-    );
-  }
-
-  String get passwordCheckLabel {
-    return Intl.message(
-      'Confirm password',
-      name: 'passwordCheckLabel',
-      desc: '',
-      args: [],
-    );
-  }
-
-  String get nameLabel {
-    return Intl.message(
-      'Last & first name',
-      name: 'nameLabel',
-      desc: '',
-      args: [],
-    );
-  }
-
-  String get signUpLabel {
-    return Intl.message(
-      'Sign up',
-      name: 'signUpLabel',
-      desc: '',
-      args: [],
-    );
-  }
-
-  String get signInLabel {
-    return Intl.message(
-      'Sign in',
-      name: 'signInLabel',
-      desc: '',
-      args: [],
-    );
-  }
-
-  String get saveLabel {
-    return Intl.message(
-      'Save',
-      name: 'saveLabel',
-      desc: '',
-      args: [],
-    );
-  }
-
-  String get sendLabel {
-    return Intl.message(
-      'Send',
-      name: 'sendLabel',
-      desc: '',
-      args: [],
-    );
-  }
-
-  String get troubleSigningInLabel {
-    return Intl.message(
-      'Trouble signing in?',
-      name: 'troubleSigningInLabel',
-      desc: '',
-      args: [],
-    );
-  }
-
-  String get nextButtonLabel {
+  String get buttonNext {
     return Intl.message(
       'Next',
-      name: 'nextButtonLabel',
+      name: 'buttonNext',
       desc: '',
       args: [],
     );
   }
 
-  String get cancelButtonLabel {
+  String get buttonCancel {
     return Intl.message(
       'Cancel',
-      name: 'cancelButtonLabel',
+      name: 'buttonCancel',
       desc: '',
       args: [],
     );
   }
 
-  String signInWith(dynamic provider) {
+  String get buttonSave {
+    return Intl.message(
+      'Save',
+      name: 'buttonSave',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get buttonSend {
+    return Intl.message(
+      'Send',
+      name: 'buttonSend',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get labelEmail {
+    return Intl.message(
+      'Email',
+      name: 'labelEmail',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get labelPassword {
+    return Intl.message(
+      'Password',
+      name: 'labelPassword',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get labelConfirmPassword {
+    return Intl.message(
+      'Confirm password',
+      name: 'labelConfirmPassword',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get labelFirstName {
+    return Intl.message(
+      'First name',
+      name: 'labelFirstName',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get labelLastName {
+    return Intl.message(
+      'Last name',
+      name: 'labelLastName',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get labelGroup {
+    return Intl.message(
+      'Group',
+      name: 'labelGroup',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get hintEmail {
+    return Intl.message(
+      'john.doe@stud.acs.upb.ro',
+      name: 'hintEmail',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get hintPassword {
+    return Intl.message(
+      '····················',
+      name: 'hintPassword',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get hintFirstName {
+    return Intl.message(
+      'John',
+      name: 'hintFirstName',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get hintLastName {
+    return Intl.message(
+      'Doe',
+      name: 'hintLastName',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get hintGroup {
+    return Intl.message(
+      '314CB',
+      name: 'hintGroup',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get actionSignUp {
+    return Intl.message(
+      'Sign up',
+      name: 'actionSignUp',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get actionLogIn {
+    return Intl.message(
+      'Log in',
+      name: 'actionLogIn',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get actionLogInAnonymously {
+    return Intl.message(
+      'Log in anonymously',
+      name: 'actionLogInAnonymously',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get actionSocialLogin {
+    return Intl.message(
+      'Social login',
+      name: 'actionSocialLogin',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String actionSignInWith(dynamic provider) {
     return Intl.message(
       'Sign in with $provider',
-      name: 'signInWith',
+      name: 'actionSignInWith',
       desc: '',
       args: [provider],
     );
   }
 
-  String get passwordLengthWarning {
+  String get actionResetPassword {
     return Intl.message(
-      'The password must be 6 characters long or more.',
-      name: 'passwordLengthWarning',
+      'Reset password',
+      name: 'actionResetPassword',
       desc: '',
       args: [],
     );
   }
 
-  String get passwordCheckError {
+  String get actionSendEmail {
     return Intl.message(
-      'The two passwords differ.',
-      name: 'passwordCheckError',
+      'Send e-mail',
+      name: 'actionSendEmail',
       desc: '',
       args: [],
     );
   }
 
-  String get incorrectPassword {
-    return Intl.message(
-      'The password you entered is incorrect.',
-      name: 'incorrectPassword',
-      desc: '',
-      args: [],
-    );
-  }
-
-  String get errorOccurred {
-    return Intl.message(
-      'An error occured.',
-      name: 'errorOccurred',
-      desc: '',
-      args: [],
-    );
-  }
-
-  String get somethingWentWrong {
+  String get errorSomethingWentWrong {
     return Intl.message(
       'Something went wrong.',
-      name: 'somethingWentWrong',
+      name: 'errorSomethingWentWrong',
       desc: '',
       args: [],
     );
   }
 
-  String get internetConnectionWarning {
+  String get errorPasswordsDiffer {
+    return Intl.message(
+      'The two passwords differ.',
+      name: 'errorPasswordsDiffer',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get errorIncorrectPassword {
+    return Intl.message(
+      'The password you entered is incorrect.',
+      name: 'errorIncorrectPassword',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get errorNoPassword {
+    return Intl.message(
+      'You need to provide a password.',
+      name: 'errorNoPassword',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get errorInvalidEmail {
+    return Intl.message(
+      'You need to provide a valid e-mail address.',
+      name: 'errorInvalidEmail',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get errorMissingFirstName {
+    return Intl.message(
+      'Please provide your first name(s).',
+      name: 'errorMissingFirstName',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get errorMissingLastName {
+    return Intl.message(
+      'Please provide your last name(s).',
+      name: 'errorMissingLastName',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get errorEmailInUse {
+    return Intl.message(
+      'There is already an account associated with this e-mail address',
+      name: 'errorEmailInUse',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get errorEmailNotFound {
+    return Intl.message(
+      'An account associated with that e-mail could not be found. Please sign up instead.',
+      name: 'errorEmailNotFound',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get errorAccountDisabled {
+    return Intl.message(
+      'The account has been disabled.',
+      name: 'errorAccountDisabled',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get errorTooManyRequests {
+    return Intl.message(
+      'There have been too many unsuccessful login attempts from this device.',
+      name: 'errorTooManyRequests',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get warningInternetConnection {
     return Intl.message(
       'Please make sure you are connected to the internet.',
-      name: 'internetConnectionWarning',
+      name: 'warningInternetConnection',
       desc: '',
       args: [],
     );
   }
 
-  String get recoverPassword {
+  String get warningPasswordLength {
     return Intl.message(
-      'Recover password',
-      name: 'recoverPassword',
+      'The password must be 8 characters long or more.',
+      name: 'warningPasswordLength',
       desc: '',
       args: [],
     );
   }
 
-  String get recoverPasswordInstructions {
+  String get warningPasswordCharacters {
     return Intl.message(
-      'Enter your e-mai in order to be able to reset your password.',
-      name: 'recoverPasswordInstructions',
+      'The password must include lowercase and uppercase letters and at least one number and special character (!@#\$&*~).',
+      name: 'warningPasswordCharacters',
       desc: '',
       args: [],
     );
   }
 
-  String recoverPasswordDialog(dynamic email) {
+  String warningEmailInUse(dynamic email) {
     return Intl.message(
-      'Follow the instructions sent to $email to find out how to reset your password.',
-      name: 'recoverPasswordDialog',
+      'There is already an account associated with $email.',
+      name: 'warningEmailInUse',
       desc: '',
       args: [email],
     );
   }
 
-  String emailInUseMessage(dynamic email, dynamic provider) {
+  String warningUseProvider(dynamic provider) {
     return Intl.message(
-      'There is already an account associated with $email. Please log in with $provider to continue.',
-      name: 'emailInUseMessage',
+      'Please log in with $provider to continue.',
+      name: 'warningUseProvider',
       desc: '',
-      args: [email, provider],
+      args: [provider],
     );
   }
 
-  String get drawerHeaderHome {
+  String get warningTryAgainLater {
+    return Intl.message(
+      'Please try again later.',
+      name: 'warningTryAgainLater',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get navigationHome {
     return Intl.message(
       'Home',
-      name: 'drawerHeaderHome',
+      name: 'navigationHome',
       desc: '',
       args: [],
     );
   }
 
-  String get drawerHeaderProfile {
-    return Intl.message(
-      'Profile',
-      name: 'drawerHeaderProfile',
-      desc: '',
-      args: [],
-    );
-  }
-
-  String get drawerItemWebsites {
-    return Intl.message(
-      'Websites',
-      name: 'drawerItemWebsites',
-      desc: '',
-      args: [],
-    );
-  }
-
-  String get drawerItemTimetable {
+  String get navigationTimetable {
     return Intl.message(
       'Timetable',
-      name: 'drawerItemTimetable',
+      name: 'navigationTimetable',
       desc: '',
       args: [],
     );
   }
 
-  String get drawerItemClasses {
+  String get navigationWebsites {
     return Intl.message(
-      'Classes',
-      name: 'drawerItemClasses',
+      'Websites',
+      name: 'navigationWebsites',
       desc: '',
       args: [],
     );
   }
 
-  String get drawerItemNews {
-    return Intl.message(
-      'News',
-      name: 'drawerItemNews',
-      desc: '',
-      args: [],
-    );
-  }
-
-  String get drawerItemMap {
+  String get navigationMap {
     return Intl.message(
       'Map',
-      name: 'drawerItemMap',
+      name: 'navigationMap',
       desc: '',
       args: [],
     );
   }
 
-  String get drawerItemPeople {
+  String get navigationProfile {
     return Intl.message(
-      'People',
-      name: 'drawerItemPeople',
+      'Profile',
+      name: 'navigationProfile',
       desc: '',
       args: [],
     );
   }
 
-  String get drawerItemNotes {
-    return Intl.message(
-      'Notes',
-      name: 'drawerItemNotes',
-      desc: '',
-      args: [],
-    );
-  }
-
-  String get drawerItemSettings {
+  String get navigationSettings {
     return Intl.message(
       'Settings',
-      name: 'drawerItemSettings',
-      desc: '',
-      args: [],
-    );
-  }
-
-  String get drawerItemHelp {
-    return Intl.message(
-      'Help',
-      name: 'drawerItemHelp',
-      desc: '',
-      args: [],
-    );
-  }
-
-  String get drawerItemContribute {
-    return Intl.message(
-      'Contribute',
-      name: 'drawerItemContribute',
+      name: 'navigationSettings',
       desc: '',
       args: [],
     );
@@ -421,6 +493,69 @@ class S {
     return Intl.message(
       'Auto',
       name: 'settingsItemLanguageAuto',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get messageWelcomeSimple {
+    return Intl.message(
+      'Welcome!',
+      name: 'messageWelcomeSimple',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String messageWelcomeName(dynamic name) {
+    return Intl.message(
+      'Welcome, $name!',
+      name: 'messageWelcomeName',
+      desc: '',
+      args: [name],
+    );
+  }
+
+  String get messageNewUser {
+    return Intl.message(
+      'New user?',
+      name: 'messageNewUser',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get messageAccountCreated {
+    return Intl.message(
+      'Account created successfully.',
+      name: 'messageAccountCreated',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get messageResetPassword {
+    return Intl.message(
+      'Enter your e-mai in order to receive instructions on how to reset your password.',
+      name: 'messageResetPassword',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get infoPasswordResetEmailSent {
+    return Intl.message(
+      'Please check your inbox for the password reset e-mail.',
+      name: 'infoPasswordResetEmailSent',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get fileAcsBanner {
+    return Intl.message(
+      'assets/images/acs_banner_en.png',
+      name: 'fileAcsBanner',
       desc: '',
       args: [],
     );
