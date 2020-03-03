@@ -1,6 +1,7 @@
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/home/home_page.dart';
 import 'package:acs_upb_mobile/pages/profile/profile_page.dart';
+import 'package:acs_upb_mobile/pages/websites/websites_page.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -16,7 +17,7 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar> {
     var currentTab = [
       HomePage(),
       AppScaffold(title: S.of(context).navigationTimetable), // TODO: Timetable
-      AppScaffold(title: S.of(context).navigationWebsites), // TODO: Websites
+      WebsitesPage(),
       AppScaffold(title: S.of(context).navigationMap), // TODO: Map
       ProfilePage(title: S.of(context).navigationProfile), // TODO: Profile
     ];

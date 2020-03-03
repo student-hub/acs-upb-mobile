@@ -39,7 +39,7 @@ class _LoginViewState extends State<LoginView> {
       return formItems;
     }
 
-    AuthProvider authProvider = Provider.of(context);
+    AuthProvider authProvider = Provider.of<AuthProvider>(context);
     formItems =  <FormItem>[
       FormItem(
           label: S.of(context).labelEmail,
@@ -104,7 +104,7 @@ class _LoginViewState extends State<LoginView> {
   @override
   Widget build(BuildContext context) {
     ScreenUtil.init(context, width: 750, height: 1334, allowFontScaling: false);
-    AuthProvider authProvider = Provider.of(context);
+    AuthProvider authProvider = Provider.of<AuthProvider>(context);
     AppForm loginForm = _buildForm(context);
 
     return Scaffold(

@@ -5,6 +5,7 @@ import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/navigation/bottom_navigation_bar.dart';
 import 'package:acs_upb_mobile/navigation/routes.dart';
 import 'package:acs_upb_mobile/pages/settings/settings_page.dart';
+import 'package:acs_upb_mobile/pages/websites/website_provider.dart';
 import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -46,7 +47,8 @@ class MyApp extends StatelessWidget {
       themedWidgetBuilder: (context, theme) {
         return MultiProvider(
           providers: [
-            ChangeNotifierProvider<AuthProvider>(create: (_) => authProvider)
+            ChangeNotifierProvider<AuthProvider>(create: (_) => authProvider),
+            ChangeNotifierProvider<WebsiteProvider>(create: (_) => WebsiteProvider()),
           ],
           child: OKToast(
             textStyle: theme.textTheme.button,
