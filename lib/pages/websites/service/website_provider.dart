@@ -1,4 +1,4 @@
-import 'package:acs_upb_mobile/pages/websites/website.dart';
+import 'package:acs_upb_mobile/pages/websites/model/website.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 

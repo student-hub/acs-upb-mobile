@@ -1,6 +1,6 @@
 import 'package:acs_upb_mobile/generated/l10n.dart';
-import 'package:acs_upb_mobile/pages/websites/website.dart';
-import 'package:acs_upb_mobile/pages/websites/website_provider.dart';
+import 'package:acs_upb_mobile/pages/websites/model/website.dart';
+import 'package:acs_upb_mobile/pages/websites/service/website_provider.dart';
 import 'package:acs_upb_mobile/resources/storage_provider.dart';
 import 'package:acs_upb_mobile/widgets/circle_image.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
