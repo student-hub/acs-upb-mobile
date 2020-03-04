@@ -7,6 +7,20 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+extension DatabaseUser on User {
+  static User fromSnap(DocumentSnapshot snap) {
+    return User(uid: snap.documentID, firstName: snap.data['name']['first'], lastName: snap.data['name']['last'],
+    group: snap.data['group']);
+  }
+
+  Map<String, dynamic> toData() {
+    return {
+      'name': {'first': firstName, 'last': lastName},
+      'group': group
+    };
+  }
+}
+
 class AuthProvider with ChangeNotifier {
   FirebaseUser user;
   StreamSubscription userAuthSub;
@@ -82,7 +96,7 @@ class AuthProvider with ChangeNotifier {
   Future<User> getCurrentUser() async {
     DocumentSnapshot snapshot =
         await Firestore.instance.collection('users').document(user.uid).get();
-    return User.fromSnapshot(snapshot);
+    return DatabaseUser.fromSnap(snapshot);
   }
 
   Future<AuthResult> signInAnonymously({BuildContext context}) async {

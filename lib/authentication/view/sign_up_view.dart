@@ -1,4 +1,4 @@
-import 'package:acs_upb_mobile/authentication/auth_provider.dart';
+import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/navigation/routes.dart';
 import 'package:acs_upb_mobile/resources/banner.dart';
@@ -40,8 +40,7 @@ class _SignUpViewState extends State<SignUpView> {
         hint: S.of(context).hintPassword,
         controller: passwordController,
         obscureText: true,
-        check: (password) =>
-            authProvider.isStrongPassword(password: password),
+        check: (password) => authProvider.isStrongPassword(password: password),
       ),
       FormItem(
         label: S.of(context).labelConfirmPassword,
@@ -70,7 +69,6 @@ class _SignUpViewState extends State<SignUpView> {
     return formItems;
   }
 
-
   AppForm _buildForm(BuildContext context) {
     AuthProvider authProvider = Provider.of(context);
 
@@ -84,7 +82,8 @@ class _SignUpViewState extends State<SignUpView> {
         );
         if (user != null) {
           // Remove all routes below and push home page
-          Navigator.pushNamedAndRemoveUntil(context, Routes.home, (route) => false);
+          Navigator.pushNamedAndRemoveUntil(
+              context, Routes.home, (route) => false);
         }
       },
     );

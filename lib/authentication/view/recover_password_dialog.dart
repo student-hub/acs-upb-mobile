@@ -1,4 +1,4 @@
-import 'package:acs_upb_mobile/authentication/auth_provider.dart';
+import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/widgets/button.dart';
 import 'package:flutter/material.dart';
@@ -25,8 +25,8 @@ class ResetPassword {
                     Text(S.of(context).messageResetPassword),
                     TextField(
                       controller: emailController,
-                      decoration: InputDecoration(
-                          hintText: S.of(context).hintEmail),
+                      decoration:
+                          InputDecoration(hintText: S.of(context).hintEmail),
                     )
                   ],
                 ),
