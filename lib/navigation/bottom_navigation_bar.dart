@@ -18,7 +18,7 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar> {
       AppScaffold(title: S.of(context).navigationTimetable), // TODO: Timetable
       AppScaffold(title: S.of(context).navigationWebsites), // TODO: Websites
       AppScaffold(title: S.of(context).navigationMap), // TODO: Map
-      ProfilePage(title: S.of(context).navigationProfile), // TODO: Profile
+      ProfilePage(),
     ];
     var provider = Provider.of<BottomNavigationBarProvider>(context);
 
