@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 class CircleImage extends StatelessWidget {
   final ImageProvider<dynamic> image;
@@ -15,12 +16,20 @@ class CircleImage extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         Container(
-            width: 80.0,
-            height: 80.0,
+            width: MediaQuery.of(context).size.width / 5,
+            height: MediaQuery.of(context).size.width / 5,
             decoration: BoxDecoration(
+                boxShadow: [
+                  BoxShadow(color: Colors.black12, blurRadius: 12.0),
+                  BoxShadow(color: Colors.black12, blurRadius: 10.0),
+                ],
                 shape: BoxShape.circle,
                 image: DecorationImage(fit: BoxFit.fill, image: image))),
-        label != null ? Text(label, textScaleFactor: 1.5) : Container(),
+        Padding(
+          padding: const EdgeInsets.all(4.0),
+          child:
+              label != null ? Text(label, textScaleFactor: 1.5) : Container(),
+        ),
       ],
     );
   }
