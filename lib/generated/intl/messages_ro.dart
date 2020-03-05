@@ -71,10 +71,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "messageWelcomeSimple" : MessageLookupByLibrary.simpleMessage("Bine ai venit!"),
     "navigationHome" : MessageLookupByLibrary.simpleMessage("Acasă"),
     "navigationMap" : MessageLookupByLibrary.simpleMessage("Hartă"),
+    "navigationPortal" : MessageLookupByLibrary.simpleMessage("Portal"),
     "navigationProfile" : MessageLookupByLibrary.simpleMessage("Profil"),
     "navigationSettings" : MessageLookupByLibrary.simpleMessage("Setări"),
     "navigationTimetable" : MessageLookupByLibrary.simpleMessage("Orar"),
-    "navigationWebsites" : MessageLookupByLibrary.simpleMessage("Portal"),
     "settingsItemDarkMode" : MessageLookupByLibrary.simpleMessage("Dark mode"),
     "settingsItemLanguage" : MessageLookupByLibrary.simpleMessage("Limbă"),
     "settingsItemLanguageAuto" : MessageLookupByLibrary.simpleMessage("Auto"),
@@ -90,7 +90,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "warningUseProvider" : m3,
     "websiteCategoryAdministrative" : MessageLookupByLibrary.simpleMessage("Administrativ"),
     "websiteCategoryAssociations" : MessageLookupByLibrary.simpleMessage("Asociații"),
-    "websiteCategoryLearning" : MessageLookupByLibrary.simpleMessage("Învățare"),
+    "websiteCategoryLearning" : MessageLookupByLibrary.simpleMessage("Cursuri"),
     "websiteCategoryOthers" : MessageLookupByLibrary.simpleMessage("Altele"),
     "websiteCategoryResources" : MessageLookupByLibrary.simpleMessage("Resurse")
   };

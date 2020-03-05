@@ -399,10 +399,10 @@ class S {
     );
   }
 
-  String get navigationWebsites {
+  String get navigationPortal {
     return Intl.message(
-      'Websites',
-      name: 'navigationWebsites',
+      'Portal',
+      name: 'navigationPortal',
       desc: '',
       args: [],
     );

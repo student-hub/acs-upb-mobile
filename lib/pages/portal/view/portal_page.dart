@@ -1,6 +1,6 @@
 import 'package:acs_upb_mobile/generated/l10n.dart';
-import 'package:acs_upb_mobile/pages/websites/model/website.dart';
-import 'package:acs_upb_mobile/pages/websites/service/website_provider.dart';
+import 'package:acs_upb_mobile/pages/portal/model/website.dart';
+import 'package:acs_upb_mobile/pages/portal/service/website_provider.dart';
 import 'package:acs_upb_mobile/resources/storage_provider.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/widgets/circle_image.dart';
@@ -9,12 +9,12 @@ import 'package:acs_upb_mobile/widgets/spoiler/view/spoiler.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class WebsitesPage extends StatefulWidget {
+class PortalPage extends StatefulWidget {
   @override
-  _WebsitesPageState createState() => _WebsitesPageState();
+  _PortalPageState createState() => _PortalPageState();
 }
 
-class _WebsitesPageState extends State<WebsitesPage> {
+class _PortalPageState extends State<PortalPage> {
   Widget listCategory(String category, List<Website> websites) {
     if (websites == null || websites.isEmpty) {
       return Container();
@@ -87,7 +87,7 @@ class _WebsitesPageState extends State<WebsitesPage> {
     WebsiteProvider websiteProvider = Provider.of<WebsiteProvider>(context);
 
     return AppScaffold(
-      title: S.of(context).navigationWebsites,
+      title: S.of(context).navigationPortal,
       body: StreamBuilder<List<Website>>(
           stream: websiteProvider.getWebsites(),
           builder: (context, AsyncSnapshot<List<Website>> snapshot) {

@@ -46,7 +46,7 @@
 
   "navigationHome": "Acasă",
   "navigationTimetable": "Orar",
-  "navigationWebsites": "Portal",
+  "navigationPortal": "Portal",
   "navigationMap": "Hartă",
   "navigationProfile": "Profil",
   "navigationSettings": "Setări",
@@ -59,7 +59,7 @@
   "settingsItemLanguageRomanian": "Română",
   "settingsItemLanguageAuto": "Auto",
 
-  "websiteCategoryLearning": "Învățare",
+  "websiteCategoryLearning": "Cursuri",
   "websiteCategoryAdministrative": "Administrativ",
   "websiteCategoryAssociations": "Asociații",
   "websiteCategoryResources": "Resurse",
