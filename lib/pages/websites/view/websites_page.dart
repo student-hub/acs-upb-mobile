@@ -23,6 +23,7 @@ class _WebsitesPageState extends State<WebsitesPage> {
     return SafeArea(
       child: Spoiler(
         isOpened: true,
+        leadingArrow: true,
         header: Text(
           category,
           style: Theme.of(context).textTheme.headline6,

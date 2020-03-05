@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:acs_upb_mobile/widgets/spoiler/model/spoiler_details.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/widgets.dart';
 
@@ -12,6 +13,9 @@ class Spoiler extends StatefulWidget {
   final Widget child;
 
   final bool isOpened;
+
+  final bool leadingArrow;
+  final bool trailingArrow;
 
   final Curve openCurve;
   final Curve closeCurve;
@@ -30,6 +34,8 @@ class Spoiler extends StatefulWidget {
       this.header,
       this.child,
       this.isOpened = false,
+      this.leadingArrow = false,
+      this.trailingArrow = false,
       this.waitFirstCloseAnimationBeforeOpen = false,
       this.duration,
       this.onReadyCallback,
@@ -163,13 +169,29 @@ class SpoilerState extends State<Spoiler> with SingleTickerProviderStateMixin {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           GestureDetector(
-            onTap: toggle,
+            onTap: () => setState(() {
+              toggle();
+            }),
             child: Container(
               key: Key('spoiler_header'),
               child: Container(
                 key: _headerKey,
                 child: widget.header != null
-                    ? widget.header
+                    ? Row(
+                        children: <Widget>[
+                          widget.leadingArrow
+                              ? (isOpened
+                                  ? Icon(Icons.keyboard_arrow_up)
+                                  : Icon(Icons.keyboard_arrow_down))
+                              : Container(),
+                          widget.header,
+                          widget.trailingArrow
+                              ? (isOpened
+                                  ? Icon(Icons.keyboard_arrow_up)
+                                  : Icon(Icons.keyboard_arrow_down))
+                              : Container()
+                        ],
+                      )
                     : _buildDefaultHeader(),
               ),
             ),
