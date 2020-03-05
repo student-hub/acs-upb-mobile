@@ -46,7 +46,7 @@
 
   "navigationHome": "Acasă",
   "navigationTimetable": "Orar",
-  "navigationWebsites": "Platforme",
+  "navigationWebsites": "Portal",
   "navigationMap": "Hartă",
   "navigationProfile": "Profil",
   "navigationSettings": "Setări",
@@ -58,6 +58,12 @@
   "settingsItemLanguageEnglish": "Engleză",
   "settingsItemLanguageRomanian": "Română",
   "settingsItemLanguageAuto": "Auto",
+
+  "websiteCategoryLearning": "Învățare",
+  "websiteCategoryAdministrative": "Administrativ",
+  "websiteCategoryAssociations": "Asociații",
+  "websiteCategoryResources": "Resurse",
+  "websiteCategoryOthers": "Altele",
   
   "messageWelcomeSimple": "Bine ai venit!",
   "messageWelcomeName": "Bine ai venit, {name}!",

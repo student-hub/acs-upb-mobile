@@ -498,6 +498,51 @@ class S {
     );
   }
 
+  String get websiteCategoryLearning {
+    return Intl.message(
+      'Learning',
+      name: 'websiteCategoryLearning',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get websiteCategoryAdministrative {
+    return Intl.message(
+      'Administrative',
+      name: 'websiteCategoryAdministrative',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get websiteCategoryAssociations {
+    return Intl.message(
+      'Associations',
+      name: 'websiteCategoryAssociations',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get websiteCategoryResources {
+    return Intl.message(
+      'Resources',
+      name: 'websiteCategoryResources',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get websiteCategoryOthers {
+    return Intl.message(
+      'Others',
+      name: 'websiteCategoryOthers',
+      desc: '',
+      args: [],
+    );
+  }
+
   String get messageWelcomeSimple {
     return Intl.message(
       'Welcome!',

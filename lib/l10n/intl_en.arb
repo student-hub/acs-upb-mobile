@@ -59,6 +59,12 @@
   "settingsItemLanguageRomanian": "Romanian",
   "settingsItemLanguageAuto": "Auto",
 
+  "websiteCategoryLearning": "Learning",
+  "websiteCategoryAdministrative": "Administrative",
+  "websiteCategoryAssociations": "Associations",
+  "websiteCategoryResources": "Resources",
+  "websiteCategoryOthers": "Others",
+
   "messageWelcomeSimple": "Welcome!",
   "messageWelcomeName": "Welcome, {name}!",
   "messageNewUser": "New user?",

@@ -74,7 +74,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "navigationProfile" : MessageLookupByLibrary.simpleMessage("Profil"),
     "navigationSettings" : MessageLookupByLibrary.simpleMessage("Setări"),
     "navigationTimetable" : MessageLookupByLibrary.simpleMessage("Orar"),
-    "navigationWebsites" : MessageLookupByLibrary.simpleMessage("Platforme"),
+    "navigationWebsites" : MessageLookupByLibrary.simpleMessage("Portal"),
     "settingsItemDarkMode" : MessageLookupByLibrary.simpleMessage("Dark mode"),
     "settingsItemLanguage" : MessageLookupByLibrary.simpleMessage("Limbă"),
     "settingsItemLanguageAuto" : MessageLookupByLibrary.simpleMessage("Auto"),
@@ -87,6 +87,11 @@ class MessageLookup extends MessageLookupByLibrary {
     "warningPasswordCharacters" : MessageLookupByLibrary.simpleMessage("Parola trebuie să conțină majuscule, minuscule și cel puțin un număr sau un simbol."),
     "warningPasswordLength" : MessageLookupByLibrary.simpleMessage("Parola trebuie să aibă cel puțin 8 caractere."),
     "warningTryAgainLater" : MessageLookupByLibrary.simpleMessage("Încercați mai târziu."),
-    "warningUseProvider" : m3
+    "warningUseProvider" : m3,
+    "websiteCategoryAdministrative" : MessageLookupByLibrary.simpleMessage("Administrativ"),
+    "websiteCategoryAssociations" : MessageLookupByLibrary.simpleMessage("Asociații"),
+    "websiteCategoryLearning" : MessageLookupByLibrary.simpleMessage("Învățare"),
+    "websiteCategoryOthers" : MessageLookupByLibrary.simpleMessage("Altele"),
+    "websiteCategoryResources" : MessageLookupByLibrary.simpleMessage("Resurse")
   };
 }

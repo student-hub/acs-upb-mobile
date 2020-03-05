@@ -2,10 +2,27 @@ import 'package:acs_upb_mobile/pages/websites/model/website.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
+extension WebsiteCategoryExtension on WebsiteCategory {
+  static WebsiteCategory fromString(String category) {
+    switch(category) {
+      case 'learning':
+        return WebsiteCategory.learning;
+      case 'administrative':
+        return WebsiteCategory.administrative;
+      case 'association':
+        return WebsiteCategory.association;
+      case 'resource':
+        return WebsiteCategory.resource;
+      default:
+        return WebsiteCategory.other;
+    }
+  }
+}
+
 extension WebsiteFromSnap on Website {
   static Website fromSnap(DocumentSnapshot snap) {
     return Website(
-      category: snap.data['category'],
+      category: WebsiteCategoryExtension.fromString(snap.data['category']),
       iconPath: snap.data['icon'],
       label: snap.data['label'],
       link: snap.data['link'],

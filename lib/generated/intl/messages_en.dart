@@ -87,6 +87,11 @@ class MessageLookup extends MessageLookupByLibrary {
     "warningPasswordCharacters" : MessageLookupByLibrary.simpleMessage("The password must include lowercase and uppercase letters and at least one number and special character (!@#\$&*~)."),
     "warningPasswordLength" : MessageLookupByLibrary.simpleMessage("The password must be 8 characters long or more."),
     "warningTryAgainLater" : MessageLookupByLibrary.simpleMessage("Please try again later."),
-    "warningUseProvider" : m3
+    "warningUseProvider" : m3,
+    "websiteCategoryAdministrative" : MessageLookupByLibrary.simpleMessage("Administrative"),
+    "websiteCategoryAssociations" : MessageLookupByLibrary.simpleMessage("Associations"),
+    "websiteCategoryLearning" : MessageLookupByLibrary.simpleMessage("Learning"),
+    "websiteCategoryOthers" : MessageLookupByLibrary.simpleMessage("Others"),
+    "websiteCategoryResources" : MessageLookupByLibrary.simpleMessage("Resources")
   };
 }

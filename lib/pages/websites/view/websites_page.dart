@@ -22,18 +22,13 @@ class _WebsitesPageState extends State<WebsitesPage> {
     websites = [];
   }
 
-  List<Widget> listWebsitesByCategory(List<Website> websites) {
-    Map<String, List<Website>> map = Map();
-    websites.forEach((website) {
-      String category = website.category;
-      map.putIfAbsent(category, () => List<Website>());
-      map[category].add(website);
-    });
+  Widget listCategory(String category, List<Website> websites) {
+    if (websites == null || websites.isEmpty) {
+      return Container();
+    }
 
-    var children = List<Widget>();
-    map.forEach((String category, websites) {
-      children.add(SafeArea(
-          child: Spoiler(
+    return SafeArea(
+      child: Spoiler(
         isOpened: true,
         header: Text(
           category,
@@ -62,9 +57,28 @@ class _WebsitesPageState extends State<WebsitesPage> {
                 .toList(),
           ),
         ),
-      )));
+      ),
+    );
+  }
+
+  List<Widget> listWebsitesByCategory(List<Website> websites) {
+    Map<WebsiteCategory, List<Website>> map = Map();
+    websites.forEach((website) {
+      var category = website.category;
+      map.putIfAbsent(category, () => List<Website>());
+      map[category].add(website);
     });
-    return children;
+
+    return [
+      WebsiteCategory.learning,
+      WebsiteCategory.administrative,
+      WebsiteCategory.association,
+      WebsiteCategory.resource,
+      WebsiteCategory.other
+    ]
+        .map((category) =>
+            listCategory(category.toLocalizedString(context), map[category]))
+        .toList();
   }
 
   @override
@@ -79,8 +93,10 @@ class _WebsitesPageState extends State<WebsitesPage> {
             if (snapshot.connectionState == ConnectionState.active ||
                 snapshot.connectionState == ConnectionState.done) {
               var websites = snapshot.data;
-              return Column(
-                children: listWebsitesByCategory(websites),
+              return SingleChildScrollView(
+                child: Column(
+                  children: listWebsitesByCategory(websites),
+                ),
               );
             } else {
               return Container();
