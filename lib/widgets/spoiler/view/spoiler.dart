@@ -177,18 +177,27 @@ class SpoilerState extends State<Spoiler> with SingleTickerProviderStateMixin {
               child: Container(
                 key: _headerKey,
                 child: widget.header != null
-                    ? Row(
+                    ? Column(
                         children: <Widget>[
-                          widget.leadingArrow
-                              ? (isOpened
-                                  ? Icon(Icons.keyboard_arrow_up)
-                                  : Icon(Icons.keyboard_arrow_down))
-                              : Container(),
-                          widget.header,
-                          widget.trailingArrow
-                              ? (isOpened
-                                  ? Icon(Icons.keyboard_arrow_up)
-                                  : Icon(Icons.keyboard_arrow_down))
+                          Row(
+                            children: <Widget>[
+                              widget.leadingArrow
+                                  ? (isOpened
+                                      ? Icon(Icons.keyboard_arrow_up)
+                                      : Icon(Icons.keyboard_arrow_down))
+                                  : Container(),
+                              widget.header,
+                              widget.trailingArrow
+                                  ? (isOpened
+                                      ? Icon(Icons.keyboard_arrow_up)
+                                      : Icon(Icons.keyboard_arrow_down))
+                                  : Container()
+                            ],
+                          ),
+                          !isOpened
+                              ? SizedBox(
+                                  height: 8.0, // add bottom padding when closed
+                                )
                               : Container()
                         ],
                       )
