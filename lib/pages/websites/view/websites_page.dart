@@ -2,6 +2,7 @@ import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/websites/model/website.dart';
 import 'package:acs_upb_mobile/pages/websites/service/website_provider.dart';
 import 'package:acs_upb_mobile/resources/storage_provider.dart';
+import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/widgets/circle_image.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:acs_upb_mobile/widgets/spoiler/view/spoiler.dart';
@@ -14,14 +15,6 @@ class WebsitesPage extends StatefulWidget {
 }
 
 class _WebsitesPageState extends State<WebsitesPage> {
-  List<Website> websites;
-
-  @override
-  void initState() {
-    super.initState();
-    websites = [];
-  }
-
   Widget listCategory(String category, List<Website> websites) {
     if (websites == null || websites.isEmpty) {
       return Container();
@@ -40,13 +33,16 @@ class _WebsitesPageState extends State<WebsitesPage> {
             scrollDirection: Axis.horizontal,
             children: websites
                 .map((website) => Padding(
-                    padding: const EdgeInsets.only(top: 4.0, left: 8.0, right: 8.0),
+                    padding:
+                        const EdgeInsets.only(top: 4.0, left: 8.0, right: 8.0),
                     child: FutureBuilder<ImageProvider<dynamic>>(
                       future: Storage.getImageFromPath(website.iconPath),
                       builder: (context, snapshot) {
                         if (snapshot.hasData) {
                           return CircleImage(
                             label: website.label,
+                            tooltip:
+                                website.infoByLocale[Utils.getLocale(context)],
                             image: snapshot.data,
                           );
                         } else {
@@ -62,6 +58,10 @@ class _WebsitesPageState extends State<WebsitesPage> {
   }
 
   List<Widget> listWebsitesByCategory(List<Website> websites) {
+    if (websites == null || websites.isEmpty) {
+      return <Widget>[];
+    }
+
     Map<WebsiteCategory, List<Website>> map = Map();
     websites.forEach((website) {
       var category = website.category;

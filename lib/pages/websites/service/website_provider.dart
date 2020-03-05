@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 extension WebsiteCategoryExtension on WebsiteCategory {
   static WebsiteCategory fromString(String category) {
-    switch(category) {
+    switch (category) {
       case 'learning':
         return WebsiteCategory.learning;
       case 'administrative':
@@ -26,6 +26,12 @@ extension WebsiteFromSnap on Website {
       iconPath: snap.data['icon'],
       label: snap.data['label'],
       link: snap.data['link'],
+      infoByLocale: snap.data['info'] == null
+          ? {}
+          : {
+              'en': snap.data['info']['en'],
+              'ro': snap.data['info']['ro'],
+            },
     );
   }
 }

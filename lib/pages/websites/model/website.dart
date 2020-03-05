@@ -5,7 +5,7 @@ enum WebsiteCategory { learning, administrative, association, resource, other }
 
 extension WebsiteCategoryExtension on WebsiteCategory {
   String toLocalizedString(BuildContext context) {
-    switch(this) {
+    switch (this) {
       case WebsiteCategory.learning:
         return S.of(context).websiteCategoryLearning;
       case WebsiteCategory.administrative:
@@ -25,8 +25,10 @@ class Website {
   final String iconPath;
   final String label;
   final String link;
+  final Map<String, String> infoByLocale;
 
-  Website({this.category, this.iconPath, this.label, this.link});
+  Website(
+      {this.category, this.iconPath, this.label, this.link, this.infoByLocale});
 
   factory Website.fromWebsite(Website website) {
     return Website(

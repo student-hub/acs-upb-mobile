@@ -1,18 +1,17 @@
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class CircleImage extends StatelessWidget {
   final ImageProvider<dynamic> image;
   final Function() onTap;
   final String label;
+  final String tooltip;
 
-  const CircleImage({Key key, this.image, this.onTap, this.label})
-      : super(key: key);
-
+  const CircleImage({Key key, this.image, this.onTap, this.label, this.tooltip}) : super(key: key);
+  
   @override
   Widget build(BuildContext context) {
-    return Column(
+    var circleImage = Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
@@ -41,5 +40,10 @@ class CircleImage extends StatelessWidget {
         ),
       ],
     );
+
+    if (tooltip != null && tooltip != '') {
+      return Tooltip(message: tooltip, child: circleImage);
+    }
+    return circleImage;
   }
 }
