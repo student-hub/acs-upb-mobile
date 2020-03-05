@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -26,9 +27,17 @@ class CircleImage extends StatelessWidget {
                 shape: BoxShape.circle,
                 image: DecorationImage(fit: BoxFit.fill, image: image))),
         Padding(
-          padding: const EdgeInsets.all(4.0),
-          child:
-              label != null ? Text(label, textScaleFactor: 1.5) : Container(),
+          padding: const EdgeInsets.only(top: 4.0),
+          child: label != null
+              ? Container(
+                  width: MediaQuery.of(context).size.width / 5,
+                  height: MediaQuery.of(context).size.width / 12,
+                  child: AutoSizeText(
+                    label,
+                    textAlign: TextAlign.center,
+                    minFontSize: 0,
+                  ))
+              : Container(),
         ),
       ],
     );

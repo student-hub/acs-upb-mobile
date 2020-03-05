@@ -40,7 +40,7 @@ class _WebsitesPageState extends State<WebsitesPage> {
             scrollDirection: Axis.horizontal,
             children: websites
                 .map((website) => Padding(
-                    padding: const EdgeInsets.all(8.0),
+                    padding: const EdgeInsets.only(top: 4.0, left: 8.0, right: 8.0),
                     child: FutureBuilder<ImageProvider<dynamic>>(
                       future: Storage.getImageFromPath(website.iconPath),
                       builder: (context, snapshot) {
