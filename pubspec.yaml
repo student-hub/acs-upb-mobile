@@ -54,6 +54,9 @@ dependencies:
   # Displays a custom toast
   oktoast: ^2.3.1+1
 
+  # Caching utilities
+  cached_network_image: ^2.0.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
