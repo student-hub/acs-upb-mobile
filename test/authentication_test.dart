@@ -12,21 +12,21 @@ class MockAuthProvider extends Mock implements AuthProvider {}
 void main() {
   AuthProvider mockAuthProvider;
 
+  setUpAll(() async {
+    WidgetsFlutterBinding.ensureInitialized();
+    PrefService.enableCaching();
+    PrefService.cache = {};
+    PrefService.setString('language', 'en');
+
+    // Mock the behaviour of the auth provider
+    // TODO: Test AuthProvider separately
+    mockAuthProvider = MockAuthProvider();
+    // ignore: invalid_use_of_protected_member
+    when(mockAuthProvider.hasListeners).thenReturn(false);
+    when(mockAuthProvider.isAuthenticated).thenReturn(false);
+  });
+
   group('Login', () {
-    setUpAll(() async {
-      WidgetsFlutterBinding.ensureInitialized();
-      PrefService.enableCaching();
-      PrefService.cache = {};
-      PrefService.setString('language', 'en');
-
-      // Mock the behaviour of the auth provider
-      // TODO: Test AuthProvider separately
-      mockAuthProvider = MockAuthProvider();
-      // ignore: invalid_use_of_protected_member
-      when(mockAuthProvider.hasListeners).thenReturn(false);
-      when(mockAuthProvider.isAuthenticated).thenReturn(false);
-    });
-
     testWidgets('Anonymous login', (WidgetTester tester) async {
       await tester.pumpWidget(MyApp(authProvider: mockAuthProvider));
       await tester.pumpAndSettle();
@@ -81,6 +81,69 @@ void main() {
         // Easy way to check that the login page can't be navigated back to
         expect(find.byIcon(Icons.arrow_back), findsNothing);
       });
+    });
+  });
+
+  group('Recover password', () {
+    testWidgets('Send email', (WidgetTester tester) async {
+      await tester.pumpWidget(MyApp(authProvider: mockAuthProvider));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(LoginView), findsOneWidget);
+
+      when(mockAuthProvider.sendPasswordResetEmail(
+              email: anyNamed('email'), context: anyNamed('context')))
+          .thenAnswer((_) => Future.value(true));
+
+      expect(find.byType(AlertDialog), findsNothing);
+
+      // Reset password
+      await tester.tap(find.text('Reset password'));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(AlertDialog), findsOneWidget);
+
+      // Send email
+      await tester.enterText(
+          find.byKey(ValueKey('reset_password_email_text_field')),
+          'test@test.com');
+
+      await tester.tap(find.byKey(ValueKey('send_email_button')));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(AlertDialog), findsNothing);
+
+      verify(mockAuthProvider.sendPasswordResetEmail(
+          email: argThat(equals('test@test.com'), named: 'email'),
+          context: anyNamed('context')));
+    });
+
+    testWidgets('Cancel', (WidgetTester tester) async {
+      await tester.pumpWidget(MyApp(authProvider: mockAuthProvider));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(LoginView), findsOneWidget);
+
+      when(mockAuthProvider.sendPasswordResetEmail(
+              email: anyNamed('email'), context: anyNamed('context')))
+          .thenAnswer((_) => Future.value(true));
+
+      expect(find.byType(AlertDialog), findsNothing);
+
+      // Reset password
+      await tester.tap(find.text('Reset password'));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(AlertDialog), findsOneWidget);
+
+      // Close dialog
+      await tester.tap(find.byKey(ValueKey('cancel_button')));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(AlertDialog), findsNothing);
+
+      verifyNever(
+          mockAuthProvider.sendPasswordResetEmail(email: anyNamed('email')));
     });
   });
 }

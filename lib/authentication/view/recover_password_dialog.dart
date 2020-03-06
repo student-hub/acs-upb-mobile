@@ -21,9 +21,10 @@ class ResetPassword {
               content: IntrinsicHeight(
                 child: Column(
                   children: <Widget>[
-                    Expanded(child: Container(height: 6)),
+                    Expanded(child: Container(height: 8)),
                     Text(S.of(context).messageResetPassword),
                     TextField(
+                      key: ValueKey('reset_password_email_text_field'),
                       controller: emailController,
                       decoration:
                           InputDecoration(hintText: S.of(context).hintEmail),
@@ -33,6 +34,7 @@ class ResetPassword {
               ),
               actions: <Widget>[
                 FlatButton(
+                  key: ValueKey('cancel_button'),
                   child: Text(
                     S.of(context).buttonCancel.toUpperCase(),
                     style: Theme.of(context).textTheme.button,
@@ -40,6 +42,7 @@ class ResetPassword {
                   onPressed: () => Navigator.pop(context),
                 ),
                 AppButton(
+                  key: ValueKey('send_email_button'),
                   text: S.of(context).actionSendEmail.toUpperCase(),
                   width: ScreenUtil().setWidth(200),
                   onTap: () async {
