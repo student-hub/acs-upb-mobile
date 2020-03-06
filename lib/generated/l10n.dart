@@ -327,6 +327,15 @@ class S {
     );
   }
 
+  String errorCouldNotLaunchURL(dynamic url) {
+    return Intl.message(
+      'Could not launch \'$url\'.',
+      name: 'errorCouldNotLaunchURL',
+      desc: '',
+      args: [url],
+    );
+  }
+
   String get warningInternetConnection {
     return Intl.message(
       'Please make sure you are connected to the internet.',

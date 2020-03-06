@@ -6,9 +6,11 @@ import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/widgets/circle_image.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:acs_upb_mobile/widgets/spoiler/view/spoiler.dart';
+import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class PortalPage extends StatefulWidget {
   @override
@@ -16,6 +18,14 @@ class PortalPage extends StatefulWidget {
 }
 
 class _PortalPageState extends State<PortalPage> {
+  _launchURL(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      AppToast.show(S.of(context).errorCouldNotLaunchURL(url));
+    }
+  }
+
   Widget listCategory(String category, List<Website> websites) {
     if (websites == null || websites.isEmpty) {
       return Container();
@@ -49,6 +59,7 @@ class _PortalPageState extends State<PortalPage> {
                             tooltip:
                                 website.infoByLocale[Utils.getLocale(context)],
                             image: snapshot.data,
+                            onTap: () => _launchURL(website.link),
                           );
                         } else {
                           return Container();
