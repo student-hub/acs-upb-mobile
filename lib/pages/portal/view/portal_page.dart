@@ -38,32 +38,41 @@ class _PortalPageState extends State<PortalPage> {
         leadingArrow: true,
         header: Text(
           category,
-          style: Theme.of(context).textTheme.headline6,
+          style: Theme
+              .of(context)
+              .textTheme
+              .headline6,
         ),
         child: Container(
-          height: MediaQuery.of(context).size.width / 5 + // circle
+          height: MediaQuery
+              .of(context)
+              .size
+              .width / 5 + // circle
               8 + // padding
               ScreenUtil().setHeight(80), // text
           child: ListView(
             scrollDirection: Axis.horizontal,
             children: websites
-                .map((website) => Padding(
+                .map((website) =>
+                Padding(
                     padding:
-                        const EdgeInsets.only(top: 8.0, left: 8.0, right: 8.0),
+                    const EdgeInsets.only(top: 8.0, left: 8.0, right: 8.0),
                     child: FutureBuilder<ImageProvider<dynamic>>(
                       future: Storage.getImageFromPath(website.iconPath),
                       builder: (context, snapshot) {
+                        var image;
                         if (snapshot.hasData) {
-                          return CircleImage(
-                            label: website.label,
-                            tooltip:
-                                website.infoByLocale[Utils.getLocale(context)],
-                            image: snapshot.data,
-                            onTap: () => _launchURL(website.link),
-                          );
+                          image = snapshot.data;
                         } else {
-                          return Container();
+                          image = AssetImage('assets/images/white.png');
                         }
+                        return CircleImage(
+                          label: website.label,
+                          tooltip:
+                          website.infoByLocale[Utils.getLocale(context)],
+                          image: image,
+                          onTap: () => _launchURL(website.link),
+                        );
                       },
                     )))
                 .toList(),
@@ -93,7 +102,7 @@ class _PortalPageState extends State<PortalPage> {
       WebsiteCategory.other
     ]
         .map((category) =>
-            listCategory(category.toLocalizedString(context), map[category]))
+        listCategory(category.toLocalizedString(context), map[category]))
         .toList();
   }
 
@@ -103,7 +112,9 @@ class _PortalPageState extends State<PortalPage> {
     WebsiteProvider websiteProvider = Provider.of<WebsiteProvider>(context);
 
     return AppScaffold(
-      title: S.of(context).navigationPortal,
+      title: S
+          .of(context)
+          .navigationPortal,
       body: StreamBuilder<List<Website>>(
           stream: websiteProvider.getWebsites(),
           builder: (context, AsyncSnapshot<List<Website>> snapshot) {
