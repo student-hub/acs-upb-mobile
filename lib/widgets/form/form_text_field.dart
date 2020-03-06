@@ -11,14 +11,16 @@ class FormTextField extends StatefulWidget {
   final Widget suffixIcon;
 
   FormTextField(
-      {this.label,
+      {Key key,
+      this.label,
       this.hint,
       this.obscureText = false,
       this.controller,
       this.focusNode,
       this.onChanged,
       this.onSubmitted,
-      this.suffixIcon});
+      this.suffixIcon})
+      : super(key: key);
 
   @override
   _FormTextFieldState createState() => _FormTextFieldState();

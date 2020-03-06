@@ -38,11 +38,44 @@ void main() {
             .thenAnswer((_) => Future.value(true));
 
         // Log in anonymously
-        await tester.tap(find.text('LOG IN ANONYMOUSLY'));
+        await tester.tap(find.byKey(ValueKey('log_in_anonymously_button')));
         await tester.pumpAndSettle();
 
         verify(
             mockAuthProvider.signInAnonymously(context: anyNamed('context')));
+        expect(find.byType(HomePage), findsOneWidget);
+
+        // Easy way to check that the login page can't be navigated back to
+        expect(find.byIcon(Icons.arrow_back), findsNothing);
+      });
+    });
+
+    testWidgets('Credential login', (WidgetTester tester) async {
+      await tester.pumpWidget(MyApp(authProvider: mockAuthProvider));
+      await tester.pumpAndSettle();
+
+      await tester.runAsync(() async {
+        expect(find.byType(LoginView), findsOneWidget);
+
+        when(mockAuthProvider.signIn(
+                email: anyNamed('email'),
+                password: anyNamed('password'),
+                context: anyNamed('context')))
+            .thenAnswer((_) => Future.value(true));
+
+        // Enter credentials
+        await tester.enterText(
+            find.byKey(ValueKey('email_text_field')), 'test@test.com');
+        await tester.enterText(
+            find.byKey(ValueKey('password_text_field')), 'password');
+
+        await tester.tap(find.byKey(ValueKey('log_in_button')));
+        await tester.pumpAndSettle();
+
+        verify(mockAuthProvider.signIn(
+            email: argThat(equals('test@test.com'), named: 'email'),
+            password: argThat(equals('password'), named: 'password'),
+            context: anyNamed('context')));
         expect(find.byType(HomePage), findsOneWidget);
 
         // Easy way to check that the login page can't be navigated back to

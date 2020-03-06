@@ -158,6 +158,7 @@ class _LoginViewState extends State<LoginView> {
                       children: <Widget>[
                         Expanded(
                           child: AppButton(
+                            key: ValueKey('log_in_anonymously_button'),
                             text: S.of(context).actionLogInAnonymously,
                             onTap: () async {
                               var result = await authProvider.signInAnonymously(
@@ -171,6 +172,7 @@ class _LoginViewState extends State<LoginView> {
                         SizedBox(width: ScreenUtil().setWidth(30)),
                         Expanded(
                           child: AppButton(
+                            key: ValueKey('log_in_button'),
                             color: Theme.of(context).accentColor,
                             text: S.of(context).actionLogIn,
                             onTap: () => loginForm.submit(),

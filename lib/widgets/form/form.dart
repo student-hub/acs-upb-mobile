@@ -2,6 +2,7 @@ import 'package:acs_upb_mobile/resources/custom_icons.dart';
 import 'package:acs_upb_mobile/widgets/form/form_card.dart';
 import 'package:acs_upb_mobile/widgets/form/form_text_field.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:recase/recase.dart';
 
 class FormItem {
   final String label;
@@ -41,7 +42,8 @@ class AppForm extends StatefulWidget {
   _AppFormState createState() => _AppFormState();
 
   dynamic submit() {
-    return onSubmitted({for (var field in items) field.label: field.controller.text});
+    return onSubmitted(
+        {for (var field in items) field.label: field.controller.text});
   }
 }
 
@@ -55,6 +57,8 @@ class _AppFormState extends State<AppForm> {
                   FormItem field = e.value;
 
                   return FormTextField(
+                    key:
+                        ValueKey(ReCase(field.label).snakeCase + '_text_field'),
                     label: field.label,
                     hint: field.hint,
                     obscureText: field.obscureText,
@@ -101,7 +105,8 @@ class _AppFormState extends State<AppForm> {
             <Widget>[]);
   }
 
-  @override void dispose() {
+  @override
+  void dispose() {
     widget.items.forEach((field) {
       field.controller.dispose();
       field.focusNode.dispose();

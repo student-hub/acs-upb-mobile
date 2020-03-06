@@ -8,7 +8,9 @@ class AppButton extends StatefulWidget {
   final Future<dynamic> Function() onTap;
   final double width;
 
-  AppButton({this.color, this.text, this.textColor, this.onTap, this.width});
+  AppButton(
+      {Key key, this.color, this.text, this.textColor, this.onTap, this.width})
+      : super(key: key);
 
   @override
   _AppButtonState createState() => _AppButtonState();

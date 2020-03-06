@@ -46,6 +46,7 @@ dependencies:
 
   # Dart helper methods
   basic_utils: ^1.2.0
+  recase: ^3.0.0
 
   # Helps with sizing text to fit container
   auto_size_text: ^2.1.0
