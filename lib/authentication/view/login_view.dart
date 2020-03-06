@@ -67,7 +67,7 @@ class _LoginViewState extends State<LoginView> {
           password: fields[S.of(context).labelPassword],
           context: context,
         );
-        if (result != null) {
+        if (result) {
           Navigator.pushReplacementNamed(context, Routes.home);
         }
       },
@@ -162,7 +162,7 @@ class _LoginViewState extends State<LoginView> {
                             onTap: () async {
                               var result = await authProvider.signInAnonymously(
                                   context: context);
-                              if (result != null) {
+                              if (result) {
                                 Navigator.pushReplacementNamed(context, Routes.home);
                               }
                             },

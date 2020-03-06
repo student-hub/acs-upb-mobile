@@ -76,11 +76,11 @@ class _SignUpViewState extends State<SignUpView> {
       title: S.of(context).actionSignUp,
       items: _buildFormItems(),
       onSubmitted: (Map<String, String> fields) async {
-        var user = await authProvider.signUp(
+        var result = await authProvider.signUp(
           info: fields,
           context: context,
         );
-        if (user != null) {
+        if (result) {
           // Remove all routes below and push home page
           Navigator.pushNamedAndRemoveUntil(
               context, Routes.home, (route) => false);

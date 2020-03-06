@@ -99,47 +99,49 @@ class AuthProvider with ChangeNotifier {
     return DatabaseUser.fromSnap(snapshot);
   }
 
-  Future<AuthResult> signInAnonymously({BuildContext context}) async {
-    return FirebaseAuth.instance.signInAnonymously().catchError((e) {
+  Future<bool> signInAnonymously({BuildContext context}) async {
+    FirebaseAuth.instance.signInAnonymously().catchError((e) {
       _errorHandler(e, context);
-      return null;
+      return false;
     });
+    return true;
   }
 
-  Future<AuthResult> signIn(
+  Future<bool> signIn(
       {String email, String password, BuildContext context}) async {
     if (email == null || email == '') {
       AppToast.show(S.of(context).errorInvalidEmail);
-      return null;
+      return false;
     } else if (password == null || password == '') {
       AppToast.show(S.of(context).errorNoPassword);
-      return null;
+      return false;
     }
 
     List<String> providers = await FirebaseAuth.instance
         .fetchSignInMethodsForEmail(email: email)
         .catchError((e) {
       _errorHandler(e, context);
-      return null;
+      return false;
     });
 
     // An error occurred (and was already handled)
     if (providers == null) {
-      return null;
+      return false;
     }
 
     // User has an account with a different provider
     if (providers.isNotEmpty && !providers.contains('password')) {
       AppToast.show(S.of(context).warningUseProvider(providers[0]));
-      return null;
+      return false;
     }
 
-    return FirebaseAuth.instance
+    FirebaseAuth.instance
         .signInWithEmailAndPassword(email: email, password: password)
         .catchError((e) {
       _errorHandler(e, context);
-      return null;
+      return false;
     });
+    return true;
   }
 
   Future<void> signOut() {
@@ -212,7 +214,7 @@ class AuthProvider with ChangeNotifier {
   }
 
   /// Create a new user with the data in [info].
-  Future<User> signUp({Map<String, String> info, BuildContext context}) async {
+  Future<bool> signUp({Map<String, String> info, BuildContext context}) async {
     String email = info[S.of(context).labelEmail];
     String password = info[S.of(context).labelPassword];
     String confirmPassword = info[S.of(context).labelConfirmPassword];
@@ -222,25 +224,25 @@ class AuthProvider with ChangeNotifier {
 
     if (email == null || email == '') {
       AppToast.show(S.of(context).errorInvalidEmail);
-      return null;
+      return false;
     } else if (password == null || password == '') {
       AppToast.show(S.of(context).errorNoPassword);
-      return null;
+      return false;
     }
     if (confirmPassword == null || confirmPassword != password) {
       AppToast.show(S.of(context).errorPasswordsDiffer);
-      return null;
+      return false;
     }
     if (firstName == null || firstName == '') {
       AppToast.show(S.of(context).errorMissingFirstName);
-      return null;
+      return false;
     }
     if (lastName == null || lastName == '') {
       AppToast.show(S.of(context).errorMissingLastName);
-      return null;
+      return false;
     }
     if (!await isStrongPassword(password: password, context: context)) {
-      return null;
+      return false;
     }
 
     try {
@@ -270,10 +272,10 @@ class AuthProvider with ChangeNotifier {
       ref.setData(user.toData());
 
       AppToast.show(S.of(context).messageAccountCreated);
-      return user;
+      return true;
     } catch (e) {
       _errorHandler(e, context);
-      return null;
+      return false;
     }
   }
 }
