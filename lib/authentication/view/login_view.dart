@@ -68,7 +68,7 @@ class _LoginViewState extends State<LoginView> {
           context: context,
         );
         if (result != null) {
-          Navigator.popAndPushNamed(context, Routes.home);
+          Navigator.pushReplacementNamed(context, Routes.home);
         }
       },
       trailing: <Widget>[
@@ -163,7 +163,7 @@ class _LoginViewState extends State<LoginView> {
                               var result = await authProvider.signInAnonymously(
                                   context: context);
                               if (result != null) {
-                                Navigator.popAndPushNamed(context, Routes.home);
+                                Navigator.pushReplacementNamed(context, Routes.home);
                               }
                             },
                           ),

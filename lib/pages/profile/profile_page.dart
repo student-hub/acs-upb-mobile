@@ -30,7 +30,7 @@ class ProfilePage extends StatelessWidget {
             FloatingActionButton(
               onPressed: () async {
                 authProvider.signOut();
-                Navigator.popAndPushNamed(context, Routes.login);
+                Navigator.pushReplacementNamed(context, Routes.login);
               },
               tooltip: 'Sign Out',
               child: Icon(Icons.exit_to_app),
