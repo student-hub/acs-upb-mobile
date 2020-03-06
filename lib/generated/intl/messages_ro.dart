@@ -21,11 +21,13 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static m0(provider) => "Conectare cu ${provider}";
 
-  static m1(name) => "Bine ai venit, ${name}!";
+  static m1(url) => "Nu s-a putut deschide \'${url}\'.";
 
-  static m2(email) => "Există deja un cont asociat cu adresa ${email}.";
+  static m2(name) => "Bine ai venit, ${name}!";
 
-  static m3(provider) => "Folosiți ${provider} pentru a vă conecta.";
+  static m3(email) => "Există deja un cont asociat cu adresa ${email}.";
+
+  static m4(provider) => "Folosiți ${provider} pentru a vă conecta.";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
@@ -41,6 +43,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "buttonSave" : MessageLookupByLibrary.simpleMessage("Salvare"),
     "buttonSend" : MessageLookupByLibrary.simpleMessage("Trimitere"),
     "errorAccountDisabled" : MessageLookupByLibrary.simpleMessage("Contul a fost dezactivat."),
+    "errorCouldNotLaunchURL" : m1,
     "errorEmailInUse" : MessageLookupByLibrary.simpleMessage("Există deja un cont asociat acestui e-mail."),
     "errorEmailNotFound" : MessageLookupByLibrary.simpleMessage("Nu am putut găsi un cont asociat cu adresa de mail. Vă rugăm să vă înregistrați."),
     "errorIncorrectPassword" : MessageLookupByLibrary.simpleMessage("Parola introdusă nu este corectă."),
@@ -67,14 +70,14 @@ class MessageLookup extends MessageLookupByLibrary {
     "messageAccountCreated" : MessageLookupByLibrary.simpleMessage("Contul a fost creat cu succes."),
     "messageNewUser" : MessageLookupByLibrary.simpleMessage("Utilizator nou?"),
     "messageResetPassword" : MessageLookupByLibrary.simpleMessage("Introduceți mail-ul pentru a primi instrucțiuni de resetare a parolei."),
-    "messageWelcomeName" : m1,
+    "messageWelcomeName" : m2,
     "messageWelcomeSimple" : MessageLookupByLibrary.simpleMessage("Bine ai venit!"),
     "navigationHome" : MessageLookupByLibrary.simpleMessage("Acasă"),
     "navigationMap" : MessageLookupByLibrary.simpleMessage("Hartă"),
+    "navigationPortal" : MessageLookupByLibrary.simpleMessage("Portal"),
     "navigationProfile" : MessageLookupByLibrary.simpleMessage("Profil"),
     "navigationSettings" : MessageLookupByLibrary.simpleMessage("Setări"),
     "navigationTimetable" : MessageLookupByLibrary.simpleMessage("Orar"),
-    "navigationWebsites" : MessageLookupByLibrary.simpleMessage("Platforme"),
     "settingsItemDarkMode" : MessageLookupByLibrary.simpleMessage("Dark mode"),
     "settingsItemLanguage" : MessageLookupByLibrary.simpleMessage("Limbă"),
     "settingsItemLanguageAuto" : MessageLookupByLibrary.simpleMessage("Auto"),
@@ -82,11 +85,16 @@ class MessageLookup extends MessageLookupByLibrary {
     "settingsItemLanguageRomanian" : MessageLookupByLibrary.simpleMessage("Română"),
     "settingsTitleLocalization" : MessageLookupByLibrary.simpleMessage("Localizare"),
     "settingsTitlePersonalization" : MessageLookupByLibrary.simpleMessage("Personalizare"),
-    "warningEmailInUse" : m2,
+    "warningEmailInUse" : m3,
     "warningInternetConnection" : MessageLookupByLibrary.simpleMessage("Asigurați-vă că sunteți conectat la internet."),
     "warningPasswordCharacters" : MessageLookupByLibrary.simpleMessage("Parola trebuie să conțină majuscule, minuscule și cel puțin un număr sau un simbol."),
     "warningPasswordLength" : MessageLookupByLibrary.simpleMessage("Parola trebuie să aibă cel puțin 8 caractere."),
     "warningTryAgainLater" : MessageLookupByLibrary.simpleMessage("Încercați mai târziu."),
-    "warningUseProvider" : m3
+    "warningUseProvider" : m4,
+    "websiteCategoryAdministrative" : MessageLookupByLibrary.simpleMessage("Administrativ"),
+    "websiteCategoryAssociations" : MessageLookupByLibrary.simpleMessage("Asociații"),
+    "websiteCategoryLearning" : MessageLookupByLibrary.simpleMessage("Cursuri"),
+    "websiteCategoryOthers" : MessageLookupByLibrary.simpleMessage("Altele"),
+    "websiteCategoryResources" : MessageLookupByLibrary.simpleMessage("Resurse")
   };
 }

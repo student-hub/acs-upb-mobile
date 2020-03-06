@@ -27,7 +27,7 @@ class _SignUpViewState extends State<SignUpView> {
     }
 
     TextEditingController passwordController = TextEditingController();
-    AuthProvider authProvider = Provider.of(context);
+    AuthProvider authProvider = Provider.of<AuthProvider>(context);
 
     formItems = <FormItem>[
       FormItem(

@@ -36,6 +36,7 @@
   "errorEmailNotFound": "Nu am putut găsi un cont asociat cu adresa de mail. Vă rugăm să vă înregistrați.",
   "errorAccountDisabled": "Contul a fost dezactivat.",
   "errorTooManyRequests": "Au fost prea multe încercări de conectare nereușite.",
+  "errorCouldNotLaunchURL": "Nu s-a putut deschide '{url}'.",
 
   "warningInternetConnection": "Asigurați-vă că sunteți conectat la internet.",
   "warningPasswordLength": "Parola trebuie să aibă cel puțin 8 caractere.",
@@ -46,7 +47,7 @@
 
   "navigationHome": "Acasă",
   "navigationTimetable": "Orar",
-  "navigationWebsites": "Platforme",
+  "navigationPortal": "Portal",
   "navigationMap": "Hartă",
   "navigationProfile": "Profil",
   "navigationSettings": "Setări",
@@ -58,6 +59,12 @@
   "settingsItemLanguageEnglish": "Engleză",
   "settingsItemLanguageRomanian": "Română",
   "settingsItemLanguageAuto": "Auto",
+
+  "websiteCategoryLearning": "Cursuri",
+  "websiteCategoryAdministrative": "Administrativ",
+  "websiteCategoryAssociations": "Asociații",
+  "websiteCategoryResources": "Resurse",
+  "websiteCategoryOthers": "Altele",
   
   "messageWelcomeSimple": "Bine ai venit!",
   "messageWelcomeName": "Bine ai venit, {name}!",

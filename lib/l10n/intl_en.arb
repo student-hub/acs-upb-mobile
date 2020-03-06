@@ -36,6 +36,7 @@
   "errorEmailNotFound": "An account associated with that e-mail could not be found. Please sign up instead.",
   "errorAccountDisabled": "The account has been disabled.",
   "errorTooManyRequests": "There have been too many unsuccessful login attempts from this device.",
+  "errorCouldNotLaunchURL": "Could not launch '{url}'.",
 
   "warningInternetConnection": "Please make sure you are connected to the internet.",
   "warningPasswordLength": "The password must be 8 characters long or more.",
@@ -46,7 +47,7 @@
 
   "navigationHome": "Home",
   "navigationTimetable": "Timetable",
-  "navigationWebsites": "Websites",
+  "navigationPortal": "Portal",
   "navigationMap": "Map",
   "navigationProfile": "Profile",
   "navigationSettings": "Settings",
@@ -58,6 +59,12 @@
   "settingsItemLanguageEnglish": "English",
   "settingsItemLanguageRomanian": "Romanian",
   "settingsItemLanguageAuto": "Auto",
+
+  "websiteCategoryLearning": "Learning",
+  "websiteCategoryAdministrative": "Administrative",
+  "websiteCategoryAssociations": "Associations",
+  "websiteCategoryResources": "Resources",
+  "websiteCategoryOthers": "Others",
 
   "messageWelcomeSimple": "Welcome!",
   "messageWelcomeName": "Welcome, {name}!",

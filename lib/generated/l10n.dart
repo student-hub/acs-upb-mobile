@@ -327,6 +327,15 @@ class S {
     );
   }
 
+  String errorCouldNotLaunchURL(dynamic url) {
+    return Intl.message(
+      'Could not launch \'$url\'.',
+      name: 'errorCouldNotLaunchURL',
+      desc: '',
+      args: [url],
+    );
+  }
+
   String get warningInternetConnection {
     return Intl.message(
       'Please make sure you are connected to the internet.',
@@ -399,10 +408,10 @@ class S {
     );
   }
 
-  String get navigationWebsites {
+  String get navigationPortal {
     return Intl.message(
-      'Websites',
-      name: 'navigationWebsites',
+      'Portal',
+      name: 'navigationPortal',
       desc: '',
       args: [],
     );
@@ -493,6 +502,51 @@ class S {
     return Intl.message(
       'Auto',
       name: 'settingsItemLanguageAuto',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get websiteCategoryLearning {
+    return Intl.message(
+      'Learning',
+      name: 'websiteCategoryLearning',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get websiteCategoryAdministrative {
+    return Intl.message(
+      'Administrative',
+      name: 'websiteCategoryAdministrative',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get websiteCategoryAssociations {
+    return Intl.message(
+      'Associations',
+      name: 'websiteCategoryAssociations',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get websiteCategoryResources {
+    return Intl.message(
+      'Resources',
+      name: 'websiteCategoryResources',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get websiteCategoryOthers {
+    return Intl.message(
+      'Others',
+      name: 'websiteCategoryOthers',
       desc: '',
       args: [],
     );

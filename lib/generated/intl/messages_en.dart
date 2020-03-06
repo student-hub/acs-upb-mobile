@@ -21,11 +21,13 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static m0(provider) => "Sign in with ${provider}";
 
-  static m1(name) => "Welcome, ${name}!";
+  static m1(url) => "Could not launch \'${url}\'.";
 
-  static m2(email) => "There is already an account associated with ${email}.";
+  static m2(name) => "Welcome, ${name}!";
 
-  static m3(provider) => "Please log in with ${provider} to continue.";
+  static m3(email) => "There is already an account associated with ${email}.";
+
+  static m4(provider) => "Please log in with ${provider} to continue.";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
@@ -41,6 +43,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "buttonSave" : MessageLookupByLibrary.simpleMessage("Save"),
     "buttonSend" : MessageLookupByLibrary.simpleMessage("Send"),
     "errorAccountDisabled" : MessageLookupByLibrary.simpleMessage("The account has been disabled."),
+    "errorCouldNotLaunchURL" : m1,
     "errorEmailInUse" : MessageLookupByLibrary.simpleMessage("There is already an account associated with this e-mail address"),
     "errorEmailNotFound" : MessageLookupByLibrary.simpleMessage("An account associated with that e-mail could not be found. Please sign up instead."),
     "errorIncorrectPassword" : MessageLookupByLibrary.simpleMessage("The password you entered is incorrect."),
@@ -67,14 +70,14 @@ class MessageLookup extends MessageLookupByLibrary {
     "messageAccountCreated" : MessageLookupByLibrary.simpleMessage("Account created successfully."),
     "messageNewUser" : MessageLookupByLibrary.simpleMessage("New user?"),
     "messageResetPassword" : MessageLookupByLibrary.simpleMessage("Enter your e-mai in order to receive instructions on how to reset your password."),
-    "messageWelcomeName" : m1,
+    "messageWelcomeName" : m2,
     "messageWelcomeSimple" : MessageLookupByLibrary.simpleMessage("Welcome!"),
     "navigationHome" : MessageLookupByLibrary.simpleMessage("Home"),
     "navigationMap" : MessageLookupByLibrary.simpleMessage("Map"),
+    "navigationPortal" : MessageLookupByLibrary.simpleMessage("Portal"),
     "navigationProfile" : MessageLookupByLibrary.simpleMessage("Profile"),
     "navigationSettings" : MessageLookupByLibrary.simpleMessage("Settings"),
     "navigationTimetable" : MessageLookupByLibrary.simpleMessage("Timetable"),
-    "navigationWebsites" : MessageLookupByLibrary.simpleMessage("Websites"),
     "settingsItemDarkMode" : MessageLookupByLibrary.simpleMessage("Dark mode"),
     "settingsItemLanguage" : MessageLookupByLibrary.simpleMessage("Language"),
     "settingsItemLanguageAuto" : MessageLookupByLibrary.simpleMessage("Auto"),
@@ -82,11 +85,16 @@ class MessageLookup extends MessageLookupByLibrary {
     "settingsItemLanguageRomanian" : MessageLookupByLibrary.simpleMessage("Romanian"),
     "settingsTitleLocalization" : MessageLookupByLibrary.simpleMessage("Localization"),
     "settingsTitlePersonalization" : MessageLookupByLibrary.simpleMessage("Personalization"),
-    "warningEmailInUse" : m2,
+    "warningEmailInUse" : m3,
     "warningInternetConnection" : MessageLookupByLibrary.simpleMessage("Please make sure you are connected to the internet."),
     "warningPasswordCharacters" : MessageLookupByLibrary.simpleMessage("The password must include lowercase and uppercase letters and at least one number and special character (!@#\$&*~)."),
     "warningPasswordLength" : MessageLookupByLibrary.simpleMessage("The password must be 8 characters long or more."),
     "warningTryAgainLater" : MessageLookupByLibrary.simpleMessage("Please try again later."),
-    "warningUseProvider" : m3
+    "warningUseProvider" : m4,
+    "websiteCategoryAdministrative" : MessageLookupByLibrary.simpleMessage("Administrative"),
+    "websiteCategoryAssociations" : MessageLookupByLibrary.simpleMessage("Associations"),
+    "websiteCategoryLearning" : MessageLookupByLibrary.simpleMessage("Learning"),
+    "websiteCategoryOthers" : MessageLookupByLibrary.simpleMessage("Others"),
+    "websiteCategoryResources" : MessageLookupByLibrary.simpleMessage("Resources")
   };
 }

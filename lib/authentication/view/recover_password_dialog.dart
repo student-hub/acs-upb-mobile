@@ -9,7 +9,7 @@ class ResetPassword {
   ResetPassword._();
 
   static show({BuildContext context, String email}) {
-    AuthProvider authProvider = Provider.of(context, listen: false);
+    AuthProvider authProvider = Provider.of<AuthProvider>(context, listen: false);
     // Set the given email as the starting text, if provided
     TextEditingController emailController =
         TextEditingController(text: email ?? "");
