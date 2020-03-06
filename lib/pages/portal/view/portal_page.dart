@@ -61,7 +61,8 @@ class _PortalPageState extends State<PortalPage> {
                         if (snapshot.hasData) {
                           image = snapshot.data;
                         } else {
-                          image = AssetImage('assets/images/white.png');
+                          image = AssetImage('assets/' + website.iconPath) ??
+                              AssetImage('assets/images/white.png');
                         }
                         return CircleImage(
                           label: website.label,
