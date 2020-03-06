@@ -34,7 +34,7 @@ class _FormTextFieldState extends State<FormTextField> {
           // The following prevents the text field from overflowing
           Expanded(
               child: SizedBox(
-            height: 6,
+            height: 8,
           )),
           Padding(
             padding: const EdgeInsets.only(top: 10.0),
