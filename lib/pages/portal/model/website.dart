@@ -29,12 +29,4 @@ class Website {
 
   Website(
       {this.category, this.iconPath, this.label, this.link, this.infoByLocale});
-
-  factory Website.fromWebsite(Website website) {
-    return Website(
-        category: website.category,
-        iconPath: website.iconPath,
-        label: website.label,
-        link: website.link);
-  }
 }
