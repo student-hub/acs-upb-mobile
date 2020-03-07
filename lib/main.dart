@@ -5,6 +5,7 @@ import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/navigation/bottom_navigation_bar.dart';
 import 'package:acs_upb_mobile/navigation/routes.dart';
 import 'package:acs_upb_mobile/pages/settings/settings_page.dart';
+import 'package:acs_upb_mobile/resources/storage_provider.dart';
 import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -17,8 +18,10 @@ main() async {
   await PrefService.init(prefix: 'pref_');
   PrefService.setDefaultValues({'language': 'auto'});
 
-  runApp(ChangeNotifierProvider<AuthProvider>(
-      create: (_) => AuthProvider(), child: MyApp()));
+  runApp(MultiProvider(providers: [
+    ChangeNotifierProvider<AuthProvider>(create: (_) => AuthProvider()),
+    ChangeNotifierProvider<StorageProvider>(create: (_) => StorageProvider()),
+  ], child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {

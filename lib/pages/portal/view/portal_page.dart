@@ -32,6 +32,7 @@ class _PortalPageState extends State<PortalPage> {
     if (websites == null || websites.isEmpty) {
       return Container();
     }
+    StorageProvider storageProvider = Provider.of<StorageProvider>(context);
 
     return Padding(
       padding: const EdgeInsets.only(left: 8.0, right: 8.0),
@@ -55,7 +56,8 @@ class _PortalPageState extends State<PortalPage> {
                     padding:
                         const EdgeInsets.only(top: 8.0, left: 8.0, right: 8.0),
                     child: FutureBuilder<ImageProvider<dynamic>>(
-                      future: Storage.getImageFromPath(website.iconPath),
+                      future:
+                          storageProvider.getImageFromPath(website.iconPath),
                       builder: (context, snapshot) {
                         var image;
                         if (snapshot.hasData) {
