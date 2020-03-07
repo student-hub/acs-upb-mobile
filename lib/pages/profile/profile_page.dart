@@ -14,7 +14,28 @@ class ProfilePage extends StatelessWidget {
 
     return AppScaffold(
       title: S.of(context).navigationProfile,
-      body: Container(),
+      body: Column(
+        children: <Widget>[
+          Expanded(
+            flex: 1,
+            child: Container(),
+          ),
+          Expanded(
+            flex: 2,
+            child: Image(
+                image:
+                    AssetImage('assets/illustrations/undraw_profile_pic.png')),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(authProvider.user?.displayName ?? 'Anonymous'),
+          ),
+          Expanded(
+            flex: 4,
+            child: Container(),
+          ),
+        ],
+      ),
       floatingActionButton: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: <Widget>[

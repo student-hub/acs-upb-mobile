@@ -1,5 +1,6 @@
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/navigation/routes.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class AppScaffold extends StatelessWidget {
@@ -17,7 +18,25 @@ class AppScaffold extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: body,
+      body: Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: body ??
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Expanded(
+                  child: Center(
+                    child: Image(
+                        image: AssetImage(
+                            'assets/illustrations/undraw_under_construction.png')),
+                  ),
+                ),
+                SizedBox(height: 10),
+                Text('Under construction', style: Theme.of(context).textTheme.headline6,)
+              ],
+            ),
+      ),
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(40.0),
         child: AppBar(
