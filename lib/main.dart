@@ -16,19 +16,19 @@ main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await PrefService.init(prefix: 'pref_');
   PrefService.setDefaultValues({'language': 'auto'});
-  runApp(MyApp());
+
+  runApp(ChangeNotifierProvider<AuthProvider>(
+      create: (_) => AuthProvider(), child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
   final Color _accentColor = Color(0xFF43ADCD);
-  final AuthProvider authProvider;
-
-  MyApp({AuthProvider authProvider})
-      : this.authProvider = authProvider ?? AuthProvider();
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    AuthProvider authProvider = Provider.of<AuthProvider>(context);
+
     return DynamicTheme(
       defaultBrightness: Brightness.dark,
       data: (brightness) => ThemeData(
@@ -44,41 +44,38 @@ class MyApp extends StatelessWidget {
               : AppBarTheme(),
           fontFamily: 'Montserrat'),
       themedWidgetBuilder: (context, theme) {
-        return ChangeNotifierProvider<AuthProvider>(
-          create: (_) => authProvider,
-          child: OKToast(
-            textStyle: theme.textTheme.button,
-            backgroundColor: theme.accentColor.withOpacity(.8),
-            position: ToastPosition.bottom,
-            child: GestureDetector(
-              onTap: () {
-                // Remove current focus on tap
-                FocusScopeNode currentFocus = FocusScope.of(context);
-                if (!currentFocus.hasPrimaryFocus) {
-                  currentFocus.unfocus();
-                }
+        return OKToast(
+          textStyle: theme.textTheme.button,
+          backgroundColor: theme.accentColor.withOpacity(.8),
+          position: ToastPosition.bottom,
+          child: GestureDetector(
+            onTap: () {
+              // Remove current focus on tap
+              FocusScopeNode currentFocus = FocusScope.of(context);
+              if (!currentFocus.hasPrimaryFocus) {
+                currentFocus.unfocus();
+              }
+            },
+            child: MaterialApp(
+              title: "ACS UPB Mobile",
+              localizationsDelegates: [
+                GlobalMaterialLocalizations.delegate,
+                GlobalWidgetsLocalizations.delegate,
+                S.delegate
+              ],
+              supportedLocales: S.delegate.supportedLocales,
+              theme: theme,
+              initialRoute:
+                  authProvider.isAuthenticated ? Routes.home : Routes.login,
+              routes: {
+                Routes.home: (_) =>
+                    ChangeNotifierProvider<BottomNavigationBarProvider>(
+                        child: AppBottomNavigationBar(),
+                        create: (_) => BottomNavigationBarProvider()),
+                Routes.settings: (_) => SettingsPage(),
+                Routes.login: (_) => LoginView(),
+                Routes.signUp: (_) => SignUpView(),
               },
-              child: MaterialApp(
-                title: "ACS UPB Mobile",
-                localizationsDelegates: [
-                  GlobalMaterialLocalizations.delegate,
-                  GlobalWidgetsLocalizations.delegate,
-                  S.delegate
-                ],
-                supportedLocales: S.delegate.supportedLocales,
-                theme: theme,
-                initialRoute:
-                    authProvider.isAuthenticated ? Routes.home : Routes.login,
-                routes: {
-                  Routes.home: (_) =>
-                      ChangeNotifierProvider<BottomNavigationBarProvider>(
-                          child: AppBottomNavigationBar(),
-                          create: (_) => BottomNavigationBarProvider()),
-                  Routes.settings: (_) => SettingsPage(),
-                  Routes.login: (_) => LoginView(),
-                  Routes.signUp: (_) => SignUpView(),
-                },
-              ),
             ),
           ),
         );

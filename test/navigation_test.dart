@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:preferences/preferences.dart';
+import 'package:provider/provider.dart';
 
 class MockAuthProvider extends Mock implements AuthProvider {}
 
@@ -28,7 +29,8 @@ void main() {
     });
 
     testWidgets('Home', (WidgetTester tester) async {
-      await tester.pumpWidget(MyApp(authProvider: mockAuthProvider));
+      await tester.pumpWidget(ChangeNotifierProvider<AuthProvider>(
+          create: (_) => mockAuthProvider, child: MyApp()));
       await tester.pumpAndSettle();
 
       expect(find.byType(HomePage), findsOneWidget);
@@ -40,7 +42,8 @@ void main() {
     });
 
     testWidgets('Settings', (WidgetTester tester) async {
-      await tester.pumpWidget(MyApp(authProvider: mockAuthProvider));
+      await tester.pumpWidget(ChangeNotifierProvider<AuthProvider>(
+          create: (_) => mockAuthProvider, child: MyApp()));
       await tester.pumpAndSettle();
 
       // Open settings

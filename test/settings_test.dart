@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:preferences/preferences.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class MockAuthProvider extends Mock implements AuthProvider {}
@@ -28,7 +29,8 @@ void main() {
     });
 
     testWidgets('Dark mode', (WidgetTester tester) async {
-      await tester.pumpWidget(MyApp(authProvider: mockAuthProvider));
+      await tester.pumpWidget(ChangeNotifierProvider<AuthProvider>(
+          create: (_) => mockAuthProvider, child: MyApp()));
       await tester.pumpAndSettle();
 
       MaterialApp app = find.byType(MaterialApp).evaluate().first.widget;
@@ -55,7 +57,8 @@ void main() {
     });
 
     testWidgets('Language', (WidgetTester tester) async {
-      await tester.pumpWidget(MyApp(authProvider: mockAuthProvider));
+      await tester.pumpWidget(ChangeNotifierProvider<AuthProvider>(
+          create: (_) => mockAuthProvider, child: MyApp()));
       await tester.pumpAndSettle();
 
       MaterialApp app = find.byType(MaterialApp).evaluate().first.widget;

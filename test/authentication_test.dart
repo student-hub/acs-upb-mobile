@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:preferences/preferences.dart';
+import 'package:provider/provider.dart';
 
 class MockAuthProvider extends Mock implements AuthProvider {}
 
@@ -28,7 +29,8 @@ void main() {
 
   group('Login', () {
     testWidgets('Anonymous login', (WidgetTester tester) async {
-      await tester.pumpWidget(MyApp(authProvider: mockAuthProvider));
+      await tester.pumpWidget(ChangeNotifierProvider<AuthProvider>(
+          create: (_) => mockAuthProvider, child: MyApp()));
       await tester.pumpAndSettle();
 
       await tester.runAsync(() async {
@@ -51,7 +53,8 @@ void main() {
     });
 
     testWidgets('Credential login', (WidgetTester tester) async {
-      await tester.pumpWidget(MyApp(authProvider: mockAuthProvider));
+      await tester.pumpWidget(ChangeNotifierProvider<AuthProvider>(
+          create: (_) => mockAuthProvider, child: MyApp()));
       await tester.pumpAndSettle();
 
       await tester.runAsync(() async {
@@ -86,7 +89,8 @@ void main() {
 
   group('Recover password', () {
     testWidgets('Send email', (WidgetTester tester) async {
-      await tester.pumpWidget(MyApp(authProvider: mockAuthProvider));
+      await tester.pumpWidget(ChangeNotifierProvider<AuthProvider>(
+          create: (_) => mockAuthProvider, child: MyApp()));
       await tester.pumpAndSettle();
 
       expect(find.byType(LoginView), findsOneWidget);
@@ -119,7 +123,8 @@ void main() {
     });
 
     testWidgets('Cancel', (WidgetTester tester) async {
-      await tester.pumpWidget(MyApp(authProvider: mockAuthProvider));
+      await tester.pumpWidget(ChangeNotifierProvider<AuthProvider>(
+          create: (_) => mockAuthProvider, child: MyApp()));
       await tester.pumpAndSettle();
 
       expect(find.byType(LoginView), findsOneWidget);
