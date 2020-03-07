@@ -4,6 +4,7 @@ jobs:
   test:
     name: Test
     runs-on: ubuntu-latest
+
     steps:
     - uses: actions/checkout@v1
     - uses: actions/setup-java@v1
@@ -24,3 +25,26 @@ jobs:
       with:
         name: application
         path: .
+
+  coverage:
+    name: Coverage
+    needs: [test]
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: Download test artifact
+        uses: actions/download-artifact@v1
+        with:
+          name: application
+
+      - name: Install lcov
+        run: sudo apt install -y lcov
+
+      - name: Prepare coverage
+        working-directory: application
+        run: genhtml coverage/lcov.info -o coverage
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v1
