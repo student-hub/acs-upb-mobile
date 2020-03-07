@@ -100,28 +100,6 @@ void main() {
       expect(find.byTooltip('info-ro'), findsOneWidget);
     });
 
-    testWidgets('Spoilers', (WidgetTester tester) async {
-      await tester.pumpWidget(portal());
-      await tester.pumpAndSettle();
-
-      // Both categories are expanded at first
-      expect(find.byIcon(Icons.keyboard_arrow_down), findsNothing);
-      expect(find.byIcon(Icons.keyboard_arrow_up), findsNWidgets(2));
-
-      expect(find.byKey(Key('spoiler_child_closed')), findsNothing);
-      expect(find.byKey(Key('spoiler_child_opened')), findsNWidgets(2));
-
-      // Hide 'Learning' category
-      await tester.tap(find.text('Learning'));
-      await tester.pumpAndSettle();
-
-      expect(find.byIcon(Icons.keyboard_arrow_down), findsOneWidget);
-      expect(find.byIcon(Icons.keyboard_arrow_up), findsOneWidget);
-
-      expect(find.byKey(Key('spoiler_child_closed')), findsOneWidget);
-      expect(find.byKey(Key('spoiler_child_opened')), findsOneWidget);
-    });
-
     testWidgets('Links', (WidgetTester tester) async {
       await tester.pumpWidget(portal());
       await tester.pumpAndSettle();

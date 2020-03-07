@@ -7,8 +7,8 @@ import 'package:acs_upb_mobile/resources/storage_provider.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/widgets/circle_image.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
-import 'package:acs_upb_mobile/widgets/spoiler/view/spoiler.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
+import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
@@ -28,6 +28,32 @@ class _PortalPageState extends State<PortalPage> {
     }
   }
 
+  Widget spoiler({String title, Widget content}) => ExpandableNotifier(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            ExpandableTheme(
+              data: ExpandableThemeData(
+                useInkWell: false,
+                crossFadePoint: 0.5,
+                hasIcon: true,
+                iconPlacement: ExpandablePanelIconPlacement.left,
+                iconColor: Theme.of(context).textTheme.headline6.color,
+                headerAlignment: ExpandablePanelHeaderAlignment.center,
+                iconPadding: EdgeInsets.only()
+              ),
+              child: ExpandablePanel(
+                controller: ExpandableController(initialExpanded: true),
+                header:
+                    Text(title, style: Theme.of(context).textTheme.headline6),
+                collapsed: SizedBox(height: 12.0),
+                expanded: content,
+              ),
+            ),
+          ],
+        ),
+      );
+
   Widget listCategory(String category, List<Website> websites) {
     if (websites == null || websites.isEmpty) {
       return Container();
@@ -36,14 +62,9 @@ class _PortalPageState extends State<PortalPage> {
 
     return Padding(
       padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-      child: Spoiler(
-        isOpened: true,
-        leadingArrow: true,
-        header: Text(
-          category,
-          style: Theme.of(context).textTheme.headline6,
-        ),
-        child: Container(
+      child: spoiler(
+        title: category,
+        content: Container(
           height: min(MediaQuery.of(context).size.width,
                       MediaQuery.of(context).size.height) /
                   5 + // circle
@@ -121,7 +142,7 @@ class _PortalPageState extends State<PortalPage> {
               var websites = snapshot.data;
               return SingleChildScrollView(
                 child: Padding(
-                  padding: EdgeInsets.only(top: 8.0),
+                  padding: EdgeInsets.only(top: 12.0),
                   child: Column(
                     children: listWebsitesByCategory(websites),
                   ),
