@@ -86,6 +86,9 @@ dev_dependencies:
   # Mocking utility used for testing
   mockito: ^4.1.1
 
+  # Provider platform interfaces of federated flutter plugins, for testing (like url_launcher)
+  plugin_platform_interface: ^1.0.0
+
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 

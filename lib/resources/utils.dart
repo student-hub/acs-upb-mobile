@@ -4,7 +4,7 @@ import 'package:preferences/preference_service.dart';
 
 class Utils {
   static getLocale(BuildContext context) {
-    var languagePref = PrefService.sharedPreferences.get('pref_language');
+    var languagePref = PrefService.get('language');
     return languagePref == 'auto' ? S.of(context).localeName : languagePref;
   }
 }

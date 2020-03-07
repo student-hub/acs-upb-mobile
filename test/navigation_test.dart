@@ -1,6 +1,7 @@
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/main.dart';
 import 'package:acs_upb_mobile/pages/home/home_page.dart';
+import 'package:acs_upb_mobile/pages/portal/view/portal_page.dart';
 import 'package:acs_upb_mobile/pages/settings/settings_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -13,7 +14,7 @@ class MockAuthProvider extends Mock implements AuthProvider {}
 void main() {
   AuthProvider mockAuthProvider;
 
-  group('Drawer', () {
+  group('Navigation', () {
     setUpAll(() async {
       WidgetsFlutterBinding.ensureInitialized();
       PrefService.enableCaching();
@@ -39,6 +40,19 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.byType(HomePage), findsOneWidget);
+    });
+
+    testWidgets('Portal', (WidgetTester tester) async {
+      await tester.pumpWidget(ChangeNotifierProvider<AuthProvider>(
+          create: (_) => mockAuthProvider, child: MyApp()));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(HomePage), findsOneWidget);
+      // Open portal
+      await tester.tap(find.byIcon(Icons.public));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(PortalPage), findsOneWidget);
     });
 
     testWidgets('Settings', (WidgetTester tester) async {

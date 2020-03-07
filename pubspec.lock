@@ -449,7 +449,7 @@ packages:
     source: hosted
     version: "2.2.1"
   plugin_platform_interface:
-    dependency: transitive
+    dependency: "direct dev"
     description:
       name: plugin_platform_interface
       url: "https://pub.dartlang.org"
