@@ -136,6 +136,7 @@ class _SignUpViewState extends State<SignUpView> {
                       children: <Widget>[
                         Expanded(
                           child: AppButton(
+                            key: ValueKey('cancel_button'),
                             text: S.of(context).buttonCancel,
                             onTap: () async {
                               return Navigator.pop(context);
@@ -145,6 +146,7 @@ class _SignUpViewState extends State<SignUpView> {
                         SizedBox(width: ScreenUtil().setWidth(30)),
                         Expanded(
                           child: AppButton(
+                            key: ValueKey('sign_up_button'),
                             color: Theme.of(context).accentColor,
                             text: S.of(context).actionSignUp,
                             onTap: () => signUpForm.submit(),

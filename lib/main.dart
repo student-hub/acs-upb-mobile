@@ -26,6 +26,9 @@ main() async {
 
 class MyApp extends StatelessWidget {
   final Color _accentColor = Color(0xFF43ADCD);
+  final List<NavigatorObserver> navigationObservers;
+
+  MyApp({this.navigationObservers});
 
   // This widget is the root of your application.
   @override
@@ -79,6 +82,7 @@ class MyApp extends StatelessWidget {
                 Routes.login: (_) => LoginView(),
                 Routes.signUp: (_) => SignUpView(),
               },
+              navigatorObservers: navigationObservers ?? [],
             ),
           ),
         );

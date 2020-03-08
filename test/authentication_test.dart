@@ -1,5 +1,6 @@
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/authentication/view/login_view.dart';
+import 'package:acs_upb_mobile/authentication/view/sign_up_view.dart';
 import 'package:acs_upb_mobile/main.dart';
 import 'package:acs_upb_mobile/pages/home/home_page.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +10,8 @@ import 'package:preferences/preferences.dart';
 import 'package:provider/provider.dart';
 
 class MockAuthProvider extends Mock implements AuthProvider {}
+
+class MockNavigatorObserver extends Mock implements NavigatorObserver {}
 
 void main() {
   AuthProvider mockAuthProvider;
@@ -149,6 +152,108 @@ void main() {
 
       verifyNever(
           mockAuthProvider.sendPasswordResetEmail(email: anyNamed('email')));
+    });
+  });
+
+  group('Sign up', () {
+    MockNavigatorObserver mockObserver = MockNavigatorObserver();
+
+    testWidgets('Sign up', (WidgetTester tester) async {
+      await tester.pumpWidget(ChangeNotifierProvider<AuthProvider>(
+          create: (_) => mockAuthProvider,
+          child: MyApp(
+            navigationObservers: [mockObserver],
+          )));
+      await tester.pumpAndSettle();
+
+      verify(mockObserver.didPush(any, any));
+      expect(find.byType(LoginView), findsOneWidget);
+
+      // Scroll sign up button into view and tap
+      await tester.ensureVisible(find.text('Sign up'));
+      await tester.tap(find.text('Sign up'));
+      await tester.pumpAndSettle();
+
+      verify(mockObserver.didPush(any, any));
+      expect(find.byType(SignUpView), findsOneWidget);
+
+      when(mockAuthProvider.signUp(
+              info: anyNamed('info'), context: anyNamed('context')))
+          .thenAnswer((_) => Future.value(true));
+      when(mockAuthProvider.canSignUpWithEmail(email: anyNamed('email')))
+          .thenAnswer((realInvocation) => Future.value(true));
+      when(mockAuthProvider.isStrongPassword(password: anyNamed('password')))
+          .thenAnswer((realInvocation) => Future.value(true));
+
+      // Enter info
+      await tester.enterText(
+          find.byKey(ValueKey('email_text_field'), skipOffstage: true),
+          'test@test.com');
+      await tester.enterText(
+          find.byKey(ValueKey('password_text_field'), skipOffstage: true),
+          'password');
+      await tester.enterText(
+          find.byKey(ValueKey('confirm_password_text_field')), 'password');
+      await tester.enterText(
+          find.byKey(ValueKey('first_name_text_field')), 'John');
+      await tester.enterText(
+          find.byKey(ValueKey('last_name_text_field')), 'Doe');
+      await tester.enterText(find.byKey(ValueKey('group_text_field')), '314CB');
+
+      // Scroll sign up button into view and tap
+      await tester.ensureVisible(find.byKey(ValueKey('sign_up_button')));
+      await tester.tap(find.byKey(ValueKey('sign_up_button')));
+      await tester.pumpAndSettle();
+
+      verify(mockAuthProvider.signUp(
+          info: argThat(
+              equals({
+                'Email': 'test@test.com',
+                'Password': 'password',
+                'Confirm password': 'password',
+                'First name': 'John',
+                'Last name': 'Doe',
+                'Group': '314CB'
+              }),
+              named: 'info'),
+          context: anyNamed('context')));
+      expect(find.byType(HomePage), findsOneWidget);
+      verify(mockObserver.didPush(any, any));
+    });
+
+    testWidgets('Cancel', (WidgetTester tester) async {
+      await tester.pumpWidget(ChangeNotifierProvider<AuthProvider>(
+          create: (_) => mockAuthProvider,
+          child: MyApp(
+            navigationObservers: [mockObserver],
+          )));
+      await tester.pumpAndSettle();
+
+      verify(mockObserver.didPush(any, any));
+      expect(find.byType(LoginView), findsOneWidget);
+
+      // Scroll sign up button into view and tap
+      await tester.ensureVisible(find.text('Sign up'));
+      await tester.tap(find.text('Sign up'));
+      await tester.pumpAndSettle();
+
+      verify(mockObserver.didPush(any, any));
+      expect(find.byType(SignUpView), findsOneWidget);
+
+      when(mockAuthProvider.signUp(
+              info: anyNamed('info'), context: anyNamed('context')))
+          .thenAnswer((_) => Future.value(true));
+
+      // Scroll cancel button into view and tap
+      await tester.ensureVisible(find.byKey(ValueKey('cancel_button')));
+      await tester.tap(find.byKey(ValueKey('cancel_button')));
+      await tester.pumpAndSettle();
+
+      verifyNever(mockAuthProvider.signUp(
+          info: anyNamed('info'), context: anyNamed('context')));
+      expect(find.byType(LoginView), findsOneWidget);
+      expect(find.byType(SignUpView), findsNothing);
+      verify(mockObserver.didPop(any, any));
     });
   });
 }
