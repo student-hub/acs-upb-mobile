@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 
 class LoadingScreen extends StatefulWidget {
   final Text title;
-  final Color backgroundColor;
   final Future<dynamic> navigateAfterFuture;
   final double photoSize;
   final dynamic onClick;
@@ -21,7 +20,6 @@ class LoadingScreen extends StatefulWidget {
       this.onClick,
       @required this.navigateAfterFuture,
       this.title = const Text(''),
-      this.backgroundColor = Colors.white,
       this.image,
       this.loadingText = const Text(""),
       this.imageBackground,
@@ -68,12 +66,13 @@ class _LoadingScreenState extends State<LoadingScreen> {
                         image: widget.imageBackground,
                       ),
                 gradient: widget.gradientBackground,
-                color: widget.backgroundColor,
+                color: Theme.of(context).scaffoldBackgroundColor,
               ),
             ),
             Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
+                Expanded(flex: 1, child: Container()),
                 Expanded(
                   flex: 2,
                   child: Container(

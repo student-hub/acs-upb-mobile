@@ -71,9 +71,8 @@ class _MyAppState extends State<MyApp> {
   Widget buildSplashScreen(BuildContext context) {
     return LoadingScreen(
       navigateAfterFuture: chooseStartScreen(),
-      title: Text('Signing in...'),
+      loadingText: Text('Signing in...'),
       image: Image.asset('assets/icons/acs_logo.png'),
-      backgroundColor: Colors.white,
       loaderColor: Theme.of(context).accentColor,
       photoSize: 100,
     );
