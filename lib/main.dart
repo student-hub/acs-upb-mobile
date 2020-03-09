@@ -74,7 +74,6 @@ class _MyAppState extends State<MyApp> {
       loadingText: Text('Signing in...'),
       image: Image.asset('assets/icons/acs_logo.png'),
       loaderColor: Theme.of(context).accentColor,
-      photoSize: 100,
     );
   }
 

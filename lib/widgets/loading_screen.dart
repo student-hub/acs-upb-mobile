@@ -1,12 +1,12 @@
 import 'dart:async';
 import 'dart:core';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 
 class LoadingScreen extends StatefulWidget {
   final Text title;
   final Future<dynamic> navigateAfterFuture;
-  final double photoSize;
   final dynamic onClick;
   final Color loaderColor;
   final Image image;
@@ -16,7 +16,6 @@ class LoadingScreen extends StatefulWidget {
 
   LoadingScreen(
       {this.loaderColor,
-      this.photoSize,
       this.onClick,
       @required this.navigateAfterFuture,
       this.title = const Text(''),
@@ -51,6 +50,10 @@ class _LoadingScreenState extends State<LoadingScreen> {
 
   @override
   Widget build(BuildContext context) {
+    double photoSize = min(MediaQuery.of(context).size.width,
+            MediaQuery.of(context).size.height) /
+        3;
+
     return Scaffold(
       body: InkWell(
         onTap: widget.onClick,
@@ -77,19 +80,21 @@ class _LoadingScreenState extends State<LoadingScreen> {
                   flex: 2,
                   child: Container(
                       child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          CircleAvatar(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: CircleAvatar(
                             backgroundColor: Colors.transparent,
                             child: Container(child: widget.image),
-                            radius: widget.photoSize,
+                            radius: photoSize,
                           ),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 10.0),
-                          ),
-                          widget.title
-                        ],
-                      )),
+                        ),
+                      ),
+                      widget.title
+                    ],
+                  )),
                 ),
                 Expanded(
                   flex: 1,
