@@ -93,6 +93,13 @@ class AuthProvider with ChangeNotifier {
     return user != null;
   }
 
+  Future<bool> get isAuthenticatedAsync async {
+    if (user == null) {
+      user = await FirebaseAuth.instance.currentUser();
+    }
+    return user != null;
+  }
+
   Future<User> getCurrentUser() async {
     DocumentSnapshot snapshot =
         await Firestore.instance.collection('users').document(user.uid).get();

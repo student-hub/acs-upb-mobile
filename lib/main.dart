@@ -18,23 +18,24 @@ main() async {
   await PrefService.init(prefix: 'pref_');
   PrefService.setDefaultValues({'language': 'auto'});
 
+  AuthProvider authProvider = AuthProvider();
+  bool authenticated = await authProvider.isAuthenticatedAsync;
   runApp(MultiProvider(providers: [
-    ChangeNotifierProvider<AuthProvider>(create: (_) => AuthProvider()),
+    ChangeNotifierProvider<AuthProvider>(create: (_) => authProvider),
     ChangeNotifierProvider<StorageProvider>(create: (_) => StorageProvider()),
-  ], child: MyApp()));
+  ], child: MyApp(authenticated)));
 }
 
 class MyApp extends StatelessWidget {
   final Color _accentColor = Color(0xFF43ADCD);
   final List<NavigatorObserver> navigationObservers;
+  final bool _authenticated;
 
-  MyApp({this.navigationObservers});
+  MyApp(this._authenticated, {this.navigationObservers});
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    AuthProvider authProvider = Provider.of<AuthProvider>(context);
-
     return DynamicTheme(
       defaultBrightness: Brightness.dark,
       data: (brightness) => ThemeData(
@@ -71,8 +72,7 @@ class MyApp extends StatelessWidget {
               ],
               supportedLocales: S.delegate.supportedLocales,
               theme: theme,
-              initialRoute:
-                  authProvider.isAuthenticated ? Routes.home : Routes.login,
+              initialRoute: _authenticated ? Routes.home : Routes.login,
               routes: {
                 Routes.home: (_) =>
                     ChangeNotifierProvider<BottomNavigationBarProvider>(

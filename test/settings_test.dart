@@ -30,7 +30,7 @@ void main() {
 
     testWidgets('Dark mode', (WidgetTester tester) async {
       await tester.pumpWidget(ChangeNotifierProvider<AuthProvider>(
-          create: (_) => mockAuthProvider, child: MyApp()));
+          create: (_) => mockAuthProvider, child: MyApp(true)));
       await tester.pumpAndSettle();
 
       MaterialApp app = find.byType(MaterialApp).evaluate().first.widget;
@@ -58,7 +58,7 @@ void main() {
 
     testWidgets('Language', (WidgetTester tester) async {
       await tester.pumpWidget(ChangeNotifierProvider<AuthProvider>(
-          create: (_) => mockAuthProvider, child: MyApp()));
+          create: (_) => mockAuthProvider, child: MyApp(true)));
       await tester.pumpAndSettle();
 
       MaterialApp app = find.byType(MaterialApp).evaluate().first.widget;

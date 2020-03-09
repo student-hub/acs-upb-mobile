@@ -33,7 +33,7 @@ void main() {
   group('Login', () {
     testWidgets('Anonymous login', (WidgetTester tester) async {
       await tester.pumpWidget(ChangeNotifierProvider<AuthProvider>(
-          create: (_) => mockAuthProvider, child: MyApp()));
+          create: (_) => mockAuthProvider, child: MyApp(false)));
       await tester.pumpAndSettle();
 
       await tester.runAsync(() async {
@@ -57,7 +57,7 @@ void main() {
 
     testWidgets('Credential login', (WidgetTester tester) async {
       await tester.pumpWidget(ChangeNotifierProvider<AuthProvider>(
-          create: (_) => mockAuthProvider, child: MyApp()));
+          create: (_) => mockAuthProvider, child: MyApp(false)));
       await tester.pumpAndSettle();
 
       await tester.runAsync(() async {
@@ -93,7 +93,7 @@ void main() {
   group('Recover password', () {
     testWidgets('Send email', (WidgetTester tester) async {
       await tester.pumpWidget(ChangeNotifierProvider<AuthProvider>(
-          create: (_) => mockAuthProvider, child: MyApp()));
+          create: (_) => mockAuthProvider, child: MyApp(false)));
       await tester.pumpAndSettle();
 
       expect(find.byType(LoginView), findsOneWidget);
@@ -127,7 +127,7 @@ void main() {
 
     testWidgets('Cancel', (WidgetTester tester) async {
       await tester.pumpWidget(ChangeNotifierProvider<AuthProvider>(
-          create: (_) => mockAuthProvider, child: MyApp()));
+          create: (_) => mockAuthProvider, child: MyApp(false)));
       await tester.pumpAndSettle();
 
       expect(find.byType(LoginView), findsOneWidget);
@@ -162,6 +162,7 @@ void main() {
       await tester.pumpWidget(ChangeNotifierProvider<AuthProvider>(
           create: (_) => mockAuthProvider,
           child: MyApp(
+            false,
             navigationObservers: [mockObserver],
           )));
       await tester.pumpAndSettle();
@@ -225,6 +226,7 @@ void main() {
       await tester.pumpWidget(ChangeNotifierProvider<AuthProvider>(
           create: (_) => mockAuthProvider,
           child: MyApp(
+            false,
             navigationObservers: [mockObserver],
           )));
       await tester.pumpAndSettle();
