@@ -28,12 +28,14 @@ void main() {
     // ignore: invalid_use_of_protected_member
     when(mockAuthProvider.hasListeners).thenReturn(false);
     when(mockAuthProvider.isAuthenticated).thenReturn(false);
+    when(mockAuthProvider.isAuthenticatedAsync)
+        .thenAnswer((realInvocation) => Future.value(false));
   });
 
   group('Login', () {
     testWidgets('Anonymous login', (WidgetTester tester) async {
       await tester.pumpWidget(ChangeNotifierProvider<AuthProvider>(
-          create: (_) => mockAuthProvider, child: MyApp(false)));
+          create: (_) => mockAuthProvider, child: MyApp()));
       await tester.pumpAndSettle();
 
       await tester.runAsync(() async {
@@ -57,7 +59,7 @@ void main() {
 
     testWidgets('Credential login', (WidgetTester tester) async {
       await tester.pumpWidget(ChangeNotifierProvider<AuthProvider>(
-          create: (_) => mockAuthProvider, child: MyApp(false)));
+          create: (_) => mockAuthProvider, child: MyApp()));
       await tester.pumpAndSettle();
 
       await tester.runAsync(() async {
@@ -93,7 +95,7 @@ void main() {
   group('Recover password', () {
     testWidgets('Send email', (WidgetTester tester) async {
       await tester.pumpWidget(ChangeNotifierProvider<AuthProvider>(
-          create: (_) => mockAuthProvider, child: MyApp(false)));
+          create: (_) => mockAuthProvider, child: MyApp()));
       await tester.pumpAndSettle();
 
       expect(find.byType(LoginView), findsOneWidget);
@@ -127,7 +129,7 @@ void main() {
 
     testWidgets('Cancel', (WidgetTester tester) async {
       await tester.pumpWidget(ChangeNotifierProvider<AuthProvider>(
-          create: (_) => mockAuthProvider, child: MyApp(false)));
+          create: (_) => mockAuthProvider, child: MyApp()));
       await tester.pumpAndSettle();
 
       expect(find.byType(LoginView), findsOneWidget);
@@ -161,10 +163,7 @@ void main() {
     testWidgets('Sign up', (WidgetTester tester) async {
       await tester.pumpWidget(ChangeNotifierProvider<AuthProvider>(
           create: (_) => mockAuthProvider,
-          child: MyApp(
-            false,
-            navigationObservers: [mockObserver],
-          )));
+          child: MyApp(navigationObservers: [mockObserver])));
       await tester.pumpAndSettle();
 
       verify(mockObserver.didPush(any, any));
@@ -225,10 +224,7 @@ void main() {
     testWidgets('Cancel', (WidgetTester tester) async {
       await tester.pumpWidget(ChangeNotifierProvider<AuthProvider>(
           create: (_) => mockAuthProvider,
-          child: MyApp(
-            false,
-            navigationObservers: [mockObserver],
-          )));
+          child: MyApp(navigationObservers: [mockObserver])));
       await tester.pumpAndSettle();
 
       verify(mockObserver.didPush(any, any));

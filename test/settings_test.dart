@@ -26,11 +26,13 @@ void main() {
       // ignore: invalid_use_of_protected_member
       when(mockAuthProvider.hasListeners).thenReturn(false);
       when(mockAuthProvider.isAnonymous).thenReturn(true);
+      when(mockAuthProvider.isAuthenticatedAsync)
+          .thenAnswer((realInvocation) => Future.value(true));
     });
 
     testWidgets('Dark mode', (WidgetTester tester) async {
       await tester.pumpWidget(ChangeNotifierProvider<AuthProvider>(
-          create: (_) => mockAuthProvider, child: MyApp(true)));
+          create: (_) => mockAuthProvider, child: MyApp()));
       await tester.pumpAndSettle();
 
       MaterialApp app = find.byType(MaterialApp).evaluate().first.widget;
@@ -58,7 +60,7 @@ void main() {
 
     testWidgets('Language', (WidgetTester tester) async {
       await tester.pumpWidget(ChangeNotifierProvider<AuthProvider>(
-          create: (_) => mockAuthProvider, child: MyApp(true)));
+          create: (_) => mockAuthProvider, child: MyApp()));
       await tester.pumpAndSettle();
 
       MaterialApp app = find.byType(MaterialApp).evaluate().first.widget;

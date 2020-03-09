@@ -35,13 +35,15 @@ void main() {
       // ignore: invalid_use_of_protected_member
       when(mockAuthProvider.hasListeners).thenReturn(false);
       when(mockAuthProvider.isAnonymous).thenReturn(true);
+      when(mockAuthProvider.isAuthenticatedAsync)
+          .thenAnswer((realInvocation) => Future.value(true));
     });
 
     testWidgets('Home - portrait', (WidgetTester tester) async {
       await binding.setSurfaceSize(Size(PORTRAIT_WIDTH, PORTRAIT_HEIGHT));
 
       await tester.pumpWidget(ChangeNotifierProvider<AuthProvider>(
-          create: (_) => mockAuthProvider, child: MyApp(true)));
+          create: (_) => mockAuthProvider, child: MyApp()));
       await tester.pumpAndSettle();
 
       expect(find.byType(HomePage), findsOneWidget);
@@ -56,7 +58,7 @@ void main() {
       await binding.setSurfaceSize(Size(LANDSCAPE_WIDTH, LANDSCAPE_HEIGHT));
 
       await tester.pumpWidget(ChangeNotifierProvider<AuthProvider>(
-          create: (_) => mockAuthProvider, child: MyApp(true)));
+          create: (_) => mockAuthProvider, child: MyApp()));
       await tester.pumpAndSettle();
 
       expect(find.byType(HomePage), findsOneWidget);
@@ -71,7 +73,7 @@ void main() {
       await binding.setSurfaceSize(Size(PORTRAIT_WIDTH, PORTRAIT_HEIGHT));
 
       await tester.pumpWidget(ChangeNotifierProvider<AuthProvider>(
-          create: (_) => mockAuthProvider, child: MyApp(true)));
+          create: (_) => mockAuthProvider, child: MyApp()));
       await tester.pumpAndSettle();
 
       expect(find.byType(HomePage), findsOneWidget);
@@ -87,7 +89,7 @@ void main() {
       await binding.setSurfaceSize(Size(LANDSCAPE_WIDTH, LANDSCAPE_HEIGHT));
 
       await tester.pumpWidget(ChangeNotifierProvider<AuthProvider>(
-          create: (_) => mockAuthProvider, child: MyApp(true)));
+          create: (_) => mockAuthProvider, child: MyApp()));
       await tester.pumpAndSettle();
 
       expect(find.byType(HomePage), findsOneWidget);
@@ -103,7 +105,7 @@ void main() {
       await binding.setSurfaceSize(Size(PORTRAIT_WIDTH, PORTRAIT_HEIGHT));
 
       await tester.pumpWidget(ChangeNotifierProvider<AuthProvider>(
-          create: (_) => mockAuthProvider, child: MyApp(true)));
+          create: (_) => mockAuthProvider, child: MyApp()));
       await tester.pumpAndSettle();
 
       expect(find.byType(HomePage), findsOneWidget);
@@ -119,7 +121,7 @@ void main() {
       await binding.setSurfaceSize(Size(LANDSCAPE_WIDTH, LANDSCAPE_HEIGHT));
 
       await tester.pumpWidget(ChangeNotifierProvider<AuthProvider>(
-          create: (_) => mockAuthProvider, child: MyApp(true)));
+          create: (_) => mockAuthProvider, child: MyApp()));
       await tester.pumpAndSettle();
 
       expect(find.byType(HomePage), findsOneWidget);
@@ -135,7 +137,7 @@ void main() {
       await binding.setSurfaceSize(Size(PORTRAIT_WIDTH, PORTRAIT_HEIGHT));
 
       await tester.pumpWidget(ChangeNotifierProvider<AuthProvider>(
-          create: (_) => mockAuthProvider, child: MyApp(true)));
+          create: (_) => mockAuthProvider, child: MyApp()));
       await tester.pumpAndSettle();
 
       expect(find.byType(HomePage), findsOneWidget);
@@ -150,7 +152,7 @@ void main() {
       await binding.setSurfaceSize(Size(LANDSCAPE_WIDTH, LANDSCAPE_HEIGHT));
 
       await tester.pumpWidget(ChangeNotifierProvider<AuthProvider>(
-          create: (_) => mockAuthProvider, child: MyApp(true)));
+          create: (_) => mockAuthProvider, child: MyApp()));
       await tester.pumpAndSettle();
 
       expect(find.byType(HomePage), findsOneWidget);
@@ -165,7 +167,7 @@ void main() {
       await binding.setSurfaceSize(Size(PORTRAIT_WIDTH, PORTRAIT_HEIGHT));
 
       await tester.pumpWidget(ChangeNotifierProvider<AuthProvider>(
-          create: (_) => mockAuthProvider, child: MyApp(true)));
+          create: (_) => mockAuthProvider, child: MyApp()));
       await tester.pumpAndSettle();
 
       expect(find.byType(HomePage), findsOneWidget);
@@ -181,7 +183,7 @@ void main() {
       await binding.setSurfaceSize(Size(LANDSCAPE_WIDTH, LANDSCAPE_HEIGHT));
 
       await tester.pumpWidget(ChangeNotifierProvider<AuthProvider>(
-          create: (_) => mockAuthProvider, child: MyApp(true)));
+          create: (_) => mockAuthProvider, child: MyApp()));
       await tester.pumpAndSettle();
 
       expect(find.byType(HomePage), findsOneWidget);
@@ -197,7 +199,7 @@ void main() {
       await binding.setSurfaceSize(Size(PORTRAIT_WIDTH, PORTRAIT_HEIGHT));
 
       await tester.pumpWidget(ChangeNotifierProvider<AuthProvider>(
-          create: (_) => mockAuthProvider, child: MyApp(true)));
+          create: (_) => mockAuthProvider, child: MyApp()));
       await tester.pumpAndSettle();
 
       // Open settings
@@ -211,7 +213,7 @@ void main() {
       await binding.setSurfaceSize(Size(LANDSCAPE_WIDTH, LANDSCAPE_HEIGHT));
 
       await tester.pumpWidget(ChangeNotifierProvider<AuthProvider>(
-          create: (_) => mockAuthProvider, child: MyApp(true)));
+          create: (_) => mockAuthProvider, child: MyApp()));
       await tester.pumpAndSettle();
 
       // Open settings

@@ -6,6 +6,7 @@ import 'package:acs_upb_mobile/navigation/bottom_navigation_bar.dart';
 import 'package:acs_upb_mobile/navigation/routes.dart';
 import 'package:acs_upb_mobile/pages/settings/settings_page.dart';
 import 'package:acs_upb_mobile/resources/storage_provider.dart';
+import 'package:acs_upb_mobile/widgets/loading_screen.dart';
 import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -18,22 +19,66 @@ main() async {
   await PrefService.init(prefix: 'pref_');
   PrefService.setDefaultValues({'language': 'auto'});
 
-  AuthProvider authProvider = AuthProvider();
-  bool authenticated = await authProvider.isAuthenticatedAsync;
   runApp(MultiProvider(providers: [
-    ChangeNotifierProvider<AuthProvider>(create: (_) => authProvider),
+    ChangeNotifierProvider<AuthProvider>(create: (_) => AuthProvider()),
     ChangeNotifierProvider<StorageProvider>(create: (_) => StorageProvider()),
-  ], child: MyApp(authenticated)));
+  ], child: MyApp()));
 }
 
-class MyApp extends StatelessWidget {
-  final Color _accentColor = Color(0xFF43ADCD);
+class MyApp extends StatefulWidget {
   final List<NavigatorObserver> navigationObservers;
-  final bool _authenticated;
 
-  MyApp(this._authenticated, {this.navigationObservers});
+  MyApp({this.navigationObservers});
 
-  // This widget is the root of your application.
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  final Color _accentColor = Color(0xFF43ADCD);
+
+  Widget buildApp(BuildContext context, ThemeData theme) {
+    return MaterialApp(
+      title: "ACS UPB Mobile",
+      localizationsDelegates: [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        S.delegate
+      ],
+      supportedLocales: S.delegate.supportedLocales,
+      theme: theme,
+      initialRoute: Routes.root,
+      routes: {
+        Routes.root: (_) => buildSplashScreen(context),
+        Routes.home: (_) => ChangeNotifierProvider<BottomNavigationBarProvider>(
+            child: AppBottomNavigationBar(),
+            create: (_) => BottomNavigationBarProvider()),
+        Routes.settings: (_) => SettingsPage(),
+        Routes.login: (_) => LoginView(),
+        Routes.signUp: (_) => SignUpView(),
+      },
+      navigatorObservers: widget.navigationObservers ?? [],
+    );
+  }
+
+  Future<String> chooseStartScreen() async {
+    AuthProvider authProvider =
+        Provider.of<AuthProvider>(context, listen: false);
+    bool authenticated = await authProvider.isAuthenticatedAsync;
+    return authenticated ? Routes.home : Routes.login;
+  }
+
+  Widget buildSplashScreen(BuildContext context) {
+    return LoadingScreen(
+      navigateAfterFuture: chooseStartScreen(),
+      title: Text('Signing in...'),
+      image: Image.asset('assets/icons/acs_logo.png'),
+      backgroundColor: Colors.white,
+      loaderColor: Theme.of(context).accentColor,
+      photoSize: 100,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return DynamicTheme(
@@ -63,27 +108,7 @@ class MyApp extends StatelessWidget {
                 currentFocus.unfocus();
               }
             },
-            child: MaterialApp(
-              title: "ACS UPB Mobile",
-              localizationsDelegates: [
-                GlobalMaterialLocalizations.delegate,
-                GlobalWidgetsLocalizations.delegate,
-                S.delegate
-              ],
-              supportedLocales: S.delegate.supportedLocales,
-              theme: theme,
-              initialRoute: _authenticated ? Routes.home : Routes.login,
-              routes: {
-                Routes.home: (_) =>
-                    ChangeNotifierProvider<BottomNavigationBarProvider>(
-                        child: AppBottomNavigationBar(),
-                        create: (_) => BottomNavigationBarProvider()),
-                Routes.settings: (_) => SettingsPage(),
-                Routes.login: (_) => LoginView(),
-                Routes.signUp: (_) => SignUpView(),
-              },
-              navigatorObservers: navigationObservers ?? [],
-            ),
+            child: buildApp(context, theme),
           ),
         );
       },
