@@ -444,6 +444,15 @@ class S {
     );
   }
 
+  String get navigationFilter {
+    return Intl.message(
+      'Filter',
+      name: 'navigationFilter',
+      desc: '',
+      args: [],
+    );
+  }
+
   String get settingsTitlePersonalization {
     return Intl.message(
       'Personalization',
@@ -592,6 +601,15 @@ class S {
     return Intl.message(
       'Enter your e-mai in order to receive instructions on how to reset your password.',
       name: 'messageResetPassword',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get messageUnderConstruction {
+    return Intl.message(
+      'Under construction',
+      name: 'messageUnderConstruction',
       desc: '',
       args: [],
     );

@@ -72,6 +72,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "messageResetPassword" : MessageLookupByLibrary.simpleMessage("Introduceți mail-ul pentru a primi instrucțiuni de resetare a parolei."),
     "messageWelcomeName" : m2,
     "messageWelcomeSimple" : MessageLookupByLibrary.simpleMessage("Bine ai venit!"),
+    "navigationFilter" : MessageLookupByLibrary.simpleMessage("Filtru"),
     "navigationHome" : MessageLookupByLibrary.simpleMessage("Acasă"),
     "navigationMap" : MessageLookupByLibrary.simpleMessage("Hartă"),
     "navigationPortal" : MessageLookupByLibrary.simpleMessage("Portal"),

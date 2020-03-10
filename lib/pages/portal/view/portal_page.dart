@@ -1,8 +1,10 @@
 import 'dart:math';
 
 import 'package:acs_upb_mobile/generated/l10n.dart';
+import 'package:acs_upb_mobile/navigation/routes.dart';
 import 'package:acs_upb_mobile/pages/portal/model/website.dart';
 import 'package:acs_upb_mobile/pages/portal/service/website_provider.dart';
+import 'package:acs_upb_mobile/resources/custom_icons.dart';
 import 'package:acs_upb_mobile/resources/storage_provider.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/widgets/circle_image.dart';
@@ -134,6 +136,10 @@ class _PortalPageState extends State<PortalPage> {
 
     return AppScaffold(
       title: S.of(context).navigationPortal,
+      enableMenu: true,
+      menuIcon: CustomIcons.filter,
+      menuRoute: Routes.filter,
+      menuName: S.of(context).navigationFilter,
       body: StreamBuilder<List<Website>>(
           stream: websiteProvider.getWebsites(),
           builder: (context, AsyncSnapshot<List<Website>> snapshot) {

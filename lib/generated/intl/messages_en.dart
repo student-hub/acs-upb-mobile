@@ -72,6 +72,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "messageResetPassword" : MessageLookupByLibrary.simpleMessage("Enter your e-mai in order to receive instructions on how to reset your password."),
     "messageWelcomeName" : m2,
     "messageWelcomeSimple" : MessageLookupByLibrary.simpleMessage("Welcome!"),
+    "navigationFilter" : MessageLookupByLibrary.simpleMessage("Filter"),
     "navigationHome" : MessageLookupByLibrary.simpleMessage("Home"),
     "navigationMap" : MessageLookupByLibrary.simpleMessage("Map"),
     "navigationPortal" : MessageLookupByLibrary.simpleMessage("Portal"),

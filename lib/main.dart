@@ -4,6 +4,7 @@ import 'package:acs_upb_mobile/authentication/view/sign_up_view.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/navigation/bottom_navigation_bar.dart';
 import 'package:acs_upb_mobile/navigation/routes.dart';
+import 'package:acs_upb_mobile/pages/filter/view/filter_page.dart';
 import 'package:acs_upb_mobile/pages/settings/settings_page.dart';
 import 'package:acs_upb_mobile/resources/storage_provider.dart';
 import 'package:acs_upb_mobile/widgets/loading_screen.dart';
@@ -54,6 +55,7 @@ class _MyAppState extends State<MyApp> {
             child: AppBottomNavigationBar(),
             create: (_) => BottomNavigationBarProvider()),
         Routes.settings: (_) => SettingsPage(),
+        Routes.filter: (_) => FilterPage(),
         Routes.login: (_) => LoginView(),
         Routes.signUp: (_) => SignUpView(),
       },
