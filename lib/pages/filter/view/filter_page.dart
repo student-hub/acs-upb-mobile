@@ -98,7 +98,14 @@ class FilterPageState extends State<FilterPage> {
       listItems.add(Selectable(
         label: child.name,
         initiallySelected: child.value,
-        onSelected: (selected) => setState(() => child.value = selected),
+        onSelected: (selected) => setState(() {
+          child.value = selected;
+          if (selected) {
+            for (var grandchild in child.children) {
+              grandchild.value = false;
+            }
+          }
+        }),
       ));
 
       // Add padding
@@ -130,9 +137,7 @@ class FilterPageState extends State<FilterPage> {
       ));
 
       // Level options
-      widgets.addAll(
-        optionsByLevel[i]
-      );
+      widgets.addAll(optionsByLevel[i]);
     }
 
     return AppScaffold(
