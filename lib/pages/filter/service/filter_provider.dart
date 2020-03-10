@@ -6,8 +6,9 @@ extension FilterNodeExtension on FilterNode {
   static FilterNode fromMap(Map<String, dynamic> map, String parentName) {
     List<FilterNode> children = [];
 
-    map.forEach(
-        (key, value) => children.add(FilterNodeExtension.fromMap(value, key)));
+    var sortedKeys = map.keys.toList()..sort();
+    sortedKeys.forEach(
+        (key) => children.add(FilterNodeExtension.fromMap(map[key], key)));
 
     return FilterNode(name: parentName, children: children);
   }
