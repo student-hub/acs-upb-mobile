@@ -23,9 +23,9 @@ class Filter {
   /// Name of each level of the tree
   ///
   /// **Note:** There should be at least as many names as there are levels in the tree.
-  List<String> levelNames;
+  List<Map<String, String>> localizedLevelNames;
 
-  Filter({this.root, this.levelNames});
+  Filter({this.root, this.localizedLevelNames});
 }
 
 class FilterNode {

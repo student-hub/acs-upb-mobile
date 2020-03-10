@@ -1,5 +1,6 @@
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/filter/model/filter.dart';
+import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:acs_upb_mobile/widgets/selectable.dart';
 import 'package:flutter/material.dart';
@@ -19,7 +20,7 @@ class FilterPageState extends State<FilterPage> {
     super.initState();
     // Test filter
     filter = Filter(
-        levelNames: ['Degree', 'Specialization', 'Year', 'Series', 'Group'],
+        localizedLevelNames: [{'en': 'Degree', 'ro': 'Nivel de studiu'}],
         root: FilterNode(name: 'All', value: true, children: [
           FilterNode(name: 'BSc', value: true, children: [
             FilterNode(name: 'CTI', value: true, children: [
@@ -124,7 +125,7 @@ class FilterPageState extends State<FilterPage> {
     Map<int, List<Widget>> optionsByLevel = {};
     buildTree(node: filter.root, optionsByLevel: optionsByLevel);
     List<Widget> widgets = [];
-    for (var i = 0; i < filter.levelNames.length; i++) {
+    for (var i = 0; i < filter.localizedLevelNames.length; i++) {
       if (optionsByLevel[i] == null) {
         break;
       }
@@ -132,7 +133,7 @@ class FilterPageState extends State<FilterPage> {
       // Level name
       widgets.add(Padding(
         padding: const EdgeInsets.all(10.0),
-        child: Text(filter.levelNames[i],
+        child: Text(filter.localizedLevelNames[i][Utils.getLocale(context)],
             style: Theme.of(context).textTheme.headline6),
       ));
 
