@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 class Selectable extends StatefulWidget {
   final bool initiallySelected;
   final String label;
+  final Function(bool) onSelected;
 
-  Selectable({this.initiallySelected = false, this.label = ""});
+  Selectable({this.initiallySelected = false, this.label = "", this.onSelected});
 
   @override
   _SelectableState createState() => _SelectableState();
@@ -36,6 +37,7 @@ class _SelectableState extends State<Selectable> {
               onTap: () {
                 setState(() {
                   isSelected = !isSelected;
+                  widget.onSelected(isSelected);
                 });
               },
               child: Padding(

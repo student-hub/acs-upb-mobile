@@ -12,6 +12,64 @@ class FilterPage extends StatefulWidget {
 }
 
 class FilterPageState extends State<FilterPage> {
+  Filter filter;
+
+  @override
+  void initState() {
+    super.initState();
+    // Test filter
+    filter = Filter(
+        levelNames: ['Degree', 'Specialization', 'Year', 'Series', 'Group'],
+        root: FilterNode(name: 'All', value: true, children: [
+          FilterNode(name: 'BSc', value: true, children: [
+            FilterNode(name: 'CTI', value: true, children: [
+              FilterNode(name: 'CTI-1', value: true, children: [
+                FilterNode(name: '1-CA'),
+                FilterNode(
+                  name: '1-CB',
+                  value: true,
+                  children: [
+                    FilterNode(name: '311CB'),
+                    FilterNode(name: '312CB'),
+                    FilterNode(name: '313CB'),
+                    FilterNode(
+                      name: '314CB',
+                      value: true,
+                    ),
+                  ],
+                ),
+                FilterNode(name: '1-CC'),
+                FilterNode(
+                  name: '1-CD',
+                  children: [
+                    FilterNode(name: '311CD'),
+                    FilterNode(name: '312CD'),
+                    FilterNode(name: '313CD'),
+                    FilterNode(name: '314CD'),
+                  ],
+                ),
+              ]),
+              FilterNode(
+                name: 'CTI-2',
+              ),
+              FilterNode(
+                name: 'CTI-3',
+              ),
+              FilterNode(
+                name: 'CTI-4',
+              ),
+            ]),
+            FilterNode(name: 'IS')
+          ]),
+          FilterNode(name: 'MSc', children: [
+            FilterNode(
+              name: 'IA',
+            ),
+            FilterNode(name: 'SPRC'),
+          ])
+        ]));
+  }
+
   void buildTree(
       {FilterNode node, Map<int, List<Widget>> optionsByLevel, int level = 0}) {
     if (node.children == null) {
@@ -20,15 +78,31 @@ class FilterPageState extends State<FilterPage> {
 
     optionsByLevel.putIfAbsent(level, () => <Widget>[]);
 
+    // Add list of options
+    List<Widget> listItems = [];
+    optionsByLevel[level].add(
+      Padding(
+        padding: const EdgeInsets.only(left: 10.0, right: 10.0, bottom: 10.0),
+        child: Container(
+          height: 40,
+          child: ListView(
+            scrollDirection: Axis.horizontal,
+            children: listItems,
+          ),
+        ),
+      ),
+    );
+
     for (var child in node.children) {
       // Add option
-      optionsByLevel[level].add(Selectable(
+      listItems.add(Selectable(
         label: child.name,
         initiallySelected: child.value,
+        onSelected: (selected) => setState(() => child.value = selected),
       ));
 
       // Add padding
-      optionsByLevel[level].add(SizedBox(width: 10));
+      listItems.add(SizedBox(width: 10));
 
       // Display children if selected
       if (child.value == true) {
@@ -40,66 +114,6 @@ class FilterPageState extends State<FilterPage> {
 
   @override
   Widget build(BuildContext context) {
-    // Test filter
-    Filter filter = Filter(
-        levelNames: ['Degree', 'Specialization', 'Year', 'Series', 'Group'],
-        root: FilterNode(name: 'All', value: true, children: [
-          FilterNode(
-              name: 'BSc',
-              value: true,
-              children: [FilterNode(name: 'CTI', value: true, children: [
-                FilterNode(
-                  name: '1',
-                  value: true,
-                  children: [
-                    FilterNode(
-                      name: 'CA'
-                    ),
-                    FilterNode(
-                        name: 'CB',
-                      value: true,
-                      children: [
-                        FilterNode(
-                          name: '311'
-                        ),
-                        FilterNode(
-                            name: '312'
-                        ),
-                        FilterNode(
-                            name: '313'
-                        ),
-                        FilterNode(
-                            name: '314',
-                          value: true,
-                        ),
-                      ],
-                    ),
-                    FilterNode(
-                        name: 'CC'
-                    ),
-                    FilterNode(
-                        name: 'CD'
-                    ),
-                  ]
-                ),
-                FilterNode(
-                    name: '2',
-                ),
-                FilterNode(
-                    name: '3',
-                ),
-                FilterNode(
-                    name: '4',
-                ),
-              ]), FilterNode(name: 'IS')]),
-          FilterNode(name: 'MSc', children: [
-            FilterNode(
-              name: 'IA',
-            ),
-            FilterNode(name: 'SPRC'),
-          ])
-        ]));
-
     Map<int, List<Widget>> optionsByLevel = {};
     buildTree(node: filter.root, optionsByLevel: optionsByLevel);
     List<Widget> widgets = [];
@@ -116,24 +130,15 @@ class FilterPageState extends State<FilterPage> {
       ));
 
       // Level options
-      widgets.add(Padding(
-        padding: const EdgeInsets.only(left: 10.0, right: 10.0, bottom: 10.0),
-        child: Container(
-          height: 40,
-          child: ListView(
-            scrollDirection: Axis.horizontal,
-            children: optionsByLevel[i],
-          ),
-        ),
-      ));
+      widgets.addAll(
+        optionsByLevel[i]
+      );
     }
 
     return AppScaffold(
       title: S.of(context).navigationFilter,
       enableMenu: false,
-      body: ListView(
-        children: widgets
-      ),
+      body: ListView(children: widgets),
     );
   }
 }
