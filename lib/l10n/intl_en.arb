@@ -71,6 +71,7 @@
   "messageNewUser": "New user?",
   "messageAccountCreated": "Account created successfully.",
   "messageResetPassword": "Enter your e-mai in order to receive instructions on how to reset your password.",
+  "messageUnderConstruction": "Under construction",
 
   "infoPasswordResetEmailSent": "Please check your inbox for the password reset e-mail.",
 

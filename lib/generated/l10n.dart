@@ -597,6 +597,15 @@ class S {
     );
   }
 
+  String get messageUnderConstruction {
+    return Intl.message(
+      'Under construction',
+      name: 'messageUnderConstruction',
+      desc: '',
+      args: [],
+    );
+  }
+
   String get infoPasswordResetEmailSent {
     return Intl.message(
       'Please check your inbox for the password reset e-mail.',

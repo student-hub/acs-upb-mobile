@@ -70,6 +70,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "messageAccountCreated" : MessageLookupByLibrary.simpleMessage("Contul a fost creat cu succes."),
     "messageNewUser" : MessageLookupByLibrary.simpleMessage("Utilizator nou?"),
     "messageResetPassword" : MessageLookupByLibrary.simpleMessage("Introduceți mail-ul pentru a primi instrucțiuni de resetare a parolei."),
+    "messageUnderConstruction" : MessageLookupByLibrary.simpleMessage("În construcție"),
     "messageWelcomeName" : m2,
     "messageWelcomeSimple" : MessageLookupByLibrary.simpleMessage("Bine ai venit!"),
     "navigationHome" : MessageLookupByLibrary.simpleMessage("Acasă"),

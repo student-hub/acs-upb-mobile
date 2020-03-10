@@ -25,15 +25,18 @@ class AppScaffold extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
+                Expanded(flex: 2, child: Container()),
                 Expanded(
-                  child: Center(
-                    child: Image(
-                        image: AssetImage(
-                            'assets/illustrations/undraw_under_construction.png')),
-                  ),
+                  flex: 4,
+                  child: Image(
+                      image: AssetImage(
+                          'assets/illustrations/undraw_under_construction.png')),
                 ),
-                SizedBox(height: 10),
-                Text('Under construction', style: Theme.of(context).textTheme.headline6,)
+                Expanded(
+                  child: Text(S.of(context).messageUnderConstruction,
+                      style: Theme.of(context).textTheme.headline6),
+                ),
+                Expanded(child: Container()),
               ],
             ),
       ),

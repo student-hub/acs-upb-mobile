@@ -70,6 +70,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "messageAccountCreated" : MessageLookupByLibrary.simpleMessage("Account created successfully."),
     "messageNewUser" : MessageLookupByLibrary.simpleMessage("New user?"),
     "messageResetPassword" : MessageLookupByLibrary.simpleMessage("Enter your e-mai in order to receive instructions on how to reset your password."),
+    "messageUnderConstruction" : MessageLookupByLibrary.simpleMessage("Under construction"),
     "messageWelcomeName" : m2,
     "messageWelcomeSimple" : MessageLookupByLibrary.simpleMessage("Welcome!"),
     "navigationHome" : MessageLookupByLibrary.simpleMessage("Home"),
