@@ -24,6 +24,7 @@ main() async {
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider<AuthProvider>(create: (_) => AuthProvider()),
     ChangeNotifierProvider<StorageProvider>(create: (_) => StorageProvider()),
+    ChangeNotifierProvider<FilterProvider>(create: (_) => FilterProvider()),
   ], child: MyApp()));
 }
 
@@ -56,10 +57,7 @@ class _MyAppState extends State<MyApp> {
             child: AppBottomNavigationBar(),
             create: (_) => BottomNavigationBarProvider()),
         Routes.settings: (_) => SettingsPage(),
-        Routes.filter: (_) => ChangeNotifierProvider<FilterProvider>(
-          child: FilterPage(),
-          create: (_) => FilterProvider(),
-        ),
+        Routes.filter: (_) => FilterPage(),
         Routes.login: (_) => LoginView(),
         Routes.signUp: (_) => SignUpView(),
       },
