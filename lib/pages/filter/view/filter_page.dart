@@ -1,9 +1,11 @@
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/filter/model/filter.dart';
+import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:acs_upb_mobile/widgets/selectable.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class FilterPage extends StatefulWidget {
   static const String routeName = '/filter';
@@ -13,63 +15,7 @@ class FilterPage extends StatefulWidget {
 }
 
 class FilterPageState extends State<FilterPage> {
-  Filter filter;
-
-  @override
-  void initState() {
-    super.initState();
-    // Test filter
-    filter = Filter(
-        localizedLevelNames: [{'en': 'Degree', 'ro': 'Nivel de studiu'}],
-        root: FilterNode(name: 'All', value: true, children: [
-          FilterNode(name: 'BSc', value: true, children: [
-            FilterNode(name: 'CTI', value: true, children: [
-              FilterNode(name: 'CTI-1', value: true, children: [
-                FilterNode(name: '1-CA'),
-                FilterNode(
-                  name: '1-CB',
-                  value: true,
-                  children: [
-                    FilterNode(name: '311CB'),
-                    FilterNode(name: '312CB'),
-                    FilterNode(name: '313CB'),
-                    FilterNode(
-                      name: '314CB',
-                      value: true,
-                    ),
-                  ],
-                ),
-                FilterNode(name: '1-CC'),
-                FilterNode(
-                  name: '1-CD',
-                  children: [
-                    FilterNode(name: '311CD'),
-                    FilterNode(name: '312CD'),
-                    FilterNode(name: '313CD'),
-                    FilterNode(name: '314CD'),
-                  ],
-                ),
-              ]),
-              FilterNode(
-                name: 'CTI-2',
-              ),
-              FilterNode(
-                name: 'CTI-3',
-              ),
-              FilterNode(
-                name: 'CTI-4',
-              ),
-            ]),
-            FilterNode(name: 'IS')
-          ]),
-          FilterNode(name: 'MSc', children: [
-            FilterNode(
-              name: 'IA',
-            ),
-            FilterNode(name: 'SPRC'),
-          ])
-        ]));
-  }
+  Future<Filter> filterFuture;
 
   void buildTree(
       {FilterNode node, Map<int, List<Widget>> optionsByLevel, int level = 0}) {
@@ -122,29 +68,48 @@ class FilterPageState extends State<FilterPage> {
 
   @override
   Widget build(BuildContext context) {
-    Map<int, List<Widget>> optionsByLevel = {};
-    buildTree(node: filter.root, optionsByLevel: optionsByLevel);
-    List<Widget> widgets = [];
-    for (var i = 0; i < filter.localizedLevelNames.length; i++) {
-      if (optionsByLevel[i] == null) {
-        break;
-      }
-
-      // Level name
-      widgets.add(Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: Text(filter.localizedLevelNames[i][Utils.getLocale(context)],
-            style: Theme.of(context).textTheme.headline6),
-      ));
-
-      // Level options
-      widgets.addAll(optionsByLevel[i]);
+    if (filterFuture == null) {
+      // Only fetch filter once
+      filterFuture = Provider.of<FilterProvider>(context).getRelevanceFilter();
     }
 
     return AppScaffold(
       title: S.of(context).navigationFilter,
       enableMenu: false,
-      body: ListView(children: widgets),
+      body: FutureBuilder(
+          future: filterFuture,
+          builder: (BuildContext context, AsyncSnapshot snap) {
+            if (snap.hasData) {
+              Filter filter = snap.data;
+
+              Map<int, List<Widget>> optionsByLevel = {};
+              buildTree(node: filter.root, optionsByLevel: optionsByLevel);
+              List<Widget> widgets = [];
+              for (var i = 0; i < filter.localizedLevelNames.length; i++) {
+                if (optionsByLevel[i] == null) {
+                  break;
+                }
+
+                // Level name
+                widgets.add(Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Text(
+                      filter.localizedLevelNames[i][Utils.getLocale(context)],
+                      style: Theme.of(context).textTheme.headline6),
+                ));
+
+                // Level options
+                widgets.addAll(optionsByLevel[i]);
+              }
+
+              return ListView(children: widgets);
+            } else if (snap.hasError) {
+              print(snap.error);
+              return Container();
+            } else {
+              return Center(child: CircularProgressIndicator());
+            }
+          }),
     );
   }
 }
