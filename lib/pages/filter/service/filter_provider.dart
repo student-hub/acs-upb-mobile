@@ -1,6 +1,7 @@
 import 'package:acs_upb_mobile/pages/filter/model/filter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:preferences/preference_service.dart';
 
 extension FilterNodeExtension on FilterNode {
   static FilterNode fromMap(Map<String, dynamic> map, String parentName) {
@@ -35,11 +36,24 @@ class FilterProvider with ChangeNotifier {
       names.forEach(
           (element) => levelNames.add(Map<String, String>.from(element)));
 
+      // Check if there is an existing setting already
+      List<String> relevantNodes =
+          List<String>.from(PrefService.get('relevantNodes'));
+
       Map<String, dynamic> root = data['root'];
       _relevanceFilter = Filter(
           localizedLevelNames: levelNames,
           root: FilterNodeExtension.fromMap(root, 'All'),
-          listener: () => notifyListeners());
+          listener: () {
+            PrefService.setStringList(
+                'relevantNodes', _relevanceFilter.relevantNodes);
+            notifyListeners();
+          });
+
+      if (relevantNodes != null) {
+        relevantNodes.forEach((node) => _relevanceFilter.setRelevant(node));
+      }
+
       return _relevanceFilter;
     } catch (e) {
       print(e);

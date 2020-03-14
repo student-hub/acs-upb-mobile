@@ -70,12 +70,10 @@ class Filter {
           .forEach((child) => found |= _setRelevantHelper(nodeName, child));
     }
 
-    if (found) {
-      node.value = true;
-    }
     return found;
   }
 
+  /// Set the value of node with name [nodeName] to `true`.
   bool setRelevant(String nodeName) {
     return _setRelevantHelper(nodeName, root);
   }
@@ -92,7 +90,7 @@ class FilterNode {
   final List<FilterNode> children;
 
   FilterNode({this.name = '', bool value, this.children})
-      : this._valueNotifier =  ValueNotifier(value ?? false);
+      : this._valueNotifier = ValueNotifier(value ?? false);
 
   get value => _valueNotifier.value;
 

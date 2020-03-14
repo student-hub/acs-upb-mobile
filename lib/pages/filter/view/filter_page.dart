@@ -54,7 +54,6 @@ class FilterPageState extends State<FilterPage> {
 
   void _buildTree(
       {FilterNode node, Map<int, List<Widget>> optionsByLevel, int level = 0}) {
-    print('level = $level');
     if (node.children == null || node.children.isEmpty) {
       return;
     }

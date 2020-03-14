@@ -100,8 +100,8 @@ void main() {
     });
 
     test('setRelevant', () {
-      // Leaf
-      expect(testFilter.setRelevant('IA-1'), isTrue);
+      // Node
+      expect(testFilter.setRelevant('MSc'), isTrue);
 
       expect(
           testFilter.relevantNodes..sort(),
@@ -110,10 +110,8 @@ void main() {
             '311CD',
             '1-CB',
             '1-CD',
-            'IA-1',
             'CTI-1',
             'CTI',
-            'IA',
             'BSc',
             'MSc',
             'All'
@@ -128,10 +126,8 @@ void main() {
             '311CD',
             '1-CB',
             '1-CD',
-            'IA-1',
             'CTI-1',
             'CTI',
-            'IA',
             'BSc',
             'MSc',
             'All'
@@ -146,10 +142,8 @@ void main() {
             '311CD',
             '1-CB',
             '1-CD',
-            'IA-1',
             'CTI-1',
             'CTI',
-            'IA',
             'BSc',
             'MSc',
             'All'
