@@ -29,7 +29,7 @@ class FilterPageState extends State<FilterPage> {
 
   void _buildTree(
       {FilterNode node, Map<int, List<Widget>> optionsByLevel, int level = 0}) {
-    if (node.children == null) {
+    if (node.children == null || node.children.isEmpty) {
       return;
     }
 
@@ -89,7 +89,7 @@ class FilterPageState extends State<FilterPage> {
               _buildTree(node: filter.root, optionsByLevel: optionsByLevel);
               List<Widget> widgets = [];
               for (var i = 0; i < filter.localizedLevelNames.length; i++) {
-                if (optionsByLevel[i] == null) {
+                if (optionsByLevel[i] == null || optionsByLevel.isEmpty) {
                   break;
                 }
 
