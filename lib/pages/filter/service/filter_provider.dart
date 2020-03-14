@@ -38,7 +38,8 @@ class FilterProvider with ChangeNotifier {
       Map<String, dynamic> root = data['root'];
       _relevanceFilter = Filter(
           localizedLevelNames: levelNames,
-          root: FilterNodeExtension.fromMap(root, 'All'));
+          root: FilterNodeExtension.fromMap(root, 'All'),
+          listener: () => notifyListeners());
       return _relevanceFilter;
     } catch (e) {
       print(e);
