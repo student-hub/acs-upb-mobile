@@ -26,9 +26,9 @@ extension WebsiteFromSnap on Website {
   static Website fromSnap(DocumentSnapshot snap) {
     return Website(
       category: WebsiteCategoryExtension.fromString(snap.data['category']),
-      iconPath: snap.data['icon'],
-      label: snap.data['label'],
-      link: snap.data['link'],
+      iconPath: snap.data['icon'] ?? 'icons/websites/globe.png',
+      label: snap.data['label'] ?? 'Website',
+      link: snap.data['link'] ?? '',
       infoByLocale: snap.data['info'] == null
           ? {}
           : {
