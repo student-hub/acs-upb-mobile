@@ -40,7 +40,7 @@ class _LoginViewState extends State<LoginView> {
     }
 
     AuthProvider authProvider = Provider.of<AuthProvider>(context);
-    formItems =  <FormItem>[
+    formItems = <FormItem>[
       FormItem(
           label: S.of(context).labelEmail,
           hint: S.of(context).hintEmail,
@@ -164,7 +164,8 @@ class _LoginViewState extends State<LoginView> {
                               var result = await authProvider.signInAnonymously(
                                   context: context);
                               if (result) {
-                                Navigator.pushReplacementNamed(context, Routes.home);
+                                Navigator.pushReplacementNamed(
+                                    context, Routes.home);
                               }
                             },
                           ),

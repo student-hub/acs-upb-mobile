@@ -115,11 +115,10 @@ class AuthProvider with ChangeNotifier {
   }
 
   Future<bool> signInAnonymously({BuildContext context}) async {
-    FirebaseAuth.instance.signInAnonymously().catchError((e) {
+    return FirebaseAuth.instance.signInAnonymously().catchError((e) {
       _errorHandler(e, context);
       return false;
-    });
-    return true;
+    }).then((_) => true);
   }
 
   Future<bool> signIn(
@@ -150,16 +149,15 @@ class AuthProvider with ChangeNotifier {
       return false;
     }
 
-    FirebaseAuth.instance
+    return FirebaseAuth.instance
         .signInWithEmailAndPassword(email: email, password: password)
         .catchError((e) {
       _errorHandler(e, context);
       return false;
-    });
-    return true;
+    }).then((_) => true);
   }
 
-  Future<void> signOut(BuildContext context) {
+  Future<void> signOut(BuildContext context) async {
     if (isAnonymous) {
       try {
         user.delete();
@@ -169,7 +167,7 @@ class AuthProvider with ChangeNotifier {
     }
 
     Provider.of<FilterProvider>(context, listen: false).resetFilter();
-    return FirebaseAuth.instance.signOut();
+    return await FirebaseAuth.instance.signOut();
   }
 
   Future<bool> canSignInWithPassword({String email}) async {
