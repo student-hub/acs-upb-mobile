@@ -17,7 +17,17 @@ class FilterPage extends StatefulWidget {
 class FilterPageState extends State<FilterPage> {
   Future<Filter> filterFuture;
 
-  void buildTree(
+  void _onSelected(bool selection, FilterNode node) => setState(() {
+        node.value = selection;
+        if (node.children != null) {
+          for (var child in node.children) {
+            // Deselect all children
+            _onSelected(false, child);
+          }
+        }
+      });
+
+  void _buildTree(
       {FilterNode node, Map<int, List<Widget>> optionsByLevel, int level = 0}) {
     if (node.children == null) {
       return;
@@ -45,14 +55,7 @@ class FilterPageState extends State<FilterPage> {
       listItems.add(Selectable(
         label: child.name,
         initiallySelected: child.value,
-        onSelected: (selected) => setState(() {
-          child.value = selected;
-          if (selected) {
-            for (var grandchild in child.children) {
-              grandchild.value = false;
-            }
-          }
-        }),
+        onSelected: (selection) => _onSelected(selection, child),
       ));
 
       // Add padding
@@ -60,7 +63,7 @@ class FilterPageState extends State<FilterPage> {
 
       // Display children if selected
       if (child.value == true) {
-        buildTree(
+        _buildTree(
             node: child, optionsByLevel: optionsByLevel, level: level + 1);
       }
     }
@@ -83,7 +86,7 @@ class FilterPageState extends State<FilterPage> {
               Filter filter = snap.data;
 
               Map<int, List<Widget>> optionsByLevel = {};
-              buildTree(node: filter.root, optionsByLevel: optionsByLevel);
+              _buildTree(node: filter.root, optionsByLevel: optionsByLevel);
               List<Widget> widgets = [];
               for (var i = 0; i < filter.localizedLevelNames.length; i++) {
                 if (optionsByLevel[i] == null) {
