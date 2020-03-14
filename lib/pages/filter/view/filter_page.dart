@@ -27,8 +27,34 @@ class FilterPageState extends State<FilterPage> {
         }
       });
 
+  void _onSelectedExclusive(
+      bool selection, FilterNode node, List<FilterNode> nodesOnLevel) {
+    _onSelected(selection, node);
+
+    // Only one node on level can be selected
+    if (selection) {
+      for (var otherNode in nodesOnLevel) {
+        if (otherNode != node) {
+          _onSelected(false, otherNode);
+        }
+      }
+
+      // For some reason, it doesn't deselect the other nodes unless the entire
+      // page is reloaded (curious, since `setState` should technically work).
+      // As a workaround, re-push the same page, but without an animation so it
+      // looks seamless.
+      Navigator.pushReplacement(
+        context,
+        PageRouteBuilder(
+          pageBuilder: (context, animation1, animation2) => FilterPage(),
+        ),
+      );
+    }
+  }
+
   void _buildTree(
       {FilterNode node, Map<int, List<Widget>> optionsByLevel, int level = 0}) {
+    print('level = $level');
     if (node.children == null || node.children.isEmpty) {
       return;
     }
@@ -55,7 +81,9 @@ class FilterPageState extends State<FilterPage> {
       listItems.add(Selectable(
         label: child.name,
         initiallySelected: child.value,
-        onSelected: (selection) => _onSelected(selection, child),
+        onSelected: (selection) => level != 0
+            ? _onSelected(selection, child)
+            : _onSelectedExclusive(selection, child, node.children),
       ));
 
       // Add padding
