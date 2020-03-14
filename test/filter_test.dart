@@ -191,18 +191,18 @@ void main() {
           ]..sort()));
 
       // Non-existent node
-      expect(testFilter.setRelevantNodes(['Nope', 'IA']), isFalse);
+      expect(testFilter.setRelevantNodes(['Nope', '312CD']), isFalse);
       expect(
           testFilter.relevantNodes..sort(),
           equals([
             '314CB',
             '313CB',
+            '312CD',
             '311CD',
             '1-CB',
             '1-CD',
             'CTI-1',
             'CTI',
-            'IA',
             'BSc',
             'All'
           ]..sort()));
@@ -222,7 +222,6 @@ void main() {
             '1-CD',
             'CTI-1',
             'CTI',
-            'IA',
             'BSc',
             'All'
           ]..sort()));

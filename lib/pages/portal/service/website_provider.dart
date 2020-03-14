@@ -70,6 +70,7 @@ class WebsiteProvider with ChangeNotifier {
           .map((doc) => WebsiteFromSnap.fromSnap(doc))
           .toList();
     } catch (e) {
+      print(e);
       return null;
     }
   }

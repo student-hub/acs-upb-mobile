@@ -22,7 +22,18 @@ class FilterProvider with ChangeNotifier {
   final Firestore _db = Firestore.instance;
   Filter _relevanceFilter;
 
+  void resetFilter() {
+    _relevanceFilter = null;
+
+    // Reset filter preference
+    PrefService.setStringList('relevantNodes', null);
+  }
+
   Future<Filter> getRelevanceFilter(BuildContext context) async {
+    if (_relevanceFilter != null) {
+      return _relevanceFilter;
+    }
+
     try {
       var col = _db.collection('filters');
       var ref = col.document('relevance');
@@ -57,8 +68,10 @@ class FilterProvider with ChangeNotifier {
         if (authProvider.isAuthenticated) {
           User user = await authProvider.getCurrentUser();
           // Try to set the default as the user's group
-          _relevanceFilter.setRelevantUpToRoot(user.group);
-          relevantNodes = PrefService.get('relevantNodes');
+          if (user != null) {
+            _relevanceFilter.setRelevantUpToRoot(user.group);
+            relevantNodes = PrefService.get('relevantNodes');
+          }
         }
       }
 
@@ -67,8 +80,9 @@ class FilterProvider with ChangeNotifier {
       }
 
       return _relevanceFilter;
-    } catch (e) {
+    } catch (e, stackTrace) {
       print(e);
+      print(stackTrace);
       return null;
     }
   }

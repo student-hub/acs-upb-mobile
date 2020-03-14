@@ -2,16 +2,20 @@ import 'dart:async';
 
 import 'package:acs_upb_mobile/authentication/model/user.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
+import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:preferences/preference_service.dart';
+import 'package:provider/provider.dart';
 
 extension DatabaseUser on User {
   static User fromSnap(DocumentSnapshot snap) {
-    return User(uid: snap.documentID, firstName: snap.data['name']['first'], lastName: snap.data['name']['last'],
-    group: snap.data['group']);
+    return User(
+        uid: snap.documentID,
+        firstName: snap.data['name']['first'],
+        lastName: snap.data['name']['last'],
+        group: snap.data['group']);
   }
 
   Map<String, dynamic> toData() {
@@ -102,6 +106,9 @@ class AuthProvider with ChangeNotifier {
   }
 
   Future<User> getCurrentUser() async {
+    if (isAnonymous) {
+      return null;
+    }
     DocumentSnapshot snapshot =
         await Firestore.instance.collection('users').document(user.uid).get();
     return DatabaseUser.fromSnap(snapshot);
@@ -152,7 +159,7 @@ class AuthProvider with ChangeNotifier {
     return true;
   }
 
-  Future<void> signOut() {
+  Future<void> signOut(BuildContext context) {
     if (isAnonymous) {
       try {
         user.delete();
@@ -161,8 +168,7 @@ class AuthProvider with ChangeNotifier {
       }
     }
 
-    // Reset filter preference
-    PrefService.setStringList('relevantNodes', null);
+    Provider.of<FilterProvider>(context, listen: false).resetFilter();
     return FirebaseAuth.instance.signOut();
   }
 

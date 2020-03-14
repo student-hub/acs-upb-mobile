@@ -30,6 +30,7 @@ class Filter {
   List<Map<String, String>> localizedLevelNames;
 
   Filter({this.root, this.localizedLevelNames, void Function() listener}) {
+    this.root.value = true;  // root value is true by default
     _addListener(listener ?? () {}, this.root);
   }
 
@@ -43,10 +44,11 @@ class Filter {
   }
 
   void _relevantNodesHelper(List<String> list, FilterNode node) {
-    if (node.children != null) {
-      node.children.forEach((child) => this._relevantNodesHelper(list, child));
-    }
     if (node.value) {
+      if (node.children != null) {
+        node.children
+            .forEach((child) => this._relevantNodesHelper(list, child));
+      }
       list.add(node.name);
     }
   }
@@ -79,10 +81,16 @@ class Filter {
 
   /// Set the value of node with name [nodeName] and its parents to `true`.
   bool setRelevantUpToRoot(String nodeName) {
-    return _setRelevantHelper(nodeName, root, true);
+    if (nodeName != null) {
+      return _setRelevantHelper(nodeName, root, true);
+    }
+    return false;
   }
 
   bool setRelevantNodes(List<String> nodes) {
+    if(nodes == null || nodes.isEmpty) {
+      return false;
+    }
     bool setAllNodes = true;
     nodes.forEach(
         (node) => setAllNodes &= _setRelevantHelper(node, root, false));
