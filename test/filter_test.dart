@@ -12,7 +12,7 @@ void main() {
   group('Model', () {
     Filter testFilter;
 
-    setUpAll(() {
+    setUp(() {
       testFilter = Filter(
         localizedLevelNames: [
           {'en': 'Degree', 'ro': 'Nivel de studiu'},
@@ -99,9 +99,9 @@ void main() {
           ]..sort()));
     });
 
-    test('setRelevant', () {
-      // Node
-      expect(testFilter.setRelevant('MSc'), isTrue);
+    test('setRelevantUpToRoot', () {
+      // Leaf
+      expect(testFilter.setRelevantUpToRoot('IA-1'), isTrue);
 
       expect(
           testFilter.relevantNodes..sort(),
@@ -110,15 +110,17 @@ void main() {
             '311CD',
             '1-CB',
             '1-CD',
+            'IA-1',
             'CTI-1',
             'CTI',
+            'IA',
             'BSc',
             'MSc',
             'All'
           ]..sort()));
 
       // Root
-      expect(testFilter.setRelevant('All'), isTrue);
+      expect(testFilter.setRelevantUpToRoot('All'), isTrue);
       expect(
           testFilter.relevantNodes..sort(),
           equals([
@@ -126,15 +128,17 @@ void main() {
             '311CD',
             '1-CB',
             '1-CD',
+            'IA-1',
             'CTI-1',
             'CTI',
+            'IA',
             'BSc',
             'MSc',
             'All'
           ]..sort()));
 
       // Non-existent node
-      expect(testFilter.setRelevant('Nope'), isFalse);
+      expect(testFilter.setRelevantUpToRoot('Nope'), isFalse);
       expect(
           testFilter.relevantNodes..sort(),
           equals([
@@ -142,10 +146,84 @@ void main() {
             '311CD',
             '1-CB',
             '1-CD',
+            'IA-1',
+            'CTI-1',
+            'CTI',
+            'IA',
+            'BSc',
+            'MSc',
+            'All'
+          ]..sort()));
+    });
+
+    test('setRelevantNodes', () {
+      // One node
+      expect(testFilter.setRelevantNodes(['313CB']), isTrue);
+
+      expect(
+          testFilter.relevantNodes..sort(),
+          equals([
+            '314CB',
+            '313CB',
+            '311CD',
+            '1-CB',
+            '1-CD',
             'CTI-1',
             'CTI',
             'BSc',
-            'MSc',
+            'All'
+          ]..sort()));
+
+      // Root
+      expect(testFilter.setRelevantNodes(['All']), isTrue);
+      expect(
+          testFilter.relevantNodes..sort(),
+          equals([
+            '314CB',
+            '313CB',
+            '311CD',
+            '1-CB',
+            '1-CD',
+            'CTI-1',
+            'CTI',
+            'BSc',
+            'All'
+          ]..sort()));
+
+      // Non-existent node
+      expect(testFilter.setRelevantNodes(['Nope', 'IA']), isFalse);
+      expect(
+          testFilter.relevantNodes..sort(),
+          equals([
+            '314CB',
+            '313CB',
+            '311CD',
+            '1-CB',
+            '1-CD',
+            'CTI-1',
+            'CTI',
+            'IA',
+            'BSc',
+            'All'
+          ]..sort()));
+
+      // Multiple valid nodes
+      expect(testFilter.setRelevantNodes(['311CB', '312CB', '312CD']), isTrue);
+      expect(
+          testFilter.relevantNodes..sort(),
+          equals([
+            '314CB',
+            '313CB',
+            '312CB',
+            '311CB',
+            '312CD',
+            '311CD',
+            '1-CB',
+            '1-CD',
+            'CTI-1',
+            'CTI',
+            'IA',
+            'BSc',
             'All'
           ]..sort()));
     });

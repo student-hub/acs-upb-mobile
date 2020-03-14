@@ -24,6 +24,8 @@ class PortalPage extends StatefulWidget {
 }
 
 class _PortalPageState extends State<PortalPage> {
+  Future<Filter> filterFuture;
+
   _launchURL(String url) async {
     if (await canLaunch(url)) {
       await launch(url);
@@ -135,8 +137,11 @@ class _PortalPageState extends State<PortalPage> {
     ScreenUtil.init(context, width: 750, height: 1334, allowFontScaling: false);
     WebsiteProvider websiteProvider = Provider.of<WebsiteProvider>(context);
 
-    Future<Filter> filterFuture =
-        Provider.of<FilterProvider>(context).getRelevanceFilter();
+    if (filterFuture == null) {
+      filterFuture =
+          Provider.of<FilterProvider>(context).getRelevanceFilter(context);
+    }
+
     List<Website> websites = [];
 
     CircularProgressIndicator progressIndicator = CircularProgressIndicator();

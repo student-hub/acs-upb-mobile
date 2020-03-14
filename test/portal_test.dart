@@ -58,7 +58,7 @@ void main() {
   final FilterProvider mockFilterProvider = MockFilterProvider();
   // ignore: invalid_use_of_protected_member
   when(mockFilterProvider.hasListeners).thenReturn(false);
-  when(mockFilterProvider.getRelevanceFilter())
+  when(mockFilterProvider.getRelevanceFilter(any))
       .thenAnswer((_) => Future.value(Filter(root: FilterNode(name: 'All'))));
 
   final MockUrlLauncher mockUrlLauncher = MockUrlLauncher();

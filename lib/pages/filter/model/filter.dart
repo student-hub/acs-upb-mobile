@@ -58,7 +58,7 @@ class Filter {
     return list;
   }
 
-  bool _setRelevantHelper(String nodeName, FilterNode node) {
+  bool _setRelevantHelper(String nodeName, FilterNode node, bool setParents) {
     if (node.name == nodeName) {
       node.value = true;
       return true;
@@ -66,16 +66,27 @@ class Filter {
 
     bool found = false;
     if (node.children != null) {
-      node.children
-          .forEach((child) => found |= _setRelevantHelper(nodeName, child));
+      node.children.forEach(
+          (child) => found |= _setRelevantHelper(nodeName, child, setParents));
     }
 
+    // Also set the node's parents if `setParents` is `true`
+    if (setParents && found) {
+      node.value = true;
+    }
     return found;
   }
 
-  /// Set the value of node with name [nodeName] to `true`.
-  bool setRelevant(String nodeName) {
-    return _setRelevantHelper(nodeName, root);
+  /// Set the value of node with name [nodeName] and its parents to `true`.
+  bool setRelevantUpToRoot(String nodeName) {
+    return _setRelevantHelper(nodeName, root, true);
+  }
+
+  bool setRelevantNodes(List<String> nodes) {
+    bool setAllNodes = true;
+    nodes.forEach(
+        (node) => setAllNodes &= _setRelevantHelper(node, root, false));
+    return setAllNodes;
   }
 }
 

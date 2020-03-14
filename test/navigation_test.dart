@@ -122,7 +122,7 @@ void main() {
     mockFilterProvider = MockFilterProvider();
     // ignore: invalid_use_of_protected_member
     when(mockFilterProvider.hasListeners).thenReturn(false);
-    when(mockFilterProvider.getRelevanceFilter())
+    when(mockFilterProvider.getRelevanceFilter(any))
         .thenAnswer((_) => Future.value(Filter(
                 localizedLevelNames: [
                   {'en': 'Degree', 'ro': 'Nivel de studiu'},

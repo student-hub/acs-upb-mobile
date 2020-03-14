@@ -1,7 +1,10 @@
+import 'package:acs_upb_mobile/authentication/model/user.dart';
+import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/pages/filter/model/filter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:preferences/preference_service.dart';
+import 'package:provider/provider.dart';
 
 extension FilterNodeExtension on FilterNode {
   static FilterNode fromMap(Map<String, dynamic> map, String parentName) {
@@ -19,11 +22,7 @@ class FilterProvider with ChangeNotifier {
   final Firestore _db = Firestore.instance;
   Filter _relevanceFilter;
 
-  Future<Filter> getRelevanceFilter() async {
-    if (_relevanceFilter != null) {
-      return _relevanceFilter;
-    }
-
+  Future<Filter> getRelevanceFilter(BuildContext context) async {
     try {
       var col = _db.collection('filters');
       var ref = col.document('relevance');
@@ -37,8 +36,9 @@ class FilterProvider with ChangeNotifier {
           (element) => levelNames.add(Map<String, String>.from(element)));
 
       // Check if there is an existing setting already
-      List<String> relevantNodes =
-          List<String>.from(PrefService.get('relevantNodes'));
+      List<String> relevantNodes = PrefService.get('relevantNodes') == null
+          ? null
+          : List<String>.from(PrefService.get('relevantNodes'));
 
       Map<String, dynamic> root = data['root'];
       _relevanceFilter = Filter(
@@ -50,8 +50,20 @@ class FilterProvider with ChangeNotifier {
             notifyListeners();
           });
 
+      // No previous setting
+      if (relevantNodes == null) {
+        AuthProvider authProvider =
+            Provider.of<AuthProvider>(context, listen: false);
+        if (authProvider.isAuthenticated) {
+          User user = await authProvider.getCurrentUser();
+          // Try to set the default as the user's group
+          _relevanceFilter.setRelevantUpToRoot(user.group);
+          relevantNodes = PrefService.get('relevantNodes');
+        }
+      }
+
       if (relevantNodes != null) {
-        relevantNodes.forEach((node) => _relevanceFilter.setRelevant(node));
+        _relevanceFilter.setRelevantNodes(relevantNodes);
       }
 
       return _relevanceFilter;

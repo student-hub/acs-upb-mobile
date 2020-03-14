@@ -43,6 +43,7 @@ class FilterPageState extends State<FilterPage> {
       // page is reloaded (curious, since `setState` should technically work).
       // As a workaround, re-push the same page, but without an animation so it
       // looks seamless.
+      // TODO: Find a way to fix this properly, since it's still buggy.
       Navigator.pushReplacement(
         context,
         PageRouteBuilder(
@@ -100,7 +101,8 @@ class FilterPageState extends State<FilterPage> {
   Widget build(BuildContext context) {
     if (filterFuture == null) {
       // Only fetch filter once
-      filterFuture = Provider.of<FilterProvider>(context).getRelevanceFilter();
+      filterFuture =
+          Provider.of<FilterProvider>(context).getRelevanceFilter(context);
     }
 
     return AppScaffold(

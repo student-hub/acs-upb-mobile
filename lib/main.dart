@@ -21,7 +21,7 @@ main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await PrefService.init(prefix: 'pref_');
   PrefService.setDefaultValues({'language': 'auto'});
-  PrefService.setDefaultValues({'relevantNodes': <String>[]});
+  PrefService.setDefaultValues({'relevantNodes': null});
 
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider<AuthProvider>(create: (_) => AuthProvider()),
