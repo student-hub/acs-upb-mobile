@@ -64,6 +64,9 @@ dependencies:
   # Expandable widget
   expandable: ^4.1.2
 
+  # Async utility classes
+  async: ^2.4.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
