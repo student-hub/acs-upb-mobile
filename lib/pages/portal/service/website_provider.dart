@@ -61,7 +61,14 @@ class WebsiteProvider with ChangeNotifier {
         documents.addAll(qSnapshot.documents);
       }
 
-      return documents.map((doc) => WebsiteFromSnap.fromSnap(doc)).toList();
+      // Remove duplicates
+      // (a document may result out of more than one query)
+      final seenDocumentIds = Set<String>();
+      final uniqueDocuments =
+          documents.where((doc) => seenDocumentIds.add(doc.documentID));
+      return uniqueDocuments
+          .map((doc) => WebsiteFromSnap.fromSnap(doc))
+          .toList();
     } catch (e) {
       return null;
     }
