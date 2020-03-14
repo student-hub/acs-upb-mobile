@@ -105,6 +105,7 @@ class FilterPageState extends State<FilterPage> {
               return ListView(children: widgets);
             } else if (snap.hasError) {
               print(snap.error);
+              // TODO: Show error toast
               return Container();
             } else {
               return Center(child: CircularProgressIndicator());

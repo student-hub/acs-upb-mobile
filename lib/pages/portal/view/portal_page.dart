@@ -137,7 +137,9 @@ class _PortalPageState extends State<PortalPage> {
 
     Future<Filter> filterFuture =
         Provider.of<FilterProvider>(context).getRelevanceFilter();
-  List<Website> websites = [];
+    List<Website> websites = [];
+
+    CircularProgressIndicator progressIndicator = CircularProgressIndicator();
 
     return AppScaffold(
       title: S.of(context).navigationPortal,
@@ -148,27 +150,35 @@ class _PortalPageState extends State<PortalPage> {
       body: FutureBuilder(
         future: filterFuture,
         builder: (BuildContext context, AsyncSnapshot<Filter> filterSnap) {
-          if (!filterSnap.hasData) {
-            return Center(child: CircularProgressIndicator());
-          }
-          return FutureBuilder<List<Website>>(
-              future: websiteProvider.getWebsites(filterSnap.data),
-              builder: (context, AsyncSnapshot<List<Website>> websiteSnap) {
-                if (websiteSnap.connectionState == ConnectionState.active ||
-                    websiteSnap.connectionState == ConnectionState.done) {
-                  websites = websiteSnap.data;
-                  return SingleChildScrollView(
-                    child: Padding(
-                      padding: EdgeInsets.only(top: 12.0),
-                      child: Column(
-                        children: listWebsitesByCategory(websites),
+          if (filterSnap.hasData) {
+            return FutureBuilder<List<Website>>(
+                future: websiteProvider.getWebsites(filterSnap.data),
+                builder: (context, AsyncSnapshot<List<Website>> websiteSnap) {
+                  if (websiteSnap.hasData) {
+                    websites = websiteSnap.data;
+                    return SingleChildScrollView(
+                      child: Padding(
+                        padding: EdgeInsets.only(top: 12.0),
+                        child: Column(
+                          children: listWebsitesByCategory(websites),
+                        ),
                       ),
-                    ),
-                  );
-                } else {
-                  return Container();
-                }
-              });
+                    );
+                  } else if (websiteSnap.hasError) {
+                    print(filterSnap.error);
+                    // TODO: Show error toast
+                    return Container();
+                  } else {
+                    return Center(child: progressIndicator);
+                  }
+                });
+          } else if (filterSnap.hasError) {
+            print(filterSnap.error);
+            // TODO: Show error toast
+            return Container();
+          } else {
+            return Center(child: progressIndicator);
+          }
         },
       ),
     );
