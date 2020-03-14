@@ -73,6 +73,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "messageUnderConstruction" : MessageLookupByLibrary.simpleMessage("Under construction"),
     "messageWelcomeName" : m2,
     "messageWelcomeSimple" : MessageLookupByLibrary.simpleMessage("Welcome!"),
+    "navigationFilter" : MessageLookupByLibrary.simpleMessage("Filter"),
     "navigationHome" : MessageLookupByLibrary.simpleMessage("Home"),
     "navigationMap" : MessageLookupByLibrary.simpleMessage("Map"),
     "navigationPortal" : MessageLookupByLibrary.simpleMessage("Portal"),

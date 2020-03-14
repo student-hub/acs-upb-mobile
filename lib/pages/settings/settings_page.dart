@@ -21,7 +21,7 @@ class SettingsPageState extends State<SettingsPage> {
 
     return AppScaffold(
         title: S.of(context).navigationSettings,
-        settingsAction: false,
+        enableMenu: false,
         body: Builder(
           builder: (BuildContext context) {
             return Column(

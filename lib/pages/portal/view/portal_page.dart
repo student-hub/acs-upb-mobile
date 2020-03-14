@@ -1,8 +1,12 @@
 import 'dart:math';
 
 import 'package:acs_upb_mobile/generated/l10n.dart';
+import 'package:acs_upb_mobile/navigation/routes.dart';
+import 'package:acs_upb_mobile/pages/filter/model/filter.dart';
+import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
 import 'package:acs_upb_mobile/pages/portal/model/website.dart';
 import 'package:acs_upb_mobile/pages/portal/service/website_provider.dart';
+import 'package:acs_upb_mobile/resources/custom_icons.dart';
 import 'package:acs_upb_mobile/resources/storage_provider.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/widgets/circle_image.dart';
@@ -34,14 +38,13 @@ class _PortalPageState extends State<PortalPage> {
           children: [
             ExpandableTheme(
               data: ExpandableThemeData(
-                useInkWell: false,
-                crossFadePoint: 0.5,
-                hasIcon: true,
-                iconPlacement: ExpandablePanelIconPlacement.left,
-                iconColor: Theme.of(context).textTheme.headline6.color,
-                headerAlignment: ExpandablePanelHeaderAlignment.center,
-                iconPadding: EdgeInsets.only()
-              ),
+                  useInkWell: false,
+                  crossFadePoint: 0.5,
+                  hasIcon: true,
+                  iconPlacement: ExpandablePanelIconPlacement.left,
+                  iconColor: Theme.of(context).textTheme.headline6.color,
+                  headerAlignment: ExpandablePanelHeaderAlignment.center,
+                  iconPadding: EdgeInsets.only()),
               child: ExpandablePanel(
                 controller: ExpandableController(initialExpanded: true),
                 header:
@@ -132,26 +135,52 @@ class _PortalPageState extends State<PortalPage> {
     ScreenUtil.init(context, width: 750, height: 1334, allowFontScaling: false);
     WebsiteProvider websiteProvider = Provider.of<WebsiteProvider>(context);
 
+    Future<Filter> filterFuture =
+        Provider.of<FilterProvider>(context).getRelevanceFilter();
+    List<Website> websites = [];
+
+    CircularProgressIndicator progressIndicator = CircularProgressIndicator();
+
     return AppScaffold(
       title: S.of(context).navigationPortal,
-      body: StreamBuilder<List<Website>>(
-          stream: websiteProvider.getWebsites(),
-          builder: (context, AsyncSnapshot<List<Website>> snapshot) {
-            if (snapshot.connectionState == ConnectionState.active ||
-                snapshot.connectionState == ConnectionState.done) {
-              var websites = snapshot.data;
-              return SingleChildScrollView(
-                child: Padding(
-                  padding: EdgeInsets.only(top: 12.0),
-                  child: Column(
-                    children: listWebsitesByCategory(websites),
-                  ),
-                ),
-              );
-            } else {
-              return Container();
-            }
-          }),
+      enableMenu: true,
+      menuIcon: CustomIcons.filter,
+      menuRoute: Routes.filter,
+      menuName: S.of(context).navigationFilter,
+      body: FutureBuilder(
+        future: filterFuture,
+        builder: (BuildContext context, AsyncSnapshot<Filter> filterSnap) {
+          if (filterSnap.hasData) {
+            return FutureBuilder<List<Website>>(
+                future: websiteProvider.getWebsites(filterSnap.data),
+                builder: (context, AsyncSnapshot<List<Website>> websiteSnap) {
+                  if (websiteSnap.hasData) {
+                    websites = websiteSnap.data;
+                    return SingleChildScrollView(
+                      child: Padding(
+                        padding: EdgeInsets.only(top: 12.0),
+                        child: Column(
+                          children: listWebsitesByCategory(websites),
+                        ),
+                      ),
+                    );
+                  } else if (websiteSnap.hasError) {
+                    print(filterSnap.error);
+                    // TODO: Show error toast
+                    return Container();
+                  } else {
+                    return Center(child: progressIndicator);
+                  }
+                });
+          } else if (filterSnap.hasError) {
+            print(filterSnap.error);
+            // TODO: Show error toast
+            return Container();
+          } else {
+            return Center(child: progressIndicator);
+          }
+        },
+      ),
     );
   }
 }

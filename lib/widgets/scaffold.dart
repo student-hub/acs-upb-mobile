@@ -6,13 +6,19 @@ import 'package:flutter/material.dart';
 class AppScaffold extends StatelessWidget {
   final Widget body;
   final String title;
-  final bool settingsAction;
+  final bool enableMenu;
+  final IconData menuIcon;
+  final String menuRoute;
+  final String menuName;
   final Widget floatingActionButton;
 
   AppScaffold(
       {this.body,
       this.title,
-      this.settingsAction = true,
+      this.enableMenu = false,
+      this.menuIcon = Icons.settings,
+      this.menuRoute = Routes.settings,
+      this.menuName,  // By default, S.of(context).navigationSettings
       this.floatingActionButton});
 
   @override
@@ -47,17 +53,17 @@ class AppScaffold extends StatelessWidget {
           centerTitle: true,
           toolbarOpacity: 0.8,
           actions: <Widget>[
-            settingsAction
+            enableMenu
                 ? Padding(
                     padding: EdgeInsets.only(right: 20.0),
                     child: Tooltip(
-                      message: S.of(context).navigationSettings,
+                      message: menuName ?? S.of(context).navigationSettings,
                       child: GestureDetector(
                         onTap: () {
-                          Navigator.pushNamed(context, Routes.settings);
+                          Navigator.pushNamed(context, menuRoute);
                         },
                         child: Icon(
-                          Icons.settings,
+                          menuIcon,
                           size: 26.0,
                         ),
                       ),

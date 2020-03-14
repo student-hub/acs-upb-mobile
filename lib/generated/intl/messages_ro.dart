@@ -73,6 +73,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "messageUnderConstruction" : MessageLookupByLibrary.simpleMessage("În construcție"),
     "messageWelcomeName" : m2,
     "messageWelcomeSimple" : MessageLookupByLibrary.simpleMessage("Bine ai venit!"),
+    "navigationFilter" : MessageLookupByLibrary.simpleMessage("Filtru"),
     "navigationHome" : MessageLookupByLibrary.simpleMessage("Acasă"),
     "navigationMap" : MessageLookupByLibrary.simpleMessage("Hartă"),
     "navigationPortal" : MessageLookupByLibrary.simpleMessage("Portal"),

@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:acs_upb_mobile/pages/filter/model/filter.dart';
 import 'package:acs_upb_mobile/pages/portal/model/website.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -39,19 +42,35 @@ extension WebsiteFromSnap on Website {
 class WebsiteProvider with ChangeNotifier {
   final Firestore _db = Firestore.instance;
 
-  Stream<List<Website>> getWebsites() {
-    try {
-      var snaps = _db.collection('websites').snapshots();
-      snaps.handleError((e) {
-        print(e);
-        return Stream.empty();
-      });
+  Future<List<Website>> getWebsites(Filter filter) async {
+    List<String> relevanceStrings = filter.relevantNodes;
 
-      return snaps.map<List<Website>>((list) => list.documents
-          .map<Website>((doc) => WebsiteFromSnap.fromSnap(doc))
-          .toList());
+    try {
+      List<DocumentSnapshot> documents = [];
+
+      // Documents without a 'relevance' field are relevant for everyone
+      Query query = _db.collection('websites').where('relevance', isNull: true);
+      QuerySnapshot qSnapshot = await query.getDocuments();
+      documents.addAll(qSnapshot.documents);
+
+      for (String string in relevanceStrings) {
+        Query query = _db
+            .collection('websites')
+            .where('relevance', arrayContains: string);
+        QuerySnapshot qSnapshot = await query.getDocuments();
+        documents.addAll(qSnapshot.documents);
+      }
+
+      // Remove duplicates
+      // (a document may result out of more than one query)
+      final seenDocumentIds = Set<String>();
+      final uniqueDocuments =
+          documents.where((doc) => seenDocumentIds.add(doc.documentID));
+      return uniqueDocuments
+          .map((doc) => WebsiteFromSnap.fromSnap(doc))
+          .toList();
     } catch (e) {
-      return Stream.empty();
+      return null;
     }
   }
 }

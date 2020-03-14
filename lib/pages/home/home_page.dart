@@ -11,6 +11,7 @@ class HomePage extends StatelessWidget {
 
     return AppScaffold(
         title: S.of(context).navigationHome,
+        enableMenu: true,
         body: Center(
             child: Text(
                 !authProvider.isAuthenticated || authProvider.isAnonymous

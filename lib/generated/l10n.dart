@@ -444,6 +444,15 @@ class S {
     );
   }
 
+  String get navigationFilter {
+    return Intl.message(
+      'Filter',
+      name: 'navigationFilter',
+      desc: '',
+      args: [],
+    );
+  }
+
   String get settingsTitlePersonalization {
     return Intl.message(
       'Personalization',

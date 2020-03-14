@@ -51,6 +51,7 @@
   "navigationMap": "Map",
   "navigationProfile": "Profile",
   "navigationSettings": "Settings",
+  "navigationFilter": "Filter",
 
   "settingsTitlePersonalization": "Personalization",
   "settingsItemDarkMode": "Dark mode",
