@@ -44,7 +44,6 @@ class WebsiteProvider with ChangeNotifier {
 
   Future<List<Website>> getWebsites(Filter filter) async {
     List<String> relevanceStrings = filter.relevantNodes;
-    print(relevanceStrings);
 
     try {
       List<DocumentSnapshot> documents = [];
