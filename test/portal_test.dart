@@ -1,4 +1,6 @@
 import 'package:acs_upb_mobile/generated/l10n.dart';
+import 'package:acs_upb_mobile/pages/filter/model/filter.dart';
+import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
 import 'package:acs_upb_mobile/pages/portal/model/website.dart';
 import 'package:acs_upb_mobile/pages/portal/service/website_provider.dart';
 import 'package:acs_upb_mobile/pages/portal/view/portal_page.dart';
@@ -15,6 +17,8 @@ class MockWebsiteProvider extends Mock implements WebsiteProvider {}
 
 class MockStorageProvider extends Mock implements StorageProvider {}
 
+class MockFilterProvider extends Mock implements FilterProvider {}
+
 class MockUrlLauncher extends Mock
     with MockPlatformInterfaceMixin
     implements UrlLauncherPlatform {}
@@ -23,36 +27,39 @@ void main() {
   final WebsiteProvider mockWebsiteProvider = MockWebsiteProvider();
   // ignore: invalid_use_of_protected_member
   when(mockWebsiteProvider.hasListeners).thenReturn(false);
-  when(mockWebsiteProvider.getWebsites())
-      .thenAnswer((_) => Stream.fromIterable([
-            [
-              Website(
-                category: WebsiteCategory.learning,
-                iconPath: 'icons/websites/moodle.png',
-                infoByLocale: {'en': 'info-en', 'ro': 'info-ro'},
-                label: 'Moodle',
-                link: 'http://acs.curs.pub.ro/',
-              ),
-              Website(
-                category: WebsiteCategory.learning,
-                iconPath: 'icons/websites/ocw.png',
-                infoByLocale: {},
-                label: 'OCW',
-                link: 'https://ocw.cs.pub.ro/',
-              ),
-              Website(
-                category: WebsiteCategory.association,
-                iconPath: 'icons/websites/lsac.png',
-                infoByLocale: {},
-                label: 'LSAC',
-                link: 'https://lsacbucuresti.ro/',
-              ),
-            ]
-          ]));
+  when(mockWebsiteProvider.getWebsites(any)).thenAnswer((_) => Future.value([
+        Website(
+          category: WebsiteCategory.learning,
+          iconPath: 'icons/websites/moodle.png',
+          infoByLocale: {'en': 'info-en', 'ro': 'info-ro'},
+          label: 'Moodle',
+          link: 'http://acs.curs.pub.ro/',
+        ),
+        Website(
+          category: WebsiteCategory.learning,
+          iconPath: 'icons/websites/ocw.png',
+          infoByLocale: {},
+          label: 'OCW',
+          link: 'https://ocw.cs.pub.ro/',
+        ),
+        Website(
+          category: WebsiteCategory.association,
+          iconPath: 'icons/websites/lsac.png',
+          infoByLocale: {},
+          label: 'LSAC',
+          link: 'https://lsacbucuresti.ro/',
+        ),
+      ]));
 
   final StorageProvider mockStorageProvider = MockStorageProvider();
   // ignore: invalid_use_of_protected_member
   when(mockStorageProvider.hasListeners).thenReturn(false);
+
+  final FilterProvider mockFilterProvider = MockFilterProvider();
+  // ignore: invalid_use_of_protected_member
+  when(mockFilterProvider.hasListeners).thenReturn(false);
+  when(mockFilterProvider.getRelevanceFilter())
+      .thenAnswer((_) => Future.value(Filter(root: FilterNode(name: 'All'))));
 
   final MockUrlLauncher mockUrlLauncher = MockUrlLauncher();
   UrlLauncherPlatform.instance = mockUrlLauncher;
@@ -64,7 +71,9 @@ void main() {
             ChangeNotifierProvider<WebsiteProvider>(
                 create: (_) => mockWebsiteProvider),
             ChangeNotifierProvider<StorageProvider>(
-                create: (_) => mockStorageProvider)
+                create: (_) => mockStorageProvider),
+            ChangeNotifierProvider<FilterProvider>(
+                create: (_) => mockFilterProvider),
           ],
           child: MaterialApp(
               localizationsDelegates: [S.delegate], home: PortalPage()));
