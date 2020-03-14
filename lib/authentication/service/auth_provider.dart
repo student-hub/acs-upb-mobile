@@ -210,7 +210,7 @@ class AuthProvider with ChangeNotifier {
     }
     String pattern =
         r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$';
-    RegExp regExp = new RegExp(pattern);
+    RegExp regExp = RegExp(pattern);
     if (!regExp.hasMatch(password)) {
       if (context != null) {
         AppToast.show(S.of(context).warningPasswordCharacters);
@@ -259,7 +259,7 @@ class AuthProvider with ChangeNotifier {
 
       // Update display name
       try {
-        var userUpdateInfo = new UserUpdateInfo();
+        var userUpdateInfo = UserUpdateInfo();
         userUpdateInfo.displayName = firstName + ' ' + lastName;
         await res.user.updateProfile(userUpdateInfo);
         Navigator.pop(context, true);

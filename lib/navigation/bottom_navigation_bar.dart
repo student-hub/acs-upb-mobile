@@ -35,24 +35,24 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar> {
         type: BottomNavigationBarType.fixed,
         items: [
           BottomNavigationBarItem(
-            icon: new Icon(Icons.home),
-            title: new Text(S.of(context).navigationHome),
+            icon: Icon(Icons.home),
+            title: Text(S.of(context).navigationHome),
           ),
           BottomNavigationBarItem(
-            icon: new Icon(Icons.calendar_today),
-            title: new Text(S.of(context).navigationTimetable),
+            icon: Icon(Icons.calendar_today),
+            title: Text(S.of(context).navigationTimetable),
           ),
           BottomNavigationBarItem(
-            icon: new Icon(Icons.public),
-            title: new Text(S.of(context).navigationPortal),
+            icon: Icon(Icons.public),
+            title: Text(S.of(context).navigationPortal),
           ),
           BottomNavigationBarItem(
-            icon: new Icon(Icons.map),
-            title: new Text(S.of(context).navigationMap),
+            icon: Icon(Icons.map),
+            title: Text(S.of(context).navigationMap),
           ),
           BottomNavigationBarItem(
-            icon: new Icon(Icons.person),
-            title: new Text(S.of(context).navigationProfile),
+            icon: Icon(Icons.person),
+            title: Text(S.of(context).navigationProfile),
           ),
         ],
         showUnselectedLabels: true,
