@@ -79,10 +79,17 @@ class SettingsPageState extends State<SettingsPage> {
       preference,
       'language',
       onSelect: () {
-        S.load(getLocale(context, preference));
-        Navigator.of(context).pop();
         // Reload settings page
-        setState(() {});
+        setState(() {
+          S.load(getLocale(context, preference));
+          Navigator.of(context).pop();
+
+          // Hack to notify all widgets that something changed, since the
+          // localizations delegate doesn't do that. Pretend to change the theme
+          // so that listeners have to reload.
+          DynamicTheme.of(context)
+              .setBrightness(DynamicTheme.of(context).brightness);
+        });
       },
     );
   }
