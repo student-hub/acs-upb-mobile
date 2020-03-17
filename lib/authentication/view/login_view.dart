@@ -3,10 +3,8 @@ import 'package:acs_upb_mobile/authentication/view/recover_password_dialog.dart'
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/navigation/routes.dart';
 import 'package:acs_upb_mobile/resources/banner.dart';
-import 'package:acs_upb_mobile/resources/custom_icons.dart';
 import 'package:acs_upb_mobile/widgets/button.dart';
 import 'package:acs_upb_mobile/widgets/form/form.dart';
-import 'package:acs_upb_mobile/widgets/social_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
@@ -26,15 +24,6 @@ class _LoginViewState extends State<LoginView> {
   var emailController = TextEditingController();
   List<FormItem> formItems;
 
-  Widget horizontalLine() => Padding(
-        padding: EdgeInsets.symmetric(horizontal: 16.0),
-        child: Container(
-          width: ScreenUtil().setWidth(120),
-          height: 1.0,
-          color: Colors.black26.withOpacity(.2),
-        ),
-      );
-
   List<FormItem> _buildFormItems() {
     // Only build them once to avoid the cursor staying everywhere
     if (formItems != null) {
@@ -44,12 +33,12 @@ class _LoginViewState extends State<LoginView> {
     AuthProvider authProvider = Provider.of<AuthProvider>(context);
     formItems = <FormItem>[
       FormItem(
-          label: S.of(context).labelEmail,
-          hint: S.of(context).hintEmail,
-          suffix: email_suffix,
-          controller: emailController,
-          check: (email) =>
-              authProvider.canSignInWithPassword(email: email + email_suffix),
+        label: S.of(context).labelEmail,
+        hint: S.of(context).hintEmail,
+        suffix: email_suffix,
+        controller: emailController,
+        check: (email) =>
+            authProvider.canSignInWithPassword(email: email + email_suffix),
       ),
       FormItem(
         label: S.of(context).labelPassword,
@@ -192,39 +181,6 @@ class _LoginViewState extends State<LoginView> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
-                        horizontalLine(),
-                        Text(S.of(context).actionSocialLogin,
-                            style: Theme.of(context)
-                                .textTheme
-                                .subtitle1
-                                .copyWith(fontWeight: FontWeight.w500)),
-                        horizontalLine()
-                      ],
-                    ),
-                    SizedBox(
-                      height: ScreenUtil().setHeight(40),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        SocialIcon(
-                          color: Color(0xFF3B5998),
-                          iconData: CustomIcons.facebook,
-                          onPressed: () {},
-                        ),
-                        SocialIcon(
-                          color: Color(0xFFDB4437),
-                          iconData: CustomIcons.google,
-                          onPressed: () {},
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: ScreenUtil().setHeight(30),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
                         Text(
                           S.of(context).messageNewUser + " ",
                           style: Theme.of(context)
@@ -241,7 +197,7 @@ class _LoginViewState extends State<LoginView> {
                                   .accentTextTheme
                                   .subtitle1
                                   .copyWith(fontWeight: FontWeight.w500)),
-                        )
+                        ),
                       ],
                     )
                   ],
