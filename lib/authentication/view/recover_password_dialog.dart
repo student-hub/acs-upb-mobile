@@ -8,7 +8,7 @@ import 'package:provider/provider.dart';
 class ResetPassword {
   ResetPassword._();
 
-  static show({BuildContext context, String email, String emailSuffix = ''}) {
+  static show({BuildContext context, String email}) {
     AuthProvider authProvider =
         Provider.of<AuthProvider>(context, listen: false);
     // Set the given email as the starting text, if provided
@@ -37,7 +37,7 @@ class ResetPassword {
                         SizedBox(
                           width: 4,
                         ),
-                        Text(emailSuffix,
+                        Text(S.of(context).stringEmailDomain,
                             style: Theme.of(context)
                                 .inputDecorationTheme
                                 .suffixStyle),
@@ -61,7 +61,8 @@ class ResetPassword {
                   width: ScreenUtil().setWidth(200),
                   onTap: () async {
                     bool success = await authProvider.sendPasswordResetEmail(
-                        email: emailController.text + emailSuffix,
+                        email: emailController.text +
+                            S.of(context).stringEmailDomain,
                         context: context);
                     if (success) {
                       Navigator.pop(context);

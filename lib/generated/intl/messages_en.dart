@@ -87,6 +87,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "settingsItemLanguageRomanian" : MessageLookupByLibrary.simpleMessage("Romanian"),
     "settingsTitleLocalization" : MessageLookupByLibrary.simpleMessage("Localization"),
     "settingsTitlePersonalization" : MessageLookupByLibrary.simpleMessage("Personalization"),
+    "stringEmailDomain" : MessageLookupByLibrary.simpleMessage("@stud.acs.upb.ro"),
     "warningEmailInUse" : m3,
     "warningInternetConnection" : MessageLookupByLibrary.simpleMessage("Please make sure you are connected to the internet."),
     "warningPasswordCharacters" : MessageLookupByLibrary.simpleMessage("The password must include lowercase and uppercase letters and at least one number and special character (!@#\$&*~)."),

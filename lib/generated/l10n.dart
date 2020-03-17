@@ -624,6 +624,15 @@ class S {
     );
   }
 
+  String get stringEmailDomain {
+    return Intl.message(
+      '@stud.acs.upb.ro',
+      name: 'stringEmailDomain',
+      desc: '',
+      args: [],
+    );
+  }
+
   String get fileAcsBanner {
     return Intl.message(
       'assets/images/acs_banner_en.png',

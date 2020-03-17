@@ -87,6 +87,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "settingsItemLanguageRomanian" : MessageLookupByLibrary.simpleMessage("Română"),
     "settingsTitleLocalization" : MessageLookupByLibrary.simpleMessage("Localizare"),
     "settingsTitlePersonalization" : MessageLookupByLibrary.simpleMessage("Personalizare"),
+    "stringEmailDomain" : MessageLookupByLibrary.simpleMessage("@stud.acs.upb.ro"),
     "warningEmailInUse" : m3,
     "warningInternetConnection" : MessageLookupByLibrary.simpleMessage("Asigurați-vă că sunteți conectat la internet."),
     "warningPasswordCharacters" : MessageLookupByLibrary.simpleMessage("Parola trebuie să conțină majuscule, minuscule și cel puțin un număr sau un simbol."),
