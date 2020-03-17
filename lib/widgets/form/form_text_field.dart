@@ -59,7 +59,6 @@ class _FormTextFieldState extends State<FormTextField> {
                   onSubmitted: widget.onSubmitted,
                   decoration: InputDecoration(
                     hintText: widget.hint ?? widget.label.toLowerCase(),
-                    suffixIcon: widget.suffixIcon,
                   ),
                 ),
               ),
@@ -67,12 +66,13 @@ class _FormTextFieldState extends State<FormTextField> {
                   ? Row(
                       children: <Widget>[
                         SizedBox(
-                          width: 8,
+                          width: 4,
                         ),
                         Text(widget.suffix,
                             style: Theme.of(context)
                                 .inputDecorationTheme
                                 .suffixStyle),
+                        IntrinsicWidth(child: widget.suffixIcon),
                       ],
                     )
                   : Container(),

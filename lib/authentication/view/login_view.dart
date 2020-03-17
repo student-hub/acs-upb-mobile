@@ -49,7 +49,8 @@ class _LoginViewState extends State<LoginView> {
           suffix: email_suffix,
           controller: emailController,
           check: (email) =>
-              authProvider.canSignInWithPassword(email: email + email_suffix)),
+              authProvider.canSignInWithPassword(email: email + email_suffix),
+      ),
       FormItem(
         label: S.of(context).labelPassword,
         hint: S.of(context).hintPassword,

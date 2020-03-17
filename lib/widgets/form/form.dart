@@ -75,22 +75,19 @@ class _AppFormState extends State<AppForm> {
                       }
                     }),
                     suffixIcon: field.check == null
-                        ? null
+                        ? Container()
                         : FutureBuilder(
                             future: field.valid,
                             builder: (context, snapshot) {
-                              if (snapshot.connectionState ==
-                                  ConnectionState.done) {
-                                if (snapshot.data == null) {
-                                  // Display transparent icon
-                                  return CustomIcons.empty;
-                                } else {
-                                  return snapshot.data
-                                      ? CustomIcons.valid
-                                      : CustomIcons.invalid;
-                                }
+                              if (snapshot.data == null) {
+                                // No icon
+                                return Container();
                               } else {
-                                return CustomIcons.empty;
+                                return Padding(
+                                    padding: EdgeInsets.only(left: 4.0),
+                                    child: snapshot.data
+                                        ? CustomIcons.valid
+                                        : CustomIcons.invalid);
                               }
                             },
                           ),
