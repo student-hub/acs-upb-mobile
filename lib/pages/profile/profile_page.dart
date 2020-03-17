@@ -28,7 +28,7 @@ class ProfilePage extends StatelessWidget {
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Text(authProvider.user?.displayName ?? 'Anonymous'),
+            child: Text(authProvider.firebaseUser?.displayName ?? 'Anonymous'),
           ),
           Expanded(
             flex: 4,

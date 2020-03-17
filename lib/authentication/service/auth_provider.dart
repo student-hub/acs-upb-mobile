@@ -27,13 +27,13 @@ extension DatabaseUser on User {
 }
 
 class AuthProvider with ChangeNotifier {
-  FirebaseUser user;
+  FirebaseUser firebaseUser;  // TODO: Make this private
   StreamSubscription userAuthSub;
 
   AuthProvider() {
     userAuthSub = FirebaseAuth.instance.onAuthStateChanged.listen((newUser) {
       print('AuthProvider - FirebaseAuth - onAuthStateChanged - $newUser');
-      user = newUser;
+      firebaseUser = newUser;
       notifyListeners();
     }, onError: (e) {
       print('AuthProvider - FirebaseAuth - onAuthStateChanged - $e');
@@ -81,9 +81,9 @@ class AuthProvider with ChangeNotifier {
   }
 
   bool get isAnonymous {
-    assert(user != null);
+    assert(firebaseUser != null);
     bool isAnonymousUser = true;
-    for (UserInfo info in user.providerData) {
+    for (UserInfo info in firebaseUser.providerData) {
       if (info.providerId == 'facebook.com' ||
           info.providerId == 'google.com' ||
           info.providerId == 'password') {
@@ -95,14 +95,14 @@ class AuthProvider with ChangeNotifier {
   }
 
   bool get isAuthenticated {
-    return user != null;
+    return firebaseUser != null;
   }
 
   Future<bool> get isAuthenticatedAsync async {
-    if (user == null) {
-      user = await FirebaseAuth.instance.currentUser();
+    if (firebaseUser == null) {
+      firebaseUser = await FirebaseAuth.instance.currentUser();
     }
-    return user != null;
+    return firebaseUser != null;
   }
 
   Future<User> getCurrentUser() async {
@@ -110,7 +110,7 @@ class AuthProvider with ChangeNotifier {
       return null;
     }
     DocumentSnapshot snapshot =
-        await Firestore.instance.collection('users').document(user.uid).get();
+        await Firestore.instance.collection('users').document(firebaseUser.uid).get();
     return DatabaseUser.fromSnap(snapshot);
   }
 
@@ -160,7 +160,7 @@ class AuthProvider with ChangeNotifier {
   Future<void> signOut(BuildContext context) async {
     if (isAnonymous) {
       try {
-        user.delete();
+        firebaseUser.delete();
       } catch (e) {
         _errorHandler(e, null);
       }
@@ -270,10 +270,13 @@ class AuthProvider with ChangeNotifier {
         var userUpdateInfo = UserUpdateInfo();
         userUpdateInfo.displayName = firstName + ' ' + lastName;
         await res.user.updateProfile(userUpdateInfo);
-        Navigator.pop(context, true);
       } catch (e) {
         _errorHandler(e, context);
       }
+
+      // Update user with updated info
+      firebaseUser = await FirebaseAuth.instance.currentUser();
+      notifyListeners();
 
       // Create document in 'users'
       var user = User(

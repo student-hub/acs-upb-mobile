@@ -16,7 +16,7 @@ class HomePage extends StatelessWidget {
             child: Text(
                 !authProvider.isAuthenticated || authProvider.isAnonymous
                     ? S.of(context).messageWelcomeSimple
-                    : S.of(context)
-                        .messageWelcomeName(authProvider.user.displayName))));
+                    : S.of(context).messageWelcomeName(
+                        authProvider.firebaseUser.displayName))));
   }
 }
