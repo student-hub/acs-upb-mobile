@@ -19,7 +19,7 @@ class LoginView extends StatefulWidget {
 }
 
 class _LoginViewState extends State<LoginView> {
-  static const String email_suffix = '@stud.acs.upb.ro';
+  static const String emailSuffix = '@stud.acs.upb.ro';
 
   var emailController = TextEditingController();
   List<FormItem> formItems;
@@ -35,10 +35,10 @@ class _LoginViewState extends State<LoginView> {
       FormItem(
         label: S.of(context).labelEmail,
         hint: S.of(context).hintEmail,
-        suffix: email_suffix,
+        suffix: emailSuffix,
         controller: emailController,
         check: (email) =>
-            authProvider.canSignInWithPassword(email: email + email_suffix),
+            authProvider.canSignInWithPassword(email: email + emailSuffix),
       ),
       FormItem(
         label: S.of(context).labelPassword,
@@ -57,7 +57,7 @@ class _LoginViewState extends State<LoginView> {
       items: _buildFormItems(),
       onSubmitted: (Map<String, String> fields) async {
         var result = await authProvider.signIn(
-          email: fields[S.of(context).labelEmail] + email_suffix,
+          email: fields[S.of(context).labelEmail] + emailSuffix,
           password: fields[S.of(context).labelPassword],
           context: context,
         );
@@ -82,7 +82,9 @@ class _LoginViewState extends State<LoginView> {
                 ),
                 onTap: () {
                   ResetPassword.show(
-                      context: context, email: emailController.text);
+                      context: context,
+                      email: emailController.text,
+                      emailSuffix: emailSuffix);
                   // Remove text field from focus if necessary
                   FocusScopeNode currentFocus = FocusScope.of(context);
                   if (!currentFocus.hasPrimaryFocus) {

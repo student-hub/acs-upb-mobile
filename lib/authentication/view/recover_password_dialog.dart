@@ -8,8 +8,9 @@ import 'package:provider/provider.dart';
 class ResetPassword {
   ResetPassword._();
 
-  static show({BuildContext context, String email}) {
-    AuthProvider authProvider = Provider.of<AuthProvider>(context, listen: false);
+  static show({BuildContext context, String email, String emailSuffix = ''}) {
+    AuthProvider authProvider =
+        Provider.of<AuthProvider>(context, listen: false);
     // Set the given email as the starting text, if provided
     TextEditingController emailController =
         TextEditingController(text: email ?? "");
@@ -23,11 +24,24 @@ class ResetPassword {
                   children: <Widget>[
                     Expanded(child: Container(height: 8)),
                     Text(S.of(context).messageResetPassword),
-                    TextField(
-                      key: ValueKey('reset_password_email_text_field'),
-                      controller: emailController,
-                      decoration:
-                          InputDecoration(hintText: S.of(context).hintEmail),
+                    Row(
+                      children: <Widget>[
+                        Expanded(
+                          child: TextField(
+                            key: ValueKey('reset_password_email_text_field'),
+                            controller: emailController,
+                            decoration: InputDecoration(
+                                hintText: S.of(context).hintEmail),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 4,
+                        ),
+                        Text(emailSuffix,
+                            style: Theme.of(context)
+                                .inputDecorationTheme
+                                .suffixStyle),
+                      ],
                     )
                   ],
                 ),
@@ -47,7 +61,8 @@ class ResetPassword {
                   width: ScreenUtil().setWidth(200),
                   onTap: () async {
                     bool success = await authProvider.sendPasswordResetEmail(
-                        email: emailController.text, context: context);
+                        email: emailController.text + emailSuffix,
+                        context: context);
                     if (success) {
                       Navigator.pop(context);
                     }
