@@ -122,7 +122,7 @@ class S {
 
   String get hintEmail {
     return Intl.message(
-      'john.doe@stud.acs.upb.ro',
+      'john.doe',
       name: 'hintEmail',
       desc: '',
       args: [],

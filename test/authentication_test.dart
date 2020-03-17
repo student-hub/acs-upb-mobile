@@ -16,7 +16,7 @@ class MockNavigatorObserver extends Mock implements NavigatorObserver {}
 void main() {
   AuthProvider mockAuthProvider;
 
-  setUpAll(() async {
+  setUp(() async {
     WidgetsFlutterBinding.ensureInitialized();
     PrefService.enableCaching();
     PrefService.cache = {};
@@ -65,6 +65,8 @@ void main() {
       await tester.runAsync(() async {
         expect(find.byType(LoginView), findsOneWidget);
 
+        expect(find.text('@stud.acs.upb.ro'), findsOneWidget);
+
         when(mockAuthProvider.signIn(
                 email: anyNamed('email'),
                 password: anyNamed('password'),
@@ -73,7 +75,7 @@ void main() {
 
         // Enter credentials
         await tester.enterText(
-            find.byKey(ValueKey('email_text_field')), 'test@test.com');
+            find.byKey(ValueKey('email_text_field')), 'test');
         await tester.enterText(
             find.byKey(ValueKey('password_text_field')), 'password');
 
@@ -81,7 +83,7 @@ void main() {
         await tester.pumpAndSettle();
 
         verify(mockAuthProvider.signIn(
-            email: argThat(equals('test@test.com'), named: 'email'),
+            email: argThat(equals('test@stud.acs.upb.ro'), named: 'email'),
             password: argThat(equals('password'), named: 'password'),
             context: anyNamed('context')));
         expect(find.byType(HomePage), findsOneWidget);

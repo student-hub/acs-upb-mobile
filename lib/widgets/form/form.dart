@@ -11,6 +11,7 @@ class FormItem {
   final FocusNode focusNode;
   final Future<bool> Function(String) check;
   final bool obscureText;
+  final String suffix;
   Future<bool> valid;
 
   FormItem(
@@ -19,7 +20,8 @@ class FormItem {
       TextEditingController controller,
       FocusNode focusNode,
       this.check,
-      this.obscureText = false})
+      this.obscureText = false,
+      this.suffix})
       : this.controller = controller ?? TextEditingController(),
         this.focusNode = focusNode ?? FocusNode(),
         this.valid = Future<bool>(() => null);
@@ -61,6 +63,7 @@ class _AppFormState extends State<AppForm> {
                         ValueKey(ReCase(field.label).snakeCase + '_text_field'),
                     label: field.label,
                     hint: field.hint,
+                    suffix: field.suffix,
                     obscureText: field.obscureText,
                     controller: field.controller,
                     focusNode: field.focusNode,

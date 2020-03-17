@@ -21,6 +21,8 @@ class LoginView extends StatefulWidget {
 }
 
 class _LoginViewState extends State<LoginView> {
+  static const String email_suffix = '@stud.acs.upb.ro';
+
   var emailController = TextEditingController();
   List<FormItem> formItems;
 
@@ -44,8 +46,10 @@ class _LoginViewState extends State<LoginView> {
       FormItem(
           label: S.of(context).labelEmail,
           hint: S.of(context).hintEmail,
+          suffix: email_suffix,
           controller: emailController,
-          check: (email) => authProvider.canSignInWithPassword(email: email)),
+          check: (email) =>
+              authProvider.canSignInWithPassword(email: email + email_suffix)),
       FormItem(
         label: S.of(context).labelPassword,
         hint: S.of(context).hintPassword,
@@ -63,7 +67,7 @@ class _LoginViewState extends State<LoginView> {
       items: _buildFormItems(),
       onSubmitted: (Map<String, String> fields) async {
         var result = await authProvider.signIn(
-          email: fields[S.of(context).labelEmail],
+          email: fields[S.of(context).labelEmail] + email_suffix,
           password: fields[S.of(context).labelPassword],
           context: context,
         );

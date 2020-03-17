@@ -55,7 +55,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "errorSomethingWentWrong" : MessageLookupByLibrary.simpleMessage("A apărut o problemă."),
     "errorTooManyRequests" : MessageLookupByLibrary.simpleMessage("Au fost prea multe încercări de conectare nereușite."),
     "fileAcsBanner" : MessageLookupByLibrary.simpleMessage("assets/images/acs_banner_ro.png"),
-    "hintEmail" : MessageLookupByLibrary.simpleMessage("john.doe@stud.acs.upb.ro"),
+    "hintEmail" : MessageLookupByLibrary.simpleMessage("john.doe"),
     "hintFirstName" : MessageLookupByLibrary.simpleMessage("John"),
     "hintGroup" : MessageLookupByLibrary.simpleMessage("314CB"),
     "hintLastName" : MessageLookupByLibrary.simpleMessage("Doe"),
