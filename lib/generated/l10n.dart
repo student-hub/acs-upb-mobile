@@ -1,6 +1,7 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+
 import 'intl/messages_all.dart';
 
 // **************************************************************************
@@ -121,7 +122,7 @@ class S {
 
   String get hintEmail {
     return Intl.message(
-      'john.doe@stud.acs.upb.ro',
+      'john.doe',
       name: 'hintEmail',
       desc: '',
       args: [],
@@ -618,6 +619,15 @@ class S {
     return Intl.message(
       'Please check your inbox for the password reset e-mail.',
       name: 'infoPasswordResetEmailSent',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get stringEmailDomain {
+    return Intl.message(
+      '@stud.acs.upb.ro',
+      name: 'stringEmailDomain',
       desc: '',
       args: [],
     );

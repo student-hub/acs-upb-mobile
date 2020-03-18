@@ -171,6 +171,7 @@ class AuthProvider with ChangeNotifier {
   }
 
   Future<bool> canSignInWithPassword({String email}) async {
+    print('email: ' + email);
     List<String> providers = [];
     try {
       providers =

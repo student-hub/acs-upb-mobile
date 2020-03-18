@@ -11,6 +11,7 @@ class FormItem {
   final FocusNode focusNode;
   final Future<bool> Function(String) check;
   final bool obscureText;
+  final String suffix;
   Future<bool> valid;
 
   FormItem(
@@ -19,7 +20,8 @@ class FormItem {
       TextEditingController controller,
       FocusNode focusNode,
       this.check,
-      this.obscureText = false})
+      this.obscureText = false,
+      this.suffix})
       : this.controller = controller ?? TextEditingController(),
         this.focusNode = focusNode ?? FocusNode(),
         this.valid = Future<bool>(() => null);
@@ -61,6 +63,7 @@ class _AppFormState extends State<AppForm> {
                         ValueKey(ReCase(field.label).snakeCase + '_text_field'),
                     label: field.label,
                     hint: field.hint,
+                    suffix: field.suffix,
                     obscureText: field.obscureText,
                     controller: field.controller,
                     focusNode: field.focusNode,
@@ -73,24 +76,23 @@ class _AppFormState extends State<AppForm> {
                     }),
                     suffixIcon: field.check == null
                         ? null
-                        : FutureBuilder(
-                            future: field.valid,
-                            builder: (context, snapshot) {
-                              if (snapshot.connectionState ==
-                                  ConnectionState.done) {
+                        : IntrinsicWidth(
+                          child: FutureBuilder(
+                              future: field.valid,
+                              builder: (context, snapshot) {
                                 if (snapshot.data == null) {
-                                  // Display transparent icon
-                                  return CustomIcons.empty;
+                                  // No icon
+                                  return Container();
                                 } else {
-                                  return snapshot.data
-                                      ? CustomIcons.valid
-                                      : CustomIcons.invalid;
+                                  return Padding(
+                                      padding: EdgeInsets.only(left: 4.0),
+                                      child: snapshot.data
+                                          ? CustomIcons.valid
+                                          : CustomIcons.invalid);
                                 }
-                              } else {
-                                return CustomIcons.empty;
-                              }
-                            },
-                          ),
+                              },
+                            ),
+                        ),
                     onSubmitted: (_) {
                       if (i < widget.items.length - 1) {
                         FocusScope.of(context)

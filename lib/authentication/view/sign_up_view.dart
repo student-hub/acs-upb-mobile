@@ -33,7 +33,9 @@ class _SignUpViewState extends State<SignUpView> {
       FormItem(
         label: S.of(context).labelEmail,
         hint: S.of(context).hintEmail,
-        check: (email) => authProvider.canSignUpWithEmail(email: email),
+        suffix: S.of(context).stringEmailDomain,
+        check: (email) => authProvider.canSignUpWithEmail(
+            email: email + S.of(context).stringEmailDomain),
       ),
       FormItem(
         label: S.of(context).labelPassword,
@@ -76,6 +78,7 @@ class _SignUpViewState extends State<SignUpView> {
       title: S.of(context).actionSignUp,
       items: _buildFormItems(),
       onSubmitted: (Map<String, String> fields) async {
+        fields[S.of(context).labelEmail] += S.of(context).stringEmailDomain;
         var result = await authProvider.signUp(
           info: fields,
           context: context,
