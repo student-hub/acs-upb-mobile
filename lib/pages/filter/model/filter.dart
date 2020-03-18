@@ -30,7 +30,7 @@ class Filter {
   List<Map<String, String>> localizedLevelNames;
 
   Filter({this.root, this.localizedLevelNames, void Function() listener}) {
-    this.root.value = true;  // root value is true by default
+    this.root.value = true; // root value is true by default
     _addListener(listener ?? () {}, this.root);
   }
 
@@ -58,6 +58,22 @@ class Filter {
     List<String> list = [];
     _relevantNodesHelper(list, root);
     return list;
+  }
+
+  /// Get selected node on first level, if there is any
+  ///
+  /// First level nodes should be mutually exclusive, so this only returns one
+  /// value.
+  String get baseNode {
+    if (root.children != null) {
+      var selected =
+          root.children.where((child) => child.value == true).toList();
+      assert(selected.length <= 1);
+      if (selected.length == 1) {
+        return selected[0].name;
+      }
+    }
+    return null;
   }
 
   bool _setRelevantHelper(String nodeName, FilterNode node, bool setParents) {
@@ -88,7 +104,7 @@ class Filter {
   }
 
   bool setRelevantNodes(List<String> nodes) {
-    if(nodes == null || nodes.isEmpty) {
+    if (nodes == null || nodes.isEmpty) {
       return false;
     }
     bool setAllNodes = true;

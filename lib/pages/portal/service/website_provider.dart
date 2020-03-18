@@ -43,8 +43,6 @@ class WebsiteProvider with ChangeNotifier {
   final Firestore _db = Firestore.instance;
 
   Future<List<Website>> getWebsites(Filter filter) async {
-    List<String> relevanceStrings = filter.relevantNodes;
-
     try {
       List<DocumentSnapshot> documents = [];
 
@@ -53,9 +51,11 @@ class WebsiteProvider with ChangeNotifier {
       QuerySnapshot qSnapshot = await query.getDocuments();
       documents.addAll(qSnapshot.documents);
 
-      for (String string in relevanceStrings) {
+      for (String string in filter.relevantNodes) {
+        // selected nodes
         Query query = _db
             .collection('websites')
+            .where('degree', isEqualTo: filter.baseNode)
             .where('relevance', arrayContains: string);
         QuerySnapshot qSnapshot = await query.getDocuments();
         documents.addAll(qSnapshot.documents);
