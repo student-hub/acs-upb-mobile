@@ -57,9 +57,16 @@ class _FormTextFieldState extends State<FormTextField> {
                   focusNode: widget.focusNode,
                   onChanged: widget.onChanged,
                   onSubmitted: widget.onSubmitted,
-                  decoration: InputDecoration(
-                    hintText: widget.hint ?? widget.label.toLowerCase(),
-                  ),
+                  // Only show verification icon within text field if it exists
+                  // and there no suffix text set
+                  decoration: widget.suffix == null && widget.suffixIcon != null
+                      ? InputDecoration(
+                          hintText: widget.hint ?? widget.label.toLowerCase(),
+                          suffixIcon: widget.suffixIcon,
+                        )
+                      : InputDecoration(
+                          hintText: widget.hint ?? widget.label.toLowerCase(),
+                        ),
                 ),
               ),
               widget.suffix != null
@@ -72,7 +79,7 @@ class _FormTextFieldState extends State<FormTextField> {
                             style: Theme.of(context)
                                 .inputDecorationTheme
                                 .suffixStyle),
-                        IntrinsicWidth(child: widget.suffixIcon),
+                        widget.suffixIcon,
                       ],
                     )
                   : Container(),

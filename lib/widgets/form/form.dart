@@ -75,22 +75,24 @@ class _AppFormState extends State<AppForm> {
                       }
                     }),
                     suffixIcon: field.check == null
-                        ? Container()
-                        : FutureBuilder(
-                            future: field.valid,
-                            builder: (context, snapshot) {
-                              if (snapshot.data == null) {
-                                // No icon
-                                return Container();
-                              } else {
-                                return Padding(
-                                    padding: EdgeInsets.only(left: 4.0),
-                                    child: snapshot.data
-                                        ? CustomIcons.valid
-                                        : CustomIcons.invalid);
-                              }
-                            },
-                          ),
+                        ? null
+                        : IntrinsicWidth(
+                          child: FutureBuilder(
+                              future: field.valid,
+                              builder: (context, snapshot) {
+                                if (snapshot.data == null) {
+                                  // No icon
+                                  return Container();
+                                } else {
+                                  return Padding(
+                                      padding: EdgeInsets.only(left: 4.0),
+                                      child: snapshot.data
+                                          ? CustomIcons.valid
+                                          : CustomIcons.invalid);
+                                }
+                              },
+                            ),
+                        ),
                     onSubmitted: (_) {
                       if (i < widget.items.length - 1) {
                         FocusScope.of(context)
