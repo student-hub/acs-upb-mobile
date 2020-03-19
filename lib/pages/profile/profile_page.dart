@@ -62,49 +62,88 @@ class ProfilePage extends StatelessWidget {
     );
   }
 
+  Widget _deleteAccountButton(BuildContext context) {
+    AuthProvider authProvider = Provider.of<AuthProvider>(context);
+
+    if (!authProvider.isAuthenticatedFromCache || authProvider.isAnonymous) {
+      return Container();
+    }
+
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: InkWell(
+        onTap: () => authProvider.delete(context: context),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Icon(
+              Icons.delete,
+              size: Theme.of(context).textTheme.subtitle1.fontSize,
+              color: Colors.red,
+            ),
+            SizedBox(width: 4),
+            Text(
+              S.of(context).actionDeleteAccount,
+              style: Theme.of(context)
+                  .textTheme
+                  .subtitle2
+                  .apply(color: Colors.red, fontWeightDelta: 1),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     AuthProvider authProvider = Provider.of<AuthProvider>(context);
 
     return AppScaffold(
       title: S.of(context).navigationProfile,
-      body: Column(
-        children: <Widget>[
-          Expanded(
-            flex: 1,
-            child: Container(),
-          ),
-          Expanded(
-            flex: 2,
-            child: Image(
-                image:
-                    AssetImage('assets/illustrations/undraw_profile_pic.png')),
-          ),
-          SizedBox(height: 8),
-          Text(
-            authProvider.firebaseUser?.displayName ??
-                S.of(context).stringAnonymous,
-            style:
-                Theme.of(context).textTheme.subtitle1.apply(fontWeightDelta: 2),
-          ),
-          SizedBox(height: 4),
-          InkWell(
-            onTap: () async {
-              authProvider.signOut(context);
-              await Navigator.pushReplacementNamed(context, Routes.login);
-            },
-            child: Text(S.of(context).actionLogOut,
-                style: Theme.of(context)
-                    .accentTextTheme
-                    .subtitle2
-                    .copyWith(fontWeight: FontWeight.w500)),
-          ),
-          Expanded(
-            flex: 4,
-            child: Container(),
-          ),
-          _accountNotVerifiedFooter(context),
-        ],
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          children: <Widget>[
+            Expanded(
+              flex: 1,
+              child: Container(),
+            ),
+            Expanded(
+              flex: 2,
+              child: Image(
+                  image: AssetImage(
+                      'assets/illustrations/undraw_profile_pic.png')),
+            ),
+            SizedBox(height: 8),
+            Text(
+              authProvider.firebaseUser?.displayName ??
+                  S.of(context).stringAnonymous,
+              style: Theme.of(context)
+                  .textTheme
+                  .subtitle1
+                  .apply(fontWeightDelta: 2),
+            ),
+            SizedBox(height: 4),
+            InkWell(
+              onTap: () async {
+                authProvider.signOut(context);
+                await Navigator.pushReplacementNamed(context, Routes.login);
+              },
+              child: Text(S.of(context).actionLogOut,
+                  style: Theme.of(context)
+                      .accentTextTheme
+                      .subtitle2
+                      .copyWith(fontWeight: FontWeight.w500)),
+            ),
+            Expanded(
+              flex: 3,
+              child: Container(),
+            ),
+            _deleteAccountButton(context),
+            _accountNotVerifiedFooter(context),
+          ],
+        ),
       ),
     );
   }

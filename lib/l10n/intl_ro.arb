@@ -26,6 +26,7 @@
   "actionResetPassword": "Resetare parolă",
   "actionSendEmail": "Trimite e-mail",
   "actionSendVerificationAgain": "Trimite mail din nou?",
+  "actionDeleteAccount": "Ștergere cont",
 
   "errorSomethingWentWrong": "A apărut o problemă.",
   "errorPasswordsDiffer": "Cele două parole diferă.",

@@ -26,6 +26,7 @@
   "actionResetPassword": "Reset password",
   "actionSendEmail": "Send e-mail",
   "actionSendVerificationAgain": "Send e-mail again?",
+  "actionDeleteAccount": "Delete account",
 
   "errorSomethingWentWrong": "Something went wrong.",
   "errorPasswordsDiffer": "The two passwords differ.",
