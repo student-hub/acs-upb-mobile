@@ -188,29 +188,37 @@ class AuthProvider with ChangeNotifier {
     return await FirebaseAuth.instance.signOut();
   }
 
-  Future<bool> canSignInWithPassword({String email}) async {
-    print('email: ' + email);
+  Future<bool> canSignInWithPassword(
+      {String email, BuildContext context}) async {
     List<String> providers = [];
     try {
       providers =
           await FirebaseAuth.instance.fetchSignInMethodsForEmail(email: email);
     } catch (e) {
-      _errorHandler(e, null);
+      _errorHandler(e, context);
       return false;
     }
-    return providers.contains('password');
+    bool accountExists = providers.contains('password');
+    if (!accountExists && context != null) {
+      AppToast.show(S.of(context).errorEmailNotFound);
+    }
+    return accountExists;
   }
 
-  Future<bool> canSignUpWithEmail({String email}) async {
+  Future<bool> canSignUpWithEmail({String email, BuildContext context}) async {
     List<String> providers = [];
     try {
       providers =
           await FirebaseAuth.instance.fetchSignInMethodsForEmail(email: email);
     } catch (e) {
-      _errorHandler(e, null);
+      _errorHandler(e, context);
       return false;
     }
-    return providers.isEmpty;
+    bool accountExists = providers.isNotEmpty;
+    if (accountExists && context != null) {
+      AppToast.show(S.of(context).warningEmailInUse(email));
+    }
+    return !accountExists;
   }
 
   Future<bool> sendPasswordResetEmail(

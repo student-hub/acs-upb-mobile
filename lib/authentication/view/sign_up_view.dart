@@ -4,6 +4,7 @@ import 'package:acs_upb_mobile/navigation/routes.dart';
 import 'package:acs_upb_mobile/resources/banner.dart';
 import 'package:acs_upb_mobile/widgets/button.dart';
 import 'package:acs_upb_mobile/widgets/form/form.dart';
+import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
@@ -25,6 +26,7 @@ class _SignUpViewState extends State<SignUpView> {
     if (formItems != null) {
       return formItems;
     }
+    String emailDomain = S.of(context).stringEmailDomain;
 
     TextEditingController passwordController = TextEditingController();
     AuthProvider authProvider = Provider.of<AuthProvider>(context);
@@ -33,23 +35,28 @@ class _SignUpViewState extends State<SignUpView> {
       FormItem(
         label: S.of(context).labelEmail,
         hint: S.of(context).hintEmail,
-        suffix: S.of(context).stringEmailDomain,
-        check: (email) => authProvider.canSignUpWithEmail(
-            email: email + S.of(context).stringEmailDomain),
+        suffix: emailDomain,
+        check: (email, {BuildContext context}) => authProvider
+            .canSignUpWithEmail(email: email + emailDomain, context: context),
       ),
       FormItem(
         label: S.of(context).labelPassword,
         hint: S.of(context).hintPassword,
         controller: passwordController,
         obscureText: true,
-        check: (password) => authProvider.isStrongPassword(password: password),
+        check: (password, {BuildContext context}) =>
+            authProvider.isStrongPassword(password: password, context: context),
       ),
       FormItem(
         label: S.of(context).labelConfirmPassword,
         hint: S.of(context).hintPassword,
         obscureText: true,
-        check: (password) async {
-          return password == passwordController.text;
+        check: (password, {BuildContext context}) async {
+          bool ok = password == passwordController.text;
+          if (!ok && context != null) {
+            AppToast.show(S.of(context).errorPasswordsDiffer);
+          }
+          return ok;
         },
       ),
       FormItem(
@@ -63,7 +70,8 @@ class _SignUpViewState extends State<SignUpView> {
       FormItem(
         label: S.of(context).labelGroup,
         hint: S.of(context).hintGroup,
-        check: (group) async {
+        check: (group, {BuildContext context}) async {
+          // TODO: Allow MSc groups and show message for invalid inputs
           return group.length == 5 && group[0] == '3';
         },
       ),

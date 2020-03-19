@@ -27,16 +27,18 @@ class _LoginViewState extends State<LoginView> {
     if (formItems != null) {
       return formItems;
     }
+    String emailDomain = S.of(context).stringEmailDomain;
 
     AuthProvider authProvider = Provider.of<AuthProvider>(context);
     formItems = <FormItem>[
       FormItem(
         label: S.of(context).labelEmail,
         hint: S.of(context).hintEmail,
-        suffix: S.of(context).stringEmailDomain,
+        suffix: emailDomain,
         controller: emailController,
-        check: (email) => authProvider.canSignInWithPassword(
-            email: email + S.of(context).stringEmailDomain),
+        check: (email, {BuildContext context}) =>
+            authProvider.canSignInWithPassword(
+                email: email + emailDomain, context: context),
       ),
       FormItem(
         label: S.of(context).labelPassword,

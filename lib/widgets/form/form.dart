@@ -9,7 +9,7 @@ class FormItem {
   final String hint;
   final TextEditingController controller;
   final FocusNode focusNode;
-  final Future<bool> Function(String) check;
+  final Future<bool> Function(String, {BuildContext context}) check;
   final bool obscureText;
   final String suffix;
   Future<bool> valid;
@@ -77,22 +77,29 @@ class _AppFormState extends State<AppForm> {
                     suffixIcon: field.check == null
                         ? null
                         : IntrinsicWidth(
-                          child: FutureBuilder(
+                            child: FutureBuilder(
                               future: field.valid,
-                              builder: (context, snapshot) {
+                              builder: (BuildContext context,
+                                  AsyncSnapshot<bool> snapshot) {
                                 if (snapshot.data == null) {
                                   // No icon
                                   return Container();
                                 } else {
-                                  return Padding(
-                                      padding: EdgeInsets.only(left: 4.0),
-                                      child: snapshot.data
-                                          ? CustomIcons.valid
-                                          : CustomIcons.invalid);
+                                  return GestureDetector(
+                                    onTap: () {
+                                      field.check(field.controller.text,
+                                          context: context);
+                                    },
+                                    child: Padding(
+                                        padding: EdgeInsets.only(left: 4.0),
+                                        child: snapshot.data
+                                            ? CustomIcons.valid
+                                            : CustomIcons.invalid),
+                                  );
                                 }
                               },
                             ),
-                        ),
+                          ),
                     onSubmitted: (_) {
                       if (i < widget.items.length - 1) {
                         FocusScope.of(context)
