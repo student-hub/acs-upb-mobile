@@ -254,4 +254,37 @@ void main() {
       verify(mockObserver.didPop(any, any));
     });
   });
+
+  group('Sign out', () {
+    MockNavigatorObserver mockObserver = MockNavigatorObserver();
+
+    setUp(() {
+      // Mock an anonymous user already being logged in
+      when(mockAuthProvider.isAuthenticatedFromCache).thenReturn(true);
+      when(mockAuthProvider.isAuthenticatedFromService)
+          .thenAnswer((realInvocation) => Future.value(true));
+      when(mockAuthProvider.isAnonymous).thenReturn(true);
+    });
+
+    testWidgets('Sign out', (WidgetTester tester) async {
+      await tester.pumpWidget(ChangeNotifierProvider<AuthProvider>(
+          create: (_) => mockAuthProvider,
+          child: MyApp(navigationObservers: [mockObserver])));
+      await tester.pumpAndSettle();
+
+      verify(mockObserver.didPush(any, any));
+      expect(find.byType(HomePage), findsOneWidget);
+
+      // Open profile page
+      await tester.tap(find.byIcon(Icons.person));
+      await tester.pumpAndSettle();
+
+      // Press log out button
+      await tester.tap(find.text('Log out'));
+      await tester.pumpAndSettle();
+
+      verify(mockAuthProvider.signOut(any));
+      expect(find.byType(LoginView), findsOneWidget);
+    });
+  });
 }
