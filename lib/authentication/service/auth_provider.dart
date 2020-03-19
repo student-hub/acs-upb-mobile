@@ -15,7 +15,8 @@ extension DatabaseUser on User {
         uid: snap.documentID,
         firstName: snap.data['name']['first'],
         lastName: snap.data['name']['last'],
-        group: snap.data['group']);
+        group: snap.data['group'],
+        permissionLevel: snap.data['permissionLevel']);
   }
 
   Map<String, dynamic> toData() {
