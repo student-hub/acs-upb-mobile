@@ -178,15 +178,35 @@ class AuthProvider with ChangeNotifier {
 
   Future<void> signOut(BuildContext context) async {
     if (isAnonymous) {
-      try {
-        firebaseUser.delete();
-      } catch (e) {
-        _errorHandler(e, null);
-      }
+      delete();
     }
 
     Provider.of<FilterProvider>(context, listen: false).resetFilter();
     return await FirebaseAuth.instance.signOut();
+  }
+
+  Future<bool> delete({BuildContext context}) async {
+    if (firebaseUser == null) {
+      firebaseUser = await FirebaseAuth.instance.currentUser();
+    }
+
+    assert(firebaseUser != null);
+
+    DocumentReference ref =
+        Firestore.instance.collection('users').document(firebaseUser.uid);
+    ref?.delete();
+
+    try {
+      firebaseUser.delete();
+    } catch (e) {
+      _errorHandler(e, context);
+      return false;
+    }
+
+    if (context != null) {
+      AppToast.show(S.of(context).messageAccountDeleted);
+    }
+    return true;
   }
 
   Future<bool> canSignInWithPassword(

@@ -246,6 +246,15 @@ class S {
     );
   }
 
+  String get actionDeleteAccount {
+    return Intl.message(
+      'Delete account',
+      name: 'actionDeleteAccount',
+      desc: '',
+      args: [],
+    );
+  }
+
   String get errorSomethingWentWrong {
     return Intl.message(
       'Something went wrong.',
@@ -624,6 +633,15 @@ class S {
     );
   }
 
+  String get messageAccountDeleted {
+    return Intl.message(
+      'Account deleted successfully.',
+      name: 'messageAccountDeleted',
+      desc: '',
+      args: [],
+    );
+  }
+
   String get messageCheckEmailVerification {
     return Intl.message(
       'Please check your email for account verification.',
@@ -637,6 +655,24 @@ class S {
     return Intl.message(
       'Enter your e-mai in order to receive instructions on how to reset your password.',
       name: 'messageResetPassword',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get messageDeleteAccount {
+    return Intl.message(
+      'Are you sure you want to delete your account?',
+      name: 'messageDeleteAccount',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get messageCannotBeUndone {
+    return Intl.message(
+      'This action cannot be undone.',
+      name: 'messageCannotBeUndone',
       desc: '',
       args: [],
     );

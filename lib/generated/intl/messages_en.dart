@@ -31,6 +31,7 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
+    "actionDeleteAccount" : MessageLookupByLibrary.simpleMessage("Delete account"),
     "actionLogIn" : MessageLookupByLibrary.simpleMessage("Log in"),
     "actionLogInAnonymously" : MessageLookupByLibrary.simpleMessage("Log in anonymously"),
     "actionLogOut" : MessageLookupByLibrary.simpleMessage("Log out"),
@@ -70,7 +71,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "labelLastName" : MessageLookupByLibrary.simpleMessage("Last name"),
     "labelPassword" : MessageLookupByLibrary.simpleMessage("Password"),
     "messageAccountCreated" : MessageLookupByLibrary.simpleMessage("Account created successfully."),
+    "messageAccountDeleted" : MessageLookupByLibrary.simpleMessage("Account deleted successfully."),
+    "messageCannotBeUndone" : MessageLookupByLibrary.simpleMessage("This action cannot be undone."),
     "messageCheckEmailVerification" : MessageLookupByLibrary.simpleMessage("Please check your email for account verification."),
+    "messageDeleteAccount" : MessageLookupByLibrary.simpleMessage("Are you sure you want to delete your account?"),
     "messageEmailNotVerified" : MessageLookupByLibrary.simpleMessage("Account is not verified."),
     "messageNewUser" : MessageLookupByLibrary.simpleMessage("New user?"),
     "messageResetPassword" : MessageLookupByLibrary.simpleMessage("Enter your e-mai in order to receive instructions on how to reset your password."),
