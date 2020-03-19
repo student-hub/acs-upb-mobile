@@ -183,6 +183,15 @@ class S {
     );
   }
 
+  String get actionLogOut {
+    return Intl.message(
+      'Log out',
+      name: 'actionLogOut',
+      desc: '',
+      args: [],
+    );
+  }
+
   String get actionLogInAnonymously {
     return Intl.message(
       'Log in anonymously',
@@ -223,6 +232,15 @@ class S {
     return Intl.message(
       'Send e-mail',
       name: 'actionSendEmail',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get actionSendVerificationAgain {
+    return Intl.message(
+      'Send e-mail again?',
+      name: 'actionSendVerificationAgain',
       desc: '',
       args: [],
     );
@@ -588,6 +606,15 @@ class S {
     );
   }
 
+  String get messageEmailNotVerified {
+    return Intl.message(
+      'Account is not verified.',
+      name: 'messageEmailNotVerified',
+      desc: '',
+      args: [],
+    );
+  }
+
   String get messageAccountCreated {
     return Intl.message(
       'Account created successfully.',
@@ -601,6 +628,15 @@ class S {
     return Intl.message(
       'Please check your email for account verification.',
       name: 'messageCheckEmailVerification',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get messageSignInAfterVerification {
+    return Intl.message(
+      'You may need to sign in again after verification.',
+      name: 'messageSignInAfterVerification',
       desc: '',
       args: [],
     );
@@ -637,6 +673,15 @@ class S {
     return Intl.message(
       '@stud.acs.upb.ro',
       name: 'stringEmailDomain',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get stringAnonymous {
+    return Intl.message(
+      'Anonymous',
+      name: 'stringAnonymous',
       desc: '',
       args: [],
     );
