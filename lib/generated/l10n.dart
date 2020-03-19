@@ -16,7 +16,7 @@ class S {
     AppLocalizationDelegate();
 
   static Future<S> load(Locale locale) {
-    final String name = locale.countryCode.isEmpty ? locale.languageCode : locale.toString();
+    final String name = (locale.countryCode?.isEmpty ?? false) ? locale.languageCode : locale.toString();
     final String localeName = Intl.canonicalizedLocale(name);
     return initializeMessages(localeName).then((_) {
       Intl.defaultLocale = localeName;
@@ -597,6 +597,15 @@ class S {
     );
   }
 
+  String get messageCheckEmailVerification {
+    return Intl.message(
+      'Please check your email for account verification.',
+      name: 'messageCheckEmailVerification',
+      desc: '',
+      args: [],
+    );
+  }
+
   String get messageResetPassword {
     return Intl.message(
       'Enter your e-mai in order to receive instructions on how to reset your password.',
@@ -648,7 +657,7 @@ class AppLocalizationDelegate extends LocalizationsDelegate<S> {
 
   List<Locale> get supportedLocales {
     return const <Locale>[
-      Locale('en', ''), Locale('ro', ''),
+      Locale.fromSubtags(languageCode: 'en'), Locale.fromSubtags(languageCode: 'ro'),
     ];
   }
 

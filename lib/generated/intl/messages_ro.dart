@@ -68,6 +68,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "labelLastName" : MessageLookupByLibrary.simpleMessage("Nume"),
     "labelPassword" : MessageLookupByLibrary.simpleMessage("Parolă"),
     "messageAccountCreated" : MessageLookupByLibrary.simpleMessage("Contul a fost creat cu succes."),
+    "messageCheckEmailVerification" : MessageLookupByLibrary.simpleMessage("Verificați-vă mail-ul pentru confirmarea contului."),
     "messageNewUser" : MessageLookupByLibrary.simpleMessage("Utilizator nou?"),
     "messageResetPassword" : MessageLookupByLibrary.simpleMessage("Introduceți mail-ul pentru a primi instrucțiuni de resetare a parolei."),
     "messageUnderConstruction" : MessageLookupByLibrary.simpleMessage("În construcție"),

@@ -71,6 +71,7 @@
   "messageWelcomeName": "Welcome, {name}!",
   "messageNewUser": "New user?",
   "messageAccountCreated": "Account created successfully.",
+  "messageCheckEmailVerification": "Please check your email for account verification.",
   "messageResetPassword": "Enter your e-mai in order to receive instructions on how to reset your password.",
   "messageUnderConstruction": "Under construction",
 

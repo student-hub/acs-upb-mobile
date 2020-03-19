@@ -27,7 +27,7 @@ extension DatabaseUser on User {
 }
 
 class AuthProvider with ChangeNotifier {
-  FirebaseUser firebaseUser;  // TODO: Make this private
+  FirebaseUser firebaseUser; // TODO: Make this private
   StreamSubscription userAuthSub;
 
   AuthProvider() {
@@ -109,8 +109,10 @@ class AuthProvider with ChangeNotifier {
     if (isAnonymous) {
       return null;
     }
-    DocumentSnapshot snapshot =
-        await Firestore.instance.collection('users').document(firebaseUser.uid).get();
+    DocumentSnapshot snapshot = await Firestore.instance
+        .collection('users')
+        .document(firebaseUser.uid)
+        .get();
     return DatabaseUser.fromSnap(snapshot);
   }
 
@@ -290,7 +292,12 @@ class AuthProvider with ChangeNotifier {
           Firestore.instance.collection('users').document(user.uid);
       ref.setData(user.toData());
 
-      AppToast.show(S.of(context).messageAccountCreated);
+      // Send verification e-mail
+      await firebaseUser.sendEmailVerification();
+
+      AppToast.show(S.of(context).messageAccountCreated +
+          ' ' +
+          S.of(context).messageCheckEmailVerification);
       return true;
     } catch (e) {
       _errorHandler(e, context);
