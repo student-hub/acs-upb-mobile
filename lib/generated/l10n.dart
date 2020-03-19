@@ -633,6 +633,15 @@ class S {
     );
   }
 
+  String get messageAccountDeleted {
+    return Intl.message(
+      'Account deleted successfully.',
+      name: 'messageAccountDeleted',
+      desc: '',
+      args: [],
+    );
+  }
+
   String get messageCheckEmailVerification {
     return Intl.message(
       'Please check your email for account verification.',

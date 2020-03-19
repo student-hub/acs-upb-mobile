@@ -185,7 +185,7 @@ class AuthProvider with ChangeNotifier {
     return await FirebaseAuth.instance.signOut();
   }
 
-  Future<void> delete({BuildContext context}) async {
+  Future<bool> delete({BuildContext context}) async {
     if (firebaseUser == null) {
       firebaseUser = await FirebaseAuth.instance.currentUser();
     }
@@ -200,7 +200,13 @@ class AuthProvider with ChangeNotifier {
       firebaseUser.delete();
     } catch (e) {
       _errorHandler(e, context);
+      return false;
     }
+
+    if (context != null) {
+      AppToast.show(S.of(context).messageAccountDeleted);
+    }
+    return true;
   }
 
   Future<bool> canSignInWithPassword(

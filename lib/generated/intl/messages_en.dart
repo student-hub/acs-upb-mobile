@@ -71,6 +71,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "labelLastName" : MessageLookupByLibrary.simpleMessage("Last name"),
     "labelPassword" : MessageLookupByLibrary.simpleMessage("Password"),
     "messageAccountCreated" : MessageLookupByLibrary.simpleMessage("Account created successfully."),
+    "messageAccountDeleted" : MessageLookupByLibrary.simpleMessage("Account deleted successfully."),
     "messageCheckEmailVerification" : MessageLookupByLibrary.simpleMessage("Please check your email for account verification."),
     "messageEmailNotVerified" : MessageLookupByLibrary.simpleMessage("Account is not verified."),
     "messageNewUser" : MessageLookupByLibrary.simpleMessage("New user?"),

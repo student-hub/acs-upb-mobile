@@ -8,6 +8,13 @@ import 'package:provider/provider.dart';
 class ProfilePage extends StatelessWidget {
   ProfilePage({Key key}) : super(key: key);
 
+  Future<void> _signOut(BuildContext context) async {
+    AuthProvider authProvider =
+        Provider.of<AuthProvider>(context, listen: false);
+    authProvider.signOut(context);
+    Navigator.pushReplacementNamed(context, Routes.login);
+  }
+
   Widget _accountNotVerifiedFooter(BuildContext context) {
     AuthProvider authProvider = Provider.of<AuthProvider>(context);
 
@@ -72,7 +79,12 @@ class ProfilePage extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: InkWell(
-        onTap: () => authProvider.delete(context: context),
+        onTap: () async {
+          bool res = await authProvider.delete(context: context);
+          if (res) {
+            _signOut(context);
+          }
+        },
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
@@ -126,9 +138,8 @@ class ProfilePage extends StatelessWidget {
             ),
             SizedBox(height: 4),
             InkWell(
-              onTap: () async {
-                authProvider.signOut(context);
-                await Navigator.pushReplacementNamed(context, Routes.login);
+              onTap: () {
+                _signOut(context);
               },
               child: Text(S.of(context).actionLogOut,
                   style: Theme.of(context)
