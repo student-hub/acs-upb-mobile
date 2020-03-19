@@ -75,6 +75,9 @@ class _MyAppState extends State<MyApp> {
       data: (brightness) => ThemeData(
           brightness: brightness,
           accentColor: _accentColor,
+          // The following two lines are meant to remove the splash effect
+          splashColor: Colors.transparent,
+          highlightColor: Colors.transparent,
           accentTextTheme: ThemeData().accentTextTheme.apply(
               fontFamily: 'Montserrat',
               bodyColor: _accentColor,
