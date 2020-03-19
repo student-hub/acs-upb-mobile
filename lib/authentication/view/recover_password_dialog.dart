@@ -2,7 +2,6 @@ import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/widgets/button.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
 class ResetPassword {
@@ -58,7 +57,7 @@ class ResetPassword {
                 AppButton(
                   key: ValueKey('send_email_button'),
                   text: S.of(context).actionSendEmail.toUpperCase(),
-                  width: ScreenUtil().setWidth(200),
+                  width: 130,
                   onTap: () async {
                     bool success = await authProvider.sendPasswordResetEmail(
                         email: emailController.text +
