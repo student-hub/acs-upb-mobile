@@ -18,16 +18,16 @@ class AppScaffold extends StatelessWidget {
       this.enableMenu = false,
       this.menuIcon = Icons.settings,
       this.menuRoute = Routes.settings,
-      this.menuName,  // By default, S.of(context).navigationSettings
+      this.menuName, // By default, S.of(context).navigationSettings
       this.floatingActionButton});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: body ??
-            Column(
+      body: body ??
+          Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
@@ -45,7 +45,7 @@ class AppScaffold extends StatelessWidget {
                 Expanded(child: Container()),
               ],
             ),
-      ),
+          ),
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(40.0),
         child: AppBar(

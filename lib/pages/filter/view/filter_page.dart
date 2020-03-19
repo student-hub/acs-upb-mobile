@@ -62,10 +62,10 @@ class FilterPageState extends State<FilterPage> {
     optionsByLevel.putIfAbsent(level, () => <Widget>[]);
 
     // Add list of options
-    List<Widget> listItems = [];
+    List<Widget> listItems = [SizedBox(width: 10)];
     optionsByLevel[level].add(
       Padding(
-        padding: const EdgeInsets.only(left: 10.0, right: 10.0, bottom: 10.0),
+        padding: const EdgeInsets.only(bottom: 10.0),
         child: Container(
           height: 40,
           child: ListView(
@@ -126,7 +126,8 @@ class FilterPageState extends State<FilterPage> {
                 widgets.add(Padding(
                   padding: const EdgeInsets.all(10.0),
                   child: Text(
-                      filter.localizedLevelNames[i][Utils.getLocaleString(context)],
+                      filter.localizedLevelNames[i]
+                          [Utils.getLocaleString(context)],
                       style: Theme.of(context).textTheme.headline6),
                 ));
 
