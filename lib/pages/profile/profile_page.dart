@@ -75,23 +75,25 @@ class ProfilePage extends StatelessWidget {
         onTap: () async {
           showDialog(context: context, builder: _deletionConfirmationDialog);
         },
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Icon(
-              Icons.delete,
-              size: Theme.of(context).textTheme.subtitle1.fontSize,
-              color: Colors.red,
-            ),
-            SizedBox(width: 4),
-            Text(
-              S.of(context).actionDeleteAccount,
-              style: Theme.of(context)
-                  .textTheme
-                  .subtitle2
-                  .apply(color: Colors.red, fontWeightDelta: 1),
-            ),
-          ],
+        child: IntrinsicWidth(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Icon(
+                Icons.delete,
+                size: Theme.of(context).textTheme.subtitle1.fontSize,
+                color: Colors.red,
+              ),
+              SizedBox(width: 4),
+              Text(
+                S.of(context).actionDeleteAccount,
+                style: Theme.of(context)
+                    .textTheme
+                    .subtitle2
+                    .apply(color: Colors.red, fontWeightDelta: 1),
+              ),
+            ],
+          ),
         ),
       ),
     );
