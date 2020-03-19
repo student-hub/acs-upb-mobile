@@ -55,7 +55,7 @@ class _MyAppState extends State<MyApp> {
       theme: theme,
       initialRoute: Routes.root,
       routes: {
-        Routes.root: (_) => buildSplashScreen(context),
+        Routes.root: (_) => AppLoadingScreen(),
         Routes.home: (_) => ChangeNotifierProvider<BottomNavigationBarProvider>(
             child: AppBottomNavigationBar(),
             create: (_) => BottomNavigationBarProvider()),
@@ -65,25 +65,6 @@ class _MyAppState extends State<MyApp> {
         Routes.signUp: (_) => SignUpView(),
       },
       navigatorObservers: widget.navigationObservers ?? [],
-    );
-  }
-
-  Future<String> setUpAndChooseStartScreen(BuildContext context) async {
-    // Load locale from settings
-    S.load(Utils.getLocale(context));
-
-    AuthProvider authProvider =
-        Provider.of<AuthProvider>(context, listen: false);
-    bool authenticated = await authProvider.isAuthenticatedFromService;
-    return authenticated ? Routes.home : Routes.login;
-  }
-
-  Widget buildSplashScreen(BuildContext context) {
-    return LoadingScreen(
-      navigateAfterFuture: setUpAndChooseStartScreen(context),
-      loadingText: Text('Setting up...'),
-      image: Image.asset('assets/icons/acs_logo.png'),
-      loaderColor: Theme.of(context).accentColor,
     );
   }
 
@@ -120,6 +101,28 @@ class _MyAppState extends State<MyApp> {
           ),
         );
       },
+    );
+  }
+}
+
+class AppLoadingScreen extends StatelessWidget {
+  Future<String> _setUpAndChooseStartScreen(BuildContext context) async {
+    // Load locale from settings
+    S.load(Utils.getLocale(context));
+
+    AuthProvider authProvider =
+    Provider.of<AuthProvider>(context, listen: false);
+    bool authenticated = await authProvider.isAuthenticatedFromService;
+    return authenticated ? Routes.home : Routes.login;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return LoadingScreen(
+      navigateAfterFuture: _setUpAndChooseStartScreen(context),
+      loadingText: Text('Setting up...'),
+      image: Image.asset('assets/icons/acs_logo.png'),
+      loaderColor: Theme.of(context).accentColor,
     );
   }
 }
