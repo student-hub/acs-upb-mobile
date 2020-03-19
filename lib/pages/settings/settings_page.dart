@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:acs_upb_mobile/generated/l10n.dart';
+import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/material.dart';
@@ -81,7 +82,7 @@ class SettingsPageState extends State<SettingsPage> {
       onSelect: () {
         // Reload settings page
         setState(() {
-          S.load(getLocale(context, preference));
+          S.load(Utils.getLocaleFromString(context, preference));
           Navigator.of(context).pop();
 
           // Hack to notify all widgets that something changed, since the
@@ -105,20 +106,6 @@ class SettingsPageState extends State<SettingsPage> {
       default:
         stderr.writeln("Invalid preference string: $preference");
         return S.of(context).settingsItemLanguageAuto;
-    }
-  }
-
-  Locale getLocale(BuildContext context, String preference) {
-    switch (preference) {
-      case 'en':
-        return Locale('en', 'US');
-      case 'ro':
-        return Locale('ro', 'RO');
-      case 'auto':
-        return getLocale(context, S.of(context).localeName);
-      default:
-        stderr.writeln("Invalid preference string: $preference");
-        return getLocale(context, S.of(context).localeName);
     }
   }
 }

@@ -9,6 +9,7 @@ import 'package:acs_upb_mobile/pages/filter/view/filter_page.dart';
 import 'package:acs_upb_mobile/pages/portal/service/website_provider.dart';
 import 'package:acs_upb_mobile/pages/settings/settings_page.dart';
 import 'package:acs_upb_mobile/resources/storage_provider.dart';
+import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/widgets/loading_screen.dart';
 import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/material.dart';
@@ -21,7 +22,6 @@ main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await PrefService.init(prefix: 'pref_');
   PrefService.setDefaultValues({'language': 'auto'});
-  PrefService.setDefaultValues({'relevantNodes': null});
 
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider<AuthProvider>(create: (_) => AuthProvider()),
@@ -68,7 +68,10 @@ class _MyAppState extends State<MyApp> {
     );
   }
 
-  Future<String> chooseStartScreen() async {
+  Future<String> setUpAndChooseStartScreen(BuildContext context) async {
+    // Load locale from settings
+    S.load(Utils.getLocale(context));
+
     AuthProvider authProvider =
         Provider.of<AuthProvider>(context, listen: false);
     bool authenticated = await authProvider.isAuthenticatedFromService;
@@ -77,8 +80,8 @@ class _MyAppState extends State<MyApp> {
 
   Widget buildSplashScreen(BuildContext context) {
     return LoadingScreen(
-      navigateAfterFuture: chooseStartScreen(),
-      loadingText: Text('Signing in...'),
+      navigateAfterFuture: setUpAndChooseStartScreen(context),
+      loadingText: Text('Setting up...'),
       image: Image.asset('assets/icons/acs_logo.png'),
       loaderColor: Theme.of(context).accentColor,
     );
