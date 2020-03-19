@@ -124,7 +124,7 @@ class _LoginViewState extends State<LoginView> {
               constraints: BoxConstraints(
                   maxHeight: MediaQuery.of(context).size.height / 4),
               child: Image.asset("assets/images/city_doodle.png",
-                  color: Theme.of(context).primaryColor.withOpacity(0.4)),
+                  color: Theme.of(context).accentColor.withOpacity(0.4)),
             ),
           ),
           SingleChildScrollView(
