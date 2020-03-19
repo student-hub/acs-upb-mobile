@@ -1,3 +1,4 @@
+import 'package:acs_upb_mobile/authentication/model/user.dart';
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/navigation/routes.dart';
@@ -174,14 +175,22 @@ class ProfilePage extends StatelessWidget {
                       'assets/illustrations/undraw_profile_pic.png')),
             ),
             SizedBox(height: 8),
-            Text(
-              authProvider.firebaseUser?.displayName ??
-                  S.of(context).stringAnonymous,
-              style: Theme.of(context)
-                  .textTheme
-                  .subtitle1
-                  .apply(fontWeightDelta: 2),
-            ),
+            FutureBuilder(
+                future: authProvider.currentUser,
+                builder: (BuildContext context, AsyncSnapshot<User> snap) {
+                  String userName;
+                  if (snap.hasData) {
+                    User user = snap.data;
+                    userName = user.firstName + ' ' + user.lastName;
+                  }
+                  return Text(
+                    userName ?? S.of(context).stringAnonymous,
+                    style: Theme.of(context)
+                        .textTheme
+                        .subtitle1
+                        .apply(fontWeightDelta: 2),
+                  );
+                }),
             SizedBox(height: 4),
             InkWell(
               onTap: () {

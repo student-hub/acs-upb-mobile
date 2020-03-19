@@ -66,7 +66,7 @@ class FilterProvider with ChangeNotifier {
         AuthProvider authProvider =
             Provider.of<AuthProvider>(context, listen: false);
         if (authProvider.isAuthenticatedFromCache) {
-          User user = await authProvider.getCurrentUser();
+          User user = await authProvider.currentUser;
           // Try to set the default as the user's group
           if (user != null) {
             _relevanceFilter.setRelevantUpToRoot(user.group);
