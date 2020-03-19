@@ -338,7 +338,7 @@ class S {
 
   String get errorTooManyRequests {
     return Intl.message(
-      'There have been too many unsuccessful login attempts from this device.',
+      'There have been too many requests from this device.',
       name: 'errorTooManyRequests',
       desc: '',
       args: [],

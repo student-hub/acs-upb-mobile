@@ -37,7 +37,7 @@
   "errorEmailInUse": "There is already an account associated with this e-mail address",
   "errorEmailNotFound": "An account associated with that e-mail could not be found. Please sign up instead.",
   "errorAccountDisabled": "The account has been disabled.",
-  "errorTooManyRequests": "There have been too many unsuccessful login attempts from this device.",
+  "errorTooManyRequests": "There have been too many requests from this device.",
   "errorCouldNotLaunchURL": "Could not launch '{url}'.",
 
   "warningInternetConnection": "Please make sure you are connected to the internet.",

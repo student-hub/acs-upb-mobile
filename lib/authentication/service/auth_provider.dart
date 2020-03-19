@@ -332,11 +332,17 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
-  Future<void> sendEmailVerification({BuildContext context}) async {
-    await firebaseUser.sendEmailVerification();
+  Future<bool> sendEmailVerification({BuildContext context}) async {
+    try {
+      await firebaseUser.sendEmailVerification();
+    } catch (e) {
+      _errorHandler(e, context);
+      return false;
+    }
 
     if (context != null) {
       AppToast.show(S.of(context).messageCheckEmailVerification);
     }
+    return true;
   }
 }

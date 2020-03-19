@@ -37,7 +37,7 @@
   "errorEmailInUse": "Există deja un cont asociat acestui e-mail.",
   "errorEmailNotFound": "Nu am putut găsi un cont asociat cu adresa de mail. Vă rugăm să vă înregistrați.",
   "errorAccountDisabled": "Contul a fost dezactivat.",
-  "errorTooManyRequests": "Au fost prea multe încercări de conectare nereușite.",
+  "errorTooManyRequests": "Au fost trimise prea multe cereri de pe acest dispozitiv.",
   "errorCouldNotLaunchURL": "Nu s-a putut deschide '{url}'.",
 
   "warningInternetConnection": "Asigurați-vă că sunteți conectat la internet.",

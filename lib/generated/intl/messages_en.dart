@@ -55,7 +55,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "errorNoPassword" : MessageLookupByLibrary.simpleMessage("You need to provide a password."),
     "errorPasswordsDiffer" : MessageLookupByLibrary.simpleMessage("The two passwords differ."),
     "errorSomethingWentWrong" : MessageLookupByLibrary.simpleMessage("Something went wrong."),
-    "errorTooManyRequests" : MessageLookupByLibrary.simpleMessage("There have been too many unsuccessful login attempts from this device."),
+    "errorTooManyRequests" : MessageLookupByLibrary.simpleMessage("There have been too many requests from this device."),
     "fileAcsBanner" : MessageLookupByLibrary.simpleMessage("assets/images/acs_banner_en.png"),
     "hintEmail" : MessageLookupByLibrary.simpleMessage("john.doe"),
     "hintFirstName" : MessageLookupByLibrary.simpleMessage("John"),
