@@ -108,8 +108,8 @@ class ProfilePage extends StatelessWidget {
           SizedBox(height: 4),
           InkWell(
             onTap: () async {
-              await Navigator.pushReplacementNamed(context, Routes.login);
               authProvider.signOut(context);
+              await Navigator.pushReplacementNamed(context, Routes.login);
             },
             child: Text(S.of(context).actionLogOut,
                 style: Theme.of(context)
