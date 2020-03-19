@@ -46,11 +46,11 @@ void main() {
 
     // Pretend an anonymous user is already logged in
     mockAuthProvider = MockAuthProvider();
-    when(mockAuthProvider.isAuthenticated).thenReturn(true);
+    when(mockAuthProvider.isAuthenticatedFromCache).thenReturn(true);
     // ignore: invalid_use_of_protected_member
     when(mockAuthProvider.hasListeners).thenReturn(false);
     when(mockAuthProvider.isAnonymous).thenReturn(true);
-    when(mockAuthProvider.isAuthenticatedAsync)
+    when(mockAuthProvider.isAuthenticatedFromService)
         .thenAnswer((_) => Future.value(true));
 
     mockStorageProvider = MockStorageProvider();

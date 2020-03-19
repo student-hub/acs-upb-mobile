@@ -65,7 +65,7 @@ class FilterProvider with ChangeNotifier {
       if (relevantNodes == null) {
         AuthProvider authProvider =
             Provider.of<AuthProvider>(context, listen: false);
-        if (authProvider.isAuthenticated) {
+        if (authProvider.isAuthenticatedFromCache) {
           User user = await authProvider.getCurrentUser();
           // Try to set the default as the user's group
           if (user != null) {

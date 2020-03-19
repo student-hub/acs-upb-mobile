@@ -71,7 +71,7 @@ class _MyAppState extends State<MyApp> {
   Future<String> chooseStartScreen() async {
     AuthProvider authProvider =
         Provider.of<AuthProvider>(context, listen: false);
-    bool authenticated = await authProvider.isAuthenticatedAsync;
+    bool authenticated = await authProvider.isAuthenticatedFromService;
     return authenticated ? Routes.home : Routes.login;
   }
 

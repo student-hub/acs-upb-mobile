@@ -94,14 +94,18 @@ class AuthProvider with ChangeNotifier {
     return isAnonymousUser;
   }
 
-  bool get isAuthenticated {
+  /// Check the memory cache to see if there is a user authenticated
+  bool get isAuthenticatedFromCache {
     return firebaseUser != null;
   }
 
-  Future<bool> get isAuthenticatedAsync async {
-    if (firebaseUser == null) {
-      firebaseUser = await FirebaseAuth.instance.currentUser();
-    }
+  /// Check the filesystem to see if there is a user authenticated.
+  ///
+  /// This method is [async] and should only be necessary on app startup, since
+  /// for everything else, the [AuthProvider] will notify its listeners and
+  /// update the cache if the authentication state changes.
+  Future<bool> get isAuthenticatedFromService async {
+    firebaseUser = await FirebaseAuth.instance.currentUser();
     return firebaseUser != null;
   }
 
@@ -295,13 +299,23 @@ class AuthProvider with ChangeNotifier {
       // Send verification e-mail
       await firebaseUser.sendEmailVerification();
 
-      AppToast.show(S.of(context).messageAccountCreated +
-          ' ' +
-          S.of(context).messageCheckEmailVerification);
+      if (context != null) {
+        AppToast.show(S.of(context).messageAccountCreated +
+            ' ' +
+            S.of(context).messageCheckEmailVerification);
+      }
       return true;
     } catch (e) {
       _errorHandler(e, context);
       return false;
+    }
+  }
+
+  Future<void> sendEmailVerification({BuildContext context}) async {
+    await firebaseUser.sendEmailVerification();
+
+    if (context != null) {
+      AppToast.show(S.of(context).messageCheckEmailVerification);
     }
   }
 }

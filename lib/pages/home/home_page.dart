@@ -14,7 +14,7 @@ class HomePage extends StatelessWidget {
         enableMenu: true,
         body: Center(
             child: Text(
-                !authProvider.isAuthenticated || authProvider.isAnonymous
+                !authProvider.isAuthenticatedFromCache || authProvider.isAnonymous
                     ? S.of(context).messageWelcomeSimple
                     : S.of(context).messageWelcomeName(
                         authProvider.firebaseUser.displayName))));

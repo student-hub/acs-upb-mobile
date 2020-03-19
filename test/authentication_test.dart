@@ -27,8 +27,8 @@ void main() {
     mockAuthProvider = MockAuthProvider();
     // ignore: invalid_use_of_protected_member
     when(mockAuthProvider.hasListeners).thenReturn(false);
-    when(mockAuthProvider.isAuthenticated).thenReturn(false);
-    when(mockAuthProvider.isAuthenticatedAsync)
+    when(mockAuthProvider.isAuthenticatedFromCache).thenReturn(false);
+    when(mockAuthProvider.isAuthenticatedFromService)
         .thenAnswer((realInvocation) => Future.value(false));
   });
 
