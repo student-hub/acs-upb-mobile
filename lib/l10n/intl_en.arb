@@ -75,7 +75,6 @@
   "messageEmailNotVerified": "Account is not verified.",
   "messageAccountCreated": "Account created successfully.",
   "messageCheckEmailVerification": "Please check your email for account verification.",
-  "messageSignInAfterVerification": "You may need to sign in again after verification.",
   "messageResetPassword": "Enter your e-mai in order to receive instructions on how to reset your password.",
   "messageUnderConstruction": "Under construction",
 

@@ -74,7 +74,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "messageEmailNotVerified" : MessageLookupByLibrary.simpleMessage("Account is not verified."),
     "messageNewUser" : MessageLookupByLibrary.simpleMessage("New user?"),
     "messageResetPassword" : MessageLookupByLibrary.simpleMessage("Enter your e-mai in order to receive instructions on how to reset your password."),
-    "messageSignInAfterVerification" : MessageLookupByLibrary.simpleMessage("You may need to sign in again after verification."),
     "messageUnderConstruction" : MessageLookupByLibrary.simpleMessage("Under construction"),
     "messageWelcomeName" : m2,
     "messageWelcomeSimple" : MessageLookupByLibrary.simpleMessage("Welcome!"),

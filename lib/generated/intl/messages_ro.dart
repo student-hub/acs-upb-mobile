@@ -74,7 +74,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "messageEmailNotVerified" : MessageLookupByLibrary.simpleMessage("Contul nu este verificat."),
     "messageNewUser" : MessageLookupByLibrary.simpleMessage("Utilizator nou?"),
     "messageResetPassword" : MessageLookupByLibrary.simpleMessage("Introduceți mail-ul pentru a primi instrucțiuni de resetare a parolei."),
-    "messageSignInAfterVerification" : MessageLookupByLibrary.simpleMessage("Va trebui să vă conectați din nou după verificare."),
     "messageUnderConstruction" : MessageLookupByLibrary.simpleMessage("În construcție"),
     "messageWelcomeName" : m2,
     "messageWelcomeSimple" : MessageLookupByLibrary.simpleMessage("Bine ai venit!"),

@@ -75,7 +75,6 @@
   "messageEmailNotVerified": "Contul nu este verificat.",
   "messageAccountCreated": "Contul a fost creat cu succes.",
   "messageCheckEmailVerification": "Verificați-vă mail-ul pentru confirmarea contului.",
-  "messageSignInAfterVerification": "Va trebui să vă conectați din nou după verificare.",
   "messageResetPassword": "Introduceți mail-ul pentru a primi instrucțiuni de resetare a parolei.",
   "messageUnderConstruction": "În construcție",
 

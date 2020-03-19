@@ -102,6 +102,7 @@ class AuthProvider with ChangeNotifier {
 
   /// Check the network to see if there is a user authenticated
   Future<bool> get isVerifiedFromService async {
+    firebaseUser.reload();
     firebaseUser = await FirebaseAuth.instance.currentUser();
     return firebaseUser.isEmailVerified;
   }

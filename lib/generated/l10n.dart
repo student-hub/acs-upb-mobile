@@ -633,15 +633,6 @@ class S {
     );
   }
 
-  String get messageSignInAfterVerification {
-    return Intl.message(
-      'You may need to sign in again after verification.',
-      name: 'messageSignInAfterVerification',
-      desc: '',
-      args: [],
-    );
-  }
-
   String get messageResetPassword {
     return Intl.message(
       'Enter your e-mai in order to receive instructions on how to reset your password.',
