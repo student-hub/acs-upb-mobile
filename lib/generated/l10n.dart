@@ -660,6 +660,24 @@ class S {
     );
   }
 
+  String get messageDeleteAccount {
+    return Intl.message(
+      'Are you sure you want to delete your account?',
+      name: 'messageDeleteAccount',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get messageCannotBeUndone {
+    return Intl.message(
+      'This action cannot be undone.',
+      name: 'messageCannotBeUndone',
+      desc: '',
+      args: [],
+    );
+  }
+
   String get messageUnderConstruction {
     return Intl.message(
       'Under construction',
