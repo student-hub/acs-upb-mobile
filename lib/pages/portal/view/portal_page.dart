@@ -59,51 +59,82 @@ class _PortalPageState extends State<PortalPage> {
         ),
       );
 
+  Widget addWebsiteButton({bool trailing = false}) => Padding(
+        padding: const EdgeInsets.only(top: 8.0, left: 8.0, right: 8.0),
+        child: CircleImage(
+          icon: Icon(
+            Icons.add,
+            color: Theme.of(context).unselectedWidgetColor,
+          ),
+          label: trailing ? "" : null,
+          circleScaleFactor: 0.6,
+          // Only align when there is no other website in the category
+          alignWhenScaling: !trailing,
+        ),
+      );
+
   Widget listCategory(String category, List<Website> websites) {
-    if (websites == null || websites.isEmpty) {
-      return Container();
-    }
     StorageProvider storageProvider = Provider.of<StorageProvider>(context);
 
     return Padding(
       padding: const EdgeInsets.only(left: 8.0, right: 8.0),
       child: spoiler(
         title: category,
-        content: Container(
-          height: min(MediaQuery.of(context).size.width,
-                      MediaQuery.of(context).size.height) /
-                  5 + // circle
-              8 + // padding
-              ScreenUtil().setHeight(80), // text
-          child: ListView(
-            scrollDirection: Axis.horizontal,
-            children: websites
-                .map((website) => Padding(
-                    padding:
-                        const EdgeInsets.only(top: 8.0, left: 8.0, right: 8.0),
-                    child: FutureBuilder<ImageProvider<dynamic>>(
-                      future:
-                          storageProvider.getImageFromPath(website.iconPath),
-                      builder: (context, snapshot) {
-                        var image;
-                        if (snapshot.hasData) {
-                          image = snapshot.data;
-                        } else {
-                          image = AssetImage('assets/' + website.iconPath) ??
-                              AssetImage('assets/images/white.png');
-                        }
-                        return CircleImage(
-                          label: website.label,
-                          tooltip:
-                              website.infoByLocale[Utils.getLocaleString(context)],
-                          image: image,
-                          onTap: () => _launchURL(website.link),
-                        );
-                      },
-                    )))
-                .toList(),
-          ),
-        ),
+        content: websites == null || websites.isEmpty
+            ? Container(
+                height: min(MediaQuery.of(context).size.width,
+                            MediaQuery.of(context).size.height) /
+                        5 + // circle
+                    8, // padding
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 8.0),
+                  child: Row(
+                    children: <Widget>[
+                      addWebsiteButton(),
+                    ],
+                  ),
+                ),
+              )
+            : Container(
+                height: min(MediaQuery.of(context).size.width,
+                            MediaQuery.of(context).size.height) /
+                        5 + // circle
+                    8 + // padding
+                    ScreenUtil().setHeight(80), // text
+                child: ListView(
+                  scrollDirection: Axis.horizontal,
+                  children: websites
+                          .map<Widget>(
+                            (website) => Padding(
+                              padding: const EdgeInsets.only(
+                                  top: 8.0, left: 8.0, right: 8.0),
+                              child: FutureBuilder<ImageProvider<dynamic>>(
+                                future: storageProvider
+                                    .getImageFromPath(website.iconPath),
+                                builder: (context, snapshot) {
+                                  var image;
+                                  if (snapshot.hasData) {
+                                    image = snapshot.data;
+                                  } else {
+                                    image = AssetImage(
+                                            'assets/' + website.iconPath) ??
+                                        AssetImage('assets/images/white.png');
+                                  }
+                                  return CircleImage(
+                                    label: website.label,
+                                    tooltip: website.infoByLocale[
+                                        Utils.getLocaleString(context)],
+                                    image: image,
+                                    onTap: () => _launchURL(website.link),
+                                  );
+                                },
+                              ),
+                            ),
+                          )
+                          .toList() +
+                      <Widget>[addWebsiteButton(trailing: true)],
+                ),
+              ),
       ),
     );
   }
