@@ -34,7 +34,8 @@ class _PortalPageState extends State<PortalPage> {
     }
   }
 
-  Widget spoiler({String title, Widget content}) => ExpandableNotifier(
+  Widget spoiler({String title, Widget content, bool initialExpanded = true}) =>
+      ExpandableNotifier(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
@@ -48,7 +49,8 @@ class _PortalPageState extends State<PortalPage> {
                   headerAlignment: ExpandablePanelHeaderAlignment.center,
                   iconPadding: EdgeInsets.only()),
               child: ExpandablePanel(
-                controller: ExpandableController(initialExpanded: true),
+                controller:
+                    ExpandableController(initialExpanded: initialExpanded),
                 header:
                     Text(title, style: Theme.of(context).textTheme.headline6),
                 collapsed: SizedBox(height: 12.0),
@@ -75,12 +77,14 @@ class _PortalPageState extends State<PortalPage> {
 
   Widget listCategory(String category, List<Website> websites) {
     StorageProvider storageProvider = Provider.of<StorageProvider>(context);
+    bool hasContent = websites != null && websites.isNotEmpty;
 
     return Padding(
       padding: const EdgeInsets.only(left: 8.0, right: 8.0),
       child: spoiler(
         title: category,
-        content: websites == null || websites.isEmpty
+        initialExpanded: hasContent,
+        content: !hasContent
             ? Container(
                 height: min(MediaQuery.of(context).size.width,
                             MediaQuery.of(context).size.height) /
