@@ -26,7 +26,7 @@ class FilterProvider with ChangeNotifier {
     _relevanceFilter = null;
 
     // Reset filter preference
-    PrefService.setStringList('relevantNodes', null);
+    PrefService.setStringList('relevant_nodes', null);
   }
 
   Future<Filter> getRelevanceFilter(BuildContext context) async {
@@ -47,9 +47,9 @@ class FilterProvider with ChangeNotifier {
           (element) => levelNames.add(Map<String, String>.from(element)));
 
       // Check if there is an existing setting already
-      List<String> relevantNodes = PrefService.get('relevantNodes') == null
+      List<String> relevantNodes = PrefService.get('relevant_nodes') == null
           ? null
-          : List<String>.from(PrefService.get('relevantNodes'));
+          : List<String>.from(PrefService.get('relevant_nodes'));
 
       Map<String, dynamic> root = data['root'];
       _relevanceFilter = Filter(
@@ -57,7 +57,7 @@ class FilterProvider with ChangeNotifier {
           root: FilterNodeExtension.fromMap(root, 'All'),
           listener: () {
             PrefService.setStringList(
-                'relevantNodes', _relevanceFilter.relevantNodes);
+                'relevant_nodes', _relevanceFilter.relevantNodes);
             notifyListeners();
           });
 
@@ -70,7 +70,7 @@ class FilterProvider with ChangeNotifier {
           // Try to set the default as the user's group
           if (user != null) {
             _relevanceFilter.setRelevantUpToRoot(user.group);
-            relevantNodes = PrefService.get('relevantNodes');
+            relevantNodes = PrefService.get('relevant_nodes');
           }
         }
       }
