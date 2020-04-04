@@ -136,9 +136,9 @@ class _PortalPageState extends State<PortalPage> {
   Widget build(BuildContext context) {
     ScreenUtil.init(context, width: 750, height: 1334, allowFontScaling: false);
     WebsiteProvider websiteProvider = Provider.of<WebsiteProvider>(context);
+    FilterProvider filterProvider = Provider.of<FilterProvider>(context);
 
-    filterFuture =
-        Provider.of<FilterProvider>(context).getRelevanceFilter(context);
+    filterFuture = filterProvider.getRelevanceFilter(context);
 
     List<Website> websites = [];
 
@@ -148,8 +148,12 @@ class _PortalPageState extends State<PortalPage> {
       title: S.of(context).navigationPortal,
       enableMenu: true,
       menuIcon: CustomIcons.filter,
-      menuRoute: Routes.filter,
       menuName: S.of(context).navigationFilter,
+      menuItems: {
+        S.of(context).filterMenuShowAll: () => filterProvider.disable(),
+        S.of(context).filterMenuRelevance: () =>
+            Navigator.pushNamed(context, Routes.filter)
+      },
       body: FutureBuilder(
         future: filterFuture,
         builder: (BuildContext context, AsyncSnapshot<Filter> filterSnap) {

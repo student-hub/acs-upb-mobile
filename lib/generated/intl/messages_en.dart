@@ -58,6 +58,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "errorSomethingWentWrong" : MessageLookupByLibrary.simpleMessage("Something went wrong."),
     "errorTooManyRequests" : MessageLookupByLibrary.simpleMessage("There have been too many requests from this device."),
     "fileAcsBanner" : MessageLookupByLibrary.simpleMessage("assets/images/acs_banner_en.png"),
+    "filterMenuRelevance" : MessageLookupByLibrary.simpleMessage("Filter by relevance"),
+    "filterMenuShowAll" : MessageLookupByLibrary.simpleMessage("Show all"),
     "hintEmail" : MessageLookupByLibrary.simpleMessage("john.doe"),
     "hintFirstName" : MessageLookupByLibrary.simpleMessage("John"),
     "hintGroup" : MessageLookupByLibrary.simpleMessage("314CB"),
