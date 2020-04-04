@@ -93,6 +93,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "settingsItemLanguageAuto" : MessageLookupByLibrary.simpleMessage("Auto"),
     "settingsItemLanguageEnglish" : MessageLookupByLibrary.simpleMessage("English"),
     "settingsItemLanguageRomanian" : MessageLookupByLibrary.simpleMessage("Romanian"),
+    "settingsRelevanceFilter" : MessageLookupByLibrary.simpleMessage("Relevance filter"),
     "settingsTitleLocalization" : MessageLookupByLibrary.simpleMessage("Localization"),
     "settingsTitlePersonalization" : MessageLookupByLibrary.simpleMessage("Personalization"),
     "stringAnonymous" : MessageLookupByLibrary.simpleMessage("Anonymous"),

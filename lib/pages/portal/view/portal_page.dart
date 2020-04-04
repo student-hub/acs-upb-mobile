@@ -94,8 +94,8 @@ class _PortalPageState extends State<PortalPage> {
                         }
                         return CircleImage(
                           label: website.label,
-                          tooltip:
-                              website.infoByLocale[Utils.getLocaleString(context)],
+                          tooltip: website
+                              .infoByLocale[Utils.getLocaleString(context)],
                           image: image,
                           onTap: () => _launchURL(website.link),
                         );
@@ -137,10 +137,8 @@ class _PortalPageState extends State<PortalPage> {
     ScreenUtil.init(context, width: 750, height: 1334, allowFontScaling: false);
     WebsiteProvider websiteProvider = Provider.of<WebsiteProvider>(context);
 
-    if (filterFuture == null) {
-      filterFuture =
-          Provider.of<FilterProvider>(context).getRelevanceFilter(context);
-    }
+    filterFuture =
+        Provider.of<FilterProvider>(context).getRelevanceFilter(context);
 
     List<Website> websites = [];
 
@@ -155,7 +153,7 @@ class _PortalPageState extends State<PortalPage> {
       body: FutureBuilder(
         future: filterFuture,
         builder: (BuildContext context, AsyncSnapshot<Filter> filterSnap) {
-          if (filterSnap.hasData) {
+          if (filterSnap.connectionState == ConnectionState.done) {
             return FutureBuilder<List<Website>>(
                 future: websiteProvider.getWebsites(filterSnap.data),
                 builder: (context, AsyncSnapshot<List<Website>> websiteSnap) {

@@ -93,6 +93,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "settingsItemLanguageAuto" : MessageLookupByLibrary.simpleMessage("Auto"),
     "settingsItemLanguageEnglish" : MessageLookupByLibrary.simpleMessage("Engleză"),
     "settingsItemLanguageRomanian" : MessageLookupByLibrary.simpleMessage("Română"),
+    "settingsRelevanceFilter" : MessageLookupByLibrary.simpleMessage("Filtru de relevanță"),
     "settingsTitleLocalization" : MessageLookupByLibrary.simpleMessage("Localizare"),
     "settingsTitlePersonalization" : MessageLookupByLibrary.simpleMessage("Personalizare"),
     "stringAnonymous" : MessageLookupByLibrary.simpleMessage("Anonim"),

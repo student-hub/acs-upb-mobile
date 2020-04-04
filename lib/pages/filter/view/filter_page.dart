@@ -5,6 +5,7 @@ import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:acs_upb_mobile/widgets/selectable.dart';
 import 'package:flutter/material.dart';
+import 'package:preferences/preferences.dart';
 import 'package:provider/provider.dart';
 
 class FilterPage extends StatefulWidget {
@@ -99,11 +100,20 @@ class FilterPageState extends State<FilterPage> {
 
   @override
   Widget build(BuildContext context) {
-    if (filterFuture == null) {
-      // Only fetch filter once
-      filterFuture =
-          Provider.of<FilterProvider>(context).getRelevanceFilter(context);
-    }
+    var filterProvider = Provider.of<FilterProvider>(context);
+
+    List<Widget> widgets = [];
+    widgets.add(
+      SwitchPreference(
+        S.of(context).settingsRelevanceFilter,
+        'relevance_filter',
+        onEnable: () => setState(() => filterProvider.enable()),
+        onDisable: () => setState(() => filterProvider.disable()),
+        defaultVal: true,
+      ),
+    );
+
+    filterFuture = filterProvider.getRelevanceFilter(context);
 
     return AppScaffold(
       title: S.of(context).navigationFilter,
@@ -111,12 +121,11 @@ class FilterPageState extends State<FilterPage> {
       body: FutureBuilder(
           future: filterFuture,
           builder: (BuildContext context, AsyncSnapshot snap) {
-            if (snap.hasData) {
+            if (snap.connectionState == ConnectionState.done && snap.hasData) {
               Filter filter = snap.data;
 
               Map<int, List<Widget>> optionsByLevel = {};
               _buildTree(node: filter.root, optionsByLevel: optionsByLevel);
-              List<Widget> widgets = [];
               for (var i = 0; i < filter.localizedLevelNames.length; i++) {
                 if (optionsByLevel[i] == null || optionsByLevel.isEmpty) {
                   break;
@@ -124,7 +133,7 @@ class FilterPageState extends State<FilterPage> {
 
                 // Level name
                 widgets.add(Padding(
-                  padding: const EdgeInsets.all(10.0),
+                  padding: const EdgeInsets.only(left: 10.0, bottom: 2.0),
                   child: Text(
                       filter.localizedLevelNames[i]
                           [Utils.getLocaleString(context)],
@@ -134,15 +143,15 @@ class FilterPageState extends State<FilterPage> {
                 // Level options
                 widgets.addAll(optionsByLevel[i]);
               }
-
-              return ListView(children: widgets);
             } else if (snap.hasError) {
               print(snap.error);
               // TODO: Show error toast
               return Container();
-            } else {
+            } else if (snap.connectionState != ConnectionState.done) {
               return Center(child: CircularProgressIndicator());
             }
+
+            return ListView(children: widgets);
           }),
     );
   }

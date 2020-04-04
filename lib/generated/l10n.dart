@@ -543,6 +543,15 @@ class S {
     );
   }
 
+  String get settingsRelevanceFilter {
+    return Intl.message(
+      'Relevance filter',
+      name: 'settingsRelevanceFilter',
+      desc: '',
+      args: [],
+    );
+  }
+
   String get websiteCategoryLearning {
     return Intl.message(
       'Learning',

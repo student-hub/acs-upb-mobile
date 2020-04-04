@@ -63,6 +63,7 @@
   "settingsItemLanguageEnglish": "English",
   "settingsItemLanguageRomanian": "Romanian",
   "settingsItemLanguageAuto": "Auto",
+  "settingsRelevanceFilter": "Relevance filter",
 
   "websiteCategoryLearning": "Learning",
   "websiteCategoryAdministrative": "Administrative",
