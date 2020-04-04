@@ -95,7 +95,7 @@ class _PortalPageState extends State<PortalPage> {
                         return CircleImage(
                           label: website.label,
                           tooltip:
-                              website.infoByLocale[Utils.getLocaleString(context)],
+                              website.infoByLocale[Utils.getLocaleString()],
                           image: image,
                           onTap: () => _launchURL(website.link),
                         );

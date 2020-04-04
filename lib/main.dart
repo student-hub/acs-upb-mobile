@@ -111,7 +111,7 @@ class _MyAppState extends State<MyApp> {
 class AppLoadingScreen extends StatelessWidget {
   Future<String> _setUpAndChooseStartScreen(BuildContext context) async {
     // Load locale from settings
-    S.load(Utils.getLocale(context));
+    S.load(Utils.getLocale());
 
     AuthProvider authProvider =
     Provider.of<AuthProvider>(context, listen: false);
