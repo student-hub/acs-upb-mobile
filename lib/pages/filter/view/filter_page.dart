@@ -103,7 +103,15 @@ class FilterPageState extends State<FilterPage> {
 
     List<Widget> widgets = [SizedBox(height: 10.0)];
 
-    filterFuture = filterProvider.getRelevanceFilter(context);
+    // Only fetch the filter once.
+    // This is a tradeoff, since it makes the UI a bit buggy in some cases (for
+    // instance if a row shows up before a row that has an option selected, it
+    // will have that option selected as well). However, it avoids the page
+    // being rebuilt completely every single time something is pressed (which
+    // looks really bad and scrolls all the rows back to the beginning).
+    if (filterFuture == null) {
+      filterFuture = filterProvider.getRelevanceFilter(context);
+    }
 
     return AppScaffold(
       title: S.of(context).navigationFilter,
