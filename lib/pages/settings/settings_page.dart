@@ -82,7 +82,7 @@ class SettingsPageState extends State<SettingsPage> {
       onSelect: () {
         // Reload settings page
         setState(() {
-          S.load(Utils.getLocaleFromString(context, preference));
+          S.load(Utils.getLocaleFromString(preference));
           Navigator.of(context).pop();
 
           // Hack to notify all widgets that something changed, since the

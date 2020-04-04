@@ -135,8 +135,7 @@ class FilterPageState extends State<FilterPage> {
                 widgets.add(Padding(
                   padding: const EdgeInsets.only(left: 10.0, bottom: 2.0),
                   child: Text(
-                      filter.localizedLevelNames[i]
-                          [Utils.getLocaleString(context)],
+                      filter.localizedLevelNames[i][Utils.getLocaleString()],
                       style: Theme.of(context).textTheme.headline6),
                 ));
 
