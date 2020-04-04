@@ -122,6 +122,7 @@ void main() {
     mockFilterProvider = MockFilterProvider();
     // ignore: invalid_use_of_protected_member
     when(mockFilterProvider.hasListeners).thenReturn(false);
+    when(mockFilterProvider.filterEnabled).thenReturn(true);
     when(mockFilterProvider.getRelevanceFilter(any))
         .thenAnswer((_) => Future.value(Filter(
                 localizedLevelNames: [
@@ -415,10 +416,14 @@ void main() {
       ));
       await tester.pumpAndSettle();
 
-      // Open filter on portal page
+      // Open filter popup menu
       await tester.tap(find.byIcon(Icons.public));
       await tester.pumpAndSettle();
       await tester.tap(find.byIcon(CustomIcons.filter));
+      await tester.pumpAndSettle();
+
+      // Open filter on portal page
+      await tester.tap(find.text('Filter by relevance'));
       await tester.pumpAndSettle();
 
       expect(find.byType(FilterPage), findsOneWidget);
@@ -441,10 +446,14 @@ void main() {
       ));
       await tester.pumpAndSettle();
 
-      // Open filter on portal page
+      // Open filter popup menu
       await tester.tap(find.byIcon(Icons.public));
       await tester.pumpAndSettle();
       await tester.tap(find.byIcon(CustomIcons.filter));
+      await tester.pumpAndSettle();
+
+      // Open filter on portal page
+      await tester.tap(find.text('Filter by relevance'));
       await tester.pumpAndSettle();
 
       expect(find.byType(FilterPage), findsOneWidget);
