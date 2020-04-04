@@ -31,6 +31,7 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
+    "actionApply" : MessageLookupByLibrary.simpleMessage("Apply"),
     "actionDeleteAccount" : MessageLookupByLibrary.simpleMessage("Delete account"),
     "actionLogIn" : MessageLookupByLibrary.simpleMessage("Log in"),
     "actionLogInAnonymously" : MessageLookupByLibrary.simpleMessage("Log in anonymously"),
@@ -58,6 +59,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "errorSomethingWentWrong" : MessageLookupByLibrary.simpleMessage("Something went wrong."),
     "errorTooManyRequests" : MessageLookupByLibrary.simpleMessage("There have been too many requests from this device."),
     "fileAcsBanner" : MessageLookupByLibrary.simpleMessage("assets/images/acs_banner_en.png"),
+    "filterMenuRelevance" : MessageLookupByLibrary.simpleMessage("Filter by relevance"),
+    "filterMenuShowAll" : MessageLookupByLibrary.simpleMessage("Show all"),
     "hintEmail" : MessageLookupByLibrary.simpleMessage("john.doe"),
     "hintFirstName" : MessageLookupByLibrary.simpleMessage("John"),
     "hintGroup" : MessageLookupByLibrary.simpleMessage("314CB"),
@@ -93,6 +96,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "settingsItemLanguageAuto" : MessageLookupByLibrary.simpleMessage("Auto"),
     "settingsItemLanguageEnglish" : MessageLookupByLibrary.simpleMessage("English"),
     "settingsItemLanguageRomanian" : MessageLookupByLibrary.simpleMessage("Romanian"),
+    "settingsRelevanceFilter" : MessageLookupByLibrary.simpleMessage("Relevance filter"),
     "settingsTitleLocalization" : MessageLookupByLibrary.simpleMessage("Localization"),
     "settingsTitlePersonalization" : MessageLookupByLibrary.simpleMessage("Personalization"),
     "stringAnonymous" : MessageLookupByLibrary.simpleMessage("Anonymous"),

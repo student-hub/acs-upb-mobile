@@ -27,6 +27,7 @@
   "actionSendEmail": "Send e-mail",
   "actionSendVerificationAgain": "Send e-mail again?",
   "actionDeleteAccount": "Delete account",
+  "actionApply": "Apply",
 
   "errorSomethingWentWrong": "Something went wrong.",
   "errorPasswordsDiffer": "The two passwords differ.",
@@ -56,6 +57,9 @@
   "navigationSettings": "Settings",
   "navigationFilter": "Filter",
 
+  "filterMenuShowAll": "Show all",
+  "filterMenuRelevance": "Filter by relevance",
+
   "settingsTitlePersonalization": "Personalization",
   "settingsItemDarkMode": "Dark mode",
   "settingsTitleLocalization": "Localization",
@@ -63,6 +67,7 @@
   "settingsItemLanguageEnglish": "English",
   "settingsItemLanguageRomanian": "Romanian",
   "settingsItemLanguageAuto": "Auto",
+  "settingsRelevanceFilter": "Relevance filter",
 
   "websiteCategoryLearning": "Learning",
   "websiteCategoryAdministrative": "Administrative",

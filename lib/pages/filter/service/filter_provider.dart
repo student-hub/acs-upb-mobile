@@ -20,7 +20,7 @@ extension FilterNodeExtension on FilterNode {
 
 class FilterProvider with ChangeNotifier {
   final Firestore _db = Firestore.instance;
-  Filter _relevanceFilter;
+  Filter _relevanceFilter;  // filter cache
 
   void resetFilter() {
     _relevanceFilter = null;
@@ -28,6 +28,20 @@ class FilterProvider with ChangeNotifier {
     // Reset filter preference
     PrefService.setStringList('relevant_nodes', null);
   }
+
+  void enable() {
+    _relevanceFilter = null;
+    PrefService.setBool('relevance_filter', true);
+    notifyListeners();
+  }
+
+  void disable() {
+    _relevanceFilter = null;
+    PrefService.setBool('relevance_filter', false);
+    notifyListeners();
+  }
+
+  bool get filterEnabled => PrefService.get('relevance_filter');
 
   Future<Filter> getRelevanceFilter(BuildContext context) async {
     if (_relevanceFilter != null) {

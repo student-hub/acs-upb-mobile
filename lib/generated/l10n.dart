@@ -1,6 +1,7 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+
 import 'intl/messages_all.dart';
 
 // **************************************************************************
@@ -252,6 +253,15 @@ class S {
     );
   }
 
+  String get actionApply {
+    return Intl.message(
+      'Apply',
+      name: 'actionApply',
+      desc: '',
+      args: [],
+    );
+  }
+
   String get errorSomethingWentWrong {
     return Intl.message(
       'Something went wrong.',
@@ -477,6 +487,24 @@ class S {
     );
   }
 
+  String get filterMenuShowAll {
+    return Intl.message(
+      'Show all',
+      name: 'filterMenuShowAll',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get filterMenuRelevance {
+    return Intl.message(
+      'Filter by relevance',
+      name: 'filterMenuRelevance',
+      desc: '',
+      args: [],
+    );
+  }
+
   String get settingsTitlePersonalization {
     return Intl.message(
       'Personalization',
@@ -535,6 +563,15 @@ class S {
     return Intl.message(
       'Auto',
       name: 'settingsItemLanguageAuto',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get settingsRelevanceFilter {
+    return Intl.message(
+      'Relevance filter',
+      name: 'settingsRelevanceFilter',
       desc: '',
       args: [],
     );

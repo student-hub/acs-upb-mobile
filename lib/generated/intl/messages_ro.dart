@@ -31,6 +31,7 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
+    "actionApply" : MessageLookupByLibrary.simpleMessage("Aplică"),
     "actionDeleteAccount" : MessageLookupByLibrary.simpleMessage("Ștergere cont"),
     "actionLogIn" : MessageLookupByLibrary.simpleMessage("Conectare"),
     "actionLogInAnonymously" : MessageLookupByLibrary.simpleMessage("Conectare anonimă"),
@@ -58,6 +59,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "errorSomethingWentWrong" : MessageLookupByLibrary.simpleMessage("A apărut o problemă."),
     "errorTooManyRequests" : MessageLookupByLibrary.simpleMessage("Au fost trimise prea multe cereri de pe acest dispozitiv."),
     "fileAcsBanner" : MessageLookupByLibrary.simpleMessage("assets/images/acs_banner_ro.png"),
+    "filterMenuRelevance" : MessageLookupByLibrary.simpleMessage("Filtrează după relevanță"),
+    "filterMenuShowAll" : MessageLookupByLibrary.simpleMessage("Arată tot"),
     "hintEmail" : MessageLookupByLibrary.simpleMessage("john.doe"),
     "hintFirstName" : MessageLookupByLibrary.simpleMessage("John"),
     "hintGroup" : MessageLookupByLibrary.simpleMessage("314CB"),
@@ -93,6 +96,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "settingsItemLanguageAuto" : MessageLookupByLibrary.simpleMessage("Auto"),
     "settingsItemLanguageEnglish" : MessageLookupByLibrary.simpleMessage("Engleză"),
     "settingsItemLanguageRomanian" : MessageLookupByLibrary.simpleMessage("Română"),
+    "settingsRelevanceFilter" : MessageLookupByLibrary.simpleMessage("Filtru de relevanță"),
     "settingsTitleLocalization" : MessageLookupByLibrary.simpleMessage("Localizare"),
     "settingsTitlePersonalization" : MessageLookupByLibrary.simpleMessage("Personalizare"),
     "stringAnonymous" : MessageLookupByLibrary.simpleMessage("Anonim"),

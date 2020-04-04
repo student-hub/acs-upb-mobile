@@ -94,8 +94,8 @@ class _PortalPageState extends State<PortalPage> {
                         }
                         return CircleImage(
                           label: website.label,
-                          tooltip:
-                              website.infoByLocale[Utils.getLocaleString()],
+                          tooltip: website
+                              .infoByLocale[Utils.getLocaleString()],
                           image: image,
                           onTap: () => _launchURL(website.link),
                         );
@@ -136,11 +136,9 @@ class _PortalPageState extends State<PortalPage> {
   Widget build(BuildContext context) {
     ScreenUtil.init(context, width: 750, height: 1334, allowFontScaling: false);
     WebsiteProvider websiteProvider = Provider.of<WebsiteProvider>(context);
+    FilterProvider filterProvider = Provider.of<FilterProvider>(context);
 
-    if (filterFuture == null) {
-      filterFuture =
-          Provider.of<FilterProvider>(context).getRelevanceFilter(context);
-    }
+    filterFuture = filterProvider.getRelevanceFilter(context);
 
     List<Website> websites = [];
 
@@ -150,14 +148,19 @@ class _PortalPageState extends State<PortalPage> {
       title: S.of(context).navigationPortal,
       enableMenu: true,
       menuIcon: CustomIcons.filter,
-      menuRoute: Routes.filter,
-      menuName: S.of(context).navigationFilter,
+      menuTooltip: S.of(context).navigationFilter,
+      menuItems: {
+        S.of(context).filterMenuShowAll: () => filterProvider.disable(),
+        S.of(context).filterMenuRelevance: () =>
+            Navigator.pushNamed(context, Routes.filter)
+      },
       body: FutureBuilder(
         future: filterFuture,
         builder: (BuildContext context, AsyncSnapshot<Filter> filterSnap) {
-          if (filterSnap.hasData) {
+          if (filterSnap.connectionState == ConnectionState.done) {
             return FutureBuilder<List<Website>>(
-                future: websiteProvider.getWebsites(filterSnap.data),
+                future: websiteProvider.getWebsites(
+                    filterProvider.filterEnabled ? filterSnap.data : null),
                 builder: (context, AsyncSnapshot<List<Website>> websiteSnap) {
                   if (websiteSnap.hasData) {
                     websites = websiteSnap.data;
