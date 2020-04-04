@@ -252,6 +252,15 @@ class S {
     );
   }
 
+  String get actionApply {
+    return Intl.message(
+      'Apply',
+      name: 'actionApply',
+      desc: '',
+      args: [],
+    );
+  }
+
   String get errorSomethingWentWrong {
     return Intl.message(
       'Something went wrong.',

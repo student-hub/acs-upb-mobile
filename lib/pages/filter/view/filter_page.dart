@@ -5,7 +5,6 @@ import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:acs_upb_mobile/widgets/selectable.dart';
 import 'package:flutter/material.dart';
-import 'package:preferences/preferences.dart';
 import 'package:provider/provider.dart';
 
 class FilterPage extends StatefulWidget {
@@ -102,22 +101,18 @@ class FilterPageState extends State<FilterPage> {
   Widget build(BuildContext context) {
     var filterProvider = Provider.of<FilterProvider>(context);
 
-    List<Widget> widgets = [];
-    widgets.add(
-      SwitchPreference(
-        S.of(context).settingsRelevanceFilter,
-        'relevance_filter',
-        onEnable: () => setState(() => filterProvider.enable()),
-        onDisable: () => setState(() => filterProvider.disable()),
-        defaultVal: true,
-      ),
-    );
+    List<Widget> widgets = [SizedBox(height: 10.0)];
 
     filterFuture = filterProvider.getRelevanceFilter(context);
 
     return AppScaffold(
       title: S.of(context).navigationFilter,
-      enableMenu: false,
+      enableMenu: true,
+      menuText: S.of(context).actionApply,
+      menuAction: () {
+        filterProvider.enable();
+        Navigator.of(context).pop();
+      },
       body: FutureBuilder(
           future: filterFuture,
           builder: (BuildContext context, AsyncSnapshot snap) {
@@ -133,7 +128,7 @@ class FilterPageState extends State<FilterPage> {
 
                 // Level name
                 widgets.add(Padding(
-                  padding: const EdgeInsets.only(left: 10.0, bottom: 2.0),
+                  padding: const EdgeInsets.only(left: 10.0, bottom: 8.0),
                   child: Text(
                       filter.localizedLevelNames[i][Utils.getLocaleString()],
                       style: Theme.of(context).textTheme.headline6),

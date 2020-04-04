@@ -17,8 +17,14 @@ class AppScaffold extends StatelessWidget {
   // Route to push when the action button is pressed
   final String menuRoute;
 
+  // Action that happens when the button is pressed. This overrides [menuRoute].
+  final Function() menuAction;
+
   // Action button tooltip text
-  final String menuName;
+  final String menuTooltip;
+
+  // Action text. This overrides [menuIcon].
+  final String menuText;
 
   // Option-action map that should be specified if a popup menu is needed. It
   // overrides [menuRoute].
@@ -29,13 +35,18 @@ class AppScaffold extends StatelessWidget {
       this.title,
       this.enableMenu = false,
       this.menuIcon = Icons.settings,
+      this.menuText,
       this.menuRoute = Routes.settings,
+      this.menuAction,
       this.menuItems,
-      this.menuName, // By default, S.of(context).navigationSettings
+      this.menuTooltip, // By default, menuText ?? S.of(context).navigationSettings
       this.floatingActionButton});
 
   @override
   Widget build(BuildContext context) {
+    Function() action =
+        menuAction ?? () => Navigator.pushNamed(context, menuRoute);
+
     return Scaffold(
       body: body ??
           Padding(
@@ -68,7 +79,9 @@ class AppScaffold extends StatelessWidget {
           actions: <Widget>[
             enableMenu
                 ? Tooltip(
-                    message: menuName ?? S.of(context).navigationSettings,
+                    message: menuTooltip ??
+                        menuText ??
+                        S.of(context).navigationSettings,
                     child: menuItems != null
                         ? PopupMenuButton<String>(
                             icon: Icon(menuIcon),
@@ -83,12 +96,15 @@ class AppScaffold extends StatelessWidget {
                             },
                             offset: Offset(0, 100),
                           )
-                        : IconButton(
-                            icon: Icon(menuIcon),
-                            onPressed: () {
-                              Navigator.pushNamed(context, menuRoute);
-                            },
-                          ),
+                        : menuText != null
+                            ? FlatButton(
+                                child: Text(menuText),
+                                onPressed: action,
+                              )
+                            : IconButton(
+                                icon: Icon(menuIcon),
+                                onPressed: action,
+                              ),
                   )
                 : Container(),
           ],

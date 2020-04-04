@@ -39,12 +39,9 @@ class FilterProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<Filter> getRelevanceFilter(BuildContext context) async {
-    bool filterEnabled = PrefService.get('relevance_filter');
-    if (!filterEnabled) {
-      return null;
-    }
+  bool get filterEnabled => PrefService.get('relevance_filter');
 
+  Future<Filter> getRelevanceFilter(BuildContext context) async {
     if (_relevanceFilter != null) {
       return _relevanceFilter;
     }
