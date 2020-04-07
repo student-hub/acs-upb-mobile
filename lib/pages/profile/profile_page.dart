@@ -3,6 +3,7 @@ import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/navigation/routes.dart';
 import 'package:acs_upb_mobile/widgets/button.dart';
+import 'package:acs_upb_mobile/widgets/dialog.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -17,51 +18,29 @@ class ProfilePage extends StatelessWidget {
     Navigator.pushReplacementNamed(context, Routes.login);
   }
 
-  AlertDialog _deletionConfirmationDialog(BuildContext context) {
-    return AlertDialog(
-      title: Row(
-        children: <Widget>[
-          Icon(Icons.warning, color: Colors.red),
-          SizedBox(width: 4),
-          Text(S.of(context).actionDeleteAccount),
+  AppDialog _deletionConfirmationDialog(BuildContext context) => AppDialog(
+        icon: Icon(Icons.warning, color: Colors.red),
+        title: S.of(context).actionDeleteAccount,
+        message: S.of(context).messageDeleteAccount +
+            ' ' +
+            S.of(context).messageCannotBeUndone,
+        actions: [
+          AppButton(
+            key: ValueKey('delete_account_button'),
+            text: S.of(context).actionDeleteAccount.toUpperCase(),
+            color: Colors.red,
+            width: 130,
+            onTap: () async {
+              AuthProvider authProvider =
+                  Provider.of<AuthProvider>(context, listen: false);
+              bool res = await authProvider.delete(context: context);
+              if (res) {
+                _signOut(context);
+              }
+            },
+          )
         ],
-      ),
-      content: IntrinsicHeight(
-        child: Column(
-          children: <Widget>[
-            Expanded(child: Container(height: 8)),
-            Text(S.of(context).messageDeleteAccount +
-                ' ' +
-                S.of(context).messageCannotBeUndone),
-          ],
-        ),
-      ),
-      actions: <Widget>[
-        FlatButton(
-          key: ValueKey('cancel_button'),
-          child: Text(
-            S.of(context).buttonCancel.toUpperCase(),
-            style: Theme.of(context).textTheme.button,
-          ),
-          onPressed: () => Navigator.pop(context),
-        ),
-        AppButton(
-          key: ValueKey('delete_account_button'),
-          text: S.of(context).actionDeleteAccount.toUpperCase(),
-          color: Colors.red,
-          width: 130,
-          onTap: () async {
-            AuthProvider authProvider =
-                Provider.of<AuthProvider>(context, listen: false);
-            bool res = await authProvider.delete(context: context);
-            if (res) {
-              _signOut(context);
-            }
-          },
-        ),
-      ],
-    );
-  }
+      );
 
   Widget _deleteAccountButton(BuildContext context) {
     AuthProvider authProvider = Provider.of<AuthProvider>(context);

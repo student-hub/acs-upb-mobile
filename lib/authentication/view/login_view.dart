@@ -1,9 +1,9 @@
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
-import 'package:acs_upb_mobile/authentication/view/recover_password_dialog.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/navigation/routes.dart';
 import 'package:acs_upb_mobile/resources/banner.dart';
 import 'package:acs_upb_mobile/widgets/button.dart';
+import 'package:acs_upb_mobile/widgets/dialog.dart';
 import 'package:acs_upb_mobile/widgets/form/form.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -49,8 +49,51 @@ class _LoginViewState extends State<LoginView> {
     return formItems;
   }
 
+  AppDialog _resetPasswordDialog(BuildContext context) => AppDialog(
+        title: S.of(context).actionResetPassword,
+        message: S.of(context).messageResetPassword,
+        content: <Widget>[
+          Row(
+            children: <Widget>[
+              Expanded(
+                child: TextField(
+                  key: ValueKey('reset_password_email_text_field'),
+                  controller: emailController,
+                  decoration:
+                      InputDecoration(hintText: S.of(context).hintEmail),
+                ),
+              ),
+              SizedBox(
+                width: 4,
+              ),
+              Text(S.of(context).stringEmailDomain,
+                  style: Theme.of(context).inputDecorationTheme.suffixStyle),
+            ],
+          )
+        ],
+        actions: [
+          AppButton(
+            key: ValueKey('send_email_button'),
+            text: S.of(context).actionSendEmail.toUpperCase(),
+            width: 130,
+            onTap: () async {
+              bool success =
+                  await Provider.of<AuthProvider>(context, listen: false)
+                      .sendPasswordResetEmail(
+                          email: emailController.text +
+                              S.of(context).stringEmailDomain,
+                          context: context);
+              if (success) {
+                Navigator.pop(context);
+              }
+              return;
+            },
+          ),
+        ],
+      );
+
   AppForm _buildForm(BuildContext context) {
-    AuthProvider authProvider = Provider.of(context);
+    AuthProvider authProvider = Provider.of<AuthProvider>(context);
 
     return AppForm(
       title: S.of(context).actionLogIn,
@@ -82,9 +125,7 @@ class _LoginViewState extends State<LoginView> {
                       .copyWith(fontWeight: FontWeight.w500),
                 ),
                 onTap: () {
-                  ResetPassword.show(
-                      context: context, email: emailController.text);
-                  // Remove text field from focus if necessary
+                  showDialog(context: context, builder: _resetPasswordDialog);
                   FocusScopeNode currentFocus = FocusScope.of(context);
                   if (!currentFocus.hasPrimaryFocus) {
                     currentFocus.unfocus();
