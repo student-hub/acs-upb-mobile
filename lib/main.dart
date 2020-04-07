@@ -21,7 +21,7 @@ import 'package:provider/provider.dart';
 main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await PrefService.init(prefix: 'pref_');
-  PrefService.setDefaultValues({'language': 'auto'});
+  PrefService.setDefaultValues({'language': 'auto', 'relevance_filter': true});
 
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider<AuthProvider>(create: (_) => AuthProvider()),
