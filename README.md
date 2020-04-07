@@ -5,6 +5,12 @@
 
 A mobile application for students at ACS UPB.  
 
+![light_login_ro](screenshots/light_login_ro.png)![dark_login_en](screenshots/dark_login_en.png)
+
+![light_settings_ro](screenshots/light_settings_ro.png)![dark_settings_en](screenshots/dark_settings_en.png)
+
+![light_portal_ro](screenshots/light_portal_ro.png)![dark_portal_en](screenshots/dark_portal_en.png)
+
 ## Building from source with Android Studio
 
 ### Prerequisites
