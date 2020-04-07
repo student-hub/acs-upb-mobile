@@ -48,6 +48,7 @@
   "warningEmailInUse": "Există deja un cont asociat cu adresa {email}.",
   "warningUseProvider": "Folosiți {provider} pentru a vă conecta.",
   "warningTryAgainLater": "Încercați mai târziu.",
+  "warningFilterAlreadyDisabled": "Întreg conținutul este vizibil deja.",
 
   "navigationHome": "Acasă",
   "navigationTimetable": "Orar",

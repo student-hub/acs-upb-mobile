@@ -423,6 +423,15 @@ class S {
     );
   }
 
+  String get warningFilterAlreadyDisabled {
+    return Intl.message(
+      'Already showing all content.',
+      name: 'warningFilterAlreadyDisabled',
+      desc: '',
+      args: [],
+    );
+  }
+
   String get navigationHome {
     return Intl.message(
       'Home',

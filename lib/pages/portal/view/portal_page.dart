@@ -94,8 +94,8 @@ class _PortalPageState extends State<PortalPage> {
                         }
                         return CircleImage(
                           label: website.label,
-                          tooltip: website
-                              .infoByLocale[Utils.getLocaleString()],
+                          tooltip:
+                              website.infoByLocale[Utils.getLocaleString()],
                           image: image,
                           onTap: () => _launchURL(website.link),
                         );
@@ -150,9 +150,15 @@ class _PortalPageState extends State<PortalPage> {
       menuIcon: CustomIcons.filter,
       menuTooltip: S.of(context).navigationFilter,
       menuItems: {
-        S.of(context).filterMenuShowAll: () => filterProvider.disable(),
         S.of(context).filterMenuRelevance: () =>
-            Navigator.pushNamed(context, Routes.filter)
+            Navigator.pushNamed(context, Routes.filter),
+        S.of(context).filterMenuShowAll: () {
+          if (!filterProvider.filterEnabled) {
+            AppToast.show(S.of(context).warningFilterAlreadyDisabled);
+          } else {
+            filterProvider.disable();
+          }
+        },
       },
       body: FutureBuilder(
         future: filterFuture,
