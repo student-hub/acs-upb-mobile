@@ -27,7 +27,7 @@ void main() {
   final WebsiteProvider mockWebsiteProvider = MockWebsiteProvider();
   // ignore: invalid_use_of_protected_member
   when(mockWebsiteProvider.hasListeners).thenReturn(false);
-  when(mockWebsiteProvider.getWebsites(any)).thenAnswer((_) => Future.value([
+  when(mockWebsiteProvider.fetchWebsites(any)).thenAnswer((_) => Future.value([
         Website(
           category: WebsiteCategory.learning,
           iconPath: 'icons/websites/moodle.png',
@@ -58,7 +58,7 @@ void main() {
   final FilterProvider mockFilterProvider = MockFilterProvider();
   // ignore: invalid_use_of_protected_member
   when(mockFilterProvider.hasListeners).thenReturn(false);
-  when(mockFilterProvider.getRelevanceFilter(any))
+  when(mockFilterProvider.fetchFilter(any))
       .thenAnswer((_) => Future.value(Filter(root: FilterNode(name: 'All'))));
   when(mockFilterProvider.filterEnabled).thenReturn(true);
 

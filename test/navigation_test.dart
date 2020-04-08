@@ -60,7 +60,7 @@ void main() {
     mockWebsiteProvider = MockWebsiteProvider();
     // ignore: invalid_use_of_protected_member
     when(mockWebsiteProvider.hasListeners).thenReturn(false);
-    when(mockWebsiteProvider.getWebsites(any)).thenAnswer((_) => Future.value([
+    when(mockWebsiteProvider.fetchWebsites(any)).thenAnswer((_) => Future.value([
           Website(
             category: WebsiteCategory.learning,
             iconPath: 'icons/websites/moodle.png',
@@ -123,7 +123,7 @@ void main() {
     // ignore: invalid_use_of_protected_member
     when(mockFilterProvider.hasListeners).thenReturn(false);
     when(mockFilterProvider.filterEnabled).thenReturn(true);
-    when(mockFilterProvider.getRelevanceFilter(any))
+    when(mockFilterProvider.fetchFilter(any))
         .thenAnswer((_) => Future.value(Filter(
                 localizedLevelNames: [
                   {'en': 'Degree', 'ro': 'Nivel de studiu'},

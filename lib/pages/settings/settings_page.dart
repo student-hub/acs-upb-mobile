@@ -54,13 +54,13 @@ class SettingsPageState extends State<SettingsPage> {
                       ),
                       PreferenceTitle(S.of(context).settingsTitleLocalization),
                       PreferenceDialogLink(S.of(context).settingsItemLanguage,
-                          desc: getLanguagePrefString(
+                          desc: languagePrefString(
                               context, PrefService.get('language')),
                           dialog: PreferenceDialog(
                             [
-                              getLanguageRadioPreference(context, 'ro'),
-                              getLanguageRadioPreference(context, 'en'),
-                              getLanguageRadioPreference(context, 'auto'),
+                              languageRadioPreference(context, 'ro'),
+                              languageRadioPreference(context, 'en'),
+                              languageRadioPreference(context, 'auto'),
                             ],
                             onlySaveOnSubmit: false,
                           ))
@@ -73,10 +73,10 @@ class SettingsPageState extends State<SettingsPage> {
         ));
   }
 
-  RadioPreference getLanguageRadioPreference(
+  RadioPreference languageRadioPreference(
       BuildContext context, String preference) {
     return RadioPreference(
-      getLanguagePrefString(context, preference),
+      languagePrefString(context, preference),
       preference,
       'language',
       onSelect: () {
@@ -95,7 +95,7 @@ class SettingsPageState extends State<SettingsPage> {
     );
   }
 
-  String getLanguagePrefString(BuildContext context, String preference) {
+  String languagePrefString(BuildContext context, String preference) {
     switch (preference) {
       case 'en':
         return S.of(context).settingsItemLanguageEnglish;

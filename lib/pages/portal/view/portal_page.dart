@@ -83,7 +83,7 @@ class _PortalPageState extends State<PortalPage> {
                         const EdgeInsets.only(top: 8.0, left: 8.0, right: 8.0),
                     child: FutureBuilder<ImageProvider<dynamic>>(
                       future:
-                          storageProvider.getImageFromPath(website.iconPath),
+                          storageProvider.imageFromPath(website.iconPath),
                       builder: (context, snapshot) {
                         var image;
                         if (snapshot.hasData) {
@@ -138,7 +138,7 @@ class _PortalPageState extends State<PortalPage> {
     WebsiteProvider websiteProvider = Provider.of<WebsiteProvider>(context);
     FilterProvider filterProvider = Provider.of<FilterProvider>(context);
 
-    filterFuture = filterProvider.getRelevanceFilter(context);
+    filterFuture = filterProvider.fetchFilter(context);
 
     List<Website> websites = [];
 
@@ -156,7 +156,7 @@ class _PortalPageState extends State<PortalPage> {
           if (!filterProvider.filterEnabled) {
             AppToast.show(S.of(context).warningFilterAlreadyDisabled);
           } else {
-            filterProvider.disable();
+            filterProvider.disableFilter();
           }
         },
       },
@@ -165,7 +165,7 @@ class _PortalPageState extends State<PortalPage> {
         builder: (BuildContext context, AsyncSnapshot<Filter> filterSnap) {
           if (filterSnap.connectionState == ConnectionState.done) {
             return FutureBuilder<List<Website>>(
-                future: websiteProvider.getWebsites(
+                future: websiteProvider.fetchWebsites(
                     filterProvider.filterEnabled ? filterSnap.data : null),
                 builder: (context, AsyncSnapshot<List<Website>> websiteSnap) {
                   if (websiteSnap.hasData) {

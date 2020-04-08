@@ -110,7 +110,7 @@ class FilterPageState extends State<FilterPage> {
     // being rebuilt completely every single time something is pressed (which
     // looks really bad and scrolls all the rows back to the beginning).
     if (filterFuture == null) {
-      filterFuture = filterProvider.getRelevanceFilter(context);
+      filterFuture = filterProvider.fetchFilter(context);
     }
 
     return AppScaffold(
@@ -118,7 +118,7 @@ class FilterPageState extends State<FilterPage> {
       enableMenu: true,
       menuText: S.of(context).actionApply,
       menuAction: () {
-        filterProvider.enable();
+        filterProvider.enableFilter();
         Navigator.of(context).pop();
       },
       body: FutureBuilder(

@@ -29,13 +29,13 @@ class FilterProvider with ChangeNotifier {
     PrefService.setStringList('relevant_nodes', null);
   }
 
-  void enable() {
+  void enableFilter() {
     _relevanceFilter = null;
     PrefService.setBool('relevance_filter', true);
     notifyListeners();
   }
 
-  void disable() {
+  void disableFilter() {
     _relevanceFilter = null;
     PrefService.setBool('relevance_filter', false);
     notifyListeners();
@@ -43,7 +43,7 @@ class FilterProvider with ChangeNotifier {
 
   bool get filterEnabled => PrefService.get('relevance_filter');
 
-  Future<Filter> getRelevanceFilter(BuildContext context) async {
+  Future<Filter> fetchFilter(BuildContext context) async {
     if (_relevanceFilter != null) {
       return _relevanceFilter;
     }

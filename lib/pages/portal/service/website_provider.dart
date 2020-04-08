@@ -42,7 +42,7 @@ extension WebsiteFromSnap on Website {
 class WebsiteProvider with ChangeNotifier {
   final Firestore _db = Firestore.instance;
 
-  Future<List<Website>> getWebsites(Filter filter) async {
+  Future<List<Website>> fetchWebsites(Filter filter) async {
     try {
       List<DocumentSnapshot> documents = [];
       
@@ -65,8 +65,6 @@ class WebsiteProvider with ChangeNotifier {
           documents.addAll(qSnapshot.documents);
         }
       }
-
-      
 
       // Remove duplicates
       // (a document may result out of more than one query)
