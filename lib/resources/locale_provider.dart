@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:preferences/preference_service.dart';
 
-class Utils {
+class LocaleProvider {
   static String defaultLocale = 'en';
   static List<String> supportedLocales = ['en', 'ro'];
 
-  static getLocaleString() {
+  static get localeString {
     var languagePref = PrefService.get('language');
     if (languagePref == 'auto') {
       String systemLocale = Intl.defaultLocale.substring(0, 2);
@@ -20,20 +20,20 @@ class Utils {
     }
   }
 
-  static Locale getLocaleFromString(String preferenceString) {
+  static Locale localeFromString(String preferenceString) {
     switch (preferenceString) {
       case 'auto':
-        return getLocaleFromString(Intl.defaultLocale);
+        return localeFromString(Intl.defaultLocale);
       case 'ro':
         return Locale('ro', 'RO');
       case 'en':
         return Locale('en', 'US');
       default:
-        return getLocaleFromString(defaultLocale);
+        return localeFromString(defaultLocale);
     }
   }
 
-  static Locale getLocale() {
-    return getLocaleFromString(getLocaleString());
+  static Locale get locale {
+    return localeFromString(localeString);
   }
 }

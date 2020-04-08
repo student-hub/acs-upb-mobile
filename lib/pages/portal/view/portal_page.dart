@@ -7,8 +7,8 @@ import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
 import 'package:acs_upb_mobile/pages/portal/model/website.dart';
 import 'package:acs_upb_mobile/pages/portal/service/website_provider.dart';
 import 'package:acs_upb_mobile/resources/custom_icons.dart';
+import 'package:acs_upb_mobile/resources/locale_provider.dart';
 import 'package:acs_upb_mobile/resources/storage_provider.dart';
-import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/widgets/circle_image.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
@@ -94,8 +94,8 @@ class _PortalPageState extends State<PortalPage> {
                         }
                         return CircleImage(
                           label: website.label,
-                          tooltip:
-                              website.infoByLocale[Utils.getLocaleString()],
+                          tooltip: website
+                              .infoByLocale[LocaleProvider.localeString],
                           image: image,
                           onTap: () => _launchURL(website.link),
                         );

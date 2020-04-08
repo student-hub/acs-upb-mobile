@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:acs_upb_mobile/generated/l10n.dart';
-import 'package:acs_upb_mobile/resources/utils.dart';
+import 'package:acs_upb_mobile/resources/locale_provider.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/material.dart';
@@ -82,7 +82,7 @@ class SettingsPageState extends State<SettingsPage> {
       onSelect: () {
         // Reload settings page
         setState(() {
-          S.load(Utils.getLocaleFromString(preference));
+          S.load(LocaleProvider.localeFromString(preference));
           Navigator.of(context).pop();
 
           // Hack to notify all widgets that something changed, since the

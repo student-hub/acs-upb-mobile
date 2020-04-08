@@ -1,7 +1,7 @@
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/filter/model/filter.dart';
 import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
-import 'package:acs_upb_mobile/resources/utils.dart';
+import 'package:acs_upb_mobile/resources/locale_provider.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:acs_upb_mobile/widgets/selectable.dart';
 import 'package:flutter/material.dart';
@@ -138,7 +138,8 @@ class FilterPageState extends State<FilterPage> {
                 widgets.add(Padding(
                   padding: const EdgeInsets.only(left: 10.0, bottom: 8.0),
                   child: Text(
-                      filter.localizedLevelNames[i][Utils.getLocaleString()],
+                      filter.localizedLevelNames[i]
+                          [LocaleProvider.localeString],
                       style: Theme.of(context).textTheme.headline6),
                 ));
 
