@@ -45,21 +45,28 @@ class WebsiteProvider with ChangeNotifier {
   Future<List<Website>> getWebsites(Filter filter) async {
     try {
       List<DocumentSnapshot> documents = [];
-
-      // Documents without a 'relevance' field are relevant for everyone
-      Query query = _db.collection('websites').where('relevance', isNull: true);
-      QuerySnapshot qSnapshot = await query.getDocuments();
-      documents.addAll(qSnapshot.documents);
-
-      for (String string in filter.relevantNodes) {
-        // selected nodes
-        Query query = _db
-            .collection('websites')
-            .where('degree', isEqualTo: filter.baseNode)
-            .where('relevance', arrayContains: string);
+      
+      if (filter == null) {
+        QuerySnapshot qSnapshot = await _db.collection('websites').getDocuments();
+        documents.addAll(qSnapshot.documents);
+      } else {
+        // Documents without a 'relevance' field are relevant for everyone
+        Query query = _db.collection('websites').where('relevance', isNull: true);
         QuerySnapshot qSnapshot = await query.getDocuments();
         documents.addAll(qSnapshot.documents);
+
+        for (String string in filter.relevantNodes) {
+          // selected nodes
+          Query query = _db
+              .collection('websites')
+              .where('degree', isEqualTo: filter.baseNode)
+              .where('relevance', arrayContains: string);
+          QuerySnapshot qSnapshot = await query.getDocuments();
+          documents.addAll(qSnapshot.documents);
+        }
       }
+
+      
 
       // Remove duplicates
       // (a document may result out of more than one query)

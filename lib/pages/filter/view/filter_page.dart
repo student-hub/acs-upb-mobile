@@ -99,24 +99,36 @@ class FilterPageState extends State<FilterPage> {
 
   @override
   Widget build(BuildContext context) {
+    var filterProvider = Provider.of<FilterProvider>(context);
+
+    List<Widget> widgets = [SizedBox(height: 10.0)];
+
+    // Only fetch the filter once.
+    // This is a tradeoff, since it makes the UI a bit buggy in some cases (for
+    // instance if a row shows up before a row that has an option selected, it
+    // will have that option selected as well). However, it avoids the page
+    // being rebuilt completely every single time something is pressed (which
+    // looks really bad and scrolls all the rows back to the beginning).
     if (filterFuture == null) {
-      // Only fetch filter once
-      filterFuture =
-          Provider.of<FilterProvider>(context).getRelevanceFilter(context);
+      filterFuture = filterProvider.getRelevanceFilter(context);
     }
 
     return AppScaffold(
       title: S.of(context).navigationFilter,
-      enableMenu: false,
+      enableMenu: true,
+      menuText: S.of(context).actionApply,
+      menuAction: () {
+        filterProvider.enable();
+        Navigator.of(context).pop();
+      },
       body: FutureBuilder(
           future: filterFuture,
           builder: (BuildContext context, AsyncSnapshot snap) {
-            if (snap.hasData) {
+            if (snap.connectionState == ConnectionState.done && snap.hasData) {
               Filter filter = snap.data;
 
               Map<int, List<Widget>> optionsByLevel = {};
               _buildTree(node: filter.root, optionsByLevel: optionsByLevel);
-              List<Widget> widgets = [];
               for (var i = 0; i < filter.localizedLevelNames.length; i++) {
                 if (optionsByLevel[i] == null || optionsByLevel.isEmpty) {
                   break;
@@ -124,25 +136,24 @@ class FilterPageState extends State<FilterPage> {
 
                 // Level name
                 widgets.add(Padding(
-                  padding: const EdgeInsets.all(10.0),
+                  padding: const EdgeInsets.only(left: 10.0, bottom: 8.0),
                   child: Text(
-                      filter.localizedLevelNames[i]
-                          [Utils.getLocaleString(context)],
+                      filter.localizedLevelNames[i][Utils.getLocaleString()],
                       style: Theme.of(context).textTheme.headline6),
                 ));
 
                 // Level options
                 widgets.addAll(optionsByLevel[i]);
               }
-
-              return ListView(children: widgets);
             } else if (snap.hasError) {
               print(snap.error);
               // TODO: Show error toast
               return Container();
-            } else {
+            } else if (snap.connectionState != ConnectionState.done) {
               return Center(child: CircularProgressIndicator());
             }
+
+            return ListView(children: widgets);
           }),
     );
   }

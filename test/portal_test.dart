@@ -60,6 +60,7 @@ void main() {
   when(mockFilterProvider.hasListeners).thenReturn(false);
   when(mockFilterProvider.getRelevanceFilter(any))
       .thenAnswer((_) => Future.value(Filter(root: FilterNode(name: 'All'))));
+  when(mockFilterProvider.filterEnabled).thenReturn(true);
 
   final MockUrlLauncher mockUrlLauncher = MockUrlLauncher();
   UrlLauncherPlatform.instance = mockUrlLauncher;

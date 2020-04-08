@@ -6,23 +6,47 @@ import 'package:flutter/material.dart';
 class AppScaffold extends StatelessWidget {
   final Widget body;
   final String title;
-  final bool enableMenu;
-  final IconData menuIcon;
-  final String menuRoute;
-  final String menuName;
   final Widget floatingActionButton;
+
+  // Show an action button on the right side of the scaffold bar
+  final bool enableMenu;
+
+  // Icon for the action button
+  final IconData menuIcon;
+
+  // Route to push when the action button is pressed
+  final String menuRoute;
+
+  // Action that happens when the button is pressed. This overrides [menuRoute].
+  final Function() menuAction;
+
+  // Action button tooltip text
+  final String menuTooltip;
+
+  // Action text. This overrides [menuIcon].
+  final String menuText;
+
+  // Option-action map that should be specified if a popup menu is needed. It
+  // overrides [menuRoute].
+  final Map<String, void Function()> menuItems;
 
   AppScaffold(
       {this.body,
       this.title,
       this.enableMenu = false,
       this.menuIcon = Icons.settings,
+      this.menuText,
       this.menuRoute = Routes.settings,
-      this.menuName, // By default, S.of(context).navigationSettings
+      this.menuAction,
+      this.menuItems,
+      this.menuTooltip, // By default, menuText ?? S.of(context).navigationSettings
       this.floatingActionButton});
 
   @override
   Widget build(BuildContext context) {
+    Function() action =
+        menuAction ?? () => Navigator.pushNamed(context, menuRoute);
+
     return Scaffold(
       body: body ??
           Padding(
@@ -54,20 +78,34 @@ class AppScaffold extends StatelessWidget {
           toolbarOpacity: 0.8,
           actions: <Widget>[
             enableMenu
-                ? Padding(
-                    padding: EdgeInsets.only(right: 20.0),
-                    child: Tooltip(
-                      message: menuName ?? S.of(context).navigationSettings,
-                      child: GestureDetector(
-                        onTap: () {
-                          Navigator.pushNamed(context, menuRoute);
-                        },
-                        child: Icon(
-                          menuIcon,
-                          size: 26.0,
-                        ),
-                      ),
-                    ))
+                ? Tooltip(
+                    message: menuTooltip ??
+                        menuText ??
+                        S.of(context).navigationSettings,
+                    child: menuItems != null
+                        ? PopupMenuButton<String>(
+                            icon: Icon(menuIcon),
+                            onSelected: (selected) => menuItems[selected](),
+                            itemBuilder: (BuildContext context) {
+                              return menuItems.keys
+                                  .map((option) => PopupMenuItem(
+                                        value: option,
+                                        child: Text(option),
+                                      ))
+                                  .toList();
+                            },
+                            offset: Offset(0, 100),
+                          )
+                        : menuText != null
+                            ? FlatButton(
+                                child: Text(menuText),
+                                onPressed: action,
+                              )
+                            : IconButton(
+                                icon: Icon(menuIcon),
+                                onPressed: action,
+                              ),
+                  )
                 : Container(),
           ],
         ),

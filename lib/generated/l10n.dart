@@ -1,7 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-
 import 'intl/messages_all.dart';
 
 // **************************************************************************
@@ -10,7 +9,7 @@ import 'intl/messages_all.dart';
 // **************************************************************************
 
 class S {
-  S(this.localeName);
+  S();
   
   static const AppLocalizationDelegate delegate =
     AppLocalizationDelegate();
@@ -20,15 +19,13 @@ class S {
     final String localeName = Intl.canonicalizedLocale(name);
     return initializeMessages(localeName).then((_) {
       Intl.defaultLocale = localeName;
-      return S(localeName);
+      return S();
     });
   } 
 
   static S of(BuildContext context) {
     return Localizations.of<S>(context, S);
   }
-
-  final String localeName;
 
   String get buttonNext {
     return Intl.message(
@@ -210,7 +207,7 @@ class S {
     );
   }
 
-  String actionSignInWith(dynamic provider) {
+  String actionSignInWith(Object provider) {
     return Intl.message(
       'Sign in with $provider',
       name: 'actionSignInWith',
@@ -241,6 +238,24 @@ class S {
     return Intl.message(
       'Send e-mail again?',
       name: 'actionSendVerificationAgain',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get actionDeleteAccount {
+    return Intl.message(
+      'Delete account',
+      name: 'actionDeleteAccount',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get actionApply {
+    return Intl.message(
+      'Apply',
+      name: 'actionApply',
       desc: '',
       args: [],
     );
@@ -338,14 +353,14 @@ class S {
 
   String get errorTooManyRequests {
     return Intl.message(
-      'There have been too many unsuccessful login attempts from this device.',
+      'There have been too many requests from this device.',
       name: 'errorTooManyRequests',
       desc: '',
       args: [],
     );
   }
 
-  String errorCouldNotLaunchURL(dynamic url) {
+  String errorCouldNotLaunchURL(Object url) {
     return Intl.message(
       'Could not launch \'$url\'.',
       name: 'errorCouldNotLaunchURL',
@@ -381,7 +396,7 @@ class S {
     );
   }
 
-  String warningEmailInUse(dynamic email) {
+  String warningEmailInUse(Object email) {
     return Intl.message(
       'There is already an account associated with $email.',
       name: 'warningEmailInUse',
@@ -390,7 +405,7 @@ class S {
     );
   }
 
-  String warningUseProvider(dynamic provider) {
+  String warningUseProvider(Object provider) {
     return Intl.message(
       'Please log in with $provider to continue.',
       name: 'warningUseProvider',
@@ -403,6 +418,15 @@ class S {
     return Intl.message(
       'Please try again later.',
       name: 'warningTryAgainLater',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get warningFilterAlreadyDisabled {
+    return Intl.message(
+      'Already showing all content.',
+      name: 'warningFilterAlreadyDisabled',
       desc: '',
       args: [],
     );
@@ -471,6 +495,24 @@ class S {
     );
   }
 
+  String get filterMenuShowAll {
+    return Intl.message(
+      'Show all',
+      name: 'filterMenuShowAll',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get filterMenuRelevance {
+    return Intl.message(
+      'Filter by relevance',
+      name: 'filterMenuRelevance',
+      desc: '',
+      args: [],
+    );
+  }
+
   String get settingsTitlePersonalization {
     return Intl.message(
       'Personalization',
@@ -534,6 +576,15 @@ class S {
     );
   }
 
+  String get settingsRelevanceFilter {
+    return Intl.message(
+      'Relevance filter',
+      name: 'settingsRelevanceFilter',
+      desc: '',
+      args: [],
+    );
+  }
+
   String get websiteCategoryLearning {
     return Intl.message(
       'Learning',
@@ -588,7 +639,7 @@ class S {
     );
   }
 
-  String messageWelcomeName(dynamic name) {
+  String messageWelcomeName(Object name) {
     return Intl.message(
       'Welcome, $name!',
       name: 'messageWelcomeName',
@@ -624,6 +675,15 @@ class S {
     );
   }
 
+  String get messageAccountDeleted {
+    return Intl.message(
+      'Account deleted successfully.',
+      name: 'messageAccountDeleted',
+      desc: '',
+      args: [],
+    );
+  }
+
   String get messageCheckEmailVerification {
     return Intl.message(
       'Please check your email for account verification.',
@@ -637,6 +697,24 @@ class S {
     return Intl.message(
       'Enter your e-mai in order to receive instructions on how to reset your password.',
       name: 'messageResetPassword',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get messageDeleteAccount {
+    return Intl.message(
+      'Are you sure you want to delete your account?',
+      name: 'messageDeleteAccount',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get messageCannotBeUndone {
+    return Intl.message(
+      'This action cannot be undone.',
+      name: 'messageCannotBeUndone',
       desc: '',
       args: [],
     );

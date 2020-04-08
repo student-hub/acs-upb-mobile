@@ -28,13 +28,13 @@ extension DatabaseUser on User {
 }
 
 class AuthProvider with ChangeNotifier {
-  FirebaseUser firebaseUser; // TODO: Make this private
-  StreamSubscription userAuthSub;
+  FirebaseUser _firebaseUser; // TODO: Make this private
+  StreamSubscription _userAuthSub;
 
   AuthProvider() {
-    userAuthSub = FirebaseAuth.instance.onAuthStateChanged.listen((newUser) {
+    _userAuthSub = FirebaseAuth.instance.onAuthStateChanged.listen((newUser) {
       print('AuthProvider - FirebaseAuth - onAuthStateChanged - $newUser');
-      firebaseUser = newUser;
+      _firebaseUser = newUser;
       notifyListeners();
     }, onError: (e) {
       print('AuthProvider - FirebaseAuth - onAuthStateChanged - $e');
@@ -43,9 +43,9 @@ class AuthProvider with ChangeNotifier {
 
   @override
   void dispose() {
-    if (userAuthSub != null) {
-      userAuthSub.cancel();
-      userAuthSub = null;
+    if (_userAuthSub != null) {
+      _userAuthSub.cancel();
+      _userAuthSub = null;
     }
     super.dispose();
   }
@@ -82,9 +82,9 @@ class AuthProvider with ChangeNotifier {
   }
 
   bool get isAnonymous {
-    assert(firebaseUser != null);
+    assert(_firebaseUser != null);
     bool isAnonymousUser = true;
-    for (UserInfo info in firebaseUser.providerData) {
+    for (UserInfo info in _firebaseUser.providerData) {
       if (info.providerId == 'facebook.com' ||
           info.providerId == 'google.com' ||
           info.providerId == 'password') {
@@ -97,20 +97,20 @@ class AuthProvider with ChangeNotifier {
 
   /// Check the memory cache to see if there is a user authenticated
   bool get isVerifiedFromCache {
-    assert(firebaseUser != null);
-    return firebaseUser.isEmailVerified;
+    assert(_firebaseUser != null);
+    return _firebaseUser.isEmailVerified;
   }
 
   /// Check the network to see if there is a user authenticated
   Future<bool> get isVerifiedFromService async {
-    firebaseUser.reload();
-    firebaseUser = await FirebaseAuth.instance.currentUser();
-    return firebaseUser.isEmailVerified;
+    _firebaseUser.reload();
+    _firebaseUser = await FirebaseAuth.instance.currentUser();
+    return _firebaseUser.isEmailVerified;
   }
 
   /// Check the memory cache to see if there is a user authenticated
   bool get isAuthenticatedFromCache {
-    return firebaseUser != null;
+    return _firebaseUser != null;
   }
 
   /// Check the filesystem to see if there is a user authenticated.
@@ -119,17 +119,17 @@ class AuthProvider with ChangeNotifier {
   /// for everything else, the [AuthProvider] will notify its listeners and
   /// update the cache if the authentication state changes.
   Future<bool> get isAuthenticatedFromService async {
-    firebaseUser = await FirebaseAuth.instance.currentUser();
-    return firebaseUser != null;
+    _firebaseUser = await FirebaseAuth.instance.currentUser();
+    return _firebaseUser != null;
   }
 
-  Future<User> getCurrentUser() async {
+  Future<User> get currentUser async {
     if (isAnonymous) {
       return null;
     }
     DocumentSnapshot snapshot = await Firestore.instance
         .collection('users')
-        .document(firebaseUser.uid)
+        .document(_firebaseUser.uid)
         .get();
     return DatabaseUser.fromSnap(snapshot);
   }
@@ -179,15 +179,35 @@ class AuthProvider with ChangeNotifier {
 
   Future<void> signOut(BuildContext context) async {
     if (isAnonymous) {
-      try {
-        firebaseUser.delete();
-      } catch (e) {
-        _errorHandler(e, null);
-      }
+      delete();
     }
 
     Provider.of<FilterProvider>(context, listen: false).resetFilter();
     return await FirebaseAuth.instance.signOut();
+  }
+
+  Future<bool> delete({BuildContext context}) async {
+    if (_firebaseUser == null) {
+      _firebaseUser = await FirebaseAuth.instance.currentUser();
+    }
+
+    assert(_firebaseUser != null);
+
+    DocumentReference ref =
+        Firestore.instance.collection('users').document(_firebaseUser.uid);
+    ref?.delete();
+
+    try {
+      _firebaseUser.delete();
+    } catch (e) {
+      _errorHandler(e, context);
+      return false;
+    }
+
+    if (context != null) {
+      AppToast.show(S.of(context).messageAccountDeleted);
+    }
+    return true;
   }
 
   Future<bool> canSignInWithPassword(
@@ -304,7 +324,7 @@ class AuthProvider with ChangeNotifier {
       }
 
       // Update user with updated info
-      firebaseUser = await FirebaseAuth.instance.currentUser();
+      _firebaseUser = await FirebaseAuth.instance.currentUser();
       notifyListeners();
 
       // Create document in 'users'
@@ -319,7 +339,7 @@ class AuthProvider with ChangeNotifier {
       ref.setData(user.toData());
 
       // Send verification e-mail
-      await firebaseUser.sendEmailVerification();
+      await _firebaseUser.sendEmailVerification();
 
       if (context != null) {
         AppToast.show(S.of(context).messageAccountCreated +
@@ -333,11 +353,17 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
-  Future<void> sendEmailVerification({BuildContext context}) async {
-    await firebaseUser.sendEmailVerification();
+  Future<bool> sendEmailVerification({BuildContext context}) async {
+    try {
+      await _firebaseUser.sendEmailVerification();
+    } catch (e) {
+      _errorHandler(e, context);
+      return false;
+    }
 
     if (context != null) {
       AppToast.show(S.of(context).messageCheckEmailVerification);
     }
+    return true;
   }
 }

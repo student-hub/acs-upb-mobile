@@ -20,14 +20,28 @@ extension FilterNodeExtension on FilterNode {
 
 class FilterProvider with ChangeNotifier {
   final Firestore _db = Firestore.instance;
-  Filter _relevanceFilter;
+  Filter _relevanceFilter;  // filter cache
 
   void resetFilter() {
     _relevanceFilter = null;
 
     // Reset filter preference
-    PrefService.setStringList('relevantNodes', null);
+    PrefService.setStringList('relevant_nodes', null);
   }
+
+  void enable() {
+    _relevanceFilter = null;
+    PrefService.setBool('relevance_filter', true);
+    notifyListeners();
+  }
+
+  void disable() {
+    _relevanceFilter = null;
+    PrefService.setBool('relevance_filter', false);
+    notifyListeners();
+  }
+
+  bool get filterEnabled => PrefService.get('relevance_filter');
 
   Future<Filter> getRelevanceFilter(BuildContext context) async {
     if (_relevanceFilter != null) {
@@ -47,9 +61,9 @@ class FilterProvider with ChangeNotifier {
           (element) => levelNames.add(Map<String, String>.from(element)));
 
       // Check if there is an existing setting already
-      List<String> relevantNodes = PrefService.get('relevantNodes') == null
+      List<String> relevantNodes = PrefService.get('relevant_nodes') == null
           ? null
-          : List<String>.from(PrefService.get('relevantNodes'));
+          : List<String>.from(PrefService.get('relevant_nodes'));
 
       Map<String, dynamic> root = data['root'];
       _relevanceFilter = Filter(
@@ -57,7 +71,7 @@ class FilterProvider with ChangeNotifier {
           root: FilterNodeExtension.fromMap(root, 'All'),
           listener: () {
             PrefService.setStringList(
-                'relevantNodes', _relevanceFilter.relevantNodes);
+                'relevant_nodes', _relevanceFilter.relevantNodes);
             notifyListeners();
           });
 
@@ -66,11 +80,11 @@ class FilterProvider with ChangeNotifier {
         AuthProvider authProvider =
             Provider.of<AuthProvider>(context, listen: false);
         if (authProvider.isAuthenticatedFromCache) {
-          User user = await authProvider.getCurrentUser();
+          User user = await authProvider.currentUser;
           // Try to set the default as the user's group
           if (user != null) {
             _relevanceFilter.setRelevantUpToRoot(user.group);
-            relevantNodes = PrefService.get('relevantNodes');
+            relevantNodes = PrefService.get('relevant_nodes');
           }
         }
       }

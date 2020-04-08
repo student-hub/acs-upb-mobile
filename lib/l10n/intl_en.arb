@@ -26,6 +26,8 @@
   "actionResetPassword": "Reset password",
   "actionSendEmail": "Send e-mail",
   "actionSendVerificationAgain": "Send e-mail again?",
+  "actionDeleteAccount": "Delete account",
+  "actionApply": "Apply",
 
   "errorSomethingWentWrong": "Something went wrong.",
   "errorPasswordsDiffer": "The two passwords differ.",
@@ -37,7 +39,7 @@
   "errorEmailInUse": "There is already an account associated with this e-mail address",
   "errorEmailNotFound": "An account associated with that e-mail could not be found. Please sign up instead.",
   "errorAccountDisabled": "The account has been disabled.",
-  "errorTooManyRequests": "There have been too many unsuccessful login attempts from this device.",
+  "errorTooManyRequests": "There have been too many requests from this device.",
   "errorCouldNotLaunchURL": "Could not launch '{url}'.",
 
   "warningInternetConnection": "Please make sure you are connected to the internet.",
@@ -46,6 +48,7 @@
   "warningEmailInUse": "There is already an account associated with {email}.",
   "warningUseProvider": "Please log in with {provider} to continue.",
   "warningTryAgainLater": "Please try again later.",
+  "warningFilterAlreadyDisabled": "Already showing all content.",
 
   "navigationHome": "Home",
   "navigationTimetable": "Timetable",
@@ -55,6 +58,9 @@
   "navigationSettings": "Settings",
   "navigationFilter": "Filter",
 
+  "filterMenuShowAll": "Show all",
+  "filterMenuRelevance": "Filter by relevance",
+
   "settingsTitlePersonalization": "Personalization",
   "settingsItemDarkMode": "Dark mode",
   "settingsTitleLocalization": "Localization",
@@ -62,6 +68,7 @@
   "settingsItemLanguageEnglish": "English",
   "settingsItemLanguageRomanian": "Romanian",
   "settingsItemLanguageAuto": "Auto",
+  "settingsRelevanceFilter": "Relevance filter",
 
   "websiteCategoryLearning": "Learning",
   "websiteCategoryAdministrative": "Administrative",
@@ -74,8 +81,11 @@
   "messageNewUser": "New user?",
   "messageEmailNotVerified": "Account is not verified.",
   "messageAccountCreated": "Account created successfully.",
+  "messageAccountDeleted": "Account deleted successfully.",
   "messageCheckEmailVerification": "Please check your email for account verification.",
   "messageResetPassword": "Enter your e-mai in order to receive instructions on how to reset your password.",
+  "messageDeleteAccount": "Are you sure you want to delete your account?",
+  "messageCannotBeUndone": "This action cannot be undone.",
   "messageUnderConstruction": "Under construction",
 
   "infoPasswordResetEmailSent": "Please check your inbox for the password reset e-mail.",

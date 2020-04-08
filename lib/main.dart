@@ -21,7 +21,7 @@ import 'package:provider/provider.dart';
 main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await PrefService.init(prefix: 'pref_');
-  PrefService.setDefaultValues({'language': 'auto'});
+  PrefService.setDefaultValues({'language': 'auto', 'relevance_filter': true});
 
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider<AuthProvider>(create: (_) => AuthProvider()),
@@ -75,6 +75,9 @@ class _MyAppState extends State<MyApp> {
       data: (brightness) => ThemeData(
           brightness: brightness,
           accentColor: _accentColor,
+          // The following two lines are meant to remove the splash effect
+          splashColor: Colors.transparent,
+          highlightColor: Colors.transparent,
           accentTextTheme: ThemeData().accentTextTheme.apply(
               fontFamily: 'Montserrat',
               bodyColor: _accentColor,
@@ -108,7 +111,7 @@ class _MyAppState extends State<MyApp> {
 class AppLoadingScreen extends StatelessWidget {
   Future<String> _setUpAndChooseStartScreen(BuildContext context) async {
     // Load locale from settings
-    S.load(Utils.getLocale(context));
+    S.load(Utils.getLocale());
 
     AuthProvider authProvider =
     Provider.of<AuthProvider>(context, listen: false);
