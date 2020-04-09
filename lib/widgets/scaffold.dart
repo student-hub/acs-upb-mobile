@@ -98,7 +98,13 @@ class AppScaffold extends StatelessWidget {
                           )
                         : menuText != null
                             ? FlatButton(
-                                child: Text(menuText),
+                                child: Text(
+                                  menuText,
+                                  style: TextStyle().apply(
+                                      color: Theme.of(context)
+                                          .primaryIconTheme
+                                          .color),
+                                ),
                                 onPressed: action,
                               )
                             : IconButton(
