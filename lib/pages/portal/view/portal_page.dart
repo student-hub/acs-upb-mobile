@@ -110,7 +110,7 @@ class _PortalPageState extends State<PortalPage> {
                             MediaQuery.of(context).size.height) /
                         5 + // circle
                     8 + // padding
-                    ScreenUtil().setHeight(80), // text
+                    ScreenUtil().setHeight(100), // text
                 child: ListView(
                   scrollDirection: Axis.horizontal,
                   children: websites
@@ -175,7 +175,6 @@ class _PortalPageState extends State<PortalPage> {
 
   @override
   Widget build(BuildContext context) {
-    ScreenUtil.init(context, width: 750, height: 1334, allowFontScaling: false);
     WebsiteProvider websiteProvider = Provider.of<WebsiteProvider>(context);
     FilterProvider filterProvider = Provider.of<FilterProvider>(context);
 

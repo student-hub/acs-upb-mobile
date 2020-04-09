@@ -13,12 +13,12 @@ class UniBanner extends StatelessWidget {
               children: <Widget>[
                 Image.asset(
                   "assets/icons/acs_logo.png",
-                  height: ScreenUtil().setWidth(150),
+                  height: ScreenUtil().setWidth(220),
                 ),
                 Image.asset(
                   S.of(context).fileAcsBanner,
                   color: Theme.of(context).textTheme.headline6.color,
-                  height: ScreenUtil().setWidth(85),
+                  height: ScreenUtil().setWidth(120),
                 ),
               ],
             ),

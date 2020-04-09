@@ -102,7 +102,6 @@ class _SignUpViewState extends State<SignUpView> {
 
   @override
   Widget build(BuildContext context) {
-    ScreenUtil.init(context, width: 750, height: 1334, allowFontScaling: false);
     AppForm signUpForm = _buildForm(context);
 
     return Scaffold(
@@ -117,7 +116,7 @@ class _SignUpViewState extends State<SignUpView> {
                   constraints: BoxConstraints(
                     maxWidth: MediaQuery.of(context).size.width / 1.4,
                     maxHeight: MediaQuery.of(context).size.height -
-                        ScreenUtil().setHeight(380),
+                        ScreenUtil().setHeight(550),
                   ),
                   child: Image.asset(
                       "assets/illustrations/undraw_personal_information.png")),
@@ -141,7 +140,7 @@ class _SignUpViewState extends State<SignUpView> {
                       ),
                     ),
                     Expanded(child: signUpForm),
-                    SizedBox(height: ScreenUtil().setHeight(40)),
+                    SizedBox(height: ScreenUtil().setHeight(60)),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
@@ -154,7 +153,7 @@ class _SignUpViewState extends State<SignUpView> {
                             },
                           ),
                         ),
-                        SizedBox(width: ScreenUtil().setWidth(30)),
+                        SizedBox(width: ScreenUtil().setWidth(50)),
                         Expanded(
                           child: AppButton(
                             key: ValueKey('sign_up_button'),
@@ -166,7 +165,7 @@ class _SignUpViewState extends State<SignUpView> {
                       ],
                     ),
                     SizedBox(
-                      height: ScreenUtil().setHeight(50),
+                      height: ScreenUtil().setHeight(70),
                     ),
                   ],
                 ),

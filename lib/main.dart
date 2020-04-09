@@ -15,6 +15,7 @@ import 'package:acs_upb_mobile/widgets/loading_screen.dart';
 import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:preferences/preferences.dart';
 import 'package:provider/provider.dart';
@@ -116,13 +117,16 @@ class AppLoadingScreen extends StatelessWidget {
     S.load(Utils.getLocale());
 
     AuthProvider authProvider =
-    Provider.of<AuthProvider>(context, listen: false);
+        Provider.of<AuthProvider>(context, listen: false);
     bool authenticated = await authProvider.isAuthenticatedFromService;
     return authenticated ? Routes.home : Routes.login;
   }
 
   @override
   Widget build(BuildContext context) {
+    ScreenUtil.init(context,
+        width: 1080, height: 2160, allowFontScaling: false);
+
     return LoadingScreen(
       navigateAfterFuture: _setUpAndChooseStartScreen(context),
       loadingText: Text('Setting up...'),

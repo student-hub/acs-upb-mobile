@@ -58,7 +58,6 @@ class CircleImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ScreenUtil.init(context, width: 750, height: 1334, allowFontScaling: false);
     var circleSize = circleScaleFactor *
         min(MediaQuery.of(context).size.width,
             MediaQuery.of(context).size.height) /
@@ -97,7 +96,7 @@ class CircleImage extends StatelessWidget {
           ),
           label != null
               ? Container(
-                  height: ScreenUtil().setHeight(80),
+                  height: ScreenUtil().setHeight(100),
                   width: circleSize,
                   child: Center(
                     child: AutoSizeText(

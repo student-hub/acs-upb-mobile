@@ -111,7 +111,7 @@ class _LoginViewState extends State<LoginView> {
       },
       trailing: <Widget>[
         SizedBox(
-          height: ScreenUtil().setHeight(35),
+          height: ScreenUtil().setHeight(50),
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
@@ -139,7 +139,6 @@ class _LoginViewState extends State<LoginView> {
 
   @override
   Widget build(BuildContext context) {
-    ScreenUtil.init(context, width: 750, height: 1334, allowFontScaling: false);
     AuthProvider authProvider = Provider.of<AuthProvider>(context);
     AppForm loginForm = _buildForm(context);
 
@@ -155,7 +154,7 @@ class _LoginViewState extends State<LoginView> {
                   constraints: BoxConstraints(
                     maxWidth: MediaQuery.of(context).size.width / 1.4,
                     maxHeight: MediaQuery.of(context).size.height -
-                        ScreenUtil().setHeight(380),
+                        ScreenUtil().setHeight(550),
                   ),
                   child: Image.asset(
                       "assets/illustrations/undraw_digital_nomad.png")),
@@ -188,7 +187,7 @@ class _LoginViewState extends State<LoginView> {
                       ),
                     ),
                     Expanded(child: loginForm),
-                    SizedBox(height: ScreenUtil().setHeight(40)),
+                    SizedBox(height: ScreenUtil().setHeight(60)),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
@@ -206,7 +205,7 @@ class _LoginViewState extends State<LoginView> {
                             },
                           ),
                         ),
-                        SizedBox(width: ScreenUtil().setWidth(30)),
+                        SizedBox(width: ScreenUtil().setWidth(50)),
                         Expanded(
                           child: AppButton(
                             key: ValueKey('log_in_button'),
@@ -218,7 +217,7 @@ class _LoginViewState extends State<LoginView> {
                       ],
                     ),
                     SizedBox(
-                      height: ScreenUtil().setHeight(50),
+                      height: ScreenUtil().setHeight(70),
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,

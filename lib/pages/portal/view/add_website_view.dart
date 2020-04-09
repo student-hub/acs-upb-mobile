@@ -22,7 +22,6 @@ class _AddWebsiteViewState extends State<AddWebsiteView> {
 
   @override
   Widget build(BuildContext context) {
-    ScreenUtil.init(context, width: 1080, height: 2160, allowFontScaling: true);
     return AppScaffold(
       title: S.of(context).actionAddWebsite,
       enableMenu: true,
