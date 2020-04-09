@@ -28,6 +28,7 @@
   "actionSendVerificationAgain": "Trimite mail din nou?",
   "actionDeleteAccount": "Ștergere cont",
   "actionApply": "Aplică",
+  "actionAddWebsite": "Adaugă website",
 
   "errorSomethingWentWrong": "A apărut o problemă.",
   "errorPasswordsDiffer": "Cele două parole diferă.",

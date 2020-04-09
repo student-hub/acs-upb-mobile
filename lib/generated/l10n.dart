@@ -1,6 +1,7 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+
 import 'intl/messages_all.dart';
 
 // **************************************************************************
@@ -256,6 +257,15 @@ class S {
     return Intl.message(
       'Apply',
       name: 'actionApply',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get actionAddWebsite {
+    return Intl.message(
+      'Add website',
+      name: 'actionAddWebsite',
       desc: '',
       args: [],
     );

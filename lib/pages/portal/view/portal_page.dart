@@ -61,17 +61,23 @@ class _PortalPageState extends State<PortalPage> {
         ),
       );
 
-  Widget addWebsiteButton({bool trailing = false}) => Padding(
-        padding: const EdgeInsets.only(top: 8.0, left: 8.0, right: 8.0),
-        child: CircleImage(
-          icon: Icon(
-            Icons.add,
-            color: Theme.of(context).unselectedWidgetColor,
+  Widget addWebsiteButton({bool trailing = false}) => Tooltip(
+        message: S.of(context).actionAddWebsite,
+        child: GestureDetector(
+          onTap: () => Navigator.of(context).pushNamed(Routes.addWebsite),
+          child: Padding(
+            padding: const EdgeInsets.only(top: 8.0, left: 8.0, right: 8.0),
+            child: CircleImage(
+              icon: Icon(
+                Icons.add,
+                color: Theme.of(context).unselectedWidgetColor,
+              ),
+              label: trailing ? "" : null,
+              circleScaleFactor: 0.6,
+              // Only align when there is no other website in the category
+              alignWhenScaling: !trailing,
+            ),
           ),
-          label: trailing ? "" : null,
-          circleScaleFactor: 0.6,
-          // Only align when there is no other website in the category
-          alignWhenScaling: !trailing,
         ),
       );
 
@@ -126,8 +132,8 @@ class _PortalPageState extends State<PortalPage> {
                                   }
                                   return CircleImage(
                                     label: website.label,
-                                    tooltip: website.infoByLocale[
-                                        Utils.getLocaleString()],
+                                    tooltip: website
+                                        .infoByLocale[Utils.getLocaleString()],
                                     image: image,
                                     onTap: () => _launchURL(website.link),
                                   );
