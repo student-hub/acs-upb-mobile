@@ -113,6 +113,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "warningPasswordLength" : MessageLookupByLibrary.simpleMessage("The password must be 8 characters long or more."),
     "warningTryAgainLater" : MessageLookupByLibrary.simpleMessage("Please try again later."),
     "warningUseProvider" : m4,
+    "warningWebsiteNameExists" : MessageLookupByLibrary.simpleMessage("A website with the same name already exists."),
     "websiteCategoryAdministrative" : MessageLookupByLibrary.simpleMessage("Administrative"),
     "websiteCategoryAssociations" : MessageLookupByLibrary.simpleMessage("Associations"),
     "websiteCategoryLearning" : MessageLookupByLibrary.simpleMessage("Learning"),

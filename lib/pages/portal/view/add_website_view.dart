@@ -1,8 +1,10 @@
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/portal/model/website.dart';
+import 'package:acs_upb_mobile/pages/portal/service/website_provider.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
 
 class AddWebsiteView extends StatefulWidget {
   static const String routeName = '/add_website';
@@ -26,10 +28,20 @@ class _AddWebsiteViewState extends State<AddWebsiteView> {
       title: S.of(context).actionAddWebsite,
       enableMenu: true,
       menuText: S.of(context).buttonSave,
-      menuAction: () {
+      menuAction: () async {
         if (_formKey.currentState.validate()) {
-          // TODO: Add website
-          Navigator.of(context).pop();
+          bool res = await Provider.of<WebsiteProvider>(context, listen: false)
+              .addWebsite(
+            Website(
+              label: _labelController.text,
+              link: _linkController.text,
+              category: _selectedCategory,
+            ),
+            context: context,
+          );
+          if (res) {
+            Navigator.of(context).pop();
+          }
         }
       },
       body: SafeArea(

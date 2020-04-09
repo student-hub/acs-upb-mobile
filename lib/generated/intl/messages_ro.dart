@@ -113,6 +113,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "warningPasswordLength" : MessageLookupByLibrary.simpleMessage("Parola trebuie să aibă cel puțin 8 caractere."),
     "warningTryAgainLater" : MessageLookupByLibrary.simpleMessage("Încercați mai târziu."),
     "warningUseProvider" : m4,
+    "warningWebsiteNameExists" : MessageLookupByLibrary.simpleMessage("Există deja un site cu același nume."),
     "websiteCategoryAdministrative" : MessageLookupByLibrary.simpleMessage("Administrativ"),
     "websiteCategoryAssociations" : MessageLookupByLibrary.simpleMessage("Asociații"),
     "websiteCategoryLearning" : MessageLookupByLibrary.simpleMessage("Cursuri"),

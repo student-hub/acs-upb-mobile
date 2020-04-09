@@ -478,6 +478,15 @@ class S {
     );
   }
 
+  String get warningWebsiteNameExists {
+    return Intl.message(
+      'A website with the same name already exists.',
+      name: 'warningWebsiteNameExists',
+      desc: '',
+      args: [],
+    );
+  }
+
   String get navigationHome {
     return Intl.message(
       'Home',

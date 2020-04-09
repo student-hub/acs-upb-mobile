@@ -54,6 +54,7 @@
   "warningTryAgainLater": "Încercați mai târziu.",
   "warningFilterAlreadyDisabled": "Întreg conținutul este vizibil deja.",
   "warningInvalidURL": "Trebuie să introduceți un URL valid.",
+  "warningWebsiteNameExists": "Există deja un site cu același nume.",
 
   "navigationHome": "Acasă",
   "navigationTimetable": "Orar",
