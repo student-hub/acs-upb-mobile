@@ -118,6 +118,33 @@ class S {
     );
   }
 
+  String get labelName {
+    return Intl.message(
+      'Name',
+      name: 'labelName',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get labelCategory {
+    return Intl.message(
+      'Category',
+      name: 'labelCategory',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get labelLink {
+    return Intl.message(
+      'Link',
+      name: 'labelLink',
+      desc: '',
+      args: [],
+    );
+  }
+
   String get hintEmail {
     return Intl.message(
       'john.doe',
@@ -437,6 +464,15 @@ class S {
     return Intl.message(
       'Already showing all content.',
       name: 'warningFilterAlreadyDisabled',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get warningInvalidURL {
+    return Intl.message(
+      'You need to provide a valid URL.',
+      name: 'warningInvalidURL',
       desc: '',
       args: [],
     );

@@ -10,6 +10,9 @@
   "labelFirstName": "Prenume",
   "labelLastName": "Nume",
   "labelGroup": "Grupa",
+  "labelName": "Nume",
+  "labelCategory": "Categorie",
+  "labelLink": "Link",
 
   "hintEmail": "john.doe",
   "hintPassword": "····················",
@@ -50,6 +53,7 @@
   "warningUseProvider": "Folosiți {provider} pentru a vă conecta.",
   "warningTryAgainLater": "Încercați mai târziu.",
   "warningFilterAlreadyDisabled": "Întreg conținutul este vizibil deja.",
+  "warningInvalidURL": "Trebuie să introduceți un URL valid.",
 
   "navigationHome": "Acasă",
   "navigationTimetable": "Orar",
