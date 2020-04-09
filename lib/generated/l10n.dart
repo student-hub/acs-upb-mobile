@@ -1,7 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-
 import 'intl/messages_all.dart';
 
 // **************************************************************************
@@ -59,6 +58,15 @@ class S {
     return Intl.message(
       'Send',
       name: 'buttonSend',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get buttonApply {
+    return Intl.message(
+      'Apply',
+      name: 'buttonApply',
       desc: '',
       args: [],
     );
@@ -248,15 +256,6 @@ class S {
     return Intl.message(
       'Delete account',
       name: 'actionDeleteAccount',
-      desc: '',
-      args: [],
-    );
-  }
-
-  String get actionApply {
-    return Intl.message(
-      'Apply',
-      name: 'actionApply',
       desc: '',
       args: [],
     );

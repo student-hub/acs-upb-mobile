@@ -116,7 +116,7 @@ class FilterPageState extends State<FilterPage> {
     return AppScaffold(
       title: S.of(context).navigationFilter,
       enableMenu: true,
-      menuText: S.of(context).actionApply,
+      menuText: S.of(context).buttonApply,
       menuAction: () {
         filterProvider.enableFilter();
         Navigator.of(context).pop();

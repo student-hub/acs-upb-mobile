@@ -3,6 +3,7 @@
   "buttonCancel": "Cancel",
   "buttonSave": "Save",
   "buttonSend": "Send",
+  "buttonApply": "Apply",
 
   "labelEmail": "Email",
   "labelPassword": "Password",
@@ -27,7 +28,6 @@
   "actionSendEmail": "Send e-mail",
   "actionSendVerificationAgain": "Send e-mail again?",
   "actionDeleteAccount": "Delete account",
-  "actionApply": "Apply",
 
   "errorSomethingWentWrong": "Something went wrong.",
   "errorPasswordsDiffer": "The two passwords differ.",

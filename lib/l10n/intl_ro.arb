@@ -3,6 +3,7 @@
   "buttonCancel": "Anulare",
   "buttonSave": "Salvare",
   "buttonSend": "Trimitere",
+  "buttonApply": "Aplică",
 
   "labelEmail": "Email",
   "labelPassword": "Parolă",
@@ -27,7 +28,6 @@
   "actionSendEmail": "Trimite e-mail",
   "actionSendVerificationAgain": "Trimite mail din nou?",
   "actionDeleteAccount": "Ștergere cont",
-  "actionApply": "Aplică",
 
   "errorSomethingWentWrong": "A apărut o problemă.",
   "errorPasswordsDiffer": "Cele două parole diferă.",

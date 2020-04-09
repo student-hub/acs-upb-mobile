@@ -31,7 +31,6 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
-    "actionApply" : MessageLookupByLibrary.simpleMessage("Apply"),
     "actionDeleteAccount" : MessageLookupByLibrary.simpleMessage("Delete account"),
     "actionLogIn" : MessageLookupByLibrary.simpleMessage("Log in"),
     "actionLogInAnonymously" : MessageLookupByLibrary.simpleMessage("Log in anonymously"),
@@ -42,6 +41,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "actionSignInWith" : m0,
     "actionSignUp" : MessageLookupByLibrary.simpleMessage("Sign up"),
     "actionSocialLogin" : MessageLookupByLibrary.simpleMessage("Social login"),
+    "buttonApply" : MessageLookupByLibrary.simpleMessage("Apply"),
     "buttonCancel" : MessageLookupByLibrary.simpleMessage("Cancel"),
     "buttonNext" : MessageLookupByLibrary.simpleMessage("Next"),
     "buttonSave" : MessageLookupByLibrary.simpleMessage("Save"),
