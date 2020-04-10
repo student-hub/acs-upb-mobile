@@ -32,31 +32,25 @@ class _AddWebsiteViewState extends State<AddWebsiteView> {
   SelectableController _onlyMeController = SelectableController();
   SelectableController _anyoneController = SelectableController();
 
-  List<Widget> relevanceList() => [
-        Selectable(
-          label: S.of(context).relevanceOnlyMe,
-          initiallySelected: true,
-          onSelected: (selected) => setState(() => selected
-              ? _anyoneController.deselect()
-              : _anyoneController.select()),
-          controller: _onlyMeController,
-        ),
-        SizedBox(width: 4),
-        Selectable(
-          label: S.of(context).relevanceAnyone,
-          initiallySelected: false,
-          onSelected: (selected) => setState(() => selected
-              ? _onlyMeController.deselect()
-              : _onlyMeController.select()),
-          controller: _anyoneController,
-        ),
-      ];
-
   _launchURL(String url) async {
     if (await canLaunch(url)) {
       await launch(url);
     } else {
       AppToast.show(S.of(context).errorCouldNotLaunchURL(url));
+    }
+  }
+
+  // Icon color from InputDecoration
+  Color get _iconColor {
+    ThemeData themeData = Theme.of(context);
+
+    switch (themeData.brightness) {
+      case Brightness.dark:
+        return Colors.white70;
+      case Brightness.light:
+        return Colors.black45;
+      default:
+        return themeData.iconTheme.color;
     }
   }
 
@@ -67,14 +61,11 @@ class _AddWebsiteViewState extends State<AddWebsiteView> {
             padding: const EdgeInsets.all(8.0),
             child: Row(
               children: <Widget>[
-                Icon(Icons.remove_red_eye, color: Theme.of(context).hintColor),
+                Icon(Icons.remove_red_eye, color: _iconColor),
                 SizedBox(width: 12.0),
                 Text(
                   S.of(context).labelPreview + ':',
-                  style: Theme.of(context)
-                      .textTheme
-                      .subtitle1
-                      .apply(color: Theme.of(context).hintColor),
+                  style: Theme.of(context).textTheme.subtitle1,
                 ),
                 SizedBox(width: 12.0),
                 Expanded(
@@ -100,8 +91,7 @@ class _AddWebsiteViewState extends State<AddWebsiteView> {
                         },
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(
-                            top: 8.0, left: 8.0),
+                        padding: const EdgeInsets.only(top: 8.0, left: 8.0),
                         child: CircleImage(
                           icon: Icon(
                             Icons.add,
@@ -202,10 +192,10 @@ class _AddWebsiteViewState extends State<AddWebsiteView> {
             ),
             Padding(
               padding:
-                  const EdgeInsets.only(top: 10.0, left: 28.0, right: 16.0),
+                  const EdgeInsets.only(top: 12.0, left: 28.0, right: 16.0),
               child: Row(
                 children: <Widget>[
-                  Icon(CustomIcons.filter, color: Theme.of(context).hintColor),
+                  Icon(CustomIcons.filter, color: _iconColor),
                   SizedBox(width: 12.0),
                   Expanded(
                     child: Column(
@@ -213,17 +203,37 @@ class _AddWebsiteViewState extends State<AddWebsiteView> {
                       children: <Widget>[
                         Text(
                           S.of(context).labelRelevance,
-                          style: TextStyle(
-                              color: Theme.of(context).hintColor,
-                              fontSize: 12,
-                              fontWeight: FontWeight.w400),
+                          style: Theme.of(context)
+                              .textTheme
+                              .caption
+                              .apply(color: Theme.of(context).hintColor),
                         ),
-                        SizedBox(height: 4.0),
+                        SizedBox(height: 8.0),
                         Container(
                           height: 40,
                           child: ListView(
                             scrollDirection: Axis.horizontal,
-                            children: relevanceList(),
+                            children: <Widget>[
+                              Selectable(
+                                label: S.of(context).relevanceOnlyMe,
+                                initiallySelected: true,
+                                onSelected: (selected) => setState(() =>
+                                    selected
+                                        ? _anyoneController.deselect()
+                                        : _anyoneController.select()),
+                                controller: _onlyMeController,
+                              ),
+                              SizedBox(width: 8.0),
+                              Selectable(
+                                label: S.of(context).relevanceAnyone,
+                                initiallySelected: false,
+                                onSelected: (selected) => setState(() =>
+                                    selected
+                                        ? _onlyMeController.deselect()
+                                        : _onlyMeController.select()),
+                                controller: _anyoneController,
+                              ),
+                            ],
                           ),
                         ),
                       ],
