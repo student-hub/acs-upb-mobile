@@ -124,6 +124,10 @@ class AuthProvider with ChangeNotifier {
     return _firebaseUser != null;
   }
 
+  String get uid {
+    return _firebaseUser.uid;
+  }
+
   Future<User> get currentUser async {
     if (isAnonymous) {
       return null;

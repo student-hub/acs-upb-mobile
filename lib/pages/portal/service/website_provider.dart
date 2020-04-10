@@ -63,7 +63,7 @@ extension WebsiteExtension on Website {
 class WebsiteProvider with ChangeNotifier {
   final Firestore _db = Firestore.instance;
 
-  Future<List<Website>> getWebsites(Filter filter) async {
+  Future<List<Website>> getWebsites(Filter filter, {String uid}) async {
     try {
       List<DocumentSnapshot> documents = [];
 
@@ -92,8 +92,19 @@ class WebsiteProvider with ChangeNotifier {
       // Remove duplicates
       // (a document may result out of more than one query)
       final seenDocumentIds = Set<String>();
-      final uniqueDocuments =
-          documents.where((doc) => seenDocumentIds.add(doc.documentID));
+      final uniqueDocuments = documents
+          .where((doc) => seenDocumentIds.add(doc.documentID))
+          .toList();
+
+      // Get user-added websites
+      if (uid != null) {
+        DocumentReference ref =
+            Firestore.instance.collection('users').document(uid);
+        QuerySnapshot qSnapshot =
+            await ref.collection('websites').getDocuments();
+        uniqueDocuments.addAll(qSnapshot.documents);
+      }
+
       return uniqueDocuments
           .map((doc) => WebsiteExtension.fromSnap(doc))
           .toList();

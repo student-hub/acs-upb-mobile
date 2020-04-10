@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/navigation/routes.dart';
 import 'package:acs_upb_mobile/pages/filter/model/filter.dart';
@@ -177,6 +178,7 @@ class _PortalPageState extends State<PortalPage> {
   Widget build(BuildContext context) {
     WebsiteProvider websiteProvider = Provider.of<WebsiteProvider>(context);
     FilterProvider filterProvider = Provider.of<FilterProvider>(context);
+    AuthProvider authProvider = Provider.of<AuthProvider>(context);
 
     filterFuture = filterProvider.getRelevanceFilter(context);
 
@@ -206,7 +208,8 @@ class _PortalPageState extends State<PortalPage> {
           if (filterSnap.connectionState == ConnectionState.done) {
             return FutureBuilder<List<Website>>(
                 future: websiteProvider.getWebsites(
-                    filterProvider.filterEnabled ? filterSnap.data : null),
+                    filterProvider.filterEnabled ? filterSnap.data : null,
+                    uid: authProvider.uid),
                 builder: (context, AsyncSnapshot<List<Website>> websiteSnap) {
                   if (websiteSnap.hasData) {
                     websites = websiteSnap.data;
