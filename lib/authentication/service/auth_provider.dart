@@ -27,7 +27,7 @@ extension DatabaseUser on User {
 }
 
 class AuthProvider with ChangeNotifier {
-  FirebaseUser _firebaseUser; // TODO: Make this private
+  FirebaseUser _firebaseUser;
   StreamSubscription _userAuthSub;
 
   AuthProvider() {
@@ -102,7 +102,7 @@ class AuthProvider with ChangeNotifier {
 
   /// Check the network to see if there is a user authenticated
   Future<bool> get isVerifiedFromService async {
-    _firebaseUser.reload();
+    await _firebaseUser.reload();
     _firebaseUser = await FirebaseAuth.instance.currentUser();
     return _firebaseUser.isEmailVerified;
   }
@@ -314,17 +314,13 @@ class AuthProvider with ChangeNotifier {
           .createUserWithEmailAndPassword(email: email, password: password);
 
       // Update display name
-      try {
-        var userUpdateInfo = UserUpdateInfo();
-        userUpdateInfo.displayName = firstName + ' ' + lastName;
-        await res.user.updateProfile(userUpdateInfo);
-      } catch (e) {
-        _errorHandler(e, context);
-      }
+      var userUpdateInfo = UserUpdateInfo();
+      userUpdateInfo.displayName = firstName + ' ' + lastName;
+      await res.user.updateProfile(userUpdateInfo);
 
       // Update user with updated info
+      await _firebaseUser?.reload();
       _firebaseUser = await FirebaseAuth.instance.currentUser();
-      notifyListeners();
 
       // Create document in 'users'
       var user = User(
@@ -335,7 +331,7 @@ class AuthProvider with ChangeNotifier {
 
       DocumentReference ref =
           Firestore.instance.collection('users').document(user.uid);
-      ref.setData(user.toData());
+      await ref.setData(user.toData());
 
       // Send verification e-mail
       await _firebaseUser.sendEmailVerification();
@@ -345,8 +341,13 @@ class AuthProvider with ChangeNotifier {
             ' ' +
             S.of(context).messageCheckEmailVerification);
       }
+
+      notifyListeners();
       return true;
     } catch (e) {
+      // Remove user if it was created
+      await _firebaseUser?.delete();
+
       _errorHandler(e, context);
       return false;
     }
