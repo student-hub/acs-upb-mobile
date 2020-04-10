@@ -145,6 +145,15 @@ class S {
     );
   }
 
+  String get labelRelevance {
+    return Intl.message(
+      'Relevance',
+      name: 'labelRelevance',
+      desc: '',
+      args: [],
+    );
+  }
+
   String get hintEmail {
     return Intl.message(
       'john.doe',
@@ -572,6 +581,24 @@ class S {
     return Intl.message(
       'Filter by relevance',
       name: 'filterMenuRelevance',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get relevanceOnlyMe {
+    return Intl.message(
+      'Only me',
+      name: 'relevanceOnlyMe',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get relevanceAnyone {
+    return Intl.message(
+      'Anyone',
+      name: 'relevanceAnyone',
       desc: '',
       args: [],
     );

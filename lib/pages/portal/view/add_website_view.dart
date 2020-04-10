@@ -1,8 +1,11 @@
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/portal/model/website.dart';
 import 'package:acs_upb_mobile/pages/portal/service/website_provider.dart';
+import 'package:acs_upb_mobile/resources/custom_icons.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
+import 'package:acs_upb_mobile/widgets/selectable.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
@@ -21,6 +24,30 @@ class _AddWebsiteViewState extends State<AddWebsiteView> {
   WebsiteCategory _selectedCategory = WebsiteCategory.learning;
   TextEditingController _labelController = TextEditingController();
   TextEditingController _linkController = TextEditingController();
+
+  // The "Only me" and "Anyone" relevance options are mutually exclusive
+  SelectableController _onlyMeController = SelectableController();
+  SelectableController _anyoneController = SelectableController();
+
+  List<Widget> relevanceList() => [
+        Selectable(
+          label: S.of(context).relevanceOnlyMe,
+          initiallySelected: true,
+          onSelected: (selected) => setState(() => selected
+              ? _anyoneController.deselect()
+              : _anyoneController.select()),
+          controller: _onlyMeController,
+        ),
+        SizedBox(width: 4),
+        Selectable(
+          label: S.of(context).relevanceAnyone,
+          initiallySelected: false,
+          onSelected: (selected) => setState(() => selected
+              ? _onlyMeController.deselect()
+              : _onlyMeController.select()),
+          controller: _anyoneController,
+        ),
+      ];
 
   @override
   Widget build(BuildContext context) {
@@ -103,6 +130,38 @@ class _AddWebsiteViewState extends State<AddWebsiteView> {
                     ),
                   ],
                 ),
+              ),
+            ),
+            Padding(
+              padding:
+                  const EdgeInsets.only(top: 10.0, left: 28.0, right: 16.0),
+              child: Row(
+                children: <Widget>[
+                  Icon(CustomIcons.filter, color: Theme.of(context).hintColor),
+                  SizedBox(width: 12.0),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text(
+                          S.of(context).labelRelevance,
+                          style: TextStyle(
+                              color: Theme.of(context).hintColor,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w400),
+                        ),
+                        SizedBox(height: 4.0),
+                        Container(
+                          height: 40,
+                          child: ListView(
+                            scrollDirection: Axis.horizontal,
+                            children: relevanceList(),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
             ),
           ],

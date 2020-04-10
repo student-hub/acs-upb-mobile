@@ -13,6 +13,7 @@
   "labelName": "Name",
   "labelCategory": "Category",
   "labelLink": "Link",
+  "labelRelevance": "Relevance",
 
   "hintEmail": "john.doe",
   "hintPassword": "····················",
@@ -67,6 +68,9 @@
   "filterMenuShowAll": "Show all",
   "filterMenuShowMine": "Show only mine",
   "filterMenuRelevance": "Filter by relevance",
+
+  "relevanceOnlyMe": "Only me",
+  "relevanceAnyone": "Anyone",
 
   "settingsTitlePersonalization": "Personalization",
   "settingsItemDarkMode": "Dark mode",

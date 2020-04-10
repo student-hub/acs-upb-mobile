@@ -13,6 +13,7 @@
   "labelName": "Nume",
   "labelCategory": "Categorie",
   "labelLink": "Link",
+  "labelRelevance": "Relevanță",
 
   "hintEmail": "john.doe",
   "hintPassword": "····················",
@@ -67,6 +68,9 @@
   "filterMenuShowAll": "Arată tot",
   "filterMenuShowMine": "Arată doar pe ale mele",
   "filterMenuRelevance": "Filtrează după relevanță",
+
+  "relevanceOnlyMe": "Doar eu",
+  "relevanceAnyone": "Oricine",
 
   "settingsTitlePersonalization": "Personalizare",
   "settingsItemDarkMode": "Dark mode",
