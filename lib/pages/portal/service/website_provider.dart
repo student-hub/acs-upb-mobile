@@ -1,11 +1,14 @@
 import 'dart:async';
 
+import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/filter/model/filter.dart';
 import 'package:acs_upb_mobile/pages/portal/model/website.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:meta/meta.dart';
+import 'package:provider/provider.dart';
 import 'package:recase/recase.dart';
 
 extension WebsiteCategoryExtension on WebsiteCategory {
@@ -99,8 +102,15 @@ class WebsiteProvider with ChangeNotifier {
     }
   }
 
-  Future<bool> addWebsite(Website website, {BuildContext context}) async {
+  Future<bool> addWebsite(Website website,
+      {@required BuildContext context}) async {
     assert(website.label != null);
+    assert(context != null);
+
+    AuthProvider authProvider =
+        Provider.of<AuthProvider>(context, listen: false);
+    String uid = (await authProvider.currentUser)?.uid;
+    assert(uid != null);
 
     // Sanitize label to obtain document ID
     String id =
@@ -110,14 +120,15 @@ class WebsiteProvider with ChangeNotifier {
 
     if ((await ref.get()).data != null) {
       print('A website with id $id already exists');
-      if (context != null) {
-        AppToast.show(S.of(context).warningWebsiteNameExists);
-      }
+      AppToast.show(S.of(context).warningWebsiteNameExists);
       return false;
     }
 
     try {
-      await ref.setData(website.toData());
+      var data = website.toData();
+      data['addedBy'] = uid;
+      await ref.setData(data);
+
       notifyListeners();
       return true;
     } catch (e) {
