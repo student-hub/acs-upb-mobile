@@ -199,7 +199,10 @@ class _PortalPageState extends State<PortalPage> {
           userOnly = false;
           Navigator.pushNamed(context, Routes.filter);
         },
-        S.of(context).filterMenuShowMine: () => setState(() => userOnly = true),
+        S.of(context).filterMenuShowMine: () {
+          setState(() => userOnly = true);
+          filterProvider.enable();
+        },
         S.of(context).filterMenuShowAll: () {
           if (!filterProvider.filterEnabled) {
             AppToast.show(S.of(context).warningFilterAlreadyDisabled);
