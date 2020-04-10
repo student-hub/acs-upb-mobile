@@ -50,7 +50,8 @@ extension WebsiteExtension on Website {
     };
 
     if (label != null) data['label'] = label;
-    if (category != null) data['category'] = category.toString();
+    if (category != null)
+      data['category'] = category.toString().split('.').last;
     if (iconPath != null) data['icon'] = iconPath;
     if (link != null) data['link'] = link;
     if (infoByLocale != null) data['info'] = infoByLocale;
