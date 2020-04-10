@@ -22,7 +22,8 @@ extension DatabaseUser on User {
   Map<String, dynamic> toData() {
     return {
       'name': {'first': firstName, 'last': lastName},
-      'group': group
+      'group': group,
+      'permissionLevel': permissionLevel
     };
   }
 }
