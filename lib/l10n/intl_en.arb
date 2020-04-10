@@ -15,6 +15,7 @@
   "labelLink": "Link",
   "labelRelevance": "Relevance",
   "labelPreview": "Preview",
+  "labelDescription": "Description",
 
   "hintEmail": "john.doe",
   "hintPassword": "····················",

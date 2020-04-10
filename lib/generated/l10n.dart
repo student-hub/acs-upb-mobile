@@ -163,6 +163,15 @@ class S {
     );
   }
 
+  String get labelDescription {
+    return Intl.message(
+      'Description',
+      name: 'labelDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
   String get hintEmail {
     return Intl.message(
       'john.doe',

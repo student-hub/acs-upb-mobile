@@ -73,6 +73,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "infoPasswordResetEmailSent" : MessageLookupByLibrary.simpleMessage("Please check your inbox for the password reset e-mail."),
     "labelCategory" : MessageLookupByLibrary.simpleMessage("Categorie"),
     "labelConfirmPassword" : MessageLookupByLibrary.simpleMessage("Confirmare parolă"),
+    "labelDescription" : MessageLookupByLibrary.simpleMessage("Descriere"),
     "labelEmail" : MessageLookupByLibrary.simpleMessage("Email"),
     "labelFirstName" : MessageLookupByLibrary.simpleMessage("Prenume"),
     "labelGroup" : MessageLookupByLibrary.simpleMessage("Grupa"),

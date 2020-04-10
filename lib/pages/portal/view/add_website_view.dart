@@ -3,6 +3,7 @@ import 'package:acs_upb_mobile/pages/portal/model/website.dart';
 import 'package:acs_upb_mobile/pages/portal/service/website_provider.dart';
 import 'package:acs_upb_mobile/resources/custom_icons.dart';
 import 'package:acs_upb_mobile/resources/storage_provider.dart';
+import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/widgets/circle_image.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:acs_upb_mobile/widgets/selectable.dart';
@@ -12,7 +13,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:validators/sanitizers.dart';
 import 'package:validators/validators.dart';
 
 class AddWebsiteView extends StatefulWidget {
@@ -24,12 +24,12 @@ class AddWebsiteView extends StatefulWidget {
 
 class _AddWebsiteViewState extends State<AddWebsiteView> {
   final _formKey = GlobalKey<FormState>();
-  final _labelKey = GlobalKey<FormFieldState>();
-  final _linkKey = GlobalKey<FormFieldState>();
 
   WebsiteCategory _selectedCategory = WebsiteCategory.learning;
   TextEditingController _labelController = TextEditingController();
   TextEditingController _linkController = TextEditingController();
+  TextEditingController _descriptionRoController = TextEditingController();
+  TextEditingController _descriptionEnController = TextEditingController();
 
   // The "Only me" and "Anyone" relevance options are mutually exclusive
   SelectableController _onlyMeController = SelectableController();
@@ -57,76 +57,139 @@ class _AddWebsiteViewState extends State<AddWebsiteView> {
     }
   }
 
-  Widget preview() => Padding(
-        padding: const EdgeInsets.only(left: 20.0, right: 8.0, top: 8.0),
-        child: Card(
-          child: Column(
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  children: <Widget>[
-                    Icon(Icons.remove_red_eye, color: _iconColor),
-                    SizedBox(width: 12.0),
-                    Text(
-                      S.of(context).labelPreview + ':',
-                      style: Theme.of(context).textTheme.subtitle1,
-                    ),
-                    SizedBox(width: 12.0),
-                    Expanded(
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          FutureBuilder<ImageProvider<dynamic>>(
-                            future: Provider.of<StorageProvider>(context,
-                                    listen: false)
-                                .getImageFromPath('icons/websites/globe.png'),
-                            builder: (context, snapshot) {
-                              ImageProvider<dynamic> image =
-                                  AssetImage('assets/images/globe.png');
-                              if (snapshot.hasData) {
-                                image = snapshot.data;
-                              }
-                              return CircleImage(
-                                label: toString(_labelController.text).isEmpty
-                                    ? Website.labelFromLink(_linkController.text)
-                                    : _labelController.text,
-                                onTap: () => _launchURL(_linkController.text),
-                                image: image,
-                              );
-                            },
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 8.0, left: 8.0),
-                            child: CircleImage(
-                              icon: Icon(
-                                Icons.add,
-                                color: Theme.of(context).unselectedWidgetColor,
-                              ),
-                              label: "",
-                              circleScaleFactor: 0.6,
-                              // Only align when there is no other website in the category
-                              alignWhenScaling: true,
+  Website buildWebsite() => Website(
+          label: _labelController.text,
+          link: _linkController.text,
+          category: _selectedCategory,
+          infoByLocale: {
+            'ro': _descriptionRoController.text,
+            'en': _descriptionEnController.text
+          });
+
+  Widget preview() {
+    Website website = buildWebsite();
+
+    return Padding(
+      padding: const EdgeInsets.only(left: 20.0, right: 8.0, top: 8.0),
+      child: Card(
+        child: Column(
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                children: <Widget>[
+                  Icon(Icons.remove_red_eye, color: _iconColor),
+                  SizedBox(width: 12.0),
+                  Text(
+                    S.of(context).labelPreview + ':',
+                    style: Theme.of(context).textTheme.subtitle1,
+                  ),
+                  SizedBox(width: 12.0),
+                  Expanded(
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        FutureBuilder<ImageProvider<dynamic>>(
+                          future: Provider.of<StorageProvider>(context,
+                                  listen: false)
+                              .getImageFromPath('icons/websites/globe.png'),
+                          builder: (context, snapshot) {
+                            ImageProvider<dynamic> image =
+                                AssetImage('assets/images/globe.png');
+                            if (snapshot.hasData) {
+                              image = snapshot.data;
+                            }
+                            return CircleImage(
+                              label: website.label,
+                              onTap: () => _launchURL(website.link),
+                              image: image,
+                              tooltip:
+                                  website.infoByLocale[Utils.getLocaleString()],
+                            );
+                          },
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 8.0, left: 8.0),
+                          child: CircleImage(
+                            icon: Icon(
+                              Icons.add,
+                              color: Theme.of(context).unselectedWidgetColor,
                             ),
+                            label: "",
+                            circleScaleFactor: 0.6,
+                            // Only align when there is no other website in the category
+                            alignWhenScaling: true,
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-              Padding(
-                padding:
-                    const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 8.0),
-                child: AutoSizeText(
-                  S.of(context).messageWebsitePreview,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(color: Theme.of(context).hintColor),
-                ),
-              )
-            ],
-          ),
+            ),
+            Padding(
+              padding:
+                  const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 8.0),
+              child: AutoSizeText(
+                S.of(context).messageWebsitePreview,
+                textAlign: TextAlign.center,
+                style: TextStyle(color: Theme.of(context).hintColor),
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget relevanceField() => Padding(
+        padding: const EdgeInsets.only(top: 12.0, left: 12.0),
+        child: Row(
+          children: <Widget>[
+            Icon(CustomIcons.filter, color: _iconColor),
+            SizedBox(width: 12.0),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    S.of(context).labelRelevance,
+                    style: Theme.of(context)
+                        .textTheme
+                        .caption
+                        .apply(color: Theme.of(context).hintColor),
+                  ),
+                  SizedBox(height: 8.0),
+                  Container(
+                    height: 40,
+                    child: ListView(
+                      scrollDirection: Axis.horizontal,
+                      children: <Widget>[
+                        Selectable(
+                          label: S.of(context).relevanceOnlyMe,
+                          initiallySelected: true,
+                          onSelected: (selected) => setState(() => selected
+                              ? _anyoneController.deselect()
+                              : _anyoneController.select()),
+                          controller: _onlyMeController,
+                        ),
+                        SizedBox(width: 8.0),
+                        Selectable(
+                          label: S.of(context).relevanceAnyone,
+                          initiallySelected: false,
+                          onSelected: (selected) => setState(() => selected
+                              ? _onlyMeController.deselect()
+                              : _onlyMeController.select()),
+                          controller: _anyoneController,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
       );
 
@@ -140,12 +203,7 @@ class _AddWebsiteViewState extends State<AddWebsiteView> {
         if (_formKey.currentState.validate()) {
           bool res = await Provider.of<WebsiteProvider>(context, listen: false)
               .addWebsite(
-            Website(
-                label: toString(_labelController.text).isEmpty
-                    ? Website.labelFromLink(_linkController.text)
-                    : _labelController.text,
-                link: _linkController.text,
-                category: _selectedCategory),
+            buildWebsite(),
             userOnly: _onlyMeController.isSelected,
             context: context,
           );
@@ -165,7 +223,6 @@ class _AddWebsiteViewState extends State<AddWebsiteView> {
                 child: Column(
                   children: <Widget>[
                     TextFormField(
-                      key: _labelKey,
                       controller: _labelController,
                       decoration: InputDecoration(
                         labelText: S.of(context).labelName,
@@ -193,7 +250,6 @@ class _AddWebsiteViewState extends State<AddWebsiteView> {
                           setState(() => _selectedCategory = selection),
                     ),
                     TextFormField(
-                      key: _linkKey,
                       controller: _linkController,
                       decoration: InputDecoration(
                         labelText: S.of(context).labelLink + ' *',
@@ -208,60 +264,37 @@ class _AddWebsiteViewState extends State<AddWebsiteView> {
                       },
                       onChanged: (_) => setState(() {}),
                     ),
+                    relevanceField(),
+                    TextFormField(
+                      controller: _descriptionRoController,
+                      decoration: InputDecoration(
+                          labelText: S.of(context).labelDescription +
+                              ' (' +
+                              S
+                                  .of(context)
+                                  .settingsItemLanguageRomanian
+                                  .toLowerCase() +
+                              ')',
+                          hintText: 'Cel mai popular motor de căutare.',
+                          prefixIcon: Icon(Icons.info)),
+                      onChanged: (_) => setState(() {}),
+                    ),
+                    TextFormField(
+                      controller: _descriptionEnController,
+                      decoration: InputDecoration(
+                          labelText: S.of(context).labelDescription +
+                              ' (' +
+                              S
+                                  .of(context)
+                                  .settingsItemLanguageEnglish
+                                  .toLowerCase() +
+                              ')',
+                          hintText: 'The most popular search engine.',
+                          prefixIcon: Icon(Icons.info)),
+                      onChanged: (_) => setState(() {}),
+                    ),
                   ],
                 ),
-              ),
-            ),
-            Padding(
-              padding:
-                  const EdgeInsets.only(top: 12.0, left: 28.0, right: 16.0),
-              child: Row(
-                children: <Widget>[
-                  Icon(CustomIcons.filter, color: _iconColor),
-                  SizedBox(width: 12.0),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text(
-                          S.of(context).labelRelevance,
-                          style: Theme.of(context)
-                              .textTheme
-                              .caption
-                              .apply(color: Theme.of(context).hintColor),
-                        ),
-                        SizedBox(height: 8.0),
-                        Container(
-                          height: 40,
-                          child: ListView(
-                            scrollDirection: Axis.horizontal,
-                            children: <Widget>[
-                              Selectable(
-                                label: S.of(context).relevanceOnlyMe,
-                                initiallySelected: true,
-                                onSelected: (selected) => setState(() =>
-                                    selected
-                                        ? _anyoneController.deselect()
-                                        : _anyoneController.select()),
-                                controller: _onlyMeController,
-                              ),
-                              SizedBox(width: 8.0),
-                              Selectable(
-                                label: S.of(context).relevanceAnyone,
-                                initiallySelected: false,
-                                onSelected: (selected) => setState(() =>
-                                    selected
-                                        ? _onlyMeController.deselect()
-                                        : _onlyMeController.select()),
-                                controller: _anyoneController,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
               ),
             ),
           ],

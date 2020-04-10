@@ -15,6 +15,7 @@
   "labelLink": "Link",
   "labelRelevance": "Relevanță",
   "labelPreview": "Previzualizare",
+  "labelDescription": "Descriere",
 
   "hintEmail": "john.doe",
   "hintPassword": "····················",
@@ -23,7 +24,7 @@
   "hintGroup": "314CB",
   "hintWebsiteLabel": "Google",
   "hintWebsiteLink": "http://google.com",
-  
+
   "actionSignUp": "Înregistrare",
   "actionLogIn": "Conectare",
   "actionLogOut": "Deconectare",
