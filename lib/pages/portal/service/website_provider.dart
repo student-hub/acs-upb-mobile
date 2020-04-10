@@ -63,38 +63,41 @@ extension WebsiteExtension on Website {
 class WebsiteProvider with ChangeNotifier {
   final Firestore _db = Firestore.instance;
 
-  Future<List<Website>> getWebsites(Filter filter, {String uid}) async {
+  Future<List<Website>> getWebsites(Filter filter,
+      {bool userOnly = false, String uid}) async {
     try {
       List<DocumentSnapshot> documents = [];
 
-      if (filter == null) {
-        QuerySnapshot qSnapshot =
-            await _db.collection('websites').getDocuments();
-        documents.addAll(qSnapshot.documents);
-      } else {
-        // Documents without a 'relevance' field are relevant for everyone
-        Query query =
-            _db.collection('websites').where('relevance', isNull: true);
-        QuerySnapshot qSnapshot = await query.getDocuments();
-        documents.addAll(qSnapshot.documents);
-
-        for (String string in filter.relevantNodes) {
-          // selected nodes
-          Query query = _db
-              .collection('websites')
-              .where('degree', isEqualTo: filter.baseNode)
-              .where('relevance', arrayContains: string);
+      if (!userOnly) {
+        if (filter == null) {
+          QuerySnapshot qSnapshot =
+              await _db.collection('websites').getDocuments();
+          documents.addAll(qSnapshot.documents);
+        } else {
+          // Documents without a 'relevance' field are relevant for everyone
+          Query query =
+              _db.collection('websites').where('relevance', isNull: true);
           QuerySnapshot qSnapshot = await query.getDocuments();
           documents.addAll(qSnapshot.documents);
-        }
-      }
 
-      // Remove duplicates
-      // (a document may result out of more than one query)
-      final seenDocumentIds = Set<String>();
-      final uniqueDocuments = documents
-          .where((doc) => seenDocumentIds.add(doc.documentID))
-          .toList();
+          for (String string in filter.relevantNodes) {
+            // selected nodes
+            Query query = _db
+                .collection('websites')
+                .where('degree', isEqualTo: filter.baseNode)
+                .where('relevance', arrayContains: string);
+            QuerySnapshot qSnapshot = await query.getDocuments();
+            documents.addAll(qSnapshot.documents);
+          }
+        }
+
+        // Remove duplicates
+        // (a document may result out of more than one query)
+        final seenDocumentIds = Set<String>();
+        documents = documents
+            .where((doc) => seenDocumentIds.add(doc.documentID))
+            .toList();
+      }
 
       // Get user-added websites
       if (uid != null) {
@@ -102,12 +105,10 @@ class WebsiteProvider with ChangeNotifier {
             Firestore.instance.collection('users').document(uid);
         QuerySnapshot qSnapshot =
             await ref.collection('websites').getDocuments();
-        uniqueDocuments.addAll(qSnapshot.documents);
+        documents.addAll(qSnapshot.documents);
       }
 
-      return uniqueDocuments
-          .map((doc) => WebsiteExtension.fromSnap(doc))
-          .toList();
+      return documents.map((doc) => WebsiteExtension.fromSnap(doc)).toList();
     } catch (e) {
       print(e);
       return null;

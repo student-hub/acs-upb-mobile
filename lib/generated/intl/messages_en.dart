@@ -62,6 +62,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "fileAcsBanner" : MessageLookupByLibrary.simpleMessage("assets/images/acs_banner_en.png"),
     "filterMenuRelevance" : MessageLookupByLibrary.simpleMessage("Filter by relevance"),
     "filterMenuShowAll" : MessageLookupByLibrary.simpleMessage("Show all"),
+    "filterMenuShowMine" : MessageLookupByLibrary.simpleMessage("Show only mine"),
     "hintEmail" : MessageLookupByLibrary.simpleMessage("john.doe"),
     "hintFirstName" : MessageLookupByLibrary.simpleMessage("John"),
     "hintGroup" : MessageLookupByLibrary.simpleMessage("314CB"),

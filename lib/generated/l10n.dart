@@ -559,6 +559,15 @@ class S {
     );
   }
 
+  String get filterMenuShowMine {
+    return Intl.message(
+      'Show only mine',
+      name: 'filterMenuShowMine',
+      desc: '',
+      args: [],
+    );
+  }
+
   String get filterMenuRelevance {
     return Intl.message(
       'Filter by relevance',

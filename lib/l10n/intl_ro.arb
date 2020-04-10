@@ -65,6 +65,7 @@
   "navigationFilter": "Filtru",
 
   "filterMenuShowAll": "Arată tot",
+  "filterMenuShowMine": "Arată doar pe ale mele",
   "filterMenuRelevance": "Filtrează după relevanță",
 
   "settingsTitlePersonalization": "Personalizare",

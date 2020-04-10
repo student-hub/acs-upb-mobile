@@ -62,6 +62,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "fileAcsBanner" : MessageLookupByLibrary.simpleMessage("assets/images/acs_banner_ro.png"),
     "filterMenuRelevance" : MessageLookupByLibrary.simpleMessage("Filtrează după relevanță"),
     "filterMenuShowAll" : MessageLookupByLibrary.simpleMessage("Arată tot"),
+    "filterMenuShowMine" : MessageLookupByLibrary.simpleMessage("Arată doar pe ale mele"),
     "hintEmail" : MessageLookupByLibrary.simpleMessage("john.doe"),
     "hintFirstName" : MessageLookupByLibrary.simpleMessage("John"),
     "hintGroup" : MessageLookupByLibrary.simpleMessage("314CB"),

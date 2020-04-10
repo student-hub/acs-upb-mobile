@@ -27,6 +27,9 @@ class PortalPage extends StatefulWidget {
 class _PortalPageState extends State<PortalPage> {
   Future<Filter> filterFuture;
 
+  // Only show user-added websites
+  bool userOnly = false;
+
   _launchURL(String url) async {
     if (await canLaunch(url)) {
       await launch(url);
@@ -192,12 +195,16 @@ class _PortalPageState extends State<PortalPage> {
       menuIcon: CustomIcons.filter,
       menuTooltip: S.of(context).navigationFilter,
       menuItems: {
-        S.of(context).filterMenuRelevance: () =>
-            Navigator.pushNamed(context, Routes.filter),
+        S.of(context).filterMenuRelevance: () {
+          userOnly = false;
+          Navigator.pushNamed(context, Routes.filter);
+        },
+        S.of(context).filterMenuShowMine: () => setState(() => userOnly = true),
         S.of(context).filterMenuShowAll: () {
           if (!filterProvider.filterEnabled) {
             AppToast.show(S.of(context).warningFilterAlreadyDisabled);
           } else {
+            userOnly = false;
             filterProvider.disable();
           }
         },
@@ -208,8 +215,10 @@ class _PortalPageState extends State<PortalPage> {
           if (filterSnap.connectionState == ConnectionState.done) {
             return FutureBuilder<List<Website>>(
                 future: websiteProvider.getWebsites(
-                    filterProvider.filterEnabled ? filterSnap.data : null,
-                    uid: authProvider.uid),
+                  filterProvider.filterEnabled ? filterSnap.data : null,
+                  userOnly: userOnly,
+                  uid: authProvider.uid,
+                ),
                 builder: (context, AsyncSnapshot<List<Website>> websiteSnap) {
                   if (websiteSnap.hasData) {
                     websites = websiteSnap.data;

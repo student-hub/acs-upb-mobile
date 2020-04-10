@@ -65,6 +65,7 @@
   "navigationFilter": "Filter",
 
   "filterMenuShowAll": "Show all",
+  "filterMenuShowMine": "Show only mine",
   "filterMenuRelevance": "Filter by relevance",
 
   "settingsTitlePersonalization": "Personalization",
