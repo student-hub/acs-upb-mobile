@@ -78,6 +78,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "labelLink" : MessageLookupByLibrary.simpleMessage("Link"),
     "labelName" : MessageLookupByLibrary.simpleMessage("Name"),
     "labelPassword" : MessageLookupByLibrary.simpleMessage("Password"),
+    "labelPreview" : MessageLookupByLibrary.simpleMessage("Preview"),
     "labelRelevance" : MessageLookupByLibrary.simpleMessage("Relevance"),
     "messageAccountCreated" : MessageLookupByLibrary.simpleMessage("Account created successfully."),
     "messageAccountDeleted" : MessageLookupByLibrary.simpleMessage("Account deleted successfully."),

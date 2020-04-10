@@ -2,12 +2,15 @@ import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/portal/model/website.dart';
 import 'package:acs_upb_mobile/pages/portal/service/website_provider.dart';
 import 'package:acs_upb_mobile/resources/custom_icons.dart';
+import 'package:acs_upb_mobile/resources/storage_provider.dart';
+import 'package:acs_upb_mobile/widgets/circle_image.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:acs_upb_mobile/widgets/selectable.dart';
+import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class AddWebsiteView extends StatefulWidget {
   static const String routeName = '/add_website';
@@ -49,6 +52,76 @@ class _AddWebsiteViewState extends State<AddWebsiteView> {
         ),
       ];
 
+  _launchURL(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      AppToast.show(S.of(context).errorCouldNotLaunchURL(url));
+    }
+  }
+
+  Widget preview() => Padding(
+        padding: const EdgeInsets.only(left: 20.0, right: 8.0, top: 8.0),
+        child: Card(
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              children: <Widget>[
+                Icon(Icons.remove_red_eye, color: Theme.of(context).hintColor),
+                SizedBox(width: 12.0),
+                Text(
+                  S.of(context).labelPreview + ':',
+                  style: Theme.of(context)
+                      .textTheme
+                      .subtitle1
+                      .apply(color: Theme.of(context).hintColor),
+                ),
+                SizedBox(width: 12.0),
+                Expanded(
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      FutureBuilder<ImageProvider<dynamic>>(
+                        future:
+                            Provider.of<StorageProvider>(context, listen: false)
+                                .getImageFromPath('icons/websites/globe.png'),
+                        builder: (context, snapshot) {
+                          ImageProvider<dynamic> image =
+                              AssetImage('assets/images/white.png');
+                          if (snapshot.hasData) {
+                            image = snapshot.data;
+                          }
+                          return CircleImage(
+                            label: _labelController.text,
+                            onTap: () => _launchURL(_linkController.text),
+                            image: image,
+                          );
+                        },
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(
+                            top: 8.0, left: 8.0),
+                        child: CircleImage(
+                          icon: Icon(
+                            Icons.add,
+                            color: Theme.of(context).unselectedWidgetColor,
+                          ),
+                          label: "",
+                          circleScaleFactor: 0.6,
+                          // Only align when there is no other website in the category
+                          alignWhenScaling: true,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
@@ -75,14 +148,7 @@ class _AddWebsiteViewState extends State<AddWebsiteView> {
       body: SafeArea(
         child: ListView(
           children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.only(top: 10.0),
-              child: Container(
-                height: ScreenUtil().setHeight(800),
-                child: Image.asset(
-                    'assets/illustrations/undraw_the_world_is_mine.png'),
-              ),
-            ),
+            preview(),
             Padding(
               padding: const EdgeInsets.only(left: 16.0, right: 16.0),
               child: Form(
@@ -96,6 +162,7 @@ class _AddWebsiteViewState extends State<AddWebsiteView> {
                         labelText: S.of(context).labelName,
                         prefixIcon: Icon(Icons.label),
                       ),
+                      onChanged: (_) => setState(() {}),
                     ),
                     DropdownButtonFormField<WebsiteCategory>(
                       isExpanded: true,

@@ -154,6 +154,15 @@ class S {
     );
   }
 
+  String get labelPreview {
+    return Intl.message(
+      'Preview',
+      name: 'labelPreview',
+      desc: '',
+      args: [],
+    );
+  }
+
   String get hintEmail {
     return Intl.message(
       'john.doe',

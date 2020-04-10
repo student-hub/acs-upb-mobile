@@ -78,6 +78,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "labelLink" : MessageLookupByLibrary.simpleMessage("Link"),
     "labelName" : MessageLookupByLibrary.simpleMessage("Nume"),
     "labelPassword" : MessageLookupByLibrary.simpleMessage("Parolă"),
+    "labelPreview" : MessageLookupByLibrary.simpleMessage("Previzualizare"),
     "labelRelevance" : MessageLookupByLibrary.simpleMessage("Relevanță"),
     "messageAccountCreated" : MessageLookupByLibrary.simpleMessage("Contul a fost creat cu succes."),
     "messageAccountDeleted" : MessageLookupByLibrary.simpleMessage("Contul a fost șters cu succes."),
