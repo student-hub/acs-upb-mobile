@@ -116,7 +116,7 @@ class WebsiteProvider with ChangeNotifier {
   }
 
   Future<bool> addWebsite(Website website,
-      {@required BuildContext context}) async {
+      {bool userOnly = true, @required BuildContext context}) async {
     assert(website.label != null);
     assert(context != null);
 
@@ -129,7 +129,16 @@ class WebsiteProvider with ChangeNotifier {
     String id =
         ReCase(website.label.replaceAll(RegExp('[^A-ZĂÂȘȚa-zăâșț0-9 ]'), ''))
             .snakeCase;
-    DocumentReference ref = _db.collection('websites').document(id);
+    DocumentReference ref;
+    if (!userOnly) {
+      ref = _db.collection('websites').document(id);
+    } else {
+      ref = _db
+          .collection('users')
+          .document(uid)
+          .collection('websites')
+          .document(id);
+    }
 
     if ((await ref.get()).data != null) {
       print('A website with id $id already exists');

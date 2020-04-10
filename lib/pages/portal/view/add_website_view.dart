@@ -64,6 +64,7 @@ class _AddWebsiteViewState extends State<AddWebsiteView> {
               link: _linkController.text,
               category: _selectedCategory,
             ),
+            userOnly: _onlyMeController.isSelected,
             context: context,
           );
           if (res) {
