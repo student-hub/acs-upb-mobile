@@ -7,10 +7,13 @@ import 'package:acs_upb_mobile/widgets/circle_image.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:acs_upb_mobile/widgets/selectable.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:validators/sanitizers.dart';
+import 'package:validators/validators.dart';
 
 class AddWebsiteView extends StatefulWidget {
   static const String routeName = '/add_website';
@@ -57,57 +60,72 @@ class _AddWebsiteViewState extends State<AddWebsiteView> {
   Widget preview() => Padding(
         padding: const EdgeInsets.only(left: 20.0, right: 8.0, top: 8.0),
         child: Card(
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              children: <Widget>[
-                Icon(Icons.remove_red_eye, color: _iconColor),
-                SizedBox(width: 12.0),
-                Text(
-                  S.of(context).labelPreview + ':',
-                  style: Theme.of(context).textTheme.subtitle1,
-                ),
-                SizedBox(width: 12.0),
-                Expanded(
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      FutureBuilder<ImageProvider<dynamic>>(
-                        future:
-                            Provider.of<StorageProvider>(context, listen: false)
+          child: Column(
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  children: <Widget>[
+                    Icon(Icons.remove_red_eye, color: _iconColor),
+                    SizedBox(width: 12.0),
+                    Text(
+                      S.of(context).labelPreview + ':',
+                      style: Theme.of(context).textTheme.subtitle1,
+                    ),
+                    SizedBox(width: 12.0),
+                    Expanded(
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          FutureBuilder<ImageProvider<dynamic>>(
+                            future: Provider.of<StorageProvider>(context,
+                                    listen: false)
                                 .getImageFromPath('icons/websites/globe.png'),
-                        builder: (context, snapshot) {
-                          ImageProvider<dynamic> image =
-                              AssetImage('assets/images/white.png');
-                          if (snapshot.hasData) {
-                            image = snapshot.data;
-                          }
-                          return CircleImage(
-                            label: _labelController.text,
-                            onTap: () => _launchURL(_linkController.text),
-                            image: image,
-                          );
-                        },
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 8.0, left: 8.0),
-                        child: CircleImage(
-                          icon: Icon(
-                            Icons.add,
-                            color: Theme.of(context).unselectedWidgetColor,
+                            builder: (context, snapshot) {
+                              ImageProvider<dynamic> image =
+                                  AssetImage('assets/images/globe.png');
+                              if (snapshot.hasData) {
+                                image = snapshot.data;
+                              }
+                              return CircleImage(
+                                label: toString(_labelController.text).isEmpty
+                                    ? Website.labelFromLink(_linkController.text)
+                                    : _labelController.text,
+                                onTap: () => _launchURL(_linkController.text),
+                                image: image,
+                              );
+                            },
                           ),
-                          label: "",
-                          circleScaleFactor: 0.6,
-                          // Only align when there is no other website in the category
-                          alignWhenScaling: true,
-                        ),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 8.0, left: 8.0),
+                            child: CircleImage(
+                              icon: Icon(
+                                Icons.add,
+                                color: Theme.of(context).unselectedWidgetColor,
+                              ),
+                              label: "",
+                              circleScaleFactor: 0.6,
+                              // Only align when there is no other website in the category
+                              alignWhenScaling: true,
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+              Padding(
+                padding:
+                    const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 8.0),
+                child: AutoSizeText(
+                  S.of(context).messageWebsitePreview,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: Theme.of(context).hintColor),
+                ),
+              )
+            ],
           ),
         ),
       );
@@ -123,10 +141,11 @@ class _AddWebsiteViewState extends State<AddWebsiteView> {
           bool res = await Provider.of<WebsiteProvider>(context, listen: false)
               .addWebsite(
             Website(
-              label: _labelController.text,
-              link: _linkController.text,
-              category: _selectedCategory,
-            ),
+                label: toString(_labelController.text).isEmpty
+                    ? Website.labelFromLink(_linkController.text)
+                    : _labelController.text,
+                link: _linkController.text,
+                category: _selectedCategory),
             userOnly: _onlyMeController.isSelected,
             context: context,
           );
@@ -150,6 +169,7 @@ class _AddWebsiteViewState extends State<AddWebsiteView> {
                       controller: _labelController,
                       decoration: InputDecoration(
                         labelText: S.of(context).labelName,
+                        hintText: S.of(context).hintWebsiteLabel,
                         prefixIcon: Icon(Icons.label),
                       ),
                       onChanged: (_) => setState(() {}),
@@ -176,15 +196,17 @@ class _AddWebsiteViewState extends State<AddWebsiteView> {
                       key: _linkKey,
                       controller: _linkController,
                       decoration: InputDecoration(
-                        labelText: S.of(context).labelLink,
+                        labelText: S.of(context).labelLink + ' *',
+                        hintText: S.of(context).hintWebsiteLink,
                         prefixIcon: Icon(Icons.public),
                       ),
                       validator: (value) {
-                        if (value.isEmpty) {
+                        if (!isURL(value, requireProtocol: true)) {
                           return S.of(context).warningInvalidURL;
                         }
                         return null;
                       },
+                      onChanged: (_) => setState(() {}),
                     ),
                   ],
                 ),

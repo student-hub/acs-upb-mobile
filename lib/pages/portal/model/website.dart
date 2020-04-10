@@ -1,5 +1,7 @@
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:flutter/material.dart';
+import 'package:meta/meta.dart';
+import 'package:validators/sanitizers.dart';
 
 enum WebsiteCategory { learning, administrative, association, resource, other }
 
@@ -28,5 +30,13 @@ class Website {
   final Map<String, String> infoByLocale;
 
   Website(
-      {this.category, this.iconPath, this.label, this.link, this.infoByLocale});
+      {@required this.category,
+      this.iconPath,
+      String label,
+      @required String link,
+      this.infoByLocale})
+      : this.label = toString(label).isEmpty ? labelFromLink(link) : label,
+        this.link = link;
+
+  static String labelFromLink(String link) => link.split('://').last;
 }

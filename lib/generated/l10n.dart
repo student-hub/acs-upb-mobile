@@ -208,6 +208,24 @@ class S {
     );
   }
 
+  String get hintWebsiteLabel {
+    return Intl.message(
+      'Google',
+      name: 'hintWebsiteLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get hintWebsiteLink {
+    return Intl.message(
+      'http://google.com',
+      name: 'hintWebsiteLink',
+      desc: '',
+      args: [],
+    );
+  }
+
   String get actionSignUp {
     return Intl.message(
       'Sign up',
@@ -824,6 +842,15 @@ class S {
     return Intl.message(
       'Under construction',
       name: 'messageUnderConstruction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get messageWebsitePreview {
+    return Intl.message(
+      'Try tapping/long-pressing/hovering the preview to test the new website.',
+      name: 'messageWebsitePreview',
       desc: '',
       args: [],
     );
