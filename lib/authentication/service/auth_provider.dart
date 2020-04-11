@@ -15,13 +15,15 @@ extension DatabaseUser on User {
         uid: snap.documentID,
         firstName: snap.data['name']['first'],
         lastName: snap.data['name']['last'],
-        group: snap.data['group']);
+        group: snap.data['group'],
+        permissionLevel: snap.data['permissionLevel']);
   }
 
   Map<String, dynamic> toData() {
     return {
       'name': {'first': firstName, 'last': lastName},
-      'group': group
+      'group': group,
+      'permissionLevel': permissionLevel
     };
   }
 }
@@ -120,6 +122,10 @@ class AuthProvider with ChangeNotifier {
   Future<bool> get isAuthenticatedFromService async {
     _firebaseUser = await FirebaseAuth.instance.currentUser();
     return _firebaseUser != null;
+  }
+
+  String get uid {
+    return _firebaseUser.uid;
   }
 
   Future<User> get currentUser async {

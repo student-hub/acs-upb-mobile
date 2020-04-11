@@ -11,13 +11,21 @@
   "labelFirstName": "Prenume",
   "labelLastName": "Nume",
   "labelGroup": "Grupa",
+  "labelName": "Nume",
+  "labelCategory": "Categorie",
+  "labelLink": "Link",
+  "labelRelevance": "Relevanță",
+  "labelPreview": "Previzualizare",
+  "labelDescription": "Descriere",
 
   "hintEmail": "john.doe",
   "hintPassword": "····················",
   "hintFirstName": "John",
   "hintLastName": "Doe",
   "hintGroup": "314CB",
-  
+  "hintWebsiteLabel": "Google",
+  "hintWebsiteLink": "http://google.com",
+
   "actionSignUp": "Înregistrare",
   "actionLogIn": "Conectare",
   "actionLogOut": "Deconectare",
@@ -28,6 +36,7 @@
   "actionSendEmail": "Trimite e-mail",
   "actionSendVerificationAgain": "Trimite mail din nou?",
   "actionDeleteAccount": "Ștergere cont",
+  "actionAddWebsite": "Adaugă website",
 
   "errorSomethingWentWrong": "A apărut o problemă.",
   "errorPasswordsDiffer": "Cele două parole diferă.",
@@ -49,6 +58,10 @@
   "warningUseProvider": "Folosiți {provider} pentru a vă conecta.",
   "warningTryAgainLater": "Încercați mai târziu.",
   "warningFilterAlreadyDisabled": "Întreg conținutul este vizibil deja.",
+  "warningInvalidURL": "Trebuie să introduceți un URL valid.",
+  "warningWebsiteNameExists": "Există deja un site cu același nume.",
+  "warningNoPermissionToAddPublicWebsite": "Nu aveți permisiunea să creați site-uri publice.",
+  "warningAuthenticationNeeded": "Autentificați-vă pentru a accesa această funcționalitate.",
 
   "navigationHome": "Acasă",
   "navigationTimetable": "Orar",
@@ -59,7 +72,11 @@
   "navigationFilter": "Filtru",
 
   "filterMenuShowAll": "Arată tot",
+  "filterMenuShowMine": "Arată doar pe ale mele",
   "filterMenuRelevance": "Filtrează după relevanță",
+
+  "relevanceOnlyMe": "Doar eu",
+  "relevanceAnyone": "Oricine",
 
   "settingsTitlePersonalization": "Personalizare",
   "settingsItemDarkMode": "Dark mode",
@@ -87,6 +104,7 @@
   "messageDeleteAccount": "Sunteți sigur că doriți să ștergeți contul?",
   "messageCannotBeUndone": "Această acțiune nu este reversibilă.",
   "messageUnderConstruction": "În construcție",
+  "messageWebsitePreview": "Încearcă să apeși, să faci hover sau să ții apăsat ca să testezi noul website.",
 
   "infoPasswordResetEmailSent": "Please check your inbox for the password reset e-mail.",
 

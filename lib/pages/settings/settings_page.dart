@@ -18,8 +18,6 @@ class SettingsPage extends StatefulWidget {
 class SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
-    ScreenUtil.init(context, width: 1080, height: 2160, allowFontScaling: true);
-
     return AppScaffold(
         title: S.of(context).navigationSettings,
         enableMenu: false,

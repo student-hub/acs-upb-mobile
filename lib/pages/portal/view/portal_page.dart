@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/navigation/routes.dart';
 import 'package:acs_upb_mobile/pages/filter/model/filter.dart';
@@ -26,6 +27,9 @@ class PortalPage extends StatefulWidget {
 class _PortalPageState extends State<PortalPage> {
   Future<Filter> filterFuture;
 
+  // Only show user-added websites
+  bool userOnly = false;
+
   _launchURL(String url) async {
     if (await canLaunch(url)) {
       await launch(url);
@@ -34,7 +38,8 @@ class _PortalPageState extends State<PortalPage> {
     }
   }
 
-  Widget spoiler({String title, Widget content}) => ExpandableNotifier(
+  Widget spoiler({String title, Widget content, bool initialExpanded = true}) =>
+      ExpandableNotifier(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
@@ -48,7 +53,8 @@ class _PortalPageState extends State<PortalPage> {
                   headerAlignment: ExpandablePanelHeaderAlignment.center,
                   iconPadding: EdgeInsets.only()),
               child: ExpandablePanel(
-                controller: ExpandableController(initialExpanded: true),
+                controller:
+                    ExpandableController(initialExpanded: initialExpanded),
                 header:
                     Text(title, style: Theme.of(context).textTheme.headline6),
                 collapsed: SizedBox(height: 12.0),
@@ -59,31 +65,75 @@ class _PortalPageState extends State<PortalPage> {
         ),
       );
 
+  Widget addWebsiteButton({bool trailing = false}) => Tooltip(
+        message: S.of(context).actionAddWebsite,
+        child: GestureDetector(
+          onTap: () {
+            AuthProvider authProvider =
+                Provider.of<AuthProvider>(context, listen: false);
+            if (authProvider.isAuthenticatedFromCache &&
+                !authProvider.isAnonymous) {
+              Navigator.of(context).pushNamed(Routes.addWebsite);
+            } else {
+              AppToast.show(S.of(context).warningAuthenticationNeeded);
+            }
+          },
+          child: Padding(
+            padding: const EdgeInsets.only(top: 8.0, left: 8.0, right: 8.0),
+            child: CircleImage(
+              icon: Icon(
+                Icons.add,
+                color: Theme.of(context).unselectedWidgetColor,
+              ),
+              label: trailing ? "" : null,
+              circleScaleFactor: 0.6,
+              // Only align when there is no other website in the category
+              alignWhenScaling: !trailing,
+            ),
+          ),
+        ),
+      );
+
   Widget listCategory(String category, List<Website> websites) {
-    if (websites == null || websites.isEmpty) {
-      return Container();
-    }
     StorageProvider storageProvider = Provider.of<StorageProvider>(context);
+    bool hasContent = websites != null && websites.isNotEmpty;
 
     return Padding(
       padding: const EdgeInsets.only(left: 8.0, right: 8.0),
       child: spoiler(
         title: category,
-        content: Container(
-          height: min(MediaQuery.of(context).size.width,
-                      MediaQuery.of(context).size.height) /
-                  5 + // circle
-              8 + // padding
-              ScreenUtil().setHeight(80), // text
-          child: ListView(
-            scrollDirection: Axis.horizontal,
-            children: websites
-                .map((website) => Padding(
-                    padding:
-                        const EdgeInsets.only(top: 8.0, left: 8.0, right: 8.0),
-                    child: FutureBuilder<ImageProvider<dynamic>>(
-                      future:
-                          storageProvider.imageFromPath(website.iconPath),
+        initialExpanded: hasContent,
+        content: !hasContent
+            ? Container(
+                height: min(MediaQuery.of(context).size.width,
+                            MediaQuery.of(context).size.height) /
+                        5 + // circle
+                    8, // padding
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 8.0),
+                  child: Row(
+                    children: <Widget>[
+                      addWebsiteButton(),
+                    ],
+                  ),
+                ),
+              )
+            : Container(
+                height: min(MediaQuery.of(context).size.width,
+                            MediaQuery.of(context).size.height) /
+                        5 + // circle
+                    8 + // padding
+                    ScreenUtil().setHeight(100), // text
+                child: ListView(
+                  scrollDirection: Axis.horizontal,
+                  children: websites
+                          .map<Widget>(
+                            (website) => Padding(
+                              padding: const EdgeInsets.only(
+                                  top: 8.0, left: 8.0, right: 8.0),
+                              child: FutureBuilder<ImageProvider<dynamic>>(
+                                future: storageProvider
+                                    .imageFromPath(website.iconPath),
                       builder: (context, snapshot) {
                         var image;
                         if (snapshot.hasData) {
@@ -96,14 +146,17 @@ class _PortalPageState extends State<PortalPage> {
                           label: website.label,
                           tooltip: website
                               .infoByLocale[LocaleProvider.localeString],
-                          image: image,
-                          onTap: () => _launchURL(website.link),
-                        );
-                      },
-                    )))
-                .toList(),
-          ),
-        ),
+                                    image: image,
+                                    onTap: () => _launchURL(website.link),
+                                  );
+                                },
+                              ),
+                            ),
+                          )
+                          .toList() +
+                      <Widget>[addWebsiteButton(trailing: true)],
+                ),
+              ),
       ),
     );
   }
@@ -134,9 +187,9 @@ class _PortalPageState extends State<PortalPage> {
 
   @override
   Widget build(BuildContext context) {
-    ScreenUtil.init(context, width: 750, height: 1334, allowFontScaling: false);
     WebsiteProvider websiteProvider = Provider.of<WebsiteProvider>(context);
     FilterProvider filterProvider = Provider.of<FilterProvider>(context);
+    AuthProvider authProvider = Provider.of<AuthProvider>(context);
 
     filterFuture = filterProvider.fetchFilter(context);
 
@@ -150,12 +203,19 @@ class _PortalPageState extends State<PortalPage> {
       menuIcon: CustomIcons.filter,
       menuTooltip: S.of(context).navigationFilter,
       menuItems: {
-        S.of(context).filterMenuRelevance: () =>
-            Navigator.pushNamed(context, Routes.filter),
+        S.of(context).filterMenuRelevance: () {
+          userOnly = false;
+          Navigator.pushNamed(context, Routes.filter);
+        },
+        S.of(context).filterMenuShowMine: () {
+          setState(() => userOnly = true);
+          filterProvider.enableFilter();
+        },
         S.of(context).filterMenuShowAll: () {
           if (!filterProvider.filterEnabled) {
             AppToast.show(S.of(context).warningFilterAlreadyDisabled);
           } else {
+            userOnly = false;
             filterProvider.disableFilter();
           }
         },
@@ -166,7 +226,10 @@ class _PortalPageState extends State<PortalPage> {
           if (filterSnap.connectionState == ConnectionState.done) {
             return FutureBuilder<List<Website>>(
                 future: websiteProvider.fetchWebsites(
-                    filterProvider.filterEnabled ? filterSnap.data : null),
+                  filterProvider.filterEnabled ? filterSnap.data : null,
+                  userOnly: userOnly,
+                  uid: authProvider.uid,
+                ),
                 builder: (context, AsyncSnapshot<List<Website>> websiteSnap) {
                   if (websiteSnap.hasData) {
                     websites = websiteSnap.data;

@@ -127,6 +127,60 @@ class S {
     );
   }
 
+  String get labelName {
+    return Intl.message(
+      'Name',
+      name: 'labelName',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get labelCategory {
+    return Intl.message(
+      'Category',
+      name: 'labelCategory',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get labelLink {
+    return Intl.message(
+      'Link',
+      name: 'labelLink',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get labelRelevance {
+    return Intl.message(
+      'Relevance',
+      name: 'labelRelevance',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get labelPreview {
+    return Intl.message(
+      'Preview',
+      name: 'labelPreview',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get labelDescription {
+    return Intl.message(
+      'Description',
+      name: 'labelDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
   String get hintEmail {
     return Intl.message(
       'john.doe',
@@ -167,6 +221,24 @@ class S {
     return Intl.message(
       '314CB',
       name: 'hintGroup',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get hintWebsiteLabel {
+    return Intl.message(
+      'Google',
+      name: 'hintWebsiteLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get hintWebsiteLink {
+    return Intl.message(
+      'http://google.com',
+      name: 'hintWebsiteLink',
       desc: '',
       args: [],
     );
@@ -257,6 +329,15 @@ class S {
     return Intl.message(
       'Delete account',
       name: 'actionDeleteAccount',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get actionAddWebsite {
+    return Intl.message(
+      'Add website',
+      name: 'actionAddWebsite',
       desc: '',
       args: [],
     );
@@ -433,6 +514,42 @@ class S {
     );
   }
 
+  String get warningInvalidURL {
+    return Intl.message(
+      'You need to provide a valid URL.',
+      name: 'warningInvalidURL',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get warningWebsiteNameExists {
+    return Intl.message(
+      'A website with the same name already exists.',
+      name: 'warningWebsiteNameExists',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get warningNoPermissionToAddPublicWebsite {
+    return Intl.message(
+      'You do not have permission to create a public website.',
+      name: 'warningNoPermissionToAddPublicWebsite',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get warningAuthenticationNeeded {
+    return Intl.message(
+      'Please authenticate in order to access this feature.',
+      name: 'warningAuthenticationNeeded',
+      desc: '',
+      args: [],
+    );
+  }
+
   String get navigationHome {
     return Intl.message(
       'Home',
@@ -505,10 +622,37 @@ class S {
     );
   }
 
+  String get filterMenuShowMine {
+    return Intl.message(
+      'Show only mine',
+      name: 'filterMenuShowMine',
+      desc: '',
+      args: [],
+    );
+  }
+
   String get filterMenuRelevance {
     return Intl.message(
       'Filter by relevance',
       name: 'filterMenuRelevance',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get relevanceOnlyMe {
+    return Intl.message(
+      'Only me',
+      name: 'relevanceOnlyMe',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get relevanceAnyone {
+    return Intl.message(
+      'Anyone',
+      name: 'relevanceAnyone',
       desc: '',
       args: [],
     );
@@ -725,6 +869,15 @@ class S {
     return Intl.message(
       'Under construction',
       name: 'messageUnderConstruction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get messageWebsitePreview {
+    return Intl.message(
+      'Try tapping/long-pressing/hovering the preview to test the new website.',
+      name: 'messageWebsitePreview',
       desc: '',
       args: [],
     );

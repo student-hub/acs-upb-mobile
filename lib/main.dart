@@ -7,6 +7,7 @@ import 'package:acs_upb_mobile/navigation/routes.dart';
 import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
 import 'package:acs_upb_mobile/pages/filter/view/filter_page.dart';
 import 'package:acs_upb_mobile/pages/portal/service/website_provider.dart';
+import 'package:acs_upb_mobile/pages/portal/view/add_website_view.dart';
 import 'package:acs_upb_mobile/pages/settings/settings_page.dart';
 import 'package:acs_upb_mobile/resources/locale_provider.dart';
 import 'package:acs_upb_mobile/resources/storage_provider.dart';
@@ -14,6 +15,7 @@ import 'package:acs_upb_mobile/widgets/loading_screen.dart';
 import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:preferences/preferences.dart';
 import 'package:provider/provider.dart';
@@ -61,6 +63,7 @@ class _MyAppState extends State<MyApp> {
             create: (_) => BottomNavigationBarProvider()),
         Routes.settings: (_) => SettingsPage(),
         Routes.filter: (_) => FilterPage(),
+        Routes.addWebsite: (_) => AddWebsiteView(),
         Routes.login: (_) => LoginView(),
         Routes.signUp: (_) => SignUpView(),
       },
@@ -121,6 +124,9 @@ class AppLoadingScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ScreenUtil.init(context,
+        width: 1080, height: 2160, allowFontScaling: false);
+
     return LoadingScreen(
       navigateAfterFuture: _setUpAndChooseStartScreen(context),
       loadingText: Text('Setting up...'),
