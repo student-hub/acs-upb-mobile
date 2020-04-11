@@ -1,3 +1,4 @@
+import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/filter/model/filter.dart';
 import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
@@ -6,6 +7,7 @@ import 'package:acs_upb_mobile/pages/portal/service/website_provider.dart';
 import 'package:acs_upb_mobile/pages/portal/view/portal_page.dart';
 import 'package:acs_upb_mobile/resources/storage_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
@@ -18,6 +20,8 @@ class MockWebsiteProvider extends Mock implements WebsiteProvider {}
 class MockStorageProvider extends Mock implements StorageProvider {}
 
 class MockFilterProvider extends Mock implements FilterProvider {}
+
+class MockAuthProvider extends Mock implements AuthProvider {}
 
 class MockUrlLauncher extends Mock
     with MockPlatformInterfaceMixin
@@ -67,17 +71,35 @@ void main() {
   when(mockUrlLauncher.canLaunch(any))
       .thenAnswer((realInvocation) => Future.value(true));
 
+  final MockAuthProvider mockAuthProvider = MockAuthProvider();
+  // ignore: invalid_use_of_protected_member
+  when(mockAuthProvider.hasListeners).thenReturn(false);
+  when(mockAuthProvider.isAnonymous).thenReturn(false);
+  when(mockAuthProvider.isAuthenticatedFromCache).thenReturn(true);
+  when(mockAuthProvider.isAuthenticatedFromService)
+      .thenAnswer((realInvocation) => Future.value(true));
+
   final portal = () => MultiProvider(
-          providers: [
-            ChangeNotifierProvider<WebsiteProvider>(
-                create: (_) => mockWebsiteProvider),
-            ChangeNotifierProvider<StorageProvider>(
-                create: (_) => mockStorageProvider),
-            ChangeNotifierProvider<FilterProvider>(
-                create: (_) => mockFilterProvider),
-          ],
-          child: MaterialApp(
-              localizationsDelegates: [S.delegate], home: PortalPage()));
+        providers: [
+          ChangeNotifierProvider<WebsiteProvider>(
+              create: (_) => mockWebsiteProvider),
+          ChangeNotifierProvider<StorageProvider>(
+              create: (_) => mockStorageProvider),
+          ChangeNotifierProvider<FilterProvider>(
+              create: (_) => mockFilterProvider),
+          ChangeNotifierProvider<AuthProvider>(create: (_) => mockAuthProvider),
+        ],
+        child: MaterialApp(
+          localizationsDelegates: [S.delegate],
+          home: Builder(
+            builder: (context) {
+              ScreenUtil.init(context,
+                  width: 1080, height: 2160, allowFontScaling: false);
+              return PortalPage();
+            },
+          ),
+        ),
+      );
 
   group('Portal', () {
     setUpAll(() async {
