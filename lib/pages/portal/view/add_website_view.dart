@@ -1,3 +1,5 @@
+import 'package:acs_upb_mobile/authentication/model/user.dart';
+import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/portal/model/website.dart';
 import 'package:acs_upb_mobile/pages/portal/service/website_provider.dart';
@@ -34,6 +36,20 @@ class _AddWebsiteViewState extends State<AddWebsiteView> {
   // The "Only me" and "Anyone" relevance options are mutually exclusive
   SelectableController _onlyMeController = SelectableController();
   SelectableController _anyoneController = SelectableController();
+
+  User _user;
+
+  _fetchUser() async {
+    AuthProvider authProvider = Provider.of(context, listen: false);
+    _user = await authProvider.currentUser;
+    setState(() {});
+  }
+
+  @override
+  initState() {
+    super.initState();
+    _fetchUser();
+  }
 
   _launchURL(String url) async {
     if (await canLaunch(url)) {
@@ -96,7 +112,7 @@ class _AddWebsiteViewState extends State<AddWebsiteView> {
                               .getImageFromPath('icons/websites/globe.png'),
                           builder: (context, snapshot) {
                             ImageProvider<dynamic> image =
-                                AssetImage('assets/images/globe.png');
+                                AssetImage('icons/websites/globe.png');
                             if (snapshot.hasData) {
                               image = snapshot.data;
                             }
@@ -169,19 +185,34 @@ class _AddWebsiteViewState extends State<AddWebsiteView> {
                         Selectable(
                           label: S.of(context).relevanceOnlyMe,
                           initiallySelected: true,
-                          onSelected: (selected) => setState(() => selected
-                              ? _anyoneController.deselect()
-                              : _anyoneController.select()),
+                          onSelected: (selected) => setState(() {
+                            if (_user?.canAddPublicWebsite ?? false) {
+                              selected
+                                  ? _anyoneController.deselect()
+                                  : _anyoneController.select();
+                            } else {
+                              _onlyMeController.select();
+                            }
+                          }),
                           controller: _onlyMeController,
                         ),
                         SizedBox(width: 8.0),
                         Selectable(
                           label: S.of(context).relevanceAnyone,
                           initiallySelected: false,
-                          onSelected: (selected) => setState(() => selected
-                              ? _onlyMeController.deselect()
-                              : _onlyMeController.select()),
+                          onSelected: (selected) => setState(() {
+                            if (_user?.canAddPublicWebsite ?? false) {
+                              selected
+                                  ? _onlyMeController.deselect()
+                                  : _onlyMeController.select();
+                            } else {
+                              AppToast.show(S
+                                  .of(context)
+                                  .warningNoPermissionToAddPublicWebsite);
+                            }
+                          }),
                           controller: _anyoneController,
+                          disabled: !(_user?.canAddPublicWebsite ?? false),
                         ),
                       ],
                     ),

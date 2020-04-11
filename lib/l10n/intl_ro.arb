@@ -60,6 +60,7 @@
   "warningFilterAlreadyDisabled": "Întreg conținutul este vizibil deja.",
   "warningInvalidURL": "Trebuie să introduceți un URL valid.",
   "warningWebsiteNameExists": "Există deja un site cu același nume.",
+  "warningNoPermissionToAddPublicWebsite": "Nu aveți permisiunea să creați site-uri publice.",
 
   "navigationHome": "Acasă",
   "navigationTimetable": "Orar",

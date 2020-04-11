@@ -19,12 +19,14 @@ class Selectable extends StatefulWidget {
   final String label;
   final Function(bool) onSelected;
   final SelectableController controller;
+  final bool disabled;
 
   Selectable(
       {this.initiallySelected = false,
       this.label = "",
       this.onSelected,
-      this.controller});
+      this.controller,
+      this.disabled = false});
 
   @override
   _SelectableState createState() => _SelectableState();
@@ -45,20 +47,31 @@ class _SelectableState extends State<Selectable> {
 
     return Container(
       decoration: BoxDecoration(
-          color:
-              isSelected ? Theme.of(context).accentColor : Colors.transparent,
-          borderRadius: const BorderRadius.all(Radius.circular(24.0)),
-          border: Border.all(color: Theme.of(context).accentColor)),
+        color: isSelected
+            ? (widget.disabled
+                ? Theme.of(context).disabledColor
+                : Theme.of(context).accentColor)
+            : Colors.transparent,
+        borderRadius: const BorderRadius.all(Radius.circular(24.0)),
+        border: Border.all(
+            color: widget.disabled
+                ? Theme.of(context).disabledColor
+                : Theme.of(context).accentColor),
+      ),
       child: Material(
         color: Colors.transparent,
         child: InkWell(
           splashColor: Colors.white24,
           borderRadius: const BorderRadius.all(Radius.circular(24.0)),
           onTap: () {
-            setState(() {
-              isSelected = !isSelected;
-              widget.onSelected(isSelected);
-            });
+            setState(
+              () {
+                if (!widget.disabled) {
+                  isSelected = !isSelected;
+                }
+                widget.onSelected(isSelected);
+              },
+            );
           },
           child: Padding(
             padding:
@@ -71,8 +84,11 @@ class _SelectableState extends State<Selectable> {
                   fontWeight: FontWeight.w600,
                   fontSize: 12,
                   letterSpacing: 0.27,
-                  color:
-                      isSelected ? Colors.white : Theme.of(context).accentColor,
+                  color: isSelected
+                      ? Colors.white
+                      : widget.disabled
+                          ? Theme.of(context).disabledColor
+                          : Theme.of(context).accentColor,
                 ),
               ),
             ),

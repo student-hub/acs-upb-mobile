@@ -12,5 +12,8 @@ class User {
       @required this.firstName,
       @required this.lastName,
       this.group,
-      this.permissionLevel = 0});
+      int permissionLevel})
+      : this.permissionLevel = permissionLevel ?? 0;
+
+  bool get canAddPublicWebsite => permissionLevel >= 3;
 }

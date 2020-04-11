@@ -532,6 +532,15 @@ class S {
     );
   }
 
+  String get warningNoPermissionToAddPublicWebsite {
+    return Intl.message(
+      'You do not have permission to create a public website.',
+      name: 'warningNoPermissionToAddPublicWebsite',
+      desc: '',
+      args: [],
+    );
+  }
+
   String get navigationHome {
     return Intl.message(
       'Home',
