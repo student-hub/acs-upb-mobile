@@ -68,7 +68,16 @@ class _PortalPageState extends State<PortalPage> {
   Widget addWebsiteButton({bool trailing = false}) => Tooltip(
         message: S.of(context).actionAddWebsite,
         child: GestureDetector(
-          onTap: () => Navigator.of(context).pushNamed(Routes.addWebsite),
+          onTap: () {
+            AuthProvider authProvider =
+                Provider.of<AuthProvider>(context, listen: false);
+            if (authProvider.isAuthenticatedFromCache &&
+                !authProvider.isAnonymous) {
+              Navigator.of(context).pushNamed(Routes.addWebsite);
+            } else {
+              AppToast.show(S.of(context).warningAuthenticationNeeded);
+            }
+          },
           child: Padding(
             padding: const EdgeInsets.only(top: 8.0, left: 8.0, right: 8.0),
             child: CircleImage(

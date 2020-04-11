@@ -61,6 +61,7 @@
   "warningInvalidURL": "You need to provide a valid URL.",
   "warningWebsiteNameExists": "A website with the same name already exists.",
   "warningNoPermissionToAddPublicWebsite": "You do not have permission to create a public website.",
+  "warningAuthenticationNeeded": "Please authenticate in order to access this feature.",
 
   "navigationHome": "Home",
   "navigationTimetable": "Timetable",

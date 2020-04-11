@@ -114,6 +114,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "settingsTitlePersonalization" : MessageLookupByLibrary.simpleMessage("Personalization"),
     "stringAnonymous" : MessageLookupByLibrary.simpleMessage("Anonymous"),
     "stringEmailDomain" : MessageLookupByLibrary.simpleMessage("@stud.acs.upb.ro"),
+    "warningAuthenticationNeeded" : MessageLookupByLibrary.simpleMessage("Please authenticate in order to access this feature."),
     "warningEmailInUse" : m3,
     "warningFilterAlreadyDisabled" : MessageLookupByLibrary.simpleMessage("Already showing all content."),
     "warningInternetConnection" : MessageLookupByLibrary.simpleMessage("Please make sure you are connected to the internet."),

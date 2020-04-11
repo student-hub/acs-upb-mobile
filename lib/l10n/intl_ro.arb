@@ -61,6 +61,7 @@
   "warningInvalidURL": "Trebuie să introduceți un URL valid.",
   "warningWebsiteNameExists": "Există deja un site cu același nume.",
   "warningNoPermissionToAddPublicWebsite": "Nu aveți permisiunea să creați site-uri publice.",
+  "warningAuthenticationNeeded": "Autentificați-vă pentru a accesa această funcționalitate.",
 
   "navigationHome": "Acasă",
   "navigationTimetable": "Orar",

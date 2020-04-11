@@ -114,6 +114,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "settingsTitlePersonalization" : MessageLookupByLibrary.simpleMessage("Personalizare"),
     "stringAnonymous" : MessageLookupByLibrary.simpleMessage("Anonim"),
     "stringEmailDomain" : MessageLookupByLibrary.simpleMessage("@stud.acs.upb.ro"),
+    "warningAuthenticationNeeded" : MessageLookupByLibrary.simpleMessage("Autentificați-vă pentru a accesa această funcționalitate."),
     "warningEmailInUse" : m3,
     "warningFilterAlreadyDisabled" : MessageLookupByLibrary.simpleMessage("Întreg conținutul este vizibil deja."),
     "warningInternetConnection" : MessageLookupByLibrary.simpleMessage("Asigurați-vă că sunteți conectat la internet."),

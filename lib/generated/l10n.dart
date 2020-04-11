@@ -541,6 +541,15 @@ class S {
     );
   }
 
+  String get warningAuthenticationNeeded {
+    return Intl.message(
+      'Please authenticate in order to access this feature.',
+      name: 'warningAuthenticationNeeded',
+      desc: '',
+      args: [],
+    );
+  }
+
   String get navigationHome {
     return Intl.message(
       'Home',
