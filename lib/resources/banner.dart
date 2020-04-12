@@ -1,7 +1,6 @@
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class UniBanner extends StatelessWidget {
   @override
@@ -13,12 +12,12 @@ class UniBanner extends StatelessWidget {
               children: <Widget>[
                 Image.asset(
                   "assets/icons/acs_logo.png",
-                  height: ScreenUtil().setWidth(220),
+                  height: 150.0,
                 ),
                 Image.asset(
                   S.of(context).fileAcsBanner,
                   color: Theme.of(context).textTheme.headline6.color,
-                  height: ScreenUtil().setWidth(120),
+                  height: 100.0,
                 ),
               ],
             ),

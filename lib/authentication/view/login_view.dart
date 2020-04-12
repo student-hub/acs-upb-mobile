@@ -5,8 +5,8 @@ import 'package:acs_upb_mobile/resources/banner.dart';
 import 'package:acs_upb_mobile/widgets/button.dart';
 import 'package:acs_upb_mobile/widgets/dialog.dart';
 import 'package:acs_upb_mobile/widgets/form/form.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
 class LoginView extends StatefulWidget {
@@ -111,7 +111,7 @@ class _LoginViewState extends State<LoginView> {
       },
       trailing: <Widget>[
         SizedBox(
-          height: ScreenUtil().setHeight(50),
+          height: 20,
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
@@ -149,24 +149,23 @@ class _LoginViewState extends State<LoginView> {
           Align(
             alignment: FractionalOffset.topRight,
             child: Padding(
-              padding: EdgeInsets.only(top: 5.0, right: 10.0),
-              child: ConstrainedBox(
-                  constraints: BoxConstraints(
-                    maxWidth: MediaQuery.of(context).size.width / 1.4,
-                    maxHeight: MediaQuery.of(context).size.height -
-                        ScreenUtil().setHeight(550),
-                  ),
+              padding: EdgeInsets.all(10.0),
+              child: Container(
+                  height: MediaQuery.of(context).size.height / 3,
                   child: Image.asset(
                       "assets/illustrations/undraw_digital_nomad.png")),
             ),
           ),
           Align(
-            alignment: FractionalOffset.bottomRight,
-            child: ConstrainedBox(
-              constraints: BoxConstraints(
-                  maxHeight: MediaQuery.of(context).size.height / 4),
-              child: Image.asset("assets/images/city_doodle.png",
-                  color: Theme.of(context).accentColor.withOpacity(0.4)),
+            alignment: FractionalOffset.bottomCenter,
+            child: Container(
+              height: MediaQuery.of(context).size.height / 4,
+              width: MediaQuery.of(context).size.width,
+              child: FittedBox(
+                fit: BoxFit.fitHeight,
+                child: Image.asset("assets/images/city_doodle.png",
+                    color: Theme.of(context).accentColor.withOpacity(0.4)),
+              ),
             ),
           ),
           SingleChildScrollView(
@@ -176,9 +175,7 @@ class _LoginViewState extends State<LoginView> {
                 child: Column(
                   children: <Widget>[
                     SizedBox(
-                      height: ScreenUtil.screenWidth > ScreenUtil.screenHeight
-                          ? MediaQuery.of(context).size.height / 2
-                          : MediaQuery.of(context).size.width / 1.62,
+                      height: MediaQuery.of(context).size.height / 3,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: <Widget>[
@@ -186,8 +183,9 @@ class _LoginViewState extends State<LoginView> {
                         ],
                       ),
                     ),
+                    SizedBox(height: 10),
                     Expanded(child: loginForm),
-                    SizedBox(height: ScreenUtil().setHeight(60)),
+                    SizedBox(height: 20),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
@@ -205,7 +203,7 @@ class _LoginViewState extends State<LoginView> {
                             },
                           ),
                         ),
-                        SizedBox(width: ScreenUtil().setWidth(50)),
+                        SizedBox(width: 20),
                         Expanded(
                           child: AppButton(
                             key: ValueKey('log_in_button'),
@@ -217,7 +215,7 @@ class _LoginViewState extends State<LoginView> {
                       ],
                     ),
                     SizedBox(
-                      height: ScreenUtil().setHeight(70),
+                      height: 30,
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
