@@ -13,7 +13,6 @@ import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -117,7 +116,7 @@ class _PortalPageState extends State<PortalPage> {
             : Container(
                 height: 80.0 + // circle
                     8.0 + // padding
-                    ScreenUtil().setHeight(100), // text
+                    40.0, // text
                 child: ListView(
                   scrollDirection: Axis.horizontal,
                   children: websites
