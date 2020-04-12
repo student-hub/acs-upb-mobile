@@ -7,7 +7,6 @@ import 'package:acs_upb_mobile/pages/portal/service/website_provider.dart';
 import 'package:acs_upb_mobile/pages/portal/view/portal_page.dart';
 import 'package:acs_upb_mobile/resources/storage_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
@@ -91,13 +90,7 @@ void main() {
         ],
         child: MaterialApp(
           localizationsDelegates: [S.delegate],
-          home: Builder(
-            builder: (context) {
-              ScreenUtil.init(context,
-                  width: 1080, height: 2160, allowFontScaling: false);
-              return PortalPage();
-            },
-          ),
+          home: PortalPage(),
         ),
       );
 

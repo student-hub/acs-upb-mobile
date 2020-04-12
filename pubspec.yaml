@@ -88,9 +88,6 @@ dev_dependencies:
   # Using Provider for state management
   provider: ^4.0.4
 
-  # Useful for adapting screen and font sizes
-  flutter_screenutil: ^1.0.2
-
   # Mocking utility used for testing
   mockito: ^4.1.1
 
