@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/navigation/routes.dart';
@@ -105,10 +103,8 @@ class _PortalPageState extends State<PortalPage> {
         initialExpanded: hasContent,
         content: !hasContent
             ? Container(
-                height: min(MediaQuery.of(context).size.width,
-                            MediaQuery.of(context).size.height) /
-                        5 + // circle
-                    8, // padding
+                height: 80.0 + // circle
+                    8.0, // padding
                 child: Padding(
                   padding: const EdgeInsets.only(bottom: 8.0),
                   child: Row(
@@ -119,10 +115,8 @@ class _PortalPageState extends State<PortalPage> {
                 ),
               )
             : Container(
-                height: min(MediaQuery.of(context).size.width,
-                            MediaQuery.of(context).size.height) /
-                        5 + // circle
-                    8 + // padding
+                height: 80.0 + // circle
+                    8.0 + // padding
                     ScreenUtil().setHeight(100), // text
                 child: ListView(
                   scrollDirection: Axis.horizontal,

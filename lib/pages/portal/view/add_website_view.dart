@@ -134,8 +134,6 @@ class _AddWebsiteViewState extends State<AddWebsiteView> {
                             ),
                             label: "",
                             circleScaleFactor: 0.6,
-                            // Only align when there is no other website in the category
-                            alignWhenScaling: true,
                           ),
                         ),
                       ],

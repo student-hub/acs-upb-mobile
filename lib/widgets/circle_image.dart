@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -58,10 +56,7 @@ class CircleImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var circleSize = circleScaleFactor *
-        min(MediaQuery.of(context).size.width,
-            MediaQuery.of(context).size.height) /
-        5;
+    var circleSize = circleScaleFactor * 80;
     var circleImage = GestureDetector(
       onTap: onTap,
       child: Column(
