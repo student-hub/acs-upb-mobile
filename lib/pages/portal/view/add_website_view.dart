@@ -112,7 +112,7 @@ class _AddWebsiteViewState extends State<AddWebsiteView> {
                               .imageFromPath('icons/websites/globe.png'),
                           builder: (context, snapshot) {
                             ImageProvider<dynamic> image =
-                                AssetImage('icons/websites/globe.png');
+                                AssetImage('assets/icons/websites/globe.png');
                             if (snapshot.hasData) {
                               image = snapshot.data;
                             }
