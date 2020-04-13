@@ -25,16 +25,16 @@ class SettingsPageState extends State<SettingsPage> {
           builder: (BuildContext context) {
             return Column(
               children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.only(top: 10.0),
-                  child: Container(
-                      height: ScreenUtil().setHeight(800),
-                      child: Image.asset(
-                          'assets/illustrations/undraw_settings.png')),
-                ),
                 Expanded(
                   child: PreferencePage(
                     [
+                      Padding(
+                        padding: const EdgeInsets.only(top: 10.0),
+                        child: Container(
+                            height: ScreenUtil().setHeight(800),
+                            child: Image.asset(
+                                'assets/illustrations/undraw_settings.png')),
+                      ),
                       PreferenceTitle(
                           S.of(context).settingsTitlePersonalization),
                       SwitchPreference(

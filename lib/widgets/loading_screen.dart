@@ -101,14 +101,22 @@ class _LoadingScreenState extends State<LoadingScreen> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      CircularProgressIndicator(
-                        valueColor:
-                            AlwaysStoppedAnimation<Color>(widget.loaderColor),
+                      Expanded(flex: 1, child: Container()),
+                      Expanded(
+                        flex: 2,
+                        child: AspectRatio(
+                          aspectRatio: 1.0,
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: CircularProgressIndicator(
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                  widget.loaderColor),
+                            ),
+                          ),
+                        ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 20.0),
-                      ),
-                      widget.loadingText
+                      widget.loadingText,
+                      SizedBox(height: 8.0),
                     ],
                   ),
                 ),
