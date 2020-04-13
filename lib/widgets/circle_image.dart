@@ -42,6 +42,13 @@ class CircleImage extends StatelessWidget {
   /// default size circle
   final bool alignWhenScaling;
 
+  /// Fade image using [overlayColor] and display [overlayIcon] on top of it
+  final bool enableOverlay;
+
+  final Icon overlayIcon;
+
+  final Color overlayColor;
+
   const CircleImage(
       {Key key,
       this.image,
@@ -50,8 +57,10 @@ class CircleImage extends StatelessWidget {
       this.label,
       this.tooltip,
       this.circleScaleFactor = 1,
-      this.alignWhenScaling = false})
-      : super(key: key);
+      this.alignWhenScaling = false,
+      this.enableOverlay = false,
+      this.overlayIcon,
+      this.overlayColor});
 
   @override
   Widget build(BuildContext context) {
@@ -65,27 +74,54 @@ class CircleImage extends StatelessWidget {
           Container(
             // Align if [alignWhenScaling] is `true`
             width: circleSize / (alignWhenScaling ? circleScaleFactor : 1),
-            child: Container(
-              width: circleSize,
-              height: circleSize,
-              decoration: image != null
-                  ? BoxDecoration(
-                      boxShadow: [
-                        CustomBoxShadow(blurRadius: 12.0),
-                        CustomBoxShadow(blurRadius: 10.0),
-                      ],
-                      shape: BoxShape.circle,
-                      image: DecorationImage(fit: BoxFit.fill, image: image),
-                    )
-                  : BoxDecoration(
-                      boxShadow: [
-                        CustomBoxShadow(blurRadius: 12.0),
-                        CustomBoxShadow(blurRadius: 10.0),
-                      ],
-                      shape: BoxShape.circle,
-                      color: Theme.of(context).backgroundColor.withOpacity(0.6),
-                    ),
-              child: icon,
+            child: Stack(
+              children: <Widget>[
+                Container(
+                  width: circleSize,
+                  height: circleSize,
+                  decoration: image != null
+                      ? BoxDecoration(
+                          boxShadow: [
+                            CustomBoxShadow(blurRadius: 12.0),
+                            CustomBoxShadow(blurRadius: 10.0),
+                          ],
+                          shape: BoxShape.circle,
+                          image: DecorationImage(
+                              fit: BoxFit.fill,
+                              colorFilter: enableOverlay
+                                  ? ColorFilter.mode(
+                                      overlayColor ?? Colors.blueGrey[100],
+                                      BlendMode.lighten,
+                                    )
+                                  : null,
+                              image: image),
+                        )
+                      : BoxDecoration(
+                          boxShadow: [
+                            CustomBoxShadow(blurRadius: 12.0),
+                            CustomBoxShadow(blurRadius: 10.0),
+                          ],
+                          shape: BoxShape.circle,
+                          color: Theme.of(context)
+                              .backgroundColor
+                              .withOpacity(0.6),
+                        ),
+                  child: icon,
+                ),
+                enableOverlay
+                    ? Container(
+                        width: circleSize,
+                        height: circleSize,
+                        child: Center(
+                          child: overlayIcon ??
+                              Icon(
+                                Icons.edit,
+                                color: Colors.grey[700],
+                              ),
+                        ),
+                      )
+                    : Container(),
+              ],
             ),
           ),
           label != null
