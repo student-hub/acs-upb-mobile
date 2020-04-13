@@ -1,8 +1,5 @@
-import 'dart:math';
-
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CustomBoxShadow extends BoxShadow {
   final BlurStyle blurStyle;
@@ -58,10 +55,7 @@ class CircleImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var circleSize = circleScaleFactor *
-        min(MediaQuery.of(context).size.width,
-            MediaQuery.of(context).size.height) /
-        5;
+    var circleSize = circleScaleFactor * 80;
     var circleImage = GestureDetector(
       onTap: onTap,
       child: Column(
@@ -96,7 +90,7 @@ class CircleImage extends StatelessWidget {
           ),
           label != null
               ? Container(
-                  height: ScreenUtil().setHeight(100),
+                  height: 40.0,
                   width: circleSize,
                   child: Center(
                     child: AutoSizeText(
@@ -104,7 +98,6 @@ class CircleImage extends StatelessWidget {
                       textAlign: TextAlign.center,
                       minFontSize: 10,
                       maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
                       wrapWords: false,
                     ),
                   ))

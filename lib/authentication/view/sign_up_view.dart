@@ -6,7 +6,6 @@ import 'package:acs_upb_mobile/widgets/button.dart';
 import 'package:acs_upb_mobile/widgets/form/form.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
 class SignUpView extends StatefulWidget {
@@ -111,13 +110,9 @@ class _SignUpViewState extends State<SignUpView> {
           Align(
             alignment: FractionalOffset.topRight,
             child: Padding(
-              padding: EdgeInsets.only(top: 5.0, right: 10.0),
-              child: ConstrainedBox(
-                  constraints: BoxConstraints(
-                    maxWidth: MediaQuery.of(context).size.width / 1.4,
-                    maxHeight: MediaQuery.of(context).size.height -
-                        ScreenUtil().setHeight(550),
-                  ),
+              padding: EdgeInsets.all(10.0),
+              child: Container(
+                  height: MediaQuery.of(context).size.height / 3 - 20,
                   child: Image.asset(
                       "assets/illustrations/undraw_personal_information.png")),
             ),
@@ -129,9 +124,7 @@ class _SignUpViewState extends State<SignUpView> {
                 child: Column(
                   children: <Widget>[
                     SizedBox(
-                      height: ScreenUtil.screenWidth > ScreenUtil.screenHeight
-                          ? MediaQuery.of(context).size.height / 2
-                          : MediaQuery.of(context).size.width / 1.62,
+                      height: MediaQuery.of(context).size.height / 3,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: <Widget>[
@@ -139,8 +132,9 @@ class _SignUpViewState extends State<SignUpView> {
                         ],
                       ),
                     ),
+                    SizedBox(height: 10),
                     Expanded(child: signUpForm),
-                    SizedBox(height: ScreenUtil().setHeight(60)),
+                    SizedBox(height: 20),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
@@ -153,7 +147,7 @@ class _SignUpViewState extends State<SignUpView> {
                             },
                           ),
                         ),
-                        SizedBox(width: ScreenUtil().setWidth(50)),
+                        SizedBox(width: 20),
                         Expanded(
                           child: AppButton(
                             key: ValueKey('sign_up_button'),
@@ -164,9 +158,7 @@ class _SignUpViewState extends State<SignUpView> {
                         ),
                       ],
                     ),
-                    SizedBox(
-                      height: ScreenUtil().setHeight(70),
-                    ),
+                    SizedBox(height: 20),
                   ],
                 ),
               ),

@@ -112,7 +112,7 @@ class _AddWebsiteViewState extends State<AddWebsiteView> {
                               .imageFromPath('icons/websites/globe.png'),
                           builder: (context, snapshot) {
                             ImageProvider<dynamic> image =
-                                AssetImage('icons/websites/globe.png');
+                                AssetImage('assets/icons/websites/globe.png');
                             if (snapshot.hasData) {
                               image = snapshot.data;
                             }
@@ -134,8 +134,6 @@ class _AddWebsiteViewState extends State<AddWebsiteView> {
                             ),
                             label: "",
                             circleScaleFactor: 0.6,
-                            // Only align when there is no other website in the category
-                            alignWhenScaling: true,
                           ),
                         ),
                       ],

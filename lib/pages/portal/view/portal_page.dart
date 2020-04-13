@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/navigation/routes.dart';
@@ -15,7 +13,6 @@ import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -105,10 +102,8 @@ class _PortalPageState extends State<PortalPage> {
         initialExpanded: hasContent,
         content: !hasContent
             ? Container(
-                height: min(MediaQuery.of(context).size.width,
-                            MediaQuery.of(context).size.height) /
-                        5 + // circle
-                    8, // padding
+                height: 80.0 + // circle
+                    8.0, // padding
                 child: Padding(
                   padding: const EdgeInsets.only(bottom: 8.0),
                   child: Row(
@@ -119,11 +114,9 @@ class _PortalPageState extends State<PortalPage> {
                 ),
               )
             : Container(
-                height: min(MediaQuery.of(context).size.width,
-                            MediaQuery.of(context).size.height) /
-                        5 + // circle
-                    8 + // padding
-                    ScreenUtil().setHeight(100), // text
+                height: 80.0 + // circle
+                    8.0 + // padding
+                    40.0, // text
                 child: ListView(
                   scrollDirection: Axis.horizontal,
                   children: websites
