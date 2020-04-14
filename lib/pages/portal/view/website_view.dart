@@ -222,7 +222,7 @@ class _WebsiteViewState extends State<WebsiteView> {
                       children: <Widget>[
                         Selectable(
                           label: S.of(context).relevanceOnlyMe,
-                          initiallySelected: true,
+                          initiallySelected: widget.website?.isPrivate ?? true,
                           onSelected: (selected) => setState(() {
                             if (_user?.canAddPublicWebsite ?? false) {
                               selected
@@ -237,7 +237,8 @@ class _WebsiteViewState extends State<WebsiteView> {
                         SizedBox(width: 8.0),
                         Selectable(
                           label: S.of(context).relevanceAnyone,
-                          initiallySelected: false,
+                          initiallySelected:
+                              !(widget.website?.isPrivate ?? true),
                           onSelected: (selected) => setState(() {
                             if (_user?.canAddPublicWebsite ?? false) {
                               selected
