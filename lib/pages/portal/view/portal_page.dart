@@ -1,3 +1,4 @@
+import 'package:acs_upb_mobile/authentication/model/user.dart';
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/navigation/routes.dart';
@@ -29,6 +30,19 @@ class _PortalPageState extends State<PortalPage> {
   bool userOnly = false;
 
   bool editingEnabled = false;
+
+  User user;
+
+  _fetchUser() async {
+    AuthProvider authProvider = Provider.of(context, listen: false);
+    user = await authProvider.currentUser;
+    setState(() {});
+  }
+
+  initState() {
+    super.initState();
+    _fetchUser();
+  }
 
   _launchURL(String url) async {
     if (await canLaunch(url)) {
@@ -140,13 +154,17 @@ class _PortalPageState extends State<PortalPage> {
                                             'assets/' + website.iconPath) ??
                                         AssetImage('assets/images/white.png');
                                   }
+
+                                  bool canEdit = editingEnabled &&
+                                      (website.isPrivate ||
+                                          (user.canEditPublicWebsite ?? false));
                                   return CircleImage(
                                     label: website.label,
                                     tooltip: website.infoByLocale[
                                         LocaleProvider.localeString],
                                     image: image,
-                                    enableOverlay: editingEnabled,
-                                    onTap: () => editingEnabled
+                                    enableOverlay: canEdit,
+                                    onTap: () => canEdit
                                         ? Navigator.of(context)
                                             .push(MaterialPageRoute(
                                                 builder: (_) => WebsiteView(

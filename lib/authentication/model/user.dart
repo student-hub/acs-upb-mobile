@@ -16,4 +16,6 @@ class User {
       : this.permissionLevel = permissionLevel ?? 0;
 
   bool get canAddPublicWebsite => permissionLevel >= 3;
+
+  bool get canEditPublicWebsite => permissionLevel >= 3;
 }
