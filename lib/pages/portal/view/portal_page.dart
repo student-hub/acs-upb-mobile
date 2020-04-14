@@ -1,3 +1,4 @@
+import 'package:acs_upb_mobile/authentication/model/user.dart';
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/navigation/routes.dart';
@@ -5,6 +6,7 @@ import 'package:acs_upb_mobile/pages/filter/model/filter.dart';
 import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
 import 'package:acs_upb_mobile/pages/portal/model/website.dart';
 import 'package:acs_upb_mobile/pages/portal/service/website_provider.dart';
+import 'package:acs_upb_mobile/pages/portal/view/website_view.dart';
 import 'package:acs_upb_mobile/resources/custom_icons.dart';
 import 'package:acs_upb_mobile/resources/locale_provider.dart';
 import 'package:acs_upb_mobile/resources/storage_provider.dart';
@@ -26,6 +28,21 @@ class _PortalPageState extends State<PortalPage> {
 
   // Only show user-added websites
   bool userOnly = false;
+
+  bool editingEnabled = false;
+
+  User user;
+
+  _fetchUser() async {
+    AuthProvider authProvider = Provider.of(context, listen: false);
+    user = await authProvider.currentUser;
+    setState(() {});
+  }
+
+  initState() {
+    super.initState();
+    _fetchUser();
+  }
 
   _launchURL(String url) async {
     if (await canLaunch(url)) {
@@ -70,7 +87,8 @@ class _PortalPageState extends State<PortalPage> {
                 Provider.of<AuthProvider>(context, listen: false);
             if (authProvider.isAuthenticatedFromCache &&
                 !authProvider.isAnonymous) {
-              Navigator.of(context).pushNamed(Routes.addWebsite);
+              Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (_) => WebsiteView()));
             } else {
               AppToast.show(S.of(context).warningAuthenticationNeeded);
             }
@@ -127,20 +145,33 @@ class _PortalPageState extends State<PortalPage> {
                               child: FutureBuilder<ImageProvider<dynamic>>(
                                 future: storageProvider
                                     .imageFromPath(website.iconPath),
-                      builder: (context, snapshot) {
-                        var image;
-                        if (snapshot.hasData) {
-                          image = snapshot.data;
-                        } else {
-                          image = AssetImage('assets/' + website.iconPath) ??
-                              AssetImage('assets/images/white.png');
-                        }
-                        return CircleImage(
-                          label: website.label,
-                          tooltip: website
-                              .infoByLocale[LocaleProvider.localeString],
+                                builder: (context, snapshot) {
+                                  var image;
+                                  if (snapshot.hasData) {
+                                    image = snapshot.data;
+                                  } else {
+                                    image = AssetImage(
+                                            'assets/' + website.iconPath) ??
+                                        AssetImage('assets/images/white.png');
+                                  }
+
+                                  bool canEdit = editingEnabled &&
+                                      (website.isPrivate ||
+                                          (user.canEditPublicWebsite ?? false));
+                                  return CircleImage(
+                                    label: website.label,
+                                    tooltip: website.infoByLocale[
+                                        LocaleProvider.localeString],
                                     image: image,
-                                    onTap: () => _launchURL(website.link),
+                                    enableOverlay: canEdit,
+                                    onTap: () => canEdit
+                                        ? Navigator.of(context)
+                                            .push(MaterialPageRoute(
+                                                builder: (_) => WebsiteView(
+                                                      website: website,
+                                                      updateExisting: true,
+                                                    )))
+                                        : _launchURL(website.link),
                                   );
                                 },
                               ),
@@ -192,27 +223,46 @@ class _PortalPageState extends State<PortalPage> {
 
     return AppScaffold(
       title: S.of(context).navigationPortal,
-      enableMenu: true,
-      menuIcon: CustomIcons.filter,
-      menuTooltip: S.of(context).navigationFilter,
-      menuItems: {
-        S.of(context).filterMenuRelevance: () {
-          userOnly = false;
-          Navigator.pushNamed(context, Routes.filter);
-        },
-        S.of(context).filterMenuShowMine: () {
-          setState(() => userOnly = true);
-          filterProvider.enableFilter();
-        },
-        S.of(context).filterMenuShowAll: () {
-          if (!filterProvider.filterEnabled) {
-            AppToast.show(S.of(context).warningFilterAlreadyDisabled);
-          } else {
-            userOnly = false;
-            filterProvider.disableFilter();
-          }
-        },
-      },
+      actions: [
+        AppScaffoldAction(
+          icon: editingEnabled ? CustomIcons.edit_slash : Icons.edit,
+          tooltip: editingEnabled
+              ? S.of(context).actionDisableEditing
+              : S.of(context).actionEnableEditing,
+          onPressed: () {
+            AuthProvider authProvider =
+                Provider.of<AuthProvider>(context, listen: false);
+            if (authProvider.isAuthenticatedFromCache &&
+                !authProvider.isAnonymous) {
+              setState(() => editingEnabled = !editingEnabled);
+            } else {
+              AppToast.show(S.of(context).warningAuthenticationNeeded);
+            }
+          },
+        ),
+        AppScaffoldAction(
+          icon: CustomIcons.filter,
+          tooltip: S.of(context).navigationFilter,
+          items: {
+            S.of(context).filterMenuRelevance: () {
+              userOnly = false;
+              Navigator.pushNamed(context, Routes.filter);
+            },
+            S.of(context).filterMenuShowMine: () {
+              setState(() => userOnly = true);
+              filterProvider.enableFilter();
+            },
+            S.of(context).filterMenuShowAll: () {
+              if (!filterProvider.filterEnabled) {
+                AppToast.show(S.of(context).warningFilterAlreadyDisabled);
+              } else {
+                userOnly = false;
+                filterProvider.disableFilter();
+              }
+            },
+          },
+        ),
+      ],
       body: FutureBuilder(
         future: filterFuture,
         builder: (BuildContext context, AsyncSnapshot<Filter> filterSnap) {

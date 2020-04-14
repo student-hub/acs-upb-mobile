@@ -343,6 +343,33 @@ class S {
     );
   }
 
+  String get actionEditWebsite {
+    return Intl.message(
+      'Edit website',
+      name: 'actionEditWebsite',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get actionEnableEditing {
+    return Intl.message(
+      'Enable editing',
+      name: 'actionEnableEditing',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get actionDisableEditing {
+    return Intl.message(
+      'Disable editing',
+      name: 'actionDisableEditing',
+      desc: '',
+      args: [],
+    );
+  }
+
   String get errorSomethingWentWrong {
     return Intl.message(
       'Something went wrong.',

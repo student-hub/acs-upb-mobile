@@ -1,15 +1,11 @@
 import 'dart:async';
 
-import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/filter/model/filter.dart';
 import 'package:acs_upb_mobile/pages/portal/model/website.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:meta/meta.dart';
-import 'package:provider/provider.dart';
-import 'package:recase/recase.dart';
 
 extension WebsiteCategoryExtension on WebsiteCategory {
   static WebsiteCategory fromString(String category) {
@@ -29,8 +25,12 @@ extension WebsiteCategoryExtension on WebsiteCategory {
 }
 
 extension WebsiteExtension on Website {
-  static Website fromSnap(DocumentSnapshot snap) {
+  // [ownerUid] should be provided if the website is user-private
+  static Website fromSnap(DocumentSnapshot snap, {String ownerUid}) {
     return Website(
+      ownerUid: ownerUid ?? snap.data['addedBy'],
+      id: snap.documentID,
+      isPrivate: ownerUid != null,
       category: WebsiteCategoryExtension.fromString(snap.data['category']),
       iconPath: snap.data['icon'] ?? 'icons/websites/globe.png',
       label: snap.data['label'] ?? 'Website',
@@ -45,9 +45,12 @@ extension WebsiteExtension on Website {
   }
 
   Map<String, dynamic> toData() {
-    Map<String, dynamic> data = {
-      'relevance': null // TODO: Make relevance customizable
-    };
+    Map<String, dynamic> data = {};
+
+    if (!isPrivate) {
+      if (ownerUid != null) data['addedBy'] = ownerUid;
+      data['relevance'] = null; // TODO: Make relevance customizable
+    }
 
     if (label != null) data['label'] = label;
     if (category != null)
@@ -66,9 +69,11 @@ class WebsiteProvider with ChangeNotifier {
   Future<List<Website>> fetchWebsites(Filter filter,
       {bool userOnly = false, String uid}) async {
     try {
-      List<DocumentSnapshot> documents = [];
+      List<Website> websites = [];
 
       if (!userOnly) {
+        List<DocumentSnapshot> documents = [];
+
         if (filter == null) {
           QuerySnapshot qSnapshot =
               await _db.collection('websites').getDocuments();
@@ -91,13 +96,15 @@ class WebsiteProvider with ChangeNotifier {
           }
         }
 
-      // Remove duplicates
-      // (a document may result out of more than one query)
-      final seenDocumentIds = Set<String>();
+        // Remove duplicates
+        // (a document may result out of more than one query)
+        final seenDocumentIds = Set<String>();
 
         documents = documents
             .where((doc) => seenDocumentIds.add(doc.documentID))
             .toList();
+
+        websites.addAll(documents.map((doc) => WebsiteExtension.fromSnap(doc)));
       }
 
       // Get user-added websites
@@ -106,10 +113,12 @@ class WebsiteProvider with ChangeNotifier {
             Firestore.instance.collection('users').document(uid);
         QuerySnapshot qSnapshot =
             await ref.collection('websites').getDocuments();
-        documents.addAll(qSnapshot.documents);
+
+        websites.addAll(qSnapshot.documents
+            .map((doc) => WebsiteExtension.fromSnap(doc, ownerUid: uid)));
       }
 
-      return documents.map((doc) => WebsiteExtension.fromSnap(doc)).toList();
+      return websites;
     } catch (e) {
       print(e);
       return null;
@@ -117,39 +126,30 @@ class WebsiteProvider with ChangeNotifier {
   }
 
   Future<bool> addWebsite(Website website,
-      {bool userOnly = true, @required BuildContext context}) async {
+      {bool updateExisting = false, BuildContext context}) async {
     assert(website.label != null);
     assert(context != null);
 
-    AuthProvider authProvider =
-        Provider.of<AuthProvider>(context, listen: false);
-    String uid = (await authProvider.currentUser)?.uid;
-    assert(uid != null);
-
-    // Sanitize label to obtain document ID
-    String id =
-        ReCase(website.label.replaceAll(RegExp('[^A-ZĂÂȘȚa-zăâșț0-9 ]'), ''))
-            .snakeCase;
     DocumentReference ref;
-    if (!userOnly) {
-      ref = _db.collection('websites').document(id);
+    if (!website.isPrivate) {
+      ref = _db.collection('websites').document(website.id);
     } else {
       ref = _db
           .collection('users')
-          .document(uid)
+          .document(website.ownerUid)
           .collection('websites')
-          .document(id);
+          .document(website.id);
     }
 
-    if ((await ref.get()).data != null) {
-      print('A website with id $id already exists');
+    if ((await ref.get()).data != null && !updateExisting) {
+      // TODO: Properly check if a website with a similar name/link already exists
+      print('A website with id ${website.id} already exists');
       AppToast.show(S.of(context).warningWebsiteNameExists);
       return false;
     }
 
     try {
       var data = website.toData();
-      data['addedBy'] = uid;
       await ref.setData(data);
 
       notifyListeners();

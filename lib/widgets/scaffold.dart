@@ -1,52 +1,51 @@
 import 'package:acs_upb_mobile/generated/l10n.dart';
-import 'package:acs_upb_mobile/navigation/routes.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
+class AppScaffoldAction {
+  // Icon for the action button
+  final IconData icon;
+
+  // Route to push when the action button is pressed
+  final String route;
+
+  // Action that happens when the button is pressed. This overrides [route].
+  final Function() onPressed;
+
+  // Action button tooltip text
+  final String tooltip;
+
+  // Action text. This overrides [icon].
+  final String text;
+
+  // Option-action map that should be specified if a popup menu is needed. It
+  // overrides [route].
+  final Map<String, void Function()> items;
+
+  AppScaffoldAction(
+      {this.icon,
+      this.route,
+      this.onPressed,
+      this.tooltip,
+      this.text,
+      this.items});
+}
 
 class AppScaffold extends StatelessWidget {
   final Widget body;
   final String title;
   final Widget floatingActionButton;
-
-  // Show an action button on the right side of the scaffold bar
-  final bool enableMenu;
-
-  // Icon for the action button
-  final IconData menuIcon;
-
-  // Route to push when the action button is pressed
-  final String menuRoute;
-
-  // Action that happens when the button is pressed. This overrides [menuRoute].
-  final Function() menuAction;
-
-  // Action button tooltip text
-  final String menuTooltip;
-
-  // Action text. This overrides [menuIcon].
-  final String menuText;
-
-  // Option-action map that should be specified if a popup menu is needed. It
-  // overrides [menuRoute].
-  final Map<String, void Function()> menuItems;
+  final List<AppScaffoldAction> actions;
 
   AppScaffold(
       {this.body,
       this.title,
-      this.enableMenu = false,
-      this.menuIcon = Icons.settings,
-      this.menuText,
-      this.menuRoute = Routes.settings,
-      this.menuAction,
-      this.menuItems,
-      this.menuTooltip, // By default, menuText ?? S.of(context).navigationSettings
-      this.floatingActionButton});
+      List<AppScaffoldAction> actions,
+      this.floatingActionButton})
+      : this.actions = actions ?? [];
 
   @override
   Widget build(BuildContext context) {
-    Function() action =
-        menuAction ?? () => Navigator.pushNamed(context, menuRoute);
-
     return Scaffold(
       body: body ??
           Padding(
@@ -76,52 +75,53 @@ class AppScaffold extends StatelessWidget {
           title: Text(title),
           centerTitle: true,
           toolbarOpacity: 0.8,
-          actions: <Widget>[
-            enableMenu
-                ? menuItems != null
-                    ? PopupMenuButton<String>(
-                        icon: Icon(menuIcon),
-                        tooltip: menuTooltip ??
-                            menuText ??
-                            S.of(context).navigationSettings,
-                        onSelected: (selected) => menuItems[selected](),
-                        itemBuilder: (BuildContext context) {
-                          return menuItems.keys
-                              .map((option) => PopupMenuItem(
-                                    value: option,
-                                    child: Text(option),
-                                  ))
-                              .toList();
-                        },
-                        offset: Offset(0, 100),
-                      )
-                    : Tooltip(
-                        message: menuTooltip ??
-                            menuText ??
-                            S.of(context).navigationSettings,
-                        child: menuText != null
-                            ? ButtonTheme(
-                                minWidth: 8.0,
-                                child: FlatButton(
-                                  materialTapTargetSize:
-                                      MaterialTapTargetSize.shrinkWrap,
-                                  child: Text(
-                                    menuText,
-                                    style: TextStyle().apply(
-                                        color: Theme.of(context)
-                                            .primaryIconTheme
-                                            .color),
-                                  ),
-                                  onPressed: action,
-                                ),
-                              )
-                            : IconButton(
-                                icon: Icon(menuIcon),
-                                onPressed: action,
+          actions: actions.map((action) {
+            Function() onPressed = action.onPressed ??
+                () => Navigator.pushNamed(context, action.route);
+
+            return action.items != null
+                ? PopupMenuButton<String>(
+                    icon: Icon(action.icon),
+                    tooltip: action.tooltip ??
+                        action.text ??
+                        S.of(context).navigationSettings,
+                    onSelected: (selected) => action.items[selected](),
+                    itemBuilder: (BuildContext context) {
+                      return action.items.keys
+                          .map((option) => PopupMenuItem(
+                                value: option,
+                                child: Text(option),
+                              ))
+                          .toList();
+                    },
+                    offset: Offset(0, 100),
+                  )
+                : Tooltip(
+                    message: action.tooltip ??
+                        action.text ??
+                        S.of(context).navigationSettings,
+                    child: action.text != null
+                        ? ButtonTheme(
+                            minWidth: 8.0,
+                            child: FlatButton(
+                              materialTapTargetSize:
+                                  MaterialTapTargetSize.shrinkWrap,
+                              child: Text(
+                                action.text,
+                                style: TextStyle().apply(
+                                    color: Theme.of(context)
+                                        .primaryIconTheme
+                                        .color),
                               ),
-                      )
-                : Container(),
-          ],
+                              onPressed: onPressed,
+                            ),
+                          )
+                        : IconButton(
+                            icon: Icon(action.icon),
+                            onPressed: onPressed,
+                          ),
+                  );
+          }).toList(),
         ),
       ),
       floatingActionButton: floatingActionButton,

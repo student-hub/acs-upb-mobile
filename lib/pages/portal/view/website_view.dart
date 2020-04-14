@@ -14,24 +14,36 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
+import 'package:recase/recase.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:validators/validators.dart';
 
-class AddWebsiteView extends StatefulWidget {
-  static const String routeName = '/add_website';
+class WebsiteView extends StatefulWidget {
+  final Website website;
+  final bool updateExisting;
+
+  // If [updateExisting] is true, this acts like an "Edit website" page starting
+  // from the info in [website]. Otherwise, it acts like an "Add website" page.
+  WebsiteView({Key key, this.website, this.updateExisting = false})
+      : super(key: key) {
+    if (this.updateExisting == true && this.website == null) {
+      throw ArgumentError(
+          'WebsiteView: website cannot be null if updateExisting is true');
+    }
+  }
 
   @override
-  _AddWebsiteViewState createState() => _AddWebsiteViewState();
+  _WebsiteViewState createState() => _WebsiteViewState();
 }
 
-class _AddWebsiteViewState extends State<AddWebsiteView> {
+class _WebsiteViewState extends State<WebsiteView> {
   final _formKey = GlobalKey<FormState>();
 
-  WebsiteCategory _selectedCategory = WebsiteCategory.learning;
-  TextEditingController _labelController = TextEditingController();
-  TextEditingController _linkController = TextEditingController();
-  TextEditingController _descriptionRoController = TextEditingController();
-  TextEditingController _descriptionEnController = TextEditingController();
+  WebsiteCategory _selectedCategory;
+  TextEditingController _labelController;
+  TextEditingController _linkController;
+  TextEditingController _descriptionRoController;
+  TextEditingController _descriptionEnController;
 
   // The "Only me" and "Anyone" relevance options are mutually exclusive
   SelectableController _onlyMeController = SelectableController();
@@ -49,6 +61,22 @@ class _AddWebsiteViewState extends State<AddWebsiteView> {
   initState() {
     super.initState();
     _fetchUser();
+
+    _selectedCategory = widget.website?.category ?? WebsiteCategory.learning;
+    _labelController = TextEditingController(text: widget.website?.label ?? '');
+    _linkController = TextEditingController(text: widget.website?.link ?? '');
+
+    Map<String, String> description = {'en': '', 'ro': ''};
+    if (widget.website != null) {
+      description['en'] = widget.website.infoByLocale.containsKey('en')
+          ? widget.website.infoByLocale['en']
+          : '';
+      description['ro'] = widget.website.infoByLocale.containsKey('ro')
+          ? widget.website.infoByLocale['ro']
+          : '';
+    }
+    _descriptionRoController = TextEditingController(text: description['ro']);
+    _descriptionEnController = TextEditingController(text: description['en']);
   }
 
   _launchURL(String url) async {
@@ -73,17 +101,29 @@ class _AddWebsiteViewState extends State<AddWebsiteView> {
     }
   }
 
-  Website buildWebsite() => Website(
+  String _buildId() {
+    if (widget.updateExisting) return widget.website.id;
+    // Sanitize label to obtain document ID
+    return ReCase(_labelController.text
+            .replaceAll(RegExp('[^A-ZĂÂȘȚa-zăâșț0-9 ]'), ''))
+        .snakeCase;
+  }
+
+  Website _buildWebsite() => Website(
+          id: _buildId(),
+          ownerUid: _user?.uid,
+          isPrivate: _onlyMeController.isSelected ?? true,
           label: _labelController.text,
           link: _linkController.text,
           category: _selectedCategory,
+          iconPath: widget.website?.iconPath ?? 'icons/websites/globe.png',
           infoByLocale: {
             'ro': _descriptionRoController.text,
             'en': _descriptionEnController.text
           });
 
-  Widget preview() {
-    Website website = buildWebsite();
+  Widget _preview() {
+    Website website = _buildWebsite();
 
     return Padding(
       padding: const EdgeInsets.only(left: 20.0, right: 8.0, top: 8.0),
@@ -109,7 +149,7 @@ class _AddWebsiteViewState extends State<AddWebsiteView> {
                         FutureBuilder<ImageProvider<dynamic>>(
                           future: Provider.of<StorageProvider>(context,
                                   listen: false)
-                              .imageFromPath('icons/websites/globe.png'),
+                              .imageFromPath(website.iconPath),
                           builder: (context, snapshot) {
                             ImageProvider<dynamic> image =
                                 AssetImage('assets/icons/websites/globe.png');
@@ -157,7 +197,7 @@ class _AddWebsiteViewState extends State<AddWebsiteView> {
     );
   }
 
-  Widget relevanceField() => Padding(
+  Widget _relevanceField() => Padding(
         padding: const EdgeInsets.only(top: 12.0, left: 12.0),
         child: Row(
           children: <Widget>[
@@ -182,7 +222,7 @@ class _AddWebsiteViewState extends State<AddWebsiteView> {
                       children: <Widget>[
                         Selectable(
                           label: S.of(context).relevanceOnlyMe,
-                          initiallySelected: true,
+                          initiallySelected: widget.website?.isPrivate ?? true,
                           onSelected: (selected) => setState(() {
                             if (_user?.canAddPublicWebsite ?? false) {
                               selected
@@ -197,7 +237,8 @@ class _AddWebsiteViewState extends State<AddWebsiteView> {
                         SizedBox(width: 8.0),
                         Selectable(
                           label: S.of(context).relevanceAnyone,
-                          initiallySelected: false,
+                          initiallySelected:
+                              !(widget.website?.isPrivate ?? true),
                           onSelected: (selected) => setState(() {
                             if (_user?.canAddPublicWebsite ?? false) {
                               selected
@@ -225,26 +266,32 @@ class _AddWebsiteViewState extends State<AddWebsiteView> {
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
-      title: S.of(context).actionAddWebsite,
-      enableMenu: true,
-      menuText: S.of(context).buttonSave,
-      menuAction: () async {
-        if (_formKey.currentState.validate()) {
-          bool res = await Provider.of<WebsiteProvider>(context, listen: false)
-              .addWebsite(
-            buildWebsite(),
-            userOnly: _onlyMeController.isSelected,
-            context: context,
-          );
-          if (res) {
-            Navigator.of(context).pop();
-          }
-        }
-      },
+      title: widget.updateExisting
+          ? S.of(context).actionEditWebsite
+          : S.of(context).actionAddWebsite,
+      actions: [
+        AppScaffoldAction(
+          text: S.of(context).buttonSave,
+          onPressed: () async {
+            if (_formKey.currentState.validate()) {
+              bool res =
+                  await Provider.of<WebsiteProvider>(context, listen: false)
+                      .addWebsite(
+                _buildWebsite(),
+                updateExisting: widget.updateExisting,
+                context: context,
+              );
+              if (res) {
+                Navigator.of(context).pop();
+              }
+            }
+          },
+        )
+      ],
       body: SafeArea(
         child: ListView(
           children: <Widget>[
-            preview(),
+            _preview(),
             Padding(
               padding: const EdgeInsets.only(left: 16.0, right: 16.0),
               child: Form(
@@ -293,7 +340,7 @@ class _AddWebsiteViewState extends State<AddWebsiteView> {
                       },
                       onChanged: (_) => setState(() {}),
                     ),
-                    relevanceField(),
+                    _relevanceField(),
                     TextFormField(
                       controller: _descriptionRoController,
                       decoration: InputDecoration(

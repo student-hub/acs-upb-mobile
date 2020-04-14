@@ -23,6 +23,15 @@ extension WebsiteCategoryExtension on WebsiteCategory {
 }
 
 class Website {
+  /// The user who created this website (or null if it's public)
+  final String ownerUid;
+
+  /// The ID of this website
+  final String id;
+
+  /// Whether the website is public or part of user data
+  final bool isPrivate;
+
   final WebsiteCategory category;
   final String iconPath;
   final String label;
@@ -30,7 +39,10 @@ class Website {
   final Map<String, String> infoByLocale;
 
   Website(
-      {@required this.category,
+      {this.ownerUid,
+      @required this.id,
+      @required this.isPrivate,
+      @required this.category,
       this.iconPath,
       String label,
       @required String link,

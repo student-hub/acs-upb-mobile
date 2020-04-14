@@ -37,6 +37,9 @@
   "actionSendVerificationAgain": "Send e-mail again?",
   "actionDeleteAccount": "Delete account",
   "actionAddWebsite": "Add website",
+  "actionEditWebsite": "Edit website",
+  "actionEnableEditing": "Enable editing",
+  "actionDisableEditing": "Disable editing",
 
   "errorSomethingWentWrong": "Something went wrong.",
   "errorPasswordsDiffer": "The two passwords differ.",
