@@ -17,21 +17,32 @@ import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:validators/validators.dart';
 
-class AddWebsiteView extends StatefulWidget {
-  static const String routeName = '/add_website';
+class WebsiteView extends StatefulWidget {
+  final Website website;
+  final bool updateExisting;
+
+  // If [updateExisting] is true, this acts like an "Edit website" page starting
+  // from the info in [website]. Otherwise, it acts like an "Add website" page.
+  WebsiteView({Key key, this.website, this.updateExisting = false})
+      : super(key: key) {
+    if (this.updateExisting == true && this.website == null) {
+      throw ArgumentError(
+          'WebsiteView: website cannot be null if updateExisting is true');
+    }
+  }
 
   @override
-  _AddWebsiteViewState createState() => _AddWebsiteViewState();
+  _WebsiteViewState createState() => _WebsiteViewState();
 }
 
-class _AddWebsiteViewState extends State<AddWebsiteView> {
+class _WebsiteViewState extends State<WebsiteView> {
   final _formKey = GlobalKey<FormState>();
 
-  WebsiteCategory _selectedCategory = WebsiteCategory.learning;
-  TextEditingController _labelController = TextEditingController();
-  TextEditingController _linkController = TextEditingController();
-  TextEditingController _descriptionRoController = TextEditingController();
-  TextEditingController _descriptionEnController = TextEditingController();
+  WebsiteCategory _selectedCategory;
+  TextEditingController _labelController;
+  TextEditingController _linkController;
+  TextEditingController _descriptionRoController;
+  TextEditingController _descriptionEnController;
 
   // The "Only me" and "Anyone" relevance options are mutually exclusive
   SelectableController _onlyMeController = SelectableController();
@@ -49,6 +60,22 @@ class _AddWebsiteViewState extends State<AddWebsiteView> {
   initState() {
     super.initState();
     _fetchUser();
+
+    _selectedCategory = widget.website?.category ?? WebsiteCategory.learning;
+    _labelController = TextEditingController(text: widget.website?.label ?? '');
+    _linkController = TextEditingController(text: widget.website?.link ?? '');
+
+    Map<String, String> description = {'en': '', 'ro': ''};
+    if (widget.website != null) {
+      description['en'] = widget.website.infoByLocale.containsKey('en')
+          ? widget.website.infoByLocale['en']
+          : '';
+      description['ro'] = widget.website.infoByLocale.containsKey('ro')
+          ? widget.website.infoByLocale['ro']
+          : '';
+    }
+    _descriptionRoController = TextEditingController(text: description['ro']);
+    _descriptionEnController = TextEditingController(text: description['en']);
   }
 
   _launchURL(String url) async {
@@ -225,7 +252,9 @@ class _AddWebsiteViewState extends State<AddWebsiteView> {
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
-      title: S.of(context).actionAddWebsite,
+      title: widget.updateExisting
+          ? S.of(context).actionEditWebsite
+          : S.of(context).actionAddWebsite,
       actions: [
         AppScaffoldAction(
           text: S.of(context).buttonSave,

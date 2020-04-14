@@ -5,6 +5,7 @@ import 'package:acs_upb_mobile/pages/filter/model/filter.dart';
 import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
 import 'package:acs_upb_mobile/pages/portal/model/website.dart';
 import 'package:acs_upb_mobile/pages/portal/service/website_provider.dart';
+import 'package:acs_upb_mobile/pages/portal/view/website_view.dart';
 import 'package:acs_upb_mobile/resources/custom_icons.dart';
 import 'package:acs_upb_mobile/resources/locale_provider.dart';
 import 'package:acs_upb_mobile/resources/storage_provider.dart';
@@ -72,7 +73,8 @@ class _PortalPageState extends State<PortalPage> {
                 Provider.of<AuthProvider>(context, listen: false);
             if (authProvider.isAuthenticatedFromCache &&
                 !authProvider.isAnonymous) {
-              Navigator.of(context).pushNamed(Routes.addWebsite);
+              Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (_) => WebsiteView()));
             } else {
               AppToast.show(S.of(context).warningAuthenticationNeeded);
             }
@@ -144,7 +146,14 @@ class _PortalPageState extends State<PortalPage> {
                                         LocaleProvider.localeString],
                                     image: image,
                                     enableOverlay: editingEnabled,
-                                    onTap: () => _launchURL(website.link),
+                                    onTap: () => editingEnabled
+                                        ? Navigator.of(context)
+                                            .push(MaterialPageRoute(
+                                                builder: (_) => WebsiteView(
+                                                      website: website,
+                                                      updateExisting: true,
+                                                    )))
+                                        : _launchURL(website.link),
                                   );
                                 },
                               ),
