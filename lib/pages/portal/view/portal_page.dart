@@ -27,6 +27,8 @@ class _PortalPageState extends State<PortalPage> {
   // Only show user-added websites
   bool userOnly = false;
 
+  bool editingEnabled = false;
+
   _launchURL(String url) async {
     if (await canLaunch(url)) {
       await launch(url);
@@ -141,6 +143,7 @@ class _PortalPageState extends State<PortalPage> {
                                     tooltip: website.infoByLocale[
                                         LocaleProvider.localeString],
                                     image: image,
+                                    enableOverlay: editingEnabled,
                                     onTap: () => _launchURL(website.link),
                                   );
                                 },
@@ -195,6 +198,10 @@ class _PortalPageState extends State<PortalPage> {
       title: S.of(context).navigationPortal,
       actions: [
         AppScaffoldAction(
+          icon: Icons.edit,
+          onPressed: () => setState(() => editingEnabled = !editingEnabled),
+        ),
+        AppScaffoldAction(
           icon: CustomIcons.filter,
           tooltip: S.of(context).navigationFilter,
           items: {
@@ -215,7 +222,7 @@ class _PortalPageState extends State<PortalPage> {
               }
             },
           },
-        )
+        ),
       ],
       body: FutureBuilder(
         future: filterFuture,
