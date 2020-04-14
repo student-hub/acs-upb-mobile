@@ -41,11 +41,49 @@ including the order of imports.
 * Where necessary, comments should use Markdown formatting (e.g. backticks - \` - for code snippets
 and `[brackets]` for code references).
 * Use only single apostrophes - ' - for strings (e.g. `'hello'` instead of `"hello"`)
-* All strings that are visible to the user should be internationalised and set in the corresponding
-`.arb` files within the `l10n` folder. The
+
+## Working with Firebase
+This application uses [Firebase](https://firebase.google.com/) to manage remote storage and
+authentication.
+
+### Setup
+`TODO`
+
+### Database structure
+`TODO`
+
+### Rules
+`TODO`
+
+## Internationalization
+
+### On-device
+All strings that are visible to the user should be internationalised and set in the corresponding
+`.arb` files within the [`l10n`](lib/l10n) folder. The
 [Flutter Intl](https://plugins.jetbrains.com/plugin/13666-flutter-intl) Android Studio plugin does
 all the hard work for you by generating the code when you save an `.arb` file. Strings can then be
 accessed using `S.of(context).stringID`.
+
+### Remote
+In the database, internationalized strings are saved as a dictionary where the locale is the key:
+```
+{
+    'ro': 'Îmi place Flutter!',
+    'en': 'I like Flutter!'
+}
+```
+These will have a corresponding `Map` variable in the Dart code (e.g. `Map<String, String>
+infoByLocale`). See [`WebsiteProvider`](lib/pages/portal/service/website_provider.dart) for a
+serialization/deserialization example.
+
+
+### Changing the locale
+Changing the app's language is done via the [settings page](lib/pages/settings/settings_page.dart).
+
+### Fetching the locale
+The [`LocaleProvider`](lib/resources/locale_provider.dart) class offers utility methods for
+fetching the current locale string. See [`PortalPage`](lib/pages/portal/view/portal_page.dart)
+for a usage example.
 
 ## Custom icons
 
