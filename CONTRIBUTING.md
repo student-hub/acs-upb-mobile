@@ -45,3 +45,32 @@ including the order of imports.
 [Flutter Intl](https://plugins.jetbrains.com/plugin/13666-flutter-intl) Android Studio plugin does
 all the hard work for you by generating the code when you save an `.arb` file. Strings can then be
 accessed using `S.of(context).stringID`.
+
+## Custom icons
+
+If you need to use icons other than the ones provided by the
+[Material library](https://material.io/resources/icons), the process is as follows:
+
+### Generating the font file
+* Convert the `.ttf` [custom font](assets/fonts/CustomIcons/CustomIcons.ttf) in the project to an
+`.svg` font (using a tool such as [this one](https://convertio.co/ttf-svg/)).
+* Go to [FlutterIcon](https://fluttericon.com/) and upload (drag & drop) the file you obtained
+earlier in order to import the icons.
+* Check that the imported icons are the ones defined in the
+[`CustomIcons`](lib/resources/custom_icons.dart) class to make sure nothing went wrong with the
+conversion, and select all of them.
+* (Upload and) select any additional icons that you want to use in the project, then click
+**Download**.
+
+### Updating the project
+* Rename the font file in the archive downloaded earlier to `CustomIcons.ttf` and replace the
+[custom font](assets/fonts/CustomIcons/CustomIcons.ttf) in the project.
+* Copy the IconData definitions from the `.dart` file in the archive and replace the corresponding
+definitions in the [`CustomIcons`](lib/resources/custom_icons.dart) class;
+* Check that everything still works correctly :)
+
+**Note**: [FontAwesome](https://fontawesome.com/icons?d=gallery) icons are recommended, where
+possible, because they are consistent with the overall style. For additional action icons check out
+[FontAwesomeActions](https://github.com/nyon/fontawesome-actions) - the repo provides an [`.svg`
+font](https://github.com/nyon/fontawesome-actions/blob/master/dist/fonts/fontawesome-webfont.svg)
+you can upload directly into [FlutterIcon](https://fluttericon.com/).
