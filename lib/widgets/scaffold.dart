@@ -78,44 +78,48 @@ class AppScaffold extends StatelessWidget {
           toolbarOpacity: 0.8,
           actions: <Widget>[
             enableMenu
-                ? Tooltip(
-                    message: menuTooltip ??
-                        menuText ??
-                        S.of(context).navigationSettings,
-                    child: menuItems != null
-                        ? PopupMenuButton<String>(
-                            icon: Icon(menuIcon),
-                            onSelected: (selected) => menuItems[selected](),
-                            itemBuilder: (BuildContext context) {
-                              return menuItems.keys
-                                  .map((option) => PopupMenuItem(
-                                        value: option,
-                                        child: Text(option),
-                                      ))
-                                  .toList();
-                            },
-                            offset: Offset(0, 100),
-                          )
-                        : menuText != null
+                ? menuItems != null
+                    ? PopupMenuButton<String>(
+                        icon: Icon(menuIcon),
+                        tooltip: menuTooltip ??
+                            menuText ??
+                            S.of(context).navigationSettings,
+                        onSelected: (selected) => menuItems[selected](),
+                        itemBuilder: (BuildContext context) {
+                          return menuItems.keys
+                              .map((option) => PopupMenuItem(
+                                    value: option,
+                                    child: Text(option),
+                                  ))
+                              .toList();
+                        },
+                        offset: Offset(0, 100),
+                      )
+                    : Tooltip(
+                        message: menuTooltip ??
+                            menuText ??
+                            S.of(context).navigationSettings,
+                        child: menuText != null
                             ? ButtonTheme(
-                          minWidth: 8.0,
-                          child: FlatButton(
-                            materialTapTargetSize:
-                                MaterialTapTargetSize.shrinkWrap,
-                            child: Text(
-                              menuText,
-                              style: TextStyle().apply(
-                                  color:
-                                      Theme.of(context).primaryIconTheme.color),
-                            ),
-                            onPressed: action,
-                          ),
+                                minWidth: 8.0,
+                                child: FlatButton(
+                                  materialTapTargetSize:
+                                      MaterialTapTargetSize.shrinkWrap,
+                                  child: Text(
+                                    menuText,
+                                    style: TextStyle().apply(
+                                        color: Theme.of(context)
+                                            .primaryIconTheme
+                                            .color),
+                                  ),
+                                  onPressed: action,
+                                ),
                               )
                             : IconButton(
                                 icon: Icon(menuIcon),
                                 onPressed: action,
                               ),
-                  )
+                      )
                 : Container(),
           ],
         ),
