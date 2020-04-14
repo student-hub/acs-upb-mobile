@@ -29,8 +29,10 @@ extension WebsiteCategoryExtension on WebsiteCategory {
 }
 
 extension WebsiteExtension on Website {
-  static Website fromSnap(DocumentSnapshot snap) {
+  static Website fromSnap(DocumentSnapshot snap, {String ownerUid}) {
     return Website(
+      ownerUid: ownerUid,
+      id: snap.documentID,
       category: WebsiteCategoryExtension.fromString(snap.data['category']),
       iconPath: snap.data['icon'] ?? 'icons/websites/globe.png',
       label: snap.data['label'] ?? 'Website',
@@ -66,9 +68,11 @@ class WebsiteProvider with ChangeNotifier {
   Future<List<Website>> fetchWebsites(Filter filter,
       {bool userOnly = false, String uid}) async {
     try {
-      List<DocumentSnapshot> documents = [];
+      List<Website> websites = [];
 
       if (!userOnly) {
+        List<DocumentSnapshot> documents = [];
+
         if (filter == null) {
           QuerySnapshot qSnapshot =
               await _db.collection('websites').getDocuments();
@@ -91,13 +95,15 @@ class WebsiteProvider with ChangeNotifier {
           }
         }
 
-      // Remove duplicates
-      // (a document may result out of more than one query)
-      final seenDocumentIds = Set<String>();
+        // Remove duplicates
+        // (a document may result out of more than one query)
+        final seenDocumentIds = Set<String>();
 
         documents = documents
             .where((doc) => seenDocumentIds.add(doc.documentID))
             .toList();
+
+        websites.addAll(documents.map((doc) => WebsiteExtension.fromSnap(doc)));
       }
 
       // Get user-added websites
@@ -106,10 +112,12 @@ class WebsiteProvider with ChangeNotifier {
             Firestore.instance.collection('users').document(uid);
         QuerySnapshot qSnapshot =
             await ref.collection('websites').getDocuments();
-        documents.addAll(qSnapshot.documents);
+
+        websites.addAll(qSnapshot.documents
+            .map((doc) => WebsiteExtension.fromSnap(doc, ownerUid: uid)));
       }
 
-      return documents.map((doc) => WebsiteExtension.fromSnap(doc)).toList();
+      return websites;
     } catch (e) {
       print(e);
       return null;
