@@ -115,6 +115,7 @@ class _WebsiteViewState extends State<WebsiteView> {
           ownerUid:
               widget.website != null ? widget.website.ownerUid : _user?.uid,
           isPrivate: _onlyMeController.isSelected ?? true,
+          editedBy: (widget.website?.editedBy ?? []) + [_user?.uid],
           label: _labelController.text,
           link: _linkController.text,
           category: _selectedCategory,

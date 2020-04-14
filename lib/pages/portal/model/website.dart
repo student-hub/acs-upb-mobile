@@ -32,6 +32,8 @@ class Website {
   /// Whether the website is public or part of user data
   final bool isPrivate;
 
+  final List<String> editedBy;
+
   final WebsiteCategory category;
   final String iconPath;
   final String label;
@@ -42,12 +44,14 @@ class Website {
       {this.ownerUid,
       @required this.id,
       @required this.isPrivate,
+      List<String> editedBy,
       @required this.category,
       this.iconPath,
       String label,
       @required String link,
       this.infoByLocale})
-      : this.label = toString(label).isEmpty ? labelFromLink(link) : label,
+      : this.editedBy = editedBy ?? [],
+        this.label = toString(label).isEmpty ? labelFromLink(link) : label,
         this.link = link;
 
   static String labelFromLink(String link) => link.split('://').last;

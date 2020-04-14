@@ -32,6 +32,7 @@ extension WebsiteExtension on Website {
       ownerUid: ownerUid ?? snap.data['addedBy'],
       id: snap.documentID,
       isPrivate: ownerUid != null,
+      editedBy: List<String>.from(snap.data['editedBy'] ?? []),
       category: WebsiteCategoryExtension.fromString(snap.data['category']),
       iconPath: snap.data['icon'] ?? 'icons/websites/globe.png',
       label: snap.data['label'] ?? 'Website',
@@ -50,6 +51,7 @@ extension WebsiteExtension on Website {
 
     if (!isPrivate) {
       if (ownerUid != null) data['addedBy'] = ownerUid;
+      data['editedBy'] = editedBy;
       data['relevance'] = null; // TODO: Make relevance customizable
     }
 
