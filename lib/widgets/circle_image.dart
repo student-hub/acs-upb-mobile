@@ -90,7 +90,7 @@ class CircleImage extends StatelessWidget {
                               fit: BoxFit.fill,
                               colorFilter: enableOverlay
                                   ? ColorFilter.mode(
-                                      overlayColor ?? Colors.blueGrey[100],
+                                      overlayColor ?? Colors.blueGrey[200],
                                       BlendMode.lighten,
                                     )
                                   : null,
