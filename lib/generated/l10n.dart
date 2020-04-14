@@ -577,6 +577,15 @@ class S {
     );
   }
 
+  String get warningNothingToEdit {
+    return Intl.message(
+      'There is nothing you have permission to edit.',
+      name: 'warningNothingToEdit',
+      desc: '',
+      args: [],
+    );
+  }
+
   String get navigationHome {
     return Intl.message(
       'Home',
@@ -905,6 +914,15 @@ class S {
     return Intl.message(
       'Try tapping/long-pressing/hovering the preview to test the new website.',
       name: 'messageWebsitePreview',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get messageAddCustomWebsite {
+    return Intl.message(
+      'Try adding a custom website.',
+      name: 'messageAddCustomWebsite',
       desc: '',
       args: [],
     );

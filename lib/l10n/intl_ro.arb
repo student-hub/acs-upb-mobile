@@ -65,6 +65,7 @@
   "warningWebsiteNameExists": "Există deja un site cu același nume.",
   "warningNoPermissionToAddPublicWebsite": "Nu aveți permisiunea să creați site-uri publice.",
   "warningAuthenticationNeeded": "Autentificați-vă pentru a accesa această funcționalitate.",
+  "warningNothingToEdit": "Nu există nimic pentru care să aveți permisiuni de editare.",
 
   "navigationHome": "Acasă",
   "navigationTimetable": "Orar",
@@ -95,7 +96,7 @@
   "websiteCategoryAssociations": "Asociații",
   "websiteCategoryResources": "Resurse",
   "websiteCategoryOthers": "Altele",
-  
+
   "messageWelcomeSimple": "Bine ai venit!",
   "messageWelcomeName": "Bine ai venit, {name}!",
   "messageNewUser":"Utilizator nou?",
@@ -107,12 +108,13 @@
   "messageDeleteAccount": "Sunteți sigur că doriți să ștergeți contul?",
   "messageCannotBeUndone": "Această acțiune nu este reversibilă.",
   "messageUnderConstruction": "În construcție",
-  "messageWebsitePreview": "Încearcă să apeși, să faci hover sau să ții apăsat ca să testezi noul website.",
+  "messageWebsitePreview": "Încercați să apăsați, să faceți hover sau să țineți apăsat ca să testați noul website.",
+  "messageAddCustomWebsite": "Încercați să adăugați un website.",
 
   "infoPasswordResetEmailSent": "Please check your inbox for the password reset e-mail.",
 
   "stringEmailDomain": "@stud.acs.upb.ro",
   "stringAnonymous": "Anonim",
-  
+
   "fileAcsBanner": "assets/images/acs_banner_ro.png"
 }

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:acs_upb_mobile/authentication/model/user.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/filter/model/filter.dart';
 import 'package:acs_upb_mobile/pages/portal/model/website.dart';
@@ -159,5 +160,15 @@ class WebsiteProvider with ChangeNotifier {
       AppToast.show(e.message); // TODO: Localize message
       return false;
     }
+  }
+
+  /// Check if there is at least one website that the [user] has permission to edit
+  Future<bool> hasEditableWebsites(User user) async {
+    // We assume there is at least one public website in the database
+    if (user.canEditPublicWebsite) return true;
+
+    CollectionReference ref =
+        _db.collection('users').document(user.uid).collection('websites');
+    return (await ref.getDocuments()).documents.length > 0;
   }
 }

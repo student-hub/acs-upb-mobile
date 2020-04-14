@@ -65,6 +65,7 @@
   "warningWebsiteNameExists": "A website with the same name already exists.",
   "warningNoPermissionToAddPublicWebsite": "You do not have permission to create a public website.",
   "warningAuthenticationNeeded": "Please authenticate in order to access this feature.",
+  "warningNothingToEdit": "There is nothing you have permission to edit.",
 
   "navigationHome": "Home",
   "navigationTimetable": "Timetable",
@@ -108,6 +109,7 @@
   "messageCannotBeUndone": "This action cannot be undone.",
   "messageUnderConstruction": "Under construction",
   "messageWebsitePreview": "Try tapping/long-pressing/hovering the preview to test the new website.",
+  "messageAddCustomWebsite": "Try adding a custom website.",
 
   "infoPasswordResetEmailSent": "Please check your inbox for the password reset e-mail.",
 

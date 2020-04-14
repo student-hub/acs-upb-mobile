@@ -234,6 +234,16 @@ class _PortalPageState extends State<PortalPage> {
                 Provider.of<AuthProvider>(context, listen: false);
             if (authProvider.isAuthenticatedFromCache &&
                 !authProvider.isAnonymous) {
+              // Show message if there is nothing the user can edit
+              if (!editingEnabled) {
+                websiteProvider.hasEditableWebsites(user).then((canEdit) {
+                  if (!canEdit)
+                    AppToast.show(S.of(context).warningNothingToEdit +
+                        ' ' +
+                        S.of(context).messageAddCustomWebsite);
+                });
+              }
+
               setState(() => editingEnabled = !editingEnabled);
             } else {
               AppToast.show(S.of(context).warningAuthenticationNeeded);
