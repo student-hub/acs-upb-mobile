@@ -19,7 +19,6 @@ class SettingsPageState extends State<SettingsPage> {
   Widget build(BuildContext context) {
     return AppScaffold(
         title: S.of(context).navigationSettings,
-        enableMenu: false,
         body: Builder(
           builder: (BuildContext context) {
             return Column(

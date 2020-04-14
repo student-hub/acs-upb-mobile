@@ -127,18 +127,19 @@ class _PortalPageState extends State<PortalPage> {
                               child: FutureBuilder<ImageProvider<dynamic>>(
                                 future: storageProvider
                                     .imageFromPath(website.iconPath),
-                      builder: (context, snapshot) {
-                        var image;
-                        if (snapshot.hasData) {
-                          image = snapshot.data;
-                        } else {
-                          image = AssetImage('assets/' + website.iconPath) ??
-                              AssetImage('assets/images/white.png');
-                        }
-                        return CircleImage(
-                          label: website.label,
-                          tooltip: website
-                              .infoByLocale[LocaleProvider.localeString],
+                                builder: (context, snapshot) {
+                                  var image;
+                                  if (snapshot.hasData) {
+                                    image = snapshot.data;
+                                  } else {
+                                    image = AssetImage(
+                                            'assets/' + website.iconPath) ??
+                                        AssetImage('assets/images/white.png');
+                                  }
+                                  return CircleImage(
+                                    label: website.label,
+                                    tooltip: website.infoByLocale[
+                                        LocaleProvider.localeString],
                                     image: image,
                                     onTap: () => _launchURL(website.link),
                                   );
@@ -192,27 +193,30 @@ class _PortalPageState extends State<PortalPage> {
 
     return AppScaffold(
       title: S.of(context).navigationPortal,
-      enableMenu: true,
-      menuIcon: CustomIcons.filter,
-      menuTooltip: S.of(context).navigationFilter,
-      menuItems: {
-        S.of(context).filterMenuRelevance: () {
-          userOnly = false;
-          Navigator.pushNamed(context, Routes.filter);
-        },
-        S.of(context).filterMenuShowMine: () {
-          setState(() => userOnly = true);
-          filterProvider.enableFilter();
-        },
-        S.of(context).filterMenuShowAll: () {
-          if (!filterProvider.filterEnabled) {
-            AppToast.show(S.of(context).warningFilterAlreadyDisabled);
-          } else {
-            userOnly = false;
-            filterProvider.disableFilter();
-          }
-        },
-      },
+      actions: [
+        AppScaffoldAction(
+          icon: CustomIcons.filter,
+          tooltip: S.of(context).navigationFilter,
+          items: {
+            S.of(context).filterMenuRelevance: () {
+              userOnly = false;
+              Navigator.pushNamed(context, Routes.filter);
+            },
+            S.of(context).filterMenuShowMine: () {
+              setState(() => userOnly = true);
+              filterProvider.enableFilter();
+            },
+            S.of(context).filterMenuShowAll: () {
+              if (!filterProvider.filterEnabled) {
+                AppToast.show(S.of(context).warningFilterAlreadyDisabled);
+              } else {
+                userOnly = false;
+                filterProvider.disableFilter();
+              }
+            },
+          },
+        )
+      ],
       body: FutureBuilder(
         future: filterFuture,
         builder: (BuildContext context, AsyncSnapshot<Filter> filterSnap) {

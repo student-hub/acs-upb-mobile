@@ -115,12 +115,15 @@ class FilterPageState extends State<FilterPage> {
 
     return AppScaffold(
       title: S.of(context).navigationFilter,
-      enableMenu: true,
-      menuText: S.of(context).buttonApply,
-      menuAction: () {
-        filterProvider.enableFilter();
-        Navigator.of(context).pop();
-      },
+      actions: [
+        AppScaffoldAction(
+          text: S.of(context).buttonApply,
+          onPressed: () {
+            filterProvider.enableFilter();
+            Navigator.of(context).pop();
+          },
+        )
+      ],
       body: FutureBuilder(
           future: filterFuture,
           builder: (BuildContext context, AsyncSnapshot snap) {

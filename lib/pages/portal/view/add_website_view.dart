@@ -120,8 +120,8 @@ class _AddWebsiteViewState extends State<AddWebsiteView> {
                               label: website.label,
                               onTap: () => _launchURL(website.link),
                               image: image,
-                              tooltip:
-                                  website.infoByLocale[LocaleProvider.localeString],
+                              tooltip: website
+                                  .infoByLocale[LocaleProvider.localeString],
                             );
                           },
                         ),
@@ -226,21 +226,25 @@ class _AddWebsiteViewState extends State<AddWebsiteView> {
   Widget build(BuildContext context) {
     return AppScaffold(
       title: S.of(context).actionAddWebsite,
-      enableMenu: true,
-      menuText: S.of(context).buttonSave,
-      menuAction: () async {
-        if (_formKey.currentState.validate()) {
-          bool res = await Provider.of<WebsiteProvider>(context, listen: false)
-              .addWebsite(
-            buildWebsite(),
-            userOnly: _onlyMeController.isSelected,
-            context: context,
-          );
-          if (res) {
-            Navigator.of(context).pop();
-          }
-        }
-      },
+      actions: [
+        AppScaffoldAction(
+          text: S.of(context).buttonSave,
+          onPressed: () async {
+            if (_formKey.currentState.validate()) {
+              bool res =
+                  await Provider.of<WebsiteProvider>(context, listen: false)
+                      .addWebsite(
+                buildWebsite(),
+                userOnly: _onlyMeController.isSelected,
+                context: context,
+              );
+              if (res) {
+                Navigator.of(context).pop();
+              }
+            }
+          },
+        )
+      ],
       body: SafeArea(
         child: ListView(
           children: <Widget>[
