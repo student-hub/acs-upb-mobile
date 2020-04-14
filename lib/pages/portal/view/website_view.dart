@@ -111,7 +111,7 @@ class _WebsiteViewState extends State<WebsiteView> {
 
   Website _buildWebsite() => Website(
           id: _buildId(),
-          ownerUid: _user.uid,
+          ownerUid: _user?.uid,
           isPrivate: _onlyMeController.isSelected ?? true,
           label: _labelController.text,
           link: _linkController.text,
