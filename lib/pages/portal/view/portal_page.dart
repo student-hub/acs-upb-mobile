@@ -215,7 +215,9 @@ class _PortalPageState extends State<PortalPage> {
     FilterProvider filterProvider = Provider.of<FilterProvider>(context);
     AuthProvider authProvider = Provider.of<AuthProvider>(context);
 
-    filterFuture = filterProvider.fetchFilter(context);
+    if (filterFuture == null) {
+      filterFuture = filterProvider.fetchFilter(context);
+    }
 
     List<Website> websites = [];
 
@@ -255,10 +257,12 @@ class _PortalPageState extends State<PortalPage> {
           tooltip: S.of(context).navigationFilter,
           items: {
             S.of(context).filterMenuRelevance: () {
+              filterFuture = null;  // reset filter cache
               userOnly = false;
               Navigator.pushNamed(context, Routes.filter);
             },
             S.of(context).filterMenuShowMine: () {
+              filterFuture = null;  // reset filter cache
               setState(() => userOnly = true);
               filterProvider.enableFilter();
             },
@@ -266,6 +270,7 @@ class _PortalPageState extends State<PortalPage> {
               if (!filterProvider.filterEnabled) {
                 AppToast.show(S.of(context).warningFilterAlreadyDisabled);
               } else {
+                filterFuture = null;  // reset filter cache
                 userOnly = false;
                 filterProvider.disableFilter();
               }
