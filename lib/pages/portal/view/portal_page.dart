@@ -225,7 +225,10 @@ class _PortalPageState extends State<PortalPage> {
       title: S.of(context).navigationPortal,
       actions: [
         AppScaffoldAction(
-          icon: Icons.edit,
+          icon: editingEnabled ? CustomIcons.edit_slash : Icons.edit,
+          tooltip: editingEnabled
+              ? S.of(context).actionDisableEditing
+              : S.of(context).actionEnableEditing,
           onPressed: () {
             AuthProvider authProvider =
                 Provider.of<AuthProvider>(context, listen: false);

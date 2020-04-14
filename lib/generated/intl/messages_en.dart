@@ -33,7 +33,9 @@ class MessageLookup extends MessageLookupByLibrary {
   static _notInlinedMessages(_) => <String, Function> {
     "actionAddWebsite" : MessageLookupByLibrary.simpleMessage("Add website"),
     "actionDeleteAccount" : MessageLookupByLibrary.simpleMessage("Delete account"),
+    "actionDisableEditing" : MessageLookupByLibrary.simpleMessage("Disable editing"),
     "actionEditWebsite" : MessageLookupByLibrary.simpleMessage("Edit website"),
+    "actionEnableEditing" : MessageLookupByLibrary.simpleMessage("Enable editing"),
     "actionLogIn" : MessageLookupByLibrary.simpleMessage("Log in"),
     "actionLogInAnonymously" : MessageLookupByLibrary.simpleMessage("Log in anonymously"),
     "actionLogOut" : MessageLookupByLibrary.simpleMessage("Log out"),
