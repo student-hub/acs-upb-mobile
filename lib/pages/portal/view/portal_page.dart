@@ -208,7 +208,16 @@ class _PortalPageState extends State<PortalPage> {
       actions: [
         AppScaffoldAction(
           icon: Icons.edit,
-          onPressed: () => setState(() => editingEnabled = !editingEnabled),
+          onPressed: () {
+            AuthProvider authProvider =
+                Provider.of<AuthProvider>(context, listen: false);
+            if (authProvider.isAuthenticatedFromCache &&
+                !authProvider.isAnonymous) {
+              setState(() => editingEnabled = !editingEnabled);
+            } else {
+              AppToast.show(S.of(context).warningAuthenticationNeeded);
+            }
+          },
         ),
         AppScaffoldAction(
           icon: CustomIcons.filter,
