@@ -120,8 +120,8 @@ class _AddWebsiteViewState extends State<AddWebsiteView> {
                               label: website.label,
                               onTap: () => _launchURL(website.link),
                               image: image,
-                              tooltip:
-                                  website.infoByLocale[LocaleProvider.localeString],
+                              tooltip: website
+                                  .infoByLocale[LocaleProvider.localeString],
                             );
                           },
                         ),
@@ -307,6 +307,8 @@ class _AddWebsiteViewState extends State<AddWebsiteView> {
                           hintText: 'Cel mai popular motor de căutare.',
                           prefixIcon: Icon(Icons.info)),
                       onChanged: (_) => setState(() {}),
+                      minLines: 1,
+                      maxLines: 5,
                     ),
                     TextFormField(
                       controller: _descriptionEnController,
@@ -321,6 +323,8 @@ class _AddWebsiteViewState extends State<AddWebsiteView> {
                           hintText: 'The most popular search engine.',
                           prefixIcon: Icon(Icons.info)),
                       onChanged: (_) => setState(() {}),
+                      minLines: 1,
+                      maxLines: 5,
                     ),
                   ],
                 ),
