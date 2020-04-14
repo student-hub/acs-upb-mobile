@@ -109,9 +109,11 @@ class _WebsiteViewState extends State<WebsiteView> {
         .snakeCase;
   }
 
-  Website _buildWebsite() => Website(
+  Website _buildWebsite() =>
+      Website(
           id: _buildId(),
-          ownerUid: _user?.uid,
+          ownerUid:
+              widget.website != null ? widget.website.ownerUid : _user?.uid,
           isPrivate: _onlyMeController.isSelected ?? true,
           label: _labelController.text,
           link: _linkController.text,
