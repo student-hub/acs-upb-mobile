@@ -116,6 +116,7 @@ class _WebsiteViewState extends State<WebsiteView> {
           label: _labelController.text,
           link: _linkController.text,
           category: _selectedCategory,
+          iconPath: widget.website?.iconPath ?? 'icons/websites/globe.png',
           infoByLocale: {
             'ro': _descriptionRoController.text,
             'en': _descriptionEnController.text
@@ -148,7 +149,7 @@ class _WebsiteViewState extends State<WebsiteView> {
                         FutureBuilder<ImageProvider<dynamic>>(
                           future: Provider.of<StorageProvider>(context,
                                   listen: false)
-                              .imageFromPath('icons/websites/globe.png'),
+                              .imageFromPath(website.iconPath),
                           builder: (context, snapshot) {
                             ImageProvider<dynamic> image =
                                 AssetImage('assets/icons/websites/globe.png');
