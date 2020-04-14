@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class SelectableController {
   _SelectableState _selectableState;
 
-  bool get isSelected => _selectableState.isSelected;
+  bool get isSelected => _selectableState?.isSelected;
 
   void select() {
     _selectableState.isSelected = true;

@@ -14,6 +14,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
+import 'package:recase/recase.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:validators/validators.dart';
 
@@ -100,7 +101,18 @@ class _WebsiteViewState extends State<WebsiteView> {
     }
   }
 
-  Website buildWebsite() => Website(
+  String _buildId() {
+    if (widget.updateExisting) return widget.website.id;
+    // Sanitize label to obtain document ID
+    return ReCase(_labelController.text
+            .replaceAll(RegExp('[^A-ZĂÂȘȚa-zăâșț0-9 ]'), ''))
+        .snakeCase;
+  }
+
+  Website _buildWebsite() => Website(
+          id: _buildId(),
+          ownerUid: _user.uid,
+          isPrivate: _onlyMeController.isSelected ?? true,
           label: _labelController.text,
           link: _linkController.text,
           category: _selectedCategory,
@@ -109,8 +121,8 @@ class _WebsiteViewState extends State<WebsiteView> {
             'en': _descriptionEnController.text
           });
 
-  Widget preview() {
-    Website website = buildWebsite();
+  Widget _preview() {
+    Website website = _buildWebsite();
 
     return Padding(
       padding: const EdgeInsets.only(left: 20.0, right: 8.0, top: 8.0),
@@ -184,7 +196,7 @@ class _WebsiteViewState extends State<WebsiteView> {
     );
   }
 
-  Widget relevanceField() => Padding(
+  Widget _relevanceField() => Padding(
         padding: const EdgeInsets.only(top: 12.0, left: 12.0),
         child: Row(
           children: <Widget>[
@@ -263,8 +275,8 @@ class _WebsiteViewState extends State<WebsiteView> {
               bool res =
                   await Provider.of<WebsiteProvider>(context, listen: false)
                       .addWebsite(
-                buildWebsite(),
-                userOnly: _onlyMeController.isSelected,
+                _buildWebsite(),
+                updateExisting: widget.updateExisting,
                 context: context,
               );
               if (res) {
@@ -277,7 +289,7 @@ class _WebsiteViewState extends State<WebsiteView> {
       body: SafeArea(
         child: ListView(
           children: <Widget>[
-            preview(),
+            _preview(),
             Padding(
               padding: const EdgeInsets.only(left: 16.0, right: 16.0),
               child: Form(
@@ -326,7 +338,7 @@ class _WebsiteViewState extends State<WebsiteView> {
                       },
                       onChanged: (_) => setState(() {}),
                     ),
-                    relevanceField(),
+                    _relevanceField(),
                     TextFormField(
                       controller: _descriptionRoController,
                       decoration: InputDecoration(
