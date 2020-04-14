@@ -4,14 +4,14 @@
 
 1. Check out [this](https://opensource.com/article/19/7/create-pull-request-github) tutorial if you
 don't know how to make a PR.
-2. Increase the version number in the `pubspec.yaml` file with the following guidelines in mind:
-    - Build number (0.2.1+**4**) is for very small changes and bug fixes (usually not visible to the
+2. Increase the version number in the [`pubspec.yaml`](pubspec.yaml) file with the following guidelines in mind:
+    - **Build number** (0.2.1+**4**) is for very small changes and bug fixes (usually not visible to the
     end user).
-    - Patch version (0.2.**1**+4) is for minor improvements that may be visible to an attentive end
+    - **Patch version** (0.2.**1**+4) is for minor improvements that may be visible to an attentive end
     user.
-    - Minor version (0.**2**.1+4) is for added functionality (i.e. merging a branch that introduces
+    - **Minor version** (0.**2**.1+4) is for added functionality (i.e. merging a branch that introduces
     a new feature).
-    - Major version (**0**.2.1+4) marks important project milestones.
+    - **Major version** (**0**.2.1+4) marks important project milestones.
 3. Document any non-obvious parts of the code and make sure the commit description is clear on why
 the change is necessary.
 4. If it's a new feature, write at least one test for it.
@@ -38,7 +38,8 @@ following mentions:
 * Android Studio (IntelliJ) with the `dartfmt` tool is used to automatically format the code,
 including the order of imports.  
 * For consistency, the `new` keyword (which is optional in Dart) should **not** be used.  
-* Where necessary, comments should use Markdown formatting (e.g. backticks - ` - for code snippets).
+* Where necessary, comments should use Markdown formatting (e.g. backticks - \` - for code snippets
+and `[brackets]` for code references).
 * Use only single apostrophes - ' - for strings (e.g. `'hello'` instead of `"hello"`)
 * All strings that are visible to the user should be internationalised and set in the corresponding
 `.arb` files within the `l10n` folder. The
