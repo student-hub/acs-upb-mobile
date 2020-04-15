@@ -103,9 +103,11 @@ class _WebsiteViewState extends State<WebsiteView> {
 
   String _buildId() {
     if (widget.updateExisting) return widget.website.id;
+    String label = (_labelController.text ?? '') == ''
+        ? Website.labelFromLink(_linkController.text)
+        : _labelController.text;
     // Sanitize label to obtain document ID
-    return ReCase(_labelController.text
-            .replaceAll(RegExp('[^A-ZĂÂȘȚa-zăâșț0-9 ]'), ''))
+    return ReCase(label.replaceAll(RegExp('[^A-ZĂÂȘȚa-zăâșț0-9 ]'), ''))
         .snakeCase;
   }
 
