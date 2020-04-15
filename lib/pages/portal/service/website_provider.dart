@@ -174,6 +174,29 @@ class WebsiteProvider with ChangeNotifier {
     }
   }
 
+  Future<bool> deleteWebsite(Website website, {BuildContext context}) async {
+    try {
+      DocumentReference ref;
+      if (!website.isPrivate) {
+        ref = _db.collection('websites').document(website.id);
+      } else {
+        ref = _db
+            .collection('users')
+            .document(website.ownerUid)
+            .collection('websites')
+            .document(website.id);
+      }
+
+      await ref.delete();
+
+      notifyListeners();
+      return true;
+    } catch (e) {
+      _errorHandler(e, context);
+      return false;
+    }
+  }
+
   /// Check if there is at least one website that the [user] has permission to edit
   Future<bool> hasEditableWebsites(User user) async {
     // We assume there is at least one public website in the database

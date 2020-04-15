@@ -352,6 +352,15 @@ class S {
     );
   }
 
+  String get actionDeleteWebsite {
+    return Intl.message(
+      'Delete website',
+      name: 'actionDeleteWebsite',
+      desc: '',
+      args: [],
+    );
+  }
+
   String get actionEnableEditing {
     return Intl.message(
       'Enable editing',
@@ -932,6 +941,42 @@ class S {
     return Intl.message(
       'Try adding a custom website.',
       name: 'messageAddCustomWebsite',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get messageWebsiteAdded {
+    return Intl.message(
+      'Website added successfully.',
+      name: 'messageWebsiteAdded',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get messageWebsiteEdited {
+    return Intl.message(
+      'Website modified successfully.',
+      name: 'messageWebsiteEdited',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get messageDeleteWebsite {
+    return Intl.message(
+      'Are you sure you want to delete this website?',
+      name: 'messageDeleteWebsite',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get messageWebsiteDeleted {
+    return Intl.message(
+      'Website deleted successfully.',
+      name: 'messageWebsiteDeleted',
       desc: '',
       args: [],
     );

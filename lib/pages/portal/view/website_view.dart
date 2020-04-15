@@ -6,7 +6,9 @@ import 'package:acs_upb_mobile/pages/portal/service/website_provider.dart';
 import 'package:acs_upb_mobile/resources/custom_icons.dart';
 import 'package:acs_upb_mobile/resources/locale_provider.dart';
 import 'package:acs_upb_mobile/resources/storage_provider.dart';
+import 'package:acs_upb_mobile/widgets/button.dart';
 import 'package:acs_upb_mobile/widgets/circle_image.dart';
+import 'package:acs_upb_mobile/widgets/dialog.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:acs_upb_mobile/widgets/selectable.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
@@ -268,6 +270,30 @@ class _WebsiteViewState extends State<WebsiteView> {
         ),
       );
 
+  AppDialog _deletionConfirmationDialog(BuildContext context) => AppDialog(
+        icon: Icon(Icons.delete),
+        title: S.of(context).actionDeleteWebsite,
+        message: S.of(context).messageDeleteWebsite,
+        actions: [
+          AppButton(
+            text: S.of(context).actionDeleteWebsite,
+            width: 130,
+            onTap: () async {
+              Navigator.pop(context); // Pop dialog window
+
+              WebsiteProvider websiteProvider =
+                  Provider.of<WebsiteProvider>(context, listen: false);
+              bool res = await websiteProvider.deleteWebsite(widget.website,
+                  context: context);
+              if (res) {
+                Navigator.pop(context); // Pop editing page
+                AppToast.show(S.of(context).messageWebsiteDeleted);
+              }
+            },
+          )
+        ],
+      );
+
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
@@ -275,24 +301,42 @@ class _WebsiteViewState extends State<WebsiteView> {
           ? S.of(context).actionEditWebsite
           : S.of(context).actionAddWebsite,
       actions: [
-        AppScaffoldAction(
-          text: S.of(context).buttonSave,
-          onPressed: () async {
-            if (_formKey.currentState.validate()) {
-              bool res =
-                  await Provider.of<WebsiteProvider>(context, listen: false)
-                      .addWebsite(
-                _buildWebsite(),
-                updateExisting: widget.updateExisting,
-                context: context,
-              );
-              if (res) {
-                Navigator.of(context).pop();
-              }
-            }
-          },
-        )
-      ],
+            AppScaffoldAction(
+              text: S.of(context).buttonSave,
+              onPressed: () async {
+                if (_formKey.currentState.validate()) {
+                  bool res =
+                      await Provider.of<WebsiteProvider>(context, listen: false)
+                          .addWebsite(
+                    _buildWebsite(),
+                    updateExisting: widget.updateExisting,
+                    context: context,
+                  );
+                  if (res) {
+                    AppToast.show(widget.updateExisting
+                        ? S.of(context).messageWebsiteEdited
+                        : S.of(context).messageWebsiteAdded);
+                    Navigator.of(context).pop();
+                  }
+                }
+              },
+            ),
+          ] +
+          (widget.updateExisting
+              ? [
+                  AppScaffoldAction(
+                    icon: Icons.more_vert,
+                    items: {
+                      S.of(context).actionDeleteWebsite: () => showDialog(
+                          context: context,
+                          child: _deletionConfirmationDialog(context))
+                    },
+                    onPressed: () => showDialog(
+                        context: context,
+                        child: _deletionConfirmationDialog(context)),
+                  )
+                ]
+              : <AppScaffoldAction>[]),
       body: SafeArea(
         child: ListView(
           children: <Widget>[

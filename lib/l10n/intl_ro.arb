@@ -38,6 +38,7 @@
   "actionDeleteAccount": "Ștergere cont",
   "actionAddWebsite": "Adaugă website",
   "actionEditWebsite": "Modifică website",
+  "actionDeleteWebsite": "Șterge website",
   "actionEnableEditing": "Activează modul editare",
   "actionDisableEditing": "Dezactivează modul editare",
 
@@ -111,6 +112,10 @@
   "messageUnderConstruction": "În construcție",
   "messageWebsitePreview": "Încercați să apăsați, să faceți hover sau să țineți apăsat ca să testați noul website.",
   "messageAddCustomWebsite": "Încercați să adăugați un website.",
+  "messageWebsiteAdded": "Website added successfully.",
+  "messageWebsiteEdited": "Website modified successfully.",
+  "messageDeleteWebsite": "Are you sure you want to delete this website?",
+  "messageWebsiteDeleted": "Website-ul a fost șters cu succes.",
 
   "infoPasswordResetEmailSent": "Please check your inbox for the password reset e-mail.",
 
