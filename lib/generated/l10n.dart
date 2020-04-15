@@ -478,6 +478,15 @@ class S {
     );
   }
 
+  String get errorPermissionDenied {
+    return Intl.message(
+      'You do not have permission to do that.',
+      name: 'errorPermissionDenied',
+      desc: '',
+      args: [],
+    );
+  }
+
   String get warningInternetConnection {
     return Intl.message(
       'Please make sure you are connected to the internet.',

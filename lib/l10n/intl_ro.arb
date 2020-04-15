@@ -53,6 +53,7 @@
   "errorAccountDisabled": "Contul a fost dezactivat.",
   "errorTooManyRequests": "Au fost trimise prea multe cereri de pe acest dispozitiv.",
   "errorCouldNotLaunchURL": "Nu s-a putut deschide '{url}'.",
+  "errorPermissionDenied": "Nu aveți suficiente permisiuni.",
 
   "warningInternetConnection": "Asigurați-vă că sunteți conectat la internet.",
   "warningPasswordLength": "Parola trebuie să aibă cel puțin 8 caractere.",

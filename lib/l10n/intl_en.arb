@@ -53,6 +53,7 @@
   "errorAccountDisabled": "The account has been disabled.",
   "errorTooManyRequests": "There have been too many requests from this device.",
   "errorCouldNotLaunchURL": "Could not launch '{url}'.",
+  "errorPermissionDenied": "You do not have permission to do that.",
 
   "warningInternetConnection": "Please make sure you are connected to the internet.",
   "warningPasswordLength": "The password must be 8 characters long or more.",

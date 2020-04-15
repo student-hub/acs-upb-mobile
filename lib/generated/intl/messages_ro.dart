@@ -60,6 +60,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "errorMissingLastName" : MessageLookupByLibrary.simpleMessage("Introduceți numele de familie."),
     "errorNoPassword" : MessageLookupByLibrary.simpleMessage("Trebuie să introduceți parola."),
     "errorPasswordsDiffer" : MessageLookupByLibrary.simpleMessage("Cele două parole diferă."),
+    "errorPermissionDenied" : MessageLookupByLibrary.simpleMessage("Nu aveți suficiente permisiuni."),
     "errorSomethingWentWrong" : MessageLookupByLibrary.simpleMessage("A apărut o problemă."),
     "errorTooManyRequests" : MessageLookupByLibrary.simpleMessage("Au fost trimise prea multe cereri de pe acest dispozitiv."),
     "fileAcsBanner" : MessageLookupByLibrary.simpleMessage("assets/images/acs_banner_ro.png"),

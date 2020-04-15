@@ -77,7 +77,7 @@ class AuthProvider with ChangeNotifier {
           AppToast.show(S.of(context).errorEmailInUse);
           break;
         default:
-          AppToast.show(e.message);
+          AppToast.show(S.of(context).errorSomethingWentWrong);
       }
     }
   }

@@ -69,6 +69,17 @@ extension WebsiteExtension on Website {
 class WebsiteProvider with ChangeNotifier {
   final Firestore _db = Firestore.instance;
 
+  void _errorHandler(e, context) {
+    print(e.message);
+    if (context != null) {
+      if (e.message.contains('PERMISSION_DENIED')) {
+        AppToast.show(S.of(context).errorPermissionDenied);
+      } else {
+        AppToast.show(S.of(context).errorSomethingWentWrong);
+      }
+    }
+  }
+
   Future<List<Website>> fetchWebsites(Filter filter,
       {bool userOnly = false, String uid}) async {
     try {
@@ -123,7 +134,7 @@ class WebsiteProvider with ChangeNotifier {
 
       return websites;
     } catch (e) {
-      print(e);
+      _errorHandler(e, null);
       return null;
     }
   }
@@ -133,33 +144,32 @@ class WebsiteProvider with ChangeNotifier {
     assert(website.label != null);
     assert(context != null);
 
-    DocumentReference ref;
-    if (!website.isPrivate) {
-      ref = _db.collection('websites').document(website.id);
-    } else {
-      ref = _db
-          .collection('users')
-          .document(website.ownerUid)
-          .collection('websites')
-          .document(website.id);
-    }
-
-    if ((await ref.get()).data != null && !updateExisting) {
-      // TODO: Properly check if a website with a similar name/link already exists
-      print('A website with id ${website.id} already exists');
-      AppToast.show(S.of(context).warningWebsiteNameExists);
-      return false;
-    }
-
     try {
+      DocumentReference ref;
+      if (!website.isPrivate) {
+        ref = _db.collection('websites').document(website.id);
+      } else {
+        ref = _db
+            .collection('users')
+            .document(website.ownerUid)
+            .collection('websites')
+            .document(website.id);
+      }
+
+      if ((await ref.get()).data != null && !updateExisting) {
+        // TODO: Properly check if a website with a similar name/link already exists
+        print('A website with id ${website.id} already exists');
+        AppToast.show(S.of(context).warningWebsiteNameExists);
+        return false;
+      }
+
       var data = website.toData();
       await ref.setData(data);
 
       notifyListeners();
       return true;
     } catch (e) {
-      print(e);
-      AppToast.show(e.message); // TODO: Localize message
+      _errorHandler(e, context);
       return false;
     }
   }
