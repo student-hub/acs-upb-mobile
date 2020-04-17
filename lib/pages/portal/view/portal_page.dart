@@ -79,44 +79,14 @@ class _PortalPageState extends State<PortalPage> {
         ),
       );
 
-  Widget addWebsiteButton({bool trailing = false}) => Tooltip(
-        message: S.of(context).actionAddWebsite,
-        child: GestureDetector(
-          onTap: () {
-            AuthProvider authProvider =
-                Provider.of<AuthProvider>(context, listen: false);
-            if (authProvider.isAuthenticatedFromCache &&
-                !authProvider.isAnonymous) {
-              Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (_) => WebsiteView()));
-            } else {
-              AppToast.show(S.of(context).warningAuthenticationNeeded);
-            }
-          },
-          child: Padding(
-            padding: const EdgeInsets.only(top: 8.0, left: 8.0, right: 8.0),
-            child: CircleImage(
-              icon: Icon(
-                Icons.add,
-                color: Theme.of(context).unselectedWidgetColor,
-              ),
-              label: trailing ? "" : null,
-              circleScaleFactor: 0.6,
-              // Only align when there is no other website in the category
-              alignWhenScaling: !trailing,
-            ),
-          ),
-        ),
-      );
-
-  Widget listCategory(String category, List<Website> websites) {
+  Widget listCategory(WebsiteCategory category, List<Website> websites) {
     StorageProvider storageProvider = Provider.of<StorageProvider>(context);
     bool hasContent = websites != null && websites.isNotEmpty;
 
     return Padding(
       padding: const EdgeInsets.only(left: 8.0, right: 8.0),
       child: spoiler(
-        title: category,
+        title: category.toLocalizedString(context),
         initialExpanded: hasContent,
         content: !hasContent
             ? Container(
@@ -126,7 +96,7 @@ class _PortalPageState extends State<PortalPage> {
                   padding: const EdgeInsets.only(bottom: 8.0),
                   child: Row(
                     children: <Widget>[
-                      addWebsiteButton(),
+                      _AddWebsiteButton(category: category),
                     ],
                   ),
                 ),
@@ -178,7 +148,9 @@ class _PortalPageState extends State<PortalPage> {
                             ),
                           )
                           .toList() +
-                      <Widget>[addWebsiteButton(trailing: true)],
+                      <Widget>[
+                        _AddWebsiteButton(trailing: true, category: category)
+                      ],
                 ),
               ),
       ),
@@ -203,10 +175,7 @@ class _PortalPageState extends State<PortalPage> {
       WebsiteCategory.association,
       WebsiteCategory.resource,
       WebsiteCategory.other
-    ]
-        .map((category) =>
-            listCategory(category.toLocalizedString(context), map[category]))
-        .toList();
+    ].map((category) => listCategory(category, map[category])).toList();
   }
 
   @override
@@ -257,12 +226,12 @@ class _PortalPageState extends State<PortalPage> {
           tooltip: S.of(context).navigationFilter,
           items: {
             S.of(context).filterMenuRelevance: () {
-              filterFuture = null;  // reset filter cache
+              filterFuture = null; // reset filter cache
               userOnly = false;
               Navigator.pushNamed(context, Routes.filter);
             },
             S.of(context).filterMenuShowMine: () {
-              filterFuture = null;  // reset filter cache
+              filterFuture = null; // reset filter cache
               setState(() => userOnly = true);
               filterProvider.enableFilter();
             },
@@ -270,7 +239,7 @@ class _PortalPageState extends State<PortalPage> {
               if (!filterProvider.filterEnabled) {
                 AppToast.show(S.of(context).warningFilterAlreadyDisabled);
               } else {
-                filterFuture = null;  // reset filter cache
+                filterFuture = null; // reset filter cache
                 userOnly = false;
                 filterProvider.disableFilter();
               }
@@ -318,4 +287,52 @@ class _PortalPageState extends State<PortalPage> {
       ),
     );
   }
+}
+
+class _AddWebsiteButton extends StatelessWidget {
+  final bool trailing;
+  final WebsiteCategory category;
+
+  const _AddWebsiteButton(
+      {Key key,
+      this.trailing = false,
+      this.category = WebsiteCategory.learning})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) => Tooltip(
+        message: S.of(context).actionAddWebsite,
+        child: GestureDetector(
+          onTap: () {
+            AuthProvider authProvider =
+                Provider.of<AuthProvider>(context, listen: false);
+            if (authProvider.isAuthenticatedFromCache &&
+                !authProvider.isAnonymous) {
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (_) => WebsiteView(
+                        website: Website(
+                            id: null,
+                            isPrivate: true,
+                            link: "",
+                            category: category),
+                      )));
+            } else {
+              AppToast.show(S.of(context).warningAuthenticationNeeded);
+            }
+          },
+          child: Padding(
+            padding: const EdgeInsets.only(top: 8.0, left: 8.0, right: 8.0),
+            child: CircleImage(
+              icon: Icon(
+                Icons.add,
+                color: Theme.of(context).unselectedWidgetColor,
+              ),
+              label: trailing ? "" : null,
+              circleScaleFactor: 0.6,
+              // Only align when there is no other website in the category
+              alignWhenScaling: !trailing,
+            ),
+          ),
+        ),
+      );
 }

@@ -49,10 +49,11 @@ class Website {
       this.iconPath,
       String label,
       @required String link,
-      this.infoByLocale})
+      Map<String, String> infoByLocale})
       : this.editedBy = editedBy ?? [],
         this.label = toString(label).isEmpty ? labelFromLink(link) : label,
-        this.link = link;
+        this.link = link,
+        this.infoByLocale = infoByLocale ?? {};
 
   static String labelFromLink(String link) => link.split('://').last;
 }
