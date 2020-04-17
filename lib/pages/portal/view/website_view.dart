@@ -208,28 +208,40 @@ class _WebsiteViewState extends State<WebsiteView> {
 
   Widget _customRelevanceButton() {
     FilterProvider filterProvider = Provider.of<FilterProvider>(context);
+    Color buttonColor = _user?.canAddPublicWebsite ?? false
+        ? Theme.of(context).accentColor
+        : Theme.of(context).hintColor;
 
     return GestureDetector(
-      onTap: () => Navigator.of(context).push(MaterialPageRoute(
-        builder: (_) => ChangeNotifierProvider.value(
-          value: filterProvider,
-          child: FilterPage(
-            title: S.of(context).labelRelevance,
-            buttonText: S.of(context).buttonSet,
-            info: S.of(context).infoRelevance,
-            hint: S.of(context).infoRelevanceExample,
-          ),
-        ),
-      )),
+      onTap: () {
+        if (_user?.canAddPublicWebsite ?? false) {
+          Navigator.of(context).push(MaterialPageRoute(
+            builder: (_) => ChangeNotifierProvider.value(
+              value: filterProvider,
+              child: FilterPage(
+                title: S.of(context).labelRelevance,
+                buttonText: S.of(context).buttonSet,
+                info: S.of(context).infoRelevance,
+                hint: S.of(context).infoRelevanceExample,
+              ),
+            ),
+          ));
+        } else {
+          AppToast.show(S.of(context).warningNoPermissionToAddPublicWebsite);
+        }
+      },
       child: Row(
         children: <Widget>[
           Text(
             S.of(context).labelCustom,
-            style: Theme.of(context).accentTextTheme.subtitle2,
+            style: Theme.of(context)
+                .accentTextTheme
+                .subtitle2
+                .copyWith(color: buttonColor),
           ),
           Icon(
             Icons.arrow_forward_ios,
-            color: Theme.of(context).accentColor,
+            color: buttonColor,
             size: Theme.of(context).textTheme.subtitle2.fontSize,
           )
         ],
