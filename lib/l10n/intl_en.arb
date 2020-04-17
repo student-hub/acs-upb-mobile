@@ -4,6 +4,7 @@
   "buttonSave": "Save",
   "buttonSend": "Send",
   "buttonApply": "Apply",
+  "buttonSet": "Set",
 
   "labelEmail": "Email",
   "labelPassword": "Password",
@@ -17,6 +18,7 @@
   "labelRelevance": "Relevance",
   "labelPreview": "Preview",
   "labelDescription": "Description",
+  "labelCustom": "Custom",
 
   "hintEmail": "john.doe",
   "hintPassword": "····················",
@@ -118,6 +120,8 @@
   "messageWebsiteDeleted": "Website deleted successfully.",
 
   "infoPasswordResetEmailSent": "Please check your inbox for the password reset e-mail.",
+  "infoRelevance": "Try to choose the most restrictive category.",
+  "infoRelevanceExample": "For instance, if something is only relevant for \"314CB\" and \"315CB\", don't just set \"CB\".",
 
   "stringEmailDomain": "@stud.acs.upb.ro",
   "stringAnonymous": "Anonymous",

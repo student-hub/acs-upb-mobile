@@ -73,6 +73,15 @@ class S {
     );
   }
 
+  String get buttonSet {
+    return Intl.message(
+      'Set',
+      name: 'buttonSet',
+      desc: '',
+      args: [],
+    );
+  }
+
   String get labelEmail {
     return Intl.message(
       'Email',
@@ -176,6 +185,15 @@ class S {
     return Intl.message(
       'Description',
       name: 'labelDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get labelCustom {
+    return Intl.message(
+      'Custom',
+      name: 'labelCustom',
       desc: '',
       args: [],
     );
@@ -986,6 +1004,24 @@ class S {
     return Intl.message(
       'Please check your inbox for the password reset e-mail.',
       name: 'infoPasswordResetEmailSent',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get infoRelevance {
+    return Intl.message(
+      'Try to choose the most restrictive category.',
+      name: 'infoRelevance',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get infoRelevanceExample {
+    return Intl.message(
+      'For instance, if something is only relevant for "314CB" and "315CB", don\'t just set "CB".',
+      name: 'infoRelevanceExample',
       desc: '',
       args: [],
     );

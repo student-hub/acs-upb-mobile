@@ -87,8 +87,10 @@ class _PortalPageState extends State<PortalPage> {
                 Provider.of<AuthProvider>(context, listen: false);
             if (authProvider.isAuthenticatedFromCache &&
                 !authProvider.isAnonymous) {
-              Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (_) => WebsiteView()));
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (_) => ChangeNotifierProvider<FilterProvider>(
+                    create: (_) => FilterProvider(), child: WebsiteView()),
+              ));
             } else {
               AppToast.show(S.of(context).warningAuthenticationNeeded);
             }
@@ -257,12 +259,12 @@ class _PortalPageState extends State<PortalPage> {
           tooltip: S.of(context).navigationFilter,
           items: {
             S.of(context).filterMenuRelevance: () {
-              filterFuture = null;  // reset filter cache
+              filterFuture = null; // reset filter cache
               userOnly = false;
               Navigator.pushNamed(context, Routes.filter);
             },
             S.of(context).filterMenuShowMine: () {
-              filterFuture = null;  // reset filter cache
+              filterFuture = null; // reset filter cache
               setState(() => userOnly = true);
               filterProvider.enableFilter();
             },
@@ -270,7 +272,7 @@ class _PortalPageState extends State<PortalPage> {
               if (!filterProvider.filterEnabled) {
                 AppToast.show(S.of(context).warningFilterAlreadyDisabled);
               } else {
-                filterFuture = null;  // reset filter cache
+                filterFuture = null; // reset filter cache
                 userOnly = false;
                 filterProvider.disableFilter();
               }

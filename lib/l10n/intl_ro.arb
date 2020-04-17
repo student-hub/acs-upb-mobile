@@ -4,6 +4,7 @@
   "buttonSave": "Salvare",
   "buttonSend": "Trimitere",
   "buttonApply": "Aplică",
+  "buttonSet": "Setează",
 
   "labelEmail": "Email",
   "labelPassword": "Parolă",
@@ -17,6 +18,7 @@
   "labelRelevance": "Relevanță",
   "labelPreview": "Previzualizare",
   "labelDescription": "Descriere",
+  "labelCustom": "Alta",
 
   "hintEmail": "john.doe",
   "hintPassword": "····················",
@@ -118,6 +120,8 @@
   "messageWebsiteDeleted": "Website-ul a fost șters cu succes.",
 
   "infoPasswordResetEmailSent": "Please check your inbox for the password reset e-mail.",
+  "infoRelevance": "Încercați să selectați cea mai restrictivă categorie.",
+  "infoRelevanceExample": "De exemplu, dacă ceva este relevant doar pentru \"314CB\" și \"315CB\", nu setați direct \"CB\".",
 
   "stringEmailDomain": "@stud.acs.upb.ro",
   "stringAnonymous": "Anonim",

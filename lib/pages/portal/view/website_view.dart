@@ -1,6 +1,8 @@
 import 'package:acs_upb_mobile/authentication/model/user.dart';
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
+import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
+import 'package:acs_upb_mobile/pages/filter/view/filter_page.dart';
 import 'package:acs_upb_mobile/pages/portal/model/website.dart';
 import 'package:acs_upb_mobile/pages/portal/service/website_provider.dart';
 import 'package:acs_upb_mobile/resources/custom_icons.dart';
@@ -204,6 +206,37 @@ class _WebsiteViewState extends State<WebsiteView> {
     );
   }
 
+  Widget _customRelevanceButton() {
+    FilterProvider filterProvider = Provider.of<FilterProvider>(context);
+
+    return GestureDetector(
+      onTap: () => Navigator.of(context).push(MaterialPageRoute(
+        builder: (_) => ChangeNotifierProvider.value(
+          value: filterProvider,
+          child: FilterPage(
+            title: S.of(context).labelRelevance,
+            buttonText: S.of(context).buttonSet,
+            info: S.of(context).infoRelevance,
+            hint: S.of(context).infoRelevanceExample,
+          ),
+        ),
+      )),
+      child: Row(
+        children: <Widget>[
+          Text(
+            S.of(context).labelCustom,
+            style: Theme.of(context).accentTextTheme.subtitle2,
+          ),
+          Icon(
+            Icons.arrow_forward_ios,
+            color: Theme.of(context).accentColor,
+            size: Theme.of(context).textTheme.subtitle2.fontSize,
+          )
+        ],
+      ),
+    );
+  }
+
   Widget _relevanceField() => Padding(
         padding: const EdgeInsets.only(top: 12.0, left: 12.0),
         child: Row(
@@ -222,46 +255,55 @@ class _WebsiteViewState extends State<WebsiteView> {
                         .apply(color: Theme.of(context).hintColor),
                   ),
                   SizedBox(height: 8.0),
-                  Container(
-                    height: 40,
-                    child: ListView(
-                      scrollDirection: Axis.horizontal,
-                      children: <Widget>[
-                        Selectable(
-                          label: S.of(context).relevanceOnlyMe,
-                          initiallySelected: widget.website?.isPrivate ?? true,
-                          onSelected: (selected) => setState(() {
-                            if (_user?.canAddPublicWebsite ?? false) {
-                              selected
-                                  ? _anyoneController.deselect()
-                                  : _anyoneController.select();
-                            } else {
-                              _onlyMeController.select();
-                            }
-                          }),
-                          controller: _onlyMeController,
+                  Row(
+                    children: <Widget>[
+                      Expanded(
+                        child: Container(
+                          height: 40,
+                          child: ListView(
+                            scrollDirection: Axis.horizontal,
+                            children: <Widget>[
+                              Selectable(
+                                label: S.of(context).relevanceOnlyMe,
+                                initiallySelected:
+                                    widget.website?.isPrivate ?? true,
+                                onSelected: (selected) => setState(() {
+                                  if (_user?.canAddPublicWebsite ?? false) {
+                                    selected
+                                        ? _anyoneController.deselect()
+                                        : _anyoneController.select();
+                                  } else {
+                                    _onlyMeController.select();
+                                  }
+                                }),
+                                controller: _onlyMeController,
+                              ),
+                              SizedBox(width: 8.0),
+                              Selectable(
+                                label: S.of(context).relevanceAnyone,
+                                initiallySelected:
+                                    !(widget.website?.isPrivate ?? true),
+                                onSelected: (selected) => setState(() {
+                                  if (_user?.canAddPublicWebsite ?? false) {
+                                    selected
+                                        ? _onlyMeController.deselect()
+                                        : _onlyMeController.select();
+                                  } else {
+                                    AppToast.show(S
+                                        .of(context)
+                                        .warningNoPermissionToAddPublicWebsite);
+                                  }
+                                }),
+                                controller: _anyoneController,
+                                disabled:
+                                    !(_user?.canAddPublicWebsite ?? false),
+                              ),
+                            ],
+                          ),
                         ),
-                        SizedBox(width: 8.0),
-                        Selectable(
-                          label: S.of(context).relevanceAnyone,
-                          initiallySelected:
-                              !(widget.website?.isPrivate ?? true),
-                          onSelected: (selected) => setState(() {
-                            if (_user?.canAddPublicWebsite ?? false) {
-                              selected
-                                  ? _onlyMeController.deselect()
-                                  : _onlyMeController.select();
-                            } else {
-                              AppToast.show(S
-                                  .of(context)
-                                  .warningNoPermissionToAddPublicWebsite);
-                            }
-                          }),
-                          controller: _anyoneController,
-                          disabled: !(_user?.canAddPublicWebsite ?? false),
-                        ),
-                      ],
-                    ),
+                      ),
+                      _customRelevanceButton(),
+                    ],
                   ),
                 ],
               ),

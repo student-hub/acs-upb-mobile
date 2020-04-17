@@ -4,11 +4,27 @@ import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
 import 'package:acs_upb_mobile/resources/locale_provider.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:acs_upb_mobile/widgets/selectable.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class FilterPage extends StatefulWidget {
   static const String routeName = '/filter';
+
+  /// By default, this is [S.of(context).navigationFilter]
+  final String title;
+
+  /// Helper text that should show at the top of the page
+  final String info;
+
+  /// Additional helper text
+  final String hint;
+
+  /// Text for the save button (by default, [S.of(context).buttonApply])
+  final String buttonText;
+
+  const FilterPage({Key key, this.title, this.info, this.hint, this.buttonText})
+      : super(key: key);
 
   @override
   State<StatefulWidget> createState() => FilterPageState();
@@ -47,7 +63,12 @@ class FilterPageState extends State<FilterPage> {
       Navigator.pushReplacement(
         context,
         PageRouteBuilder(
-          pageBuilder: (context, animation1, animation2) => FilterPage(),
+          pageBuilder: (context, animation1, animation2) => FilterPage(
+            title: widget.title,
+            info: widget.info,
+            hint: widget.hint,
+            buttonText: widget.buttonText,
+          ),
         ),
       );
     }
@@ -114,51 +135,88 @@ class FilterPageState extends State<FilterPage> {
     }
 
     return AppScaffold(
-      title: S.of(context).navigationFilter,
+      title: widget.title ?? S.of(context).navigationFilter,
       actions: [
         AppScaffoldAction(
-          text: S.of(context).buttonApply,
+          text: widget.buttonText ?? S.of(context).buttonApply,
           onPressed: () {
             filterProvider.enableFilter();
             Navigator.of(context).pop();
           },
         )
       ],
-      body: FutureBuilder(
-          future: filterFuture,
-          builder: (BuildContext context, AsyncSnapshot snap) {
-            if (snap.connectionState == ConnectionState.done && snap.hasData) {
-              Filter filter = snap.data;
+      body: Column(
+        children: <Widget>[
+          widget.info != null
+              ? Padding(
+                  padding:
+                      const EdgeInsets.only(left: 10.0, right: 10.0, top: 10.0),
+                  child: Row(
+                    children: <Widget>[
+                      Icon(
+                        Icons.info,
+                        size: Theme.of(context).textTheme.subtitle1.fontSize,
+                      ),
+                      SizedBox(width: 4.0),
+                      Container(
+                          width: MediaQuery.of(context).size.width -
+                              Theme.of(context).textTheme.subtitle1.fontSize -
+                              24.0,
+                          child: AutoSizeText(
+                            widget.info,
+                          )),
+                    ],
+                  ),
+                )
+              : Container(),
+          widget.hint != null
+              ? Padding(
+                  padding:
+                      const EdgeInsets.only(left: 10.0, right: 10.0, top: 10.0),
+                  child: AutoSizeText(
+                    widget.hint,
+                    style: TextStyle(color: Theme.of(context).hintColor),
+                  ),
+                )
+              : Container(),
+          FutureBuilder(
+              future: filterFuture,
+              builder: (BuildContext context, AsyncSnapshot snap) {
+                if (snap.connectionState == ConnectionState.done &&
+                    snap.hasData) {
+                  Filter filter = snap.data;
 
-              Map<int, List<Widget>> optionsByLevel = {};
-              _buildTree(node: filter.root, optionsByLevel: optionsByLevel);
-              for (var i = 0; i < filter.localizedLevelNames.length; i++) {
-                if (optionsByLevel[i] == null || optionsByLevel.isEmpty) {
-                  break;
+                  Map<int, List<Widget>> optionsByLevel = {};
+                  _buildTree(node: filter.root, optionsByLevel: optionsByLevel);
+                  for (var i = 0; i < filter.localizedLevelNames.length; i++) {
+                    if (optionsByLevel[i] == null || optionsByLevel.isEmpty) {
+                      break;
+                    }
+
+                    // Level name
+                    widgets.add(Padding(
+                      padding: const EdgeInsets.only(left: 10.0, bottom: 8.0),
+                      child: Text(
+                          filter.localizedLevelNames[i]
+                              [LocaleProvider.localeString],
+                          style: Theme.of(context).textTheme.headline6),
+                    ));
+
+                    // Level options
+                    widgets.addAll(optionsByLevel[i]);
+                  }
+                } else if (snap.hasError) {
+                  print(snap.error);
+                  // TODO: Show error toast
+                  return Container();
+                } else if (snap.connectionState != ConnectionState.done) {
+                  return Center(child: CircularProgressIndicator());
                 }
 
-                // Level name
-                widgets.add(Padding(
-                  padding: const EdgeInsets.only(left: 10.0, bottom: 8.0),
-                  child: Text(
-                      filter.localizedLevelNames[i]
-                          [LocaleProvider.localeString],
-                      style: Theme.of(context).textTheme.headline6),
-                ));
-
-                // Level options
-                widgets.addAll(optionsByLevel[i]);
-              }
-            } else if (snap.hasError) {
-              print(snap.error);
-              // TODO: Show error toast
-              return Container();
-            } else if (snap.connectionState != ConnectionState.done) {
-              return Center(child: CircularProgressIndicator());
-            }
-
-            return ListView(children: widgets);
-          }),
+                return Expanded(child: ListView(children: widgets));
+              }),
+        ],
+      ),
     );
   }
 }
