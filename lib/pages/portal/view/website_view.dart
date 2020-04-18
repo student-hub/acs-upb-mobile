@@ -313,12 +313,19 @@ class _WebsiteViewState extends State<WebsiteView> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      Text(
-                        S.of(context).labelRelevance,
-                        style: Theme.of(context)
-                            .textTheme
-                            .caption
-                            .apply(color: Theme.of(context).hintColor),
+                      Row(
+                        children: <Widget>[
+                          Expanded(
+                            child: Text(
+                              S.of(context).labelRelevance,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .caption
+                                  .apply(color: Theme.of(context).hintColor),
+                            ),
+                          ),
+                          _customRelevanceButton(),
+                        ],
                       ),
                       SizedBox(height: 8.0),
                       Row(
@@ -381,8 +388,6 @@ class _WebsiteViewState extends State<WebsiteView> {
                       ),
                     ],
                   ),
-                  SizedBox(height: 8),
-                  _customRelevanceButton(),
                 ],
               ),
             ),
