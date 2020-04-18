@@ -23,7 +23,16 @@ class FilterPage extends StatefulWidget {
   /// Text for the save button (by default, [S.of(context).buttonApply])
   final String buttonText;
 
-  const FilterPage({Key key, this.title, this.info, this.hint, this.buttonText})
+  /// Callback after the user submits the page
+  final Function() onSubmit;
+
+  const FilterPage(
+      {Key key,
+      this.title,
+      this.info,
+      this.hint,
+      this.buttonText,
+      this.onSubmit})
       : super(key: key);
 
   @override
@@ -68,6 +77,7 @@ class FilterPageState extends State<FilterPage> {
             info: widget.info,
             hint: widget.hint,
             buttonText: widget.buttonText,
+            onSubmit: widget.onSubmit,
           ),
         ),
       );
@@ -140,6 +150,9 @@ class FilterPageState extends State<FilterPage> {
         AppScaffoldAction(
           text: widget.buttonText ?? S.of(context).buttonApply,
           onPressed: () {
+            if (widget.onSubmit != null) {
+              widget.onSubmit();
+            }
             filterProvider.enableFilter();
             Navigator.of(context).pop();
           },

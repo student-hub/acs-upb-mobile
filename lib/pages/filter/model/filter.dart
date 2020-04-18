@@ -60,6 +60,32 @@ class Filter {
     return list;
   }
 
+  bool _relevantLeavesHelper(List<String> list, FilterNode node) {
+    if (node.value) {
+      bool hasSelectedChildren = false;
+      if (node.children != null) {
+        node.children.forEach((child) =>
+            hasSelectedChildren |= _relevantLeavesHelper(list, child));
+      }
+      if (!hasSelectedChildren) {
+        list.add(node.name);
+      }
+
+      return true;
+    }
+    return false;
+  }
+
+  /// Extracts the leaves from the tree of selected nodes
+  ///
+  /// In other words, returns the last selected nodes (the ones that do not have
+  /// any selected children).
+  List<String> get relevantLeaves {
+    List<String> list = [];
+    _relevantLeavesHelper(list, root);
+    return list;
+  }
+
   /// Get selected node on first level, if there is any
   ///
   /// First level nodes should be mutually exclusive, so this only returns one
