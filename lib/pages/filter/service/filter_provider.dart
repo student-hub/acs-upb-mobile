@@ -34,6 +34,7 @@ class FilterProvider with ChangeNotifier {
   void resetFilter() {
     _relevanceFilter = null;
 
+    _relevantNodes = null;
     if (global) {
       // Reset filter preference
       PrefService.setStringList('relevant_nodes', null);
@@ -41,8 +42,6 @@ class FilterProvider with ChangeNotifier {
   }
 
   void enableFilter() {
-    _relevanceFilter = null;
-
     _enabled = true;
     if (global) {
       PrefService.setBool('relevance_filter', true);

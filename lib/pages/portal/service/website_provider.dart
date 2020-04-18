@@ -52,7 +52,6 @@ extension WebsiteExtension on Website {
     if (!isPrivate) {
       if (ownerUid != null) data['addedBy'] = ownerUid;
       data['editedBy'] = editedBy;
-      data['relevance'] = null; // TODO: Make relevance customizable
     }
 
     if (label != null) data['label'] = label;
@@ -140,7 +139,10 @@ class WebsiteProvider with ChangeNotifier {
   }
 
   Future<bool> addWebsite(Website website,
-      {bool updateExisting = false, BuildContext context}) async {
+      {String degree,
+      List<String> relevance,
+      bool updateExisting = false,
+      BuildContext context}) async {
     assert(website.label != null);
     assert(context != null);
 
@@ -164,6 +166,12 @@ class WebsiteProvider with ChangeNotifier {
       }
 
       var data = website.toData();
+      if (!website.isPrivate) {
+        if (degree != null) {
+          data['degree'] = degree;
+        }
+        data['relevance'] = relevance;
+      }
       await ref.setData(data);
 
       notifyListeners();

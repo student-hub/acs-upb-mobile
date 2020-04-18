@@ -53,7 +53,7 @@ class _WebsiteViewState extends State<WebsiteView> {
   // The "Only me" and "Anyone" relevance options are mutually exclusive
   SelectableController _onlyMeController = SelectableController();
   SelectableController _anyoneController = SelectableController();
-  List<SelectableController> _customControllers = [];
+  Map<String, SelectableController> _customControllers = {};
 
   User _user;
   Filter _filter;
@@ -126,21 +126,20 @@ class _WebsiteViewState extends State<WebsiteView> {
         .snakeCase;
   }
 
-  Website _buildWebsite() =>
-      Website(
-          id: _buildId(),
-          ownerUid:
-              widget.website != null ? widget.website.ownerUid : _user?.uid,
-          isPrivate: _onlyMeController.isSelected ?? true,
-          editedBy: (widget.website?.editedBy ?? []) + [_user?.uid],
-          label: _labelController.text,
-          link: _linkController.text,
-          category: _selectedCategory,
-          iconPath: widget.website?.iconPath ?? 'icons/websites/globe.png',
-          infoByLocale: {
-            'ro': _descriptionRoController.text,
-            'en': _descriptionEnController.text
-          });
+  Website _buildWebsite() => Website(
+        id: _buildId(),
+        ownerUid: widget.website != null ? widget.website.ownerUid : _user?.uid,
+        isPrivate: _onlyMeController.isSelected ?? true,
+        editedBy: (widget.website?.editedBy ?? []) + [_user?.uid],
+        label: _labelController.text,
+        link: _linkController.text,
+        category: _selectedCategory,
+        iconPath: widget.website?.iconPath ?? 'icons/websites/globe.png',
+        infoByLocale: {
+          'ro': _descriptionRoController.text,
+          'en': _descriptionEnController.text
+        },
+      );
 
   Widget _preview() {
     Website website = _buildWebsite();
@@ -235,10 +234,11 @@ class _WebsiteViewState extends State<WebsiteView> {
                   buttonText: S.of(context).buttonSet,
                   info: S.of(context).infoRelevance,
                   hint: S.of(context).infoRelevanceExample,
-                  onSubmit: () {
+                  onSubmit: () async {
                     _onlyMeController.deselect();
                     _anyoneController.deselect();
-                    _customControllers
+                    await _fetchFilter();
+                    _customControllers.values
                         .forEach((controller) => controller.select());
                   },
                 ),
@@ -271,16 +271,17 @@ class _WebsiteViewState extends State<WebsiteView> {
   Widget _customRelevanceSelectables() {
     List<String> nodes = _filter?.relevantLeaves ?? [];
     List<Widget> widgets = [];
-    _customControllers = [];
+    _customControllers = {};
 
     nodes.forEach((node) {
       SelectableController controller = SelectableController();
-      _customControllers.add(controller);
+      _customControllers[node] = controller;
 
       widgets.add(SizedBox(width: 8.0));
       widgets.add(Selectable(
         label: node,
         controller: controller,
+        initiallySelected: false,
         onSelected: (selected) => setState(() {
           if (_user?.canAddPublicWebsite ?? false) {
             if (selected) {
@@ -344,7 +345,7 @@ class _WebsiteViewState extends State<WebsiteView> {
                                       if (_user?.canAddPublicWebsite ?? false) {
                                         if (selected) {
                                           _anyoneController.deselect();
-                                          _customControllers.forEach(
+                                          _customControllers.values.forEach(
                                               (controller) =>
                                                   controller.deselect());
                                         } else {
@@ -366,7 +367,7 @@ class _WebsiteViewState extends State<WebsiteView> {
                                         selected
                                             ? _onlyMeController.deselect()
                                             : _onlyMeController.select();
-                                        _customControllers.forEach(
+                                        _customControllers.values.forEach(
                                             (controller) =>
                                                 controller.deselect());
                                       } else {
@@ -430,13 +431,33 @@ class _WebsiteViewState extends State<WebsiteView> {
               text: S.of(context).buttonSave,
               onPressed: () async {
                 if (_formKey.currentState.validate()) {
-                  bool res =
-                      await Provider.of<WebsiteProvider>(context, listen: false)
-                          .addWebsite(
-                    _buildWebsite(),
-                    updateExisting: widget.updateExisting,
-                    context: context,
-                  );
+                  WebsiteProvider websiteProvider =
+                      Provider.of<WebsiteProvider>(context, listen: false);
+
+                  bool res = false;
+                  if (_onlyMeController.isSelected ||
+                      _anyoneController.isSelected) {
+                    res = await websiteProvider.addWebsite(
+                      _buildWebsite(),
+                      updateExisting: widget.updateExisting,
+                      context: context,
+                    );
+                  } else {
+                    List<String> relevance = [];
+                    _customControllers.forEach((node, controller) {
+                      if (controller.isSelected) {
+                        relevance.add(node);
+                      }
+                    });
+
+                    res = await websiteProvider.addWebsite(
+                      _buildWebsite(),
+                      degree: _filter.baseNode,
+                      relevance: relevance,
+                      updateExisting: widget.updateExisting,
+                      context: context,
+                    );
+                  }
                   if (res) {
                     AppToast.show(widget.updateExisting
                         ? S.of(context).messageWebsiteEdited
