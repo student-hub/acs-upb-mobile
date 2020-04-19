@@ -53,10 +53,16 @@ class _WebsiteViewState extends State<WebsiteView> {
   // The "Only me" and "Anyone" relevance options are mutually exclusive
   SelectableController _onlyMeController = SelectableController();
   SelectableController _anyoneController = SelectableController();
+  Map<String, SelectableController> _defaultControllers = {};
   Map<String, SelectableController> _customControllers = {};
 
   User _user;
   Filter _filter;
+
+  List<SelectableController> get _publicControllers =>
+      [_anyoneController] +
+      _defaultControllers.values.toList() +
+      _customControllers.values.toList();
 
   _fetchUser() async {
     AuthProvider authProvider = Provider.of(context, listen: false);
@@ -246,8 +252,12 @@ class _WebsiteViewState extends State<WebsiteView> {
                   info: S.of(context).infoRelevance,
                   hint: S.of(context).infoRelevanceExample,
                   onSubmit: () async {
+                    // Deselect all options
                     _onlyMeController.deselect();
-                    _anyoneController.deselect();
+                    _publicControllers
+                        .forEach((controller) => controller.deselect());
+
+                    // Select the new options
                     await _fetchFilter();
                     _customControllers.values
                         .forEach((controller) => controller.select());
@@ -279,17 +289,28 @@ class _WebsiteViewState extends State<WebsiteView> {
     );
   }
 
-  Widget _customRelevanceSelectables() {
-    List<String> nodes = _filter?.relevantLeaves ?? [];
-    List<Widget> widgets = [];
-    _customControllers = {};
+  void _onCustomSelected(bool selected) => setState(() {
+        if (_user?.canAddPublicWebsite ?? false) {
+          if (selected) {
+            _onlyMeController.deselect();
+            _anyoneController.deselect();
+          }
+        } else {
+          AppToast.show(S.of(context).warningNoPermissionToAddPublicWebsite);
+        }
+      });
 
+  Widget _customRelevanceSelectables() {
+    // Add strings from the filter options
+    List<Widget> customSelectables = [];
+    _customControllers = {};
+    List<String> nodes = _filter?.relevantLeaves ?? [];
     nodes.forEach((node) {
       SelectableController controller = SelectableController();
       _customControllers[node] = controller;
 
-      widgets.add(SizedBox(width: 8.0));
-      widgets.add(Selectable(
+      customSelectables.add(SizedBox(width: 8.0));
+      customSelectables.add(Selectable(
         label: node,
         controller: controller,
         initiallySelected: false,
@@ -307,8 +328,29 @@ class _WebsiteViewState extends State<WebsiteView> {
       ));
     });
 
+    // Add the provided website relevance strings, if applicable
+    // These are selected by default
+    List<Widget> defaultSelectables = [];
+    _defaultControllers = {};
+    nodes = widget.website?.relevance ?? [];
+    nodes.forEach((node) {
+      if (!_customControllers.containsKey(node)) {
+        SelectableController controller = SelectableController();
+        _defaultControllers[node] = controller;
+
+        defaultSelectables.add(SizedBox(width: 8.0));
+        defaultSelectables.add(Selectable(
+          label: node,
+          controller: controller,
+          initiallySelected: true,
+          onSelected: _onCustomSelected,
+          disabled: !(_user?.canAddPublicWebsite ?? false),
+        ));
+      }
+    });
+
     return Row(
-      children: widgets,
+      children: defaultSelectables + customSelectables,
     );
   }
 
@@ -355,8 +397,7 @@ class _WebsiteViewState extends State<WebsiteView> {
                                     onSelected: (selected) => setState(() {
                                       if (_user?.canAddPublicWebsite ?? false) {
                                         if (selected) {
-                                          _anyoneController.deselect();
-                                          _customControllers.values.forEach(
+                                          _publicControllers.forEach(
                                               (controller) =>
                                                   controller.deselect());
                                         } else {
@@ -371,16 +412,23 @@ class _WebsiteViewState extends State<WebsiteView> {
                                   SizedBox(width: 8.0),
                                   Selectable(
                                     label: S.of(context).relevanceAnyone,
-                                    initiallySelected:
-                                        !(widget.website?.isPrivate ?? true),
+                                    initiallySelected: widget.website == null
+                                        ? false
+                                        : widget.website.relevance == null,
                                     onSelected: (selected) => setState(() {
                                       if (_user?.canAddPublicWebsite ?? false) {
-                                        selected
-                                            ? _onlyMeController.deselect()
-                                            : _onlyMeController.select();
-                                        _customControllers.values.forEach(
-                                            (controller) =>
-                                                controller.deselect());
+                                        if (selected) {
+                                          // Deselect all controllers
+                                          _onlyMeController.deselect();
+                                          _publicControllers.forEach(
+                                              (controller) =>
+                                                  controller.deselect());
+
+                                          // Select "anyone" controller
+                                          _anyoneController.select();
+                                        } else {
+                                          _onlyMeController.select();
+                                        }
                                       } else {
                                         AppToast.show(S
                                             .of(context)
