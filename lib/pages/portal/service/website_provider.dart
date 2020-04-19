@@ -8,6 +8,24 @@ import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
+extension UserExtension on User {
+  /// Check if there is at least one website that the [user] has permission to edit
+  Future<bool> get hasEditableWebsites async {
+    // We assume there is at least one public website in the database
+    if (canEditPublicWebsite) return true;
+    return await hasPrivateWebsites;
+  }
+
+  /// Check if user has at least one private website
+  Future<bool> get hasPrivateWebsites async {
+    CollectionReference ref = Firestore.instance
+        .collection('users')
+        .document(uid)
+        .collection('websites');
+    return (await ref.getDocuments()).documents.length > 0;
+  }
+}
+
 extension WebsiteCategoryExtension on WebsiteCategory {
   static WebsiteCategory fromString(String category) {
     switch (category) {
@@ -195,15 +213,5 @@ class WebsiteProvider with ChangeNotifier {
       _errorHandler(e, context);
       return false;
     }
-  }
-
-  /// Check if there is at least one website that the [user] has permission to edit
-  Future<bool> hasEditableWebsites(User user) async {
-    // We assume there is at least one public website in the database
-    if (user.canEditPublicWebsite) return true;
-
-    CollectionReference ref =
-        _db.collection('users').document(user.uid).collection('websites');
-    return (await ref.getDocuments()).documents.length > 0;
   }
 }

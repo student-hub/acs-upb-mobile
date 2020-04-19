@@ -559,6 +559,15 @@ class S {
     );
   }
 
+  String get warningFilterAlreadyShowingYours {
+    return Intl.message(
+      'Already showing only custom websites.',
+      name: 'warningFilterAlreadyShowingYours',
+      desc: '',
+      args: [],
+    );
+  }
+
   String get warningInvalidURL {
     return Intl.message(
       'You need to provide a valid URL.',
@@ -572,6 +581,15 @@ class S {
     return Intl.message(
       'A website with the same name already exists.',
       name: 'warningWebsiteNameExists',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get warningNoPrivateWebsite {
+    return Intl.message(
+      'You have not created any private websites yet.',
+      name: 'warningNoPrivateWebsite',
       desc: '',
       args: [],
     );

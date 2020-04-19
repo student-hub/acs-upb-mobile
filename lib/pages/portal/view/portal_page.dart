@@ -158,9 +158,7 @@ class _PortalPageState extends State<PortalPage> {
   }
 
   List<Widget> listWebsitesByCategory(List<Website> websites) {
-    if (websites == null || websites.isEmpty) {
-      return <Widget>[];
-    }
+    assert(websites != null);
 
     Map<WebsiteCategory, List<Website>> map = Map();
     websites.forEach((website) {
@@ -207,7 +205,7 @@ class _PortalPageState extends State<PortalPage> {
                 !authProvider.isAnonymous) {
               // Show message if there is nothing the user can edit
               if (!editingEnabled) {
-                websiteProvider.hasEditableWebsites(user).then((canEdit) {
+                user.hasEditableWebsites.then((canEdit) {
                   if (!canEdit)
                     AppToast.show(S.of(context).warningNothingToEdit +
                         ' ' +
@@ -231,9 +229,24 @@ class _PortalPageState extends State<PortalPage> {
               Navigator.pushNamed(context, Routes.filter);
             },
             S.of(context).filterMenuShowMine: () {
-              filterFuture = null; // reset filter cache
-              setState(() => userOnly = true);
-              filterProvider.enableFilter();
+              if (authProvider.isAuthenticatedFromCache &&
+                  !authProvider.isAnonymous) {
+                // Show message if user has no private websites
+                if (!userOnly) {
+                  user.hasPrivateWebsites.then((hasPrivate) {
+                    if (!hasPrivate)
+                      AppToast.show(S.of(context).warningNoPrivateWebsite);
+                  });
+
+                  filterFuture = null; // reset filter cache
+                  setState(() => userOnly = true);
+                  filterProvider.enableFilter();
+                } else {
+                  AppToast.show(S.of(context).warningFilterAlreadyShowingYours);
+                }
+              } else {
+                AppToast.show(S.of(context).warningAuthenticationNeeded);
+              }
             },
             S.of(context).filterMenuShowAll: () {
               if (!filterProvider.filterEnabled) {
@@ -258,7 +271,7 @@ class _PortalPageState extends State<PortalPage> {
                   uid: authProvider.uid,
                 ),
                 builder: (context, AsyncSnapshot<List<Website>> websiteSnap) {
-                  if (websiteSnap.hasData) {
+                  if (websiteSnap.connectionState == ConnectionState.done) {
                     websites = websiteSnap.data;
                     return SingleChildScrollView(
                       child: Padding(
