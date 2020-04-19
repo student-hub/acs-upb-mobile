@@ -139,6 +139,11 @@ class _WebsiteViewState extends State<WebsiteView> {
         relevance.add(node);
       }
     });
+    _defaultControllers.forEach((node, controller) {
+      if (controller.isSelected) {
+        relevance.add(node);
+      }
+    });
 
     return Website(
       id: _buildId(),
@@ -154,7 +159,7 @@ class _WebsiteViewState extends State<WebsiteView> {
         'en': _descriptionEnController.text
       },
       relevance: relevance.isEmpty ? null : relevance,
-      degree: _filter?.baseNode,
+      degree: _filter?.baseNode ?? widget.website?.degree,
     );
   }
 
