@@ -99,11 +99,15 @@ class AuthProvider with ChangeNotifier {
   /// Check the memory cache to see if there is a user authenticated
   bool get isVerifiedFromCache {
     assert(_firebaseUser != null);
-    return _firebaseUser.isEmailVerified;
+    return !isAnonymous && _firebaseUser.isEmailVerified;
   }
 
   /// Check the network to see if there is a user authenticated
   Future<bool> get isVerifiedFromService async {
+    if (isAnonymous) {
+      return false;
+    }
+
     await _firebaseUser.reload();
     _firebaseUser = await FirebaseAuth.instance.currentUser();
     return _firebaseUser.isEmailVerified;
