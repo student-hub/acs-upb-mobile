@@ -169,10 +169,16 @@ class _PortalPageState extends State<PortalPage> {
                                     onTap: () => canEdit
                                         ? Navigator.of(context)
                                             .push(MaterialPageRoute(
-                                                builder: (_) => WebsiteView(
-                                                      website: website,
-                                                      updateExisting: true,
-                                                    )))
+                                            builder: (_) =>
+                                                ChangeNotifierProvider<
+                                                    FilterProvider>(
+                                              create: (_) => FilterProvider(),
+                                              child: WebsiteView(
+                                                website: website,
+                                                updateExisting: true,
+                                              ),
+                                            ),
+                                          ))
                                         : _launchURL(website.link),
                                   );
                                 },
