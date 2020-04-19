@@ -43,6 +43,10 @@ extension WebsiteExtension on Website {
               'en': snap.data['info']['en'],
               'ro': snap.data['info']['ro'],
             },
+      degree: snap.data['degree'],
+      relevance: snap.data['relevance'] == null
+          ? null
+          : List<String>.from(snap.data['relevance']),
     );
   }
 
@@ -52,6 +56,8 @@ extension WebsiteExtension on Website {
     if (!isPrivate) {
       if (ownerUid != null) data['addedBy'] = ownerUid;
       data['editedBy'] = editedBy;
+      data['relevance'] = relevance;
+      if (degree != null) data['degree'] = degree;
     }
 
     if (label != null) data['label'] = label;
@@ -139,9 +145,7 @@ class WebsiteProvider with ChangeNotifier {
   }
 
   Future<bool> addWebsite(Website website,
-      {String degree,
-      List<String> relevance,
-      bool updateExisting = false,
+      {bool updateExisting = false,
       BuildContext context}) async {
     assert(website.label != null);
     assert(context != null);
@@ -167,10 +171,10 @@ class WebsiteProvider with ChangeNotifier {
 
       var data = website.toData();
       if (!website.isPrivate) {
-        if (degree != null) {
-          data['degree'] = degree;
+        if (website.degree != null) {
+          data['degree'] = website.degree;
         }
-        data['relevance'] = relevance;
+        data['relevance'] = website.relevance;
       }
       await ref.setData(data);
 

@@ -126,20 +126,31 @@ class _WebsiteViewState extends State<WebsiteView> {
         .snakeCase;
   }
 
-  Website _buildWebsite() => Website(
-        id: _buildId(),
-        ownerUid: widget.website != null ? widget.website.ownerUid : _user?.uid,
-        isPrivate: _onlyMeController.isSelected ?? true,
-        editedBy: (widget.website?.editedBy ?? []) + [_user?.uid],
-        label: _labelController.text,
-        link: _linkController.text,
-        category: _selectedCategory,
-        iconPath: widget.website?.iconPath ?? 'icons/websites/globe.png',
-        infoByLocale: {
-          'ro': _descriptionRoController.text,
-          'en': _descriptionEnController.text
-        },
-      );
+  Website _buildWebsite() {
+    List<String> relevance = [];
+    _customControllers.forEach((node, controller) {
+      if (controller.isSelected) {
+        relevance.add(node);
+      }
+    });
+
+    return Website(
+      id: _buildId(),
+      ownerUid: widget.website != null ? widget.website.ownerUid : _user?.uid,
+      isPrivate: _onlyMeController.isSelected ?? true,
+      editedBy: (widget.website?.editedBy ?? []) + [_user?.uid],
+      label: _labelController.text,
+      link: _linkController.text,
+      category: _selectedCategory,
+      iconPath: widget.website?.iconPath ?? 'icons/websites/globe.png',
+      infoByLocale: {
+        'ro': _descriptionRoController.text,
+        'en': _descriptionEnController.text
+      },
+      relevance: relevance.isEmpty ? null : relevance,
+      degree: _filter?.baseNode,
+    );
+  }
 
   Widget _preview() {
     Website website = _buildWebsite();
@@ -452,8 +463,6 @@ class _WebsiteViewState extends State<WebsiteView> {
 
                     res = await websiteProvider.addWebsite(
                       _buildWebsite(),
-                      degree: _filter.baseNode,
-                      relevance: relevance,
                       updateExisting: widget.updateExisting,
                       context: context,
                     );
