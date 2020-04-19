@@ -141,54 +141,61 @@ class ProfilePage extends StatelessWidget {
       title: S.of(context).navigationProfile,
       body: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Column(
-          children: <Widget>[
-            Expanded(
-              flex: 1,
-              child: Container(),
-            ),
-            Expanded(
-              flex: 2,
-              child: Image(
-                  image: AssetImage(
-                      'assets/illustrations/undraw_profile_pic.png')),
-            ),
-            SizedBox(height: 8),
-            FutureBuilder(
-                future: authProvider.currentUser,
-                builder: (BuildContext context, AsyncSnapshot<User> snap) {
-                  String userName;
-                  if (snap.hasData) {
-                    User user = snap.data;
-                    userName = user.firstName + ' ' + user.lastName;
-                  }
-                  return Text(
-                    userName ?? S.of(context).stringAnonymous,
-                    style: Theme.of(context)
-                        .textTheme
-                        .subtitle1
-                        .apply(fontWeightDelta: 2),
-                  );
-                }),
-            SizedBox(height: 4),
-            InkWell(
-              onTap: () {
-                _signOut(context);
-              },
-              child: Text(S.of(context).actionLogOut,
-                  style: Theme.of(context)
-                      .accentTextTheme
-                      .subtitle2
-                      .copyWith(fontWeight: FontWeight.w500)),
-            ),
-            Expanded(
-              flex: 3,
-              child: Container(),
-            ),
-            _deleteAccountButton(context),
-            _accountNotVerifiedFooter(context),
-          ],
-        ),
+        child: FutureBuilder(
+            future: authProvider.currentUser,
+            builder: (BuildContext context, AsyncSnapshot<User> snap) {
+              String userName;
+              if (snap.connectionState == ConnectionState.done) {
+                User user = snap.data;
+                if (user != null) {
+                  userName = user.firstName + ' ' + user.lastName;
+                }
+                return Column(
+                  children: <Widget>[
+                    Expanded(
+                      flex: 1,
+                      child: Container(),
+                    ),
+                    Expanded(
+                      flex: 2,
+                      child: Image(
+                          image: AssetImage(
+                              'assets/illustrations/undraw_profile_pic.png')),
+                    ),
+                    SizedBox(height: 8),
+                    Text(
+                      userName ?? S.of(context).stringAnonymous,
+                      style: Theme.of(context)
+                          .textTheme
+                          .subtitle1
+                          .apply(fontWeightDelta: 2),
+                    ),
+                    SizedBox(height: 4),
+                    InkWell(
+                      onTap: () {
+                        _signOut(context);
+                      },
+                      child: Text(
+                          authProvider.isAnonymous
+                              ? S.of(context).actionLogIn
+                              : S.of(context).actionLogOut,
+                          style: Theme.of(context)
+                              .accentTextTheme
+                              .subtitle2
+                              .copyWith(fontWeight: FontWeight.w500)),
+                    ),
+                    Expanded(
+                      flex: 3,
+                      child: Container(),
+                    ),
+                    _deleteAccountButton(context),
+                    _accountNotVerifiedFooter(context),
+                  ],
+                );
+              } else {
+                return Center(child: CircularProgressIndicator());
+              }
+            }),
       ),
     );
   }
