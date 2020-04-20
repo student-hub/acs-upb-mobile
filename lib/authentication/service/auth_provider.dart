@@ -83,7 +83,10 @@ class AuthProvider with ChangeNotifier {
   }
 
   bool get isAnonymous {
-    assert(_firebaseUser != null);
+    if (_firebaseUser == null) {
+      return true;
+    }
+
     bool isAnonymousUser = true;
     for (UserInfo info in _firebaseUser.providerData) {
       if (info.providerId == 'facebook.com' ||
