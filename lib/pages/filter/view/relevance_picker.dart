@@ -113,13 +113,10 @@ class _RelevancePickerState extends State<RelevancePicker> {
                     _anyoneController.deselect();
 
                     // Select the new options
-                    _filterApplied = true;
                     await _fetchFilter();
+                    setState(() => _filterApplied = true);
                     if (_filter.relevantLeaves.contains('All')) {
                       _anyoneController.select();
-                    } else {
-                      _customControllers.values
-                          .forEach((controller) => controller.select());
                     }
                   },
                 ),
@@ -178,7 +175,7 @@ class _RelevancePickerState extends State<RelevancePicker> {
           widgets.add(Selectable(
             label: node,
             controller: controller,
-            initiallySelected: false,
+            initiallySelected: _filterApplied,
             onSelected: (selected) => setState(() {
               if (_user?.canAddPublicWebsite ?? false) {
                 if (selected) {
