@@ -20,28 +20,62 @@ extension FilterNodeExtension on FilterNode {
 
 class FilterProvider with ChangeNotifier {
   final Firestore _db = Firestore.instance;
-  Filter _relevanceFilter;  // filter cache
+  Filter _relevanceFilter; // filter cache
+
+  /// Whether this is the global filter instance and should update shared preferences
+  final bool global;
+
+  final String defaultDegree;
+
+  bool _enabled;
+  List<String> _relevantNodes;
+
+  FilterProvider(
+      {this.global = false,
+      bool filterEnabled,
+      this.defaultDegree,
+      List<String> defaultRelevance})
+      : _enabled = filterEnabled ?? PrefService.get('relevance_filter') ?? true,
+        _relevantNodes = defaultRelevance {
+    if (defaultRelevance != null) {
+      if (this.defaultDegree == null) {
+        throw ArgumentError(
+            'If the relevance is not null, the degree cannot be null.');
+      }
+    }
+  }
 
   void resetFilter() {
     _relevanceFilter = null;
 
-    // Reset filter preference
-    PrefService.setStringList('relevant_nodes', null);
+    _relevantNodes = null;
+    if (global) {
+      // Reset filter preference
+      PrefService.setStringList('relevant_nodes', null);
+    }
   }
 
   void enableFilter() {
-    _relevanceFilter = null;
-    PrefService.setBool('relevance_filter', true);
+    _enabled = true;
+    if (global) {
+      PrefService.setBool('relevance_filter', true);
+    }
+
     notifyListeners();
   }
 
   void disableFilter() {
     _relevanceFilter = null;
-    PrefService.setBool('relevance_filter', false);
+
+    _enabled = false;
+    if (global) {
+      PrefService.setBool('relevance_filter', false);
+    }
+
     notifyListeners();
   }
 
-  bool get filterEnabled => PrefService.get('relevance_filter');
+  bool get filterEnabled => _enabled;
 
   Future<Filter> fetchFilter(BuildContext context) async {
     if (_relevanceFilter != null) {
@@ -61,36 +95,40 @@ class FilterProvider with ChangeNotifier {
           (element) => levelNames.add(Map<String, String>.from(element)));
 
       // Check if there is an existing setting already
-      List<String> relevantNodes = PrefService.get('relevant_nodes') == null
-          ? null
-          : List<String>.from(PrefService.get('relevant_nodes'));
+      if (global) {
+        _relevantNodes = PrefService.get('relevant_nodes') == null
+            ? null
+            : List<String>.from(PrefService.get('relevant_nodes'));
+      }
 
       Map<String, dynamic> root = data['root'];
       _relevanceFilter = Filter(
           localizedLevelNames: levelNames,
           root: FilterNodeExtension.fromMap(root, 'All'),
           listener: () {
-            PrefService.setStringList(
-                'relevant_nodes', _relevanceFilter.relevantNodes);
+            if (global) {
+              PrefService.setStringList(
+                  'relevant_nodes', _relevanceFilter.relevantNodes);
+            }
             notifyListeners();
           });
 
-      // No previous setting
-      if (relevantNodes == null) {
+      if (_relevantNodes != null && defaultDegree != null) {
+        _relevantNodes.forEach((node) =>
+            _relevanceFilter.setRelevantUpToRoot(node, defaultDegree));
+      } else {
+        // No previous setting or defaults => set the user's group
         AuthProvider authProvider =
             Provider.of<AuthProvider>(context, listen: false);
         if (authProvider.isAuthenticatedFromCache) {
           User user = await authProvider.currentUser;
           // Try to set the default as the user's group
           if (user != null) {
-            _relevanceFilter.setRelevantUpToRoot(user.group);
-            relevantNodes = PrefService.get('relevant_nodes');
+            // TODO: Add 'degree' field to user after fixing sign up
+            _relevanceFilter.setRelevantUpToRoot(user.group, 'BSc');
+            _relevantNodes = _relevanceFilter.relevantNodes;
           }
         }
-      }
-
-      if (relevantNodes != null) {
-        _relevanceFilter.setRelevantNodes(relevantNodes);
       }
 
       return _relevanceFilter;

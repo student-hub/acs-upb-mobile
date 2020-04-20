@@ -27,7 +27,8 @@ main() async {
     ChangeNotifierProvider<AuthProvider>(create: (_) => AuthProvider()),
     ChangeNotifierProvider<StorageProvider>(create: (_) => StorageProvider()),
     ChangeNotifierProvider<WebsiteProvider>(create: (_) => WebsiteProvider()),
-    ChangeNotifierProvider<FilterProvider>(create: (_) => FilterProvider()),
+    ChangeNotifierProvider<FilterProvider>(
+        create: (_) => FilterProvider(global: true)),
   ], child: MyApp()));
 }
 

@@ -60,6 +60,32 @@ class Filter {
     return list;
   }
 
+  bool _relevantLeavesHelper(List<String> list, FilterNode node) {
+    if (node.value) {
+      bool hasSelectedChildren = false;
+      if (node.children != null) {
+        node.children.forEach((child) =>
+            hasSelectedChildren |= _relevantLeavesHelper(list, child));
+      }
+      if (!hasSelectedChildren) {
+        list.add(node.name);
+      }
+
+      return true;
+    }
+    return false;
+  }
+
+  /// Extracts the leaves from the tree of selected nodes
+  ///
+  /// In other words, returns the last selected nodes (the ones that do not have
+  /// any selected children).
+  List<String> get relevantLeaves {
+    List<String> list = [];
+    _relevantLeavesHelper(list, root);
+    return list;
+  }
+
   /// Get selected node on first level, if there is any
   ///
   /// First level nodes should be mutually exclusive, so this only returns one
@@ -95,12 +121,23 @@ class Filter {
     return found;
   }
 
-  /// Set the value of node with name [nodeName] and its parents to `true`.
-  bool setRelevantUpToRoot(String nodeName) {
-    if (nodeName != null) {
-      return _setRelevantHelper(nodeName, root, true);
+  /// Set the value of node with name [nodeName] and its parents to `true`, on the [baseNode] branch
+  bool setRelevantUpToRoot(String nodeName, String baseNode) {
+    if (nodeName == 'All') {
+      return true;
     }
-    return false;
+
+    bool found = false;
+    if (nodeName != null) {
+      for (var base in root.children) {
+        if (base.name == baseNode) {
+          found = _setRelevantHelper(nodeName, base, true);
+          break;
+        }
+      }
+    }
+
+    return found;
   }
 
   bool setRelevantNodes(List<String> nodes) {

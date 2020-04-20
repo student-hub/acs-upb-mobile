@@ -137,10 +137,19 @@ class _PortalPageState extends State<PortalPage> {
                                     onTap: () => canEdit
                                         ? Navigator.of(context)
                                             .push(MaterialPageRoute(
-                                                builder: (_) => WebsiteView(
-                                                      website: website,
-                                                      updateExisting: true,
-                                                    )))
+                                            builder: (_) =>
+                                                ChangeNotifierProvider<
+                                                    FilterProvider>(
+                                              create: (_) => FilterProvider(
+                                                defaultDegree: website.degree,
+                                                  defaultRelevance:
+                                                      website.relevance),
+                                              child: WebsiteView(
+                                                website: website,
+                                                updateExisting: true,
+                                              ),
+                                            ),
+                                          ))
                                         : _launchURL(website.link),
                                   );
                                 },
@@ -322,13 +331,13 @@ class _AddWebsiteButton extends StatelessWidget {
             if (authProvider.isAuthenticatedFromCache &&
                 !authProvider.isAnonymous) {
               Navigator.of(context).push(MaterialPageRoute(
-                  builder: (_) => WebsiteView(
-                        website: Website(
-                            id: null,
-                            isPrivate: true,
-                            link: "",
-                            category: category),
-                      )));
+                builder: (_) => ChangeNotifierProvider<FilterProvider>(
+                    create: (_) => FilterProvider(), child: WebsiteView(website: Website(
+                    id: null,
+                    isPrivate: true,
+                    link: "",
+                    category: category),)),
+              ));
             } else {
               AppToast.show(S.of(context).warningAuthenticationNeeded);
             }

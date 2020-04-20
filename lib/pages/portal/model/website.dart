@@ -40,6 +40,9 @@ class Website {
   final String link;
   final Map<String, String> infoByLocale;
 
+  final String degree;
+  final List<String> relevance;
+
   Website(
       {this.ownerUid,
       @required this.id,
@@ -49,11 +52,20 @@ class Website {
       this.iconPath,
       String label,
       @required String link,
-      Map<String, String> infoByLocale})
+      Map<String, String> infoByLocale,
+      this.degree,
+      @required this.relevance})
       : this.editedBy = editedBy ?? [],
         this.label = toString(label).isEmpty ? labelFromLink(link) : label,
         this.link = link,
-        this.infoByLocale = infoByLocale ?? {};
+        this.infoByLocale = infoByLocale ?? {} {
+    if (this.relevance != null) {
+      if (this.degree == null) {
+        throw ArgumentError(
+            'If the relevance is not null, the degree cannot be null.');
+      }
+    }
+  }
 
   static String labelFromLink(String link) => link.split('://').last;
 }

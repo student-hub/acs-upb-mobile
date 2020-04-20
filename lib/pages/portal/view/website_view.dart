@@ -1,6 +1,8 @@
 import 'package:acs_upb_mobile/authentication/model/user.dart';
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
+import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
+import 'package:acs_upb_mobile/pages/filter/view/relevance_picker.dart';
 import 'package:acs_upb_mobile/pages/portal/model/website.dart';
 import 'package:acs_upb_mobile/pages/portal/service/website_provider.dart';
 import 'package:acs_upb_mobile/resources/custom_icons.dart';
@@ -10,7 +12,6 @@ import 'package:acs_upb_mobile/widgets/button.dart';
 import 'package:acs_upb_mobile/widgets/circle_image.dart';
 import 'package:acs_upb_mobile/widgets/dialog.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
-import 'package:acs_upb_mobile/widgets/selectable.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
@@ -46,10 +47,7 @@ class _WebsiteViewState extends State<WebsiteView> {
   TextEditingController _linkController;
   TextEditingController _descriptionRoController;
   TextEditingController _descriptionEnController;
-
-  // The "Only me" and "Anyone" relevance options are mutually exclusive
-  SelectableController _onlyMeController = SelectableController();
-  SelectableController _anyoneController = SelectableController();
+  RelevanceController _relevanceController = RelevanceController();
 
   User _user;
 
@@ -89,20 +87,6 @@ class _WebsiteViewState extends State<WebsiteView> {
     }
   }
 
-  // Icon color from InputDecoration
-  Color get _iconColor {
-    ThemeData themeData = Theme.of(context);
-
-    switch (themeData.brightness) {
-      case Brightness.dark:
-        return Colors.white70;
-      case Brightness.light:
-        return Colors.black45;
-      default:
-        return themeData.iconTheme.color;
-    }
-  }
-
   String _buildId() {
     if (widget.updateExisting) return widget.website.id;
     String label = (_labelController.text ?? '') == ''
@@ -113,19 +97,24 @@ class _WebsiteViewState extends State<WebsiteView> {
         .snakeCase;
   }
 
-  Website _buildWebsite() => Website(
+  Website _buildWebsite() {
+    return Website(
           id: _buildId(),
           ownerUid: widget.website?.ownerUid ?? _user?.uid,
-          isPrivate: _onlyMeController.isSelected ?? true,
-          editedBy: (widget.website?.editedBy ?? []) + [_user?.uid],
-          label: _labelController.text,
-          link: _linkController.text,
-          category: _selectedCategory,
-          iconPath: widget.website?.iconPath ?? 'icons/websites/globe.png',
-          infoByLocale: {
-            'ro': _descriptionRoController.text,
-            'en': _descriptionEnController.text
-          });
+      isPrivate: _relevanceController.private ?? true,
+      editedBy: (widget.website?.editedBy ?? []) + [_user?.uid],
+      label: _labelController.text,
+      link: _linkController.text,
+      category: _selectedCategory,
+      iconPath: widget.website?.iconPath ?? 'icons/websites/globe.png',
+      infoByLocale: {
+        'ro': _descriptionRoController.text,
+        'en': _descriptionEnController.text
+      },
+      relevance: _relevanceController.customRelevance,
+      degree: _relevanceController.degree ?? widget.website?.degree,
+    );
+  }
 
   Widget _preview() {
     Website website = _buildWebsite();
@@ -139,7 +128,8 @@ class _WebsiteViewState extends State<WebsiteView> {
               padding: const EdgeInsets.all(8.0),
               child: Row(
                 children: <Widget>[
-                  Icon(Icons.remove_red_eye, color: _iconColor),
+                  Icon(Icons.remove_red_eye,
+                      color: CustomIcons.formIconColor(Theme.of(context))),
                   SizedBox(width: 12.0),
                   Text(
                     S.of(context).labelPreview + ':',
@@ -202,72 +192,6 @@ class _WebsiteViewState extends State<WebsiteView> {
     );
   }
 
-  Widget _relevanceField() => Padding(
-        padding: const EdgeInsets.only(top: 12.0, left: 12.0),
-        child: Row(
-          children: <Widget>[
-            Icon(CustomIcons.filter, color: _iconColor),
-            SizedBox(width: 12.0),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    S.of(context).labelRelevance,
-                    style: Theme.of(context)
-                        .textTheme
-                        .caption
-                        .apply(color: Theme.of(context).hintColor),
-                  ),
-                  SizedBox(height: 8.0),
-                  Container(
-                    height: 40,
-                    child: ListView(
-                      scrollDirection: Axis.horizontal,
-                      children: <Widget>[
-                        Selectable(
-                          label: S.of(context).relevanceOnlyMe,
-                          initiallySelected: widget.website?.isPrivate ?? true,
-                          onSelected: (selected) => setState(() {
-                            if (_user?.canAddPublicWebsite ?? false) {
-                              selected
-                                  ? _anyoneController.deselect()
-                                  : _anyoneController.select();
-                            } else {
-                              _onlyMeController.select();
-                            }
-                          }),
-                          controller: _onlyMeController,
-                        ),
-                        SizedBox(width: 8.0),
-                        Selectable(
-                          label: S.of(context).relevanceAnyone,
-                          initiallySelected:
-                              !(widget.website?.isPrivate ?? true),
-                          onSelected: (selected) => setState(() {
-                            if (_user?.canAddPublicWebsite ?? false) {
-                              selected
-                                  ? _onlyMeController.deselect()
-                                  : _onlyMeController.select();
-                            } else {
-                              AppToast.show(S
-                                  .of(context)
-                                  .warningNoPermissionToAddPublicWebsite);
-                            }
-                          }),
-                          controller: _anyoneController,
-                          disabled: !(_user?.canAddPublicWebsite ?? false),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      );
-
   AppDialog _deletionConfirmationDialog(BuildContext context) => AppDialog(
         icon: Icon(Icons.delete),
         title: S.of(context).actionDeleteWebsite,
@@ -303,13 +227,24 @@ class _WebsiteViewState extends State<WebsiteView> {
               text: S.of(context).buttonSave,
               onPressed: () async {
                 if (_formKey.currentState.validate()) {
-                  bool res =
-                      await Provider.of<WebsiteProvider>(context, listen: false)
-                          .addWebsite(
-                    _buildWebsite(),
-                    updateExisting: widget.updateExisting,
-                    context: context,
-                  );
+                  WebsiteProvider websiteProvider =
+                      Provider.of<WebsiteProvider>(context, listen: false);
+
+                  bool res = false;
+                  if (_relevanceController.private ||
+                      _relevanceController.anyone) {
+                    res = await websiteProvider.addWebsite(
+                      _buildWebsite(),
+                      updateExisting: widget.updateExisting,
+                      context: context,
+                    );
+                  } else {
+                    res = await websiteProvider.addWebsite(
+                      _buildWebsite(),
+                      updateExisting: widget.updateExisting,
+                      context: context,
+                    );
+                  }
                   if (res) {
                     AppToast.show(widget.updateExisting
                         ? S.of(context).messageWebsiteEdited
@@ -387,7 +322,12 @@ class _WebsiteViewState extends State<WebsiteView> {
                       },
                       onChanged: (_) => setState(() {}),
                     ),
-                    _relevanceField(),
+                    RelevancePicker(
+                      filterProvider: Provider.of<FilterProvider>(context),
+                      defaultPrivate: widget.website?.isPrivate ?? true,
+                      defaultRelevance: widget.website?.relevance,
+                      controller: _relevanceController,
+                    ),
                     TextFormField(
                       controller: _descriptionRoController,
                       decoration: InputDecoration(
