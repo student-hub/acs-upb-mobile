@@ -188,12 +188,6 @@ class WebsiteProvider with ChangeNotifier {
       }
 
       var data = website.toData();
-      if (!website.isPrivate) {
-        if (website.degree != null) {
-          data['degree'] = website.degree;
-        }
-        data['relevance'] = website.relevance;
-      }
       await ref.setData(data);
 
       notifyListeners();

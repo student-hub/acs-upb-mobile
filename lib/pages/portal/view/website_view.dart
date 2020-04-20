@@ -100,7 +100,7 @@ class _WebsiteViewState extends State<WebsiteView> {
   Website _buildWebsite() {
     return Website(
           id: _buildId(),
-          ownerUid: widget.website?.ownerUid ?? _user?.uid,
+          ownerUid: widget.updateExisting ? widget.website.ownerUid : _user?.uid,
       isPrivate: _relevanceController.private ?? true,
       editedBy: (widget.website?.editedBy ?? []) + [_user?.uid],
       label: _labelController.text,
