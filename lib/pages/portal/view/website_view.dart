@@ -53,16 +53,12 @@ class _WebsiteViewState extends State<WebsiteView> {
   // The "Only me" and "Anyone" relevance options are mutually exclusive
   SelectableController _onlyMeController = SelectableController();
   SelectableController _anyoneController = SelectableController();
-  Map<String, SelectableController> _defaultControllers = {};
   Map<String, SelectableController> _customControllers = {};
 
   User _user;
   Filter _filter;
 
-  List<SelectableController> get _publicControllers =>
-      [_anyoneController] +
-      _defaultControllers.values.toList() +
-      _customControllers.values.toList();
+  bool _filterApplied = false;
 
   _fetchUser() async {
     AuthProvider authProvider = Provider.of(context, listen: false);
@@ -135,11 +131,6 @@ class _WebsiteViewState extends State<WebsiteView> {
   Website _buildWebsite() {
     List<String> relevance = [];
     _customControllers.forEach((node, controller) {
-      if (controller.isSelected) {
-        relevance.add(node);
-      }
-    });
-    _defaultControllers.forEach((node, controller) {
       if (controller.isSelected) {
         relevance.add(node);
       }
@@ -259,10 +250,10 @@ class _WebsiteViewState extends State<WebsiteView> {
                   onSubmit: () async {
                     // Deselect all options
                     _onlyMeController.deselect();
-                    _publicControllers
-                        .forEach((controller) => controller.deselect());
+                    _anyoneController.deselect();
 
                     // Select the new options
+                    _filterApplied = true;
                     await _fetchFilter();
                     _customControllers.values
                         .forEach((controller) => controller.select());
@@ -306,56 +297,60 @@ class _WebsiteViewState extends State<WebsiteView> {
       });
 
   Widget _customRelevanceSelectables() {
-    // Add strings from the filter options
-    List<Widget> customSelectables = [];
+    List<Widget> widgets = [];
     _customControllers = {};
-    List<String> nodes = _filter?.relevantLeaves ?? [];
-    nodes.forEach((node) {
-      SelectableController controller = SelectableController();
-      _customControllers[node] = controller;
 
-      customSelectables.add(SizedBox(width: 8.0));
-      customSelectables.add(Selectable(
-        label: node,
-        controller: controller,
-        initiallySelected: false,
-        onSelected: (selected) => setState(() {
-          if (_user?.canAddPublicWebsite ?? false) {
-            if (selected) {
-              _onlyMeController.deselect();
-              _anyoneController.deselect();
-            }
-          } else {
-            AppToast.show(S.of(context).warningNoPermissionToAddPublicWebsite);
-          }
-        }),
-        disabled: !(_user?.canAddPublicWebsite ?? false),
-      ));
-    });
-
-    // Add the provided website relevance strings, if applicable
-    // These are selected by default
-    List<Widget> defaultSelectables = [];
-    _defaultControllers = {};
-    nodes = widget.website?.relevance ?? [];
-    nodes.forEach((node) {
-      if (!_customControllers.containsKey(node)) {
+    if (_filterApplied || !widget.updateExisting) {
+      // Add strings from the filter options
+      List<String> nodes = _filter?.relevantLeaves ?? [];
+      nodes.forEach((node) {
         SelectableController controller = SelectableController();
-        _defaultControllers[node] = controller;
+        _customControllers[node] = controller;
 
-        defaultSelectables.add(SizedBox(width: 8.0));
-        defaultSelectables.add(Selectable(
+        widgets.add(SizedBox(width: 8.0));
+        widgets.add(Selectable(
           label: node,
           controller: controller,
-          initiallySelected: true,
-          onSelected: _onCustomSelected,
+          initiallySelected: false,
+          onSelected: (selected) =>
+              setState(() {
+                if (_user?.canAddPublicWebsite ?? false) {
+                  if (selected) {
+                    _onlyMeController.deselect();
+                    _anyoneController.deselect();
+                  }
+                } else {
+                  AppToast.show(S
+                      .of(context)
+                      .warningNoPermissionToAddPublicWebsite);
+                }
+              }),
           disabled: !(_user?.canAddPublicWebsite ?? false),
         ));
-      }
-    });
+      });
+    } else {
+      // Add the provided website relevance strings, if applicable
+      // These are selected by default
+      List<String> nodes = widget.website?.relevance ?? [];
+      nodes.forEach((node) {
+        if (!_customControllers.containsKey(node)) {
+          SelectableController controller = SelectableController();
+          _customControllers[node] = controller;
+
+          widgets.add(SizedBox(width: 8.0));
+          widgets.add(Selectable(
+            label: node,
+            controller: controller,
+            initiallySelected: true,
+            onSelected: _onCustomSelected,
+            disabled: !(_user?.canAddPublicWebsite ?? false),
+          ));
+        }
+      });
+    }
 
     return Row(
-      children: defaultSelectables + customSelectables,
+      children: widgets,
     );
   }
 
@@ -402,7 +397,7 @@ class _WebsiteViewState extends State<WebsiteView> {
                                     onSelected: (selected) => setState(() {
                                       if (_user?.canAddPublicWebsite ?? false) {
                                         if (selected) {
-                                          _publicControllers.forEach(
+                                          _customControllers.values.forEach(
                                               (controller) =>
                                                   controller.deselect());
                                         } else {
@@ -425,12 +420,9 @@ class _WebsiteViewState extends State<WebsiteView> {
                                         if (selected) {
                                           // Deselect all controllers
                                           _onlyMeController.deselect();
-                                          _publicControllers.forEach(
+                                          _customControllers.values.forEach(
                                               (controller) =>
                                                   controller.deselect());
-
-                                          // Select "anyone" controller
-                                          _anyoneController.select();
                                         } else {
                                           _onlyMeController.select();
                                         }
