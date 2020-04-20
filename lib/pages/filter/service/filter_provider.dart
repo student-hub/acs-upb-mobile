@@ -25,11 +25,25 @@ class FilterProvider with ChangeNotifier {
   /// Whether this is the global filter instance and should update shared preferences
   final bool global;
 
+  final String defaultDegree;
+
   bool _enabled;
   List<String> _relevantNodes;
 
-  FilterProvider({this.global = false, bool filterEnabled})
-      : _enabled = filterEnabled ?? PrefService.get('relevance_filter') ?? true;
+  FilterProvider(
+      {this.global = false,
+      bool filterEnabled,
+      this.defaultDegree,
+      List<String> defaultRelevance})
+      : _enabled = filterEnabled ?? PrefService.get('relevance_filter') ?? true,
+        _relevantNodes = defaultRelevance {
+    if (defaultRelevance != null) {
+      if (this.defaultDegree == null) {
+        throw ArgumentError(
+            'If the relevance is not null, the degree cannot be null.');
+      }
+    }
+  }
 
   void resetFilter() {
     _relevanceFilter = null;
@@ -99,22 +113,22 @@ class FilterProvider with ChangeNotifier {
             notifyListeners();
           });
 
-      // No previous setting
-      if (_relevantNodes == null) {
+      if (_relevantNodes != null && defaultDegree != null) {
+        _relevantNodes.forEach((node) =>
+            _relevanceFilter.setRelevantUpToRoot(node, defaultDegree));
+      } else {
+        // No previous setting or defaults => set the user's group
         AuthProvider authProvider =
             Provider.of<AuthProvider>(context, listen: false);
         if (authProvider.isAuthenticatedFromCache) {
           User user = await authProvider.currentUser;
           // Try to set the default as the user's group
           if (user != null) {
-            _relevanceFilter.setRelevantUpToRoot(user.group);
+            // TODO: Add 'degree' field to user after fixing sign up
+            _relevanceFilter.setRelevantUpToRoot(user.group, 'BSc');
             _relevantNodes = _relevanceFilter.relevantNodes;
           }
         }
-      }
-
-      if (_relevantNodes != null) {
-        _relevanceFilter.setRelevantNodes(_relevantNodes);
       }
 
       return _relevanceFilter;

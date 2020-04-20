@@ -101,7 +101,26 @@ void main() {
 
     test('setRelevantUpToRoot', () {
       // Leaf
-      expect(testFilter.setRelevantUpToRoot('IA-1'), isTrue);
+      expect(testFilter.setRelevantUpToRoot('IA-1', 'MSc'), isTrue);
+
+      expect(
+          testFilter.relevantNodes..sort(),
+          equals([
+            '314CB',
+            '311CD',
+            '1-CB',
+            '1-CD',
+            'IA-1',
+            'CTI-1',
+            'CTI',
+            'IA',
+            'BSc',
+            'MSc',
+            'All'
+          ]..sort()));
+
+      // Wrong baseNode
+      expect(testFilter.setRelevantUpToRoot('IA-1', 'BSc'), isFalse);
 
       expect(
           testFilter.relevantNodes..sort(),
@@ -120,7 +139,7 @@ void main() {
           ]..sort()));
 
       // Root
-      expect(testFilter.setRelevantUpToRoot('All'), isTrue);
+      expect(testFilter.setRelevantUpToRoot('All', 'BSc'), isTrue);
       expect(
           testFilter.relevantNodes..sort(),
           equals([
@@ -138,7 +157,7 @@ void main() {
           ]..sort()));
 
       // Non-existent node
-      expect(testFilter.setRelevantUpToRoot('Nope'), isFalse);
+      expect(testFilter.setRelevantUpToRoot('Nope', 'BSc'), isFalse);
       expect(
           testFilter.relevantNodes..sort(),
           equals([
@@ -154,6 +173,24 @@ void main() {
             'MSc',
             'All'
           ]..sort()));
+
+      // Non-existent baseNode
+      expect(testFilter.setRelevantUpToRoot('IA-1', 'Nope'), isFalse);
+      expect(
+      testFilter.relevantNodes..sort(),
+      equals([
+      '314CB',
+      '311CD',
+      '1-CB',
+      '1-CD',
+      'IA-1',
+      'CTI-1',
+      'CTI',
+      'IA',
+      'BSc',
+      'MSc',
+      'All'
+      ]..sort()));
     });
 
     test('setRelevantNodes', () {

@@ -121,12 +121,23 @@ class Filter {
     return found;
   }
 
-  /// Set the value of node with name [nodeName] and its parents to `true`.
-  bool setRelevantUpToRoot(String nodeName) {
-    if (nodeName != null) {
-      return _setRelevantHelper(nodeName, root, true);
+  /// Set the value of node with name [nodeName] and its parents to `true`, on the [baseNode] branch
+  bool setRelevantUpToRoot(String nodeName, String baseNode) {
+    if (nodeName == 'All') {
+      return true;
     }
-    return false;
+
+    bool found = false;
+    if (nodeName != null) {
+      for (var base in root.children) {
+        if (base.name == baseNode) {
+          found = _setRelevantHelper(nodeName, base, true);
+          break;
+        }
+      }
+    }
+
+    return found;
   }
 
   bool setRelevantNodes(List<String> nodes) {
