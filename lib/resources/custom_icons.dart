@@ -18,4 +18,15 @@ class CustomIcons {
 
   // Transparent icon to be used as a placeholder
   static const Icon empty = Icon(Icons.cancel, color: Color(0));
+
+  static Color formIconColor(ThemeData themeData) {
+    switch (themeData.brightness) {
+      case Brightness.dark:
+        return Colors.white70;
+      case Brightness.light:
+        return Colors.black45;
+      default:
+        return themeData.iconTheme.color;
+    }
+  }
 }
