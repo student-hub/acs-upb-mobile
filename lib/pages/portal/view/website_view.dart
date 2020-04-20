@@ -255,8 +255,12 @@ class _WebsiteViewState extends State<WebsiteView> {
                     // Select the new options
                     _filterApplied = true;
                     await _fetchFilter();
-                    _customControllers.values
-                        .forEach((controller) => controller.select());
+                    if (_filter.relevantNodes.contains('All')) {
+                      _anyoneController.select();
+                    } else {
+                      _customControllers.values
+                          .forEach((controller) => controller.select());
+                    }
                   },
                 ),
               ),
@@ -304,29 +308,31 @@ class _WebsiteViewState extends State<WebsiteView> {
       // Add strings from the filter options
       List<String> nodes = _filter?.relevantLeaves ?? [];
       nodes.forEach((node) {
-        SelectableController controller = SelectableController();
-        _customControllers[node] = controller;
+        if (node != 'All') {
+          // The "All" case (when nothing is selected in the filter) is handled
+          // separately using [_anyoneController]
+          SelectableController controller = SelectableController();
+          _customControllers[node] = controller;
 
-        widgets.add(SizedBox(width: 8.0));
-        widgets.add(Selectable(
-          label: node,
-          controller: controller,
-          initiallySelected: false,
-          onSelected: (selected) =>
-              setState(() {
-                if (_user?.canAddPublicWebsite ?? false) {
-                  if (selected) {
-                    _onlyMeController.deselect();
-                    _anyoneController.deselect();
-                  }
-                } else {
-                  AppToast.show(S
-                      .of(context)
-                      .warningNoPermissionToAddPublicWebsite);
+          widgets.add(SizedBox(width: 8.0));
+          widgets.add(Selectable(
+            label: node,
+            controller: controller,
+            initiallySelected: false,
+            onSelected: (selected) => setState(() {
+              if (_user?.canAddPublicWebsite ?? false) {
+                if (selected) {
+                  _onlyMeController.deselect();
+                  _anyoneController.deselect();
                 }
-              }),
-          disabled: !(_user?.canAddPublicWebsite ?? false),
-        ));
+              } else {
+                AppToast.show(
+                    S.of(context).warningNoPermissionToAddPublicWebsite);
+              }
+            }),
+            disabled: !(_user?.canAddPublicWebsite ?? false),
+          ));
+        }
       });
     } else {
       // Add the provided website relevance strings, if applicable
@@ -397,6 +403,7 @@ class _WebsiteViewState extends State<WebsiteView> {
                                     onSelected: (selected) => setState(() {
                                       if (_user?.canAddPublicWebsite ?? false) {
                                         if (selected) {
+                                          _anyoneController.deselect();
                                           _customControllers.values.forEach(
                                               (controller) =>
                                                   controller.deselect());
