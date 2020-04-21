@@ -208,9 +208,9 @@ class AuthProvider with ChangeNotifier {
     try {
       DocumentReference ref =
           Firestore.instance.collection('users').document(_firebaseUser.uid);
-      ref?.delete();
+      await ref.delete();
 
-      _firebaseUser.delete();
+      await _firebaseUser.delete();
     } catch (e) {
       _errorHandler(e, context);
       return false;
