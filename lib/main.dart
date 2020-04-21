@@ -114,8 +114,6 @@ class AppLoadingScreen extends StatelessWidget {
     // Load locale from settings
     S.load(LocaleProvider.locale);
 
-    await Provider.of<FilterProvider>(context).fetchFilter(context);
-
     AuthProvider authProvider =
         Provider.of<AuthProvider>(context, listen: false);
     bool authenticated = await authProvider.isAuthenticatedFromService;

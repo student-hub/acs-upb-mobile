@@ -25,11 +25,23 @@ class _SignUpViewState extends State<SignUpView> {
   Filter filter;
   List<FilterNode> nodes;
 
+  void _fetchFilter() async {
+    // Fetch filter for dropdown buttons
+    FilterProvider filterProvider =
+        Provider.of<FilterProvider>(context, listen: false);
+    filter = await filterProvider.fetchFilter(context);
+
+    // Reset filter so it can be reloaded after user signs in
+    filterProvider.resetFilter();
+
+    // Add the first selected node and refresh
+    nodes = [filter.root];
+    setState(() {});
+  }
+
   initState() {
     super.initState();
-
-    filter = Provider.of<FilterProvider>(context, listen: false).cachedFilter;
-    nodes = [filter.root];
+    _fetchFilter();
   }
 
   List<FormItem> _buildFormItems() {
@@ -83,43 +95,47 @@ class _SignUpViewState extends State<SignUpView> {
   }
 
   List<Widget> _dropdownTree(BuildContext context) {
-    List<Widget> items = [];
-    for (var i = 0; i < nodes.length; i++) {
-      if (nodes[i] != null && nodes[i].children.isNotEmpty) {
-        items.add(Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            // The following prevents the text field from overflowing
-            SizedBox(
-              height: 8,
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 10.0),
-              child: Text(
-                  filter.localizedLevelNames[i][LocaleProvider.localeString],
-                  style: Theme.of(context)
-                      .textTheme
-                      .subtitle1
-                      .apply(fontSizeFactor: 1.1)),
-            ),
-            DropdownButtonFormField<FilterNode>(
-              value: nodes.length > i + 1 ? nodes[i + 1] : null,
-              items: nodes[i]
-                  .children
-                  .map((node) => DropdownMenuItem(
-                        value: node,
-                        child: Text(node.name),
-                      ))
-                  .toList(),
-              onChanged: (selected) => setState(
-                () {
-                  nodes.removeRange(i + 1, nodes.length);
-                  nodes.add(selected);
-                },
+    List<Widget> items = [SizedBox(height: 8)];
+
+    if (filter == null) {
+      items.add(Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: Center(child: CircularProgressIndicator()),
+      ));
+    } else {
+      for (var i = 0; i < nodes.length; i++) {
+        if (nodes[i] != null && nodes[i].children.isNotEmpty) {
+          items.add(Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.only(top: 10.0),
+                child: Text(
+                    filter.localizedLevelNames[i][LocaleProvider.localeString],
+                    style: Theme.of(context)
+                        .textTheme
+                        .subtitle1
+                        .apply(fontSizeFactor: 1.1)),
               ),
-            ),
-          ],
-        ));
+              DropdownButtonFormField<FilterNode>(
+                value: nodes.length > i + 1 ? nodes[i + 1] : null,
+                items: nodes[i]
+                    .children
+                    .map((node) => DropdownMenuItem(
+                          value: node,
+                          child: Text(node.name),
+                        ))
+                    .toList(),
+                onChanged: (selected) => setState(
+                  () {
+                    nodes.removeRange(i + 1, nodes.length);
+                    nodes.add(selected);
+                  },
+                ),
+              ),
+            ],
+          ));
+        }
       }
     }
     return items;
