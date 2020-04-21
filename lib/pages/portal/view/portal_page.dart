@@ -272,7 +272,7 @@ class _PortalPageState extends State<PortalPage> {
       body: FutureBuilder(
         future: filterFuture,
         builder: (BuildContext context, AsyncSnapshot<Filter> filterSnap) {
-          if (filterSnap.connectionState == ConnectionState.done) {
+          if (filterSnap.hasData) {
             return FutureBuilder<List<Website>>(
                 future: websiteProvider.fetchWebsites(
                   filterProvider.filterEnabled ? filterSnap.data : null,
@@ -280,7 +280,7 @@ class _PortalPageState extends State<PortalPage> {
                   uid: authProvider.uid,
                 ),
                 builder: (context, AsyncSnapshot<List<Website>> websiteSnap) {
-                  if (websiteSnap.connectionState == ConnectionState.done) {
+                  if (websiteSnap.hasData) {
                     websites = websiteSnap.data;
                     return SingleChildScrollView(
                       child: Padding(
