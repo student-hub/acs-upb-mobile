@@ -50,8 +50,9 @@ class FilterProvider with ChangeNotifier {
 
     _relevantNodes = null;
     if (global) {
-      // Reset filter preference
+      // Reset defaults
       PrefService.setStringList('relevant_nodes', null);
+      PrefService.setBool('relevance_filter', true);
     }
   }
 
@@ -132,7 +133,7 @@ class FilterProvider with ChangeNotifier {
               user.year,
               user.series,
               user.group
-            ].where((element) => element != null));
+            ].where((element) => element != null).toList());
           }
         }
       }
