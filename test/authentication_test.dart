@@ -1,3 +1,4 @@
+import 'package:acs_upb_mobile/authentication/model/user.dart';
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/authentication/view/login_view.dart';
 import 'package:acs_upb_mobile/authentication/view/sign_up_view.dart';
@@ -263,10 +264,15 @@ void main() {
       when(mockAuthProvider.isAuthenticatedFromCache).thenReturn(true);
       when(mockAuthProvider.isAuthenticatedFromService)
           .thenAnswer((realInvocation) => Future.value(true));
-      when(mockAuthProvider.isAnonymous).thenReturn(true);
+      when(mockAuthProvider.isVerifiedFromService)
+          .thenAnswer((realInvocation) => Future.value(false));
     });
 
-    testWidgets('Sign out', (WidgetTester tester) async {
+    testWidgets('Sign out anonymous', (WidgetTester tester) async {
+      when(mockAuthProvider.currentUser)
+          .thenAnswer((realInvocation) => Future.value(null));
+      when(mockAuthProvider.isAnonymous).thenReturn(true);
+
       await tester.pumpWidget(ChangeNotifierProvider<AuthProvider>(
           create: (_) => mockAuthProvider,
           child: MyApp(navigationObservers: [mockObserver])));
@@ -278,6 +284,35 @@ void main() {
       // Open profile page
       await tester.tap(find.byIcon(Icons.person));
       await tester.pumpAndSettle();
+
+      expect(find.text('Anonymous'), findsOneWidget);
+
+      // Press log in button
+      await tester.tap(find.text('Log in'));
+      await tester.pumpAndSettle();
+
+      verify(mockAuthProvider.signOut(any));
+      expect(find.byType(LoginView), findsOneWidget);
+    });
+
+    testWidgets('Sign out authenticated', (WidgetTester tester) async {
+      when(mockAuthProvider.currentUser).thenAnswer((realInvocation) =>
+          Future.value(User(uid: '0', firstName: 'John', lastName: 'Doe')));
+      when(mockAuthProvider.isAnonymous).thenReturn(false);
+
+      await tester.pumpWidget(ChangeNotifierProvider<AuthProvider>(
+          create: (_) => mockAuthProvider,
+          child: MyApp(navigationObservers: [mockObserver])));
+      await tester.pumpAndSettle();
+
+      verify(mockObserver.didPush(any, any));
+      expect(find.byType(HomePage), findsOneWidget);
+
+      // Open profile page
+      await tester.tap(find.byIcon(Icons.person));
+      await tester.pumpAndSettle();
+
+      expect(find.text('John Doe'), findsOneWidget);
 
       // Press log out button
       await tester.tap(find.text('Log out'));
