@@ -107,12 +107,12 @@ class _SignUpViewState extends State<SignUpView> {
               items: nodes[i]
                   .children
                   .map((node) => DropdownMenuItem(
-                value: node,
-                child: Text(node.name),
-              ))
+                        value: node,
+                        child: Text(node.name),
+                      ))
                   .toList(),
               onChanged: (selected) => setState(
-                    () {
+                () {
                   nodes.removeRange(i + 1, nodes.length);
                   nodes.add(selected);
                 },
@@ -134,10 +134,18 @@ class _SignUpViewState extends State<SignUpView> {
       trailing: _dropdownTree(context),
       onSubmitted: (Map<String, String> fields) async {
         fields[S.of(context).labelEmail] += S.of(context).stringEmailDomain;
+        nodes.asMap().forEach((i, node) {
+          if (i > 0) {
+            fields[filter.localizedLevelNames[i - 1]
+                [LocaleProvider.localeString]] = node.name;
+          }
+        });
+
         var result = await authProvider.signUp(
           info: fields,
           context: context,
         );
+
         if (result) {
           // Remove all routes below and push home page
           Navigator.pushNamedAndRemoveUntil(

@@ -2,27 +2,63 @@ import 'dart:async';
 
 import 'package:acs_upb_mobile/authentication/model/user.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
+import 'package:acs_upb_mobile/pages/filter/model/filter.dart';
 import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
+import 'package:acs_upb_mobile/resources/locale_provider.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+extension MapUtils<K, V> on Map<K, V> {
+  V getIfPresent(K key) {
+    if (this.containsKey(key)) {
+      return this[key];
+    } else {
+      return null;
+    }
+  }
+}
+
 extension DatabaseUser on User {
   static User fromSnap(DocumentSnapshot snap) {
+    String degree;
+    String domain;
+    String year;
+    String series;
+    String group;
+    if (snap.data.containsKey('class')) {
+      degree = snap.data['class']['degree'];
+      domain = snap.data['class']['domain'];
+      year = snap.data['class']['year'];
+      series = snap.data['class']['series'];
+      group = snap.data['class']['group'];
+    }
+
     return User(
         uid: snap.documentID,
         firstName: snap.data['name']['first'],
         lastName: snap.data['name']['last'],
-        group: snap.data['group'],
+        degree: degree,
+        domain: domain,
+        year: year,
+        series: series,
+        group: group,
         permissionLevel: snap.data['permissionLevel']);
   }
 
   Map<String, dynamic> toData() {
+    Map<String, String> classInfo = {};
+    if (degree != null) classInfo['degree'] = degree;
+    if (domain != null) classInfo['domain'] = domain;
+    if (year != null) classInfo['year'] = year;
+    if (series != null) classInfo['series'] = series;
+    if (group != null) classInfo['group'] = group;
+
     return {
       'name': {'first': firstName, 'last': lastName},
-      'group': group,
+      'class': classInfo,
       'permissionLevel': permissionLevel
     };
   }
@@ -208,9 +244,9 @@ class AuthProvider with ChangeNotifier {
     try {
       DocumentReference ref =
           Firestore.instance.collection('users').document(_firebaseUser.uid);
-      ref?.delete();
+      await ref.delete();
 
-      _firebaseUser.delete();
+      await _firebaseUser.delete();
     } catch (e) {
       _errorHandler(e, context);
       return false;
@@ -296,7 +332,19 @@ class AuthProvider with ChangeNotifier {
     String confirmPassword = info[S.of(context).labelConfirmPassword];
     String firstName = info[S.of(context).labelFirstName];
     String lastName = info[S.of(context).labelLastName];
-    String group = info[S.of(context).labelGroup];
+
+    Filter filter =
+        Provider.of<FilterProvider>(context, listen: false).cachedFilter;
+    String degree = info.getIfPresent(
+        filter.localizedLevelNames[0][LocaleProvider.localeString]);
+    String domain = info.getIfPresent(
+        filter.localizedLevelNames[1][LocaleProvider.localeString]);
+    String year = info.getIfPresent(
+        filter.localizedLevelNames[2][LocaleProvider.localeString]);
+    String series = info.getIfPresent(
+        filter.localizedLevelNames[3][LocaleProvider.localeString]);
+    String group = info.getIfPresent(
+        filter.localizedLevelNames[4][LocaleProvider.localeString]);
 
     if (email == null || email == '') {
       AppToast.show(S.of(context).errorInvalidEmail);
@@ -340,6 +388,10 @@ class AuthProvider with ChangeNotifier {
           uid: res.user.uid,
           firstName: firstName,
           lastName: lastName,
+          degree: degree,
+          domain: domain,
+          year: year,
+          series: series,
           group: group);
 
       DocumentReference ref =

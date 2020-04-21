@@ -85,7 +85,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "labelDescription" : MessageLookupByLibrary.simpleMessage("Descriere"),
     "labelEmail" : MessageLookupByLibrary.simpleMessage("Email"),
     "labelFirstName" : MessageLookupByLibrary.simpleMessage("Prenume"),
-    "labelGroup" : MessageLookupByLibrary.simpleMessage("Grupa"),
     "labelLastName" : MessageLookupByLibrary.simpleMessage("Nume"),
     "labelLink" : MessageLookupByLibrary.simpleMessage("Link"),
     "labelName" : MessageLookupByLibrary.simpleMessage("Nume"),
