@@ -123,6 +123,7 @@
   "infoPasswordResetEmailSent": "Please check your inbox for the password reset e-mail.",
   "infoRelevance": "Try to choose the most restrictive category.",
   "infoRelevanceExample": "For instance, if something is only relevant for \"314CB\" and \"315CB\", don't just set \"CB\".",
+  "infoPassword": "It must contain lower and uppercase letters, one number and one special character (!@#$&*~), and have a minimum length of 8.",
 
   "stringEmailDomain": "@stud.acs.upb.ro",
   "stringAnonymous": "Anonymous",

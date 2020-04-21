@@ -1038,6 +1038,15 @@ class S {
     );
   }
 
+  String get infoPassword {
+    return Intl.message(
+      'It must contain lower and uppercase letters, one number and one special character (!@#\$&*~), and have a minimum length of 8.',
+      name: 'infoPassword',
+      desc: '',
+      args: [],
+    );
+  }
+
   String get stringEmailDomain {
     return Intl.message(
       '@stud.acs.upb.ro',

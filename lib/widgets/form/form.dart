@@ -6,6 +6,7 @@ import 'package:recase/recase.dart';
 
 class FormItem {
   final String label;
+  final String additionalHint;
   final String hint;
   final TextEditingController controller;
   final FocusNode focusNode;
@@ -16,6 +17,7 @@ class FormItem {
 
   FormItem(
       {this.label,
+      this.additionalHint,
       this.hint,
       TextEditingController controller,
       FocusNode focusNode,
@@ -62,6 +64,7 @@ class _AppFormState extends State<AppForm> {
                     key:
                         ValueKey(ReCase(field.label).snakeCase + '_text_field'),
                     label: field.label,
+                    additionalHint: field.additionalHint,
                     hint: field.hint,
                     suffix: field.suffix,
                     obscureText: field.obscureText,

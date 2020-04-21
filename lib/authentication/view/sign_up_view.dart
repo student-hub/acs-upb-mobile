@@ -65,6 +65,7 @@ class _SignUpViewState extends State<SignUpView> {
       FormItem(
         label: S.of(context).labelPassword,
         hint: S.of(context).hintPassword,
+        additionalHint: S.of(context).infoPassword,
         controller: passwordController,
         obscureText: true,
         check: (password, {BuildContext context}) =>
@@ -109,7 +110,7 @@ class _SignUpViewState extends State<SignUpView> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Padding(
-                padding: const EdgeInsets.only(top: 10.0),
+                padding: const EdgeInsets.only(top: 8.0),
                 child: Text(
                     filter.localizedLevelNames[i][LocaleProvider.localeString],
                     style: Theme.of(context)
