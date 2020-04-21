@@ -1,7 +1,10 @@
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/navigation/routes.dart';
+import 'package:acs_upb_mobile/pages/filter/model/filter.dart';
+import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
 import 'package:acs_upb_mobile/resources/banner.dart';
+import 'package:acs_upb_mobile/resources/locale_provider.dart';
 import 'package:acs_upb_mobile/widgets/button.dart';
 import 'package:acs_upb_mobile/widgets/form/form.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
@@ -19,6 +22,27 @@ class SignUpView extends StatefulWidget {
 
 class _SignUpViewState extends State<SignUpView> {
   List<FormItem> formItems;
+  Filter filter;
+  List<FilterNode> nodes;
+
+  void _fetchFilter() async {
+    // Fetch filter for dropdown buttons
+    FilterProvider filterProvider =
+        Provider.of<FilterProvider>(context, listen: false);
+    filter = await filterProvider.fetchFilter(context);
+
+    // Reset filter so it can be reloaded after user signs in
+    filterProvider.resetFilter();
+
+    // Add the first selected node and refresh
+    nodes = [filter.root];
+    setState(() {});
+  }
+
+  initState() {
+    super.initState();
+    _fetchFilter();
+  }
 
   List<FormItem> _buildFormItems() {
     // Only build them once to avoid the cursor staying everywhere
@@ -41,6 +65,7 @@ class _SignUpViewState extends State<SignUpView> {
       FormItem(
         label: S.of(context).labelPassword,
         hint: S.of(context).hintPassword,
+        additionalHint: S.of(context).infoPassword,
         controller: passwordController,
         obscureText: true,
         check: (password, {BuildContext context}) =>
@@ -66,16 +91,55 @@ class _SignUpViewState extends State<SignUpView> {
         label: S.of(context).labelLastName,
         hint: S.of(context).hintLastName,
       ),
-      FormItem(
-        label: S.of(context).labelGroup,
-        hint: S.of(context).hintGroup,
-        check: (group, {BuildContext context}) async {
-          // TODO: Allow MSc groups and show message for invalid inputs
-          return group.length == 5 && group[0] == '3';
-        },
-      ),
     ];
     return formItems;
+  }
+
+  List<Widget> _dropdownTree(BuildContext context) {
+    List<Widget> items = [SizedBox(height: 8)];
+
+    if (filter == null) {
+      items.add(Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: Center(child: CircularProgressIndicator()),
+      ));
+    } else {
+      for (var i = 0; i < nodes.length; i++) {
+        if (nodes[i] != null && nodes[i].children.isNotEmpty) {
+          items.add(Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.only(top: 8.0),
+                child: Text(
+                    filter.localizedLevelNames[i][LocaleProvider.localeString],
+                    style: Theme.of(context)
+                        .textTheme
+                        .subtitle1
+                        .apply(fontSizeFactor: 1.1)),
+              ),
+              DropdownButtonFormField<FilterNode>(
+                value: nodes.length > i + 1 ? nodes[i + 1] : null,
+                items: nodes[i]
+                    .children
+                    .map((node) => DropdownMenuItem(
+                          value: node,
+                          child: Text(node.name),
+                        ))
+                    .toList(),
+                onChanged: (selected) => setState(
+                  () {
+                    nodes.removeRange(i + 1, nodes.length);
+                    nodes.add(selected);
+                  },
+                ),
+              ),
+            ],
+          ));
+        }
+      }
+    }
+    return items;
   }
 
   AppForm _buildForm(BuildContext context) {
@@ -84,12 +148,21 @@ class _SignUpViewState extends State<SignUpView> {
     return AppForm(
       title: S.of(context).actionSignUp,
       items: _buildFormItems(),
+      trailing: _dropdownTree(context),
       onSubmitted: (Map<String, String> fields) async {
         fields[S.of(context).labelEmail] += S.of(context).stringEmailDomain;
+        nodes.asMap().forEach((i, node) {
+          if (i > 0) {
+            fields[filter.localizedLevelNames[i - 1]
+                [LocaleProvider.localeString]] = node.name;
+          }
+        });
+
         var result = await authProvider.signUp(
           info: fields,
           context: context,
         );
+
         if (result) {
           // Remove all routes below and push home page
           Navigator.pushNamedAndRemoveUntil(

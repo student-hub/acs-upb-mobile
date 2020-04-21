@@ -10,7 +10,7 @@ import 'intl/messages_all.dart';
 // **************************************************************************
 
 class S {
-  S();
+  S(this.localeName);
   
   static const AppLocalizationDelegate delegate =
     AppLocalizationDelegate();
@@ -20,13 +20,15 @@ class S {
     final String localeName = Intl.canonicalizedLocale(name);
     return initializeMessages(localeName).then((_) {
       Intl.defaultLocale = localeName;
-      return S();
+      return S(localeName);
     });
   } 
 
   static S of(BuildContext context) {
     return Localizations.of<S>(context, S);
   }
+
+  final String localeName;
 
   String get buttonNext {
     return Intl.message(
@@ -122,15 +124,6 @@ class S {
     return Intl.message(
       'Last name',
       name: 'labelLastName',
-      desc: '',
-      args: [],
-    );
-  }
-
-  String get labelGroup {
-    return Intl.message(
-      'Group',
-      name: 'labelGroup',
       desc: '',
       args: [],
     );
@@ -307,7 +300,7 @@ class S {
     );
   }
 
-  String actionSignInWith(Object provider) {
+  String actionSignInWith(dynamic provider) {
     return Intl.message(
       'Sign in with $provider',
       name: 'actionSignInWith',
@@ -496,7 +489,7 @@ class S {
     );
   }
 
-  String errorCouldNotLaunchURL(Object url) {
+  String errorCouldNotLaunchURL(dynamic url) {
     return Intl.message(
       'Could not launch \'$url\'.',
       name: 'errorCouldNotLaunchURL',
@@ -541,7 +534,7 @@ class S {
     );
   }
 
-  String warningEmailInUse(Object email) {
+  String warningEmailInUse(dynamic email) {
     return Intl.message(
       'There is already an account associated with $email.',
       name: 'warningEmailInUse',
@@ -550,7 +543,7 @@ class S {
     );
   }
 
-  String warningUseProvider(Object provider) {
+  String warningUseProvider(dynamic provider) {
     return Intl.message(
       'Please log in with $provider to continue.',
       name: 'warningUseProvider',
@@ -874,7 +867,7 @@ class S {
     );
   }
 
-  String messageWelcomeName(Object name) {
+  String messageWelcomeName(dynamic name) {
     return Intl.message(
       'Welcome, $name!',
       name: 'messageWelcomeName',
@@ -1040,6 +1033,15 @@ class S {
     return Intl.message(
       'For instance, if something is only relevant for "314CB" and "315CB", don\'t just set "CB".',
       name: 'infoRelevanceExample',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get infoPassword {
+    return Intl.message(
+      'It must contain lower and uppercase letters, one number and one special character (!@#\$&*~), and have a minimum length of 8.',
+      name: 'infoPassword',
       desc: '',
       args: [],
     );

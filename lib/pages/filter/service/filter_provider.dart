@@ -50,8 +50,9 @@ class FilterProvider with ChangeNotifier {
 
     _relevantNodes = null;
     if (global) {
-      // Reset filter preference
+      // Reset defaults
       PrefService.setStringList('relevant_nodes', null);
+      PrefService.setBool('relevance_filter', true);
     }
   }
 
@@ -76,6 +77,8 @@ class FilterProvider with ChangeNotifier {
   }
 
   bool get filterEnabled => _enabled;
+
+  Filter get cachedFilter => _relevanceFilter;
 
   Future<Filter> fetchFilter(BuildContext context) async {
     if (_relevanceFilter != null) {
@@ -122,11 +125,15 @@ class FilterProvider with ChangeNotifier {
             Provider.of<AuthProvider>(context, listen: false);
         if (authProvider.isAuthenticatedFromCache) {
           User user = await authProvider.currentUser;
-          // Try to set the default as the user's group
+          // Try to set the default from the user data
           if (user != null) {
-            // TODO: Add 'degree' field to user after fixing sign up
-            _relevanceFilter.setRelevantUpToRoot(user.group, 'BSc');
-            _relevantNodes = _relevanceFilter.relevantNodes;
+            _relevanceFilter.setRelevantNodes([
+              user.degree,
+              user.domain,
+              user.year,
+              user.series,
+              user.group
+            ].where((element) => element != null).toList());
           }
         }
       }

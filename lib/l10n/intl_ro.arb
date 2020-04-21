@@ -11,7 +11,6 @@
   "labelConfirmPassword": "Confirmare parolă",
   "labelFirstName": "Prenume",
   "labelLastName": "Nume",
-  "labelGroup": "Grupa",
   "labelName": "Nume",
   "labelCategory": "Categorie",
   "labelLink": "Link",
@@ -60,7 +59,7 @@
 
   "warningInternetConnection": "Asigurați-vă că sunteți conectat la internet.",
   "warningPasswordLength": "Parola trebuie să aibă cel puțin 8 caractere.",
-  "warningPasswordCharacters": "Parola trebuie să conțină majuscule, minuscule și cel puțin un număr sau un simbol.",
+  "warningPasswordCharacters": "Parola trebuie să conțină majuscule, minuscule și cel puțin un număr sau un simbol (!@#$&*~).",
   "warningEmailInUse": "Există deja un cont asociat cu adresa {email}.",
   "warningUseProvider": "Folosiți {provider} pentru a vă conecta.",
   "warningTryAgainLater": "Încercați mai târziu.",
@@ -124,6 +123,7 @@
   "infoPasswordResetEmailSent": "Please check your inbox for the password reset e-mail.",
   "infoRelevance": "Încercați să selectați cea mai restrictivă categorie.",
   "infoRelevanceExample": "De exemplu, dacă ceva este relevant doar pentru \"314CB\" și \"315CB\", nu setați direct \"CB\".",
+  "infoPassword": "Aceasta trebuie să conțină majuscule, minuscule și cel puțin un număr sau un simbol (!@#$&,*~), având minimum 8 caractere.",
 
   "stringEmailDomain": "@stud.acs.upb.ro",
   "stringAnonymous": "Anonim",
