@@ -2,6 +2,8 @@ import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/authentication/view/login_view.dart';
 import 'package:acs_upb_mobile/authentication/view/sign_up_view.dart';
 import 'package:acs_upb_mobile/main.dart';
+import 'package:acs_upb_mobile/pages/filter/model/filter.dart';
+import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
 import 'package:acs_upb_mobile/pages/home/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -12,6 +14,8 @@ import 'package:provider/provider.dart';
 class MockAuthProvider extends Mock implements AuthProvider {}
 
 class MockNavigatorObserver extends Mock implements NavigatorObserver {}
+
+class MockFilterProvider extends Mock implements FilterProvider {}
 
 void main() {
   AuthProvider mockAuthProvider;
@@ -160,11 +164,78 @@ void main() {
 
   group('Sign up', () {
     MockNavigatorObserver mockObserver = MockNavigatorObserver();
+    FilterProvider mockFilterProvider = MockFilterProvider();
+
+    setUp(() {
+      mockFilterProvider = MockFilterProvider();
+      // ignore: invalid_use_of_protected_member
+      when(mockFilterProvider.hasListeners).thenReturn(false);
+      when(mockFilterProvider.filterEnabled).thenReturn(true);
+      when(mockFilterProvider.fetchFilter(any))
+          .thenAnswer((_) => Future.value(Filter(
+                  localizedLevelNames: [
+                    {'en': 'Degree', 'ro': 'Nivel de studiu'},
+                    {'en': 'Major', 'ro': 'Specializare'},
+                    {'en': 'Year', 'ro': 'An'},
+                    {'en': 'Series', 'ro': 'Serie'},
+                    {'en': 'Group', 'ro': 'Group'}
+                  ],
+                  root: FilterNode(name: 'All', value: true, children: [
+                    FilterNode(name: 'BSc', value: true, children: [
+                      FilterNode(name: 'CTI', value: true, children: [
+                        FilterNode(name: 'CTI-1', value: true, children: [
+                          FilterNode(name: '1-CA'),
+                          FilterNode(
+                            name: '1-CB',
+                            value: true,
+                            children: [
+                              FilterNode(name: '311CB'),
+                              FilterNode(name: '312CB'),
+                              FilterNode(name: '313CB'),
+                              FilterNode(
+                                name: '314CB',
+                                value: true,
+                              ),
+                            ],
+                          ),
+                          FilterNode(name: '1-CC'),
+                          FilterNode(
+                            name: '1-CD',
+                            children: [
+                              FilterNode(name: '311CD'),
+                              FilterNode(name: '312CD'),
+                              FilterNode(name: '313CD'),
+                              FilterNode(name: '314CD'),
+                            ],
+                          ),
+                        ]),
+                        FilterNode(
+                          name: 'CTI-2',
+                        ),
+                        FilterNode(
+                          name: 'CTI-3',
+                        ),
+                        FilterNode(
+                          name: 'CTI-4',
+                        ),
+                      ]),
+                      FilterNode(name: 'IS')
+                    ]),
+                    FilterNode(name: 'MSc', children: [
+                      FilterNode(
+                        name: 'IA',
+                      ),
+                      FilterNode(name: 'SPRC'),
+                    ])
+                  ]))));
+    });
 
     testWidgets('Sign up', (WidgetTester tester) async {
-      await tester.pumpWidget(ChangeNotifierProvider<AuthProvider>(
-          create: (_) => mockAuthProvider,
-          child: MyApp(navigationObservers: [mockObserver])));
+      await tester.pumpWidget(MultiProvider(providers: [
+        ChangeNotifierProvider<AuthProvider>(create: (_) => mockAuthProvider),
+        ChangeNotifierProvider<FilterProvider>(
+            create: (_) => mockFilterProvider)
+      ], child: MyApp(navigationObservers: [mockObserver])));
       await tester.pumpAndSettle();
 
       verify(mockObserver.didPush(any, any));
@@ -198,7 +269,7 @@ void main() {
           find.byKey(ValueKey('first_name_text_field')), 'John');
       await tester.enterText(
           find.byKey(ValueKey('last_name_text_field')), 'Doe');
-      await tester.enterText(find.byKey(ValueKey('group_text_field')), '314CB');
+      // TODO: Test dropdown buttons
 
       // Scroll sign up button into view and tap
       await tester.ensureVisible(find.byKey(ValueKey('sign_up_button')));
@@ -213,7 +284,6 @@ void main() {
                 'Confirm password': 'password',
                 'First name': 'John',
                 'Last name': 'Doe',
-                'Group': '314CB'
               }),
               named: 'info'),
           context: anyNamed('context')));
@@ -222,9 +292,11 @@ void main() {
     });
 
     testWidgets('Cancel', (WidgetTester tester) async {
-      await tester.pumpWidget(ChangeNotifierProvider<AuthProvider>(
-          create: (_) => mockAuthProvider,
-          child: MyApp(navigationObservers: [mockObserver])));
+      await tester.pumpWidget(MultiProvider(providers: [
+        ChangeNotifierProvider<AuthProvider>(create: (_) => mockAuthProvider),
+        ChangeNotifierProvider<FilterProvider>(
+            create: (_) => mockFilterProvider)
+      ], child: MyApp(navigationObservers: [mockObserver])));
       await tester.pumpAndSettle();
 
       verify(mockObserver.didPush(any, any));
