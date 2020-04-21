@@ -77,6 +77,8 @@ class FilterProvider with ChangeNotifier {
 
   bool get filterEnabled => _enabled;
 
+  Filter get cachedFilter => _relevanceFilter;
+
   Future<Filter> fetchFilter(BuildContext context) async {
     if (_relevanceFilter != null) {
       return _relevanceFilter;
