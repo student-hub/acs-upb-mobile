@@ -88,7 +88,7 @@ The project database contains the following collections:
 <details>
 <summary><b>users</b></summary>
 This collection stores per-user data. The document key is the user's `uid` (from
-[FirebaseAuth](https://firebase.google.com/docs/auth)).
+<a href=https://firebase.google.com/docs/auth>FirebaseAuth</a>).
 
 ###### Fields
 All the documents in the collection share the same structure:
@@ -125,7 +125,7 @@ All the documents in the collection share the same structure:
 * **websites**  
 A user can define their own websites, that only they have access to. These will reside in the
 __websites__ sub-collection, and have the following field structure, similar to the one in the
-root-level [websites](#websites-collection) collection:
+root-level <a href=#websites-collection>websites</a> collection:
 <table>
   <tr>
     <th>Field</th>
@@ -173,7 +173,7 @@ subcollections) and no one else's. However, they cannot modify the `permissionLe
 <summary class="collection" id="websites-collection"><b>websites</b></summary>
 This collection stores useful websites, shown in the app under the *Portal* page. Who they are
 relevant for depends on the `degree` and `relevance` fields (for more information, see the
-[filters](#filters-collection) collection).
+<a href=#filters-collection>filters</a> collection).
 
 ###### Fields
 All the documents in the collection share the same structure:
@@ -247,7 +247,7 @@ the `addedBy` field) _or if their `permissionLevel` is equal to or greater than 
 
 <details>
 <summary class="collection" id="filters-collection"><b>filters</b></summary>
-This collection stores [Filter](lib/pages/filter/model/filter.dart) objects. These are basically
+This collection stores <a href=lib/pages/filter/model/filter.dart><code>Filter</code></a> objects. These are basically
 trees with named nodes and levels. In the case of the relevance filter, they are meant to represent
 the way the University organises students:
 
