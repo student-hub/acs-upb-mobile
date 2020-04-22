@@ -86,6 +86,8 @@ void main() {
     when(mockWebsiteProvider.fetchWebsites(any))
         .thenAnswer((_) => Future.value([
               Website(
+                id: '1',
+                relevance: null,
                 category: WebsiteCategory.learning,
                 iconPath: 'icons/websites/moodle.png',
                 infoByLocale: {'en': 'info-en', 'ro': 'info-ro'},
@@ -94,6 +96,8 @@ void main() {
                 isPrivate: false,
               ),
               Website(
+                id: '2',
+                relevance: null,
                 category: WebsiteCategory.learning,
                 iconPath: 'icons/websites/ocw.png',
                 infoByLocale: {},
@@ -102,6 +106,8 @@ void main() {
                 isPrivate: false,
               ),
               Website(
+                id: '3',
+                relevance: null,
                 category: WebsiteCategory.learning,
                 iconPath: 'icons/websites/moodle.png',
                 infoByLocale: {'en': 'info-en', 'ro': 'info-ro'},
@@ -110,6 +116,8 @@ void main() {
                 isPrivate: false,
               ),
               Website(
+                id: '4',
+                relevance: null,
                 category: WebsiteCategory.learning,
                 iconPath: 'icons/websites/ocw.png',
                 infoByLocale: {},
@@ -118,6 +126,8 @@ void main() {
                 isPrivate: false,
               ),
               Website(
+                id: '5',
+                relevance: null,
                 category: WebsiteCategory.association,
                 iconPath: 'icons/websites/lsac.png',
                 infoByLocale: {},
@@ -126,6 +136,8 @@ void main() {
                 isPrivate: false,
               ),
               Website(
+                id: '6',
+                relevance: null,
                 category: WebsiteCategory.administrative,
                 iconPath: 'icons/websites/lsac.png',
                 infoByLocale: {},
@@ -134,6 +146,8 @@ void main() {
                 isPrivate: false,
               ),
               Website(
+                id: '7',
+                relevance: null,
                 category: WebsiteCategory.resource,
                 iconPath: 'icons/websites/lsac.png',
                 infoByLocale: {},
@@ -142,6 +156,8 @@ void main() {
                 isPrivate: false,
               ),
               Website(
+                id: '8',
+                relevance: null,
                 category: WebsiteCategory.other,
                 iconPath: 'icons/websites/lsac.png',
                 infoByLocale: {},
@@ -422,8 +438,12 @@ void main() {
     setUp(() {
       when(mockAuthProvider.isAuthenticatedFromCache).thenReturn(true);
       when(mockAuthProvider.isAnonymous).thenReturn(false);
-      when(mockAuthProvider.currentUser).thenAnswer(
-          (realInvocation) => Future.value(User(permissionLevel: 3)));
+      when(mockAuthProvider.currentUser).thenAnswer((realInvocation) =>
+          Future.value(User(
+              uid: '1',
+              firstName: 'John',
+              lastName: 'Doe',
+              permissionLevel: 3)));
     });
 
     for (var size in screenSizes) {
@@ -469,8 +489,12 @@ void main() {
     setUp(() {
       when(mockAuthProvider.isAuthenticatedFromCache).thenReturn(true);
       when(mockAuthProvider.isAnonymous).thenReturn(false);
-      when(mockAuthProvider.currentUser).thenAnswer(
-          (realInvocation) => Future.value(User(permissionLevel: 3)));
+      when(mockAuthProvider.currentUser).thenAnswer((realInvocation) =>
+          Future.value(User(
+              uid: '1',
+              firstName: 'John',
+              lastName: 'Doe',
+              permissionLevel: 3)));
     });
 
     for (var size in screenSizes) {

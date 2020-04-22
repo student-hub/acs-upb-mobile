@@ -32,25 +32,34 @@ void main() {
   when(mockWebsiteProvider.hasListeners).thenReturn(false);
   when(mockWebsiteProvider.fetchWebsites(any)).thenAnswer((_) => Future.value([
         Website(
+          id: '1',
+          relevance: null,
           category: WebsiteCategory.learning,
           iconPath: 'icons/websites/moodle.png',
           infoByLocale: {'en': 'info-en', 'ro': 'info-ro'},
           label: 'Moodle',
           link: 'http://acs.curs.pub.ro/',
+          isPrivate: false,
         ),
         Website(
+          id: '2',
+          relevance: null,
           category: WebsiteCategory.learning,
           iconPath: 'icons/websites/ocw.png',
           infoByLocale: {},
           label: 'OCW',
           link: 'https://ocw.cs.pub.ro/',
+          isPrivate: false,
         ),
         Website(
+          id: '3',
+          relevance: null,
           category: WebsiteCategory.association,
           iconPath: 'icons/websites/lsac.png',
           infoByLocale: {},
           label: 'LSAC',
           link: 'https://lsacbucuresti.ro/',
+          isPrivate: false,
         ),
       ]));
 
