@@ -1,3 +1,4 @@
+import 'package:acs_upb_mobile/authentication/model/user.dart';
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/main.dart';
 import 'package:acs_upb_mobile/pages/filter/model/filter.dart';
@@ -82,57 +83,65 @@ void main() {
                 category: WebsiteCategory.learning,
                 iconPath: 'icons/websites/moodle.png',
                 infoByLocale: {'en': 'info-en', 'ro': 'info-ro'},
-                label: 'Moodle',
+                label: 'Moodle1',
                 link: 'http://acs.curs.pub.ro/',
+                isPrivate: false,
               ),
               Website(
                 category: WebsiteCategory.learning,
                 iconPath: 'icons/websites/ocw.png',
                 infoByLocale: {},
-                label: 'OCW',
+                label: 'OCW1',
                 link: 'https://ocw.cs.pub.ro/',
+                isPrivate: false,
               ),
               Website(
                 category: WebsiteCategory.learning,
                 iconPath: 'icons/websites/moodle.png',
                 infoByLocale: {'en': 'info-en', 'ro': 'info-ro'},
-                label: 'Moodle',
+                label: 'Moodle2',
                 link: 'http://acs.curs.pub.ro/',
+                isPrivate: false,
               ),
               Website(
                 category: WebsiteCategory.learning,
                 iconPath: 'icons/websites/ocw.png',
                 infoByLocale: {},
-                label: 'OCW',
+                label: 'OCW2',
                 link: 'https://ocw.cs.pub.ro/',
+                isPrivate: false,
               ),
               Website(
                 category: WebsiteCategory.association,
                 iconPath: 'icons/websites/lsac.png',
                 infoByLocale: {},
-                label: 'LSAC',
+                label: 'LSAC1',
                 link: 'https://lsacbucuresti.ro/',
+                isPrivate: false,
               ),
               Website(
                 category: WebsiteCategory.administrative,
                 iconPath: 'icons/websites/lsac.png',
                 infoByLocale: {},
-                label: 'LSAC',
+                label: 'LSAC2',
                 link: 'https://lsacbucuresti.ro/',
+                isPrivate: false,
               ),
               Website(
                 category: WebsiteCategory.resource,
                 iconPath: 'icons/websites/lsac.png',
                 infoByLocale: {},
-                label: 'LSAC',
+                label: 'LSAC3',
                 link: 'https://lsacbucuresti.ro/',
+                isPrivate: false,
               ),
               Website(
                 category: WebsiteCategory.other,
                 iconPath: 'icons/websites/lsac.png',
                 infoByLocale: {},
-                label: 'LSAC',
+                label: 'LSAC4',
                 link: 'https://lsacbucuresti.ro/',
+                isPrivate: false,
               ),
             ]));
 
@@ -386,13 +395,63 @@ void main() {
         ));
         await tester.pumpAndSettle();
 
-        // Open add website page
+        // Open portal page
         await tester.tap(find.byIcon(Icons.public));
         await tester.pumpAndSettle();
 
+        // Open add website page
         var addWebsiteButton = find.byKey(ValueKey('add_website_associations'));
         await tester.ensureVisible(addWebsiteButton);
+        await tester.pumpAndSettle();
+
         await tester.tap(addWebsiteButton);
+        await tester.pumpAndSettle();
+
+        expect(find.byType(WebsiteView), findsOneWidget);
+      });
+    }
+  });
+
+  group('Edit website', () {
+    setUp(() {
+      when(mockAuthProvider.isAuthenticatedFromCache).thenReturn(true);
+      when(mockAuthProvider.isAnonymous).thenReturn(false);
+      when(mockAuthProvider.currentUser).thenAnswer(
+          (realInvocation) => Future.value(User(permissionLevel: 3)));
+    });
+
+    for (var size in screenSizes) {
+      testWidgets('${size.width}x${size.height}', (WidgetTester tester) async {
+        await binding.setSurfaceSize(size);
+
+        await tester.pumpWidget(MultiProvider(
+          providers: [
+            ChangeNotifierProvider<AuthProvider>(
+                create: (_) => mockAuthProvider),
+            ChangeNotifierProvider<StorageProvider>(
+                create: (_) => mockStorageProvider),
+            ChangeNotifierProvider<WebsiteProvider>(
+                create: (_) => mockWebsiteProvider),
+            ChangeNotifierProvider<FilterProvider>(
+                create: (_) => mockFilterProvider),
+          ],
+          child: MyApp(),
+        ));
+        await tester.pumpAndSettle();
+
+        // Open portal page
+        await tester.tap(find.byIcon(Icons.public));
+        await tester.pumpAndSettle();
+
+        // Enable editing
+        await tester.tap(find.byIcon(Icons.edit));
+        await tester.pumpAndSettle();
+
+        // Open edit website page
+        await tester.ensureVisible(find.text('LSAC1'));
+        await tester.pumpAndSettle();
+
+        await tester.tap(find.text('LSAC1'));
         await tester.pumpAndSettle();
 
         expect(find.byType(WebsiteView), findsOneWidget);
