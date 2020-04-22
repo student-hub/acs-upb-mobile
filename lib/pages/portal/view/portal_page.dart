@@ -16,6 +16,7 @@ import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:recase/recase.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class PortalPage extends StatefulWidget {
@@ -96,7 +97,11 @@ class _PortalPageState extends State<PortalPage> {
                   padding: const EdgeInsets.only(bottom: 8.0),
                   child: Row(
                     children: <Widget>[
-                      _AddWebsiteButton(category: category),
+                      _AddWebsiteButton(
+                          key: ValueKey('add_website_' +
+                              ReCase(category.toLocalizedString(context))
+                                  .snakeCase),
+                          category: category),
                     ],
                   ),
                 ),
@@ -141,7 +146,7 @@ class _PortalPageState extends State<PortalPage> {
                                                 ChangeNotifierProvider<
                                                     FilterProvider>(
                                               create: (_) => FilterProvider(
-                                                defaultDegree: website.degree,
+                                                  defaultDegree: website.degree,
                                                   defaultRelevance:
                                                       website.relevance),
                                               child: WebsiteView(
@@ -158,7 +163,12 @@ class _PortalPageState extends State<PortalPage> {
                           )
                           .toList() +
                       <Widget>[
-                        _AddWebsiteButton(trailing: true, category: category)
+                        _AddWebsiteButton(
+                            key: ValueKey('add_website_' +
+                                ReCase(category.toLocalizedString(context))
+                                    .snakeCase),
+                            trailing: true,
+                            category: category)
                       ],
                 ),
               ),
@@ -332,11 +342,14 @@ class _AddWebsiteButton extends StatelessWidget {
                 !authProvider.isAnonymous) {
               Navigator.of(context).push(MaterialPageRoute(
                 builder: (_) => ChangeNotifierProvider<FilterProvider>(
-                    create: (_) => FilterProvider(), child: WebsiteView(website: Website(
-                    id: null,
-                    isPrivate: true,
-                    link: "",
-                    category: category),)),
+                    create: (_) => FilterProvider(),
+                    child: WebsiteView(
+                      website: Website(
+                          id: null,
+                          isPrivate: true,
+                          link: "",
+                          category: category),
+                    )),
               ));
             } else {
               AppToast.show(S.of(context).warningAuthenticationNeeded);

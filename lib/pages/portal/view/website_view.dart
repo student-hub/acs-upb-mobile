@@ -99,8 +99,8 @@ class _WebsiteViewState extends State<WebsiteView> {
 
   Website _buildWebsite() {
     return Website(
-          id: _buildId(),
-          ownerUid: widget.updateExisting ? widget.website.ownerUid : _user?.uid,
+      id: _buildId(),
+      ownerUid: widget.updateExisting ? widget.website.ownerUid : _user?.uid,
       isPrivate: _relevanceController.private ?? true,
       editedBy: (widget.website?.editedBy ?? []) + [_user?.uid],
       label: _labelController.text,
@@ -120,7 +120,7 @@ class _WebsiteViewState extends State<WebsiteView> {
     Website website = _buildWebsite();
 
     return Padding(
-      padding: const EdgeInsets.only(left: 20.0, right: 8.0, top: 8.0),
+      padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 8.0),
       child: Card(
         child: Column(
           children: <Widget>[
@@ -131,7 +131,7 @@ class _WebsiteViewState extends State<WebsiteView> {
                   Icon(Icons.remove_red_eye,
                       color: CustomIcons.formIconColor(Theme.of(context))),
                   SizedBox(width: 12.0),
-                  Text(
+                  AutoSizeText(
                     S.of(context).labelPreview + ':',
                     style: Theme.of(context).textTheme.subtitle1,
                   ),
@@ -141,34 +141,25 @@ class _WebsiteViewState extends State<WebsiteView> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
-                        FutureBuilder<ImageProvider<dynamic>>(
-                          future: Provider.of<StorageProvider>(context,
-                                  listen: false)
-                              .imageFromPath(website.iconPath),
-                          builder: (context, snapshot) {
-                            ImageProvider<dynamic> image =
-                                AssetImage('assets/icons/websites/globe.png');
-                            if (snapshot.hasData) {
-                              image = snapshot.data;
-                            }
-                            return CircleImage(
-                              label: website.label,
-                              onTap: () => _launchURL(website.link),
-                              image: image,
-                              tooltip: website
-                                  .infoByLocale[LocaleProvider.localeString],
-                            );
-                          },
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 8.0, left: 8.0),
-                          child: CircleImage(
-                            icon: Icon(
-                              Icons.add,
-                              color: Theme.of(context).unselectedWidgetColor,
-                            ),
-                            label: "",
-                            circleScaleFactor: 0.6,
+                        Expanded(
+                          child: FutureBuilder<ImageProvider<dynamic>>(
+                            future: Provider.of<StorageProvider>(context,
+                                    listen: false)
+                                .imageFromPath(website.iconPath),
+                            builder: (context, snapshot) {
+                              ImageProvider<dynamic> image =
+                                  AssetImage('assets/icons/websites/globe.png');
+                              if (snapshot.hasData) {
+                                image = snapshot.data;
+                              }
+                              return CircleImage(
+                                label: website.label,
+                                onTap: () => _launchURL(website.link),
+                                image: image,
+                                tooltip: website
+                                    .infoByLocale[LocaleProvider.localeString],
+                              );
+                            },
                           ),
                         ),
                       ],

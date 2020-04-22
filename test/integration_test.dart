@@ -7,6 +7,7 @@ import 'package:acs_upb_mobile/pages/home/home_page.dart';
 import 'package:acs_upb_mobile/pages/portal/model/website.dart';
 import 'package:acs_upb_mobile/pages/portal/service/website_provider.dart';
 import 'package:acs_upb_mobile/pages/portal/view/portal_page.dart';
+import 'package:acs_upb_mobile/pages/portal/view/website_view.dart';
 import 'package:acs_upb_mobile/pages/settings/settings_page.dart';
 import 'package:acs_upb_mobile/resources/custom_icons.dart';
 import 'package:acs_upb_mobile/resources/storage_provider.dart';
@@ -23,6 +24,8 @@ class MockStorageProvider extends Mock implements StorageProvider {}
 class MockWebsiteProvider extends Mock implements WebsiteProvider {}
 
 class MockFilterProvider extends Mock implements FilterProvider {}
+
+class MockNavigatorObserver extends Mock implements NavigatorObserver {}
 
 void main() {
   AuthProvider mockAuthProvider;
@@ -354,6 +357,45 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(find.byType(FilterPage), findsOneWidget);
+      });
+    }
+  });
+
+  group('Add website', () {
+    setUp(() {
+      when(mockAuthProvider.isAuthenticatedFromCache).thenReturn(true);
+      when(mockAuthProvider.isAnonymous).thenReturn(false);
+    });
+
+    for (var size in screenSizes) {
+      testWidgets('${size.width}x${size.height}', (WidgetTester tester) async {
+        await binding.setSurfaceSize(size);
+
+        await tester.pumpWidget(MultiProvider(
+          providers: [
+            ChangeNotifierProvider<AuthProvider>(
+                create: (_) => mockAuthProvider),
+            ChangeNotifierProvider<StorageProvider>(
+                create: (_) => mockStorageProvider),
+            ChangeNotifierProvider<WebsiteProvider>(
+                create: (_) => mockWebsiteProvider),
+            ChangeNotifierProvider<FilterProvider>(
+                create: (_) => mockFilterProvider),
+          ],
+          child: MyApp(),
+        ));
+        await tester.pumpAndSettle();
+
+        // Open add website page
+        await tester.tap(find.byIcon(Icons.public));
+        await tester.pumpAndSettle();
+
+        var addWebsiteButton = find.byKey(ValueKey('add_website_associations'));
+        await tester.ensureVisible(addWebsiteButton);
+        await tester.tap(addWebsiteButton);
+        await tester.pumpAndSettle();
+
+        expect(find.byType(WebsiteView), findsOneWidget);
       });
     }
   });
