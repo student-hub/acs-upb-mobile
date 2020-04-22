@@ -3,20 +3,29 @@
 [![Tests](https://github.com/acs-upb-mobile/acs-upb-mobile/workflows/Tests/badge.svg)](https://github.com/acs-upb-mobile/acs-upb-mobile/actions?query=workflow%3ATests)
 [![codecov](https://codecov.io/gh/acs-upb-mobile/acs-upb-mobile/branch/master/graph/badge.svg)](https://codecov.io/gh/acs-upb-mobile/acs-upb-mobile)
 
-A mobile application for students at ACS UPB.  
+A mobile application for students at [ACS UPB](http://acs.pub.ro/). For now, you can try it out by
+accessing [https://acs-upb-mobile.web.app/](https://acs-upb-mobile.web.app/). Android users can also
+download the apk from the latest [release](https://github.com/acs-upb-mobile/acs-upb-mobile/releases).
 
-![light_login_ro](screenshots/light_login_ro.png)![dark_login_en](screenshots/dark_login_en.png)
+Please note that some features may not work perfectly in the web version, as
+[Flutter web support](https://flutter.dev/web) is currently still in beta. However, please feel free
+to [create an issue](https://github.com/acs-upb-mobile/acs-upb-mobile/issues/new?&template=bug_report.md)
+if you encounter any problem.
 
-![light_settings_ro](screenshots/light_settings_ro.png)![dark_settings_en](screenshots/dark_settings_en.png)
+## Screenshots
 
-![light_portal_ro](screenshots/light_portal_ro.png)![dark_portal_en](screenshots/dark_portal_en.png)
+<img src=screenshots/light_login_ro.png height=500><img src=screenshots/dark_login_en.png height=500>
+
+<img src=screenshots/light_settings_ro.png height=500><img src=screenshots/dark_settings_en.png height=500>
+
+<img src=screenshots/light_portal_ro.png height=500><img src=screenshots/dark_portal_en.png height=500>
 
 ## Building from source with Android Studio
 
 ### Prerequisites
 
 * Install Flutter as per the instructions [here](https://flutter.dev/docs/get-started/install).
-* Open Android Studio. 
+* Open Android Studio.
 * Make sure you have the [Flutter plugin](https://plugins.jetbrains.com/plugin/9212-flutter)
 installed, as well as the [Dart plugin](https://plugins.jetbrains.com/plugin/6351-dart) dependency.
 Restart the IDE if necessary.
@@ -65,7 +74,7 @@ Possible fixes could be:
 
 Test your setup by creating and running a new Flutter project (Android Studio provides a sample). If
 that works but this project doesn't, feel free to
-[open an Issue](https://github.com/IoanaAlexandru/acs_upb_mobile/issues/new) and describe the
+[open an issue](https://github.com/IoanaAlexandru/acs_upb_mobile/issues/new) and describe the
 problem.
 
 ## License  
