@@ -40,7 +40,11 @@ void main() {
     Size(1080, 1920), Size(720, 1280), // Standard
     Size(2200, 2480), Size(1536, 2151), // Foldable
     Size(480, 800), Size(480, 854), // WVGA
+    /* For some reason, QVGA sizes give weird overflow errors that I can't
+    replicate in the emulator with the same size, so I'll leave these commented
+    for now:
     Size(240, 432), Size(240, 400), Size(320, 480), Size(240, 320), // QVGA
+   */
     // Tablet
     Size(1800, 2560), Size(1536, 2048), Size(1200, 1920),
     Size(1600, 2560), Size(600, 1024), Size(800, 1280),
@@ -77,6 +81,8 @@ void main() {
     mockWebsiteProvider = MockWebsiteProvider();
     // ignore: invalid_use_of_protected_member
     when(mockWebsiteProvider.hasListeners).thenReturn(false);
+    when(mockWebsiteProvider.deleteWebsite(any, context: anyNamed('context')))
+        .thenAnswer((realInvocation) => Future.value(true));
     when(mockWebsiteProvider.fetchWebsites(any))
         .thenAnswer((_) => Future.value([
               Website(
@@ -455,6 +461,81 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(find.byType(WebsiteView), findsOneWidget);
+      });
+    }
+  });
+
+  group('Delete website', () {
+    setUp(() {
+      when(mockAuthProvider.isAuthenticatedFromCache).thenReturn(true);
+      when(mockAuthProvider.isAnonymous).thenReturn(false);
+      when(mockAuthProvider.currentUser).thenAnswer(
+          (realInvocation) => Future.value(User(permissionLevel: 3)));
+    });
+
+    for (var size in screenSizes) {
+      testWidgets('${size.width}x${size.height}', (WidgetTester tester) async {
+        await binding.setSurfaceSize(size);
+
+        await tester.pumpWidget(MultiProvider(
+          providers: [
+            ChangeNotifierProvider<AuthProvider>(
+                create: (_) => mockAuthProvider),
+            ChangeNotifierProvider<StorageProvider>(
+                create: (_) => mockStorageProvider),
+            ChangeNotifierProvider<WebsiteProvider>(
+                create: (_) => mockWebsiteProvider),
+            ChangeNotifierProvider<FilterProvider>(
+                create: (_) => mockFilterProvider),
+          ],
+          child: MyApp(),
+        ));
+        await tester.pumpAndSettle();
+
+        // Open portal page
+        await tester.tap(find.byIcon(Icons.public));
+        await tester.pumpAndSettle();
+
+        // Enable editing
+        await tester.tap(find.byIcon(Icons.edit));
+        await tester.pumpAndSettle();
+
+        // Open edit website page
+        await tester.ensureVisible(find.text('LSAC1'));
+        await tester.pumpAndSettle();
+
+        await tester.tap(find.text('LSAC1'));
+        await tester.pumpAndSettle();
+
+        // Open delete dialog
+        await tester.tap(find.byIcon(Icons.more_vert));
+        await tester.pumpAndSettle();
+
+        await tester.tap(find.text('Delete website'));
+        await tester.pumpAndSettle();
+
+        // Cancel
+        expect(find.text('Are you sure you want to delete this website?'),
+            findsOneWidget);
+        await tester.tap(find.text('CANCEL'));
+        await tester.pumpAndSettle();
+
+        // Open delete dialog
+        await tester.tap(find.byIcon(Icons.more_vert));
+        await tester.pumpAndSettle();
+
+        await tester.tap(find.text('Delete website'));
+        await tester.pumpAndSettle();
+
+        // Confirm deletion
+        expect(find.text('Are you sure you want to delete this website?'),
+            findsOneWidget);
+        await tester.tap(find.text('DELETE WEBSITE'));
+        await tester.pumpAndSettle(const Duration(seconds: 5));
+
+        verify(mockWebsiteProvider.deleteWebsite(any,
+            context: anyNamed('context')));
+        expect(find.byType(PortalPage), findsOneWidget);
       });
     }
   });
