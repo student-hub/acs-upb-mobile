@@ -31,6 +31,7 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
+    "actionAddEvent" : MessageLookupByLibrary.simpleMessage("Add event"),
     "actionAddWebsite" : MessageLookupByLibrary.simpleMessage("Add website"),
     "actionDeleteAccount" : MessageLookupByLibrary.simpleMessage("Delete account"),
     "actionDeleteWebsite" : MessageLookupByLibrary.simpleMessage("Delete website"),
@@ -110,6 +111,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "messageWebsitePreview" : MessageLookupByLibrary.simpleMessage("Try tapping/long-pressing/hovering the preview to test the new website."),
     "messageWelcomeName" : m2,
     "messageWelcomeSimple" : MessageLookupByLibrary.simpleMessage("Welcome!"),
+    "navigationClasses" : MessageLookupByLibrary.simpleMessage("Classes"),
     "navigationFilter" : MessageLookupByLibrary.simpleMessage("Filter"),
     "navigationHome" : MessageLookupByLibrary.simpleMessage("Home"),
     "navigationMap" : MessageLookupByLibrary.simpleMessage("Map"),

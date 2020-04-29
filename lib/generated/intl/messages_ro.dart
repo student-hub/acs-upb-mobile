@@ -31,6 +31,7 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
+    "actionAddEvent" : MessageLookupByLibrary.simpleMessage("Adaugă eveniment"),
     "actionAddWebsite" : MessageLookupByLibrary.simpleMessage("Adaugă website"),
     "actionDeleteAccount" : MessageLookupByLibrary.simpleMessage("Ștergere cont"),
     "actionDeleteWebsite" : MessageLookupByLibrary.simpleMessage("Șterge website"),
@@ -110,6 +111,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "messageWebsitePreview" : MessageLookupByLibrary.simpleMessage("Încercați să apăsați, să faceți hover sau să țineți apăsat ca să testați noul website."),
     "messageWelcomeName" : m2,
     "messageWelcomeSimple" : MessageLookupByLibrary.simpleMessage("Bine ai venit!"),
+    "navigationClasses" : MessageLookupByLibrary.simpleMessage("Materii"),
     "navigationFilter" : MessageLookupByLibrary.simpleMessage("Filtru"),
     "navigationHome" : MessageLookupByLibrary.simpleMessage("Acasă"),
     "navigationMap" : MessageLookupByLibrary.simpleMessage("Hartă"),

@@ -43,6 +43,7 @@
   "actionEnableEditing": "Activează modul editare",
   "actionDisableEditing": "Dezactivează modul editare",
   "actionJumpToToday": "Sari la ziua de azi",
+  "actionAddEvent": "Adaugă eveniment",
 
   "errorSomethingWentWrong": "A apărut o problemă.",
   "errorPasswordsDiffer": "Cele două parole diferă.",
@@ -80,6 +81,7 @@
   "navigationProfile": "Profil",
   "navigationSettings": "Setări",
   "navigationFilter": "Filtru",
+  "navigationClasses": "Materii",
 
   "filterMenuShowAll": "Arată tot",
   "filterMenuShowMine": "Arată doar pe ale mele",

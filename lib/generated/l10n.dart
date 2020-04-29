@@ -398,6 +398,15 @@ class S {
     );
   }
 
+  String get actionAddEvent {
+    return Intl.message(
+      'Add event',
+      name: 'actionAddEvent',
+      desc: '',
+      args: [],
+    );
+  }
+
   String get errorSomethingWentWrong {
     return Intl.message(
       'Something went wrong.',
@@ -699,6 +708,15 @@ class S {
     return Intl.message(
       'Filter',
       name: 'navigationFilter',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get navigationClasses {
+    return Intl.message(
+      'Classes',
+      name: 'navigationClasses',
       desc: '',
       args: [],
     );

@@ -43,6 +43,7 @@
   "actionEnableEditing": "Enable editing",
   "actionDisableEditing": "Disable editing",
   "actionJumpToToday": "Jump to today",
+  "actionAddEvent": "Add event",
 
   "errorSomethingWentWrong": "Something went wrong.",
   "errorPasswordsDiffer": "The two passwords differ.",
@@ -80,6 +81,7 @@
   "navigationProfile": "Profile",
   "navigationSettings": "Settings",
   "navigationFilter": "Filter",
+  "navigationClasses": "Classes",
 
   "filterMenuShowAll": "Show all",
   "filterMenuShowMine": "Show only mine",

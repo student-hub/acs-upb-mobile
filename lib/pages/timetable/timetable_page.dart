@@ -45,6 +45,16 @@ class _TimetablePageState extends State<TimetablePage> {
         onPressed: () => _controller.animateToToday(),
         tooltip: S.of(context).actionJumpToToday,
       ),
+      actions: [
+        AppScaffoldAction(
+          icon: Icons.class_,
+          tooltip: S.of(context).navigationClasses,
+        ),
+        AppScaffoldAction(
+          icon: Icons.add,
+          tooltip: S.of(context).actionAddEvent,
+        ),
+      ],
       body: Timetable<BasicEvent>(
         controller: _controller,
         eventBuilder: (event) => BasicEventWidget(event),
