@@ -42,6 +42,7 @@
   "actionDeleteWebsite": "Șterge website",
   "actionEnableEditing": "Activează modul editare",
   "actionDisableEditing": "Dezactivează modul editare",
+  "actionJumpToToday": "Sari la ziua de azi",
 
   "errorSomethingWentWrong": "A apărut o problemă.",
   "errorPasswordsDiffer": "Cele două parole diferă.",

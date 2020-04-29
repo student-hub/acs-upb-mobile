@@ -42,6 +42,7 @@
   "actionDeleteWebsite": "Delete website",
   "actionEnableEditing": "Enable editing",
   "actionDisableEditing": "Disable editing",
+  "actionJumpToToday": "Jump to today",
 
   "errorSomethingWentWrong": "Something went wrong.",
   "errorPasswordsDiffer": "The two passwords differ.",

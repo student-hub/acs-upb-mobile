@@ -2,6 +2,7 @@ import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/home/home_page.dart';
 import 'package:acs_upb_mobile/pages/portal/view/portal_page.dart';
 import 'package:acs_upb_mobile/pages/profile/profile_page.dart';
+import 'package:acs_upb_mobile/pages/timetable/timetable_page.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -16,11 +17,12 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar> {
   Widget build(BuildContext context) {
     var currentTab = [
       HomePage(),
-      AppScaffold(title: S.of(context).navigationTimetable), // TODO: Timetable
+      TimetablePage(),
       PortalPage(),
       AppScaffold(title: S.of(context).navigationMap), // TODO: Map
       ProfilePage(),
     ];
+
     var provider = Provider.of<BottomNavigationBarProvider>(context);
 
     return Scaffold(

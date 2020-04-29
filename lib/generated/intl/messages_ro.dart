@@ -37,6 +37,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "actionDisableEditing" : MessageLookupByLibrary.simpleMessage("Dezactivează modul editare"),
     "actionEditWebsite" : MessageLookupByLibrary.simpleMessage("Modifică website"),
     "actionEnableEditing" : MessageLookupByLibrary.simpleMessage("Activează modul editare"),
+    "actionJumpToToday" : MessageLookupByLibrary.simpleMessage("Sari la ziua de azi"),
     "actionLogIn" : MessageLookupByLibrary.simpleMessage("Conectare"),
     "actionLogInAnonymously" : MessageLookupByLibrary.simpleMessage("Conectare anonimă"),
     "actionLogOut" : MessageLookupByLibrary.simpleMessage("Deconectare"),

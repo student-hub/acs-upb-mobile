@@ -10,6 +10,7 @@ import 'package:acs_upb_mobile/pages/portal/service/website_provider.dart';
 import 'package:acs_upb_mobile/pages/portal/view/portal_page.dart';
 import 'package:acs_upb_mobile/pages/portal/view/website_view.dart';
 import 'package:acs_upb_mobile/pages/settings/settings_page.dart';
+import 'package:acs_upb_mobile/pages/timetable/timetable_page.dart';
 import 'package:acs_upb_mobile/resources/custom_icons.dart';
 import 'package:acs_upb_mobile/resources/storage_provider.dart';
 import 'package:flutter/material.dart';
@@ -263,8 +264,7 @@ void main() {
         await tester.tap(find.byIcon(Icons.calendar_today));
         await tester.pumpAndSettle();
 
-        // TODO: Replace with page when implemented
-        expect(find.text('Timetable'), findsNWidgets(2));
+        expect(find.byType(TimetablePage), findsNWidgets(1));
       });
     }
   });
