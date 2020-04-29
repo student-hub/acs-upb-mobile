@@ -36,12 +36,14 @@ class AppScaffold extends StatelessWidget {
   final String title;
   final Widget floatingActionButton;
   final List<AppScaffoldAction> actions;
+  final Widget leading;
 
   AppScaffold(
       {this.body,
       this.title,
       List<AppScaffoldAction> actions,
-      this.floatingActionButton})
+      this.floatingActionButton,
+      this.leading})
       : this.actions = actions ?? [];
 
   @override
@@ -75,6 +77,7 @@ class AppScaffold extends StatelessWidget {
           title: Text(title),
           centerTitle: true,
           toolbarOpacity: 0.8,
+          leading: leading,
           actions: actions.map((action) {
             Function() onPressed = action.onPressed ??
                 () => Navigator.pushNamed(context, action.route);
