@@ -62,8 +62,9 @@ class _TimetablePageState extends State<TimetablePage> {
   Widget build(BuildContext context) {
     return AppScaffold(
       title: S.of(context).navigationTimetable,
-      leading: IconButton(
-        icon: Icon(Icons.today),
+      needsToBeAuthenticated: true,
+      leading: AppScaffoldAction(
+        icon: Icons.today,
         onPressed: () => _controller.animateToToday(),
         tooltip: S.of(context).actionJumpToToday,
       ),
