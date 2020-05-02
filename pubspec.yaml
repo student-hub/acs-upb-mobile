@@ -72,6 +72,9 @@ dependencies:
   # Timetable widget
   timetable: ^0.1.1
 
+  # Color picker widget
+  flutter_colorpicker: ^0.3.4
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

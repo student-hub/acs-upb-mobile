@@ -20,6 +20,7 @@
   "labelCustom": "Custom",
   "labelType": "Type",
   "labelLocation": "Location",
+  "labelColor": "Color",
 
   "hintEmail": "john.doe",
   "hintPassword": "····················",

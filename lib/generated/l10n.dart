@@ -210,6 +210,15 @@ class S {
     );
   }
 
+  String get labelColor {
+    return Intl.message(
+      'Color',
+      name: 'labelColor',
+      desc: '',
+      args: [],
+    );
+  }
+
   String get hintEmail {
     return Intl.message(
       'john.doe',

@@ -7,6 +7,7 @@ import 'package:acs_upb_mobile/widgets/dialog.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:provider/provider.dart';
 import 'package:timetable/timetable.dart';
 
@@ -61,6 +62,8 @@ class _EventViewState extends State<EventView> {
   TextEditingController _typeController;
   TextEditingController _locationController;
 
+  Color _selectedColor;
+
   User _user;
 
   _fetchUser() async {
@@ -73,6 +76,8 @@ class _EventViewState extends State<EventView> {
   initState() {
     super.initState();
     _fetchUser();
+
+    _selectedColor = widget.event?.color ?? Colors.blue;
 
     _titleController = TextEditingController(text: widget.event?.title ?? '');
     _typeController = TextEditingController(text: widget.event?.type ?? '');
@@ -114,6 +119,78 @@ class _EventViewState extends State<EventView> {
             context: context, child: _deletionConfirmationDialog(context)),
       );
 
+  Padding _colorIcon() => Padding(
+        padding: const EdgeInsets.all(4.0),
+        child: Container(
+          width: 18,
+          height: 18,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(4.0)),
+            color: _selectedColor,
+          ),
+        ),
+      );
+
+  InkWell _colorPicker(BuildContext context) => InkWell(
+        onTap: () {
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                content: BlockPicker(
+                  pickerColor: _selectedColor,
+                  // TODO: Manage color change
+                  onColorChanged: (newColor) {
+                    setState(() => _selectedColor = newColor);
+                    Navigator.of(context).pop();
+                  },
+                ),
+              );
+            },
+          );
+        },
+        child: Padding(
+          padding: const EdgeInsets.only(top: 12.0, left: 12.0),
+          child: Row(
+            children: <Widget>[
+              _colorIcon(),
+              SizedBox(width: 12.0),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: <Widget>[
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Row(
+                          children: <Widget>[
+                            Expanded(
+                              child: Text(
+                                S.of(context).labelColor,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .caption
+                                    .apply(color: Theme.of(context).hintColor),
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 2.0),
+                        // TODO: Show color name instead of hex
+                        Text('#' +
+                            _selectedColor.value
+                                .toRadixString(16)
+                                .toUpperCase()),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
@@ -151,18 +228,7 @@ class _EventViewState extends State<EventView> {
                     padding: const EdgeInsets.all(16.0),
                     child: Row(
                       children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.all(4.0),
-                          child: Container(
-                            width: 18,
-                            height: 18,
-                            decoration: BoxDecoration(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(4.0)),
-                              color: widget.event.color,
-                            ),
-                          ),
-                        ),
+                        _colorIcon(),
                         SizedBox(width: 16),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -229,6 +295,7 @@ class _EventViewState extends State<EventView> {
                             ),
                             onChanged: (_) => setState(() {}),
                           ),
+                          _colorPicker(context),
                         ],
                       ),
                     ),

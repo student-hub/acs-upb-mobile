@@ -85,6 +85,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "infoRelevance" : MessageLookupByLibrary.simpleMessage("Încercați să selectați cea mai restrictivă categorie."),
     "infoRelevanceExample" : MessageLookupByLibrary.simpleMessage("De exemplu, dacă ceva este relevant doar pentru \"314CB\" și \"315CB\", nu setați direct \"CB\"."),
     "labelCategory" : MessageLookupByLibrary.simpleMessage("Categorie"),
+    "labelColor" : MessageLookupByLibrary.simpleMessage("Culoare"),
     "labelConfirmPassword" : MessageLookupByLibrary.simpleMessage("Confirmare parolă"),
     "labelCustom" : MessageLookupByLibrary.simpleMessage("Alta"),
     "labelDescription" : MessageLookupByLibrary.simpleMessage("Descriere"),
