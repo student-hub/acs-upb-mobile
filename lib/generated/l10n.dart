@@ -1,6 +1,7 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+
 import 'intl/messages_all.dart';
 
 // **************************************************************************
@@ -186,6 +187,24 @@ class S {
     return Intl.message(
       'Custom',
       name: 'labelCustom',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get labelType {
+    return Intl.message(
+      'Type',
+      name: 'labelType',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get labelLocation {
+    return Intl.message(
+      'Location',
+      name: 'labelLocation',
       desc: '',
       args: [],
     );
@@ -402,6 +421,24 @@ class S {
     return Intl.message(
       'Add event',
       name: 'actionAddEvent',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get actionEditEvent {
+    return Intl.message(
+      'Edit event',
+      name: 'actionEditEvent',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get actionDeleteEvent {
+    return Intl.message(
+      'Delete event',
+      name: 'actionDeleteEvent',
       desc: '',
       args: [],
     );
@@ -722,6 +759,15 @@ class S {
     );
   }
 
+  String get navigationEventDetails {
+    return Intl.message(
+      'Event details',
+      name: 'navigationEventDetails',
+      desc: '',
+      args: [],
+    );
+  }
+
   String get filterMenuShowAll {
     return Intl.message(
       'Show all',
@@ -1032,6 +1078,15 @@ class S {
     return Intl.message(
       'Website deleted successfully.',
       name: 'messageWebsiteDeleted',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get messageDeleteEvent {
+    return Intl.message(
+      'Are you sure you want to delete this event?',
+      name: 'messageDeleteEvent',
       desc: '',
       args: [],
     );
