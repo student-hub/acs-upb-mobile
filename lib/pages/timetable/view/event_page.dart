@@ -151,7 +151,18 @@ class _EventViewState extends State<EventView> {
                     padding: const EdgeInsets.all(16.0),
                     child: Row(
                       children: <Widget>[
-                        Icon(Icons.event),
+                        Padding(
+                          padding: const EdgeInsets.all(4.0),
+                          child: Container(
+                            width: 18,
+                            height: 18,
+                            decoration: BoxDecoration(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(4.0)),
+                              color: widget.event.color,
+                            ),
+                          ),
+                        ),
                         SizedBox(width: 16),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
