@@ -57,9 +57,11 @@ class AppScaffold extends StatelessWidget {
       return null;
     }
 
-    Function() onPressed = !enableContent
-        ? null
-        : action?.onPressed ?? () => Navigator.pushNamed(context, action.route);
+    Function() onPressed =
+        !enableContent || (action?.onPressed == null && action?.route == null)
+            ? null
+            : action?.onPressed ??
+                () => Navigator.pushNamed(context, action?.route);
 
     return action?.items != null
         ? PopupMenuButton<String>(
