@@ -21,6 +21,8 @@
   "labelType": "Tip",
   "labelLocation": "Locație",
   "labelColor": "Culoare",
+  "labelStart": "Început",
+  "labelEnd": "Sfârșit",
 
   "hintEmail": "john.doe",
   "hintPassword": "····················",

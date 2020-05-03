@@ -75,6 +75,9 @@ dependencies:
   # Color picker widget
   flutter_colorpicker: ^0.3.4
 
+  # Date & time picker widget
+  datetime_picker_formfield: ^1.0.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

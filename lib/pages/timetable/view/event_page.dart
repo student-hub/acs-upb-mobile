@@ -8,6 +8,7 @@ import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:timetable/timetable.dart';
 
@@ -58,11 +59,17 @@ class EventView extends StatefulWidget {
 class _EventViewState extends State<EventView> {
   final _formKey = GlobalKey<FormState>();
 
+  DateFormat _format = DateFormat("EEEE, dd MMMM HH:mm");
+
   TextEditingController _titleController;
   TextEditingController _typeController;
   TextEditingController _locationController;
 
   Color _selectedColor;
+  DateTime _startTime;
+  DateTime _endTime;
+
+  TextEditingController _endTimeController;
 
   User _user;
 
@@ -78,6 +85,11 @@ class _EventViewState extends State<EventView> {
     _fetchUser();
 
     _selectedColor = widget.event?.color ?? Colors.blue;
+    _startTime = widget.event?.start?.toDateTimeLocal() ?? DateTime.now();
+    _endTime = widget.event?.end?.toDateTimeLocal() ??
+        _startTime.add(Duration(hours: 1));
+
+    _endTimeController = TextEditingController(text: _format.format(_endTime));
 
     _titleController = TextEditingController(text: widget.event?.title ?? '');
     _typeController = TextEditingController(text: widget.event?.type ?? '');
@@ -287,6 +299,29 @@ class _EventViewState extends State<EventView> {
                             ),
                             onChanged: (_) => setState(() {}),
                           ),
+                          // TODO: Check that startTime < endTime
+                          DateTimeField(
+                            label: S.of(context).labelStart,
+                            initialValue: _startTime,
+                            format: _format,
+                            onUpdate: (newValue) => setState(() {
+                              print(newValue);
+                              Duration duration =
+                                  _endTime.difference(_startTime);
+                              print(duration);
+                              _startTime = newValue;
+                              _endTime = _startTime.add(duration);
+                              _endTimeController.text =
+                                  _format.format(_endTime);
+                            }),
+                          ),
+                          DateTimeField(
+                            label: S.of(context).labelEnd,
+                            controller: _endTimeController,
+                            onUpdate: (newValue) => setState(() {
+                              _endTime = newValue;
+                            }),
+                          ),
                           TextFormField(
                             controller: _locationController,
                             decoration: InputDecoration(
@@ -302,6 +337,125 @@ class _EventViewState extends State<EventView> {
                   ),
                 ],
         ),
+      ),
+    );
+  }
+}
+
+class DateTimeField extends StatefulWidget {
+  final String label;
+  final DateTime initialValue;
+  final TextEditingController controller;
+  final Function(DateTime) onUpdate;
+  final DateFormat format;
+
+  DateTimeField(
+      {Key key,
+      this.label = '',
+      DateTime initialValue,
+      TextEditingController controller,
+      this.onUpdate,
+      DateFormat format})
+      : this.controller = controller ??
+            TextEditingController(text: format.format(initialValue)),
+        this.format = format ?? DateFormat("EEEE, dd MMMM HH:mm"),
+        this.initialValue = initialValue ?? DateTime.now(),
+        super(key: key);
+
+  @override
+  _DateTimeFieldState createState() => _DateTimeFieldState();
+}
+
+class _DateTimeFieldState extends State<DateTimeField> {
+  DateTime currentValue;
+  FocusNode focusNode;
+
+  bool hadFocus = false;
+
+  _showPicker() async {
+    DateTime selectedValue = currentValue;
+
+    final date = await showDatePicker(
+        context: context,
+        firstDate: DateTime(1900),
+        initialDate: currentValue ?? DateTime.now(),
+        lastDate: DateTime(2100));
+    if (date != null) {
+      final time = await showTimePicker(
+        context: context,
+        initialTime: TimeOfDay.fromDateTime(currentValue ?? DateTime.now()),
+      );
+      setState(() {
+        selectedValue = DateTime(date.year, date.month, date.day,
+            time?.hour ?? 0, time?.minute ?? 0);
+      });
+    }
+
+    if (widget.onUpdate != null) {
+      widget.onUpdate(selectedValue);
+    }
+    widget.controller.text = widget.format.format(selectedValue);
+  }
+
+  void _handleFocusChanged() async {
+    bool hasFocus = focusNode.hasFocus;
+    if (focusNode.hasFocus && !hadFocus) {
+      hadFocus = hasFocus;
+      _hideKeyboard();
+      await _showPicker();
+    } else {
+      hadFocus = hasFocus;
+    }
+  }
+
+  void _hideKeyboard() {
+    Future.microtask(() => FocusScope.of(context).requestFocus(FocusNode()));
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    currentValue = widget.initialValue;
+
+    focusNode = FocusNode();
+    focusNode.addListener(_handleFocusChanged);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: () async {
+        DateTime selectedValue = currentValue;
+
+        final date = await showDatePicker(
+            context: context,
+            firstDate: DateTime(1900),
+            initialDate: currentValue ?? DateTime.now(),
+            lastDate: DateTime(2100));
+        if (date != null) {
+          final time = await showTimePicker(
+            context: context,
+            initialTime: TimeOfDay.fromDateTime(currentValue ?? DateTime.now()),
+          );
+          setState(() {
+            selectedValue = DateTime(date.year, date.month, date.day,
+                time?.hour ?? 0, time?.minute ?? 0);
+          });
+        }
+
+        if (widget.onUpdate != null) {
+          widget.onUpdate(selectedValue);
+        }
+        widget.controller.text = widget.format.format(selectedValue);
+      },
+      child: TextField(
+        decoration: InputDecoration(
+          labelText: widget.label,
+          prefixIcon: Icon(Icons.access_time),
+        ),
+        controller: widget.controller,
+        focusNode: focusNode,
+        readOnly: true,
       ),
     );
   }

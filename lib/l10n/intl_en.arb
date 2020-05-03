@@ -21,6 +21,8 @@
   "labelType": "Type",
   "labelLocation": "Location",
   "labelColor": "Color",
+  "labelStart": "Start",
+  "labelEnd": "End",
 
   "hintEmail": "john.doe",
   "hintPassword": "····················",

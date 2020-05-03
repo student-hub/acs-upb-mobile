@@ -219,6 +219,24 @@ class S {
     );
   }
 
+  String get labelStart {
+    return Intl.message(
+      'Start',
+      name: 'labelStart',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get labelEnd {
+    return Intl.message(
+      'End',
+      name: 'labelEnd',
+      desc: '',
+      args: [],
+    );
+  }
+
   String get hintEmail {
     return Intl.message(
       'john.doe',
