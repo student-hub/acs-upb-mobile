@@ -4,7 +4,6 @@ import 'package:acs_upb_mobile/pages/portal/view/portal_page.dart';
 import 'package:acs_upb_mobile/pages/profile/profile_page.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class AppBottomNavigationBar extends StatefulWidget {
   @override
@@ -12,63 +11,62 @@ class AppBottomNavigationBar extends StatefulWidget {
 }
 
 class _AppBottomNavigationBarState extends State<AppBottomNavigationBar> {
+  var tabs;
+
   @override
   Widget build(BuildContext context) {
-    var currentTab = [
-      HomePage(),
-      AppScaffold(title: S.of(context).navigationTimetable), // TODO: Timetable
-      PortalPage(),
-      AppScaffold(title: S.of(context).navigationMap), // TODO: Map
-      ProfilePage(),
-    ];
-    var provider = Provider.of<BottomNavigationBarProvider>(context);
+    if (tabs == null) {
+      tabs = [
+        HomePage(),
+        AppScaffold(
+            title: S.of(context).navigationTimetable), // TODO: Timetable
+        PortalPage(),
+        AppScaffold(title: S.of(context).navigationMap), // TODO: Map
+        ProfilePage(),
+      ];
+    }
 
-    return Scaffold(
-      body: currentTab[provider.currentIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: provider.currentIndex,
-        onTap: (index) {
-          provider.currentIndex = index;
-        },
-        type: BottomNavigationBarType.fixed,
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            title: Text(S.of(context).navigationHome),
+    return DefaultTabController(
+      length: tabs.length,
+      child: Scaffold(
+        body: TabBarView(children: tabs),
+        bottomNavigationBar: SizedBox(
+          height: 45,
+          child: TabBar(
+            tabs: [
+              Tab(
+                icon: Icon(Icons.home),
+                text: S.of(context).navigationHome,
+                iconMargin: EdgeInsets.all(0),
+              ),
+              Tab(
+                icon: Icon(Icons.calendar_today),
+                text: S.of(context).navigationTimetable,
+                iconMargin: EdgeInsets.all(0),
+              ),
+              Tab(
+                icon: Icon(Icons.public),
+                text: S.of(context).navigationPortal,
+                iconMargin: EdgeInsets.all(0),
+              ),
+              Tab(
+                icon: Icon(Icons.map),
+                text: S.of(context).navigationMap,
+                iconMargin: EdgeInsets.all(0),
+              ),
+              Tab(
+                icon: Icon(Icons.person),
+                text: S.of(context).navigationProfile,
+                iconMargin: EdgeInsets.all(0),
+              ),
+            ],
+            labelColor: Theme.of(context).accentColor,
+            labelPadding: EdgeInsets.all(0),
+            indicatorPadding: EdgeInsets.all(0),
+            unselectedLabelColor: Theme.of(context).unselectedWidgetColor,
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.calendar_today),
-            title: Text(S.of(context).navigationTimetable),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.public),
-            title: Text(S.of(context).navigationPortal),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.map),
-            title: Text(S.of(context).navigationMap),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            title: Text(S.of(context).navigationProfile),
-          ),
-        ],
-        showUnselectedLabels: true,
-        selectedItemColor: Theme.of(context).accentColor,
-        selectedFontSize: 13.0,
-        unselectedFontSize: 13.0,
+        ),
       ),
     );
-  }
-}
-
-class BottomNavigationBarProvider with ChangeNotifier {
-  int _currentIndex = 0;
-
-  get currentIndex => _currentIndex;
-
-  set currentIndex(int index) {
-    _currentIndex = index;
-    notifyListeners();
   }
 }

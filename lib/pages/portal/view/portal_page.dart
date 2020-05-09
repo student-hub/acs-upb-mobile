@@ -24,8 +24,10 @@ class PortalPage extends StatefulWidget {
   _PortalPageState createState() => _PortalPageState();
 }
 
-class _PortalPageState extends State<PortalPage> {
+class _PortalPageState extends State<PortalPage>
+    with AutomaticKeepAliveClientMixin {
   Future<Filter> filterFuture;
+  List<Website> websites = [];
 
   // Only show user-added websites
   bool userOnly = false;
@@ -37,7 +39,9 @@ class _PortalPageState extends State<PortalPage> {
   _fetchUser() async {
     AuthProvider authProvider = Provider.of(context, listen: false);
     user = await authProvider.currentUser;
-    setState(() {});
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   initState() {
@@ -197,6 +201,8 @@ class _PortalPageState extends State<PortalPage> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
+
     WebsiteProvider websiteProvider = Provider.of<WebsiteProvider>(context);
     FilterProvider filterProvider = Provider.of<FilterProvider>(context);
     AuthProvider authProvider = Provider.of<AuthProvider>(context);
@@ -204,8 +210,6 @@ class _PortalPageState extends State<PortalPage> {
     if (filterFuture == null) {
       filterFuture = filterProvider.fetchFilter(context);
     }
-
-    List<Website> websites = [];
 
     CircularProgressIndicator progressIndicator = CircularProgressIndicator();
 
@@ -319,6 +323,9 @@ class _PortalPageState extends State<PortalPage> {
       ),
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }
 
 class _AddWebsiteButton extends StatelessWidget {
