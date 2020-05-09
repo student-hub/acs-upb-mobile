@@ -10,7 +10,7 @@ import 'intl/messages_all.dart';
 // **************************************************************************
 
 class S {
-  S(this.localeName);
+  S();
   
   static const AppLocalizationDelegate delegate =
     AppLocalizationDelegate();
@@ -20,15 +20,13 @@ class S {
     final String localeName = Intl.canonicalizedLocale(name);
     return initializeMessages(localeName).then((_) {
       Intl.defaultLocale = localeName;
-      return S(localeName);
+      return S();
     });
   } 
 
   static S of(BuildContext context) {
     return Localizations.of<S>(context, S);
   }
-
-  final String localeName;
 
   String get buttonNext {
     return Intl.message(
@@ -300,7 +298,7 @@ class S {
     );
   }
 
-  String actionSignInWith(dynamic provider) {
+  String actionSignInWith(Object provider) {
     return Intl.message(
       'Sign in with $provider',
       name: 'actionSignInWith',
@@ -489,7 +487,7 @@ class S {
     );
   }
 
-  String errorCouldNotLaunchURL(dynamic url) {
+  String errorCouldNotLaunchURL(Object url) {
     return Intl.message(
       'Could not launch \'$url\'.',
       name: 'errorCouldNotLaunchURL',
@@ -534,7 +532,7 @@ class S {
     );
   }
 
-  String warningEmailInUse(dynamic email) {
+  String warningEmailInUse(Object email) {
     return Intl.message(
       'There is already an account associated with $email.',
       name: 'warningEmailInUse',
@@ -543,7 +541,7 @@ class S {
     );
   }
 
-  String warningUseProvider(dynamic provider) {
+  String warningUseProvider(Object provider) {
     return Intl.message(
       'Please log in with $provider to continue.',
       name: 'warningUseProvider',
@@ -867,7 +865,7 @@ class S {
     );
   }
 
-  String messageWelcomeName(dynamic name) {
+  String messageWelcomeName(Object name) {
     return Intl.message(
       'Welcome, $name!',
       name: 'messageWelcomeName',
@@ -1080,7 +1078,8 @@ class AppLocalizationDelegate extends LocalizationsDelegate<S> {
 
   List<Locale> get supportedLocales {
     return const <Locale>[
-      Locale.fromSubtags(languageCode: 'en'), Locale.fromSubtags(languageCode: 'ro'),
+      Locale.fromSubtags(languageCode: 'en'),
+      Locale.fromSubtags(languageCode: 'ro'),
     ];
   }
 

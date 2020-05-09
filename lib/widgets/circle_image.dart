@@ -36,11 +36,7 @@ class CircleImage extends StatelessWidget {
 
   final String tooltip;
 
-  final double circleScaleFactor;
-
-  /// Set this to true if the scaled down circle should be aligned with the
-  /// default size circle
-  final bool alignWhenScaling;
+  final double circleSize;
 
   /// Fade image using [overlayColor] and display [overlayIcon] on top of it
   final bool enableOverlay;
@@ -56,15 +52,13 @@ class CircleImage extends StatelessWidget {
       this.onTap,
       this.label,
       this.tooltip,
-      this.circleScaleFactor = 1,
-      this.alignWhenScaling = false,
+      this.circleSize = 80,
       this.enableOverlay = false,
       this.overlayIcon,
       this.overlayColor});
 
   @override
   Widget build(BuildContext context) {
-    var circleSize = circleScaleFactor * 80;
     var circleImage = GestureDetector(
       onTap: onTap,
       child: Column(
@@ -72,8 +66,7 @@ class CircleImage extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Container(
-            // Align if [alignWhenScaling] is `true`
-            width: circleSize / (alignWhenScaling ? circleScaleFactor : 1),
+            width: circleSize,
             child: Stack(
               children: <Widget>[
                 Container(

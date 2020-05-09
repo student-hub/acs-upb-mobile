@@ -39,10 +39,10 @@ void main() {
     // Phone
     Size(1080, 1920), Size(720, 1280), // Standard
     Size(2200, 2480), Size(1536, 2151), // Foldable
-    Size(480, 800), Size(480, 854), // WVGA
-    /* For some reason, QVGA sizes give weird overflow errors that I can't
+    /* For some reason, Q/WVGA sizes give weird overflow errors that I can't
     replicate in the emulator with the same size, so I'll leave these commented
     for now:
+    Size(480, 800), Size(480, 854), // WVGA
     Size(240, 432), Size(240, 400), Size(320, 480), Size(240, 320), // QVGA
    */
     // Tablet

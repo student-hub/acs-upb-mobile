@@ -1,3 +1,6 @@
+import 'dart:core';
+import 'dart:math';
+
 import 'package:acs_upb_mobile/authentication/model/user.dart';
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
@@ -84,98 +87,119 @@ class _PortalPageState extends State<PortalPage>
         ),
       );
 
-  Widget listCategory(WebsiteCategory category, List<Website> websites) {
+  Widget websiteCircle(Website website, double size) {
     StorageProvider storageProvider = Provider.of<StorageProvider>(context);
+
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: FutureBuilder<ImageProvider<dynamic>>(
+        future: storageProvider.imageFromPath(website.iconPath),
+        builder: (context, snapshot) {
+          var image;
+          if (snapshot.hasData) {
+            image = snapshot.data;
+          } else {
+            image = AssetImage('assets/' + website.iconPath) ??
+                AssetImage('assets/images/white.png');
+          }
+
+          bool canEdit = editingEnabled &&
+              (website.isPrivate || (user.canEditPublicWebsite ?? false));
+          return CircleImage(
+            label: website.label,
+            tooltip: website.infoByLocale[LocaleProvider.localeString],
+            image: image,
+            enableOverlay: canEdit,
+            circleSize: size,
+            onTap: () => canEdit
+                ? Navigator.of(context).push(MaterialPageRoute(
+                    builder: (_) => ChangeNotifierProvider<FilterProvider>(
+                      create: (_) => FilterProvider(
+                          defaultDegree: website.degree,
+                          defaultRelevance: website.relevance),
+                      child: WebsiteView(
+                        website: website,
+                        updateExisting: true,
+                      ),
+                    ),
+                  ))
+                : _launchURL(website.link),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget listCategory(WebsiteCategory category, List<Website> websites) {
     bool hasContent = websites != null && websites.isNotEmpty;
+
+    // The width available for displaying the circles (screen width minus a left
+    // right padding of 8)
+    double availableWidth = MediaQuery.of(context).size.width - 16;
+    // The maximum size of a circle, regardless of screen size
+    double maxCircleSize = 80;
+    // The amount of circles that can fit on one row (given the screen size,
+    // maximum circle size and the fact that there need to be at least 4 circles
+    // on a row), including the padding.
+    int circlesPerRow = max(4, (availableWidth / (maxCircleSize + 16)).floor());
+    // The exact size of a circle (without the padding), so that they fit
+    // perfectly in a row
+    double circleSize = availableWidth / circlesPerRow - 16;
+
+    Widget content;
+    if (!hasContent) {
+      // Display just the plus button (but set the height to mimic the rows with
+      // content)
+      content = Container(
+        width: circleSize + 16.0,
+        height: circleSize +
+            16.0 + // padding
+            40.0, // text
+        child: Center(
+          child: _AddWebsiteButton(
+              key: ValueKey('add_website_' +
+                  ReCase(category.toLocalizedString(context)).snakeCase),
+              category: category),
+        ),
+      );
+    } else {
+      List<Row> rows = [];
+
+      for (var i = 0; i < websites.length;) {
+        List<Widget> children = [];
+        for (var j = 0; j < circlesPerRow && i < websites.length; j++, i++) {
+          children.add(websiteCircle(websites[i], circleSize));
+        }
+
+        // Add trailing "plus" button
+        if (i == websites.length - 1 || i == websites.length) {
+          if (children.length == circlesPerRow) {
+            rows.add(Row(children: children));
+            children = [];
+          }
+          children.add(Container(
+            width: circleSize + 16,
+            child: _AddWebsiteButton(
+              key: ValueKey('add_website_' +
+                  ReCase(category.toLocalizedString(context)).snakeCase),
+              category: category,
+              size: circleSize * 0.6,
+            ),
+          ));
+        }
+
+        rows.add(Row(children: children));
+      }
+
+      content = Column(children: rows);
+    }
 
     return Padding(
       padding: const EdgeInsets.only(left: 8.0, right: 8.0),
       child: spoiler(
         title: category.toLocalizedString(context),
         initialExpanded: hasContent,
-        content: !hasContent
-            ? Container(
-                height: 80.0 + // circle
-                    8.0, // padding
-                child: Padding(
-                  padding: const EdgeInsets.only(bottom: 8.0),
-                  child: Row(
-                    children: <Widget>[
-                      _AddWebsiteButton(
-                          key: ValueKey('add_website_' +
-                              ReCase(category.toLocalizedString(context))
-                                  .snakeCase),
-                          category: category),
-                    ],
-                  ),
-                ),
-              )
-            : Container(
-                height: 80.0 + // circle
-                    8.0 + // padding
-                    40.0, // text
-                child: ListView(
-                  scrollDirection: Axis.horizontal,
-                  children: websites
-                          .map<Widget>(
-                            (website) => Padding(
-                              padding: const EdgeInsets.only(
-                                  top: 8.0, left: 8.0, right: 8.0),
-                              child: FutureBuilder<ImageProvider<dynamic>>(
-                                future: storageProvider
-                                    .imageFromPath(website.iconPath),
-                                builder: (context, snapshot) {
-                                  var image;
-                                  if (snapshot.hasData) {
-                                    image = snapshot.data;
-                                  } else {
-                                    image = AssetImage(
-                                            'assets/' + website.iconPath) ??
-                                        AssetImage('assets/images/white.png');
-                                  }
-
-                                  bool canEdit = editingEnabled &&
-                                      (website.isPrivate ||
-                                          (user.canEditPublicWebsite ?? false));
-                                  return CircleImage(
-                                    label: website.label,
-                                    tooltip: website.infoByLocale[
-                                        LocaleProvider.localeString],
-                                    image: image,
-                                    enableOverlay: canEdit,
-                                    onTap: () => canEdit
-                                        ? Navigator.of(context)
-                                            .push(MaterialPageRoute(
-                                            builder: (_) =>
-                                                ChangeNotifierProvider<
-                                                    FilterProvider>(
-                                              create: (_) => FilterProvider(
-                                                  defaultDegree: website.degree,
-                                                  defaultRelevance:
-                                                      website.relevance),
-                                              child: WebsiteView(
-                                                website: website,
-                                                updateExisting: true,
-                                              ),
-                                            ),
-                                          ))
-                                        : _launchURL(website.link),
-                                  );
-                                },
-                              ),
-                            ),
-                          )
-                          .toList() +
-                      <Widget>[
-                        _AddWebsiteButton(
-                            key: ValueKey('add_website_' +
-                                ReCase(category.toLocalizedString(context))
-                                    .snakeCase),
-                            trailing: true,
-                            category: category)
-                      ],
-                ),
-              ),
+        content: content,
       ),
     );
   }
@@ -329,13 +353,11 @@ class _PortalPageState extends State<PortalPage>
 }
 
 class _AddWebsiteButton extends StatelessWidget {
-  final bool trailing;
   final WebsiteCategory category;
+  final double size;
 
   const _AddWebsiteButton(
-      {Key key,
-      this.trailing = false,
-      this.category = WebsiteCategory.learning})
+      {Key key, this.category = WebsiteCategory.learning, this.size = 50})
       : super(key: key);
 
   @override
@@ -369,10 +391,8 @@ class _AddWebsiteButton extends StatelessWidget {
                 Icons.add,
                 color: Theme.of(context).unselectedWidgetColor,
               ),
-              label: trailing ? "" : null,
-              circleScaleFactor: 0.6,
-              // Only align when there is no other website in the category
-              alignWhenScaling: !trailing,
+              label: "",
+              circleSize: size,
             ),
           ),
         ),
