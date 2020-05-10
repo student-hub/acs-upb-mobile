@@ -113,6 +113,17 @@
   "websiteCategoryResources": "Resources",
   "websiteCategoryOthers": "Others",
 
+  "uniEventTypeLab": "Lab",
+  "uniEventTypeSeminar": "Seminar",
+  "uniEventTypeLecture": "Lecture",
+  "uniEventTypeSports": "Sports",
+  "uniEventTypeExam": "Exam",
+  "uniEventTypeHomework": "Homework",
+  "uniEventTypeProject": "Project",
+  "uniEventTypeTest": "Test",
+  "uniEventTypePractical": "Practical",
+  "uniEventTypeResearch": "Research",
+
   "messageWelcomeSimple": "Welcome!",
   "messageWelcomeName": "Welcome, {name}!",
   "messageNewUser": "New user?",

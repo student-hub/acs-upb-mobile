@@ -1,6 +1,6 @@
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/uni_event.dart';
-import 'package:acs_upb_mobile/pages/timetable/view/event_page.dart';
+import 'package:acs_upb_mobile/pages/timetable/view/event_view.dart';
 import 'package:acs_upb_mobile/pages/timetable/view/uni_event_widget.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:flutter/material.dart';
@@ -28,7 +28,7 @@ class _TimetablePageState extends State<TimetablePage> {
         UniEvent(
           id: '0',
           title: 'PC',
-          type: 'Laborator',
+          type: UniEventType.lab,
           location: 'EG105',
           start: LocalDate.today().at(LocalTime(13, 0, 0)),
           end: LocalDate.today().at(LocalTime(15, 0, 0)),
@@ -36,7 +36,7 @@ class _TimetablePageState extends State<TimetablePage> {
         UniEvent(
           id: '1',
           title: 'USO',
-          type: 'Curs',
+          type: UniEventType.lecture,
           location: 'PR001',
           color: Colors.teal,
           start: LocalDate.today().addDays(1).at(LocalTime(10, 0, 0)),
@@ -45,7 +45,7 @@ class _TimetablePageState extends State<TimetablePage> {
         UniEvent(
           id: '2',
           title: 'PL',
-          type: 'Test',
+          type: UniEventType.test,
           location: 'EG206',
           color: Colors.orange,
           start: LocalDate.today().addDays(1).at(LocalTime(13, 0, 0)),

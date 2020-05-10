@@ -65,6 +65,7 @@ class _EventViewState extends State<EventView> {
   TextEditingController _typeController;
   TextEditingController _locationController;
 
+  UniEventType _selectedEventType;
   Color _selectedColor;
   DateTime _startTime;
   DateTime _endTime;
@@ -84,6 +85,8 @@ class _EventViewState extends State<EventView> {
     super.initState();
     _fetchUser();
 
+    _selectedEventType = widget.event?.type ?? UniEventType.lab;
+
     _startTime = widget.event?.start?.toDateTimeLocal() ?? DateTime.now();
     _endTime = widget.event?.end?.toDateTimeLocal() ??
         _startTime.add(Duration(hours: 1));
@@ -91,7 +94,6 @@ class _EventViewState extends State<EventView> {
     _endTimeController = TextEditingController(text: _format.format(_endTime));
 
     _titleController = TextEditingController(text: widget.event?.title ?? '');
-    _typeController = TextEditingController(text: widget.event?.type ?? '');
     _locationController =
         TextEditingController(text: widget.event?.location ?? '');
   }
@@ -207,6 +209,9 @@ class _EventViewState extends State<EventView> {
     if (_selectedColor == null) {
       _selectedColor = widget.event?.color ?? Theme.of(context).primaryColor;
     }
+    if (_typeController == null) {
+      _typeController = TextEditingController(text: widget.event?.type?.toLocalizedString(context) ?? '');
+    }
 
     return AppScaffold(
       title: widget.addNew
@@ -264,7 +269,7 @@ class _EventViewState extends State<EventView> {
                       children: <Widget>[
                         Icon(Icons.category),
                         SizedBox(width: 16),
-                        Text(widget.event.type),
+                        Text(widget.event.type.toLocalizedString(context)),
                       ],
                     ),
                   ),
@@ -294,13 +299,22 @@ class _EventViewState extends State<EventView> {
                             ),
                             onChanged: (_) => setState(() {}),
                           ),
-                          TextFormField(
-                            controller: _typeController,
+                          DropdownButtonFormField<UniEventType>(
                             decoration: InputDecoration(
                               labelText: S.of(context).labelType,
                               prefixIcon: Icon(Icons.category),
                             ),
-                            onChanged: (_) => setState(() {}),
+                            value: _selectedEventType,
+                            items: UniEventType.values
+                                .map(
+                                  (type) => DropdownMenuItem<UniEventType>(
+                                value: type,
+                                child: Text(type.toLocalizedString(context)),
+                              ),
+                            )
+                                .toList(),
+                            onChanged: (selection) =>
+                                setState(() => _selectedEventType = selection),
                           ),
                           // TODO: Check that startTime < endTime
                           DateTimeField(

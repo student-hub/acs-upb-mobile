@@ -113,6 +113,17 @@
   "websiteCategoryResources": "Resurse",
   "websiteCategoryOthers": "Altele",
 
+  "uniEventTypeLab": "Laborator",
+  "uniEventTypeSeminar": "Seminar",
+  "uniEventTypeLecture": "Curs",
+  "uniEventTypeSports": "Sport",
+  "uniEventTypeExam": "Examen",
+  "uniEventTypeHomework": "Temă",
+  "uniEventTypeProject": "Proiect",
+  "uniEventTypeTest": "Test",
+  "uniEventTypePractical": "Colocviu",
+  "uniEventTypeResearch": "Cercetare",
+
   "messageWelcomeSimple": "Bine ai venit!",
   "messageWelcomeName": "Bine ai venit, {name}!",
   "messageNewUser":"Utilizator nou?",
