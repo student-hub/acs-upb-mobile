@@ -84,7 +84,6 @@ class _EventViewState extends State<EventView> {
     super.initState();
     _fetchUser();
 
-    _selectedColor = widget.event?.color ?? Colors.blue;
     _startTime = widget.event?.start?.toDateTimeLocal() ?? DateTime.now();
     _endTime = widget.event?.end?.toDateTimeLocal() ??
         _startTime.add(Duration(hours: 1));
@@ -205,6 +204,10 @@ class _EventViewState extends State<EventView> {
 
   @override
   Widget build(BuildContext context) {
+    if (_selectedColor == null) {
+      _selectedColor = widget.event?.color ?? Theme.of(context).primaryColor;
+    }
+
     return AppScaffold(
       title: widget.addNew
           ? S.of(context).actionAddEvent

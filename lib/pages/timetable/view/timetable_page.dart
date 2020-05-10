@@ -30,7 +30,6 @@ class _TimetablePageState extends State<TimetablePage> {
           title: 'PC',
           type: 'Laborator',
           location: 'EG105',
-          color: Colors.blue,
           start: LocalDate.today().at(LocalTime(13, 0, 0)),
           end: LocalDate.today().at(LocalTime(15, 0, 0)),
         ),

@@ -13,6 +13,8 @@ class UniEventWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Color color = event.color ?? Theme.of(context).primaryColor;
+
     return GestureDetector(
       onTap: () => Navigator.of(context).push(MaterialPageRoute(
         builder: (_) => EventView(
@@ -28,7 +30,7 @@ class UniEventWidget extends StatelessWidget {
           ),
           borderRadius: BorderRadius.circular(4),
         ),
-        color: event.color,
+        color: color,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
@@ -45,7 +47,7 @@ class UniEventWidget extends StatelessWidget {
                 style: Theme.of(context).textTheme.bodyText2.copyWith(
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
-                      color: event.color.highEmphasisOnColor,
+                      color: color.highEmphasisOnColor,
                     ),
               ),
             ),
@@ -62,7 +64,7 @@ class UniEventWidget extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                         style: Theme.of(context).textTheme.bodyText2.copyWith(
                               fontSize: 10,
-                              color: event.color.highEmphasisOnColor,
+                              color: color.highEmphasisOnColor,
                             ),
                       ),
                     ),
@@ -80,7 +82,7 @@ class UniEventWidget extends StatelessWidget {
                           overflow: TextOverflow.ellipsis,
                           style: Theme.of(context).textTheme.bodyText2.copyWith(
                                 fontSize: 12,
-                                color: event.color.mediumEmphasisOnColor,
+                                color: color.mediumEmphasisOnColor,
                               ),
                         ),
                       ),
