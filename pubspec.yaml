@@ -70,7 +70,7 @@ dependencies:
   async: ^2.4.0
 
   # Timetable widget
-  timetable: ^0.1.1
+  timetable: ^0.2.0
 
   # Color picker widget
   flutter_colorpicker: ^0.3.4

@@ -19,6 +19,9 @@ class _TimetablePageState extends State<TimetablePage> {
   void initState() {
     super.initState();
     _controller = TimetableController(
+      // TODO: Make initialTimeRange customizable in settings
+      initialTimeRange: InitialTimeRange.range(
+          startTime: LocalTime(7, 55, 0), endTime: LocalTime(20, 5, 0)),
       // A basic EventProvider containing a single event.
       eventProvider: EventProvider.list([
         // TODO: This is a placeholder
