@@ -33,7 +33,7 @@ extension EventExtension on Event {
 }
 
 class EventView extends StatefulWidget {
-  final UniEvent event;
+  final UniEventInstance event;
   final bool addNew;
   final bool updateExisting;
 
@@ -85,7 +85,7 @@ class _EventViewState extends State<EventView> {
     super.initState();
     _fetchUser();
 
-    _selectedEventType = widget.event?.type ?? UniEventType.lab;
+    _selectedEventType = widget.event?.mainEvent?.type ?? UniEventType.lab;
 
     _startTime = widget.event?.start?.toDateTimeLocal() ?? DateTime.now();
     _endTime = widget.event?.end?.toDateTimeLocal() ??
@@ -210,7 +210,9 @@ class _EventViewState extends State<EventView> {
       _selectedColor = widget.event?.color ?? Theme.of(context).primaryColor;
     }
     if (_typeController == null) {
-      _typeController = TextEditingController(text: widget.event?.type?.toLocalizedString(context) ?? '');
+      _typeController = TextEditingController(
+          text:
+              widget.event?.mainEvent?.type?.toLocalizedString(context) ?? '');
     }
 
     return AppScaffold(
@@ -269,7 +271,8 @@ class _EventViewState extends State<EventView> {
                       children: <Widget>[
                         Icon(Icons.category),
                         SizedBox(width: 16),
-                        Text(widget.event.type.toLocalizedString(context)),
+                        Text(widget.event.mainEvent.type
+                            .toLocalizedString(context)),
                       ],
                     ),
                   ),
@@ -308,10 +311,11 @@ class _EventViewState extends State<EventView> {
                             items: UniEventType.values
                                 .map(
                                   (type) => DropdownMenuItem<UniEventType>(
-                                value: type,
-                                child: Text(type.toLocalizedString(context)),
-                              ),
-                            )
+                                    value: type,
+                                    child:
+                                        Text(type.toLocalizedString(context)),
+                                  ),
+                                )
                                 .toList(),
                             onChanged: (selection) =>
                                 setState(() => _selectedEventType = selection),

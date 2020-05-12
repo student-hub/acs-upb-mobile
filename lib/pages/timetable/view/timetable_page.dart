@@ -13,46 +13,47 @@ class TimetablePage extends StatefulWidget {
 }
 
 class _TimetablePageState extends State<TimetablePage> {
-  TimetableController<UniEvent> _controller;
+  TimetableController<UniEventInstance> _controller;
 
   @override
   void initState() {
     super.initState();
+    // TODO: This is a placeholder
+    List<UniEvent> events = [
+      UniEvent(
+        id: '0',
+        type: UniEventType.homework,
+        properties: {
+          'soft': LocalDate.today().at(LocalTime(13, 0, 0)),
+          'hard':
+              LocalDate.today().at(LocalTime(13, 0, 0)).add(Period(days: 7)),
+          'name': 'PC - Tema 1',
+        },
+      ),
+      UniEvent(
+        id: '1',
+        type: UniEventType.test,
+        properties: {
+          'name': 'M1 - Parțial',
+          'start': LocalDate.today().addDays(1).at(LocalTime(10, 0, 0)),
+          'end': LocalDate.today().addDays(1).at(LocalTime(13, 0, 0)),
+          'location': 'PR001',
+        },
+        color: Colors.teal,
+      ),
+    ];
+
     _controller = TimetableController(
-      // TODO: Make initialTimeRange customizable in settings
-      initialTimeRange: InitialTimeRange.range(
-          startTime: LocalTime(7, 55, 0), endTime: LocalTime(20, 5, 0)),
-      // A basic EventProvider containing a single event.
-      eventProvider: EventProvider.list([
-        // TODO: This is a placeholder
-        UniEvent(
-          id: '0',
-          title: 'PC',
-          type: UniEventType.lab,
-          location: 'EG105',
-          start: LocalDate.today().at(LocalTime(13, 0, 0)),
-          end: LocalDate.today().at(LocalTime(15, 0, 0)),
-        ),
-        UniEvent(
-          id: '1',
-          title: 'USO',
-          type: UniEventType.lecture,
-          location: 'PR001',
-          color: Colors.teal,
-          start: LocalDate.today().addDays(1).at(LocalTime(10, 0, 0)),
-          end: LocalDate.today().addDays(1).at(LocalTime(13, 0, 0)),
-        ),
-        UniEvent(
-          id: '2',
-          title: 'PL',
-          type: UniEventType.test,
-          location: 'EG206',
-          color: Colors.orange,
-          start: LocalDate.today().addDays(1).at(LocalTime(13, 0, 0)),
-          end: LocalDate.today().addDays(1).at(LocalTime(14, 0, 0)),
-        ),
-      ]),
-    );
+        // TODO: Make initialTimeRange customizable in settings
+        initialTimeRange: InitialTimeRange.range(
+            startTime: LocalTime(7, 55, 0), endTime: LocalTime(20, 5, 0)),
+        // A basic EventProvider containing a single event.
+        eventProvider: EventProvider.list((events
+            .map((event) => event.generateInstances())
+            .fold(
+                [],
+                (previousInstances, instances) =>
+                    previousInstances + instances))));
   }
 
   @override
@@ -84,7 +85,7 @@ class _TimetablePageState extends State<TimetablePage> {
           )),
         ),
       ],
-      body: Timetable<UniEvent>(
+      body: Timetable<UniEventInstance>(
         controller: _controller,
         eventBuilder: (event) => UniEventWidget(event),
       ),
