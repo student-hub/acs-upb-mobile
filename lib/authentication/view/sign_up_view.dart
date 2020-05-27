@@ -24,15 +24,13 @@ class _SignUpViewState extends State<SignUpView> {
   List<FormItem> formItems;
   Filter filter;
   List<FilterNode> nodes;
+  FilterProvider filterProvider;
 
   void _fetchFilter() async {
     // Fetch filter for dropdown buttons
-    FilterProvider filterProvider =
+    filterProvider =
         Provider.of<FilterProvider>(context, listen: false);
     filter = await filterProvider.fetchFilter(context);
-
-    // Reset filter so it can be reloaded after user signs in
-    filterProvider.resetFilter();
 
     // Add the first selected node and refresh
     nodes = [filter.root];
@@ -240,5 +238,13 @@ class _SignUpViewState extends State<SignUpView> {
         ],
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    // Reset filter so it can be reloaded after user signs in
+    filterProvider?.resetFilter();
+
+    super.dispose();
   }
 }
