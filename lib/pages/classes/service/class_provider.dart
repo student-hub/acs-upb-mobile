@@ -38,6 +38,7 @@ extension ClassExtension on Class {
 class ClassProvider with ChangeNotifier {
   final Firestore _db = Firestore.instance;
   List<Class> classesCache;
+  List<Class> userClassesCache;
 
   Future<List<String>> fetchUserClassIds(
       {String uid, BuildContext context}) async {
@@ -59,6 +60,7 @@ class ClassProvider with ChangeNotifier {
       DocumentReference ref =
           Firestore.instance.collection('users').document(uid);
       await ref.updateData({'classes': classIds});
+      userClassesCache = null;
       notifyListeners();
       return true;
     } catch (e) {
@@ -102,7 +104,11 @@ class ClassProvider with ChangeNotifier {
         classesCache = (await results).expand((i) => i).toList();
         return classesCache;
       } else {
+        if (userClassesCache != null) {
+          return userClassesCache;
+        }
         List<Class> classes = [];
+
         // Get only the user's classes
         List<String> classIds =
             await fetchUserClassIds(uid: uid, context: context);
@@ -126,7 +132,9 @@ class ClassProvider with ChangeNotifier {
                 classSnap: await col.document(classId).get()));
           }
         }
-        return classes;
+
+        userClassesCache = classes;
+        return userClassesCache;
       }
     } catch (e) {
       if (context != null) {
