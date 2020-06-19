@@ -30,6 +30,22 @@ class ClassesPage extends StatelessWidget {
     return classSections;
   }
 
+  Color colorFromAcronym(String acronym) {
+    int r = 0, g = 0, b = 0;
+    if (acronym.length >= 1) {
+      b = acronym[0].codeUnitAt(0);
+      if (acronym.length >= 2) {
+        g = acronym[1].codeUnitAt(0);
+        if (acronym.length >= 3) {
+          r = acronym[2].codeUnitAt(0);
+        }
+      }
+    }
+    int brightnessFactor = 2;
+    return Color.fromRGBO(
+        r * brightnessFactor, g * brightnessFactor, b * brightnessFactor, 1);
+  }
+
   @override
   Widget build(BuildContext context) {
     ClassProvider classProvider = Provider.of<ClassProvider>(context);
@@ -61,6 +77,9 @@ class ClassesPage extends StatelessWidget {
                                               children: [
                                                 ListTile(
                                                   leading: CircleAvatar(
+                                                    backgroundColor:
+                                                        colorFromAcronym(
+                                                            c.acronym),
                                                     child: AutoSizeText(
                                                       c.acronym,
                                                       minFontSize: 5,
