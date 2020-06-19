@@ -130,6 +130,8 @@ class ClassList extends StatelessWidget {
     classes.forEach((c) {
       classSections[sectionName(context, c.year, c.semester)].add(c);
     });
+    classSections.keys.forEach(
+        (key) => classSections[key].sort((a, b) => a.name.compareTo(b.name)));
     classSections.removeWhere((key, classes) => classes.length == 0);
     return classSections;
   }
