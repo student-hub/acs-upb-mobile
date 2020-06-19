@@ -8,11 +8,33 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class ClassesPage extends StatelessWidget {
+class ClassesPage extends StatefulWidget {
+  @override
+  _ClassesPageState createState() => _ClassesPageState();
+}
+
+class _ClassesPageState extends State<ClassesPage> {
+  Future<List<String>> userClassIdsFuture;
+  Future<List<Class>> classesFuture;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    ClassProvider classProvider = Provider.of<ClassProvider>(context, listen: false);
+    AuthProvider authProvider = Provider.of<AuthProvider>(context, listen: false);
+    userClassIdsFuture = classProvider.fetchUserClassIds(
+        uid: authProvider.uid, context: context);
+  }
+
   @override
   Widget build(BuildContext context) {
     ClassProvider classProvider = Provider.of<ClassProvider>(context);
     AuthProvider authProvider = Provider.of<AuthProvider>(context);
+
+    if (classesFuture == null) {
+      classesFuture = classProvider.fetchClasses(uid: authProvider.uid);
+    }
 
     return AppScaffold(
       title: S.of(context).navigationClasses,
@@ -25,15 +47,15 @@ class ClassesPage extends StatelessWidget {
               builder: (_) => ChangeNotifierProvider.value(
                   value: classProvider,
                   child: FutureBuilder(
-                    future: classProvider.fetchUserClassIds(
-                        uid: authProvider.uid, context: context),
+                    future: userClassIdsFuture,
                     builder: (context, snap) {
                       if (snap.hasData) {
                         return AddClassesPage(
                             initialClassIds: snap.data,
-                            onSave: (classIds) {
-                              classProvider.setUserClassIds(
+                            onSave: (classIds) async {
+                              await classProvider.setUserClassIds(
                                   classIds: classIds, uid: authProvider.uid);
+                              classesFuture = null;
                               Navigator.pop(context);
                             });
                       } else {
@@ -46,7 +68,7 @@ class ClassesPage extends StatelessWidget {
         ),
       ],
       body: ClassList(
-          classesFuture: classProvider.fetchClasses(uid: authProvider.uid)),
+          classesFuture: classesFuture),
     );
   }
 }
@@ -65,13 +87,17 @@ class AddClassesPage extends StatefulWidget {
 
 class _AddClassesPageState extends State<AddClassesPage> {
   List<String> classIds;
+  Future<List<Class>> classesFuture;
 
   _AddClassesPageState({List<String> classIds})
       : this.classIds = classIds ?? [];
 
   @override
   Widget build(BuildContext context) {
-    ClassProvider classProvider = Provider.of<ClassProvider>(context);
+    if (classesFuture == null) {
+      ClassProvider classProvider = Provider.of<ClassProvider>(context);
+      classesFuture = classProvider.fetchClasses();
+    }
 
     return AppScaffold(
       title: S.of(context).actionAddClasses,
@@ -82,7 +108,7 @@ class _AddClassesPageState extends State<AddClassesPage> {
         )
       ],
       body: ClassList(
-        classesFuture: classProvider.fetchClasses(),
+        classesFuture: classesFuture,
         initiallySelected: classIds,
         selectable: true,
         onSelected: (selected, classId) {
