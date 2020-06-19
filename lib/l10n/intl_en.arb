@@ -24,6 +24,9 @@
   "labelStart": "Start",
   "labelEnd": "End",
 
+  "labelYear": "Year",
+  "labelSemester": "Semester",
+
   "hintEmail": "john.doe",
   "hintPassword": "····················",
   "hintFirstName": "John",

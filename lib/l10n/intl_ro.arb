@@ -24,6 +24,9 @@
   "labelStart": "Început",
   "labelEnd": "Sfârșit",
 
+  "labelYear": "Anul",
+  "labelSemester": "Semestrul",
+
   "hintEmail": "john.doe",
   "hintPassword": "····················",
   "hintFirstName": "John",
