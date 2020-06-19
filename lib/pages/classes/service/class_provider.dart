@@ -58,7 +58,7 @@ class ClassProvider with ChangeNotifier {
     try {
       DocumentReference ref =
           Firestore.instance.collection('users').document(uid);
-      await ref.setData({'classes': classIds});
+      await ref.updateData({'classes': classIds});
       notifyListeners();
       return true;
     } catch (e) {
