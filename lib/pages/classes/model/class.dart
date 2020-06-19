@@ -1,4 +1,7 @@
+import 'package:meta/meta.dart';
+
 class Class {
+  final String id;
   final String name;
   final String acronym;
   final int credits;
@@ -8,6 +11,6 @@ class Class {
   final String semester;
   final String series;
 
-  Class({this.name, this.acronym, this.credits, this.degree, this.domain,
+  Class({@required this.id, this.name, this.acronym, this.credits, this.degree, this.domain,
       this.year, this.semester, this.series});
 }

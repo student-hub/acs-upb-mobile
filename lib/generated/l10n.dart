@@ -487,6 +487,15 @@ class S {
     );
   }
 
+  String get actionAddClasses {
+    return Intl.message(
+      'Add classes',
+      name: 'actionAddClasses',
+      desc: '',
+      args: [],
+    );
+  }
+
   String get errorSomethingWentWrong {
     return Intl.message(
       'Something went wrong.',

@@ -54,6 +54,7 @@
   "actionAddEvent": "Adaugă eveniment",
   "actionEditEvent": "Modifică eveniment",
   "actionDeleteEvent": "Șterge eveniment",
+  "actionAddClasses": "Adaugă materii",
 
   "errorSomethingWentWrong": "A apărut o problemă.",
   "errorPasswordsDiffer": "Cele două parole diferă.",
