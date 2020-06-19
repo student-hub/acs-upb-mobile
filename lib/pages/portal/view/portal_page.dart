@@ -12,8 +12,8 @@ import 'package:acs_upb_mobile/resources/locale_provider.dart';
 import 'package:acs_upb_mobile/resources/storage_provider.dart';
 import 'package:acs_upb_mobile/widgets/circle_image.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
+import 'package:acs_upb_mobile/widgets/spoiler.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
-import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:recase/recase.dart';
@@ -53,40 +53,13 @@ class _PortalPageState extends State<PortalPage> {
     }
   }
 
-  Widget spoiler({String title, Widget content, bool initialExpanded = true}) =>
-      ExpandableNotifier(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            ExpandableTheme(
-              data: ExpandableThemeData(
-                  useInkWell: false,
-                  crossFadePoint: 0.5,
-                  hasIcon: true,
-                  iconPlacement: ExpandablePanelIconPlacement.left,
-                  iconColor: Theme.of(context).textTheme.headline6.color,
-                  headerAlignment: ExpandablePanelHeaderAlignment.center,
-                  iconPadding: EdgeInsets.only()),
-              child: ExpandablePanel(
-                controller:
-                    ExpandableController(initialExpanded: initialExpanded),
-                header:
-                    Text(title, style: Theme.of(context).textTheme.headline6),
-                collapsed: SizedBox(height: 12.0),
-                expanded: content,
-              ),
-            ),
-          ],
-        ),
-      );
-
   Widget listCategory(WebsiteCategory category, List<Website> websites) {
     StorageProvider storageProvider = Provider.of<StorageProvider>(context);
     bool hasContent = websites != null && websites.isNotEmpty;
 
     return Padding(
       padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-      child: spoiler(
+      child: AppSpoiler(
         title: category.toLocalizedString(context),
         initialExpanded: hasContent,
         content: !hasContent

@@ -1,4 +1,5 @@
 import 'package:acs_upb_mobile/generated/l10n.dart';
+import 'package:acs_upb_mobile/pages/classes/view/classes_page.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/uni_event.dart';
 import 'package:acs_upb_mobile/pages/timetable/view/event_view.dart';
 import 'package:acs_upb_mobile/pages/timetable/view/uni_event_widget.dart';
@@ -76,6 +77,9 @@ class _TimetablePageState extends State<TimetablePage> {
         AppScaffoldAction(
           icon: Icons.class_,
           tooltip: S.of(context).navigationClasses,
+          onPressed: () => Navigator.of(context).push(MaterialPageRoute(
+            builder: (_) => ClassesPage(),
+          )),
         ),
         AppScaffoldAction(
           icon: Icons.add,
