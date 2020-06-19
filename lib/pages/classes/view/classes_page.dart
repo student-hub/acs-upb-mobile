@@ -15,14 +15,29 @@ class ClassesPage extends StatefulWidget {
 
 class _ClassesPageState extends State<ClassesPage> {
   Future<List<String>> userClassIdsFuture;
-  Future<List<Class>> classesFuture;
+  List<Class> classes;
+  bool updating = false;
+
+  void updateClasses() async {
+    ClassProvider classProvider =
+        Provider.of<ClassProvider>(context, listen: false);
+    AuthProvider authProvider =
+        Provider.of<AuthProvider>(context, listen: false);
+    classes = await classProvider.fetchClasses(uid: authProvider.uid);
+    updating = false;
+    setState(() {});
+  }
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    ClassProvider classProvider = Provider.of<ClassProvider>(context, listen: false);
-    AuthProvider authProvider = Provider.of<AuthProvider>(context, listen: false);
+
+    updateClasses();
+
+    ClassProvider classProvider =
+        Provider.of<ClassProvider>(context, listen: false);
+    AuthProvider authProvider =
+        Provider.of<AuthProvider>(context, listen: false);
     userClassIdsFuture = classProvider.fetchUserClassIds(
         uid: authProvider.uid, context: context);
   }
@@ -31,10 +46,6 @@ class _ClassesPageState extends State<ClassesPage> {
   Widget build(BuildContext context) {
     ClassProvider classProvider = Provider.of<ClassProvider>(context);
     AuthProvider authProvider = Provider.of<AuthProvider>(context);
-
-    if (classesFuture == null) {
-      classesFuture = classProvider.fetchClasses(uid: authProvider.uid);
-    }
 
     return AppScaffold(
       title: S.of(context).navigationClasses,
@@ -55,7 +66,8 @@ class _ClassesPageState extends State<ClassesPage> {
                             onSave: (classIds) async {
                               await classProvider.setUserClassIds(
                                   classIds: classIds, uid: authProvider.uid);
-                              classesFuture = null;
+                              updating = true;
+                              updateClasses();
                               Navigator.pop(context);
                             });
                       } else {
@@ -67,8 +79,18 @@ class _ClassesPageState extends State<ClassesPage> {
           ),
         ),
       ],
-      body: ClassList(
-          classesFuture: classesFuture),
+      body: updating
+          ? Stack(
+              children: [
+                ClassList(
+                  classes: classes,
+                ),
+                Container(
+                    color: Theme.of(context).disabledColor,
+                    child: Center(child: CircularProgressIndicator())),
+              ],
+            )
+          : ClassList(classes: classes),
     );
   }
 }
@@ -87,18 +109,26 @@ class AddClassesPage extends StatefulWidget {
 
 class _AddClassesPageState extends State<AddClassesPage> {
   List<String> classIds;
-  Future<List<Class>> classesFuture;
+  List<Class> classes;
 
   _AddClassesPageState({List<String> classIds})
       : this.classIds = classIds ?? [];
 
+  void updateClasses() async {
+    ClassProvider classProvider =
+        Provider.of<ClassProvider>(context, listen: false);
+    classes = await classProvider.fetchClasses();
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    updateClasses();
+  }
+
   @override
   Widget build(BuildContext context) {
-    if (classesFuture == null) {
-      ClassProvider classProvider = Provider.of<ClassProvider>(context);
-      classesFuture = classProvider.fetchClasses();
-    }
-
     return AppScaffold(
       title: S.of(context).actionAddClasses,
       actions: [
@@ -108,7 +138,7 @@ class _AddClassesPageState extends State<AddClassesPage> {
         )
       ],
       body: ClassList(
-        classesFuture: classesFuture,
+        classes: classes,
         initiallySelected: classIds,
         selectable: true,
         onSelected: (selected, classId) {
@@ -124,13 +154,13 @@ class _AddClassesPageState extends State<AddClassesPage> {
 }
 
 class ClassList extends StatelessWidget {
-  final Future<List<Class>> classesFuture;
+  final List<Class> classes;
   final Function(bool, String) onSelected;
   final List<String> initiallySelected;
   final bool selectable;
 
   ClassList(
-      {this.classesFuture,
+      {this.classes,
       Function(bool, String) onSelected,
       List<String> initiallySelected,
       this.selectable = false})
@@ -164,61 +194,50 @@ class ClassList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-        future: classesFuture,
-        builder: (context, snap) {
-          if (snap.connectionState == ConnectionState.done) {
-            List<Class> classes = snap.data ?? [];
-            // TODO: Add special page is user has no classes yet
-            var classSections = sections(classes, context);
+    if (classes != null) {
+      var classSections = sections(classes, context);
 
-            return Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: ListView(
-                children: classSections
-                    .map((sectionName, classes) => MapEntry(
-                        sectionName,
-                        Column(
-                          children: [
-                            AppSpoiler(
-                              title: sectionName,
-                              content: Column(
-                                children: <Widget>[Divider()] +
-                                    classes
-                                        .map<Widget>(
-                                          (c) => Column(
-                                            children: [
-                                              ClassListItem(
-                                                selectable: selectable,
-                                                initiallySelected:
-                                                    initiallySelected
-                                                        .contains(c.id),
-                                                classInfo: c,
-                                                onSelected: (selected) =>
-                                                    onSelected(selected, c.id),
-                                              ),
-                                              Divider(),
-                                            ],
-                                          ),
-                                        )
-                                        .toList(),
-                              ),
-                            ),
-                            SizedBox(height: 8),
-                          ],
-                        )))
-                    .values
-                    .toList(),
-              ),
-            );
-          } else if (snap.hasError) {
-            print(snap.error);
-            // TODO: Show error toast
-            return Container();
-          } else {
-            return Center(child: CircularProgressIndicator());
-          }
-        });
+      return Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: ListView(
+          children: classSections
+              .map((sectionName, classes) => MapEntry(
+                  sectionName,
+                  Column(
+                    children: [
+                      AppSpoiler(
+                        title: sectionName,
+                        content: Column(
+                          children: <Widget>[Divider()] +
+                              classes
+                                  .map<Widget>(
+                                    (c) => Column(
+                                      children: [
+                                        ClassListItem(
+                                          selectable: selectable,
+                                          initiallySelected:
+                                              initiallySelected.contains(c.id),
+                                          classInfo: c,
+                                          onSelected: (selected) =>
+                                              onSelected(selected, c.id),
+                                        ),
+                                        Divider(),
+                                      ],
+                                    ),
+                                  )
+                                  .toList(),
+                        ),
+                      ),
+                      SizedBox(height: 8),
+                    ],
+                  )))
+              .values
+              .toList(),
+        ),
+      );
+    } else {
+      return Center(child: CircularProgressIndicator());
+    }
   }
 }
 
