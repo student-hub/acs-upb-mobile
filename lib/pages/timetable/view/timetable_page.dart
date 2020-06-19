@@ -1,10 +1,12 @@
 import 'package:acs_upb_mobile/generated/l10n.dart';
+import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
 import 'package:acs_upb_mobile/pages/classes/view/classes_page.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/uni_event.dart';
 import 'package:acs_upb_mobile/pages/timetable/view/event_view.dart';
 import 'package:acs_upb_mobile/pages/timetable/view/uni_event_widget.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:time_machine/time_machine.dart';
 import 'package:timetable/timetable.dart';
 
@@ -78,7 +80,9 @@ class _TimetablePageState extends State<TimetablePage> {
           icon: Icons.class_,
           tooltip: S.of(context).navigationClasses,
           onPressed: () => Navigator.of(context).push(MaterialPageRoute(
-            builder: (_) => ClassesPage(),
+            builder: (_) => ChangeNotifierProvider.value(
+                value: Provider.of<ClassProvider>(context),
+                child: ClassesPage()),
           )),
         ),
         AppScaffoldAction(

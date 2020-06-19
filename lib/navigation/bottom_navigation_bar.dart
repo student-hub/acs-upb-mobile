@@ -1,4 +1,5 @@
 import 'package:acs_upb_mobile/generated/l10n.dart';
+import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
 import 'package:acs_upb_mobile/pages/home/home_page.dart';
 import 'package:acs_upb_mobile/pages/portal/view/portal_page.dart';
 import 'package:acs_upb_mobile/pages/profile/profile_page.dart';
@@ -17,7 +18,8 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar> {
   Widget build(BuildContext context) {
     var currentTab = [
       HomePage(),
-      TimetablePage(),
+      ChangeNotifierProvider(
+          create: (_) => ClassProvider(), child: TimetablePage()),
       PortalPage(),
       AppScaffold(title: S.of(context).navigationMap), // TODO: Map
       ProfilePage(),

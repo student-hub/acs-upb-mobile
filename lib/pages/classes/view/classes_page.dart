@@ -1,8 +1,11 @@
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/classes/model/class.dart';
+import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:acs_upb_mobile/widgets/spoiler.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class ClassesPage extends StatelessWidget {
   String sectionName(BuildContext context, String year, String semester) =>
@@ -14,27 +17,7 @@ class ClassesPage extends StatelessWidget {
       ' ' +
       semester;
 
-  Map<String, List<Class>> sections(BuildContext context) {
-    List<Class> classes = [
-      Class(
-        name: 'Matematică 1',
-        acronym: 'M1',
-        year: '1',
-        semester: '1',
-      ),
-      Class(
-        name: 'Programarea Calculatoarelor',
-        acronym: 'PC',
-        year: '1',
-        semester: '1',
-      ),
-      Class(
-        name: 'Matematică 3',
-        acronym: 'M3',
-        year: '1',
-        semester: '2',
-      ),
-    ];
+  Map<String, List<Class>> sections(List<Class> classes, BuildContext context) {
     Map<String, List<Class>> classSections = {};
     for (var year in ['1', '2', '3', '4']) {
       for (var semester in ['1', '2']) {
@@ -49,40 +32,65 @@ class ClassesPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var classSections = sections(context);
+    ClassProvider classProvider = Provider.of<ClassProvider>(context);
 
     return AppScaffold(
       title: S.of(context).navigationClasses,
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: ListView(
-          children: classSections
-              .map((sectionName, classes) => MapEntry(
-                  sectionName,
-                  Column(
-                    children: [
-                      AppSpoiler(
-                        title: sectionName,
-                        content: Column(
-                          children: classes
-                              .map<Widget>(
-                                (c) => ListTile(
-                                  leading: CircleAvatar(
-                                    child: Text(c.acronym),
-                                  ),
-                                  title: Text(c.name),
+      body: FutureBuilder(
+          future: classProvider.fetchClasses(),
+          builder: (context, snap) {
+            if (snap.hasData) {
+              List<Class> classes = snap.data;
+              var classSections = sections(classes, context);
+
+              return Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ListView(
+                  children: classSections
+                      .map((sectionName, classes) => MapEntry(
+                          sectionName,
+                          Column(
+                            children: [
+                              AppSpoiler(
+                                title: sectionName,
+                                content: Column(
+                                  children: <Widget>[Divider()] +
+                                      classes
+                                          .map<Widget>(
+                                            (c) => Column(
+                                              children: [
+                                                ListTile(
+                                                  leading: CircleAvatar(
+                                                    child: AutoSizeText(
+                                                      c.acronym,
+                                                      minFontSize: 5,
+                                                      maxLines: 1,
+                                                    ),
+                                                  ),
+                                                  title: Text(c.name),
+                                                ),
+                                                Divider(),
+                                              ],
+                                            ),
+                                          )
+                                          .toList(),
                                 ),
-                              )
-                              .toList(),
-                        ),
-                      ),
-                      SizedBox(height: 8),
-                    ],
-                  )))
-              .values
-              .toList(),
-        ),
-      ),
+                              ),
+                              SizedBox(height: 8),
+                            ],
+                          )))
+                      .values
+                      .toList(),
+                ),
+              );
+            } else if (snap.hasError) {
+              print(snap.error);
+              // TODO: Show error toast
+              return Container();
+            } else {
+              return Center(child: CircularProgressIndicator());
+            }
+          }),
     );
   }
 }
