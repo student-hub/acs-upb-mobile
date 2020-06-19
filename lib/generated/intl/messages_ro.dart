@@ -118,7 +118,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "navigationTimetable" : MessageLookupByLibrary.simpleMessage("Orar"),
     "relevanceAnyone" : MessageLookupByLibrary.simpleMessage("Oricine"),
     "relevanceOnlyMe" : MessageLookupByLibrary.simpleMessage("Doar eu"),
-    "settingsItemDarkMode" : MessageLookupByLibrary.simpleMessage("Dark mode"),
+    "settingsItemDarkMode" : MessageLookupByLibrary.simpleMessage("Mod Întunecat"),
     "settingsItemLanguage" : MessageLookupByLibrary.simpleMessage("Limbă"),
     "settingsItemLanguageAuto" : MessageLookupByLibrary.simpleMessage("Auto"),
     "settingsItemLanguageEnglish" : MessageLookupByLibrary.simpleMessage("Engleză"),
