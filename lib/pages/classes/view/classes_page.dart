@@ -67,7 +67,12 @@ class ClassesPage extends StatelessWidget {
                                                       maxLines: 1,
                                                     ),
                                                   ),
-                                                  title: Text(c.name),
+                                                  title: Text(c.name +
+                                                      (c.series == null
+                                                          ? ''
+                                                          : ' (' +
+                                                              c.series +
+                                                              ')')),
                                                 ),
                                                 Divider(),
                                               ],
