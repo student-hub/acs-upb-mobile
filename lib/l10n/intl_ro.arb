@@ -27,6 +27,9 @@
   "labelYear": "Anul",
   "labelSemester": "Semestrul",
 
+  "sectionShortcuts": "Scurtături",
+  "sectionEvents": "Evenimente",
+
   "hintEmail": "john.doe",
   "hintPassword": "····················",
   "hintFirstName": "John",

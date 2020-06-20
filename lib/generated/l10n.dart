@@ -253,6 +253,24 @@ class S {
     );
   }
 
+  String get sectionShortcuts {
+    return Intl.message(
+      'Shortcuts',
+      name: 'sectionShortcuts',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get sectionEvents {
+    return Intl.message(
+      'Events',
+      name: 'sectionEvents',
+      desc: '',
+      args: [],
+    );
+  }
+
   String get hintEmail {
     return Intl.message(
       'john.doe',

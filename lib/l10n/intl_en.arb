@@ -27,6 +27,9 @@
   "labelYear": "Year",
   "labelSemester": "Semester",
 
+  "sectionShortcuts": "Shortcuts",
+  "sectionEvents": "Events",
+
   "hintEmail": "john.doe",
   "hintPassword": "····················",
   "hintFirstName": "John",

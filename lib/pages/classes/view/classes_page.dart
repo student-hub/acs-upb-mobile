@@ -2,6 +2,7 @@ import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/classes/model/class.dart';
 import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
+import 'package:acs_upb_mobile/pages/classes/view/class_view.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:acs_upb_mobile/widgets/spoiler.dart';
 import 'package:auto_size_text/auto_size_text.dart';
@@ -90,7 +91,12 @@ class _ClassesPageState extends State<ClassesPage> {
                     child: Center(child: CircularProgressIndicator())),
               ],
             )
-          : ClassList(classes: classes),
+          : ClassList(
+              classes: classes,
+              onTap: (classInfo) => Navigator.of(context).push(
+                  MaterialPageRoute(
+                      builder: (context) => ClassView(classInfo: classInfo))),
+            ),
     );
   }
 }
@@ -158,13 +164,16 @@ class ClassList extends StatelessWidget {
   final Function(bool, String) onSelected;
   final List<String> initiallySelected;
   final bool selectable;
+  final Function(Class) onTap;
 
   ClassList(
       {this.classes,
       Function(bool, String) onSelected,
       List<String> initiallySelected,
-      this.selectable = false})
+      this.selectable = false,
+      Function(Class) onTap})
       : onSelected = onSelected ?? ((selected, classId) {}),
+        onTap = onTap ?? ((_) {}),
         initiallySelected = initiallySelected ?? [];
 
   String sectionName(BuildContext context, String year, String semester) =>
@@ -220,6 +229,7 @@ class ClassList extends StatelessWidget {
                                           classInfo: c,
                                           onSelected: (selected) =>
                                               onSelected(selected, c.id),
+                                          onTap: () => onTap(c),
                                         ),
                                         Divider(),
                                       ],
@@ -246,14 +256,17 @@ class ClassListItem extends StatefulWidget {
   final bool initiallySelected;
   final Function(bool) onSelected;
   final bool selectable;
+  final Function() onTap;
 
   ClassListItem(
       {Key key,
       this.classInfo,
       this.initiallySelected = false,
       Function(bool) onSelected,
-      this.selectable = false})
+      this.selectable = false,
+      Function() onTap})
       : this.onSelected = onSelected ?? ((_) {}),
+        this.onTap = onTap ?? (() {}),
         super(key: key);
 
   @override
@@ -266,27 +279,11 @@ class _ClassListItemState extends State<ClassListItem> {
 
   _ClassListItemState({this.selected});
 
-  Color colorFromAcronym(String acronym) {
-    int r = 0, g = 0, b = 0;
-    if (acronym.length >= 1) {
-      b = acronym[0].codeUnitAt(0);
-      if (acronym.length >= 2) {
-        g = acronym[1].codeUnitAt(0);
-        if (acronym.length >= 3) {
-          r = acronym[2].codeUnitAt(0);
-        }
-      }
-    }
-    int brightnessFactor = 2;
-    return Color.fromRGBO(
-        r * brightnessFactor, g * brightnessFactor, b * brightnessFactor, 1);
-  }
-
   @override
   Widget build(BuildContext context) {
     return ListTile(
       leading: CircleAvatar(
-        backgroundColor: colorFromAcronym(widget.classInfo.acronym),
+        backgroundColor: widget.classInfo.colorFromAcronym,
         child: (widget.selectable && selected)
             ? Icon(Icons.check)
             : AutoSizeText(
@@ -296,10 +293,7 @@ class _ClassListItemState extends State<ClassListItem> {
               ),
       ),
       title: Text(
-        widget.classInfo.name +
-            (widget.classInfo.series == null
-                ? ''
-                : ' (' + widget.classInfo.series + ')'),
+        widget.classInfo.completeName,
         style: widget.selectable
             ? (selected
                 ? Theme.of(context)
@@ -312,8 +306,11 @@ class _ClassListItemState extends State<ClassListItem> {
             : Theme.of(context).textTheme.subtitle1,
       ),
       onTap: () => setState(() {
-        selected = !selected;
-        widget.onSelected(selected);
+        if (widget.selectable) {
+          selected = !selected;
+          widget.onSelected(selected);
+        }
+        widget.onTap();
       }),
     );
   }

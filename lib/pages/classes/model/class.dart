@@ -13,4 +13,8 @@ class Class {
 
   Class({@required this.id, this.name, this.acronym, this.credits, this.degree, this.domain,
       this.year, this.semester, this.series});
+
+  String get completeName => name + (series == null ? '' : ' (' + series + ')');
+
+  String get shortName => acronym + (series == null ? '' : ' (' + series + ')');
 }

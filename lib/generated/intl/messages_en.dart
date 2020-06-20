@@ -133,6 +133,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "navigationTimetable" : MessageLookupByLibrary.simpleMessage("Timetable"),
     "relevanceAnyone" : MessageLookupByLibrary.simpleMessage("Anyone"),
     "relevanceOnlyMe" : MessageLookupByLibrary.simpleMessage("Only me"),
+    "sectionEvents" : MessageLookupByLibrary.simpleMessage("Events"),
+    "sectionShortcuts" : MessageLookupByLibrary.simpleMessage("Shortcuts"),
     "settingsItemDarkMode" : MessageLookupByLibrary.simpleMessage("Dark mode"),
     "settingsItemLanguage" : MessageLookupByLibrary.simpleMessage("Language"),
     "settingsItemLanguageAuto" : MessageLookupByLibrary.simpleMessage("Auto"),
