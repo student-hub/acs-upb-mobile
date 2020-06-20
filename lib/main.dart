@@ -45,7 +45,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  final Color _accentColor = Color(0xFF43ADCD);
+  final Color _accentColor = Color(0xFF43ACCD);
 
   Widget buildApp(BuildContext context, ThemeData theme) {
     return MaterialApp(
@@ -86,7 +86,7 @@ class _MyAppState extends State<MyApp> {
             displayColor: _accentColor),
         toggleableActiveColor: _accentColor,
         fontFamily: 'Montserrat',
-        primaryColor: _accentColor,
+        primaryColor: Color(0xFF4DB5E4),
       ),
       themedWidgetBuilder: (context, theme) {
         return OKToast(
