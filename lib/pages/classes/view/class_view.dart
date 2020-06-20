@@ -132,9 +132,19 @@ class ClassView extends StatelessWidget {
                   Icon(Icons.laptop, color: Theme.of(context).iconTheme.color),
             ),
             title: Text('Tema 1'),
-            subtitle: Text('5 Feb 2020 | 23:55'),
+            subtitle: Text('5 Oct 2020 | 23:55'),
             contentPadding: EdgeInsets.zero,
-          )
+          ),
+          ListTile(
+            leading: CircleAvatar(
+              backgroundColor: Colors.grey.withOpacity(0.2),
+              child:
+              Icon(Icons.spellcheck, color: Theme.of(context).iconTheme.color),
+            ),
+            title: Text('Test'),
+            subtitle: Text('1 Nov 2020 | 16:00'),
+            contentPadding: EdgeInsets.zero,
+          ),
         ],
       ),
     );
