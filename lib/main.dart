@@ -60,9 +60,7 @@ class _MyAppState extends State<MyApp> {
       initialRoute: Routes.root,
       routes: {
         Routes.root: (_) => AppLoadingScreen(),
-        Routes.home: (_) => ChangeNotifierProvider<BottomNavigationBarProvider>(
-            child: AppBottomNavigationBar(),
-            create: (_) => BottomNavigationBarProvider()),
+        Routes.home: (_) => AppBottomNavigationBar(),
         Routes.settings: (_) => SettingsPage(),
         Routes.filter: (_) => FilterPage(),
         Routes.login: (_) => LoginView(),

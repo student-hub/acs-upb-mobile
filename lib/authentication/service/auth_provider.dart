@@ -88,33 +88,39 @@ class AuthProvider with ChangeNotifier {
   }
 
   void _errorHandler(e, context) {
-    print(e.message);
-    if (context != null) {
-      switch (e.code) {
-        case 'ERROR_INVALID_EMAIL':
-        case 'ERROR_INVALID_CREDENTIAL':
-          AppToast.show(S.of(context).errorInvalidEmail);
-          break;
-        case 'ERROR_WRONG_PASSWORD':
-          AppToast.show(S.of(context).errorIncorrectPassword);
-          break;
-        case 'ERROR_USER_NOT_FOUND':
-          AppToast.show(S.of(context).errorEmailNotFound);
-          break;
-        case 'ERROR_USER_DISABLED':
-          AppToast.show(S.of(context).errorAccountDisabled);
-          break;
-        case 'ERROR_TOO_MANY_REQUESTS':
-          AppToast.show(S.of(context).errorTooManyRequests +
-              ' ' +
-              S.of(context).warningTryAgainLater);
-          break;
-        case 'ERROR_EMAIL_ALREADY_IN_USE':
-          AppToast.show(S.of(context).errorEmailInUse);
-          break;
-        default:
-          AppToast.show(S.of(context).errorSomethingWentWrong);
+    try {
+      print(e.message);
+      if (context != null) {
+        switch (e.code) {
+          case 'ERROR_INVALID_EMAIL':
+          case 'ERROR_INVALID_CREDENTIAL':
+            AppToast.show(S.of(context).errorInvalidEmail);
+            break;
+          case 'ERROR_WRONG_PASSWORD':
+            AppToast.show(S.of(context).errorIncorrectPassword);
+            break;
+          case 'ERROR_USER_NOT_FOUND':
+            AppToast.show(S.of(context).errorEmailNotFound);
+            break;
+          case 'ERROR_USER_DISABLED':
+            AppToast.show(S.of(context).errorAccountDisabled);
+            break;
+          case 'ERROR_TOO_MANY_REQUESTS':
+            AppToast.show(S.of(context).errorTooManyRequests +
+                ' ' +
+                S.of(context).warningTryAgainLater);
+            break;
+          case 'ERROR_EMAIL_ALREADY_IN_USE':
+            AppToast.show(S.of(context).errorEmailInUse);
+            break;
+          default:
+            AppToast.show(e.message);
+        }
       }
+    } catch (_) {
+      // Unknown exception
+      print(e);
+      AppToast.show(S.of(context).errorSomethingWentWrong);
     }
   }
 
@@ -327,49 +333,49 @@ class AuthProvider with ChangeNotifier {
 
   /// Create a new user with the data in [info].
   Future<bool> signUp({Map<String, String> info, BuildContext context}) async {
-    String email = info[S.of(context).labelEmail];
-    String password = info[S.of(context).labelPassword];
-    String confirmPassword = info[S.of(context).labelConfirmPassword];
-    String firstName = info[S.of(context).labelFirstName];
-    String lastName = info[S.of(context).labelLastName];
-
-    Filter filter =
-        Provider.of<FilterProvider>(context, listen: false).cachedFilter;
-    String degree = info.getIfPresent(
-        filter.localizedLevelNames[0][LocaleProvider.localeString]);
-    String domain = info.getIfPresent(
-        filter.localizedLevelNames[1][LocaleProvider.localeString]);
-    String year = info.getIfPresent(
-        filter.localizedLevelNames[2][LocaleProvider.localeString]);
-    String series = info.getIfPresent(
-        filter.localizedLevelNames[3][LocaleProvider.localeString]);
-    String group = info.getIfPresent(
-        filter.localizedLevelNames[4][LocaleProvider.localeString]);
-
-    if (email == null || email == '') {
-      AppToast.show(S.of(context).errorInvalidEmail);
-      return false;
-    } else if (password == null || password == '') {
-      AppToast.show(S.of(context).errorNoPassword);
-      return false;
-    }
-    if (confirmPassword == null || confirmPassword != password) {
-      AppToast.show(S.of(context).errorPasswordsDiffer);
-      return false;
-    }
-    if (firstName == null || firstName == '') {
-      AppToast.show(S.of(context).errorMissingFirstName);
-      return false;
-    }
-    if (lastName == null || lastName == '') {
-      AppToast.show(S.of(context).errorMissingLastName);
-      return false;
-    }
-    if (!await isStrongPassword(password: password, context: context)) {
-      return false;
-    }
-
     try {
+      String email = info[S.of(context).labelEmail];
+      String password = info[S.of(context).labelPassword];
+      String confirmPassword = info[S.of(context).labelConfirmPassword];
+      String firstName = info[S.of(context).labelFirstName];
+      String lastName = info[S.of(context).labelLastName];
+
+      Filter filter =
+          Provider.of<FilterProvider>(context, listen: false).cachedFilter;
+      String degree = info.getIfPresent(
+          filter.localizedLevelNames[0][LocaleProvider.localeString]);
+      String domain = info.getIfPresent(
+          filter.localizedLevelNames[1][LocaleProvider.localeString]);
+      String year = info.getIfPresent(
+          filter.localizedLevelNames[2][LocaleProvider.localeString]);
+      String series = info.getIfPresent(
+          filter.localizedLevelNames[3][LocaleProvider.localeString]);
+      String group = info.getIfPresent(
+          filter.localizedLevelNames[4][LocaleProvider.localeString]);
+
+      if (email == null || email == '') {
+        AppToast.show(S.of(context).errorInvalidEmail);
+        return false;
+      } else if (password == null || password == '') {
+        AppToast.show(S.of(context).errorNoPassword);
+        return false;
+      }
+      if (confirmPassword == null || confirmPassword != password) {
+        AppToast.show(S.of(context).errorPasswordsDiffer);
+        return false;
+      }
+      if (firstName == null || firstName == '') {
+        AppToast.show(S.of(context).errorMissingFirstName);
+        return false;
+      }
+      if (lastName == null || lastName == '') {
+        AppToast.show(S.of(context).errorMissingLastName);
+        return false;
+      }
+      if (!await isStrongPassword(password: password, context: context)) {
+        return false;
+      }
+
       // Create user
       AuthResult res = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(email: email, password: password);

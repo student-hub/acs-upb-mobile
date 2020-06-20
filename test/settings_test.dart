@@ -30,7 +30,7 @@ void main() {
           .thenAnswer((realInvocation) => Future.value(true));
     });
 
-    testWidgets('Dark mode', (WidgetTester tester) async {
+    testWidgets('Dark Mode', (WidgetTester tester) async {
       await tester.pumpWidget(ChangeNotifierProvider<AuthProvider>(
           create: (_) => mockAuthProvider, child: MyApp()));
       await tester.pumpAndSettle();
@@ -44,14 +44,14 @@ void main() {
 
       // Toggle dark mode
       expect(find.text("Language"), findsOneWidget);
-      await tester.tap(find.text('Dark mode'));
+      await tester.tap(find.text('Dark Mode'));
       await tester.pumpAndSettle();
 
       app = find.byType(MaterialApp).evaluate().first.widget;
       expect(app.theme.brightness, equals(Brightness.light));
 
       // Toggle dark mode
-      await tester.tap(find.text('Dark mode'));
+      await tester.tap(find.text('Dark Mode'));
       await tester.pumpAndSettle();
 
       app = find.byType(MaterialApp).evaluate().first.widget;

@@ -57,6 +57,9 @@ android {
         debug {
             minifyEnabled true
         }
+        profile {
+            minifyEnabled true
+        }
     }
 }
 

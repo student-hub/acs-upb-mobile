@@ -930,7 +930,7 @@ class S {
 
   String get settingsItemDarkMode {
     return Intl.message(
-      'Dark mode',
+      'Dark Mode',
       name: 'settingsItemDarkMode',
       desc: '',
       args: [],
