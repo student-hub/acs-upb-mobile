@@ -1,9 +1,21 @@
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/classes/model/class.dart';
+import 'package:acs_upb_mobile/pages/classes/model/person.dart';
 import 'package:acs_upb_mobile/pages/filter/model/filter.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+
+extension PersonExtension on Person {
+  static Person fromSnap(DocumentSnapshot snap) {
+    return Person(
+      name: snap.data['name'],
+      email: snap.data['email'],
+      office: snap.data['office'],
+      position: snap.data['position'],
+    );
+  }
+}
 
 extension ShortcutTypeExtension on ShortcutType {
   static ShortcutType fromString(String string) {
@@ -21,8 +33,8 @@ extension ShortcutTypeExtension on ShortcutType {
 }
 
 extension ClassExtension on Class {
-  static Class fromSnap(
-      {DocumentSnapshot classSnap, DocumentSnapshot subclassSnap}) {
+  static Future<Class> fromSnap(
+      {DocumentSnapshot classSnap, DocumentSnapshot subclassSnap}) async {
     if (subclassSnap == null) {
       return Class(
         id: classSnap.documentID,
@@ -45,6 +57,15 @@ extension ClassExtension on Class {
         ));
       }
 
+      var lecturerSnap = await Firestore.instance
+          .collection('people')
+          .document(subclassSnap.data['lecturer'])
+          .get();
+      Person lecturer;
+      if (lecturerSnap?.data != null) {
+        lecturer = PersonExtension.fromSnap(lecturerSnap);
+      }
+
       return Class(
         id: classSnap.documentID + '/' + subclassSnap.documentID,
         name: classSnap.data['class'],
@@ -56,6 +77,7 @@ extension ClassExtension on Class {
         semester: classSnap.data['semester'],
         series: subclassSnap.data['series'],
         shortcuts: shortcuts,
+        lecturer: lecturer,
       );
     }
   }
@@ -118,12 +140,12 @@ class ClassProvider with ChangeNotifier {
             var subdocs = (await subclasses.getDocuments()).documents;
             if (subdocs.length > 0) {
               return subdocs
-                  .map(((subdoc) => ClassExtension.fromSnap(
+                  .map(((subdoc) async => await ClassExtension.fromSnap(
                       classSnap: doc, subclassSnap: subdoc)))
                   .toList();
             }
           }
-          return [ClassExtension.fromSnap(classSnap: doc)];
+          return [await ClassExtension.fromSnap(classSnap: doc)];
         }).toList());
 
         // Flatten
@@ -150,11 +172,11 @@ class ClassProvider with ChangeNotifier {
                 .collection('subclasses')
                 .document(idTokens[1])
                 .get();
-            classes.add(ClassExtension.fromSnap(
+            classes.add(await ClassExtension.fromSnap(
                 classSnap: parent, subclassSnap: child));
           } else {
             // it's a parent class
-            classes.add(ClassExtension.fromSnap(
+            classes.add(await ClassExtension.fromSnap(
                 classSnap: await col.document(classId).get()));
           }
         }

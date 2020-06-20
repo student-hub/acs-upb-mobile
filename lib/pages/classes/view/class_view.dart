@@ -164,7 +164,7 @@ class ClassView extends StatelessWidget {
                   children: [
                     Icon(Icons.person),
                     SizedBox(width: 4),
-                    Text("Vlad Posea"),
+                    Text(classInfo.lecturer?.name ?? ''),
                   ],
                 ),
                 SizedBox(height: 4),

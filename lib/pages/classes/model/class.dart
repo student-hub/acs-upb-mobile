@@ -1,4 +1,5 @@
 import 'package:acs_upb_mobile/generated/l10n.dart';
+import 'package:acs_upb_mobile/pages/classes/model/person.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:meta/meta.dart';
 
@@ -38,6 +39,7 @@ class Class {
   final String semester;
   final String series;
   final List<Shortcut> shortcuts;
+  final Person lecturer;
 
   Class(
       {@required this.id,
@@ -49,7 +51,8 @@ class Class {
       this.year,
       this.semester,
       this.series,
-      List<Shortcut> shortcuts})
+      List<Shortcut> shortcuts,
+      this.lecturer})
       : shortcuts = shortcuts ?? [];
 
   String get completeName => name + (series == null ? '' : ' (' + series + ')');
