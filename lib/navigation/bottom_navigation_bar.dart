@@ -4,7 +4,6 @@ import 'package:acs_upb_mobile/pages/home/home_page.dart';
 import 'package:acs_upb_mobile/pages/portal/view/portal_page.dart';
 import 'package:acs_upb_mobile/pages/profile/profile_page.dart';
 import 'package:acs_upb_mobile/pages/timetable/view/timetable_page.dart';
-import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -24,7 +23,6 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar> {
         ChangeNotifierProvider(
             create: (_) => ClassProvider(), child: TimetablePage()),
         PortalPage(),
-        AppScaffold(title: S.of(context).navigationMap), // TODO: Map
         ProfilePage(),
       ];
     }
@@ -50,11 +48,6 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar> {
               Tab(
                 icon: Icon(Icons.public),
                 text: S.of(context).navigationPortal,
-                iconMargin: EdgeInsets.all(0),
-              ),
-              Tab(
-                icon: Icon(Icons.map),
-                text: S.of(context).navigationMap,
                 iconMargin: EdgeInsets.all(0),
               ),
               Tab(
