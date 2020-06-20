@@ -4,6 +4,7 @@ import 'package:acs_upb_mobile/resources/custom_icons.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:black_hole_flutter/black_hole_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -98,7 +99,7 @@ class ClassView extends StatelessWidget {
       leading: CircleAvatar(
         child: Icon(shortcutIcon(shortcut.type)),
         backgroundColor: Colors.transparent,
-        foregroundColor: Colors.grey.shade600,
+        foregroundColor: Theme.of(context).iconTheme.color,
       ),
       title: Text(shortcut.name ?? shortcut.type.toLocalizedString(context)),
       contentPadding: EdgeInsets.zero,
@@ -126,7 +127,8 @@ class ClassView extends StatelessWidget {
           ListTile(
             leading: CircleAvatar(
               backgroundColor: Colors.grey.withOpacity(0.2),
-              child: Icon(Icons.laptop, color: Colors.grey.shade600),
+              child:
+                  Icon(Icons.laptop, color: Theme.of(context).iconTheme.color),
             ),
             title: Text('Tema 1'),
             subtitle: Text('5 Feb 2020 | 23:55'),
@@ -149,6 +151,9 @@ class ClassView extends StatelessWidget {
                 classInfo.acronym,
                 minFontSize: 5,
                 maxLines: 1,
+                style: TextStyle(
+                  color: classInfo.colorFromAcronym.highEmphasisOnColor,
+                ),
               ),
             ),
             SizedBox(width: 8),

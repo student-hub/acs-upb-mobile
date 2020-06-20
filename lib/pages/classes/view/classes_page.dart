@@ -6,6 +6,7 @@ import 'package:acs_upb_mobile/pages/classes/view/class_view.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:acs_upb_mobile/widgets/spoiler.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:black_hole_flutter/black_hole_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -285,11 +286,17 @@ class _ClassListItemState extends State<ClassListItem> {
       leading: CircleAvatar(
         backgroundColor: widget.classInfo.colorFromAcronym,
         child: (widget.selectable && selected)
-            ? Icon(Icons.check)
+            ? Icon(
+                Icons.check,
+                color: widget.classInfo.colorFromAcronym.highEmphasisOnColor,
+              )
             : AutoSizeText(
                 widget.classInfo.acronym,
                 minFontSize: 5,
                 maxLines: 1,
+                style: TextStyle(
+                  color: widget.classInfo.colorFromAcronym.highEmphasisOnColor,
+                ),
               ),
       ),
       title: Text(
