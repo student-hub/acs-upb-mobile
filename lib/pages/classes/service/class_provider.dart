@@ -11,8 +11,10 @@ extension PersonExtension on Person {
     return Person(
       name: snap.data['name'],
       email: snap.data['email'],
+      phone: snap.data['phone'],
       office: snap.data['office'],
       position: snap.data['position'],
+      photo: snap.data['photo'],
     );
   }
 }

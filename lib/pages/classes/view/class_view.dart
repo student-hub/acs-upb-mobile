@@ -1,5 +1,6 @@
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/classes/model/class.dart';
+import 'package:acs_upb_mobile/pages/classes/view/person_view.dart';
 import 'package:acs_upb_mobile/resources/custom_icons.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
@@ -39,7 +40,7 @@ class ClassView extends StatelessWidget {
         padding: const EdgeInsets.all(8.0),
         child: ListView(
           children: [
-            headerCard(),
+            headerCard(context),
             SizedBox(height: 8),
             shortcuts(context),
             SizedBox(height: 8),
@@ -139,7 +140,7 @@ class ClassView extends StatelessWidget {
     );
   }
 
-  Widget headerCard() {
+  Widget headerCard(BuildContext context) {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -160,12 +161,23 @@ class ClassView extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  children: [
-                    Icon(Icons.person),
-                    SizedBox(width: 4),
-                    Text(classInfo.lecturer?.name ?? ''),
-                  ],
+                GestureDetector(
+                  onTap: () => showModalBottomSheet(
+                    isScrollControlled: true,
+                      context: context,
+                      builder: (context) => FractionallySizedBox(
+                        heightFactor: 0.25,
+                        child: PersonView(
+                              person: classInfo.lecturer,
+                            ),
+                      )),
+                  child: Row(
+                    children: [
+                      Icon(Icons.person),
+                      SizedBox(width: 4),
+                      Text(classInfo.lecturer?.name ?? ''),
+                    ],
+                  ),
                 ),
                 SizedBox(height: 4),
                 Row(
