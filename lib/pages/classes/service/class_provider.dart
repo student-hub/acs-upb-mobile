@@ -141,10 +141,12 @@ class ClassProvider with ChangeNotifier {
           if (subclasses != null) {
             var subdocs = (await subclasses.getDocuments()).documents;
             if (subdocs.length > 0) {
-              return subdocs
-                  .map(((subdoc) async => await ClassExtension.fromSnap(
-                      classSnap: doc, subclassSnap: subdoc)))
-                  .toList();
+              List<Class> classes = [];
+              for (var subdoc in subdocs) {
+                classes.add(await ClassExtension.fromSnap(
+                    classSnap: doc, subclassSnap: subdoc));
+              }
+              return classes;
             }
           }
           return [await ClassExtension.fromSnap(classSnap: doc)];
