@@ -5,6 +5,21 @@ import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
+extension ShortcutTypeExtension on ShortcutType {
+  static ShortcutType fromString(String string) {
+    switch (string) {
+      case 'main':
+        return ShortcutType.main;
+      case 'classbook':
+        return ShortcutType.classbook;
+      case 'resource':
+        return ShortcutType.resource;
+      case 'other':
+        return ShortcutType.other;
+    }
+  }
+}
+
 extension ClassExtension on Class {
   static Class fromSnap(
       {DocumentSnapshot classSnap, DocumentSnapshot subclassSnap}) {
@@ -20,6 +35,16 @@ extension ClassExtension on Class {
         semester: classSnap.data['semester'],
       );
     } else {
+      List<Shortcut> shortcuts = [];
+      for (var s in List<Map<String, dynamic>>.from(
+          subclassSnap.data['shortcuts'] ?? [])) {
+        shortcuts.add(Shortcut(
+          type: ShortcutTypeExtension.fromString(s['type']),
+          name: s['name'],
+          link: s['link'],
+        ));
+      }
+
       return Class(
         id: classSnap.documentID + '/' + subclassSnap.documentID,
         name: classSnap.data['class'],
@@ -30,6 +55,7 @@ extension ClassExtension on Class {
         year: classSnap.data['year'],
         semester: classSnap.data['semester'],
         series: subclassSnap.data['series'],
+        shortcuts: shortcuts,
       );
     }
   }

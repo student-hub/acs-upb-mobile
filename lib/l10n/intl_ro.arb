@@ -30,6 +30,11 @@
   "sectionShortcuts": "Scurtături",
   "sectionEvents": "Evenimente",
 
+  "shortcutTypeMain": "Pagina principală",
+  "shortcutTypeClassbook": "Catalog",
+  "shortcutTypeResource": "Resursă",
+  "shortcutTypeOther": "Alta",
+
   "hintEmail": "john.doe",
   "hintPassword": "····················",
   "hintFirstName": "John",

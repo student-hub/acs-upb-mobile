@@ -271,6 +271,42 @@ class S {
     );
   }
 
+  String get shortcutTypeMain {
+    return Intl.message(
+      'Main page',
+      name: 'shortcutTypeMain',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get shortcutTypeClassbook {
+    return Intl.message(
+      'Classbook',
+      name: 'shortcutTypeClassbook',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get shortcutTypeResource {
+    return Intl.message(
+      'Resource',
+      name: 'shortcutTypeResource',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get shortcutTypeOther {
+    return Intl.message(
+      'Other',
+      name: 'shortcutTypeOther',
+      desc: '',
+      args: [],
+    );
+  }
+
   String get hintEmail {
     return Intl.message(
       'john.doe',

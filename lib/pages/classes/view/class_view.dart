@@ -1,8 +1,11 @@
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/classes/model/class.dart';
+import 'package:acs_upb_mobile/resources/custom_icons.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
+import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 extension ClassExtension on Class {
   Color get colorFromAcronym {
@@ -51,41 +54,56 @@ class ClassView extends StatelessWidget {
       padding: const EdgeInsets.all(8.0),
       child: Column(
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                S.of(context).sectionShortcuts,
-                style: Theme.of(context).textTheme.headline6,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    S.of(context).sectionShortcuts,
+                    style: Theme.of(context).textTheme.headline6,
+                  ),
+                  Icon(Icons.add),
+                ],
               ),
-              Icon(Icons.add),
-            ],
-          ),
-          Divider(),
-          ListTile(
-            leading: CircleAvatar(
-              child: Icon(Icons.home),
-              backgroundColor: Colors.transparent,
-              foregroundColor: Colors.grey.shade600,
-            ),
-            title: Text('Pagina principală'),
-            contentPadding: EdgeInsets.zero,
-            dense: true,
-            visualDensity: VisualDensity.compact,
-          ),
-          ListTile(
-            leading: CircleAvatar(
-              child: Icon(Icons.insert_drive_file),
-              backgroundColor: Colors.transparent,
-              foregroundColor: Colors.grey.shade600,
-            ),
-            title: Text('Catalog'),
-            contentPadding: EdgeInsets.zero,
-            dense: true,
-            visualDensity: VisualDensity.compact,
-          )
-        ],
+              Divider()
+            ] +
+            classInfo.shortcuts.map((s) => shortcut(s, context)).toList(),
       ),
+    );
+  }
+
+  IconData shortcutIcon(ShortcutType type) {
+    switch (type) {
+      case ShortcutType.main:
+        return Icons.home;
+      case ShortcutType.classbook:
+        return CustomIcons.book;
+      case ShortcutType.resource:
+        return Icons.insert_drive_file;
+      case ShortcutType.other:
+        return Icons.public;
+    }
+  }
+
+  _launchURL(String url, BuildContext context) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      AppToast.show(S.of(context).errorCouldNotLaunchURL(url));
+    }
+  }
+
+  Widget shortcut(Shortcut shortcut, BuildContext context) {
+    return ListTile(
+      onTap: () => _launchURL(shortcut.link, context),
+      leading: CircleAvatar(
+        child: Icon(shortcutIcon(shortcut.type)),
+        backgroundColor: Colors.transparent,
+        foregroundColor: Colors.grey.shade600,
+      ),
+      title: Text(shortcut.name ?? shortcut.type.toLocalizedString(context)),
+      contentPadding: EdgeInsets.zero,
+      dense: true,
+      visualDensity: VisualDensity.compact,
     );
   }
 

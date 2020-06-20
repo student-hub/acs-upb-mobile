@@ -30,6 +30,11 @@
   "sectionShortcuts": "Shortcuts",
   "sectionEvents": "Events",
 
+  "shortcutTypeMain": "Main page",
+  "shortcutTypeClassbook": "Classbook",
+  "shortcutTypeResource": "Resource",
+  "shortcutTypeOther": "Other",
+
   "hintEmail": "john.doe",
   "hintPassword": "····················",
   "hintFirstName": "John",

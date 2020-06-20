@@ -1,4 +1,31 @@
+import 'package:acs_upb_mobile/generated/l10n.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:meta/meta.dart';
+
+enum ShortcutType { main, classbook, resource, other }
+
+extension ShortcutTypeExtension on ShortcutType {
+  String toLocalizedString(BuildContext context) {
+    switch (this) {
+      case ShortcutType.main:
+        return S.of(context).shortcutTypeMain;
+      case ShortcutType.classbook:
+        return S.of(context).shortcutTypeClassbook;
+      case ShortcutType.resource:
+        return S.of(context).shortcutTypeResource;
+      case ShortcutType.other:
+        return S.of(context).shortcutTypeOther;
+    }
+  }
+}
+
+class Shortcut {
+  final ShortcutType type;
+  final String name;
+  final String link;
+
+  Shortcut({this.type, this.name, this.link});
+}
 
 class Class {
   final String id;
@@ -10,9 +37,20 @@ class Class {
   final String year;
   final String semester;
   final String series;
+  final List<Shortcut> shortcuts;
 
-  Class({@required this.id, this.name, this.acronym, this.credits, this.degree, this.domain,
-      this.year, this.semester, this.series});
+  Class(
+      {@required this.id,
+      this.name,
+      this.acronym,
+      this.credits,
+      this.degree,
+      this.domain,
+      this.year,
+      this.semester,
+      this.series,
+      List<Shortcut> shortcuts})
+      : shortcuts = shortcuts ?? [];
 
   String get completeName => name + (series == null ? '' : ' (' + series + ')');
 
