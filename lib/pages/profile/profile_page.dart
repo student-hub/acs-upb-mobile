@@ -139,6 +139,7 @@ class ProfilePage extends StatelessWidget {
 
     return AppScaffold(
       title: S.of(context).navigationProfile,
+      actions: [AppScaffoldAction(icon: Icons.edit, onPressed: () {})],
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: FutureBuilder(
