@@ -1,7 +1,6 @@
 import 'package:acs_upb_mobile/pages/classes/model/person.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class PersonView extends StatelessWidget {

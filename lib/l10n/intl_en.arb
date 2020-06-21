@@ -64,6 +64,7 @@
   "actionEditEvent": "Edit event",
   "actionDeleteEvent": "Delete event",
   "actionAddClasses": "Add classes",
+  "actionAddShortcut": "Add shortcut",
 
   "errorSomethingWentWrong": "Something went wrong.",
   "errorPasswordsDiffer": "The two passwords differ.",

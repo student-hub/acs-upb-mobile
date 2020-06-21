@@ -35,6 +35,7 @@ class MessageLookup extends MessageLookupByLibrary {
   static _notInlinedMessages(_) => <String, Function> {
     "actionAddClasses" : MessageLookupByLibrary.simpleMessage("Add classes"),
     "actionAddEvent" : MessageLookupByLibrary.simpleMessage("Add event"),
+    "actionAddShortcut" : MessageLookupByLibrary.simpleMessage("Add shortcut"),
     "actionAddWebsite" : MessageLookupByLibrary.simpleMessage("Add website"),
     "actionDeleteAccount" : MessageLookupByLibrary.simpleMessage("Delete account"),
     "actionDeleteEvent" : MessageLookupByLibrary.simpleMessage("Delete event"),

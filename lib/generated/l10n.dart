@@ -568,6 +568,15 @@ class S {
     );
   }
 
+  String get actionAddShortcut {
+    return Intl.message(
+      'Add shortcut',
+      name: 'actionAddShortcut',
+      desc: '',
+      args: [],
+    );
+  }
+
   String get errorSomethingWentWrong {
     return Intl.message(
       'Something went wrong.',

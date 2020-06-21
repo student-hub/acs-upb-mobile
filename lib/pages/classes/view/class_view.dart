@@ -1,6 +1,7 @@
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/classes/model/class.dart';
 import 'package:acs_upb_mobile/pages/classes/view/person_view.dart';
+import 'package:acs_upb_mobile/pages/classes/view/shortcut_view.dart';
 import 'package:acs_upb_mobile/pages/timetable/view/event_view.dart';
 import 'package:acs_upb_mobile/resources/custom_icons.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
@@ -64,7 +65,16 @@ class ClassView extends StatelessWidget {
                     S.of(context).sectionShortcuts,
                     style: Theme.of(context).textTheme.headline6,
                   ),
-                  Icon(Icons.add),
+                  IconButton(
+                      icon: Icon(Icons.add),
+                      onPressed: () => showModalBottomSheet(
+                          isScrollControlled: true,
+                          context: context,
+                          // TODO: Fix size for landscape
+                          builder: (context) => FractionallySizedBox(
+                                heightFactor: 0.3,
+                                child: ShortcutView(),
+                              ))),
                 ],
               ),
               Divider()
@@ -183,6 +193,7 @@ class ClassView extends StatelessWidget {
                   onTap: () => showModalBottomSheet(
                       isScrollControlled: true,
                       context: context,
+                      // TODO: Fix size for landscape
                       builder: (context) => FractionallySizedBox(
                             heightFactor: 0.25,
                             child: PersonView(
