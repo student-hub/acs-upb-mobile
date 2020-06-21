@@ -23,7 +23,7 @@
   "labelColor": "Color",
   "labelStart": "Start",
   "labelEnd": "End",
-
+  "labelClass": "Class",
   "labelYear": "Year",
   "labelSemester": "Semester",
   "labelTeam": "{name} team",

@@ -1,6 +1,7 @@
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/classes/model/class.dart';
 import 'package:acs_upb_mobile/pages/classes/view/person_view.dart';
+import 'package:acs_upb_mobile/pages/timetable/view/event_view.dart';
 import 'package:acs_upb_mobile/resources/custom_icons.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
@@ -121,7 +122,14 @@ class ClassView extends StatelessWidget {
                 S.of(context).sectionEvents,
                 style: Theme.of(context).textTheme.headline6,
               ),
-              Icon(Icons.add),
+              IconButton(
+                icon: Icon(Icons.add),
+                onPressed: () => Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => EventView(
+                    addNew: true,
+                  ),
+                )),
+              ),
             ],
           ),
           Divider(),

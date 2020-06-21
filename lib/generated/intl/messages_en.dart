@@ -88,6 +88,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "infoRelevance" : MessageLookupByLibrary.simpleMessage("Try to choose the most restrictive category."),
     "infoRelevanceExample" : MessageLookupByLibrary.simpleMessage("For instance, if something is only relevant for \"314CB\" and \"315CB\", don\'t just set \"CB\"."),
     "labelCategory" : MessageLookupByLibrary.simpleMessage("Category"),
+    "labelClass" : MessageLookupByLibrary.simpleMessage("Class"),
     "labelColor" : MessageLookupByLibrary.simpleMessage("Color"),
     "labelConfirmPassword" : MessageLookupByLibrary.simpleMessage("Confirm password"),
     "labelCustom" : MessageLookupByLibrary.simpleMessage("Custom"),

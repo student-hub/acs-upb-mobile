@@ -235,6 +235,15 @@ class S {
     );
   }
 
+  String get labelClass {
+    return Intl.message(
+      'Class',
+      name: 'labelClass',
+      desc: '',
+      args: [],
+    );
+  }
+
   String get labelYear {
     return Intl.message(
       'Year',

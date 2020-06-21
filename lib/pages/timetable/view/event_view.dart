@@ -280,6 +280,17 @@ class _EventViewState extends State<EventView> {
                     padding: const EdgeInsets.all(16.0),
                     child: Row(
                       children: <Widget>[
+                        Icon(Icons.class_),
+                        SizedBox(width: 16),
+                        Text(widget.event.mainEvent.type
+                            .toLocalizedString(context)),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Row(
+                      children: <Widget>[
                         Icon(Icons.location_on),
                         SizedBox(width: 16),
                         Text(widget.event.location),
@@ -319,6 +330,20 @@ class _EventViewState extends State<EventView> {
                                 .toList(),
                             onChanged: (selection) =>
                                 setState(() => _selectedEventType = selection),
+                          ),
+                          DropdownButtonFormField<String>(
+                            decoration: InputDecoration(
+                              labelText: S.of(context).labelClass,
+                              prefixIcon: Icon(Icons.class_),
+                            ),
+                            value: 'Programarea Calculatoarelor (CB)',
+                            items: [
+                              DropdownMenuItem(
+                                  value: 'Programarea Calculatoarelor (CB)',
+                                  child:
+                                      Text('Programarea Calculatoarelor (CB)')),
+                            ],
+                            onChanged: (_) {},
                           ),
                           // TODO: Check that startTime < endTime
                           DateTimeField(
