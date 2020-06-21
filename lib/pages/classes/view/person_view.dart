@@ -13,7 +13,7 @@ class PersonView extends StatelessWidget {
   Widget build(BuildContext context) {
     return AppScaffold(
       title: person.name,
-      actions: [AppScaffoldAction(icon: Icons.edit, onPressed: (){})],
+      actions: [AppScaffoldAction(icon: Icons.edit)],
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Center(
