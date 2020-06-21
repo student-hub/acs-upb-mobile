@@ -253,6 +253,15 @@ class S {
     );
   }
 
+  String labelTeam(Object name) {
+    return Intl.message(
+      '$name team',
+      name: 'labelTeam',
+      desc: '',
+      args: [name],
+    );
+  }
+
   String get sectionShortcuts {
     return Intl.message(
       'Shortcuts',

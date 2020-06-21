@@ -138,8 +138,8 @@ class ClassView extends StatelessWidget {
           ListTile(
             leading: CircleAvatar(
               backgroundColor: Colors.grey.withOpacity(0.2),
-              child:
-              Icon(Icons.spellcheck, color: Theme.of(context).iconTheme.color),
+              child: Icon(Icons.spellcheck,
+                  color: Theme.of(context).iconTheme.color),
             ),
             title: Text('Test'),
             subtitle: Text('1 Nov 2020 | 16:00'),
@@ -173,14 +173,14 @@ class ClassView extends StatelessWidget {
               children: [
                 GestureDetector(
                   onTap: () => showModalBottomSheet(
-                    isScrollControlled: true,
+                      isScrollControlled: true,
                       context: context,
                       builder: (context) => FractionallySizedBox(
-                        heightFactor: 0.25,
-                        child: PersonView(
+                            heightFactor: 0.25,
+                            child: PersonView(
                               person: classInfo.lecturer,
                             ),
-                      )),
+                          )),
                   child: Row(
                     children: [
                       Icon(Icons.person),
@@ -194,7 +194,7 @@ class ClassView extends StatelessWidget {
                   children: [
                     Icon(Icons.people),
                     SizedBox(width: 4),
-                    Text(classInfo.shortName + ' team'),
+                    Text(S.of(context).labelTeam(classInfo.shortName)),
                   ],
                 ),
               ],

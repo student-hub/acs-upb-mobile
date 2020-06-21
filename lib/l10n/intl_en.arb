@@ -26,6 +26,7 @@
 
   "labelYear": "Year",
   "labelSemester": "Semester",
+  "labelTeam": "{name} team",
 
   "sectionShortcuts": "Shortcuts",
   "sectionEvents": "Events",
