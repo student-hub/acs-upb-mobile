@@ -94,9 +94,13 @@ class _ClassesPageState extends State<ClassesPage> {
             )
           : ClassList(
               classes: classes,
-              onTap: (classInfo) => Navigator.of(context).push(
-                  MaterialPageRoute(
-                      builder: (context) => ClassView(classInfo: classInfo))),
+              onTap: (classInfo) =>
+                  Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => ChangeNotifierProvider.value(
+                  value: classProvider,
+                  child: ClassView(classInfo: classInfo),
+                ),
+              )),
             ),
     );
   }

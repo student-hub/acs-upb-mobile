@@ -1,5 +1,6 @@
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/classes/model/class.dart';
+import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
 import 'package:acs_upb_mobile/pages/classes/view/person_view.dart';
 import 'package:acs_upb_mobile/pages/classes/view/shortcut_view.dart';
 import 'package:acs_upb_mobile/pages/timetable/view/event_view.dart';
@@ -9,6 +10,7 @@ import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:black_hole_flutter/black_hole_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 extension ClassExtension on Class {
@@ -54,6 +56,7 @@ class ClassView extends StatelessWidget {
   }
 
   Widget shortcuts(BuildContext context) {
+    var classProvider = Provider.of<ClassProvider>(context);
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(
@@ -66,15 +69,20 @@ class ClassView extends StatelessWidget {
                     style: Theme.of(context).textTheme.headline6,
                   ),
                   IconButton(
-                      icon: Icon(Icons.add),
-                      onPressed: () => showModalBottomSheet(
-                          isScrollControlled: true,
-                          context: context,
-                          // TODO: Fix size for landscape
-                          builder: (context) => FractionallySizedBox(
-                                heightFactor: 0.3,
-                                child: ShortcutView(),
-                              ))),
+                    icon: Icon(Icons.add),
+                    onPressed: () =>
+                        Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => ChangeNotifierProvider.value(
+                        value: classProvider,
+                        child: ShortcutView(
+                          onSave: (shortcut) => classProvider.addShortcut(
+                              classId: classInfo.id,
+                              shortcut: shortcut,
+                              context: context),
+                        ),
+                      ),
+                    )),
+                  ),
                 ],
               ),
               Divider()

@@ -24,8 +24,9 @@ class Shortcut {
   final ShortcutType type;
   final String name;
   final String link;
+  final String ownerUid;
 
-  Shortcut({this.type, this.name, this.link});
+  Shortcut({this.type, this.name, this.link, this.ownerUid});
 }
 
 class Class {

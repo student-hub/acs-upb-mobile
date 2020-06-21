@@ -1,7 +1,9 @@
+import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/classes/model/class.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:validators/validators.dart';
 
 class ShortcutView extends StatefulWidget {
@@ -16,14 +18,29 @@ class ShortcutView extends StatefulWidget {
 class _ShortcutViewState extends State<ShortcutView> {
   final formKey = GlobalKey<FormState>();
   ShortcutType selectedType = ShortcutType.resource;
-  TextEditingController labelController;
-  TextEditingController linkController;
+  TextEditingController labelController = TextEditingController();
+  TextEditingController linkController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
       title: S.of(context).actionAddShortcut,
-      actions: [AppScaffoldAction(text: S.of(context).buttonSave)],
+      actions: [
+        AppScaffoldAction(
+            text: S.of(context).buttonSave,
+            onPressed: () {
+              if (formKey.currentState.validate()) {
+                widget.onSave(Shortcut(
+                  name: labelController.text,
+                  link: linkController.text,
+                  type: selectedType,
+                  ownerUid:
+                      Provider.of<AuthProvider>(context, listen: false).uid,
+                ));
+                Navigator.of(context).pop();
+              }
+            })
+      ],
       body: Padding(
         padding: const EdgeInsets.only(left: 16.0, right: 16.0),
         child: Form(

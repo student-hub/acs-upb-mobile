@@ -56,6 +56,7 @@ extension ClassExtension on Class {
           type: ShortcutTypeExtension.fromString(s['type']),
           name: s['name'],
           link: s['link'],
+          ownerUid: s['addedBy'],
         ));
       }
 
@@ -189,10 +190,49 @@ class ClassProvider with ChangeNotifier {
         return userClassesCache;
       }
     } catch (e) {
+      print(e);
       if (context != null) {
         AppToast.show(S.of(context).errorSomethingWentWrong);
       }
       return null;
+    }
+  }
+
+  Future<bool> addShortcut(
+      {String classId, Shortcut shortcut, BuildContext context}) async {
+    try {
+      CollectionReference col = _db.collection('classes');
+      DocumentReference doc;
+      var idTokens = classId.split('/');
+      if (idTokens.length > 1) {
+        // it's a subclass
+        doc = col
+            .document(idTokens[0])
+            .collection('subclasses')
+            .document(idTokens[1]);
+      } else {
+        // it's a parent class
+        doc = col.document(idTokens[0]);
+      }
+
+      var shortcuts = List<Map<String, dynamic>>.from(
+          (await doc.get()).data['shortcuts'] ?? []);
+      shortcuts.add({
+        'type': shortcut.type.toString().split('.').last,
+        'name': shortcut.name,
+        'link': shortcut.link,
+        'addedBy': shortcut.ownerUid
+      });
+
+      await doc.updateData({'shortcuts': shortcuts});
+      notifyListeners();
+      return true;
+    } catch (e) {
+      print(e);
+      if (context != null) {
+        AppToast.show(S.of(context).errorSomethingWentWrong);
+      }
+      return false;
     }
   }
 }
