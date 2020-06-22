@@ -8,32 +8,49 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class AppBottomNavigationBar extends StatefulWidget {
+  final int tabIndex;
+
+  AppBottomNavigationBar({this.tabIndex = 0});
+
   @override
   _AppBottomNavigationBarState createState() => _AppBottomNavigationBarState();
 }
 
-class _AppBottomNavigationBarState extends State<AppBottomNavigationBar> {
+class _AppBottomNavigationBarState extends State<AppBottomNavigationBar>
+    with TickerProviderStateMixin {
   var tabs;
+  TabController tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    tabController = TabController(vsync: this, length: 4);
+    tabs = [
+      HomePage(tabController),
+      ChangeNotifierProvider(
+          create: (_) => ClassProvider(), child: TimetablePage()),
+      PortalPage(),
+      ProfilePage(),
+    ];
+  }
+
+  @override
+  void dispose() {
+    tabController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    if (tabs == null) {
-      tabs = [
-        HomePage(),
-        ChangeNotifierProvider(
-            create: (_) => ClassProvider(), child: TimetablePage()),
-        PortalPage(),
-        ProfilePage(),
-      ];
-    }
-
     return DefaultTabController(
       length: tabs.length,
+      initialIndex: widget.tabIndex,
       child: Scaffold(
-        body: TabBarView(children: tabs),
+        body: TabBarView(controller: tabController, children: tabs),
         bottomNavigationBar: SizedBox(
           height: 45,
           child: TabBar(
+            controller: tabController,
             tabs: [
               Tab(
                 icon: Icon(Icons.home),

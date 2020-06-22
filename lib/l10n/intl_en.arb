@@ -30,6 +30,7 @@
 
   "sectionShortcuts": "Shortcuts",
   "sectionEvents": "Events",
+  "sectionFrequentlyAccessedWebsites": "Favourite websites",
 
   "shortcutTypeMain": "Main page",
   "shortcutTypeClassbook": "Classbook",
@@ -66,6 +67,7 @@
   "actionAddClasses": "Add classes",
   "actionAddShortcut": "Add shortcut",
   "actionDeleteShortcut": "Delete shortcut",
+  "actionShowMore": "Show more",
 
   "errorSomethingWentWrong": "Something went wrong.",
   "errorPasswordsDiffer": "The two passwords differ.",

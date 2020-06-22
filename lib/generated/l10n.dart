@@ -289,6 +289,15 @@ class S {
     );
   }
 
+  String get sectionFrequentlyAccessedWebsites {
+    return Intl.message(
+      'Favourite websites',
+      name: 'sectionFrequentlyAccessedWebsites',
+      desc: '',
+      args: [],
+    );
+  }
+
   String get shortcutTypeMain {
     return Intl.message(
       'Main page',
@@ -581,6 +590,15 @@ class S {
     return Intl.message(
       'Delete shortcut',
       name: 'actionDeleteShortcut',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get actionShowMore {
+    return Intl.message(
+      'Show more',
+      name: 'actionShowMore',
       desc: '',
       args: [],
     );

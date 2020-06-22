@@ -30,6 +30,7 @@
 
   "sectionShortcuts": "Scurtături",
   "sectionEvents": "Evenimente",
+  "sectionFrequentlyAccessedWebsites": "Website-uri favorite",
 
   "shortcutTypeMain": "Pagina principală",
   "shortcutTypeClassbook": "Catalog",
@@ -66,6 +67,7 @@
   "actionAddClasses": "Adaugă materii",
   "actionAddShortcut": "Adaugă scurtătură",
   "actionDeleteShortcut": "Șterge scurtătură",
+  "actionShowMore": "Arată mai multe",
 
   "errorSomethingWentWrong": "A apărut o problemă.",
   "errorPasswordsDiffer": "Cele două parole diferă.",
