@@ -15,7 +15,9 @@ import 'package:url_launcher/url_launcher.dart';
 
 extension ClassExtension on Class {
   Color get colorFromAcronym {
-    int r = 0, g = 0, b = 0;
+    int r = 0,
+        g = 0,
+        b = 0;
     if (acronym.length >= 1) {
       b = acronym[0].codeUnitAt(0);
       if (acronym.length >= 2) {
@@ -31,15 +33,20 @@ extension ClassExtension on Class {
   }
 }
 
-class ClassView extends StatelessWidget {
+class ClassView extends StatefulWidget {
   final Class classInfo;
 
   const ClassView({Key key, this.classInfo}) : super(key: key);
 
   @override
+  _ClassViewState createState() => _ClassViewState();
+}
+
+class _ClassViewState extends State<ClassView> {
+  @override
   Widget build(BuildContext context) {
     return AppScaffold(
-      title: classInfo.completeName,
+      title: widget.classInfo.completeName,
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: ListView(
@@ -61,33 +68,43 @@ class ClassView extends StatelessWidget {
       padding: const EdgeInsets.all(8.0),
       child: Column(
         children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    S.of(context).sectionShortcuts,
-                    style: Theme.of(context).textTheme.headline6,
-                  ),
-                  IconButton(
-                    icon: Icon(Icons.add),
-                    onPressed: () =>
-                        Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => ChangeNotifierProvider.value(
-                        value: classProvider,
-                        child: ShortcutView(
-                          onSave: (shortcut) => classProvider.addShortcut(
-                              classId: classInfo.id,
-                              shortcut: shortcut,
-                              context: context),
-                        ),
-                      ),
-                    )),
-                  ),
-                ],
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                S
+                    .of(context)
+                    .sectionShortcuts,
+                style: Theme
+                    .of(context)
+                    .textTheme
+                    .headline6,
               ),
-              Divider()
-            ] +
-            classInfo.shortcuts.map((s) => shortcut(s, context)).toList(),
+              IconButton(
+                icon: Icon(Icons.add),
+                onPressed: () =>
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) =>
+                          ChangeNotifierProvider.value(
+                            value: classProvider,
+                            child: ShortcutView(
+                                onSave: (shortcut) {
+                                  setState(() =>
+                                  widget.classInfo.shortcuts.add(shortcut));
+                                  classProvider.addShortcut(
+                                      classId: widget.classInfo.id,
+                                      shortcut: shortcut,
+                                      context: context);
+                                }
+                            ),
+                          ),
+                    )),
+              ),
+            ],
+          ),
+          Divider()
+        ] +
+            widget.classInfo.shortcuts.map((s) => shortcut(s, context)).toList(),
       ),
     );
   }
@@ -119,7 +136,10 @@ class ClassView extends StatelessWidget {
       leading: CircleAvatar(
         child: Icon(shortcutIcon(shortcut.type)),
         backgroundColor: Colors.transparent,
-        foregroundColor: Theme.of(context).iconTheme.color,
+        foregroundColor: Theme
+            .of(context)
+            .iconTheme
+            .color,
       ),
       title: Text(shortcut.name ?? shortcut.type.toLocalizedString(context)),
       contentPadding: EdgeInsets.zero,
@@ -137,16 +157,23 @@ class ClassView extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                S.of(context).sectionEvents,
-                style: Theme.of(context).textTheme.headline6,
+                S
+                    .of(context)
+                    .sectionEvents,
+                style: Theme
+                    .of(context)
+                    .textTheme
+                    .headline6,
               ),
               IconButton(
                 icon: Icon(Icons.add),
-                onPressed: () => Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => EventView(
-                    addNew: true,
-                  ),
-                )),
+                onPressed: () =>
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) =>
+                          EventView(
+                            addNew: true,
+                          ),
+                    )),
               ),
             ],
           ),
@@ -155,7 +182,10 @@ class ClassView extends StatelessWidget {
             leading: CircleAvatar(
               backgroundColor: Colors.grey.withOpacity(0.2),
               child:
-                  Icon(Icons.laptop, color: Theme.of(context).iconTheme.color),
+              Icon(Icons.laptop, color: Theme
+                  .of(context)
+                  .iconTheme
+                  .color),
             ),
             title: Text('Tema 1'),
             subtitle: Text('5 Oct 2020 | 23:55'),
@@ -165,7 +195,10 @@ class ClassView extends StatelessWidget {
             leading: CircleAvatar(
               backgroundColor: Colors.grey.withOpacity(0.2),
               child: Icon(Icons.spellcheck,
-                  color: Theme.of(context).iconTheme.color),
+                  color: Theme
+                      .of(context)
+                      .iconTheme
+                      .color),
             ),
             title: Text('Test'),
             subtitle: Text('1 Nov 2020 | 16:00'),
@@ -183,13 +216,13 @@ class ClassView extends StatelessWidget {
         child: Row(
           children: [
             CircleAvatar(
-              backgroundColor: classInfo.colorFromAcronym,
+              backgroundColor: widget.classInfo.colorFromAcronym,
               child: AutoSizeText(
-                classInfo.acronym,
+                widget.classInfo.acronym,
                 minFontSize: 5,
                 maxLines: 1,
                 style: TextStyle(
-                  color: classInfo.colorFromAcronym.highEmphasisOnColor,
+                  color: widget.classInfo.colorFromAcronym.highEmphasisOnColor,
                 ),
               ),
             ),
@@ -198,21 +231,23 @@ class ClassView extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 GestureDetector(
-                  onTap: () => showModalBottomSheet(
-                      isScrollControlled: true,
-                      context: context,
-                      // TODO: Fix size for landscape
-                      builder: (context) => FractionallySizedBox(
-                            heightFactor: 0.25,
-                            child: PersonView(
-                              person: classInfo.lecturer,
-                            ),
-                          )),
+                  onTap: () =>
+                      showModalBottomSheet(
+                          isScrollControlled: true,
+                          context: context,
+                          // TODO: Fix size for landscape
+                          builder: (context) =>
+                              FractionallySizedBox(
+                                heightFactor: 0.25,
+                                child: PersonView(
+                                  person: widget.classInfo.lecturer,
+                                ),
+                              )),
                   child: Row(
                     children: [
                       Icon(Icons.person),
                       SizedBox(width: 4),
-                      Text(classInfo.lecturer?.name ?? ''),
+                      Text(widget.classInfo.lecturer?.name ?? ''),
                     ],
                   ),
                 ),
@@ -221,7 +256,7 @@ class ClassView extends StatelessWidget {
                   children: [
                     Icon(Icons.people),
                     SizedBox(width: 4),
-                    Text(S.of(context).labelTeam(classInfo.shortName)),
+                    Text(S.of(context).labelTeam(widget.classInfo.shortName)),
                   ],
                 ),
               ],

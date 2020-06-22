@@ -225,6 +225,7 @@ class ClassProvider with ChangeNotifier {
       });
 
       await doc.updateData({'shortcuts': shortcuts});
+      userClassesCache = null;
       notifyListeners();
       return true;
     } catch (e) {
