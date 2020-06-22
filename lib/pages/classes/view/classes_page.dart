@@ -121,18 +121,20 @@ class _ClassesPageState extends State<ClassesPage> {
       ],
       body: Stack(
         children: [
-          (classes ?? []).isNotEmpty
-              ? ClassList(
-                  classes: classes,
-                  onTap: (classInfo) =>
-                      Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => ChangeNotifierProvider.value(
-                      value: classProvider,
-                      child: ClassView(classInfo: classInfo),
-                    ),
-                  )),
-                )
-              : _noClassesView(),
+          if (updating != null)
+            ((classes != null && classes.isNotEmpty)
+                ? ClassList(
+                    classes: classes,
+                    onTap: (classInfo) =>
+                        Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => ChangeNotifierProvider.value(
+                        value: classProvider,
+                        child: ClassView(classInfo: classInfo),
+                      ),
+                    )),
+                  )
+                : _noClassesView()),
+          if (updating == null) Center(child: CircularProgressIndicator()),
           if (updating == true)
             Container(
                 color: Theme.of(context).disabledColor,

@@ -22,27 +22,160 @@ class _TimetablePageState extends State<TimetablePage> {
   void initState() {
     super.initState();
     // TODO: This is a placeholder
+    var startDate = LocalDate(2020, 6, 22);
     List<UniEvent> events = [
       UniEvent(
-        id: '0',
-        type: UniEventType.homework,
+        id: '3',
+        type: UniEventType.lab,
         properties: {
-          'soft': LocalDate.today().at(LocalTime(13, 0, 0)),
-          'hard':
-              LocalDate.today().at(LocalTime(13, 0, 0)).add(Period(days: 7)),
-          'name': 'PC - Tema 1',
+          'name': 'USO',
+          'start': startDate.at(LocalTime(8, 0, 0)),
+          'end': startDate.at(LocalTime(10, 0, 0)),
+          'location': 'EG306',
         },
+        color: Colors.blue,
+      ),
+      UniEvent(
+        id: '4',
+        type: UniEventType.lab,
+        properties: {
+          'name': 'PC',
+          'start': startDate.at(LocalTime(10, 0, 0)),
+          'end': startDate.at(LocalTime(12, 0, 0)),
+          'location': 'EG105',
+        },
+        color: Colors.blue,
+      ),
+      UniEvent(
+        id: '5',
+        type: UniEventType.seminar,
+        properties: {
+          'name': 'LS1',
+          'start': startDate.at(LocalTime(12, 0, 0)),
+          'end': startDate.at(LocalTime(14, 0, 0)),
+          'location': 'PR103b',
+        },
+        color: Colors.lime,
+      ),
+      UniEvent(
+        id: '6',
+        type: UniEventType.lecture,
+        properties: {
+          'name': 'PL',
+          'start': startDate.addDays(1).at(LocalTime(9, 0, 0)),
+          'end': startDate.addDays(1).at(LocalTime(12, 0, 0)),
+          'location': 'AN001',
+        },
+        color: Colors.orange,
+      ),
+      UniEvent(
+        id: '7',
+        type: UniEventType.seminar,
+        properties: {
+          'name': 'M1',
+          'start': startDate.addDays(1).at(LocalTime(14, 0, 0)),
+          'end': startDate.addDays(1).at(LocalTime(16, 0, 0)),
+          'location': 'EC102',
+        },
+        color: Colors.lime,
+      ),
+      UniEvent(
+        id: '8',
+        type: UniEventType.lab,
+        properties: {
+          'name': 'PL',
+          'start': startDate.addDays(1).at(LocalTime(16, 0, 0)),
+          'end': startDate.addDays(1).at(LocalTime(18, 0, 0)),
+          'location': 'EG311',
+        },
+        color: Colors.blue,
+      ),
+      UniEvent(
+        id: '9',
+        type: UniEventType.lab,
+        properties: {
+          'name': 'USO',
+          'start': startDate.addDays(1).at(LocalTime(18, 0, 0)),
+          'end': startDate.addDays(1).at(LocalTime(20, 0, 0)),
+          'location': 'EG306',
+        },
+        color: Colors.blue,
       ),
       UniEvent(
         id: '1',
         type: UniEventType.test,
         properties: {
           'name': 'M1 - Parțial',
-          'start': LocalDate.today().addDays(1).at(LocalTime(10, 0, 0)),
-          'end': LocalDate.today().addDays(1).at(LocalTime(13, 0, 0)),
-          'location': 'PR001',
+          'start': startDate.addDays(2).at(LocalTime(8, 0, 0)),
+          'end': startDate.addDays(2).at(LocalTime(11, 0, 0)),
+          'location': 'AN001',
         },
         color: Colors.teal,
+      ),
+      UniEvent(
+        id: '2',
+        type: UniEventType.lecture,
+        properties: {
+          'name': 'M2',
+          'start': startDate.addDays(2).at(LocalTime(11, 0, 0)),
+          'end': startDate.addDays(2).at(LocalTime(14, 0, 0)),
+          'location': 'AN001',
+        },
+        color: Colors.orange,
+      ),
+      UniEvent(
+        id: '10',
+        type: UniEventType.seminar,
+        properties: {
+          'name': 'M2',
+          'start': startDate.addDays(2).at(LocalTime(14, 0, 0)),
+          'end': startDate.addDays(2).at(LocalTime(16, 0, 0)),
+          'location': 'AN217',
+        },
+        color: Colors.lime,
+      ),
+      UniEvent(
+        id: '11',
+        type: UniEventType.lecture,
+        properties: {
+          'name': 'PC',
+          'start': startDate.addDays(3).at(LocalTime(11, 0, 0)),
+          'end': startDate.addDays(3).at(LocalTime(14, 0, 0)),
+          'location': 'PR001',
+        },
+        color: Colors.orange,
+      ),
+      UniEvent(
+        id: '12',
+        type: UniEventType.seminar,
+        properties: {
+          'name': 'L',
+          'start': startDate.addDays(3).at(LocalTime(14, 0, 0)),
+          'end': startDate.addDays(3).at(LocalTime(16, 0, 0)),
+          'location': 'AN217',
+        },
+        color: Colors.lime,
+      ),
+      UniEvent(
+        id: '13',
+        type: UniEventType.lecture,
+        properties: {
+          'name': 'L',
+          'start': startDate.addDays(4).at(LocalTime(8, 0, 0)),
+          'end': startDate.addDays(4).at(LocalTime(10, 0, 0)),
+          'location': 'AN034',
+        },
+        color: Colors.orange,
+      ),
+      UniEvent(
+        id: '0',
+        type: UniEventType.homework,
+        properties: {
+          'soft': startDate.addDays(5).at(LocalTime(23, 00, 0)),
+          'hard':
+          startDate.at(LocalTime(23, 0, 0)).add(Period(days: 7)),
+          'name': 'PC - Tema 1',
+        },
       ),
     ];
 

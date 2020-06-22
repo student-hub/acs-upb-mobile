@@ -141,6 +141,18 @@ class UniEvent {
         // TODO: Handle this case.
         break;
     }
+
+    return [
+      UniEventInstance(
+        id: id,
+        title: properties['name'],
+        mainEvent: this,
+        color: this.color,
+        start: properties['start'],
+        end: properties['end'],
+        location: properties['location'],
+      )
+    ];
   }
 }
 
