@@ -1324,6 +1324,15 @@ class S {
     );
   }
 
+  String messageDeleteShortcut(Object shortcutName) {
+    return Intl.message(
+      'Are you sure you want to delete "$shortcutName"?',
+      name: 'messageDeleteShortcut',
+      desc: '',
+      args: [shortcutName],
+    );
+  }
+
   String get infoPasswordResetEmailSent {
     return Intl.message(
       'Please check your inbox for the password reset e-mail.',

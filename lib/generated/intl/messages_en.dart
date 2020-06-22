@@ -25,11 +25,13 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static m2(name) => "${name} team";
 
-  static m3(name) => "Welcome, ${name}!";
+  static m3(shortcutName) => "Are you sure you want to delete \"${shortcutName}\"?";
 
-  static m4(email) => "There is already an account associated with ${email}.";
+  static m4(name) => "Welcome, ${name}!";
 
-  static m5(provider) => "Please log in with ${provider} to continue.";
+  static m5(email) => "There is already an account associated with ${email}.";
+
+  static m6(provider) => "Please log in with ${provider} to continue.";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
@@ -117,6 +119,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "messageCheckEmailVerification" : MessageLookupByLibrary.simpleMessage("Please check your email for account verification."),
     "messageDeleteAccount" : MessageLookupByLibrary.simpleMessage("Are you sure you want to delete your account?"),
     "messageDeleteEvent" : MessageLookupByLibrary.simpleMessage("Are you sure you want to delete this event?"),
+    "messageDeleteShortcut" : m3,
     "messageDeleteWebsite" : MessageLookupByLibrary.simpleMessage("Are you sure you want to delete this website?"),
     "messageEmailNotVerified" : MessageLookupByLibrary.simpleMessage("Account is not verified."),
     "messageNewUser" : MessageLookupByLibrary.simpleMessage("New user?"),
@@ -126,7 +129,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "messageWebsiteDeleted" : MessageLookupByLibrary.simpleMessage("Website deleted successfully."),
     "messageWebsiteEdited" : MessageLookupByLibrary.simpleMessage("Website modified successfully."),
     "messageWebsitePreview" : MessageLookupByLibrary.simpleMessage("Try tapping/long-pressing/hovering the preview to test the new website."),
-    "messageWelcomeName" : m3,
+    "messageWelcomeName" : m4,
     "messageWelcomeSimple" : MessageLookupByLibrary.simpleMessage("Welcome!"),
     "navigationClasses" : MessageLookupByLibrary.simpleMessage("Classes"),
     "navigationEventDetails" : MessageLookupByLibrary.simpleMessage("Event details"),
@@ -166,7 +169,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "uniEventTypeSports" : MessageLookupByLibrary.simpleMessage("Sports"),
     "uniEventTypeTest" : MessageLookupByLibrary.simpleMessage("Test"),
     "warningAuthenticationNeeded" : MessageLookupByLibrary.simpleMessage("Please authenticate in order to access this feature."),
-    "warningEmailInUse" : m4,
+    "warningEmailInUse" : m5,
     "warningFilterAlreadyDisabled" : MessageLookupByLibrary.simpleMessage("Already showing all content."),
     "warningFilterAlreadyShowingYours" : MessageLookupByLibrary.simpleMessage("Already showing only custom websites."),
     "warningInternetConnection" : MessageLookupByLibrary.simpleMessage("Please make sure you are connected to the internet."),
@@ -177,7 +180,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "warningPasswordCharacters" : MessageLookupByLibrary.simpleMessage("The password must include lowercase and uppercase letters and at least one number and special character (!@#\$&*~)."),
     "warningPasswordLength" : MessageLookupByLibrary.simpleMessage("The password must be 8 characters long or more."),
     "warningTryAgainLater" : MessageLookupByLibrary.simpleMessage("Please try again later."),
-    "warningUseProvider" : m5,
+    "warningUseProvider" : m6,
     "warningWebsiteNameExists" : MessageLookupByLibrary.simpleMessage("A website with the same name already exists."),
     "websiteCategoryAdministrative" : MessageLookupByLibrary.simpleMessage("Administrative"),
     "websiteCategoryAssociations" : MessageLookupByLibrary.simpleMessage("Associations"),

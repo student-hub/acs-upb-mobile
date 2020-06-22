@@ -5,6 +5,8 @@ import 'package:acs_upb_mobile/pages/classes/view/person_view.dart';
 import 'package:acs_upb_mobile/pages/classes/view/shortcut_view.dart';
 import 'package:acs_upb_mobile/pages/timetable/view/event_view.dart';
 import 'package:acs_upb_mobile/resources/custom_icons.dart';
+import 'package:acs_upb_mobile/widgets/button.dart';
+import 'package:acs_upb_mobile/widgets/dialog.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:auto_size_text/auto_size_text.dart';
@@ -127,7 +129,24 @@ class _ClassViewState extends State<ClassView> {
     }
   }
 
+  AppDialog _deletionConfirmationDialog(
+          {BuildContext context, String shortcutName, Function onDelete}) =>
+      AppDialog(
+        icon: Icon(Icons.delete),
+        title: S.of(context).actionDeleteShortcut,
+        message: S.of(context).messageDeleteShortcut(shortcutName),
+        actions: [
+          AppButton(
+            text: S.of(context).actionDeleteShortcut,
+            width: 130,
+            onTap: onDelete,
+          )
+        ],
+      );
+
   Widget shortcut({int index, Shortcut shortcut, BuildContext context}) {
+    var classProvider = Provider.of<ClassProvider>(context);
+
     return PositionedTapDetector(
       onTap: (_) => _launchURL(shortcut.link, context),
       onLongPress: (position) async {
@@ -145,16 +164,24 @@ class _ClassViewState extends State<ClassView> {
               )
             ]);
         if (option == S.of(context).actionDeleteShortcut) {
-          var success = await Provider.of<ClassProvider>(context, listen: false)
-              .deleteShortcut(
-                  classId: widget.classInfo.id,
-                  shortcutIndex: index,
-                  context: context);
-          if (success) {
-            setState(() {
-              widget.classInfo.shortcuts.removeAt(index);
-            });
-          }
+          showDialog(
+              context: context,
+              builder: (context) => _deletionConfirmationDialog(
+                  context: context,
+                  shortcutName: shortcut.name,
+                  onDelete: () async {
+                    Navigator.pop(context); // Pop dialog window
+
+                    var success = await classProvider.deleteShortcut(
+                        classId: widget.classInfo.id,
+                        shortcutIndex: index,
+                        context: context);
+                    if (success) {
+                      setState(() {
+                        widget.classInfo.shortcuts.removeAt(index);
+                      });
+                    }
+                  }));
         }
       },
       child: ListTile(
