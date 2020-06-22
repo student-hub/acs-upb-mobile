@@ -34,6 +34,17 @@ extension ShortcutTypeExtension on ShortcutType {
   }
 }
 
+extension ShortcutExtension on Shortcut {
+  Map<String, dynamic> toData() {
+    return {
+      'type': type.toString().split('.').last,
+      'name': name,
+      'link': link,
+      'addedBy': ownerUid
+    };
+  }
+}
+
 extension ClassExtension on Class {
   static Future<Class> fromSnap(
       {DocumentSnapshot classSnap, DocumentSnapshot subclassSnap}) async {
@@ -198,31 +209,52 @@ class ClassProvider with ChangeNotifier {
     }
   }
 
+  DocumentReference _getClassDocument(String classId) {
+    CollectionReference col = _db.collection('classes');
+    DocumentReference doc;
+    var idTokens = classId.split('/');
+    if (idTokens.length > 1) {
+      // it's a subclass
+      return col
+          .document(idTokens[0])
+          .collection('subclasses')
+          .document(idTokens[1]);
+    } else {
+      // it's a parent class
+      return col.document(idTokens[0]);
+    }
+  }
+
   Future<bool> addShortcut(
       {String classId, Shortcut shortcut, BuildContext context}) async {
     try {
-      CollectionReference col = _db.collection('classes');
-      DocumentReference doc;
-      var idTokens = classId.split('/');
-      if (idTokens.length > 1) {
-        // it's a subclass
-        doc = col
-            .document(idTokens[0])
-            .collection('subclasses')
-            .document(idTokens[1]);
-      } else {
-        // it's a parent class
-        doc = col.document(idTokens[0]);
-      }
+      DocumentReference doc = _getClassDocument(classId);
 
       var shortcuts = List<Map<String, dynamic>>.from(
           (await doc.get()).data['shortcuts'] ?? []);
-      shortcuts.add({
-        'type': shortcut.type.toString().split('.').last,
-        'name': shortcut.name,
-        'link': shortcut.link,
-        'addedBy': shortcut.ownerUid
-      });
+      shortcuts.add(shortcut.toData());
+
+      await doc.updateData({'shortcuts': shortcuts});
+      userClassesCache = null;
+      notifyListeners();
+      return true;
+    } catch (e) {
+      print(e);
+      if (context != null) {
+        AppToast.show(S.of(context).errorSomethingWentWrong);
+      }
+      return false;
+    }
+  }
+
+  Future<bool> deleteShortcut(
+      {String classId, int shortcutIndex, BuildContext context}) async {
+    try {
+      DocumentReference doc = _getClassDocument(classId);
+
+      var shortcuts = List<Map<String, dynamic>>.from(
+          (await doc.get()).data['shortcuts'] ?? []);
+      shortcuts.removeAt(shortcutIndex);
 
       await doc.updateData({'shortcuts': shortcuts});
       userClassesCache = null;

@@ -39,6 +39,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "actionAddWebsite" : MessageLookupByLibrary.simpleMessage("Adaugă website"),
     "actionDeleteAccount" : MessageLookupByLibrary.simpleMessage("Ștergere cont"),
     "actionDeleteEvent" : MessageLookupByLibrary.simpleMessage("Șterge eveniment"),
+    "actionDeleteShortcut" : MessageLookupByLibrary.simpleMessage("Șterge scurtătură"),
     "actionDeleteWebsite" : MessageLookupByLibrary.simpleMessage("Șterge website"),
     "actionDisableEditing" : MessageLookupByLibrary.simpleMessage("Dezactivează modul editare"),
     "actionEditEvent" : MessageLookupByLibrary.simpleMessage("Modifică eveniment"),

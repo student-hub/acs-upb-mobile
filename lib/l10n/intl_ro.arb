@@ -65,6 +65,7 @@
   "actionDeleteEvent": "Șterge eveniment",
   "actionAddClasses": "Adaugă materii",
   "actionAddShortcut": "Adaugă scurtătură",
+  "actionDeleteShortcut": "Șterge scurtătură",
 
   "errorSomethingWentWrong": "A apărut o problemă.",
   "errorPasswordsDiffer": "Cele două parole diferă.",

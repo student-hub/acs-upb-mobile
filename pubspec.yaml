@@ -78,6 +78,9 @@ dependencies:
   # Date & time picker widget
   datetime_picker_formfield: ^1.0.0
 
+  # Allows getting the position of taps
+  positioned_tap_detector: ^1.0.3
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

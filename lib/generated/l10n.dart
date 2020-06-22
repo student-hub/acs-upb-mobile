@@ -577,6 +577,15 @@ class S {
     );
   }
 
+  String get actionDeleteShortcut {
+    return Intl.message(
+      'Delete shortcut',
+      name: 'actionDeleteShortcut',
+      desc: '',
+      args: [],
+    );
+  }
+
   String get errorSomethingWentWrong {
     return Intl.message(
       'Something went wrong.',

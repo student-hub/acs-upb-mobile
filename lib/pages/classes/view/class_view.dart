@@ -9,15 +9,15 @@ import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:black_hole_flutter/black_hole_flutter.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:positioned_tap_detector/positioned_tap_detector.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 extension ClassExtension on Class {
   Color get colorFromAcronym {
-    int r = 0,
-        g = 0,
-        b = 0;
+    int r = 0, g = 0, b = 0;
     if (acronym.length >= 1) {
       b = acronym[0].codeUnitAt(0);
       if (acronym.length >= 2) {
@@ -68,43 +68,40 @@ class _ClassViewState extends State<ClassView> {
       padding: const EdgeInsets.all(8.0),
       child: Column(
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                S
-                    .of(context)
-                    .sectionShortcuts,
-                style: Theme
-                    .of(context)
-                    .textTheme
-                    .headline6,
-              ),
-              IconButton(
-                icon: Icon(Icons.add),
-                onPressed: () =>
-                    Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) =>
-                          ChangeNotifierProvider.value(
-                            value: classProvider,
-                            child: ShortcutView(
-                                onSave: (shortcut) {
-                                  setState(() =>
-                                  widget.classInfo.shortcuts.add(shortcut));
-                                  classProvider.addShortcut(
-                                      classId: widget.classInfo.id,
-                                      shortcut: shortcut,
-                                      context: context);
-                                }
-                            ),
-                          ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    S.of(context).sectionShortcuts,
+                    style: Theme.of(context).textTheme.headline6,
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.add),
+                    onPressed: () =>
+                        Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => ChangeNotifierProvider.value(
+                        value: classProvider,
+                        child: ShortcutView(onSave: (shortcut) {
+                          setState(
+                              () => widget.classInfo.shortcuts.add(shortcut));
+                          classProvider.addShortcut(
+                              classId: widget.classInfo.id,
+                              shortcut: shortcut,
+                              context: context);
+                        }),
+                      ),
                     )),
+                  ),
+                ],
               ),
-            ],
-          ),
-          Divider()
-        ] +
-            widget.classInfo.shortcuts.map((s) => shortcut(s, context)).toList(),
+              Divider()
+            ] +
+            widget.classInfo.shortcuts
+                .asMap()
+                .map((i, s) => MapEntry(
+                    i, shortcut(index: i, shortcut: s, context: context)))
+                .values
+                .toList(),
       ),
     );
   }
@@ -130,21 +127,47 @@ class _ClassViewState extends State<ClassView> {
     }
   }
 
-  Widget shortcut(Shortcut shortcut, BuildContext context) {
-    return ListTile(
-      onTap: () => _launchURL(shortcut.link, context),
-      leading: CircleAvatar(
-        child: Icon(shortcutIcon(shortcut.type)),
-        backgroundColor: Colors.transparent,
-        foregroundColor: Theme
-            .of(context)
-            .iconTheme
-            .color,
+  Widget shortcut({int index, Shortcut shortcut, BuildContext context}) {
+    return PositionedTapDetector(
+      onTap: (_) => _launchURL(shortcut.link, context),
+      onLongPress: (position) async {
+        final RenderBox overlay =
+            Overlay.of(context).context.findRenderObject();
+        var option = await showMenu(
+            context: context,
+            position: RelativeRect.fromRect(
+                Rect.fromPoints(position.global, position.global),
+                Offset.zero & overlay.size),
+            items: [
+              PopupMenuItem(
+                value: S.of(context).actionDeleteShortcut,
+                child: Text(S.of(context).actionDeleteShortcut),
+              )
+            ]);
+        if (option == S.of(context).actionDeleteShortcut) {
+          var success = await Provider.of<ClassProvider>(context, listen: false)
+              .deleteShortcut(
+                  classId: widget.classInfo.id,
+                  shortcutIndex: index,
+                  context: context);
+          if (success) {
+            setState(() {
+              widget.classInfo.shortcuts.removeAt(index);
+            });
+          }
+        }
+      },
+      child: ListTile(
+        leading: CircleAvatar(
+          child: Icon(shortcutIcon(shortcut.type)),
+          backgroundColor: Colors.transparent,
+          foregroundColor: Theme.of(context).iconTheme.color,
+        ),
+        title: Text(shortcut.name ?? shortcut.type.toLocalizedString(context)),
+        contentPadding: EdgeInsets.zero,
+        dense: true,
+        visualDensity: VisualDensity.compact,
       ),
-      title: Text(shortcut.name ?? shortcut.type.toLocalizedString(context)),
-      contentPadding: EdgeInsets.zero,
-      dense: true,
-      visualDensity: VisualDensity.compact,
     );
   }
 
@@ -157,23 +180,16 @@ class _ClassViewState extends State<ClassView> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                S
-                    .of(context)
-                    .sectionEvents,
-                style: Theme
-                    .of(context)
-                    .textTheme
-                    .headline6,
+                S.of(context).sectionEvents,
+                style: Theme.of(context).textTheme.headline6,
               ),
               IconButton(
                 icon: Icon(Icons.add),
-                onPressed: () =>
-                    Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) =>
-                          EventView(
-                            addNew: true,
-                          ),
-                    )),
+                onPressed: () => Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => EventView(
+                    addNew: true,
+                  ),
+                )),
               ),
             ],
           ),
@@ -182,10 +198,7 @@ class _ClassViewState extends State<ClassView> {
             leading: CircleAvatar(
               backgroundColor: Colors.grey.withOpacity(0.2),
               child:
-              Icon(Icons.laptop, color: Theme
-                  .of(context)
-                  .iconTheme
-                  .color),
+                  Icon(Icons.laptop, color: Theme.of(context).iconTheme.color),
             ),
             title: Text('Tema 1'),
             subtitle: Text('5 Oct 2020 | 23:55'),
@@ -195,10 +208,7 @@ class _ClassViewState extends State<ClassView> {
             leading: CircleAvatar(
               backgroundColor: Colors.grey.withOpacity(0.2),
               child: Icon(Icons.spellcheck,
-                  color: Theme
-                      .of(context)
-                      .iconTheme
-                      .color),
+                  color: Theme.of(context).iconTheme.color),
             ),
             title: Text('Test'),
             subtitle: Text('1 Nov 2020 | 16:00'),
@@ -231,18 +241,16 @@ class _ClassViewState extends State<ClassView> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 GestureDetector(
-                  onTap: () =>
-                      showModalBottomSheet(
-                          isScrollControlled: true,
-                          context: context,
-                          // TODO: Fix size for landscape
-                          builder: (context) =>
-                              FractionallySizedBox(
-                                heightFactor: 0.25,
-                                child: PersonView(
-                                  person: widget.classInfo.lecturer,
-                                ),
-                              )),
+                  onTap: () => showModalBottomSheet(
+                      isScrollControlled: true,
+                      context: context,
+                      // TODO: Fix size for landscape
+                      builder: (context) => FractionallySizedBox(
+                            heightFactor: 0.25,
+                            child: PersonView(
+                              person: widget.classInfo.lecturer,
+                            ),
+                          )),
                   child: Row(
                     children: [
                       Icon(Icons.person),
