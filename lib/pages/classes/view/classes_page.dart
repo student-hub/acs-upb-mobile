@@ -18,14 +18,21 @@ class ClassesPage extends StatefulWidget {
 class _ClassesPageState extends State<ClassesPage> {
   Future<List<String>> userClassIdsFuture;
   List<Class> classes;
-  bool updating = false;
+  bool updating;
 
   void updateClasses() async {
+    // If updating is null, classes haven't been initialized yet so they're not
+    // technically "updating"
+    if (updating != null) {
+      updating = true;
+    }
+
     ClassProvider classProvider =
         Provider.of<ClassProvider>(context, listen: false);
     AuthProvider authProvider =
         Provider.of<AuthProvider>(context, listen: false);
     classes = await classProvider.fetchClasses(uid: authProvider.uid);
+
     updating = false;
     setState(() {});
   }
@@ -68,7 +75,6 @@ class _ClassesPageState extends State<ClassesPage> {
                             onSave: (classIds) async {
                               await classProvider.setUserClassIds(
                                   classIds: classIds, uid: authProvider.uid);
-                              updating = true;
                               updateClasses();
                               Navigator.pop(context);
                             });
@@ -81,27 +87,23 @@ class _ClassesPageState extends State<ClassesPage> {
           ),
         ),
       ],
-      body: updating
-          ? Stack(
-              children: [
-                ClassList(
-                  classes: classes,
-                ),
-                Container(
-                    color: Theme.of(context).disabledColor,
-                    child: Center(child: CircularProgressIndicator())),
-              ],
-            )
-          : ClassList(
-              classes: classes,
-              onTap: (classInfo) =>
-                  Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => ChangeNotifierProvider.value(
-                  value: classProvider,
-                  child: ClassView(classInfo: classInfo),
-                ),
-              )),
-            ),
+      body: Stack(
+        children: [
+          ClassList(
+            classes: classes,
+            onTap: (classInfo) => Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => ChangeNotifierProvider.value(
+                value: classProvider,
+                child: ClassView(classInfo: classInfo),
+              ),
+            )),
+          ),
+          if (updating == true)
+            Container(
+                color: Theme.of(context).disabledColor,
+                child: Center(child: CircularProgressIndicator())),
+        ],
+      ),
     );
   }
 }

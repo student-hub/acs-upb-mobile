@@ -29,7 +29,7 @@ class PortalPage extends StatefulWidget {
 
 class _PortalPageState extends State<PortalPage>
     with AutomaticKeepAliveClientMixin {
-  Future<Filter> filterFuture;
+  Filter filterCache;
   List<Website> websites = [];
 
   // Only show user-added websites
@@ -38,6 +38,8 @@ class _PortalPageState extends State<PortalPage>
   bool editingEnabled = false;
 
   User user;
+
+  bool updating;
 
   _fetchUser() async {
     AuthProvider authProvider = Provider.of(context, listen: false);
@@ -50,6 +52,22 @@ class _PortalPageState extends State<PortalPage>
   initState() {
     super.initState();
     _fetchUser();
+    _updateFilter();
+  }
+
+  _updateFilter() async {
+    // If updating is null, filter hasn't been initialized yet so it's not
+    // technically "updating"
+    if (updating != null) {
+      updating = true;
+    }
+
+    FilterProvider filterProvider =
+        Provider.of<FilterProvider>(context, listen: false);
+    filterCache = await filterProvider.fetchFilter(context);
+
+    updating = false;
+    setState(() {});
   }
 
   _launchURL(String url) async {
@@ -204,10 +222,6 @@ class _PortalPageState extends State<PortalPage>
     FilterProvider filterProvider = Provider.of<FilterProvider>(context);
     AuthProvider authProvider = Provider.of<AuthProvider>(context);
 
-    if (filterFuture == null) {
-      filterFuture = filterProvider.fetchFilter(context);
-    }
-
     CircularProgressIndicator progressIndicator = CircularProgressIndicator();
 
     return AppScaffold(
@@ -244,7 +258,7 @@ class _PortalPageState extends State<PortalPage>
           tooltip: S.of(context).navigationFilter,
           items: {
             S.of(context).filterMenuRelevance: () {
-              filterFuture = null; // reset filter cache
+              _updateFilter();
               userOnly = false;
               Navigator.pushNamed(context, Routes.filter);
             },
@@ -258,7 +272,7 @@ class _PortalPageState extends State<PortalPage>
                       AppToast.show(S.of(context).warningNoPrivateWebsite);
                   });
 
-                  filterFuture = null; // reset filter cache
+                  _updateFilter();
                   setState(() => userOnly = true);
                   filterProvider.enableFilter();
                 } else {
@@ -272,7 +286,7 @@ class _PortalPageState extends State<PortalPage>
               if (!filterProvider.filterEnabled) {
                 AppToast.show(S.of(context).warningFilterAlreadyDisabled);
               } else {
-                filterFuture = null; // reset filter cache
+                _updateFilter();
                 userOnly = false;
                 filterProvider.disableFilter();
               }
@@ -280,43 +294,38 @@ class _PortalPageState extends State<PortalPage>
           },
         ),
       ],
-      body: FutureBuilder(
-        future: filterFuture,
-        builder: (BuildContext context, AsyncSnapshot<Filter> filterSnap) {
-          if (filterSnap.hasData) {
-            return FutureBuilder<List<Website>>(
-                future: websiteProvider.fetchWebsites(
-                  filterProvider.filterEnabled ? filterSnap.data : null,
-                  userOnly: userOnly,
-                  uid: authProvider.uid,
-                ),
-                builder: (context, AsyncSnapshot<List<Website>> websiteSnap) {
-                  if (websiteSnap.hasData) {
-                    websites = websiteSnap.data;
-                    return SingleChildScrollView(
-                      child: Padding(
-                        padding: EdgeInsets.only(top: 12.0),
-                        child: Column(
-                          children: listWebsitesByCategory(websites),
-                        ),
+      body: Stack(
+        children: [
+          FutureBuilder<List<Website>>(
+              future: websiteProvider.fetchWebsites(
+                filterProvider.filterEnabled ? filterCache : null,
+                userOnly: userOnly,
+                uid: authProvider.uid,
+              ),
+              builder: (context, AsyncSnapshot<List<Website>> websiteSnap) {
+                if (websiteSnap.hasData) {
+                  websites = websiteSnap.data;
+                  return SingleChildScrollView(
+                    child: Padding(
+                      padding: EdgeInsets.only(top: 12.0),
+                      child: Column(
+                        children: listWebsitesByCategory(websites),
                       ),
-                    );
-                  } else if (websiteSnap.hasError) {
-                    print(filterSnap.error);
-                    // TODO: Show error toast
-                    return Container();
-                  } else {
-                    return Center(child: progressIndicator);
-                  }
-                });
-          } else if (filterSnap.hasError) {
-            print(filterSnap.error);
-            // TODO: Show error toast
-            return Container();
-          } else {
-            return Center(child: progressIndicator);
-          }
-        },
+                    ),
+                  );
+                } else if (websiteSnap.hasError) {
+                  print(websiteSnap.error);
+                  // TODO: Show error toast
+                  return Container();
+                } else {
+                  return Center(child: progressIndicator);
+                }
+              }),
+          if (updating == true)
+            Container(
+                color: Theme.of(context).disabledColor,
+                child: Center(child: CircularProgressIndicator())),
+        ],
       ),
     );
   }
