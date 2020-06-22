@@ -1342,6 +1342,15 @@ class S {
     );
   }
 
+  String get messageShortcutDeleted {
+    return Intl.message(
+      'Shortcut deleted successfully.',
+      name: 'messageShortcutDeleted',
+      desc: '',
+      args: [],
+    );
+  }
+
   String get infoPasswordResetEmailSent {
     return Intl.message(
       'Please check your inbox for the password reset e-mail.',

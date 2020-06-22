@@ -147,6 +147,7 @@ class _ClassViewState extends State<ClassView> {
 
   Widget shortcut({int index, Shortcut shortcut, BuildContext context}) {
     var classProvider = Provider.of<ClassProvider>(context);
+    var classViewContext = context;
 
     return PositionedTapDetector(
       onTap: (_) => _launchURL(shortcut.link, context),
@@ -181,6 +182,7 @@ class _ClassViewState extends State<ClassView> {
                       setState(() {
                         widget.classInfo.shortcuts.removeAt(index);
                       });
+                      AppToast.show(S.of(classViewContext).messageShortcutDeleted);
                     }
                   }));
         }
