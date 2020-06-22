@@ -1,5 +1,7 @@
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/navigation/routes.dart';
+import 'package:acs_upb_mobile/pages/classes/model/class.dart';
+import 'package:acs_upb_mobile/pages/classes/view/class_view.dart';
 import 'package:acs_upb_mobile/pages/portal/model/website.dart';
 import 'package:acs_upb_mobile/resources/locale_provider.dart';
 import 'package:acs_upb_mobile/resources/storage_provider.dart';
@@ -7,6 +9,7 @@ import 'package:acs_upb_mobile/widgets/circle_image.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:black_hole_flutter/black_hole_flutter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -192,9 +195,11 @@ class HomePage extends StatelessWidget {
               ),
               ListTile(
                 leading: CircleAvatar(
-                  backgroundColor: Colors.grey.withOpacity(0.2),
+                  backgroundColor: Class(acronym: 'PC').colorFromAcronym,
                   child: Icon(Icons.laptop,
-                      color: Theme.of(context).iconTheme.color),
+                      color: Class(acronym: 'PC')
+                          .colorFromAcronym
+                          .highEmphasisOnColor),
                 ),
                 title: Text('PC - Tema 1'),
                 subtitle: Text('5 Oct 2020 | 23:55'),
@@ -202,9 +207,11 @@ class HomePage extends StatelessWidget {
               ),
               ListTile(
                 leading: CircleAvatar(
-                  backgroundColor: Colors.grey.withOpacity(0.2),
+                  backgroundColor: Class(acronym: 'USO').colorFromAcronym,
                   child: Icon(Icons.spellcheck,
-                      color: Theme.of(context).iconTheme.color),
+                      color: Class(acronym: 'PC')
+                          .colorFromAcronym
+                          .highEmphasisOnColor),
                 ),
                 title: Text('USO - Test'),
                 subtitle: Text('1 Nov 2020 | 16:00'),
