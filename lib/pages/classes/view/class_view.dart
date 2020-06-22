@@ -135,6 +135,7 @@ class _ClassViewState extends State<ClassView> {
         icon: Icon(Icons.delete),
         title: S.of(context).actionDeleteShortcut,
         message: S.of(context).messageDeleteShortcut(shortcutName),
+        info: S.of(context).messageThisCouldAffectOtherStudents,
         actions: [
           AppButton(
             text: S.of(context).actionDeleteShortcut,

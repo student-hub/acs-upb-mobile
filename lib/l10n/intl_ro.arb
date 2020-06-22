@@ -158,6 +158,7 @@
   "messageWebsiteDeleted": "Website-ul a fost șters cu succes.",
   "messageDeleteEvent": "Sunteți sigur că doriți să ștergeți acest eveniment?",
   "messageDeleteShortcut": "Sunteți sigur că doriți să ștergeți \"{shortcutName}\"?",
+  "messageThisCouldAffectOtherStudents": "Alți studenți ar putea fi afectați.",
 
   "infoPasswordResetEmailSent": "Please check your inbox for the password reset e-mail.",
   "infoRelevance": "Încercați să selectați cea mai restrictivă categorie.",

@@ -124,6 +124,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "messageEmailNotVerified" : MessageLookupByLibrary.simpleMessage("Contul nu este verificat."),
     "messageNewUser" : MessageLookupByLibrary.simpleMessage("Utilizator nou?"),
     "messageResetPassword" : MessageLookupByLibrary.simpleMessage("Introduceți mail-ul pentru a primi instrucțiuni de resetare a parolei."),
+    "messageThisCouldAffectOtherStudents" : MessageLookupByLibrary.simpleMessage("Alți studenți ar putea fi afectați."),
     "messageUnderConstruction" : MessageLookupByLibrary.simpleMessage("În construcție"),
     "messageWebsiteAdded" : MessageLookupByLibrary.simpleMessage("Website adăugat cu succes."),
     "messageWebsiteDeleted" : MessageLookupByLibrary.simpleMessage("Website-ul a fost șters cu succes."),

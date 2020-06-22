@@ -158,6 +158,7 @@
   "messageWebsiteDeleted": "Website deleted successfully.",
   "messageDeleteEvent": "Are you sure you want to delete this event?",
   "messageDeleteShortcut": "Are you sure you want to delete \"{shortcutName}\"?",
+  "messageThisCouldAffectOtherStudents": "This could affect other students.",
 
   "infoPasswordResetEmailSent": "Please check your inbox for the password reset e-mail.",
   "infoRelevance": "Try to choose the most restrictive category.",

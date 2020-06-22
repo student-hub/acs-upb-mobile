@@ -124,6 +124,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "messageEmailNotVerified" : MessageLookupByLibrary.simpleMessage("Account is not verified."),
     "messageNewUser" : MessageLookupByLibrary.simpleMessage("New user?"),
     "messageResetPassword" : MessageLookupByLibrary.simpleMessage("Enter your e-mai in order to receive instructions on how to reset your password."),
+    "messageThisCouldAffectOtherStudents" : MessageLookupByLibrary.simpleMessage("This could affect other students."),
     "messageUnderConstruction" : MessageLookupByLibrary.simpleMessage("Under construction"),
     "messageWebsiteAdded" : MessageLookupByLibrary.simpleMessage("Website added successfully."),
     "messageWebsiteDeleted" : MessageLookupByLibrary.simpleMessage("Website deleted successfully."),

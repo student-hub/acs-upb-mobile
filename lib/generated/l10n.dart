@@ -1333,6 +1333,15 @@ class S {
     );
   }
 
+  String get messageThisCouldAffectOtherStudents {
+    return Intl.message(
+      'This could affect other students.',
+      name: 'messageThisCouldAffectOtherStudents',
+      desc: '',
+      args: [],
+    );
+  }
+
   String get infoPasswordResetEmailSent {
     return Intl.message(
       'Please check your inbox for the password reset e-mail.',
