@@ -1351,6 +1351,24 @@ class S {
     );
   }
 
+  String get messageNoClassesYet {
+    return Intl.message(
+      'You have not added any classes yet.',
+      name: 'messageNoClassesYet',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get messageGetStartedPlusButton {
+    return Intl.message(
+      'Get started by pressing the + button above.',
+      name: 'messageGetStartedPlusButton',
+      desc: '',
+      args: [],
+    );
+  }
+
   String get infoPasswordResetEmailSent {
     return Intl.message(
       'Please check your inbox for the password reset e-mail.',

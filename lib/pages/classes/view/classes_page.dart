@@ -51,6 +51,38 @@ class _ClassesPageState extends State<ClassesPage> {
         uid: authProvider.uid, context: context);
   }
 
+  Widget _noClassesView() => Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Expanded(flex: 1, child: Container()),
+            Expanded(
+              flex: 2,
+              child: Align(
+                alignment: Alignment.bottomCenter,
+                child: Image(
+                    image: AssetImage('assets/illustrations/undraw_empty.png')),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.all(10.0),
+              child: Text(S.of(context).messageNoClassesYet,
+                  style: Theme.of(context).textTheme.headline6),
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: 10.0, right: 10.0),
+              child: Text(
+                S.of(context).messageGetStartedPlusButton,
+                style: Theme.of(context).textTheme.subtitle1,
+              ),
+            ),
+            Expanded(flex: 1, child: Container()),
+          ],
+        ),
+      );
+
   @override
   Widget build(BuildContext context) {
     ClassProvider classProvider = Provider.of<ClassProvider>(context);
@@ -89,15 +121,18 @@ class _ClassesPageState extends State<ClassesPage> {
       ],
       body: Stack(
         children: [
-          ClassList(
-            classes: classes,
-            onTap: (classInfo) => Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => ChangeNotifierProvider.value(
-                value: classProvider,
-                child: ClassView(classInfo: classInfo),
-              ),
-            )),
-          ),
+          (classes ?? []).isNotEmpty
+              ? ClassList(
+                  classes: classes,
+                  onTap: (classInfo) =>
+                      Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => ChangeNotifierProvider.value(
+                      value: classProvider,
+                      child: ClassView(classInfo: classInfo),
+                    ),
+                  )),
+                )
+              : _noClassesView(),
           if (updating == true)
             Container(
                 color: Theme.of(context).disabledColor,

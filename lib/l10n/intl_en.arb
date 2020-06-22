@@ -160,6 +160,8 @@
   "messageDeleteShortcut": "Are you sure you want to delete \"{shortcutName}\"?",
   "messageThisCouldAffectOtherStudents": "This could affect other students.",
   "messageShortcutDeleted": "Shortcut deleted successfully.",
+  "messageNoClassesYet": "You have not added any classes yet.",
+  "messageGetStartedPlusButton": "Get started by pressing the + button above.",
 
   "infoPasswordResetEmailSent": "Please check your inbox for the password reset e-mail.",
   "infoRelevance": "Try to choose the most restrictive category.",
