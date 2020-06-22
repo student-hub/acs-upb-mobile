@@ -148,6 +148,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "relevanceAnyone" : MessageLookupByLibrary.simpleMessage("Anyone"),
     "relevanceOnlyMe" : MessageLookupByLibrary.simpleMessage("Only me"),
     "sectionEvents" : MessageLookupByLibrary.simpleMessage("Events"),
+    "sectionEventsComingUp" : MessageLookupByLibrary.simpleMessage("Events coming up"),
+    "sectionFAQ" : MessageLookupByLibrary.simpleMessage("FAQ"),
     "sectionFrequentlyAccessedWebsites" : MessageLookupByLibrary.simpleMessage("Favourite websites"),
     "sectionShortcuts" : MessageLookupByLibrary.simpleMessage("Shortcuts"),
     "settingsItemDarkMode" : MessageLookupByLibrary.simpleMessage("Dark Mode"),

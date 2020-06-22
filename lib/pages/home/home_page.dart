@@ -1,4 +1,3 @@
-import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/navigation/routes.dart';
 import 'package:acs_upb_mobile/pages/portal/model/website.dart';
@@ -7,6 +6,8 @@ import 'package:acs_upb_mobile/resources/storage_provider.dart';
 import 'package:acs_upb_mobile/widgets/circle_image.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
+import 'package:auto_size_text/auto_size_text.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -26,7 +27,26 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    AuthProvider authProvider = Provider.of<AuthProvider>(context);
+    return AppScaffold(
+      title: S.of(context).navigationHome,
+      actions: [
+        AppScaffoldAction(
+          icon: Icons.settings,
+          tooltip: S.of(context).navigationSettings,
+          route: Routes.settings,
+        )
+      ],
+      body: ListView(
+        children: [
+          favouriteWebsites(context),
+          upcomingEvents(context),
+          faq(context),
+        ],
+      ),
+    );
+  }
+
+  Padding favouriteWebsites(BuildContext context) {
     var websites = [
       Website(
         id: '1',
@@ -60,95 +80,200 @@ class HomePage extends StatelessWidget {
       ),
     ];
 
-    return AppScaffold(
-      title: S.of(context).navigationHome,
-      actions: [
-        AppScaffoldAction(
-          icon: Icons.settings,
-          tooltip: S.of(context).navigationSettings,
-          route: Routes.settings,
-        )
-      ],
-      body: ListView(
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 8.0),
-            child: Card(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  children: <Widget>[
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
+    return Padding(
+      padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 8.0),
+      child: Card(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: <Widget>[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    S.of(context).sectionFrequentlyAccessedWebsites,
+                    style: Theme.of(context).textTheme.headline6,
+                  ),
+                  GestureDetector(
+                    onTap: () => tabController.animateTo(2),
+                    child: Row(
+                      children: <Widget>[
                         Text(
-                          S.of(context).sectionFrequentlyAccessedWebsites,
-                          style: Theme.of(context).textTheme.headline6,
+                          S.of(context).actionShowMore,
+                          style: Theme.of(context)
+                              .accentTextTheme
+                              .subtitle2
+                              .copyWith(color: Theme.of(context).accentColor),
                         ),
-                        GestureDetector(
-                          onTap: () => tabController.animateTo(2),
-                          child: Row(
-                            children: <Widget>[
-                              Text(
-                                S.of(context).actionShowMore,
-                                style: Theme.of(context)
-                                    .accentTextTheme
-                                    .subtitle2
-                                    .copyWith(
-                                        color: Theme.of(context).accentColor),
-                              ),
-                              Icon(
-                                Icons.arrow_forward_ios,
-                                color: Theme.of(context).accentColor,
-                                size: Theme.of(context)
-                                    .textTheme
-                                    .subtitle2
-                                    .fontSize,
-                              )
-                            ],
-                          ),
+                        Icon(
+                          Icons.arrow_forward_ios,
+                          color: Theme.of(context).accentColor,
+                          size: Theme.of(context).textTheme.subtitle2.fontSize,
                         )
                       ],
                     ),
-                    SizedBox(height: 12),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: websites
-                          .map((website) => Expanded(
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: FutureBuilder<ImageProvider<dynamic>>(
-                                    future: Provider.of<StorageProvider>(
-                                            context,
-                                            listen: false)
-                                        .imageFromPath(website.iconPath),
-                                    builder: (context, snapshot) {
-                                      ImageProvider<dynamic> image = AssetImage(
-                                          'assets/icons/websites/globe.png');
-                                      if (snapshot.hasData) {
-                                        image = snapshot.data;
-                                      }
-                                      return CircleImage(
-                                        label: website.label,
-                                        onTap: () =>
-                                            _launchURL(website.link, context),
-                                        image: image,
-                                        tooltip: website.infoByLocale[
-                                            LocaleProvider.localeString],
-                                      );
-                                    },
-                                  ),
-                                ),
-                              ))
-                          .toList(),
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-            ),
+              SizedBox(height: 12),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: websites
+                    .map((website) => Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: FutureBuilder<ImageProvider<dynamic>>(
+                              future: Provider.of<StorageProvider>(context,
+                                      listen: false)
+                                  .imageFromPath(website.iconPath),
+                              builder: (context, snapshot) {
+                                ImageProvider<dynamic> image = AssetImage(
+                                    'assets/icons/websites/globe.png');
+                                if (snapshot.hasData) {
+                                  image = snapshot.data;
+                                }
+                                return CircleImage(
+                                  label: website.label,
+                                  onTap: () =>
+                                      _launchURL(website.link, context),
+                                  image: image,
+                                  tooltip: website.infoByLocale[
+                                      LocaleProvider.localeString],
+                                );
+                              },
+                            ),
+                          ),
+                        ))
+                    .toList(),
+              ),
+            ],
           ),
-        ],
+        ),
+      ),
+    );
+  }
+
+  Padding upcomingEvents(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 8.0),
+      child: Card(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: <Widget>[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    S.of(context).sectionEventsComingUp,
+                    style: Theme.of(context).textTheme.headline6,
+                  ),
+                  GestureDetector(
+                    onTap: () => tabController.animateTo(1),
+                    child: Row(
+                      children: <Widget>[
+                        Text(
+                          S.of(context).actionShowMore,
+                          style: Theme.of(context)
+                              .accentTextTheme
+                              .subtitle2
+                              .copyWith(color: Theme.of(context).accentColor),
+                        ),
+                        Icon(
+                          Icons.arrow_forward_ios,
+                          color: Theme.of(context).accentColor,
+                          size: Theme.of(context).textTheme.subtitle2.fontSize,
+                        )
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              ListTile(
+                leading: CircleAvatar(
+                  backgroundColor: Colors.grey.withOpacity(0.2),
+                  child: Icon(Icons.laptop,
+                      color: Theme.of(context).iconTheme.color),
+                ),
+                title: Text('PC - Tema 1'),
+                subtitle: Text('5 Oct 2020 | 23:55'),
+                contentPadding: EdgeInsets.zero,
+              ),
+              ListTile(
+                leading: CircleAvatar(
+                  backgroundColor: Colors.grey.withOpacity(0.2),
+                  child: Icon(Icons.spellcheck,
+                      color: Theme.of(context).iconTheme.color),
+                ),
+                title: Text('USO - Test'),
+                subtitle: Text('1 Nov 2020 | 16:00'),
+                contentPadding: EdgeInsets.zero,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Padding faq(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 8.0),
+      child: Card(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: <Widget>[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    S.of(context).sectionFAQ,
+                    style: Theme.of(context).textTheme.headline6,
+                  ),
+                  GestureDetector(
+                    onTap: () {},
+                    child: Row(
+                      children: <Widget>[
+                        Text(
+                          S.of(context).actionShowMore,
+                          style: Theme.of(context)
+                              .accentTextTheme
+                              .subtitle2
+                              .copyWith(color: Theme.of(context).accentColor),
+                        ),
+                        Icon(
+                          Icons.arrow_forward_ios,
+                          color: Theme.of(context).accentColor,
+                          size: Theme.of(context).textTheme.subtitle2.fontSize,
+                        )
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              ListTile(
+                title: Text('Cum mă conectez la eduroam?'),
+                subtitle: AutoSizeText(
+                  'Conectarea în rețeaua eduroam se face pe baza aceluiași cont folosit și pe site-ul de cursuri. Pentru rețeaua eduroam datele de identificare vor fi de forma:',
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                contentPadding: EdgeInsets.zero,
+              ),
+              ListTile(
+                title: Text('Cum citesc orarul?'),
+                subtitle: AutoSizeText(
+                  'În orar se regăsesc toate materiile care se pot face în anul respectiv. În general, acestea sunt descrise pe 4 tipuri de căsuțe...',
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                contentPadding: EdgeInsets.zero,
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

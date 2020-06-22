@@ -298,6 +298,24 @@ class S {
     );
   }
 
+  String get sectionEventsComingUp {
+    return Intl.message(
+      'Events coming up',
+      name: 'sectionEventsComingUp',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get sectionFAQ {
+    return Intl.message(
+      'FAQ',
+      name: 'sectionFAQ',
+      desc: '',
+      args: [],
+    );
+  }
+
   String get shortcutTypeMain {
     return Intl.message(
       'Main page',

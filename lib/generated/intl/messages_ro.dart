@@ -148,6 +148,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "relevanceAnyone" : MessageLookupByLibrary.simpleMessage("Oricine"),
     "relevanceOnlyMe" : MessageLookupByLibrary.simpleMessage("Doar eu"),
     "sectionEvents" : MessageLookupByLibrary.simpleMessage("Evenimente"),
+    "sectionEventsComingUp" : MessageLookupByLibrary.simpleMessage("Evenimente următoare"),
+    "sectionFAQ" : MessageLookupByLibrary.simpleMessage("Întrebări frecvente"),
     "sectionFrequentlyAccessedWebsites" : MessageLookupByLibrary.simpleMessage("Website-uri favorite"),
     "sectionShortcuts" : MessageLookupByLibrary.simpleMessage("Scurtături"),
     "settingsItemDarkMode" : MessageLookupByLibrary.simpleMessage("Mod Întunecat"),
