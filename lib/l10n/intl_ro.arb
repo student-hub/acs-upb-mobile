@@ -28,6 +28,8 @@
   "labelSemester": "Semestrul",
   "labelTeam": "Echipa {name}",
   "labelUnknown": "Necunoscut",
+  "labelEvaluation": "Evaluare",
+  "labelPoints": "Puncte",
 
   "sectionShortcuts": "Scurtături",
   "sectionEvents": "Evenimente",
@@ -48,6 +50,8 @@
   "hintGroup": "314CB",
   "hintWebsiteLabel": "Google",
   "hintWebsiteLink": "http://google.com",
+  "hintEvaluation": "Examen final",
+  "hintPoints": "4.0",
 
   "actionSignUp": "Înregistrare",
   "actionLogIn": "Conectare",
@@ -72,6 +76,7 @@
   "actionAddShortcut": "Adaugă scurtătură",
   "actionDeleteShortcut": "Șterge scurtătură",
   "actionShowMore": "Arată mai multe",
+  "actionEditGrading": "Modifică punctaj",
 
   "errorSomethingWentWrong": "A apărut o problemă.",
   "errorPasswordsDiffer": "Cele două parole diferă.",

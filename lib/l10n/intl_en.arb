@@ -28,6 +28,8 @@
   "labelSemester": "Semester",
   "labelTeam": "{name} team",
   "labelUnknown": "Unknown",
+  "labelEvaluation": "Evaluation",
+  "labelPoints": "Points",
 
   "sectionShortcuts": "Shortcuts",
   "sectionEvents": "Events",
@@ -48,6 +50,8 @@
   "hintGroup": "314CB",
   "hintWebsiteLabel": "Google",
   "hintWebsiteLink": "http://google.com",
+  "hintEvaluation": "Final exam",
+  "hintPoints": "4.0",
 
   "actionSignUp": "Sign up",
   "actionLogIn": "Log in",
@@ -72,6 +76,7 @@
   "actionAddShortcut": "Add shortcut",
   "actionDeleteShortcut": "Delete shortcut",
   "actionShowMore": "Show more",
+  "actionEditGrading": "Edit grading",
 
   "errorSomethingWentWrong": "Something went wrong.",
   "errorPasswordsDiffer": "The two passwords differ.",

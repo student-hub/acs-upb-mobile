@@ -280,6 +280,24 @@ class S {
     );
   }
 
+  String get labelEvaluation {
+    return Intl.message(
+      'Evaluation',
+      name: 'labelEvaluation',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get labelPoints {
+    return Intl.message(
+      'Points',
+      name: 'labelPoints',
+      desc: '',
+      args: [],
+    );
+  }
+
   String get sectionShortcuts {
     return Intl.message(
       'Shortcuts',
@@ -428,6 +446,24 @@ class S {
     return Intl.message(
       'http://google.com',
       name: 'hintWebsiteLink',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get hintEvaluation {
+    return Intl.message(
+      'Final exam',
+      name: 'hintEvaluation',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get hintPoints {
+    return Intl.message(
+      '4.0',
+      name: 'hintPoints',
       desc: '',
       args: [],
     );
@@ -635,6 +671,15 @@ class S {
     return Intl.message(
       'Show more',
       name: 'actionShowMore',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get actionEditGrading {
+    return Intl.message(
+      'Edit grading',
+      name: 'actionEditGrading',
       desc: '',
       args: [],
     );

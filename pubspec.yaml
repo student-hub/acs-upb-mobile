@@ -84,6 +84,9 @@ dependencies:
   # Draws pie charts
   pie_chart: ^3.1.1
 
+  # Adds Dart utilities
+  quiver: ^2.1.3
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

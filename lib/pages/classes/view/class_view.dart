@@ -1,6 +1,7 @@
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/classes/model/class.dart';
 import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
+import 'package:acs_upb_mobile/pages/classes/view/grading_view.dart';
 import 'package:acs_upb_mobile/pages/classes/view/person_view.dart';
 import 'package:acs_upb_mobile/pages/classes/view/shortcut_view.dart';
 import 'package:acs_upb_mobile/pages/timetable/view/event_view.dart';
@@ -13,7 +14,6 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:black_hole_flutter/black_hole_flutter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:pie_chart/pie_chart.dart';
 import 'package:positioned_tap_detector/positioned_tap_detector.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -34,9 +34,6 @@ extension ClassExtension on Class {
     return Color.fromRGBO(
         r * brightnessFactor, g * brightnessFactor, b * brightnessFactor, 1);
   }
-
-  Map<String, double> get gradingDataMap => grading
-      ?.map((name, value) => MapEntry(name + '\n' + value.toString(), value));
 }
 
 class ClassView extends StatefulWidget {
@@ -65,7 +62,7 @@ class _ClassViewState extends State<ClassView> {
                 SizedBox(height: 8),
                 events(context),
                 SizedBox(height: 8),
-                grading(context),
+                GradingChart(grading: widget.classInfo.grading),
               ],
             ),
           ),
@@ -256,43 +253,6 @@ class _ClassViewState extends State<ClassView> {
             contentPadding: EdgeInsets.zero,
           ),
         ],
-      ),
-    );
-  }
-
-  Widget grading(BuildContext context) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          children: <Widget>[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  S.of(context).sectionGrading,
-                  style: Theme.of(context).textTheme.headline6,
-                ),
-                IconButton(icon: Icon(Icons.edit)),
-              ],
-            ),
-            widget.classInfo.gradingDataMap != null
-                ? PieChart(
-                    dataMap: widget.classInfo.gradingDataMap,
-                    legendPosition: LegendPosition.left,
-                    legendStyle: Theme.of(context).textTheme.subtitle2,
-                    chartValueStyle: Theme.of(context)
-                        .textTheme
-                        .subtitle2
-                        .copyWith(fontWeight: FontWeight.bold, fontSize: 12),
-                    decimalPlaces: 1,
-                  )
-                : Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Center(child: Text(S.of(context).labelUnknown)),
-                  ),
-          ],
-        ),
       ),
     );
   }
