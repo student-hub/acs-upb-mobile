@@ -928,6 +928,24 @@ class S {
     );
   }
 
+  String get warningFieldCannotBeEmpty {
+    return Intl.message(
+      'Field cannot be empty.',
+      name: 'warningFieldCannotBeEmpty',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get warningFieldCannotBeZero {
+    return Intl.message(
+      'Field cannot be zero.',
+      name: 'warningFieldCannotBeZero',
+      desc: '',
+      args: [],
+    );
+  }
+
   String get navigationHome {
     return Intl.message(
       'Home',

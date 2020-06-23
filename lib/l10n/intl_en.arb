@@ -106,6 +106,8 @@
   "warningNoPermissionToAddPublicWebsite": "You do not have permission to create a public website.",
   "warningAuthenticationNeeded": "Please authenticate in order to access this feature.",
   "warningNothingToEdit": "There is nothing you have permission to edit.",
+  "warningFieldCannotBeEmpty": "Field cannot be empty.",
+  "warningFieldCannotBeZero": "Field cannot be zero.",
 
   "navigationHome": "Home",
   "navigationTimetable": "Timetable",

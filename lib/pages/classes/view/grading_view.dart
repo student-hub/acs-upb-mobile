@@ -171,7 +171,13 @@ class _GradingViewState extends State<GradingView> {
                 prefixIcon: Icon(Icons.label),
               ),
               validator: (value) {
-                // TODO
+                if (i == focusNodes.length - 2) {
+                  // Ignore the last row
+                  return null;
+                }
+                if (value == '') {
+                  return S.of(context).warningFieldCannotBeEmpty;
+                }
                 return null;
               },
               onChanged: (_) {
@@ -192,7 +198,16 @@ class _GradingViewState extends State<GradingView> {
                 hintText: S.of(context).hintPoints,
               ),
               validator: (value) {
-                // TODO
+                if (i == focusNodes.length - 2) {
+                  // Ignore the last row
+                  return null;
+                }
+                if (value == '') {
+                  return S.of(context).warningFieldCannotBeEmpty;
+                }
+                if (double.parse(value) == 0) {
+                  return S.of(context).warningFieldCannotBeZero;
+                }
                 return null;
               },
               onChanged: (_) {
@@ -234,7 +249,7 @@ class _GradingViewState extends State<GradingView> {
 //                  ownerUid:
 //                  Provider.of<AuthProvider>(context, listen: false).uid,
 //                ));
-                  Navigator.of(context).pop();
+//                  Navigator.of(context).pop();
                 }
               })
         ],

@@ -106,6 +106,8 @@
   "warningNoPermissionToAddPublicWebsite": "Nu aveți permisiunea să creați site-uri publice.",
   "warningAuthenticationNeeded": "Autentificați-vă pentru a accesa această funcționalitate.",
   "warningNothingToEdit": "Nu există nimic pentru care să aveți permisiuni de editare.",
+  "warningFieldCannotBeEmpty": "Câmpul nu poate fi gol.",
+  "warningFieldCannotBeZero": "Câmpul nu poate fi zero.",
 
   "navigationHome": "Acasă",
   "navigationTimetable": "Orar",
