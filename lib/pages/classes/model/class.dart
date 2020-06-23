@@ -41,6 +41,7 @@ class Class {
   final String series;
   final List<Shortcut> shortcuts;
   final Person lecturer;
+  final Map<String, double> grading;
 
   Class(
       {@required this.id,
@@ -53,7 +54,8 @@ class Class {
       this.semester,
       this.series,
       List<Shortcut> shortcuts,
-      this.lecturer})
+      this.lecturer,
+      this.grading})
       : shortcuts = shortcuts ?? [];
 
   String get completeName => name + (series == null ? '' : ' (' + series + ')');

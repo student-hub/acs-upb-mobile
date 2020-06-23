@@ -112,6 +112,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "labelStart" : MessageLookupByLibrary.simpleMessage("Început"),
     "labelTeam" : m2,
     "labelType" : MessageLookupByLibrary.simpleMessage("Tip"),
+    "labelUnknown" : MessageLookupByLibrary.simpleMessage("Necunoscut"),
     "labelYear" : MessageLookupByLibrary.simpleMessage("Anul"),
     "messageAccountCreated" : MessageLookupByLibrary.simpleMessage("Contul a fost creat cu succes."),
     "messageAccountDeleted" : MessageLookupByLibrary.simpleMessage("Contul a fost șters cu succes."),

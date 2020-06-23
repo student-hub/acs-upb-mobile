@@ -112,6 +112,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "labelStart" : MessageLookupByLibrary.simpleMessage("Start"),
     "labelTeam" : m2,
     "labelType" : MessageLookupByLibrary.simpleMessage("Type"),
+    "labelUnknown" : MessageLookupByLibrary.simpleMessage("Unknown"),
     "labelYear" : MessageLookupByLibrary.simpleMessage("Year"),
     "messageAccountCreated" : MessageLookupByLibrary.simpleMessage("Account created successfully."),
     "messageAccountDeleted" : MessageLookupByLibrary.simpleMessage("Account deleted successfully."),

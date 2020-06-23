@@ -27,6 +27,7 @@
   "labelYear": "Anul",
   "labelSemester": "Semestrul",
   "labelTeam": "Echipa {name}",
+  "labelUnknown": "Necunoscut",
 
   "sectionShortcuts": "Scurtături",
   "sectionEvents": "Evenimente",

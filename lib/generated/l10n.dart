@@ -271,6 +271,15 @@ class S {
     );
   }
 
+  String get labelUnknown {
+    return Intl.message(
+      'Unknown',
+      name: 'labelUnknown',
+      desc: '',
+      args: [],
+    );
+  }
+
   String get sectionShortcuts {
     return Intl.message(
       'Shortcuts',

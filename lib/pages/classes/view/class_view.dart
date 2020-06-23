@@ -34,6 +34,9 @@ extension ClassExtension on Class {
     return Color.fromRGBO(
         r * brightnessFactor, g * brightnessFactor, b * brightnessFactor, 1);
   }
+
+  Map<String, double> get gradingDataMap => grading
+      ?.map((name, value) => MapEntry(name + '\n' + value.toString(), value));
 }
 
 class ClassView extends StatefulWidget {
@@ -50,19 +53,23 @@ class _ClassViewState extends State<ClassView> {
   Widget build(BuildContext context) {
     return AppScaffold(
       title: widget.classInfo.completeName,
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: ListView(
-          children: [
-            headerCard(context),
-            SizedBox(height: 8),
-            shortcuts(context),
-            SizedBox(height: 8),
-            events(context),
-            SizedBox(height: 8),
-            grading(context),
-          ],
-        ),
+      body: ListView(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              children: [
+                headerCard(context),
+                SizedBox(height: 8),
+                shortcuts(context),
+                SizedBox(height: 8),
+                events(context),
+                SizedBox(height: 8),
+                grading(context),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -269,21 +276,21 @@ class _ClassViewState extends State<ClassView> {
                 IconButton(icon: Icon(Icons.edit)),
               ],
             ),
-            PieChart(
-              dataMap: {
-                'Laborator\n1.5p': 1.5,
-                'Teme de casă\n4p': 4,
-                'Temă specială\n0.5p': 0.5,
-                'Examen final\n4p': 4
-              },
-              legendPosition: LegendPosition.left,
-              legendStyle: Theme.of(context).textTheme.subtitle2,
-              chartValueStyle: Theme.of(context)
-                  .textTheme
-                  .subtitle2
-                  .copyWith(fontWeight: FontWeight.bold, fontSize: 12),
-              decimalPlaces: 1,
-            )
+            widget.classInfo.gradingDataMap != null
+                ? PieChart(
+                    dataMap: widget.classInfo.gradingDataMap,
+                    legendPosition: LegendPosition.left,
+                    legendStyle: Theme.of(context).textTheme.subtitle2,
+                    chartValueStyle: Theme.of(context)
+                        .textTheme
+                        .subtitle2
+                        .copyWith(fontWeight: FontWeight.bold, fontSize: 12),
+                    decimalPlaces: 1,
+                  )
+                : Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Center(child: Text(S.of(context).labelUnknown)),
+                  ),
           ],
         ),
       ),
