@@ -316,6 +316,15 @@ class S {
     );
   }
 
+  String get sectionGrading {
+    return Intl.message(
+      'Grading',
+      name: 'sectionGrading',
+      desc: '',
+      args: [],
+    );
+  }
+
   String get shortcutTypeMain {
     return Intl.message(
       'Main page',

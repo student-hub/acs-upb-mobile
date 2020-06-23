@@ -151,6 +151,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "sectionEventsComingUp" : MessageLookupByLibrary.simpleMessage("Evenimente următoare"),
     "sectionFAQ" : MessageLookupByLibrary.simpleMessage("Întrebări frecvente"),
     "sectionFrequentlyAccessedWebsites" : MessageLookupByLibrary.simpleMessage("Website-uri favorite"),
+    "sectionGrading" : MessageLookupByLibrary.simpleMessage("Punctaj"),
     "sectionShortcuts" : MessageLookupByLibrary.simpleMessage("Scurtături"),
     "settingsItemDarkMode" : MessageLookupByLibrary.simpleMessage("Mod Întunecat"),
     "settingsItemLanguage" : MessageLookupByLibrary.simpleMessage("Limbă"),

@@ -81,6 +81,9 @@ dependencies:
   # Allows getting the position of taps
   positioned_tap_detector: ^1.0.3
 
+  # Draws pie charts
+  pie_chart: ^3.1.1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

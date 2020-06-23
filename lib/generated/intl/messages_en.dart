@@ -151,6 +151,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "sectionEventsComingUp" : MessageLookupByLibrary.simpleMessage("Events coming up"),
     "sectionFAQ" : MessageLookupByLibrary.simpleMessage("FAQ"),
     "sectionFrequentlyAccessedWebsites" : MessageLookupByLibrary.simpleMessage("Favourite websites"),
+    "sectionGrading" : MessageLookupByLibrary.simpleMessage("Grading"),
     "sectionShortcuts" : MessageLookupByLibrary.simpleMessage("Shortcuts"),
     "settingsItemDarkMode" : MessageLookupByLibrary.simpleMessage("Dark Mode"),
     "settingsItemLanguage" : MessageLookupByLibrary.simpleMessage("Language"),

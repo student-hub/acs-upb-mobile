@@ -13,6 +13,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:black_hole_flutter/black_hole_flutter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:pie_chart/pie_chart.dart';
 import 'package:positioned_tap_detector/positioned_tap_detector.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -58,6 +59,8 @@ class _ClassViewState extends State<ClassView> {
             shortcuts(context),
             SizedBox(height: 8),
             events(context),
+            SizedBox(height: 8),
+            grading(context),
           ],
         ),
       ),
@@ -182,7 +185,8 @@ class _ClassViewState extends State<ClassView> {
                       setState(() {
                         widget.classInfo.shortcuts.removeAt(index);
                       });
-                      AppToast.show(S.of(classViewContext).messageShortcutDeleted);
+                      AppToast.show(
+                          S.of(classViewContext).messageShortcutDeleted);
                     }
                   }));
         }
@@ -245,6 +249,43 @@ class _ClassViewState extends State<ClassView> {
             contentPadding: EdgeInsets.zero,
           ),
         ],
+      ),
+    );
+  }
+
+  Widget grading(BuildContext context) {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          children: <Widget>[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  S.of(context).sectionGrading,
+                  style: Theme.of(context).textTheme.headline6,
+                ),
+                IconButton(icon: Icon(Icons.edit)),
+              ],
+            ),
+            PieChart(
+              dataMap: {
+                'Laborator\n1.5p': 1.5,
+                'Teme de casă\n4p': 4,
+                'Temă specială\n0.5p': 0.5,
+                'Examen final\n4p': 4
+              },
+              legendPosition: LegendPosition.left,
+              legendStyle: Theme.of(context).textTheme.subtitle2,
+              chartValueStyle: Theme.of(context)
+                  .textTheme
+                  .subtitle2
+                  .copyWith(fontWeight: FontWeight.bold, fontSize: 12),
+              decimalPlaces: 1,
+            )
+          ],
+        ),
       ),
     );
   }
