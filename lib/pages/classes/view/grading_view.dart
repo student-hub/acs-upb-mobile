@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:pie_chart/pie_chart.dart';
 import 'package:provider/provider.dart';
 import 'package:quiver/iterables.dart';
-import 'package:validators/validators.dart';
 
 class GradingChart extends StatefulWidget {
   final Map<String, double> grading;
@@ -90,6 +89,7 @@ class _GradingViewState extends State<GradingView> {
   final formKey = GlobalKey<FormState>();
   List<TextEditingController> nameContollers = [];
   List<TextEditingController> valueControllers = [];
+  List<FocusNode> focusNodes = [];
   TextEditingController totalController = TextEditingController(text: '0.0');
 
   @override
@@ -98,10 +98,14 @@ class _GradingViewState extends State<GradingView> {
     grading = widget.grading;
     widget.grading?.forEach((name, value) {
       nameContollers.add(TextEditingController(text: name));
+      focusNodes.add(FocusNode());
       valueControllers.add(TextEditingController(text: value.toString()));
+      focusNodes.add(FocusNode());
     });
     nameContollers.add(TextEditingController());
+    focusNodes.add(FocusNode());
     valueControllers.add(TextEditingController());
+    focusNodes.add(FocusNode());
     updateTotal();
   }
 
@@ -131,7 +135,9 @@ class _GradingViewState extends State<GradingView> {
           (valueControllers[i].text == '' ||
               double.parse(valueControllers[i].text) == 0)) {
         nameContollers.removeAt(i);
+        focusNodes.removeAt(i);
         valueControllers.removeAt(i);
+        focusNodes.removeAt(i);
       }
     }
 
@@ -139,20 +145,88 @@ class _GradingViewState extends State<GradingView> {
         valueControllers.last.text != '' &&
         double.parse(valueControllers.last.text) != 0) {
       nameContollers.add(TextEditingController());
+      focusNodes.add(FocusNode());
       valueControllers.add(TextEditingController());
+      focusNodes.add(FocusNode());
     }
     setState(() {});
   }
 
+  List<Widget> buildTextFields() {
+    List<Widget> widgets = [];
+
+    for (var i = 0; i < focusNodes.length - 1; i += 2) {
+      var nameController = nameContollers[i ~/ 2];
+      var valueController = valueControllers[i ~/ 2];
+
+      widgets.add(Row(
+        children: [
+          Expanded(
+            flex: 3,
+            child: TextFormField(
+              focusNode: focusNodes[i],
+              controller: nameController,
+              decoration: InputDecoration(
+                hintText: S.of(context).hintEvaluation,
+                prefixIcon: Icon(Icons.label),
+              ),
+              validator: (value) {
+                // TODO
+                return null;
+              },
+              onChanged: (_) {
+                updateChart();
+                updateTextFields();
+              },
+              onFieldSubmitted: (_) =>
+                  FocusScope.of(context).requestFocus(focusNodes[i + 1]),
+            ),
+          ),
+          SizedBox(width: 16),
+          Expanded(
+            child: TextFormField(
+              focusNode: focusNodes[i + 1],
+              controller: valueController,
+              keyboardType: TextInputType.numberWithOptions(decimal: true),
+              decoration: InputDecoration(
+                hintText: S.of(context).hintPoints,
+              ),
+              validator: (value) {
+                // TODO
+                return null;
+              },
+              onChanged: (_) {
+                updateChart();
+                updateTotal();
+                updateTextFields();
+              },
+              onFieldSubmitted: (_) =>
+                  FocusScope.of(context).requestFocus(focusNodes[i + 2]),
+            ),
+          )
+        ],
+      ));
+    }
+    return widgets;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return AppScaffold(
-      title: S.of(context).actionEditGrading,
-      actions: [
-        AppScaffoldAction(
-            text: S.of(context).buttonSave,
-            onPressed: () {
-              if (formKey.currentState.validate()) {
+    return GestureDetector(
+      onTap: () {
+        FocusScopeNode currentFocus = FocusScope.of(context);
+
+        if (!currentFocus.hasPrimaryFocus) {
+          currentFocus.unfocus();
+        }
+      },
+      child: AppScaffold(
+        title: S.of(context).actionEditGrading,
+        actions: [
+          AppScaffoldAction(
+              text: S.of(context).buttonSave,
+              onPressed: () {
+                if (formKey.currentState.validate()) {
 //                widget.onSave(Shortcut(
 //                  name: nameContollers.text,
 //                  link: valueControllers.text,
@@ -160,132 +234,85 @@ class _GradingViewState extends State<GradingView> {
 //                  ownerUid:
 //                  Provider.of<AuthProvider>(context, listen: false).uid,
 //                ));
-                Navigator.of(context).pop();
-              }
-            })
-      ],
-      body: ListView(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: GradingChart(
-              grading: grading,
-              withHeader: false,
+                  Navigator.of(context).pop();
+                }
+              })
+        ],
+        body: ListView(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: GradingChart(
+                grading: grading,
+                withHeader: false,
+              ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 16.0, right: 16.0),
-            child: Form(
-              key: formKey,
-              child: Column(
-                children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Row(
+            Padding(
+              padding: const EdgeInsets.only(left: 16.0, right: 16.0),
+              child: Form(
+                key: formKey,
+                child: Column(
+                  children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                flex: 3,
+                                child: Text(
+                                  S.of(context).labelEvaluation,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .subtitle1
+                                      .copyWith(fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                              Expanded(
+                                child: Text(
+                                  S.of(context).labelPoints,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .subtitle1
+                                      .copyWith(fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
+                      ] +
+                      buildTextFields() +
+                      [
+                        Divider(),
+                        Row(
                           children: [
                             Expanded(
                               flex: 3,
-                              child: Text(
-                                S.of(context).labelEvaluation,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .subtitle1
-                                    .copyWith(fontWeight: FontWeight.bold),
+                              child: Padding(
+                                padding: const EdgeInsets.only(right: 16.0),
+                                child: Text(
+                                  'Total:',
+                                  textAlign: TextAlign.right,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .subtitle1
+                                      .copyWith(fontWeight: FontWeight.bold),
+                                ),
                               ),
                             ),
                             Expanded(
-                              child: Text(
-                                S.of(context).labelPoints,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .subtitle1
-                                    .copyWith(fontWeight: FontWeight.bold),
+                              child: TextFormField(
+                                controller: totalController,
+                                readOnly: true,
                               ),
                             ),
                           ],
                         ),
-                      )
-                    ] +
-                    zip([nameContollers, valueControllers]).map((controllers) {
-                      var nameContoller = controllers[0];
-                      var valueController = controllers[1];
-
-                      return Row(
-                        children: [
-                          Expanded(
-                            flex: 3,
-                            child: TextFormField(
-                              controller: nameContoller,
-                              decoration: InputDecoration(
-                                hintText: S.of(context).hintEvaluation,
-                                prefixIcon: Icon(Icons.label),
-                              ),
-                              onChanged: (_) {
-                                updateChart();
-                                updateTextFields();
-                              },
-                            ),
-                          ),
-                          SizedBox(width: 16),
-                          Expanded(
-                            child: TextFormField(
-                              controller: valueController,
-                              keyboardType: TextInputType.numberWithOptions(
-                                  decimal: true),
-                              decoration: InputDecoration(
-                                hintText: S.of(context).hintPoints,
-                              ),
-                              onFieldSubmitted: (_) {
-                                updateTotal();
-                                updateChart();
-                              },
-                              validator: (value) {
-                                if (!isURL(value, requireProtocol: true)) {
-                                  return S.of(context).warningInvalidURL;
-                                }
-                                return null;
-                              },
-                              onChanged: (_) {
-                                updateChart();
-                                updateTotal();
-                                updateTextFields();
-                              },
-                            ),
-                          )
-                        ],
-                      );
-                    }).toList() +
-                    [
-                      Divider(),
-                      Row(
-                        children: [
-                          Expanded(
-                            flex: 3,
-                            child: Padding(
-                              padding: const EdgeInsets.only(right: 16.0),
-                              child: Text(
-                                'Total:',
-                                textAlign: TextAlign.right,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .subtitle1
-                                    .copyWith(fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                          ),
-                          Expanded(
-                            child: TextFormField(
-                              controller: totalController,
-                              readOnly: true,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
+                      ],
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
