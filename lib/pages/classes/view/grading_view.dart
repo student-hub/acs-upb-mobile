@@ -19,8 +19,11 @@ class GradingChart extends StatefulWidget {
 }
 
 class _GradingChartState extends State<GradingChart> {
-  Map<String, double> get gradingDataMap => widget.grading?.map(
-      (name, value) => MapEntry(name + '\n' + value.toString() + 'p', value));
+  Map<String, double> get gradingDataMap =>
+      widget.grading?.map((name, value) => MapEntry(
+          (name ?? '') + '\n' + (value ?? 0.0).toString() + 'p',
+          value ?? 0.0)) ??
+      {};
 
   @override
   Widget build(BuildContext context) {
@@ -87,7 +90,7 @@ class GradingView extends StatefulWidget {
 class _GradingViewState extends State<GradingView> {
   Map<String, double> grading;
   final formKey = GlobalKey<FormState>();
-  List<TextEditingController> nameContollers = [];
+  List<TextEditingController> nameControllers = [];
   List<TextEditingController> valueControllers = [];
   List<FocusNode> focusNodes = [];
   TextEditingController totalController = TextEditingController(text: '0.0');
@@ -97,12 +100,12 @@ class _GradingViewState extends State<GradingView> {
     super.initState();
     grading = widget.grading;
     widget.grading?.forEach((name, value) {
-      nameContollers.add(TextEditingController(text: name));
+      nameControllers.add(TextEditingController(text: name));
       focusNodes.add(FocusNode());
       valueControllers.add(TextEditingController(text: value.toString()));
       focusNodes.add(FocusNode());
     });
-    nameContollers.add(TextEditingController());
+    nameControllers.add(TextEditingController());
     focusNodes.add(FocusNode());
     valueControllers.add(TextEditingController());
     focusNodes.add(FocusNode());
@@ -112,7 +115,7 @@ class _GradingViewState extends State<GradingView> {
   void updateTotal() async {
     double total = 0;
     valueControllers.forEach((controller) {
-      if (controller.text != '') {
+      if (controller.text != '' && controller.text != null) {
         total += double.parse(controller.text);
       }
     });
@@ -121,30 +124,40 @@ class _GradingViewState extends State<GradingView> {
 
   void updateChart() async {
     grading = {};
-    nameContollers.asMap().forEach((i, nameController) {
-      if (nameController.text != '') {
-        grading[nameController.text] = double.parse(valueControllers[i].text);
+    nameControllers.asMap().forEach((i, nameController) {
+      if (nameController.text != '' && nameController.text != null) {
+        if (valueControllers[i].text == '' ||
+            valueControllers[i].text == null) {
+          grading[nameController.text] = 0.0;
+        } else {
+          grading[nameController.text] = double.parse(valueControllers[i].text);
+        }
       }
     });
     setState(() {});
   }
 
   void updateTextFields() async {
-    for (var i in range(nameContollers.length - 1)) {
-      if (nameContollers[i].text == '' &&
+    for (var i in range(nameControllers.length - 1)) {
+      // Remove empty entries
+      if ((nameControllers[i].text == '' || nameControllers[i].text == null) &&
           (valueControllers[i].text == '' ||
+              valueControllers[i].text == null ||
               double.parse(valueControllers[i].text) == 0)) {
-        nameContollers.removeAt(i);
+        nameControllers.removeAt(i);
         focusNodes.removeAt(i);
         valueControllers.removeAt(i);
         focusNodes.removeAt(i);
       }
     }
 
-    if (nameContollers.last.text != '' &&
+    // Add new entry if last one is filled out
+    if (nameControllers.last.text != '' &&
+        nameControllers.last.text == null &&
         valueControllers.last.text != '' &&
+        valueControllers.last.text != null &&
         double.parse(valueControllers.last.text) != 0) {
-      nameContollers.add(TextEditingController());
+      nameControllers.add(TextEditingController());
       focusNodes.add(FocusNode());
       valueControllers.add(TextEditingController());
       focusNodes.add(FocusNode());
@@ -156,7 +169,7 @@ class _GradingViewState extends State<GradingView> {
     List<Widget> widgets = [];
 
     for (var i = 0; i < focusNodes.length - 1; i += 2) {
-      var nameController = nameContollers[i ~/ 2];
+      var nameController = nameControllers[i ~/ 2];
       var valueController = valueControllers[i ~/ 2];
 
       widgets.add(Row(
@@ -175,7 +188,7 @@ class _GradingViewState extends State<GradingView> {
                   // Ignore the last row
                   return null;
                 }
-                if (value == '') {
+                if (value == '' || value == null) {
                   return S.of(context).warningFieldCannotBeEmpty;
                 }
                 return null;
@@ -202,7 +215,7 @@ class _GradingViewState extends State<GradingView> {
                   // Ignore the last row
                   return null;
                 }
-                if (value == '') {
+                if (value == '' || value == null) {
                   return S.of(context).warningFieldCannotBeEmpty;
                 }
                 if (double.parse(value) == 0) {
