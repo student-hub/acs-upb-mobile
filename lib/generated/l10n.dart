@@ -946,6 +946,15 @@ class S {
     );
   }
 
+  String get warningNoneYet {
+    return Intl.message(
+      'None yet',
+      name: 'warningNoneYet',
+      desc: '',
+      args: [],
+    );
+  }
+
   String get navigationHome {
     return Intl.message(
       'Home',

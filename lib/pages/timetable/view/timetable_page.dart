@@ -1,3 +1,4 @@
+import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
 import 'package:acs_upb_mobile/pages/classes/view/classes_page.dart';
@@ -18,11 +19,17 @@ class TimetablePage extends StatefulWidget {
 class _TimetablePageState extends State<TimetablePage> {
   TimetableController<UniEventInstance> _controller;
 
+  bool isMainUser(BuildContext context) {
+    AuthProvider authProvider =
+    Provider.of<AuthProvider>(context, listen: false);
+    return authProvider.uid == 'P1Ziec4xuEOjem3NIMWzyTfORTU2';
+  }
+
   @override
   void initState() {
     super.initState();
     // TODO: This is a placeholder
-    var startDate = LocalDate(2020, 6, 22);
+    var startDate = LocalDate(2020, 6, 29);
     List<UniEvent> events = [
       UniEvent(
         id: '3',
@@ -178,6 +185,9 @@ class _TimetablePageState extends State<TimetablePage> {
         },
       ),
     ];
+    if (!isMainUser(context)) {
+      events = [];
+    }
 
     _controller = TimetableController(
         // TODO: Make initialTimeRange customizable in settings

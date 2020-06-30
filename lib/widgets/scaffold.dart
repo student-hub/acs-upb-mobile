@@ -194,25 +194,34 @@ class AppScaffold extends StatelessWidget {
         authProvider.isAuthenticatedFromCache && !authProvider.isAnonymous;
     bool enableContent = !needsToBeAuthenticated || isAuthenticated;
 
-    return Scaffold(
-      body: enableContent
-          ? body ?? _underConstructionPage(context: context)
-          : _needsAuthenticationPage(context: context),
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(40.0),
-        child: AppBar(
-          title: Text(title),
-          centerTitle: true,
-          toolbarOpacity: 0.8,
-          leading: _widgetFromAction(leading,
-              enableContent: enableContent, context: context),
-          actions: actions
-              .map((action) => _widgetFromAction(action,
-                  enableContent: enableContent, context: context))
-              .toList(),
+    return GestureDetector(
+      onTap: () {
+        // Remove current focus on tap
+        FocusScopeNode currentFocus = FocusScope.of(context);
+        if (!currentFocus.hasPrimaryFocus) {
+          currentFocus.unfocus();
+        }
+      },
+      child: Scaffold(
+        body: enableContent
+            ? body ?? _underConstructionPage(context: context)
+            : _needsAuthenticationPage(context: context),
+        appBar: PreferredSize(
+          preferredSize: Size.fromHeight(40.0),
+          child: AppBar(
+            title: Text(title),
+            centerTitle: true,
+            toolbarOpacity: 0.8,
+            leading: _widgetFromAction(leading,
+                enableContent: enableContent, context: context),
+            actions: actions
+                .map((action) => _widgetFromAction(action,
+                    enableContent: enableContent, context: context))
+                .toList(),
+          ),
         ),
+        floatingActionButton: floatingActionButton,
       ),
-      floatingActionButton: floatingActionButton,
     );
   }
 }

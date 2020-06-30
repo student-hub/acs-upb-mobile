@@ -80,9 +80,11 @@ extension ClassExtension on Class {
         lecturer = PersonExtension.fromSnap(lecturerSnap);
       }
 
-      Map<String, double> grading = Map<String, double>.from(
-          subclassSnap['grading'].map((String name, dynamic value) =>
-              MapEntry(name, value.toDouble())));
+      Map<String, double> grading;
+      if (subclassSnap['grading'] != null) {
+        grading = Map<String, double>.from(subclassSnap['grading'].map(
+            (String name, dynamic value) => MapEntry(name, value.toDouble())));
+      }
 
       return Class(
         id: classSnap.documentID + '/' + subclassSnap.documentID,

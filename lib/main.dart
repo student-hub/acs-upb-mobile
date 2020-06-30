@@ -50,6 +50,7 @@ class _MyAppState extends State<MyApp> {
   Widget buildApp(BuildContext context, ThemeData theme) {
     return MaterialApp(
       title: "ACS UPB Mobile",
+      debugShowCheckedModeBanner: false,
       localizationsDelegates: [
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,

@@ -209,6 +209,10 @@ class _ClassViewState extends State<ClassView> {
     );
   }
 
+  bool get isMainClass =>
+      widget.classInfo.id ==
+      'f02b4390-b226-11ea-bdce-1f2c02351158/GH6G712zp3bKI19YbCxz';
+
   Widget events(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
@@ -232,26 +236,28 @@ class _ClassViewState extends State<ClassView> {
             ],
           ),
           Divider(),
-          ListTile(
-            leading: CircleAvatar(
-              backgroundColor: Colors.grey.withOpacity(0.2),
-              child:
-                  Icon(Icons.laptop, color: Theme.of(context).iconTheme.color),
+          if (isMainClass)
+            ListTile(
+              leading: CircleAvatar(
+                backgroundColor: Colors.grey.withOpacity(0.2),
+                child: Icon(Icons.laptop,
+                    color: Theme.of(context).iconTheme.color),
+              ),
+              title: Text('Tema 1'),
+              subtitle: Text('5 Oct 2020 | 23:55'),
+              contentPadding: EdgeInsets.zero,
             ),
-            title: Text('Tema 1'),
-            subtitle: Text('5 Oct 2020 | 23:55'),
-            contentPadding: EdgeInsets.zero,
-          ),
-          ListTile(
-            leading: CircleAvatar(
-              backgroundColor: Colors.grey.withOpacity(0.2),
-              child: Icon(Icons.spellcheck,
-                  color: Theme.of(context).iconTheme.color),
+          if (isMainClass)
+            ListTile(
+              leading: CircleAvatar(
+                backgroundColor: Colors.grey.withOpacity(0.2),
+                child: Icon(Icons.spellcheck,
+                    color: Theme.of(context).iconTheme.color),
+              ),
+              title: Text('Test'),
+              subtitle: Text('1 Nov 2020 | 16:00'),
+              contentPadding: EdgeInsets.zero,
             ),
-            title: Text('Test'),
-            subtitle: Text('1 Nov 2020 | 16:00'),
-            contentPadding: EdgeInsets.zero,
-          ),
         ],
       ),
     );
@@ -279,16 +285,21 @@ class _ClassViewState extends State<ClassView> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 GestureDetector(
-                  onTap: () => showModalBottomSheet(
-                      isScrollControlled: true,
-                      context: context,
-                      // TODO: Fix size for landscape
-                      builder: (context) => FractionallySizedBox(
-                            heightFactor: 0.25,
-                            child: PersonView(
-                              person: widget.classInfo.lecturer,
-                            ),
-                          )),
+                  onTap: () {
+                    if (widget.classInfo.lecturer != null) {
+                      showModalBottomSheet(
+                        isScrollControlled: true,
+                        context: context,
+                        // TODO: Fix size for landscape
+                        builder: (context) => FractionallySizedBox(
+                          heightFactor: 0.3,
+                          child: PersonView(
+                            person: widget.classInfo.lecturer,
+                          ),
+                        ),
+                      );
+                    }
+                  },
                   child: Row(
                     children: [
                       Icon(Icons.person),

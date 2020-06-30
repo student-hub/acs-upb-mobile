@@ -108,6 +108,7 @@
   "warningNothingToEdit": "There is nothing you have permission to edit.",
   "warningFieldCannotBeEmpty": "Field cannot be empty.",
   "warningFieldCannotBeZero": "Field cannot be zero.",
+  "warningNoneYet": "None yet",
 
   "navigationHome": "Home",
   "navigationTimetable": "Timetable",

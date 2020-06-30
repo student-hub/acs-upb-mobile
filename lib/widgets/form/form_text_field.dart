@@ -60,6 +60,8 @@ class _FormTextFieldState extends State<FormTextField> {
               children: <Widget>[
                 Expanded(
                   child: TextField(
+                    autocorrect: false,
+                    enableSuggestions: false,
                     obscureText: widget.obscureText,
                     controller: widget.controller,
                     focusNode: widget.focusNode,

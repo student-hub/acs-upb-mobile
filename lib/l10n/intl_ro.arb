@@ -108,6 +108,7 @@
   "warningNothingToEdit": "Nu există nimic pentru care să aveți permisiuni de editare.",
   "warningFieldCannotBeEmpty": "Câmpul nu poate fi gol.",
   "warningFieldCannotBeZero": "Câmpul nu poate fi zero.",
+  "warningNoneYet": "Nu există încă",
 
   "navigationHome": "Acasă",
   "navigationTimetable": "Orar",

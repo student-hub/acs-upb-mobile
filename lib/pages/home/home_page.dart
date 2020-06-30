@@ -1,3 +1,4 @@
+import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/navigation/routes.dart';
 import 'package:acs_upb_mobile/pages/classes/model/class.dart';
@@ -95,7 +96,7 @@ class HomePage extends StatelessWidget {
                 children: [
                   Text(
                     S.of(context).sectionFrequentlyAccessedWebsites,
-                    style: Theme.of(context).textTheme.headline6,
+                    style: Theme.of(context).textTheme.headline6.copyWith(fontSize: 18),
                   ),
                   GestureDetector(
                     onTap: () => tabController.animateTo(2),
@@ -119,7 +120,7 @@ class HomePage extends StatelessWidget {
                 ],
               ),
               SizedBox(height: 12),
-              Row(
+              if (isMainUser(context)) Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: websites
@@ -150,6 +151,7 @@ class HomePage extends StatelessWidget {
                         ))
                     .toList(),
               ),
+              if (!isMainUser(context)) noneYet(context)
             ],
           ),
         ),
@@ -157,7 +159,21 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  Padding upcomingEvents(BuildContext context) {
+  bool isMainUser(BuildContext context) {
+    AuthProvider authProvider =
+        Provider.of<AuthProvider>(context, listen: false);
+    return authProvider.uid == 'P1Ziec4xuEOjem3NIMWzyTfORTU2';
+  }
+
+  Widget noneYet(BuildContext context) => Container(
+      height: 100,
+      child: Center(
+          child: Text(
+        S.of(context).warningNoneYet,
+        style: TextStyle(color: Theme.of(context).disabledColor),
+      )));
+
+  Widget upcomingEvents(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 8.0),
       child: Card(
@@ -170,7 +186,7 @@ class HomePage extends StatelessWidget {
                 children: [
                   Text(
                     S.of(context).sectionEventsComingUp,
-                    style: Theme.of(context).textTheme.headline6,
+                    style: Theme.of(context).textTheme.headline6.copyWith(fontSize: 18),
                   ),
                   GestureDetector(
                     onTap: () => tabController.animateTo(1),
@@ -193,30 +209,33 @@ class HomePage extends StatelessWidget {
                   ),
                 ],
               ),
-              ListTile(
-                leading: CircleAvatar(
-                  backgroundColor: Class(acronym: 'PC').colorFromAcronym,
-                  child: Icon(Icons.laptop,
-                      color: Class(acronym: 'PC')
-                          .colorFromAcronym
-                          .highEmphasisOnColor),
+              if (isMainUser(context))
+                ListTile(
+                  leading: CircleAvatar(
+                    backgroundColor: Class(acronym: 'PC').colorFromAcronym,
+                    child: Icon(Icons.laptop,
+                        color: Class(acronym: 'PC')
+                            .colorFromAcronym
+                            .highEmphasisOnColor),
+                  ),
+                  title: Text('PC - Tema 1'),
+                  subtitle: Text('5 Oct 2020 | 23:55'),
+                  contentPadding: EdgeInsets.zero,
                 ),
-                title: Text('PC - Tema 1'),
-                subtitle: Text('5 Oct 2020 | 23:55'),
-                contentPadding: EdgeInsets.zero,
-              ),
-              ListTile(
-                leading: CircleAvatar(
-                  backgroundColor: Class(acronym: 'USO').colorFromAcronym,
-                  child: Icon(Icons.spellcheck,
-                      color: Class(acronym: 'PC')
-                          .colorFromAcronym
-                          .highEmphasisOnColor),
+              if (isMainUser(context))
+                ListTile(
+                  leading: CircleAvatar(
+                    backgroundColor: Class(acronym: 'USO').colorFromAcronym,
+                    child: Icon(Icons.spellcheck,
+                        color: Class(acronym: 'PC')
+                            .colorFromAcronym
+                            .highEmphasisOnColor),
+                  ),
+                  title: Text('USO - Test'),
+                  subtitle: Text('1 Nov 2020 | 16:00'),
+                  contentPadding: EdgeInsets.zero,
                 ),
-                title: Text('USO - Test'),
-                subtitle: Text('1 Nov 2020 | 16:00'),
-                contentPadding: EdgeInsets.zero,
-              ),
+              if (!isMainUser(context)) noneYet(context)
             ],
           ),
         ),
@@ -237,7 +256,7 @@ class HomePage extends StatelessWidget {
                 children: [
                   Text(
                     S.of(context).sectionFAQ,
-                    style: Theme.of(context).textTheme.headline6,
+                    style: Theme.of(context).textTheme.headline6.copyWith(fontSize: 18),
                   ),
                   GestureDetector(
                     onTap: () {},

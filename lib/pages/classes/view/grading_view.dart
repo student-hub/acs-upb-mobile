@@ -21,9 +21,7 @@ class GradingChart extends StatefulWidget {
 class _GradingChartState extends State<GradingChart> {
   Map<String, double> get gradingDataMap =>
       widget.grading?.map((name, value) => MapEntry(
-          (name ?? '') + '\n' + (value ?? 0.0).toString() + 'p',
-          value ?? 0.0)) ??
-      {};
+          (name ?? '') + '\n' + (value ?? 0.0).toString() + 'p', value ?? 0.0));
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +67,13 @@ class _GradingChartState extends State<GradingChart> {
                   )
                 : Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Center(child: Text(S.of(context).labelUnknown)),
+                    child: Center(
+                      child: Text(
+                        S.of(context).labelUnknown,
+                        style:
+                            TextStyle(color: Theme.of(context).disabledColor),
+                      ),
+                    ),
                   ),
           ],
         ),
@@ -138,22 +142,9 @@ class _GradingViewState extends State<GradingView> {
   }
 
   void updateTextFields() async {
-    for (var i in range(nameControllers.length - 1)) {
-      // Remove empty entries
-      if ((nameControllers[i].text == '' || nameControllers[i].text == null) &&
-          (valueControllers[i].text == '' ||
-              valueControllers[i].text == null ||
-              double.parse(valueControllers[i].text) == 0)) {
-        nameControllers.removeAt(i);
-        focusNodes.removeAt(i);
-        valueControllers.removeAt(i);
-        focusNodes.removeAt(i);
-      }
-    }
-
     // Add new entry if last one is filled out
     if (nameControllers.last.text != '' &&
-        nameControllers.last.text == null &&
+        nameControllers.last.text != null &&
         valueControllers.last.text != '' &&
         valueControllers.last.text != null &&
         double.parse(valueControllers.last.text) != 0) {
@@ -161,6 +152,28 @@ class _GradingViewState extends State<GradingView> {
       focusNodes.add(FocusNode());
       valueControllers.add(TextEditingController());
       focusNodes.add(FocusNode());
+    }
+
+    for (var i in range(nameControllers.length - 1)) {
+      // Remove empty entries
+      if ((nameControllers[i].text == '' || nameControllers[i].text == null) &&
+          (valueControllers[i].text == '' ||
+              valueControllers[i].text == null ||
+              double.parse(valueControllers[i].text) == 0)) {
+        // Remove focus
+        FocusScopeNode currentFocus = FocusScope.of(context);
+        if (!currentFocus.hasPrimaryFocus) {
+          currentFocus.unfocus();
+        }
+
+        // Remove fields
+        nameControllers.removeAt(i);
+        focusNodes.removeAt(i);
+        valueControllers.removeAt(i);
+        focusNodes.removeAt(i);
+
+        break;
+      }
     }
     setState(() {});
   }
