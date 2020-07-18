@@ -20,6 +20,9 @@ if you encounter any problem.
 
 <img src=screenshots/light_portal_ro.png height=500><img src=screenshots/dark_portal_en.png height=500>
 
+## Contributors
+* [Ioana Alexandru](https://github.com/IoanaAlexandru)
+
 ## Building from source with Android Studio
 
 ### Prerequisites
