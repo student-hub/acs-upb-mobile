@@ -22,6 +22,7 @@ if you encounter any problem.
 
 ## Contributors
 * [Ioana Alexandru](https://github.com/IoanaAlexandru)
+* [Andrei-Constantin Mirciu](https://github.com/andreicmirciu)
 
 ## Building from source with Android Studio
 
