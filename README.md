@@ -1,4 +1,4 @@
-# ACS UPB Mobile
+    # ACS UPB Mobile
 [![License](https://img.shields.io/badge/license-MIT-green.svg?style=flat)](https://github.com/IoanaAlexandru/acs_upb_mobile/blob/master/LICENSE.txt)
 [![Tests](https://github.com/acs-upb-mobile/acs-upb-mobile/workflows/Tests/badge.svg)](https://github.com/acs-upb-mobile/acs-upb-mobile/actions?query=workflow%3ATests)
 [![codecov](https://codecov.io/gh/acs-upb-mobile/acs-upb-mobile/branch/master/graph/badge.svg)](https://codecov.io/gh/acs-upb-mobile/acs-upb-mobile)
@@ -23,6 +23,7 @@ if you encounter any problem.
 ## Contributors
 * [Ioana Alexandru](https://github.com/IoanaAlexandru)
 * [Andrei-Constantin Mirciu](https://github.com/andreicmirciu)
+* [Adrian_Mărgineanu](https://github.com/AdrianMargineanu)
 
 ## Building from source with Android Studio
 
