@@ -320,7 +320,10 @@ class AuthProvider with ChangeNotifier {
       return false;
     }
     String pattern =
-        r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$';
+        r'^(?=.*?[A-ZĂÂÎȘȚ])'
+        r'(?=.*?[a-zăâîșț])'
+        r'(?=.*?[0-9])'
+        r'(?=.*?[!@#$&*~`%^_+=(){};:"<>/.,\[\]\|\\]).{8,}$';
     RegExp regExp = RegExp(pattern);
     if (!regExp.hasMatch(password)) {
       if (context != null) {
