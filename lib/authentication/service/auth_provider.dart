@@ -5,6 +5,7 @@ import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/filter/model/filter.dart';
 import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
 import 'package:acs_upb_mobile/resources/locale_provider.dart';
+import 'package:acs_upb_mobile/resources/validator.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -312,28 +313,6 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
-  Future<bool> isStrongPassword({String password, BuildContext context}) async {
-    if (password.length < 8) {
-      if (context != null) {
-        AppToast.show(S.of(context).warningPasswordLength);
-      }
-      return false;
-    }
-    String pattern =
-        r'^(?=.*?[A-ZĂÂÎȘȚ])'
-        r'(?=.*?[a-zăâîșț])'
-        r'(?=.*?[0-9])'
-        r'(?=.*?[!@#$&*~`%^_+=(){};:"<>/.,\[\]\|\\]).{8,}$';
-    RegExp regExp = RegExp(pattern);
-    if (!regExp.hasMatch(password)) {
-      if (context != null) {
-        AppToast.show(S.of(context).warningPasswordCharacters);
-      }
-      return false;
-    }
-    return true;
-  }
-
   /// Create a new user with the data in [info].
   Future<bool> signUp({Map<String, String> info, BuildContext context}) async {
     try {
@@ -375,7 +354,7 @@ class AuthProvider with ChangeNotifier {
         AppToast.show(S.of(context).errorMissingLastName);
         return false;
       }
-      if (!await isStrongPassword(password: password, context: context)) {
+      if (!await AppValidator.isStrongPassword(password: password, context: context)) {
         return false;
       }
 
