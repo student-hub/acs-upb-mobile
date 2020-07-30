@@ -1,23 +1,9 @@
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/classes/model/class.dart';
-import 'package:acs_upb_mobile/pages/classes/model/person.dart';
 import 'package:acs_upb_mobile/pages/filter/model/filter.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-
-extension PersonExtension on Person {
-  static Person fromSnap(DocumentSnapshot snap) {
-    return Person(
-      name: snap.data['name'],
-      email: snap.data['email'],
-      phone: snap.data['phone'],
-      office: snap.data['office'],
-      position: snap.data['position'],
-      photo: snap.data['photo'],
-    );
-  }
-}
 
 extension ShortcutTypeExtension on ShortcutType {
   static ShortcutType fromString(String string) {
@@ -71,15 +57,6 @@ extension ClassExtension on Class {
         ));
       }
 
-      var lecturerSnap = await Firestore.instance
-          .collection('people')
-          .document(subclassSnap.data['lecturer'])
-          .get();
-      Person lecturer;
-      if (lecturerSnap?.data != null) {
-        lecturer = PersonExtension.fromSnap(lecturerSnap);
-      }
-
       Map<String, double> grading;
       if (subclassSnap['grading'] != null) {
         grading = Map<String, double>.from(subclassSnap['grading'].map(
@@ -97,7 +74,6 @@ extension ClassExtension on Class {
         semester: classSnap.data['semester'],
         series: subclassSnap.data['series'],
         shortcuts: shortcuts,
-        lecturer: lecturer,
         grading: grading,
       );
     }
@@ -112,10 +88,12 @@ class ClassProvider with ChangeNotifier {
   Future<List<String>> fetchUserClassIds(
       {String uid, BuildContext context}) async {
     try {
+      // TODO: Get all classes if user is not authenticated
       DocumentSnapshot snap =
           await Firestore.instance.collection('users').document(uid).get();
       return List<String>.from(snap.data['classes'] ?? []);
     } catch (e) {
+      print(e);
       if (context != null) {
         AppToast.show(S.of(context).errorSomethingWentWrong);
       }
@@ -182,7 +160,7 @@ class ClassProvider with ChangeNotifier {
 
         // Get only the user's classes
         List<String> classIds =
-            await fetchUserClassIds(uid: uid, context: context);
+            await fetchUserClassIds(uid: uid, context: context) ?? [];
 
         CollectionReference col = _db.collection('classes');
         for (var classId in classIds) {

@@ -57,21 +57,30 @@ class AppDialog extends StatelessWidget {
                   if (info != null)
                     Column(children: [
                       SizedBox(height: 8),
-                      Row(
-                        children: <Widget>[
-                          Icon(
-                            Icons.info,
-                            color: Theme.of(context).hintColor,
-                            size:
-                                Theme.of(context).textTheme.subtitle1.fontSize,
-                          ),
-                          SizedBox(width: 4.0),
-                          Text(
-                            info,
-                            style:
-                                TextStyle(color: Theme.of(context).hintColor),
-                          ),
-                        ],
+                      RichText(
+                        text: TextSpan(
+                          style: Theme.of(context).textTheme.bodyText2,
+                          children: [
+                            WidgetSpan(
+                              child: Padding(
+                                padding: const EdgeInsets.only(right: 4.0),
+                                child: Icon(
+                                  Icons.info,
+                                  color: Theme.of(context).hintColor,
+                                  size: Theme.of(context)
+                                      .textTheme
+                                      .subtitle1
+                                      .fontSize,
+                                ),
+                              ),
+                            ),
+                            TextSpan(
+                              text: info,
+                              style:
+                                  TextStyle(color: Theme.of(context).hintColor),
+                            ),
+                          ],
+                        ),
                       )
                     ])
                 ] +

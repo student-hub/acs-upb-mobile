@@ -1,9 +1,9 @@
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
+import 'package:acs_upb_mobile/pages/classes/view/classes_page.dart';
 import 'package:acs_upb_mobile/pages/home/home_page.dart';
 import 'package:acs_upb_mobile/pages/portal/view/portal_page.dart';
 import 'package:acs_upb_mobile/pages/profile/profile_page.dart';
-import 'package:acs_upb_mobile/pages/timetable/view/timetable_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -26,9 +26,9 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar>
     super.initState();
     tabController = TabController(vsync: this, length: 4);
     tabs = [
-      HomePage(tabController),
+      HomePage(),
       ChangeNotifierProvider(
-          create: (_) => ClassProvider(), child: TimetablePage()),
+          create: (_) => ClassProvider(), child: ClassesPage()),
       PortalPage(),
       ProfilePage(),
     ];
@@ -58,8 +58,8 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar>
                 iconMargin: EdgeInsets.all(0),
               ),
               Tab(
-                icon: Icon(Icons.calendar_today),
-                text: S.of(context).navigationTimetable,
+                icon: Icon(Icons.class_),
+                text: S.of(context).navigationClasses,
                 iconMargin: EdgeInsets.all(0),
               ),
               Tab(

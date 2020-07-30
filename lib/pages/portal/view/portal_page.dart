@@ -67,7 +67,9 @@ class _PortalPageState extends State<PortalPage>
     filterCache = await filterProvider.fetchFilter(context);
 
     updating = false;
-    setState(() {});
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   _launchURL(String url) async {

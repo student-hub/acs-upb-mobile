@@ -1,6 +1,7 @@
 import 'package:acs_upb_mobile/authentication/model/user.dart';
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/main.dart';
+import 'package:acs_upb_mobile/pages/classes/view/classes_page.dart';
 import 'package:acs_upb_mobile/pages/filter/model/filter.dart';
 import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
 import 'package:acs_upb_mobile/pages/filter/view/filter_page.dart';
@@ -10,7 +11,6 @@ import 'package:acs_upb_mobile/pages/portal/service/website_provider.dart';
 import 'package:acs_upb_mobile/pages/portal/view/portal_page.dart';
 import 'package:acs_upb_mobile/pages/portal/view/website_view.dart';
 import 'package:acs_upb_mobile/pages/settings/settings_page.dart';
-import 'package:acs_upb_mobile/pages/timetable/view/timetable_page.dart';
 import 'package:acs_upb_mobile/resources/custom_icons.dart';
 import 'package:acs_upb_mobile/resources/storage_provider.dart';
 import 'package:flutter/material.dart';
@@ -262,7 +262,7 @@ void main() {
     }
   });
 
-  group('Timetable', () {
+  group('Classes', () {
     for (var size in screenSizes) {
       testWidgets('${size.width}x${size.height}', (WidgetTester tester) async {
         await binding.setSurfaceSize(size);
@@ -272,29 +272,10 @@ void main() {
 
         expect(find.byType(HomePage), findsOneWidget);
         // Open timetable
-        await tester.tap(find.byIcon(Icons.calendar_today));
+        await tester.tap(find.byIcon(Icons.class_));
         await tester.pumpAndSettle();
 
-        expect(find.byType(TimetablePage), findsNWidgets(1));
-      });
-    }
-  });
-
-  group('Map', () {
-    for (var size in screenSizes) {
-      testWidgets('${size.width}x${size.height}', (WidgetTester tester) async {
-        await binding.setSurfaceSize(size);
-
-        await tester.pumpWidget(buildApp());
-        await tester.pumpAndSettle();
-
-        expect(find.byType(HomePage), findsOneWidget);
-        // Open map
-        await tester.tap(find.byIcon(Icons.map));
-        await tester.pumpAndSettle();
-
-        // TODO: Replace with page when implemented
-        expect(find.text('Map'), findsNWidgets(2));
+        expect(find.byType(ClassesPage), findsNWidgets(1));
       });
     }
   });

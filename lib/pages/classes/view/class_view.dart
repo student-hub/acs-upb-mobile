@@ -2,16 +2,12 @@ import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/classes/model/class.dart';
 import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
 import 'package:acs_upb_mobile/pages/classes/view/grading_view.dart';
-import 'package:acs_upb_mobile/pages/classes/view/person_view.dart';
 import 'package:acs_upb_mobile/pages/classes/view/shortcut_view.dart';
-import 'package:acs_upb_mobile/pages/timetable/view/event_view.dart';
 import 'package:acs_upb_mobile/resources/custom_icons.dart';
 import 'package:acs_upb_mobile/widgets/button.dart';
 import 'package:acs_upb_mobile/widgets/dialog.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
-import 'package:auto_size_text/auto_size_text.dart';
-import 'package:black_hole_flutter/black_hole_flutter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:positioned_tap_detector/positioned_tap_detector.dart';
@@ -53,14 +49,10 @@ class _ClassViewState extends State<ClassView> {
       body: ListView(
         children: [
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
             child: Column(
               children: [
-                headerCard(context),
-                SizedBox(height: 8),
                 shortcuts(context),
-                SizedBox(height: 8),
-                events(context),
                 SizedBox(height: 8),
                 GradingChart(grading: widget.classInfo.grading),
               ],
@@ -205,121 +197,6 @@ class _ClassViewState extends State<ClassView> {
         contentPadding: EdgeInsets.zero,
         dense: true,
         visualDensity: VisualDensity.compact,
-      ),
-    );
-  }
-
-  bool get isMainClass =>
-      widget.classInfo.id ==
-      'f02b4390-b226-11ea-bdce-1f2c02351158/GH6G712zp3bKI19YbCxz';
-
-  Widget events(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                S.of(context).sectionEvents,
-                style: Theme.of(context).textTheme.headline6,
-              ),
-              IconButton(
-                icon: Icon(Icons.add),
-                onPressed: () => Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => EventView(
-                    addNew: true,
-                  ),
-                )),
-              ),
-            ],
-          ),
-          Divider(),
-          if (isMainClass)
-            ListTile(
-              leading: CircleAvatar(
-                backgroundColor: Colors.grey.withOpacity(0.2),
-                child: Icon(Icons.laptop,
-                    color: Theme.of(context).iconTheme.color),
-              ),
-              title: Text('Tema 1'),
-              subtitle: Text('5 Oct 2020 | 23:55'),
-              contentPadding: EdgeInsets.zero,
-            ),
-          if (isMainClass)
-            ListTile(
-              leading: CircleAvatar(
-                backgroundColor: Colors.grey.withOpacity(0.2),
-                child: Icon(Icons.spellcheck,
-                    color: Theme.of(context).iconTheme.color),
-              ),
-              title: Text('Test'),
-              subtitle: Text('1 Nov 2020 | 16:00'),
-              contentPadding: EdgeInsets.zero,
-            ),
-        ],
-      ),
-    );
-  }
-
-  Widget headerCard(BuildContext context) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Row(
-          children: [
-            CircleAvatar(
-              backgroundColor: widget.classInfo.colorFromAcronym,
-              child: AutoSizeText(
-                widget.classInfo.acronym,
-                minFontSize: 5,
-                maxLines: 1,
-                style: TextStyle(
-                  color: widget.classInfo.colorFromAcronym.highEmphasisOnColor,
-                ),
-              ),
-            ),
-            SizedBox(width: 8),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                GestureDetector(
-                  onTap: () {
-                    if (widget.classInfo.lecturer != null) {
-                      showModalBottomSheet(
-                        isScrollControlled: true,
-                        context: context,
-                        // TODO: Fix size for landscape
-                        builder: (context) => FractionallySizedBox(
-                          heightFactor: 0.3,
-                          child: PersonView(
-                            person: widget.classInfo.lecturer,
-                          ),
-                        ),
-                      );
-                    }
-                  },
-                  child: Row(
-                    children: [
-                      Icon(Icons.person),
-                      SizedBox(width: 4),
-                      Text(widget.classInfo.lecturer?.name ?? ''),
-                    ],
-                  ),
-                ),
-                SizedBox(height: 4),
-                Row(
-                  children: [
-                    Icon(Icons.people),
-                    SizedBox(width: 4),
-                    Text(S.of(context).labelTeam(widget.classInfo.shortName)),
-                  ],
-                ),
-              ],
-            ),
-          ],
-        ),
       ),
     );
   }

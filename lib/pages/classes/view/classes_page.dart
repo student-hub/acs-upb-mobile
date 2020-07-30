@@ -34,7 +34,9 @@ class _ClassesPageState extends State<ClassesPage> {
     classes = await classProvider.fetchClasses(uid: authProvider.uid);
 
     updating = false;
-    setState(() {});
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   @override
@@ -90,6 +92,8 @@ class _ClassesPageState extends State<ClassesPage> {
 
     return AppScaffold(
       title: S.of(context).navigationClasses,
+      // TODO: Simply show all classes if user is not authenticated
+      needsToBeAuthenticated: true,
       actions: [
         AppScaffoldAction(
           icon: Icons.add,
@@ -168,7 +172,9 @@ class _AddClassesPageState extends State<AddClassesPage> {
     ClassProvider classProvider =
         Provider.of<ClassProvider>(context, listen: false);
     classes = await classProvider.fetchClasses();
-    setState(() {});
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   @override

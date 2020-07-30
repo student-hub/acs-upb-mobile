@@ -1,5 +1,4 @@
 import 'package:acs_upb_mobile/generated/l10n.dart';
-import 'package:acs_upb_mobile/pages/classes/model/person.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:meta/meta.dart';
 
@@ -14,7 +13,7 @@ extension ShortcutTypeExtension on ShortcutType {
         return S.of(context).shortcutTypeClassbook;
       case ShortcutType.resource:
         return S.of(context).shortcutTypeResource;
-      case ShortcutType.other:
+      default:
         return S.of(context).shortcutTypeOther;
     }
   }
@@ -40,7 +39,6 @@ class Class {
   final String semester;
   final String series;
   final List<Shortcut> shortcuts;
-  final Person lecturer;
   final Map<String, double> grading;
 
   Class(
@@ -54,7 +52,6 @@ class Class {
       this.semester,
       this.series,
       List<Shortcut> shortcuts,
-      this.lecturer,
       this.grading})
       : shortcuts = shortcuts ?? [];
 
