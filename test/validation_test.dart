@@ -38,7 +38,7 @@ void main() {
           false);
     });
 
-    test('Invalid password - japanese', () async {
+    test('Invalid password - Japanese', () async {
       expect(
           await AppValidator.isStrongPassword(
               password: 'こんにちはこんにちは', context: null),
