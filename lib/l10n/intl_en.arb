@@ -61,7 +61,7 @@
   "warningPasswordLength": "The password must be 8 characters long or more.",
   "warningPasswordUppercase": "The password must include at least one uppercase letter.",
   "warningPasswordLowercase": "The password must include at least one lowercase letter.",
-  "warningPasswordSpecialCharacters": "The password must include one least a special character.",
+  "warningPasswordSpecialCharacters": "The password must include a least one special character.",
   "warningPasswordNumber" :"The password must include at least one number.",
   "warningEmailInUse": "There is already an account associated with {email}.",
   "warningUseProvider": "Please log in with {provider} to continue.",
