@@ -232,6 +232,7 @@ void main() {
                   ]))));
     });
 
+
     testWidgets('Sign up', (WidgetTester tester) async {
       await tester.pumpWidget(MultiProvider(providers: [
         ChangeNotifierProvider<AuthProvider>(create: (_) => mockAuthProvider),
@@ -256,8 +257,8 @@ void main() {
           .thenAnswer((_) => Future.value(true));
       when(mockAuthProvider.canSignUpWithEmail(email: anyNamed('email')))
           .thenAnswer((realInvocation) => Future.value(true));
-      when(AppValidator.isStrongPassword(password: anyNamed('password')))
-          .thenAnswer((realInvocation) => Future.value(true));
+//      when(AppValidator.isStrongPassword(password: anyNamed('password')))
+//          .thenAnswer((realInvocation) => Future.value(true));
 
       // Enter info
       await tester.enterText(
