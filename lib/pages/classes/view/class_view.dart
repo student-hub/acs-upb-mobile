@@ -14,7 +14,7 @@ import 'package:positioned_tap_detector/positioned_tap_detector.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-extension ClassExtension on Class {
+extension ClassExtension on ClassHeader {
   Color get colorFromAcronym {
     int r = 0, g = 0, b = 0;
     if (acronym.length >= 1) {
@@ -45,7 +45,7 @@ class _ClassViewState extends State<ClassView> {
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
-      title: widget.classInfo.completeName,
+      title: widget.classInfo.header.name,
       body: ListView(
         children: [
           Padding(
@@ -86,7 +86,7 @@ class _ClassViewState extends State<ClassView> {
                           setState(
                               () => widget.classInfo.shortcuts.add(shortcut));
                           classProvider.addShortcut(
-                              classId: widget.classInfo.id,
+                              classId: widget.classInfo.header.id,
                               shortcut: shortcut,
                               context: context);
                         }),
@@ -174,7 +174,7 @@ class _ClassViewState extends State<ClassView> {
                     Navigator.pop(context); // Pop dialog window
 
                     var success = await classProvider.deleteShortcut(
-                        classId: widget.classInfo.id,
+                        classId: widget.classInfo.header.id,
                         shortcutIndex: index,
                         context: context);
                     if (success) {

@@ -31,59 +31,74 @@ extension ShortcutExtension on Shortcut {
   }
 }
 
-extension ClassExtension on Class {
-  static Future<Class> fromSnap(
-      {DocumentSnapshot classSnap, DocumentSnapshot subclassSnap}) async {
-    if (subclassSnap == null) {
-      return Class(
-        id: classSnap.documentID,
-        name: classSnap.data['class'],
-        acronym: classSnap.data['acronym'],
-        credits: int.parse(classSnap.data['credits']),
-        degree: classSnap.data['degree'],
-        domain: classSnap.data['domain'],
-        year: classSnap.data['year'],
-        semester: classSnap.data['semester'],
-      );
-    } else {
-      List<Shortcut> shortcuts = [];
-      for (var s in List<Map<String, dynamic>>.from(
-          subclassSnap.data['shortcuts'] ?? [])) {
-        shortcuts.add(Shortcut(
-          type: ShortcutTypeExtension.fromString(s['type']),
-          name: s['name'],
-          link: s['link'],
-          ownerUid: s['addedBy'],
-        ));
-      }
-
-      Map<String, double> grading;
-      if (subclassSnap['grading'] != null) {
-        grading = Map<String, double>.from(subclassSnap['grading'].map(
-            (String name, dynamic value) => MapEntry(name, value.toDouble())));
-      }
-
-      return Class(
-        id: classSnap.documentID + '/' + subclassSnap.documentID,
-        name: classSnap.data['class'],
-        acronym: classSnap.data['acronym'],
-        credits: int.parse(classSnap.data['credits']),
-        degree: classSnap.data['degree'],
-        domain: classSnap.data['domain'],
-        year: classSnap.data['year'],
-        semester: classSnap.data['semester'],
-        series: subclassSnap.data['series'],
-        shortcuts: shortcuts,
-        grading: grading,
-      );
+extension ClassHeaderExtension on ClassHeader {
+  static ClassHeader fromSnap(DocumentSnapshot snap) {
+    var splitAcronym = snap.data['shortname'].split('-');
+    if (splitAcronym.length < 4) {
+      return null;
     }
+    return ClassHeader(
+      id: snap.documentID,
+      name: snap.data['fullname'],
+      acronym: snap.data['shortname'].split('-')[3],
+      category: snap.data['category_path'],
+    );
   }
 }
 
+//extension ClassExtension on Class {
+//  static Future<Class> fromSnap(
+//      {DocumentSnapshot classSnap, DocumentSnapshot subclassSnap}) async {
+//    if (subclassSnap == null) {
+//      return Class(
+//        id: classSnap.documentID,
+//        name: classSnap.data['class'],
+//        acronym: classSnap.data['acronym'],
+//        credits: int.parse(classSnap.data['credits']),
+//        degree: classSnap.data['degree'],
+//        domain: classSnap.data['domain'],
+//        year: classSnap.data['year'],
+//        semester: classSnap.data['semester'],
+//      );
+//    } else {
+//      List<Shortcut> shortcuts = [];
+//      for (var s in List<Map<String, dynamic>>.from(
+//          subclassSnap.data['shortcuts'] ?? [])) {
+//        shortcuts.add(Shortcut(
+//          type: ShortcutTypeExtension.fromString(s['type']),
+//          name: s['name'],
+//          link: s['link'],
+//          ownerUid: s['addedBy'],
+//        ));
+//      }
+//
+//      Map<String, double> grading;
+//      if (subclassSnap['grading'] != null) {
+//        grading = Map<String, double>.from(subclassSnap['grading'].map(
+//            (String name, dynamic value) => MapEntry(name, value.toDouble())));
+//      }
+//
+//      return Class(
+//        id: classSnap.documentID + '/' + subclassSnap.documentID,
+//        name: classSnap.data['class'],
+//        acronym: classSnap.data['acronym'],
+//        credits: int.parse(classSnap.data['credits']),
+//        degree: classSnap.data['degree'],
+//        domain: classSnap.data['domain'],
+//        year: classSnap.data['year'],
+//        semester: classSnap.data['semester'],
+//        series: subclassSnap.data['series'],
+//        shortcuts: shortcuts,
+//        grading: grading,
+//      );
+//    }
+//  }
+//}
+
 class ClassProvider with ChangeNotifier {
   final Firestore _db = Firestore.instance;
-  List<Class> classesCache;
-  List<Class> userClassesCache;
+  List<ClassHeader> classHeadersCache;
+  List<ClassHeader> userClassHeadersCache;
 
   Future<List<String>> fetchUserClassIds(
       {String uid, BuildContext context}) async {
@@ -107,7 +122,7 @@ class ClassProvider with ChangeNotifier {
       DocumentReference ref =
           Firestore.instance.collection('users').document(uid);
       await ref.updateData({'classes': classIds});
-      userClassesCache = null;
+      userClassHeadersCache = null;
       notifyListeners();
       return true;
     } catch (e) {
@@ -118,72 +133,57 @@ class ClassProvider with ChangeNotifier {
     }
   }
 
-  Future<List<Class>> fetchClasses(
+  Future<List<ClassHeader>> fetchClassHeaders(
       {String uid, Filter filter, BuildContext context}) async {
     try {
       if (uid == null) {
-        if (classesCache != null) {
-          return classesCache;
+        if (classHeadersCache != null) {
+          return classHeadersCache;
         }
 
         // Get all classes
         QuerySnapshot qSnapshot =
-            await _db.collection('classes').getDocuments();
+            await _db.collection('import_moodle').getDocuments();
         List<DocumentSnapshot> documents = qSnapshot.documents;
 
-        // Get query results as a list of lists (including subclasses)
-        var results = Future.wait(documents.map((doc) async {
-          CollectionReference subclasses =
-              doc.reference.collection('subclasses');
-          if (subclasses != null) {
-            var subdocs = (await subclasses.getDocuments()).documents;
-            if (subdocs.length > 0) {
-              List<Class> classes = [];
-              for (var subdoc in subdocs) {
-                classes.add(await ClassExtension.fromSnap(
-                    classSnap: doc, subclassSnap: subdoc));
-              }
-              return classes;
-            }
-          }
-          return [await ClassExtension.fromSnap(classSnap: doc)];
-        }).toList());
-
-        // Flatten
-        classesCache = (await results).expand((i) => i).toList();
-        return classesCache;
+        List<ClassHeader> result = documents
+            .map((doc) => ClassHeaderExtension.fromSnap(doc))
+            .where((e) => e != null)
+            .toList();
+//        result.sort((a, b) => a.name.compareTo(b.name));
+        return result;
       } else {
-        if (userClassesCache != null) {
-          return userClassesCache;
+        if (userClassHeadersCache != null) {
+          return userClassHeadersCache;
         }
-        List<Class> classes = [];
+        List<ClassHeader> headers = [];
 
-        // Get only the user's classes
-        List<String> classIds =
-            await fetchUserClassIds(uid: uid, context: context) ?? [];
+//        // Get only the user's classes
+//        List<String> classIds =
+//            await fetchUserClassIds(uid: uid, context: context) ?? [];
+//
+//        CollectionReference col = _db.collection('classes');
+//        for (var classId in classIds) {
+//          var idTokens = classId.split('/');
+//          if (idTokens.length > 1) {
+//            // it's a subclass
+//            var parent = await col.document(idTokens[0]).get();
+//            var child = await col
+//                .document(idTokens[0])
+//                .collection('subclasses')
+//                .document(idTokens[1])
+//                .get();
+//            headers.add(await ClassExtension.fromSnap(
+//                classSnap: parent, subclassSnap: child));
+//          } else {
+//            // it's a parent class
+//            headers.add(await ClassExtension.fromSnap(
+//                classSnap: await col.document(classId).get()));
+//          }
+//        }
 
-        CollectionReference col = _db.collection('classes');
-        for (var classId in classIds) {
-          var idTokens = classId.split('/');
-          if (idTokens.length > 1) {
-            // it's a subclass
-            var parent = await col.document(idTokens[0]).get();
-            var child = await col
-                .document(idTokens[0])
-                .collection('subclasses')
-                .document(idTokens[1])
-                .get();
-            classes.add(await ClassExtension.fromSnap(
-                classSnap: parent, subclassSnap: child));
-          } else {
-            // it's a parent class
-            classes.add(await ClassExtension.fromSnap(
-                classSnap: await col.document(classId).get()));
-          }
-        }
-
-        userClassesCache = classes;
-        return userClassesCache;
+        userClassHeadersCache = headers;
+        return userClassHeadersCache;
       }
     } catch (e) {
       print(e);
@@ -196,7 +196,6 @@ class ClassProvider with ChangeNotifier {
 
   DocumentReference _getClassDocument(String classId) {
     CollectionReference col = _db.collection('classes');
-    DocumentReference doc;
     var idTokens = classId.split('/');
     if (idTokens.length > 1) {
       // it's a subclass
@@ -220,7 +219,7 @@ class ClassProvider with ChangeNotifier {
       shortcuts.add(shortcut.toData());
 
       await doc.updateData({'shortcuts': shortcuts});
-      userClassesCache = null;
+      userClassHeadersCache = null;
       notifyListeners();
       return true;
     } catch (e) {
@@ -242,7 +241,7 @@ class ClassProvider with ChangeNotifier {
       shortcuts.removeAt(shortcutIndex);
 
       await doc.updateData({'shortcuts': shortcuts});
-      userClassesCache = null;
+      userClassHeadersCache = null;
       notifyListeners();
       return true;
     } catch (e) {

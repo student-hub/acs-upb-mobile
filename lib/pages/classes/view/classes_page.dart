@@ -17,7 +17,7 @@ class ClassesPage extends StatefulWidget {
 
 class _ClassesPageState extends State<ClassesPage> {
   Future<List<String>> userClassIdsFuture;
-  List<Class> classes;
+  List<ClassHeader> headers;
   bool updating;
 
   void updateClasses() async {
@@ -31,7 +31,7 @@ class _ClassesPageState extends State<ClassesPage> {
         Provider.of<ClassProvider>(context, listen: false);
     AuthProvider authProvider =
         Provider.of<AuthProvider>(context, listen: false);
-    classes = await classProvider.fetchClasses(uid: authProvider.uid);
+    headers = await classProvider.fetchClassHeaders(uid: authProvider.uid);
 
     updating = false;
     if (mounted) {
@@ -126,9 +126,9 @@ class _ClassesPageState extends State<ClassesPage> {
       body: Stack(
         children: [
           if (updating != null)
-            ((classes != null && classes.isNotEmpty)
+            ((headers != null && headers.isNotEmpty)
                 ? ClassList(
-                    classes: classes,
+                    classes: headers,
                     onTap: (classInfo) =>
                         Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) => ChangeNotifierProvider.value(
@@ -163,7 +163,7 @@ class AddClassesPage extends StatefulWidget {
 
 class _AddClassesPageState extends State<AddClassesPage> {
   List<String> classIds;
-  List<Class> classes;
+  List<ClassHeader> headers;
 
   _AddClassesPageState({List<String> classIds})
       : this.classIds = classIds ?? [];
@@ -171,7 +171,7 @@ class _AddClassesPageState extends State<AddClassesPage> {
   void updateClasses() async {
     ClassProvider classProvider =
         Provider.of<ClassProvider>(context, listen: false);
-    classes = await classProvider.fetchClasses();
+    headers = await classProvider.fetchClassHeaders();
     if (mounted) {
       setState(() {});
     }
@@ -194,7 +194,7 @@ class _AddClassesPageState extends State<AddClassesPage> {
         )
       ],
       body: ClassList(
-        classes: classes,
+        classes: headers,
         initiallySelected: classIds,
         selectable: true,
         onSelected: (selected, classId) {
@@ -210,11 +210,11 @@ class _AddClassesPageState extends State<AddClassesPage> {
 }
 
 class ClassList extends StatelessWidget {
-  final List<Class> classes;
+  final List<ClassHeader> classes;
   final Function(bool, String) onSelected;
   final List<String> initiallySelected;
   final bool selectable;
-  final Function(Class) onTap;
+  final Function(ClassHeader) onTap;
 
   ClassList(
       {this.classes,
@@ -235,20 +235,66 @@ class ClassList extends StatelessWidget {
       ' ' +
       semester;
 
-  Map<String, List<Class>> sections(List<Class> classes, BuildContext context) {
-    Map<String, List<Class>> classSections = {};
-    for (var year in ['1', '2', '3', '4']) {
-      for (var semester in ['1', '2']) {
-        classSections[sectionName(context, year, semester)] = [];
-      }
-    }
+  Map<String, dynamic> sections(
+      List<ClassHeader> classes, BuildContext context) {
+    Map<String, dynamic> map = {};
+
     classes.forEach((c) {
-      classSections[sectionName(context, c.year, c.semester)].add(c);
+      List<String> category = c.category.split('/');
+      var currentPath = map;
+      for (int i = 0; i < category.length; i++) {
+        String section = category[i].trim();
+
+        if (!currentPath.containsKey(section)) {
+          currentPath[section] = Map<String, dynamic>();
+        }
+        currentPath = currentPath[section];
+      }
+
+      if (!currentPath.containsKey('/')) {
+        currentPath['/'] = [];
+      }
+      currentPath['/'].add(c);
     });
-    classSections.keys.forEach(
-        (key) => classSections[key].sort((a, b) => a.name.compareTo(b.name)));
-    classSections.removeWhere((key, classes) => classes.length == 0);
-    return classSections;
+
+    return map;
+  }
+
+  List<Widget> buildSections(
+      BuildContext context, Map<String, dynamic> sections) {
+    List<Widget> children = [SizedBox(height: 4)];
+
+    sections.forEach((section, values) {
+      if (section == '/') {
+        children.addAll(values.map<Widget>(
+          (c) => Column(
+            children: [
+              ClassListItem(
+                selectable: selectable,
+                initiallySelected: initiallySelected.contains(c.id),
+                classInfo: c,
+                onSelected: (selected) => onSelected(selected, c.id),
+                onTap: () => onTap(c),
+              ),
+              Divider(),
+            ],
+          ),
+        ));
+      } else {
+        children.add(AppSpoiler(
+          title: section,
+          initialExpanded: false,
+          content: Padding(
+            padding: const EdgeInsets.only(left: 16.0),
+            child: Column(
+              children: buildSections(context, sections[section]),
+            ),
+          ),
+        ));
+      }
+    });
+
+    return children;
   }
 
   @override
@@ -256,44 +302,15 @@ class ClassList extends StatelessWidget {
     if (classes != null) {
       var classSections = sections(classes, context);
 
-      return Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: ListView(
-          children: classSections
-              .map((sectionName, classes) => MapEntry(
-                  sectionName,
-                  Column(
-                    children: [
-                      AppSpoiler(
-                        title: sectionName,
-                        content: Column(
-                          children: <Widget>[Divider()] +
-                              classes
-                                  .map<Widget>(
-                                    (c) => Column(
-                                      children: [
-                                        ClassListItem(
-                                          selectable: selectable,
-                                          initiallySelected:
-                                              initiallySelected.contains(c.id),
-                                          classInfo: c,
-                                          onSelected: (selected) =>
-                                              onSelected(selected, c.id),
-                                          onTap: () => onTap(c),
-                                        ),
-                                        Divider(),
-                                      ],
-                                    ),
-                                  )
-                                  .toList(),
-                        ),
-                      ),
-                      SizedBox(height: 8),
-                    ],
-                  )))
-              .values
-              .toList(),
-        ),
+      return ListView(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              children: buildSections(context, classSections)
+            ),
+          ),
+        ],
       );
     } else {
       return Center(child: CircularProgressIndicator());
@@ -302,7 +319,7 @@ class ClassList extends StatelessWidget {
 }
 
 class ClassListItem extends StatefulWidget {
-  final Class classInfo;
+  final ClassHeader classInfo;
   final bool initiallySelected;
   final Function(bool) onSelected;
   final bool selectable;
@@ -349,7 +366,7 @@ class _ClassListItemState extends State<ClassListItem> {
               ),
       ),
       title: Text(
-        widget.classInfo.completeName,
+        widget.classInfo.name,
         style: widget.selectable
             ? (selected
                 ? Theme.of(context)

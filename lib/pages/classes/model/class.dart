@@ -28,10 +28,17 @@ class Shortcut {
   Shortcut({this.type, this.name, this.link, this.ownerUid});
 }
 
-class Class {
+class ClassHeader {
   final String id;
   final String name;
   final String acronym;
+  final String category;
+
+  ClassHeader({this.id, this.name, this.acronym, this.category});
+}
+
+class Class {
+  ClassHeader header;
   final int credits;
   final String degree;
   final String domain;
@@ -42,9 +49,7 @@ class Class {
   final Map<String, double> grading;
 
   Class(
-      {@required this.id,
-      this.name,
-      this.acronym,
+      {@required this.header,
       this.credits,
       this.degree,
       this.domain,
@@ -54,8 +59,4 @@ class Class {
       List<Shortcut> shortcuts,
       this.grading})
       : shortcuts = shortcuts ?? [];
-
-  String get completeName => name + (series == null ? '' : ' (' + series + ')');
-
-  String get shortName => acronym + (series == null ? '' : ' (' + series + ')');
 }
