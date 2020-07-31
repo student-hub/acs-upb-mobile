@@ -583,30 +583,30 @@ class S {
     );
   }
 
-  /// `The password must include at least an uppercase letter.`
+  /// `The password must include at least one uppercase letter.`
   String get warningPasswordUppercase {
     return Intl.message(
-      'The password must include at least an uppercase letter.',
+      'The password must include at least one uppercase letter.',
       name: 'warningPasswordUppercase',
       desc: '',
       args: [],
     );
   }
 
-  /// `The password must include at least a lowercase letter.`
+  /// `The password must include at least one lowercase letter.`
   String get warningPasswordLowercase {
     return Intl.message(
-      'The password must include at least a lowercase letter.',
+      'The password must include at least one lowercase letter.',
       name: 'warningPasswordLowercase',
       desc: '',
       args: [],
     );
   }
 
-  /// `The password must include at least a special character.`
+  /// `The password must include one least a special character.`
   String get warningPasswordSpecialCharacters {
     return Intl.message(
-      'The password must include at least a special character.',
+      'The password must include one least a special character.',
       name: 'warningPasswordSpecialCharacters',
       desc: '',
       args: [],
