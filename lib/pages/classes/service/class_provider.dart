@@ -46,54 +46,32 @@ extension ClassHeaderExtension on ClassHeader {
   }
 }
 
-//extension ClassExtension on Class {
-//  static Future<Class> fromSnap(
-//      {DocumentSnapshot classSnap, DocumentSnapshot subclassSnap}) async {
-//    if (subclassSnap == null) {
-//      return Class(
-//        id: classSnap.documentID,
-//        name: classSnap.data['class'],
-//        acronym: classSnap.data['acronym'],
-//        credits: int.parse(classSnap.data['credits']),
-//        degree: classSnap.data['degree'],
-//        domain: classSnap.data['domain'],
-//        year: classSnap.data['year'],
-//        semester: classSnap.data['semester'],
-//      );
-//    } else {
-//      List<Shortcut> shortcuts = [];
-//      for (var s in List<Map<String, dynamic>>.from(
-//          subclassSnap.data['shortcuts'] ?? [])) {
-//        shortcuts.add(Shortcut(
-//          type: ShortcutTypeExtension.fromString(s['type']),
-//          name: s['name'],
-//          link: s['link'],
-//          ownerUid: s['addedBy'],
-//        ));
-//      }
-//
-//      Map<String, double> grading;
-//      if (subclassSnap['grading'] != null) {
-//        grading = Map<String, double>.from(subclassSnap['grading'].map(
-//            (String name, dynamic value) => MapEntry(name, value.toDouble())));
-//      }
-//
-//      return Class(
-//        id: classSnap.documentID + '/' + subclassSnap.documentID,
-//        name: classSnap.data['class'],
-//        acronym: classSnap.data['acronym'],
-//        credits: int.parse(classSnap.data['credits']),
-//        degree: classSnap.data['degree'],
-//        domain: classSnap.data['domain'],
-//        year: classSnap.data['year'],
-//        semester: classSnap.data['semester'],
-//        series: subclassSnap.data['series'],
-//        shortcuts: shortcuts,
-//        grading: grading,
-//      );
-//    }
-//  }
-//}
+extension ClassExtension on Class {
+  static Class fromSnap({ClassHeader header, DocumentSnapshot snap}) {
+    List<Shortcut> shortcuts = [];
+    for (var s
+        in List<Map<String, dynamic>>.from(snap.data['shortcuts'] ?? [])) {
+      shortcuts.add(Shortcut(
+        type: ShortcutTypeExtension.fromString(s['type']),
+        name: s['name'],
+        link: s['link'],
+        ownerUid: s['addedBy'],
+      ));
+    }
+
+    Map<String, double> grading;
+    if (snap['grading'] != null) {
+      grading = Map<String, double>.from(snap['grading'].map(
+          (String name, dynamic value) => MapEntry(name, value.toDouble())));
+    }
+
+    return Class(
+      header: header,
+      shortcuts: shortcuts,
+      grading: grading,
+    );
+  }
+}
 
 class ClassProvider with ChangeNotifier {
   final Firestore _db = Firestore.instance;
@@ -174,6 +152,21 @@ class ClassProvider with ChangeNotifier {
         userClassHeadersCache = headers;
         return userClassHeadersCache;
       }
+    } catch (e) {
+      print(e);
+      if (context != null) {
+        AppToast.show(S.of(context).errorSomethingWentWrong);
+      }
+      return null;
+    }
+  }
+
+  Future<Class> fetchClassInfo(ClassHeader header,
+      {BuildContext context}) async {
+    try {
+      DocumentSnapshot snap =
+          await _db.collection('classes').document(header.id).get();
+      return ClassExtension.fromSnap(snap: snap);
     } catch (e) {
       print(e);
       if (context != null) {

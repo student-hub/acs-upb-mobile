@@ -33,33 +33,46 @@ extension ClassExtension on ClassHeader {
 }
 
 class ClassView extends StatefulWidget {
-  final Class classInfo;
+  final ClassHeader classHeader;
 
-  const ClassView({Key key, this.classInfo}) : super(key: key);
+  const ClassView({Key key, this.classHeader}) : super(key: key);
 
   @override
   _ClassViewState createState() => _ClassViewState();
 }
 
 class _ClassViewState extends State<ClassView> {
+  Class classInfo;
+
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
-      title: widget.classInfo.header.name,
-      body: ListView(
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            child: Column(
-              children: [
-                shortcuts(context),
-                SizedBox(height: 8),
-                GradingChart(grading: widget.classInfo.grading),
-              ],
-            ),
-          ),
-        ],
-      ),
+      title: widget.classHeader.name,
+      body: FutureBuilder(
+          future: Provider.of<ClassProvider>(context)
+              .fetchClassInfo(widget.classHeader, context: context),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.done) {
+              classInfo = snapshot.data;
+
+              return ListView(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: Column(
+                      children: [
+                        shortcuts(context),
+                        SizedBox(height: 8),
+                        GradingChart(grading: classInfo.grading),
+                      ],
+                    ),
+                  ),
+                ],
+              );
+            } else {
+              return Center(child: CircularProgressIndicator());
+            }
+          }),
     );
   }
 
@@ -83,10 +96,9 @@ class _ClassViewState extends State<ClassView> {
                       builder: (context) => ChangeNotifierProvider.value(
                         value: classProvider,
                         child: ShortcutView(onSave: (shortcut) {
-                          setState(
-                              () => widget.classInfo.shortcuts.add(shortcut));
+                          setState(() => classInfo.shortcuts.add(shortcut));
                           classProvider.addShortcut(
-                              classId: widget.classInfo.header.id,
+                              classId: widget.classHeader.id,
                               shortcut: shortcut,
                               context: context);
                         }),
@@ -97,7 +109,7 @@ class _ClassViewState extends State<ClassView> {
               ),
               Divider()
             ] +
-            widget.classInfo.shortcuts
+            classInfo.shortcuts
                 .asMap()
                 .map((i, s) => MapEntry(
                     i, shortcut(index: i, shortcut: s, context: context)))
@@ -174,12 +186,12 @@ class _ClassViewState extends State<ClassView> {
                     Navigator.pop(context); // Pop dialog window
 
                     var success = await classProvider.deleteShortcut(
-                        classId: widget.classInfo.header.id,
+                        classId: widget.classHeader.id,
                         shortcutIndex: index,
                         context: context);
                     if (success) {
                       setState(() {
-                        widget.classInfo.shortcuts.removeAt(index);
+                        classInfo.shortcuts.removeAt(index);
                       });
                       AppToast.show(
                           S.of(classViewContext).messageShortcutDeleted);

@@ -130,11 +130,11 @@ class _ClassesPageState extends State<ClassesPage> {
                 ? ClassList(
                     classes: headers,
                     sectioned: false,
-                    onTap: (classInfo) =>
+                    onTap: (classHeader) =>
                         Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) => ChangeNotifierProvider.value(
                         value: classProvider,
-                        child: ClassView(classInfo: null),
+                        child: ClassView(classHeader: classHeader),
                       ),
                     )),
                   )
@@ -297,7 +297,7 @@ class ClassList extends StatelessWidget {
           ClassListItem(
             selectable: selectable,
             initiallySelected: initiallySelected.contains(header.id),
-            classInfo: header,
+            classHeader: header,
             onSelected: (selected) => onSelected(selected, header.id),
             onTap: () => onTap(header),
           ),
@@ -326,7 +326,7 @@ class ClassList extends StatelessWidget {
 }
 
 class ClassListItem extends StatefulWidget {
-  final ClassHeader classInfo;
+  final ClassHeader classHeader;
   final bool initiallySelected;
   final Function(bool) onSelected;
   final bool selectable;
@@ -334,7 +334,7 @@ class ClassListItem extends StatefulWidget {
 
   ClassListItem(
       {Key key,
-      this.classInfo,
+      this.classHeader,
       this.initiallySelected = false,
       Function(bool) onSelected,
       this.selectable = false,
@@ -357,23 +357,24 @@ class _ClassListItemState extends State<ClassListItem> {
   Widget build(BuildContext context) {
     return ListTile(
       leading: CircleAvatar(
-        backgroundColor: widget.classInfo.colorFromAcronym,
+        backgroundColor: widget.classHeader.colorFromAcronym,
         child: (widget.selectable && selected)
             ? Icon(
                 Icons.check,
-                color: widget.classInfo.colorFromAcronym.highEmphasisOnColor,
+                color: widget.classHeader.colorFromAcronym.highEmphasisOnColor,
               )
             : AutoSizeText(
-                widget.classInfo.acronym,
+                widget.classHeader.acronym,
                 minFontSize: 5,
                 maxLines: 1,
                 style: TextStyle(
-                  color: widget.classInfo.colorFromAcronym.highEmphasisOnColor,
+                  color:
+                      widget.classHeader.colorFromAcronym.highEmphasisOnColor,
                 ),
               ),
       ),
       title: Text(
-        widget.classInfo.name,
+        widget.classHeader.name,
         style: widget.selectable
             ? (selected
                 ? Theme.of(context)
