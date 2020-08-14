@@ -235,7 +235,7 @@ class ClassList extends StatelessWidget {
       ' ' +
       semester;
 
-  Map<String, dynamic> sections(
+  Map<String, dynamic> classesBySection(
       List<ClassHeader> classes, BuildContext context) {
     Map<String, dynamic> map = {};
 
@@ -261,7 +261,8 @@ class ClassList extends StatelessWidget {
   }
 
   List<Widget> buildSections(
-      BuildContext context, Map<String, dynamic> sections) {
+      BuildContext context, Map<String, dynamic> sections,
+      {int level = 0}) {
     List<Widget> children = [SizedBox(height: 4)];
 
     sections.forEach((section, values) {
@@ -283,11 +284,13 @@ class ClassList extends StatelessWidget {
       } else {
         children.add(AppSpoiler(
           title: section,
+          level: level,
           initialExpanded: false,
           content: Padding(
             padding: const EdgeInsets.only(left: 16.0),
             child: Column(
-              children: buildSections(context, sections[section]),
+              children:
+                  buildSections(context, sections[section], level: level + 1),
             ),
           ),
         ));
@@ -300,15 +303,13 @@ class ClassList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (classes != null) {
-      var classSections = sections(classes, context);
+      var classSections = classesBySection(classes, context);
 
       return ListView(
         children: [
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Column(
-              children: buildSections(context, classSections)
-            ),
+            child: Column(children: buildSections(context, classSections)),
           ),
         ],
       );

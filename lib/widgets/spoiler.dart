@@ -6,9 +6,16 @@ class AppSpoiler extends StatelessWidget {
   final Widget content;
   final bool initialExpanded;
 
-  AppSpoiler(
-      {Key key, this.title = "", Widget content, this.initialExpanded = true})
-      : this.content = content ?? Container(),
+  /// Level for nested spoilers; the higher the level, the smaller the font size
+  final int level;
+
+  AppSpoiler({
+    Key key,
+    this.title = "",
+    Widget content,
+    this.initialExpanded = true,
+    this.level = 0,
+  })  : this.content = content ?? Container(),
         super(key: key);
 
   @override
@@ -29,7 +36,11 @@ class AppSpoiler extends StatelessWidget {
             child: ExpandablePanel(
               controller:
                   ExpandableController(initialExpanded: initialExpanded),
-              header: Text(title, style: Theme.of(context).textTheme.headline6),
+              header: Text(title,
+                  style: Theme.of(context)
+                      .textTheme
+                      .headline6
+                      .apply(fontSizeDelta: -level.toDouble())),
               collapsed: SizedBox(height: 12.0),
               expanded: content,
             ),
