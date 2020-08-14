@@ -97,8 +97,32 @@ extension ClassHeaderExtension on ClassHeader {
 
 class ClassProvider with ChangeNotifier {
   final Firestore _db = Firestore.instance;
-  List<ClassHeader> classHeadersCache;
-  List<ClassHeader> userClassHeadersCache;
+  Map<String, dynamic> classHeadersCache;
+  Map<String, dynamic> userClassHeadersCache;
+
+  Map<String, dynamic> classesBySection(List<ClassHeader> classes) {
+    Map<String, dynamic> map = {};
+
+    classes.forEach((c) {
+      List<String> category = c.category.split('/');
+      var currentPath = map;
+      for (int i = 0; i < category.length; i++) {
+        String section = category[i].trim();
+
+        if (!currentPath.containsKey(section)) {
+          currentPath[section] = Map<String, dynamic>();
+        }
+        currentPath = currentPath[section];
+      }
+
+      if (!currentPath.containsKey('/')) {
+        currentPath['/'] = [];
+      }
+      currentPath['/'].add(c);
+    });
+
+    return map;
+  }
 
   Future<List<String>> fetchUserClassIds(
       {String uid, BuildContext context}) async {
@@ -133,7 +157,7 @@ class ClassProvider with ChangeNotifier {
     }
   }
 
-  Future<List<ClassHeader>> fetchClassHeaders(
+  Future<Map<String, dynamic>> fetchClassHeaders(
       {String uid, Filter filter, BuildContext context}) async {
     try {
       if (uid == null) {
@@ -146,12 +170,13 @@ class ClassProvider with ChangeNotifier {
             await _db.collection('import_moodle').getDocuments();
         List<DocumentSnapshot> documents = qSnapshot.documents;
 
-        List<ClassHeader> result = documents
+        List<ClassHeader> headers = documents
             .map((doc) => ClassHeaderExtension.fromSnap(doc))
             .where((e) => e != null)
             .toList();
-//        result.sort((a, b) => a.name.compareTo(b.name));
-        return result;
+
+        classHeadersCache = classesBySection(headers);
+        return classHeadersCache;
       } else {
         if (userClassHeadersCache != null) {
           return userClassHeadersCache;
@@ -182,7 +207,7 @@ class ClassProvider with ChangeNotifier {
 //          }
 //        }
 
-        userClassHeadersCache = headers;
+        userClassHeadersCache = classesBySection(headers);
         return userClassHeadersCache;
       }
     } catch (e) {

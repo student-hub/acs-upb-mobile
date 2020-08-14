@@ -17,7 +17,7 @@ class ClassesPage extends StatefulWidget {
 
 class _ClassesPageState extends State<ClassesPage> {
   Future<List<String>> userClassIdsFuture;
-  List<ClassHeader> headers;
+  Map<String, dynamic> headers;
   bool updating;
 
   void updateClasses() async {
@@ -163,7 +163,7 @@ class AddClassesPage extends StatefulWidget {
 
 class _AddClassesPageState extends State<AddClassesPage> {
   List<String> classIds;
-  List<ClassHeader> headers;
+  Map<String, dynamic> headers;
 
   _AddClassesPageState({List<String> classIds})
       : this.classIds = classIds ?? [];
@@ -210,7 +210,7 @@ class _AddClassesPageState extends State<AddClassesPage> {
 }
 
 class ClassList extends StatelessWidget {
-  final List<ClassHeader> classes;
+  final Map<String, dynamic> classes;
   final Function(bool, String) onSelected;
   final List<String> initiallySelected;
   final bool selectable;
@@ -235,34 +235,7 @@ class ClassList extends StatelessWidget {
       ' ' +
       semester;
 
-  Map<String, dynamic> classesBySection(
-      List<ClassHeader> classes, BuildContext context) {
-    Map<String, dynamic> map = {};
-
-    classes.forEach((c) {
-      List<String> category = c.category.split('/');
-      var currentPath = map;
-      for (int i = 0; i < category.length; i++) {
-        String section = category[i].trim();
-
-        if (!currentPath.containsKey(section)) {
-          currentPath[section] = Map<String, dynamic>();
-        }
-        currentPath = currentPath[section];
-      }
-
-      if (!currentPath.containsKey('/')) {
-        currentPath['/'] = [];
-      }
-      currentPath['/'].add(c);
-    });
-
-    return map;
-  }
-
-  List<Widget> buildSections(
-      BuildContext context, Map<String, dynamic> sections,
-      {int level = 0}) {
+  List<Widget> buildSections(Map<String, dynamic> sections, {int level = 0}) {
     List<Widget> children = [SizedBox(height: 4)];
 
     sections.forEach((section, values) {
@@ -289,8 +262,7 @@ class ClassList extends StatelessWidget {
           content: Padding(
             padding: const EdgeInsets.only(left: 16.0),
             child: Column(
-              children:
-                  buildSections(context, sections[section], level: level + 1),
+              children: buildSections(sections[section], level: level + 1),
             ),
           ),
         ));
@@ -303,13 +275,11 @@ class ClassList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (classes != null) {
-      var classSections = classesBySection(classes, context);
-
       return ListView(
         children: [
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Column(children: buildSections(context, classSections)),
+            child: Column(children: buildSections(classes)),
           ),
         ],
       );
