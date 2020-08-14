@@ -158,29 +158,18 @@ class ClassProvider with ChangeNotifier {
         }
         List<ClassHeader> headers = [];
 
-//        // Get only the user's classes
-//        List<String> classIds =
-//            await fetchUserClassIds(uid: uid, context: context) ?? [];
-//
-//        CollectionReference col = _db.collection('classes');
-//        for (var classId in classIds) {
-//          var idTokens = classId.split('/');
-//          if (idTokens.length > 1) {
-//            // it's a subclass
-//            var parent = await col.document(idTokens[0]).get();
-//            var child = await col
-//                .document(idTokens[0])
-//                .collection('subclasses')
-//                .document(idTokens[1])
-//                .get();
-//            headers.add(await ClassExtension.fromSnap(
-//                classSnap: parent, subclassSnap: child));
-//          } else {
-//            // it's a parent class
-//            headers.add(await ClassExtension.fromSnap(
-//                classSnap: await col.document(classId).get()));
-//          }
-//        }
+        // Get only the user's classes
+        List<String> classIds =
+            await fetchUserClassIds(uid: uid, context: context) ?? [];
+
+        CollectionReference col = _db.collection('import_moodle');
+        for (var classId in classIds) {
+          DocumentSnapshot snap = await col.document(classId).get();
+          ClassHeader header = ClassHeaderExtension.fromSnap(snap);
+          if (header != null) {
+            headers.add(header);
+          }
+        }
 
         userClassHeadersCache = headers;
         return userClassHeadersCache;

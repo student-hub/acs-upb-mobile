@@ -129,11 +129,12 @@ class _ClassesPageState extends State<ClassesPage> {
             ((headers != null && headers.isNotEmpty)
                 ? ClassList(
                     classes: headers,
+                    sectioned: false,
                     onTap: (classInfo) =>
                         Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) => ChangeNotifierProvider.value(
                         value: classProvider,
-                        child: ClassView(classInfo: classInfo),
+                        child: ClassView(classInfo: null),
                       ),
                     )),
                   )
@@ -215,13 +216,15 @@ class ClassList extends StatelessWidget {
   final List<String> initiallySelected;
   final bool selectable;
   final Function(ClassHeader) onTap;
+  final bool sectioned;
 
   ClassList(
       {this.classes,
       Function(bool, String) onSelected,
       List<String> initiallySelected,
       this.selectable = false,
-      Function(Class) onTap})
+      this.sectioned = true,
+      Function(ClassHeader) onTap})
       : onSelected = onSelected ?? ((selected, classId) {}),
         onTap = onTap ?? ((_) {}),
         initiallySelected = initiallySelected ?? [];
@@ -268,18 +271,7 @@ class ClassList extends StatelessWidget {
     sections.forEach((section, values) {
       if (section == '/') {
         children.addAll(values.map<Widget>(
-          (c) => Column(
-            children: [
-              ClassListItem(
-                selectable: selectable,
-                initiallySelected: initiallySelected.contains(c.id),
-                classInfo: c,
-                onSelected: (selected) => onSelected(selected, c.id),
-                onTap: () => onTap(c),
-              ),
-              Divider(),
-            ],
-          ),
+          (c) => buildClassItem(c),
         ));
       } else {
         children.add(AppSpoiler(
@@ -300,16 +292,30 @@ class ClassList extends StatelessWidget {
     return children;
   }
 
+  Widget buildClassItem(ClassHeader header) => Column(
+        children: [
+          ClassListItem(
+            selectable: selectable,
+            initiallySelected: initiallySelected.contains(header.id),
+            classInfo: header,
+            onSelected: (selected) => onSelected(selected, header.id),
+            onTap: () => onTap(header),
+          ),
+          Divider(),
+        ],
+      );
+
   @override
   Widget build(BuildContext context) {
     if (classes != null) {
-      var classSections = classesBySection(classes, context);
-
       return ListView(
         children: [
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Column(children: buildSections(context, classSections)),
+            child: Column(
+                children: sectioned
+                    ? buildSections(context, classesBySection(classes, context))
+                    : classes.map((c) => buildClassItem(c)).toList()),
           ),
         ],
       );
