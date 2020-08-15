@@ -36,35 +36,31 @@ void main() {
       await tester.pumpAndSettle();
 
       MaterialApp app = find.byType(MaterialApp).evaluate().first.widget;
-      expect(app.theme.brightness, equals(Brightness.dark));
+      expect(app.theme.brightness, equals(Brightness.light));
 
       // Open settings
       await tester.tap(find.byIcon(Icons.settings));
       await tester.pumpAndSettle();
 
       // Toggle dark mode
-      expect(find.text("Language"), findsOneWidget);
       await tester.tap(find.text('Dark Mode'));
       await tester.pumpAndSettle();
 
       app = find.byType(MaterialApp).evaluate().first.widget;
-      expect(app.theme.brightness, equals(Brightness.light));
+      expect(app.theme.brightness, equals(Brightness.dark));
 
       // Toggle dark mode
       await tester.tap(find.text('Dark Mode'));
       await tester.pumpAndSettle();
 
       app = find.byType(MaterialApp).evaluate().first.widget;
-      expect(app.theme.brightness, equals(Brightness.dark));
+      expect(app.theme.brightness, equals(Brightness.light));
     });
 
     testWidgets('Language', (WidgetTester tester) async {
       await tester.pumpWidget(ChangeNotifierProvider<AuthProvider>(
           create: (_) => mockAuthProvider, child: MyApp()));
       await tester.pumpAndSettle();
-
-      MaterialApp app = find.byType(MaterialApp).evaluate().first.widget;
-      expect(app.theme.brightness, equals(Brightness.dark));
 
       // Open settings
       await tester.tap(find.byIcon(Icons.settings));
