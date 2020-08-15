@@ -47,11 +47,13 @@ class _ClassViewState extends State<ClassView> {
 
   @override
   Widget build(BuildContext context) {
+    var classProvider = Provider.of<ClassProvider>(context);
+
     return AppScaffold(
       title: widget.classHeader.name,
       body: FutureBuilder(
-          future: Provider.of<ClassProvider>(context)
-              .fetchClassInfo(widget.classHeader, context: context),
+          future: classProvider.fetchClassInfo(widget.classHeader,
+              context: context),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
               classInfo = snapshot.data;
@@ -64,7 +66,11 @@ class _ClassViewState extends State<ClassView> {
                       children: [
                         shortcuts(context),
                         SizedBox(height: 8),
-                        GradingChart(grading: classInfo.grading),
+                        GradingChart(
+                          grading: classInfo.grading,
+                          onSave: (grading) => classProvider.setGrading(
+                              classId: widget.classHeader.id, grading: grading),
+                        ),
                       ],
                     ),
                   ),

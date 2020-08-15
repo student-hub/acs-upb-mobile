@@ -12,8 +12,10 @@ import 'package:quiver/iterables.dart';
 class GradingChart extends StatefulWidget {
   final Map<String, double> grading;
   final bool withHeader;
+  final Function(Map<String, double>) onSave;
 
-  const GradingChart({Key key, this.grading, this.withHeader = true})
+  const GradingChart(
+      {Key key, this.grading, this.withHeader = true, this.onSave})
       : super(key: key);
 
   @override
@@ -58,6 +60,7 @@ class _GradingChartState extends State<GradingChart> {
                                   value: classProvider,
                                   child: GradingView(
                                     grading: widget.grading,
+                                    onSave: widget.onSave,
                                   ),
                                 ),
                               ))
@@ -96,8 +99,9 @@ class _GradingChartState extends State<GradingChart> {
 
 class GradingView extends StatefulWidget {
   final Map<String, double> grading;
+  final Function(Map<String, double>) onSave;
 
-  const GradingView({Key key, this.grading}) : super(key: key);
+  const GradingView({Key key, this.grading, this.onSave}) : super(key: key);
 
   @override
   _GradingViewState createState() => _GradingViewState();
@@ -280,14 +284,8 @@ class _GradingViewState extends State<GradingView> {
               text: S.of(context).buttonSave,
               onPressed: () {
                 if (formKey.currentState.validate()) {
-//                widget.onSave(Shortcut(
-//                  name: nameContollers.text,
-//                  link: valueControllers.text,
-//                  type: selectedType,
-//                  ownerUid:
-//                  Provider.of<AuthProvider>(context, listen: false).uid,
-//                ));
-//                  Navigator.of(context).pop();
+                  widget.onSave(grading);
+                  Navigator.of(context).pop();
                 }
               })
         ],

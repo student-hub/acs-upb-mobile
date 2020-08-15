@@ -137,7 +137,7 @@ class ClassProvider with ChangeNotifier {
             .map((doc) => ClassHeaderExtension.fromSnap(doc))
             .where((e) => e != null)
             .toList();
-//        result.sort((a, b) => a.name.compareTo(b.name));
+
         return result;
       } else {
         if (userClassHeadersCache != null) {
@@ -220,7 +220,6 @@ class ClassProvider with ChangeNotifier {
         await doc.updateData({'shortcuts': shortcuts});
       }
 
-      userClassHeadersCache = null;
       notifyListeners();
       return true;
     } catch (e) {
@@ -242,7 +241,34 @@ class ClassProvider with ChangeNotifier {
       shortcuts.removeAt(shortcutIndex);
 
       await doc.updateData({'shortcuts': shortcuts});
-      userClassHeadersCache = null;
+
+      notifyListeners();
+      return true;
+    } catch (e) {
+      print(e);
+      if (context != null) {
+        AppToast.show(S.of(context).errorSomethingWentWrong);
+      }
+      return false;
+    }
+  }
+
+  Future<bool> setGrading(
+      {String classId,
+      Map<String, double> grading,
+      BuildContext context}) async {
+    try {
+      DocumentReference doc = _getClassDocument(classId);
+      DocumentSnapshot snap = await doc.get();
+
+      if (snap.data == null) {
+        // Document does not exist
+        await doc.setData({'grading': grading});
+      } else {
+        // Document exists
+        await doc.updateData({'grading': grading});
+      }
+
       notifyListeners();
       return true;
     } catch (e) {
