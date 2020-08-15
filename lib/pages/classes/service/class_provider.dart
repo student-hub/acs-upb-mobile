@@ -19,7 +19,7 @@ extension ShortcutTypeExtension on ShortcutType {
         return ShortcutType.classbook;
       case 'resource':
         return ShortcutType.resource;
-      case 'other':
+      default:
         return ShortcutType.other;
     }
   }

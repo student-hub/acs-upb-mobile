@@ -80,6 +80,7 @@ class _ClassViewState extends State<ClassView> {
   Widget shortcuts(BuildContext context) {
     var classProvider = Provider.of<ClassProvider>(context);
     var authProvider = Provider.of<AuthProvider>(context);
+
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(
@@ -230,7 +231,9 @@ class _ClassViewState extends State<ClassView> {
           backgroundColor: Colors.transparent,
           foregroundColor: Theme.of(context).iconTheme.color,
         ),
-        title: Text(shortcut.name ?? shortcut.type.toLocalizedString(context)),
+        title: Text((shortcut.name?.isEmpty ?? true)
+            ? shortcut.type.toLocalizedString(context)
+            : shortcut.name),
         contentPadding: EdgeInsets.zero,
         dense: true,
         visualDensity: VisualDensity.compact,
