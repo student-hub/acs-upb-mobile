@@ -1,9 +1,14 @@
+import 'package:acs_upb_mobile/authentication/model/user.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/classes/model/class.dart';
 import 'package:acs_upb_mobile/pages/filter/model/filter.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+
+extension UserExtension on User {
+  bool get canEditClassInfo => permissionLevel >= 3;
+}
 
 extension ShortcutTypeExtension on ShortcutType {
   static ShortcutType fromString(String string) {

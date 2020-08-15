@@ -104,6 +104,7 @@
   "warningWebsiteNameExists": "A website with the same name already exists.",
   "warningNoPrivateWebsite": "You have not created any private websites yet.",
   "warningNoPermissionToAddPublicWebsite": "You do not have permission to create a public website.",
+  "warningNoPermissionToEditClassInfo": "You do not have permission to edit class information.",
   "warningAuthenticationNeeded": "Please authenticate in order to access this feature.",
   "warningNothingToEdit": "There is nothing you have permission to edit.",
   "warningFieldCannotBeEmpty": "Field cannot be empty.",

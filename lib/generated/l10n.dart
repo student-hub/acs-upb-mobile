@@ -1014,6 +1014,16 @@ class S {
     );
   }
 
+  /// `You do not have permission to edit class information.`
+  String get warningNoPermissionToEditClassInfo {
+    return Intl.message(
+      'You do not have permission to edit class information.',
+      name: 'warningNoPermissionToEditClassInfo',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Please authenticate in order to access this feature.`
   String get warningAuthenticationNeeded {
     return Intl.message(

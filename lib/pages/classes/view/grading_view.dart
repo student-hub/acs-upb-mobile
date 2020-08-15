@@ -1,6 +1,8 @@
+import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
+import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pie_chart/pie_chart.dart';
@@ -26,6 +28,7 @@ class _GradingChartState extends State<GradingChart> {
   @override
   Widget build(BuildContext context) {
     ClassProvider classProvider = Provider.of<ClassProvider>(context);
+    AuthProvider authProvider = Provider.of<AuthProvider>(context);
 
     return Card(
       child: Padding(
@@ -40,17 +43,26 @@ class _GradingChartState extends State<GradingChart> {
                     S.of(context).sectionGrading,
                     style: Theme.of(context).textTheme.headline6,
                   ),
-                  IconButton(
-                    icon: Icon(Icons.edit),
-                    onPressed: () =>
-                        Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => ChangeNotifierProvider.value(
-                        value: classProvider,
-                        child: GradingView(
-                          grading: widget.grading,
-                        ),
-                      ),
-                    )),
+                  GestureDetector(
+                    onTap: authProvider.currentUserFromCache.canEditClassInfo
+                        ? () {}
+                        : () => AppToast.show(
+                            S.of(context).warningNoPermissionToEditClassInfo),
+                    child: IconButton(
+                      icon: Icon(Icons.edit),
+                      onPressed: authProvider
+                              .currentUserFromCache.canEditClassInfo
+                          ? () => Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) =>
+                                    ChangeNotifierProvider.value(
+                                  value: classProvider,
+                                  child: GradingView(
+                                    grading: widget.grading,
+                                  ),
+                                ),
+                              ))
+                          : null,
+                    ),
                   ),
                 ],
               ),

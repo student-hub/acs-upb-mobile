@@ -104,6 +104,7 @@
   "warningWebsiteNameExists": "Există deja un site cu același nume.",
   "warningNoPrivateWebsite": "Nu ați creat nici un website privat încă.",
   "warningNoPermissionToAddPublicWebsite": "Nu aveți permisiunea să creați site-uri publice.",
+  "warningNoPermissionToEditClassInfo": "You do not have permission to edit class information.",
   "warningAuthenticationNeeded": "Autentificați-vă pentru a accesa această funcționalitate.",
   "warningNothingToEdit": "Nu există nimic pentru care să aveți permisiuni de editare.",
   "warningFieldCannotBeEmpty": "Câmpul nu poate fi gol.",

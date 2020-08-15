@@ -192,6 +192,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "warningInternetConnection" : MessageLookupByLibrary.simpleMessage("Please make sure you are connected to the internet."),
     "warningInvalidURL" : MessageLookupByLibrary.simpleMessage("You need to provide a valid URL."),
     "warningNoPermissionToAddPublicWebsite" : MessageLookupByLibrary.simpleMessage("You do not have permission to create a public website."),
+    "warningNoPermissionToEditClassInfo" : MessageLookupByLibrary.simpleMessage("You do not have permission to edit class information."),
     "warningNoPrivateWebsite" : MessageLookupByLibrary.simpleMessage("You have not created any private websites yet."),
     "warningNoneYet" : MessageLookupByLibrary.simpleMessage("None yet"),
     "warningNothingToEdit" : MessageLookupByLibrary.simpleMessage("There is nothing you have permission to edit."),

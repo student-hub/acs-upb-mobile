@@ -192,6 +192,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "warningInternetConnection" : MessageLookupByLibrary.simpleMessage("Asigurați-vă că sunteți conectat la internet."),
     "warningInvalidURL" : MessageLookupByLibrary.simpleMessage("Trebuie să introduceți un URL valid."),
     "warningNoPermissionToAddPublicWebsite" : MessageLookupByLibrary.simpleMessage("Nu aveți permisiunea să creați site-uri publice."),
+    "warningNoPermissionToEditClassInfo" : MessageLookupByLibrary.simpleMessage("You do not have permission to edit class information."),
     "warningNoPrivateWebsite" : MessageLookupByLibrary.simpleMessage("Nu ați creat nici un website privat încă."),
     "warningNoneYet" : MessageLookupByLibrary.simpleMessage("Nu există încă"),
     "warningNothingToEdit" : MessageLookupByLibrary.simpleMessage("Nu există nimic pentru care să aveți permisiuni de editare."),

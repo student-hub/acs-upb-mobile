@@ -1,3 +1,4 @@
+import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/classes/model/class.dart';
 import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
@@ -78,6 +79,7 @@ class _ClassViewState extends State<ClassView> {
 
   Widget shortcuts(BuildContext context) {
     var classProvider = Provider.of<ClassProvider>(context);
+    var authProvider = Provider.of<AuthProvider>(context);
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(
@@ -89,21 +91,31 @@ class _ClassViewState extends State<ClassView> {
                     S.of(context).sectionShortcuts,
                     style: Theme.of(context).textTheme.headline6,
                   ),
-                  IconButton(
-                    icon: Icon(Icons.add),
-                    onPressed: () =>
-                        Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => ChangeNotifierProvider.value(
-                        value: classProvider,
-                        child: ShortcutView(onSave: (shortcut) {
-                          setState(() => classInfo.shortcuts.add(shortcut));
-                          classProvider.addShortcut(
-                              classId: widget.classHeader.id,
-                              shortcut: shortcut,
-                              context: context);
-                        }),
-                      ),
-                    )),
+                  GestureDetector(
+                    onTap: authProvider.currentUserFromCache.canEditClassInfo
+                        ? () {}
+                        : () => AppToast.show(
+                            S.of(context).warningNoPermissionToEditClassInfo),
+                    child: IconButton(
+                      icon: Icon(Icons.add),
+                      onPressed: authProvider
+                              .currentUserFromCache.canEditClassInfo
+                          ? () => Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) =>
+                                    ChangeNotifierProvider.value(
+                                  value: classProvider,
+                                  child: ShortcutView(onSave: (shortcut) {
+                                    setState(() =>
+                                        classInfo.shortcuts.add(shortcut));
+                                    classProvider.addShortcut(
+                                        classId: widget.classHeader.id,
+                                        shortcut: shortcut,
+                                        context: context);
+                                  }),
+                                ),
+                              ))
+                          : null,
+                    ),
                   ),
                 ],
               ),
