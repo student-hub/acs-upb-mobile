@@ -48,6 +48,10 @@ extension ClassHeaderExtension on ClassHeader {
 
 extension ClassExtension on Class {
   static Class fromSnap({ClassHeader header, DocumentSnapshot snap}) {
+    if (snap.data == null) {
+      return Class(header: header);
+    }
+
     List<Shortcut> shortcuts = [];
     for (var s
         in List<Map<String, dynamic>>.from(snap.data['shortcuts'] ?? [])) {
@@ -166,7 +170,7 @@ class ClassProvider with ChangeNotifier {
     try {
       DocumentSnapshot snap =
           await _db.collection('classes').document(header.id).get();
-      return ClassExtension.fromSnap(snap: snap);
+      return ClassExtension.fromSnap(header: header, snap: snap);
     } catch (e) {
       print(e);
       if (context != null) {
@@ -195,12 +199,22 @@ class ClassProvider with ChangeNotifier {
       {String classId, Shortcut shortcut, BuildContext context}) async {
     try {
       DocumentReference doc = _getClassDocument(classId);
+      DocumentSnapshot snap = await doc.get();
 
-      var shortcuts = List<Map<String, dynamic>>.from(
-          (await doc.get()).data['shortcuts'] ?? []);
-      shortcuts.add(shortcut.toData());
+      if (snap.data == null) {
+        // Document does not exist
+        await doc.setData({
+          'shortcuts': [shortcut.toData()]
+        });
+      } else {
+        // Document exists
+        var shortcuts =
+            List<Map<String, dynamic>>.from(snap.data['shortcuts'] ?? []);
+        shortcuts.add(shortcut.toData());
 
-      await doc.updateData({'shortcuts': shortcuts});
+        await doc.updateData({'shortcuts': shortcuts});
+      }
+
       userClassHeadersCache = null;
       notifyListeners();
       return true;
