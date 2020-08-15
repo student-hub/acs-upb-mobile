@@ -47,6 +47,13 @@ class _ShortcutViewState extends State<ShortcutView> {
           key: formKey,
           child: Column(
             children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.only(top: 10.0),
+                child: Container(
+                    height: MediaQuery.of(context).size.height / 3,
+                    child: Image.asset(
+                        'assets/illustrations/undraw_share_link.png')),
+              ),
               TextFormField(
                 controller: labelController,
                 decoration: InputDecoration(
