@@ -70,7 +70,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return DynamicTheme(
-      defaultBrightness: Brightness.dark,
+      defaultBrightness: PrefService.get('dark_mode') ? Brightness.dark: Brightness.light,
       data: (brightness) => ThemeData(
           brightness: brightness,
           accentColor: _accentColor,
