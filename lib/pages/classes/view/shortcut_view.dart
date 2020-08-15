@@ -45,7 +45,7 @@ class _ShortcutViewState extends State<ShortcutView> {
         padding: const EdgeInsets.only(left: 16.0, right: 16.0),
         child: Form(
           key: formKey,
-          child: Column(
+          child: ListView(
             children: <Widget>[
               Padding(
                 padding: const EdgeInsets.only(top: 10.0),
