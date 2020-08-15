@@ -109,12 +109,25 @@ class _ClassViewState extends State<ClassView> {
               ),
               Divider()
             ] +
-            classInfo.shortcuts
-                .asMap()
-                .map((i, s) => MapEntry(
-                    i, shortcut(index: i, shortcut: s, context: context)))
-                .values
-                .toList(),
+            (classInfo.shortcuts.isEmpty
+                ? <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Center(
+                        child: Text(
+                          S.of(context).labelUnknown,
+                          style:
+                              TextStyle(color: Theme.of(context).disabledColor),
+                        ),
+                      ),
+                    )
+                  ]
+                : classInfo.shortcuts
+                    .asMap()
+                    .map((i, s) => MapEntry(
+                        i, shortcut(index: i, shortcut: s, context: context)))
+                    .values
+                    .toList()),
       ),
     );
   }
