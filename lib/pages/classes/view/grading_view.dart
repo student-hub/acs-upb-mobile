@@ -74,6 +74,7 @@ class _GradingChartState extends State<GradingChart> {
                     dataMap: gradingDataMap,
                     legendPosition: LegendPosition.left,
                     legendStyle: Theme.of(context).textTheme.subtitle2,
+                    chartRadius: 250,
                     chartValueStyle: Theme.of(context)
                         .textTheme
                         .subtitle2
