@@ -45,6 +45,7 @@ dependencies:
   firebase_core: ^0.4.3+1
   cloud_firestore: ^0.13.4
   firebase_storage: ^3.1.3
+  substring_highlight: ^0.1.2
 
   # Dart helper methods
   basic_utils: ^1.2.0

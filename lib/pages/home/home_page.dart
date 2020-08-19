@@ -2,6 +2,7 @@ import 'package:acs_upb_mobile/authentication/model/user.dart';
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/navigation/routes.dart';
+import 'package:acs_upb_mobile/pages/faq/faqPage.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -29,9 +30,14 @@ class HomePage extends StatelessWidget {
               User user = snap.data;
               firstName = user.firstName;
             }
-            return Text(firstName == null
-                ? S.of(context).messageWelcomeSimple
-                : S.of(context).messageWelcomeName(firstName));
+            return FlatButton(
+              onPressed: () {
+                Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) { return FaqPage(); }));
+              },
+              child: Text(firstName == null
+                  ? S.of(context).messageWelcomeSimple
+                  : S.of(context).messageWelcomeName(firstName)),
+            );
           },
         ),
       ),
