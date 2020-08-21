@@ -21,27 +21,31 @@ class _QuestionsListState extends State<QuestionsList> {
   @override
   Widget build(BuildContext context) {
     List<Question> filteredList = widget.questions
-        .where((element) =>
-            element.question
-                .toLowerCase()
-                .contains(widget.filter.toLowerCase()) &&
-            (activeCategory == "" ? true : element.category == activeCategory))
+        .where((question) =>
+            widget.filter.split(" ").where((element) => element != "").fold(
+                true,
+                (previousValue, filter) =>
+                    previousValue && question.question.toLowerCase().contains(filter)) &&
+            (activeCategory == "" ? true : question.category == activeCategory))
         .toList();
 
     List categoryList = widget.categories
         .map((category) => Padding(
               padding: const EdgeInsets.symmetric(horizontal: 4.0),
-              child: Selectable(
-                label: category,
-                initiallySelected: false,
-                onSelected: (selection) {
-                  setState(() {
-                    activeCategory = "";
-                    if (selection) {
-                      activeCategory = category;
-                    }
-                  });
-                },
+              child: Container(
+                width: 100,
+                child: Selectable(
+                  label: category,
+                  initiallySelected: false,
+                  onSelected: (selection) {
+                    setState(() {
+                      activeCategory = "";
+                      if (selection) {
+                        activeCategory = category;
+                      }
+                    });
+                  },
+                ),
               ),
             ))
         .toList();
