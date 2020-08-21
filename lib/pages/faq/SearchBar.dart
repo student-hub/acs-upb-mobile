@@ -31,6 +31,7 @@ class _SearchBarState extends State<SearchBar> {
               color: Color.fromRGBO(142, 142, 147, .15),
             ),
             child: TextField(
+              autofocus: true,
               controller: widget.textController,
               onChanged: widget.onSearch,
               decoration: InputDecoration(
