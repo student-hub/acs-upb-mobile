@@ -1,3 +1,4 @@
+import 'package:acs_upb_mobile/pages/faq/model/question.dart';
 import 'package:acs_upb_mobile/widgets/selectable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -5,7 +6,7 @@ import 'package:substring_highlight/substring_highlight.dart';
 import 'faqPage.dart';
 
 class QuestionsList extends StatefulWidget {
-  final List<QA> questions;
+  final List<Question> questions;
   final String filter;
   final List<String> categories;
 
@@ -21,7 +22,7 @@ class _QuestionsListState extends State<QuestionsList> {
   @override
   Widget build(BuildContext context) {
 
-    List<QA> filteredList = widget.questions
+    List<Question> filteredList = widget.questions
         .where((element) =>
             element.question
                 .toLowerCase()
