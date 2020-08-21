@@ -1,9 +1,8 @@
 import 'package:acs_upb_mobile/pages/faq/model/question.dart';
 import 'package:acs_upb_mobile/widgets/selectable.dart';
+import 'package:dynamic_text_highlighting/dynamic_text_highlighting.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:substring_highlight/substring_highlight.dart';
-import 'faqPage.dart';
 
 class QuestionsList extends StatefulWidget {
   final List<Question> questions;
@@ -21,7 +20,6 @@ class _QuestionsListState extends State<QuestionsList> {
 
   @override
   Widget build(BuildContext context) {
-
     List<Question> filteredList = widget.questions
         .where((element) =>
             element.question
@@ -32,8 +30,8 @@ class _QuestionsListState extends State<QuestionsList> {
 
     List categoryList = widget.categories
         .map((category) => Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 4.0),
-          child: Selectable(
+              padding: const EdgeInsets.symmetric(horizontal: 4.0),
+              child: Selectable(
                 label: category,
                 initiallySelected: false,
                 onSelected: (selection) {
@@ -45,8 +43,11 @@ class _QuestionsListState extends State<QuestionsList> {
                   });
                 },
               ),
-        ))
+            ))
         .toList();
+
+    List<String> filteredWords =
+        widget.filter.split(" ").where((element) => element != "").toList();
 
     return Column(
       children: [
@@ -65,18 +66,18 @@ class _QuestionsListState extends State<QuestionsList> {
             itemCount: filteredList.length,
             itemBuilder: (context, index) {
               return ExpansionTile(
-                title: SubstringHighlight(
-                  text: filteredList[index].question,
-                  textStyle: Theme.of(context).textTheme.subtitle1,
-                  term: widget.filter,
-                  textStyleHighlight: TextStyle(
-                    fontSize: Theme.of(context).textTheme.subtitle1.fontSize,
-                    fontWeight:
-                        Theme.of(context).textTheme.subtitle1.fontWeight,
-                    fontStyle: Theme.of(context).textTheme.subtitle1.fontStyle,
-                    color: Colors.blue,
-                  ),
-                ),
+                title: filteredWords.isNotEmpty
+                    ? DynamicTextHighlighting(
+                        text: filteredList[index].question,
+                        style: Theme.of(context).textTheme.subtitle1,
+                        highlights: filteredWords,
+                        color: Colors.blue,
+                        caseSensitive: false,
+                      )
+                    : Text(
+                        filteredList[index].question,
+                        style: Theme.of(context).textTheme.subtitle1,
+                      ),
                 children: [
                   Padding(
                     padding: const EdgeInsets.all(8.0),
