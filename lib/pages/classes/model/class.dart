@@ -39,23 +39,11 @@ class ClassHeader {
 
 class Class {
   ClassHeader header;
-  final int credits;
-  final String degree;
-  final String domain;
-  final String year;
-  final String semester;
-  final String series;
   final List<Shortcut> shortcuts;
   final Map<String, double> grading;
 
   Class(
       {@required this.header,
-      this.credits,
-      this.degree,
-      this.domain,
-      this.year,
-      this.semester,
-      this.series,
       List<Shortcut> shortcuts,
       this.grading})
       : shortcuts = shortcuts ?? [];
