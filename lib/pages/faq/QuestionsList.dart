@@ -3,6 +3,7 @@ import 'package:acs_upb_mobile/widgets/selectable.dart';
 import 'package:dynamic_text_highlighting/dynamic_text_highlighting.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 
 class QuestionsList extends StatefulWidget {
   final List<Question> questions;
@@ -25,7 +26,8 @@ class _QuestionsListState extends State<QuestionsList> {
             widget.filter.split(" ").where((element) => element != "").fold(
                 true,
                 (previousValue, filter) =>
-                    previousValue && question.question.toLowerCase().contains(filter)) &&
+                    previousValue &&
+                    question.question.toLowerCase().contains(filter)) &&
             (activeCategory == "" ? true : question.category == activeCategory))
         .toList();
 
@@ -85,9 +87,8 @@ class _QuestionsListState extends State<QuestionsList> {
                 children: [
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      filteredList[index].answer,
-                      style: Theme.of(context).textTheme.bodyText2,
+                    child: MarkdownBody(
+                      data: filteredList[index].answer,
                     ),
                   ),
                 ],
