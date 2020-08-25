@@ -15,11 +15,22 @@ class _FaqPageState extends State<FaqPage> {
   List<Question> questions = List<Question>();
   List<String> categories;
   String filter = "";
+  bool searchClosed = true;
 
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
       title: 'FAQ',
+      actions: [
+        AppScaffoldAction(
+          icon: Icons.search,
+          onPressed: () {
+            setState(() {
+              searchClosed = !searchClosed;
+            });
+          },
+        )
+      ],
       body: ListView(
         children: [
           SearchWidget(
@@ -34,9 +45,11 @@ class _FaqPageState extends State<FaqPage> {
             },
             cancelCallback: () {
               setState(() {
+                searchClosed = true;
                 filter = "";
               });
             },
+            searchClosed: searchClosed,
           ),
           FutureBuilder(
             future: QuestionsService().getDocuments(),
