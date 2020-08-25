@@ -18,42 +18,55 @@ class QuestionsList extends StatefulWidget {
 
 class _QuestionsListState extends State<QuestionsList> {
   String activeCategory = "";
+  Map<String, SelectableController> _controllers = Map<String, SelectableController>();
+
+  @override
+  void initState() {
+    widget.categories.forEach((element) {
+      _controllers.putIfAbsent(element, () => SelectableController());
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     List<Question> filteredList = widget.questions
         .where((question) =>
-            widget.filter.split(" ").where((element) => element != "").fold(
-                true,
-                (previousValue, filter) =>
-                    previousValue &&
-                    question.question.toLowerCase().contains(filter)) &&
-            (activeCategory == "" ? true : question.category == activeCategory))
+    widget.filter.split(" ").where((element) => element != "").fold(
+        true,
+            (previousValue, filter) =>
+        previousValue &&
+            question.question.toLowerCase().contains(filter)) &&
+        (activeCategory == "" ? true : question.category == activeCategory))
         .toList();
 
     List categoryList = widget.categories
-        .map((category) => Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 4.0),
-              child: Container(
-                width: 100,
-                child: Selectable(
-                  label: category,
-                  initiallySelected: false,
-                  onSelected: (selection) {
-                    setState(() {
-                      activeCategory = "";
-                      if (selection) {
-                        activeCategory = category;
-                      }
-                    });
-                  },
-                ),
-              ),
-            ))
+        .map((category) =>
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 4.0),
+          child: Container(
+            width: 100,
+            child: Selectable(
+              controller: _controllers[category],
+              label: category,
+              initiallySelected: false,
+              onSelected: (selection) {
+                setState(() {
+                  activeCategory = "";
+                  if (selection) {
+                    _controllers.values.forEach((element) {element.deselect();});
+                    _controllers[category].select();
+                    activeCategory = category;
+                  }
+                });
+              },
+            ),
+          ),
+        ))
         .toList();
 
     List<String> filteredWords =
-        widget.filter.split(" ").where((element) => element != "").toList();
+    widget.filter.split(" ").where((element) => element != "").toList();
 
     return Column(
       children: [
@@ -74,16 +87,22 @@ class _QuestionsListState extends State<QuestionsList> {
               return ExpansionTile(
                 title: filteredWords.isNotEmpty
                     ? DynamicTextHighlighting(
-                        text: filteredList[index].question,
-                        style: Theme.of(context).textTheme.subtitle1,
-                        highlights: filteredWords,
-                        color: Colors.blue,
-                        caseSensitive: false,
-                      )
+                  text: filteredList[index].question,
+                  style: Theme
+                      .of(context)
+                      .textTheme
+                      .subtitle1,
+                  highlights: filteredWords,
+                  color: Colors.blue,
+                  caseSensitive: false,
+                )
                     : Text(
-                        filteredList[index].question,
-                        style: Theme.of(context).textTheme.subtitle1,
-                      ),
+                  filteredList[index].question,
+                  style: Theme
+                      .of(context)
+                      .textTheme
+                      .subtitle1,
+                ),
                 children: [
                   Padding(
                     padding: const EdgeInsets.all(8.0),
