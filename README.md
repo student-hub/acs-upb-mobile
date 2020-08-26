@@ -24,7 +24,7 @@ if you encounter any problem.
 * [Ioana Alexandru](https://github.com/IoanaAlexandru)
 * [Andrei-Constantin Mirciu](https://github.com/andreicmirciu)
 * [Adrian Mărgineanu](https://github.com/AdrianMargineanu)
-* [Alex Contiu](https://github.com/AlexContiu)
+* [Alex Conțiu](https://github.com/AlexContiu)
 * [Eric Postolache](https://github.com/ericpostolache)
 
 ## Building from source with Android Studio
