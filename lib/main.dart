@@ -4,6 +4,7 @@ import 'package:acs_upb_mobile/authentication/view/sign_up_view.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/navigation/bottom_navigation_bar.dart';
 import 'package:acs_upb_mobile/navigation/routes.dart';
+import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
 import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
 import 'package:acs_upb_mobile/pages/filter/view/filter_page.dart';
 import 'package:acs_upb_mobile/pages/portal/service/website_provider.dart';
@@ -30,6 +31,7 @@ main() async {
     ChangeNotifierProvider<AuthProvider>(create: (_) => AuthProvider()),
     ChangeNotifierProvider<StorageProvider>(create: (_) => StorageProvider()),
     ChangeNotifierProvider<WebsiteProvider>(create: (_) => WebsiteProvider()),
+    ChangeNotifierProvider<ClassProvider>(create: (_) => ClassProvider()),
     ChangeNotifierProvider<FilterProvider>(
         create: (_) => FilterProvider(global: true)),
   ], child: MyApp()));

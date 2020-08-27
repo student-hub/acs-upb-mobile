@@ -1,11 +1,9 @@
 import 'package:acs_upb_mobile/generated/l10n.dart';
-import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
 import 'package:acs_upb_mobile/pages/classes/view/classes_page.dart';
 import 'package:acs_upb_mobile/pages/home/home_page.dart';
 import 'package:acs_upb_mobile/pages/portal/view/portal_page.dart';
 import 'package:acs_upb_mobile/pages/profile/profile_page.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class AppBottomNavigationBar extends StatefulWidget {
   final int tabIndex;
@@ -27,8 +25,7 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar>
     tabController = TabController(vsync: this, length: 4);
     tabs = [
       HomePage(),
-      ChangeNotifierProvider(
-          create: (_) => ClassProvider(), child: ClassesPage()),
+      ClassesPage(),
       PortalPage(),
       ProfilePage(),
     ];
