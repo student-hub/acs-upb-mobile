@@ -6,6 +6,7 @@ import 'package:acs_upb_mobile/main.dart';
 import 'package:acs_upb_mobile/pages/filter/model/filter.dart';
 import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
 import 'package:acs_upb_mobile/pages/home/home_page.dart';
+import 'package:acs_upb_mobile/resources/validator.dart';
 import 'package:acs_upb_mobile/pages/portal/service/website_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -276,8 +277,6 @@ void main() {
               info: anyNamed('info'), context: anyNamed('context')))
           .thenAnswer((_) => Future.value(true));
       when(mockAuthProvider.canSignUpWithEmail(email: anyNamed('email')))
-          .thenAnswer((realInvocation) => Future.value(true));
-      when(mockAuthProvider.isStrongPassword(password: anyNamed('password')))
           .thenAnswer((realInvocation) => Future.value(true));
 
       // Enter info

@@ -5,6 +5,7 @@ import 'package:acs_upb_mobile/pages/filter/model/filter.dart';
 import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
 import 'package:acs_upb_mobile/resources/banner.dart';
 import 'package:acs_upb_mobile/resources/locale_provider.dart';
+import 'package:acs_upb_mobile/resources/validator.dart';
 import 'package:acs_upb_mobile/widgets/button.dart';
 import 'package:acs_upb_mobile/widgets/form/form.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
@@ -66,7 +67,7 @@ class _SignUpViewState extends State<SignUpView> {
         controller: passwordController,
         obscureText: true,
         check: (password, {BuildContext context}) =>
-            authProvider.isStrongPassword(password: password, context: context),
+            AppValidator.isStrongPassword(password: password, context: context),
       ),
       FormItem(
         label: S.of(context).labelConfirmPassword,

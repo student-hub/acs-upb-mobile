@@ -20,6 +20,13 @@ if you encounter any problem.
 
 <img src=screenshots/light_portal_ro.png height=500><img src=screenshots/dark_portal_en.png height=500>
 
+## Contributors
+* [Ioana Alexandru](https://github.com/IoanaAlexandru)
+* [Andrei-Constantin Mirciu](https://github.com/andreicmirciu)
+* [Adrian Mărgineanu](https://github.com/AdrianMargineanu)
+* [Alex Conțiu](https://github.com/AlexContiu)
+* [Eric Postolache](https://github.com/ericpostolache)
+
 ## Building from source with Android Studio
 
 ### Prerequisites

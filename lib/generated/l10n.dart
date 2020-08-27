@@ -1,7 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-
 import 'intl/messages_all.dart';
 
 // **************************************************************************
@@ -914,11 +913,41 @@ class S {
     );
   }
 
-  /// `The password must include lowercase and uppercase letters and at least one number and special character (!@#$&*~).`
-  String get warningPasswordCharacters {
+  /// `The password must include at least one uppercase letter.`
+  String get warningPasswordUppercase {
     return Intl.message(
-      'The password must include lowercase and uppercase letters and at least one number and special character (!@#\$&*~).',
-      name: 'warningPasswordCharacters',
+      'The password must include at least one uppercase letter.',
+      name: 'warningPasswordUppercase',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `The password must include at least one lowercase letter.`
+  String get warningPasswordLowercase {
+    return Intl.message(
+      'The password must include at least one lowercase letter.',
+      name: 'warningPasswordLowercase',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `The password must include at least one special character.`
+  String get warningPasswordSpecialCharacters {
+    return Intl.message(
+      'The password must include at least one special character.',
+      name: 'warningPasswordSpecialCharacters',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `The password must include at least one number.`
+  String get warningPasswordNumber {
+    return Intl.message(
+      'The password must include at least one number.',
+      name: 'warningPasswordNumber',
       desc: '',
       args: [],
     );
@@ -1704,10 +1733,10 @@ class S {
     );
   }
 
-  /// `It must contain lower and uppercase letters, one number and one special character (!@#$&*~), and have a minimum length of 8.`
+  /// `It must contain lower and uppercase letters, one number and one special character, and have a minimum length of 8.`
   String get infoPassword {
     return Intl.message(
-      'It must contain lower and uppercase letters, one number and one special character (!@#\$&*~), and have a minimum length of 8.',
+      'It must contain lower and uppercase letters, one number and one special character, and have a minimum length of 8.',
       name: 'infoPassword',
       desc: '',
       args: [],
