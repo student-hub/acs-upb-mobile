@@ -57,6 +57,7 @@ class _SignUpViewState extends State<SignUpView> {
         label: S.of(context).labelEmail,
         hint: S.of(context).hintEmail,
         suffix: emailDomain,
+        autocorrect: false,
         check: (email, {BuildContext context}) => authProvider
             .canSignUpWithEmail(email: email + emailDomain, context: context),
       ),

@@ -36,6 +36,7 @@ class _LoginViewState extends State<LoginView> {
         hint: S.of(context).hintEmail,
         suffix: emailDomain,
         controller: emailController,
+        autocorrect: false,
         check: (email, {BuildContext context}) =>
             authProvider.canSignInWithPassword(
                 email: email + emailDomain, context: context),

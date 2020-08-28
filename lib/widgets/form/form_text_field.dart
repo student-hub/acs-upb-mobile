@@ -12,6 +12,8 @@ class FormTextField extends StatefulWidget {
   final Function(String) onChanged;
   final Function(String) onSubmitted;
   final Widget suffixIcon;
+  final bool autocorrect;
+  final bool enableSuggestions;
 
   FormTextField({
     Key key,
@@ -25,6 +27,8 @@ class FormTextField extends StatefulWidget {
     this.onChanged,
     this.onSubmitted,
     this.suffixIcon,
+    this.autocorrect = true,
+    this.enableSuggestions = true,
   }) : super(key: key);
 
   @override
@@ -60,8 +64,8 @@ class _FormTextFieldState extends State<FormTextField> {
               children: <Widget>[
                 Expanded(
                   child: TextField(
-                    autocorrect: false,
-                    enableSuggestions: false,
+                    autocorrect: widget.autocorrect,
+                    enableSuggestions: widget.enableSuggestions,
                     obscureText: widget.obscureText,
                     controller: widget.controller,
                     focusNode: widget.focusNode,

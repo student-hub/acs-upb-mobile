@@ -14,17 +14,21 @@ class FormItem {
   final bool obscureText;
   final String suffix;
   Future<bool> valid;
+  final bool autocorrect;
+  final bool enableSuggestions;
 
-  FormItem(
-      {this.label,
-      this.additionalHint,
-      this.hint,
-      TextEditingController controller,
-      FocusNode focusNode,
-      this.check,
-      this.obscureText = false,
-      this.suffix})
-      : this.controller = controller ?? TextEditingController(),
+  FormItem({
+    this.label,
+    this.additionalHint,
+    this.hint,
+    TextEditingController controller,
+    FocusNode focusNode,
+    this.check,
+    this.obscureText = false,
+    this.suffix,
+    this.autocorrect = true,
+    this.enableSuggestions = true,
+  })  : this.controller = controller ?? TextEditingController(),
         this.focusNode = focusNode ?? FocusNode(),
         this.valid = Future<bool>(() => null);
 }
@@ -70,6 +74,8 @@ class _AppFormState extends State<AppForm> {
                     obscureText: field.obscureText,
                     controller: field.controller,
                     focusNode: field.focusNode,
+                    autocorrect: field.autocorrect,
+                    enableSuggestions: field.enableSuggestions,
                     onChanged: (text) => setState(() {
                       if (text == null || text == "") {
                         field.valid = Future<bool>(() => null);
