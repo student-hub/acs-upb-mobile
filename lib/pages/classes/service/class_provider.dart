@@ -185,25 +185,10 @@ class ClassProvider with ChangeNotifier {
     }
   }
 
-  DocumentReference _getClassDocument(String classId) {
-    CollectionReference col = _db.collection('classes');
-    var idTokens = classId.split('/');
-    if (idTokens.length > 1) {
-      // it's a subclass
-      return col
-          .document(idTokens[0])
-          .collection('subclasses')
-          .document(idTokens[1]);
-    } else {
-      // it's a parent class
-      return col.document(idTokens[0]);
-    }
-  }
-
   Future<bool> addShortcut(
       {String classId, Shortcut shortcut, BuildContext context}) async {
     try {
-      DocumentReference doc = _getClassDocument(classId);
+      DocumentReference doc = _db.collection('classes').document(classId);
       DocumentSnapshot snap = await doc.get();
 
       if (snap.data == null) {
@@ -234,7 +219,7 @@ class ClassProvider with ChangeNotifier {
   Future<bool> deleteShortcut(
       {String classId, int shortcutIndex, BuildContext context}) async {
     try {
-      DocumentReference doc = _getClassDocument(classId);
+      DocumentReference doc = _db.collection('classes').document(classId);
 
       var shortcuts = List<Map<String, dynamic>>.from(
           (await doc.get()).data['shortcuts'] ?? []);
@@ -258,7 +243,7 @@ class ClassProvider with ChangeNotifier {
       Map<String, double> grading,
       BuildContext context}) async {
     try {
-      DocumentReference doc = _getClassDocument(classId);
+      DocumentReference doc = _db.collection('classes').document(classId);
       DocumentSnapshot snap = await doc.get();
 
       if (snap.data == null) {
