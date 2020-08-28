@@ -29,8 +29,7 @@ class _SignUpViewState extends State<SignUpView> {
 
   void _fetchFilter() async {
     // Fetch filter for dropdown buttons
-    filterProvider =
-        Provider.of<FilterProvider>(context, listen: false);
+    filterProvider = Provider.of<FilterProvider>(context, listen: false);
     filter = await filterProvider.fetchFilter(context);
 
     // Add the first selected node and refresh
@@ -58,6 +57,7 @@ class _SignUpViewState extends State<SignUpView> {
         label: S.of(context).labelEmail,
         hint: S.of(context).hintEmail,
         suffix: emailDomain,
+        autocorrect: false,
         check: (email, {BuildContext context}) => authProvider
             .canSignUpWithEmail(email: email + emailDomain, context: context),
       ),
@@ -175,68 +175,77 @@ class _SignUpViewState extends State<SignUpView> {
   Widget build(BuildContext context) {
     AppForm signUpForm = _buildForm(context);
 
-    return Scaffold(
-      body: Stack(
-        fit: StackFit.expand,
-        children: <Widget>[
-          Align(
-            alignment: FractionalOffset.topRight,
-            child: Padding(
-              padding: EdgeInsets.all(10.0),
-              child: Container(
-                  height: MediaQuery.of(context).size.height / 3 - 20,
-                  child: Image.asset(
-                      "assets/illustrations/undraw_personal_information.png")),
-            ),
-          ),
-          SingleChildScrollView(
-            child: Padding(
-              padding: EdgeInsets.only(left: 28.0, right: 28.0, bottom: 8.0),
-              child: IntrinsicHeight(
-                child: Column(
-                  children: <Widget>[
-                    SizedBox(
-                      height: MediaQuery.of(context).size.height / 3,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: <Widget>[
-                          UniBanner(),
-                        ],
-                      ),
-                    ),
-                    SizedBox(height: 10),
-                    Expanded(child: signUpForm),
-                    SizedBox(height: 20),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Expanded(
-                          child: AppButton(
-                            key: ValueKey('cancel_button'),
-                            text: S.of(context).buttonCancel,
-                            onTap: () async {
-                              return Navigator.pop(context);
-                            },
-                          ),
-                        ),
-                        SizedBox(width: 20),
-                        Expanded(
-                          child: AppButton(
-                            key: ValueKey('sign_up_button'),
-                            color: Theme.of(context).accentColor,
-                            text: S.of(context).actionSignUp,
-                            onTap: () => signUpForm.submit(),
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 20),
-                  ],
-                ),
+    return GestureDetector(
+      onTap: () {
+        // Remove current focus on tap
+        FocusScopeNode currentFocus = FocusScope.of(context);
+        if (!currentFocus.hasPrimaryFocus) {
+          currentFocus.unfocus();
+        }
+      },
+      child: Scaffold(
+        body: Stack(
+          fit: StackFit.expand,
+          children: <Widget>[
+            Align(
+              alignment: FractionalOffset.topRight,
+              child: Padding(
+                padding: EdgeInsets.all(10.0),
+                child: Container(
+                    height: MediaQuery.of(context).size.height / 3 - 20,
+                    child: Image.asset(
+                        "assets/illustrations/undraw_personal_information.png")),
               ),
             ),
-          )
-        ],
+            SingleChildScrollView(
+              child: Padding(
+                padding: EdgeInsets.only(left: 28.0, right: 28.0, bottom: 8.0),
+                child: IntrinsicHeight(
+                  child: Column(
+                    children: <Widget>[
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height / 3,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: <Widget>[
+                            UniBanner(),
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: 10),
+                      Expanded(child: signUpForm),
+                      SizedBox(height: 20),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Expanded(
+                            child: AppButton(
+                              key: ValueKey('cancel_button'),
+                              text: S.of(context).buttonCancel,
+                              onTap: () async {
+                                return Navigator.pop(context);
+                              },
+                            ),
+                          ),
+                          SizedBox(width: 20),
+                          Expanded(
+                            child: AppButton(
+                              key: ValueKey('sign_up_button'),
+                              color: Theme.of(context).accentColor,
+                              text: S.of(context).actionSignUp,
+                              onTap: () => signUpForm.submit(),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 20),
+                    ],
+                  ),
+                ),
+              ),
+            )
+          ],
+        ),
       ),
     );
   }

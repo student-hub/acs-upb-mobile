@@ -36,6 +36,7 @@ class _LoginViewState extends State<LoginView> {
         hint: S.of(context).hintEmail,
         suffix: emailDomain,
         controller: emailController,
+        autocorrect: false,
         check: (email, {BuildContext context}) =>
             authProvider.canSignInWithPassword(
                 email: email + emailDomain, context: context),
@@ -142,117 +143,126 @@ class _LoginViewState extends State<LoginView> {
     AuthProvider authProvider = Provider.of<AuthProvider>(context);
     AppForm loginForm = _buildForm(context);
 
-    return Scaffold(
-      body: Stack(
-        fit: StackFit.expand,
-        children: <Widget>[
-          Align(
-            alignment: FractionalOffset.topRight,
-            child: Padding(
-              padding: EdgeInsets.all(10.0),
-              child: Container(
-                  height: MediaQuery.of(context).size.height / 3,
-                  child: Image.asset(
-                      "assets/illustrations/undraw_digital_nomad.png")),
-            ),
-          ),
-          Align(
-            alignment: FractionalOffset.bottomCenter,
-            child: ConstrainedBox(
-              constraints: BoxConstraints(
-              maxHeight: MediaQuery.of(context).size.height / 4,
-              maxWidth: MediaQuery.of(context).size.width,
+    return GestureDetector(
+      onTap: () {
+        // Remove current focus on tap
+        FocusScopeNode currentFocus = FocusScope.of(context);
+        if (!currentFocus.hasPrimaryFocus) {
+          currentFocus.unfocus();
+        }
+      },
+      child: Scaffold(
+        body: Stack(
+          fit: StackFit.expand,
+          children: <Widget>[
+            Align(
+              alignment: FractionalOffset.topRight,
+              child: Padding(
+                padding: EdgeInsets.all(10.0),
+                child: Container(
+                    height: MediaQuery.of(context).size.height / 3,
+                    child: Image.asset(
+                        "assets/illustrations/undraw_digital_nomad.png")),
               ),
-              child: FittedBox(
-                fit:BoxFit.contain,
-                child: ConstrainedBox(
-                  constraints: BoxConstraints(
-                    minWidth: 1,
-                    minHeight: 1,
+            ),
+            Align(
+              alignment: FractionalOffset.bottomCenter,
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  maxHeight: MediaQuery.of(context).size.height / 4,
+                  maxWidth: MediaQuery.of(context).size.width,
+                ),
+                child: FittedBox(
+                  fit: BoxFit.contain,
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(
+                      minWidth: 1,
+                      minHeight: 1,
+                    ),
+                    child: Image.asset("assets/images/city_doodle.png",
+                        color: Theme.of(context).accentColor.withOpacity(0.4)),
                   ),
-                  child: Image.asset("assets/images/city_doodle.png",
-                      color: Theme.of(context).accentColor.withOpacity(0.4)),
                 ),
               ),
             ),
-          ),
-          SingleChildScrollView(
-            child: Padding(
-              padding: EdgeInsets.only(left: 28.0, right: 28.0, bottom: 8.0),
-              child: IntrinsicHeight(
-                child: Column(
-                  children: <Widget>[
-                    SizedBox(
-                      height: MediaQuery.of(context).size.height / 3,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.end,
+            SingleChildScrollView(
+              child: Padding(
+                padding: EdgeInsets.only(left: 28.0, right: 28.0, bottom: 8.0),
+                child: IntrinsicHeight(
+                  child: Column(
+                    children: <Widget>[
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height / 3,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: <Widget>[
+                            UniBanner(),
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: 10),
+                      Expanded(child: loginForm),
+                      SizedBox(height: 20),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
-                          UniBanner(),
+                          Expanded(
+                            child: AppButton(
+                              key: ValueKey('log_in_anonymously_button'),
+                              text: S.of(context).actionLogInAnonymously,
+                              onTap: () async {
+                                var result = await authProvider
+                                    .signInAnonymously(context: context);
+                                if (result) {
+                                  Navigator.pushReplacementNamed(
+                                      context, Routes.home);
+                                }
+                              },
+                            ),
+                          ),
+                          SizedBox(width: 20),
+                          Expanded(
+                            child: AppButton(
+                              key: ValueKey('log_in_button'),
+                              color: Theme.of(context).accentColor,
+                              text: S.of(context).actionLogIn,
+                              onTap: () => loginForm.submit(),
+                            ),
+                          ),
                         ],
                       ),
-                    ),
-                    SizedBox(height: 10),
-                    Expanded(child: loginForm),
-                    SizedBox(height: 20),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Expanded(
-                          child: AppButton(
-                            key: ValueKey('log_in_anonymously_button'),
-                            text: S.of(context).actionLogInAnonymously,
-                            onTap: () async {
-                              var result = await authProvider.signInAnonymously(
-                                  context: context);
-                              if (result) {
-                                Navigator.pushReplacementNamed(
-                                    context, Routes.home);
-                              }
+                      SizedBox(
+                        height: 30,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Text(
+                            S.of(context).messageNewUser + " ",
+                            style: Theme.of(context)
+                                .textTheme
+                                .subtitle1
+                                .copyWith(fontWeight: FontWeight.w400),
+                          ),
+                          InkWell(
+                            onTap: () {
+                              Navigator.pushNamed(context, Routes.signUp);
                             },
+                            child: Text(S.of(context).actionSignUp,
+                                style: Theme.of(context)
+                                    .accentTextTheme
+                                    .subtitle1
+                                    .copyWith(fontWeight: FontWeight.w500)),
                           ),
-                        ),
-                        SizedBox(width: 20),
-                        Expanded(
-                          child: AppButton(
-                            key: ValueKey('log_in_button'),
-                            color: Theme.of(context).accentColor,
-                            text: S.of(context).actionLogIn,
-                            onTap: () => loginForm.submit(),
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 30,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Text(
-                          S.of(context).messageNewUser + " ",
-                          style: Theme.of(context)
-                              .textTheme
-                              .subtitle1
-                              .copyWith(fontWeight: FontWeight.w400),
-                        ),
-                        InkWell(
-                          onTap: () {
-                            Navigator.pushNamed(context, Routes.signUp);
-                          },
-                          child: Text(S.of(context).actionSignUp,
-                              style: Theme.of(context)
-                                  .accentTextTheme
-                                  .subtitle1
-                                  .copyWith(fontWeight: FontWeight.w500)),
-                        ),
-                      ],
-                    )
-                  ],
+                        ],
+                      )
+                    ],
+                  ),
                 ),
               ),
-            ),
-          )
-        ],
+            )
+          ],
+        ),
       ),
     );
   }

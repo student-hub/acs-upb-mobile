@@ -8,6 +8,8 @@ class CustomIcons {
   static const _kFontPkg = null;
 
   // Custom font icons (see [CONTRIBUTING.md] for more info)
+  static const IconData book =
+      IconData(0xe800, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData edit_slash =
       IconData(0xe804, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData filter =

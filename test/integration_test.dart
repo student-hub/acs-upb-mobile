@@ -1,6 +1,12 @@
 import 'package:acs_upb_mobile/authentication/model/user.dart';
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/main.dart';
+import 'package:acs_upb_mobile/pages/classes/model/class.dart';
+import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
+import 'package:acs_upb_mobile/pages/classes/view/class_view.dart';
+import 'package:acs_upb_mobile/pages/classes/view/classes_page.dart';
+import 'package:acs_upb_mobile/pages/classes/view/grading_view.dart';
+import 'package:acs_upb_mobile/pages/classes/view/shortcut_view.dart';
 import 'package:acs_upb_mobile/pages/filter/model/filter.dart';
 import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
 import 'package:acs_upb_mobile/pages/filter/view/filter_page.dart';
@@ -9,6 +15,7 @@ import 'package:acs_upb_mobile/pages/portal/model/website.dart';
 import 'package:acs_upb_mobile/pages/portal/service/website_provider.dart';
 import 'package:acs_upb_mobile/pages/portal/view/portal_page.dart';
 import 'package:acs_upb_mobile/pages/portal/view/website_view.dart';
+import 'package:acs_upb_mobile/pages/profile/profile_page.dart';
 import 'package:acs_upb_mobile/pages/settings/settings_page.dart';
 import 'package:acs_upb_mobile/resources/custom_icons.dart';
 import 'package:acs_upb_mobile/resources/storage_provider.dart';
@@ -18,6 +25,9 @@ import 'package:mockito/mockito.dart';
 import 'package:preferences/preferences.dart';
 import 'package:provider/provider.dart';
 
+// These tests open each page in the app on multiple screen sizes to make sure
+// nothing overflows/breaks.
+
 class MockAuthProvider extends Mock implements AuthProvider {}
 
 class MockStorageProvider extends Mock implements StorageProvider {}
@@ -26,6 +36,8 @@ class MockWebsiteProvider extends Mock implements WebsiteProvider {}
 
 class MockFilterProvider extends Mock implements FilterProvider {}
 
+class MockClassProvider extends Mock implements ClassProvider {}
+
 class MockNavigatorObserver extends Mock implements NavigatorObserver {}
 
 void main() {
@@ -33,6 +45,7 @@ void main() {
   StorageProvider mockStorageProvider;
   WebsiteProvider mockWebsiteProvider;
   FilterProvider mockFilterProvider;
+  ClassProvider mockClassProvider;
 
   // Test layout for different screen sizes
   List<Size> screenSizes = [
@@ -66,6 +79,8 @@ void main() {
               create: (_) => mockWebsiteProvider),
           ChangeNotifierProvider<FilterProvider>(
               create: (_) => mockFilterProvider),
+          ChangeNotifierProvider<ClassProvider>(
+              create: (_) => mockClassProvider),
         ],
         child: MyApp(),
       );
@@ -241,6 +256,67 @@ void main() {
                     FilterNode(name: 'SPRC'),
                   ])
                 ]))));
+
+    mockClassProvider = MockClassProvider();
+    // ignore: invalid_use_of_protected_member
+    when(mockClassProvider.hasListeners).thenReturn(false);
+    when(mockClassProvider.fetchClassHeaders(uid: anyNamed('uid')))
+        .thenAnswer((_) => Future.value([
+              ClassHeader(
+                id: '1',
+                name: 'Maths 1',
+                acronym: 'M1',
+                category: 'A/B',
+              ),
+              ClassHeader(
+                id: '2',
+                name: 'Maths 2',
+                acronym: 'M2',
+                category: 'A/C',
+              ),
+              ClassHeader(
+                id: '3',
+                name: 'Programming',
+                acronym: 'PC',
+                category: 'A',
+              ),
+              ClassHeader(
+                id: '4',
+                name: 'Physics',
+                acronym: 'PH',
+                category: 'D',
+              ),
+            ]));
+    when(mockClassProvider.fetchUserClassIds(
+            uid: anyNamed('uid'), context: anyNamed('context')))
+        .thenAnswer((_) => Future.value(['3']));
+    when(mockClassProvider.fetchClassInfo(any, context: anyNamed('context')))
+        .thenAnswer((_) => Future.value(
+              Class(
+                header: ClassHeader(
+                  id: '3',
+                  name: 'Programming',
+                  acronym: 'PC',
+                  category: 'A',
+                ),
+                shortcuts: [
+                  Shortcut(
+                      type: ShortcutType.main,
+                      name: 'OCW',
+                      link: 'https://ocw.cs.pub.ro/courses/programare'),
+                  Shortcut(
+                      type: ShortcutType.other,
+                      name: 'Google',
+                      link: 'https://google.com'),
+                ],
+                grading: {
+                  'Exam': 4,
+                  'Lab': 1.5,
+                  'Homework': 4,
+                  'Extra homework': 0.5,
+                },
+              ),
+            ));
   });
 
   group('Home', () {
@@ -252,6 +328,7 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(find.byType(HomePage), findsOneWidget);
+
         // Open home
         await tester.tap(find.byIcon(Icons.home));
         await tester.pumpAndSettle();
@@ -261,7 +338,7 @@ void main() {
     }
   });
 
-  group('Timetable', () {
+  group('Class', () {
     for (var size in screenSizes) {
       testWidgets('${size.width}x${size.height}', (WidgetTester tester) async {
         await binding.setSurfaceSize(size);
@@ -269,18 +346,27 @@ void main() {
         await tester.pumpWidget(buildApp());
         await tester.pumpAndSettle();
 
-        expect(find.byType(HomePage), findsOneWidget);
-        // Open timetable
-        await tester.tap(find.byIcon(Icons.calendar_today));
+        // Open classes
+        await tester.tap(find.byIcon(Icons.class_));
         await tester.pumpAndSettle();
 
-        // TODO: Replace with page when implemented
-        expect(find.text('Timetable'), findsNWidgets(2));
+        // Open class view
+        expect(find.byType(ClassesPage), findsNWidgets(1));
       });
     }
   });
 
-  group('Map', () {
+  group('Add class', () {
+    setUp(() {
+      when(mockAuthProvider.currentUser).thenAnswer((_) =>
+          Future.value(User(uid: '0', firstName: 'John', lastName: 'Doe')));
+      when(mockAuthProvider.isAuthenticatedFromService)
+          .thenAnswer((_) => Future.value(true));
+      when(mockAuthProvider.isAuthenticatedFromCache).thenReturn(true);
+      when(mockAuthProvider.isAnonymous).thenReturn(false);
+      when(mockAuthProvider.uid).thenReturn('0');
+    });
+
     for (var size in screenSizes) {
       testWidgets('${size.width}x${size.height}', (WidgetTester tester) async {
         await binding.setSurfaceSize(size);
@@ -288,18 +374,38 @@ void main() {
         await tester.pumpWidget(buildApp());
         await tester.pumpAndSettle();
 
-        expect(find.byType(HomePage), findsOneWidget);
-        // Open map
-        await tester.tap(find.byIcon(Icons.map));
+        // Open classes page
+        await tester.tap(find.byIcon(Icons.class_));
         await tester.pumpAndSettle();
 
-        // TODO: Replace with page when implemented
-        expect(find.text('Map'), findsNWidgets(2));
+        // Open add class view
+        await tester.tap(find.byIcon(Icons.add));
+        await tester.pumpAndSettle();
+
+        expect(find.byType(AddClassesPage), findsOneWidget);
+
+        // Save
+        await tester.tap(find.text('Save'));
+        await tester.pumpAndSettle();
+
+        expect(find.byType(ClassesPage), findsOneWidget);
       });
     }
   });
 
-  group('Portal', () {
+  group('Class view', () {
+    setUp(() {
+      when(mockAuthProvider.currentUser).thenAnswer((_) => Future.value(User(
+          uid: '0', firstName: 'John', lastName: 'Doe', permissionLevel: 3)));
+      when(mockAuthProvider.currentUserFromCache).thenReturn(User(
+          uid: '0', firstName: 'John', lastName: 'Doe', permissionLevel: 3));
+      when(mockAuthProvider.isAuthenticatedFromService)
+          .thenAnswer((_) => Future.value(true));
+      when(mockAuthProvider.isAuthenticatedFromCache).thenReturn(true);
+      when(mockAuthProvider.isAnonymous).thenReturn(false);
+      when(mockAuthProvider.uid).thenReturn('0');
+    });
+
     for (var size in screenSizes) {
       testWidgets('${size.width}x${size.height}', (WidgetTester tester) async {
         await binding.setSurfaceSize(size);
@@ -307,12 +413,37 @@ void main() {
         await tester.pumpWidget(buildApp());
         await tester.pumpAndSettle();
 
-        expect(find.byType(HomePage), findsOneWidget);
-        // Open portal
-        await tester.tap(find.byIcon(Icons.public));
+        // Open classes page
+        await tester.tap(find.byIcon(Icons.class_));
         await tester.pumpAndSettle();
 
-        expect(find.byType(PortalPage), findsOneWidget);
+        // Open class view
+        await tester.tap(find.text('PC'));
+        await tester.pumpAndSettle();
+
+        expect(find.byType(ClassView), findsOneWidget);
+
+        // Open add shortcut view
+        await tester.tap(find.byIcon(Icons.add));
+        await tester.pumpAndSettle();
+
+        expect(find.byType(ShortcutView), findsOneWidget);
+
+        await tester.tap(find.byIcon(Icons.arrow_back));
+        await tester.pumpAndSettle();
+
+        expect(find.byType(ClassView), findsOneWidget);
+
+        // Open grading view
+        await tester.tap(find.byIcon(Icons.edit));
+        await tester.pumpAndSettle();
+
+        expect(find.byType(GradingView), findsOneWidget);
+
+        await tester.tap(find.text('Save'));
+        await tester.pumpAndSettle();
+
+        expect(find.byType(ClassView), findsOneWidget);
       });
     }
   });
@@ -325,13 +456,11 @@ void main() {
         await tester.pumpWidget(buildApp());
         await tester.pumpAndSettle();
 
-        expect(find.byType(HomePage), findsOneWidget);
         // Open profile
         await tester.tap(find.byIcon(Icons.person));
         await tester.pumpAndSettle();
 
-        // TODO: Replace with page when implemented
-        expect(find.text('Profile'), findsNWidgets(2));
+        expect(find.byType(ProfilePage), findsNWidgets(1));
       });
     }
   });
@@ -349,6 +478,23 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(find.byType(SettingsPage), findsOneWidget);
+      });
+    }
+  });
+
+  group('Portal', () {
+    for (var size in screenSizes) {
+      testWidgets('${size.width}x${size.height}', (WidgetTester tester) async {
+        await binding.setSurfaceSize(size);
+
+        await tester.pumpWidget(buildApp());
+        await tester.pumpAndSettle();
+
+        // Open portal
+        await tester.tap(find.byIcon(Icons.public));
+        await tester.pumpAndSettle();
+
+        expect(find.byType(PortalPage), findsOneWidget);
       });
     }
   });
