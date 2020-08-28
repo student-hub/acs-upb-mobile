@@ -199,7 +199,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "warningPasswordLength" : MessageLookupByLibrary.simpleMessage("The password must be 8 characters long or more."),
     "warningPasswordLowercase" : MessageLookupByLibrary.simpleMessage("The password must include at least one lowercase letter."),
     "warningPasswordNumber" : MessageLookupByLibrary.simpleMessage("The password must include at least one number."),
-    "warningPasswordSpecialCharacters" : MessageLookupByLibrary.simpleMessage("The password must include one least a special character."),
+    "warningPasswordSpecialCharacters" : MessageLookupByLibrary.simpleMessage("The password must include at least one special character."),
     "warningPasswordUppercase" : MessageLookupByLibrary.simpleMessage("The password must include at least one uppercase letter."),
     "warningTryAgainLater" : MessageLookupByLibrary.simpleMessage("Please try again later."),
     "warningUseProvider" : m6,
