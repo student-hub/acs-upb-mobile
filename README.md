@@ -12,6 +12,10 @@ Please note that some features may not work perfectly in the web version, as
 to [create an issue](https://github.com/acs-upb-mobile/acs-upb-mobile/issues/new?&template=bug_report.md)
 if you encounter any problem.
 
+If you would like to contribute and don't know where to start, or you have any questions about this
+project, feel free to [join us on Slack](https://join.slack.com/t/acs-upb-mobile/shared_invite/zt-gz48csbn-iVYTE04sFaawINPTlV4oew)
+and ask anything on the **#ama** channel.
+
 ## Screenshots
 
 <img src=screenshots/light_login_ro.png height=500><img src=screenshots/dark_login_en.png height=500>
