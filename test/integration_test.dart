@@ -369,28 +369,26 @@ void main() {
 
     for (var size in screenSizes) {
       testWidgets('${size.width}x${size.height}', (WidgetTester tester) async {
-        await tester.runAsync(() async {
-          await binding.setSurfaceSize(size);
+        await binding.setSurfaceSize(size);
 
-          await tester.pumpWidget(buildApp());
-          await tester.pumpAndSettle();
+        await tester.pumpWidget(buildApp());
+        await tester.pumpAndSettle();
 
-          // Open classes page
-          await tester.tap(find.byIcon(Icons.class_));
-          await tester.pumpAndSettle();
+        // Open classes page
+        await tester.tap(find.byIcon(Icons.class_));
+        await tester.pumpAndSettle();
 
-          // Open add class view
-          await tester.tap(find.byIcon(Icons.add));
-          await tester.pumpAndSettle();
+        // Open add class view
+        await tester.tap(find.byIcon(Icons.add));
+        await tester.pumpAndSettle();
 
-          expect(find.byType(AddClassesPage), findsOneWidget);
+        expect(find.byType(AddClassesPage), findsOneWidget);
 
-          // Save
-          await tester.tap(find.text('Save'));
-          await tester.pumpAndSettle();
+        // Save
+        await tester.tap(find.text('Save'));
+        await tester.pumpAndSettle();
 
-          expect(find.byType(ClassesPage), findsOneWidget);
-        });
+        expect(find.byType(ClassesPage), findsOneWidget);
       });
     }
   });
@@ -410,44 +408,42 @@ void main() {
 
     for (var size in screenSizes) {
       testWidgets('${size.width}x${size.height}', (WidgetTester tester) async {
-        await tester.runAsync(() async {
-          await binding.setSurfaceSize(size);
+        await binding.setSurfaceSize(size);
 
-          await tester.pumpWidget(buildApp());
-          await tester.pumpAndSettle();
+        await tester.pumpWidget(buildApp());
+        await tester.pumpAndSettle();
 
-          // Open classes page
-          await tester.tap(find.byIcon(Icons.class_));
-          await tester.pumpAndSettle();
+        // Open classes page
+        await tester.tap(find.byIcon(Icons.class_));
+        await tester.pumpAndSettle();
 
-          // Open class view
-          await tester.tap(find.text('PC'));
-          await tester.pumpAndSettle();
+        // Open class view
+        await tester.tap(find.text('PC'));
+        await tester.pumpAndSettle();
 
-          expect(find.byType(ClassView), findsOneWidget);
+        expect(find.byType(ClassView), findsOneWidget);
 
-          // Open add shortcut view
-          await tester.tap(find.byIcon(Icons.add));
-          await tester.pumpAndSettle();
+        // Open add shortcut view
+        await tester.tap(find.byIcon(Icons.add));
+        await tester.pumpAndSettle();
 
-          expect(find.byType(ShortcutView), findsOneWidget);
+        expect(find.byType(ShortcutView), findsOneWidget);
 
-          await tester.tap(find.byIcon(Icons.arrow_back));
-          await tester.pumpAndSettle();
+        await tester.tap(find.byIcon(Icons.arrow_back));
+        await tester.pumpAndSettle();
 
-          expect(find.byType(ClassView), findsOneWidget);
+        expect(find.byType(ClassView), findsOneWidget);
 
-          // Open grading view
-          await tester.tap(find.byIcon(Icons.edit));
-          await tester.pumpAndSettle();
+        // Open grading view
+        await tester.tap(find.byIcon(Icons.edit));
+        await tester.pumpAndSettle();
 
-          expect(find.byType(GradingView), findsOneWidget);
+        expect(find.byType(GradingView), findsOneWidget);
 
-          await tester.tap(find.text('Save'));
-          await tester.pumpAndSettle();
+        await tester.tap(find.text('Save'));
+        await tester.pumpAndSettle();
 
-          expect(find.byType(ClassView), findsOneWidget);
-        });
+        expect(find.byType(ClassView), findsOneWidget);
       });
     }
   });
