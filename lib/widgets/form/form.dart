@@ -36,6 +36,7 @@ class FormItem {
 class AppForm extends StatefulWidget {
   final String title;
   final List<FormItem> items;
+  final bool submitOnEnter;
 
   /// Map from [FormItem.label] to corresponding input
   final dynamic Function(Map<String, String>) onSubmitted;
@@ -43,7 +44,12 @@ class AppForm extends StatefulWidget {
   /// Widgets to be added at the end of the form
   final List<Widget> trailing;
 
-  AppForm({this.title, this.items, this.onSubmitted, List<Widget> trailing})
+  AppForm(
+      {this.title,
+      this.items,
+      this.onSubmitted,
+      List<Widget> trailing,
+      this.submitOnEnter = true})
       : this.trailing = trailing ?? <Widget>[];
 
   @override
@@ -114,7 +120,15 @@ class _AppFormState extends State<AppForm> {
                         FocusScope.of(context)
                             .requestFocus(widget.items[i + 1].focusNode);
                       } else {
-                        widget.submit();
+                        if (widget.submitOnEnter) {
+                          widget.submit();
+                        } else {
+                          // Just remove focus
+                          FocusScopeNode currentFocus = FocusScope.of(context);
+                          if (!currentFocus.hasPrimaryFocus) {
+                            currentFocus.unfocus();
+                          }
+                        }
                       }
                     },
                   );

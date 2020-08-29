@@ -148,6 +148,7 @@ class _SignUpViewState extends State<SignUpView> {
       title: S.of(context).actionSignUp,
       items: _buildFormItems(),
       trailing: _dropdownTree(context),
+      submitOnEnter: false,
       onSubmitted: (Map<String, String> fields) async {
         fields[S.of(context).labelEmail] += S.of(context).stringEmailDomain;
         nodes.asMap().forEach((i, node) {
