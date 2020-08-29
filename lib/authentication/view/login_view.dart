@@ -37,6 +37,7 @@ class _LoginViewState extends State<LoginView> {
         suffix: emailDomain,
         controller: emailController,
         autocorrect: false,
+        autofillHints: [AutofillHints.username],
         check: (email, {BuildContext context}) =>
             authProvider.canSignInWithPassword(
                 email: email + emailDomain, context: context),
@@ -45,6 +46,7 @@ class _LoginViewState extends State<LoginView> {
         label: S.of(context).labelPassword,
         hint: S.of(context).hintPassword,
         obscureText: true,
+        autofillHints: [AutofillHints.password],
       ),
     ];
     return formItems;

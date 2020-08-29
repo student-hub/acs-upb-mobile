@@ -14,6 +14,8 @@ class FormTextField extends StatefulWidget {
   final Widget suffixIcon;
   final bool autocorrect;
   final bool enableSuggestions;
+  final TextInputType keyboardType;
+  final List<String> autofillHints;
 
   FormTextField({
     Key key,
@@ -29,6 +31,8 @@ class FormTextField extends StatefulWidget {
     this.suffixIcon,
     this.autocorrect = true,
     this.enableSuggestions = true,
+    this.keyboardType = TextInputType.text,
+    this.autofillHints,
   }) : super(key: key);
 
   @override
@@ -64,6 +68,7 @@ class _FormTextFieldState extends State<FormTextField> {
               children: <Widget>[
                 Expanded(
                   child: TextField(
+                    keyboardType: widget.keyboardType,
                     autocorrect: widget.autocorrect,
                     enableSuggestions: widget.enableSuggestions,
                     obscureText: widget.obscureText,
@@ -71,17 +76,20 @@ class _FormTextFieldState extends State<FormTextField> {
                     focusNode: widget.focusNode,
                     onChanged: widget.onChanged,
                     onSubmitted: widget.onSubmitted,
+                    autofillHints: widget.autofillHints,
                     // Only show verification icon within text field if it exists
                     // and there no suffix text set
-                    decoration: widget.suffix == null &&
-                            widget.suffixIcon != null
-                        ? InputDecoration(
-                            hintText: widget.hint ?? widget.label.toLowerCase(),
-                            suffixIcon: widget.suffixIcon,
-                          )
-                        : InputDecoration(
-                            hintText: widget.hint ?? widget.label.toLowerCase(),
-                          ),
+                    decoration:
+                        widget.suffix == null && widget.suffixIcon != null
+                            ? InputDecoration(
+                                hintText:
+                                    widget.hint ?? widget.label.toLowerCase(),
+                                suffixIcon: widget.suffixIcon,
+                              )
+                            : InputDecoration(
+                                hintText:
+                                    widget.hint ?? widget.label.toLowerCase(),
+                              ),
                   ),
                 ),
                 widget.suffix != null

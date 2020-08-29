@@ -16,6 +16,8 @@ class FormItem {
   Future<bool> valid;
   final bool autocorrect;
   final bool enableSuggestions;
+  final TextInputType keyboardType;
+  final List<String> autofillHints;
 
   FormItem({
     this.label,
@@ -28,6 +30,8 @@ class FormItem {
     this.suffix,
     this.autocorrect = true,
     this.enableSuggestions = true,
+    this.keyboardType = TextInputType.text,
+    this.autofillHints,
   })  : this.controller = controller ?? TextEditingController(),
         this.focusNode = focusNode ?? FocusNode(),
         this.valid = Future<bool>(() => null);
@@ -82,6 +86,8 @@ class _AppFormState extends State<AppForm> {
                     focusNode: field.focusNode,
                     autocorrect: field.autocorrect,
                     enableSuggestions: field.enableSuggestions,
+                    keyboardType: field.keyboardType,
+                    autofillHints: field.autofillHints,
                     onChanged: (text) => setState(() {
                       if (text == null || text == "") {
                         field.valid = Future<bool>(() => null);

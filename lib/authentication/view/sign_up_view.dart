@@ -58,6 +58,7 @@ class _SignUpViewState extends State<SignUpView> {
         hint: S.of(context).hintEmail,
         suffix: emailDomain,
         autocorrect: false,
+        autofillHints: [AutofillHints.newUsername],
         check: (email, {BuildContext context}) => authProvider
             .canSignUpWithEmail(email: email + emailDomain, context: context),
       ),
@@ -67,6 +68,7 @@ class _SignUpViewState extends State<SignUpView> {
         additionalHint: S.of(context).infoPassword,
         controller: passwordController,
         obscureText: true,
+        autofillHints: [AutofillHints.newPassword],
         check: (password, {BuildContext context}) =>
             AppValidator.isStrongPassword(password: password, context: context),
       ),
@@ -85,10 +87,12 @@ class _SignUpViewState extends State<SignUpView> {
       FormItem(
         label: S.of(context).labelFirstName,
         hint: S.of(context).hintFirstName,
+        autofillHints: [AutofillHints.givenName]
       ),
       FormItem(
         label: S.of(context).labelLastName,
         hint: S.of(context).hintLastName,
+        autofillHints: [AutofillHints.familyName]
       ),
     ];
     return formItems;
