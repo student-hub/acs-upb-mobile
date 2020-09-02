@@ -1,7 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-
 import 'intl/messages_all.dart';
 
 // **************************************************************************
@@ -9,8 +8,12 @@ import 'intl/messages_all.dart';
 // Made by Localizely
 // **************************************************************************
 
+// ignore_for_file: non_constant_identifier_names, lines_longer_than_80_chars
+
 class S {
   S();
+  
+  static S current;
   
   static const AppLocalizationDelegate delegate =
     AppLocalizationDelegate();
@@ -20,7 +23,9 @@ class S {
     final localeName = Intl.canonicalizedLocale(name); 
     return initializeMessages(localeName).then((_) {
       Intl.defaultLocale = localeName;
-      return S();
+      S.current = S();
+      
+      return S.current;
     });
   } 
 
@@ -28,6 +33,7 @@ class S {
     return Localizations.of<S>(context, S);
   }
 
+  /// `Next`
   String get buttonNext {
     return Intl.message(
       'Next',
@@ -37,6 +43,7 @@ class S {
     );
   }
 
+  /// `Cancel`
   String get buttonCancel {
     return Intl.message(
       'Cancel',
@@ -46,6 +53,7 @@ class S {
     );
   }
 
+  /// `Save`
   String get buttonSave {
     return Intl.message(
       'Save',
@@ -55,6 +63,7 @@ class S {
     );
   }
 
+  /// `Send`
   String get buttonSend {
     return Intl.message(
       'Send',
@@ -64,6 +73,7 @@ class S {
     );
   }
 
+  /// `Apply`
   String get buttonApply {
     return Intl.message(
       'Apply',
@@ -73,6 +83,7 @@ class S {
     );
   }
 
+  /// `Set`
   String get buttonSet {
     return Intl.message(
       'Set',
@@ -82,6 +93,7 @@ class S {
     );
   }
 
+  /// `Email`
   String get labelEmail {
     return Intl.message(
       'Email',
@@ -91,6 +103,7 @@ class S {
     );
   }
 
+  /// `Password`
   String get labelPassword {
     return Intl.message(
       'Password',
@@ -100,6 +113,7 @@ class S {
     );
   }
 
+  /// `Confirm password`
   String get labelConfirmPassword {
     return Intl.message(
       'Confirm password',
@@ -109,6 +123,7 @@ class S {
     );
   }
 
+  /// `First name`
   String get labelFirstName {
     return Intl.message(
       'First name',
@@ -118,6 +133,7 @@ class S {
     );
   }
 
+  /// `Last name`
   String get labelLastName {
     return Intl.message(
       'Last name',
@@ -127,6 +143,7 @@ class S {
     );
   }
 
+  /// `Name`
   String get labelName {
     return Intl.message(
       'Name',
@@ -136,6 +153,7 @@ class S {
     );
   }
 
+  /// `Category`
   String get labelCategory {
     return Intl.message(
       'Category',
@@ -145,6 +163,7 @@ class S {
     );
   }
 
+  /// `Link`
   String get labelLink {
     return Intl.message(
       'Link',
@@ -154,6 +173,7 @@ class S {
     );
   }
 
+  /// `Relevance`
   String get labelRelevance {
     return Intl.message(
       'Relevance',
@@ -163,6 +183,7 @@ class S {
     );
   }
 
+  /// `Preview`
   String get labelPreview {
     return Intl.message(
       'Preview',
@@ -172,6 +193,7 @@ class S {
     );
   }
 
+  /// `Description`
   String get labelDescription {
     return Intl.message(
       'Description',
@@ -181,6 +203,7 @@ class S {
     );
   }
 
+  /// `Custom`
   String get labelCustom {
     return Intl.message(
       'Custom',
@@ -190,6 +213,227 @@ class S {
     );
   }
 
+  /// `Type`
+  String get labelType {
+    return Intl.message(
+      'Type',
+      name: 'labelType',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Location`
+  String get labelLocation {
+    return Intl.message(
+      'Location',
+      name: 'labelLocation',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Color`
+  String get labelColor {
+    return Intl.message(
+      'Color',
+      name: 'labelColor',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Start`
+  String get labelStart {
+    return Intl.message(
+      'Start',
+      name: 'labelStart',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `End`
+  String get labelEnd {
+    return Intl.message(
+      'End',
+      name: 'labelEnd',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Class`
+  String get labelClass {
+    return Intl.message(
+      'Class',
+      name: 'labelClass',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Year`
+  String get labelYear {
+    return Intl.message(
+      'Year',
+      name: 'labelYear',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Semester`
+  String get labelSemester {
+    return Intl.message(
+      'Semester',
+      name: 'labelSemester',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `{name} team`
+  String labelTeam(Object name) {
+    return Intl.message(
+      '$name team',
+      name: 'labelTeam',
+      desc: '',
+      args: [name],
+    );
+  }
+
+  /// `Unknown`
+  String get labelUnknown {
+    return Intl.message(
+      'Unknown',
+      name: 'labelUnknown',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Evaluation`
+  String get labelEvaluation {
+    return Intl.message(
+      'Evaluation',
+      name: 'labelEvaluation',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Points`
+  String get labelPoints {
+    return Intl.message(
+      'Points',
+      name: 'labelPoints',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Shortcuts`
+  String get sectionShortcuts {
+    return Intl.message(
+      'Shortcuts',
+      name: 'sectionShortcuts',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Events`
+  String get sectionEvents {
+    return Intl.message(
+      'Events',
+      name: 'sectionEvents',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Favourite websites`
+  String get sectionFrequentlyAccessedWebsites {
+    return Intl.message(
+      'Favourite websites',
+      name: 'sectionFrequentlyAccessedWebsites',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Events coming up`
+  String get sectionEventsComingUp {
+    return Intl.message(
+      'Events coming up',
+      name: 'sectionEventsComingUp',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `FAQ`
+  String get sectionFAQ {
+    return Intl.message(
+      'FAQ',
+      name: 'sectionFAQ',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Grading`
+  String get sectionGrading {
+    return Intl.message(
+      'Grading',
+      name: 'sectionGrading',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Main page`
+  String get shortcutTypeMain {
+    return Intl.message(
+      'Main page',
+      name: 'shortcutTypeMain',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Classbook`
+  String get shortcutTypeClassbook {
+    return Intl.message(
+      'Classbook',
+      name: 'shortcutTypeClassbook',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Resource`
+  String get shortcutTypeResource {
+    return Intl.message(
+      'Resource',
+      name: 'shortcutTypeResource',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Other`
+  String get shortcutTypeOther {
+    return Intl.message(
+      'Other',
+      name: 'shortcutTypeOther',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `john.doe`
   String get hintEmail {
     return Intl.message(
       'john.doe',
@@ -199,6 +443,7 @@ class S {
     );
   }
 
+  /// `····················`
   String get hintPassword {
     return Intl.message(
       '····················',
@@ -208,6 +453,7 @@ class S {
     );
   }
 
+  /// `John`
   String get hintFirstName {
     return Intl.message(
       'John',
@@ -217,6 +463,7 @@ class S {
     );
   }
 
+  /// `Doe`
   String get hintLastName {
     return Intl.message(
       'Doe',
@@ -226,6 +473,7 @@ class S {
     );
   }
 
+  /// `314CB`
   String get hintGroup {
     return Intl.message(
       '314CB',
@@ -235,6 +483,7 @@ class S {
     );
   }
 
+  /// `Google`
   String get hintWebsiteLabel {
     return Intl.message(
       'Google',
@@ -244,6 +493,7 @@ class S {
     );
   }
 
+  /// `http://google.com`
   String get hintWebsiteLink {
     return Intl.message(
       'http://google.com',
@@ -253,6 +503,27 @@ class S {
     );
   }
 
+  /// `Final exam`
+  String get hintEvaluation {
+    return Intl.message(
+      'Final exam',
+      name: 'hintEvaluation',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `4.0`
+  String get hintPoints {
+    return Intl.message(
+      '4.0',
+      name: 'hintPoints',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Sign up`
   String get actionSignUp {
     return Intl.message(
       'Sign up',
@@ -262,6 +533,7 @@ class S {
     );
   }
 
+  /// `Log in`
   String get actionLogIn {
     return Intl.message(
       'Log in',
@@ -271,6 +543,7 @@ class S {
     );
   }
 
+  /// `Log out`
   String get actionLogOut {
     return Intl.message(
       'Log out',
@@ -280,6 +553,7 @@ class S {
     );
   }
 
+  /// `Log in anonymously`
   String get actionLogInAnonymously {
     return Intl.message(
       'Log in anonymously',
@@ -289,6 +563,7 @@ class S {
     );
   }
 
+  /// `Social login`
   String get actionSocialLogin {
     return Intl.message(
       'Social login',
@@ -298,6 +573,7 @@ class S {
     );
   }
 
+  /// `Sign in with {provider}`
   String actionSignInWith(Object provider) {
     return Intl.message(
       'Sign in with $provider',
@@ -307,6 +583,7 @@ class S {
     );
   }
 
+  /// `Reset password`
   String get actionResetPassword {
     return Intl.message(
       'Reset password',
@@ -316,6 +593,7 @@ class S {
     );
   }
 
+  /// `Send e-mail`
   String get actionSendEmail {
     return Intl.message(
       'Send e-mail',
@@ -325,6 +603,7 @@ class S {
     );
   }
 
+  /// `Send e-mail again?`
   String get actionSendVerificationAgain {
     return Intl.message(
       'Send e-mail again?',
@@ -334,6 +613,7 @@ class S {
     );
   }
 
+  /// `Delete account`
   String get actionDeleteAccount {
     return Intl.message(
       'Delete account',
@@ -343,6 +623,7 @@ class S {
     );
   }
 
+  /// `Add website`
   String get actionAddWebsite {
     return Intl.message(
       'Add website',
@@ -352,6 +633,7 @@ class S {
     );
   }
 
+  /// `Edit website`
   String get actionEditWebsite {
     return Intl.message(
       'Edit website',
@@ -361,6 +643,7 @@ class S {
     );
   }
 
+  /// `Delete website`
   String get actionDeleteWebsite {
     return Intl.message(
       'Delete website',
@@ -370,6 +653,7 @@ class S {
     );
   }
 
+  /// `Enable editing`
   String get actionEnableEditing {
     return Intl.message(
       'Enable editing',
@@ -379,6 +663,7 @@ class S {
     );
   }
 
+  /// `Disable editing`
   String get actionDisableEditing {
     return Intl.message(
       'Disable editing',
@@ -388,6 +673,97 @@ class S {
     );
   }
 
+  /// `Jump to today`
+  String get actionJumpToToday {
+    return Intl.message(
+      'Jump to today',
+      name: 'actionJumpToToday',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Add event`
+  String get actionAddEvent {
+    return Intl.message(
+      'Add event',
+      name: 'actionAddEvent',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Edit event`
+  String get actionEditEvent {
+    return Intl.message(
+      'Edit event',
+      name: 'actionEditEvent',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Delete event`
+  String get actionDeleteEvent {
+    return Intl.message(
+      'Delete event',
+      name: 'actionDeleteEvent',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Add classes`
+  String get actionAddClasses {
+    return Intl.message(
+      'Add classes',
+      name: 'actionAddClasses',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Add shortcut`
+  String get actionAddShortcut {
+    return Intl.message(
+      'Add shortcut',
+      name: 'actionAddShortcut',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Delete shortcut`
+  String get actionDeleteShortcut {
+    return Intl.message(
+      'Delete shortcut',
+      name: 'actionDeleteShortcut',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Show more`
+  String get actionShowMore {
+    return Intl.message(
+      'Show more',
+      name: 'actionShowMore',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Edit grading`
+  String get actionEditGrading {
+    return Intl.message(
+      'Edit grading',
+      name: 'actionEditGrading',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Something went wrong.`
   String get errorSomethingWentWrong {
     return Intl.message(
       'Something went wrong.',
@@ -397,6 +773,7 @@ class S {
     );
   }
 
+  /// `The two passwords differ.`
   String get errorPasswordsDiffer {
     return Intl.message(
       'The two passwords differ.',
@@ -406,6 +783,7 @@ class S {
     );
   }
 
+  /// `The password you entered is incorrect.`
   String get errorIncorrectPassword {
     return Intl.message(
       'The password you entered is incorrect.',
@@ -415,6 +793,7 @@ class S {
     );
   }
 
+  /// `You need to provide a password.`
   String get errorNoPassword {
     return Intl.message(
       'You need to provide a password.',
@@ -424,6 +803,7 @@ class S {
     );
   }
 
+  /// `You need to provide a valid e-mail address.`
   String get errorInvalidEmail {
     return Intl.message(
       'You need to provide a valid e-mail address.',
@@ -433,6 +813,7 @@ class S {
     );
   }
 
+  /// `Please provide your first name(s).`
   String get errorMissingFirstName {
     return Intl.message(
       'Please provide your first name(s).',
@@ -442,6 +823,7 @@ class S {
     );
   }
 
+  /// `Please provide your last name(s).`
   String get errorMissingLastName {
     return Intl.message(
       'Please provide your last name(s).',
@@ -451,6 +833,7 @@ class S {
     );
   }
 
+  /// `There is already an account associated with this e-mail address`
   String get errorEmailInUse {
     return Intl.message(
       'There is already an account associated with this e-mail address',
@@ -460,6 +843,7 @@ class S {
     );
   }
 
+  /// `An account associated with that e-mail could not be found. Please sign up instead.`
   String get errorEmailNotFound {
     return Intl.message(
       'An account associated with that e-mail could not be found. Please sign up instead.',
@@ -469,6 +853,7 @@ class S {
     );
   }
 
+  /// `The account has been disabled.`
   String get errorAccountDisabled {
     return Intl.message(
       'The account has been disabled.',
@@ -478,6 +863,7 @@ class S {
     );
   }
 
+  /// `There have been too many requests from this device.`
   String get errorTooManyRequests {
     return Intl.message(
       'There have been too many requests from this device.',
@@ -487,6 +873,7 @@ class S {
     );
   }
 
+  /// `Could not launch '{url}'.`
   String errorCouldNotLaunchURL(Object url) {
     return Intl.message(
       'Could not launch \'$url\'.',
@@ -496,6 +883,7 @@ class S {
     );
   }
 
+  /// `You do not have permission to do that.`
   String get errorPermissionDenied {
     return Intl.message(
       'You do not have permission to do that.',
@@ -505,6 +893,7 @@ class S {
     );
   }
 
+  /// `Please make sure you are connected to the internet.`
   String get warningInternetConnection {
     return Intl.message(
       'Please make sure you are connected to the internet.',
@@ -514,6 +903,7 @@ class S {
     );
   }
 
+  /// `The password must be 8 characters long or more.`
   String get warningPasswordLength {
     return Intl.message(
       'The password must be 8 characters long or more.',
@@ -523,15 +913,47 @@ class S {
     );
   }
 
-  String get warningPasswordCharacters {
+  /// `The password must include at least one uppercase letter.`
+  String get warningPasswordUppercase {
     return Intl.message(
-      'The password must include lowercase and uppercase letters and at least one number and special character (!@#\$&*~).',
-      name: 'warningPasswordCharacters',
+      'The password must include at least one uppercase letter.',
+      name: 'warningPasswordUppercase',
       desc: '',
       args: [],
     );
   }
 
+  /// `The password must include at least one lowercase letter.`
+  String get warningPasswordLowercase {
+    return Intl.message(
+      'The password must include at least one lowercase letter.',
+      name: 'warningPasswordLowercase',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `The password must include at least one special character.`
+  String get warningPasswordSpecialCharacters {
+    return Intl.message(
+      'The password must include at least one special character.',
+      name: 'warningPasswordSpecialCharacters',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `The password must include at least one number.`
+  String get warningPasswordNumber {
+    return Intl.message(
+      'The password must include at least one number.',
+      name: 'warningPasswordNumber',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `There is already an account associated with {email}.`
   String warningEmailInUse(Object email) {
     return Intl.message(
       'There is already an account associated with $email.',
@@ -541,6 +963,7 @@ class S {
     );
   }
 
+  /// `Please log in with {provider} to continue.`
   String warningUseProvider(Object provider) {
     return Intl.message(
       'Please log in with $provider to continue.',
@@ -550,6 +973,7 @@ class S {
     );
   }
 
+  /// `Please try again later.`
   String get warningTryAgainLater {
     return Intl.message(
       'Please try again later.',
@@ -559,6 +983,7 @@ class S {
     );
   }
 
+  /// `Already showing all content.`
   String get warningFilterAlreadyDisabled {
     return Intl.message(
       'Already showing all content.',
@@ -568,6 +993,7 @@ class S {
     );
   }
 
+  /// `Already showing only custom websites.`
   String get warningFilterAlreadyShowingYours {
     return Intl.message(
       'Already showing only custom websites.',
@@ -577,6 +1003,7 @@ class S {
     );
   }
 
+  /// `You need to provide a valid URL.`
   String get warningInvalidURL {
     return Intl.message(
       'You need to provide a valid URL.',
@@ -586,6 +1013,7 @@ class S {
     );
   }
 
+  /// `A website with the same name already exists.`
   String get warningWebsiteNameExists {
     return Intl.message(
       'A website with the same name already exists.',
@@ -595,6 +1023,7 @@ class S {
     );
   }
 
+  /// `You have not created any private websites yet.`
   String get warningNoPrivateWebsite {
     return Intl.message(
       'You have not created any private websites yet.',
@@ -604,6 +1033,7 @@ class S {
     );
   }
 
+  /// `You do not have permission to create a public website.`
   String get warningNoPermissionToAddPublicWebsite {
     return Intl.message(
       'You do not have permission to create a public website.',
@@ -613,6 +1043,17 @@ class S {
     );
   }
 
+  /// `You do not have permission to edit class information.`
+  String get warningNoPermissionToEditClassInfo {
+    return Intl.message(
+      'You do not have permission to edit class information.',
+      name: 'warningNoPermissionToEditClassInfo',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please authenticate in order to access this feature.`
   String get warningAuthenticationNeeded {
     return Intl.message(
       'Please authenticate in order to access this feature.',
@@ -622,6 +1063,7 @@ class S {
     );
   }
 
+  /// `There is nothing you have permission to edit.`
   String get warningNothingToEdit {
     return Intl.message(
       'There is nothing you have permission to edit.',
@@ -631,6 +1073,37 @@ class S {
     );
   }
 
+  /// `Field cannot be empty.`
+  String get warningFieldCannotBeEmpty {
+    return Intl.message(
+      'Field cannot be empty.',
+      name: 'warningFieldCannotBeEmpty',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Field cannot be zero.`
+  String get warningFieldCannotBeZero {
+    return Intl.message(
+      'Field cannot be zero.',
+      name: 'warningFieldCannotBeZero',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `None yet`
+  String get warningNoneYet {
+    return Intl.message(
+      'None yet',
+      name: 'warningNoneYet',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Home`
   String get navigationHome {
     return Intl.message(
       'Home',
@@ -640,6 +1113,7 @@ class S {
     );
   }
 
+  /// `Timetable`
   String get navigationTimetable {
     return Intl.message(
       'Timetable',
@@ -649,6 +1123,7 @@ class S {
     );
   }
 
+  /// `Portal`
   String get navigationPortal {
     return Intl.message(
       'Portal',
@@ -658,6 +1133,7 @@ class S {
     );
   }
 
+  /// `Map`
   String get navigationMap {
     return Intl.message(
       'Map',
@@ -667,6 +1143,7 @@ class S {
     );
   }
 
+  /// `Profile`
   String get navigationProfile {
     return Intl.message(
       'Profile',
@@ -676,6 +1153,7 @@ class S {
     );
   }
 
+  /// `Settings`
   String get navigationSettings {
     return Intl.message(
       'Settings',
@@ -685,6 +1163,7 @@ class S {
     );
   }
 
+  /// `Filter`
   String get navigationFilter {
     return Intl.message(
       'Filter',
@@ -694,6 +1173,27 @@ class S {
     );
   }
 
+  /// `Classes`
+  String get navigationClasses {
+    return Intl.message(
+      'Classes',
+      name: 'navigationClasses',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Event details`
+  String get navigationEventDetails {
+    return Intl.message(
+      'Event details',
+      name: 'navigationEventDetails',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Show all`
   String get filterMenuShowAll {
     return Intl.message(
       'Show all',
@@ -703,6 +1203,7 @@ class S {
     );
   }
 
+  /// `Show only mine`
   String get filterMenuShowMine {
     return Intl.message(
       'Show only mine',
@@ -712,6 +1213,7 @@ class S {
     );
   }
 
+  /// `Filter by relevance`
   String get filterMenuRelevance {
     return Intl.message(
       'Filter by relevance',
@@ -721,6 +1223,7 @@ class S {
     );
   }
 
+  /// `Only me`
   String get relevanceOnlyMe {
     return Intl.message(
       'Only me',
@@ -730,6 +1233,7 @@ class S {
     );
   }
 
+  /// `Anyone`
   String get relevanceAnyone {
     return Intl.message(
       'Anyone',
@@ -739,6 +1243,7 @@ class S {
     );
   }
 
+  /// `Personalization`
   String get settingsTitlePersonalization {
     return Intl.message(
       'Personalization',
@@ -748,6 +1253,7 @@ class S {
     );
   }
 
+  /// `Dark Mode`
   String get settingsItemDarkMode {
     return Intl.message(
       'Dark Mode',
@@ -757,6 +1263,7 @@ class S {
     );
   }
 
+  /// `Localization`
   String get settingsTitleLocalization {
     return Intl.message(
       'Localization',
@@ -766,6 +1273,7 @@ class S {
     );
   }
 
+  /// `Language`
   String get settingsItemLanguage {
     return Intl.message(
       'Language',
@@ -775,6 +1283,7 @@ class S {
     );
   }
 
+  /// `English`
   String get settingsItemLanguageEnglish {
     return Intl.message(
       'English',
@@ -784,6 +1293,7 @@ class S {
     );
   }
 
+  /// `Romanian`
   String get settingsItemLanguageRomanian {
     return Intl.message(
       'Romanian',
@@ -793,6 +1303,7 @@ class S {
     );
   }
 
+  /// `Auto`
   String get settingsItemLanguageAuto {
     return Intl.message(
       'Auto',
@@ -802,6 +1313,7 @@ class S {
     );
   }
 
+  /// `Relevance filter`
   String get settingsRelevanceFilter {
     return Intl.message(
       'Relevance filter',
@@ -811,6 +1323,7 @@ class S {
     );
   }
 
+  /// `Learning`
   String get websiteCategoryLearning {
     return Intl.message(
       'Learning',
@@ -820,6 +1333,7 @@ class S {
     );
   }
 
+  /// `Administrative`
   String get websiteCategoryAdministrative {
     return Intl.message(
       'Administrative',
@@ -829,6 +1343,7 @@ class S {
     );
   }
 
+  /// `Associations`
   String get websiteCategoryAssociations {
     return Intl.message(
       'Associations',
@@ -838,6 +1353,7 @@ class S {
     );
   }
 
+  /// `Resources`
   String get websiteCategoryResources {
     return Intl.message(
       'Resources',
@@ -847,6 +1363,7 @@ class S {
     );
   }
 
+  /// `Others`
   String get websiteCategoryOthers {
     return Intl.message(
       'Others',
@@ -856,6 +1373,107 @@ class S {
     );
   }
 
+  /// `Lab`
+  String get uniEventTypeLab {
+    return Intl.message(
+      'Lab',
+      name: 'uniEventTypeLab',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Seminar`
+  String get uniEventTypeSeminar {
+    return Intl.message(
+      'Seminar',
+      name: 'uniEventTypeSeminar',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Lecture`
+  String get uniEventTypeLecture {
+    return Intl.message(
+      'Lecture',
+      name: 'uniEventTypeLecture',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Sports`
+  String get uniEventTypeSports {
+    return Intl.message(
+      'Sports',
+      name: 'uniEventTypeSports',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Exam`
+  String get uniEventTypeExam {
+    return Intl.message(
+      'Exam',
+      name: 'uniEventTypeExam',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Homework`
+  String get uniEventTypeHomework {
+    return Intl.message(
+      'Homework',
+      name: 'uniEventTypeHomework',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Project`
+  String get uniEventTypeProject {
+    return Intl.message(
+      'Project',
+      name: 'uniEventTypeProject',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Test`
+  String get uniEventTypeTest {
+    return Intl.message(
+      'Test',
+      name: 'uniEventTypeTest',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Practical`
+  String get uniEventTypePractical {
+    return Intl.message(
+      'Practical',
+      name: 'uniEventTypePractical',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Research`
+  String get uniEventTypeResearch {
+    return Intl.message(
+      'Research',
+      name: 'uniEventTypeResearch',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Welcome!`
   String get messageWelcomeSimple {
     return Intl.message(
       'Welcome!',
@@ -865,6 +1483,7 @@ class S {
     );
   }
 
+  /// `Welcome, {name}!`
   String messageWelcomeName(Object name) {
     return Intl.message(
       'Welcome, $name!',
@@ -874,6 +1493,7 @@ class S {
     );
   }
 
+  /// `New user?`
   String get messageNewUser {
     return Intl.message(
       'New user?',
@@ -883,6 +1503,7 @@ class S {
     );
   }
 
+  /// `Account is not verified.`
   String get messageEmailNotVerified {
     return Intl.message(
       'Account is not verified.',
@@ -892,6 +1513,7 @@ class S {
     );
   }
 
+  /// `Account created successfully.`
   String get messageAccountCreated {
     return Intl.message(
       'Account created successfully.',
@@ -901,6 +1523,7 @@ class S {
     );
   }
 
+  /// `Account deleted successfully.`
   String get messageAccountDeleted {
     return Intl.message(
       'Account deleted successfully.',
@@ -910,6 +1533,7 @@ class S {
     );
   }
 
+  /// `Please check your email for account verification.`
   String get messageCheckEmailVerification {
     return Intl.message(
       'Please check your email for account verification.',
@@ -919,6 +1543,7 @@ class S {
     );
   }
 
+  /// `Enter your e-mai in order to receive instructions on how to reset your password.`
   String get messageResetPassword {
     return Intl.message(
       'Enter your e-mai in order to receive instructions on how to reset your password.',
@@ -928,6 +1553,7 @@ class S {
     );
   }
 
+  /// `Are you sure you want to delete your account?`
   String get messageDeleteAccount {
     return Intl.message(
       'Are you sure you want to delete your account?',
@@ -937,6 +1563,7 @@ class S {
     );
   }
 
+  /// `This action cannot be undone.`
   String get messageCannotBeUndone {
     return Intl.message(
       'This action cannot be undone.',
@@ -946,6 +1573,7 @@ class S {
     );
   }
 
+  /// `Under construction`
   String get messageUnderConstruction {
     return Intl.message(
       'Under construction',
@@ -955,6 +1583,7 @@ class S {
     );
   }
 
+  /// `Try tapping/long-pressing/hovering the preview to test the new website.`
   String get messageWebsitePreview {
     return Intl.message(
       'Try tapping/long-pressing/hovering the preview to test the new website.',
@@ -964,6 +1593,7 @@ class S {
     );
   }
 
+  /// `Try adding a custom website.`
   String get messageAddCustomWebsite {
     return Intl.message(
       'Try adding a custom website.',
@@ -973,6 +1603,7 @@ class S {
     );
   }
 
+  /// `Website added successfully.`
   String get messageWebsiteAdded {
     return Intl.message(
       'Website added successfully.',
@@ -982,6 +1613,7 @@ class S {
     );
   }
 
+  /// `Website modified successfully.`
   String get messageWebsiteEdited {
     return Intl.message(
       'Website modified successfully.',
@@ -991,6 +1623,7 @@ class S {
     );
   }
 
+  /// `Are you sure you want to delete this website?`
   String get messageDeleteWebsite {
     return Intl.message(
       'Are you sure you want to delete this website?',
@@ -1000,6 +1633,7 @@ class S {
     );
   }
 
+  /// `Website deleted successfully.`
   String get messageWebsiteDeleted {
     return Intl.message(
       'Website deleted successfully.',
@@ -1009,6 +1643,67 @@ class S {
     );
   }
 
+  /// `Are you sure you want to delete this event?`
+  String get messageDeleteEvent {
+    return Intl.message(
+      'Are you sure you want to delete this event?',
+      name: 'messageDeleteEvent',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Are you sure you want to delete "{shortcutName}"?`
+  String messageDeleteShortcut(Object shortcutName) {
+    return Intl.message(
+      'Are you sure you want to delete "$shortcutName"?',
+      name: 'messageDeleteShortcut',
+      desc: '',
+      args: [shortcutName],
+    );
+  }
+
+  /// `This could affect other students.`
+  String get messageThisCouldAffectOtherStudents {
+    return Intl.message(
+      'This could affect other students.',
+      name: 'messageThisCouldAffectOtherStudents',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Shortcut deleted successfully.`
+  String get messageShortcutDeleted {
+    return Intl.message(
+      'Shortcut deleted successfully.',
+      name: 'messageShortcutDeleted',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You have not added any classes yet.`
+  String get messageNoClassesYet {
+    return Intl.message(
+      'You have not added any classes yet.',
+      name: 'messageNoClassesYet',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Get started by pressing the + button above.`
+  String get messageGetStartedPlusButton {
+    return Intl.message(
+      'Get started by pressing the + button above.',
+      name: 'messageGetStartedPlusButton',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please check your inbox for the password reset e-mail.`
   String get infoPasswordResetEmailSent {
     return Intl.message(
       'Please check your inbox for the password reset e-mail.',
@@ -1018,6 +1713,7 @@ class S {
     );
   }
 
+  /// `Try to choose the most restrictive category.`
   String get infoRelevance {
     return Intl.message(
       'Try to choose the most restrictive category.',
@@ -1027,6 +1723,7 @@ class S {
     );
   }
 
+  /// `For instance, if something is only relevant for "314CB" and "315CB", don't just set "CB".`
   String get infoRelevanceExample {
     return Intl.message(
       'For instance, if something is only relevant for "314CB" and "315CB", don\'t just set "CB".',
@@ -1036,15 +1733,17 @@ class S {
     );
   }
 
+  /// `It must contain lower and uppercase letters, one number and one special character, and have a minimum length of 8.`
   String get infoPassword {
     return Intl.message(
-      'It must contain lower and uppercase letters, one number and one special character (!@#\$&*~), and have a minimum length of 8.',
+      'It must contain lower and uppercase letters, one number and one special character, and have a minimum length of 8.',
       name: 'infoPassword',
       desc: '',
       args: [],
     );
   }
 
+  /// `@stud.acs.upb.ro`
   String get stringEmailDomain {
     return Intl.message(
       '@stud.acs.upb.ro',
@@ -1054,6 +1753,7 @@ class S {
     );
   }
 
+  /// `Anonymous`
   String get stringAnonymous {
     return Intl.message(
       'Anonymous',
@@ -1063,6 +1763,7 @@ class S {
     );
   }
 
+  /// `assets/images/acs_banner_en.png`
   String get fileAcsBanner {
     return Intl.message(
       'assets/images/acs_banner_en.png',

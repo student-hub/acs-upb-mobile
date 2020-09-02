@@ -6,6 +6,8 @@ import 'package:acs_upb_mobile/main.dart';
 import 'package:acs_upb_mobile/pages/filter/model/filter.dart';
 import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
 import 'package:acs_upb_mobile/pages/home/home_page.dart';
+import 'package:acs_upb_mobile/resources/validator.dart';
+import 'package:acs_upb_mobile/pages/portal/service/website_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
@@ -18,8 +20,12 @@ class MockNavigatorObserver extends Mock implements NavigatorObserver {}
 
 class MockFilterProvider extends Mock implements FilterProvider {}
 
+class MockWebsiteProvider extends Mock implements WebsiteProvider {}
+
 void main() {
   AuthProvider mockAuthProvider;
+  WebsiteProvider mockWebsiteProvider;
+  FilterProvider mockFilterProvider;
 
   setUp(() async {
     WidgetsFlutterBinding.ensureInitialized();
@@ -35,6 +41,23 @@ void main() {
     when(mockAuthProvider.isAuthenticatedFromCache).thenReturn(false);
     when(mockAuthProvider.isAuthenticatedFromService)
         .thenAnswer((realInvocation) => Future.value(false));
+
+    mockWebsiteProvider = MockWebsiteProvider();
+    // ignore: invalid_use_of_protected_member
+    when(mockWebsiteProvider.hasListeners).thenReturn(false);
+    when(mockWebsiteProvider.deleteWebsite(any, context: anyNamed('context')))
+        .thenAnswer((realInvocation) => Future.value(true));
+    when(mockWebsiteProvider.fetchWebsites(any))
+        .thenAnswer((_) => Future.value([]));
+
+    mockFilterProvider = MockFilterProvider();
+    // ignore: invalid_use_of_protected_member
+    when(mockFilterProvider.hasListeners).thenReturn(false);
+    when(mockFilterProvider.filterEnabled).thenReturn(true);
+    when(mockFilterProvider.fetchFilter(any))
+        .thenAnswer((_) => Future.value(Filter(localizedLevelNames: [
+              {'en': 'Level', 'ro': 'Nivel'}
+            ], root: FilterNode(name: 'root'))));
   });
 
   group('Login', () {
@@ -255,8 +278,6 @@ void main() {
           .thenAnswer((_) => Future.value(true));
       when(mockAuthProvider.canSignUpWithEmail(email: anyNamed('email')))
           .thenAnswer((realInvocation) => Future.value(true));
-      when(mockAuthProvider.isStrongPassword(password: anyNamed('password')))
-          .thenAnswer((realInvocation) => Future.value(true));
 
       // Enter info
       await tester.enterText(
@@ -345,9 +366,13 @@ void main() {
           .thenAnswer((realInvocation) => Future.value(null));
       when(mockAuthProvider.isAnonymous).thenReturn(true);
 
-      await tester.pumpWidget(ChangeNotifierProvider<AuthProvider>(
-          create: (_) => mockAuthProvider,
-          child: MyApp(navigationObservers: [mockObserver])));
+      await tester.pumpWidget(MultiProvider(providers: [
+        ChangeNotifierProvider<AuthProvider>(create: (_) => mockAuthProvider),
+        ChangeNotifierProvider<FilterProvider>(
+            create: (_) => mockFilterProvider),
+        ChangeNotifierProvider<WebsiteProvider>(
+            create: (_) => mockWebsiteProvider),
+      ], child: MyApp(navigationObservers: [mockObserver])));
       await tester.pumpAndSettle();
 
       verify(mockObserver.didPush(any, any));
@@ -372,9 +397,13 @@ void main() {
           Future.value(User(uid: '0', firstName: 'John', lastName: 'Doe')));
       when(mockAuthProvider.isAnonymous).thenReturn(false);
 
-      await tester.pumpWidget(ChangeNotifierProvider<AuthProvider>(
-          create: (_) => mockAuthProvider,
-          child: MyApp(navigationObservers: [mockObserver])));
+      await tester.pumpWidget(MultiProvider(providers: [
+        ChangeNotifierProvider<AuthProvider>(create: (_) => mockAuthProvider),
+        ChangeNotifierProvider<FilterProvider>(
+            create: (_) => mockFilterProvider),
+        ChangeNotifierProvider<WebsiteProvider>(
+            create: (_) => mockWebsiteProvider),
+      ], child: MyApp(navigationObservers: [mockObserver])));
       await tester.pumpAndSettle();
 
       verify(mockObserver.didPush(any, any));

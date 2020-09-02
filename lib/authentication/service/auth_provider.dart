@@ -5,6 +5,7 @@ import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/filter/model/filter.dart';
 import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
 import 'package:acs_upb_mobile/resources/locale_provider.dart';
+import 'package:acs_upb_mobile/resources/validator.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -67,11 +68,13 @@ extension DatabaseUser on User {
 class AuthProvider with ChangeNotifier {
   FirebaseUser _firebaseUser;
   StreamSubscription _userAuthSub;
+  User _currentUser;
 
   AuthProvider() {
     _userAuthSub = FirebaseAuth.instance.onAuthStateChanged.listen((newUser) {
       print('AuthProvider - FirebaseAuth - onAuthStateChanged - $newUser');
       _firebaseUser = newUser;
+      _fetchUser();
       notifyListeners();
     }, onError: (e) {
       print('AuthProvider - FirebaseAuth - onAuthStateChanged - $e');
@@ -177,7 +180,7 @@ class AuthProvider with ChangeNotifier {
     return _firebaseUser.uid;
   }
 
-  Future<User> get currentUser async {
+  Future<User> _fetchUser() async {
     if (isAnonymous) {
       return null;
     }
@@ -185,8 +188,14 @@ class AuthProvider with ChangeNotifier {
         .collection('users')
         .document(_firebaseUser.uid)
         .get();
-    return DatabaseUser.fromSnap(snapshot);
+
+    _currentUser = DatabaseUser.fromSnap(snapshot);
+    return _currentUser;
   }
+
+  Future<User> get currentUser => _fetchUser();
+
+  User get currentUserFromCache => _currentUser;
 
   Future<bool> signInAnonymously({BuildContext context}) async {
     return FirebaseAuth.instance.signInAnonymously().catchError((e) {
@@ -312,25 +321,6 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
-  Future<bool> isStrongPassword({String password, BuildContext context}) async {
-    if (password.length < 8) {
-      if (context != null) {
-        AppToast.show(S.of(context).warningPasswordLength);
-      }
-      return false;
-    }
-    String pattern =
-        r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$';
-    RegExp regExp = RegExp(pattern);
-    if (!regExp.hasMatch(password)) {
-      if (context != null) {
-        AppToast.show(S.of(context).warningPasswordCharacters);
-      }
-      return false;
-    }
-    return true;
-  }
-
   /// Create a new user with the data in [info].
   Future<bool> signUp({Map<String, String> info, BuildContext context}) async {
     try {
@@ -372,7 +362,7 @@ class AuthProvider with ChangeNotifier {
         AppToast.show(S.of(context).errorMissingLastName);
         return false;
       }
-      if (!await isStrongPassword(password: password, context: context)) {
+      if (!await AppValidator.isStrongPassword(password: password, context: context)) {
         return false;
       }
 
