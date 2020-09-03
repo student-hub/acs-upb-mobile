@@ -5,25 +5,35 @@ class IconText extends StatelessWidget {
   final String text;
   final TextStyle style;
   final Function() onTap;
+  final TextAlign align;
 
-  const IconText({Key key, this.icon, this.text, this.style, this.onTap})
+  const IconText(
+      {Key key,
+      @required this.icon,
+      @required this.text,
+      this.style,
+      this.onTap,
+      this.align = TextAlign.left})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    TextStyle widgetStyle = style ?? Theme.of(context).textTheme.bodyText1;
+
     return InkWell(
       onTap: onTap,
       child: RichText(
+        textAlign: align,
         text: TextSpan(
-          style: style,
+          style: widgetStyle,
           children: [
             WidgetSpan(
               child: Padding(
                 padding: const EdgeInsets.only(right: 4.0),
                 child: Icon(
                   icon,
-                  color: style.color,
-                  size: style.fontSize + 4,
+                  color: widgetStyle.color,
+                  size: widgetStyle.fontSize + 4,
                 ),
               ),
             ),
