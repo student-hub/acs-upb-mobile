@@ -6,6 +6,7 @@ import 'package:acs_upb_mobile/widgets/button.dart';
 import 'package:acs_upb_mobile/widgets/dialog.dart';
 import 'package:acs_upb_mobile/widgets/icon_text.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -80,37 +81,34 @@ class ProfilePage extends StatelessWidget {
         }
         return Padding(
           padding: const EdgeInsets.all(8.0),
-          child: ConstrainedBox(
-            constraints:
-                BoxConstraints(maxWidth: MediaQuery.of(context).size.width),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Icon(
-                  Icons.error_outline,
-                  size: Theme.of(context).textTheme.subtitle2.fontSize,
+          child: RichText(
+            textAlign: TextAlign.center,
+            text: TextSpan(
+              style: Theme.of(context)
+                  .textTheme
+                  .subtitle2
+                  .copyWith(fontWeight: FontWeight.w400),
+              children: [
+                WidgetSpan(
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 4.0),
+                    child: Icon(
+                      Icons.error_outline,
+                      size: Theme.of(context).textTheme.subtitle2.fontSize + 4,
+                    ),
+                  ),
                 ),
-                SizedBox(width: 4),
-                Text(
-                  S.of(context).messageEmailNotVerified,
-                  style: Theme.of(context)
-                      .textTheme
-                      .subtitle2
-                      .copyWith(fontWeight: FontWeight.w400),
-                  maxLines: 1,
-                ),
-                InkWell(
-                  onTap: () {
-                    authProvider.sendEmailVerification(context: context);
-                  },
-                  child: Text(
-                    ' ' + S.of(context).actionSendVerificationAgain,
+                TextSpan(
+                    text: S.of(context).messageEmailNotVerified + ' '),
+                TextSpan(
+                    text: S.of(context).actionSendVerificationAgain,
                     style: Theme.of(context)
                         .accentTextTheme
                         .subtitle2
                         .copyWith(fontWeight: FontWeight.w500),
-                  ),
-                ),
+                    recognizer: TapGestureRecognizer()
+                      ..onTap = () =>
+                          authProvider.sendEmailVerification(context: context)),
               ],
             ),
           ),
