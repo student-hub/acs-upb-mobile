@@ -2,9 +2,9 @@ import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/filter/model/filter.dart';
 import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
 import 'package:acs_upb_mobile/resources/locale_provider.dart';
+import 'package:acs_upb_mobile/widgets/icon_text.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:acs_upb_mobile/widgets/selectable.dart';
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -197,37 +197,20 @@ class FilterPageState extends State<FilterPage> {
                         Padding(
                           padding: const EdgeInsets.only(
                               left: 10.0, right: 10.0, top: 10.0),
-                          child: Row(
-                            children: <Widget>[
-                              Icon(
-                                Icons.info,
-                                size: Theme.of(context)
-                                    .textTheme
-                                    .subtitle1
-                                    .fontSize,
-                              ),
-                              SizedBox(width: 4.0),
-                              Container(
-                                  width: MediaQuery.of(context).size.width -
-                                      Theme.of(context)
-                                          .textTheme
-                                          .subtitle1
-                                          .fontSize -
-                                      24.0,
-                                  child: AutoSizeText(
-                                    widget.info,
-                                  )),
-                            ],
+                          child: IconText(
+                            icon: Icons.info,
+                            text: widget.info,
+                            style: Theme.of(context).textTheme.bodyText1,
                           ),
                         ),
                       if (widget.hint != null)
                         Padding(
                           padding: const EdgeInsets.only(
-                              left: 10.0, right: 10.0, top: 10.0),
-                          child: AutoSizeText(
+                              left: 10.0, right: 10.0, top: 5.0),
+                          child: Text(
                             widget.hint,
-                            style: TextStyle(
-                                color: Theme.of(context).hintColor),
+                            style:
+                                TextStyle(color: Theme.of(context).hintColor),
                           ),
                         )
                     ] +

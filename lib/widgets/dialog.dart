@@ -1,5 +1,6 @@
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/widgets/button.dart';
+import 'package:acs_upb_mobile/widgets/icon_text.dart';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 
@@ -57,31 +58,13 @@ class AppDialog extends StatelessWidget {
                   if (info != null)
                     Column(children: [
                       SizedBox(height: 8),
-                      RichText(
-                        text: TextSpan(
-                          style: Theme.of(context).textTheme.bodyText2,
-                          children: [
-                            WidgetSpan(
-                              child: Padding(
-                                padding: const EdgeInsets.only(right: 4.0),
-                                child: Icon(
-                                  Icons.info,
-                                  color: Theme.of(context).hintColor,
-                                  size: Theme.of(context)
-                                      .textTheme
-                                      .subtitle1
-                                      .fontSize,
-                                ),
-                              ),
-                            ),
-                            TextSpan(
-                              text: info,
-                              style:
-                                  TextStyle(color: Theme.of(context).hintColor),
-                            ),
-                          ],
-                        ),
-                      )
+                      IconText(
+                          icon: Icons.info,
+                          text: info,
+                          style: Theme.of(context)
+                              .textTheme
+                              .subtitle2
+                              .copyWith(color: Theme.of(context).hintColor))
                     ])
                 ] +
                 (content ?? <Widget>[]),
