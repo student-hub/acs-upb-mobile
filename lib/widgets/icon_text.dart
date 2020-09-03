@@ -48,7 +48,7 @@ class IconText extends StatelessWidget {
             if (actionText != null && actionText != '')
               TextSpan(
                 text: ' ' + actionText,
-                style: style
+                style: widgetStyle
                     .copyWith(color: Theme.of(context).accentColor)
                     .apply(fontWeightDelta: 2),
                 recognizer: TapGestureRecognizer()..onTap = onTap,

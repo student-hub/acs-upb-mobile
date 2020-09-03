@@ -774,6 +774,16 @@ class S {
     );
   }
 
+  /// `Contribute!`
+  String get actionContribute {
+    return Intl.message(
+      'Contribute!',
+      name: 'actionContribute',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Something went wrong.`
   String get errorSomethingWentWrong {
     return Intl.message(
@@ -1749,6 +1759,16 @@ class S {
     return Intl.message(
       'It must contain lower and uppercase letters, one number and one special character, and have a minimum length of 8.',
       name: 'infoPassword',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `ACS UPB Mobile is open source.`
+  String get infoAppIsOpenSource {
+    return Intl.message(
+      'ACS UPB Mobile is open source.',
+      name: 'infoAppIsOpenSource',
       desc: '',
       args: [],
     );

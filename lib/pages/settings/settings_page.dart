@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:acs_upb_mobile/generated/l10n.dart';
+import 'package:acs_upb_mobile/resources/custom_icons.dart';
 import 'package:acs_upb_mobile/resources/locale_provider.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/widgets/icon_text.dart';
@@ -72,6 +73,22 @@ class SettingsPageState extends State<SettingsPage> {
                         align: TextAlign.center,
                         onTap: () => Utils.launchURL(
                             'https://www.websitepolicies.com/policies/view/IIUFv381',
+                            context: context),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: IconText(
+                        icon: CustomIcons.github_brands,
+                        text: S.of(context).infoAppIsOpenSource,
+                        actionText: S.of(context).actionContribute,
+                        align: TextAlign.center,
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyText1
+                            .apply(color: Theme.of(context).hintColor),
+                        onTap: () => Utils.launchURL(
+                            'https://github.com/acs-upb-mobile/acs-upb-mobile',
                             context: context),
                       ),
                     )

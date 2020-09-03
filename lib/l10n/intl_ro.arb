@@ -78,6 +78,7 @@
   "actionDeleteShortcut": "Șterge scurtătură",
   "actionShowMore": "Arată mai multe",
   "actionEditGrading": "Modifică punctaj",
+  "actionContribute": "Contribuie!",
 
   "errorSomethingWentWrong": "A apărut o problemă.",
   "errorPasswordsDiffer": "Cele două parole diferă.",
@@ -186,6 +187,7 @@
   "infoRelevance": "Încercați să selectați cea mai restrictivă categorie.",
   "infoRelevanceExample": "De exemplu, dacă ceva este relevant doar pentru \"314CB\" și \"315CB\", nu setați direct \"CB\".",
   "infoPassword": "Aceasta trebuie să conțină majuscule, minuscule și cel puțin un număr sau un simbol, având minimum 8 caractere.",
+  "infoAppIsOpenSource": "ACS UPB Mobile este open source.",
 
   "stringEmailDomain": "@stud.acs.upb.ro",
   "stringAnonymous": "Anonim",
