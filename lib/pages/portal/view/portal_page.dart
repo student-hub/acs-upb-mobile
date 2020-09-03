@@ -13,6 +13,7 @@ import 'package:acs_upb_mobile/pages/portal/view/website_view.dart';
 import 'package:acs_upb_mobile/resources/custom_icons.dart';
 import 'package:acs_upb_mobile/resources/locale_provider.dart';
 import 'package:acs_upb_mobile/resources/storage_provider.dart';
+import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/widgets/circle_image.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:acs_upb_mobile/widgets/spoiler.dart';
@@ -20,7 +21,6 @@ import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:recase/recase.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class PortalPage extends StatefulWidget {
   @override
@@ -72,14 +72,6 @@ class _PortalPageState extends State<PortalPage>
     }
   }
 
-  _launchURL(String url) async {
-    if (await canLaunch(url)) {
-      await launch(url);
-    } else {
-      AppToast.show(S.of(context).errorCouldNotLaunchURL(url));
-    }
-  }
-
   Widget websiteCircle(Website website, double size) {
     StorageProvider storageProvider = Provider.of<StorageProvider>(context);
 
@@ -116,7 +108,7 @@ class _PortalPageState extends State<PortalPage>
                       ),
                     ),
                   ))
-                : _launchURL(website.link),
+                : Utils.launchURL(website.link, context: context),
           );
         },
       ),
