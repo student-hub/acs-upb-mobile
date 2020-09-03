@@ -1,8 +1,14 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 class IconText extends StatelessWidget {
   final IconData icon;
   final String text;
+
+  /// Optional "action" text. If this is specified, it will show after the
+  /// [text], have the theme's [accentColor], and will be the trigger area for
+  /// [onTap].
+  final String actionText;
   final TextStyle style;
   final Function() onTap;
   final TextAlign align;
@@ -11,6 +17,7 @@ class IconText extends StatelessWidget {
       {Key key,
       @required this.icon,
       @required this.text,
+      this.actionText,
       this.style,
       this.onTap,
       this.align = TextAlign.left})
@@ -21,7 +28,7 @@ class IconText extends StatelessWidget {
     TextStyle widgetStyle = style ?? Theme.of(context).textTheme.bodyText1;
 
     return InkWell(
-      onTap: onTap,
+      onTap: actionText != null && actionText != '' ? null : onTap,
       child: RichText(
         textAlign: align,
         text: TextSpan(
@@ -38,6 +45,14 @@ class IconText extends StatelessWidget {
               ),
             ),
             TextSpan(text: text),
+            if (actionText != null && actionText != '')
+              TextSpan(
+                text: ' ' + actionText,
+                style: style
+                    .copyWith(color: Theme.of(context).accentColor)
+                    .apply(fontWeightDelta: 2),
+                recognizer: TapGestureRecognizer()..onTap = onTap,
+              )
           ],
         ),
       ),
