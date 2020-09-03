@@ -1,6 +1,7 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+
 import 'intl/messages_all.dart';
 
 // **************************************************************************
@@ -328,6 +329,16 @@ class S {
     return Intl.message(
       'Points',
       name: 'labelPoints',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Privacy Policy`
+  String get labelPrivacyPolicy {
+    return Intl.message(
+      'Privacy Policy',
+      name: 'labelPrivacyPolicy',
       desc: '',
       args: [],
     );

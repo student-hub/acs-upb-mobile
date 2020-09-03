@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/resources/locale_provider.dart';
+import 'package:acs_upb_mobile/resources/utils.dart';
+import 'package:acs_upb_mobile/widgets/icon_text.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/material.dart';
@@ -18,56 +20,69 @@ class SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
-        title: S.of(context).navigationSettings,
-        body: Builder(
-          builder: (BuildContext context) {
-            return Column(
-              children: <Widget>[
-                Expanded(
-                  child: PreferencePage(
-                    [
-                      Padding(
-                        padding: const EdgeInsets.only(top: 10.0),
-                        child: Container(
-                            height: MediaQuery.of(context).size.height / 3,
-                            child: Image.asset(
-                                'assets/illustrations/undraw_settings.png')),
+      title: S.of(context).navigationSettings,
+      body: Builder(
+        builder: (BuildContext context) {
+          return Column(
+            children: <Widget>[
+              Expanded(
+                child: PreferencePage(
+                  [
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10.0),
+                      child: Container(
+                          height: MediaQuery.of(context).size.height / 3,
+                          child: Image.asset(
+                              'assets/illustrations/undraw_settings.png')),
+                    ),
+                    PreferenceTitle(S.of(context).settingsTitlePersonalization),
+                    SwitchPreference(
+                      S.of(context).settingsItemDarkMode,
+                      "dark_mode",
+                      onEnable: () {
+                        DynamicTheme.of(context).setBrightness(Brightness.dark);
+                      },
+                      onDisable: () {
+                        DynamicTheme.of(context)
+                            .setBrightness(Brightness.light);
+                      },
+                      defaultVal: MediaQuery.of(context).platformBrightness ==
+                          Brightness.dark,
+                    ),
+                    PreferenceTitle(S.of(context).settingsTitleLocalization),
+                    PreferenceDialogLink(
+                      S.of(context).settingsItemLanguage,
+                      desc: languagePrefString(
+                          context, PrefService.get('language')),
+                      dialog: PreferenceDialog(
+                        [
+                          languageRadioPreference(context, 'ro'),
+                          languageRadioPreference(context, 'en'),
+                          languageRadioPreference(context, 'auto'),
+                        ],
+                        onlySaveOnSubmit: false,
                       ),
-                      PreferenceTitle(
-                          S.of(context).settingsTitlePersonalization),
-                      SwitchPreference(
-                        S.of(context).settingsItemDarkMode,
-                        "dark_mode",
-                        onEnable: () {
-                          DynamicTheme.of(context)
-                              .setBrightness(Brightness.dark);
-                        },
-                        onDisable: () {
-                          DynamicTheme.of(context)
-                              .setBrightness(Brightness.light);
-                        },
-                        defaultVal: MediaQuery.of(context).platformBrightness ==
-                            Brightness.dark,
+                    ),
+                    Divider(),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: IconText(
+                        icon: Icons.lock_outline,
+                        text: S.of(context).labelPrivacyPolicy,
+                        align: TextAlign.center,
+                        onTap: () => Utils.launchURL(
+                            'https://www.websitepolicies.com/policies/view/IIUFv381',
+                            context: context),
                       ),
-                      PreferenceTitle(S.of(context).settingsTitleLocalization),
-                      PreferenceDialogLink(S.of(context).settingsItemLanguage,
-                          desc: languagePrefString(
-                              context, PrefService.get('language')),
-                          dialog: PreferenceDialog(
-                            [
-                              languageRadioPreference(context, 'ro'),
-                              languageRadioPreference(context, 'en'),
-                              languageRadioPreference(context, 'auto'),
-                            ],
-                            onlySaveOnSubmit: false,
-                          ))
-                    ],
-                  ),
+                    )
+                  ],
                 ),
-              ],
-            );
-          },
-        ));
+              ),
+            ],
+          );
+        },
+      ),
+    );
   }
 
   RadioPreference languageRadioPreference(
