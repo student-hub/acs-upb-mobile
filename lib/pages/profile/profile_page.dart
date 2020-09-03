@@ -81,7 +81,6 @@ class ProfilePage extends StatelessWidget {
         return Padding(
           padding: const EdgeInsets.all(8.0),
           child: IconText(
-            align: TextAlign.center,
             icon: Icons.error_outline,
             text: S.of(context).messageEmailNotVerified,
             actionText: S.of(context).actionSendVerificationAgain,

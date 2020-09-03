@@ -11,7 +11,6 @@ class IconText extends StatelessWidget {
   final String actionText;
   final TextStyle style;
   final Function() onTap;
-  final TextAlign align;
 
   const IconText(
       {Key key,
@@ -19,8 +18,7 @@ class IconText extends StatelessWidget {
       @required this.text,
       this.actionText,
       this.style,
-      this.onTap,
-      this.align = TextAlign.left})
+      this.onTap})
       : super(key: key);
 
   @override
@@ -29,32 +27,34 @@ class IconText extends StatelessWidget {
 
     return InkWell(
       onTap: actionText != null && actionText != '' ? null : onTap,
-      child: RichText(
-        textAlign: align,
-        text: TextSpan(
-          style: widgetStyle,
-          children: [
-            WidgetSpan(
-              child: Padding(
-                padding: const EdgeInsets.only(right: 4.0),
-                child: Icon(
-                  icon,
-                  color: widgetStyle.color,
-                  size: widgetStyle.fontSize + 4,
-                ),
-              ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(right: 4.0),
+            child: Icon(
+              icon,
+              color: widgetStyle.color,
+              size: widgetStyle.fontSize + 4,
             ),
-            TextSpan(text: text),
-            if (actionText != null && actionText != '')
-              TextSpan(
-                text: ' ' + actionText,
-                style: widgetStyle
-                    .copyWith(color: Theme.of(context).accentColor)
-                    .apply(fontWeightDelta: 2),
-                recognizer: TapGestureRecognizer()..onTap = onTap,
-              )
-          ],
-        ),
+          ),
+          RichText(
+            text: TextSpan(
+              style: widgetStyle,
+              children: [
+                TextSpan(text: text),
+                if (actionText != null && actionText != '')
+                  TextSpan(
+                    text: ' ' + actionText,
+                    style: widgetStyle
+                        .copyWith(color: Theme.of(context).accentColor)
+                        .apply(fontWeightDelta: 2),
+                    recognizer: TapGestureRecognizer()..onTap = onTap,
+                  )
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

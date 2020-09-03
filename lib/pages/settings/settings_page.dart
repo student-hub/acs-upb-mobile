@@ -70,7 +70,6 @@ class SettingsPageState extends State<SettingsPage> {
                       child: IconText(
                         icon: Icons.lock_outline,
                         text: S.of(context).labelPrivacyPolicy,
-                        align: TextAlign.center,
                         onTap: () => Utils.launchURL(
                             'https://www.websitepolicies.com/policies/view/IIUFv381',
                             context: context),
@@ -82,7 +81,6 @@ class SettingsPageState extends State<SettingsPage> {
                         icon: CustomIcons.github_brands,
                         text: S.of(context).infoAppIsOpenSource,
                         actionText: S.of(context).actionContribute,
-                        align: TextAlign.center,
                         style: Theme.of(context)
                             .textTheme
                             .bodyText1
