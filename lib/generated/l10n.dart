@@ -1124,6 +1124,16 @@ class S {
     );
   }
 
+  /// `You need to agree to the `
+  String get warningAgreeTo {
+    return Intl.message(
+      'You need to agree to the ',
+      name: 'warningAgreeTo',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Home`
   String get navigationHome {
     return Intl.message(
@@ -1719,6 +1729,16 @@ class S {
     return Intl.message(
       'Get started by pressing the + button above.',
       name: 'messageGetStartedPlusButton',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `I agree to the `
+  String get messageIAgreeToThe {
+    return Intl.message(
+      'I agree to the ',
+      name: 'messageIAgreeToThe',
       desc: '',
       args: [],
     );

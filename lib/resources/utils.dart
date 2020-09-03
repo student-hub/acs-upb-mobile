@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class Utils {
+  Utils._();
+
   static launchURL(String url, {BuildContext context}) async {
     if (await canLaunch(url)) {
       await launch(url);

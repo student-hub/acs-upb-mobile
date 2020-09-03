@@ -115,6 +115,7 @@
   "warningFieldCannotBeEmpty": "Field cannot be empty.",
   "warningFieldCannotBeZero": "Field cannot be zero.",
   "warningNoneYet": "None yet",
+  "warningAgreeTo": "You need to agree to the ",
 
   "navigationHome": "Home",
   "navigationTimetable": "Timetable",
@@ -182,6 +183,7 @@
   "messageShortcutDeleted": "Shortcut deleted successfully.",
   "messageNoClassesYet": "You have not added any classes yet.",
   "messageGetStartedPlusButton": "Get started by pressing the + button above.",
+  "messageIAgreeToThe": "I agree to the ",
 
   "infoPasswordResetEmailSent": "Please check your inbox for the password reset e-mail.",
   "infoRelevance": "Try to choose the most restrictive category.",
