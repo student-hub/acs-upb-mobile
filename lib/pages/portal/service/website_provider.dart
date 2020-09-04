@@ -7,6 +7,7 @@ import 'package:acs_upb_mobile/pages/portal/model/website.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:preferences/preference_service.dart';
 
 extension UserExtension on User {
   /// Check if there is at least one website that the [user] has permission to edit
@@ -103,6 +104,21 @@ class WebsiteProvider with ChangeNotifier {
     }
   }
 
+  void getVisits(List<Website> websites) {
+    var websitesId = PrefService.sharedPreferences.getStringList("websitesId");
+    var websitesNumberOfVisits =
+        PrefService.sharedPreferences.getStringList("websitesNumberOfVisits");
+    if (websitesId != null && websitesNumberOfVisits != null) {
+      var idsMap = Map<String, int>.from(websitesId.asMap().map((index, key) =>
+          MapEntry(key, int.tryParse(websitesNumberOfVisits[index] ?? 0))));
+      websites.forEach((website) {
+        if (idsMap[website.id] != null) {
+          website.numberOfVisits = idsMap[website.id];
+        }
+      });
+    }
+  }
+
   Future<List<Website>> fetchWebsites(Filter filter,
       {bool userOnly = false, String uid}) async {
     try {
@@ -155,6 +171,10 @@ class WebsiteProvider with ChangeNotifier {
             .map((doc) => WebsiteExtension.fromSnap(doc, ownerUid: uid)));
       }
 
+      getVisits(websites);
+      websites.sort((website1, website2) =>
+          website2.numberOfVisits.compareTo(website1.numberOfVisits));
+
       return websites;
     } catch (e) {
       _errorHandler(e, null);
@@ -163,8 +183,7 @@ class WebsiteProvider with ChangeNotifier {
   }
 
   Future<bool> addWebsite(Website website,
-      {bool updateExisting = false,
-      BuildContext context}) async {
+      {bool updateExisting = false, BuildContext context}) async {
     assert(website.label != null);
     assert(context != null);
 
@@ -219,5 +238,27 @@ class WebsiteProvider with ChangeNotifier {
       _errorHandler(e, context);
       return false;
     }
+  }
+
+  void updateVisits(Website website) async {
+    website.numberOfVisits++;
+    List<String> websitesId =
+        PrefService.sharedPreferences.getStringList("websitesId");
+    List<String> websitesNumberOfVisits =
+        PrefService.sharedPreferences.getStringList("websitesNumberOfVisits");
+    if (websitesId == null || websitesNumberOfVisits == null) {
+      websitesId = new List<String>();
+      websitesNumberOfVisits = new List<String>();
+    }
+    if (websitesId.contains(websitesId)) {
+      int index = websitesId.indexOf(website.id);
+      websitesNumberOfVisits.insert(index, websitesNumberOfVisits.toString());
+    } else {
+      websitesId.add(website.id);
+      websitesNumberOfVisits.add(website.numberOfVisits.toString());
+      PrefService.sharedPreferences.setStringList("websitesId", websitesId);
+    }
+    PrefService.sharedPreferences
+        .setStringList("websitesNumberOfVisits", websitesNumberOfVisits);
   }
 }

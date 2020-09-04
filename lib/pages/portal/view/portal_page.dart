@@ -111,19 +111,25 @@ class _PortalPageState extends State<PortalPage>
             image: image,
             enableOverlay: canEdit,
             circleSize: size,
-            onTap: () => canEdit
-                ? Navigator.of(context).push(MaterialPageRoute(
-                    builder: (_) => ChangeNotifierProvider<FilterProvider>(
-                      create: (_) => FilterProvider(
-                          defaultDegree: website.degree,
-                          defaultRelevance: website.relevance),
-                      child: WebsiteView(
-                        website: website,
-                        updateExisting: true,
-                      ),
+            onTap: () {
+              if (canEdit) {
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (_) => ChangeNotifierProvider<FilterProvider>(
+                    create: (_) => FilterProvider(
+                        defaultDegree: website.degree,
+                        defaultRelevance: website.relevance),
+                    child: WebsiteView(
+                      website: website,
+                      updateExisting: true,
                     ),
-                  ))
-                : _launchURL(website.link),
+                  ),
+                ));
+              } else {
+                Provider.of<WebsiteProvider>(context, listen: false)
+                    .updateVisits(website);
+                _launchURL(website.link);
+              }
+            },
           );
         },
       ),
