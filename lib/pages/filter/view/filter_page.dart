@@ -158,78 +158,81 @@ class FilterPageState extends State<FilterPage> {
           },
         )
       ],
-      body: Column(
-        children: <Widget>[
-          widget.info != null
-              ? Padding(
-                  padding:
-                      const EdgeInsets.only(left: 10.0, right: 10.0, top: 10.0),
-                  child: Row(
-                    children: <Widget>[
-                      Icon(
-                        Icons.info,
-                        size: Theme.of(context).textTheme.subtitle1.fontSize,
-                      ),
-                      SizedBox(width: 4.0),
-                      Container(
-                          width: MediaQuery.of(context).size.width -
-                              Theme.of(context).textTheme.subtitle1.fontSize -
-                              24.0,
-                          child: AutoSizeText(
-                            widget.info,
-                          )),
-                    ],
-                  ),
-                )
-              : Container(),
-          widget.hint != null
-              ? Padding(
-                  padding:
-                      const EdgeInsets.only(left: 10.0, right: 10.0, top: 10.0),
-                  child: AutoSizeText(
-                    widget.hint,
-                    style: TextStyle(color: Theme.of(context).hintColor),
-                  ),
-                )
-              : Container(),
-          FutureBuilder(
-              future: filterFuture,
-              builder: (BuildContext context, AsyncSnapshot snap) {
-                if (snap.connectionState == ConnectionState.done &&
-                    snap.hasData) {
-                  Filter filter = snap.data;
+      body: FutureBuilder(
+          future: filterFuture,
+          builder: (BuildContext context, AsyncSnapshot snap) {
+            if (snap.connectionState == ConnectionState.done && snap.hasData) {
+              Filter filter = snap.data;
 
-                  Map<int, List<Widget>> optionsByLevel = {};
-                  _buildTree(node: filter.root, optionsByLevel: optionsByLevel);
-                  for (var i = 0; i < filter.localizedLevelNames.length; i++) {
-                    if (optionsByLevel[i] == null || optionsByLevel.isEmpty) {
-                      break;
-                    }
-
-                    // Level name
-                    widgets.add(Padding(
-                      padding: const EdgeInsets.only(left: 10.0, bottom: 8.0),
-                      child: Text(
-                          filter.localizedLevelNames[i]
-                              [LocaleProvider.localeString],
-                          style: Theme.of(context).textTheme.headline6),
-                    ));
-
-                    // Level options
-                    widgets.addAll(optionsByLevel[i]);
-                  }
-                } else if (snap.hasError) {
-                  print(snap.error);
-                  // TODO: Show error toast
-                  return Container();
-                } else if (snap.connectionState != ConnectionState.done) {
-                  return Center(child: CircularProgressIndicator());
+              Map<int, List<Widget>> optionsByLevel = {};
+              _buildTree(node: filter.root, optionsByLevel: optionsByLevel);
+              for (var i = 0; i < filter.localizedLevelNames.length; i++) {
+                if (optionsByLevel[i] == null || optionsByLevel.isEmpty) {
+                  break;
                 }
 
-                return Expanded(child: ListView(children: widgets));
-              }),
-        ],
-      ),
+                // Level name
+                widgets.add(Padding(
+                  padding: const EdgeInsets.only(left: 10.0, bottom: 8.0),
+                  child: Text(
+                      filter.localizedLevelNames[i]
+                          [LocaleProvider.localeString],
+                      style: Theme.of(context).textTheme.headline6),
+                ));
+
+                // Level options
+                widgets.addAll(optionsByLevel[i]);
+              }
+            } else if (snap.hasError) {
+              print(snap.error);
+              // TODO: Show error toast
+              return Container();
+            } else if (snap.connectionState != ConnectionState.done) {
+              return Center(child: CircularProgressIndicator());
+            }
+
+            return ListView(
+                children: <Widget>[
+                      if (widget.info != null)
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              left: 10.0, right: 10.0, top: 10.0),
+                          child: Row(
+                            children: <Widget>[
+                              Icon(
+                                Icons.info,
+                                size: Theme.of(context)
+                                    .textTheme
+                                    .subtitle1
+                                    .fontSize,
+                              ),
+                              SizedBox(width: 4.0),
+                              Container(
+                                  width: MediaQuery.of(context).size.width -
+                                      Theme.of(context)
+                                          .textTheme
+                                          .subtitle1
+                                          .fontSize -
+                                      24.0,
+                                  child: AutoSizeText(
+                                    widget.info,
+                                  )),
+                            ],
+                          ),
+                        ),
+                      if (widget.hint != null)
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              left: 10.0, right: 10.0, top: 10.0),
+                          child: AutoSizeText(
+                            widget.hint,
+                            style: TextStyle(
+                                color: Theme.of(context).hintColor),
+                          ),
+                        )
+                    ] +
+                    widgets);
+          }),
     );
   }
 }

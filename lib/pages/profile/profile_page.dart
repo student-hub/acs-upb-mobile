@@ -145,10 +145,12 @@ class ProfilePage extends StatelessWidget {
             future: authProvider.currentUser,
             builder: (BuildContext context, AsyncSnapshot<User> snap) {
               String userName;
+              String userGroup;
               if (snap.connectionState == ConnectionState.done) {
                 User user = snap.data;
                 if (user != null) {
                   userName = user.firstName + ' ' + user.lastName;
+                  userGroup = user.group;
                 }
                 return Column(
                   children: <Widget>[
@@ -170,7 +172,15 @@ class ProfilePage extends StatelessWidget {
                           .subtitle1
                           .apply(fontWeightDelta: 2),
                     ),
-                    SizedBox(height: 4),
+                    if (userGroup != null)
+                      Column(
+                        children: [
+                          SizedBox(height: 4),
+                          Text(userGroup,
+                              style: Theme.of(context).textTheme.subtitle1),
+                        ],
+                      ),
+                    SizedBox(height: 8),
                     InkWell(
                       onTap: () {
                         _signOut(context);
