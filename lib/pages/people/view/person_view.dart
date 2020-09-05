@@ -22,11 +22,8 @@ class PersonView extends StatelessWidget {
                   color: Theme.of(context).accentColor, width: 10),
             ),
             child: Center(
-              child: RichText(
-                text: TextSpan(
-                    text: person.name,
-                    style: Theme.of(context).textTheme.headline6),
-              ),
+              child: Text(person.name,
+                  style: Theme.of(context).textTheme.headline6),
             ),
           ),
           Padding(
@@ -59,53 +56,62 @@ class PersonView extends StatelessWidget {
                           RichText(
                             maxLines: 2,
                             softWrap: true,
-                            text: TextSpan(children: [
-                              WidgetSpan(
-                                  child: Padding(
-                                padding: const EdgeInsets.only(right: 4.0),
-                                child: Icon(Icons.email),
-                              )),
-                              TextSpan(text: person.email ?? '-'),
-                            ]),
+                            text: TextSpan(
+                                style: Theme.of(context).textTheme.bodyText1,
+                                children: [
+                                  WidgetSpan(
+                                      child: Padding(
+                                    padding: const EdgeInsets.only(right: 4.0),
+                                    child: Icon(Icons.email),
+                                  )),
+                                  TextSpan(text: person.email ?? '-'),
+                                ]),
                           ),
                           SizedBox(height: 8),
                           RichText(
                             maxLines: 2,
                             softWrap: true,
-                            text: TextSpan(children: [
-                              WidgetSpan(
-                                  child: Padding(
-                                padding: const EdgeInsets.only(right: 4.0),
-                                child: Icon(Icons.phone),
-                              )),
-                              TextSpan(text: person.phone ?? '-'),
-                            ]),
+                            text: TextSpan(
+                                style: Theme.of(context).textTheme.bodyText1,
+                                children: [
+                                  WidgetSpan(
+                                      child: Padding(
+                                    padding: const EdgeInsets.only(right: 4.0),
+                                    child: Icon(Icons.phone),
+                                  )),
+                                  TextSpan(text: person.phone ?? '-'),
+                                ]),
                           ),
                           SizedBox(height: 8),
                           RichText(
                             maxLines: 2,
                             softWrap: true,
-                            text: TextSpan(children: [
-                              WidgetSpan(
-                                  child: Padding(
-                                padding: const EdgeInsets.only(right: 4.0),
-                                child: Icon(Icons.location_on),
-                              )),
-                              TextSpan(text: person.office ?? '-'),
-                            ]),
+                            text: TextSpan(
+                                style: Theme.of(context).textTheme.bodyText1,
+                                children: [
+                                  WidgetSpan(
+                                      child: Padding(
+                                    padding: const EdgeInsets.only(right: 4.0),
+                                    child: Icon(Icons.location_on),
+                                  )),
+                                  TextSpan(text: person.office ?? '-'),
+                                ]),
                           ),
                           SizedBox(height: 8),
                           RichText(
                             maxLines: 2,
                             softWrap: true,
-                            text: TextSpan(children: [
-                              WidgetSpan(
-                                  child: Padding(
-                                padding: const EdgeInsets.only(right: 4.0),
-                                child: Icon(Icons.work),
-                              )),
-                              TextSpan(text: person.position ?? '-'),
-                            ]),
+                            text: TextSpan(
+                                //TODO This line generates RenderFlex Overflow
+                                //style: Theme.of(context).textTheme.bodyText1,
+                                children: [
+                                  WidgetSpan(
+                                      child: Padding(
+                                    padding: const EdgeInsets.only(right: 4.0),
+                                    child: Icon(Icons.work),
+                                  )),
+                                  TextSpan(text: person.position ?? '-'),
+                                ]),
                           )
                         ],
                       ),

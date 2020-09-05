@@ -27,7 +27,6 @@ class PersonProvider with ChangeNotifier {
           await Firestore.instance.collection("people").getDocuments();
       documents.addAll(qSnapshot.documents);
       people.addAll(documents.map((doc) => PersonExtension.fromSnap(doc)));
-      //return List<Person>.from(qSnapshot.documents ?? []);
       return people;
     } catch (e) {
       print(e);
