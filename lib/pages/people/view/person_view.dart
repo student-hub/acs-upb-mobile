@@ -7,6 +7,7 @@ class PersonView extends StatelessWidget {
   final Person person;
 
   const PersonView({Key key, this.person}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return IntrinsicHeight(
@@ -15,15 +16,16 @@ class PersonView extends StatelessWidget {
           Container(
             width: MediaQuery.of(context).size.width,
             decoration: new BoxDecoration(
-              color: const Color(0xFF43ADCD),
-                shape: BoxShape.rectangle,
-                border: new Border.all(color: Color(0xFF43ADCD), width: 10),
+              color: Theme.of(context).accentColor,
+              shape: BoxShape.rectangle,
+              border: new Border.all(
+                  color: Theme.of(context).accentColor, width: 10),
             ),
             child: Center(
               child: RichText(
-                text: TextSpan(text: person.name,
-                    style: Theme.of(context).textTheme.headline6
-                ),
+                text: TextSpan(
+                    text: person.name,
+                    style: Theme.of(context).textTheme.headline6),
               ),
             ),
           ),
@@ -39,17 +41,17 @@ class PersonView extends StatelessWidget {
                         padding: const EdgeInsets.only(left: 8.0, right: 16.0),
                         child: person.photo != null
                             ? CircleAvatar(
-                          maxRadius: 50,
-                          backgroundImage: CachedNetworkImageProvider(
-                              person.photo),
-                        )
+                                maxRadius: 50,
+                                backgroundImage:
+                                    CachedNetworkImageProvider(person.photo),
+                              )
                             : CircleAvatar(
-                          radius: 50,
-                          child: Icon(
-                            Icons.person,
-                            size: 50,
-                          ),
-                        ),
+                                radius: 50,
+                                child: Icon(
+                                  Icons.person,
+                                  size: 50,
+                                ),
+                              ),
                       ),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -59,40 +61,11 @@ class PersonView extends StatelessWidget {
                             softWrap: true,
                             text: TextSpan(children: [
                               WidgetSpan(
-                                child: Padding(
-                                  padding: const EdgeInsets.only(right: 4.0),
-                                  child: Icon(Icons.email),
-                                )
-                              ),
-                              TextSpan(text: person.email ?? '-')
-                            ]),
-                          ),
-                          SizedBox(height: 8),
-                          RichText(
-                            maxLines: 2,
-                            softWrap: true,
-                            text: TextSpan(children: [
-                              WidgetSpan(
-                                child: Padding(
-                                  padding: const EdgeInsets.only(right: 4.0),
-                                  child: Icon(Icons.phone),
-                                )
-                              ),
-                              TextSpan(text: person.phone ?? '-')
-                            ]),
-                          ),
-                          SizedBox(height: 8),
-                          RichText(
-                            maxLines: 2,
-                            softWrap: true,
-                            text: TextSpan(children: [
-                              WidgetSpan(
-                                child: Padding(
-                                  padding: const EdgeInsets.only(right: 4.0),
-                                  child: Icon(Icons.location_on),
-                                )
-                              ),
-                              TextSpan(text: person.office ?? '-')
+                                  child: Padding(
+                                padding: const EdgeInsets.only(right: 4.0),
+                                child: Icon(Icons.email),
+                              )),
+                              TextSpan(text: person.email ?? '-'),
                             ]),
                           ),
                           SizedBox(height: 8),
@@ -102,11 +75,36 @@ class PersonView extends StatelessWidget {
                             text: TextSpan(children: [
                               WidgetSpan(
                                   child: Padding(
-                                    padding: const EdgeInsets.only(right: 4.0),
-                                    child: Icon(Icons.work),
-                                  )
-                              ),
-                              TextSpan(text: person.position ?? '-')
+                                padding: const EdgeInsets.only(right: 4.0),
+                                child: Icon(Icons.phone),
+                              )),
+                              TextSpan(text: person.phone ?? '-'),
+                            ]),
+                          ),
+                          SizedBox(height: 8),
+                          RichText(
+                            maxLines: 2,
+                            softWrap: true,
+                            text: TextSpan(children: [
+                              WidgetSpan(
+                                  child: Padding(
+                                padding: const EdgeInsets.only(right: 4.0),
+                                child: Icon(Icons.location_on),
+                              )),
+                              TextSpan(text: person.office ?? '-'),
+                            ]),
+                          ),
+                          SizedBox(height: 8),
+                          RichText(
+                            maxLines: 2,
+                            softWrap: true,
+                            text: TextSpan(children: [
+                              WidgetSpan(
+                                  child: Padding(
+                                padding: const EdgeInsets.only(right: 4.0),
+                                child: Icon(Icons.work),
+                              )),
+                              TextSpan(text: person.position ?? '-'),
                             ]),
                           )
                         ],

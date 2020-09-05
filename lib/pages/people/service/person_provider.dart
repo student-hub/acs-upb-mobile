@@ -1,6 +1,8 @@
+import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/people/model/person.dart';
-import 'package:acs_upb_mobile/pages/people/view/person_view.dart';
+import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 extension PersonExtension on Person {
@@ -16,64 +18,23 @@ extension PersonExtension on Person {
   }
 }
 
-class ListPage extends StatefulWidget {
-  @override
-  _ListPageState createState() => _ListPageState();
-}
-
-class _ListPageState extends State<ListPage> {
-  Future _data;
-
-  Future getPeople() async {
-    QuerySnapshot qn = await Firestore.instance.collection("people").getDocuments();
-    return qn.documents;
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _data = getPeople();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: FutureBuilder(
-          future: _data,
-          builder: (_, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(
-                child: Text("Loading..."),
-              );
-            } else {
-              return ListView.builder(
-                  itemCount: snapshot.data.length,
-                  itemBuilder: (_, index) {
-                    return ListTile(
-                      leading: CircleAvatar(
-                        backgroundImage:
-                        NetworkImage(snapshot.data[index].data["photo"]),
-                      ),
-                      title: Text(snapshot.data[index].data["name"]),
-                      subtitle: Text(snapshot.data[index].data["email"]),
-                      onTap: () => navigateToDetail(PersonExtension.fromSnap(snapshot.data[index])),
-                    );
-                  });
-            }
-          }),
-    );
-  }
-
-  navigateToDetail(Person person) {
-    showModalBottomSheet<dynamic>(
-      isScrollControlled: true,
-      context: context,
-      // TODO: Fix size for long position name
-      builder: (BuildContext buildContext) {
-        return PersonView(
-          person: person,
-        );
-      },
-    );
+class PersonProvider with ChangeNotifier {
+  Future<List<Person>> fetchPeople(BuildContext context) async {
+    try {
+      List<Person> people = [];
+      List<DocumentSnapshot> documents = [];
+      QuerySnapshot qSnapshot =
+          await Firestore.instance.collection("people").getDocuments();
+      documents.addAll(qSnapshot.documents);
+      people.addAll(documents.map((doc) => PersonExtension.fromSnap(doc)));
+      //return List<Person>.from(qSnapshot.documents ?? []);
+      return people;
+    } catch (e) {
+      print(e);
+      if (context != null) {
+        AppToast.show(S.of(context).errorSomethingWentWrong);
+      }
+      return null;
+    }
   }
 }
