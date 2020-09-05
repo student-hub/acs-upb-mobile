@@ -14,17 +14,25 @@ class FormItem {
   final bool obscureText;
   final String suffix;
   Future<bool> valid;
+  final bool autocorrect;
+  final bool enableSuggestions;
+  final TextInputType keyboardType;
+  final List<String> autofillHints;
 
-  FormItem(
-      {this.label,
-      this.additionalHint,
-      this.hint,
-      TextEditingController controller,
-      FocusNode focusNode,
-      this.check,
-      this.obscureText = false,
-      this.suffix})
-      : this.controller = controller ?? TextEditingController(),
+  FormItem({
+    this.label,
+    this.additionalHint,
+    this.hint,
+    TextEditingController controller,
+    FocusNode focusNode,
+    this.check,
+    this.obscureText = false,
+    this.suffix,
+    this.autocorrect = true,
+    this.enableSuggestions = true,
+    this.keyboardType = TextInputType.text,
+    this.autofillHints,
+  })  : this.controller = controller ?? TextEditingController(),
         this.focusNode = focusNode ?? FocusNode(),
         this.valid = Future<bool>(() => null);
 }
@@ -32,6 +40,7 @@ class FormItem {
 class AppForm extends StatefulWidget {
   final String title;
   final List<FormItem> items;
+  final bool submitOnEnter;
 
   /// Map from [FormItem.label] to corresponding input
   final dynamic Function(Map<String, String>) onSubmitted;
@@ -39,7 +48,12 @@ class AppForm extends StatefulWidget {
   /// Widgets to be added at the end of the form
   final List<Widget> trailing;
 
-  AppForm({this.title, this.items, this.onSubmitted, List<Widget> trailing})
+  AppForm(
+      {this.title,
+      this.items,
+      this.onSubmitted,
+      List<Widget> trailing,
+      this.submitOnEnter = true})
       : this.trailing = trailing ?? <Widget>[];
 
   @override
@@ -70,6 +84,10 @@ class _AppFormState extends State<AppForm> {
                     obscureText: field.obscureText,
                     controller: field.controller,
                     focusNode: field.focusNode,
+                    autocorrect: field.autocorrect,
+                    enableSuggestions: field.enableSuggestions,
+                    keyboardType: field.keyboardType,
+                    autofillHints: field.autofillHints,
                     onChanged: (text) => setState(() {
                       if (text == null || text == "") {
                         field.valid = Future<bool>(() => null);
@@ -108,7 +126,15 @@ class _AppFormState extends State<AppForm> {
                         FocusScope.of(context)
                             .requestFocus(widget.items[i + 1].focusNode);
                       } else {
-                        widget.submit();
+                        if (widget.submitOnEnter) {
+                          widget.submit();
+                        } else {
+                          // Just remove focus
+                          FocusScopeNode currentFocus = FocusScope.of(context);
+                          if (!currentFocus.hasPrimaryFocus) {
+                            currentFocus.unfocus();
+                          }
+                        }
                       }
                     },
                   );

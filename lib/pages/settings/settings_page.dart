@@ -46,7 +46,8 @@ class SettingsPageState extends State<SettingsPage> {
                           DynamicTheme.of(context)
                               .setBrightness(Brightness.light);
                         },
-                        defaultVal: true,
+                        defaultVal: MediaQuery.of(context).platformBrightness ==
+                            Brightness.dark,
                       ),
                       PreferenceTitle(S.of(context).settingsTitleLocalization),
                       PreferenceDialogLink(S.of(context).settingsItemLanguage,

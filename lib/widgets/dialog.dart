@@ -13,6 +13,9 @@ class AppDialog extends StatelessWidget {
   /// Dialog message
   final String message;
 
+  /// Additional information
+  final String info;
+
   /// Content to be shown under dialog message
   final List<Widget> content;
 
@@ -28,6 +31,7 @@ class AppDialog extends StatelessWidget {
       this.icon,
       @required this.title,
       @required this.message,
+      this.info,
       this.content,
       this.actions,
       this.enableCancelButton = true})
@@ -50,6 +54,35 @@ class AppDialog extends StatelessWidget {
             children: <Widget>[
                   Expanded(child: Container(height: 8)),
                   Text(message),
+                  if (info != null)
+                    Column(children: [
+                      SizedBox(height: 8),
+                      RichText(
+                        text: TextSpan(
+                          style: Theme.of(context).textTheme.bodyText2,
+                          children: [
+                            WidgetSpan(
+                              child: Padding(
+                                padding: const EdgeInsets.only(right: 4.0),
+                                child: Icon(
+                                  Icons.info,
+                                  color: Theme.of(context).hintColor,
+                                  size: Theme.of(context)
+                                      .textTheme
+                                      .subtitle1
+                                      .fontSize,
+                                ),
+                              ),
+                            ),
+                            TextSpan(
+                              text: info,
+                              style:
+                                  TextStyle(color: Theme.of(context).hintColor),
+                            ),
+                          ],
+                        ),
+                      )
+                    ])
                 ] +
                 (content ?? <Widget>[]),
           ),

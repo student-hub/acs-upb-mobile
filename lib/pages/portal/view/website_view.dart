@@ -201,6 +201,9 @@ class _WebsiteViewState extends State<WebsiteView> {
         message: S
             .of(context)
             .messageDeleteWebsite,
+        info: widget.website.isPrivate
+            ? null
+            : S.of(context).messageThisCouldAffectOtherStudents,
         actions: [
           AppButton(
             text: S
