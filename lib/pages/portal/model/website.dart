@@ -14,15 +14,25 @@ extension WebsiteCategoryExtension on WebsiteCategory {
   String toLocalizedString(BuildContext context) {
     switch (this) {
       case WebsiteCategory.learning:
-        return S.of(context).websiteCategoryLearning;
+        return S
+            .of(context)
+            .websiteCategoryLearning;
       case WebsiteCategory.administrative:
-        return S.of(context).websiteCategoryAdministrative;
+        return S
+            .of(context)
+            .websiteCategoryAdministrative;
       case WebsiteCategory.association:
-        return S.of(context).websiteCategoryAssociations;
+        return S
+            .of(context)
+            .websiteCategoryAssociations;
       case WebsiteCategory.resource:
-        return S.of(context).websiteCategoryResources;
+        return S
+            .of(context)
+            .websiteCategoryResources;
       default:
-        return S.of(context).websiteCategoryOthers;
+        return S
+            .of(context)
+            .websiteCategoryOthers;
     }
   }
 }
@@ -49,22 +59,21 @@ class Website {
   final List<String> relevance;
   int numberOfVisits = 0;
 
-  Website(
-      {this.ownerUid,
-      @required this.id,
-      @required this.isPrivate,
-      List<String> editedBy,
-      @required this.category,
-      this.iconPath,
-      String label,
-      @required String link,
-      Map<String, String> infoByLocale,
-      this.degree,
-      @required this.relevance})
+  Website({this.ownerUid,
+    @required this.id,
+    @required this.isPrivate,
+    List<String> editedBy,
+    @required this.category,
+    this.iconPath,
+    String label,
+    @required String link,
+    Map<String, String> infoByLocale,
+    this.degree,
+    @required this.relevance})
       : this.editedBy = editedBy ?? [],
         this.label = toString(label).isEmpty ? labelFromLink(link) : label,
         this.link = link,
-        this.infoByLocale = infoByLocale ?? {}{
+        this.infoByLocale = infoByLocale ?? {} {
     if (this.relevance != null) {
       if (this.degree == null) {
         throw ArgumentError(
@@ -73,5 +82,8 @@ class Website {
     }
   }
 
-  static String labelFromLink(String link) => link.split('://').last;
+  static String labelFromLink(String link) =>
+      link
+          .split('://')
+          .last;
 }

@@ -59,9 +59,9 @@ extension WebsiteExtension on Website {
       infoByLocale: snap.data['info'] == null
           ? {}
           : {
-              'en': snap.data['info']['en'],
-              'ro': snap.data['info']['ro'],
-            },
+        'en': snap.data['info']['en'],
+        'ro': snap.data['info']['ro'],
+      },
       degree: snap.data['degree'],
       relevance: snap.data['relevance'] == null
           ? null
@@ -81,7 +81,10 @@ extension WebsiteExtension on Website {
 
     if (label != null) data['label'] = label;
     if (category != null)
-      data['category'] = category.toString().split('.').last;
+      data['category'] = category
+          .toString()
+          .split('.')
+          .last;
     if (iconPath != null) data['icon'] = iconPath;
     if (link != null) data['link'] = link;
     if (infoByLocale != null) data['info'] = infoByLocale;
@@ -97,9 +100,13 @@ class WebsiteProvider with ChangeNotifier {
     print(e.message);
     if (context != null) {
       if (e.message.contains('PERMISSION_DENIED')) {
-        AppToast.show(S.of(context).errorPermissionDenied);
+        AppToast.show(S
+            .of(context)
+            .errorPermissionDenied);
       } else {
-        AppToast.show(S.of(context).errorSomethingWentWrong);
+        AppToast.show(S
+            .of(context)
+            .errorSomethingWentWrong);
       }
     }
   }
@@ -107,7 +114,7 @@ class WebsiteProvider with ChangeNotifier {
   void getVisits(List<Website> websites) {
     var websitesId = PrefService.sharedPreferences.getStringList("websitesId");
     var websitesNumberOfVisits =
-        PrefService.sharedPreferences.getStringList("websitesNumberOfVisits");
+    PrefService.sharedPreferences.getStringList("websitesNumberOfVisits");
     if (websitesId != null && websitesNumberOfVisits != null) {
       var idsMap = Map<String, int>.from(websitesId.asMap().map((index, key) =>
           MapEntry(key, int.tryParse(websitesNumberOfVisits[index] ?? 0))));
@@ -129,12 +136,12 @@ class WebsiteProvider with ChangeNotifier {
 
         if (filter == null) {
           QuerySnapshot qSnapshot =
-              await _db.collection('websites').getDocuments();
+          await _db.collection('websites').getDocuments();
           documents.addAll(qSnapshot.documents);
         } else {
           // Documents without a 'relevance' field are relevant for everyone
           Query query =
-              _db.collection('websites').where('relevance', isNull: true);
+          _db.collection('websites').where('relevance', isNull: true);
           QuerySnapshot qSnapshot = await query.getDocuments();
           documents.addAll(qSnapshot.documents);
 
@@ -163,9 +170,9 @@ class WebsiteProvider with ChangeNotifier {
       // Get user-added websites
       if (uid != null) {
         DocumentReference ref =
-            Firestore.instance.collection('users').document(uid);
+        Firestore.instance.collection('users').document(uid);
         QuerySnapshot qSnapshot =
-            await ref.collection('websites').getDocuments();
+        await ref.collection('websites').getDocuments();
 
         websites.addAll(qSnapshot.documents
             .map((doc) => WebsiteExtension.fromSnap(doc, ownerUid: uid)));
@@ -202,7 +209,9 @@ class WebsiteProvider with ChangeNotifier {
       if ((await ref.get()).data != null && !updateExisting) {
         // TODO: Properly check if a website with a similar name/link already exists
         print('A website with id ${website.id} already exists');
-        AppToast.show(S.of(context).warningWebsiteNameExists);
+        AppToast.show(S
+            .of(context)
+            .warningWebsiteNameExists);
         return false;
       }
 
@@ -243,9 +252,9 @@ class WebsiteProvider with ChangeNotifier {
   void updateVisits(Website website) async {
     website.numberOfVisits++;
     List<String> websitesId =
-        PrefService.sharedPreferences.getStringList("websitesId");
+    PrefService.sharedPreferences.getStringList("websitesId");
     List<String> websitesNumberOfVisits =
-        PrefService.sharedPreferences.getStringList("websitesNumberOfVisits");
+    PrefService.sharedPreferences.getStringList("websitesNumberOfVisits");
     if (websitesId == null || websitesNumberOfVisits == null) {
       websitesId = new List<String>();
       websitesNumberOfVisits = new List<String>();

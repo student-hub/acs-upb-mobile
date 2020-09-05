@@ -71,14 +71,21 @@ class _PortalPageState extends State<PortalPage>
                   crossFadePoint: 0.5,
                   hasIcon: true,
                   iconPlacement: ExpandablePanelIconPlacement.left,
-                  iconColor: Theme.of(context).textTheme.headline6.color,
+                  iconColor: Theme
+                      .of(context)
+                      .textTheme
+                      .headline6
+                      .color,
                   headerAlignment: ExpandablePanelHeaderAlignment.center,
                   iconPadding: EdgeInsets.only()),
               child: ExpandablePanel(
                 controller:
-                    ExpandableController(initialExpanded: initialExpanded),
+                ExpandableController(initialExpanded: initialExpanded),
                 header:
-                    Text(title, style: Theme.of(context).textTheme.headline6),
+                Text(title, style: Theme
+                    .of(context)
+                    .textTheme
+                    .headline6),
                 collapsed: SizedBox(height: 12.0),
                 expanded: content,
               ),
@@ -114,15 +121,17 @@ class _PortalPageState extends State<PortalPage>
             onTap: () {
               if (canEdit) {
                 Navigator.of(context).push(MaterialPageRoute(
-                  builder: (_) => ChangeNotifierProvider<FilterProvider>(
-                    create: (_) => FilterProvider(
-                        defaultDegree: website.degree,
-                        defaultRelevance: website.relevance),
-                    child: WebsiteView(
-                      website: website,
-                      updateExisting: true,
-                    ),
-                  ),
+                  builder: (_) =>
+                      ChangeNotifierProvider<FilterProvider>(
+                        create: (_) =>
+                            FilterProvider(
+                                defaultDegree: website.degree,
+                                defaultRelevance: website.relevance),
+                        child: WebsiteView(
+                          website: website,
+                          updateExisting: true,
+                        ),
+                      ),
                 ));
               } else {
                 Provider.of<WebsiteProvider>(context, listen: false)
@@ -141,7 +150,10 @@ class _PortalPageState extends State<PortalPage>
 
     // The width available for displaying the circles (screen width minus a left
     // right padding of 8)
-    double availableWidth = MediaQuery.of(context).size.width - 16;
+    double availableWidth = MediaQuery
+        .of(context)
+        .size
+        .width - 16;
     // The maximum size of a circle, regardless of screen size
     double maxCircleSize = 80;
     // The amount of circles that can fit on one row (given the screen size,
@@ -244,66 +256,94 @@ class _PortalPageState extends State<PortalPage>
     CircularProgressIndicator progressIndicator = CircularProgressIndicator();
 
     return AppScaffold(
-      title: S.of(context).navigationPortal,
+      title: S
+          .of(context)
+          .navigationPortal,
       actions: [
         AppScaffoldAction(
           icon: editingEnabled ? CustomIcons.edit_slash : Icons.edit,
           tooltip: editingEnabled
-              ? S.of(context).actionDisableEditing
-              : S.of(context).actionEnableEditing,
+              ? S
+              .of(context)
+              .actionDisableEditing
+              : S
+              .of(context)
+              .actionEnableEditing,
           onPressed: () {
             AuthProvider authProvider =
-                Provider.of<AuthProvider>(context, listen: false);
+            Provider.of<AuthProvider>(context, listen: false);
             if (authProvider.isAuthenticatedFromCache &&
                 !authProvider.isAnonymous) {
               // Show message if there is nothing the user can edit
               if (!editingEnabled) {
                 user.hasEditableWebsites.then((canEdit) {
                   if (!canEdit)
-                    AppToast.show(S.of(context).warningNothingToEdit +
+                    AppToast.show(S
+                        .of(context)
+                        .warningNothingToEdit +
                         ' ' +
-                        S.of(context).messageAddCustomWebsite);
+                        S
+                            .of(context)
+                            .messageAddCustomWebsite);
                 });
               }
 
               setState(() => editingEnabled = !editingEnabled);
             } else {
-              AppToast.show(S.of(context).warningAuthenticationNeeded);
+              AppToast.show(S
+                  .of(context)
+                  .warningAuthenticationNeeded);
             }
           },
         ),
         AppScaffoldAction(
           icon: CustomIcons.filter,
-          tooltip: S.of(context).navigationFilter,
+          tooltip: S
+              .of(context)
+              .navigationFilter,
           items: {
-            S.of(context).filterMenuRelevance: () {
+            S
+                .of(context)
+                .filterMenuRelevance: () {
               filterFuture = null; // reset filter cache
               userOnly = false;
               Navigator.pushNamed(context, Routes.filter);
             },
-            S.of(context).filterMenuShowMine: () {
+            S
+                .of(context)
+                .filterMenuShowMine: () {
               if (authProvider.isAuthenticatedFromCache &&
                   !authProvider.isAnonymous) {
                 // Show message if user has no private websites
                 if (!userOnly) {
                   user.hasPrivateWebsites.then((hasPrivate) {
                     if (!hasPrivate)
-                      AppToast.show(S.of(context).warningNoPrivateWebsite);
+                      AppToast.show(S
+                          .of(context)
+                          .warningNoPrivateWebsite);
                   });
 
                   filterFuture = null; // reset filter cache
                   setState(() => userOnly = true);
                   filterProvider.enableFilter();
                 } else {
-                  AppToast.show(S.of(context).warningFilterAlreadyShowingYours);
+                  AppToast.show(S
+                      .of(context)
+                      .warningFilterAlreadyShowingYours);
                 }
               } else {
-                AppToast.show(S.of(context).warningAuthenticationNeeded);
+                AppToast.show(S
+                    .of(context)
+                    .warningAuthenticationNeeded);
               }
             },
-            S.of(context).filterMenuShowAll: () {
+            S
+                .of(context)
+                .filterMenuShowAll: () {
               if (!filterProvider.filterEnabled) {
-                AppToast.show(S.of(context).warningFilterAlreadyDisabled);
+                AppToast.show(S
+                    .of(context)
+                    .warningFilterAlreadyDisabled);
               } else {
                 filterFuture = null; // reset filter cache
                 userOnly = false;
@@ -367,27 +407,33 @@ class _AddWebsiteButton extends StatelessWidget {
       : super(key: key);
 
   @override
-  Widget build(BuildContext context) => Tooltip(
-        message: S.of(context).actionAddWebsite,
+  Widget build(BuildContext context) =>
+      Tooltip(
+        message: S
+            .of(context)
+            .actionAddWebsite,
         child: GestureDetector(
           onTap: () {
             AuthProvider authProvider =
-                Provider.of<AuthProvider>(context, listen: false);
+            Provider.of<AuthProvider>(context, listen: false);
             if (authProvider.isAuthenticatedFromCache &&
                 !authProvider.isAnonymous) {
               Navigator.of(context).push(MaterialPageRoute(
-                builder: (_) => ChangeNotifierProvider<FilterProvider>(
-                    create: (_) => FilterProvider(),
-                    child: WebsiteView(
-                      website: Website(
-                          id: null,
-                          isPrivate: true,
-                          link: "",
-                          category: category),
-                    )),
+                builder: (_) =>
+                    ChangeNotifierProvider<FilterProvider>(
+                        create: (_) => FilterProvider(),
+                        child: WebsiteView(
+                          website: Website(
+                              id: null,
+                              isPrivate: true,
+                              link: "",
+                              category: category),
+                        )),
               ));
             } else {
-              AppToast.show(S.of(context).warningAuthenticationNeeded);
+              AppToast.show(S
+                  .of(context)
+                  .warningAuthenticationNeeded);
             }
           },
           child: Padding(
@@ -395,7 +441,9 @@ class _AddWebsiteButton extends StatelessWidget {
             child: CircleImage(
               icon: Icon(
                 Icons.add,
-                color: Theme.of(context).unselectedWidgetColor,
+                color: Theme
+                    .of(context)
+                    .unselectedWidgetColor,
               ),
               label: "",
               circleSize: size,
