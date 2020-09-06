@@ -10,6 +10,8 @@ import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:preferences/preferences.dart';
 
+import 'ask_permissions.dart';
+
 class SettingsPage extends StatefulWidget {
   static const String routeName = '/settings';
 
@@ -92,7 +94,21 @@ class SettingsPageState extends State<SettingsPage> {
                             'https://github.com/acs-upb-mobile/acs-upb-mobile',
                             context: context),
                       ),
-                    )
+                    ),
+                    Divider(),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: FlatButton(
+                        onPressed: () => {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => AskPermissions())),
+                        },
+                        child: Text(
+                          S.of(context).labelAskPermissions,
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),

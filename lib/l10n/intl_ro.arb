@@ -9,6 +9,7 @@
   "labelEmail": "Email",
   "labelPassword": "Parolă",
   "labelConfirmPassword": "Confirmare parolă",
+  "labelAskPermissions": "Cere permisiuni!",
   "labelFirstName": "Prenume",
   "labelLastName": "Nume",
   "labelName": "Nume",
@@ -117,6 +118,7 @@
   "warningNoneYet": "Nu există încă",
   "warningAgreeTo": "Trebuie să fiți de acord cu ",
 
+  "navigationAskPermissions": "Cere permisiuni",
   "navigationHome": "Acasă",
   "navigationTimetable": "Orar",
   "navigationPortal": "Portal",

@@ -9,6 +9,7 @@
   "labelEmail": "Email",
   "labelPassword": "Password",
   "labelConfirmPassword": "Confirm password",
+  "labelAskPermissions": "Ask permissions!",
   "labelFirstName": "First name",
   "labelLastName": "Last name",
   "labelName": "Name",
@@ -117,6 +118,7 @@
   "warningNoneYet": "None yet",
   "warningAgreeTo": "You need to agree to the ",
 
+  "navigationAskPermissions": "Ask permissions",
   "navigationHome": "Home",
   "navigationTimetable": "Timetable",
   "navigationPortal": "Portal",
