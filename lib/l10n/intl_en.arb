@@ -9,6 +9,7 @@
   "labelEmail": "Email",
   "labelPassword": "Password",
   "labelConfirmPassword": "Confirm password",
+  "labelAskPermissions": "Ask permissions!",
   "labelFirstName": "First name",
   "labelLastName": "Last name",
   "labelName": "Name",
@@ -114,6 +115,7 @@
   "warningFieldCannotBeZero": "Field cannot be zero.",
   "warningNoneYet": "None yet",
 
+  "navigationAskPermissions": "Ask permissions",
   "navigationHome": "Home",
   "navigationTimetable": "Timetable",
   "navigationPortal": "Portal",

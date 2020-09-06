@@ -123,6 +123,16 @@ class S {
     );
   }
 
+  /// `Ask permissions!`
+  String get labelAskPermissions {
+    return Intl.message(
+      'Ask permissions!',
+      name: 'labelAskPermissions',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `First name`
   String get labelFirstName {
     return Intl.message(
@@ -1098,6 +1108,16 @@ class S {
     return Intl.message(
       'None yet',
       name: 'warningNoneYet',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Ask permissions`
+  String get navigationAskPermissions {
+    return Intl.message(
+      'Ask permissions',
+      name: 'navigationAskPermissions',
       desc: '',
       args: [],
     );
