@@ -54,17 +54,18 @@ class _SignUpViewState extends State<SignUpView> {
   void parse(TextEditingController email, TextEditingController firstName,
       TextEditingController lastName) {
 
-    var emailName = email.text;
-    var name = emailName.split('.');
+    String emailName = email.text.replaceAll(RegExp(r'[0-9]'), '');
+    List<String> name = emailName.split('.');
+    List<String> firstNameString;
 
-    if(name[0].indexOf('_') < 0) {
+    if (name[0].indexOf('_') < 0) {
       firstName.text = name[0].titleCase;
+    } else {
+      firstNameString = name[0].split('_');
+      firstName.text =
+          firstNameString[0].titleCase + " " + firstNameString[1].titleCase;
     }
-    else {
-      var firstNameString = name[0].split('_');
-      firstName.text = firstNameString[0].titleCase + " " + firstNameString[1].titleCase;
-    }
-      lastName.text = name[1].replaceAll(RegExp(r'[0-9]'), '').titleCase;
+    lastName.text = name[1].titleCase;
   }
 
   List<FormItem> _buildFormItems() {
@@ -86,7 +87,7 @@ class _SignUpViewState extends State<SignUpView> {
         check: (email, {BuildContext context}) => authProvider
             .canSignUpWithEmail(email: email + emailDomain, context: context),
         onChanged: (_) =>
-          parse(emailController, firstNameController, lastNameController),
+            parse(emailController, firstNameController, lastNameController),
       ),
       FormItem(
         label: S.of(context).labelPassword,
