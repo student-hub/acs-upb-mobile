@@ -104,45 +104,50 @@ class WebsiteProvider with ChangeNotifier {
     }
   }
 
-  ///This method initializes the number of visits of websites with the value
-  /// accumulated until then. These data are stored in 2 lists: the list of website ids
-  /// and the list with the number of accesses, according to the index in the list
+
+  /// Initializes the number of visits of websites with the value stored locally.
+  /// Because [PrefService] doesn't support storing maps, the
+  /// data is stored in 2 lists: the list of website IDs ([websiteIds]) and the list
+  /// with the number of visits ([websiteVisits]), where `websiteVisits[i]` is the
+  /// number of times the user accessed website with ID `websiteIds[i]`.
   void initializeNumberOfVisits(List<Website> websites) {
     List<String> websiteIds =
         PrefService.sharedPreferences.getStringList("websiteIds");
-    List<String> visitsByWebsiteId =
-        PrefService.sharedPreferences.getStringList("visitsByWebsiteId");
+    List<String>  websiteVisits =
+        PrefService.sharedPreferences.getStringList("websiteVisits");
 
-    if (websiteIds != null && visitsByWebsiteId != null) {
-      var idsMap = Map<String, int>.from(websiteIds.asMap().map((index, key) =>
-          MapEntry(key, int.tryParse(visitsByWebsiteId[index] ?? 0))));
+    if (websiteIds != null &&  websiteVisits != null) {
+      var visitsByWebsiteId = Map<String, int>.from(websiteIds.asMap().map((index, key) =>
+          MapEntry(key, int.tryParse( websiteVisits[index] ?? 0))));
       websites.forEach((website) {
-        if (idsMap[website.id] != null) {
-          website.numberOfVisits = idsMap[website.id];
+        if (visitsByWebsiteId[website.id] != null) {
+          website.numberOfVisits = visitsByWebsiteId[website.id];
         }
       });
     }
   }
 
-  ///this method increment the number of visits of websites when it is accessed
-  /// by the user. In case the site has not been saved until now, it creates
-  /// another element in the 2 lists(id and visits) for the respective site
+  /// Increments the number of visits of [website], both in-memory and on the local storage.
+  /// Because [PrefService] doesn't support storing maps, the
+  /// data is stored in 2 lists: the list of website IDs ([websiteIds]) and the list
+  /// with the number of visits ([websiteVisits]), where `websiteVisits[i]` is the
+  /// number of times the user accessed website with ID `websiteIds[i]`.
   void incrementNumberOfVisits(Website website) async {
     website.numberOfVisits++;
     List<String> websiteIds =
         PrefService.sharedPreferences.getStringList("websiteIds") ?? [];
-    List<String> visitsByWebsiteId =
-        PrefService.sharedPreferences.getStringList("visitsByWebsiteId") ?? [];
+    List<String>  websiteVisits =
+        PrefService.sharedPreferences.getStringList("websiteVisits") ?? [];
     if (websiteIds.contains(website.id)) {
       int index = websiteIds.indexOf(website.id);
-      visitsByWebsiteId.insert(index, visitsByWebsiteId.toString());
+      websiteVisits.insert(index,  websiteVisits.toString());
     } else {
       websiteIds.add(website.id);
-      visitsByWebsiteId.add(website.numberOfVisits.toString());
+      websiteVisits.add(website.numberOfVisits.toString());
       PrefService.sharedPreferences.setStringList("websiteIds", websiteIds);
     }
     PrefService.sharedPreferences
-        .setStringList("visitsByWebsiteId", visitsByWebsiteId);
+        .setStringList("websiteVisits",  websiteVisits);
   }
 
   Future<List<Website>> fetchWebsites(Filter filter,
@@ -264,27 +269,5 @@ class WebsiteProvider with ChangeNotifier {
       _errorHandler(e, context);
       return false;
     }
-  }
-
-  void updateVisits(Website website) async {
-    website.numberOfVisits++;
-    List<String> websitesId =
-        PrefService.sharedPreferences.getStringList("websitesId");
-    List<String> visitsByWebsiteId =
-        PrefService.sharedPreferences.getStringList("visitsByWebsiteId");
-    if (websitesId == null || visitsByWebsiteId == null) {
-      websitesId = new List<String>();
-      visitsByWebsiteId = new List<String>();
-    }
-    if (websitesId.contains(websitesId)) {
-      int index = websitesId.indexOf(website.id);
-      visitsByWebsiteId.insert(index, visitsByWebsiteId.toString());
-    } else {
-      websitesId.add(website.id);
-      visitsByWebsiteId.add(website.numberOfVisits.toString());
-      PrefService.sharedPreferences.setStringList("websiteIds", websitesId);
-    }
-    PrefService.sharedPreferences
-        .setStringList("visitsByWebsiteId", visitsByWebsiteId);
   }
 }
