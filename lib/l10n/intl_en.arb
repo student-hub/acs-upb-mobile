@@ -78,7 +78,7 @@
   "actionDeleteShortcut": "Delete shortcut",
   "actionShowMore": "Show more",
   "actionEditGrading": "Edit grading",
-  "actionContribute": "Contribute!",
+  "actionContribute": "Contribute",
 
   "errorSomethingWentWrong": "Something went wrong.",
   "errorPasswordsDiffer": "The two passwords differ.",

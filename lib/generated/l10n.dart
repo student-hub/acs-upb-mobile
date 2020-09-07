@@ -774,10 +774,10 @@ class S {
     );
   }
 
-  /// `Contribute!`
+  /// `Contribute`
   String get actionContribute {
     return Intl.message(
-      'Contribute!',
+      'Contribute',
       name: 'actionContribute',
       desc: '',
       args: [],

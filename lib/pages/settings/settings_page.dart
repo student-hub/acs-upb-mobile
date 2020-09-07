@@ -82,6 +82,7 @@ class SettingsPageState extends State<SettingsPage> {
                         icon: CustomIcons.github_brands,
                         text: S.of(context).infoAppIsOpenSource,
                         actionText: S.of(context).actionContribute,
+                        actionArrow: true,
                         align: TextAlign.center,
                         style: Theme.of(context)
                             .textTheme

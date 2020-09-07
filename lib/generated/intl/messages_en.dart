@@ -39,7 +39,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "actionAddEvent" : MessageLookupByLibrary.simpleMessage("Add event"),
     "actionAddShortcut" : MessageLookupByLibrary.simpleMessage("Add shortcut"),
     "actionAddWebsite" : MessageLookupByLibrary.simpleMessage("Add website"),
-    "actionContribute" : MessageLookupByLibrary.simpleMessage("Contribute!"),
+    "actionContribute" : MessageLookupByLibrary.simpleMessage("Contribute"),
     "actionDeleteAccount" : MessageLookupByLibrary.simpleMessage("Delete account"),
     "actionDeleteEvent" : MessageLookupByLibrary.simpleMessage("Delete event"),
     "actionDeleteShortcut" : MessageLookupByLibrary.simpleMessage("Delete shortcut"),

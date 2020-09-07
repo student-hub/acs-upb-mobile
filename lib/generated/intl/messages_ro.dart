@@ -39,7 +39,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "actionAddEvent" : MessageLookupByLibrary.simpleMessage("Adaugă eveniment"),
     "actionAddShortcut" : MessageLookupByLibrary.simpleMessage("Adaugă scurtătură"),
     "actionAddWebsite" : MessageLookupByLibrary.simpleMessage("Adaugă website"),
-    "actionContribute" : MessageLookupByLibrary.simpleMessage("Contribuie!"),
+    "actionContribute" : MessageLookupByLibrary.simpleMessage("Contribuie"),
     "actionDeleteAccount" : MessageLookupByLibrary.simpleMessage("Ștergere cont"),
     "actionDeleteEvent" : MessageLookupByLibrary.simpleMessage("Șterge eveniment"),
     "actionDeleteShortcut" : MessageLookupByLibrary.simpleMessage("Șterge scurtătură"),
