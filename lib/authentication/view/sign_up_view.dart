@@ -11,6 +11,7 @@ import 'package:acs_upb_mobile/widgets/form/form.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:recase/recase.dart';
 
 class SignUpView extends StatefulWidget {
   static const String routeName = '/signup';
@@ -27,6 +28,11 @@ class _SignUpViewState extends State<SignUpView> {
   List<FilterNode> nodes;
   FilterProvider filterProvider;
 
+  TextEditingController passwordController = TextEditingController();
+  TextEditingController firstNameController = TextEditingController();
+  TextEditingController lastNameController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+
   void _fetchFilter() async {
     // Fetch filter for dropdown buttons
     filterProvider = Provider.of<FilterProvider>(context, listen: false);
@@ -42,25 +48,42 @@ class _SignUpViewState extends State<SignUpView> {
     _fetchFilter();
   }
 
+  void parse(TextEditingController email, TextEditingController firstName,
+      TextEditingController lastName) {
+
+    var emailName = email.text;
+    var name = emailName.split('.');
+
+    if(name[0].indexOf('_') < 0) {
+      firstName.text = name[0].titleCase;
+    }
+    else {
+      var firstNameString = name[0].split('_');
+      firstName.text = firstNameString[0].titleCase + " " + firstNameString[1].titleCase;
+    }
+      lastName.text = name[1].replaceAll(RegExp(r'[0-9]'), '').titleCase;
+  }
+
   List<FormItem> _buildFormItems() {
     // Only build them once to avoid the cursor staying everywhere
     if (formItems != null) {
       return formItems;
     }
     String emailDomain = S.of(context).stringEmailDomain;
-
-    TextEditingController passwordController = TextEditingController();
     AuthProvider authProvider = Provider.of<AuthProvider>(context);
 
     formItems = <FormItem>[
       FormItem(
         label: S.of(context).labelEmail,
         hint: S.of(context).hintEmail,
+        controller: emailController,
         suffix: emailDomain,
         autocorrect: false,
         autofillHints: [AutofillHints.newUsername],
         check: (email, {BuildContext context}) => authProvider
             .canSignUpWithEmail(email: email + emailDomain, context: context),
+        onChanged: (_) =>
+          parse(emailController, firstNameController, lastNameController),
       ),
       FormItem(
         label: S.of(context).labelPassword,
@@ -85,15 +108,15 @@ class _SignUpViewState extends State<SignUpView> {
         },
       ),
       FormItem(
-        label: S.of(context).labelFirstName,
-        hint: S.of(context).hintFirstName,
-        autofillHints: [AutofillHints.givenName]
-      ),
+          label: S.of(context).labelFirstName,
+          hint: S.of(context).hintFirstName,
+          controller: firstNameController,
+          autofillHints: [AutofillHints.givenName]),
       FormItem(
-        label: S.of(context).labelLastName,
-        hint: S.of(context).hintLastName,
-        autofillHints: [AutofillHints.familyName]
-      ),
+          label: S.of(context).labelLastName,
+          hint: S.of(context).hintLastName,
+          controller: lastNameController,
+          autofillHints: [AutofillHints.familyName]),
     ];
     return formItems;
   }
