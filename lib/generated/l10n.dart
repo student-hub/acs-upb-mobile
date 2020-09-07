@@ -1,6 +1,7 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+
 import 'intl/messages_all.dart';
 
 // **************************************************************************
@@ -328,6 +329,16 @@ class S {
     return Intl.message(
       'Points',
       name: 'labelPoints',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Privacy Policy`
+  String get labelPrivacyPolicy {
+    return Intl.message(
+      'Privacy Policy',
+      name: 'labelPrivacyPolicy',
       desc: '',
       args: [],
     );
@@ -763,6 +774,16 @@ class S {
     );
   }
 
+  /// `Contribute`
+  String get actionContribute {
+    return Intl.message(
+      'Contribute',
+      name: 'actionContribute',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Something went wrong.`
   String get errorSomethingWentWrong {
     return Intl.message(
@@ -1098,6 +1119,16 @@ class S {
     return Intl.message(
       'None yet',
       name: 'warningNoneYet',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You need to agree to the `
+  String get warningAgreeTo {
+    return Intl.message(
+      'You need to agree to the ',
+      name: 'warningAgreeTo',
       desc: '',
       args: [],
     );
@@ -1703,6 +1734,16 @@ class S {
     );
   }
 
+  /// `I agree to the `
+  String get messageIAgreeToThe {
+    return Intl.message(
+      'I agree to the ',
+      name: 'messageIAgreeToThe',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Please check your inbox for the password reset e-mail.`
   String get infoPasswordResetEmailSent {
     return Intl.message(
@@ -1738,6 +1779,16 @@ class S {
     return Intl.message(
       'It must contain lower and uppercase letters, one number and one special character, and have a minimum length of 8.',
       name: 'infoPassword',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `ACS UPB Mobile is open source.`
+  String get infoAppIsOpenSource {
+    return Intl.message(
+      'ACS UPB Mobile is open source.',
+      name: 'infoAppIsOpenSource',
       desc: '',
       args: [],
     );

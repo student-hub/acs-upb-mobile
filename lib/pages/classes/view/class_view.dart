@@ -5,6 +5,7 @@ import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
 import 'package:acs_upb_mobile/pages/classes/view/grading_view.dart';
 import 'package:acs_upb_mobile/pages/classes/view/shortcut_view.dart';
 import 'package:acs_upb_mobile/resources/custom_icons.dart';
+import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/widgets/button.dart';
 import 'package:acs_upb_mobile/widgets/dialog.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
@@ -13,7 +14,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:positioned_tap_detector/positioned_tap_detector.dart';
 import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 extension ClassExtension on ClassHeader {
   Color get colorFromAcronym {
@@ -164,14 +164,6 @@ class _ClassViewState extends State<ClassView> {
     }
   }
 
-  _launchURL(String url, BuildContext context) async {
-    if (await canLaunch(url)) {
-      await launch(url);
-    } else {
-      AppToast.show(S.of(context).errorCouldNotLaunchURL(url));
-    }
-  }
-
   AppDialog _deletionConfirmationDialog(
           {BuildContext context, String shortcutName, Function onDelete}) =>
       AppDialog(
@@ -193,7 +185,7 @@ class _ClassViewState extends State<ClassView> {
     var classViewContext = context;
 
     return PositionedTapDetector(
-      onTap: (_) => _launchURL(shortcut.link, context),
+      onTap: (_) => Utils.launchURL(shortcut.link, context: context),
       onLongPress: (position) async {
         final RenderBox overlay =
             Overlay.of(context).context.findRenderObject();
