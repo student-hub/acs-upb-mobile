@@ -36,7 +36,7 @@ class FormItem {
     this.enableSuggestions = true,
     this.keyboardType = TextInputType.text,
     this.autofillHints,
-  })  : this.onSubmitted = onSubmitted ?? (() {}),
+  })  : this.onSubmitted = onSubmitted ?? ((_) {}),
         this.controller = controller ?? TextEditingController(),
         this.focusNode = focusNode ?? FocusNode(),
         this.valid = Future<bool>(() => null);
