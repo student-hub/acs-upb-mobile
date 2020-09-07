@@ -6,7 +6,6 @@ import 'package:acs_upb_mobile/main.dart';
 import 'package:acs_upb_mobile/pages/filter/model/filter.dart';
 import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
 import 'package:acs_upb_mobile/pages/home/home_page.dart';
-import 'package:acs_upb_mobile/resources/validator.dart';
 import 'package:acs_upb_mobile/pages/portal/service/website_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -293,8 +292,13 @@ void main() {
           find.byKey(ValueKey('last_name_text_field')), 'Doe');
       // TODO: Test dropdown buttons
 
-      // Scroll sign up button into view and tap
+      // Scroll sign up button into view
       await tester.ensureVisible(find.byKey(ValueKey('sign_up_button')));
+
+      // Check Privacy Policy
+      await tester.tap(find.byType(Checkbox));
+
+      // Press sign up
       await tester.tap(find.byKey(ValueKey('sign_up_button')));
       await tester.pumpAndSettle();
 

@@ -4,6 +4,7 @@ import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/navigation/routes.dart';
 import 'package:acs_upb_mobile/widgets/button.dart';
 import 'package:acs_upb_mobile/widgets/dialog.dart';
+import 'package:acs_upb_mobile/widgets/icon_text.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -51,31 +52,16 @@ class ProfilePage extends StatelessWidget {
 
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: InkWell(
-        onTap: () async {
-          showDialog(context: context, builder: _deletionConfirmationDialog);
-        },
-        child: IntrinsicWidth(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Icon(
-                Icons.delete,
-                size: Theme.of(context).textTheme.subtitle1.fontSize,
-                color: Colors.red,
-              ),
-              SizedBox(width: 4),
-              Text(
-                S.of(context).actionDeleteAccount,
-                style: Theme.of(context)
-                    .textTheme
-                    .subtitle2
-                    .apply(color: Colors.red, fontWeightDelta: 1),
-              ),
-            ],
-          ),
-        ),
-      ),
+      child: IconText(
+          onTap: () async {
+            showDialog(context: context, builder: _deletionConfirmationDialog);
+          },
+          icon: Icons.delete,
+          text: S.of(context).actionDeleteAccount,
+          style: Theme.of(context)
+              .textTheme
+              .subtitle2
+              .apply(color: Colors.red, fontWeightDelta: 1)),
     );
   }
 
@@ -94,39 +80,16 @@ class ProfilePage extends StatelessWidget {
         }
         return Padding(
           padding: const EdgeInsets.all(8.0),
-          child: ConstrainedBox(
-            constraints:
-                BoxConstraints(maxWidth: MediaQuery.of(context).size.width),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Icon(
-                  Icons.error_outline,
-                  size: Theme.of(context).textTheme.subtitle2.fontSize,
-                ),
-                SizedBox(width: 4),
-                Text(
-                  S.of(context).messageEmailNotVerified,
-                  style: Theme.of(context)
-                      .textTheme
-                      .subtitle2
-                      .copyWith(fontWeight: FontWeight.w400),
-                  maxLines: 1,
-                ),
-                InkWell(
-                  onTap: () {
-                    authProvider.sendEmailVerification(context: context);
-                  },
-                  child: Text(
-                    ' ' + S.of(context).actionSendVerificationAgain,
-                    style: Theme.of(context)
-                        .accentTextTheme
-                        .subtitle2
-                        .copyWith(fontWeight: FontWeight.w500),
-                  ),
-                ),
-              ],
-            ),
+          child: IconText(
+            align: TextAlign.center,
+            icon: Icons.error_outline,
+            text: S.of(context).messageEmailNotVerified,
+            actionText: S.of(context).actionSendVerificationAgain,
+            style: Theme.of(context)
+                .textTheme
+                .subtitle2
+                .copyWith(fontWeight: FontWeight.w400),
+            onTap: () => authProvider.sendEmailVerification(context: context),
           ),
         );
       },
