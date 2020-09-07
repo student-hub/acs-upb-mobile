@@ -132,13 +132,8 @@ class _WebsiteViewState extends State<WebsiteView> {
                       color: CustomIcons.formIconColor(Theme.of(context))),
                   SizedBox(width: 12.0),
                   AutoSizeText(
-                    S
-                        .of(context)
-                        .labelPreview + ':',
-                    style: Theme
-                        .of(context)
-                        .textTheme
-                        .subtitle1,
+                    S.of(context).labelPreview + ':',
+                    style: Theme.of(context).textTheme.subtitle1,
                   ),
                   SizedBox(width: 12.0),
                   Expanded(
@@ -149,11 +144,11 @@ class _WebsiteViewState extends State<WebsiteView> {
                         Expanded(
                           child: FutureBuilder<ImageProvider<dynamic>>(
                             future: Provider.of<StorageProvider>(context,
-                                listen: false)
+                                    listen: false)
                                 .imageFromPath(website.iconPath),
                             builder: (context, snapshot) {
                               ImageProvider<dynamic> image =
-                              AssetImage('assets/icons/websites/globe.png');
+                                  AssetImage('assets/icons/websites/globe.png');
                               if (snapshot.hasData) {
                                 image = snapshot.data;
                               }
@@ -175,15 +170,11 @@ class _WebsiteViewState extends State<WebsiteView> {
             ),
             Padding(
               padding:
-              const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 8.0),
+                  const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 8.0),
               child: AutoSizeText(
-                S
-                    .of(context)
-                    .messageWebsitePreview,
+                S.of(context).messageWebsitePreview,
                 textAlign: TextAlign.center,
-                style: TextStyle(color: Theme
-                    .of(context)
-                    .hintColor),
+                style: TextStyle(color: Theme.of(context).hintColor),
               ),
             )
           ],
@@ -192,36 +183,27 @@ class _WebsiteViewState extends State<WebsiteView> {
     );
   }
 
-  AppDialog _deletionConfirmationDialog(BuildContext context) =>
-      AppDialog(
+  AppDialog _deletionConfirmationDialog(BuildContext context) => AppDialog(
         icon: Icon(Icons.delete),
-        title: S
-            .of(context)
-            .actionDeleteWebsite,
-        message: S
-            .of(context)
-            .messageDeleteWebsite,
+        title: S.of(context).actionDeleteWebsite,
+        message: S.of(context).messageDeleteWebsite,
         info: widget.website.isPrivate
             ? null
             : S.of(context).messageThisCouldAffectOtherStudents,
         actions: [
           AppButton(
-            text: S
-                .of(context)
-                .actionDeleteWebsite,
+            text: S.of(context).actionDeleteWebsite,
             width: 130,
             onTap: () async {
               Navigator.pop(context); // Pop dialog window
 
               WebsiteProvider websiteProvider =
-              Provider.of<WebsiteProvider>(context, listen: false);
+                  Provider.of<WebsiteProvider>(context, listen: false);
               bool res = await websiteProvider.deleteWebsite(widget.website,
                   context: context);
               if (res) {
                 Navigator.pop(context); // Pop editing page
-                AppToast.show(S
-                    .of(context)
-                    .messageWebsiteDeleted);
+                AppToast.show(S.of(context).messageWebsiteDeleted);
               }
             },
           )
@@ -232,69 +214,55 @@ class _WebsiteViewState extends State<WebsiteView> {
   Widget build(BuildContext context) {
     return AppScaffold(
       title: widget.updateExisting
-          ? S
-          .of(context)
-          .actionEditWebsite
-          : S
-          .of(context)
-          .actionAddWebsite,
+          ? S.of(context).actionEditWebsite
+          : S.of(context).actionAddWebsite,
       actions: [
-        AppScaffoldAction(
-          text: S
-              .of(context)
-              .buttonSave,
-          onPressed: () async {
-            if (_formKey.currentState.validate()) {
-              WebsiteProvider websiteProvider =
-              Provider.of<WebsiteProvider>(context, listen: false);
+            AppScaffoldAction(
+              text: S.of(context).buttonSave,
+              onPressed: () async {
+                if (_formKey.currentState.validate()) {
+                  WebsiteProvider websiteProvider =
+                      Provider.of<WebsiteProvider>(context, listen: false);
 
-              bool res = false;
-              if (_relevanceController.private ||
-                  _relevanceController.anyone) {
-                res = await websiteProvider.addWebsite(
-                  _buildWebsite(),
-                  updateExisting: widget.updateExisting,
-                  context: context,
-                );
-              } else {
-                res = await websiteProvider.addWebsite(
-                  _buildWebsite(),
-                  updateExisting: widget.updateExisting,
-                  context: context,
-                );
-              }
-              if (res) {
-                AppToast.show(widget.updateExisting
-                    ? S
-                    .of(context)
-                    .messageWebsiteEdited
-                    : S
-                    .of(context)
-                    .messageWebsiteAdded);
-                Navigator.of(context).pop();
-              }
-            }
-          },
-        ),
-      ] +
+                  bool res = false;
+                  if (_relevanceController.private ||
+                      _relevanceController.anyone) {
+                    res = await websiteProvider.addWebsite(
+                      _buildWebsite(),
+                      updateExisting: widget.updateExisting,
+                      context: context,
+                    );
+                  } else {
+                    res = await websiteProvider.addWebsite(
+                      _buildWebsite(),
+                      updateExisting: widget.updateExisting,
+                      context: context,
+                    );
+                  }
+                  if (res) {
+                    AppToast.show(widget.updateExisting
+                        ? S.of(context).messageWebsiteEdited
+                        : S.of(context).messageWebsiteAdded);
+                    Navigator.of(context).pop();
+                  }
+                }
+              },
+            ),
+          ] +
           (widget.updateExisting
               ? [
-            AppScaffoldAction(
-              icon: Icons.more_vert,
-              items: {
-                S
-                    .of(context)
-                    .actionDeleteWebsite: () =>
-                    showDialog(
+                  AppScaffoldAction(
+                    icon: Icons.more_vert,
+                    items: {
+                      S.of(context).actionDeleteWebsite: () => showDialog(
+                          context: context,
+                          child: _deletionConfirmationDialog(context))
+                    },
+                    onPressed: () => showDialog(
                         context: context,
-                        child: _deletionConfirmationDialog(context))
-              },
-              onPressed: () =>
-                  showDialog(
-                      context: context,
-                      child: _deletionConfirmationDialog(context)),
-            )
-          ]
+                        child: _deletionConfirmationDialog(context)),
+                  )
+                ]
               : <AppScaffoldAction>[]),
       body: SafeArea(
         child: ListView(
@@ -309,12 +277,8 @@ class _WebsiteViewState extends State<WebsiteView> {
                     TextFormField(
                       controller: _labelController,
                       decoration: InputDecoration(
-                        labelText: S
-                            .of(context)
-                            .labelName,
-                        hintText: S
-                            .of(context)
-                            .hintWebsiteLabel,
+                        labelText: S.of(context).labelName,
+                        hintText: S.of(context).hintWebsiteLabel,
                         prefixIcon: Icon(Icons.label),
                       ),
                       onChanged: (_) => setState(() {}),
@@ -322,20 +286,17 @@ class _WebsiteViewState extends State<WebsiteView> {
                     DropdownButtonFormField<WebsiteCategory>(
                       isExpanded: true,
                       decoration: InputDecoration(
-                        labelText: S
-                            .of(context)
-                            .labelCategory,
+                        labelText: S.of(context).labelCategory,
                         prefixIcon: Icon(Icons.category),
                       ),
                       value: _selectedCategory,
                       items: WebsiteCategory.values
                           .map(
-                            (category) =>
-                            DropdownMenuItem<WebsiteCategory>(
+                            (category) => DropdownMenuItem<WebsiteCategory>(
                               value: category,
                               child: Text(category.toLocalizedString(context)),
                             ),
-                      )
+                          )
                           .toList(),
                       onChanged: (selection) =>
                           setState(() => _selectedCategory = selection),
@@ -343,19 +304,13 @@ class _WebsiteViewState extends State<WebsiteView> {
                     TextFormField(
                       controller: _linkController,
                       decoration: InputDecoration(
-                        labelText: S
-                            .of(context)
-                            .labelLink + ' *',
-                        hintText: S
-                            .of(context)
-                            .hintWebsiteLink,
+                        labelText: S.of(context).labelLink + ' *',
+                        hintText: S.of(context).hintWebsiteLink,
                         prefixIcon: Icon(Icons.public),
                       ),
                       validator: (value) {
                         if (!isURL(value, requireProtocol: true)) {
-                          return S
-                              .of(context)
-                              .warningInvalidURL;
+                          return S.of(context).warningInvalidURL;
                         }
                         return null;
                       },
@@ -370,9 +325,7 @@ class _WebsiteViewState extends State<WebsiteView> {
                     TextFormField(
                       controller: _descriptionRoController,
                       decoration: InputDecoration(
-                          labelText: S
-                              .of(context)
-                              .labelDescription +
+                          labelText: S.of(context).labelDescription +
                               ' (' +
                               S
                                   .of(context)
@@ -388,9 +341,7 @@ class _WebsiteViewState extends State<WebsiteView> {
                     TextFormField(
                       controller: _descriptionEnController,
                       decoration: InputDecoration(
-                          labelText: S
-                              .of(context)
-                              .labelDescription +
+                          labelText: S.of(context).labelDescription +
                               ' (' +
                               S
                                   .of(context)
