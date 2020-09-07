@@ -27,15 +27,17 @@ class FormItem {
     this.hint,
     TextEditingController controller,
     FocusNode focusNode,
-    this.onSubmitted,
-        this.onChanged,this.check,
+    Function(String) onSubmitted,
+    this.onChanged,
+    this.check,
     this.obscureText = false,
     this.suffix,
     this.autocorrect = true,
     this.enableSuggestions = true,
     this.keyboardType = TextInputType.text,
     this.autofillHints,
-  })  : this.controller = controller ?? TextEditingController(),
+  })  : this.onSubmitted = onSubmitted ?? (() {}),
+        this.controller = controller ?? TextEditingController(),
         this.focusNode = focusNode ?? FocusNode(),
         this.valid = Future<bool>(() => null);
 }
@@ -127,9 +129,9 @@ class _AppFormState extends State<AppForm> {
                           ),
                     onSubmitted: (input) {
                       if (i < widget.items.length - 1) {
-                        field.onSubmitted(input);
                         FocusScope.of(context)
                             .requestFocus(widget.items[i + 1].focusNode);
+                        field.onSubmitted(input);
                       } else {
                         if (widget.submitOnEnter) {
                           widget.submit();
