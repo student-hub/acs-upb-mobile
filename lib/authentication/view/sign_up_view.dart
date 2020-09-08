@@ -51,7 +51,7 @@ class _SignUpViewState extends State<SignUpView> {
     _fetchFilter();
   }
 
-  void parse(TextEditingController email, TextEditingController firstName,
+  void parseNameFromEmail(TextEditingController email, TextEditingController firstName,
       TextEditingController lastName) {
 
     String emailName = email.text.replaceAll(RegExp(r'[0-9]'), '');
@@ -87,7 +87,7 @@ class _SignUpViewState extends State<SignUpView> {
         check: (email, {BuildContext context}) => authProvider
             .canSignUpWithEmail(email: email + emailDomain, context: context),
         onChanged: (_) =>
-            parse(emailController, firstNameController, lastNameController),
+            parseNameFromEmail(emailController, firstNameController, lastNameController),
       ),
       FormItem(
         label: S.of(context).labelPassword,
