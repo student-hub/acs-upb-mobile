@@ -63,7 +63,7 @@ class _SignUpViewState extends State<SignUpView> {
     } else {
       firstNameString = name[0].split('_');
       firstName.text =
-          firstNameString[0].titleCase + " " + firstNameString[1].titleCase;
+          firstNameString[0].titleCase + ' ' + firstNameString[1].titleCase;
     }
     lastName.text = name[1].titleCase;
   }
