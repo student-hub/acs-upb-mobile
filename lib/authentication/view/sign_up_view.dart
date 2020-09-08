@@ -58,7 +58,7 @@ class _SignUpViewState extends State<SignUpView> {
     List<String> name = emailName.split('.');
     List<String> firstNameString;
 
-    if (name[0].indexOf('_') < 0) {
+    if (name[0].contains('_')) {
       firstName.text = name[0].titleCase;
     } else {
       firstNameString = name[0].split('_');
