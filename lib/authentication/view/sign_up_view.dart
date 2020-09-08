@@ -54,18 +54,18 @@ class _SignUpViewState extends State<SignUpView> {
   void parseNameFromEmail(TextEditingController email, TextEditingController firstName,
       TextEditingController lastName) {
 
-    String emailName = email.text.replaceAll(RegExp(r'[0-9]'), '');
-    List<String> name = emailName.split('.');
-    List<String> firstNameString;
+    String emailWithoutNumbers = email.text.replaceAll(RegExp(r'[0-9]'), '');
+    List<String> names = emailWithoutNumbers.split('.');
+    List<String> firstNames;
 
-    if (name[0].indexOf('_') < 0) {
-      firstName.text = name[0].titleCase;
+    if (names[0].indexOf('_') < 0) {
+      firstName.text = names[0].titleCase;
     } else {
-      firstNameString = name[0].split('_');
+      firstNames = names[0].split('_');
       firstName.text =
-          firstNameString[0].titleCase + " " + firstNameString[1].titleCase;
+          firstNames[0].titleCase + " " + firstNames[1].titleCase;
     }
-    lastName.text = name[1].titleCase;
+    lastName.text = names[1].titleCase;
   }
 
   List<FormItem> _buildFormItems() {
