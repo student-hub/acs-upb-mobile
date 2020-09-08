@@ -51,6 +51,10 @@ class _SignUpViewState extends State<SignUpView> {
     _fetchFilter();
   }
 
+  /// This function takes the email of user and sends the name data to the name fields.
+  /// Special characters such as ".", "_" are used to separate the names, and numbers are removed.
+  /// Format example: firstnameone_firstnametwo.lastname123@stud.acs.pub.ro
+  /// The names will start with capital letters.
   void parseNameFromEmail(TextEditingController email, TextEditingController firstName,
       TextEditingController lastName) {
 
