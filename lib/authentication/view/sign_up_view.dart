@@ -55,9 +55,9 @@ class _SignUpViewState extends State<SignUpView> {
   /// Special characters such as ".", "_" are used to separate the names, and numbers are removed.
   /// Format example: firstnameone_firstnametwo.lastname123@stud.acs.pub.ro
   /// The names will start with capital letters.
-  void parseNameFromEmail(TextEditingController email, TextEditingController firstName,
-      TextEditingController lastName) {
 
+  void parseNameFromEmail(TextEditingController email,
+      TextEditingController firstName, TextEditingController lastName) {
     String emailWithoutNumbers = email.text.replaceAll(RegExp(r'[0-9]'), '');
     List<String> names = emailWithoutNumbers.split('.');
     List<String> firstNames;
@@ -66,8 +66,7 @@ class _SignUpViewState extends State<SignUpView> {
       firstName.text = names[0].titleCase;
     } else {
       firstNames = names[0].split('_');
-      firstName.text =
-          firstNames[0].titleCase + " " + firstNames[1].titleCase;
+      firstName.text = firstNames[0].titleCase + " " + firstNames[1].titleCase;
     }
     lastName.text = names[1].titleCase;
   }
@@ -90,8 +89,8 @@ class _SignUpViewState extends State<SignUpView> {
         autofillHints: [AutofillHints.newUsername],
         check: (email, {BuildContext context}) => authProvider
             .canSignUpWithEmail(email: email + emailDomain, context: context),
-        onChanged: (_) =>
-            parseNameFromEmail(emailController, firstNameController, lastNameController),
+        onChanged: (_) => parseNameFromEmail(
+            emailController, firstNameController, lastNameController),
       ),
       FormItem(
         label: S.of(context).labelPassword,
