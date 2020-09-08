@@ -106,6 +106,7 @@ class WebsiteProvider with ChangeNotifier {
 
 
   /// Initializes the number of visits of websites with the value stored locally.
+  ///
   /// Because [PrefService] doesn't support storing maps, the
   /// data is stored in 2 lists: the list of website IDs ([websiteIds]) and the list
   /// with the number of visits ([websiteVisits]), where `websiteVisits[i]` is the
@@ -118,22 +119,22 @@ class WebsiteProvider with ChangeNotifier {
 
     if (websiteIds != null &&  websiteVisits != null) {
       var visitsByWebsiteId = Map<String, int>.from(websiteIds.asMap().map((index, key) =>
-          MapEntry(key, int.tryParse( websiteVisits[index] ?? 0))));
+          MapEntry(key, int.tryParse(websiteVisits[index] ?? 0))));
       websites.forEach((website) {
-        if (visitsByWebsiteId[website.id] != null) {
-          website.numberOfVisits = visitsByWebsiteId[website.id];
-        }
+          website.numberOfVisits = visitsByWebsiteId[website.id] ?? 0;
       });
     }
   }
 
   /// Increments the number of visits of [website], both in-memory and on the local storage.
+  ///
   /// Because [PrefService] doesn't support storing maps, the
   /// data is stored in 2 lists: the list of website IDs ([websiteIds]) and the list
   /// with the number of visits ([websiteVisits]), where `websiteVisits[i]` is the
   /// number of times the user accessed website with ID `websiteIds[i]`.
   void incrementNumberOfVisits(Website website) async {
     website.numberOfVisits++;
+    print(website.numberOfVisits);
     List<String> websiteIds =
         PrefService.sharedPreferences.getStringList("websiteIds") ?? [];
     List<String>  websiteVisits =
@@ -148,6 +149,7 @@ class WebsiteProvider with ChangeNotifier {
     }
     PrefService.sharedPreferences
         .setStringList("websiteVisits",  websiteVisits);
+    notifyListeners();
   }
 
   Future<List<Website>> fetchWebsites(Filter filter,
