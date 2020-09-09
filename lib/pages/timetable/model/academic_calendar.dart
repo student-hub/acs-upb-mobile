@@ -51,8 +51,7 @@ class AcademicCalendar {
 
   List<UniEventInstance> generateHolidayInstances() {
     var instances = holidays
-        .map((holiday, interval) =>
-        MapEntry(
+        .map((holiday, interval) => MapEntry(
             holiday,
             UniEventInstance(
               id: holiday,
