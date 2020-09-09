@@ -50,7 +50,7 @@ dependencies:
   dynamic_text_highlighting: ^2.2.0
 
   # Package which supports markdown
-  flutter_markdown: ^0.4.3
+  flutter_markdown: ^0.4.4
 
   # Dart helper methods
   basic_utils: ^1.2.0

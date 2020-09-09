@@ -4,6 +4,7 @@ import 'package:dynamic_text_highlighting/dynamic_text_highlighting.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:markdown/markdown.dart' as md;
 
 class QuestionsList extends StatefulWidget {
   final List<Question> questions;
@@ -18,7 +19,8 @@ class QuestionsList extends StatefulWidget {
 
 class _QuestionsListState extends State<QuestionsList> {
   String activeCategory = "";
-  Map<String, SelectableController> _controllers = Map<String, SelectableController>();
+  Map<String, SelectableController> _controllers =
+      Map<String, SelectableController>();
 
   @override
   void initState() {
@@ -32,41 +34,42 @@ class _QuestionsListState extends State<QuestionsList> {
   Widget build(BuildContext context) {
     List<Question> filteredList = widget.questions
         .where((question) =>
-    widget.filter.split(" ").where((element) => element != "").fold(
-        true,
-            (previousValue, filter) =>
-        previousValue &&
-            question.question.toLowerCase().contains(filter)) &&
-        (activeCategory == "" ? true : question.category == activeCategory))
+            widget.filter.split(" ").where((element) => element != "").fold(
+                true,
+                (previousValue, filter) =>
+                    previousValue &&
+                    question.question.toLowerCase().contains(filter)) &&
+            (activeCategory == "" ? true : question.category == activeCategory))
         .toList();
 
     List categoryList = widget.categories
-        .map((category) =>
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 4.0),
-          child: Container(
-            width: 100,
-            child: Selectable(
-              controller: _controllers[category],
-              label: category,
-              initiallySelected: false,
-              onSelected: (selection) {
-                setState(() {
-                  activeCategory = "";
-                  if (selection) {
-                    _controllers.values.forEach((element) {element.deselect();});
-                    _controllers[category].select();
-                    activeCategory = category;
-                  }
-                });
-              },
-            ),
-          ),
-        ))
+        .map((category) => Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 4.0),
+              child: Container(
+                width: 100,
+                child: Selectable(
+                  controller: _controllers[category],
+                  label: category,
+                  initiallySelected: false,
+                  onSelected: (selection) {
+                    setState(() {
+                      activeCategory = "";
+                      if (selection) {
+                        _controllers.values.forEach((element) {
+                          element.deselect();
+                        });
+                        _controllers[category].select();
+                        activeCategory = category;
+                      }
+                    });
+                  },
+                ),
+              ),
+            ))
         .toList();
 
     List<String> filteredWords =
-    widget.filter.split(" ").where((element) => element != "").toList();
+        widget.filter.split(" ").where((element) => element != "").toList();
 
     return Column(
       children: [
@@ -87,27 +90,26 @@ class _QuestionsListState extends State<QuestionsList> {
               return ExpansionTile(
                 title: filteredWords.isNotEmpty
                     ? DynamicTextHighlighting(
-                  text: filteredList[index].question,
-                  style: Theme
-                      .of(context)
-                      .textTheme
-                      .subtitle1,
-                  highlights: filteredWords,
-                  color: Colors.blue,
-                  caseSensitive: false,
-                )
+                        text: filteredList[index].question,
+                        style: Theme.of(context).textTheme.subtitle1,
+                        highlights: filteredWords,
+                        color: Colors.blue,
+                        caseSensitive: false,
+                      )
                     : Text(
-                  filteredList[index].question,
-                  style: Theme
-                      .of(context)
-                      .textTheme
-                      .subtitle1,
-                ),
+                        filteredList[index].question,
+                        style: Theme.of(context).textTheme.subtitle1,
+                      ),
                 children: [
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: MarkdownBody(
-                      data: filteredList[index].answer,
+                      data: filteredList[index].answer.replaceAll(' ', '\n'),
+                      extensionSet: md.ExtensionSet(
+                          md.ExtensionSet.gitHubFlavored.blockSyntaxes, [
+                        md.EmojiSyntax(),
+                        ...md.ExtensionSet.gitHubFlavored.inlineSyntaxes
+                      ]),
                     ),
                   ),
                 ],
