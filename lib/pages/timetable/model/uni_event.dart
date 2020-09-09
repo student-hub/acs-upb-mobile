@@ -25,17 +25,32 @@ class UniEvent {
   });
 
   List<UniEventInstance> generateInstances() {
-    return [
-      UniEventInstance(
-        id: id,
-        title: name,
-        mainEvent: this,
-        color: this.color,
-        start: start,
-        end: start.add(duration),
-        location: location,
-      )
-    ];
+    if (rrule == null) {
+      return [
+        UniEventInstance(
+          id: id,
+          title: name,
+          mainEvent: this,
+          color: this.color,
+          start: start,
+          end: start.add(duration),
+          location: location,
+        )
+      ];
+    } else {
+      var instances = rrule.getInstances(start: start);
+      return instances
+          .map((start) => UniEventInstance(
+                id: id,
+                title: name,
+                mainEvent: this,
+                color: this.color,
+                start: start,
+                end: start.add(duration),
+                location: location,
+              ))
+          .toList();
+    }
   }
 }
 

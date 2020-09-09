@@ -6,6 +6,7 @@ import 'package:acs_upb_mobile/pages/timetable/view/uni_event_widget.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:rrule/rrule.dart';
 import 'package:time_machine/time_machine.dart';
 import 'package:timetable/timetable.dart';
 
@@ -29,8 +30,13 @@ class _TimetablePageState extends State<TimetablePage> {
         seminar = {'ro': 'seminar', 'en': 'seminar'},
         lecture = {'ro': 'Lecture', 'en': 'Curs'};
 
+    var rrule = RecurrenceRule(
+        frequency: Frequency.weekly,
+        until: startDate.add(Period(weeks: 5)).atMidnight(),);
+
     List<UniEvent> events = [
       UniEvent(
+        rrule: rrule,
         id: '3',
         localizedType: lab,
         name: 'USO',
@@ -40,6 +46,7 @@ class _TimetablePageState extends State<TimetablePage> {
         color: Colors.blue,
       ),
       UniEvent(
+        rrule: rrule,
         id: '4',
         localizedType: lab,
         name: 'PC',
@@ -49,6 +56,7 @@ class _TimetablePageState extends State<TimetablePage> {
         color: Colors.blue,
       ),
       UniEvent(
+        rrule: rrule,
         id: '5',
         localizedType: seminar,
         name: 'LS1',
@@ -58,6 +66,7 @@ class _TimetablePageState extends State<TimetablePage> {
         color: Colors.lime,
       ),
       UniEvent(
+        rrule: rrule,
         id: '6',
         localizedType: lecture,
         name: 'PL',
@@ -67,6 +76,7 @@ class _TimetablePageState extends State<TimetablePage> {
         color: Colors.orange,
       ),
       UniEvent(
+        rrule: rrule,
         id: '7',
         localizedType: seminar,
         name: 'M1',
@@ -76,6 +86,7 @@ class _TimetablePageState extends State<TimetablePage> {
         color: Colors.lime,
       ),
       UniEvent(
+        rrule: rrule,
         id: '8',
         localizedType: lab,
         name: 'PL',
@@ -85,6 +96,7 @@ class _TimetablePageState extends State<TimetablePage> {
         color: Colors.blue,
       ),
       UniEvent(
+        rrule: rrule,
         id: '9',
         localizedType: lab,
         name: 'USO',
@@ -94,6 +106,7 @@ class _TimetablePageState extends State<TimetablePage> {
         color: Colors.blue,
       ),
       UniEvent(
+        rrule: rrule,
         id: '2',
         localizedType: lecture,
         name: 'M2',
@@ -103,6 +116,7 @@ class _TimetablePageState extends State<TimetablePage> {
         color: Colors.orange,
       ),
       UniEvent(
+        rrule: rrule,
         id: '10',
         localizedType: seminar,
         name: 'M2',
@@ -112,6 +126,7 @@ class _TimetablePageState extends State<TimetablePage> {
         color: Colors.lime,
       ),
       UniEvent(
+        rrule: rrule,
         id: '11',
         localizedType: lecture,
         name: 'PC',
@@ -121,6 +136,7 @@ class _TimetablePageState extends State<TimetablePage> {
         color: Colors.orange,
       ),
       UniEvent(
+        rrule: rrule,
         id: '12',
         localizedType: seminar,
         name: 'L',
@@ -130,6 +146,7 @@ class _TimetablePageState extends State<TimetablePage> {
         color: Colors.lime,
       ),
       UniEvent(
+        rrule: rrule,
         id: '13',
         localizedType: lecture,
         name: 'L',
