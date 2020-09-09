@@ -63,7 +63,7 @@ packages:
       name: black_hole_flutter
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.2.10"
+    version: "0.2.13"
   boolean_selector:
     dependency: transitive
     description:
@@ -690,7 +690,7 @@ packages:
       name: timetable
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.2.0"
+    version: "0.2.7"
   typed_data:
     dependency: transitive
     description:
@@ -770,4 +770,4 @@ packages:
     version: "2.2.0"
 sdks:
   dart: ">=2.10.0-0.0.dev <2.10.0"
-  flutter: ">=1.12.13+hotfix.4 <2.0.0"
+  flutter: ">=1.17.0 <2.0.0"

@@ -70,7 +70,7 @@ dependencies:
   async: ^2.4.0
 
   # Timetable widget
-  timetable: ^0.2.0
+  timetable: ^0.2.7
 
   # Event recurrence rule handler
   rrule: ^0.1.1

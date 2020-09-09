@@ -1,3 +1,6 @@
+import 'dart:core';
+
+import 'package:acs_upb_mobile/pages/timetable/model/academic_calendar.dart';
 import 'package:flutter/material.dart';
 import 'package:rrule/rrule.dart';
 import 'package:time_machine/time_machine.dart';
@@ -24,7 +27,7 @@ class UniEvent {
     this.localizedType,
   });
 
-  List<UniEventInstance> generateInstances() {
+  List<UniEventInstance> generateInstances({AcademicCalendar calendar}) {
     if (rrule == null) {
       return [
         UniEventInstance(
@@ -38,17 +41,25 @@ class UniEvent {
         )
       ];
     } else {
+      // Calculate recurrences
       var instances = rrule.getInstances(start: start);
+
+      // Exclude holidays
+      calendar?.holidays?.forEach((holiday, interval) {
+        instances = instances.where((start) => !interval.includes(start));
+      });
+
       return instances
-          .map((start) => UniEventInstance(
-                id: id,
-                title: name,
-                mainEvent: this,
-                color: this.color,
-                start: start,
-                end: start.add(duration),
-                location: location,
-              ))
+          .map((start) =>
+          UniEventInstance(
+            id: id,
+            title: name,
+            mainEvent: this,
+            color: this.color,
+            start: start,
+            end: start.add(duration),
+            location: location,
+          ))
           .toList();
     }
   }
@@ -62,25 +73,24 @@ class UniEventInstance extends Event {
   final String location;
   final String info;
 
-  UniEventInstance(
-      {@required String id,
-      @required this.title,
-      @required this.mainEvent,
-      Color color,
-      this.location,
-      this.info,
-      @required LocalDateTime start,
-      @required LocalDateTime end})
-      : this.color = color ?? mainEvent.color,
+  UniEventInstance({@required String id,
+    @required this.title,
+    @required this.mainEvent,
+    Color color,
+    this.location,
+    this.info,
+    @required LocalDateTime start,
+    @required LocalDateTime end})
+      : this.color = color ?? mainEvent?.color,
         super(id: id, start: start, end: end);
 
   @override
   bool operator ==(dynamic other) =>
       super == other &&
-      color == other.color &&
-      location == other.location &&
-      mainEvent == other.mainEvent &&
-      title == other.title;
+          color == other.color &&
+          location == other.location &&
+          mainEvent == other.mainEvent &&
+          title == other.title;
 
   @override
   int get hashCode =>

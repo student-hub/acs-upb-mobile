@@ -1,6 +1,7 @@
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
 import 'package:acs_upb_mobile/pages/classes/view/classes_page.dart';
+import 'package:acs_upb_mobile/pages/timetable/model/academic_calendar.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/uni_event.dart';
 import 'package:acs_upb_mobile/pages/timetable/view/uni_event_widget.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
@@ -17,12 +18,13 @@ class TimetablePage extends StatefulWidget {
 
 class _TimetablePageState extends State<TimetablePage> {
   TimetableController<UniEventInstance> _controller;
+  AcademicCalendar calendar = AcademicCalendar();
 
   @override
   void initState() {
     super.initState();
     // TODO: This is a placeholder
-    var startDate = LocalDate.today();
+    var startDate = calendar.semesters[0].start.calendarDate;
     var twoHours = Period(hours: 2);
     var threeHours = Period(hours: 3);
 
@@ -31,8 +33,9 @@ class _TimetablePageState extends State<TimetablePage> {
         lecture = {'ro': 'Lecture', 'en': 'Curs'};
 
     var rrule = RecurrenceRule(
-        frequency: Frequency.weekly,
-        until: startDate.add(Period(weeks: 5)).atMidnight(),);
+      frequency: Frequency.weekly,
+      until: calendar.semesters[1].end,
+    );
 
     List<UniEvent> events = [
       UniEvent(
@@ -161,12 +164,13 @@ class _TimetablePageState extends State<TimetablePage> {
         // TODO: Make initialTimeRange customizable in settings
         initialTimeRange: InitialTimeRange.range(
             startTime: LocalTime(7, 55, 0), endTime: LocalTime(20, 5, 0)),
-        eventProvider: EventProvider.list((events
-            .map((event) => event.generateInstances())
-            .fold(
-                [],
-                (previousInstances, instances) =>
-                    previousInstances + instances))));
+        eventProvider: EventProvider.list(calendar.generateHolidayInstances() +
+            (events
+                .map((event) => event.generateInstances(calendar: calendar))
+                .fold(
+                    [],
+                    (previousInstances, instances) =>
+                        previousInstances + instances))));
   }
 
   @override
@@ -203,6 +207,11 @@ class _TimetablePageState extends State<TimetablePage> {
       body: Timetable<UniEventInstance>(
         controller: _controller,
         eventBuilder: (event) => UniEventWidget(event),
+        allDayEventBuilder: (context, event, info) => UniAllDayEventWidget(
+          event,
+          info: info,
+          onTap: () {},
+        ),
       ),
     );
   }

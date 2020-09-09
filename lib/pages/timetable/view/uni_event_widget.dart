@@ -3,6 +3,8 @@ import 'package:acs_upb_mobile/resources/locale_provider.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:black_hole_flutter/black_hole_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:timetable/src/all_day.dart';
+import 'package:timetable/timetable.dart';
 
 class UniEventWidget extends StatelessWidget {
   final UniEventInstance event;
@@ -86,6 +88,71 @@ class UniEventWidget extends StatelessWidget {
                   : Container(),
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class UniAllDayEventWidget extends StatelessWidget {
+  const UniAllDayEventWidget(
+    this.event, {
+    Key key,
+    @required this.info,
+    this.borderRadius = 4,
+    this.onTap,
+  })  : assert(event != null),
+        assert(info != null),
+        assert(borderRadius != null),
+        super(key: key);
+
+  /// The event to be displayed.
+  final UniEventInstance event;
+  final AllDayEventLayoutInfo info;
+  final double borderRadius;
+
+  /// An optional [VoidCallback] that will be invoked when the user taps this
+  /// widget.
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.all(2),
+      child: CustomPaint(
+        painter: AllDayEventBackgroundPainter(
+          info: info,
+          color: event.color,
+          borderRadius: borderRadius,
+        ),
+        child: Material(
+          shape: AllDayEventBorder(
+            info: info,
+            side: BorderSide.none,
+            borderRadius: borderRadius,
+          ),
+          clipBehavior: Clip.antiAlias,
+          color: Colors.transparent,
+          child: InkWell(
+            onTap: onTap,
+            child: _buildContent(context),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildContent(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.fromLTRB(4, 2, 0, 2),
+      child: Align(
+        alignment: AlignmentDirectional.centerStart,
+        child: DefaultTextStyle(
+          style: context.textTheme.bodyText2.copyWith(
+            fontSize: 14,
+            color: event.color.highEmphasisOnColor,
+          ),
+          child: Text(event.title, maxLines: 1),
         ),
       ),
     );
