@@ -50,6 +50,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.9.3"
+  basics:
+    dependency: transitive
+    description:
+      name: basics
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.4.0+1"
   black_hole_flutter:
     dependency: transitive
     description:
@@ -560,6 +567,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.6"
+  rrule:
+    dependency: "direct main"
+    description:
+      name: rrule
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.1"
   rxdart:
     dependency: transitive
     description:

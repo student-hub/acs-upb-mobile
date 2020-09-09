@@ -1,8 +1,8 @@
 import 'package:acs_upb_mobile/generated/l10n.dart';
-import 'package:acs_upb_mobile/pages/classes/view/classes_page.dart';
 import 'package:acs_upb_mobile/pages/home/home_page.dart';
 import 'package:acs_upb_mobile/pages/portal/view/portal_page.dart';
 import 'package:acs_upb_mobile/pages/profile/profile_page.dart';
+import 'package:acs_upb_mobile/pages/timetable/view/timetable_page.dart';
 import 'package:flutter/material.dart';
 
 class AppBottomNavigationBar extends StatefulWidget {
@@ -25,7 +25,7 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar>
     tabController = TabController(vsync: this, length: 4);
     tabs = [
       HomePage(),
-      ClassesPage(),
+      TimetablePage(),
       PortalPage(),
       ProfilePage(),
     ];
@@ -55,8 +55,8 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar>
                 iconMargin: EdgeInsets.all(0),
               ),
               Tab(
-                icon: Icon(Icons.class_),
-                text: S.of(context).navigationClasses,
+                icon: Icon(Icons.calendar_today_rounded),
+                text: S.of(context).navigationTimetable,
                 iconMargin: EdgeInsets.all(0),
               ),
               Tab(
