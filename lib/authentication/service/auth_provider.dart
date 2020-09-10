@@ -73,11 +73,13 @@ extension DatabaseUser on User {
 class AuthProvider with ChangeNotifier {
   FirebaseUser _firebaseUser;
   StreamSubscription _userAuthSub;
+  User _currentUser;
 
   AuthProvider() {
     _userAuthSub = FirebaseAuth.instance.onAuthStateChanged.listen((newUser) {
       print('AuthProvider - FirebaseAuth - onAuthStateChanged - $newUser');
       _firebaseUser = newUser;
+      _fetchUser();
       notifyListeners();
     }, onError: (e) {
       print('AuthProvider - FirebaseAuth - onAuthStateChanged - $e');
@@ -183,7 +185,7 @@ class AuthProvider with ChangeNotifier {
     return _firebaseUser.uid;
   }
 
-  Future<User> get currentUser async {
+  Future<User> _fetchUser() async {
     if (isAnonymous) {
       return null;
     }
@@ -191,8 +193,14 @@ class AuthProvider with ChangeNotifier {
         .collection('users')
         .document(_firebaseUser.uid)
         .get();
-    return DatabaseUser.fromSnap(snapshot);
+
+    _currentUser = DatabaseUser.fromSnap(snapshot);
+    return _currentUser;
   }
+
+  Future<User> get currentUser => _fetchUser();
+
+  User get currentUserFromCache => _currentUser;
 
   Future<bool> signInAnonymously({BuildContext context}) async {
     return FirebaseAuth.instance.signInAnonymously().catchError((e) {

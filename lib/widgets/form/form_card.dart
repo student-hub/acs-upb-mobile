@@ -33,20 +33,22 @@ class _FormCardState extends State<FormCard> {
       child: Padding(
         padding:
         EdgeInsets.only(left: 16.0, right: 16.0, top: 16.0, bottom: 16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.only(bottom: 8.0),
-              child: Text(widget.title,
-                  style: Theme
-                      .of(context)
-                      .textTheme
-                      .headline5
-                      .copyWith(fontWeight:FontWeight.w600)),
-            )
-          ] +
-              widget.children,
+        child: AutofillGroup(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.only(bottom: 8.0),
+                child: Text(widget.title,
+                    style: Theme
+                        .of(context)
+                        .textTheme
+                        .headline5
+                        .copyWith(fontWeight:FontWeight.w600)),
+              )
+            ] +
+                widget.children,
+          ),
         ),
       ),
     );

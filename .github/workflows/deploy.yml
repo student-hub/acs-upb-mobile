@@ -32,6 +32,12 @@ jobs:
       - name: Build web
         run: flutter build web --release
 
+      - name: Fetch time_machine
+        run: git clone https://github.com/Dana-Ferguson/time_machine
+
+      - name: Copy time_machine data to the build area
+        run: mkdir -p build/web/packages/time_machine/data && cp -R time_machine/lib/data build/web/packages/time_machine
+
       - name: Deploy to Firebase
         uses: w9jds/firebase-action@master
         with:
