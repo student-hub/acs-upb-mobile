@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 
 /// Filter represented in the form of a tree with named levels
 ///
@@ -58,6 +59,30 @@ class Filter {
     List<String> list = [];
     _relevantNodesHelper(list, root);
     return list;
+  }
+
+  List<FilterNode> findNodeByPath(List<String> path){
+    List<FilterNode> result = [root];
+    if(path == null){
+      return result;
+    }
+    for(int i = 0; i< path.length; i++){
+      FilterNode aux = _findNodeByPathHelper(path[i], result.last);
+      if(aux == null){
+        return result;
+      }
+      result.add(aux);
+    }
+    return result;
+  }
+
+  FilterNode _findNodeByPathHelper(String nodeName, FilterNode parent){
+    for(int i = 0; i < parent.children.length; i++){
+      if(parent.children[i].name.compareTo(nodeName) == 0){
+        return parent.children[i];
+      }
+    }
+    return null;
   }
 
   bool _relevantLeavesHelper(List<String> list, FilterNode node) {

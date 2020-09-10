@@ -1,16 +1,30 @@
+//import 'dart:html';
+import 'dart:io';
+import 'dart:math';
+
 import 'package:acs_upb_mobile/authentication/model/user.dart';
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/navigation/routes.dart';
+import 'package:acs_upb_mobile/resources/storage_provider.dart';
 import 'package:acs_upb_mobile/widgets/button.dart';
 import 'package:acs_upb_mobile/widgets/dialog.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+import 'file:///D:/work/Acs-upb-mobile/acs-upb-mobile/lib/authentication/view/edit_profile_page.dart';
 
-class ProfilePage extends StatelessWidget {
+class ProfilePage extends StatefulWidget {
   ProfilePage({Key key}) : super(key: key);
 
+  @override
+  _ProfilePageState createState() => _ProfilePageState();
+}
+
+class _ProfilePageState extends State<ProfilePage> {
   Future<void> _signOut(BuildContext context) async {
     AuthProvider authProvider =
         Provider.of<AuthProvider>(context, listen: false);
@@ -51,30 +65,59 @@ class ProfilePage extends StatelessWidget {
 
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: InkWell(
-        onTap: () async {
-          showDialog(context: context, builder: _deletionConfirmationDialog);
-        },
-        child: IntrinsicWidth(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Icon(
-                Icons.delete,
-                size: Theme.of(context).textTheme.subtitle1.fontSize,
-                color: Colors.red,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          InkWell(
+            onTap: () async {
+              showDialog(context: context, builder: _deletionConfirmationDialog);
+            },
+            child: IntrinsicWidth(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Icon(
+                    Icons.delete,
+                    size: Theme.of(context).textTheme.subtitle1.fontSize,
+                    color: Colors.red,
+                  ),
+                  SizedBox(width: 4),
+                  Text(
+                    S.of(context).actionDeleteAccount,
+                    style: Theme.of(context)
+                        .textTheme
+                        .subtitle2
+                        .apply(color: Colors.red, fontWeightDelta: 1),
+                  ),
+                ],
               ),
-              SizedBox(width: 4),
-              Text(
-                S.of(context).actionDeleteAccount,
-                style: Theme.of(context)
-                    .textTheme
-                    .subtitle2
-                    .apply(color: Colors.red, fontWeightDelta: 1),
-              ),
-            ],
+            ),
           ),
-        ),
+          InkWell( //TODO: remake the lok of the button
+            onTap: () async {
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) => EditProfilePage() ));
+            },
+            child: IntrinsicWidth(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Icon(
+                    Icons.delete,
+                    size: Theme.of(context).textTheme.subtitle1.fontSize,
+                    color: Colors.red,
+                  ),
+                  SizedBox(width: 4),
+                  Text(
+                    'Edit',
+                    style: Theme.of(context)
+                        .textTheme
+                        .subtitle2
+                        .apply(color: Colors.red, fontWeightDelta: 1),
+                  ),
+                ],
+              ),
+            ),
+          ),],
       ),
     );
   }
@@ -136,7 +179,7 @@ class ProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     AuthProvider authProvider = Provider.of<AuthProvider>(context);
-
+    StorageProvider storageProvider = Provider.of<StorageProvider>(context, listen: true);
     return AppScaffold(
       title: S.of(context).navigationProfile,
       body: Padding(
@@ -145,10 +188,14 @@ class ProfilePage extends StatelessWidget {
             future: authProvider.currentUser,
             builder: (BuildContext context, AsyncSnapshot<User> snap) {
               String userName;
+              String picturePath;
               if (snap.connectionState == ConnectionState.done) {
                 User user = snap.data;
                 if (user != null) {
                   userName = user.firstName + ' ' + user.lastName;
+                  picturePath = user.picture;
+                }else{
+                  picturePath = ' ';
                 }
                 return Column(
                   children: <Widget>[
@@ -156,11 +203,37 @@ class ProfilePage extends StatelessWidget {
                       flex: 1,
                       child: Container(),
                     ),
-                    Expanded(
-                      flex: 2,
-                      child: Image(
-                          image: AssetImage(
-                              'assets/illustrations/undraw_profile_pic.png')),
+
+                    FutureBuilder<ImageProvider<dynamic>>(
+                      future:  storageProvider.imageFromPath(picturePath),
+                      builder: (context, AsyncSnapshot<ImageProvider<dynamic>> snapshot) {
+                        var image;
+                        debugPrint('image : ' + snapshot.connectionState.toString() );
+                        if (snapshot.connectionState == ConnectionState.done) {
+                          image = snapshot.data;
+                        } else {
+                          debugPrint('image : in else ' + snapshot.hasData.toString());
+                          image = AssetImage(
+                              'assets/illustrations/undraw_profile_pic.png');
+                        }
+
+                        return GestureDetector(
+                          onDoubleTap: () async {
+                              final pickedFile = await ImagePicker().getImage(source: ImageSource.gallery);
+                              StorageReference storageReference = FirebaseStorage.instance
+                              .ref()
+                              .child('profile_picture/test');
+                              StorageUploadTask uploadTask = storageReference.putFile(File(pickedFile.path));
+                              if(user != null){
+                              }
+                              await uploadTask.onComplete;
+                              setState(() {
+                                image = Image.file(File(pickedFile.path));
+                              });
+                          },
+                            child: CircleAvatar(
+                            radius: 95, backgroundImage: image),);
+                      },
                     ),
                     SizedBox(height: 8),
                     Text(

@@ -603,10 +603,10 @@ class S {
     );
   }
 
-  /// `The password must include one least a special character.`
+  /// `The password must include at least one special character.`
   String get warningPasswordSpecialCharacters {
     return Intl.message(
-      'The password must include one least a special character.',
+      'The password must include at least one special character.',
       name: 'warningPasswordSpecialCharacters',
       desc: '',
       args: [],

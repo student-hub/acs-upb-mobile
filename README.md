@@ -23,7 +23,7 @@ if you encounter any problem.
 ## Contributors
 * [Ioana Alexandru](https://github.com/IoanaAlexandru)
 * [Andrei-Constantin Mirciu](https://github.com/andreicmirciu)
-* [Adrian Mărgineanu](https://github.com/AdrianMargineanu)
+* [Adrian_Mărgineanu](https://github.com/AdrianMargineanu)
 
 ## Building from source with Android Studio
 
@@ -65,7 +65,7 @@ device (make sure USB debugging is enabled).
 power on Xcode's simulator.
 * Select your device from the dropdown list and hit the play button (*Shift+F10* / *^R*).
 
-### Building for Web
+### Building for Web 
 
 * You need to have *Chrome* installed in order to be able to run the web version of the app.
 * Select *Chrome* from the dropdown list and hit the play button (*Shift+F10* / *^R*).

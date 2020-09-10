@@ -29,12 +29,15 @@ extension DatabaseUser on User {
     String year;
     String series;
     String group;
+    String picture;
+
     if (snap.data.containsKey('class')) {
       degree = snap.data['class']['degree'];
       domain = snap.data['class']['domain'];
       year = snap.data['class']['year'];
       series = snap.data['class']['series'];
       group = snap.data['class']['group'];
+      picture = snap.data['class']['picture'];
     }
 
     return User(
@@ -46,6 +49,7 @@ extension DatabaseUser on User {
         year: year,
         series: series,
         group: group,
+        picture: picture,
         permissionLevel: snap.data['permissionLevel']);
   }
 
@@ -56,6 +60,7 @@ extension DatabaseUser on User {
     if (year != null) classInfo['year'] = year;
     if (series != null) classInfo['series'] = series;
     if (group != null) classInfo['group'] = group;
+    if (picture != null) classInfo['picture'] = picture;
 
     return {
       'name': {'first': firstName, 'last': lastName},
@@ -354,7 +359,8 @@ class AuthProvider with ChangeNotifier {
         AppToast.show(S.of(context).errorMissingLastName);
         return false;
       }
-      if (!await AppValidator.isStrongPassword(password: password, context: context)) {
+      if (!await AppValidator.isStrongPassword(
+          password: password, context: context)) {
         return false;
       }
 
@@ -418,5 +424,60 @@ class AuthProvider with ChangeNotifier {
       AppToast.show(S.of(context).messageCheckEmailVerification);
     }
     return true;
+  }
+
+  ///Update the user information with the data in [info].
+  Future<bool> updateProfile(
+      {Map<String, String> info, BuildContext context}) async {
+    try {
+      String firstName = info[S.of(context).labelFirstName];
+      String lastName = info[S.of(context).labelLastName];
+
+      Filter filter =
+          Provider.of<FilterProvider>(context, listen: false).cachedFilter;
+      String degree = info.getIfPresent(
+          filter.localizedLevelNames[0][LocaleProvider.localeString]);
+      String domain = info.getIfPresent(
+          filter.localizedLevelNames[1][LocaleProvider.localeString]);
+      String year = info.getIfPresent(
+          filter.localizedLevelNames[2][LocaleProvider.localeString]);
+      String series = info.getIfPresent(
+          filter.localizedLevelNames[3][LocaleProvider.localeString]);
+      String group = info.getIfPresent(
+          filter.localizedLevelNames[4][LocaleProvider.localeString]);
+
+      if (firstName == null || firstName == '') {
+        AppToast.show(S.of(context).errorMissingFirstName);
+        return false;
+      }
+      if (lastName == null || lastName == '') {
+        AppToast.show(S.of(context).errorMissingLastName);
+        return false;
+      }
+      User user =
+          await Provider.of<AuthProvider>(context, listen: false).currentUser;
+      user.firstName = firstName;
+      user.lastName = lastName;
+      user.degree = degree;
+      user.domain = domain;
+      user.year = year;
+      user.series = series;
+      user.group = group;
+      Firestore.instance
+          .collection('users')
+          .document(user.uid)
+          .updateData(user.toData());
+      FirebaseUser userFire = await FirebaseAuth.instance.currentUser();
+      var userUpdateInfo = UserUpdateInfo();
+      userUpdateInfo.displayName = firstName + ' ' + lastName;
+      userFire.updateProfile(userUpdateInfo);
+
+
+      return true;
+
+    } catch (e) {
+      _errorHandler(e, context);
+      return false;
+    }
   }
 }

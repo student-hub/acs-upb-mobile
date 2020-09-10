@@ -1,7 +1,7 @@
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/home/home_page.dart';
 import 'package:acs_upb_mobile/pages/portal/view/portal_page.dart';
-import 'package:acs_upb_mobile/pages/profile/profile_page.dart';
+import 'file:///D:/work/Acs-upb-mobile/acs-upb-mobile/lib/authentication/view/profile_page.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:flutter/material.dart';
 
