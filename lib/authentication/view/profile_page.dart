@@ -1,8 +1,8 @@
 import 'dart:io';
-import 'dart:math';
 
 import 'package:acs_upb_mobile/authentication/model/user.dart';
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
+import 'package:acs_upb_mobile/authentication/view/edit_profile_page.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/navigation/routes.dart';
 import 'package:acs_upb_mobile/resources/storage_provider.dart';
@@ -15,7 +15,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
-import 'file:///D:/work/Acs-upb-mobile/acs-upb-mobile/lib/authentication/view/edit_profile_page.dart';
 
 class ProfilePage extends StatefulWidget {
   ProfilePage({Key key}) : super(key: key);
@@ -112,8 +111,22 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     AuthProvider authProvider = Provider.of<AuthProvider>(context);
-    StorageProvider storageProvider = Provider.of<StorageProvider>(context, listen: true);
+    StorageProvider storageProvider =
+        Provider.of<StorageProvider>(context, listen: true);
     return AppScaffold(
+      actions: [
+        AppScaffoldAction(
+            icon: Icons.edit,
+            onPressed: () {
+              AuthProvider authProvider =
+                  Provider.of<AuthProvider>(context, listen: false);
+              if (authProvider.isAuthenticatedFromCache &&
+                  !authProvider.isAnonymous) {
+                Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => EditProfilePage()));
+              }
+            })
+      ],
       title: S.of(context).navigationProfile,
       body: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -129,7 +142,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   userName = user.firstName + ' ' + user.lastName;
                   userGroup = user.group;
                   picturePath = user.picture;
-                }else{
+                } else {
                   picturePath = ' ';
                 }
                 return Column(
@@ -138,36 +151,41 @@ class _ProfilePageState extends State<ProfilePage> {
                       flex: 1,
                       child: Container(),
                     ),
-
                     FutureBuilder<ImageProvider<dynamic>>(
-                      future:  storageProvider.imageFromPath(picturePath),
-                      builder: (context, AsyncSnapshot<ImageProvider<dynamic>> snapshot) {
+                      future: storageProvider.imageFromPath(picturePath),
+                      builder: (context,
+                          AsyncSnapshot<ImageProvider<dynamic>> snapshot) {
                         var image;
-                        debugPrint('image : ' + snapshot.connectionState.toString() );
+                        debugPrint(
+                            'image : ' + snapshot.connectionState.toString());
                         if (snapshot.connectionState == ConnectionState.done) {
                           image = snapshot.data;
                         } else {
-                          debugPrint('image : in else ' + snapshot.hasData.toString());
+                          debugPrint(
+                              'image : in else ' + snapshot.hasData.toString());
                           image = AssetImage(
                               'assets/illustrations/undraw_profile_pic.png');
                         }
 
                         return GestureDetector(
                           onDoubleTap: () async {
-                              final pickedFile = await ImagePicker().getImage(source: ImageSource.gallery);
-                              StorageReference storageReference = FirebaseStorage.instance
-                              .ref()
-                              .child('profile_picture/test');
-                              StorageUploadTask uploadTask = storageReference.putFile(File(pickedFile.path));
-                              if(user != null){
-                              }
-                              await uploadTask.onComplete;
-                              setState(() {
-                                image = Image.file(File(pickedFile.path));
-                              });
+                            final pickedFile = await ImagePicker()
+                                .getImage(source: ImageSource.gallery);
+                            StorageReference storageReference = FirebaseStorage
+                                .instance
+                                .ref()
+                                .child('profile_picture/test');
+                            StorageUploadTask uploadTask =
+                                storageReference.putFile(File(pickedFile.path));
+                            if (user != null) {}
+                            await uploadTask.onComplete;
+                            setState(() {
+                              image = Image.file(File(pickedFile.path));
+                            });
                           },
-                            child: CircleAvatar(
-                            radius: 95, backgroundImage: image),);
+                          child:
+                              CircleAvatar(radius: 95, backgroundImage: image),
+                        );
                       },
                     ),
                     SizedBox(height: 8),
