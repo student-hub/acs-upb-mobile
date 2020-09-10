@@ -52,10 +52,6 @@ class _TimetablePageState extends State<TimetablePage> {
                 child: ClassesPage()),
           )),
         ),
-        AppScaffoldAction(
-          icon: Icons.add,
-          tooltip: S.of(context).actionAddEvent,
-        ),
       ],
       body: Timetable<UniEventInstance>(
         controller: _controller,
