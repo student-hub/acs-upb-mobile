@@ -172,4 +172,9 @@ class UniEventProvider extends EventProvider<UniEventInstance>
       LocalDate date) {
     return _events.map((events) => events.partDayEvents.intersectingDate(date));
   }
+
+  @override
+  void dispose() {
+    // TODO: Find a better way to prevent Timetable from calling dispose on this provider
+  }
 }
