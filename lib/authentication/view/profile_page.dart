@@ -156,10 +156,13 @@ class _ProfilePageState extends State<ProfilePage> {
                       builder: (context,
                           AsyncSnapshot<ImageProvider<dynamic>> snapshot) {
                         var image;
-                        debugPrint(
-                            'image : ' + snapshot.connectionState.toString());
                         if (snapshot.connectionState == ConnectionState.done) {
-                          image = snapshot.data;
+                          if(snapshot.hasData) {
+                            image = snapshot.data;
+                          }else{
+                            image = AssetImage(
+                                'assets/illustrations/undraw_profile_pic.png');
+                          }
                         } else {
                           debugPrint(
                               'image : in else ' + snapshot.hasData.toString());
