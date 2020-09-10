@@ -23,6 +23,8 @@ import 'package:provider/provider.dart';
 import 'package:recase/recase.dart';
 
 class PortalPage extends StatefulWidget {
+  PortalPage({Key key}) : super(key: key);
+
   @override
   _PortalPageState createState() => _PortalPageState();
 }

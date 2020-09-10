@@ -11,6 +11,8 @@ import 'package:time_machine/time_machine.dart';
 import 'package:timetable/timetable.dart';
 
 class TimetablePage extends StatefulWidget {
+  TimetablePage({Key key}) : super(key: key);
+
   @override
   _TimetablePageState createState() => _TimetablePageState();
 }
@@ -28,7 +30,7 @@ class _TimetablePageState extends State<TimetablePage> {
   Widget build(BuildContext context) {
     if (_controller == null) {
       _controller = TimetableController(
-        // TODO: Make initialTimeRange customizable in settings
+          // TODO: Make initialTimeRange customizable in settings
           initialTimeRange: InitialTimeRange.range(
               startTime: LocalTime(7, 55, 0), endTime: LocalTime(20, 5, 0)),
           eventProvider: Provider.of<UniEventProvider>(context));
