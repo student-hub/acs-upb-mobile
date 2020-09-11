@@ -434,7 +434,7 @@ class AuthProvider with ChangeNotifier {
     return true;
   }
 
-  ///Update the user information with the data in [info].
+  /// Update the user information with the data in [info].
   Future<bool> updateProfile(
       {Map<String, String> info, BuildContext context}) async {
     try {

@@ -12,6 +12,7 @@ import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:preferences/preference_title.dart';
 import 'package:provider/provider.dart';
 
 class EditProfilePage extends StatefulWidget {
@@ -102,7 +103,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Padding(
-                padding: const EdgeInsets.only(top: 8.0),
+                padding: const EdgeInsets.only(top: 8.0, left: 10.0),
                 child: Text(
                   filter.localizedLevelNames[i][LocaleProvider.localeString],
                   style: Theme.of(context)
@@ -117,7 +118,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     .children
                     .map((node) => DropdownMenuItem(
                           value: node,
-                          child: Text(node.name),
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 10.0),
+                            child: Text(node.name),
+                          ),
                         ))
                     .toList(),
                 onChanged: (selected) => setState(
@@ -208,47 +212,39 @@ class _EditProfilePageState extends State<EditProfilePage> {
         )
       ],
       body: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.symmetric(horizontal: 10.0),
         child: FutureBuilder(
           future: authProvider.currentUser,
           builder: (BuildContext context, AsyncSnapshot<User> snap) {
             return Container(
-              child: ListView(children: [
-                Form(
-                  key: editProfileForm,
-                  child: Column(children: [
-                    TextFormField(
-                      decoration: InputDecoration(
-                        labelText: S.of(context).labelFirstName,
-                        hintText: S.of(context).hintFirstName,
+              child: ListView(
+                children: [
+                      PreferenceTitle(
+                        S.of(context).labelPersonalInformation,
+                        leftPadding: 0,
                       ),
-                      controller: firstNameController,
-                      validator: (value) {
-                        if (value.isEmpty || value == null) {
-                          return S.of(context).errorMissingFirstName;
-                        }
-                        return null;
-                      },
-                    ),
-                    TextFormField(
-                      decoration: InputDecoration(
-                        labelText: S.of(context).labelLastName,
-                        hintText: S.of(context).hintLastName,
+                      TextFormField(
+                          decoration: InputDecoration(
+                            prefixIcon: Icon(Icons.person),
+                            labelText: S.of(context).labelFirstName,
+                            hintText: S.of(context).hintFirstName,
+                          ),
+                          controller: firstNameController),
+                      TextFormField(
+                        decoration: InputDecoration(
+                          prefixIcon: Icon(Icons.person),
+                          labelText: S.of(context).labelLastName,
+                          hintText: S.of(context).hintLastName,
+                        ),
+                        controller: lastNameController,
                       ),
-                      controller: lastNameController,
-                      validator: (value) {
-                        if (value.isEmpty || value == null) {
-                          return S.of(context).errorMissingLastName;
-                        }
-                        return null;
-                      },
-                    ),
-                  ]),
-                ),
-                Column(
-                  children: _dropdownTree(context),
-                )
-              ]),
+                      PreferenceTitle(
+                        S.of(context).labelClass,
+                        leftPadding: 0,
+                      ),
+                    ] +
+                    _dropdownTree(context),
+              ),
             );
           },
         ),
