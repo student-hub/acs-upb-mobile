@@ -453,6 +453,8 @@ class AuthProvider with ChangeNotifier {
           filter.localizedLevelNames[3][LocaleProvider.localeString]);
       String group = info.getIfPresent(
           filter.localizedLevelNames[4][LocaleProvider.localeString]);
+      String subgroup = info.getIfPresent(
+          filter.localizedLevelNames[5][LocaleProvider.localeString]);
 
       if (firstName == null || firstName == '') {
         AppToast.show(S.of(context).errorMissingFirstName);
@@ -471,18 +473,16 @@ class AuthProvider with ChangeNotifier {
       user.year = year;
       user.series = series;
       user.group = group;
+      //user.subgroup = subgroup;
       Firestore.instance
           .collection('users')
           .document(user.uid)
           .updateData(user.toData());
-      FirebaseUser userFire = await FirebaseAuth.instance.currentUser();
+
       var userUpdateInfo = UserUpdateInfo();
       userUpdateInfo.displayName = firstName + ' ' + lastName;
-      userFire.updateProfile(userUpdateInfo);
-
-
+      _firebaseUser.updateProfile(userUpdateInfo);
       return true;
-
     } catch (e) {
       _errorHandler(e, context);
       return false;

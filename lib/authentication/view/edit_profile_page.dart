@@ -153,6 +153,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     nodes[4].name,
                 filter.localizedLevelNames[4][LocaleProvider.localeString]:
                     nodes[5].name,
+               filter.localizedLevelNames[5][LocaleProvider.localeString]:
+                   nodes[6].name,
               }, context: context,);
 
              if(result){
