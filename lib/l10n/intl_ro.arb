@@ -159,6 +159,7 @@
   "uniEventTypeTest": "Test",
   "uniEventTypePractical": "Colocviu",
   "uniEventTypeResearch": "Cercetare",
+  "uniEventTypeOther": "Altul",
 
   "messageWelcomeSimple": "Bine ai venit!",
   "messageWelcomeName": "Bine ai venit, {name}!",

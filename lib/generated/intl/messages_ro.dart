@@ -181,6 +181,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "uniEventTypeHomework" : MessageLookupByLibrary.simpleMessage("Temă"),
     "uniEventTypeLab" : MessageLookupByLibrary.simpleMessage("Laborator"),
     "uniEventTypeLecture" : MessageLookupByLibrary.simpleMessage("Curs"),
+    "uniEventTypeOther" : MessageLookupByLibrary.simpleMessage("Altul"),
     "uniEventTypePractical" : MessageLookupByLibrary.simpleMessage("Colocviu"),
     "uniEventTypeProject" : MessageLookupByLibrary.simpleMessage("Proiect"),
     "uniEventTypeResearch" : MessageLookupByLibrary.simpleMessage("Cercetare"),

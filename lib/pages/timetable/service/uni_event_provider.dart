@@ -22,6 +22,8 @@ extension UniEventTypeExtension on UniEventType {
         return UniEventType.seminar;
       case 'sports':
         return UniEventType.sports;
+      default:
+        return UniEventType.other;
     }
   }
 }
@@ -65,18 +67,26 @@ extension TimestampExtension on Timestamp {
 
 extension UniEventExtension on UniEvent {
   static UniEvent fromSnap(DocumentSnapshot snap) {
-    return UniEvent(
-      rrule: RecurrenceRuleExtension.fromJSON(snap.data['rrule']),
-      id: snap.documentID,
-      type: UniEventTypeExtension.fromString(snap.data['type']),
-      name: snap.data['name'],
-      // Convert time to UTC and then to local time
-      start: (snap.data['start'] as Timestamp).toLocalDateTime(),
-      duration: PeriodExtension.fromJSON(snap.data['duration']),
-      location: snap.data['location'],
-      // TODO: Allow users to set event colours in settings
-      color: Colors.blue,
-    );
+    if (snap.data['start'] == null || snap.data['duration'] == null)
+      return null;
+
+    try {
+      return UniEvent(
+        rrule: RecurrenceRuleExtension.fromJSON(snap.data['rrule']),
+        id: snap.documentID,
+        type: UniEventTypeExtension.fromString(snap.data['type']),
+        name: snap.data['name'],
+        // Convert time to UTC and then to local time
+        start: (snap.data['start'] as Timestamp).toLocalDateTime(),
+        duration: PeriodExtension.fromJSON(snap.data['duration']),
+        location: snap.data['location'],
+        // TODO: Allow users to set event colours in settings
+        color: Colors.blue,
+      );
+    } catch (e) {
+      print(e);
+      return null;
+    }
   }
 }
 
@@ -85,23 +95,20 @@ class UniEventProvider extends EventProvider<UniEventInstance>
   AcademicCalendar calendar = AcademicCalendar();
 
   Stream<List<UniEventInstance>> get _events {
-    try {
-      Stream<List<UniEvent>> e = Firestore.instance
-          .collection('events')
-          .snapshots()
-          .map((snapshot) => snapshot.documents
-              .map((document) => UniEventExtension.fromSnap(document))
-              .toList());
+    Stream<List<UniEvent>> e = Firestore.instance
+        .collection('events')
+        .snapshots()
+        .map((snapshot) => snapshot.documents
+            .map((document) => UniEventExtension.fromSnap(document))
+            .where((element) => element != null)
+            .toList());
 
-      return e.map((events) =>
-          events
-              .map((event) => event.generateInstances(calendar: calendar))
-              .expand((i) => i)
-              .toList() +
-          calendar.generateHolidayInstances());
-    } catch (e) {
-      print(e);
-    }
+    return e.map((events) =>
+        events
+            .map((event) => event.generateInstances(calendar: calendar))
+            .expand((i) => i)
+            .toList() +
+        calendar.generateHolidayInstances());
   }
 
   @override

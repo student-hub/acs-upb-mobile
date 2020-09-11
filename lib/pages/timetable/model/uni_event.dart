@@ -7,7 +7,7 @@ import 'package:rrule/rrule.dart';
 import 'package:time_machine/time_machine.dart';
 import 'package:timetable/timetable.dart';
 
-enum UniEventType { lecture, lab, seminar, sports }
+enum UniEventType { lecture, lab, seminar, sports, other }
 
 extension UniEventTypeExtension on UniEventType {
   String toLocalizedString(BuildContext context) {
@@ -20,6 +20,8 @@ extension UniEventTypeExtension on UniEventType {
         return S.of(context).uniEventTypeSeminar;
       case UniEventType.sports:
         return S.of(context).uniEventTypeSports;
+      default:
+        return S.of(context).uniEventTypeOther;
     }
   }
 }

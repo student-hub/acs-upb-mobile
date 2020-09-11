@@ -159,6 +159,7 @@
   "uniEventTypeTest": "Test",
   "uniEventTypePractical": "Practical",
   "uniEventTypeResearch": "Research",
+  "uniEventTypeOther": "Other",
 
   "messageWelcomeSimple": "Welcome!",
   "messageWelcomeName": "Welcome, {name}!",

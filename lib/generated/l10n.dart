@@ -1504,6 +1504,16 @@ class S {
     );
   }
 
+  /// `Other`
+  String get uniEventTypeOther {
+    return Intl.message(
+      'Other',
+      name: 'uniEventTypeOther',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Welcome!`
   String get messageWelcomeSimple {
     return Intl.message(
