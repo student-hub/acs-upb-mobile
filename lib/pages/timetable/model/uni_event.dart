@@ -1,15 +1,33 @@
 import 'dart:core';
 
+import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/academic_calendar.dart';
 import 'package:flutter/material.dart';
 import 'package:rrule/rrule.dart';
 import 'package:time_machine/time_machine.dart';
 import 'package:timetable/timetable.dart';
 
+enum UniEventType { lecture, lab, seminar, sports }
+
+extension UniEventTypeExtension on UniEventType {
+  String toLocalizedString(BuildContext context) {
+    switch (this) {
+      case UniEventType.lecture:
+        return S.of(context).uniEventTypeLecture;
+      case UniEventType.lab:
+        return S.of(context).uniEventTypeLab;
+      case UniEventType.seminar:
+        return S.of(context).uniEventTypeSeminar;
+      case UniEventType.sports:
+        return S.of(context).uniEventTypeSports;
+    }
+  }
+}
+
 class UniEvent {
   final String id;
   final Color color;
-  final Map<String, String> localizedType;
+  final UniEventType type;
   final RecurrenceRule rrule;
   final LocalDateTime start;
   final Period duration;
@@ -24,7 +42,7 @@ class UniEvent {
     @required this.duration,
     @required this.id,
     this.color,
-    this.localizedType,
+    this.type,
   });
 
   List<UniEventInstance> generateInstances({AcademicCalendar calendar}) {
@@ -50,16 +68,15 @@ class UniEvent {
       });
 
       return instances
-          .map((start) =>
-          UniEventInstance(
-            id: id,
-            title: name,
-            mainEvent: this,
-            color: this.color,
-            start: start,
-            end: start.add(duration),
-            location: location,
-          ))
+          .map((start) => UniEventInstance(
+                id: id,
+                title: name,
+                mainEvent: this,
+                color: this.color,
+                start: start,
+                end: start.add(duration),
+                location: location,
+              ))
           .toList();
     }
   }
@@ -73,24 +90,25 @@ class UniEventInstance extends Event {
   final String location;
   final String info;
 
-  UniEventInstance({@required String id,
-    @required this.title,
-    @required this.mainEvent,
-    Color color,
-    this.location,
-    this.info,
-    @required LocalDateTime start,
-    @required LocalDateTime end})
+  UniEventInstance(
+      {@required String id,
+      @required this.title,
+      @required this.mainEvent,
+      Color color,
+      this.location,
+      this.info,
+      @required LocalDateTime start,
+      @required LocalDateTime end})
       : this.color = color ?? mainEvent?.color,
         super(id: id, start: start, end: end);
 
   @override
   bool operator ==(dynamic other) =>
       super == other &&
-          color == other.color &&
-          location == other.location &&
-          mainEvent == other.mainEvent &&
-          title == other.title;
+      color == other.color &&
+      location == other.location &&
+      mainEvent == other.mainEvent &&
+      title == other.title;
 
   @override
   int get hashCode =>

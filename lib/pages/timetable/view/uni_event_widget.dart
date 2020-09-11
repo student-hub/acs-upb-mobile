@@ -1,5 +1,4 @@
 import 'package:acs_upb_mobile/pages/timetable/model/uni_event.dart';
-import 'package:acs_upb_mobile/resources/locale_provider.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:black_hole_flutter/black_hole_flutter.dart';
 import 'package:flutter/material.dart';
@@ -47,13 +46,12 @@ class UniEventWidget extends StatelessWidget {
                     ),
               ),
             ),
-            event.mainEvent.localizedType != null
+            event.mainEvent.type != null
                 ? Expanded(
                     child: Padding(
                       padding: EdgeInsets.fromLTRB(4, 2, 4, 2),
                       child: AutoSizeText(
-                        event.mainEvent
-                            .localizedType[LocaleProvider.localeString],
+                        event.mainEvent.type.toLocalizedString(context),
                         wrapWords: false,
                         minFontSize: 8,
                         maxFontSize: 10,
