@@ -13,23 +13,25 @@ import 'package:acs_upb_mobile/pages/portal/view/website_view.dart';
 import 'package:acs_upb_mobile/resources/custom_icons.dart';
 import 'package:acs_upb_mobile/resources/locale_provider.dart';
 import 'package:acs_upb_mobile/resources/storage_provider.dart';
+import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/widgets/circle_image.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
+import 'package:acs_upb_mobile/widgets/spoiler.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
-import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:recase/recase.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class PortalPage extends StatefulWidget {
+  PortalPage({Key key}) : super(key: key);
+
   @override
   _PortalPageState createState() => _PortalPageState();
 }
 
 class _PortalPageState extends State<PortalPage>
     with AutomaticKeepAliveClientMixin {
-  Future<Filter> filterFuture;
+  Filter filterCache;
   List<Website> websites = [];
 
   // Only show user-added websites
@@ -38,6 +40,8 @@ class _PortalPageState extends State<PortalPage>
   bool editingEnabled = false;
 
   User user;
+
+  bool updating;
 
   _fetchUser() async {
     AuthProvider authProvider = Provider.of(context, listen: false);
@@ -50,42 +54,25 @@ class _PortalPageState extends State<PortalPage>
   initState() {
     super.initState();
     _fetchUser();
+    _updateFilter();
   }
 
-  _launchURL(String url) async {
-    if (await canLaunch(url)) {
-      await launch(url);
-    } else {
-      AppToast.show(S.of(context).errorCouldNotLaunchURL(url));
+  _updateFilter() async {
+    // If updating is null, filter hasn't been initialized yet so it's not
+    // technically "updating"
+    if (updating != null) {
+      updating = true;
+    }
+
+    FilterProvider filterProvider =
+        Provider.of<FilterProvider>(context, listen: false);
+    filterCache = await filterProvider.fetchFilter(context);
+
+    updating = false;
+    if (mounted) {
+      setState(() {});
     }
   }
-
-  Widget spoiler({String title, Widget content, bool initialExpanded = true}) =>
-      ExpandableNotifier(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            ExpandableTheme(
-              data: ExpandableThemeData(
-                  useInkWell: false,
-                  crossFadePoint: 0.5,
-                  hasIcon: true,
-                  iconPlacement: ExpandablePanelIconPlacement.left,
-                  iconColor: Theme.of(context).textTheme.headline6.color,
-                  headerAlignment: ExpandablePanelHeaderAlignment.center,
-                  iconPadding: EdgeInsets.only()),
-              child: ExpandablePanel(
-                controller:
-                    ExpandableController(initialExpanded: initialExpanded),
-                header:
-                    Text(title, style: Theme.of(context).textTheme.headline6),
-                collapsed: SizedBox(height: 12.0),
-                expanded: content,
-              ),
-            ),
-          ],
-        ),
-      );
 
   Widget websiteCircle(Website website, double size) {
     StorageProvider storageProvider = Provider.of<StorageProvider>(context);
@@ -123,7 +110,7 @@ class _PortalPageState extends State<PortalPage>
                       ),
                     ),
                   ))
-                : _launchURL(website.link),
+                : Utils.launchURL(website.link, context: context),
           );
         },
       ),
@@ -196,7 +183,7 @@ class _PortalPageState extends State<PortalPage>
 
     return Padding(
       padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-      child: spoiler(
+      child: AppSpoiler(
         title: category.toLocalizedString(context),
         initialExpanded: hasContent,
         content: content,
@@ -230,10 +217,6 @@ class _PortalPageState extends State<PortalPage>
     WebsiteProvider websiteProvider = Provider.of<WebsiteProvider>(context);
     FilterProvider filterProvider = Provider.of<FilterProvider>(context);
     AuthProvider authProvider = Provider.of<AuthProvider>(context);
-
-    if (filterFuture == null) {
-      filterFuture = filterProvider.fetchFilter(context);
-    }
 
     CircularProgressIndicator progressIndicator = CircularProgressIndicator();
 
@@ -271,7 +254,7 @@ class _PortalPageState extends State<PortalPage>
           tooltip: S.of(context).navigationFilter,
           items: {
             S.of(context).filterMenuRelevance: () {
-              filterFuture = null; // reset filter cache
+              _updateFilter();
               userOnly = false;
               Navigator.pushNamed(context, Routes.filter);
             },
@@ -285,7 +268,7 @@ class _PortalPageState extends State<PortalPage>
                       AppToast.show(S.of(context).warningNoPrivateWebsite);
                   });
 
-                  filterFuture = null; // reset filter cache
+                  _updateFilter();
                   setState(() => userOnly = true);
                   filterProvider.enableFilter();
                 } else {
@@ -299,7 +282,7 @@ class _PortalPageState extends State<PortalPage>
               if (!filterProvider.filterEnabled) {
                 AppToast.show(S.of(context).warningFilterAlreadyDisabled);
               } else {
-                filterFuture = null; // reset filter cache
+                _updateFilter();
                 userOnly = false;
                 filterProvider.disableFilter();
               }
@@ -307,43 +290,38 @@ class _PortalPageState extends State<PortalPage>
           },
         ),
       ],
-      body: FutureBuilder(
-        future: filterFuture,
-        builder: (BuildContext context, AsyncSnapshot<Filter> filterSnap) {
-          if (filterSnap.hasData) {
-            return FutureBuilder<List<Website>>(
-                future: websiteProvider.fetchWebsites(
-                  filterProvider.filterEnabled ? filterSnap.data : null,
-                  userOnly: userOnly,
-                  uid: authProvider.uid,
-                ),
-                builder: (context, AsyncSnapshot<List<Website>> websiteSnap) {
-                  if (websiteSnap.hasData) {
-                    websites = websiteSnap.data;
-                    return SingleChildScrollView(
-                      child: Padding(
-                        padding: EdgeInsets.only(top: 12.0),
-                        child: Column(
-                          children: listWebsitesByCategory(websites),
-                        ),
+      body: Stack(
+        children: [
+          FutureBuilder<List<Website>>(
+              future: websiteProvider.fetchWebsites(
+                filterProvider.filterEnabled ? filterCache : null,
+                userOnly: userOnly,
+                uid: authProvider.uid,
+              ),
+              builder: (context, AsyncSnapshot<List<Website>> websiteSnap) {
+                if (websiteSnap.hasData) {
+                  websites = websiteSnap.data;
+                  return SingleChildScrollView(
+                    child: Padding(
+                      padding: EdgeInsets.only(top: 12.0),
+                      child: Column(
+                        children: listWebsitesByCategory(websites),
                       ),
-                    );
-                  } else if (websiteSnap.hasError) {
-                    print(filterSnap.error);
-                    // TODO: Show error toast
-                    return Container();
-                  } else {
-                    return Center(child: progressIndicator);
-                  }
-                });
-          } else if (filterSnap.hasError) {
-            print(filterSnap.error);
-            // TODO: Show error toast
-            return Container();
-          } else {
-            return Center(child: progressIndicator);
-          }
-        },
+                    ),
+                  );
+                } else if (websiteSnap.hasError) {
+                  print(websiteSnap.error);
+                  // TODO: Show error toast
+                  return Container();
+                } else {
+                  return Center(child: progressIndicator);
+                }
+              }),
+          if (updating == true)
+            Container(
+                color: Theme.of(context).disabledColor,
+                child: Center(child: CircularProgressIndicator())),
+        ],
       ),
     );
   }

@@ -1,5 +1,6 @@
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/widgets/button.dart';
+import 'package:acs_upb_mobile/widgets/icon_text.dart';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 
@@ -12,6 +13,9 @@ class AppDialog extends StatelessWidget {
 
   /// Dialog message
   final String message;
+
+  /// Additional information
+  final String info;
 
   /// Content to be shown under dialog message
   final List<Widget> content;
@@ -28,6 +32,7 @@ class AppDialog extends StatelessWidget {
       this.icon,
       @required this.title,
       @required this.message,
+      this.info,
       this.content,
       this.actions,
       this.enableCancelButton = true})
@@ -50,6 +55,17 @@ class AppDialog extends StatelessWidget {
             children: <Widget>[
                   Expanded(child: Container(height: 8)),
                   Text(message),
+                  if (info != null)
+                    Column(children: [
+                      SizedBox(height: 8),
+                      IconText(
+                          icon: Icons.info,
+                          text: info,
+                          style: Theme.of(context)
+                              .textTheme
+                              .subtitle2
+                              .copyWith(color: Theme.of(context).hintColor))
+                    ])
                 ] +
                 (content ?? <Widget>[]),
           ),

@@ -5,10 +5,12 @@ import 'package:acs_upb_mobile/pages/filter/model/filter.dart';
 import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
 import 'package:acs_upb_mobile/resources/banner.dart';
 import 'package:acs_upb_mobile/resources/locale_provider.dart';
+import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/resources/validator.dart';
 import 'package:acs_upb_mobile/widgets/button.dart';
 import 'package:acs_upb_mobile/widgets/form/form.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -26,11 +28,11 @@ class _SignUpViewState extends State<SignUpView> {
   Filter filter;
   List<FilterNode> nodes;
   FilterProvider filterProvider;
+  bool agreedToPolicy = false;
 
   void _fetchFilter() async {
     // Fetch filter for dropdown buttons
-    filterProvider =
-        Provider.of<FilterProvider>(context, listen: false);
+    filterProvider = Provider.of<FilterProvider>(context, listen: false);
     filter = await filterProvider.fetchFilter(context);
 
     // Add the first selected node and refresh
@@ -58,6 +60,8 @@ class _SignUpViewState extends State<SignUpView> {
         label: S.of(context).labelEmail,
         hint: S.of(context).hintEmail,
         suffix: emailDomain,
+        autocorrect: false,
+        autofillHints: [AutofillHints.newUsername],
         check: (email, {BuildContext context}) => authProvider
             .canSignUpWithEmail(email: email + emailDomain, context: context),
       ),
@@ -67,6 +71,7 @@ class _SignUpViewState extends State<SignUpView> {
         additionalHint: S.of(context).infoPassword,
         controller: passwordController,
         obscureText: true,
+        autofillHints: [AutofillHints.newPassword],
         check: (password, {BuildContext context}) =>
             AppValidator.isStrongPassword(password: password, context: context),
       ),
@@ -83,13 +88,13 @@ class _SignUpViewState extends State<SignUpView> {
         },
       ),
       FormItem(
-        label: S.of(context).labelFirstName,
-        hint: S.of(context).hintFirstName,
-      ),
+          label: S.of(context).labelFirstName,
+          hint: S.of(context).hintFirstName,
+          autofillHints: [AutofillHints.givenName]),
       FormItem(
-        label: S.of(context).labelLastName,
-        hint: S.of(context).hintLastName,
-      ),
+          label: S.of(context).labelLastName,
+          hint: S.of(context).hintLastName,
+          autofillHints: [AutofillHints.familyName]),
     ];
     return formItems;
   }
@@ -141,14 +146,57 @@ class _SignUpViewState extends State<SignUpView> {
     return items;
   }
 
+  Widget _privacyPolicy() {
+    return Padding(
+      padding: const EdgeInsets.only(top: 8.0),
+      child: Row(
+        children: [
+          Checkbox(
+            value: agreedToPolicy,
+            visualDensity: VisualDensity.compact,
+            onChanged: (value) => setState(() => agreedToPolicy = value),
+          ),
+          Expanded(
+            child: RichText(
+              text: TextSpan(
+                  style: Theme.of(context).textTheme.subtitle1,
+                  children: [
+                    TextSpan(text: S.of(context).messageIAgreeToThe),
+                    TextSpan(
+                        text: S.of(context).labelPrivacyPolicy,
+                        style: Theme.of(context)
+                            .accentTextTheme
+                            .subtitle1
+                            .apply(fontWeightDelta: 2),
+                        recognizer: TapGestureRecognizer()
+                          ..onTap = () => Utils.launchURL(
+                              'https://www.websitepolicies.com/policies/view/IIUFv381',
+                              context: context)),
+                    TextSpan(text: '.'),
+                  ]),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   AppForm _buildForm(BuildContext context) {
     AuthProvider authProvider = Provider.of(context);
 
     return AppForm(
       title: S.of(context).actionSignUp,
       items: _buildFormItems(),
-      trailing: _dropdownTree(context),
+      trailing: _dropdownTree(context) + [_privacyPolicy()],
+      submitOnEnter: false,
       onSubmitted: (Map<String, String> fields) async {
+        if (!agreedToPolicy) {
+          AppToast.show(S.of(context).warningAgreeTo +
+              S.of(context).labelPrivacyPolicy +
+              '.');
+          return;
+        }
+
         fields[S.of(context).labelEmail] += S.of(context).stringEmailDomain;
         nodes.asMap().forEach((i, node) {
           if (i > 0) {
@@ -175,68 +223,77 @@ class _SignUpViewState extends State<SignUpView> {
   Widget build(BuildContext context) {
     AppForm signUpForm = _buildForm(context);
 
-    return Scaffold(
-      body: Stack(
-        fit: StackFit.expand,
-        children: <Widget>[
-          Align(
-            alignment: FractionalOffset.topRight,
-            child: Padding(
-              padding: EdgeInsets.all(10.0),
-              child: Container(
-                  height: MediaQuery.of(context).size.height / 3 - 20,
-                  child: Image.asset(
-                      "assets/illustrations/undraw_personal_information.png")),
-            ),
-          ),
-          SingleChildScrollView(
-            child: Padding(
-              padding: EdgeInsets.only(left: 28.0, right: 28.0, bottom: 8.0),
-              child: IntrinsicHeight(
-                child: Column(
-                  children: <Widget>[
-                    SizedBox(
-                      height: MediaQuery.of(context).size.height / 3,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: <Widget>[
-                          UniBanner(),
-                        ],
-                      ),
-                    ),
-                    SizedBox(height: 10),
-                    Expanded(child: signUpForm),
-                    SizedBox(height: 20),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Expanded(
-                          child: AppButton(
-                            key: ValueKey('cancel_button'),
-                            text: S.of(context).buttonCancel,
-                            onTap: () async {
-                              return Navigator.pop(context);
-                            },
-                          ),
-                        ),
-                        SizedBox(width: 20),
-                        Expanded(
-                          child: AppButton(
-                            key: ValueKey('sign_up_button'),
-                            color: Theme.of(context).accentColor,
-                            text: S.of(context).actionSignUp,
-                            onTap: () => signUpForm.submit(),
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 20),
-                  ],
-                ),
+    return GestureDetector(
+      onTap: () {
+        // Remove current focus on tap
+        FocusScopeNode currentFocus = FocusScope.of(context);
+        if (!currentFocus.hasPrimaryFocus) {
+          currentFocus.unfocus();
+        }
+      },
+      child: Scaffold(
+        body: Stack(
+          fit: StackFit.expand,
+          children: <Widget>[
+            Align(
+              alignment: FractionalOffset.topRight,
+              child: Padding(
+                padding: EdgeInsets.all(10.0),
+                child: Container(
+                    height: MediaQuery.of(context).size.height / 3 - 20,
+                    child: Image.asset(
+                        "assets/illustrations/undraw_personal_information.png")),
               ),
             ),
-          )
-        ],
+            SingleChildScrollView(
+              child: Padding(
+                padding: EdgeInsets.only(left: 28.0, right: 28.0, bottom: 8.0),
+                child: IntrinsicHeight(
+                  child: Column(
+                    children: <Widget>[
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height / 3,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: <Widget>[
+                            UniBanner(),
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: 10),
+                      Expanded(child: signUpForm),
+                      SizedBox(height: 20),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Expanded(
+                            child: AppButton(
+                              key: ValueKey('cancel_button'),
+                              text: S.of(context).buttonCancel,
+                              onTap: () async {
+                                return Navigator.pop(context);
+                              },
+                            ),
+                          ),
+                          SizedBox(width: 20),
+                          Expanded(
+                            child: AppButton(
+                              key: ValueKey('sign_up_button'),
+                              color: Theme.of(context).accentColor,
+                              text: S.of(context).actionSignUp,
+                              onTap: () => signUpForm.submit(),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 20),
+                    ],
+                  ),
+                ),
+              ),
+            )
+          ],
+        ),
       ),
     );
   }

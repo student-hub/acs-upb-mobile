@@ -4,6 +4,7 @@ import 'package:acs_upb_mobile/authentication/view/sign_up_view.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/navigation/bottom_navigation_bar.dart';
 import 'package:acs_upb_mobile/navigation/routes.dart';
+import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
 import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
 import 'package:acs_upb_mobile/pages/filter/view/filter_page.dart';
 import 'package:acs_upb_mobile/pages/portal/service/website_provider.dart';
@@ -13,13 +14,17 @@ import 'package:acs_upb_mobile/resources/storage_provider.dart';
 import 'package:acs_upb_mobile/widgets/loading_screen.dart';
 import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:preferences/preferences.dart';
 import 'package:provider/provider.dart';
+import 'package:time_machine/time_machine.dart';
 
 main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await TimeMachine.initialize({'rootBundle': rootBundle});
   await PrefService.init(prefix: 'pref_');
   PrefService.setDefaultValues({'language': 'auto', 'relevance_filter': true});
 
@@ -27,6 +32,7 @@ main() async {
     ChangeNotifierProvider<AuthProvider>(create: (_) => AuthProvider()),
     ChangeNotifierProvider<StorageProvider>(create: (_) => StorageProvider()),
     ChangeNotifierProvider<WebsiteProvider>(create: (_) => WebsiteProvider()),
+    ChangeNotifierProvider<ClassProvider>(create: (_) => ClassProvider()),
     ChangeNotifierProvider<FilterProvider>(
         create: (_) => FilterProvider(global: true)),
   ], child: MyApp()));
@@ -42,11 +48,12 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  final Color _accentColor = Color(0xFF43ADCD);
+  final Color _accentColor = Color(0xFF43ACCD);
 
   Widget buildApp(BuildContext context, ThemeData theme) {
     return MaterialApp(
       title: "ACS UPB Mobile",
+      debugShowCheckedModeBanner: false,
       localizationsDelegates: [
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
@@ -70,22 +77,21 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return DynamicTheme(
-      defaultBrightness: Brightness.dark,
+      defaultBrightness: SchedulerBinding.instance.window.platformBrightness,
       data: (brightness) => ThemeData(
-          brightness: brightness,
-          accentColor: _accentColor,
-          // The following two lines are meant to remove the splash effect
-          splashColor: Colors.transparent,
-          highlightColor: Colors.transparent,
-          accentTextTheme: ThemeData().accentTextTheme.apply(
-              fontFamily: 'Montserrat',
-              bodyColor: _accentColor,
-              displayColor: _accentColor),
-          toggleableActiveColor: _accentColor,
-          appBarTheme: brightness == Brightness.light
-              ? AppBarTheme(color: _accentColor)
-              : AppBarTheme(),
-          fontFamily: 'Montserrat'),
+        brightness: brightness,
+        accentColor: _accentColor,
+        // The following two lines are meant to remove the splash effect
+        splashColor: Colors.transparent,
+        highlightColor: Colors.transparent,
+        accentTextTheme: ThemeData().accentTextTheme.apply(
+            fontFamily: 'Montserrat',
+            bodyColor: _accentColor,
+            displayColor: _accentColor),
+        toggleableActiveColor: _accentColor,
+        fontFamily: 'Montserrat',
+        primaryColor: Color(0xFF4DB5E4),
+      ),
       themedWidgetBuilder: (context, theme) {
         return OKToast(
           textStyle: theme.textTheme.button,
