@@ -29,16 +29,16 @@ extension UniEventTypeExtension on UniEventType {
 extension PeriodExtension on Period {
   static Period fromJSON(Map<String, dynamic> json) {
     return Period(
-      years: int.parse(json['years'] ?? '0'),
-      months: int.parse(json['months'] ?? '0'),
-      weeks: int.parse(json['weeks'] ?? '0'),
-      days: int.parse(json['days'] ?? '0'),
-      hours: int.parse(json['hours'] ?? '0'),
-      minutes: int.parse(json['minutes'] ?? '0'),
-      seconds: int.parse(json['seconds'] ?? '0'),
-      milliseconds: int.parse(json['milliseconds'] ?? '0'),
-      microseconds: int.parse(json['microseconds'] ?? '0'),
-      nanoseconds: int.parse(json['nanoseconds'] ?? '0'),
+      years: json['years'] ?? 0,
+      months: json['months'] ?? 0,
+      weeks: json['weeks'] ?? 0,
+      days: json['days'] ?? 0,
+      hours: json['hours'] ?? 0,
+      minutes: json['minutes'] ?? 0,
+      seconds: json['seconds'] ?? 0,
+      milliseconds: json['milliseconds'] ?? 0,
+      microseconds: json['microseconds'] ?? 0,
+      nanoseconds: json['nanoseconds'] ?? 0,
     );
   }
 }
@@ -50,7 +50,7 @@ extension RecurrenceRuleExtension on RecurrenceRule {
 
     return RecurrenceRule(
       frequency: recurFreqValues[(json['frequency'] as String).toUpperCase()],
-      interval: int.parse(json['interval'] ?? '1'),
+      interval: json['interval'] ?? 1,
       until: (json['until'] as Timestamp).toLocalDateTime(),
     );
   }
@@ -66,7 +66,7 @@ extension TimestampExtension on Timestamp {
 extension UniEventExtension on UniEvent {
   static UniEvent fromSnap(DocumentSnapshot snap) {
     return UniEvent(
-      rrule: RecurrenceRuleExtension.fromJSON(snap['rrule']),
+      rrule: RecurrenceRuleExtension.fromJSON(snap.data['rrule']),
       id: snap.documentID,
       type: UniEventTypeExtension.fromString(snap.data['type']),
       name: snap.data['name'],
@@ -85,19 +85,23 @@ class UniEventProvider extends EventProvider<UniEventInstance>
   AcademicCalendar calendar = AcademicCalendar();
 
   Stream<List<UniEventInstance>> get _events {
-    Stream<List<UniEvent>> e = Firestore.instance
-        .collection('events')
-        .snapshots()
-        .map((snapshot) => snapshot.documents
-            .map((document) => UniEventExtension.fromSnap(document))
-            .toList());
+    try {
+      Stream<List<UniEvent>> e = Firestore.instance
+          .collection('events')
+          .snapshots()
+          .map((snapshot) => snapshot.documents
+              .map((document) => UniEventExtension.fromSnap(document))
+              .toList());
 
-    return e.map((events) =>
-        events
-            .map((event) => event.generateInstances(calendar: calendar))
-            .expand((i) => i)
-            .toList() +
-        calendar.generateHolidayInstances());
+      return e.map((events) =>
+          events
+              .map((event) => event.generateInstances(calendar: calendar))
+              .expand((i) => i)
+              .toList() +
+          calendar.generateHolidayInstances());
+    } catch (e) {
+      print(e);
+    }
   }
 
   @override
