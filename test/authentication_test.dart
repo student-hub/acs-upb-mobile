@@ -53,7 +53,7 @@ void main() {
     // ignore: invalid_use_of_protected_member
     when(mockFilterProvider.hasListeners).thenReturn(false);
     when(mockFilterProvider.filterEnabled).thenReturn(true);
-    when(mockFilterProvider.fetchFilter(any))
+    when(mockFilterProvider.fetchFilter(context: anyNamed('context')))
         .thenAnswer((_) => Future.value(Filter(localizedLevelNames: [
               {'en': 'Level', 'ro': 'Nivel'}
             ], root: FilterNode(name: 'root'))));
@@ -194,7 +194,7 @@ void main() {
       // ignore: invalid_use_of_protected_member
       when(mockFilterProvider.hasListeners).thenReturn(false);
       when(mockFilterProvider.filterEnabled).thenReturn(true);
-      when(mockFilterProvider.fetchFilter(any))
+      when(mockFilterProvider.fetchFilter(context: anyNamed('context')))
           .thenAnswer((_) => Future.value(Filter(
                   localizedLevelNames: [
                     {'en': 'Degree', 'ro': 'Nivel de studiu'},
@@ -255,7 +255,8 @@ void main() {
 
     testWidgets('Sign up', (WidgetTester tester) async {
       await tester.pumpWidget(MultiProvider(providers: [
-        ChangeNotifierProvider<AuthenticationProvider>(create: (_) => mockAuthProvider),
+        ChangeNotifierProvider<AuthenticationProvider>(
+            create: (_) => mockAuthProvider),
         ChangeNotifierProvider<FilterProvider>(
             create: (_) => mockFilterProvider)
       ], child: MyApp(navigationObservers: [mockObserver])));
@@ -319,7 +320,8 @@ void main() {
 
     testWidgets('Cancel', (WidgetTester tester) async {
       await tester.pumpWidget(MultiProvider(providers: [
-        ChangeNotifierProvider<AuthenticationProvider>(create: (_) => mockAuthProvider),
+        ChangeNotifierProvider<AuthenticationProvider>(
+            create: (_) => mockAuthProvider),
         ChangeNotifierProvider<FilterProvider>(
             create: (_) => mockFilterProvider)
       ], child: MyApp(navigationObservers: [mockObserver])));
@@ -371,7 +373,8 @@ void main() {
       when(mockAuthProvider.isAnonymous).thenReturn(true);
 
       await tester.pumpWidget(MultiProvider(providers: [
-        ChangeNotifierProvider<AuthenticationProvider>(create: (_) => mockAuthProvider),
+        ChangeNotifierProvider<AuthenticationProvider>(
+            create: (_) => mockAuthProvider),
         ChangeNotifierProvider<FilterProvider>(
             create: (_) => mockFilterProvider),
         ChangeNotifierProvider<WebsiteProvider>(
@@ -402,7 +405,8 @@ void main() {
       when(mockAuthProvider.isAnonymous).thenReturn(false);
 
       await tester.pumpWidget(MultiProvider(providers: [
-        ChangeNotifierProvider<AuthenticationProvider>(create: (_) => mockAuthProvider),
+        ChangeNotifierProvider<AuthenticationProvider>(
+            create: (_) => mockAuthProvider),
         ChangeNotifierProvider<FilterProvider>(
             create: (_) => mockFilterProvider),
         ChangeNotifierProvider<WebsiteProvider>(

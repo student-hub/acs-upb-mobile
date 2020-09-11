@@ -79,7 +79,7 @@ class _RelevancePickerState extends State<RelevancePicker> {
   }
 
   _fetchFilter() async {
-    _filter = await widget.filterProvider.fetchFilter(context);
+    _filter = await widget.filterProvider.fetchFilter(context: context);
     setState(() {});
   }
 

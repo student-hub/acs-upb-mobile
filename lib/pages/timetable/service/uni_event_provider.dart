@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/pages/classes/model/class.dart';
 import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
+import 'package:acs_upb_mobile/pages/filter/model/filter.dart';
+import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/academic_calendar.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/uni_event.dart';
 import 'package:async/async.dart';
@@ -99,16 +101,28 @@ class UniEventProvider extends EventProvider<UniEventInstance>
     with ChangeNotifier {
   AcademicCalendar calendar = AcademicCalendar();
   ClassProvider classProvider;
+  FilterProvider filterProvider;
   final AuthenticationProvider authProvider;
   List<String> classIds = [];
+  Filter filter;
 
-  void update(ClassProvider classProvider) {
+  void updateClasses(ClassProvider classProvider) {
     this.classProvider = classProvider;
     fetchClassIds();
   }
 
   void fetchClassIds() async {
     classIds = await classProvider.fetchUserClassIds(uid: authProvider.uid);
+    notifyListeners();
+  }
+
+  void updateFilter(FilterProvider filterProvider) {
+    this.filterProvider = filterProvider;
+    fetchFilter();
+  }
+
+  void fetchFilter() async {
+    filter = await filterProvider.fetchFilter();
     notifyListeners();
   }
 
@@ -124,6 +138,7 @@ class UniEventProvider extends EventProvider<UniEventInstance>
       Stream<List<UniEvent>> stream = Firestore.instance
           .collection('events')
           .where('class', isEqualTo: classId)
+          .where('relevance', arrayContainsAny: filter.relevantNodes)
           .snapshots()
           .asyncMap((snapshot) async {
         List<UniEvent> events = [];

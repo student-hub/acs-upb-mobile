@@ -70,7 +70,7 @@ void main() {
   final FilterProvider mockFilterProvider = MockFilterProvider();
   // ignore: invalid_use_of_protected_member
   when(mockFilterProvider.hasListeners).thenReturn(false);
-  when(mockFilterProvider.fetchFilter(any))
+  when(mockFilterProvider.fetchFilter(context: anyNamed('context')))
       .thenAnswer((_) => Future.value(Filter(root: FilterNode(name: 'All'))));
   when(mockFilterProvider.filterEnabled).thenReturn(true);
 
@@ -95,7 +95,8 @@ void main() {
               create: (_) => mockStorageProvider),
           ChangeNotifierProvider<FilterProvider>(
               create: (_) => mockFilterProvider),
-          ChangeNotifierProvider<AuthenticationProvider>(create: (_) => mockAuthProvider),
+          ChangeNotifierProvider<AuthenticationProvider>(
+              create: (_) => mockAuthProvider),
         ],
         child: MaterialApp(
           localizationsDelegates: [S.delegate],

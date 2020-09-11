@@ -33,7 +33,7 @@ class _SignUpViewState extends State<SignUpView> {
   void _fetchFilter() async {
     // Fetch filter for dropdown buttons
     filterProvider = Provider.of<FilterProvider>(context, listen: false);
-    filter = await filterProvider.fetchFilter(context);
+    filter = await filterProvider.fetchFilter(context: context);
 
     // Add the first selected node and refresh
     nodes = [filter.root];
@@ -53,7 +53,8 @@ class _SignUpViewState extends State<SignUpView> {
     String emailDomain = S.of(context).stringEmailDomain;
 
     TextEditingController passwordController = TextEditingController();
-    AuthenticationProvider authProvider = Provider.of<AuthenticationProvider>(context);
+    AuthenticationProvider authProvider =
+        Provider.of<AuthenticationProvider>(context);
 
     formItems = <FormItem>[
       FormItem(

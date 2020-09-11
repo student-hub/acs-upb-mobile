@@ -1,10 +1,11 @@
 import 'package:acs_upb_mobile/authentication/model/user.dart';
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
+import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/filter/model/filter.dart';
+import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:preferences/preference_service.dart';
-import 'package:provider/provider.dart';
 
 extension FilterNodeExtension on FilterNode {
   static FilterNode fromMap(Map<String, dynamic> map, String parentName) {
@@ -21,6 +22,7 @@ extension FilterNodeExtension on FilterNode {
 class FilterProvider with ChangeNotifier {
   final Firestore _db = Firestore.instance;
   Filter _relevanceFilter; // filter cache
+  AuthenticationProvider authProvider;
 
   /// Whether this is the global filter instance and should update shared preferences
   final bool global;
@@ -34,9 +36,11 @@ class FilterProvider with ChangeNotifier {
       {this.global = false,
       bool filterEnabled,
       this.defaultDegree,
-      List<String> defaultRelevance})
+      List<String> defaultRelevance,
+      AuthenticationProvider authProvider})
       : _enabled = filterEnabled ?? PrefService.get('relevance_filter') ?? true,
-        _relevantNodes = defaultRelevance {
+        _relevantNodes = defaultRelevance,
+        authProvider = authProvider ?? AuthenticationProvider() {
     if (defaultRelevance != null) {
       if (this.defaultDegree == null) {
         throw ArgumentError(
@@ -80,7 +84,7 @@ class FilterProvider with ChangeNotifier {
 
   Filter get cachedFilter => _relevanceFilter;
 
-  Future<Filter> fetchFilter(BuildContext context) async {
+  Future<Filter> fetchFilter({BuildContext context}) async {
     if (_relevanceFilter != null) {
       return _relevanceFilter;
     }
@@ -121,8 +125,6 @@ class FilterProvider with ChangeNotifier {
             _relevanceFilter.setRelevantUpToRoot(node, defaultDegree));
       } else {
         // No previous setting or defaults => set the user's group
-        AuthenticationProvider authProvider =
-            Provider.of<AuthenticationProvider>(context, listen: false);
         if (authProvider.isAuthenticatedFromCache) {
           User user = await authProvider.currentUser;
           // Try to set the default from the user data
@@ -141,7 +143,9 @@ class FilterProvider with ChangeNotifier {
       return _relevanceFilter;
     } catch (e, stackTrace) {
       print(e);
-      print(stackTrace);
+      if (context != null) {
+        AppToast.show(S.of(context).errorSomethingWentWrong);
+      }
       return null;
     }
   }

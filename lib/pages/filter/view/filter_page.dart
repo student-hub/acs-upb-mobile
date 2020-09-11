@@ -163,7 +163,7 @@ class FilterPageState extends State<FilterPage> {
     // being rebuilt completely every single time something is pressed (which
     // looks really bad and scrolls all the rows back to the beginning).
     if (filterFuture == null) {
-      filterFuture = filterProvider.fetchFilter(context);
+      filterFuture = filterProvider.fetchFilter(context: context);
     }
 
     return AppScaffold(

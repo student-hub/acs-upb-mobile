@@ -66,7 +66,7 @@ class _PortalPageState extends State<PortalPage>
 
     FilterProvider filterProvider =
         Provider.of<FilterProvider>(context, listen: false);
-    filterCache = await filterProvider.fetchFilter(context);
+    filterCache = await filterProvider.fetchFilter(context: context);
 
     updating = false;
     if (mounted) {
@@ -102,8 +102,9 @@ class _PortalPageState extends State<PortalPage>
                 ? Navigator.of(context).push(MaterialPageRoute(
                     builder: (_) => ChangeNotifierProvider<FilterProvider>(
                       create: (_) => FilterProvider(
-                          defaultDegree: website.degree,
-                          defaultRelevance: website.relevance),
+                        defaultDegree: website.degree,
+                        defaultRelevance: website.relevance,
+                      ),
                       child: WebsiteView(
                         website: website,
                         updateExisting: true,
@@ -216,7 +217,8 @@ class _PortalPageState extends State<PortalPage>
 
     WebsiteProvider websiteProvider = Provider.of<WebsiteProvider>(context);
     FilterProvider filterProvider = Provider.of<FilterProvider>(context);
-    AuthenticationProvider authProvider = Provider.of<AuthenticationProvider>(context);
+    AuthenticationProvider authProvider =
+        Provider.of<AuthenticationProvider>(context);
 
     CircularProgressIndicator progressIndicator = CircularProgressIndicator();
 

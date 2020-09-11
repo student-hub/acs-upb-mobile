@@ -1,9 +1,11 @@
 import 'package:acs_upb_mobile/generated/l10n.dart';
+import 'package:acs_upb_mobile/navigation/routes.dart';
 import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
 import 'package:acs_upb_mobile/pages/classes/view/classes_page.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/uni_event.dart';
 import 'package:acs_upb_mobile/pages/timetable/service/uni_event_provider.dart';
 import 'package:acs_upb_mobile/pages/timetable/view/uni_event_widget.dart';
+import 'package:acs_upb_mobile/resources/custom_icons.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -54,6 +56,10 @@ class _TimetablePageState extends State<TimetablePage> {
                 child: ClassesPage()),
           )),
         ),
+        AppScaffoldAction(
+            icon: CustomIcons.filter,
+            tooltip: S.of(context).navigationFilter,
+            onPressed: () => Navigator.pushNamed(context, Routes.filter)),
       ],
       body: Timetable<UniEventInstance>(
         controller: _controller,

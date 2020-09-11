@@ -37,15 +37,22 @@ main() async {
     ChangeNotifierProvider<StorageProvider>(create: (_) => StorageProvider()),
     ChangeNotifierProvider<WebsiteProvider>(create: (_) => WebsiteProvider()),
     ChangeNotifierProvider<ClassProvider>(create: (_) => classProvider),
-    ChangeNotifierProxyProvider<ClassProvider, UniEventProvider>(
+    ChangeNotifierProvider<FilterProvider>(
+        create: (_) => FilterProvider(
+              global: true,
+              authProvider: authProvider,
+            )),
+    ChangeNotifierProxyProvider2<ClassProvider, FilterProvider,
+        UniEventProvider>(
       create: (_) => UniEventProvider(
         authProvider: authProvider,
       ),
-      update: (context, classProvider, uniEventProvider) =>
-          uniEventProvider..update(classProvider),
+      update: (context, classProvider, filterProvider, uniEventProvider) {
+        return uniEventProvider
+          ..updateClasses(classProvider)
+          ..updateFilter(filterProvider);
+      },
     ),
-    ChangeNotifierProvider<FilterProvider>(
-        create: (_) => FilterProvider(global: true)),
   ], child: MyApp()));
 }
 
