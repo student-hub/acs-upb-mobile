@@ -223,20 +223,40 @@ class _EditProfilePageState extends State<EditProfilePage> {
                         S.of(context).labelPersonalInformation,
                         leftPadding: 0,
                       ),
-                      TextFormField(
-                          decoration: InputDecoration(
-                            prefixIcon: Icon(Icons.person),
-                            labelText: S.of(context).labelFirstName,
-                            hintText: S.of(context).hintFirstName,
-                          ),
-                          controller: firstNameController),
-                      TextFormField(
-                        decoration: InputDecoration(
-                          prefixIcon: Icon(Icons.person),
-                          labelText: S.of(context).labelLastName,
-                          hintText: S.of(context).hintLastName,
+                      Form(
+                        key: editProfileForm,
+                        child: Column(
+                          children: [
+                            TextFormField(
+                              decoration: InputDecoration(
+                                prefixIcon: Icon(Icons.person),
+                                labelText: S.of(context).labelFirstName,
+                                hintText: S.of(context).hintFirstName,
+                              ),
+                              controller: firstNameController,
+                              validator: (value) {
+                                if (value.isEmpty || value != null) {
+                                  return S.of(context).errorMissingFirstName;
+                                }
+                                return null;
+                              },
+                            ),
+                            TextFormField(
+                              decoration: InputDecoration(
+                                prefixIcon: Icon(Icons.person),
+                                labelText: S.of(context).labelLastName,
+                                hintText: S.of(context).hintLastName,
+                              ),
+                              controller: lastNameController,
+                              validator: (value) {
+                                if (value.isEmpty || value != null) {
+                                  return S.of(context).errorMissingLastName;
+                                }
+                                return null;
+                              },
+                            ),
+                          ],
                         ),
-                        controller: lastNameController,
                       ),
                       PreferenceTitle(
                         S.of(context).labelClass,
