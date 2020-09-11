@@ -163,7 +163,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
   Widget build(BuildContext context) {
     AuthProvider authProvider = Provider.of<AuthProvider>(context);
     return AppScaffold(
-      title: 'Edit Profile',
+      title: S.of(context).sectionEditProfile,
       actions: [
         AppScaffoldAction(
             text: S.of(context).buttonSave,
@@ -190,10 +190,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 );
 
                 if (result) {
-                  AppToast.show('Success');
+                  AppToast.show(S.of(context).messageEditProfileSuccess);
                   Navigator.pop(context);
                 } else {
-                  AppToast.show('Fail');
+                  AppToast.show(S.of(context).errorSomethingWentWrong);
                 }
               }
             }),

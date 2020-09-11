@@ -403,6 +403,16 @@ class S {
     );
   }
 
+  /// `Edit Profile`
+  String get sectionEditProfile {
+    return Intl.message(
+      'Edit Profile',
+      name: 'sectionEditProfile',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Main page`
   String get shortcutTypeMain {
     return Intl.message(
@@ -1738,6 +1748,16 @@ class S {
     return Intl.message(
       'I agree to the ',
       name: 'messageIAgreeToThe',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// ``
+  String get messageEditProfileSuccess {
+    return Intl.message(
+      '',
+      name: 'messageEditProfileSuccess',
       desc: '',
       args: [],
     );
