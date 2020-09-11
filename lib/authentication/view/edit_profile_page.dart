@@ -181,17 +181,17 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     S.of(context).labelFirstName: firstNameController.text,
                     S.of(context).labelLastName: lastNameController.text,
                     filter.localizedLevelNames[0][LocaleProvider.localeString]:
-                        nodes[1].name != null ? nodes[1].name : null,
+                        nodes.length > 1 ? nodes[1].name : null,
                     filter.localizedLevelNames[1][LocaleProvider.localeString]:
-                        nodes[2].name != null ? nodes[2].name : null,
+                        nodes.length > 2 ? nodes[2].name : null,
                     filter.localizedLevelNames[2][LocaleProvider.localeString]:
-                        nodes[3].name != null ? nodes[3].name : null,
+                        nodes.length > 3 ? nodes[3].name : null,
                     filter.localizedLevelNames[3][LocaleProvider.localeString]:
-                        nodes[4].name != null ? nodes[4].name : null,
+                        nodes.length > 4? nodes[4].name : null,
                     filter.localizedLevelNames[4][LocaleProvider.localeString]:
-                        nodes[5].name != null ? nodes[5].name : null,
+                        nodes.length > 5? nodes[5].name : null,
                     filter.localizedLevelNames[5][LocaleProvider.localeString]:
-                        nodes[6].name != null ? nodes[6].name : null,
+                        nodes.length > 6 ? nodes[6].name : null,
                   },
                   context: context,
                 );
