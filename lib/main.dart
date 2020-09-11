@@ -29,12 +29,14 @@ main() async {
   await PrefService.init(prefix: 'pref_');
   PrefService.setDefaultValues({'language': 'auto', 'relevance_filter': true});
 
+  ClassProvider classProvider = ClassProvider();
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider<AuthProvider>(create: (_) => AuthProvider()),
     ChangeNotifierProvider<StorageProvider>(create: (_) => StorageProvider()),
     ChangeNotifierProvider<WebsiteProvider>(create: (_) => WebsiteProvider()),
-    ChangeNotifierProvider<ClassProvider>(create: (_) => ClassProvider()),
-    ChangeNotifierProvider<UniEventProvider>(create: (_) => UniEventProvider()),
+    ChangeNotifierProvider<ClassProvider>(create: (_) => classProvider),
+    ChangeNotifierProvider<UniEventProvider>(
+        create: (_) => UniEventProvider(classProvider: classProvider)),
     ChangeNotifierProvider<FilterProvider>(
         create: (_) => FilterProvider(global: true)),
   ], child: MyApp()));

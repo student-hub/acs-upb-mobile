@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:acs_upb_mobile/pages/classes/model/class.dart';
+import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/academic_calendar.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/uni_event.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -66,7 +68,7 @@ extension TimestampExtension on Timestamp {
 }
 
 extension UniEventExtension on UniEvent {
-  static UniEvent fromSnap(DocumentSnapshot snap) {
+  static UniEvent fromSnap(DocumentSnapshot snap, {ClassHeader classHeader}) {
     if (snap.data['start'] == null || snap.data['duration'] == null)
       return null;
 
@@ -82,6 +84,7 @@ extension UniEventExtension on UniEvent {
         location: snap.data['location'],
         // TODO: Allow users to set event colours in settings
         color: Colors.blue,
+        classHeader: classHeader,
       );
     } catch (e) {
       print(e);
@@ -93,15 +96,33 @@ extension UniEventExtension on UniEvent {
 class UniEventProvider extends EventProvider<UniEventInstance>
     with ChangeNotifier {
   AcademicCalendar calendar = AcademicCalendar();
+  final ClassProvider classProvider;
+
+  UniEventProvider({ClassProvider classProvider})
+      : classProvider = classProvider ?? ClassProvider();
 
   Stream<List<UniEventInstance>> get _events {
     Stream<List<UniEvent>> e = Firestore.instance
         .collection('events')
         .snapshots()
-        .map((snapshot) => snapshot.documents
-            .map((document) => UniEventExtension.fromSnap(document))
-            .where((element) => element != null)
-            .toList());
+        .asyncMap((snapshot) async {
+      List<UniEvent> events = [];
+      try {
+        for (var doc in snapshot.documents) {
+          ClassHeader classHeader;
+          if (doc.data['class'] != null) {
+            classHeader =
+                await classProvider.fetchClassHeader(doc.data['class']);
+          }
+
+          events.add(UniEventExtension.fromSnap(doc, classHeader: classHeader));
+        }
+        return events.where((element) => element != null).toList();
+      } catch (e) {
+        print(e);
+        return events;
+      }
+    });
 
     return e.map((events) =>
         events

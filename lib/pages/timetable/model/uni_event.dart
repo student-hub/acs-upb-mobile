@@ -1,6 +1,7 @@
 import 'dart:core';
 
 import 'package:acs_upb_mobile/generated/l10n.dart';
+import 'package:acs_upb_mobile/pages/classes/model/class.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/academic_calendar.dart';
 import 'package:flutter/material.dart';
 import 'package:rrule/rrule.dart';
@@ -35,6 +36,7 @@ class UniEvent {
   final Period duration;
   final String name;
   final String location;
+  final ClassHeader classHeader;
 
   const UniEvent({
     this.name,
@@ -45,9 +47,12 @@ class UniEvent {
     @required this.id,
     this.color,
     this.type,
+    this.classHeader,
   });
 
   List<UniEventInstance> generateInstances({AcademicCalendar calendar}) {
+    String name = this.name ?? classHeader?.acronym ?? '';
+
     if (rrule == null) {
       return [
         UniEventInstance(

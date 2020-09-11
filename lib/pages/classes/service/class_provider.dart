@@ -120,6 +120,23 @@ class ClassProvider with ChangeNotifier {
     }
   }
 
+  Future<ClassHeader> fetchClassHeader(String classId,
+      {BuildContext context}) async {
+    try {
+      // Get class with id [classId]
+      DocumentSnapshot snap =
+          await _db.collection('import_moodle').document(classId).get();
+
+      return ClassHeaderExtension.fromSnap(snap);
+    } catch (e) {
+      print(e);
+      if (context != null) {
+        AppToast.show(S.of(context).errorSomethingWentWrong);
+      }
+      return null;
+    }
+  }
+
   Future<List<ClassHeader>> fetchClassHeaders(
       {String uid, Filter filter, BuildContext context}) async {
     try {
