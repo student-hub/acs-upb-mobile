@@ -11,6 +11,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class ClassesPage extends StatefulWidget {
+  ClassesPage({Key key}) : super(key: key);
+
   @override
   _ClassesPageState createState() => _ClassesPageState();
 }

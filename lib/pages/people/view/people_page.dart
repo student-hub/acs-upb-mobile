@@ -9,6 +9,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class PeoplePage extends StatefulWidget {
+  PeoplePage({Key key}) : super(key: key);
+
   @override
   _PeoplePageState createState() => _PeoplePageState();
 }

@@ -30,6 +30,7 @@
   "labelUnknown": "Necunoscut",
   "labelEvaluation": "Evaluare",
   "labelPoints": "Puncte",
+  "labelPrivacyPolicy": "Privacy Policy",
 
   "sectionShortcuts": "Scurtături",
   "sectionEvents": "Evenimente",
@@ -77,6 +78,7 @@
   "actionDeleteShortcut": "Șterge scurtătură",
   "actionShowMore": "Arată mai multe",
   "actionEditGrading": "Modifică punctaj",
+  "actionContribute": "Contribuie",
 
   "errorSomethingWentWrong": "A apărut o problemă.",
   "errorPasswordsDiffer": "Cele două parole diferă.",
@@ -113,6 +115,7 @@
   "warningFieldCannotBeEmpty": "Câmpul nu poate fi gol.",
   "warningFieldCannotBeZero": "Câmpul nu poate fi zero.",
   "warningNoneYet": "Nu există încă",
+  "warningAgreeTo": "Trebuie să fiți de acord cu ",
 
   "navigationHome": "Acasă",
   "navigationTimetable": "Orar",
@@ -181,11 +184,13 @@
   "messageShortcutDeleted": "Scurtătura a fost ștearsă cu succes.",
   "messageNoClassesYet": "Nu ați adăugat nici o materie încă.",
   "messageGetStartedPlusButton": "Începeți prin a apăsa butonul + de mai sus.",
+  "messageIAgreeToThe": "Sunt de acord cu ",
 
   "infoPasswordResetEmailSent": "Please check your inbox for the password reset e-mail.",
   "infoRelevance": "Încercați să selectați cea mai restrictivă categorie.",
   "infoRelevanceExample": "De exemplu, dacă ceva este relevant doar pentru \"314CB\" și \"315CB\", nu setați direct \"CB\".",
   "infoPassword": "Aceasta trebuie să conțină majuscule, minuscule și cel puțin un număr sau un simbol, având minimum 8 caractere.",
+  "infoAppIsOpenSource": "ACS UPB Mobile este open source.",
 
   "stringEmailDomain": "@stud.acs.upb.ro",
   "stringAnonymous": "Anonim",

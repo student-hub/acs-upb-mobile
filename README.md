@@ -18,11 +18,11 @@ and ask anything on the **#ama** channel.
 
 ## Screenshots
 
-<img src=screenshots/light_login_ro.png height=500><img src=screenshots/dark_login_en.png height=500>
+<img src=screenshots/app/light_login_ro.png height=500><img src=screenshots/app/dark_login_en.png height=500>
 
-<img src=screenshots/light_settings_ro.png height=500><img src=screenshots/dark_settings_en.png height=500>
+<img src=screenshots/app/light_settings_ro.png height=500><img src=screenshots/app/dark_settings_en.png height=500>
 
-<img src=screenshots/light_portal_ro.png height=500><img src=screenshots/dark_portal_en.png height=500>
+<img src=screenshots/app/light_portal_ro.png height=500><img src=screenshots/app/dark_portal_en.png height=500>
 
 ## Contributors
 * [Ioana Alexandru](https://github.com/IoanaAlexandru)

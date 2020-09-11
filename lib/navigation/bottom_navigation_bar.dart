@@ -19,16 +19,17 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar>
     with TickerProviderStateMixin {
   var tabs;
   TabController tabController;
+  final PageStorageBucket bucket = PageStorageBucket();
 
   @override
   void initState() {
     super.initState();
     tabs = [
-      HomePage(),
-      ClassesPage(),
-      PortalPage(),
-      ProfilePage(),
-      PeoplePage(),
+      HomePage(key: PageStorageKey('Home')),
+      ClassesPage(key: PageStorageKey('Classes')),
+      PortalPage(key: PageStorageKey('Portal')),
+      ProfilePage(key: PageStorageKey('Profile')),
+      PeoplePage(key: PageStorageKey('People')),
     ];
     tabController = TabController(vsync: this, length: tabs.length);
   }
@@ -45,7 +46,10 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar>
       length: tabs.length,
       initialIndex: widget.tabIndex,
       child: Scaffold(
-        body: TabBarView(controller: tabController, children: tabs),
+        body: PageStorage(
+          child: TabBarView(controller: tabController, children: tabs),
+          bucket: bucket,
+        ),
         bottomNavigationBar: SizedBox(
           height: 45,
           child: TabBar(
