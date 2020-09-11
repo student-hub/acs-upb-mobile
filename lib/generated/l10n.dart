@@ -1134,6 +1134,16 @@ class S {
     );
   }
 
+  /// `Only {n} options can be selected at a time.`
+  String warningOnlyNOptionsAtATime(Object n) {
+    return Intl.message(
+      'Only $n options can be selected at a time.',
+      name: 'warningOnlyNOptionsAtATime',
+      desc: '',
+      args: [n],
+    );
+  }
+
   /// `Home`
   String get navigationHome {
     return Intl.message(

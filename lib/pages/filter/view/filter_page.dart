@@ -5,6 +5,7 @@ import 'package:acs_upb_mobile/resources/locale_provider.dart';
 import 'package:acs_upb_mobile/widgets/icon_text.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:acs_upb_mobile/widgets/selectable.dart';
+import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -41,8 +42,18 @@ class FilterPage extends StatefulWidget {
 
 class FilterPageState extends State<FilterPage> {
   Future<Filter> filterFuture;
+  int selectedNodes = 0;
+  final int maxSelectedNodes = 10;
 
   void _onSelected(bool selection, FilterNode node) => setState(() {
+        if (node.value == selection) return;
+
+        if (selection) {
+          selectedNodes++;
+        } else {
+          selectedNodes--;
+        }
+
         node.value = selection;
         if (node.children != null) {
           for (var child in node.children) {
@@ -109,12 +120,23 @@ class FilterPageState extends State<FilterPage> {
 
     for (var child in node.children) {
       // Add option
+      SelectableController controller = SelectableController();
       listItems.add(Selectable(
         label: child.name,
         initiallySelected: child.value,
-        onSelected: (selection) => level != 0
-            ? _onSelected(selection, child)
-            : _onSelectedExclusive(selection, child, node.children),
+        controller: controller,
+        onSelected: (selection) {
+          if (selection && selectedNodes >= maxSelectedNodes) {
+            AppToast.show(
+                S.of(context).warningOnlyNOptionsAtATime(maxSelectedNodes));
+            controller.deselect();
+            return;
+          }
+
+          level != 0
+              ? _onSelected(selection, child)
+              : _onSelectedExclusive(selection, child, node.children);
+        },
       ));
 
       // Add padding
@@ -163,6 +185,8 @@ class FilterPageState extends State<FilterPage> {
           builder: (BuildContext context, AsyncSnapshot snap) {
             if (snap.connectionState == ConnectionState.done && snap.hasData) {
               Filter filter = snap.data;
+
+              selectedNodes = filter.relevantNodes.length - 1;
 
               Map<int, List<Widget>> optionsByLevel = {};
               _buildTree(node: filter.root, optionsByLevel: optionsByLevel);

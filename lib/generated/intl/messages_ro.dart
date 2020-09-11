@@ -31,7 +31,9 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static m5(email) => "Există deja un cont asociat cu adresa ${email}.";
 
-  static m6(provider) => "Folosiți ${provider} pentru a vă conecta.";
+  static m6(n) => "Doar ${n} opțiuni pot fi selectate la un moment dat.";
+
+  static m7(provider) => "Folosiți ${provider} pentru a vă conecta.";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
@@ -202,13 +204,14 @@ class MessageLookup extends MessageLookupByLibrary {
     "warningNoPrivateWebsite" : MessageLookupByLibrary.simpleMessage("Nu ați creat nici un website privat încă."),
     "warningNoneYet" : MessageLookupByLibrary.simpleMessage("Nu există încă"),
     "warningNothingToEdit" : MessageLookupByLibrary.simpleMessage("Nu există nimic pentru care să aveți permisiuni de editare."),
+    "warningOnlyNOptionsAtATime" : m6,
     "warningPasswordLength" : MessageLookupByLibrary.simpleMessage("Parola trebuie să aibă cel puțin 8 caractere."),
     "warningPasswordLowercase" : MessageLookupByLibrary.simpleMessage("Parola trebuie să conțină cel putin o minusculă."),
     "warningPasswordNumber" : MessageLookupByLibrary.simpleMessage("Parola trebuie să conțină cel puțin un număr."),
     "warningPasswordSpecialCharacters" : MessageLookupByLibrary.simpleMessage("Parola trebuie să conțină cel puțin un simbol."),
     "warningPasswordUppercase" : MessageLookupByLibrary.simpleMessage("Parola trebuie să conțină cel putin o majusculă."),
     "warningTryAgainLater" : MessageLookupByLibrary.simpleMessage("Încercați mai târziu."),
-    "warningUseProvider" : m6,
+    "warningUseProvider" : m7,
     "warningWebsiteNameExists" : MessageLookupByLibrary.simpleMessage("Există deja un site cu același nume."),
     "websiteCategoryAdministrative" : MessageLookupByLibrary.simpleMessage("Administrativ"),
     "websiteCategoryAssociations" : MessageLookupByLibrary.simpleMessage("Asociații"),

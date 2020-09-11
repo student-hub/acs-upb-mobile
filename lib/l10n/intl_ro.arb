@@ -116,6 +116,7 @@
   "warningFieldCannotBeZero": "Câmpul nu poate fi zero.",
   "warningNoneYet": "Nu există încă",
   "warningAgreeTo": "Trebuie să fiți de acord cu ",
+  "warningOnlyNOptionsAtATime": "Doar {n} opțiuni pot fi selectate la un moment dat.",
 
   "navigationHome": "Acasă",
   "navigationTimetable": "Orar",

@@ -31,7 +31,9 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static m5(email) => "There is already an account associated with ${email}.";
 
-  static m6(provider) => "Please log in with ${provider} to continue.";
+  static m6(n) => "Only ${n} options can be selected at a time.";
+
+  static m7(provider) => "Please log in with ${provider} to continue.";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
@@ -202,13 +204,14 @@ class MessageLookup extends MessageLookupByLibrary {
     "warningNoPrivateWebsite" : MessageLookupByLibrary.simpleMessage("You have not created any private websites yet."),
     "warningNoneYet" : MessageLookupByLibrary.simpleMessage("None yet"),
     "warningNothingToEdit" : MessageLookupByLibrary.simpleMessage("There is nothing you have permission to edit."),
+    "warningOnlyNOptionsAtATime" : m6,
     "warningPasswordLength" : MessageLookupByLibrary.simpleMessage("The password must be 8 characters long or more."),
     "warningPasswordLowercase" : MessageLookupByLibrary.simpleMessage("The password must include at least one lowercase letter."),
     "warningPasswordNumber" : MessageLookupByLibrary.simpleMessage("The password must include at least one number."),
     "warningPasswordSpecialCharacters" : MessageLookupByLibrary.simpleMessage("The password must include at least one special character."),
     "warningPasswordUppercase" : MessageLookupByLibrary.simpleMessage("The password must include at least one uppercase letter."),
     "warningTryAgainLater" : MessageLookupByLibrary.simpleMessage("Please try again later."),
-    "warningUseProvider" : m6,
+    "warningUseProvider" : m7,
     "warningWebsiteNameExists" : MessageLookupByLibrary.simpleMessage("A website with the same name already exists."),
     "websiteCategoryAdministrative" : MessageLookupByLibrary.simpleMessage("Administrative"),
     "websiteCategoryAssociations" : MessageLookupByLibrary.simpleMessage("Associations"),
