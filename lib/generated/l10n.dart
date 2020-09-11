@@ -343,6 +343,16 @@ class S {
     );
   }
 
+  /// `Personal information`
+  String get labelPersonalInformation {
+    return Intl.message(
+      'Personal information',
+      name: 'labelPersonalInformation',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Shortcuts`
   String get sectionShortcuts {
     return Intl.message(

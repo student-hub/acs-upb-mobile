@@ -112,6 +112,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "labelLocation" : MessageLookupByLibrary.simpleMessage("Locație"),
     "labelName" : MessageLookupByLibrary.simpleMessage("Nume"),
     "labelPassword" : MessageLookupByLibrary.simpleMessage("Parolă"),
+    "labelPersonalInformation" : MessageLookupByLibrary.simpleMessage("Informații personale"),
     "labelPoints" : MessageLookupByLibrary.simpleMessage("Puncte"),
     "labelPreview" : MessageLookupByLibrary.simpleMessage("Previzualizare"),
     "labelPrivacyPolicy" : MessageLookupByLibrary.simpleMessage("Privacy Policy"),
