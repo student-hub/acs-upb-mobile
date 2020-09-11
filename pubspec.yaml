@@ -68,6 +68,7 @@ dependencies:
 
   # Async utility classes
   async: ^2.4.0
+  rxdart: ^0.24.1
 
   # Timetable widget
   timetable: ^0.2.7

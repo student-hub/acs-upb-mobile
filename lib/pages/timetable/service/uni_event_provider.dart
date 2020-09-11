@@ -5,6 +5,7 @@ import 'package:acs_upb_mobile/pages/classes/model/class.dart';
 import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/academic_calendar.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/uni_event.dart';
+import 'package:async/async.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:rrule/rrule.dart';
@@ -97,42 +98,68 @@ extension UniEventExtension on UniEvent {
 class UniEventProvider extends EventProvider<UniEventInstance>
     with ChangeNotifier {
   AcademicCalendar calendar = AcademicCalendar();
-  final ClassProvider classProvider;
+  ClassProvider classProvider;
   final AuthenticationProvider authProvider;
+  List<String> classIds = [];
 
-  UniEventProvider(
-      {ClassProvider classProvider, AuthenticationProvider authProvider})
-      : classProvider = classProvider ?? ClassProvider(),
-        authProvider = authProvider ?? AuthenticationProvider();
+  void update(ClassProvider classProvider) {
+    this.classProvider = classProvider;
+    fetchClassIds();
+  }
+
+  void fetchClassIds() async {
+    classIds = await classProvider.fetchUserClassIds(uid: authProvider.uid);
+    notifyListeners();
+  }
+
+  UniEventProvider({AuthenticationProvider authProvider})
+      : authProvider = authProvider ?? AuthenticationProvider();
 
   Stream<List<UniEventInstance>> get _events {
-    Stream<List<UniEvent>> e = Firestore.instance
-        .collection('events')
-        .snapshots()
-        .asyncMap((snapshot) async {
-      List<UniEvent> events = [];
-      try {
-        for (var doc in snapshot.documents) {
-          ClassHeader classHeader;
-          if (doc.data['class'] != null) {
-            classHeader =
-                await classProvider.fetchClassHeader(doc.data['class']);
-          }
+    if (!authProvider.isAuthenticatedFromCache) return Stream.value([]);
 
-          events.add(UniEventExtension.fromSnap(doc, classHeader: classHeader));
+    List<Stream<List<UniEvent>>> streams = [];
+
+    classIds?.forEach((classId) {
+      Stream<List<UniEvent>> stream = Firestore.instance
+          .collection('events')
+          .where('class', isEqualTo: classId)
+          .snapshots()
+          .asyncMap((snapshot) async {
+        List<UniEvent> events = [];
+
+        try {
+          for (var doc in snapshot.documents) {
+            ClassHeader classHeader;
+            if (doc.data['class'] != null) {
+              classHeader =
+                  await classProvider.fetchClassHeader(doc.data['class']);
+            }
+
+            events
+                .add(UniEventExtension.fromSnap(doc, classHeader: classHeader));
+          }
+          return events.where((element) => element != null).toList();
+        } catch (e) {
+          print(e);
+          return events;
         }
-        return events.where((element) => element != null).toList();
-      } catch (e) {
-        print(e);
-        return events;
-      }
+      });
+      streams.add(stream);
     });
 
-    return e.map((events) =>
+    var stream = StreamZip(streams);
+
+    return stream.map((events) =>
         events
+            // Flatten zipped streams
+            .expand((i) => i)
+            // Generate instances for each event
             .map((event) => event.generateInstances(calendar: calendar))
+            // Flatten lists of instances
             .expand((i) => i)
             .toList() +
+        // Add holiday instances
         calendar.generateHolidayInstances());
   }
 

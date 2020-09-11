@@ -31,16 +31,19 @@ main() async {
 
   AuthenticationProvider authProvider = AuthenticationProvider();
   ClassProvider classProvider = ClassProvider();
+
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider<AuthenticationProvider>(create: (_) => authProvider),
     ChangeNotifierProvider<StorageProvider>(create: (_) => StorageProvider()),
     ChangeNotifierProvider<WebsiteProvider>(create: (_) => WebsiteProvider()),
     ChangeNotifierProvider<ClassProvider>(create: (_) => classProvider),
-    ChangeNotifierProvider<UniEventProvider>(
-        create: (_) => UniEventProvider(
-              classProvider: classProvider,
-              authProvider: authProvider,
-            )),
+    ChangeNotifierProxyProvider<ClassProvider, UniEventProvider>(
+      create: (_) => UniEventProvider(
+        authProvider: authProvider,
+      ),
+      update: (context, classProvider, uniEventProvider) =>
+          uniEventProvider..update(classProvider),
+    ),
     ChangeNotifierProvider<FilterProvider>(
         create: (_) => FilterProvider(global: true)),
   ], child: MyApp()));
