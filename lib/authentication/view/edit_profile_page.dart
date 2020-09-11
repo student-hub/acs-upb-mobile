@@ -184,7 +184,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   filter.localizedLevelNames[2][LocaleProvider.localeString]:
                       nodes[3].name != null ? nodes[3].name: null,
                   filter.localizedLevelNames[3][LocaleProvider.localeString]:
-                      nodes[4].name != null ? nodes[4].name: null ,
+                      nodes[4].name != null ? nodes[4].name: null,
                   filter.localizedLevelNames[4][LocaleProvider.localeString]:
                       nodes[5].name != null ? nodes[5].name: null,
                   filter.localizedLevelNames[5][LocaleProvider.localeString]:
