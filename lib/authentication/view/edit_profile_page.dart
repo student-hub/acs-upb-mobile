@@ -32,6 +32,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
   final firstNameController = TextEditingController();
   final lastNameController = TextEditingController();
 
+  final editProfileForm = GlobalKey<FormState>();
+
   void _fetchInitialData() async {
     filterProvider = Provider.of<FilterProvider>(context, listen: false);
     filter = await filterProvider.fetchFilter(context);
@@ -173,31 +175,33 @@ class _EditProfilePageState extends State<EditProfilePage> {
         AppScaffoldAction(
             text: S.of(context).buttonSave,
             onPressed: () async {
-              bool result = await authProvider.updateProfile(
-                info: {
-                  S.of(context).labelFirstName: firstNameController.text,
-                  S.of(context).labelLastName: lastNameController.text,
-                  filter.localizedLevelNames[0][LocaleProvider.localeString]:
-                      nodes[1].name != null ? nodes[1].name: null,
-                  filter.localizedLevelNames[1][LocaleProvider.localeString]:
-                      nodes[2].name != null ? nodes[2].name: null,
-                  filter.localizedLevelNames[2][LocaleProvider.localeString]:
-                      nodes[3].name != null ? nodes[3].name: null,
-                  filter.localizedLevelNames[3][LocaleProvider.localeString]:
-                      nodes[4].name != null ? nodes[4].name: null,
-                  filter.localizedLevelNames[4][LocaleProvider.localeString]:
-                      nodes[5].name != null ? nodes[5].name: null,
-                  filter.localizedLevelNames[5][LocaleProvider.localeString]:
-                      nodes[6].name != null ? nodes[6].name: null,
-                },
-                context: context,
-              );
+              if (editProfileForm.currentState.validate()) {
+                bool result = await authProvider.updateProfile(
+                  info: {
+                    S.of(context).labelFirstName: firstNameController.text,
+                    S.of(context).labelLastName: lastNameController.text,
+                    filter.localizedLevelNames[0][LocaleProvider.localeString]:
+                        nodes[1].name != null ? nodes[1].name : null,
+                    filter.localizedLevelNames[1][LocaleProvider.localeString]:
+                        nodes[2].name != null ? nodes[2].name : null,
+                    filter.localizedLevelNames[2][LocaleProvider.localeString]:
+                        nodes[3].name != null ? nodes[3].name : null,
+                    filter.localizedLevelNames[3][LocaleProvider.localeString]:
+                        nodes[4].name != null ? nodes[4].name : null,
+                    filter.localizedLevelNames[4][LocaleProvider.localeString]:
+                        nodes[5].name != null ? nodes[5].name : null,
+                    filter.localizedLevelNames[5][LocaleProvider.localeString]:
+                        nodes[6].name != null ? nodes[6].name : null,
+                  },
+                  context: context,
+                );
 
-              if (result) {
-                AppToast.show('Success');
-                Navigator.pop(context);
-              } else {
-                AppToast.show('Fail');
+                if (result) {
+                  AppToast.show('Success');
+                  Navigator.pop(context);
+                } else {
+                  AppToast.show('Fail');
+                }
               }
             }),
         AppScaffoldAction(
@@ -217,21 +221,37 @@ class _EditProfilePageState extends State<EditProfilePage> {
           builder: (BuildContext context, AsyncSnapshot<User> snap) {
             return Container(
               child: ListView(children: [
-                Column(children: [
-                  TextFormField(
+                Form(
+                  key: editProfileForm,
+                  child: Column(children: [
+                    TextFormField(
                       decoration: InputDecoration(
                         labelText: S.of(context).labelFirstName,
                         hintText: S.of(context).hintFirstName,
                       ),
-                      controller: firstNameController),
-                  TextFormField(
-                    decoration: InputDecoration(
-                      labelText: S.of(context).labelLastName,
-                      hintText: S.of(context).hintLastName,
+                      controller: firstNameController,
+                      validator: (value) {
+                        if (value.isEmpty || value == null) {
+                          return S.of(context).errorMissingFirstName;
+                        }
+                        return null;
+                      },
                     ),
-                    controller: lastNameController,
-                  ),
-                ]),
+                    TextFormField(
+                      decoration: InputDecoration(
+                        labelText: S.of(context).labelLastName,
+                        hintText: S.of(context).hintLastName,
+                      ),
+                      controller: lastNameController,
+                      validator: (value) {
+                        if (value.isEmpty || value == null) {
+                          return S.of(context).errorMissingLastName;
+                        }
+                        return null;
+                      },
+                    ),
+                  ]),
+                ),
                 Column(
                   children: _dropdownTree(context),
                 )

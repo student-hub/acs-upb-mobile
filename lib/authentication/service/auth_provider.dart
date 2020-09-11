@@ -456,14 +456,6 @@ class AuthProvider with ChangeNotifier {
       String subgroup = info.getIfPresent(
           filter.localizedLevelNames[5][LocaleProvider.localeString]);
 
-      if (firstName == null || firstName == '') {
-        AppToast.show(S.of(context).errorMissingFirstName);
-        return false;
-      }
-      if (lastName == null || lastName == '') {
-        AppToast.show(S.of(context).errorMissingLastName);
-        return false;
-      }
       User user =
           await Provider.of<AuthProvider>(context, listen: false).currentUser;
       user.firstName = firstName;
