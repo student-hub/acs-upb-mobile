@@ -28,7 +28,7 @@ import 'package:provider/provider.dart';
 // These tests open each page in the app on multiple screen sizes to make sure
 // nothing overflows/breaks.
 
-class MockAuthProvider extends Mock implements AuthProvider {}
+class MockAuthProvider extends Mock implements AuthenticationProvider {}
 
 class MockStorageProvider extends Mock implements StorageProvider {}
 
@@ -41,7 +41,7 @@ class MockClassProvider extends Mock implements ClassProvider {}
 class MockNavigatorObserver extends Mock implements NavigatorObserver {}
 
 void main() {
-  AuthProvider mockAuthProvider;
+  AuthenticationProvider mockAuthProvider;
   StorageProvider mockStorageProvider;
   WebsiteProvider mockWebsiteProvider;
   FilterProvider mockFilterProvider;
@@ -72,7 +72,7 @@ void main() {
 
   buildApp() => MultiProvider(
         providers: [
-          ChangeNotifierProvider<AuthProvider>(create: (_) => mockAuthProvider),
+          ChangeNotifierProvider<AuthenticationProvider>(create: (_) => mockAuthProvider),
           ChangeNotifierProvider<StorageProvider>(
               create: (_) => mockStorageProvider),
           ChangeNotifierProvider<WebsiteProvider>(

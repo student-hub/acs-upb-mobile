@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/pages/classes/model/class.dart';
 import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/academic_calendar.dart';
@@ -97,9 +98,12 @@ class UniEventProvider extends EventProvider<UniEventInstance>
     with ChangeNotifier {
   AcademicCalendar calendar = AcademicCalendar();
   final ClassProvider classProvider;
+  final AuthenticationProvider authProvider;
 
-  UniEventProvider({ClassProvider classProvider})
-      : classProvider = classProvider ?? ClassProvider();
+  UniEventProvider(
+      {ClassProvider classProvider, AuthenticationProvider authProvider})
+      : classProvider = classProvider ?? ClassProvider(),
+        authProvider = authProvider ?? AuthenticationProvider();
 
   Stream<List<UniEventInstance>> get _events {
     Stream<List<UniEvent>> e = Firestore.instance

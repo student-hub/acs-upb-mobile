@@ -121,8 +121,8 @@ class FilterProvider with ChangeNotifier {
             _relevanceFilter.setRelevantUpToRoot(node, defaultDegree));
       } else {
         // No previous setting or defaults => set the user's group
-        AuthProvider authProvider =
-            Provider.of<AuthProvider>(context, listen: false);
+        AuthenticationProvider authProvider =
+            Provider.of<AuthenticationProvider>(context, listen: false);
         if (authProvider.isAuthenticatedFromCache) {
           User user = await authProvider.currentUser;
           // Try to set the default from the user data

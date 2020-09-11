@@ -85,7 +85,7 @@ class _ClassViewState extends State<ClassView> {
 
   Widget shortcuts(BuildContext context) {
     var classProvider = Provider.of<ClassProvider>(context);
-    var authProvider = Provider.of<AuthProvider>(context);
+    var authProvider = Provider.of<AuthenticationProvider>(context);
 
     return Padding(
       padding: const EdgeInsets.all(8.0),

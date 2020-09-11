@@ -31,8 +31,8 @@ class _ClassesPageState extends State<ClassesPage> {
 
     ClassProvider classProvider =
         Provider.of<ClassProvider>(context, listen: false);
-    AuthProvider authProvider =
-        Provider.of<AuthProvider>(context, listen: false);
+    AuthenticationProvider authProvider =
+        Provider.of<AuthenticationProvider>(context, listen: false);
     headers = await classProvider.fetchClassHeaders(uid: authProvider.uid);
 
     updating = false;
@@ -49,8 +49,8 @@ class _ClassesPageState extends State<ClassesPage> {
 
     ClassProvider classProvider =
         Provider.of<ClassProvider>(context, listen: false);
-    AuthProvider authProvider =
-        Provider.of<AuthProvider>(context, listen: false);
+    AuthenticationProvider authProvider =
+        Provider.of<AuthenticationProvider>(context, listen: false);
     userClassIdsFuture = classProvider.fetchUserClassIds(
         uid: authProvider.uid, context: context);
   }
@@ -90,7 +90,7 @@ class _ClassesPageState extends State<ClassesPage> {
   @override
   Widget build(BuildContext context) {
     ClassProvider classProvider = Provider.of<ClassProvider>(context);
-    AuthProvider authProvider = Provider.of<AuthProvider>(context);
+    AuthenticationProvider authProvider = Provider.of<AuthenticationProvider>(context);
 
     return AppScaffold(
       title: S.of(context).navigationClasses,

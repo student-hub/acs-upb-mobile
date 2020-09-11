@@ -13,8 +13,8 @@ class ProfilePage extends StatelessWidget {
   ProfilePage({Key key}) : super(key: key);
 
   Future<void> _signOut(BuildContext context) async {
-    AuthProvider authProvider =
-        Provider.of<AuthProvider>(context, listen: false);
+    AuthenticationProvider authProvider =
+        Provider.of<AuthenticationProvider>(context, listen: false);
     authProvider.signOut(context);
     Navigator.pushReplacementNamed(context, Routes.login);
   }
@@ -32,8 +32,8 @@ class ProfilePage extends StatelessWidget {
             color: Colors.red,
             width: 130,
             onTap: () async {
-              AuthProvider authProvider =
-                  Provider.of<AuthProvider>(context, listen: false);
+              AuthenticationProvider authProvider =
+                  Provider.of<AuthenticationProvider>(context, listen: false);
               bool res = await authProvider.delete(context: context);
               if (res) {
                 _signOut(context);
@@ -44,7 +44,7 @@ class ProfilePage extends StatelessWidget {
       );
 
   Widget _deleteAccountButton(BuildContext context) {
-    AuthProvider authProvider = Provider.of<AuthProvider>(context);
+    AuthenticationProvider authProvider = Provider.of<AuthenticationProvider>(context);
 
     if (!authProvider.isAuthenticatedFromCache || authProvider.isAnonymous) {
       return Container();
@@ -66,7 +66,7 @@ class ProfilePage extends StatelessWidget {
   }
 
   Widget _accountNotVerifiedFooter(BuildContext context) {
-    AuthProvider authProvider = Provider.of<AuthProvider>(context);
+    AuthenticationProvider authProvider = Provider.of<AuthenticationProvider>(context);
 
     if (!authProvider.isAuthenticatedFromCache || authProvider.isAnonymous) {
       return Container();
@@ -98,7 +98,7 @@ class ProfilePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    AuthProvider authProvider = Provider.of<AuthProvider>(context);
+    AuthenticationProvider authProvider = Provider.of<AuthenticationProvider>(context);
 
     return AppScaffold(
       title: S.of(context).navigationProfile,

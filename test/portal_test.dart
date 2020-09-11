@@ -20,7 +20,7 @@ class MockStorageProvider extends Mock implements StorageProvider {}
 
 class MockFilterProvider extends Mock implements FilterProvider {}
 
-class MockAuthProvider extends Mock implements AuthProvider {}
+class MockAuthProvider extends Mock implements AuthenticationProvider {}
 
 class MockUrlLauncher extends Mock
     with MockPlatformInterfaceMixin
@@ -95,7 +95,7 @@ void main() {
               create: (_) => mockStorageProvider),
           ChangeNotifierProvider<FilterProvider>(
               create: (_) => mockFilterProvider),
-          ChangeNotifierProvider<AuthProvider>(create: (_) => mockAuthProvider),
+          ChangeNotifierProvider<AuthenticationProvider>(create: (_) => mockAuthProvider),
         ],
         child: MaterialApp(
           localizationsDelegates: [S.delegate],

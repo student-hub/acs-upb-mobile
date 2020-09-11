@@ -30,7 +30,7 @@ class _GradingChartState extends State<GradingChart> {
   @override
   Widget build(BuildContext context) {
     ClassProvider classProvider = Provider.of<ClassProvider>(context);
-    AuthProvider authProvider = Provider.of<AuthProvider>(context);
+    AuthenticationProvider authProvider = Provider.of<AuthenticationProvider>(context);
 
     return Card(
       child: Padding(
