@@ -145,9 +145,4 @@ class FilterProvider with ChangeNotifier {
       return null;
     }
   }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
 }
