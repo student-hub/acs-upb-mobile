@@ -21,13 +21,11 @@ extension PersonExtension on Person {
 class PersonProvider with ChangeNotifier {
   Future<List<Person>> fetchPeople(BuildContext context) async {
     try {
-      List<Person> people = [];
-      List<DocumentSnapshot> documents = [];
       QuerySnapshot qSnapshot =
           await Firestore.instance.collection("people").getDocuments();
-      documents.addAll(qSnapshot.documents);
-      people.addAll(documents.map((doc) => PersonExtension.fromSnap(doc)));
-      return people;
+      return qSnapshot.documents
+          .map((doc) => PersonExtension.fromSnap(doc))
+          .toList();
     } catch (e) {
       print(e);
       if (context != null) {
