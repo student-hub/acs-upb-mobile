@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:acs_upb_mobile/authentication/model/user.dart';
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/authentication/view/edit_profile_page.dart';
@@ -8,10 +6,8 @@ import 'package:acs_upb_mobile/resources/storage_provider.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/widgets/icon_text.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -113,25 +109,7 @@ class _ProfilePageState extends State<ProfilePage> {
                               'assets/illustrations/undraw_profile_pic.png');
                         }
 
-                        return GestureDetector(
-                          onDoubleTap: () async {
-                            final pickedFile = await ImagePicker()
-                                .getImage(source: ImageSource.gallery);
-                            StorageReference storageReference = FirebaseStorage
-                                .instance
-                                .ref()
-                                .child('profile_picture/test');
-                            StorageUploadTask uploadTask =
-                                storageReference.putFile(File(pickedFile.path));
-                            if (user != null) {}
-                            await uploadTask.onComplete;
-                            setState(() {
-                              image = Image.file(File(pickedFile.path));
-                            });
-                          },
-                          child:
-                              CircleAvatar(radius: 95, backgroundImage: image),
-                        );
+                        return CircleAvatar(radius: 95, backgroundImage: image);
                       },
                     ),
                     SizedBox(height: 8),
