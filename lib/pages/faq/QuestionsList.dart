@@ -44,9 +44,9 @@ class _QuestionsListState extends State<QuestionsList> {
 
     List categoryList = widget.categories
         .map((category) => Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 4.0),
+              padding: const EdgeInsets.symmetric(horizontal: 3.0),
               child: Container(
-                width: 100,
+                width: 120,
                 child: Selectable(
                   controller: _controllers[category],
                   label: category,
@@ -104,7 +104,7 @@ class _QuestionsListState extends State<QuestionsList> {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: MarkdownBody(
-                      data: filteredList[index].answer.replaceAll(' ', '\n'),
+                      data: filteredList[index].answer.replaceAll('\\n', '\n'),
                       extensionSet: md.ExtensionSet(
                           md.ExtensionSet.gitHubFlavored.blockSyntaxes, [
                         md.EmojiSyntax(),
