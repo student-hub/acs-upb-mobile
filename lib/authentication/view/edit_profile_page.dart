@@ -135,13 +135,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
     return items;
   }
 
-  Future<void> _signOut(BuildContext context) async {
-    AuthProvider authProvider =
-        Provider.of<AuthProvider>(context, listen: false);
-    authProvider.signOut(context);
-    Navigator.pushReplacementNamed(context, Routes.login);
-  }
-
   AppDialog _deletionConfirmationDialog(BuildContext context) => AppDialog(
         icon: Icon(Icons.warning, color: Colors.red),
         title: S.of(context).actionDeleteAccount,
