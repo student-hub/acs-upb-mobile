@@ -1753,10 +1753,10 @@ class S {
     );
   }
 
-  /// ``
+  /// `Profile updated successfully.`
   String get messageEditProfileSuccess {
     return Intl.message(
-      '',
+      'Profile updated successfully.',
       name: 'messageEditProfileSuccess',
       desc: '',
       args: [],

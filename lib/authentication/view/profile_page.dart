@@ -22,7 +22,6 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-
   Widget _accountNotVerifiedFooter(BuildContext context) {
     AuthProvider authProvider = Provider.of<AuthProvider>(context);
 
@@ -103,15 +102,13 @@ class _ProfilePageState extends State<ProfilePage> {
                           AsyncSnapshot<ImageProvider<dynamic>> snapshot) {
                         var image;
                         if (snapshot.connectionState == ConnectionState.done) {
-                          if(snapshot.hasData) {
+                          if (snapshot.hasData) {
                             image = snapshot.data;
-                          }else{
+                          } else {
                             image = AssetImage(
                                 'assets/illustrations/undraw_profile_pic.png');
                           }
                         } else {
-                          debugPrint(
-                              'image : in else ' + snapshot.hasData.toString());
                           image = AssetImage(
                               'assets/illustrations/undraw_profile_pic.png');
                         }

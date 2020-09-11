@@ -131,7 +131,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "messageDeleteEvent" : MessageLookupByLibrary.simpleMessage("Are you sure you want to delete this event?"),
     "messageDeleteShortcut" : m3,
     "messageDeleteWebsite" : MessageLookupByLibrary.simpleMessage("Are you sure you want to delete this website?"),
-    "messageEditProfileSuccess" : MessageLookupByLibrary.simpleMessage(""),
+    "messageEditProfileSuccess" : MessageLookupByLibrary.simpleMessage("Profile updated successfully."),
     "messageEmailNotVerified" : MessageLookupByLibrary.simpleMessage("Account is not verified."),
     "messageGetStartedPlusButton" : MessageLookupByLibrary.simpleMessage("Get started by pressing the + button above."),
     "messageIAgreeToThe" : MessageLookupByLibrary.simpleMessage("I agree to the "),

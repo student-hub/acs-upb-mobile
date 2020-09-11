@@ -131,7 +131,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "messageDeleteEvent" : MessageLookupByLibrary.simpleMessage("Sunteți sigur că doriți să ștergeți acest eveniment?"),
     "messageDeleteShortcut" : m3,
     "messageDeleteWebsite" : MessageLookupByLibrary.simpleMessage("Sunteți sigur că doriți să ștergeți acest website?"),
-    "messageEditProfileSuccess" : MessageLookupByLibrary.simpleMessage("Profilul a fost actualizat cu succes"),
+    "messageEditProfileSuccess" : MessageLookupByLibrary.simpleMessage("Profilul a fost actualizat cu succes."),
     "messageEmailNotVerified" : MessageLookupByLibrary.simpleMessage("Contul nu este verificat."),
     "messageGetStartedPlusButton" : MessageLookupByLibrary.simpleMessage("Începeți prin a apăsa butonul + de mai sus."),
     "messageIAgreeToThe" : MessageLookupByLibrary.simpleMessage("Sunt de acord cu "),
