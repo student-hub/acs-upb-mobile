@@ -68,13 +68,16 @@ class UniEvent {
       });
 
       return instances
-          .map((start) => UniEventInstance(
-                id: id,
+          .toList()
+          .asMap()
+          .entries
+          .map((instance) => UniEventInstance(
+                id: id + '-' + instance.key.toString(),
                 title: name,
                 mainEvent: this,
                 color: this.color,
-                start: start,
-                end: start.add(duration),
+                start: instance.value,
+                end: instance.value.add(duration),
                 location: location,
               ))
           .toList();
