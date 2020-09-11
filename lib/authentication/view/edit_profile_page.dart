@@ -1,9 +1,12 @@
 import 'package:acs_upb_mobile/authentication/model/user.dart';
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
+import 'package:acs_upb_mobile/navigation/routes.dart';
 import 'package:acs_upb_mobile/pages/filter/model/filter.dart';
 import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
 import 'package:acs_upb_mobile/resources/locale_provider.dart';
+import 'package:acs_upb_mobile/widgets/button.dart';
+import 'package:acs_upb_mobile/widgets/dialog.dart';
 import 'package:acs_upb_mobile/widgets/form/form.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
@@ -130,6 +133,37 @@ class _EditProfilePageState extends State<EditProfilePage> {
     return items;
   }
 
+  Future<void> _signOut(BuildContext context) async {
+    AuthProvider authProvider =
+        Provider.of<AuthProvider>(context, listen: false);
+    authProvider.signOut(context);
+    Navigator.pushReplacementNamed(context, Routes.login);
+  }
+
+  AppDialog _deletionConfirmationDialog(BuildContext context) => AppDialog(
+        icon: Icon(Icons.warning, color: Colors.red),
+        title: S.of(context).actionDeleteAccount,
+        message: S.of(context).messageDeleteAccount +
+            ' ' +
+            S.of(context).messageCannotBeUndone,
+        actions: [
+          AppButton(
+            key: ValueKey('delete_account_button'),
+            text: S.of(context).actionDeleteAccount.toUpperCase(),
+            color: Colors.red,
+            width: 130,
+            onTap: () async {
+              AuthProvider authProvider =
+                  Provider.of<AuthProvider>(context, listen: false);
+              bool res = await authProvider.delete(context: context);
+              if (res) {
+                _signOut(context);
+              }
+            },
+          )
+        ],
+      );
+
   @override
   Widget build(BuildContext context) {
     AuthProvider authProvider = Provider.of<AuthProvider>(context);
@@ -139,31 +173,42 @@ class _EditProfilePageState extends State<EditProfilePage> {
         AppScaffoldAction(
             text: S.of(context).buttonSave,
             onPressed: () async {
-             bool result = await authProvider.updateProfile(info: {
-                S.of(context).labelFirstName:
-                    firstNameController.text,
-                S.of(context).labelLastName: lastNameController.text,
-                filter.localizedLevelNames[0][LocaleProvider.localeString]:
-                    nodes[1].name,
-                filter.localizedLevelNames[1][LocaleProvider.localeString]:
-                    nodes[2].name,
-                filter.localizedLevelNames[2][LocaleProvider.localeString]:
-                    nodes[3].name,
-                filter.localizedLevelNames[3][LocaleProvider.localeString]:
-                    nodes[4].name,
-                filter.localizedLevelNames[4][LocaleProvider.localeString]:
-                    nodes[5].name,
-               filter.localizedLevelNames[5][LocaleProvider.localeString]:
-                   nodes[6].name,
-              }, context: context,);
+              bool result = await authProvider.updateProfile(
+                info: {
+                  S.of(context).labelFirstName: firstNameController.text,
+                  S.of(context).labelLastName: lastNameController.text,
+                  filter.localizedLevelNames[0][LocaleProvider.localeString]:
+                      nodes[1].name,
+                  filter.localizedLevelNames[1][LocaleProvider.localeString]:
+                      nodes[2].name,
+                  filter.localizedLevelNames[2][LocaleProvider.localeString]:
+                      nodes[3].name,
+                  filter.localizedLevelNames[3][LocaleProvider.localeString]:
+                      nodes[4].name,
+                  filter.localizedLevelNames[4][LocaleProvider.localeString]:
+                      nodes[5].name,
+                  filter.localizedLevelNames[5][LocaleProvider.localeString]:
+                      nodes[6].name,
+                },
+                context: context,
+              );
 
-             if(result){
+              if (result) {
                 AppToast.show('Success');
                 Navigator.pop(context);
-             }else{
-               AppToast.show('Fail');
-             }
-            })
+              } else {
+                AppToast.show('Fail');
+              }
+            }),
+        AppScaffoldAction(
+          icon: Icons.more_vert,
+          items: {
+            S.of(context).actionDeleteAccount: () => showDialog(
+                context: context, child: _deletionConfirmationDialog(context))
+          },
+          onPressed: () => showDialog(
+              context: context, child: _deletionConfirmationDialog(context)),
+        )
       ],
       body: Padding(
         padding: const EdgeInsets.all(8.0),

@@ -31,52 +31,6 @@ class _ProfilePageState extends State<ProfilePage> {
     Navigator.pushReplacementNamed(context, Routes.login);
   }
 
-  AppDialog _deletionConfirmationDialog(BuildContext context) => AppDialog(
-        icon: Icon(Icons.warning, color: Colors.red),
-        title: S.of(context).actionDeleteAccount,
-        message: S.of(context).messageDeleteAccount +
-            ' ' +
-            S.of(context).messageCannotBeUndone,
-        actions: [
-          AppButton(
-            key: ValueKey('delete_account_button'),
-            text: S.of(context).actionDeleteAccount.toUpperCase(),
-            color: Colors.red,
-            width: 130,
-            onTap: () async {
-              AuthProvider authProvider =
-                  Provider.of<AuthProvider>(context, listen: false);
-              bool res = await authProvider.delete(context: context);
-              if (res) {
-                _signOut(context);
-              }
-            },
-          )
-        ],
-      );
-
-  Widget _deleteAccountButton(BuildContext context) {
-    AuthProvider authProvider = Provider.of<AuthProvider>(context);
-
-    if (!authProvider.isAuthenticatedFromCache || authProvider.isAnonymous) {
-      return Container();
-    }
-
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: IconText(
-          onTap: () async {
-            showDialog(context: context, builder: _deletionConfirmationDialog);
-          },
-          icon: Icons.delete,
-          text: S.of(context).actionDeleteAccount,
-          style: Theme.of(context)
-              .textTheme
-              .subtitle2
-              .apply(color: Colors.red, fontWeightDelta: 1)),
-    );
-  }
-
   Widget _accountNotVerifiedFooter(BuildContext context) {
     AuthProvider authProvider = Provider.of<AuthProvider>(context);
 
@@ -225,7 +179,6 @@ class _ProfilePageState extends State<ProfilePage> {
                       flex: 3,
                       child: Container(),
                     ),
-                    _deleteAccountButton(context),
                     _accountNotVerifiedFooter(context),
                   ],
                 );
