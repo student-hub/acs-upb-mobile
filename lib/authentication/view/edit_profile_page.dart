@@ -1,10 +1,10 @@
 import 'package:acs_upb_mobile/authentication/model/user.dart';
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
-import 'package:acs_upb_mobile/navigation/routes.dart';
 import 'package:acs_upb_mobile/pages/filter/model/filter.dart';
 import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
 import 'package:acs_upb_mobile/resources/locale_provider.dart';
+import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/widgets/button.dart';
 import 'package:acs_upb_mobile/widgets/dialog.dart';
 import 'package:acs_upb_mobile/widgets/form/form.dart';
@@ -152,7 +152,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   Provider.of<AuthProvider>(context, listen: false);
               bool res = await authProvider.delete(context: context);
               if (res) {
-                _signOut(context);
+                Utils.signOut(context);
               }
             },
           )
@@ -180,9 +180,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     filter.localizedLevelNames[2][LocaleProvider.localeString]:
                         nodes.length > 3 ? nodes[3].name : null,
                     filter.localizedLevelNames[3][LocaleProvider.localeString]:
-                        nodes.length > 4? nodes[4].name : null,
+                        nodes.length > 4 ? nodes[4].name : null,
                     filter.localizedLevelNames[4][LocaleProvider.localeString]:
-                        nodes.length > 5? nodes[5].name : null,
+                        nodes.length > 5 ? nodes[5].name : null,
                     filter.localizedLevelNames[5][LocaleProvider.localeString]:
                         nodes.length > 6 ? nodes[6].name : null,
                   },
