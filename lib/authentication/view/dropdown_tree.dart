@@ -8,16 +8,12 @@ import 'package:provider/provider.dart';
 
 class DropdownTree extends StatefulWidget {
   final List<String> path;
-  final EdgeInsetsGeometry paddingField;
-  final EdgeInsetsGeometry paddingDropDownButton;
-  final EdgeInsetsGeometry paddingIndicator;
+  final double leftPadding;
 
   DropdownTree({
     Key key,
     this.path,
-    this.paddingField,
-    this.paddingDropDownButton,
-    this.paddingIndicator,
+    this.leftPadding,
   }) : super(key: key);
 
   @override
@@ -44,9 +40,9 @@ class _DropdownTreeState extends State<DropdownTree> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Padding(
-              padding: widget.paddingField != null
-                  ? widget.paddingField
-                  : const EdgeInsets.all(8.0),
+              padding: EdgeInsets.only(
+                  top: 8.0,
+                  left: widget.leftPadding != null ? widget.leftPadding : 0.0),
               child: Text(
                 filter.localizedLevelNames[i][LocaleProvider.localeString],
                 style: Theme.of(context)
@@ -62,9 +58,11 @@ class _DropdownTreeState extends State<DropdownTree> {
                   .map((node) => DropdownMenuItem(
                         value: node,
                         child: Padding(
-                          padding: widget.paddingDropDownButton != null
-                              ? widget.paddingDropDownButton
-                              : const EdgeInsets.all(8.0),
+                          padding: EdgeInsets.only(
+                              top: 8.0,
+                              left: widget.leftPadding != null
+                                  ? widget.leftPadding
+                                  : 0.0),
                           child: Text(node.name),
                         ),
                       ))

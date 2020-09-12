@@ -172,11 +172,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       leftPadding: 0,
                     ),
                     DropdownTree(
-//                  filter: filter,
                       path: path,
-//                  nodes: filter.findNodeByPath(path),
-                      paddingField: const EdgeInsets.only(top: 8.0, left: 10.0),
-                      paddingDropDownButton: const EdgeInsets.only(left: 10.0),
+                      leftPadding: 10.0,
                     )
                   ]),
                 );
