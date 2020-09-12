@@ -1,16 +1,13 @@
 import 'package:acs_upb_mobile/pages/filter/model/filter.dart';
-import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
 import 'package:acs_upb_mobile/resources/locale_provider.dart';
 import 'package:acs_upb_mobile/widgets/form/form.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class DropdownTree extends StatefulWidget {
   List<FormItem> formItems;
-  Filter filter;
+  final Filter filter;
   List<FilterNode> nodes;
-  FilterProvider filterProvider;
   final List<String> path;
   final EdgeInsetsGeometry paddingField;
   final EdgeInsetsGeometry paddingDropDownButton;
@@ -18,6 +15,7 @@ class DropdownTree extends StatefulWidget {
 
   DropdownTree({
     Key key,
+    @required this.filter,
     this.path,
     this.paddingField,
     this.paddingDropDownButton,
@@ -26,12 +24,16 @@ class DropdownTree extends StatefulWidget {
 
   @override
   _DropdownTreeState createState() => _DropdownTreeState();
+
+  List<String> getNodes(){
+    List<String> result = List();
+    nodes.forEach((element) {result.add(element.name);});
+    return result;
+  }
 }
 
 class _DropdownTreeState extends State<DropdownTree> {
   void _fetchFilter() async {
-    widget.filterProvider = Provider.of<FilterProvider>(context, listen: false);
-    widget.filter = await widget.filterProvider.fetchFilter(context);
     if (widget.path == null) {
       widget.nodes = [widget.filter.root];
     } else {
@@ -104,6 +106,8 @@ class _DropdownTreeState extends State<DropdownTree> {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(children: _dropdownTree(context),);
+    return ListView(
+      children: _dropdownTree(context),
+    );
   }
 }
