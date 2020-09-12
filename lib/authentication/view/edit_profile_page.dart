@@ -64,28 +64,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
     setState(() {});
   }
 
-  void _addControllerListener(TextEditingController controller) {
-    controller.addListener(() {
-      final text = controller.text;
-      controller.value = controller.value.copyWith(
-          text: text,
-          selection:
-              TextSelection(baseOffset: text.length, extentOffset: text.length),
-          composing: TextRange.empty);
-    });
-  }
-
   initState() {
     super.initState();
     _fetchInitialData();
-    _addControllerListener(firstNameController);
-    _addControllerListener(lastNameController);
-  }
-
-  void dispose() {
-    firstNameController.dispose();
-    lastNameController.dispose();
-    super.dispose();
   }
 
   List<Widget> _dropdownTree(BuildContext context) {
@@ -235,7 +216,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                               ),
                               controller: firstNameController,
                               validator: (value) {
-                                if (value.isEmpty || value != null) {
+                                if (value.isEmpty || value == null) {
                                   return S.of(context).errorMissingFirstName;
                                 }
                                 return null;
@@ -249,7 +230,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                               ),
                               controller: lastNameController,
                               validator: (value) {
-                                if (value.isEmpty || value != null) {
+                                if (value.isEmpty || value == null) {
                                   return S.of(context).errorMissingLastName;
                                 }
                                 return null;
