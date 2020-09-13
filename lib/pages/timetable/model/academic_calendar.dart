@@ -66,4 +66,19 @@ class AcademicCalendar {
         .toList();
     return instances;
   }
+
+  List<UniEvent> get holidayEvents => holidays
+      .map((holiday, interval) => MapEntry(
+          holiday,
+          UniEvent(
+            id: holiday,
+            name: holiday,
+            start: interval.start,
+            duration:
+                Period.differenceBetweenDateTime(interval.start, interval.end),
+            // TODO: Set holiday color in settings
+            color: Colors.yellow,
+          )))
+      .values
+      .toList();
 }

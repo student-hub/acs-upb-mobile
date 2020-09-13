@@ -145,7 +145,7 @@ class UniEventProvider extends EventProvider<UniEventInstance>
   UniEventProvider({AuthenticationProvider authProvider})
       : authProvider = authProvider ?? AuthenticationProvider();
 
-  Stream<List<UniEventInstance>> get _events {
+  Stream<List<UniEvent>> get _events {
     if (!authProvider.isAuthenticatedFromCache || filter == null)
       return Stream.value([]);
 
@@ -182,30 +182,30 @@ class UniEventProvider extends EventProvider<UniEventInstance>
 
     var stream = StreamZip(streams);
 
-    return stream.map((events) =>
-        events
-            // Flatten zipped streams
-            .expand((i) => i)
-            // Generate instances for each event
-            .map((event) => event.generateInstances(calendar: calendar))
-            // Flatten lists of instances
-            .expand((i) => i)
-            .toList() +
-        // Add holiday instances
-        calendar.generateHolidayInstances());
+    // Flatten zipped streams
+    return stream.map((events) => events.expand((i) => i).toList());
   }
 
   @override
   Stream<Iterable<UniEventInstance>> getAllDayEventsIntersecting(
       DateInterval interval) {
-    return _events
-        .map((events) => events.allDayEvents.intersectingInterval(interval));
+    var e = _events.map((events) => events
+        .map((event) => event.generateInstances(
+            calendar: calendar, intersectingInterval: interval))
+        .expand((i) => i)
+        .followedBy(calendar.generateHolidayInstances())
+        .allDayEvents);
+    return e;
   }
 
   @override
   Stream<Iterable<UniEventInstance>> getPartDayEventsIntersecting(
       LocalDate date) {
-    return _events.map((events) => events.partDayEvents.intersectingDate(date));
+    return _events.map((events) => events
+        .map((event) => event.generateInstances(
+            calendar: calendar, intersectingInterval: DateInterval(date, date)))
+        .expand((i) => i)
+        .partDayEvents);
   }
 
   @override

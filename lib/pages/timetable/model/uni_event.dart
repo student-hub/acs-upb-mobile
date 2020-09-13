@@ -50,44 +50,52 @@ class UniEvent {
     this.classHeader,
   });
 
-  List<UniEventInstance> generateInstances({AcademicCalendar calendar}) {
+  Iterable<UniEventInstance> generateInstances(
+      {AcademicCalendar calendar, DateInterval intersectingInterval}) sync* {
     String name = this.name ?? classHeader?.acronym ?? '';
 
     if (rrule == null) {
-      return [
-        UniEventInstance(
-          id: id,
-          title: name,
-          mainEvent: this,
-          color: this.color,
-          start: start,
-          end: start.add(duration),
-          location: location,
-        )
-      ];
+      yield UniEventInstance(
+        id: id,
+        title: name,
+        mainEvent: this,
+        color: this.color,
+        start: start,
+        end: start.add(duration),
+        location: location,
+      );
     } else {
       // Calculate recurrences
-      var instances = rrule.getInstances(start: start);
+      int i = 0;
+      for (var start in rrule.getInstances(start: start)) {
+        LocalDateTime end = start.add(duration);
+        if (intersectingInterval != null) {
+          if (end.calendarDate < intersectingInterval.start) continue;
+          if (start.calendarDate > intersectingInterval.end) break;
+        }
 
-      // Exclude holidays
-      calendar?.holidays?.forEach((holiday, interval) {
-        instances = instances.where((start) => !interval.includes(start));
-      });
+        bool skip = false;
+        calendar?.holidays?.forEach((holiday, interval) {
+          if (interval.includes(start)) {
+            // Skip holidays
+            skip = true;
+          }
+        });
 
-      return instances
-          .toList()
-          .asMap()
-          .entries
-          .map((instance) => UniEventInstance(
-                id: id + '-' + instance.key.toString(),
-                title: name,
-                mainEvent: this,
-                color: this.color,
-                start: instance.value,
-                end: instance.value.add(duration),
-                location: location,
-              ))
-          .toList();
+        if (!skip) {
+          yield UniEventInstance(
+            id: id + '-' + i.toString(),
+            title: name,
+            mainEvent: this,
+            color: this.color,
+            start: start,
+            end: end,
+            location: location,
+          );
+        }
+
+        i++;
+      }
     }
   }
 }
@@ -123,4 +131,9 @@ class UniEventInstance extends Event {
   @override
   int get hashCode =>
       hashList([super.hashCode, color, location, mainEvent, title]);
+
+  @override
+  bool intersectsInterval(DateInterval interval) {
+
+  }
 }
