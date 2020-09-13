@@ -32,6 +32,21 @@ extension UniEventTypeExtension on UniEventType {
         return UniEventType.other;
     }
   }
+
+  get color {
+    switch (this) {
+      case UniEventType.lecture:
+        return Colors.pinkAccent;
+      case UniEventType.lab:
+        return Colors.blueAccent;
+      case UniEventType.seminar:
+        return Colors.orangeAccent;
+      case UniEventType.sports:
+        return Colors.greenAccent;
+      case UniEventType.other:
+        return Colors.white;
+    }
+  }
 }
 
 extension PeriodExtension on Period {
@@ -77,17 +92,18 @@ extension UniEventExtension on UniEvent {
       return null;
 
     try {
+      UniEventType type = UniEventTypeExtension.fromString(snap.data['type']);
       return UniEvent(
         rrule: RecurrenceRuleExtension.fromJSON(snap.data['rrule']),
         id: snap.documentID,
-        type: UniEventTypeExtension.fromString(snap.data['type']),
+        type: type,
         name: snap.data['name'],
         // Convert time to UTC and then to local time
         start: (snap.data['start'] as Timestamp).toLocalDateTime(),
         duration: PeriodExtension.fromJSON(snap.data['duration']),
         location: snap.data['location'],
         // TODO: Allow users to set event colours in settings
-        color: Colors.blue,
+        color: type.color,
         classHeader: classHeader,
       );
     } catch (e) {
