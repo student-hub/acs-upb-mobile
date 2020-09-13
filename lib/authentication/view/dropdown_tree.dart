@@ -32,6 +32,10 @@ class _DropdownTreeState extends State<DropdownTree> {
   Filter filter;
   List<FilterNode> nodes;
 
+  List<String> get path {
+    return nodes.map((e) => e.name);
+  }
+
   List<Widget> _dropdownTree(BuildContext context) {
     List<Widget> items = [SizedBox(height: 8)];
     for (var i = 0; i < nodes.length; i++) {
@@ -84,14 +88,15 @@ class _DropdownTreeState extends State<DropdownTree> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: Provider.of<FilterProvider>(context, listen: false)
-          .fetchFilter(context),
+      future: Provider.of<FilterProvider>(context).fetchFilter(context),
       builder: (BuildContext context, AsyncSnapshot snap) {
         if (snap.hasData) {
           filter = snap.data;
-          nodes = widget.path == null
-              ? [filter.root]
-              : filter.findNodeByPath(widget.path);
+          if(nodes == null) {
+            nodes = widget.path == null
+                ? [filter.root]
+                : filter.findNodeByPath(widget.path);
+          }
           return Column(
             children: _dropdownTree(context),
           );
