@@ -7,6 +7,7 @@ import 'package:acs_upb_mobile/pages/filter/model/filter.dart';
 import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
 import 'package:acs_upb_mobile/pages/home/home_page.dart';
 import 'package:acs_upb_mobile/pages/portal/service/website_provider.dart';
+import 'package:acs_upb_mobile/widgets/form/form_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
@@ -278,18 +279,33 @@ void main() {
       when(mockAuthProvider.canSignUpWithEmail(email: anyNamed('email')))
           .thenAnswer((realInvocation) => Future.value(true));
 
-      // Enter info
+      // Test parser from email
+      final FormTextField firstName = tester
+          .widget<FormTextField>(find.byKey(ValueKey('first_name_text_field')));
+      final FormTextField lastName = tester
+          .widget<FormTextField>(find.byKey(ValueKey('last_name_text_field')));
+
       await tester.enterText(
-          find.byKey(ValueKey('email_text_field'), skipOffstage: true), 'test');
+          find.byKey(ValueKey('email_text_field'), skipOffstage: true),
+          'john_alexander.doe123');
+      expect(firstName.controller.text, equals('John Alexander'));
+      expect(lastName.controller.text, equals('Doe'));
+
+      await tester.enterText(
+          find.byKey(ValueKey('email_text_field'), skipOffstage: true),
+          'john.doe');
+      expect(firstName.controller.text, equals('John'));
+      expect(lastName.controller.text, equals('Doe'));
+
       await tester.enterText(
           find.byKey(ValueKey('password_text_field'), skipOffstage: true),
           'password');
       await tester.enterText(
           find.byKey(ValueKey('confirm_password_text_field')), 'password');
-      await tester.enterText(
-          find.byKey(ValueKey('first_name_text_field')), 'John');
-      await tester.enterText(
-          find.byKey(ValueKey('last_name_text_field')), 'Doe');
+      // await tester.enterText(
+      //     find.byKey(ValueKey('first_name_text_field')), 'John');
+      // await tester.enterText(
+      //     find.byKey(ValueKey('last_name_text_field')), 'Doe');
       // TODO: Test dropdown buttons
 
       // Scroll sign up button into view
@@ -305,7 +321,7 @@ void main() {
       verify(mockAuthProvider.signUp(
           info: argThat(
               equals({
-                'Email': 'test@stud.acs.upb.ro',
+                'Email': 'john.doe@stud.acs.upb.ro',
                 'Password': 'password',
                 'Confirm password': 'password',
                 'First name': 'John',
