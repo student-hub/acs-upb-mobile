@@ -130,7 +130,8 @@ class UniEventProvider extends EventProvider<UniEventInstance>
       : authProvider = authProvider ?? AuthenticationProvider();
 
   Stream<List<UniEventInstance>> get _events {
-    if (!authProvider.isAuthenticatedFromCache) return Stream.value([]);
+    if (!authProvider.isAuthenticatedFromCache || filter == null)
+      return Stream.value([]);
 
     List<Stream<List<UniEvent>>> streams = [];
 
