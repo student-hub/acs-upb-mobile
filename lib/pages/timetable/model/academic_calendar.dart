@@ -26,25 +26,25 @@ class AcademicCalendar {
     semesters = [
       TimeInterval(
         start: startDate,
-        end: startDate.add(Period(weeks: 3)),
+        end: startDate.add(Period(weeks: 5)),
       ),
       TimeInterval(
-        start: startDate.add(Period(weeks: 4)),
-        end: startDate.add(Period(weeks: 7)),
+        start: startDate.add(Period(weeks: 6)),
+        end: startDate.add(Period(weeks: 9)),
       ),
     ];
     holidays = {
       'Vacanța 1': TimeInterval(
-        start: startDate.addWeeks(1),
-        end: startDate.addWeeks(1).addDays(3),
+        start: startDate.addWeeks(2).addDays(2),
+        end: startDate.addWeeks(2).addDays(5),
       ),
       'Vacanța intersemestrială': TimeInterval(
-        start: startDate.addWeeks(3),
-        end: startDate.addWeeks(4),
+        start: startDate.addWeeks(6),
+        end: startDate.addWeeks(7),
       ),
       'Vacanța 2': TimeInterval(
-        start: startDate.addWeeks(5),
-        end: startDate.addWeeks(5).addDays(3),
+        start: startDate.addWeeks(8),
+        end: startDate.addWeeks(8).addDays(3),
       ),
     };
   }
