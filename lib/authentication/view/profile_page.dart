@@ -79,15 +79,11 @@ class _ProfilePageState extends State<ProfilePage> {
             builder: (BuildContext context, AsyncSnapshot<User> snap) {
               String userName;
               String userGroup;
-              String picturePath;
               if (snap.connectionState == ConnectionState.done) {
                 User user = snap.data;
                 if (user != null) {
                   userName = user.firstName + ' ' + user.lastName;
                   userGroup = user.group;
-                  picturePath = user.picture;
-                } else {
-                  picturePath = ' ';
                 }
                 return Column(
                   children: <Widget>[
@@ -95,26 +91,10 @@ class _ProfilePageState extends State<ProfilePage> {
                       flex: 1,
                       child: Container(),
                     ),
-                    FutureBuilder<ImageProvider<dynamic>>(
-                      future: storageProvider.imageFromPath(picturePath),
-                      builder: (context,
-                          AsyncSnapshot<ImageProvider<dynamic>> snapshot) {
-                        var image;
-                        if (snapshot.connectionState == ConnectionState.done) {
-                          if (snapshot.hasData) {
-                            image = snapshot.data;
-                          } else {
-                            image = AssetImage(
-                                'assets/illustrations/undraw_profile_pic.png');
-                          }
-                        } else {
-                          image = AssetImage(
-                              'assets/illustrations/undraw_profile_pic.png');
-                        }
-
-                        return CircleAvatar(radius: 95, backgroundImage: image);
-                      },
-                    ),
+                    CircleAvatar(
+                        radius: 95,
+                        backgroundImage: AssetImage(
+                            'assets/illustrations/undraw_profile_pic.png')),
                     SizedBox(height: 8),
                     Text(
                       userName ?? S.of(context).stringAnonymous,
