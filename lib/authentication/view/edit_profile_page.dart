@@ -24,6 +24,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   final firstNameController = TextEditingController();
   final lastNameController = TextEditingController();
+  final dropdownTreeController = DropdownTreeController();
 
   final editProfileForm = GlobalKey<FormState>();
 
@@ -64,7 +65,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
         AppScaffoldAction(
             text: S.of(context).buttonSave,
             onPressed: () async {
-              if (editProfileForm.currentState.validate()) {
+              if (editProfileForm.currentState.validate() && false) {
                 bool result = await authProvider.updateProfile(
                   info: {
                     S.of(context).labelFirstName: firstNameController.text,
@@ -111,6 +112,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
               if (snap.hasData) {
                 User user = snap.data;
                 path = List();
+                lastNameController.text = user.lastName;
+                firstNameController.text = user.firstName;
                 if (user.degree != null) {
                   path.add(user.degree);
                   if (user.domain != null) {
@@ -173,6 +176,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     ),
                     DropdownTree(
                       path: path,
+                      controller: dropdownTreeController,
                       leftPadding: 10.0,
                     )
                   ]),

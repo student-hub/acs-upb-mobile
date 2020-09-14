@@ -6,14 +6,22 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+class DropdownTreeController{
+  _DropdownTreeState _dropdownTreeState;
+
+  List<String> get path => _dropdownTreeState?.path;
+}
+
 class DropdownTree extends StatefulWidget {
   final List<String> path;
   final double leftPadding;
+  final DropdownTreeController controller;
 
   DropdownTree({
     Key key,
     this.path,
     this.leftPadding,
+    this.controller,
   }) : super(key: key);
 
   @override
@@ -33,7 +41,9 @@ class _DropdownTreeState extends State<DropdownTree> {
   List<FilterNode> nodes;
 
   List<String> get path {
-    return nodes.map((e) => e.name);
+    List<String> path = List();
+    nodes.forEach((element) {path.add(element.name);});
+    return path;
   }
 
   List<Widget> _dropdownTree(BuildContext context) {
@@ -87,6 +97,7 @@ class _DropdownTreeState extends State<DropdownTree> {
 
   @override
   Widget build(BuildContext context) {
+    widget.controller?._dropdownTreeState = this;
     return FutureBuilder(
       future: Provider.of<FilterProvider>(context).fetchFilter(context),
       builder: (BuildContext context, AsyncSnapshot snap) {
