@@ -55,6 +55,12 @@ class UniEvent {
     String name = this.name ?? classHeader?.acronym ?? '';
 
     if (rrule == null) {
+      LocalDateTime end = start.add(duration);
+      if (intersectingInterval != null) {
+        if (end.calendarDate < intersectingInterval.start ||
+            start.calendarDate > intersectingInterval.end) return;
+      }
+
       yield UniEventInstance(
         id: id,
         title: name,

@@ -11,7 +11,6 @@ import 'package:async/async.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:rrule/rrule.dart';
-import 'package:rrule/src/codecs/string/string.dart';
 import 'package:time_machine/src/date_interval.dart';
 import 'package:time_machine/src/localdate.dart';
 import 'package:time_machine/time_machine.dart';
@@ -66,19 +65,6 @@ extension PeriodExtension on Period {
   }
 }
 
-extension RecurrenceRuleExtension on RecurrenceRule {
-  static RecurrenceRule fromJSON(Map<String, dynamic> json) {
-    if (json == null || json['frequency'] == null || json['until'] == null)
-      return null;
-
-    return RecurrenceRule(
-      frequency: recurFreqValues[(json['frequency'] as String).toUpperCase()],
-      interval: json['interval'] ?? 1,
-      until: (json['until'] as Timestamp).toLocalDateTime(),
-    );
-  }
-}
-
 extension TimestampExtension on Timestamp {
   LocalDateTime toLocalDateTime() => LocalDateTime.dateTime(this.toDate())
       .inZoneStrictly(DateTimeZone.utc)
@@ -94,7 +80,7 @@ extension UniEventExtension on UniEvent {
     try {
       UniEventType type = UniEventTypeExtension.fromString(snap.data['type']);
       return UniEvent(
-        rrule: RecurrenceRuleExtension.fromJSON(snap.data['rrule']),
+        rrule: RecurrenceRule.fromString(snap.data['rrule']),
         id: snap.documentID,
         type: type,
         name: snap.data['name'],
@@ -189,13 +175,12 @@ class UniEventProvider extends EventProvider<UniEventInstance>
   @override
   Stream<Iterable<UniEventInstance>> getAllDayEventsIntersecting(
       DateInterval interval) {
-    var e = _events.map((events) => events
+    return _events.map((events) => events
         .map((event) => event.generateInstances(
             calendar: calendar, intersectingInterval: interval))
         .expand((i) => i)
         .followedBy(calendar.generateHolidayInstances())
         .allDayEvents);
-    return e;
   }
 
   @override
