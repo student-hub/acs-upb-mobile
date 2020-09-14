@@ -2,7 +2,6 @@ import 'package:acs_upb_mobile/authentication/model/user.dart';
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/authentication/view/edit_profile_page.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
-import 'package:acs_upb_mobile/resources/storage_provider.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/widgets/icon_text.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
@@ -52,13 +51,11 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     AuthProvider authProvider = Provider.of<AuthProvider>(context);
-    StorageProvider storageProvider =
-        Provider.of<StorageProvider>(context, listen: true);
     return AppScaffold(
       actions: [
         AppScaffoldAction(
             icon: Icons.edit,
-            tooltip: 'Edit Profile', // FIXME: localize me
+            tooltip: S.of(context).actionEditProfile,
             onPressed: authProvider.isAnonymous
                 ? null
                 : () {
