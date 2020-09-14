@@ -467,6 +467,7 @@ class AuthProvider with ChangeNotifier {
       user.year = year;
       user.series = series;
       user.group = group;
+      user.subgroup = subgroup;
       Firestore.instance
           .collection('users')
           .document(user.uid)

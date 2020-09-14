@@ -139,6 +139,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
                         path.add(user.series);
                         if (user.group != null) {
                           path.add(user.group);
+                          if(user.subgroup != null){
+                            path.add(user.subgroup);
+                          }
                         }
                       }
                     }
