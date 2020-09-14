@@ -9,7 +9,8 @@ import 'package:provider/provider.dart';
 class DropdownTreeController{
   _DropdownTreeState _dropdownTreeState;
 
-  List<String> get path => _dropdownTreeState?.path;
+  Map<String,String> get path => _dropdownTreeState?.path;
+
 }
 
 class DropdownTree extends StatefulWidget {
@@ -26,12 +27,6 @@ class DropdownTree extends StatefulWidget {
 
   @override
   _DropdownTreeState createState() => _DropdownTreeState();
-
-//  List<String> getNodes(){
-//    List<String> result = List();
-//    nodes.forEach((element) {result.add(element.name);});
-//    return result;
-//  }
 }
 
 class _DropdownTreeState extends State<DropdownTree> {
@@ -40,10 +35,21 @@ class _DropdownTreeState extends State<DropdownTree> {
   Filter filter;
   List<FilterNode> nodes;
 
-  List<String> get path {
-    List<String> path = List();
-    nodes.forEach((element) {path.add(element.name);});
-    return path;
+  Map<String,String> get path {
+    return {
+      filter.localizedLevelNames[0][LocaleProvider.localeString]:
+    nodes.length > 1 ? nodes[1].name : null,
+      filter.localizedLevelNames[1][LocaleProvider.localeString]:
+      nodes.length > 2 ? nodes[2].name : null,
+      filter.localizedLevelNames[2][LocaleProvider.localeString]:
+      nodes.length > 3 ? nodes[3].name : null,
+      filter.localizedLevelNames[3][LocaleProvider.localeString]:
+      nodes.length > 4 ? nodes[4].name : null,
+      filter.localizedLevelNames[4][LocaleProvider.localeString]:
+      nodes.length > 5 ? nodes[5].name : null,
+      filter.localizedLevelNames[5][LocaleProvider.localeString]:
+      nodes.length > 6 ? nodes[6].name : null,
+    };
   }
 
   List<Widget> _dropdownTree(BuildContext context) {
