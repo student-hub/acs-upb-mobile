@@ -11,6 +11,7 @@ class User {
   String year;
   String series;
   String group;
+  String subgroup;
 
   int permissionLevel;
 
@@ -23,6 +24,7 @@ class User {
       this.year,
       this.series,
       this.group,
+      this.subgroup,
       int permissionLevel})
       : this.permissionLevel = permissionLevel ?? 0;
 
