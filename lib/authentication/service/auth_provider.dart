@@ -29,15 +29,14 @@ extension DatabaseUser on User {
     String year;
     String series;
     String group;
-    String picture;
-
+    String subgroup;
     if (snap.data.containsKey('class')) {
       degree = snap.data['class']['degree'];
       domain = snap.data['class']['domain'];
       year = snap.data['class']['year'];
       series = snap.data['class']['series'];
       group = snap.data['class']['group'];
-      picture = snap.data['class']['picture'];
+      subgroup = snap.data['class']['subgroup'];
     }
 
     return User(
@@ -49,7 +48,7 @@ extension DatabaseUser on User {
         year: year,
         series: series,
         group: group,
-        picture: picture,
+        subgroup: subgroup,
         permissionLevel: snap.data['permissionLevel']);
   }
 
@@ -60,7 +59,7 @@ extension DatabaseUser on User {
     if (year != null) classInfo['year'] = year;
     if (series != null) classInfo['series'] = series;
     if (group != null) classInfo['group'] = group;
-    if (picture != null) classInfo['picture'] = picture;
+    if (subgroup != null) classInfo['subgroup'] = subgroup;
 
     return {
       'name': {'first': firstName, 'last': lastName},
@@ -347,6 +346,8 @@ class AuthProvider with ChangeNotifier {
           filter.localizedLevelNames[3][LocaleProvider.localeString]);
       String group = info.getIfPresent(
           filter.localizedLevelNames[4][LocaleProvider.localeString]);
+      String subgroup = info.getIfPresent(
+          filter.localizedLevelNames[5][LocaleProvider.localeString]);
 
       if (email == null || email == '') {
         AppToast.show(S.of(context).errorInvalidEmail);
@@ -394,7 +395,8 @@ class AuthProvider with ChangeNotifier {
           domain: domain,
           year: year,
           series: series,
-          group: group);
+          group: group,
+          subgroup: subgroup);
 
       DocumentReference ref =
           Firestore.instance.collection('users').document(user.uid);

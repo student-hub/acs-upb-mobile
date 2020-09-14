@@ -11,7 +11,7 @@ class User {
   String year;
   String series;
   String group;
-  String picture;
+  String subgroup;
 
   int permissionLevel;
 
@@ -24,8 +24,8 @@ class User {
       this.year,
       this.series,
       this.group,
-      int permissionLevel,
-      this.picture})
+      this.subgroup,
+      int permissionLevel})
       : this.permissionLevel = permissionLevel ?? 0;
 
   bool get canAddPublicWebsite => permissionLevel >= 3;
