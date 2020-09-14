@@ -76,7 +76,7 @@ class UniEvent {
 
         bool skip = false;
         calendar?.holidays?.forEach((holiday, interval) {
-          if (interval.includes(start)) {
+          if (interval.contains(start.calendarDate)) {
             // Skip holidays
             skip = true;
           }
@@ -131,9 +131,4 @@ class UniEventInstance extends Event {
   @override
   int get hashCode =>
       hashList([super.hashCode, color, location, mainEvent, title]);
-
-  @override
-  bool intersectsInterval(DateInterval interval) {
-
-  }
 }
