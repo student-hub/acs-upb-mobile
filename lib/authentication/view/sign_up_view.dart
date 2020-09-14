@@ -26,7 +26,7 @@ class _SignUpViewState extends State<SignUpView> {
 
   bool agreedToPolicy = false;
 
-  final dropDownController = DropdownTreeController();
+  final dropdownController = DropdownTreeController();
 
   List<FormItem> _buildFormItems() {
     // Only build them once to avoid the cursor staying everywhere
@@ -125,7 +125,7 @@ class _SignUpViewState extends State<SignUpView> {
       items: _buildFormItems(),
       trailing: <Widget>[
             DropdownTree(
-              controller: dropDownController,
+              controller: dropdownController,
             )
           ] +
           [_privacyPolicy()],
@@ -139,7 +139,9 @@ class _SignUpViewState extends State<SignUpView> {
         }
 
         fields[S.of(context).labelEmail] += S.of(context).stringEmailDomain;
-        fields.addAll(dropDownController.path);
+        if(dropdownController.path != null) {
+          fields.addAll(dropdownController.path);
+        }
 
 
         var result = await authProvider.signUp(

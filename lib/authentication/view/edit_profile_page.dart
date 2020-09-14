@@ -23,7 +23,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   final firstNameController = TextEditingController();
   final lastNameController = TextEditingController();
-  final dropdownTreeController = DropdownTreeController();
+  final dropdownController = DropdownTreeController();
 
   final formKey = GlobalKey<FormState>();
 
@@ -78,13 +78,15 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 .of(context)
                 .buttonSave,
             onPressed: () async {
-              Map<String, String> info = dropdownTreeController.path;
-              info.addAll({ S
+              Map<String, String> info = { S
                   .of(context)
                   .labelFirstName: firstNameController.text,
                 S
                     .of(context)
-                    .labelLastName: lastNameController.text,});
+                    .labelLastName: lastNameController.text,};
+              if(dropdownController.path != null) {
+                info.addAll(dropdownController.path);
+              }
               if (formKey.currentState.validate()) {
                 bool result = await authProvider.updateProfile(
                   info: info,
@@ -206,7 +208,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     ),
                     DropdownTree(
                       path: path,
-                      controller: dropdownTreeController,
+                      controller: dropdownController,
                       leftPadding: 10.0,
                     )
                   ]),

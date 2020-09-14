@@ -6,11 +6,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class DropdownTreeController{
+class DropdownTreeController {
   _DropdownTreeState _dropdownTreeState;
 
-  Map<String,String> get path => _dropdownTreeState?.path;
-
+  Map<String, String> get path => _dropdownTreeState?.path;
 }
 
 class DropdownTree extends StatefulWidget {
@@ -35,21 +34,46 @@ class _DropdownTreeState extends State<DropdownTree> {
   Filter filter;
   List<FilterNode> nodes;
 
-  Map<String,String> get path {
-    return {
-      filter.localizedLevelNames[0][LocaleProvider.localeString]:
-    nodes.length > 1 ? nodes[1].name : null,
-      filter.localizedLevelNames[1][LocaleProvider.localeString]:
-      nodes.length > 2 ? nodes[2].name : null,
-      filter.localizedLevelNames[2][LocaleProvider.localeString]:
-      nodes.length > 3 ? nodes[3].name : null,
-      filter.localizedLevelNames[3][LocaleProvider.localeString]:
-      nodes.length > 4 ? nodes[4].name : null,
-      filter.localizedLevelNames[4][LocaleProvider.localeString]:
-      nodes.length > 5 ? nodes[5].name : null,
-      filter.localizedLevelNames[5][LocaleProvider.localeString]:
-      nodes.length > 6 ? nodes[6].name : null,
-    };
+  Map<String, String> get path {
+    Map<String, String> path;
+    if (nodes.length > 1) {
+      path = Map();
+      path.addAll({
+        filter.localizedLevelNames[0][LocaleProvider.localeString]:
+            nodes[1].name
+      });
+      if (nodes.length > 2) {
+        path.addAll({
+          filter.localizedLevelNames[1][LocaleProvider.localeString]:
+              nodes[2].name
+        });
+        if (nodes.length > 3) {
+          path.addAll({
+            filter.localizedLevelNames[2][LocaleProvider.localeString]:
+                nodes[3].name
+          });
+          if (nodes.length > 4) {
+            path.addAll({
+              filter.localizedLevelNames[3][LocaleProvider.localeString]:
+                  nodes[4].name
+            });
+            if (nodes.length > 5) {
+              path.addAll({
+                filter.localizedLevelNames[3][LocaleProvider.localeString]:
+                    nodes[5].name
+              });
+              if (nodes.length > 6) {
+                path.addAll({
+                  filter.localizedLevelNames[5][LocaleProvider.localeString]:
+                      nodes[6].name
+                });
+              }
+            }
+          }
+        }
+      }
+    }
+    return path;
   }
 
   List<Widget> _dropdownTree(BuildContext context) {
@@ -109,7 +133,7 @@ class _DropdownTreeState extends State<DropdownTree> {
       builder: (BuildContext context, AsyncSnapshot snap) {
         if (snap.hasData) {
           filter = snap.data;
-          if(nodes == null) {
+          if (nodes == null) {
             nodes = widget.path == null
                 ? [filter.root]
                 : filter.findNodeByPath(widget.path);
