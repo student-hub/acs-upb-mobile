@@ -25,7 +25,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
   final lastNameController = TextEditingController();
   final dropdownTreeController = DropdownTreeController();
 
-  final editProfileForm = GlobalKey<FormState>();
+  final formKey = GlobalKey<FormState>();
 
   initState() {
     super.initState();
@@ -85,7 +85,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 S
                     .of(context)
                     .labelLastName: lastNameController.text,});
-              if (editProfileForm.currentState.validate()) {
+              if (formKey.currentState.validate()) {
                 bool result = await authProvider.updateProfile(
                   info: info,
                   context: context,
@@ -156,7 +156,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       leftPadding: 0,
                     ),
                     Form(
-                      key: editProfileForm,
+                      key: formKey,
                       child: Column(
                         children: [
                           TextFormField(
