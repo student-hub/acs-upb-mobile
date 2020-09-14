@@ -96,10 +96,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       .of(context)
                       .messageEditProfileSuccess);
                   Navigator.pop(context);
-                } else {
-                  AppToast.show(S
-                      .of(context)
-                      .errorSomethingWentWrong);
                 }
               }
             }),
