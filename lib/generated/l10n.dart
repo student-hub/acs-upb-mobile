@@ -413,16 +413,6 @@ class S {
     );
   }
 
-  /// `Edit Profile`
-  String get sectionEditProfile {
-    return Intl.message(
-      'Edit Profile',
-      name: 'sectionEditProfile',
-      desc: '',
-      args: [],
-    );
-  }
-
   /// `Main page`
   String get shortcutTypeMain {
     return Intl.message(
@@ -588,6 +578,16 @@ class S {
     return Intl.message(
       'Log in anonymously',
       name: 'actionLogInAnonymously',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Edit Profile`
+  String get actionEditProfile {
+    return Intl.message(
+      'Edit Profile',
+      name: 'actionEditProfile',
       desc: '',
       args: [],
     );

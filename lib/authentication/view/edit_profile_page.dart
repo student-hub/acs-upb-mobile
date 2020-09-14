@@ -71,7 +71,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
     return AppScaffold(
       title: S
           .of(context)
-          .sectionEditProfile,
+          .actionEditProfile,
       actions: [
         AppScaffoldAction(
             text: S

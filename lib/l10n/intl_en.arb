@@ -39,7 +39,6 @@
   "sectionEventsComingUp": "Events coming up",
   "sectionFAQ": "FAQ",
   "sectionGrading": "Grading",
-  "sectionEditProfile": "Edit Profile",
 
   "shortcutTypeMain": "Main page",
   "shortcutTypeClassbook": "Classbook",
@@ -60,6 +59,7 @@
   "actionLogIn": "Log in",
   "actionLogOut": "Log out",
   "actionLogInAnonymously": "Log in anonymously",
+  "actionEditProfile": "Edit Profile",
   "actionSocialLogin": "Social login",
   "actionSignInWith": "Sign in with {provider}",
   "actionResetPassword": "Reset password",

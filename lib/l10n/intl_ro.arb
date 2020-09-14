@@ -39,7 +39,6 @@
   "sectionEventsComingUp": "Evenimente următoare",
   "sectionFAQ": "Întrebări frecvente",
   "sectionGrading": "Punctaj",
-  "sectionEditProfile": "Setările contului",
 
   "shortcutTypeMain": "Pagina principală",
   "shortcutTypeClassbook": "Catalog",
@@ -60,6 +59,7 @@
   "actionLogIn": "Conectare",
   "actionLogOut": "Deconectare",
   "actionLogInAnonymously": "Conectare anonimă",
+  "actionEditProfile": "Modifică profil",
   "actionSocialLogin": "Rețele sociale",
   "actionSignInWith": "Conectare cu {provider}",
   "actionResetPassword": "Resetare parolă",
