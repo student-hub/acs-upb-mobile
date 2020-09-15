@@ -207,58 +207,86 @@ void main() {
                   root: FilterNode(name: 'All', value: true, children: [
                     FilterNode(name: 'BSc', value: true, children: [
                       FilterNode(name: 'CTI', value: true, children: [
-                        FilterNode(name: 'CTI-1', value: true, children: [
-                          FilterNode(name: '1-CA'),
-                          FilterNode(
-                            name: '1-CB',
-                            value: true,
-                            children: [
-                              FilterNode(name: '311CB', value: true, children: [
-                                FilterNode(name: '311CBa'),
-                                FilterNode(name: '311CBb'),
-                              ]),
-                              FilterNode(name: '312CB', value: true, children: [
-                                FilterNode(name: '312CBa'),
-                                FilterNode(name: '312CBb'),
-                              ]),
-                              FilterNode(name: '313CB', value: true, children: [
-                                FilterNode(name: '313CBa'),
-                                FilterNode(name: '313CBb'),
-                              ]),
-                              FilterNode(
-                                name: '314CB',
-                                value: true,
-                                children: [
-                                  FilterNode(name: '314CBa'),
-                                  FilterNode(name: '314CBb'),
-                                ],
-                              ),
-                            ],
-                          ),
-                          FilterNode(name: '1-CC'),
-                          FilterNode(name: '1-CD', children: [
-                            FilterNode(name: '311CD', value: true, children: [
-                              FilterNode(name: '311CDa'),
-                              FilterNode(name: '311CDb'),
-                            ]),
-                            FilterNode(name: '312CD', value: true, children: [
-                              FilterNode(name: '312CDa'),
-                              FilterNode(name: '312CDb'),
-                            ]),
-                            FilterNode(name: '313CD', value: true, children: [
-                              FilterNode(name: '313CDa'),
-                              FilterNode(name: '313CDb'),
-                            ]),
+                        FilterNode(
+                          name: 'CTI-1',
+                          value: true,
+                          children: [
+                            FilterNode(name: '1-CA'),
                             FilterNode(
-                              name: '314CD',
+                              name: '1-CB',
                               value: true,
                               children: [
-                                FilterNode(name: '314CDa'),
-                                FilterNode(name: '314CDb'),
+                                FilterNode(
+                                  name: '311CB',
+                                  value: true,
+                                  children: [
+                                    FilterNode(name: '311CBa'),
+                                    FilterNode(name: '311CBb'),
+                                  ],
+                                ),
+                                FilterNode(
+                                  name: '312CB',
+                                  value: true,
+                                  children: [
+                                    FilterNode(name: '312CBa'),
+                                    FilterNode(name: '312CBb'),
+                                  ],
+                                ),
+                                FilterNode(
+                                  name: '313CB',
+                                  value: true,
+                                  children: [
+                                    FilterNode(name: '313CBa'),
+                                    FilterNode(name: '313CBb'),
+                                  ],
+                                ),
+                                FilterNode(
+                                  name: '314CB',
+                                  value: true,
+                                  children: [
+                                    FilterNode(name: '314CBa'),
+                                    FilterNode(name: '314CBb'),
+                                  ],
+                                ),
                               ],
                             ),
-                          ]),
-                        ]),
+                            FilterNode(name: '1-CC'),
+                            FilterNode(name: '1-CD', children: [
+                              FilterNode(
+                                name: '311CD',
+                                value: true,
+                                children: [
+                                  FilterNode(name: '311CDa'),
+                                  FilterNode(name: '311CDb'),
+                                ],
+                              ),
+                              FilterNode(
+                                name: '312CD',
+                                value: true,
+                                children: [
+                                  FilterNode(name: '312CDa'),
+                                  FilterNode(name: '312CDb'),
+                                ],
+                              ),
+                              FilterNode(
+                                name: '313CD',
+                                value: true,
+                                children: [
+                                  FilterNode(name: '313CDa'),
+                                  FilterNode(name: '313CDb'),
+                                ],
+                              ),
+                              FilterNode(
+                                name: '314CD',
+                                value: true,
+                                children: [
+                                  FilterNode(name: '314CDa'),
+                                  FilterNode(name: '314CDb'),
+                                ],
+                              ),
+                            ]),
+                          ],
+                        ),
                         FilterNode(
                           name: 'CTI-2',
                         ),

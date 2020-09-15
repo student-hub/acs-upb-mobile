@@ -71,7 +71,7 @@ device (make sure USB debugging is enabled).
 power on Xcode's simulator.
 * Select your device from the dropdown list and hit the play button (*Shift+F10* / *^R*).
 
-### Building for Web 
+### Building for Web
 
 * You need to have *Chrome* installed in order to be able to run the web version of the app.
 * Select *Chrome* from the dropdown list and hit the play button (*Shift+F10* / *^R*).

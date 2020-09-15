@@ -13,13 +13,13 @@ class DropdownTreeController {
 }
 
 class DropdownTree extends StatefulWidget {
-  final List<String> path;
+  final List<String> initialPath;
   final double leftPadding;
   final DropdownTreeController controller;
 
   DropdownTree({
     Key key,
-    this.path,
+    this.initialPath,
     this.leftPadding,
     this.controller,
   }) : super(key: key);
@@ -38,7 +38,7 @@ class _DropdownTreeState extends State<DropdownTree> {
     Map<String, String> path;
     if (nodes.length > 1) {
       path = Map();
-      path.addAll({
+      path.addAll ({
         filter.localizedLevelNames[0][LocaleProvider.localeString]:
             nodes[1].name
       });
@@ -134,9 +134,9 @@ class _DropdownTreeState extends State<DropdownTree> {
         if (snap.hasData) {
           filter = snap.data;
           if (nodes == null) {
-            nodes = widget.path == null
+            nodes = widget.initialPath == null
                 ? [filter.root]
-                : filter.findNodeByPath(widget.path);
+                : filter.findNodeByPath(widget.initialPath);
           }
           return Column(
             children: _dropdownTree(context),

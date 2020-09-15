@@ -84,9 +84,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 S
                     .of(context)
                     .labelLastName: lastNameController.text,};
-              if(dropdownController.path != null) {
-                info.addAll(dropdownController.path);
-              }
+              info.addAll(dropdownController.path ?? {});
               if (formKey.currentState.validate()) {
                 bool result = await authProvider.updateProfile(
                   info: info,
@@ -207,7 +205,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       leftPadding: 0,
                     ),
                     DropdownTree(
-                      path: path,
+                      initialPath: path,
                       controller: dropdownController,
                       leftPadding: 10.0,
                     )

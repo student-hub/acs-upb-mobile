@@ -139,9 +139,7 @@ class _SignUpViewState extends State<SignUpView> {
         }
 
         fields[S.of(context).labelEmail] += S.of(context).stringEmailDomain;
-        if(dropdownController.path != null) {
-          fields.addAll(dropdownController.path);
-        }
+        fields.addAll(dropdownController.path ?? {});
 
 
         var result = await authProvider.signUp(
