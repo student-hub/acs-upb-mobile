@@ -76,13 +76,22 @@ class FilterProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  void updateFilter(Filter filter) {
+    _relevanceFilter = filter;
+    if (global) {
+      PrefService.setStringList(
+          'relevant_nodes', _relevanceFilter.relevantNodes);
+    }
+    notifyListeners();
+  }
+
   bool get filterEnabled => _enabled;
 
-  Filter get cachedFilter => _relevanceFilter;
+  Filter get cachedFilter => _relevanceFilter.clone();
 
   Future<Filter> fetchFilter(BuildContext context) async {
     if (_relevanceFilter != null) {
-      return _relevanceFilter;
+      return cachedFilter;
     }
 
     try {
@@ -106,15 +115,9 @@ class FilterProvider with ChangeNotifier {
 
       Map<String, dynamic> root = data['root'];
       _relevanceFilter = Filter(
-          localizedLevelNames: levelNames,
-          root: FilterNodeExtension.fromMap(root, 'All'),
-          listener: () {
-            if (global) {
-              PrefService.setStringList(
-                  'relevant_nodes', _relevanceFilter.relevantNodes);
-            }
-            notifyListeners();
-          });
+        localizedLevelNames: levelNames,
+        root: FilterNodeExtension.fromMap(root, 'All'),
+      );
 
       if (_relevantNodes != null && defaultDegree != null) {
         _relevantNodes.forEach((node) =>
@@ -138,7 +141,7 @@ class FilterProvider with ChangeNotifier {
         }
       }
 
-      return _relevanceFilter;
+      return cachedFilter;
     } catch (e, stackTrace) {
       print(e);
       print(stackTrace);
