@@ -123,6 +123,16 @@ class S {
     );
   }
 
+  /// `Ask permissions!`
+  String get labelAskPermissions {
+    return Intl.message(
+      'Ask permissions!',
+      name: 'labelAskPermissions',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `First name`
   String get labelFirstName {
     return Intl.message(
@@ -338,6 +348,16 @@ class S {
     return Intl.message(
       'Privacy Policy',
       name: 'labelPrivacyPolicy',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `consent for editing rights`
+  String get labelPermissionsConsent {
+    return Intl.message(
+      'consent for editing rights',
+      name: 'labelPermissionsConsent',
       desc: '',
       args: [],
     );
@@ -1133,6 +1153,26 @@ class S {
     );
   }
 
+  /// `The request must not be empty`
+  String get warningRequestEmpty {
+    return Intl.message(
+      'The request must not be empty',
+      name: 'warningRequestEmpty',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Ask for permissions`
+  String get navigationAskPermissions {
+    return Intl.message(
+      'Ask for permissions',
+      name: 'navigationAskPermissions',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Home`
   String get navigationHome {
     return Intl.message(
@@ -1733,11 +1773,41 @@ class S {
     );
   }
 
+  /// `Why do you want edit permissions for ACS UPB MOBILE?`
+  String get messageAskPermissionToEdit {
+    return Intl.message(
+      'Why do you want edit permissions for ACS UPB MOBILE?',
+      name: 'messageAskPermissionToEdit',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `The request has been sent succesfully`
+  String get messageRequestHasBeenSent {
+    return Intl.message(
+      'The request has been sent succesfully',
+      name: 'messageRequestHasBeenSent',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `I agree to the `
   String get messageIAgreeToThe {
     return Intl.message(
       'I agree to the ',
       name: 'messageIAgreeToThe',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `I will only upload information that is correct and accurate, to the best of my knowledge. I understand that submitting erroneous or offensive information on purpose will lead to my editing permissions being permanently revoked.`
+  String get messageAgreePermissions {
+    return Intl.message(
+      'I will only upload information that is correct and accurate, to the best of my knowledge. I understand that submitting erroneous or offensive information on purpose will lead to my editing permissions being permanently revoked.',
+      name: 'messageAgreePermissions',
       desc: '',
       args: [],
     );

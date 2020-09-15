@@ -32,6 +32,7 @@
   "labelEvaluation": "Evaluation",
   "labelPoints": "Points",
   "labelPrivacyPolicy": "Privacy Policy",
+  "labelPermissionsConsent": "consent for editing rights",
 
   "sectionShortcuts": "Shortcuts",
   "sectionEvents": "Events",
@@ -100,7 +101,7 @@
   "warningPasswordUppercase": "The password must include at least one uppercase letter.",
   "warningPasswordLowercase": "The password must include at least one lowercase letter.",
   "warningPasswordSpecialCharacters": "The password must include at least one special character.",
-  "warningPasswordNumber" :"The password must include at least one number.",
+  "warningPasswordNumber": "The password must include at least one number.",
   "warningEmailInUse": "There is already an account associated with {email}.",
   "warningUseProvider": "Please log in with {provider} to continue.",
   "warningTryAgainLater": "Please try again later.",
@@ -117,8 +118,9 @@
   "warningFieldCannotBeZero": "Field cannot be zero.",
   "warningNoneYet": "None yet",
   "warningAgreeTo": "You need to agree to the ",
+  "warningRequestEmpty": "The request must not be empty",
 
-  "navigationAskPermissions": "Ask permissions",
+  "navigationAskPermissions": "Ask for permissions",
   "navigationHome": "Home",
   "navigationTimetable": "Timetable",
   "navigationPortal": "Portal",
@@ -185,7 +187,10 @@
   "messageShortcutDeleted": "Shortcut deleted successfully.",
   "messageNoClassesYet": "You have not added any classes yet.",
   "messageGetStartedPlusButton": "Get started by pressing the + button above.",
+  "messageAskPermissionToEdit": "Why do you want edit permissions for ACS UPB MOBILE?",
+  "messageRequestHasBeenSent": "The request has been sent succesfully",
   "messageIAgreeToThe": "I agree to the ",
+  "messageAgreePermissions": "I will only upload information that is correct and accurate, to the best of my knowledge. I understand that submitting erroneous or offensive information on purpose will lead to my editing permissions being permanently revoked.",
 
   "infoPasswordResetEmailSent": "Please check your inbox for the password reset e-mail.",
   "infoRelevance": "Try to choose the most restrictive category.",
