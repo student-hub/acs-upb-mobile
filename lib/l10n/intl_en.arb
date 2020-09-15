@@ -59,7 +59,7 @@
   "actionLogIn": "Log in",
   "actionLogOut": "Log out",
   "actionLogInAnonymously": "Log in anonymously",
-  "actionEditProfile": "Edit Profile",
+  "actionEditProfile": "Edit profile",
   "actionSocialLogin": "Social login",
   "actionSignInWith": "Sign in with {provider}",
   "actionResetPassword": "Reset password",
