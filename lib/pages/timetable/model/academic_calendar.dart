@@ -30,7 +30,7 @@ class AcademicCalendar {
       ),
       'Vacanța intersemestrială': DateInterval(
         startDate.addWeeks(5),
-        startDate.addWeeks(6),
+        startDate.addWeeks(5).addDays(6),
       ),
       'Vacanța 2': DateInterval(
         startDate.addWeeks(8),
@@ -72,7 +72,8 @@ class AcademicCalendar {
     }
 
     for (var holiday in holidays.values) {
-      Map<int, Set<int>> holidayWeeksByYear = _getWeeksByYearInInterval(holiday);
+      Map<int, Set<int>> holidayWeeksByYear =
+          _getWeeksByYearInInterval(holiday);
 
       for (var entry in holidayWeeksByYear.entries) {
         int year = entry.key;
@@ -105,7 +106,7 @@ class AcademicCalendar {
               title: holiday,
               mainEvent: null,
               start: interval.start.atMidnight(),
-              end: interval.end.atMidnight(),
+              end: interval.end.at(LocalTime(23, 59, 0)),
               // TODO: Set holiday color in settings
               color: Colors.yellow,
             )))
