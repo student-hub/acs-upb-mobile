@@ -3,6 +3,19 @@ import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+Iterable<int> range(int low, int high) sync* {
+  for (int i = low; i < high; ++i) {
+    yield i;
+  }
+}
+
+extension IterableUtils<E> on Iterable<E> {
+  Iterable<E> whereIndex(bool test(int index)) sync* {
+    int i = 0;
+    for (var e in this) if (test(i++)) yield e;
+  }
+}
+
 class Utils {
   Utils._();
 
