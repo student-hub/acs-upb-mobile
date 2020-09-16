@@ -71,13 +71,13 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar>
                 iconMargin: EdgeInsets.all(0),
               ),
               Tab(
-                icon: Icon(Icons.person),
-                text: S.of(context).navigationProfile,
+                icon: Icon(Icons.people),
+                text: S.of(context).navigationPeople,
                 iconMargin: EdgeInsets.all(0),
               ),
               Tab(
-                icon: Icon(Icons.people),
-                text: S.of(context).navigationPeople,
+                icon: Icon(Icons.person),
+                text: S.of(context).navigationProfile,
                 iconMargin: EdgeInsets.all(0),
               ),
             ],
