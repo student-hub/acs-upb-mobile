@@ -142,7 +142,6 @@ class _SignUpViewState extends State<SignUpView> {
 
         if (dropdownController.path != null &&
             dropdownController.path.length > 1) {
-          debugPrint(dropdownController.path.toString());
           fields['class'] = dropdownController.path;
         }
 
