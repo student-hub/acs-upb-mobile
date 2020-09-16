@@ -75,14 +75,10 @@ class Filter {
     return result;
   }
 
-  FilterNode _findNodeByPathHelper(String nodeName, FilterNode parent) {
-    for (int i = 0; i < parent.children.length; i++) {
-      if (parent.children[i].name.compareTo(nodeName) == 0) {
-        return parent.children[i];
-      }
-    }
-    return null;
-  }
+  FilterNode _findNodeByPathHelper(String nodeName, FilterNode parent) =>
+      parent.children.firstWhere(
+          (element) => element.name.compareTo(nodeName) == 0,
+          orElse: null);
 
   bool _relevantLeavesHelper(List<String> list, FilterNode node) {
     if (node.value) {

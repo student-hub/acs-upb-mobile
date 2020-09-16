@@ -583,10 +583,10 @@ class S {
     );
   }
 
-  /// `Edit Profile`
+  /// `Edit profile`
   String get actionEditProfile {
     return Intl.message(
-      'Edit Profile',
+      'Edit profile',
       name: 'actionEditProfile',
       desc: '',
       args: [],
