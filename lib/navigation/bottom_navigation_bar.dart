@@ -28,8 +28,8 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar>
       HomePage(key: PageStorageKey('Home')),
       ClassesPage(key: PageStorageKey('Classes')),
       PortalPage(key: PageStorageKey('Portal')),
-      ProfilePage(key: PageStorageKey('Profile')),
       PeoplePage(key: PageStorageKey('People')),
+      ProfilePage(key: PageStorageKey('Profile')),
     ];
     tabController = TabController(vsync: this, length: tabs.length);
   }
