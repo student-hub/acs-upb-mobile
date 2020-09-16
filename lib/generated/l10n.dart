@@ -1183,6 +1183,16 @@ class S {
     );
   }
 
+  /// `People`
+  String get navigationPeople {
+    return Intl.message(
+      'People',
+      name: 'navigationPeople',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Settings`
   String get navigationSettings {
     return Intl.message(
