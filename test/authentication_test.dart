@@ -307,6 +307,70 @@ void main() {
       expect(firstName.controller.text, equals('John'));
       expect(lastName.controller.text, equals('Doe'));
 
+      ///////////////////////
+
+      await tester.enterText(
+          find.byKey(ValueKey('email_text_field'), skipOffstage: true),
+          '1234john.doe');
+      expect(firstName.controller.text, equals('John'));
+      expect(lastName.controller.text, equals('Doe'));
+
+      await tester.enterText(
+          find.byKey(ValueKey('email_text_field'), skipOffstage: true),
+          'john1234.doe');
+      expect(firstName.controller.text, equals('John'));
+      expect(lastName.controller.text, equals('Doe'));
+
+      await tester.enterText(
+          find.byKey(ValueKey('email_text_field'), skipOffstage: true),
+          'john.1234doe');
+      expect(firstName.controller.text, equals('John'));
+      expect(lastName.controller.text, equals('Doe'));
+
+      await tester.enterText(
+          find.byKey(ValueKey('email_text_field'), skipOffstage: true),
+          'john.doe1234');
+      expect(firstName.controller.text, equals('John'));
+      expect(lastName.controller.text, equals('Doe'));
+
+      await tester.enterText(
+          find.byKey(ValueKey('email_text_field'), skipOffstage: true),
+          '1234john_alexander.doe');
+      expect(firstName.controller.text, equals('John Alexander'));
+      expect(lastName.controller.text, equals('Doe'));
+
+      await tester.enterText(
+          find.byKey(ValueKey('email_text_field'), skipOffstage: true),
+          'john1234_alexander.doe');
+      expect(firstName.controller.text, equals('John Alexander'));
+      expect(lastName.controller.text, equals('Doe'));
+
+      await tester.enterText(
+          find.byKey(ValueKey('email_text_field'), skipOffstage: true),
+          'john_1234alexander.doe');
+      expect(firstName.controller.text, equals('John Alexander'));
+      expect(lastName.controller.text, equals('Doe'));
+
+      await tester.enterText(
+          find.byKey(ValueKey('email_text_field'), skipOffstage: true),
+          'john_alexander1234.doe');
+      expect(firstName.controller.text, equals('John Alexander'));
+      expect(lastName.controller.text, equals('Doe'));
+
+      await tester.enterText(
+          find.byKey(ValueKey('email_text_field'), skipOffstage: true),
+          'john_alexander.1234doe');
+      expect(firstName.controller.text, equals('John Alexander'));
+      expect(lastName.controller.text, equals('Doe'));
+
+      await tester.enterText(
+          find.byKey(ValueKey('email_text_field'), skipOffstage: true),
+          'john_alexander.doe1234');
+      expect(firstName.controller.text, equals('John Alexander'));
+      expect(lastName.controller.text, equals('Doe'));
+
+      ///////////////////////
+
       await tester.enterText(
           find.byKey(ValueKey('password_text_field'), skipOffstage: true),
           'password');
