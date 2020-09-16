@@ -114,6 +114,9 @@ dev_dependencies:
   # Provider platform interfaces of federated flutter plugins, for testing (like url_launcher)
   plugin_platform_interface: ^1.0.0
 
+  # Testing utils
+  network_image_mock: ^1.0.1
+
 dependency_overrides:
   # Workaround because timetable depends on pedantic 1.9.0 while flutter_test depends on pedantic 1.8.0
   pedantic: 1.9.0

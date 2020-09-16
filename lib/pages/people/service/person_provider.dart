@@ -19,7 +19,7 @@ extension PersonExtension on Person {
 }
 
 class PersonProvider with ChangeNotifier {
-  Future<List<Person>> fetchPeople(BuildContext context) async {
+  Future<List<Person>> fetchPeople({BuildContext context}) async {
     try {
       QuerySnapshot qSnapshot =
           await Firestore.instance.collection("people").getDocuments();

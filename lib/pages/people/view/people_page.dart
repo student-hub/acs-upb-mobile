@@ -22,7 +22,7 @@ class _PeoplePageState extends State<PeoplePage> {
     super.initState();
     PersonProvider personProvider =
         Provider.of<PersonProvider>(context, listen: false);
-    people = personProvider.fetchPeople(context);
+    people = personProvider.fetchPeople(context: context);
   }
 
   @override
@@ -34,17 +34,20 @@ class _PeoplePageState extends State<PeoplePage> {
             future: people,
             builder: (_, snapshot) {
               if (snapshot.connectionState == ConnectionState.done) {
-                return ListView.builder(itemBuilder: (_, index) {
-                  List<Person> peopleData = snapshot.data;
-                  return ListTile(
-                    leading: CircleAvatar(
-                      backgroundImage: NetworkImage(peopleData[index].photo),
-                    ),
-                    title: Text(peopleData[index].name),
-                    subtitle: Text(peopleData[index].email),
-                    onTap: () => showPersonInfo(peopleData[index]),
-                  );
-                });
+                List<Person> peopleData = snapshot.data;
+                return ListView.builder(
+                    itemCount: peopleData.length,
+                    itemBuilder: (_, index) {
+                      return ListTile(
+                        leading: CircleAvatar(
+                          backgroundImage:
+                              NetworkImage(peopleData[index].photo),
+                        ),
+                        title: Text(peopleData[index].name),
+                        subtitle: Text(peopleData[index].email),
+                        onTap: () => showPersonInfo(peopleData[index]),
+                      );
+                    });
               } else {
                 return Center(
                   child: CircularProgressIndicator(),
