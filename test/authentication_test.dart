@@ -8,6 +8,7 @@ import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
 import 'package:acs_upb_mobile/pages/home/home_page.dart';
 import 'package:acs_upb_mobile/pages/people/service/person_provider.dart';
 import 'package:acs_upb_mobile/pages/portal/service/website_provider.dart';
+import 'package:acs_upb_mobile/pages/profile/profile_page.dart';
 import 'package:acs_upb_mobile/widgets/form/form_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -395,10 +396,10 @@ void main() {
       verify(mockAuthProvider.signUp(
           info: argThat(
               equals({
-                'Email': 'john.doe@stud.acs.upb.ro',
+                'Email': 'john_alexander.doe1234@stud.acs.upb.ro',
                 'Password': 'password',
                 'Confirm password': 'password',
-                'First name': 'John',
+                'First name': 'John Alexander',
                 'Last name': 'Doe',
               }),
               named: 'info'),
