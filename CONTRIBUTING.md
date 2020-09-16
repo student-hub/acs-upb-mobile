@@ -251,9 +251,9 @@ the `addedBy` field) _or if their `permissionLevel` is equal to or greater than 
 
 <details>
 <summary class="collection" id="filters-collection"><b>filters</b></summary>
-This collection stores <a href=lib/pages/filter/model/filter.dart><code>Filter</code></a> objects. These are basically
-trees with named nodes and levels. In the case of the relevance filter, they are meant to represent
-the way the University organises students:
+This collection stores <a href=lib/pages/filter/model/filter.dart><code>Filter</code></a> objects.
+These are basically trees with named nodes and levels. In the case of the relevance filter, they are
+meant to represent the way the University organises students:
 
 ```
                                   All
@@ -307,6 +307,145 @@ Filter structure is public information and should never (or very rarely) need to
 therefore for this collection, _anyone can **read**_ but _no one can **write**_.
 
 </details>
+
+</details>
+
+<details>
+<summary class="collection" id="import_moodle-collection"><b>import_moodle</b></summary>
+This collection contains class data imported directly from the University's Moodle instance. The
+data is exported as a spreadsheet from Moodle, and imported to our app's Firestore using
+<a href="https://github.com/acs-upb-mobile/data-import/blob/master/import.js">a Node.js script</a>.
+Additional information about classes is stored in the <a href=#classes-collection>classes</a> collection.
+
+###### Fields
+The structure of the documents in the collection is the same as the columns in the export file:
+
+<img src="screenshots/other/import_moodle.png"><br>
+
+All of the fields are `strings`. In the app, `shortname` is used to extract the class' acronym,
+`fullname` is the class' name, and `category_path` defines the category under which the class is
+listed on the [ClassesPage](lib/pages/classes/view/classes_page.dart).
+
+###### Rules
+
+This is public information already available on [Moodle](https://acs.curs.pub.ro/), and will never
+be editable directly through the app. Therefore for this collection, _anyone can **read**_ but
+ _no one can **write**_.
+
+</details>
+
+<details>
+<summary class="collection" id="classes-collection"><b>classes</b></summary>
+This collection stores information about classes defined in the
+<a href=#import_moodle-collection>import_moodle</a> collection. The ID of a document in this
+collection corresponds to an ID of a document in
+<a href=#import_moodle-collection>import_moodle</a>.
+
+###### Fields
+All the documents in the collection share the same structure:
+<table>
+  <tr>
+    <th>Field</th>
+    <th>Type</th>
+    <th>Required?</th>
+    <th>Additional info</th>
+  </tr>
+  <tr>
+    <td>grading</td>
+    <td><code>map&lt;string, number&gt;</code></td>
+    <td>☐</td>
+    <td>map where the key is the name of the evaluation (e.g. “Exam”) and the value is the number
+    of points that specific evaluation weighs (generally out of 10 total)</td>
+  </tr>
+  <tr>
+    <td>lecturer</td>
+    <td><code>string</code></td>
+    <td>☐</td>
+    <td>the ID of a person in the <a href=#people-collection>people</a> collection</td>
+  </tr>
+  <tr>
+    <td>shortcuts</td>
+    <td><code>array&lt;map&lt;string, string&gt;&gt;</code></td>
+    <td>☐</td>
+    <td>array of maps representing relevant links for a class, similar to websites; map keys are
+    "addedBy", "link", "name", and "type", with "type" being one of "main", "classbook", "resource"
+    and  "other"</td>
+  </tr>
+</table>
+
+###### Rules
+
+Since classes in this collection are public information (_anyone can **read**_), altering and
+adding data here is a privilege and needs to be monitored, therefore _anyone who wants to modify
+this data needs to be authenticated_ in the first place.
+
+Users can **update** an existing class document _if their `permissionLevel` is equal to or greater
+than three_. Additionally, they can only **create** a new class document if a document with that
+specific ID exists in the <a href=#import_moodle-collection>import_moodle</a> collection.
+
+Documents in this collection cannot be **delete**d.
+
+</details>
+
+<details>
+<summary class="collection" id="people-collection"><b>people</b></summary>
+This collection currently contains information about faculty staff, extracted from the
+<a href="https://cs.pub.ro/index.php/?option=com_comprofiler&task=userslist&listid=2">official
+website</a> using <a href="https://github.com/acs-upb-mobile/data-import/blob/master/crawlers/prof_info_scraper.py">a Python scraper</a>.
+
+###### Fields
+All the documents in the collection share the same structure:
+<table>
+  <tr>
+    <th>Field</th>
+    <th>Type</th>
+    <th>Required?</th>
+    <th>Additional info</th>
+  </tr>
+  <tr>
+    <td>email</td>
+    <td><code>string</code></td>
+    <td>🗹</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>name</td>
+    <td><code>string</code></td>
+    <td>🗹</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>office</td>
+    <td><code>string</code></td>
+    <td>🗹</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>phone</td>
+    <td><code>string</code></td>
+    <td>🗹</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>photo</td>
+    <td><code>string</code></td>
+    <td>🗹</td>
+    <td>a link to the person's photo</td>
+  </tr>
+  <tr>
+    <td>position</td>
+    <td><code>string</code></td>
+    <td>🗹</td>
+    <td>the person's position within the faculty, e.g. "Professor, Dr."</td>
+  </tr>
+</table>
+
+###### Rules
+
+This is public information already available on
+[the official website](https://cs.pub.ro/index.php/?option=com_comprofiler&task=userslist&listid=2),
+and currently cannot be edited through the app due to privacy concerns. Therefore for this
+collection, _anyone can **read**_ but _no one can **write**_.
 
 </details>
 
