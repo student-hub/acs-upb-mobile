@@ -8,7 +8,7 @@ import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
 import 'package:acs_upb_mobile/pages/home/home_page.dart';
 import 'package:acs_upb_mobile/pages/people/service/person_provider.dart';
 import 'package:acs_upb_mobile/pages/portal/service/website_provider.dart';
-import 'package:acs_upb_mobile/pages/profile/profile_page.dart';
+import 'package:acs_upb_mobile/authentication/view/profile_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
