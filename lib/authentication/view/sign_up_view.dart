@@ -60,12 +60,11 @@ class _SignUpViewState extends State<SignUpView> {
       TextEditingController firstName, TextEditingController lastName) {
     String emailWithoutNumbers = email.text.replaceAll(RegExp(r'[0-9]'), '');
     List<String> names = emailWithoutNumbers.split('.');
-    List<String> firstNames;
 
     if (!names[0].contains('_')) {
       firstName.text = names[0].titleCase;
     } else {
-      firstNames = names[0].split('_');
+      List<String> firstNames = names[0].split('_');
       firstName.text = firstNames[0].titleCase + ' ' + firstNames[1].titleCase;
     }
     lastName.text = names[1].titleCase;
