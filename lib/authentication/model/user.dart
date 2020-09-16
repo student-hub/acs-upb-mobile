@@ -6,12 +6,7 @@ class User {
   String firstName;
   String lastName;
 
-  String degree;
-  String domain;
-  String year;
-  String series;
-  String group;
-  String subgroup;
+  List<String> classes;
 
   int permissionLevel;
 
@@ -19,12 +14,7 @@ class User {
       {@required this.uid,
       @required this.firstName,
       @required this.lastName,
-      this.degree,
-      this.domain,
-      this.year,
-      this.series,
-      this.group,
-      this.subgroup,
+      this.classes,
       int permissionLevel})
       : this.permissionLevel = permissionLevel ?? 0;
 

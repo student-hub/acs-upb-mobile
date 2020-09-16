@@ -20,7 +20,6 @@ class EditProfilePage extends StatefulWidget {
 }
 
 class _EditProfilePageState extends State<EditProfilePage> {
-
   final firstNameController = TextEditingController();
   final lastNameController = TextEditingController();
   final dropdownController = DropdownTreeController();
@@ -31,31 +30,21 @@ class _EditProfilePageState extends State<EditProfilePage> {
     super.initState();
   }
 
-  AppDialog _deletionConfirmationDialog(BuildContext context) =>
-      AppDialog(
+  AppDialog _deletionConfirmationDialog(BuildContext context) => AppDialog(
         icon: Icon(Icons.warning, color: Colors.red),
-        title: S
-            .of(context)
-            .actionDeleteAccount,
-        message: S
-            .of(context)
-            .messageDeleteAccount +
+        title: S.of(context).actionDeleteAccount,
+        message: S.of(context).messageDeleteAccount +
             ' ' +
-            S
-                .of(context)
-                .messageCannotBeUndone,
+            S.of(context).messageCannotBeUndone,
         actions: [
           AppButton(
             key: ValueKey('delete_account_button'),
-            text: S
-                .of(context)
-                .actionDeleteAccount
-                .toUpperCase(),
+            text: S.of(context).actionDeleteAccount.toUpperCase(),
             color: Colors.red,
             width: 130,
             onTap: () async {
               AuthProvider authProvider =
-              Provider.of<AuthProvider>(context, listen: false);
+                  Provider.of<AuthProvider>(context, listen: false);
               bool res = await authProvider.delete(context: context);
               if (res) {
                 Utils.signOut(context);
@@ -69,22 +58,19 @@ class _EditProfilePageState extends State<EditProfilePage> {
   Widget build(BuildContext context) {
     AuthProvider authProvider = Provider.of<AuthProvider>(context);
     return AppScaffold(
-      title: S
-          .of(context)
-          .actionEditProfile,
+      title: S.of(context).actionEditProfile,
       actions: [
         AppScaffoldAction(
-            text: S
-                .of(context)
-                .buttonSave,
+            text: S.of(context).buttonSave,
             onPressed: () async {
-              Map<String, String> info = { S
-                  .of(context)
-                  .labelFirstName: firstNameController.text,
-                S
-                    .of(context)
-                    .labelLastName: lastNameController.text,};
-              info.addAll(dropdownController.path ?? {});
+              Map<String, dynamic> info = {
+                S.of(context).labelFirstName: firstNameController.text,
+                S.of(context).labelLastName: lastNameController.text,
+              };
+              if (dropdownController.path != null) {
+                info['class'] = dropdownController.path;
+              }
+
               if (formKey.currentState.validate()) {
                 bool result = await authProvider.updateProfile(
                   info: info,
@@ -92,9 +78,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 );
 
                 if (result) {
-                  AppToast.show(S
-                      .of(context)
-                      .messageEditProfileSuccess);
+                  AppToast.show(S.of(context).messageEditProfileSuccess);
                   Navigator.pop(context);
                 }
               }
@@ -102,17 +86,11 @@ class _EditProfilePageState extends State<EditProfilePage> {
         AppScaffoldAction(
           icon: Icons.more_vert,
           items: {
-            S
-                .of(context)
-                .actionDeleteAccount: () =>
-                showDialog(
-                    context: context,
-                    child: _deletionConfirmationDialog(context))
+            S.of(context).actionDeleteAccount: () => showDialog(
+                context: context, child: _deletionConfirmationDialog(context))
           },
-          onPressed: () =>
-              showDialog(
-                  context: context,
-                  child: _deletionConfirmationDialog(context)),
+          onPressed: () => showDialog(
+              context: context, child: _deletionConfirmationDialog(context)),
         )
       ],
       body: Padding(
@@ -120,35 +98,16 @@ class _EditProfilePageState extends State<EditProfilePage> {
         child: FutureBuilder(
             future: authProvider.currentUser,
             builder: (BuildContext context, AsyncSnapshot<User> snap) {
+              List<String> path;
               if (snap.hasData) {
                 User user = snap.data;
-                List<String> path = List();
                 lastNameController.text = user.lastName;
                 firstNameController.text = user.firstName;
-                if (user.degree != null) {
-                  path.add(user.degree);
-                  if (user.domain != null) {
-                    path.add(user.domain);
-                    if (user.year != null) {
-                      path.add(user.year);
-                      if (user.series != null) {
-                        path.add(user.series);
-                        if (user.group != null) {
-                          path.add(user.group);
-                          if(user.subgroup != null){
-                            path.add(user.subgroup);
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
+                (user.classes != null) ? path = user.classes : null;
                 return Container(
                   child: ListView(children: [
                     PreferenceTitle(
-                      S
-                          .of(context)
-                          .labelPersonalInformation,
+                      S.of(context).labelPersonalInformation,
                       leftPadding: 0,
                     ),
                     Form(
@@ -158,19 +117,13 @@ class _EditProfilePageState extends State<EditProfilePage> {
                           TextFormField(
                             decoration: InputDecoration(
                               prefixIcon: Icon(Icons.person),
-                              labelText: S
-                                  .of(context)
-                                  .labelFirstName,
-                              hintText: S
-                                  .of(context)
-                                  .hintFirstName,
+                              labelText: S.of(context).labelFirstName,
+                              hintText: S.of(context).hintFirstName,
                             ),
                             controller: firstNameController,
                             validator: (value) {
                               if (value.isEmpty || value == null) {
-                                return S
-                                    .of(context)
-                                    .errorMissingFirstName;
+                                return S.of(context).errorMissingFirstName;
                               }
                               return null;
                             },
@@ -178,19 +131,13 @@ class _EditProfilePageState extends State<EditProfilePage> {
                           TextFormField(
                             decoration: InputDecoration(
                               prefixIcon: Icon(Icons.person),
-                              labelText: S
-                                  .of(context)
-                                  .labelLastName,
-                              hintText: S
-                                  .of(context)
-                                  .hintLastName,
+                              labelText: S.of(context).labelLastName,
+                              hintText: S.of(context).hintLastName,
                             ),
                             controller: lastNameController,
                             validator: (value) {
                               if (value.isEmpty || value == null) {
-                                return S
-                                    .of(context)
-                                    .errorMissingLastName;
+                                return S.of(context).errorMissingLastName;
                               }
                               return null;
                             },
@@ -199,9 +146,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       ),
                     ),
                     PreferenceTitle(
-                      S
-                          .of(context)
-                          .labelClass,
+                      S.of(context).labelClass,
                       leftPadding: 0,
                     ),
                     DropdownTree(

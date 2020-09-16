@@ -130,7 +130,7 @@ class _SignUpViewState extends State<SignUpView> {
           ] +
           [_privacyPolicy()],
       submitOnEnter: false,
-      onSubmitted: (Map<String, String> fields) async {
+      onSubmitted: (Map<String, dynamic> fields) async {
         if (!agreedToPolicy) {
           AppToast.show(S.of(context).warningAgreeTo +
               S.of(context).labelPrivacyPolicy +
@@ -139,8 +139,12 @@ class _SignUpViewState extends State<SignUpView> {
         }
 
         fields[S.of(context).labelEmail] += S.of(context).stringEmailDomain;
-        fields.addAll(dropdownController.path ?? {});
 
+        if (dropdownController.path != null &&
+            dropdownController.path.length > 1) {
+          debugPrint(dropdownController.path.toString());
+          fields['class'] = dropdownController.path;
+        }
 
         var result = await authProvider.signUp(
           info: fields,
@@ -234,5 +238,4 @@ class _SignUpViewState extends State<SignUpView> {
       ),
     );
   }
-
 }

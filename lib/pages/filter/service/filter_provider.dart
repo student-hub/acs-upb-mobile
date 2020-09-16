@@ -127,13 +127,7 @@ class FilterProvider with ChangeNotifier {
           User user = await authProvider.currentUser;
           // Try to set the default from the user data
           if (user != null) {
-            _relevanceFilter.setRelevantNodes([
-              user.degree,
-              user.domain,
-              user.year,
-              user.series,
-              user.group
-            ].where((element) => element != null).toList());
+            _relevanceFilter.setRelevantNodes(user.classes ?? null);
           }
         }
       }

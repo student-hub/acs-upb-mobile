@@ -9,7 +9,7 @@ import 'package:provider/provider.dart';
 class DropdownTreeController {
   _DropdownTreeState _dropdownTreeState;
 
-  Map<String, String> get path => _dropdownTreeState?.path;
+  List<String> get path => _dropdownTreeState?.path;
 }
 
 class DropdownTree extends StatefulWidget {
@@ -34,47 +34,7 @@ class _DropdownTreeState extends State<DropdownTree> {
   Filter filter;
   List<FilterNode> nodes;
 
-  Map<String, String> get path {
-    Map<String, String> path;
-    if (nodes.length > 1) {
-      path = Map();
-      path.addAll ({
-        filter.localizedLevelNames[0][LocaleProvider.localeString]:
-            nodes[1].name
-      });
-      if (nodes.length > 2) {
-        path.addAll({
-          filter.localizedLevelNames[1][LocaleProvider.localeString]:
-              nodes[2].name
-        });
-        if (nodes.length > 3) {
-          path.addAll({
-            filter.localizedLevelNames[2][LocaleProvider.localeString]:
-                nodes[3].name
-          });
-          if (nodes.length > 4) {
-            path.addAll({
-              filter.localizedLevelNames[3][LocaleProvider.localeString]:
-                  nodes[4].name
-            });
-            if (nodes.length > 5) {
-              path.addAll({
-                filter.localizedLevelNames[3][LocaleProvider.localeString]:
-                    nodes[5].name
-              });
-              if (nodes.length > 6) {
-                path.addAll({
-                  filter.localizedLevelNames[5][LocaleProvider.localeString]:
-                      nodes[6].name
-                });
-              }
-            }
-          }
-        }
-      }
-    }
-    return path;
-  }
+  List<String> get path => nodes.map((e) => e.name).skip(1).toList();
 
   List<Widget> _dropdownTree(BuildContext context) {
     List<Widget> items = [SizedBox(height: 8)];
