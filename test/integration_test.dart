@@ -11,6 +11,10 @@ import 'package:acs_upb_mobile/pages/filter/model/filter.dart';
 import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
 import 'package:acs_upb_mobile/pages/filter/view/filter_page.dart';
 import 'package:acs_upb_mobile/pages/home/home_page.dart';
+import 'package:acs_upb_mobile/pages/people/model/person.dart';
+import 'package:acs_upb_mobile/pages/people/service/person_provider.dart';
+import 'package:acs_upb_mobile/pages/people/view/people_page.dart';
+import 'package:acs_upb_mobile/pages/people/view/person_view.dart';
 import 'package:acs_upb_mobile/pages/portal/model/website.dart';
 import 'package:acs_upb_mobile/pages/portal/service/website_provider.dart';
 import 'package:acs_upb_mobile/pages/portal/view/portal_page.dart';
@@ -22,6 +26,7 @@ import 'package:acs_upb_mobile/resources/storage_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+import 'package:network_image_mock/network_image_mock.dart';
 import 'package:preferences/preferences.dart';
 import 'package:provider/provider.dart';
 
@@ -38,6 +43,8 @@ class MockFilterProvider extends Mock implements FilterProvider {}
 
 class MockClassProvider extends Mock implements ClassProvider {}
 
+class MockPersonProvider extends Mock implements PersonProvider {}
+
 class MockNavigatorObserver extends Mock implements NavigatorObserver {}
 
 void main() {
@@ -46,6 +53,7 @@ void main() {
   WebsiteProvider mockWebsiteProvider;
   FilterProvider mockFilterProvider;
   ClassProvider mockClassProvider;
+  PersonProvider mockPersonProvider;
 
   // Test layout for different screen sizes
   List<Size> screenSizes = [
@@ -81,6 +89,8 @@ void main() {
               create: (_) => mockFilterProvider),
           ChangeNotifierProvider<ClassProvider>(
               create: (_) => mockClassProvider),
+          ChangeNotifierProvider<PersonProvider>(
+              create: (_) => mockPersonProvider),
         ],
         child: MyApp(),
       );
@@ -317,6 +327,37 @@ void main() {
                 },
               ),
             ));
+
+    mockPersonProvider = MockPersonProvider();
+    // ignore: invalid_use_of_protected_member
+    when(mockPersonProvider.hasListeners).thenReturn(false);
+    when(mockPersonProvider.fetchPeople(context: anyNamed('context')))
+        .thenAnswer((_) => Future.value([
+              Person(
+                name: 'John Doe',
+                email: 'john.doe@cs.pub.ro',
+                phone: '0712345678',
+                office: 'AB123',
+                position: 'Associate Professor, Dr., Department Council',
+                photo: 'https://cdn.worldvectorlogo.com/logos/flutter-logo.svg',
+              ),
+              Person(
+                name: 'Jane Doe',
+                email: 'jane.doe@cs.pub.ro',
+                phone: '-',
+                office: 'Narnia',
+                position: 'Professor, Dr.',
+                photo: 'https://cdn.worldvectorlogo.com/logos/flutter-logo.svg',
+              ),
+              Person(
+                name: 'Mary Poppins',
+                email: 'supercalifragilistic.expialidocious@cs.pub.ro',
+                phone: '0712-345-678',
+                office: 'Mary Poppins\' office',
+                position: 'Professor, Dr., Head of Department',
+                photo: 'https://cdn.worldvectorlogo.com/logos/flutter-logo.svg',
+              ),
+            ]));
   });
 
   group('Home', () {
@@ -453,14 +494,16 @@ void main() {
       testWidgets('${size.width}x${size.height}', (WidgetTester tester) async {
         await binding.setSurfaceSize(size);
 
-        await tester.pumpWidget(buildApp());
-        await tester.pumpAndSettle();
+        mockNetworkImagesFor(() async {
+          await tester.pumpWidget(buildApp());
+          await tester.pumpAndSettle();
 
-        // Open profile
-        await tester.tap(find.byIcon(Icons.person));
-        await tester.pumpAndSettle();
+          // Open profile
+          await tester.tap(find.byIcon(Icons.person));
+          await tester.pumpAndSettle();
 
-        expect(find.byType(ProfilePage), findsNWidgets(1));
+          expect(find.byType(ProfilePage), findsNWidgets(1));
+        });
       });
     }
   });
@@ -654,6 +697,39 @@ void main() {
         verify(mockWebsiteProvider.deleteWebsite(any,
             context: anyNamed('context')));
         expect(find.byType(PortalPage), findsOneWidget);
+      });
+    }
+  });
+
+  group('People page', () {
+    setUp(() {
+      when(mockAuthProvider.isAuthenticatedFromCache).thenReturn(true);
+      when(mockAuthProvider.isAnonymous).thenReturn(true);
+    });
+
+    for (var size in screenSizes) {
+      testWidgets('${size.width}x${size.height}', (WidgetTester tester) async {
+        await binding.setSurfaceSize(size);
+
+        mockNetworkImagesFor(() async {
+          await tester.pumpWidget(buildApp());
+          await tester.pumpAndSettle();
+
+          // Open people page
+          await tester.tap(find.byIcon(Icons.people));
+          await tester.pumpAndSettle();
+
+          expect(find.byType(PeoplePage), findsOneWidget);
+
+          // Open bottom sheet with person info
+          var names = ['John Doe', 'Jane Doe', 'Mary Poppins'];
+          for (var name in names) {
+            await tester.tap(find.text(name));
+            await tester.pumpAndSettle();
+          }
+
+          expect(find.byType(PersonView), findsOneWidget);
+        });
       });
     }
   });

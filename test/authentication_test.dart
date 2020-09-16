@@ -6,7 +6,9 @@ import 'package:acs_upb_mobile/main.dart';
 import 'package:acs_upb_mobile/pages/filter/model/filter.dart';
 import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
 import 'package:acs_upb_mobile/pages/home/home_page.dart';
+import 'package:acs_upb_mobile/pages/people/service/person_provider.dart';
 import 'package:acs_upb_mobile/pages/portal/service/website_provider.dart';
+import 'package:acs_upb_mobile/pages/profile/profile_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
@@ -21,10 +23,13 @@ class MockFilterProvider extends Mock implements FilterProvider {}
 
 class MockWebsiteProvider extends Mock implements WebsiteProvider {}
 
+class MockPersonProvider extends Mock implements PersonProvider {}
+
 void main() {
   AuthProvider mockAuthProvider;
   WebsiteProvider mockWebsiteProvider;
   FilterProvider mockFilterProvider;
+  PersonProvider mockPersonProvider;
 
   setUp(() async {
     WidgetsFlutterBinding.ensureInitialized();
@@ -57,6 +62,12 @@ void main() {
         .thenAnswer((_) => Future.value(Filter(localizedLevelNames: [
               {'en': 'Level', 'ro': 'Nivel'}
             ], root: FilterNode(name: 'root'))));
+
+    mockPersonProvider = MockPersonProvider();
+    // ignore: invalid_use_of_protected_member
+    when(mockPersonProvider.hasListeners).thenReturn(false);
+    when(mockPersonProvider.fetchPeople(context: anyNamed('context')))
+        .thenAnswer((_) => Future.value([]));
   });
 
   group('Login', () {
@@ -431,6 +442,8 @@ void main() {
             create: (_) => mockFilterProvider),
         ChangeNotifierProvider<WebsiteProvider>(
             create: (_) => mockWebsiteProvider),
+        ChangeNotifierProvider<PersonProvider>(
+            create: (_) => mockPersonProvider),
       ], child: MyApp(navigationObservers: [mockObserver])));
       await tester.pumpAndSettle();
 
@@ -441,6 +454,7 @@ void main() {
       await tester.tap(find.byIcon(Icons.person));
       await tester.pumpAndSettle();
 
+      expect(find.byType(ProfilePage), findsOneWidget);
       expect(find.text('Anonymous'), findsOneWidget);
 
       // Press log in button
@@ -462,6 +476,8 @@ void main() {
             create: (_) => mockFilterProvider),
         ChangeNotifierProvider<WebsiteProvider>(
             create: (_) => mockWebsiteProvider),
+        ChangeNotifierProvider<PersonProvider>(
+            create: (_) => mockPersonProvider),
       ], child: MyApp(navigationObservers: [mockObserver])));
       await tester.pumpAndSettle();
 
@@ -472,6 +488,7 @@ void main() {
       await tester.tap(find.byIcon(Icons.person));
       await tester.pumpAndSettle();
 
+      expect(find.byType(ProfilePage), findsOneWidget);
       expect(find.text('John Doe'), findsOneWidget);
 
       // Press log out button
