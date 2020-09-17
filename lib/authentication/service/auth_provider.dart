@@ -178,7 +178,6 @@ class AuthProvider with ChangeNotifier {
     var userUpdateInfo = UserUpdateInfo();
 
     await _firebaseUser.updateProfile(userUpdateInfo);
-    notifyListeners();
   }
 
   Future<User> _fetchUser() async {
