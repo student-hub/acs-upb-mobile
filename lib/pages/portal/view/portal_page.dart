@@ -213,8 +213,6 @@ class _PortalPageState extends State<PortalPage>
 
   @override
   Widget build(BuildContext context) {
-    print('build');
-
     WebsiteProvider websiteProvider = Provider.of<WebsiteProvider>(context);
     filterProvider = Provider.of<FilterProvider>(context);
     AuthProvider authProvider = Provider.of<AuthProvider>(context);
