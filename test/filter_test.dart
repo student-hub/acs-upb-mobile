@@ -177,20 +177,20 @@ void main() {
       // Non-existent baseNode
       expect(testFilter.setRelevantUpToRoot('IA-1', 'Nope'), isFalse);
       expect(
-      testFilter.relevantNodes..sort(),
-      equals([
-      '314CB',
-      '311CD',
-      '1-CB',
-      '1-CD',
-      'IA-1',
-      'CTI-1',
-      'CTI',
-      'IA',
-      'BSc',
-      'MSc',
-      'All'
-      ]..sort()));
+          testFilter.relevantNodes..sort(),
+          equals([
+            '314CB',
+            '311CD',
+            '1-CB',
+            '1-CD',
+            'IA-1',
+            'CTI-1',
+            'CTI',
+            'IA',
+            'BSc',
+            'MSc',
+            'All'
+          ]..sort()));
     });
 
     test('setRelevantNodes', () {
@@ -262,6 +262,43 @@ void main() {
             'BSc',
             'All'
           ]..sort()));
+    });
+
+    test('findNodeByPath no input', () {
+      expect(testFilter.findNodesByPath(null).map((e) => e.name).toList(),
+          ['All']);
+    });
+
+    test('findNodeByPath valid and complete input', () {
+      expect(
+          testFilter
+              .findNodesByPath(['BSc', 'CTI', 'CTI-1', '1-CB', '311CB'])
+              .map((e) => e.name)
+              .toList(),
+          ['All', 'BSc', 'CTI', 'CTI-1', '1-CB', '311CB']);
+    });
+
+    test('findNodeByPath valid and incomplete input', () {
+      expect(
+          testFilter
+              .findNodesByPath(['BSc', 'CTI', 'CTI-1',])
+              .map((e) => e.name)
+              .toList(),
+          ['All', 'BSc', 'CTI', 'CTI-1',]);
+    });
+
+    test('findNodeByPath invalid input', () {
+      expect(
+          testFilter
+              .findNodesByPath(['aa','bb','cc','dd','ff','ee']),
+         null);
+    });
+
+    test('findNodeByPath part invalid input', () {
+      expect(
+          testFilter
+              .findNodesByPath(['BSc','bb','cc','dd','ff','ee']),
+          null);
     });
   });
 }

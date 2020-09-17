@@ -60,25 +60,24 @@ class Filter {
     return list;
   }
 
-  List<FilterNode> findNodeByPath(List<String> path) {
+  List<FilterNode> findNodesByPath(List<String> path) {
     List<FilterNode> result = [root];
     if (path == null) {
       return result;
     }
-    path.forEach((element) {
-      FilterNode aux = _findNodeByPathHelper(element, result.last);
+
+    for(String element in path) {
+      FilterNode aux = result.last.children
+          .firstWhere((e) => e.name.compareTo(element) == 0,
+          orElse: () => null);
       if (aux == null) {
         return null;
       }
       result.add(aux);
-    });
+    }
+
     return result;
   }
-
-  FilterNode _findNodeByPathHelper(String nodeName, FilterNode parent) =>
-      parent.children.firstWhere(
-          (element) => element.name.compareTo(nodeName) == 0,
-          orElse: null);
 
   bool _relevantLeavesHelper(List<String> list, FilterNode node) {
     if (node.value) {

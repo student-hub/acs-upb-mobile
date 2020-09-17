@@ -96,7 +96,7 @@ class _DropdownTreeState extends State<DropdownTree> {
           if (nodes == null) {
             nodes = widget.initialPath == null
                 ? [filter.root]
-                : filter.findNodeByPath(widget.initialPath);
+                : filter.findNodesByPath(widget.initialPath);
           }
           return Column(
             children: _dropdownTree(context),
