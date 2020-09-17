@@ -152,6 +152,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "navigationFilter" : MessageLookupByLibrary.simpleMessage("Filtru"),
     "navigationHome" : MessageLookupByLibrary.simpleMessage("Acasă"),
     "navigationMap" : MessageLookupByLibrary.simpleMessage("Hartă"),
+    "navigationPeople" : MessageLookupByLibrary.simpleMessage("Persoane"),
     "navigationPortal" : MessageLookupByLibrary.simpleMessage("Portal"),
     "navigationProfile" : MessageLookupByLibrary.simpleMessage("Profil"),
     "navigationSettings" : MessageLookupByLibrary.simpleMessage("Setări"),

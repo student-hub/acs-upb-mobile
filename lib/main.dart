@@ -6,6 +6,7 @@ import 'package:acs_upb_mobile/navigation/bottom_navigation_bar.dart';
 import 'package:acs_upb_mobile/navigation/routes.dart';
 import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
 import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
+import 'package:acs_upb_mobile/pages/people/service/person_provider.dart';
 import 'package:acs_upb_mobile/pages/portal/service/website_provider.dart';
 import 'package:acs_upb_mobile/pages/settings/settings_page.dart';
 import 'package:acs_upb_mobile/resources/locale_provider.dart';
@@ -32,6 +33,7 @@ main() async {
     ChangeNotifierProvider<StorageProvider>(create: (_) => StorageProvider()),
     ChangeNotifierProvider<WebsiteProvider>(create: (_) => WebsiteProvider()),
     ChangeNotifierProvider<ClassProvider>(create: (_) => ClassProvider()),
+    ChangeNotifierProvider<PersonProvider>(create: (_) => PersonProvider()),
     ChangeNotifierProvider<FilterProvider>(
         create: (_) => FilterProvider(global: true)),
   ], child: MyApp()));

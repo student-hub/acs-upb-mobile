@@ -152,6 +152,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "navigationFilter" : MessageLookupByLibrary.simpleMessage("Filter"),
     "navigationHome" : MessageLookupByLibrary.simpleMessage("Home"),
     "navigationMap" : MessageLookupByLibrary.simpleMessage("Map"),
+    "navigationPeople" : MessageLookupByLibrary.simpleMessage("People"),
     "navigationPortal" : MessageLookupByLibrary.simpleMessage("Portal"),
     "navigationProfile" : MessageLookupByLibrary.simpleMessage("Profile"),
     "navigationSettings" : MessageLookupByLibrary.simpleMessage("Settings"),
