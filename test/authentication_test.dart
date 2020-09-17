@@ -308,8 +308,6 @@ void main() {
       expect(firstName.controller.text, equals('John'));
       expect(lastName.controller.text, equals('Doe'));
 
-      ///////////////////////
-
       await tester.enterText(
           find.byKey(ValueKey('email_text_field'), skipOffstage: true),
           '1234john.doe');
@@ -367,8 +365,6 @@ void main() {
       await tester.enterText(
           find.byKey(ValueKey('email_text_field'), skipOffstage: true),
           'john_alexander.doe1234');
-      expect(firstName.controller.text, equals('John Alexander'));
-      expect(lastName.controller.text, equals('Doe'));
 
       ///////////////////////
 
@@ -377,10 +373,10 @@ void main() {
           'password');
       await tester.enterText(
           find.byKey(ValueKey('confirm_password_text_field')), 'password');
-      // await tester.enterText(
-      //     find.byKey(ValueKey('first_name_text_field')), 'John');
-      // await tester.enterText(
-      //     find.byKey(ValueKey('last_name_text_field')), 'Doe');
+      await tester.enterText(
+           find.byKey(ValueKey('first_name_text_field')), 'John Alexander');
+       await tester.enterText(
+           find.byKey(ValueKey('last_name_text_field')), 'Doe');
       // TODO: Test dropdown buttons
 
       // Scroll sign up button into view
