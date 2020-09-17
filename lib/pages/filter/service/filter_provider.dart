@@ -29,14 +29,15 @@ class FilterProvider with ChangeNotifier {
 
   bool _enabled;
   List<String> _relevantNodes;
+  final List<String> defaultRelevance;
 
   FilterProvider(
       {this.global = false,
       bool filterEnabled,
       this.defaultDegree,
-      List<String> defaultRelevance})
-      : _enabled = filterEnabled ?? PrefService.get('relevance_filter') ?? true,
-        _relevantNodes = defaultRelevance {
+      this.defaultRelevance})
+      : _enabled =
+            filterEnabled ?? PrefService.get('relevance_filter') ?? true {
     if (defaultRelevance != null) {
       if (this.defaultDegree == null) {
         throw ArgumentError(
@@ -119,9 +120,12 @@ class FilterProvider with ChangeNotifier {
         root: FilterNodeExtension.fromMap(root, 'All'),
       );
 
-      if (_relevantNodes != null && defaultDegree != null) {
+      if (_relevantNodes == null && defaultRelevance != null) {
+        _relevantNodes = defaultRelevance;
         _relevantNodes.forEach((node) =>
             _relevanceFilter.setRelevantUpToRoot(node, defaultDegree));
+      } else if (_relevantNodes != null) {
+        _relevanceFilter.setRelevantNodes(_relevantNodes);
       } else {
         // No previous setting or defaults => set the user's group
         AuthProvider authProvider =
