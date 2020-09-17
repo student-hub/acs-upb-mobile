@@ -213,7 +213,7 @@ void main() {
                     {'en': 'Year', 'ro': 'An'},
                     {'en': 'Series', 'ro': 'Serie'},
                     {'en': 'Group', 'ro': 'Group'},
-                    {'en': 'Subgroup', 'ro': 'Semigrupa'}
+                    {'en': 'Subgroup', 'ro': 'Semigrupă'}
                   ],
                   root: FilterNode(name: 'All', value: true, children: [
                     FilterNode(name: 'BSc', value: true, children: [
