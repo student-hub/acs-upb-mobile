@@ -97,6 +97,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "infoPasswordResetEmailSent" : MessageLookupByLibrary.simpleMessage("Please check your inbox for the password reset e-mail."),
     "infoRelevance" : MessageLookupByLibrary.simpleMessage("Încercați să selectați cea mai restrictivă categorie."),
     "infoRelevanceExample" : MessageLookupByLibrary.simpleMessage("De exemplu, dacă ceva este relevant doar pentru \"314CB\" și \"315CB\", nu setați direct \"CB\"."),
+    "infoRelevanceNothingSelected" : MessageLookupByLibrary.simpleMessage("Nu selectați nimic dacă este relevant pentru toată lumea."),
     "labelCategory" : MessageLookupByLibrary.simpleMessage("Categorie"),
     "labelClass" : MessageLookupByLibrary.simpleMessage("Materie"),
     "labelColor" : MessageLookupByLibrary.simpleMessage("Culoare"),

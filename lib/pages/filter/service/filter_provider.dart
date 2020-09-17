@@ -38,7 +38,7 @@ class FilterProvider with ChangeNotifier {
       this.defaultRelevance})
       : _enabled =
             filterEnabled ?? PrefService.get('relevance_filter') ?? true {
-    if (defaultRelevance != null) {
+    if (defaultRelevance != null && !defaultRelevance.contains('All')) {
       if (this.defaultDegree == null) {
         throw ArgumentError(
             'If the relevance is not null, the degree cannot be null.');

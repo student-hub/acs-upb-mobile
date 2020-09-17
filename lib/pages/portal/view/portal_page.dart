@@ -104,7 +104,7 @@ class _PortalPageState extends State<PortalPage>
                     builder: (_) => ChangeNotifierProvider<FilterProvider>(
                       create: (_) => FilterProvider(
                           defaultDegree: website.degree,
-                          defaultRelevance: website.relevance),
+                          defaultRelevance: website.relevance ?? ['All']),
                       child: WebsiteView(
                         website: website,
                         updateExisting: true,
