@@ -57,7 +57,7 @@ class _SignUpViewState extends State<SignUpView> {
   /// *Format example:* firstnameone_firstnametwo.lastname123@stud.acs.pub.ro
   void parseNameFromEmail(TextEditingController email,
       TextEditingController firstName, TextEditingController lastName) {
-    String emailWithoutNumbers = email.text.replaceAll(RegExp(r'[0-9]'), '');
+    String emailWithoutNumbers = email.text.replaceAll(RegExp('[^a-zA-Z._]'), '');
     List<String> names = emailWithoutNumbers.split('.');
 
     if (!names[0].contains('_')) {
