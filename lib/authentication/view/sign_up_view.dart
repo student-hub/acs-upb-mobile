@@ -124,11 +124,11 @@ class _SignUpViewState extends State<SignUpView> {
       title: S.of(context).actionSignUp,
       items: _buildFormItems(),
       trailing: <Widget>[
-            DropdownTree(
-              controller: dropdownController,
-            )
-          ] +
-          [_privacyPolicy()],
+        DropdownTree(
+          controller: dropdownController,
+        ),
+        _privacyPolicy()
+      ],
       submitOnEnter: false,
       onSubmitted: (Map<String, dynamic> fields) async {
         if (!agreedToPolicy) {

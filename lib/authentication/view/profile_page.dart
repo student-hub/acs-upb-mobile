@@ -56,16 +56,12 @@ class _ProfilePageState extends State<ProfilePage> {
         AppScaffoldAction(
             icon: Icons.edit,
             tooltip: S.of(context).actionEditProfile,
-            onPressed: authProvider.isAnonymous
+            onPressed: (authProvider.isAnonymous ||
+                    !authProvider.isAuthenticatedFromCache)
                 ? null
                 : () {
-                    AuthProvider authProvider =
-                        Provider.of<AuthProvider>(context, listen: false);
-                    if (authProvider.isAuthenticatedFromCache &&
-                        !authProvider.isAnonymous) {
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => EditProfilePage()));
-                    }
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => EditProfilePage()));
                   })
       ],
       title: S.of(context).navigationProfile,

@@ -36,7 +36,7 @@ class _DropdownTreeState extends State<DropdownTree> {
 
   List<String> get path => nodes.map((e) => e.name).skip(1).toList();
 
-  List<Widget> _dropdownTree(BuildContext context) {
+  List<Widget> _buildDropdowns(BuildContext context) {
     List<Widget> items = [SizedBox(height: 8)];
     for (var i = 0; i < nodes.length; i++) {
       if (nodes[i] != null && nodes[i].children.isNotEmpty) {
@@ -44,9 +44,8 @@ class _DropdownTreeState extends State<DropdownTree> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Padding(
-              padding: EdgeInsets.only(
-                  top: 8.0,
-                  left: widget.leftPadding != null ? widget.leftPadding : 0.0),
+              padding:
+                  EdgeInsets.only(top: 8.0, left: widget.leftPadding ?? 0.0),
               child: Text(
                 filter.localizedLevelNames[i][LocaleProvider.localeString],
                 style: Theme.of(context)
@@ -63,10 +62,7 @@ class _DropdownTreeState extends State<DropdownTree> {
                         value: node,
                         child: Padding(
                           padding: EdgeInsets.only(
-                              top: 8.0,
-                              left: widget.leftPadding != null
-                                  ? widget.leftPadding
-                                  : 0.0),
+                              top: 8.0, left: widget.leftPadding ?? 0.0),
                           child: Text(node.name),
                         ),
                       ))
@@ -88,6 +84,7 @@ class _DropdownTreeState extends State<DropdownTree> {
   @override
   Widget build(BuildContext context) {
     widget.controller?._dropdownTreeState = this;
+
     return FutureBuilder(
       future: Provider.of<FilterProvider>(context).fetchFilter(context),
       builder: (BuildContext context, AsyncSnapshot snap) {
@@ -99,13 +96,10 @@ class _DropdownTreeState extends State<DropdownTree> {
                 : filter.findNodesByPath(widget.initialPath);
           }
           return Column(
-            children: _dropdownTree(context),
+            children: _buildDropdowns(context),
           );
         }
-        return Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: Center(child: CircularProgressIndicator()),
-        );
+        return Center(child: CircularProgressIndicator());
       },
     );
   }

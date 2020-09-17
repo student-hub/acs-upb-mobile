@@ -89,8 +89,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
             S.of(context).actionDeleteAccount: () => showDialog(
                 context: context, child: _deletionConfirmationDialog(context))
           },
-          onPressed: () => showDialog(
-              context: context, child: _deletionConfirmationDialog(context)),
         )
       ],
       body: Padding(
@@ -136,7 +134,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                             ),
                             controller: lastNameController,
                             validator: (value) {
-                              if (value.isEmpty || value == null) {
+                              if (value?.isEmpty ?? true) {
                                 return S.of(context).errorMissingLastName;
                               }
                               return null;
