@@ -1774,10 +1774,10 @@ class S {
     );
   }
 
-  /// `Don't select anything if this is relevant for everyone.`
+  /// `If this is relevant for everyone, don't select anything .`
   String get infoRelevanceNothingSelected {
     return Intl.message(
-      'Don\'t select anything if this is relevant for everyone.',
+      'If this is relevant for everyone, don\'t select anything .',
       name: 'infoRelevanceNothingSelected',
       desc: '',
       args: [],

@@ -97,7 +97,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "infoPasswordResetEmailSent" : MessageLookupByLibrary.simpleMessage("Please check your inbox for the password reset e-mail."),
     "infoRelevance" : MessageLookupByLibrary.simpleMessage("Try to choose the most restrictive category."),
     "infoRelevanceExample" : MessageLookupByLibrary.simpleMessage("For instance, if something is only relevant for \"314CB\" and \"315CB\", don\'t just set \"CB\"."),
-    "infoRelevanceNothingSelected" : MessageLookupByLibrary.simpleMessage("Don\'t select anything if this is relevant for everyone."),
+    "infoRelevanceNothingSelected" : MessageLookupByLibrary.simpleMessage("If this is relevant for everyone, don\'t select anything ."),
     "labelCategory" : MessageLookupByLibrary.simpleMessage("Category"),
     "labelClass" : MessageLookupByLibrary.simpleMessage("Class"),
     "labelColor" : MessageLookupByLibrary.simpleMessage("Color"),
