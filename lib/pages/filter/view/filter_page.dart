@@ -43,18 +43,6 @@ class FilterPageState extends State<FilterPage> {
   Filter filter;
   Map<FilterNode, SelectableController> nodeControllers = {};
 
-  @override
-  void initState() {
-    super.initState();
-    _fetchFilter();
-  }
-
-  void _fetchFilter() async {
-    filter = await Provider.of<FilterProvider>(context, listen: false)
-        .fetchFilter(context);
-    setState(() {});
-  }
-
   void _onSelected(bool selection, FilterNode node) {
     if (selection != node.value) node.value = selection;
     if (node.children != null) {
@@ -137,29 +125,6 @@ class FilterPageState extends State<FilterPage> {
   Widget build(BuildContext context) {
     var filterProvider = Provider.of<FilterProvider>(context);
 
-    List<Widget> widgets = [SizedBox(height: 10.0)];
-
-    if (filter != null) {
-      Map<int, List<Widget>> optionsByLevel = {};
-      _buildTree(node: filter.root, optionsByLevel: optionsByLevel);
-      for (var i = 0; i < filter.localizedLevelNames.length; i++) {
-        if (optionsByLevel[i] == null || optionsByLevel.isEmpty) {
-          break;
-        }
-
-        // Level name
-        widgets.add(Padding(
-          padding: const EdgeInsets.only(left: 10.0, bottom: 8.0),
-          child: Text(
-              filter.localizedLevelNames[i][LocaleProvider.localeString],
-              style: Theme.of(context).textTheme.headline6),
-        ));
-
-        // Level options
-        widgets.addAll(optionsByLevel[i]);
-      }
-    }
-
     return AppScaffold(
       title: widget.title ?? S.of(context).navigationFilter,
       actions: [
@@ -175,31 +140,61 @@ class FilterPageState extends State<FilterPage> {
           },
         )
       ],
-      body: filter == null
-          ? Center(child: CircularProgressIndicator())
-          : ListView(
-              children: <Widget>[
-                    if (widget.info != null)
-                      Padding(
-                        padding: const EdgeInsets.only(
-                            left: 10.0, right: 10.0, top: 10.0),
-                        child: IconText(
-                          icon: Icons.info,
-                          text: widget.info,
-                          style: Theme.of(context).textTheme.bodyText1,
-                        ),
-                      ),
-                    if (widget.hint != null)
-                      Padding(
-                        padding: const EdgeInsets.only(
-                            left: 10.0, right: 10.0, top: 5.0),
-                        child: Text(
-                          widget.hint,
-                          style: TextStyle(color: Theme.of(context).hintColor),
-                        ),
-                      )
-                  ] +
-                  widgets),
+      body: FutureBuilder<Filter>(
+          future: Provider.of<FilterProvider>(context).fetchFilter(context),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              filter ??= snapshot.data;
+              List<Widget> widgets = [SizedBox(height: 10.0)];
+
+              Map<int, List<Widget>> optionsByLevel = {};
+              _buildTree(node: filter.root, optionsByLevel: optionsByLevel);
+              for (var i = 0; i < filter.localizedLevelNames.length; i++) {
+                if (optionsByLevel[i] == null || optionsByLevel.isEmpty) {
+                  break;
+                }
+
+                // Level name
+                widgets.add(Padding(
+                  padding: const EdgeInsets.only(left: 10.0, bottom: 8.0),
+                  child: Text(
+                      filter.localizedLevelNames[i]
+                          [LocaleProvider.localeString],
+                      style: Theme.of(context).textTheme.headline6),
+                ));
+
+                // Level options
+                widgets.addAll(optionsByLevel[i]);
+              }
+
+              return ListView(
+                  children: <Widget>[
+                        if (widget.info != null)
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                left: 10.0, right: 10.0, top: 10.0),
+                            child: IconText(
+                              icon: Icons.info,
+                              text: widget.info,
+                              style: Theme.of(context).textTheme.bodyText1,
+                            ),
+                          ),
+                        if (widget.hint != null)
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                left: 10.0, right: 10.0, top: 5.0),
+                            child: Text(
+                              widget.hint,
+                              style:
+                                  TextStyle(color: Theme.of(context).hintColor),
+                            ),
+                          )
+                      ] +
+                      widgets);
+            } else {
+              return Center(child: CircularProgressIndicator());
+            }
+          }),
     );
   }
 }
