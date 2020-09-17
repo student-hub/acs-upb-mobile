@@ -702,7 +702,7 @@ void main() {
     }
   });
 
-  group('Edit Profile',(){
+  group('Edit Profile', () {
     setUp(() {
       when(mockAuthProvider.isAuthenticatedFromCache).thenReturn(true);
       when(mockAuthProvider.isAnonymous).thenReturn(false);
@@ -730,6 +730,14 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(find.byType(EditProfilePage), findsOneWidget);
+
+        await tester.tap(find.byIcon(Icons.more_vert));
+        await tester.pumpAndSettle();
+
+        await tester.tap(find.text('Delete account') );
+        await tester.pumpAndSettle();
+
+        expect(find.byKey(ValueKey('delete_account_button')), findsOneWidget);
       });
     }
   });

@@ -66,10 +66,9 @@ class Filter {
       return result;
     }
 
-    for(String element in path) {
+    for (String element in path) {
       FilterNode aux = result.last.children
-          .firstWhere((e) => e.name.compareTo(element) == 0,
-          orElse: () => null);
+          .firstWhere((e) => e.name == element, orElse: () => null);
       if (aux == null) {
         return null;
       }

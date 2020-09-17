@@ -264,12 +264,12 @@ void main() {
           ]..sort()));
     });
 
-    test('findNodeByPath no input', () {
+    test('findNodesByPath no input', () {
       expect(testFilter.findNodesByPath(null).map((e) => e.name).toList(),
           ['All']);
     });
 
-    test('findNodeByPath valid and complete input', () {
+    test('findNodesByPath valid and complete input', () {
       expect(
           testFilter
               .findNodesByPath(['BSc', 'CTI', 'CTI-1', '1-CB', '311CB'])
@@ -278,7 +278,7 @@ void main() {
           ['All', 'BSc', 'CTI', 'CTI-1', '1-CB', '311CB']);
     });
 
-    test('findNodeByPath valid and incomplete input', () {
+    test('findNodesByPath valid and incomplete input', () {
       expect(
           testFilter
               .findNodesByPath(['BSc', 'CTI', 'CTI-1',])
@@ -287,14 +287,14 @@ void main() {
           ['All', 'BSc', 'CTI', 'CTI-1',]);
     });
 
-    test('findNodeByPath invalid input', () {
+    test('findNodesByPath invalid input', () {
       expect(
           testFilter
               .findNodesByPath(['aa','bb','cc','dd','ff','ee']),
          null);
     });
 
-    test('findNodeByPath part invalid input', () {
+    test('findNodesByPath part invalid input', () {
       expect(
           testFilter
               .findNodesByPath(['BSc','bb','cc','dd','ff','ee']),

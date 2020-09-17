@@ -12,24 +12,20 @@ import 'package:provider/provider.dart';
 
 extension DatabaseUser on User {
   static User fromSnap(DocumentSnapshot snap) {
-
     return User(
         uid: snap.documentID,
         firstName: snap.data['name']['first'],
         lastName: snap.data['name']['last'],
-        classes:  List.from(snap.data['class'] ?? []),
+        classes: List.from(snap.data['class'] ?? []),
         permissionLevel: snap.data['permissionLevel']);
   }
 
   Map<String, dynamic> toData() {
-    Map<String, dynamic> data = {
+    return {
       'name': {'first': firstName, 'last': lastName},
+      'class': classes,
       'permissionLevel': permissionLevel
     };
-    if (classes != null) {
-      data['class'] = classes;
-    }
-    return data;
   }
 }
 
@@ -48,6 +44,9 @@ class AuthProvider with ChangeNotifier {
       print('AuthProvider - FirebaseAuth - onAuthStateChanged - $e');
     });
   }
+
+  bool isOldFormat(Map<String, dynamic> userData) =>
+      userData['class'] != null && userData['class'] is Map;
 
   @override
   void dispose() {
@@ -148,36 +147,38 @@ class AuthProvider with ChangeNotifier {
     return _firebaseUser.uid;
   }
 
-  Future<void> _emigrate(Map<String,dynamic> data) async{
-    if(data['class'] != null && data['class'] is Map){
-      List classes = List();
-      classes.add(data['class']['degree']);
-      if(data['class']['domain'] != null) {
-        classes.add(data['class']['domain']);
-        if(data['class']['year'] != null) {
-          classes.add(data['class']['year']);
-          if(data['class']['series'] != null) {
-            classes.add(data['class']['series']);
-            if(data['class']['group'] != null) {
-              classes.add(data['class']['group']);
-              if(data['class']['subgroup'] != null) {
-                classes.add(data['class']['subgroup']);
-              }
+  /// The old format of class in the data base is a Map<String, String>,
+  /// where the key is the name of the level in the filter tree.
+  /// In the new format the class is a List<String> that contains the name of
+  /// the nodes
+  Future<void> migrateToNewClassFormat(Map<String, dynamic> userData) async {
+    List classes = List();
+    classes.add(userData['class']['degree']);
+    if (userData['class']['domain'] != null) {
+      classes.add(userData['class']['domain']);
+      if (userData['class']['year'] != null) {
+        classes.add(userData['class']['year']);
+        if (userData['class']['series'] != null) {
+          classes.add(userData['class']['series']);
+          if (userData['class']['group'] != null) {
+            classes.add(userData['class']['group']);
+            if (userData['class']['subgroup'] != null) {
+              classes.add(userData['class']['subgroup']);
             }
           }
         }
       }
-      data['class'] = classes;
-
-      Firestore.instance
-          .collection('users')
-          .document(_firebaseUser.uid)
-          .updateData(data);
-      var userUpdateInfo = UserUpdateInfo();
-
-      await _firebaseUser.updateProfile(userUpdateInfo);
-      notifyListeners();
     }
+    userData['class'] = classes;
+
+    await Firestore.instance
+        .collection('users')
+        .document(_firebaseUser.uid)
+        .updateData(userData);
+    var userUpdateInfo = UserUpdateInfo();
+
+    await _firebaseUser.updateProfile(userUpdateInfo);
+    notifyListeners();
   }
 
   Future<User> _fetchUser() async {
@@ -189,7 +190,10 @@ class AuthProvider with ChangeNotifier {
         .document(_firebaseUser.uid)
         .get();
     if (snapshot.data == null) return null;
-    await _emigrate(snapshot.data);
+
+    if (isOldFormat(snapshot.data))
+      await migrateToNewClassFormat(snapshot.data);
+
     _currentUser = DatabaseUser.fromSnap(snapshot);
     return _currentUser;
   }
@@ -331,8 +335,7 @@ class AuthProvider with ChangeNotifier {
       String firstName = info[S.of(context).labelFirstName];
       String lastName = info[S.of(context).labelLastName];
 
-      List<String> classes =
-          info['class'] ?? null;
+      List<String> classes = info['class'] ?? null;
 
       if (email == null || email == '') {
         AppToast.show(S.of(context).errorInvalidEmail);
@@ -424,8 +427,7 @@ class AuthProvider with ChangeNotifier {
       String firstName = info[S.of(context).labelFirstName];
       String lastName = info[S.of(context).labelLastName];
 
-      List<String> classes =
-          info['class'] ?? null;
+      List<String> classes = info['class'] ?? null;
 
       User user =
           await Provider.of<AuthProvider>(context, listen: false).currentUser;
@@ -439,6 +441,7 @@ class AuthProvider with ChangeNotifier {
           .updateData(user.toData());
 
       var userUpdateInfo = UserUpdateInfo();
+
       userUpdateInfo.displayName = firstName + ' ' + lastName;
       await _firebaseUser.updateProfile(userUpdateInfo);
       notifyListeners();

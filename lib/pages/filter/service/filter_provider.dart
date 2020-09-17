@@ -126,8 +126,8 @@ class FilterProvider with ChangeNotifier {
         if (authProvider.isAuthenticatedFromCache) {
           User user = await authProvider.currentUser;
           // Try to set the default from the user data
-          if (user != null) {
-            _relevanceFilter.setRelevantNodes(user.classes ?? null);
+          if (user != null && user.classes != null) {
+            _relevanceFilter.setRelevantNodes(user.classes);
           }
         }
       }

@@ -26,10 +26,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   final formKey = GlobalKey<FormState>();
 
-  initState() {
-    super.initState();
-  }
-
   AppDialog _deletionConfirmationDialog(BuildContext context) => AppDialog(
         icon: Icon(Icons.warning, color: Colors.red),
         title: S.of(context).actionDeleteAccount,
@@ -101,7 +97,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 User user = snap.data;
                 lastNameController.text = user.lastName;
                 firstNameController.text = user.firstName;
-                (user.classes != null) ? path = user.classes : null;
+                path = user.classes;
                 return Container(
                   child: ListView(children: [
                     PreferenceTitle(
