@@ -1,5 +1,6 @@
 import 'package:acs_upb_mobile/authentication/model/user.dart';
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
+import 'package:acs_upb_mobile/authentication/view/edit_profile_page.dart';
 import 'package:acs_upb_mobile/main.dart';
 import 'package:acs_upb_mobile/pages/classes/model/class.dart';
 import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
@@ -697,6 +698,38 @@ void main() {
         verify(mockWebsiteProvider.deleteWebsite(any,
             context: anyNamed('context')));
         expect(find.byType(PortalPage), findsOneWidget);
+      });
+    }
+  });
+
+  group('Edit Profile',(){
+    setUp(() {
+      when(mockAuthProvider.isAuthenticatedFromCache).thenReturn(true);
+      when(mockAuthProvider.isAnonymous).thenReturn(false);
+      when(mockAuthProvider.currentUser).thenAnswer((realInvocation) =>
+          Future.value(User(
+              uid: '1',
+              firstName: 'John',
+              lastName: 'Doe',
+              permissionLevel: 3)));
+    });
+
+    for (var size in screenSizes) {
+      testWidgets('${size.width}x${size.height}', (WidgetTester tester) async {
+        await binding.setSurfaceSize(size);
+
+        await tester.pumpWidget(buildApp());
+        await tester.pumpAndSettle();
+
+        // Open Profile Page
+        await tester.tap(find.byIcon(Icons.person));
+        await tester.pumpAndSettle();
+
+        // Open Edit Profile page
+        await tester.tap(find.byIcon(Icons.edit));
+        await tester.pumpAndSettle();
+
+        expect(find.byType(EditProfilePage), findsOneWidget);
       });
     }
   });
