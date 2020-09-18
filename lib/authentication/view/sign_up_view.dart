@@ -5,10 +5,12 @@ import 'package:acs_upb_mobile/pages/filter/model/filter.dart';
 import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
 import 'package:acs_upb_mobile/resources/banner.dart';
 import 'package:acs_upb_mobile/resources/locale_provider.dart';
+import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/resources/validator.dart';
 import 'package:acs_upb_mobile/widgets/button.dart';
 import 'package:acs_upb_mobile/widgets/form/form.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -26,6 +28,7 @@ class _SignUpViewState extends State<SignUpView> {
   Filter filter;
   List<FilterNode> nodes;
   FilterProvider filterProvider;
+  bool agreedToPolicy = false;
 
   void _fetchFilter() async {
     // Fetch filter for dropdown buttons
@@ -85,15 +88,13 @@ class _SignUpViewState extends State<SignUpView> {
         },
       ),
       FormItem(
-        label: S.of(context).labelFirstName,
-        hint: S.of(context).hintFirstName,
-        autofillHints: [AutofillHints.givenName]
-      ),
+          label: S.of(context).labelFirstName,
+          hint: S.of(context).hintFirstName,
+          autofillHints: [AutofillHints.givenName]),
       FormItem(
-        label: S.of(context).labelLastName,
-        hint: S.of(context).hintLastName,
-        autofillHints: [AutofillHints.familyName]
-      ),
+          label: S.of(context).labelLastName,
+          hint: S.of(context).hintLastName,
+          autofillHints: [AutofillHints.familyName]),
     ];
     return formItems;
   }
@@ -145,15 +146,57 @@ class _SignUpViewState extends State<SignUpView> {
     return items;
   }
 
+  Widget _privacyPolicy() {
+    return Padding(
+      padding: const EdgeInsets.only(top: 8.0),
+      child: Row(
+        children: [
+          Checkbox(
+            value: agreedToPolicy,
+            visualDensity: VisualDensity.compact,
+            onChanged: (value) => setState(() => agreedToPolicy = value),
+          ),
+          Expanded(
+            child: RichText(
+              text: TextSpan(
+                  style: Theme.of(context).textTheme.subtitle1,
+                  children: [
+                    TextSpan(text: S.of(context).messageIAgreeToThe),
+                    TextSpan(
+                        text: S.of(context).labelPrivacyPolicy,
+                        style: Theme.of(context)
+                            .accentTextTheme
+                            .subtitle1
+                            .apply(fontWeightDelta: 2),
+                        recognizer: TapGestureRecognizer()
+                          ..onTap = () => Utils.launchURL(
+                              'https://www.websitepolicies.com/policies/view/IIUFv381',
+                              context: context)),
+                    TextSpan(text: '.'),
+                  ]),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   AppForm _buildForm(BuildContext context) {
     AuthProvider authProvider = Provider.of(context);
 
     return AppForm(
       title: S.of(context).actionSignUp,
       items: _buildFormItems(),
-      trailing: _dropdownTree(context),
+      trailing: _dropdownTree(context) + [_privacyPolicy()],
       submitOnEnter: false,
       onSubmitted: (Map<String, String> fields) async {
+        if (!agreedToPolicy) {
+          AppToast.show(S.of(context).warningAgreeTo +
+              S.of(context).labelPrivacyPolicy +
+              '.');
+          return;
+        }
+
         fields[S.of(context).labelEmail] += S.of(context).stringEmailDomain;
         nodes.asMap().forEach((i, node) {
           if (i > 0) {

@@ -61,7 +61,7 @@ class Website {
         this.label = toString(label).isEmpty ? labelFromLink(link) : label,
         this.link = link,
         this.infoByLocale = infoByLocale ?? {} {
-    if (this.relevance != null) {
+    if (this.relevance != null && !this.relevance.contains('All')) {
       if (this.degree == null) {
         throw ArgumentError(
             'If the relevance is not null, the degree cannot be null.');

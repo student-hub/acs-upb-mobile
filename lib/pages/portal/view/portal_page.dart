@@ -4,15 +4,16 @@ import 'dart:math';
 import 'package:acs_upb_mobile/authentication/model/user.dart';
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
-import 'package:acs_upb_mobile/navigation/routes.dart';
 import 'package:acs_upb_mobile/pages/filter/model/filter.dart';
 import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
+import 'package:acs_upb_mobile/pages/filter/view/filter_page.dart';
 import 'package:acs_upb_mobile/pages/portal/model/website.dart';
 import 'package:acs_upb_mobile/pages/portal/service/website_provider.dart';
 import 'package:acs_upb_mobile/pages/portal/view/website_view.dart';
 import 'package:acs_upb_mobile/resources/custom_icons.dart';
 import 'package:acs_upb_mobile/resources/locale_provider.dart';
 import 'package:acs_upb_mobile/resources/storage_provider.dart';
+import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/widgets/circle_image.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:acs_upb_mobile/widgets/spoiler.dart';
@@ -20,9 +21,10 @@ import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:recase/recase.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class PortalPage extends StatefulWidget {
+  PortalPage({Key key}) : super(key: key);
+
   @override
   _PortalPageState createState() => _PortalPageState();
 }
@@ -31,6 +33,7 @@ class _PortalPageState extends State<PortalPage>
     with AutomaticKeepAliveClientMixin {
   Filter filterCache;
   List<Website> websites = [];
+  FilterProvider filterProvider;
 
   // Only show user-added websites
   bool userOnly = false;
@@ -62,21 +65,13 @@ class _PortalPageState extends State<PortalPage>
       updating = true;
     }
 
-    FilterProvider filterProvider =
+    FilterProvider filterProvider = this.filterProvider ??
         Provider.of<FilterProvider>(context, listen: false);
     filterCache = await filterProvider.fetchFilter(context);
 
     updating = false;
     if (mounted) {
       setState(() {});
-    }
-  }
-
-  _launchURL(String url) async {
-    if (await canLaunch(url)) {
-      await launch(url);
-    } else {
-      AppToast.show(S.of(context).errorCouldNotLaunchURL(url));
     }
   }
 
@@ -120,7 +115,7 @@ class _PortalPageState extends State<PortalPage>
               } else {
                 Provider.of<WebsiteProvider>(context, listen: false)
                     .incrementNumberOfVisits(website);
-                _launchURL(website.link);
+                Utils.launchURL(website.link);
               }
             },
           );
@@ -224,10 +219,8 @@ class _PortalPageState extends State<PortalPage>
 
   @override
   Widget build(BuildContext context) {
-    super.build(context);
-
     WebsiteProvider websiteProvider = Provider.of<WebsiteProvider>(context);
-    FilterProvider filterProvider = Provider.of<FilterProvider>(context);
+    filterProvider = Provider.of<FilterProvider>(context);
     AuthProvider authProvider = Provider.of<AuthProvider>(context);
 
     CircularProgressIndicator progressIndicator = CircularProgressIndicator();
@@ -266,9 +259,15 @@ class _PortalPageState extends State<PortalPage>
           tooltip: S.of(context).navigationFilter,
           items: {
             S.of(context).filterMenuRelevance: () {
-              _updateFilter();
               userOnly = false;
-              Navigator.pushNamed(context, Routes.filter);
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => FilterPage(
+                    onSubmit: _updateFilter,
+                  ),
+                ),
+              );
             },
             S.of(context).filterMenuShowMine: () {
               if (authProvider.isAuthenticatedFromCache &&

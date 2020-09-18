@@ -8,6 +8,7 @@ import 'package:acs_upb_mobile/pages/portal/service/website_provider.dart';
 import 'package:acs_upb_mobile/resources/custom_icons.dart';
 import 'package:acs_upb_mobile/resources/locale_provider.dart';
 import 'package:acs_upb_mobile/resources/storage_provider.dart';
+import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/widgets/button.dart';
 import 'package:acs_upb_mobile/widgets/circle_image.dart';
 import 'package:acs_upb_mobile/widgets/dialog.dart';
@@ -18,7 +19,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 import 'package:recase/recase.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:validators/validators.dart';
 
 class WebsiteView extends StatefulWidget {
@@ -77,14 +77,6 @@ class _WebsiteViewState extends State<WebsiteView> {
     }
     _descriptionRoController = TextEditingController(text: description['ro']);
     _descriptionEnController = TextEditingController(text: description['en']);
-  }
-
-  _launchURL(String url) async {
-    if (await canLaunch(url)) {
-      await launch(url);
-    } else {
-      AppToast.show(S.of(context).errorCouldNotLaunchURL(url));
-    }
   }
 
   String _buildId() {
@@ -154,7 +146,8 @@ class _WebsiteViewState extends State<WebsiteView> {
                               }
                               return CircleImage(
                                 label: website.label,
-                                onTap: () => _launchURL(website.link),
+                                onTap: () => Utils.launchURL(website.link,
+                                    context: context),
                                 image: image,
                                 tooltip: website
                                     .infoByLocale[LocaleProvider.localeString],
