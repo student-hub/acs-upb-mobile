@@ -112,18 +112,16 @@ class WebsiteProvider with ChangeNotifier {
   /// number of times the user accessed website with ID `websiteIds[i]`.
   void initializeNumberOfVisits(List<Website> websites) {
     List<String> websiteIds =
-        PrefService.sharedPreferences.getStringList('websiteIds');
+        PrefService.sharedPreferences.getStringList('websiteIds') ?? [];
     List<String> websiteVisits =
-        PrefService.sharedPreferences.getStringList('websiteVisits');
+        PrefService.sharedPreferences.getStringList('websiteVisits') ?? [];
 
-    if (websiteIds != null && websiteVisits != null) {
-      var visitsByWebsiteId = Map<String, int>.from(websiteIds.asMap().map(
-          (index, key) =>
-              MapEntry(key, int.tryParse(websiteVisits[index] ?? 0))));
-      websites.forEach((website) {
-        website.numberOfVisits = visitsByWebsiteId[website.id] ?? 0;
-      });
-    }
+    var visitsByWebsiteId = Map<String, int>.from(websiteIds.asMap().map(
+        (index, key) =>
+            MapEntry(key, int.tryParse(websiteVisits[index] ?? 0))));
+    websites.forEach((website) {
+      website.numberOfVisits = visitsByWebsiteId[website.id] ?? 0;
+    });
   }
 
   /// Increments the number of visits of [website], both in-memory and on the local storage.
@@ -139,6 +137,7 @@ class WebsiteProvider with ChangeNotifier {
         PrefService.sharedPreferences.getStringList('websiteIds') ?? [];
     List<String> websiteVisits =
         PrefService.sharedPreferences.getStringList('websiteVisits') ?? [];
+
     if (websiteIds.contains(website.id)) {
       int index = websiteIds.indexOf(website.id);
       websiteVisits.insert(index, websiteVisits.toString());
