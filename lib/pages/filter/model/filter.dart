@@ -55,6 +55,24 @@ class Filter {
     return list;
   }
 
+  List<FilterNode> findNodesByPath(List<String> path) {
+    List<FilterNode> result = [root];
+    if (path == null) {
+      return result;
+    }
+
+    for (String element in path) {
+      FilterNode aux = result.last.children
+          .firstWhere((e) => e.name == element, orElse: () => null);
+      if (aux == null) {
+        return null;
+      }
+      result.add(aux);
+    }
+
+    return result;
+  }
+
   bool _relevantLeavesHelper(List<String> list, FilterNode node) {
     if (node.value) {
       bool hasSelectedChildren = false;
