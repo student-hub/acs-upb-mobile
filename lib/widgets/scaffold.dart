@@ -66,9 +66,7 @@ class AppScaffold extends StatelessWidget {
     return action?.items != null
         ? PopupMenuButton<String>(
             icon: Icon(action.icon),
-            tooltip: action.tooltip ??
-                action.text ??
-                S.of(context).navigationSettings,
+            tooltip: action.tooltip ?? action.text,
             onSelected: (selected) => action.items[selected](),
             itemBuilder: (BuildContext context) {
               return action.items.keys
@@ -81,9 +79,7 @@ class AppScaffold extends StatelessWidget {
             offset: Offset(0, 100),
           )
         : Tooltip(
-            message: action?.tooltip ??
-                action?.text ??
-                S.of(context).navigationSettings,
+            message: action?.tooltip ?? action?.text ?? '',
             child: action?.text != null
                 ? ButtonTheme(
                     minWidth: 8.0,
