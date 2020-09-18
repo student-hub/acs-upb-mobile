@@ -734,6 +734,7 @@ void main() {
         await tester.tap(find.byIcon(Icons.more_vert));
         await tester.pumpAndSettle();
 
+        //Open delete account popup
         await tester.tap(find.text('Delete account') );
         await tester.pumpAndSettle();
 
