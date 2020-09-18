@@ -731,11 +731,11 @@ void main() {
 
         expect(find.byType(EditProfilePage), findsOneWidget);
 
+        //Open delete account popup
         await tester.tap(find.byIcon(Icons.more_vert));
         await tester.pumpAndSettle();
 
-        //Open delete account popup
-        await tester.tap(find.text('Delete account') );
+         await tester.tap(find.text('Delete account') );
         await tester.pumpAndSettle();
 
         expect(find.byKey(ValueKey('delete_account_button')), findsOneWidget);
