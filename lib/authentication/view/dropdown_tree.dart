@@ -89,8 +89,7 @@ class _DropdownTreeState extends State<DropdownTree> {
       builder: (BuildContext context, AsyncSnapshot snap) {
         if (snap.hasData) {
           filter = snap.data;
-          nodes ??=
-            nodes = widget.initialPath == null
+          nodes ??= widget.initialPath == null
                 ? [filter.root]
                 : filter.findNodesByPath(widget.initialPath);
           return Column(
