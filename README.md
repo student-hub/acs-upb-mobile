@@ -18,11 +18,11 @@ and ask anything on the **#ama** channel.
 
 ## Screenshots
 
-<img src=screenshots/light_login_ro.png height=500><img src=screenshots/dark_login_en.png height=500>
+<img src=screenshots/app/light_login_ro.png height=500><img src=screenshots/app/dark_login_en.png height=500>
 
-<img src=screenshots/light_settings_ro.png height=500><img src=screenshots/dark_settings_en.png height=500>
+<img src=screenshots/app/light_settings_ro.png height=500><img src=screenshots/app/dark_settings_en.png height=500>
 
-<img src=screenshots/light_portal_ro.png height=500><img src=screenshots/dark_portal_en.png height=500>
+<img src=screenshots/app/light_portal_ro.png height=500><img src=screenshots/app/dark_portal_en.png height=500>
 
 ## Contributors
 * [Ioana Alexandru](https://github.com/IoanaAlexandru)
@@ -71,7 +71,7 @@ device (make sure USB debugging is enabled).
 power on Xcode's simulator.
 * Select your device from the dropdown list and hit the play button (*Shift+F10* / *^R*).
 
-### Building for Web 
+### Building for Web
 
 * You need to have *Chrome* installed in order to be able to run the web version of the app.
 * Select *Chrome* from the dropdown list and hit the play button (*Shift+F10* / *^R*).

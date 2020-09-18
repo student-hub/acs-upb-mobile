@@ -6,12 +6,8 @@ class User {
   String firstName;
   String lastName;
 
-  String degree;
-  String domain;
-  String year;
-  String series;
-  String group;
-  String picture;
+    /// Info about the user's assigned group (including degree, year of study, series etc)
+    List<String> classes;
 
   int permissionLevel;
 
@@ -19,13 +15,8 @@ class User {
       {@required this.uid,
       @required this.firstName,
       @required this.lastName,
-      this.degree,
-      this.domain,
-      this.year,
-      this.series,
-      this.group,
-      int permissionLevel,
-      this.picture})
+      this.classes,
+      int permissionLevel})
       : this.permissionLevel = permissionLevel ?? 0;
 
   bool get canAddPublicWebsite => permissionLevel >= 3;

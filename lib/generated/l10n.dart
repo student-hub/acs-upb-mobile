@@ -343,6 +343,16 @@ class S {
     );
   }
 
+  /// `Personal information`
+  String get labelPersonalInformation {
+    return Intl.message(
+      'Personal information',
+      name: 'labelPersonalInformation',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Shortcuts`
   String get sectionShortcuts {
     return Intl.message(
@@ -568,6 +578,16 @@ class S {
     return Intl.message(
       'Log in anonymously',
       name: 'actionLogInAnonymously',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Edit profile`
+  String get actionEditProfile {
+    return Intl.message(
+      'Edit profile',
+      name: 'actionEditProfile',
       desc: '',
       args: [],
     );
@@ -1183,6 +1203,16 @@ class S {
     );
   }
 
+  /// `People`
+  String get navigationPeople {
+    return Intl.message(
+      'People',
+      name: 'navigationPeople',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Settings`
   String get navigationSettings {
     return Intl.message(
@@ -1738,6 +1768,16 @@ class S {
     return Intl.message(
       'I agree to the ',
       name: 'messageIAgreeToThe',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Profile updated successfully.`
+  String get messageEditProfileSuccess {
+    return Intl.message(
+      'Profile updated successfully.',
+      name: 'messageEditProfileSuccess',
       desc: '',
       args: [],
     );

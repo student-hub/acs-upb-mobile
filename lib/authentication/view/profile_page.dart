@@ -1,19 +1,12 @@
-import 'dart:io';
-
 import 'package:acs_upb_mobile/authentication/model/user.dart';
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/authentication/view/edit_profile_page.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
-import 'package:acs_upb_mobile/navigation/routes.dart';
-import 'package:acs_upb_mobile/resources/storage_provider.dart';
-import 'package:acs_upb_mobile/widgets/button.dart';
-import 'package:acs_upb_mobile/widgets/dialog.dart';
+import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/widgets/icon_text.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -24,13 +17,6 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  Future<void> _signOut(BuildContext context) async {
-    AuthProvider authProvider =
-        Provider.of<AuthProvider>(context, listen: false);
-    authProvider.signOut(context);
-    Navigator.pushReplacementNamed(context, Routes.login);
-  }
-
   Widget _accountNotVerifiedFooter(BuildContext context) {
     AuthProvider authProvider = Provider.of<AuthProvider>(context);
 
@@ -65,21 +51,18 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     AuthProvider authProvider = Provider.of<AuthProvider>(context);
-    StorageProvider storageProvider =
-        Provider.of<StorageProvider>(context, listen: true);
     return AppScaffold(
       actions: [
         AppScaffoldAction(
             icon: Icons.edit,
-            onPressed: () {
-              AuthProvider authProvider =
-                  Provider.of<AuthProvider>(context, listen: false);
-              if (authProvider.isAuthenticatedFromCache &&
-                  !authProvider.isAnonymous) {
-                Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => EditProfilePage()));
-              }
-            })
+            tooltip: S.of(context).actionEditProfile,
+            onPressed: (authProvider.isAnonymous ||
+                    !authProvider.isAuthenticatedFromCache)
+                ? null
+                : () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => EditProfilePage()));
+                  })
       ],
       title: S.of(context).navigationProfile,
       body: Padding(
@@ -89,15 +72,11 @@ class _ProfilePageState extends State<ProfilePage> {
             builder: (BuildContext context, AsyncSnapshot<User> snap) {
               String userName;
               String userGroup;
-              String picturePath;
               if (snap.connectionState == ConnectionState.done) {
                 User user = snap.data;
                 if (user != null) {
                   userName = user.firstName + ' ' + user.lastName;
-                  userGroup = user.group;
-                  picturePath = user.picture;
-                } else {
-                  picturePath = ' ';
+                  userGroup = user?.classes?.last;
                 }
                 return Column(
                   children: <Widget>[
@@ -105,46 +84,10 @@ class _ProfilePageState extends State<ProfilePage> {
                       flex: 1,
                       child: Container(),
                     ),
-                    FutureBuilder<ImageProvider<dynamic>>(
-                      future: storageProvider.imageFromPath(picturePath),
-                      builder: (context,
-                          AsyncSnapshot<ImageProvider<dynamic>> snapshot) {
-                        var image;
-                        if (snapshot.connectionState == ConnectionState.done) {
-                          if(snapshot.hasData) {
-                            image = snapshot.data;
-                          }else{
-                            image = AssetImage(
-                                'assets/illustrations/undraw_profile_pic.png');
-                          }
-                        } else {
-                          debugPrint(
-                              'image : in else ' + snapshot.hasData.toString());
-                          image = AssetImage(
-                              'assets/illustrations/undraw_profile_pic.png');
-                        }
-
-                        return GestureDetector(
-                          onDoubleTap: () async {
-                            final pickedFile = await ImagePicker()
-                                .getImage(source: ImageSource.gallery);
-                            StorageReference storageReference = FirebaseStorage
-                                .instance
-                                .ref()
-                                .child('profile_picture/test');
-                            StorageUploadTask uploadTask =
-                                storageReference.putFile(File(pickedFile.path));
-                            if (user != null) {}
-                            await uploadTask.onComplete;
-                            setState(() {
-                              image = Image.file(File(pickedFile.path));
-                            });
-                          },
-                          child:
-                              CircleAvatar(radius: 95, backgroundImage: image),
-                        );
-                      },
-                    ),
+                    CircleAvatar(
+                        radius: 95,
+                        backgroundImage: AssetImage(
+                            'assets/illustrations/undraw_profile_pic.png')),
                     SizedBox(height: 8),
                     Text(
                       userName ?? S.of(context).stringAnonymous,
@@ -164,7 +107,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     SizedBox(height: 8),
                     InkWell(
                       onTap: () {
-                        _signOut(context);
+                        Utils.signOut(context);
                       },
                       child: Text(
                           authProvider.isAnonymous

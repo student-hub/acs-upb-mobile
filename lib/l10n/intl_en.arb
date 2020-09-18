@@ -31,6 +31,7 @@
   "labelEvaluation": "Evaluation",
   "labelPoints": "Points",
   "labelPrivacyPolicy": "Privacy Policy",
+  "labelPersonalInformation": "Personal information",
 
   "sectionShortcuts": "Shortcuts",
   "sectionEvents": "Events",
@@ -58,6 +59,7 @@
   "actionLogIn": "Log in",
   "actionLogOut": "Log out",
   "actionLogInAnonymously": "Log in anonymously",
+  "actionEditProfile": "Edit profile",
   "actionSocialLogin": "Social login",
   "actionSignInWith": "Sign in with {provider}",
   "actionResetPassword": "Reset password",
@@ -122,6 +124,7 @@
   "navigationPortal": "Portal",
   "navigationMap": "Map",
   "navigationProfile": "Profile",
+  "navigationPeople": "People",
   "navigationSettings": "Settings",
   "navigationFilter": "Filter",
   "navigationClasses": "Classes",
@@ -184,6 +187,7 @@
   "messageNoClassesYet": "You have not added any classes yet.",
   "messageGetStartedPlusButton": "Get started by pressing the + button above.",
   "messageIAgreeToThe": "I agree to the ",
+  "messageEditProfileSuccess": "Profile updated successfully.",
 
   "infoPasswordResetEmailSent": "Please check your inbox for the password reset e-mail.",
   "infoRelevance": "Try to choose the most restrictive category.",
