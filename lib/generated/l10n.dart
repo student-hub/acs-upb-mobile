@@ -1,6 +1,7 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+
 import 'intl/messages_all.dart';
 
 // **************************************************************************
@@ -1768,6 +1769,16 @@ class S {
     return Intl.message(
       'Try to choose the most restrictive category.',
       name: 'infoRelevance',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `If this is relevant for everyone, don't select anything .`
+  String get infoRelevanceNothingSelected {
+    return Intl.message(
+      'If this is relevant for everyone, don\'t select anything .',
+      name: 'infoRelevanceNothingSelected',
       desc: '',
       args: [],
     );
