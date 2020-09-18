@@ -24,10 +24,6 @@ and ask anything on the **#ama** channel.
 
 <img src=screenshots/app/light_portal_ro.png height=500><img src=screenshots/app/dark_portal_en.png height=500>
 
-<img src=screenshots/app/light_classes_en.png height=500><img src=screenshots/app/dark_classes_en.png height=500>
-
-<img src=screenshots/app/light_people_en.png height=500><img src=screenshots/app/dark_people_en.png height=500>
-
 ## Contributors
 * [Ioana Alexandru](https://github.com/IoanaAlexandru)
 * [Andrei-Constantin Mirciu](https://github.com/andreicmirciu)
