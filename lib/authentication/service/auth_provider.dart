@@ -431,9 +431,9 @@ class AuthProvider with ChangeNotifier {
           .updateData(user.toData());
 
       var userUpdateInfo = UserUpdateInfo();
-
       userUpdateInfo.displayName = firstName + ' ' + lastName;
       await _firebaseUser.updateProfile(userUpdateInfo);
+      
       notifyListeners();
       return true;
     } catch (e) {
