@@ -1,4 +1,5 @@
 import 'package:acs_upb_mobile/generated/l10n.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 import 'package:validators/sanitizers.dart';
@@ -42,6 +43,7 @@ class Website {
 
   final String degree;
   final List<String> relevance;
+  int numberOfVisits = 0;
 
   Website(
       {this.ownerUid,
