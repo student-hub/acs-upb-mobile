@@ -45,9 +45,6 @@ class AuthProvider with ChangeNotifier {
     });
   }
 
-  bool isOldFormat(Map<String, dynamic> userData) =>
-      userData['class'] != null && userData['class'] is Map;
-
   @override
   void dispose() {
     if (_userAuthSub != null) {
@@ -147,37 +144,31 @@ class AuthProvider with ChangeNotifier {
     return _firebaseUser.uid;
   }
 
-  /// The old format of class in the data base is a Map<String, String>,
+  bool isOldFormat(Map<String, dynamic> userData) =>
+      userData['class'] != null && userData['class'] is Map;
+
+  /// Change the `class` of the user data in Firebase to the new format.
+  ///
+  /// The old format of class in the database is a `Map<String, String>`,
   /// where the key is the name of the level in the filter tree.
-  /// In the new format the class is a List<String> that contains the name of
-  /// the nodes
+  /// In the new format, the class is simply a `List<String>` that contains the
+  /// name of the nodes.
   Future<void> migrateToNewClassFormat(Map<String, dynamic> userData) async {
-    List classes = List();
-    classes.add(userData['class']['degree']);
-    if (userData['class']['domain'] != null) {
-      classes.add(userData['class']['domain']);
-      if (userData['class']['year'] != null) {
-        classes.add(userData['class']['year']);
-        if (userData['class']['series'] != null) {
-          classes.add(userData['class']['series']);
-          if (userData['class']['group'] != null) {
-            classes.add(userData['class']['group']);
-            if (userData['class']['subgroup'] != null) {
-              classes.add(userData['class']['subgroup']);
-            }
-          }
-        }
-      }
-    }
+    List<String> classes = [
+      'degree',
+      'domain',
+      'year',
+      'series',
+      'group',
+      'subgroup'
+    ].map((key) => userData['class'][key]).where((s) => s != null).toList();
+
     userData['class'] = classes;
 
     await Firestore.instance
         .collection('users')
         .document(_firebaseUser.uid)
         .updateData(userData);
-    var userUpdateInfo = UserUpdateInfo();
-
-    await _firebaseUser.updateProfile(userUpdateInfo);
   }
 
   Future<User> _fetchUser() async {
@@ -440,9 +431,9 @@ class AuthProvider with ChangeNotifier {
           .updateData(user.toData());
 
       var userUpdateInfo = UserUpdateInfo();
-
       userUpdateInfo.displayName = firstName + ' ' + lastName;
       await _firebaseUser.updateProfile(userUpdateInfo);
+      
       notifyListeners();
       return true;
     } catch (e) {

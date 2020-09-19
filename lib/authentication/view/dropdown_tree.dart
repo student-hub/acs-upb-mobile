@@ -9,7 +9,8 @@ import 'package:provider/provider.dart';
 class DropdownTreeController {
   _DropdownTreeState _dropdownTreeState;
 
-  List<String> get path => _dropdownTreeState?.path;
+  List<String> get path =>
+      _dropdownTreeState.nodes.map((e) => e.name).skip(1).toList();
 }
 
 class DropdownTree extends StatefulWidget {
@@ -33,8 +34,6 @@ class _DropdownTreeState extends State<DropdownTree> {
   FilterProvider filterProvider;
   Filter filter;
   List<FilterNode> nodes;
-
-  List<String> get path => nodes.map((e) => e.name).skip(1).toList();
 
   List<Widget> _buildDropdowns(BuildContext context) {
     List<Widget> items = [SizedBox(height: 8)];
@@ -90,11 +89,9 @@ class _DropdownTreeState extends State<DropdownTree> {
       builder: (BuildContext context, AsyncSnapshot snap) {
         if (snap.hasData) {
           filter = snap.data;
-          if (nodes == null) {
-            nodes = widget.initialPath == null
+          nodes ??= widget.initialPath == null
                 ? [filter.root]
                 : filter.findNodesByPath(widget.initialPath);
-          }
           return Column(
             children: _buildDropdowns(context),
           );
