@@ -2,9 +2,7 @@ import 'dart:async';
 
 import 'package:acs_upb_mobile/authentication/model/user.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
-import 'package:acs_upb_mobile/pages/filter/model/filter.dart';
 import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
-import 'package:acs_upb_mobile/resources/locale_provider.dart';
 import 'package:acs_upb_mobile/resources/validator.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -12,58 +10,20 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-extension MapUtils<K, V> on Map<K, V> {
-  V getIfPresent(K key) {
-    if (this.containsKey(key)) {
-      return this[key];
-    } else {
-      return null;
-    }
-  }
-}
-
 extension DatabaseUser on User {
   static User fromSnap(DocumentSnapshot snap) {
-    String degree;
-    String domain;
-    String year;
-    String series;
-    String group;
-    String subgroup;
-    if (snap.data.containsKey('class')) {
-      degree = snap.data['class']['degree'];
-      domain = snap.data['class']['domain'];
-      year = snap.data['class']['year'];
-      series = snap.data['class']['series'];
-      group = snap.data['class']['group'];
-      subgroup = snap.data['class']['subgroup'];
-    }
-
     return User(
         uid: snap.documentID,
         firstName: snap.data['name']['first'],
         lastName: snap.data['name']['last'],
-        degree: degree,
-        domain: domain,
-        year: year,
-        series: series,
-        group: group,
-        subgroup: subgroup,
+        classes: List.from(snap.data['class'] ?? []),
         permissionLevel: snap.data['permissionLevel']);
   }
 
   Map<String, dynamic> toData() {
-    Map<String, String> classInfo = {};
-    if (degree != null) classInfo['degree'] = degree;
-    if (domain != null) classInfo['domain'] = domain;
-    if (year != null) classInfo['year'] = year;
-    if (series != null) classInfo['series'] = series;
-    if (group != null) classInfo['group'] = group;
-    if (subgroup != null) classInfo['subgroup'] = subgroup;
-
     return {
       'name': {'first': firstName, 'last': lastName},
-      'class': classInfo,
+      'class': classes,
       'permissionLevel': permissionLevel
     };
   }
@@ -184,6 +144,33 @@ class AuthProvider with ChangeNotifier {
     return _firebaseUser.uid;
   }
 
+  bool isOldFormat(Map<String, dynamic> userData) =>
+      userData['class'] != null && userData['class'] is Map;
+
+  /// Change the `class` of the user data in Firebase to the new format.
+  ///
+  /// The old format of class in the database is a `Map<String, String>`,
+  /// where the key is the name of the level in the filter tree.
+  /// In the new format, the class is simply a `List<String>` that contains the
+  /// name of the nodes.
+  Future<void> migrateToNewClassFormat(Map<String, dynamic> userData) async {
+    List<String> classes = [
+      'degree',
+      'domain',
+      'year',
+      'series',
+      'group',
+      'subgroup'
+    ].map((key) => userData['class'][key]).where((s) => s != null).toList();
+
+    userData['class'] = classes;
+
+    await Firestore.instance
+        .collection('users')
+        .document(_firebaseUser.uid)
+        .updateData(userData);
+  }
+
   Future<User> _fetchUser() async {
     if (isAnonymous) {
       return null;
@@ -192,6 +179,10 @@ class AuthProvider with ChangeNotifier {
         .collection('users')
         .document(_firebaseUser.uid)
         .get();
+    if (snapshot.data == null) return null;
+
+    if (isOldFormat(snapshot.data))
+      await migrateToNewClassFormat(snapshot.data);
 
     _currentUser = DatabaseUser.fromSnap(snapshot);
     return _currentUser;
@@ -326,7 +317,7 @@ class AuthProvider with ChangeNotifier {
   }
 
   /// Create a new user with the data in [info].
-  Future<bool> signUp({Map<String, String> info, BuildContext context}) async {
+  Future<bool> signUp({Map<String, dynamic> info, BuildContext context}) async {
     try {
       String email = info[S.of(context).labelEmail];
       String password = info[S.of(context).labelPassword];
@@ -334,20 +325,7 @@ class AuthProvider with ChangeNotifier {
       String firstName = info[S.of(context).labelFirstName];
       String lastName = info[S.of(context).labelLastName];
 
-      Filter filter =
-          Provider.of<FilterProvider>(context, listen: false).cachedFilter;
-      String degree = info.getIfPresent(
-          filter.localizedLevelNames[0][LocaleProvider.localeString]);
-      String domain = info.getIfPresent(
-          filter.localizedLevelNames[1][LocaleProvider.localeString]);
-      String year = info.getIfPresent(
-          filter.localizedLevelNames[2][LocaleProvider.localeString]);
-      String series = info.getIfPresent(
-          filter.localizedLevelNames[3][LocaleProvider.localeString]);
-      String group = info.getIfPresent(
-          filter.localizedLevelNames[4][LocaleProvider.localeString]);
-      String subgroup = info.getIfPresent(
-          filter.localizedLevelNames[5][LocaleProvider.localeString]);
+      List<String> classes = info['class'] ?? null;
 
       if (email == null || email == '') {
         AppToast.show(S.of(context).errorInvalidEmail);
@@ -388,15 +366,11 @@ class AuthProvider with ChangeNotifier {
 
       // Create document in 'users'
       var user = User(
-          uid: res.user.uid,
-          firstName: firstName,
-          lastName: lastName,
-          degree: degree,
-          domain: domain,
-          year: year,
-          series: series,
-          group: group,
-          subgroup: subgroup);
+        uid: res.user.uid,
+        firstName: firstName,
+        lastName: lastName,
+        classes: classes,
+      );
 
       DocumentReference ref =
           Firestore.instance.collection('users').document(user.uid);
@@ -434,5 +408,37 @@ class AuthProvider with ChangeNotifier {
       AppToast.show(S.of(context).messageCheckEmailVerification);
     }
     return true;
+  }
+
+  /// Update the user information with the data in [info].
+  Future<bool> updateProfile(
+      {Map<String, dynamic> info, BuildContext context}) async {
+    try {
+      String firstName = info[S.of(context).labelFirstName];
+      String lastName = info[S.of(context).labelLastName];
+
+      List<String> classes = info['class'] ?? null;
+
+      User user =
+          await Provider.of<AuthProvider>(context, listen: false).currentUser;
+      user.firstName = firstName;
+      user.lastName = lastName;
+      user.classes = classes;
+
+      Firestore.instance
+          .collection('users')
+          .document(user.uid)
+          .updateData(user.toData());
+
+      var userUpdateInfo = UserUpdateInfo();
+      userUpdateInfo.displayName = firstName + ' ' + lastName;
+      await _firebaseUser.updateProfile(userUpdateInfo);
+      
+      notifyListeners();
+      return true;
+    } catch (e) {
+      _errorHandler(e, context);
+      return false;
+    }
   }
 }

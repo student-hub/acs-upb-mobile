@@ -1,10 +1,8 @@
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
+import 'package:acs_upb_mobile/authentication/view/dropdown_tree.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/navigation/routes.dart';
-import 'package:acs_upb_mobile/pages/filter/model/filter.dart';
-import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
 import 'package:acs_upb_mobile/resources/banner.dart';
-import 'package:acs_upb_mobile/resources/locale_provider.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/resources/validator.dart';
 import 'package:acs_upb_mobile/widgets/button.dart';
@@ -25,25 +23,10 @@ class SignUpView extends StatefulWidget {
 
 class _SignUpViewState extends State<SignUpView> {
   List<FormItem> formItems;
-  Filter filter;
-  List<FilterNode> nodes;
-  FilterProvider filterProvider;
+
   bool agreedToPolicy = false;
 
-  void _fetchFilter() async {
-    // Fetch filter for dropdown buttons
-    filterProvider = Provider.of<FilterProvider>(context, listen: false);
-    filter = await filterProvider.fetchFilter(context);
-
-    // Add the first selected node and refresh
-    nodes = [filter.root];
-    setState(() {});
-  }
-
-  initState() {
-    super.initState();
-    _fetchFilter();
-  }
+  final dropdownController = DropdownTreeController();
 
   List<FormItem> _buildFormItems() {
     // Only build them once to avoid the cursor staying everywhere
@@ -99,53 +82,6 @@ class _SignUpViewState extends State<SignUpView> {
     return formItems;
   }
 
-  List<Widget> _dropdownTree(BuildContext context) {
-    List<Widget> items = [SizedBox(height: 8)];
-
-    if (filter == null) {
-      items.add(Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: Center(child: CircularProgressIndicator()),
-      ));
-    } else {
-      for (var i = 0; i < nodes.length; i++) {
-        if (nodes[i] != null && nodes[i].children.isNotEmpty) {
-          items.add(Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.only(top: 8.0),
-                child: Text(
-                    filter.localizedLevelNames[i][LocaleProvider.localeString],
-                    style: Theme.of(context)
-                        .textTheme
-                        .subtitle1
-                        .apply(fontSizeFactor: 1.1)),
-              ),
-              DropdownButtonFormField<FilterNode>(
-                value: nodes.length > i + 1 ? nodes[i + 1] : null,
-                items: nodes[i]
-                    .children
-                    .map((node) => DropdownMenuItem(
-                          value: node,
-                          child: Text(node.name),
-                        ))
-                    .toList(),
-                onChanged: (selected) => setState(
-                  () {
-                    nodes.removeRange(i + 1, nodes.length);
-                    nodes.add(selected);
-                  },
-                ),
-              ),
-            ],
-          ));
-        }
-      }
-    }
-    return items;
-  }
-
   Widget _privacyPolicy() {
     return Padding(
       padding: const EdgeInsets.only(top: 8.0),
@@ -187,9 +123,14 @@ class _SignUpViewState extends State<SignUpView> {
     return AppForm(
       title: S.of(context).actionSignUp,
       items: _buildFormItems(),
-      trailing: _dropdownTree(context) + [_privacyPolicy()],
+      trailing: <Widget>[
+        DropdownTree(
+          controller: dropdownController,
+        ),
+        _privacyPolicy()
+      ],
       submitOnEnter: false,
-      onSubmitted: (Map<String, String> fields) async {
+      onSubmitted: (Map<String, dynamic> fields) async {
         if (!agreedToPolicy) {
           AppToast.show(S.of(context).warningAgreeTo +
               S.of(context).labelPrivacyPolicy +
@@ -198,12 +139,11 @@ class _SignUpViewState extends State<SignUpView> {
         }
 
         fields[S.of(context).labelEmail] += S.of(context).stringEmailDomain;
-        nodes.asMap().forEach((i, node) {
-          if (i > 0) {
-            fields[filter.localizedLevelNames[i - 1]
-                [LocaleProvider.localeString]] = node.name;
-          }
-        });
+
+        if (dropdownController.path != null &&
+            dropdownController.path.length > 1) {
+          fields['class'] = dropdownController.path;
+        }
 
         var result = await authProvider.signUp(
           info: fields,
@@ -296,13 +236,5 @@ class _SignUpViewState extends State<SignUpView> {
         ),
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    // Reset filter so it can be reloaded after user signs in
-    filterProvider?.resetFilter();
-
-    super.dispose();
   }
 }
