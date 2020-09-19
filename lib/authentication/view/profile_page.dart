@@ -76,7 +76,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 User user = snap.data;
                 if (user != null) {
                   userName = user.firstName + ' ' + user.lastName;
-                  userGroup = user?.classes?.last;
+                  userGroup = user.classes == null ? user.classes.last: null;
                 }
                 return Column(
                   children: <Widget>[
