@@ -17,12 +17,14 @@ class DropdownTree extends StatefulWidget {
   final List<String> initialPath;
   final double leftPadding;
   final DropdownTreeController controller;
+  final TextStyle textStyle;
 
   DropdownTree({
     Key key,
     this.initialPath,
     this.leftPadding,
     this.controller,
+    this.textStyle,
   }) : super(key: key);
 
   @override
@@ -47,10 +49,11 @@ class _DropdownTreeState extends State<DropdownTree> {
                   EdgeInsets.only(top: 8.0, left: widget.leftPadding ?? 0.0),
               child: Text(
                 filter.localizedLevelNames[i][LocaleProvider.localeString],
-                style: Theme.of(context)
-                    .textTheme
-                    .caption
-                    .apply(color: Theme.of(context).hintColor),
+                style: widget.textStyle ??
+                    Theme.of(context)
+                        .textTheme
+                        .subtitle1
+                        .apply(fontSizeFactor: 1.1),
               ),
             ),
             DropdownButtonFormField<FilterNode>(
@@ -90,8 +93,8 @@ class _DropdownTreeState extends State<DropdownTree> {
         if (snap.hasData) {
           filter = snap.data;
           nodes ??= widget.initialPath == null
-                ? [filter.root]
-                : filter.findNodesByPath(widget.initialPath);
+              ? [filter.root]
+              : filter.findNodesByPath(widget.initialPath);
           return Column(
             children: _buildDropdowns(context),
           );
