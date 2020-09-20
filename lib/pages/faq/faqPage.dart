@@ -1,5 +1,5 @@
 import 'package:acs_upb_mobile/pages/faq/model/question.dart';
-import 'package:acs_upb_mobile/pages/faq/service/question_service.dart';
+import 'package:acs_upb_mobile/pages/faq/service/faq_provider.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:acs_upb_mobile/widgets/selectable.dart';
 import 'package:flutter/cupertino.dart';
