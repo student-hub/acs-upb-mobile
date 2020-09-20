@@ -3,10 +3,10 @@ import 'package:meta/meta.dart';
 class Question {
   String question;
   String answer;
-  String category;
+  List<String> tags;
 
   Question(
       {@required this.question,
       @required this.answer,
-      @required this.category});
+      @required this.tags});
 }

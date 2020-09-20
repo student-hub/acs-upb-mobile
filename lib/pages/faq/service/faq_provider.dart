@@ -16,7 +16,7 @@ extension DatabaseQustion on Question {
   static Question fromSnap(DocumentSnapshot snap) {
     String question = snap.data['question'];
     String answer = snap.data['answer'];
-    String category = snap.data['category'];
-    return Question(question: question, answer: answer, category: category);
+    List<String> tags = List.from(snap.data['tags']);
+    return Question(question: question, answer: answer, tags: tags);
   }
 }

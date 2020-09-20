@@ -17,10 +17,9 @@ class FaqPage extends StatefulWidget {
 class _FaqPageState extends State<FaqPage> {
   List<Question> questions = List<Question>();
   List<String> categories;
-  String filter = "";
+  String filter = '';
   bool searchClosed = true;
-  String activeCategory = "";
-  var controllers = Map<String, SelectableController>();
+  List<String> activeTags = List<String>();
 
   Widget categoryList() => ListView(
         scrollDirection: Axis.horizontal,
@@ -28,18 +27,14 @@ class _FaqPageState extends State<FaqPage> {
             .map((category) => Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 3.0),
                   child: Selectable(
-                    controller: controllers[category],
                     label: category,
                     initiallySelected: false,
                     onSelected: (selection) {
                       setState(() {
-                        activeCategory = "";
                         if (selection) {
-                          controllers.values.forEach((element) {
-                            element.deselect();
-                          });
-                          controllers[category].select();
-                          activeCategory = category;
+                          activeTags.add(category);
+                        } else {
+                          activeTags.remove(category);
                         }
                       });
                     },
@@ -67,10 +62,7 @@ class _FaqPageState extends State<FaqPage> {
           builder: (context, snapshot) {
             if (!snapshot.hasData) return LinearProgressIndicator();
             questions = QuestionsService().getQuestions(snapshot.data);
-            categories = questions.map((e) => e.category).toSet().toList();
-            categories.forEach((element) {
-              controllers.putIfAbsent(element, () => SelectableController());
-            });
+            categories = questions.expand((e) => e.tags).toSet().toList();
             return ListView(
               children: [
                 SearchWidget(
@@ -83,7 +75,7 @@ class _FaqPageState extends State<FaqPage> {
                   cancelCallback: () {
                     setState(() {
                       searchClosed = true;
-                      filter = "";
+                      filter = '';
                     });
                   },
                   searchClosed: searchClosed,
@@ -92,8 +84,8 @@ class _FaqPageState extends State<FaqPage> {
                     questions: questions
                         .where((question) =>
                             filter
-                                .split(" ")
-                                .where((element) => element != "")
+                                .split(' ')
+                                .where((element) => element != '')
                                 .fold(
                                     true,
                                     (previousValue, filter) =>
@@ -101,15 +93,24 @@ class _FaqPageState extends State<FaqPage> {
                                         question.question
                                             .toLowerCase()
                                             .contains(filter)) &&
-                            (activeCategory == ""
+                            (activeTags.isEmpty
                                 ? true
-                                : question.category == activeCategory))
+                                : containsTag(activeTags, question.tags)))
                         .toList(),
                     filter: filter),
               ],
             );
           }),
     );
+  }
+
+  bool containsTag(List<String> activeTags, List<String> questionTags) {
+    for (String tag in activeTags) {
+      if (questionTags.contains(tag)) {
+        return true;
+      }
+    }
+    return false;
   }
 }
 
@@ -128,7 +129,6 @@ class _QuestionsListState extends State<QuestionsList> {
   Widget build(BuildContext context) {
     List<String> filteredWords =
         widget.filter.split(' ').where((element) => element != '').toList();
-
     return Column(
       children: [
         Padding(
