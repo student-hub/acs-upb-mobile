@@ -1,3 +1,4 @@
+import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/faq/model/question.dart';
 import 'package:acs_upb_mobile/pages/faq/service/faq_provider.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
@@ -46,7 +47,7 @@ class _FaqPageState extends State<FaqPage> {
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
-      title: 'FAQ',
+      title: S.of(context).sectionFAQ,
       actions: [
         AppScaffoldAction(
           icon: Icons.search,
