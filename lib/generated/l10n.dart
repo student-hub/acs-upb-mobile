@@ -1,7 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-
 import 'intl/messages_all.dart';
 
 // **************************************************************************
@@ -114,11 +113,41 @@ class S {
     );
   }
 
+  /// `Old password`
+  String get labelOldPassword {
+    return Intl.message(
+      'Old password',
+      name: 'labelOldPassword',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `New password`
+  String get labelNewPassword {
+    return Intl.message(
+      'New password',
+      name: 'labelNewPassword',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Confirm password`
   String get labelConfirmPassword {
     return Intl.message(
       'Confirm password',
       name: 'labelConfirmPassword',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Confirm new password`
+  String get labelConfirmNewPassword {
+    return Intl.message(
+      'Confirm new password',
+      name: 'labelConfirmNewPassword',
       desc: '',
       args: [],
     );
@@ -649,6 +678,16 @@ class S {
     return Intl.message(
       'Delete account',
       name: 'actionDeleteAccount',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Change password`
+  String get actionChangePassword {
+    return Intl.message(
+      'Change password',
+      name: 'actionChangePassword',
       desc: '',
       args: [],
     );
@@ -1779,6 +1818,16 @@ class S {
     return Intl.message(
       'Profile updated successfully.',
       name: 'messageEditProfileSuccess',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Password changed successfully.`
+  String get messageChangePasswordSuccess {
+    return Intl.message(
+      'Password changed successfully.',
+      name: 'messageChangePasswordSuccess',
       desc: '',
       args: [],
     );

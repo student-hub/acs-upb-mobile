@@ -31,7 +31,7 @@ class AppDialog extends StatelessWidget {
       {Key key,
       this.icon,
       @required this.title,
-      @required this.message,
+      this.message,
       this.info,
       this.content,
       this.actions,
@@ -53,8 +53,10 @@ class AppDialog extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
+                if(message != null) // i will correct this
                   Expanded(child: Container(height: 8)),
-                  Text(message),
+                if(message != null)
+                    Text(message),
                   if (info != null)
                     Column(children: [
                       SizedBox(height: 8),

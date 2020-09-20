@@ -199,6 +199,22 @@ class AuthProvider with ChangeNotifier {
     }).then((_) => true);
   }
 
+  Future<bool> changePassword({String password, BuildContext context}) async {
+    bool result = false;
+    _firebaseUser.updatePassword(password).then((_) {
+      AppToast.show(S.of(context).messageChangePasswordSuccess);
+      result = true;
+    })/*.catchError((e) {
+      _errorHandler(e, context);
+    })*/;
+    return result;
+  }
+
+  Future<bool> verifyPassword({String password, BuildContext context}) async {
+    return await signIn(
+        email: _firebaseUser.email, password: password, context: context);
+  }
+
   Future<bool> signIn(
       {String email, String password, BuildContext context}) async {
     if (email == null || email == '') {
@@ -433,7 +449,7 @@ class AuthProvider with ChangeNotifier {
       var userUpdateInfo = UserUpdateInfo();
       userUpdateInfo.displayName = firstName + ' ' + lastName;
       await _firebaseUser.updateProfile(userUpdateInfo);
-      
+
       notifyListeners();
       return true;
     } catch (e) {

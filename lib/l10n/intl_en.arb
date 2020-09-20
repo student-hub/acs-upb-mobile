@@ -8,7 +8,10 @@
 
   "labelEmail": "Email",
   "labelPassword": "Password",
+  "labelOldPassword": "Old password",
+  "labelNewPassword": "New password",
   "labelConfirmPassword": "Confirm password",
+  "labelConfirmNewPassword": "Confirm new password",
   "labelFirstName": "First name",
   "labelLastName": "Last name",
   "labelName": "Name",
@@ -66,6 +69,7 @@
   "actionSendEmail": "Send e-mail",
   "actionSendVerificationAgain": "Send e-mail again?",
   "actionDeleteAccount": "Delete account",
+  "actionChangePassword": "Change password",
   "actionAddWebsite": "Add website",
   "actionEditWebsite": "Edit website",
   "actionDeleteWebsite": "Delete website",
@@ -188,6 +192,7 @@
   "messageGetStartedPlusButton": "Get started by pressing the + button above.",
   "messageIAgreeToThe": "I agree to the ",
   "messageEditProfileSuccess": "Profile updated successfully.",
+  "messageChangePasswordSuccess": "Password changed successfully.",
 
   "infoPasswordResetEmailSent": "Please check your inbox for the password reset e-mail.",
   "infoRelevance": "Try to choose the most restrictive category.",
