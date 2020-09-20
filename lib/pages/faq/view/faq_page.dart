@@ -6,8 +6,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:dynamic_text_highlighting/dynamic_text_highlighting.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:acs_upb_mobile/widgets/search_bar.dart';
 import 'package:markdown/markdown.dart' as md;
-import '../SearchWidget.dart';
 
 class FaqPage extends StatefulWidget {
   @override
@@ -127,7 +127,7 @@ class _QuestionsListState extends State<QuestionsList> {
   @override
   Widget build(BuildContext context) {
     List<String> filteredWords =
-        widget.filter.split(" ").where((element) => element != "").toList();
+        widget.filter.split(' ').where((element) => element != '').toList();
 
     return Column(
       children: [
