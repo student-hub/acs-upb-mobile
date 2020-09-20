@@ -1,3 +1,4 @@
+import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -46,7 +47,7 @@ class _SearchBarState extends State<SearchBar> {
             child: Container(
               color: Colors.transparent,
               child: Center(
-                child: Text('Cancel'),
+                child: Text(S.of(context).buttonCancel),
               ),
             ),
           ),
