@@ -1,4 +1,3 @@
-import 'package:acs_upb_mobile/widgets/selectable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -23,6 +22,7 @@ class _SearchBarState extends State<SearchBar> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: <Widget>[
+        SizedBox(width: 4),
         Flexible(
           child: AnimatedContainer(
             duration: Duration(milliseconds: 200),
