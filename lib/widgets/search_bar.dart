@@ -13,8 +13,6 @@ class SearchBar extends StatefulWidget {
 }
 
 class _SearchBarState extends State<SearchBar> {
-  bool _animate = true;
-
   @override
   Widget build(BuildContext context) {
     double widthMax = MediaQuery.of(context).size.width;
@@ -24,9 +22,8 @@ class _SearchBarState extends State<SearchBar> {
       children: <Widget>[
         SizedBox(width: 4),
         Flexible(
-          child: AnimatedContainer(
-            duration: Duration(milliseconds: 200),
-            width: _animate ? widthMax * .8 : widthMax,
+          child: Container(
+            width: widthMax * .8,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(5),
               color: Color.fromRGBO(142, 142, 147, .15),
@@ -44,18 +41,12 @@ class _SearchBarState extends State<SearchBar> {
         ),
         GestureDetector(
           onTap: widget.cancel,
-          child: AnimatedOpacity(
-            opacity: _animate ? 1.0 : 0,
-            curve: Curves.easeIn,
-            duration: Duration(milliseconds: _animate ? 1000 : 0),
-            child: AnimatedContainer(
-              duration: Duration(milliseconds: 200),
-              width: _animate ? MediaQuery.of(context).size.width * .2 : 0,
-              child: Container(
-                color: Colors.transparent,
-                child: Center(
-                  child: Text('Cancel'),
-                ),
+          child: Container(
+            width: MediaQuery.of(context).size.width * .2,
+            child: Container(
+              color: Colors.transparent,
+              child: Center(
+                child: Text('Cancel'),
               ),
             ),
           ),
