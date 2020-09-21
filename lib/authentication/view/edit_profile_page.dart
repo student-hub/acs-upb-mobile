@@ -147,6 +147,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       initialPath: path,
                       controller: dropdownController,
                       leftPadding: 10.0,
+                      textStyle: Theme.of(context)
+                          .textTheme
+                          .caption
+                          .apply(color: Theme.of(context).hintColor),
                     )
                   ]),
                 );
