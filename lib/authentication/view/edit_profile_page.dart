@@ -28,7 +28,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   AppDialog _deletionConfirmationDialog(BuildContext context) {
     final passwordController = TextEditingController();
-    final passwordKey = GlobalKey<FormState>();
     return AppDialog(
       icon: Icon(Icons.warning, color: Colors.red),
       title: S.of(context).actionDeleteAccount,
@@ -36,21 +35,13 @@ class _EditProfilePageState extends State<EditProfilePage> {
           ' ' +
           S.of(context).messageCannotBeUndone,
       content: [
-        Form(
-          key: passwordKey,
-          child: TextFormField(
-              decoration: InputDecoration(
-                labelText: S.of(context).labelConfirmPassword,
-                hintText: S.of(context).hintPassword,
-              ),
-              obscureText: true,
-              controller: passwordController,
-              validator: (value) {
-                if (value.isEmpty || value == null) {
-                  return S.of(context).errorNoPassword;
-                }
-                return null;
-              }),
+        TextFormField(
+          decoration: InputDecoration(
+            labelText: S.of(context).labelConfirmPassword,
+            hintText: S.of(context).hintPassword,
+          ),
+          obscureText: true,
+          controller: passwordController,
         )
       ],
       actions: [
@@ -60,14 +51,12 @@ class _EditProfilePageState extends State<EditProfilePage> {
           color: Colors.red,
           width: 130,
           onTap: () async {
-            if(passwordKey.currentState.validate()) {
-              AuthProvider authProvider =
-              Provider.of<AuthProvider>(context, listen: false);
-              if (await authProvider.verifyPassword(
-                  password: passwordController.text, context: context)) {
-                if (await authProvider.delete(context: context)) {
-                  Utils.signOut(context);
-                }
+            AuthProvider authProvider =
+                Provider.of<AuthProvider>(context, listen: false);
+            if (await authProvider.verifyPassword(
+                password: passwordController.text, context: context)) {
+              if (await authProvider.delete(context: context)) {
+                Utils.signOut(context);
               }
             }
           },
