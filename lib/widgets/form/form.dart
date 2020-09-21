@@ -10,6 +10,8 @@ class FormItem {
   final String hint;
   final TextEditingController controller;
   final FocusNode focusNode;
+  final Function(String) onSubmitted;
+  final Function(String) onChanged;
   final Future<bool> Function(String, {BuildContext context}) check;
   final bool obscureText;
   final String suffix;
@@ -25,6 +27,8 @@ class FormItem {
     this.hint,
     TextEditingController controller,
     FocusNode focusNode,
+    Function(String) onSubmitted,
+    this.onChanged,
     this.check,
     this.obscureText = false,
     this.suffix,
@@ -32,7 +36,8 @@ class FormItem {
     this.enableSuggestions = true,
     this.keyboardType = TextInputType.text,
     this.autofillHints,
-  })  : this.controller = controller ?? TextEditingController(),
+  })  : this.onSubmitted = onSubmitted ?? ((_) {}),
+        this.controller = controller ?? TextEditingController(),
         this.focusNode = focusNode ?? FocusNode(),
         this.valid = Future<bool>(() => null);
 }
@@ -89,6 +94,7 @@ class _AppFormState extends State<AppForm> {
                     keyboardType: field.keyboardType,
                     autofillHints: field.autofillHints,
                     onChanged: (text) => setState(() {
+                      field.onChanged(text);
                       if (text == null || text == "") {
                         field.valid = Future<bool>(() => null);
                       } else {
@@ -121,10 +127,11 @@ class _AppFormState extends State<AppForm> {
                               },
                             ),
                           ),
-                    onSubmitted: (_) {
+                    onSubmitted: (input) {
                       if (i < widget.items.length - 1) {
                         FocusScope.of(context)
                             .requestFocus(widget.items[i + 1].focusNode);
+                        field.onSubmitted(input);
                       } else {
                         if (widget.submitOnEnter) {
                           widget.submit();

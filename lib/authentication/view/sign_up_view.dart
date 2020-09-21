@@ -11,6 +11,7 @@ import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:recase/recase.dart';
 
 class SignUpView extends StatefulWidget {
   static const String routeName = '/signup';
@@ -27,6 +28,28 @@ class _SignUpViewState extends State<SignUpView> {
   bool agreedToPolicy = false;
 
   final dropdownController = DropdownTreeController();
+  TextEditingController passwordController = TextEditingController();
+  TextEditingController firstNameController = TextEditingController();
+  TextEditingController lastNameController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+
+  /// Attempt to guess the user's first and last name from the email, since university e-mail addresses are standardized.
+  ///
+  /// Special characters such as ".", "_" are used to separate the names, numbers are removed and names are capitalized.
+  /// *Format example:* firstnameone_firstnametwo.lastname123@stud.acs.pub.ro
+  void parseNameFromEmail(TextEditingController email,
+      TextEditingController firstName, TextEditingController lastName) {
+    String emailWithoutNumbers = email.text.replaceAll(RegExp('[^a-zA-Z._]'), '');
+    List<String> names = emailWithoutNumbers.split('.');
+
+    if (!names[0].contains('_')) {
+      firstName.text = names[0].titleCase;
+    } else {
+      List<String> firstNames = names[0].split('_');
+      firstName.text = firstNames.map((s) => s.titleCase).join(' ');
+    }
+    lastName.text = names[1].titleCase;
+  }
 
   List<FormItem> _buildFormItems() {
     // Only build them once to avoid the cursor staying everywhere
@@ -34,19 +57,20 @@ class _SignUpViewState extends State<SignUpView> {
       return formItems;
     }
     String emailDomain = S.of(context).stringEmailDomain;
-
-    TextEditingController passwordController = TextEditingController();
     AuthProvider authProvider = Provider.of<AuthProvider>(context);
 
     formItems = <FormItem>[
       FormItem(
         label: S.of(context).labelEmail,
         hint: S.of(context).hintEmail,
+        controller: emailController,
         suffix: emailDomain,
         autocorrect: false,
         autofillHints: [AutofillHints.newUsername],
         check: (email, {BuildContext context}) => authProvider
             .canSignUpWithEmail(email: email + emailDomain, context: context),
+        onChanged: (_) => parseNameFromEmail(
+            emailController, firstNameController, lastNameController),
       ),
       FormItem(
         label: S.of(context).labelPassword,
@@ -73,10 +97,12 @@ class _SignUpViewState extends State<SignUpView> {
       FormItem(
           label: S.of(context).labelFirstName,
           hint: S.of(context).hintFirstName,
+          controller: firstNameController,
           autofillHints: [AutofillHints.givenName]),
       FormItem(
           label: S.of(context).labelLastName,
           hint: S.of(context).hintLastName,
+          controller: lastNameController,
           autofillHints: [AutofillHints.familyName]),
     ];
     return formItems;
