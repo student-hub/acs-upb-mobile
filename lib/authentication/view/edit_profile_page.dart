@@ -40,7 +40,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
           key: passwordKey,
           child: TextFormField(
               decoration: InputDecoration(
-                labelText: S.of(context).labelPassword,
+                labelText: S.of(context).labelConfirmPassword,
                 hintText: S.of(context).hintPassword,
               ),
               obscureText: true,
