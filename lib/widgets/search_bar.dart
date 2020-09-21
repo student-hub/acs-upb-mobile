@@ -29,13 +29,16 @@ class _SearchBarState extends State<SearchBar> {
               borderRadius: BorderRadius.circular(5),
               color: Color.fromRGBO(142, 142, 147, .15),
             ),
-            child: TextField(
-              autofocus: true,
-              controller: widget.textController,
-              onChanged: widget.onSearch,
-              decoration: InputDecoration(
-                icon: Icon(Icons.search),
-                border: InputBorder.none,
+            child: Padding(
+              padding: EdgeInsets.only(left: 8.0),
+              child: TextField(
+                autofocus: true,
+                controller: widget.textController,
+                onChanged: widget.onSearch,
+                decoration: InputDecoration(
+                  icon: Icon(Icons.search),
+                  border: InputBorder.none,
+                ),
               ),
             ),
           ),
