@@ -46,7 +46,7 @@ class _SignUpViewState extends State<SignUpView> {
       firstName.text = names[0].titleCase;
     } else {
       List<String> firstNames = names[0].split('_');
-      firstName.text = firstNames[0].titleCase + ' ' + firstNames[1].titleCase;
+      firstName.text = firstNames.map((s) => s.titleCase).join(' ');
     }
     lastName.text = names[1].titleCase;
   }
