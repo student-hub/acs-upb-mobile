@@ -218,7 +218,7 @@ class AuthProvider with ChangeNotifier {
         .fetchSignInMethodsForEmail(email: email)
         .catchError((e) {
       _errorHandler(e, context);
-      return false;
+      return null;
     });
 
     // An error occurred (and was already handled)
@@ -232,12 +232,13 @@ class AuthProvider with ChangeNotifier {
       return false;
     }
 
-    return FirebaseAuth.instance
+    AuthResult result = await FirebaseAuth.instance
         .signInWithEmailAndPassword(email: email, password: password)
         .catchError((e) {
       _errorHandler(e, context);
-      return false;
-    }).then((_) => true);
+      return null;
+    });
+    return result != null;
   }
 
   Future<void> signOut(BuildContext context) async {
