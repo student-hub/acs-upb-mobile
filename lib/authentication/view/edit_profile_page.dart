@@ -26,29 +26,44 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   final formKey = GlobalKey<FormState>();
 
-  AppDialog _deletionConfirmationDialog(BuildContext context) => AppDialog(
-        icon: Icon(Icons.warning, color: Colors.red),
-        title: S.of(context).actionDeleteAccount,
-        message: S.of(context).messageDeleteAccount +
-            ' ' +
-            S.of(context).messageCannotBeUndone,
-        actions: [
-          AppButton(
-            key: ValueKey('delete_account_button'),
-            text: S.of(context).actionDeleteAccount.toUpperCase(),
-            color: Colors.red,
-            width: 130,
-            onTap: () async {
-              AuthProvider authProvider =
-                  Provider.of<AuthProvider>(context, listen: false);
-              bool res = await authProvider.delete(context: context);
-              if (res) {
+  AppDialog _deletionConfirmationDialog(BuildContext context) {
+    final passwordController = TextEditingController();
+    return AppDialog(
+      icon: Icon(Icons.warning, color: Colors.red),
+      title: S.of(context).actionDeleteAccount,
+      message: S.of(context).messageDeleteAccount +
+          ' ' +
+          S.of(context).messageCannotBeUndone,
+      content: [
+        TextFormField(
+          decoration: InputDecoration(
+            labelText: S.of(context).labelConfirmPassword,
+            hintText: S.of(context).hintPassword,
+          ),
+          obscureText: true,
+          controller: passwordController,
+        )
+      ],
+      actions: [
+        AppButton(
+          key: ValueKey('delete_account_button'),
+          text: S.of(context).actionDeleteAccount.toUpperCase(),
+          color: Colors.red,
+          width: 130,
+          onTap: () async {
+            AuthProvider authProvider =
+                Provider.of<AuthProvider>(context, listen: false);
+            if (await authProvider.verifyPassword(
+                password: passwordController.text, context: context)) {
+              if (await authProvider.delete(context: context)) {
                 Utils.signOut(context);
               }
-            },
-          )
-        ],
-      );
+            }
+          },
+        )
+      ],
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
