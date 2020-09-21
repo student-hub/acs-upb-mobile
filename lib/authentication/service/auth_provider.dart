@@ -161,7 +161,10 @@ class AuthProvider with ChangeNotifier {
       'series',
       'group',
       'subgroup'
-    ].map((key) => userData['class'][key]).where((s) => s != null).toList();
+    ]
+        .map((key) => userData['class'][key].toString())
+        .where((s) => s != 'null')
+        .toList();
 
     userData['class'] = classes;
 
