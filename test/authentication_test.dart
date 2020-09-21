@@ -406,6 +406,12 @@ void main() {
 
       await tester.enterText(
           find.byKey(ValueKey('email_text_field'), skipOffstage: true),
+          'j12o##h&n_alexand@-er.do***e');
+      expect(firstName.controller.text, equals('John Alexander'));
+      expect(lastName.controller.text, equals('Doe'));
+
+      await tester.enterText(
+          find.byKey(ValueKey('email_text_field'), skipOffstage: true),
           'john_alexander.doe1234');
 
       ///////////////////////
