@@ -101,7 +101,7 @@ class _LoginViewState extends State<LoginView> {
     return AppForm(
       title: S.of(context).actionLogIn,
       items: _buildFormItems(),
-      onSubmitted: (Map<String, String> fields) async {
+      onSubmitted: (Map<String, dynamic> fields) async {
         var result = await authProvider.signIn(
           email: fields[S.of(context).labelEmail] +
               S.of(context).stringEmailDomain,

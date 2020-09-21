@@ -1,10 +1,8 @@
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
+import 'package:acs_upb_mobile/authentication/view/dropdown_tree.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/navigation/routes.dart';
-import 'package:acs_upb_mobile/pages/filter/model/filter.dart';
-import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
 import 'package:acs_upb_mobile/resources/banner.dart';
-import 'package:acs_upb_mobile/resources/locale_provider.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/resources/validator.dart';
 import 'package:acs_upb_mobile/widgets/button.dart';
@@ -13,6 +11,7 @@ import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:recase/recase.dart';
 
 class SignUpView extends StatefulWidget {
   static const String routeName = '/signup';
@@ -25,24 +24,31 @@ class SignUpView extends StatefulWidget {
 
 class _SignUpViewState extends State<SignUpView> {
   List<FormItem> formItems;
-  Filter filter;
-  List<FilterNode> nodes;
-  FilterProvider filterProvider;
+
   bool agreedToPolicy = false;
 
-  void _fetchFilter() async {
-    // Fetch filter for dropdown buttons
-    filterProvider = Provider.of<FilterProvider>(context, listen: false);
-    filter = await filterProvider.fetchFilter(context: context);
+  final dropdownController = DropdownTreeController();
+  TextEditingController passwordController = TextEditingController();
+  TextEditingController firstNameController = TextEditingController();
+  TextEditingController lastNameController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
 
-    // Add the first selected node and refresh
-    nodes = [filter.root];
-    setState(() {});
-  }
+  /// Attempt to guess the user's first and last name from the email, since university e-mail addresses are standardized.
+  ///
+  /// Special characters such as ".", "_" are used to separate the names, numbers are removed and names are capitalized.
+  /// *Format example:* firstnameone_firstnametwo.lastname123@stud.acs.pub.ro
+  void parseNameFromEmail(TextEditingController email,
+      TextEditingController firstName, TextEditingController lastName) {
+    String emailWithoutNumbers = email.text.replaceAll(RegExp('[^a-zA-Z._]'), '');
+    List<String> names = emailWithoutNumbers.split('.');
 
-  initState() {
-    super.initState();
-    _fetchFilter();
+    if (!names[0].contains('_')) {
+      firstName.text = names[0].titleCase;
+    } else {
+      List<String> firstNames = names[0].split('_');
+      firstName.text = firstNames.map((s) => s.titleCase).join(' ');
+    }
+    lastName.text = names[1].titleCase;
   }
 
   List<FormItem> _buildFormItems() {
@@ -51,8 +57,6 @@ class _SignUpViewState extends State<SignUpView> {
       return formItems;
     }
     String emailDomain = S.of(context).stringEmailDomain;
-
-    TextEditingController passwordController = TextEditingController();
     AuthProvider authProvider =
         Provider.of<AuthProvider>(context);
 
@@ -60,11 +64,14 @@ class _SignUpViewState extends State<SignUpView> {
       FormItem(
         label: S.of(context).labelEmail,
         hint: S.of(context).hintEmail,
+        controller: emailController,
         suffix: emailDomain,
         autocorrect: false,
         autofillHints: [AutofillHints.newUsername],
         check: (email, {BuildContext context}) => authProvider
             .canSignUpWithEmail(email: email + emailDomain, context: context),
+        onChanged: (_) => parseNameFromEmail(
+            emailController, firstNameController, lastNameController),
       ),
       FormItem(
         label: S.of(context).labelPassword,
@@ -91,60 +98,15 @@ class _SignUpViewState extends State<SignUpView> {
       FormItem(
           label: S.of(context).labelFirstName,
           hint: S.of(context).hintFirstName,
+          controller: firstNameController,
           autofillHints: [AutofillHints.givenName]),
       FormItem(
           label: S.of(context).labelLastName,
           hint: S.of(context).hintLastName,
+          controller: lastNameController,
           autofillHints: [AutofillHints.familyName]),
     ];
     return formItems;
-  }
-
-  List<Widget> _dropdownTree(BuildContext context) {
-    List<Widget> items = [SizedBox(height: 8)];
-
-    if (filter == null) {
-      items.add(Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: Center(child: CircularProgressIndicator()),
-      ));
-    } else {
-      for (var i = 0; i < nodes.length; i++) {
-        if (nodes[i] != null && nodes[i].children.isNotEmpty) {
-          items.add(Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.only(top: 8.0),
-                child: Text(
-                    filter.localizedLevelNames[i][LocaleProvider.localeString],
-                    style: Theme.of(context)
-                        .textTheme
-                        .subtitle1
-                        .apply(fontSizeFactor: 1.1)),
-              ),
-              DropdownButtonFormField<FilterNode>(
-                value: nodes.length > i + 1 ? nodes[i + 1] : null,
-                items: nodes[i]
-                    .children
-                    .map((node) => DropdownMenuItem(
-                          value: node,
-                          child: Text(node.name),
-                        ))
-                    .toList(),
-                onChanged: (selected) => setState(
-                  () {
-                    nodes.removeRange(i + 1, nodes.length);
-                    nodes.add(selected);
-                  },
-                ),
-              ),
-            ],
-          ));
-        }
-      }
-    }
-    return items;
   }
 
   Widget _privacyPolicy() {
@@ -188,9 +150,14 @@ class _SignUpViewState extends State<SignUpView> {
     return AppForm(
       title: S.of(context).actionSignUp,
       items: _buildFormItems(),
-      trailing: _dropdownTree(context) + [_privacyPolicy()],
+      trailing: <Widget>[
+        DropdownTree(
+          controller: dropdownController,
+        ),
+        _privacyPolicy()
+      ],
       submitOnEnter: false,
-      onSubmitted: (Map<String, String> fields) async {
+      onSubmitted: (Map<String, dynamic> fields) async {
         if (!agreedToPolicy) {
           AppToast.show(S.of(context).warningAgreeTo +
               S.of(context).labelPrivacyPolicy +
@@ -199,12 +166,11 @@ class _SignUpViewState extends State<SignUpView> {
         }
 
         fields[S.of(context).labelEmail] += S.of(context).stringEmailDomain;
-        nodes.asMap().forEach((i, node) {
-          if (i > 0) {
-            fields[filter.localizedLevelNames[i - 1]
-                [LocaleProvider.localeString]] = node.name;
-          }
-        });
+
+        if (dropdownController.path != null &&
+            dropdownController.path.length > 1) {
+          fields['class'] = dropdownController.path;
+        }
 
         var result = await authProvider.signUp(
           info: fields,
@@ -297,13 +263,5 @@ class _SignUpViewState extends State<SignUpView> {
         ),
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    // Reset filter so it can be reloaded after user signs in
-    filterProvider?.resetFilter();
-
-    super.dispose();
   }
 }

@@ -1,4 +1,4 @@
-import 'package:flutter/foundation.dart';
+import 'package:flutter/cupertino.dart';
 
 /// Filter represented in the form of a tree with named levels
 ///
@@ -27,21 +27,16 @@ class Filter {
   /// Name of each level of the tree.
   ///
   /// **Note:** There should be at least as many names as there are levels in the tree.
-  List<Map<String, String>> localizedLevelNames;
+  final List<Map<String, String>> localizedLevelNames;
 
-  Filter({this.root, this.localizedLevelNames, void Function() listener}) {
+  Filter({this.root, this.localizedLevelNames}) {
     this.root.value = true; // root value is true by default
-    _addListener(listener ?? () {}, this.root);
   }
 
-  static _addListener(void Function() listener, FilterNode node) {
-    node._valueNotifier.addListener(listener);
-    if (node.children != null) {
-      for (var child in node.children) {
-        _addListener(listener, child);
-      }
-    }
-  }
+  Filter clone() => Filter(
+        root: this.root.clone(),
+        localizedLevelNames: this.localizedLevelNames,
+      );
 
   void _relevantNodesHelper(List<String> list, FilterNode node) {
     if (node.value) {
@@ -58,6 +53,24 @@ class Filter {
     List<String> list = [];
     _relevantNodesHelper(list, root);
     return list;
+  }
+
+  List<FilterNode> findNodesByPath(List<String> path) {
+    List<FilterNode> result = [root];
+    if (path == null) {
+      return result;
+    }
+
+    for (String element in path) {
+      FilterNode aux = result.last.children
+          .firstWhere((e) => e.name == element, orElse: () => null);
+      if (aux == null) {
+        return null;
+      }
+      result.add(aux);
+    }
+
+    return result;
   }
 
   bool _relevantLeavesHelper(List<String> list, FilterNode node) {
@@ -167,4 +180,12 @@ class FilterNode {
   get value => _valueNotifier.value;
 
   set value(bool value) => _valueNotifier.value = value;
+
+  set listener(Function() listener) => _valueNotifier.addListener(listener);
+
+  FilterNode clone() => FilterNode(
+    name: name,
+    value: value,
+    children: children?.map((c) => c.clone())?.toList(),
+  );
 }

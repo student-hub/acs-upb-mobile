@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 class SelectableController {
   _SelectableState _selectableState;
 
-  bool get isSelected => _selectableState?.isSelected;
+  bool get isSelected => _selectableState?._isSelected;
 
   void select() {
-    _selectableState.isSelected = true;
+    if (!isSelected) _selectableState.isSelected = true;
   }
 
   void deselect() {
-    _selectableState.isSelected = false;
+    if (isSelected) _selectableState.isSelected = false;
   }
 }
 
@@ -33,12 +33,17 @@ class Selectable extends StatefulWidget {
 }
 
 class _SelectableState extends State<Selectable> {
-  bool isSelected;
+  bool _isSelected;
+
+  set isSelected(bool newValue) {
+    _isSelected = newValue;
+    setState(() {});
+  }
 
   @override
   void initState() {
     super.initState();
-    isSelected = widget.initiallySelected;
+    _isSelected = widget.initiallySelected;
   }
 
   @override
@@ -47,7 +52,7 @@ class _SelectableState extends State<Selectable> {
 
     return Container(
       decoration: BoxDecoration(
-        color: isSelected
+        color: _isSelected
             ? (widget.disabled
                 ? Theme.of(context).disabledColor
                 : Theme.of(context).accentColor)
@@ -67,9 +72,9 @@ class _SelectableState extends State<Selectable> {
             setState(
               () {
                 if (!widget.disabled) {
-                  isSelected = !isSelected;
+                  _isSelected = !_isSelected;
                 }
-                widget.onSelected(isSelected);
+                widget.onSelected(_isSelected);
               },
             );
           },
@@ -84,7 +89,7 @@ class _SelectableState extends State<Selectable> {
                   fontWeight: FontWeight.w600,
                   fontSize: 12,
                   letterSpacing: 0.27,
-                  color: isSelected
+                  color: _isSelected
                       ? Colors.white
                       : widget.disabled
                           ? Theme.of(context).disabledColor

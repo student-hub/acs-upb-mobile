@@ -105,7 +105,9 @@ class _RelevancePickerState extends State<RelevancePicker> {
                 child: FilterPage(
                   title: S.of(context).labelRelevance,
                   buttonText: S.of(context).buttonSet,
-                  info: S.of(context).infoRelevance,
+                  info: S.of(context).infoRelevanceNothingSelected +
+                      ' ' +
+                      S.of(context).infoRelevance,
                   hint: S.of(context).infoRelevanceExample,
                   onSubmit: () async {
                     // Deselect all options
