@@ -23,7 +23,6 @@ class Utils {
     AuthProvider authProvider =
         Provider.of<AuthProvider>(context, listen: false);
     authProvider.signOut(context);
-    Navigator.popUntil(context, (route) => !route.isFirst);
-    Navigator.pushNamed(context, Routes.login);
+    Navigator.pushNamedAndRemoveUntil(context, Routes.login, (route) => false);
   }
 }
