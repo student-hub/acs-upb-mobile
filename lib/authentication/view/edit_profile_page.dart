@@ -34,7 +34,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
     final oldPasswordController = TextEditingController();
     final changePasswordKey = GlobalKey<FormState>();
     return AppDialog(
-      title: S.of(context).actionChangePassword,
+      title: S
+          .of(context)
+          .actionChangePassword,
       content: [
         Form(
           key: changePasswordKey,
@@ -43,41 +45,61 @@ class _EditProfilePageState extends State<EditProfilePage> {
               TextFormField(
                   obscureText: true,
                   decoration: InputDecoration(
-                    labelText: S.of(context).labelOldPassword,
-                    hintText: S.of(context).hintPassword,
+                    labelText: S
+                        .of(context)
+                        .labelOldPassword,
+                    hintText: S
+                        .of(context)
+                        .hintPassword,
                   ),
                   controller: oldPasswordController,
                   validator: (value) {
                     if (value.isEmpty || value == null) {
-                      return S.of(context).errorNoPassword;
+                      return S
+                          .of(context)
+                          .errorNoPassword;
                     }
                     return null;
                   }),
               TextFormField(
                   obscureText: true,
                   decoration: InputDecoration(
-                    labelText: S.of(context).labelNewPassword,
-                    hintText: S.of(context).hintPassword,
+                    labelText: S
+                        .of(context)
+                        .labelNewPassword,
+                    hintText: S
+                        .of(context)
+                        .hintPassword,
                   ),
                   controller: newPasswordController,
                   validator: (value) {
                     if (value.isEmpty || value == null) {
-                      return S.of(context).errorNoPassword;
+                      return S
+                          .of(context)
+                          .errorNoPassword;
                     }
                     return null;
                   }),
               TextFormField(
                   obscureText: true,
                   decoration: InputDecoration(
-                    labelText: S.of(context).labelConfirmNewPassword,
-                    hintText: S.of(context).hintPassword,
+                    labelText: S
+                        .of(context)
+                        .labelConfirmNewPassword,
+                    hintText: S
+                        .of(context)
+                        .hintPassword,
                   ),
                   validator: (value) {
                     if (value.isEmpty || value == null) {
-                      return S.of(context).errorNoPassword;
+                      return S
+                          .of(context)
+                          .errorNoPassword;
                     }
                     if (value != newPasswordController.text) {
-                      return S.of(context).errorPasswordsDiffer;
+                      return S
+                          .of(context)
+                          .errorPasswordsDiffer;
                     }
                     return null;
                   }),
@@ -88,13 +110,16 @@ class _EditProfilePageState extends State<EditProfilePage> {
       actions: [
         AppButton(
           key: ValueKey('change_password_button'),
-          text: S.of(context).actionChangePassword.toUpperCase(),
+          text: S
+              .of(context)
+              .actionChangePassword
+              .toUpperCase(),
           color: Colors.lightBlue,
           width: 130,
           onTap: () async {
             if (changePasswordKey.currentState.validate()) {
               AuthProvider authProvider =
-                  Provider.of<AuthProvider>(context, listen: false);
+              Provider.of<AuthProvider>(context, listen: false);
               if (await authProvider.verifyPassword(
                   password: oldPasswordController.text, context: context)) {
                 if (await AppValidator.isStrongPassword(
@@ -113,21 +138,31 @@ class _EditProfilePageState extends State<EditProfilePage> {
     );
   }
 
-  AppDialog _deletionConfirmationDialog(BuildContext context) => AppDialog(
+  AppDialog _deletionConfirmationDialog(BuildContext context) =>
+      AppDialog(
         icon: Icon(Icons.warning, color: Colors.red),
-        title: S.of(context).actionDeleteAccount,
-        message: S.of(context).messageDeleteAccount +
+        title: S
+            .of(context)
+            .actionDeleteAccount,
+        message: S
+            .of(context)
+            .messageDeleteAccount +
             ' ' +
-            S.of(context).messageCannotBeUndone,
+            S
+                .of(context)
+                .messageCannotBeUndone,
         actions: [
           AppButton(
             key: ValueKey('delete_account_button'),
-            text: S.of(context).actionDeleteAccount.toUpperCase(),
+            text: S
+                .of(context)
+                .actionDeleteAccount
+                .toUpperCase(),
             color: Colors.red,
             width: 130,
             onTap: () async {
               AuthProvider authProvider =
-                  Provider.of<AuthProvider>(context, listen: false);
+              Provider.of<AuthProvider>(context, listen: false);
               bool res = await authProvider.delete(context: context);
               if (res) {
                 Utils.signOut(context);
@@ -137,19 +172,50 @@ class _EditProfilePageState extends State<EditProfilePage> {
         ],
       );
 
+  AppDialog _changeEmailConfirmationDialog(BuildContext context) =>
+      AppDialog(title: 'Confirm Change Email',
+        message: 'Are you sure you want to change your mail to' + emailController.text,
+        content: [
+          TextFormField(
+            decoration: InputDecoration(
+              labelText: S.of(context).labelConfirmPassword,
+              hintText: S.of(context).hintPassword,
+            ),
+            obscureText: true,
+          )
+        ],
+        actions: [
+          AppButton(
+            key: ValueKey('change_email_button'),
+            text: 'Change email',
+            color: Colors.lightBlue,
+          )
+        ],
+      );
+
   @override
   Widget build(BuildContext context) {
     AuthProvider authProvider = Provider.of<AuthProvider>(context);
-    String emailDomain = S.of(context).stringEmailDomain;
+    String emailDomain = S
+        .of(context)
+        .stringEmailDomain;
     return AppScaffold(
-      title: S.of(context).actionEditProfile,
+      title: S
+          .of(context)
+          .actionEditProfile,
       actions: [
         AppScaffoldAction(
-            text: S.of(context).buttonSave,
+            text: S
+                .of(context)
+                .buttonSave,
             onPressed: () async {
               Map<String, dynamic> info = {
-                S.of(context).labelFirstName: firstNameController.text,
-                S.of(context).labelLastName: lastNameController.text,
+                S
+                    .of(context)
+                    .labelFirstName: firstNameController.text,
+                S
+                    .of(context)
+                    .labelLastName: lastNameController.text,
               };
               if (dropdownController.path != null) {
                 info['class'] = dropdownController.path;
@@ -160,9 +226,14 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   info: info,
                   context: context,
                 );
+                if (emailController.text != authProvider.email) {
+
+                }
 
                 if (result) {
-                  AppToast.show(S.of(context).messageEditProfileSuccess);
+                  AppToast.show(S
+                      .of(context)
+                      .messageEditProfileSuccess);
                   Navigator.pop(context);
                 }
               }
@@ -170,10 +241,17 @@ class _EditProfilePageState extends State<EditProfilePage> {
         AppScaffoldAction(
           icon: Icons.more_vert,
           items: {
-            S.of(context).actionChangePassword: () => showDialog(
-                context: context, child: _changePasswordDialog(context)),
-            S.of(context).actionDeleteAccount: () => showDialog(
-                context: context, child: _deletionConfirmationDialog(context))
+            S
+                .of(context)
+                .actionChangePassword: () =>
+                showDialog(
+                    context: context, child: _changePasswordDialog(context)),
+            S
+                .of(context)
+                .actionDeleteAccount: () =>
+                showDialog(
+                    context: context,
+                    child: _deletionConfirmationDialog(context))
           },
         )
       ],
@@ -187,13 +265,17 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 User user = snap.data;
                 lastNameController.text = user.lastName;
                 firstNameController.text = user.firstName;
-                emailController.text = authProvider.email.substring(
-                    0, authProvider.email.length - emailDomain.length);
+                if (!authProvider.isVerifiedFromCache) {
+                  emailController.text = authProvider.email.substring(
+                      0, authProvider.email.length - emailDomain.length);
+                }
                 path = user.classes;
                 return Container(
                   child: ListView(children: [
                     PreferenceTitle(
-                      S.of(context).labelPersonalInformation,
+                      S
+                          .of(context)
+                          .labelPersonalInformation,
                       leftPadding: 0,
                     ),
                     Form(
@@ -203,13 +285,19 @@ class _EditProfilePageState extends State<EditProfilePage> {
                           TextFormField(
                             decoration: InputDecoration(
                               prefixIcon: Icon(Icons.person),
-                              labelText: S.of(context).labelFirstName,
-                              hintText: S.of(context).hintFirstName,
+                              labelText: S
+                                  .of(context)
+                                  .labelFirstName,
+                              hintText: S
+                                  .of(context)
+                                  .hintFirstName,
                             ),
                             controller: firstNameController,
                             validator: (value) {
                               if (value.isEmpty || value == null) {
-                                return S.of(context).errorMissingFirstName;
+                                return S
+                                    .of(context)
+                                    .errorMissingFirstName;
                               }
                               return null;
                             },
@@ -217,13 +305,19 @@ class _EditProfilePageState extends State<EditProfilePage> {
                           TextFormField(
                             decoration: InputDecoration(
                               prefixIcon: Icon(Icons.person),
-                              labelText: S.of(context).labelLastName,
-                              hintText: S.of(context).hintLastName,
+                              labelText: S
+                                  .of(context)
+                                  .labelLastName,
+                              hintText: S
+                                  .of(context)
+                                  .hintLastName,
                             ),
                             controller: lastNameController,
                             validator: (value) {
                               if (value?.isEmpty ?? true) {
-                                return S.of(context).errorMissingLastName;
+                                return S
+                                    .of(context)
+                                    .errorMissingLastName;
                               }
                               return null;
                             },
@@ -232,14 +326,20 @@ class _EditProfilePageState extends State<EditProfilePage> {
                             TextFormField(
                               decoration: InputDecoration(
                                 prefixIcon: Icon(Icons.alternate_email),
-                                labelText: S.of(context).labelEmail,
-                                hintText: S.of(context).hintEmail,
+                                labelText: S
+                                    .of(context)
+                                    .labelEmail,
+                                hintText: S
+                                    .of(context)
+                                    .hintEmail,
                                 suffix: Text(emailDomain),
                               ),
                               controller: emailController,
-                              validator : (value) {
+                              validator: (value) {
                                 if (value?.isEmpty ?? true) {
-                                  return S.of(context).errorMissingLastName;
+                                  return S
+                                      .of(context)
+                                      .errorMissingLastName;
                                 }
                                 return null;
                               },
@@ -248,7 +348,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       ),
                     ),
                     PreferenceTitle(
-                      S.of(context).labelClass,
+                      S
+                          .of(context)
+                          .labelClass,
                       leftPadding: 0,
                     ),
                     DropdownTree(
