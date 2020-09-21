@@ -343,6 +343,16 @@ class S {
     );
   }
 
+  /// `Personal information`
+  String get labelPersonalInformation {
+    return Intl.message(
+      'Personal information',
+      name: 'labelPersonalInformation',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Shortcuts`
   String get sectionShortcuts {
     return Intl.message(
@@ -568,6 +578,16 @@ class S {
     return Intl.message(
       'Log in anonymously',
       name: 'actionLogInAnonymously',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Edit profile`
+  String get actionEditProfile {
+    return Intl.message(
+      'Edit profile',
+      name: 'actionEditProfile',
       desc: '',
       args: [],
     );
@@ -1753,6 +1773,16 @@ class S {
     );
   }
 
+  /// `Profile updated successfully.`
+  String get messageEditProfileSuccess {
+    return Intl.message(
+      'Profile updated successfully.',
+      name: 'messageEditProfileSuccess',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Please check your inbox for the password reset e-mail.`
   String get infoPasswordResetEmailSent {
     return Intl.message(
@@ -1768,6 +1798,16 @@ class S {
     return Intl.message(
       'Try to choose the most restrictive category.',
       name: 'infoRelevance',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `If this is relevant for everyone, don't select anything .`
+  String get infoRelevanceNothingSelected {
+    return Intl.message(
+      'If this is relevant for everyone, don\'t select anything .',
+      name: 'infoRelevanceNothingSelected',
       desc: '',
       args: [],
     );

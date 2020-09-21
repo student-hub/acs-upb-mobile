@@ -48,7 +48,7 @@ class AppForm extends StatefulWidget {
   final bool submitOnEnter;
 
   /// Map from [FormItem.label] to corresponding input
-  final dynamic Function(Map<String, String>) onSubmitted;
+  final dynamic Function(Map<String, dynamic>) onSubmitted;
 
   /// Widgets to be added at the end of the form
   final List<Widget> trailing;
