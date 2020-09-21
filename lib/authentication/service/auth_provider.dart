@@ -144,6 +144,8 @@ class AuthProvider with ChangeNotifier {
     return _firebaseUser.uid;
   }
 
+  String get email => _firebaseUser.email;
+
   bool isOldFormat(Map<String, dynamic> userData) =>
       userData['class'] != null && userData['class'] is Map;
 

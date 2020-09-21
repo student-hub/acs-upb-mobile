@@ -24,6 +24,7 @@ class EditProfilePage extends StatefulWidget {
 class _EditProfilePageState extends State<EditProfilePage> {
   final firstNameController = TextEditingController();
   final lastNameController = TextEditingController();
+  final emailController = TextEditingController();
   final dropdownController = DropdownTreeController();
 
   final formKey = GlobalKey<FormState>();
@@ -139,6 +140,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
   @override
   Widget build(BuildContext context) {
     AuthProvider authProvider = Provider.of<AuthProvider>(context);
+    String emailDomain = S.of(context).stringEmailDomain;
     return AppScaffold(
       title: S.of(context).actionEditProfile,
       actions: [
@@ -185,6 +187,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 User user = snap.data;
                 lastNameController.text = user.lastName;
                 firstNameController.text = user.firstName;
+                emailController.text = authProvider.email.substring(
+                    0, authProvider.email.length - emailDomain.length);
                 path = user.classes;
                 return Container(
                   child: ListView(children: [
@@ -224,13 +228,21 @@ class _EditProfilePageState extends State<EditProfilePage> {
                               return null;
                             },
                           ),
-                          if(!authProvider.isVerifiedFromCache)
-                            TextField(
+                          if (!authProvider.isVerifiedFromCache)
+                            TextFormField(
                               decoration: InputDecoration(
                                 prefixIcon: Icon(Icons.alternate_email),
                                 labelText: S.of(context).labelEmail,
                                 hintText: S.of(context).hintEmail,
+                                suffix: Text(emailDomain),
                               ),
+                              controller: emailController,
+                              validator : (value) {
+                                if (value?.isEmpty ?? true) {
+                                  return S.of(context).errorMissingLastName;
+                                }
+                                return null;
+                              },
                             )
                         ],
                       ),
