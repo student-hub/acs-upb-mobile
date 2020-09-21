@@ -73,7 +73,7 @@ class _RelevancePickerState extends State<RelevancePicker> {
   bool _filterApplied = false;
 
   _fetchUser() async {
-    AuthenticationProvider authProvider = Provider.of(context, listen: false);
+    AuthProvider authProvider = Provider.of(context, listen: false);
     _user = await authProvider.currentUser;
     setState(() {});
   }

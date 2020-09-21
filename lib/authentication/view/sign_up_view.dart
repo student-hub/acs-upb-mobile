@@ -53,8 +53,8 @@ class _SignUpViewState extends State<SignUpView> {
     String emailDomain = S.of(context).stringEmailDomain;
 
     TextEditingController passwordController = TextEditingController();
-    AuthenticationProvider authProvider =
-        Provider.of<AuthenticationProvider>(context);
+    AuthProvider authProvider =
+        Provider.of<AuthProvider>(context);
 
     formItems = <FormItem>[
       FormItem(
@@ -183,7 +183,7 @@ class _SignUpViewState extends State<SignUpView> {
   }
 
   AppForm _buildForm(BuildContext context) {
-    AuthenticationProvider authProvider = Provider.of(context);
+    AuthProvider authProvider = Provider.of(context);
 
     return AppForm(
       title: S.of(context).actionSignUp,

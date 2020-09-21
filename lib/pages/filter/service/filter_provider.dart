@@ -22,7 +22,7 @@ extension FilterNodeExtension on FilterNode {
 class FilterProvider with ChangeNotifier {
   final Firestore _db = Firestore.instance;
   Filter _relevanceFilter; // filter cache
-  AuthenticationProvider authProvider;
+  AuthProvider authProvider;
 
   /// Whether this is the global filter instance and should update shared preferences
   final bool global;
@@ -37,10 +37,10 @@ class FilterProvider with ChangeNotifier {
       bool filterEnabled,
       this.defaultDegree,
       List<String> defaultRelevance,
-      AuthenticationProvider authProvider})
+      AuthProvider authProvider})
       : _enabled = filterEnabled ?? PrefService.get('relevance_filter') ?? true,
         _relevantNodes = defaultRelevance,
-        authProvider = authProvider ?? AuthenticationProvider() {
+        authProvider = authProvider ?? AuthProvider() {
     if (defaultRelevance != null) {
       if (this.defaultDegree == null) {
         throw ArgumentError(

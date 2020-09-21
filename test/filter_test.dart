@@ -4,7 +4,7 @@ import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
-class MockAuthProvider extends Mock implements AuthenticationProvider {}
+class MockAuthProvider extends Mock implements AuthProvider {}
 
 class MockFilterProvider extends Mock implements FilterProvider {}
 

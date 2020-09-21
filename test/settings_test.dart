@@ -7,10 +7,10 @@ import 'package:preferences/preferences.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class MockAuthProvider extends Mock implements AuthenticationProvider {}
+class MockAuthProvider extends Mock implements AuthProvider {}
 
 void main() {
-  AuthenticationProvider mockAuthProvider;
+  AuthProvider mockAuthProvider;
 
   group('Settings', () {
     setUpAll(() async {
@@ -31,7 +31,7 @@ void main() {
     });
 
     testWidgets('Dark Mode', (WidgetTester tester) async {
-      await tester.pumpWidget(ChangeNotifierProvider<AuthenticationProvider>(
+      await tester.pumpWidget(ChangeNotifierProvider<AuthProvider>(
           create: (_) => mockAuthProvider, child: MyApp()));
       await tester.pumpAndSettle();
 
@@ -58,7 +58,7 @@ void main() {
     });
 
     testWidgets('Language', (WidgetTester tester) async {
-      await tester.pumpWidget(ChangeNotifierProvider<AuthenticationProvider>(
+      await tester.pumpWidget(ChangeNotifierProvider<AuthProvider>(
           create: (_) => mockAuthProvider, child: MyApp()));
       await tester.pumpAndSettle();
 

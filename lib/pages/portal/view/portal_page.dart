@@ -44,7 +44,7 @@ class _PortalPageState extends State<PortalPage>
   bool updating;
 
   _fetchUser() async {
-    AuthenticationProvider authProvider = Provider.of(context, listen: false);
+    AuthProvider authProvider = Provider.of(context, listen: false);
     user = await authProvider.currentUser;
     if (mounted) {
       setState(() {});
@@ -217,8 +217,8 @@ class _PortalPageState extends State<PortalPage>
 
     WebsiteProvider websiteProvider = Provider.of<WebsiteProvider>(context);
     FilterProvider filterProvider = Provider.of<FilterProvider>(context);
-    AuthenticationProvider authProvider =
-        Provider.of<AuthenticationProvider>(context);
+    AuthProvider authProvider =
+        Provider.of<AuthProvider>(context);
 
     CircularProgressIndicator progressIndicator = CircularProgressIndicator();
 
@@ -231,8 +231,8 @@ class _PortalPageState extends State<PortalPage>
               ? S.of(context).actionDisableEditing
               : S.of(context).actionEnableEditing,
           onPressed: () {
-            AuthenticationProvider authProvider =
-                Provider.of<AuthenticationProvider>(context, listen: false);
+            AuthProvider authProvider =
+                Provider.of<AuthProvider>(context, listen: false);
             if (authProvider.isAuthenticatedFromCache &&
                 !authProvider.isAnonymous) {
               // Show message if there is nothing the user can edit
@@ -345,8 +345,8 @@ class _AddWebsiteButton extends StatelessWidget {
         message: S.of(context).actionAddWebsite,
         child: GestureDetector(
           onTap: () {
-            AuthenticationProvider authProvider =
-                Provider.of<AuthenticationProvider>(context, listen: false);
+            AuthProvider authProvider =
+                Provider.of<AuthProvider>(context, listen: false);
             if (authProvider.isAuthenticatedFromCache &&
                 !authProvider.isAnonymous) {
               Navigator.of(context).push(MaterialPageRoute(

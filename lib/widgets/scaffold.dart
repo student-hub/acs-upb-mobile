@@ -133,8 +133,8 @@ class AppScaffold extends StatelessWidget {
       );
 
   Future<void> _signOut(BuildContext context) async {
-    AuthenticationProvider authProvider =
-        Provider.of<AuthenticationProvider>(context, listen: false);
+    AuthProvider authProvider =
+        Provider.of<AuthProvider>(context, listen: false);
     authProvider.signOut(context);
     Navigator.pushReplacementNamed(context, Routes.login);
   }
@@ -189,7 +189,7 @@ class AppScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    AuthenticationProvider authProvider = Provider.of<AuthenticationProvider>(context);
+    AuthProvider authProvider = Provider.of<AuthProvider>(context);
     bool isAuthenticated =
         authProvider.isAuthenticatedFromCache && !authProvider.isAnonymous;
     bool enableContent = !needsToBeAuthenticated || isAuthenticated;

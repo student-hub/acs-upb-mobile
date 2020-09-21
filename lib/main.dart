@@ -29,11 +29,11 @@ main() async {
   await PrefService.init(prefix: 'pref_');
   PrefService.setDefaultValues({'language': 'auto', 'relevance_filter': true});
 
-  AuthenticationProvider authProvider = AuthenticationProvider();
+  AuthProvider authProvider = AuthProvider();
   ClassProvider classProvider = ClassProvider();
 
   runApp(MultiProvider(providers: [
-    ChangeNotifierProvider<AuthenticationProvider>(create: (_) => authProvider),
+    ChangeNotifierProvider<AuthProvider>(create: (_) => authProvider),
     ChangeNotifierProvider<StorageProvider>(create: (_) => StorageProvider()),
     ChangeNotifierProvider<WebsiteProvider>(create: (_) => WebsiteProvider()),
     ChangeNotifierProvider<ClassProvider>(create: (_) => classProvider),
@@ -136,8 +136,8 @@ class AppLoadingScreen extends StatelessWidget {
     // Load locale from settings
     S.load(LocaleProvider.locale);
 
-    AuthenticationProvider authProvider =
-        Provider.of<AuthenticationProvider>(context, listen: false);
+    AuthProvider authProvider =
+        Provider.of<AuthProvider>(context, listen: false);
     bool authenticated = await authProvider.isAuthenticatedFromService;
     return authenticated ? Routes.home : Routes.login;
   }

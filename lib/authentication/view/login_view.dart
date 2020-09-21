@@ -29,7 +29,7 @@ class _LoginViewState extends State<LoginView> {
     }
     String emailDomain = S.of(context).stringEmailDomain;
 
-    AuthenticationProvider authProvider = Provider.of<AuthenticationProvider>(context);
+    AuthProvider authProvider = Provider.of<AuthProvider>(context);
     formItems = <FormItem>[
       FormItem(
         label: S.of(context).labelEmail,
@@ -81,7 +81,7 @@ class _LoginViewState extends State<LoginView> {
             width: 130,
             onTap: () async {
               bool success =
-                  await Provider.of<AuthenticationProvider>(context, listen: false)
+                  await Provider.of<AuthProvider>(context, listen: false)
                       .sendPasswordResetEmail(
                           email: emailController.text +
                               S.of(context).stringEmailDomain,
@@ -96,7 +96,7 @@ class _LoginViewState extends State<LoginView> {
       );
 
   AppForm _buildForm(BuildContext context) {
-    AuthenticationProvider authProvider = Provider.of<AuthenticationProvider>(context);
+    AuthProvider authProvider = Provider.of<AuthProvider>(context);
 
     return AppForm(
       title: S.of(context).actionLogIn,
@@ -142,7 +142,7 @@ class _LoginViewState extends State<LoginView> {
 
   @override
   Widget build(BuildContext context) {
-    AuthenticationProvider authProvider = Provider.of<AuthenticationProvider>(context);
+    AuthProvider authProvider = Provider.of<AuthProvider>(context);
     AppForm loginForm = _buildForm(context);
 
     return GestureDetector(

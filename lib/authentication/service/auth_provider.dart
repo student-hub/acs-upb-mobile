@@ -65,12 +65,12 @@ extension DatabaseUser on User {
   }
 }
 
-class AuthenticationProvider with ChangeNotifier {
+class AuthProvider with ChangeNotifier {
   FirebaseUser _firebaseUser;
   StreamSubscription _userAuthSub;
   User _currentUser;
 
-  AuthenticationProvider() {
+  AuthProvider() {
     _userAuthSub = FirebaseAuth.instance.onAuthStateChanged.listen((newUser) {
       print('AuthProvider - FirebaseAuth - onAuthStateChanged - $newUser');
       _firebaseUser = newUser;
@@ -169,7 +169,7 @@ class AuthenticationProvider with ChangeNotifier {
   /// Check the filesystem to see if there is a user authenticated.
   ///
   /// This method is [async] and should only be necessary on app startup, since
-  /// for everything else, the [AuthenticationProvider] will notify its listeners and
+  /// for everything else, the [AuthProvider] will notify its listeners and
   /// update the cache if the authentication state changes.
   Future<bool> get isAuthenticatedFromService async {
     _firebaseUser = await FirebaseAuth.instance.currentUser();

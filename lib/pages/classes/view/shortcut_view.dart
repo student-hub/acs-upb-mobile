@@ -35,7 +35,7 @@ class _ShortcutViewState extends State<ShortcutView> {
                   link: linkController.text,
                   type: selectedType,
                   ownerUid:
-                      Provider.of<AuthenticationProvider>(context, listen: false).uid,
+                      Provider.of<AuthProvider>(context, listen: false).uid,
                 ));
                 Navigator.of(context).pop();
               }

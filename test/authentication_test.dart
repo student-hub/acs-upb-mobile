@@ -13,7 +13,7 @@ import 'package:mockito/mockito.dart';
 import 'package:preferences/preferences.dart';
 import 'package:provider/provider.dart';
 
-class MockAuthProvider extends Mock implements AuthenticationProvider {}
+class MockAuthProvider extends Mock implements AuthProvider {}
 
 class MockNavigatorObserver extends Mock implements NavigatorObserver {}
 
@@ -22,7 +22,7 @@ class MockFilterProvider extends Mock implements FilterProvider {}
 class MockWebsiteProvider extends Mock implements WebsiteProvider {}
 
 void main() {
-  AuthenticationProvider mockAuthProvider;
+  AuthProvider mockAuthProvider;
   WebsiteProvider mockWebsiteProvider;
   FilterProvider mockFilterProvider;
 
@@ -61,7 +61,7 @@ void main() {
 
   group('Login', () {
     testWidgets('Anonymous login', (WidgetTester tester) async {
-      await tester.pumpWidget(ChangeNotifierProvider<AuthenticationProvider>(
+      await tester.pumpWidget(ChangeNotifierProvider<AuthProvider>(
           create: (_) => mockAuthProvider, child: MyApp()));
       await tester.pumpAndSettle();
 
@@ -85,7 +85,7 @@ void main() {
     });
 
     testWidgets('Credential login', (WidgetTester tester) async {
-      await tester.pumpWidget(ChangeNotifierProvider<AuthenticationProvider>(
+      await tester.pumpWidget(ChangeNotifierProvider<AuthProvider>(
           create: (_) => mockAuthProvider, child: MyApp()));
       await tester.pumpAndSettle();
 
@@ -123,7 +123,7 @@ void main() {
 
   group('Recover password', () {
     testWidgets('Send email', (WidgetTester tester) async {
-      await tester.pumpWidget(ChangeNotifierProvider<AuthenticationProvider>(
+      await tester.pumpWidget(ChangeNotifierProvider<AuthProvider>(
           create: (_) => mockAuthProvider, child: MyApp()));
       await tester.pumpAndSettle();
 
@@ -156,7 +156,7 @@ void main() {
     });
 
     testWidgets('Cancel', (WidgetTester tester) async {
-      await tester.pumpWidget(ChangeNotifierProvider<AuthenticationProvider>(
+      await tester.pumpWidget(ChangeNotifierProvider<AuthProvider>(
           create: (_) => mockAuthProvider, child: MyApp()));
       await tester.pumpAndSettle();
 
@@ -255,7 +255,7 @@ void main() {
 
     testWidgets('Sign up', (WidgetTester tester) async {
       await tester.pumpWidget(MultiProvider(providers: [
-        ChangeNotifierProvider<AuthenticationProvider>(
+        ChangeNotifierProvider<AuthProvider>(
             create: (_) => mockAuthProvider),
         ChangeNotifierProvider<FilterProvider>(
             create: (_) => mockFilterProvider)
@@ -320,7 +320,7 @@ void main() {
 
     testWidgets('Cancel', (WidgetTester tester) async {
       await tester.pumpWidget(MultiProvider(providers: [
-        ChangeNotifierProvider<AuthenticationProvider>(
+        ChangeNotifierProvider<AuthProvider>(
             create: (_) => mockAuthProvider),
         ChangeNotifierProvider<FilterProvider>(
             create: (_) => mockFilterProvider)
@@ -373,7 +373,7 @@ void main() {
       when(mockAuthProvider.isAnonymous).thenReturn(true);
 
       await tester.pumpWidget(MultiProvider(providers: [
-        ChangeNotifierProvider<AuthenticationProvider>(
+        ChangeNotifierProvider<AuthProvider>(
             create: (_) => mockAuthProvider),
         ChangeNotifierProvider<FilterProvider>(
             create: (_) => mockFilterProvider),
@@ -405,7 +405,7 @@ void main() {
       when(mockAuthProvider.isAnonymous).thenReturn(false);
 
       await tester.pumpWidget(MultiProvider(providers: [
-        ChangeNotifierProvider<AuthenticationProvider>(
+        ChangeNotifierProvider<AuthProvider>(
             create: (_) => mockAuthProvider),
         ChangeNotifierProvider<FilterProvider>(
             create: (_) => mockFilterProvider),

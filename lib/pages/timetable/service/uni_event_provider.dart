@@ -104,7 +104,7 @@ class UniEventProvider extends EventProvider<UniEventInstance>
   AcademicCalendar calendar = AcademicCalendar();
   ClassProvider classProvider;
   FilterProvider filterProvider;
-  final AuthenticationProvider authProvider;
+  final AuthProvider authProvider;
   List<String> classIds = [];
   Filter filter;
 
@@ -128,8 +128,8 @@ class UniEventProvider extends EventProvider<UniEventInstance>
     notifyListeners();
   }
 
-  UniEventProvider({AuthenticationProvider authProvider})
-      : authProvider = authProvider ?? AuthenticationProvider();
+  UniEventProvider({AuthProvider authProvider})
+      : authProvider = authProvider ?? AuthProvider();
 
   Stream<List<UniEvent>> get _events {
     if (!authProvider.isAuthenticatedFromCache || filter == null)
