@@ -138,7 +138,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
     );
   }
 
-  AppDialog _deletionConfirmationDialog(BuildContext context) =>
+  AppDialog _deletionConfirmationDialog(BuildContext context) {
+    final passwordController = TextEditingController();
+    return
       AppDialog(
         icon: Icon(Icons.warning, color: Colors.red),
         title: S
@@ -151,7 +153,16 @@ class _EditProfilePageState extends State<EditProfilePage> {
             S
                 .of(context)
                 .messageCannotBeUndone,
-        actions: [
+      content: [
+        TextFormField(
+          decoration: InputDecoration(
+            labelText: S.of(context).labelConfirmPassword,
+            hintText: S.of(context).hintPassword,
+          ),
+          obscureText: true,
+          controller: passwordController,
+        )
+      ],  actions: [
           AppButton(
             key: ValueKey('delete_account_button'),
             text: S
@@ -163,14 +174,17 @@ class _EditProfilePageState extends State<EditProfilePage> {
             onTap: () async {
               AuthProvider authProvider =
               Provider.of<AuthProvider>(context, listen: false);
-              bool res = await authProvider.delete(context: context);
-              if (res) {
+              if (await authProvider.verifyPassword(
+                password: passwordController.text, context: context)) {
+              if (await authProvider.delete(context: context)) {
                 Utils.signOut(context);
               }
-            },
-          )
-        ],
-      );
+            }
+          },
+        )
+      ],
+    );
+  }
 
   AppDialog _changeEmailConfirmationDialog(BuildContext context) =>
       AppDialog(title: 'Confirm Change Email',
@@ -357,6 +371,11 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       initialPath: path,
                       controller: dropdownController,
                       leftPadding: 10.0,
+                      textStyle: Theme.of(context)
+                          .textTheme
+                          .caption
+                          .apply(color: Theme.of(context).hintColor),
+                    )
                     ),
                   ]),
                 );
