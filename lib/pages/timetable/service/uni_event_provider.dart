@@ -73,60 +73,37 @@ extension TimestampExtension on Timestamp {
 }
 
 extension UniEventExtension on UniEvent {
-  static UniEvent fromSnap(DocumentSnapshot snap, {ClassHeader classHeader}) {
+  static UniEvent fromSnap(DocumentSnapshot snap,
+      {ClassHeader classHeader, Map<String, AcademicCalendar> calendars}) {
     if (snap.data['start'] == null || snap.data['duration'] == null)
       return null;
 
-    try {
-      UniEventType type = UniEventTypeExtension.fromString(snap.data['type']);
-      return UniEvent(
-        rrule: RecurrenceRule.fromString(snap.data['rrule']),
-        id: snap.documentID,
-        type: type,
-        name: snap.data['name'],
-        // Convert time to UTC and then to local time
-        start: (snap.data['start'] as Timestamp).toLocalDateTime(),
-        duration: PeriodExtension.fromJSON(snap.data['duration']),
-        location: snap.data['location'],
-        // TODO: Allow users to set event colours in settings
-        color: type.color,
-        classHeader: classHeader,
-      );
-    } catch (e) {
-      print(e);
-      return null;
-    }
+    UniEventType type = UniEventTypeExtension.fromString(snap.data['type']);
+    return UniEvent(
+      rrule: RecurrenceRule.fromString(snap.data['rrule']),
+      id: snap.documentID,
+      type: type,
+      name: snap.data['name'],
+      // Convert time to UTC and then to local time
+      start: (snap.data['start'] as Timestamp).toLocalDateTime(),
+      duration: PeriodExtension.fromJSON(snap.data['duration']),
+      location: snap.data['location'],
+      // TODO: Allow users to set event colours in settings
+      color: type.color,
+      classHeader: classHeader,
+      calendar: calendars[snap.data['calendar']],
+    );
   }
 }
 
 class UniEventProvider extends EventProvider<UniEventInstance>
     with ChangeNotifier {
-  AcademicCalendar calendar = AcademicCalendar();
+  Map<String, AcademicCalendar> calendars = {'2020': AcademicCalendar()};
   ClassProvider classProvider;
   FilterProvider filterProvider;
   final AuthProvider authProvider;
   List<String> classIds = [];
   Filter filter;
-
-  void updateClasses(ClassProvider classProvider) {
-    this.classProvider = classProvider;
-    fetchClassIds();
-  }
-
-  void fetchClassIds() async {
-    classIds = await classProvider.fetchUserClassIds(uid: authProvider.uid);
-    notifyListeners();
-  }
-
-  void updateFilter(FilterProvider filterProvider) {
-    this.filterProvider = filterProvider;
-    fetchFilter();
-  }
-
-  void fetchFilter() async {
-    filter = await filterProvider.fetchFilter();
-    notifyListeners();
-  }
 
   UniEventProvider({AuthProvider authProvider})
       : authProvider = authProvider ?? AuthProvider();
@@ -154,8 +131,8 @@ class UniEventProvider extends EventProvider<UniEventInstance>
                   await classProvider.fetchClassHeader(doc.data['class']);
             }
 
-            events
-                .add(UniEventExtension.fromSnap(doc, classHeader: classHeader));
+            events.add(UniEventExtension.fromSnap(doc,
+                classHeader: classHeader, calendars: calendars));
           }
           return events.where((element) => element != null).toList();
         } catch (e) {
@@ -176,10 +153,11 @@ class UniEventProvider extends EventProvider<UniEventInstance>
   Stream<Iterable<UniEventInstance>> getAllDayEventsIntersecting(
       DateInterval interval) {
     return _events.map((events) => events
-        .map((event) => event.generateInstances(
-            calendar: calendar, intersectingInterval: interval))
+        .map((event) => event.generateInstances(intersectingInterval: interval))
         .expand((i) => i)
-        .followedBy(calendar.generateHolidayInstances())
+        .followedBy(calendars.values
+            .map((cal) => cal.generateHolidayInstances())
+            .expand((e) => e))
         .allDayEvents);
   }
 
@@ -188,9 +166,29 @@ class UniEventProvider extends EventProvider<UniEventInstance>
       LocalDate date) {
     return _events.map((events) => events
         .map((event) => event.generateInstances(
-            calendar: calendar, intersectingInterval: DateInterval(date, date)))
+            intersectingInterval: DateInterval(date, date)))
         .expand((i) => i)
         .partDayEvents);
+  }
+
+  void updateClasses(ClassProvider classProvider) {
+    this.classProvider = classProvider;
+    fetchClassIds();
+  }
+
+  void fetchClassIds() async {
+    classIds = await classProvider.fetchUserClassIds(uid: authProvider.uid);
+    notifyListeners();
+  }
+
+  void updateFilter(FilterProvider filterProvider) {
+    this.filterProvider = filterProvider;
+    fetchFilter();
+  }
+
+  void fetchFilter() async {
+    filter = await filterProvider.fetchFilter();
+    notifyListeners();
   }
 
   @override

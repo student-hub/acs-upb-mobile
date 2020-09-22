@@ -74,6 +74,7 @@ class UniEvent {
   final String name;
   final String location;
   final ClassHeader classHeader;
+  final AcademicCalendar calendar;
 
   const UniEvent({
     this.name,
@@ -85,10 +86,11 @@ class UniEvent {
     this.color,
     this.type,
     this.classHeader,
+    this.calendar,
   });
 
   Iterable<UniEventInstance> generateInstances(
-      {AcademicCalendar calendar, DateInterval intersectingInterval}) sync* {
+      {DateInterval intersectingInterval}) sync* {
     String name = this.name ?? classHeader?.acronym ?? '';
 
     if (rrule == null) {
