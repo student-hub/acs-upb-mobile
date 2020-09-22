@@ -6,7 +6,9 @@ import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
 import 'package:acs_upb_mobile/pages/filter/model/filter.dart';
 import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/academic_calendar.dart';
-import 'package:acs_upb_mobile/pages/timetable/model/uni_event.dart';
+import 'package:acs_upb_mobile/pages/timetable/model/events/all_day_event.dart';
+import 'package:acs_upb_mobile/pages/timetable/model/events/recurring_event.dart';
+import 'package:acs_upb_mobile/pages/timetable/model/events/uni_event.dart';
 import 'package:async/async.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -27,6 +29,12 @@ extension UniEventTypeExtension on UniEventType {
         return UniEventType.seminar;
       case 'sports':
         return UniEventType.sports;
+      case 'semester':
+        return UniEventType.semester;
+      case 'holiday':
+        return UniEventType.holiday;
+      case 'examSession':
+        return UniEventType.examSession;
       default:
         return UniEventType.other;
     }
@@ -42,6 +50,12 @@ extension UniEventTypeExtension on UniEventType {
         return Colors.orangeAccent;
       case UniEventType.sports:
         return Colors.greenAccent;
+      case UniEventType.semester:
+        return Colors.transparent;
+      case UniEventType.holiday:
+        return Colors.yellow;
+      case UniEventType.examSession:
+        return Colors.red;
       case UniEventType.other:
         return Colors.white;
     }
@@ -73,49 +87,73 @@ extension TimestampExtension on Timestamp {
 }
 
 extension UniEventExtension on UniEvent {
-  static UniEvent fromSnap(DocumentSnapshot snap,
-      {ClassHeader classHeader, Map<String, AcademicCalendar> calendars}) {
-    if (snap.data['start'] == null || snap.data['duration'] == null)
-      return null;
+  static UniEvent fromJSON(String id, Map<String, dynamic> json,
+      {ClassHeader classHeader,
+      Map<String, AcademicCalendar> calendars = const {}}) {
+    if (json['start'] == null ||
+        (json['duration'] == null && json['end'] == null)) return null;
 
-    UniEventType type = UniEventTypeExtension.fromString(snap.data['type']);
-    return UniEvent(
-      rrule: RecurrenceRule.fromString(snap.data['rrule']),
-      id: snap.documentID,
-      type: type,
-      name: snap.data['name'],
-      // Convert time to UTC and then to local time
-      start: (snap.data['start'] as Timestamp).toLocalDateTime(),
-      duration: PeriodExtension.fromJSON(snap.data['duration']),
-      location: snap.data['location'],
-      // TODO: Allow users to set event colours in settings
-      color: type.color,
-      classHeader: classHeader,
-      calendar: calendars[snap.data['calendar']],
-    );
+    UniEventType type = UniEventTypeExtension.fromString(json['type']);
+    if (json['end'] != null) {
+      return AllDayUniEvent(
+        id: id,
+        type: type,
+        name: json['name'],
+        // Convert time to UTC and then to local time
+        start: (json['start'] as Timestamp).toLocalDateTime().calendarDate,
+        end: (json['end'] as Timestamp).toLocalDateTime().calendarDate,
+        location: json['location'],
+        // TODO: Allow users to set event colours in settings
+        color: type.color,
+        classHeader: classHeader,
+        calendar: calendars[json['calendar']],
+      );
+    } else if (json['rrule'] != null) {
+      return RecurringUniEvent(
+        rrule: RecurrenceRule.fromString(json['rrule']),
+        id: id,
+        type: type,
+        name: json['name'],
+        // Convert time to UTC and then to local time
+        start: (json['start'] as Timestamp).toLocalDateTime(),
+        duration: PeriodExtension.fromJSON(json['duration']),
+        location: json['location'],
+        // TODO: Allow users to set event colours in settings
+        color: type.color,
+        classHeader: classHeader,
+        calendar: calendars[json['calendar']],
+      );
+    } else {
+      return UniEvent(
+        id: id,
+        type: type,
+        name: json['name'],
+        // Convert time to UTC and then to local time
+        start: (json['start'] as Timestamp).toLocalDateTime(),
+        duration: PeriodExtension.fromJSON(json['duration']),
+        location: json['location'],
+        // TODO: Allow users to set event colours in settings
+        color: type.color,
+        classHeader: classHeader,
+        calendar: calendars[json['calendar']],
+      );
+    }
   }
 }
 
-extension NamedIntervalExtension on NamedInterval {
-  static NamedInterval fromJSON(Map<String, dynamic> json) => NamedInterval(
-        localizedName: Map<String, String>.from(json['name'] ?? {}),
-        start: (json['start'] as Timestamp).toLocalDateTime().calendarDate,
-        end: (json['end'] as Timestamp).toLocalDateTime().calendarDate,
-      );
-}
-
 extension AcademicCalendarExtension on AcademicCalendar {
+  static _eventsFromMapList(List<dynamic> list, String type) =>
+      List<AllDayUniEvent>.from((list ?? []).asMap().map((index, e) {
+        e['type'] = type;
+        return MapEntry(
+            index, UniEventExtension.fromJSON(type + index.toString(), e));
+      }).values);
+
   static AcademicCalendar fromSnap(DocumentSnapshot snap) {
     return AcademicCalendar(
-      semesters: (snap.data['semesters'] ?? [])
-          .map<NamedInterval>((s) => NamedIntervalExtension.fromJSON(s))
-          .toList(),
-      holidays: (snap.data['holidays'] ?? [])
-          .map<NamedInterval>((h) => NamedIntervalExtension.fromJSON(h))
-          .toList(),
-      exams: (snap.data['exams'] ?? [])
-          .map<NamedInterval>((e) => NamedIntervalExtension.fromJSON(e))
-          .toList(),
+      semesters: _eventsFromMapList(snap.data['semesters'], 'semester'),
+      holidays: _eventsFromMapList(snap.data['holidays'], 'holiday'),
+      exams: _eventsFromMapList(snap.data['exams'], 'examSession'),
     );
   }
 }
@@ -144,8 +182,9 @@ class UniEventProvider extends EventProvider<UniEventInstance>
   }
 
   Stream<List<UniEvent>> get _events {
-    if (!authProvider.isAuthenticatedFromCache || filter == null)
-      return Stream.value([]);
+    if (!authProvider.isAuthenticatedFromCache ||
+        filter == null ||
+        calendars == null) return Stream.value([]);
 
     List<Stream<List<UniEvent>>> streams = [];
 
@@ -166,7 +205,7 @@ class UniEventProvider extends EventProvider<UniEventInstance>
                   await classProvider.fetchClassHeader(doc.data['class']);
             }
 
-            events.add(UniEventExtension.fromSnap(doc,
+            events.add(UniEventExtension.fromJSON(doc.documentID, doc.data,
                 classHeader: classHeader, calendars: calendars));
           }
           return events.where((element) => element != null).toList();
@@ -190,11 +229,13 @@ class UniEventProvider extends EventProvider<UniEventInstance>
     return _events.map((events) => events
         .map((event) => event.generateInstances(intersectingInterval: interval))
         .expand((i) => i)
-        .followedBy(calendars.values
-            .map((cal) =>
-                cal.generateHolidayInstances() + cal.generateExamInstances())
-            .expand((e) => e))
-        .allDayEvents);
+        .allDayEvents
+        .followedBy(calendars.values.map((cal) {
+          List<AllDayUniEvent> events = cal.holidays + cal.exams;
+          return events
+              .map((e) => e.generateInstances(intersectingInterval: interval))
+              .expand((e) => e);
+        }).expand((e) => e)));
   }
 
   @override

@@ -163,6 +163,9 @@
   "uniEventTypeTest": "Test",
   "uniEventTypePractical": "Practical",
   "uniEventTypeResearch": "Research",
+  "uniEventTypeHoliday": "Holiday",
+  "uniEventTypeExamSession": "Exam session",
+  "uniEventTypeSemester": "Semester",
   "uniEventTypeOther": "Other",
 
   "messageWelcomeSimple": "Welcome!",

@@ -1,5 +1,5 @@
 import 'package:acs_upb_mobile/generated/l10n.dart';
-import 'package:acs_upb_mobile/pages/timetable/model/uni_event.dart';
+import 'package:acs_upb_mobile/pages/timetable/model/events/uni_event.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -62,7 +62,9 @@ class _EventViewState extends State<EventView> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text(widget.event.mainEvent.classHeader.name,
+                    Text(
+                        widget.event.mainEvent?.classHeader?.name ??
+                            widget.event.title,
                         style: Theme.of(context).textTheme.headline6),
                     SizedBox(height: 4),
                     // TODO: Improve date format

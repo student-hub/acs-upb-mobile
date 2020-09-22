@@ -1544,6 +1544,36 @@ class S {
     );
   }
 
+  /// `Holiday`
+  String get uniEventTypeHoliday {
+    return Intl.message(
+      'Holiday',
+      name: 'uniEventTypeHoliday',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Exam session`
+  String get uniEventTypeExamSession {
+    return Intl.message(
+      'Exam session',
+      name: 'uniEventTypeExamSession',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Semester`
+  String get uniEventTypeSemester {
+    return Intl.message(
+      'Semester',
+      name: 'uniEventTypeSemester',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Other`
   String get uniEventTypeOther {
     return Intl.message(

@@ -2,7 +2,7 @@ import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
 import 'package:acs_upb_mobile/pages/classes/view/classes_page.dart';
 import 'package:acs_upb_mobile/pages/filter/view/filter_page.dart';
-import 'package:acs_upb_mobile/pages/timetable/model/uni_event.dart';
+import 'package:acs_upb_mobile/pages/timetable/model/events/uni_event.dart';
 import 'package:acs_upb_mobile/pages/timetable/service/uni_event_provider.dart';
 import 'package:acs_upb_mobile/pages/timetable/view/uni_event_widget.dart';
 import 'package:acs_upb_mobile/resources/custom_icons.dart';
@@ -72,7 +72,6 @@ class _TimetablePageState extends State<TimetablePage> {
         allDayEventBuilder: (context, event, info) => UniAllDayEventWidget(
           event,
           info: info,
-          onTap: () {},
         ),
       ),
     );

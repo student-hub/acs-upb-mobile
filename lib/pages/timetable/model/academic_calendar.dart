@@ -1,30 +1,19 @@
-import 'package:acs_upb_mobile/pages/timetable/model/uni_event.dart';
-import 'package:acs_upb_mobile/resources/locale_provider.dart';
+import 'package:acs_upb_mobile/pages/timetable/model/events/all_day_event.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
-import 'package:flutter/material.dart';
 import 'package:time_machine/src/calendars/time_machine_calendars.dart';
 import 'package:time_machine/time_machine.dart';
 
-class NamedInterval extends DateInterval {
-  final Map<String, String> localizedName;
-  final LocalDate start;
-  final LocalDate end;
-
-  NamedInterval({this.localizedName, @required this.start, @required this.end})
-      : super(start, end);
-}
-
 class AcademicCalendar {
-  List<NamedInterval> semesters;
-  List<NamedInterval> holidays;
-  List<NamedInterval> exams;
+  List<AllDayUniEvent> semesters;
+  List<AllDayUniEvent> holidays;
+  List<AllDayUniEvent> exams;
 
   AcademicCalendar(
       {this.semesters = const [],
       this.holidays = const [],
       this.exams = const []});
 
-  Map<int, Set<int>> _getWeeksByYearInInterval(NamedInterval interval) {
+  Map<int, Set<int>> _getWeeksByYearInInterval(DateInterval interval) {
     Map<int, Set<int>> weeksByYear = {};
     var rule = WeekYearRules.iso;
 
@@ -50,15 +39,19 @@ class AcademicCalendar {
     var rule = WeekYearRules.iso;
 
     for (var semester in semesters) {
-      for (var entry in _getWeeksByYearInInterval(semester).entries) {
+      for (var entry in _getWeeksByYearInInterval(
+              DateInterval(semester.startDate, semester.endDate))
+          .entries) {
         weeksByYear[entry.key] ??= {};
         weeksByYear[entry.key].addAll(entry.value);
       }
     }
 
     for (var holiday in holidays) {
+      DateInterval holidayInterval =
+          DateInterval(holiday.startDate, holiday.endDate);
       Map<int, Set<int>> holidayWeeksByYear =
-          _getWeeksByYearInInterval(holiday);
+          _getWeeksByYearInInterval(holidayInterval);
 
       for (var entry in holidayWeeksByYear.entries) {
         int year = entry.key;
@@ -72,7 +65,8 @@ class AcademicCalendar {
 
           // If the holiday includes Monday to Friday in a week, exclude week
           // number from [nonHolidayWeeks].
-          if (holiday.contains(monday) && holiday.contains(friday)) {
+          if (holidayInterval.contains(monday) &&
+              holidayInterval.contains(friday)) {
             weeksByYear[year].remove(week);
           }
         }
@@ -80,31 +74,5 @@ class AcademicCalendar {
     }
 
     return weeksByYear.values.expand((e) => e).toSet();
-  }
-
-  List<UniEventInstance> generateHolidayInstances() =>
-      _generateInstances(holidays, 'holiday', Colors.yellow);
-
-  List<UniEventInstance> generateExamInstances() =>
-      _generateInstances(exams, 'exam', Colors.red);
-
-  List<UniEventInstance> _generateInstances(
-      List<NamedInterval> intervals, String name, Color color) {
-    var instances = intervals
-        .asMap()
-        .map((index, interval) => MapEntry(
-            index,
-            UniEventInstance(
-              id: name + index.toString(),
-              title: interval.localizedName[LocaleProvider.localeString] ?? '',
-              mainEvent: null,
-              start: interval.start.atMidnight(),
-              end: interval.end.addDays(1).atMidnight(),
-              // TODO: Set holiday/exam session color in settings
-              color: color,
-            )))
-        .values
-        .toList();
-    return instances;
   }
 }

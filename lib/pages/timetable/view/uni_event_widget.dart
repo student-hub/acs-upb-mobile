@@ -1,4 +1,4 @@
-import 'package:acs_upb_mobile/pages/timetable/model/uni_event.dart';
+import 'package:acs_upb_mobile/pages/timetable/model/events/uni_event.dart';
 import 'package:acs_upb_mobile/pages/timetable/view/event_view.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:black_hole_flutter/black_hole_flutter.dart';
@@ -101,7 +101,6 @@ class UniAllDayEventWidget extends StatelessWidget {
     Key key,
     @required this.info,
     this.borderRadius = 4,
-    this.onTap,
   })  : assert(event != null),
         assert(info != null),
         assert(borderRadius != null),
@@ -111,10 +110,6 @@ class UniAllDayEventWidget extends StatelessWidget {
   final UniEventInstance event;
   final AllDayEventLayoutInfo info;
   final double borderRadius;
-
-  /// An optional [VoidCallback] that will be invoked when the user taps this
-  /// widget.
-  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -135,7 +130,9 @@ class UniAllDayEventWidget extends StatelessWidget {
           clipBehavior: Clip.antiAlias,
           color: Colors.transparent,
           child: InkWell(
-            onTap: onTap,
+            onTap: () => Navigator.of(context).push(MaterialPageRoute(
+              builder: (_) => EventView(event: event),
+            )),
             child: _buildContent(context),
           ),
         ),

@@ -1,32 +1,10 @@
-import 'dart:core';
-
-import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/classes/model/class.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/academic_calendar.dart';
+import 'package:acs_upb_mobile/pages/timetable/model/events/uni_event.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:rrule/rrule.dart';
 import 'package:time_machine/time_machine.dart';
-import 'package:timetable/timetable.dart';
-
-enum UniEventType { lecture, lab, seminar, sports, other }
-
-extension UniEventTypeExtension on UniEventType {
-  String toLocalizedString(BuildContext context) {
-    switch (this) {
-      case UniEventType.lecture:
-        return S.of(context).uniEventTypeLecture;
-      case UniEventType.lab:
-        return S.of(context).uniEventTypeLab;
-      case UniEventType.seminar:
-        return S.of(context).uniEventTypeSeminar;
-      case UniEventType.sports:
-        return S.of(context).uniEventTypeSports;
-      default:
-        return S.of(context).uniEventTypeOther;
-    }
-  }
-}
 
 extension on RecurrenceRule {
   RecurrenceRule copyWith({
@@ -64,30 +42,30 @@ extension on RecurrenceRule {
   }
 }
 
-class UniEvent {
-  final String id;
-  final Color color;
-  final UniEventType type;
+class RecurringUniEvent extends UniEvent {
   final RecurrenceRule rrule;
-  final LocalDateTime start;
-  final Period duration;
-  final String name;
-  final String location;
-  final ClassHeader classHeader;
-  final AcademicCalendar calendar;
 
-  const UniEvent({
-    this.name,
-    this.location,
-    this.rrule,
-    @required this.start,
-    @required this.duration,
-    @required this.id,
-    this.color,
-    this.type,
-    this.classHeader,
-    this.calendar,
-  });
+  const RecurringUniEvent({
+    String name,
+    String location,
+    @required this.rrule,
+    @required LocalDateTime start,
+    @required Period duration,
+    @required String id,
+    Color color,
+    UniEventType type,
+    ClassHeader classHeader,
+    AcademicCalendar calendar,
+  }) : super(
+            name: name,
+            location: location,
+            start: start,
+            duration: duration,
+            id: id,
+            color: color,
+            type: type,
+            classHeader: classHeader,
+            calendar: calendar);
 
   Iterable<UniEventInstance> generateInstances(
       {DateInterval intersectingInterval}) sync* {
@@ -150,7 +128,9 @@ class UniEvent {
 
         bool skip = false;
         calendar?.holidays?.forEach((holiday) {
-          if (holiday.contains(start.calendarDate)) {
+          DateInterval holidayInterval =
+              DateInterval(holiday.startDate, holiday.endDate);
+          if (holidayInterval.contains(start.calendarDate)) {
             // Skip holidays
             skip = true;
           }
@@ -172,37 +152,4 @@ class UniEvent {
       }
     }
   }
-}
-
-class UniEventInstance extends Event {
-  final UniEvent mainEvent;
-  final String title;
-
-  final Color color;
-  final String location;
-  final String info;
-
-  UniEventInstance(
-      {@required String id,
-      @required this.title,
-      @required this.mainEvent,
-      Color color,
-      this.location,
-      this.info,
-      @required LocalDateTime start,
-      @required LocalDateTime end})
-      : this.color = color ?? mainEvent?.color,
-        super(id: id, start: start, end: end);
-
-  @override
-  bool operator ==(dynamic other) =>
-      super == other &&
-      color == other.color &&
-      location == other.location &&
-      mainEvent == other.mainEvent &&
-      title == other.title;
-
-  @override
-  int get hashCode =>
-      hashList([super.hashCode, color, location, mainEvent, title]);
 }

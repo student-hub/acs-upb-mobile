@@ -163,6 +163,9 @@
   "uniEventTypeTest": "Test",
   "uniEventTypePractical": "Colocviu",
   "uniEventTypeResearch": "Cercetare",
+  "uniEventTypeHoliday": "Vacanță",
+  "uniEventTypeExamSession": "Sesiune de examene",
+  "uniEventTypeSemester": "Semestru",
   "uniEventTypeOther": "Altul",
 
   "messageWelcomeSimple": "Bine ai venit!",
