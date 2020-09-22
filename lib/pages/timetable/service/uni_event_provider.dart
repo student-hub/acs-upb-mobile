@@ -96,22 +96,25 @@ extension UniEventExtension on UniEvent {
   }
 }
 
+extension NamedIntervalExtension on NamedInterval {
+  static NamedInterval fromJSON(Map<String, dynamic> json) => NamedInterval(
+        localizedName: Map<String, String>.from(json['name'] ?? {}),
+        start: (json['start'] as Timestamp).toLocalDateTime().calendarDate,
+        end: (json['end'] as Timestamp).toLocalDateTime().calendarDate,
+      );
+}
+
 extension AcademicCalendarExtension on AcademicCalendar {
   static AcademicCalendar fromSnap(DocumentSnapshot snap) {
     return AcademicCalendar(
-      semesters: snap.data['semesters']
-          .map<NamedInterval>((s) => NamedInterval(
-                localizedName: Map<String, String>.from(s['name'] ?? {}),
-                start: (s['start'] as Timestamp).toLocalDateTime().calendarDate,
-                end: (s['end'] as Timestamp).toLocalDateTime().calendarDate,
-              ))
+      semesters: (snap.data['semesters'] ?? [])
+          .map<NamedInterval>((s) => NamedIntervalExtension.fromJSON(s))
           .toList(),
-      holidays: snap.data['holidays']
-          .map<NamedInterval>((h) => NamedInterval(
-                localizedName: Map<String, String>.from(h['name'] ?? {}),
-                start: (h['start'] as Timestamp).toLocalDateTime().calendarDate,
-                end: (h['end'] as Timestamp).toLocalDateTime().calendarDate,
-              ))
+      holidays: (snap.data['holidays'] ?? [])
+          .map<NamedInterval>((h) => NamedIntervalExtension.fromJSON(h))
+          .toList(),
+      exams: (snap.data['exams'] ?? [])
+          .map<NamedInterval>((e) => NamedIntervalExtension.fromJSON(e))
           .toList(),
     );
   }
@@ -188,7 +191,8 @@ class UniEventProvider extends EventProvider<UniEventInstance>
         .map((event) => event.generateInstances(intersectingInterval: interval))
         .expand((i) => i)
         .followedBy(calendars.values
-            .map((cal) => cal.generateHolidayInstances())
+            .map((cal) =>
+                cal.generateHolidayInstances() + cal.generateExamInstances())
             .expand((e) => e))
         .allDayEvents);
   }

@@ -17,8 +17,12 @@ class NamedInterval extends DateInterval {
 class AcademicCalendar {
   List<NamedInterval> semesters;
   List<NamedInterval> holidays;
+  List<NamedInterval> exams;
 
-  AcademicCalendar({this.semesters = const [], this.holidays = const []});
+  AcademicCalendar(
+      {this.semesters = const [],
+      this.holidays = const [],
+      this.exams = const []});
 
   Map<int, Set<int>> _getWeeksByYearInInterval(NamedInterval interval) {
     Map<int, Set<int>> weeksByYear = {};
@@ -78,19 +82,26 @@ class AcademicCalendar {
     return weeksByYear.values.expand((e) => e).toSet();
   }
 
-  List<UniEventInstance> generateHolidayInstances() {
-    var instances = holidays
+  List<UniEventInstance> generateHolidayInstances() =>
+      _generateInstances(holidays, 'holiday', Colors.yellow);
+
+  List<UniEventInstance> generateExamInstances() =>
+      _generateInstances(exams, 'exam', Colors.red);
+
+  List<UniEventInstance> _generateInstances(
+      List<NamedInterval> intervals, String name, Color color) {
+    var instances = intervals
         .asMap()
-        .map((index, holiday) => MapEntry(
+        .map((index, interval) => MapEntry(
             index,
             UniEventInstance(
-              id: 'holiday' + index.toString(),
-              title: holiday.localizedName[LocaleProvider.localeString],
+              id: name + index.toString(),
+              title: interval.localizedName[LocaleProvider.localeString] ?? '',
               mainEvent: null,
-              start: holiday.start.atMidnight(),
-              end: holiday.end.addDays(1).atMidnight(),
-              // TODO: Set holiday color in settings
-              color: Colors.yellow,
+              start: interval.start.atMidnight(),
+              end: interval.end.addDays(1).atMidnight(),
+              // TODO: Set holiday/exam session color in settings
+              color: color,
             )))
         .values
         .toList();
