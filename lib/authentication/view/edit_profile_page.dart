@@ -212,12 +212,15 @@ class _EditProfilePageState extends State<EditProfilePage> {
               }
 
               if (formKey.currentState.validate()) {
-                bool result = false;
-                if (emailController.text + emailDomain != authProvider.email) {
+                bool result;
+                if (!authProvider.isVerifiedFromCache &&
+                    emailController.text + emailDomain != authProvider.email) {
                   await showDialog(
                           context: context,
                           child: _changeEmailConfirmationDialog(context))
-                      .then((value) => result = value??false);
+                      .then((value) => result = value ?? false);
+                } else {
+                  result = true;
                 }
                 if (result) {
                   result = await authProvider.updateProfile(
