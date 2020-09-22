@@ -1,45 +1,26 @@
 import 'package:acs_upb_mobile/pages/timetable/model/uni_event.dart';
+import 'package:acs_upb_mobile/resources/locale_provider.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:time_machine/src/calendars/time_machine_calendars.dart';
 import 'package:time_machine/time_machine.dart';
 
+class NamedInterval extends DateInterval {
+  final Map<String, String> localizedName;
+  final LocalDate start;
+  final LocalDate end;
+
+  NamedInterval({this.localizedName, @required this.start, @required this.end})
+      : super(start, end);
+}
+
 class AcademicCalendar {
-  List<DateInterval> semesters;
-  Map<String, DateInterval> holidays;
+  List<NamedInterval> semesters;
+  List<NamedInterval> holidays;
 
-  AcademicCalendar() {
-    // TODO: Get data from database
-    var startDate = LocalDate.today().subtract(
-        Period(weeks: 2, days: LocalDate.today().dayOfWeek.value - 1));
+  AcademicCalendar({this.semesters = const [], this.holidays = const []});
 
-    semesters = [
-      DateInterval(
-        startDate,
-        startDate.add(Period(weeks: 4, days: 5)),
-      ),
-      DateInterval(
-        startDate.add(Period(weeks: 6)),
-        startDate.add(Period(weeks: 10, days: 5)),
-      ),
-    ];
-    holidays = {
-      'Vacanța 1': DateInterval(
-        startDate.addWeeks(2).addDays(2),
-        startDate.addWeeks(2).addDays(5),
-      ),
-      'Vacanța intersemestrială': DateInterval(
-        startDate.addWeeks(5),
-        startDate.addWeeks(5).addDays(6),
-      ),
-      'Vacanța 2': DateInterval(
-        startDate.addWeeks(8),
-        startDate.addWeeks(8).addDays(5),
-      ),
-    };
-  }
-
-  Map<int, Set<int>> _getWeeksByYearInInterval(DateInterval interval) {
+  Map<int, Set<int>> _getWeeksByYearInInterval(NamedInterval interval) {
     Map<int, Set<int>> weeksByYear = {};
     var rule = WeekYearRules.iso;
 
@@ -71,7 +52,7 @@ class AcademicCalendar {
       }
     }
 
-    for (var holiday in holidays.values) {
+    for (var holiday in holidays) {
       Map<int, Set<int>> holidayWeeksByYear =
           _getWeeksByYearInInterval(holiday);
 
@@ -99,14 +80,15 @@ class AcademicCalendar {
 
   List<UniEventInstance> generateHolidayInstances() {
     var instances = holidays
-        .map((holiday, interval) => MapEntry(
-            holiday,
+        .asMap()
+        .map((index, holiday) => MapEntry(
+            index,
             UniEventInstance(
-              id: holiday,
-              title: holiday,
+              id: 'holiday' + index.toString(),
+              title: holiday.localizedName[LocaleProvider.localeString],
               mainEvent: null,
-              start: interval.start.atMidnight(),
-              end: interval.end.at(LocalTime(23, 59, 0)),
+              start: holiday.start.atMidnight(),
+              end: holiday.end.addDays(1).atMidnight(),
               // TODO: Set holiday color in settings
               color: Colors.yellow,
             )))
@@ -114,19 +96,4 @@ class AcademicCalendar {
         .toList();
     return instances;
   }
-
-  List<UniEvent> get holidayEvents => holidays
-      .map((holiday, interval) => MapEntry(
-          holiday,
-          UniEvent(
-            id: holiday,
-            name: holiday,
-            start: interval.start.atMidnight(),
-            duration:
-                Period.differenceBetweenDates(interval.start, interval.end),
-            // TODO: Set holiday color in settings
-            color: Colors.yellow,
-          )))
-      .values
-      .toList();
 }

@@ -149,8 +149,8 @@ class UniEvent {
         }
 
         bool skip = false;
-        calendar?.holidays?.forEach((holiday, interval) {
-          if (interval.contains(start.calendarDate)) {
+        calendar?.holidays?.forEach((holiday) {
+          if (holiday.contains(start.calendarDate)) {
             // Skip holidays
             skip = true;
           }

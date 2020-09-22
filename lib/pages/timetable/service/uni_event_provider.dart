@@ -96,6 +96,27 @@ extension UniEventExtension on UniEvent {
   }
 }
 
+extension AcademicCalendarExtension on AcademicCalendar {
+  static AcademicCalendar fromSnap(DocumentSnapshot snap) {
+    return AcademicCalendar(
+      semesters: snap.data['semesters']
+          .map<NamedInterval>((s) => NamedInterval(
+                localizedName: Map<String, String>.from(s['name'] ?? {}),
+                start: (s['start'] as Timestamp).toLocalDateTime().calendarDate,
+                end: (s['end'] as Timestamp).toLocalDateTime().calendarDate,
+              ))
+          .toList(),
+      holidays: snap.data['holidays']
+          .map<NamedInterval>((h) => NamedInterval(
+                localizedName: Map<String, String>.from(h['name'] ?? {}),
+                start: (h['start'] as Timestamp).toLocalDateTime().calendarDate,
+                end: (h['end'] as Timestamp).toLocalDateTime().calendarDate,
+              ))
+          .toList(),
+    );
+  }
+}
+
 class UniEventProvider extends EventProvider<UniEventInstance>
     with ChangeNotifier {
   Map<String, AcademicCalendar> calendars = {'2020': AcademicCalendar()};
@@ -106,7 +127,18 @@ class UniEventProvider extends EventProvider<UniEventInstance>
   Filter filter;
 
   UniEventProvider({AuthProvider authProvider})
-      : authProvider = authProvider ?? AuthProvider();
+      : authProvider = authProvider ?? AuthProvider() {
+    fetchCalendars();
+  }
+
+  void fetchCalendars() async {
+    QuerySnapshot query =
+        await Firestore.instance.collection('calendars').getDocuments();
+    query.documents.forEach((doc) {
+      calendars[doc.documentID] = AcademicCalendarExtension.fromSnap(doc);
+    });
+    notifyListeners();
+  }
 
   Stream<List<UniEvent>> get _events {
     if (!authProvider.isAuthenticatedFromCache || filter == null)
