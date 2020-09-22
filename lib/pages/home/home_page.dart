@@ -1,42 +1,166 @@
 import 'package:acs_upb_mobile/authentication/model/user.dart';
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
+import 'package:acs_upb_mobile/authentication/view/edit_profile_page.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/navigation/routes.dart';
+import 'package:acs_upb_mobile/resources/utils.dart';
+import 'package:acs_upb_mobile/widgets/icon_text.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   HomePage({Key key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  Widget _accountNotVerifiedFooter(BuildContext context) {
     AuthProvider authProvider = Provider.of<AuthProvider>(context);
 
-    return AppScaffold(
-      title: S.of(context).navigationHome,
-      actions: [
-        AppScaffoldAction(
-          icon: Icons.settings,
-          tooltip: S.of(context).navigationSettings,
-          route: Routes.settings,
-        )
-      ],
-      body: Center(
-        child: FutureBuilder(
-          future: authProvider.currentUser,
-          builder: (BuildContext context, AsyncSnapshot<User> snap) {
-            String firstName;
-            if (snap.hasData) {
-              User user = snap.data;
-              firstName = user.firstName;
-            }
-            return Text(firstName == null
-                ? S.of(context).messageWelcomeSimple
-                : S.of(context).messageWelcomeName(firstName));
-          },
-        ),
-      ),
+    if (!authProvider.isAuthenticatedFromCache || authProvider.isAnonymous) {
+      return Container();
+    }
+
+    return FutureBuilder(
+      future: authProvider.isVerifiedFromService,
+      builder: (BuildContext context, AsyncSnapshot<bool> snap) {
+        if (!snap.hasData || snap.data) {
+          return Container();
+        }
+        return Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: IconText(
+            align: TextAlign.center,
+            icon: Icons.error_outline,
+            text: S.of(context).messageEmailNotVerified,
+            actionText: S.of(context).actionSendVerificationAgain,
+            style: Theme.of(context)
+                .textTheme
+                .caption
+                .apply(color: Theme.of(context).hintColor),
+            onTap: () => authProvider.sendEmailVerification(context: context),
+          ),
+        );
+      },
     );
+  }
+
+  Widget _profileCard(BuildContext context) {
+    AuthProvider authProvider = Provider.of<AuthProvider>(context);
+
+    return FutureBuilder(
+      future: authProvider.currentUser,
+      builder: (BuildContext context, AsyncSnapshot<User> snap) {
+        if (snap.connectionState == ConnectionState.done) {
+          String userName;
+          String userGroup;
+          if(!authProvider.isAnonymous) {
+            User user = snap.data;
+            userName = user.firstName + ' ' + user.lastName;
+            userGroup = user.classes != null ? user.classes.last : null;
+          }
+          return Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Card(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                child: Column(
+                  children: [
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                          child: CircleAvatar(
+                            radius: 40,
+                            child: Image(
+                                image: AssetImage(
+                                    'assets/illustrations/undraw_profile_pic.png')),
+                          ),
+                        ),
+                        Expanded(
+                            child: Padding(
+                          padding: const EdgeInsets.only(left: 5.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: <Widget>[
+                              FittedBox(
+                                child: Text(
+                                  userName ?? S.of(context).stringAnonymous,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .subtitle1
+                                      .apply(fontWeightDelta: 2),
+                                ),
+                              ),
+                              if (userGroup != null)
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 4.0),
+                                  child: Text(userGroup,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .subtitle1),
+                                ),
+                              InkWell(
+                                onTap: () {
+                                  Utils.signOut(context);
+                                },
+                                child: Text(
+                                    authProvider.isAnonymous
+                                        ? S.of(context).actionLogIn
+                                        : S.of(context).actionLogOut,
+                                    style: Theme.of(context)
+                                        .accentTextTheme
+                                        .subtitle2
+                                        .copyWith(fontWeight: FontWeight.w500)),
+                              ),
+                            ],
+                          ),
+                        )),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            IconButton(
+                              icon: Icon(Icons.edit),
+                              color: Theme.of(context).textTheme.button.color,
+                              onPressed: () => Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => EditProfilePage(),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                    _accountNotVerifiedFooter(context),
+                  ],
+                ),
+              ),
+            ),
+          );
+        }
+        return Center(child: CircularProgressIndicator());
+      },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AppScaffold(
+        title: S.of(context).navigationHome,
+        actions: [
+          AppScaffoldAction(
+            icon: Icons.settings,
+            tooltip: S.of(context).navigationSettings,
+            route: Routes.settings,
+          )
+        ],
+        body: ListView(
+          children: [_profileCard(context)],
+        ));
   }
 }
