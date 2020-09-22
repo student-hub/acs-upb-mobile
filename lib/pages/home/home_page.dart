@@ -36,18 +36,20 @@ class HomePage extends StatelessWidget {
   }
 
   Padding favouriteWebsites(BuildContext context) {
-    var websites = Provider.of<WebsiteProvider>(context, listen: false)
-        .fetchWebsites(null);
+    var websitesFuture =
+        Provider.of<WebsiteProvider>(context).fetchWebsites(null);
 
     return Padding(
         padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 8.0),
         child: FutureBuilder(
-            future: websites,
+            future: websitesFuture,
             builder: (_, snapshot) {
               if (snapshot.connectionState == ConnectionState.done) {
-                List<Website> websitesData = snapshot.data;
-                websitesData.sort((website1, website2) =>
-                    website2.numberOfVisits.compareTo(website1.numberOfVisits));
+                List<Website> websites = snapshot.data;
+                websites = websites
+                    .where((w) => w.numberOfVisits > 0)
+                    .take(3)
+                    .toList();
                 return Card(
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
@@ -90,14 +92,13 @@ class HomePage extends StatelessWidget {
                           ],
                         ),
                         SizedBox(height: 12),
-                        //if (isMainUser(context))
-                        if (websitesData.first.numberOfVisits == 0)
+                        if (websites.isEmpty)
                           noneYet(context)
                         else
                           Row(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             mainAxisAlignment: MainAxisAlignment.start,
-                            children: websitesData
+                            children: websites
                                 .take(3)
                                 .map((website) => Expanded(
                                       child: Padding(
@@ -145,12 +146,6 @@ class HomePage extends StatelessWidget {
                 child: CircularProgressIndicator(),
               );
             }));
-  }
-
-  bool isMainUser(BuildContext context) {
-    AuthProvider authProvider =
-        Provider.of<AuthProvider>(context, listen: false);
-    return authProvider.uid == 'P1Ziec4xuEOjem3NIMWzyTfORTU2';
   }
 
   Widget noneYet(BuildContext context) => Container(
