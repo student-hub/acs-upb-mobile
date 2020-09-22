@@ -248,15 +248,13 @@ class _EditProfilePageState extends State<EditProfilePage> {
               }
 
               if (formKey.currentState.validate()) {
-                bool result;
+                bool result = true;
                 if (!authProvider.isVerifiedFromCache &&
                     emailController.text + emailDomain != authProvider.email) {
                   await showDialog(
                           context: context,
                           child: _changeEmailConfirmationDialog(context))
                       .then((value) => result = value ?? false);
-                } else {
-                  result = true;
                 }
                 if (result) {
                   if (await authProvider.updateProfile(
