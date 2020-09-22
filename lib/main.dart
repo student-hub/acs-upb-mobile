@@ -21,6 +21,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:preferences/preferences.dart';
 import 'package:provider/provider.dart';
+import 'package:rrule/rrule.dart';
 import 'package:time_machine/time_machine.dart';
 
 main() async {
@@ -36,6 +37,9 @@ main() async {
     'ro': await Cultures.getCulture('ro'),
     'en': await Cultures.getCulture('en')
   };
+
+  // TODO: Make `rrule` package support Romanian
+  LocaleProvider.rruleL10ns = {'en': await RruleL10nEn.create()};
 
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider<AuthProvider>(create: (_) => authProvider),

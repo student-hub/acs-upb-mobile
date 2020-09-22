@@ -2,6 +2,7 @@ import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
 import 'package:acs_upb_mobile/pages/classes/view/class_view.dart';
 import 'package:acs_upb_mobile/pages/classes/view/classes_page.dart';
+import 'package:acs_upb_mobile/pages/timetable/model/events/recurring_event.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/events/uni_event.dart';
 import 'package:acs_upb_mobile/resources/locale_provider.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
@@ -85,6 +86,11 @@ class _EventViewState extends State<EventView> {
                           style: Theme.of(context).textTheme.headline6),
                       SizedBox(height: 4),
                       Text(widget.event.dateString),
+                      if (widget.event.mainEvent is RecurringUniEvent &&
+                          LocaleProvider.rruleL10n != null)
+                        Text((widget.event.mainEvent as RecurringUniEvent)
+                            .rrule
+                            .toText(l10n: LocaleProvider.rruleL10n)),
                     ],
                   ),
                 ),
