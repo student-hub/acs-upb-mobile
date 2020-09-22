@@ -1,6 +1,7 @@
 import 'package:acs_upb_mobile/authentication/model/user.dart';
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/authentication/view/edit_profile_page.dart';
+import 'package:acs_upb_mobile/authentication/view/profile_page.dart';
 import 'package:acs_upb_mobile/main.dart';
 import 'package:acs_upb_mobile/pages/classes/model/class.dart';
 import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
@@ -20,8 +21,8 @@ import 'package:acs_upb_mobile/pages/portal/model/website.dart';
 import 'package:acs_upb_mobile/pages/portal/service/website_provider.dart';
 import 'package:acs_upb_mobile/pages/portal/view/portal_page.dart';
 import 'package:acs_upb_mobile/pages/portal/view/website_view.dart';
-import 'package:acs_upb_mobile/authentication/view/profile_page.dart';
 import 'package:acs_upb_mobile/pages/settings/settings_page.dart';
+import 'package:acs_upb_mobile/pages/timetable/service/uni_event_provider.dart';
 import 'package:acs_upb_mobile/resources/custom_icons.dart';
 import 'package:acs_upb_mobile/resources/storage_provider.dart';
 import 'package:flutter/material.dart';
@@ -46,6 +47,8 @@ class MockClassProvider extends Mock implements ClassProvider {}
 
 class MockPersonProvider extends Mock implements PersonProvider {}
 
+class MockUniEventProvider extends Mock implements UniEventProvider {}
+
 class MockNavigatorObserver extends Mock implements NavigatorObserver {}
 
 void main() {
@@ -55,6 +58,7 @@ void main() {
   FilterProvider mockFilterProvider;
   ClassProvider mockClassProvider;
   PersonProvider mockPersonProvider;
+  UniEventProvider mockEventProvider;
 
   // Test layout for different screen sizes
   List<Size> screenSizes = [
@@ -92,6 +96,8 @@ void main() {
               create: (_) => mockClassProvider),
           ChangeNotifierProvider<PersonProvider>(
               create: (_) => mockPersonProvider),
+          ChangeNotifierProvider<UniEventProvider>(
+              create: (_) => mockEventProvider),
         ],
         child: MyApp(),
       );
@@ -359,6 +365,12 @@ void main() {
                 photo: 'https://cdn.worldvectorlogo.com/logos/flutter-logo.svg',
               ),
             ]));
+
+    mockEventProvider = MockUniEventProvider();
+    // ignore: invalid_use_of_protected_member
+    when(mockEventProvider.hasListeners).thenReturn(false);
+    when(mockEventProvider.getAllDayEventsIntersecting(any))
+        .thenAnswer((_) => Stream.fromIterable([]));
   });
 
   group('Home', () {
@@ -381,6 +393,16 @@ void main() {
   });
 
   group('Class', () {
+    setUp(() {
+      when(mockAuthProvider.currentUser).thenAnswer((_) =>
+          Future.value(User(uid: '0', firstName: 'John', lastName: 'Doe')));
+      when(mockAuthProvider.isAuthenticatedFromService)
+          .thenAnswer((_) => Future.value(true));
+      when(mockAuthProvider.isAuthenticatedFromCache).thenReturn(true);
+      when(mockAuthProvider.isAnonymous).thenReturn(false);
+      when(mockAuthProvider.uid).thenReturn('0');
+    });
+
     for (var size in screenSizes) {
       testWidgets('${size.width}x${size.height}', (WidgetTester tester) async {
         await binding.setSurfaceSize(size);
@@ -389,11 +411,14 @@ void main() {
         await tester.pumpAndSettle();
 
         // Open classes
+        await tester.tap(find.byIcon(Icons.calendar_today_rounded));
+        await tester.pumpAndSettle();
+
         await tester.tap(find.byIcon(Icons.class_));
         await tester.pumpAndSettle();
 
         // Open class view
-        expect(find.byType(ClassesPage), findsNWidgets(1));
+        expect(find.byType(ClassesPage), findsOneWidget);
       });
     }
   });
@@ -417,6 +442,9 @@ void main() {
         await tester.pumpAndSettle();
 
         // Open classes page
+        await tester.tap(find.byIcon(Icons.calendar_today_rounded));
+        await tester.pumpAndSettle();
+
         await tester.tap(find.byIcon(Icons.class_));
         await tester.pumpAndSettle();
 
@@ -456,6 +484,9 @@ void main() {
         await tester.pumpAndSettle();
 
         // Open classes page
+        await tester.tap(find.byIcon(Icons.calendar_today_rounded));
+        await tester.pumpAndSettle();
+
         await tester.tap(find.byIcon(Icons.class_));
         await tester.pumpAndSettle();
 
@@ -735,7 +766,7 @@ void main() {
         await tester.tap(find.byIcon(Icons.more_vert));
         await tester.pumpAndSettle();
 
-         await tester.tap(find.text('Delete account') );
+        await tester.tap(find.text('Delete account'));
         await tester.pumpAndSettle();
 
         expect(find.byKey(ValueKey('delete_account_button')), findsOneWidget);
