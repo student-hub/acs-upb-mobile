@@ -6,6 +6,7 @@ import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/resources/validator.dart';
 import 'package:acs_upb_mobile/widgets/button.dart';
 import 'package:acs_upb_mobile/widgets/dialog.dart';
+import 'package:acs_upb_mobile/widgets/icon_text.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:flutter/cupertino.dart';
@@ -175,13 +176,11 @@ class _EditProfilePageState extends State<EditProfilePage> {
           onTap: () async {
             AuthProvider authProvider =
                 Provider.of<AuthProvider>(context, listen: false);
-            bool result = await authProvider.verifyPassword(
-                password: passwordController.text, context: context);
-            if (result) {
-              result = await authProvider.changeEmail(
+            if (await authProvider.verifyPassword(
+                password: passwordController.text, context: context)) {
+              if (await authProvider.changeEmail(
                   email: emailController.text + S.of(context).stringEmailDomain,
-                  context: context);
-              if (result) {
+                  context: context)) {
                 Navigator.pop(context, true);
               } else {
                 Navigator.pop(context, false);
@@ -190,6 +189,43 @@ class _EditProfilePageState extends State<EditProfilePage> {
           },
         )
       ],
+    );
+  }
+
+  Widget _accountNotVerifiedFooter(BuildContext context) {
+    AuthProvider authProvider = Provider.of<AuthProvider>(context);
+
+    if (!authProvider.isAuthenticatedFromCache || authProvider.isAnonymous) {
+      return Container();
+    }
+
+    return FutureBuilder(
+      future: authProvider.isVerifiedFromService,
+      builder: (BuildContext context, AsyncSnapshot<bool> snap) {
+        if (!snap.hasData || snap.data) {
+          return Container();
+        }
+        return Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              IconText(
+                align: TextAlign.center,
+                icon: Icons.error_outline,
+                text: S.of(context).messageEmailNotVerified,
+                actionText: S.of(context).actionSendVerificationAgain,
+                style: Theme.of(context)
+                    .textTheme
+                    .subtitle2
+                    .copyWith(fontWeight: FontWeight.w400),
+                onTap: () =>
+                    authProvider.sendEmailVerification(context: context),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 
@@ -223,11 +259,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   result = true;
                 }
                 if (result) {
-                  result = await authProvider.updateProfile(
+                  if (await authProvider.updateProfile(
                     info: info,
                     context: context,
-                  );
-                  if (result) {
+                  )) {
                     AppToast.show(S.of(context).messageEditProfileSuccess);
                     Navigator.pop(context);
                   }
@@ -261,6 +296,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 path = user.classes;
                 return Container(
                   child: ListView(children: [
+                    _accountNotVerifiedFooter(context),
                     PreferenceTitle(
                       S.of(context).labelPersonalInformation,
                       leftPadding: 0,
