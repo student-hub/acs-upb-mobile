@@ -33,8 +33,6 @@ class AllDayUniEvent extends UniEvent {
 
   Iterable<UniEventInstance> generateInstances(
       {DateInterval intersectingInterval}) sync* {
-    String name = this.name ?? classHeader?.acronym ?? '';
-
     yield UniEventInstance(
       id: id,
       title: name,

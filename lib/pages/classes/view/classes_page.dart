@@ -333,6 +333,7 @@ class ClassListItem extends StatefulWidget {
   final Function(bool) onSelected;
   final bool selectable;
   final Function() onTap;
+  final String hint;
 
   ClassListItem(
       {Key key,
@@ -340,7 +341,8 @@ class ClassListItem extends StatefulWidget {
       this.initiallySelected = false,
       Function(bool) onSelected,
       this.selectable = false,
-      Function() onTap})
+      Function() onTap,
+      this.hint})
       : this.onSelected = onSelected ?? ((_) {}),
         this.onTap = onTap ?? (() {}),
         super(key: key);
@@ -388,6 +390,7 @@ class _ClassListItemState extends State<ClassListItem> {
                     fontWeight: FontWeight.normal))
             : Theme.of(context).textTheme.subtitle1,
       ),
+      subtitle: widget.hint != null ? Text(widget.hint) : null,
       onTap: () => setState(() {
         if (widget.selectable) {
           selected = !selected;

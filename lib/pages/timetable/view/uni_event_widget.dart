@@ -38,7 +38,7 @@ class UniEventWidget extends StatelessWidget {
             Padding(
               padding: EdgeInsets.fromLTRB(4, 2, 4, 0),
               child: AutoSizeText(
-                event.title,
+                event.title ?? event.mainEvent?.classHeader?.acronym ?? '',
                 maxLines: 2,
                 minFontSize: 4,
                 maxFontSize: 12,
@@ -150,7 +150,8 @@ class UniAllDayEventWidget extends StatelessWidget {
             fontSize: 14,
             color: event.color.highEmphasisOnColor,
           ),
-          child: Text(event.title, maxLines: 1),
+          child: Text(event.title ?? event.mainEvent?.classHeader?.acronym,
+              maxLines: 1),
         ),
       ),
     );

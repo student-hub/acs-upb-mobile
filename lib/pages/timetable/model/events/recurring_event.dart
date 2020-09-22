@@ -69,8 +69,6 @@ class RecurringUniEvent extends UniEvent {
 
   Iterable<UniEventInstance> generateInstances(
       {DateInterval intersectingInterval}) sync* {
-    String name = this.name ?? classHeader?.acronym ?? '';
-
     if (rrule == null) {
       LocalDateTime end = start.add(duration);
       if (intersectingInterval != null) {

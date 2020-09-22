@@ -144,6 +144,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "messageNoClassesYet" : MessageLookupByLibrary.simpleMessage("You have not added any classes yet."),
     "messageResetPassword" : MessageLookupByLibrary.simpleMessage("Enter your e-mai in order to receive instructions on how to reset your password."),
     "messageShortcutDeleted" : MessageLookupByLibrary.simpleMessage("Shortcut deleted successfully."),
+    "messageTapForMoreInfo" : MessageLookupByLibrary.simpleMessage("Tap for more info"),
     "messageThisCouldAffectOtherStudents" : MessageLookupByLibrary.simpleMessage("This could affect other students."),
     "messageUnderConstruction" : MessageLookupByLibrary.simpleMessage("Under construction"),
     "messageWebsiteAdded" : MessageLookupByLibrary.simpleMessage("Website added successfully."),

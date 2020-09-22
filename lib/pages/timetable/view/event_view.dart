@@ -1,9 +1,13 @@
 import 'package:acs_upb_mobile/generated/l10n.dart';
+import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
+import 'package:acs_upb_mobile/pages/classes/view/class_view.dart';
+import 'package:acs_upb_mobile/pages/classes/view/classes_page.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/events/uni_event.dart';
 import 'package:acs_upb_mobile/resources/locale_provider.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:provider/provider.dart';
 import 'package:time_machine/time_machine.dart';
 import 'package:timetable/timetable.dart';
 
@@ -29,7 +33,7 @@ extension EventExtension on Event {
       } else {
         string += '-';
       }
-      string += start.clockTime.toString('HH:mm', LocaleProvider.culture);
+      string += end.clockTime.toString('HH:mm', LocaleProvider.culture);
     }
     return string;
   }
@@ -46,10 +50,10 @@ class EventView extends StatefulWidget {
 
 class _EventViewState extends State<EventView> {
   Padding _colorIcon() => Padding(
-        padding: const EdgeInsets.all(4.0),
+        padding: const EdgeInsets.all(10.0),
         child: Container(
-          width: 18,
-          height: 18,
+          width: 20,
+          height: 20,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.all(Radius.circular(4.0)),
             color: widget.event.color,
@@ -75,8 +79,9 @@ class _EventViewState extends State<EventView> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text(
-                          widget.event.mainEvent?.classHeader?.name ??
-                              widget.event.title,
+                          widget.event.title ??
+                              widget.event.mainEvent.type
+                                  .toLocalizedString(context),
                           style: Theme.of(context).textTheme.headline6),
                       SizedBox(height: 4),
                       Text(widget.event.dateString),
@@ -86,24 +91,30 @@ class _EventViewState extends State<EventView> {
               ],
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Row(
-              children: <Widget>[
-                Icon(Icons.category),
-                SizedBox(width: 16),
-                Text(widget.event.mainEvent.type.toLocalizedString(context)),
-              ],
+          if (widget.event.mainEvent?.classHeader != null)
+            ClassListItem(
+              classHeader: widget.event.mainEvent.classHeader,
+              hint: S.of(context).messageTapForMoreInfo,
+              onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => ChangeNotifierProvider.value(
+                  value: Provider.of<ClassProvider>(context),
+                  child: ClassView(
+                      classHeader: widget.event.mainEvent.classHeader),
+                ),
+              )),
             ),
-          ),
           if (widget.event.location != null)
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: Row(
                 children: <Widget>[
-                  Icon(Icons.location_on),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Icon(Icons.location_on),
+                  ),
                   SizedBox(width: 16),
-                  Text(widget.event.location),
+                  Text(widget.event.location,
+                      style: Theme.of(context).textTheme.subtitle1),
                 ],
               ),
             ),

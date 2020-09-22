@@ -1834,6 +1834,16 @@ class S {
     );
   }
 
+  /// `Tap for more info`
+  String get messageTapForMoreInfo {
+    return Intl.message(
+      'Tap for more info',
+      name: 'messageTapForMoreInfo',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Please check your inbox for the password reset e-mail.`
   String get infoPasswordResetEmailSent {
     return Intl.message(

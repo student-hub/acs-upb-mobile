@@ -144,6 +144,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "messageNoClassesYet" : MessageLookupByLibrary.simpleMessage("Nu ați adăugat nici o materie încă."),
     "messageResetPassword" : MessageLookupByLibrary.simpleMessage("Introduceți mail-ul pentru a primi instrucțiuni de resetare a parolei."),
     "messageShortcutDeleted" : MessageLookupByLibrary.simpleMessage("Scurtătura a fost ștearsă cu succes."),
+    "messageTapForMoreInfo" : MessageLookupByLibrary.simpleMessage("Apasă pentru mai multe informații"),
     "messageThisCouldAffectOtherStudents" : MessageLookupByLibrary.simpleMessage("Alți studenți ar putea fi afectați."),
     "messageUnderConstruction" : MessageLookupByLibrary.simpleMessage("În construcție"),
     "messageWebsiteAdded" : MessageLookupByLibrary.simpleMessage("Website adăugat cu succes."),

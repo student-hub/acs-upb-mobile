@@ -66,8 +66,6 @@ class UniEvent {
 
   Iterable<UniEventInstance> generateInstances(
       {DateInterval intersectingInterval}) sync* {
-    String name = this.name ?? classHeader?.acronym ?? '';
-
     LocalDateTime end = start.add(duration);
     if (intersectingInterval != null) {
       if (end.calendarDate < intersectingInterval.start ||
