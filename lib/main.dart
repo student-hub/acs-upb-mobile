@@ -32,6 +32,11 @@ main() async {
   AuthProvider authProvider = AuthProvider();
   ClassProvider classProvider = ClassProvider();
 
+  LocaleProvider.cultures = {
+    'ro': await Cultures.getCulture('ro'),
+    'en': await Cultures.getCulture('en')
+  };
+
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider<AuthProvider>(create: (_) => authProvider),
     ChangeNotifierProvider<StorageProvider>(create: (_) => StorageProvider()),

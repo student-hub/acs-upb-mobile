@@ -1,27 +1,37 @@
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/events/uni_event.dart';
+import 'package:acs_upb_mobile/resources/locale_provider.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:time_machine/time_machine.dart';
 import 'package:timetable/timetable.dart';
 
 extension EventExtension on Event {
   String get dateString {
-    if (start.calendarDate == end.calendarDate) {
-      return start.calendarDate.toString('dddd, dd MMMM') +
-          ' • ' +
-          start.clockTime.toString('HH:mm') +
-          ' - ' +
-          end.clockTime.toString('HH:mm');
-    } else {
-      return start.calendarDate.toString('dddd, dd MMMM') +
-          ' • ' +
-          start.clockTime.toString('HH:mm') +
-          ' - ' +
-          end.calendarDate.toString('dddd, dd MMMM') +
-          ' • ' +
-          end.clockTime.toString('HH:mm');
+    LocalDateTime end = this.end.clockTime.equals(LocalTime(00, 00, 00))
+        ? this.end.subtractDays(1)
+        : this.end;
+
+    String string =
+        start.calendarDate.toString('dddd, dd MMMM', LocaleProvider.culture);
+    if (!start.clockTime.equals(LocalTime(00, 00, 00))) {
+      string +=
+          ' • ' + start.clockTime.toString('HH:mm', LocaleProvider.culture);
     }
+    if (start.calendarDate != end.calendarDate) {
+      string += ' - ' +
+          end.calendarDate.toString('dddd, dd MMMM', LocaleProvider.culture);
+    }
+    if (!end.clockTime.equals(LocalTime(00, 00, 00))) {
+      if (start.calendarDate != end.calendarDate) {
+        string += ' • ';
+      } else {
+        string += '-';
+      }
+      string += start.clockTime.toString('HH:mm', LocaleProvider.culture);
+    }
+    return string;
   }
 }
 
@@ -59,17 +69,19 @@ class _EventViewState extends State<EventView> {
               children: <Widget>[
                 _colorIcon(),
                 SizedBox(width: 16),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                        widget.event.mainEvent?.classHeader?.name ??
-                            widget.event.title,
-                        style: Theme.of(context).textTheme.headline6),
-                    SizedBox(height: 4),
-                    // TODO: Improve date format
-                    Text(widget.event.dateString),
-                  ],
+                Expanded(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                          widget.event.mainEvent?.classHeader?.name ??
+                              widget.event.title,
+                          style: Theme.of(context).textTheme.headline6),
+                      SizedBox(height: 4),
+                      Text(widget.event.dateString),
+                    ],
+                  ),
                 ),
               ],
             ),
@@ -84,16 +96,17 @@ class _EventViewState extends State<EventView> {
               ],
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Row(
-              children: <Widget>[
-                Icon(Icons.location_on),
-                SizedBox(width: 16),
-                Text(widget.event.location ?? ''),
-              ],
+          if (widget.event.location != null)
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Row(
+                children: <Widget>[
+                  Icon(Icons.location_on),
+                  SizedBox(width: 16),
+                  Text(widget.event.location),
+                ],
+              ),
             ),
-          ),
         ]),
       ),
     );

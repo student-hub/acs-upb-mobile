@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:preferences/preference_service.dart';
+import 'package:time_machine/time_machine.dart';
 
 class LocaleProvider {
   static String defaultLocale = 'en';
   static List<String> supportedLocales = ['en', 'ro'];
+  static Map<String, Culture> cultures;
 
   static get localeString {
     var languagePref = PrefService.get('language');
@@ -36,4 +38,6 @@ class LocaleProvider {
   static Locale get locale {
     return localeFromString(localeString);
   }
+
+  static Culture get culture => cultures[localeString];
 }
