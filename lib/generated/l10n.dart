@@ -663,6 +663,16 @@ class S {
     );
   }
 
+  /// `Confirm change email`
+  String get actionConfirmChangeEmail {
+    return Intl.message(
+      'Confirm change email',
+      name: 'actionConfirmChangeEmail',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Send e-mail again?`
   String get actionSendVerificationAgain {
     return Intl.message(
@@ -1673,6 +1683,16 @@ class S {
     );
   }
 
+  /// `Are you sure you want to change the email to {email}@stud.acs.upb.ro?`
+  String messageChangeEmail(Object email) {
+    return Intl.message(
+      'Are you sure you want to change the email to $email@stud.acs.upb.ro?',
+      name: 'messageChangeEmail',
+      desc: '',
+      args: [email],
+    );
+  }
+
   /// `Under construction`
   String get messageUnderConstruction {
     return Intl.message(
@@ -1828,6 +1848,16 @@ class S {
     return Intl.message(
       'Password changed successfully.',
       name: 'messageChangePasswordSuccess',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Email changed successfully`
+  String get messageChangeEmailSuccess {
+    return Intl.message(
+      'Email changed successfully',
+      name: 'messageChangeEmailSuccess',
       desc: '',
       args: [],
     );

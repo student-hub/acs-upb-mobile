@@ -206,12 +206,19 @@ class AuthProvider with ChangeNotifier {
 
   Future<bool> changePassword({String password, BuildContext context}) async {
     bool result = false;
-    _firebaseUser.updatePassword(password).then((_) {
+    await _firebaseUser.updatePassword(password).then((_) {
       AppToast.show(S.of(context).messageChangePasswordSuccess);
       result = true;
-    })/*.catchError((e) {
-      _errorHandler(e, context);
-    })*/;
+    });
+    return result;
+  }
+
+  Future<bool> changeEmail({String email, BuildContext context}) async {
+    bool result = false;
+    await _firebaseUser.updateEmail(email).then((_) {
+      AppToast.show(S.of(context).messageChangeEmailSuccess);
+      result = true;
+    });
     return result;
   }
 

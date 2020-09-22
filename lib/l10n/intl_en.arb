@@ -67,6 +67,7 @@
   "actionSignInWith": "Sign in with {provider}",
   "actionResetPassword": "Reset password",
   "actionSendEmail": "Send e-mail",
+  "actionConfirmChangeEmail": "Confirm change email",
   "actionSendVerificationAgain": "Send e-mail again?",
   "actionDeleteAccount": "Delete account",
   "actionChangePassword": "Change password",
@@ -177,6 +178,7 @@
   "messageResetPassword": "Enter your e-mai in order to receive instructions on how to reset your password.",
   "messageDeleteAccount": "Are you sure you want to delete your account?",
   "messageCannotBeUndone": "This action cannot be undone.",
+  "messageChangeEmail": "Are you sure you want to change the email to {email}@stud.acs.upb.ro?",
   "messageUnderConstruction": "Under construction",
   "messageWebsitePreview": "Try tapping/long-pressing/hovering the preview to test the new website.",
   "messageAddCustomWebsite": "Try adding a custom website.",
@@ -193,6 +195,7 @@
   "messageIAgreeToThe": "I agree to the ",
   "messageEditProfileSuccess": "Profile updated successfully.",
   "messageChangePasswordSuccess": "Password changed successfully.",
+  "messageChangeEmailSuccess": "Email changed successfully",
 
   "infoPasswordResetEmailSent": "Please check your inbox for the password reset e-mail.",
   "infoRelevance": "Try to choose the most restrictive category.",

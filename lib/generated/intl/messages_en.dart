@@ -25,13 +25,15 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static m2(name) => "${name} team";
 
-  static m3(shortcutName) => "Are you sure you want to delete \"${shortcutName}\"?";
+  static m3(email) => "Are you sure you want to change the email to ${email}@stud.acs.upb.ro?";
 
-  static m4(name) => "Welcome, ${name}!";
+  static m4(shortcutName) => "Are you sure you want to delete \"${shortcutName}\"?";
 
-  static m5(email) => "There is already an account associated with ${email}.";
+  static m5(name) => "Welcome, ${name}!";
 
-  static m6(provider) => "Please log in with ${provider} to continue.";
+  static m6(email) => "There is already an account associated with ${email}.";
+
+  static m7(provider) => "Please log in with ${provider} to continue.";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
@@ -40,6 +42,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "actionAddShortcut" : MessageLookupByLibrary.simpleMessage("Add shortcut"),
     "actionAddWebsite" : MessageLookupByLibrary.simpleMessage("Add website"),
     "actionChangePassword" : MessageLookupByLibrary.simpleMessage("Change password"),
+    "actionConfirmChangeEmail" : MessageLookupByLibrary.simpleMessage("Confirm change email"),
     "actionContribute" : MessageLookupByLibrary.simpleMessage("Contribute"),
     "actionDeleteAccount" : MessageLookupByLibrary.simpleMessage("Delete account"),
     "actionDeleteEvent" : MessageLookupByLibrary.simpleMessage("Delete event"),
@@ -133,11 +136,13 @@ class MessageLookup extends MessageLookupByLibrary {
     "messageAccountDeleted" : MessageLookupByLibrary.simpleMessage("Account deleted successfully."),
     "messageAddCustomWebsite" : MessageLookupByLibrary.simpleMessage("Try adding a custom website."),
     "messageCannotBeUndone" : MessageLookupByLibrary.simpleMessage("This action cannot be undone."),
+    "messageChangeEmail" : m3,
+    "messageChangeEmailSuccess" : MessageLookupByLibrary.simpleMessage("Email changed successfully"),
     "messageChangePasswordSuccess" : MessageLookupByLibrary.simpleMessage("Password changed successfully."),
     "messageCheckEmailVerification" : MessageLookupByLibrary.simpleMessage("Please check your email for account verification."),
     "messageDeleteAccount" : MessageLookupByLibrary.simpleMessage("Are you sure you want to delete your account?"),
     "messageDeleteEvent" : MessageLookupByLibrary.simpleMessage("Are you sure you want to delete this event?"),
-    "messageDeleteShortcut" : m3,
+    "messageDeleteShortcut" : m4,
     "messageDeleteWebsite" : MessageLookupByLibrary.simpleMessage("Are you sure you want to delete this website?"),
     "messageEditProfileSuccess" : MessageLookupByLibrary.simpleMessage("Profile updated successfully."),
     "messageEmailNotVerified" : MessageLookupByLibrary.simpleMessage("Account is not verified."),
@@ -153,7 +158,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "messageWebsiteDeleted" : MessageLookupByLibrary.simpleMessage("Website deleted successfully."),
     "messageWebsiteEdited" : MessageLookupByLibrary.simpleMessage("Website modified successfully."),
     "messageWebsitePreview" : MessageLookupByLibrary.simpleMessage("Try tapping/long-pressing/hovering the preview to test the new website."),
-    "messageWelcomeName" : m4,
+    "messageWelcomeName" : m5,
     "messageWelcomeSimple" : MessageLookupByLibrary.simpleMessage("Welcome!"),
     "navigationClasses" : MessageLookupByLibrary.simpleMessage("Classes"),
     "navigationEventDetails" : MessageLookupByLibrary.simpleMessage("Event details"),
@@ -199,7 +204,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "uniEventTypeTest" : MessageLookupByLibrary.simpleMessage("Test"),
     "warningAgreeTo" : MessageLookupByLibrary.simpleMessage("You need to agree to the "),
     "warningAuthenticationNeeded" : MessageLookupByLibrary.simpleMessage("Please authenticate in order to access this feature."),
-    "warningEmailInUse" : m5,
+    "warningEmailInUse" : m6,
     "warningFieldCannotBeEmpty" : MessageLookupByLibrary.simpleMessage("Field cannot be empty."),
     "warningFieldCannotBeZero" : MessageLookupByLibrary.simpleMessage("Field cannot be zero."),
     "warningFilterAlreadyDisabled" : MessageLookupByLibrary.simpleMessage("Already showing all content."),
@@ -217,7 +222,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "warningPasswordSpecialCharacters" : MessageLookupByLibrary.simpleMessage("The password must include at least one special character."),
     "warningPasswordUppercase" : MessageLookupByLibrary.simpleMessage("The password must include at least one uppercase letter."),
     "warningTryAgainLater" : MessageLookupByLibrary.simpleMessage("Please try again later."),
-    "warningUseProvider" : m6,
+    "warningUseProvider" : m7,
     "warningWebsiteNameExists" : MessageLookupByLibrary.simpleMessage("A website with the same name already exists."),
     "websiteCategoryAdministrative" : MessageLookupByLibrary.simpleMessage("Administrative"),
     "websiteCategoryAssociations" : MessageLookupByLibrary.simpleMessage("Associations"),
