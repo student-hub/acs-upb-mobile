@@ -18,6 +18,7 @@ class AllDayUniEvent extends UniEvent {
     UniEventType type,
     ClassHeader classHeader,
     AcademicCalendar calendar,
+    List<String> relevance,
   })  : startDate = start,
         endDate = end,
         super(
@@ -29,7 +30,8 @@ class AllDayUniEvent extends UniEvent {
             color: color,
             type: type,
             classHeader: classHeader,
-            calendar: calendar);
+            calendar: calendar,
+            relevance: relevance);
 
   Iterable<UniEventInstance> generateInstances(
       {DateInterval intersectingInterval}) sync* {

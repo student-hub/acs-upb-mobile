@@ -51,6 +51,7 @@ class UniEvent {
   final String location;
   final ClassHeader classHeader;
   final AcademicCalendar calendar;
+  final List<String> relevance;
 
   const UniEvent({
     this.name,
@@ -62,6 +63,7 @@ class UniEvent {
     this.type,
     this.classHeader,
     this.calendar,
+    this.relevance
   });
 
   Iterable<UniEventInstance> generateInstances(

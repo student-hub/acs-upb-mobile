@@ -107,6 +107,7 @@ extension UniEventExtension on UniEvent {
         color: type.color,
         classHeader: classHeader,
         calendar: calendars[json['calendar']],
+        relevance: List<String>.from(json['relevance']),
       );
     } else if (json['rrule'] != null) {
       return RecurringUniEvent(
@@ -122,6 +123,7 @@ extension UniEventExtension on UniEvent {
         color: type.color,
         classHeader: classHeader,
         calendar: calendars[json['calendar']],
+        relevance: List<String>.from(json['relevance']),
       );
     } else {
       return UniEvent(
@@ -136,6 +138,7 @@ extension UniEventExtension on UniEvent {
         color: type.color,
         classHeader: classHeader,
         calendar: calendars[json['calendar']],
+        relevance: List<String>.from(json['relevance']),
       );
     }
   }

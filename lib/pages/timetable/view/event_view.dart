@@ -105,7 +105,7 @@ class _EventViewState extends State<EventView> {
             ),
           if (widget.event.location != null)
             Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 0.0),
               child: Row(
                 children: <Widget>[
                   Padding(
@@ -114,6 +114,24 @@ class _EventViewState extends State<EventView> {
                   ),
                   SizedBox(width: 16),
                   Text(widget.event.location,
+                      style: Theme.of(context).textTheme.subtitle1),
+                ],
+              ),
+            ),
+          if (widget.event.mainEvent != null)
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 0.0),
+              child: Row(
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Icon(Icons.people),
+                  ),
+                  SizedBox(width: 16),
+                  Text(
+                      widget.event.mainEvent.relevance == null
+                          ? S.of(context).relevanceAnyone
+                          : widget.event.mainEvent.relevance.join(', '),
                       style: Theme.of(context).textTheme.subtitle1),
                 ],
               ),

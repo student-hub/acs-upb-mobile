@@ -56,6 +56,7 @@ class RecurringUniEvent extends UniEvent {
     UniEventType type,
     ClassHeader classHeader,
     AcademicCalendar calendar,
+    List<String> relevance,
   }) : super(
             name: name,
             location: location,
@@ -65,7 +66,8 @@ class RecurringUniEvent extends UniEvent {
             color: color,
             type: type,
             classHeader: classHeader,
-            calendar: calendar);
+            calendar: calendar,
+            relevance: relevance);
 
   Iterable<UniEventInstance> generateInstances(
       {DateInterval intersectingInterval}) sync* {
