@@ -45,6 +45,8 @@ void main() {
     when(mockAuthProvider.isAuthenticatedFromCache).thenReturn(false);
     when(mockAuthProvider.isAuthenticatedFromService)
         .thenAnswer((realInvocation) => Future.value(false));
+    when(mockAuthProvider.currentUser).thenAnswer((_) => Future.value(null));
+    when(mockAuthProvider.isAnonymous).thenReturn(true);
 
     mockWebsiteProvider = MockWebsiteProvider();
     // ignore: invalid_use_of_protected_member
@@ -81,7 +83,6 @@ void main() {
 
         when(mockAuthProvider.signInAnonymously(context: anyNamed('context')))
             .thenAnswer((_) => Future.value(true));
-
 
         // Log in anonymously
         await tester.tap(find.byKey(ValueKey('log_in_anonymously_button')));

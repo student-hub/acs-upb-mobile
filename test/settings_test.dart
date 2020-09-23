@@ -28,6 +28,8 @@ void main() {
       when(mockAuthProvider.isAnonymous).thenReturn(true);
       when(mockAuthProvider.isAuthenticatedFromService)
           .thenAnswer((realInvocation) => Future.value(true));
+      when(mockAuthProvider.currentUser).thenAnswer((_) => Future.value(null));
+      when(mockAuthProvider.isAnonymous).thenReturn(true);
     });
 
     testWidgets('Dark Mode', (WidgetTester tester) async {
