@@ -6,6 +6,7 @@ import 'package:acs_upb_mobile/navigation/routes.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/widgets/icon_text.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -120,13 +121,14 @@ class _HomePageState extends State<HomePage> {
                             ],
                           ),
                         )),
+                        if(user != null)
                         Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             IconButton(
                               icon: Icon(Icons.edit),
                               color: Theme.of(context).textTheme.button.color,
-                              onPressed: () => Navigator.of(context).push(
+                              onPressed: ()  => Navigator.of(context).push(
                                 MaterialPageRoute(
                                   builder: (context) => EditProfilePage(),
                                 ),

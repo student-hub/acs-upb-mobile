@@ -575,20 +575,14 @@ void main() {
       verify(mockObserver.didPush(any, any));
       expect(find.byType(HomePage), findsOneWidget);
 
-      //TODO: change the logout method
-      // Open profile page
-      // await tester.tap(find.byIcon(Icons.person));
-      // await tester.pumpAndSettle();
-      //
-      // expect(find.byType(ProfilePage), findsOneWidget);
-      // expect(find.text('Anonymous'), findsOneWidget);
-      //
-      // // Press log in button
-      // await tester.tap(find.text('Log in'));
-      // await tester.pumpAndSettle();
-      //
-      // verify(mockAuthProvider.signOut(any));
-      // expect(find.byType(LoginView), findsOneWidget);
+      expect(find.text('Anonymous'), findsOneWidget);
+
+      // Press log in button
+      await tester.tap(find.text('Log in'));
+      await tester.pumpAndSettle();
+
+      verify(mockAuthProvider.signOut(any));
+      expect(find.byType(LoginView), findsOneWidget);
     });
 
     testWidgets('Sign out authenticated', (WidgetTester tester) async {
@@ -610,20 +604,14 @@ void main() {
       verify(mockObserver.didPush(any, any));
       expect(find.byType(HomePage), findsOneWidget);
 
-      //TODO: change the logout method
-      // // Open profile page
-      // await tester.tap(find.byIcon(Icons.person));
-      // await tester.pumpAndSettle();
+      expect(find.text('John Doe'), findsOneWidget);
 
-      // expect(find.byType(ProfilePage), findsOneWidget);
-      // expect(find.text('John Doe'), findsOneWidget);
-      //
-      // // Press log out button
-      // await tester.tap(find.text('Log out'));
-      // await tester.pumpAndSettle();
+      // Press log out button
+      await tester.tap(find.text('Log out'));
+      await tester.pumpAndSettle();
 
-      // verify(mockAuthProvider.signOut(any));
-      // expect(find.byType(LoginView), findsOneWidget);
+      verify(mockAuthProvider.signOut(any));
+      expect(find.byType(LoginView), findsOneWidget);
     });
   });
 }
