@@ -32,35 +32,70 @@ class _EditProfilePageState extends State<EditProfilePage> {
   AppDialog _changePasswordDialog(BuildContext context) {
     final newPasswordController = TextEditingController();
     final oldPasswordController = TextEditingController();
+    final changePasswordKey = GlobalKey<FormState>();
+
+    AuthProvider authProvider =
+        Provider.of<AuthProvider>(context, listen: false);
     return AppDialog(
       title: S.of(context).actionChangePassword,
       content: [
-        Column(
-          children: [
-            TextFormField(
-              obscureText: true,
-              decoration: InputDecoration(
-                labelText: S.of(context).labelOldPassword,
-                hintText: S.of(context).hintPassword,
+        Form(
+          key: changePasswordKey,
+          child: Column(
+            children: [
+              TextFormField(
+                obscureText: true,
+                decoration: InputDecoration(
+                  labelText: S.of(context).labelOldPassword,
+                  hintText: S.of(context).hintPassword,
+                ),
+                controller: oldPasswordController,
+                validator: (value) {
+                  if (value?.isEmpty ?? true) {
+                    return S.of(context).errorNoPassword;
+                  }
+                  return null;
+                },
               ),
-              controller: oldPasswordController,
-            ),
-            TextFormField(
-              obscureText: true,
-              decoration: InputDecoration(
-                labelText: S.of(context).labelNewPassword,
-                hintText: S.of(context).hintPassword,
+              TextFormField(
+                obscureText: true,
+                decoration: InputDecoration(
+                  labelText: S.of(context).labelNewPassword,
+                  hintText: S.of(context).hintPassword,
+                ),
+                controller: newPasswordController,
+                validator: (value) {
+                  if (value?.isEmpty ?? true) {
+                    return S.of(context).errorNoPassword;
+                  }
+                  if (value == oldPasswordController.text) {
+                    return S.of(context).warningSamePassword;
+                  }
+                  String result = AppValidator.isStrongPassword(
+                      password: value, context: context);
+                  if (result != null) {
+                    return result;
+                  }
+                  return null;
+                },
               ),
-              controller: newPasswordController,
-            ),
-            TextFormField(
-              obscureText: true,
-              decoration: InputDecoration(
-                labelText: S.of(context).labelConfirmNewPassword,
-                hintText: S.of(context).hintPassword,
-              ),
-            ),
-          ],
+              TextFormField(
+                  obscureText: true,
+                  decoration: InputDecoration(
+                    labelText: S.of(context).labelConfirmNewPassword,
+                    hintText: S.of(context).hintPassword,
+                  ),
+                  validator: (value) {
+                    if (value?.isEmpty ?? true) {
+                      return S.of(context).errorNoPassword;
+                    }
+                    if (value == newPasswordController.text) {
+                      return S.of(context).errorPasswordsDiffer;
+                    }
+                    return null;
+                  }),
+            ],
+          ),
         )
       ],
       actions: [
@@ -70,12 +105,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
           color: Theme.of(context).accentColor,
           width: 130,
           onTap: () async {
-            AuthProvider authProvider =
-                Provider.of<AuthProvider>(context, listen: false);
-            if (await authProvider.verifyPassword(
-                password: oldPasswordController.text, context: context)) {
-              if (await AppValidator.isStrongPassword(
-                  password: newPasswordController.text, context: context)) {
+            if (changePasswordKey.currentState.validate()) {
+              if (await authProvider.verifyPassword(
+                  password: oldPasswordController.text, context: context)) {
                 if (await authProvider.changePassword(
                     password: newPasswordController.text, context: context)) {
                   AppToast.show(S.of(context).messageChangePasswordSuccess);
@@ -131,7 +163,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
   AppDialog _changeEmailConfirmationDialog(BuildContext context) {
     final passwordController = TextEditingController();
     return AppDialog(
-      title: S.of(context).actionConfirmChangeEmail,
+      title: S.of(context).actionChangeEmail,
       message: S.of(context).messageChangeEmail(
           emailController.text + S.of(context).stringEmailDomain),
       content: [
@@ -147,7 +179,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
       actions: [
         AppButton(
           key: ValueKey('change_email_button'),
-          text: S.of(context).actionConfirmChangeEmail,
+          text: S.of(context).actionChangeEmail,
           color: Theme.of(context).accentColor,
           width: 130,
           onTap: () async {
@@ -161,7 +193,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 AppToast.show(S.of(context).messageChangeEmailSuccess);
                 Navigator.pop(context, true);
               } else {
-                AppToast.show(S.of(context).errorSomethingWentWrong);
                 Navigator.pop(context, false);
               }
             }

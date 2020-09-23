@@ -67,7 +67,7 @@
   "actionSignInWith": "Conectare cu {provider}",
   "actionResetPassword": "Resetare parolă",
   "actionSendEmail": "Trimite e-mail",
-  "actionConfirmChangeEmail": "Schimbă email",
+  "actionChangeEmail": "Schimbă email",
   "actionSendVerificationAgain": "Trimite mail din nou?",
   "actionDeleteAccount": "Ștergere cont",
   "actionChangePassword": "Schimbă parola",
@@ -103,6 +103,7 @@
 
   "warningInternetConnection": "Asigurați-vă că sunteți conectat la internet.",
   "warningPasswordLength": "Parola trebuie să aibă cel puțin 8 caractere.",
+  "warningSamePassword": "Parola trebuie sa fie diferită de vechea parolă",
   "warningPasswordUppercase": "Parola trebuie să conțină cel putin o majusculă.",
   "warningPasswordLowercase": "Parola trebuie să conțină cel putin o minusculă.",
   "warningPasswordSpecialCharacters": "Parola trebuie să conțină cel puțin un simbol.",

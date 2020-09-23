@@ -208,7 +208,10 @@ class AuthProvider with ChangeNotifier {
     bool result = false;
     await _firebaseUser.updatePassword(password).then((_) {
       result = true;
-    }).catchError((_) => result = false);
+    }).catchError((e) {
+      _errorHandler(e, context);
+      result = false;
+    });
     return result;
   }
 
@@ -216,7 +219,10 @@ class AuthProvider with ChangeNotifier {
     bool result = false;
     await _firebaseUser.updateEmail(email).then((_) {
       result = true;
-    }).catchError((_) => result = false);
+    }).catchError((e) {
+      _errorHandler(e, context);
+      result = false;
+    });
     return result;
   }
 
@@ -373,8 +379,11 @@ class AuthProvider with ChangeNotifier {
         AppToast.show(S.of(context).errorMissingLastName);
         return false;
       }
-      if (!await AppValidator.isStrongPassword(
-          password: password, context: context)) {
+
+      String stringError = await AppValidator.isStrongPassword(
+          password: password, context: context);
+      if (stringError != null) {
+        AppToast.show(stringError);
         return false;
       }
 

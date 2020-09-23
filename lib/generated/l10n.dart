@@ -664,10 +664,10 @@ class S {
   }
 
   /// `Change email`
-  String get actionConfirmChangeEmail {
+  String get actionChangeEmail {
     return Intl.message(
       'Change email',
-      name: 'actionConfirmChangeEmail',
+      name: 'actionChangeEmail',
       desc: '',
       args: [],
     );
@@ -998,6 +998,16 @@ class S {
     return Intl.message(
       'The password must be 8 characters long or more.',
       name: 'warningPasswordLength',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `The password must be different from the old one`
+  String get warningSamePassword {
+    return Intl.message(
+      'The password must be different from the old one',
+      name: 'warningSamePassword',
       desc: '',
       args: [],
     );
