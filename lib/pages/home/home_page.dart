@@ -57,8 +57,8 @@ class _HomePageState extends State<HomePage> {
         if (snap.connectionState == ConnectionState.done) {
           String userName;
           String userGroup;
-          if(!authProvider.isAnonymous) {
-            User user = snap.data;
+          User user = snap.data;
+          if(user != null) {
             userName = user.firstName + ' ' + user.lastName;
             userGroup = user.classes != null ? user.classes.last : null;
           }
