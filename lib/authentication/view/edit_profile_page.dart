@@ -48,7 +48,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   ),
                   controller: oldPasswordController,
                   validator: (value) {
-                    if (value.isEmpty || value == null) {
+                    if (value?.isEmpty ?? true) {
                       return S.of(context).errorNoPassword;
                     }
                     return null;
@@ -61,7 +61,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   ),
                   controller: newPasswordController,
                   validator: (value) {
-                    if (value.isEmpty || value == null) {
+                    if (value?.isEmpty ?? true) {
                       return S.of(context).errorNoPassword;
                     }
                     return null;
@@ -73,7 +73,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     hintText: S.of(context).hintPassword,
                   ),
                   validator: (value) {
-                    if (value.isEmpty || value == null) {
+                    if (value?.isEmpty ?? true) {
                       return S.of(context).errorNoPassword;
                     }
                     if (value != newPasswordController.text) {
@@ -89,7 +89,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
         AppButton(
           key: ValueKey('change_password_button'),
           text: S.of(context).actionChangePassword.toUpperCase(),
-          color: Colors.lightBlue,
+          color: Theme.of(context).accentColor,
           width: 130,
           onTap: () async {
             if (changePasswordKey.currentState.validate()) {
@@ -99,9 +99,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   password: oldPasswordController.text, context: context)) {
                 if (await AppValidator.isStrongPassword(
                     password: newPasswordController.text, context: context)) {
-                  bool res = await authProvider.changePassword(
-                      password: newPasswordController.text, context: context);
-                  if (res) {
+                  if (await authProvider.changePassword(
+                      password: newPasswordController.text, context: context)) {
                     Navigator.pop(context);
                   }
                 }
@@ -171,7 +170,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
         AppButton(
           key: ValueKey('change_email_button'),
           text: S.of(context).actionConfirmChangeEmail,
-          color: Colors.lightBlue,
+          color: Theme.of(context).accentColor,
           width: 130,
           onTap: () async {
             AuthProvider authProvider =
@@ -192,7 +191,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
     );
   }
 
-  Widget _accountNotVerifiedFooter(BuildContext context) {
+  Widget accountNotVerifiedFooter(BuildContext context) {
     AuthProvider authProvider = Provider.of<AuthProvider>(context);
 
     if (!authProvider.isAuthenticatedFromCache || authProvider.isAnonymous) {
@@ -206,7 +205,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
           return Container();
         }
         return Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.only(top: 8.0),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -217,8 +216,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 actionText: S.of(context).actionSendVerificationAgain,
                 style: Theme.of(context)
                     .textTheme
-                    .subtitle2
-                    .copyWith(fontWeight: FontWeight.w400),
+                    .caption
+                    .copyWith(color: Theme.of(context).hintColor),
                 onTap: () =>
                     authProvider.sendEmailVerification(context: context),
               ),
@@ -288,13 +287,12 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 lastNameController.text = user.lastName;
                 firstNameController.text = user.firstName;
                 if (!authProvider.isVerifiedFromCache) {
-                  emailController.text = authProvider.email.substring(
-                      0, authProvider.email.length - emailDomain.length);
+                  emailController.text = authProvider.email.split('@')[0];
                 }
                 path = user.classes;
                 return Container(
                   child: ListView(children: [
-                    _accountNotVerifiedFooter(context),
+                    accountNotVerifiedFooter(context),
                     PreferenceTitle(
                       S.of(context).labelPersonalInformation,
                       leftPadding: 0,
@@ -311,7 +309,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                             ),
                             controller: firstNameController,
                             validator: (value) {
-                              if (value.isEmpty || value == null) {
+                              if (value?.isEmpty ?? true) {
                                 return S.of(context).errorMissingFirstName;
                               }
                               return null;
