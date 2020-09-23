@@ -194,8 +194,8 @@
   "messageGetStartedPlusButton": "Începeți prin a apăsa butonul + de mai sus.",
   "messageIAgreeToThe": "Sunt de acord cu ",
   "messageEditProfileSuccess": "Profilul a fost actualizat cu succes.",
-  "messageChangePasswordSuccess": "Parola a fost actualizată cu succes.",
-  "messageChangeEmailSuccess": "Email-ul a fost actualizat cu succes",
+  "messageChangePasswordSuccess": "Parola a fost schimbată cu succes.",
+  "messageChangeEmailSuccess": "Email-ul a fost schimbat cu succes",
 
   "infoPasswordResetEmailSent": "Please check your inbox for the password reset e-mail.",
   "infoRelevance": "Încercați să selectați cea mai restrictivă categorie.",
