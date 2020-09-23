@@ -663,10 +663,10 @@ class S {
     );
   }
 
-  /// `Confirm change email`
+  /// `Change email`
   String get actionConfirmChangeEmail {
     return Intl.message(
-      'Confirm change email',
+      'Change email',
       name: 'actionConfirmChangeEmail',
       desc: '',
       args: [],
@@ -1683,10 +1683,10 @@ class S {
     );
   }
 
-  /// `Are you sure you want to change the email to {email}@stud.acs.upb.ro?`
+  /// `Are you sure you want to change the account email to {email}?`
   String messageChangeEmail(Object email) {
     return Intl.message(
-      'Are you sure you want to change the email to $email@stud.acs.upb.ro?',
+      'Are you sure you want to change the account email to $email?',
       name: 'messageChangeEmail',
       desc: '',
       args: [email],

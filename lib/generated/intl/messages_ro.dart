@@ -25,7 +25,7 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static m2(name) => "Echipa ${name}";
 
-  static m3(email) => "Sunteți sigur că doriți să ștergeți email-ul cu ${email}@stud.acs.upb.ro?";
+  static m3(email) => "Sunteți sigur că doriți să schimbați email-ul cu ${email}?";
 
   static m4(shortcutName) => "Sunteți sigur că doriți să ștergeți \"${shortcutName}\"?";
 
@@ -42,7 +42,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "actionAddShortcut" : MessageLookupByLibrary.simpleMessage("Adaugă scurtătură"),
     "actionAddWebsite" : MessageLookupByLibrary.simpleMessage("Adaugă website"),
     "actionChangePassword" : MessageLookupByLibrary.simpleMessage("Schimbă parola"),
-    "actionConfirmChangeEmail" : MessageLookupByLibrary.simpleMessage("Confirmă schimbare email-ului"),
+    "actionConfirmChangeEmail" : MessageLookupByLibrary.simpleMessage("Schimbă email"),
     "actionContribute" : MessageLookupByLibrary.simpleMessage("Contribuie"),
     "actionDeleteAccount" : MessageLookupByLibrary.simpleMessage("Ștergere cont"),
     "actionDeleteEvent" : MessageLookupByLibrary.simpleMessage("Șterge eveniment"),

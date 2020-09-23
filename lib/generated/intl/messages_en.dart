@@ -25,7 +25,7 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static m2(name) => "${name} team";
 
-  static m3(email) => "Are you sure you want to change the email to ${email}@stud.acs.upb.ro?";
+  static m3(email) => "Are you sure you want to change the account email to ${email}?";
 
   static m4(shortcutName) => "Are you sure you want to delete \"${shortcutName}\"?";
 
@@ -42,7 +42,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "actionAddShortcut" : MessageLookupByLibrary.simpleMessage("Add shortcut"),
     "actionAddWebsite" : MessageLookupByLibrary.simpleMessage("Add website"),
     "actionChangePassword" : MessageLookupByLibrary.simpleMessage("Change password"),
-    "actionConfirmChangeEmail" : MessageLookupByLibrary.simpleMessage("Confirm change email"),
+    "actionConfirmChangeEmail" : MessageLookupByLibrary.simpleMessage("Change email"),
     "actionContribute" : MessageLookupByLibrary.simpleMessage("Contribute"),
     "actionDeleteAccount" : MessageLookupByLibrary.simpleMessage("Delete account"),
     "actionDeleteEvent" : MessageLookupByLibrary.simpleMessage("Delete event"),
