@@ -48,6 +48,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 decoration: InputDecoration(
                   labelText: S.of(context).labelOldPassword,
                   hintText: S.of(context).hintPassword,
+                  errorMaxLines: 2,
                 ),
                 controller: oldPasswordController,
                 validator: (value) {
@@ -62,6 +63,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 decoration: InputDecoration(
                   labelText: S.of(context).labelNewPassword,
                   hintText: S.of(context).hintPassword,
+                  errorMaxLines: 2,
                 ),
                 controller: newPasswordController,
                 validator: (value) {
@@ -84,6 +86,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   decoration: InputDecoration(
                     labelText: S.of(context).labelConfirmNewPassword,
                     hintText: S.of(context).hintPassword,
+                    errorMaxLines: 2,
                   ),
                   validator: (value) {
                     if (value?.isEmpty ?? true) {
