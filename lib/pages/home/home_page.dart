@@ -4,7 +4,6 @@ import 'package:acs_upb_mobile/authentication/view/edit_profile_page.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/navigation/routes.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
-import 'package:acs_upb_mobile/widgets/icon_text.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -17,38 +16,29 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  Widget _accountNotVerifiedFooter(BuildContext context) {
-    AuthProvider authProvider = Provider.of<AuthProvider>(context);
-
-    if (!authProvider.isAuthenticatedFromCache || authProvider.isAnonymous) {
-      return Container();
-    }
-
-    return FutureBuilder(
-      future: authProvider.isVerifiedFromService,
-      builder: (BuildContext context, AsyncSnapshot<bool> snap) {
-        if (!snap.hasData || snap.data) {
-          return Container();
-        }
-        return Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: IconText(
-            align: TextAlign.center,
-            icon: Icons.error_outline,
-            text: S.of(context).messageEmailNotVerified,
-            actionText: S.of(context).actionSendVerificationAgain,
-            style: Theme.of(context)
-                .textTheme
-                .caption
-                .apply(color: Theme.of(context).hintColor),
-            onTap: () => authProvider.sendEmailVerification(context: context),
-          ),
-        );
-      },
+  @override
+  Widget build(BuildContext context) {
+    return AppScaffold(
+      title: S.of(context).navigationHome,
+      actions: [
+        AppScaffoldAction(
+          icon: Icons.settings,
+          tooltip: S.of(context).navigationSettings,
+          route: Routes.settings,
+        )
+      ],
+      body: ListView(
+        children: [
+          ProfileCard(),
+        ],
+      ),
     );
   }
+}
 
-  Widget _profileCard(BuildContext context) {
+class ProfileCard extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
     AuthProvider authProvider = Provider.of<AuthProvider>(context);
 
     return FutureBuilder(
@@ -58,7 +48,7 @@ class _HomePageState extends State<HomePage> {
           String userName;
           String userGroup;
           User user = snap.data;
-          if(user != null) {
+          if (user != null) {
             userName = user.firstName + ' ' + user.lastName;
             userGroup = user.classes != null ? user.classes.last : null;
           }
@@ -82,44 +72,46 @@ class _HomePageState extends State<HomePage> {
                           ),
                         ),
                         Expanded(
-                            child: Padding(
-                          padding: const EdgeInsets.only(left: 5.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: <Widget>[
-                              FittedBox(
-                                child: Text(
-                                  userName ?? S.of(context).stringAnonymous,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .subtitle1
-                                      .apply(fontWeightDelta: 2),
-                                ),
-                              ),
-                              if (userGroup != null)
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 4.0),
-                                  child: Text(userGroup,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .subtitle1),
-                                ),
-                              InkWell(
-                                onTap: () {
-                                  Utils.signOut(context);
-                                },
-                                child: Text(
-                                    authProvider.isAnonymous
-                                        ? S.of(context).actionLogIn
-                                        : S.of(context).actionLogOut,
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 5.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: <Widget>[
+                                FittedBox(
+                                  child: Text(
+                                    userName ?? S.of(context).stringAnonymous,
                                     style: Theme.of(context)
-                                        .accentTextTheme
-                                        .subtitle2
-                                        .copyWith(fontWeight: FontWeight.w500)),
-                              ),
-                            ],
+                                        .textTheme
+                                        .subtitle1
+                                        .apply(fontWeightDelta: 2),
+                                  ),
+                                ),
+                                if (userGroup != null)
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 4.0),
+                                    child: Text(userGroup,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .subtitle1),
+                                  ),
+                                InkWell(
+                                  onTap: () {
+                                    Utils.signOut(context);
+                                  },
+                                  child: Text(
+                                      authProvider.isAnonymous
+                                          ? S.of(context).actionLogIn
+                                          : S.of(context).actionLogOut,
+                                      style: Theme.of(context)
+                                          .accentTextTheme
+                                          .subtitle2
+                                          .copyWith(
+                                              fontWeight: FontWeight.w500)),
+                                ),
+                              ],
+                            ),
                           ),
-                        )),
+                        ),
                         Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
@@ -136,31 +128,15 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ],
                     ),
-                    _accountNotVerifiedFooter(context),
+                    AccountNotVerifiedWarning(),
                   ],
                 ),
               ),
             ),
           );
         }
-        return Center(child: CircularProgressIndicator());
+        return Container();
       },
     );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return AppScaffold(
-        title: S.of(context).navigationHome,
-        actions: [
-          AppScaffoldAction(
-            icon: Icons.settings,
-            tooltip: S.of(context).navigationSettings,
-            route: Routes.settings,
-          )
-        ],
-        body: ListView(
-          children: [_profileCard(context)],
-        ));
   }
 }
