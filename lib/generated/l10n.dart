@@ -1934,11 +1934,31 @@ class S {
     );
   }
 
+  /// `This is the same username you use to log in to {forum}.`
+  String infoEmail(Object forum) {
+    return Intl.message(
+      'This is the same username you use to log in to $forum.',
+      name: 'infoEmail',
+      desc: '',
+      args: [forum],
+    );
+  }
+
   /// `@stud.acs.upb.ro`
   String get stringEmailDomain {
     return Intl.message(
       '@stud.acs.upb.ro',
       name: 'stringEmailDomain',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `cs.curs.pub.ro`
+  String get stringForum {
+    return Intl.message(
+      'cs.curs.pub.ro',
+      name: 'stringForum',
       desc: '',
       args: [],
     );

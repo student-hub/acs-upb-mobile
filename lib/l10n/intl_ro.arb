@@ -204,8 +204,10 @@
   "infoRelevanceExample": "De exemplu, dacă ceva este relevant doar pentru \"314CB\" și \"315CB\", nu setați direct \"CB\".",
   "infoPassword": "Aceasta trebuie să conțină majuscule, minuscule și cel puțin un număr sau un simbol, având minimum 8 caractere.",
   "infoAppIsOpenSource": "ACS UPB Mobile este open source.",
+  "infoEmail": "Acesta este același username pe care îl folosești să te loghezi pe {forum}.",
 
   "stringEmailDomain": "@stud.acs.upb.ro",
+  "stringForum": "cs.curs.pub.ro",
   "stringAnonymous": "Anonim",
 
   "fileAcsBanner": "assets/images/acs_banner_ro.png"

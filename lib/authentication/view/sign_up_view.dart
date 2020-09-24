@@ -64,6 +64,7 @@ class _SignUpViewState extends State<SignUpView> {
       FormItem(
         label: S.of(context).labelEmail,
         hint: S.of(context).hintEmail,
+        additionalHint: S.of(context).infoEmail(S.of(context).stringForum),
         controller: emailController,
         suffix: emailDomain,
         autocorrect: false,
