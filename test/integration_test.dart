@@ -20,7 +20,6 @@ import 'package:acs_upb_mobile/pages/portal/model/website.dart';
 import 'package:acs_upb_mobile/pages/portal/service/website_provider.dart';
 import 'package:acs_upb_mobile/pages/portal/view/portal_page.dart';
 import 'package:acs_upb_mobile/pages/portal/view/website_view.dart';
-import 'package:acs_upb_mobile/authentication/view/profile_page.dart';
 import 'package:acs_upb_mobile/pages/settings/settings_page.dart';
 import 'package:acs_upb_mobile/resources/custom_icons.dart';
 import 'package:acs_upb_mobile/resources/storage_provider.dart';
@@ -490,25 +489,6 @@ void main() {
     }
   });
 
-  group('Profile', () {
-    for (var size in screenSizes) {
-      testWidgets('${size.width}x${size.height}', (WidgetTester tester) async {
-        await binding.setSurfaceSize(size);
-
-        mockNetworkImagesFor(() async {
-          await tester.pumpWidget(buildApp());
-          await tester.pumpAndSettle();
-
-          // Open profile
-          await tester.tap(find.byIcon(Icons.person));
-          await tester.pumpAndSettle();
-
-          expect(find.byType(ProfilePage), findsNWidgets(1));
-        });
-      });
-    }
-  });
-
   group('Settings', () {
     for (var size in screenSizes) {
       testWidgets('${size.width}x${size.height}', (WidgetTester tester) async {
@@ -720,10 +700,6 @@ void main() {
         await binding.setSurfaceSize(size);
 
         await tester.pumpWidget(buildApp());
-        await tester.pumpAndSettle();
-
-        // Open Profile Page
-        await tester.tap(find.byIcon(Icons.person));
         await tester.pumpAndSettle();
 
         // Open Edit Profile page
