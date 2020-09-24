@@ -8,8 +8,8 @@
 
   "labelEmail": "Email",
   "labelPassword": "Parolă",
-  "labelOldPassword": "Parola veche",
-  "labelNewPassword": "Parola nouă",
+  "labelOldPassword": "Parolă veche",
+  "labelNewPassword": "Parolă nouă",
   "labelConfirmPassword": "Confirmare parolă",
   "labelConfirmNewPassword": "Confirmare parolă nouă",
   "labelFirstName": "Prenume",
@@ -103,7 +103,7 @@
 
   "warningInternetConnection": "Asigurați-vă că sunteți conectat la internet.",
   "warningPasswordLength": "Parola trebuie să aibă cel puțin 8 caractere.",
-  "warningSamePassword": "Parola trebuie sa fie diferită de vechea parolă",
+  "warningSamePassword": "Parola trebuie sa fie diferită de cea veche.",
   "warningPasswordUppercase": "Parola trebuie să conțină cel putin o majusculă.",
   "warningPasswordLowercase": "Parola trebuie să conțină cel putin o minusculă.",
   "warningPasswordSpecialCharacters": "Parola trebuie să conțină cel puțin un simbol.",

@@ -221,7 +221,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "warningPasswordNumber" : MessageLookupByLibrary.simpleMessage("The password must include at least one number."),
     "warningPasswordSpecialCharacters" : MessageLookupByLibrary.simpleMessage("The password must include at least one special character."),
     "warningPasswordUppercase" : MessageLookupByLibrary.simpleMessage("The password must include at least one uppercase letter."),
-    "warningSamePassword" : MessageLookupByLibrary.simpleMessage("The password must be different from the old one"),
+    "warningSamePassword" : MessageLookupByLibrary.simpleMessage("The password must be different from the old one."),
     "warningTryAgainLater" : MessageLookupByLibrary.simpleMessage("Please try again later."),
     "warningUseProvider" : m7,
     "warningWebsiteNameExists" : MessageLookupByLibrary.simpleMessage("A website with the same name already exists."),

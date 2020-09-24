@@ -1,6 +1,7 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+
 import 'intl/messages_all.dart';
 
 // **************************************************************************
@@ -1003,10 +1004,10 @@ class S {
     );
   }
 
-  /// `The password must be different from the old one`
+  /// `The password must be different from the old one.`
   String get warningSamePassword {
     return Intl.message(
-      'The password must be different from the old one',
+      'The password must be different from the old one.',
       name: 'warningSamePassword',
       desc: '',
       args: [],
