@@ -25,13 +25,15 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static m2(name) => "Echipa ${name}";
 
-  static m3(shortcutName) => "Sunteți sigur că doriți să ștergeți \"${shortcutName}\"?";
+  static m3(email) => "Sunteți sigur că doriți să schimbați email-ul cu ${email}?";
 
-  static m4(name) => "Bine ai venit, ${name}!";
+  static m4(shortcutName) => "Sunteți sigur că doriți să ștergeți \"${shortcutName}\"?";
 
-  static m5(email) => "Există deja un cont asociat cu adresa ${email}.";
+  static m5(name) => "Bine ai venit, ${name}!";
 
-  static m6(provider) => "Folosiți ${provider} pentru a vă conecta.";
+  static m6(email) => "Există deja un cont asociat cu adresa ${email}.";
+
+  static m7(provider) => "Folosiți ${provider} pentru a vă conecta.";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
@@ -39,6 +41,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "actionAddEvent" : MessageLookupByLibrary.simpleMessage("Adaugă eveniment"),
     "actionAddShortcut" : MessageLookupByLibrary.simpleMessage("Adaugă scurtătură"),
     "actionAddWebsite" : MessageLookupByLibrary.simpleMessage("Adaugă website"),
+    "actionChangeEmail" : MessageLookupByLibrary.simpleMessage("Schimbă email"),
+    "actionChangePassword" : MessageLookupByLibrary.simpleMessage("Schimbă parola"),
     "actionContribute" : MessageLookupByLibrary.simpleMessage("Contribuie"),
     "actionDeleteAccount" : MessageLookupByLibrary.simpleMessage("Ștergere cont"),
     "actionDeleteEvent" : MessageLookupByLibrary.simpleMessage("Șterge eveniment"),
@@ -102,6 +106,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "labelCategory" : MessageLookupByLibrary.simpleMessage("Categorie"),
     "labelClass" : MessageLookupByLibrary.simpleMessage("Materie"),
     "labelColor" : MessageLookupByLibrary.simpleMessage("Culoare"),
+    "labelConfirmNewPassword" : MessageLookupByLibrary.simpleMessage("Confirmare parolă nouă"),
     "labelConfirmPassword" : MessageLookupByLibrary.simpleMessage("Confirmare parolă"),
     "labelCustom" : MessageLookupByLibrary.simpleMessage("Alta"),
     "labelDescription" : MessageLookupByLibrary.simpleMessage("Descriere"),
@@ -113,6 +118,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "labelLink" : MessageLookupByLibrary.simpleMessage("Link"),
     "labelLocation" : MessageLookupByLibrary.simpleMessage("Locație"),
     "labelName" : MessageLookupByLibrary.simpleMessage("Nume"),
+    "labelNewPassword" : MessageLookupByLibrary.simpleMessage("Parolă nouă"),
+    "labelOldPassword" : MessageLookupByLibrary.simpleMessage("Parolă veche"),
     "labelPassword" : MessageLookupByLibrary.simpleMessage("Parolă"),
     "labelPersonalInformation" : MessageLookupByLibrary.simpleMessage("Informații personale"),
     "labelPoints" : MessageLookupByLibrary.simpleMessage("Puncte"),
@@ -129,10 +136,13 @@ class MessageLookup extends MessageLookupByLibrary {
     "messageAccountDeleted" : MessageLookupByLibrary.simpleMessage("Contul a fost șters cu succes."),
     "messageAddCustomWebsite" : MessageLookupByLibrary.simpleMessage("Încercați să adăugați un website."),
     "messageCannotBeUndone" : MessageLookupByLibrary.simpleMessage("Această acțiune nu este reversibilă."),
+    "messageChangeEmail" : m3,
+    "messageChangeEmailSuccess" : MessageLookupByLibrary.simpleMessage("Email-ul a fost schimbat cu succes"),
+    "messageChangePasswordSuccess" : MessageLookupByLibrary.simpleMessage("Parola a fost schimbată cu succes."),
     "messageCheckEmailVerification" : MessageLookupByLibrary.simpleMessage("Verificați-vă mail-ul pentru confirmarea contului."),
     "messageDeleteAccount" : MessageLookupByLibrary.simpleMessage("Sunteți sigur că doriți să ștergeți contul?"),
     "messageDeleteEvent" : MessageLookupByLibrary.simpleMessage("Sunteți sigur că doriți să ștergeți acest eveniment?"),
-    "messageDeleteShortcut" : m3,
+    "messageDeleteShortcut" : m4,
     "messageDeleteWebsite" : MessageLookupByLibrary.simpleMessage("Sunteți sigur că doriți să ștergeți acest website?"),
     "messageEditProfileSuccess" : MessageLookupByLibrary.simpleMessage("Profilul a fost actualizat cu succes."),
     "messageEmailNotVerified" : MessageLookupByLibrary.simpleMessage("Contul nu este verificat."),
@@ -148,7 +158,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "messageWebsiteDeleted" : MessageLookupByLibrary.simpleMessage("Website-ul a fost șters cu succes."),
     "messageWebsiteEdited" : MessageLookupByLibrary.simpleMessage("Website modificat cu succes."),
     "messageWebsitePreview" : MessageLookupByLibrary.simpleMessage("Încercați să apăsați, să faceți hover sau să țineți apăsat ca să testați noul website."),
-    "messageWelcomeName" : m4,
+    "messageWelcomeName" : m5,
     "messageWelcomeSimple" : MessageLookupByLibrary.simpleMessage("Bine ai venit!"),
     "navigationClasses" : MessageLookupByLibrary.simpleMessage("Materii"),
     "navigationEventDetails" : MessageLookupByLibrary.simpleMessage("Detalii eveniment"),
@@ -194,7 +204,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "uniEventTypeTest" : MessageLookupByLibrary.simpleMessage("Test"),
     "warningAgreeTo" : MessageLookupByLibrary.simpleMessage("Trebuie să fiți de acord cu "),
     "warningAuthenticationNeeded" : MessageLookupByLibrary.simpleMessage("Autentificați-vă pentru a accesa această funcționalitate."),
-    "warningEmailInUse" : m5,
+    "warningEmailInUse" : m6,
     "warningFieldCannotBeEmpty" : MessageLookupByLibrary.simpleMessage("Câmpul nu poate fi gol."),
     "warningFieldCannotBeZero" : MessageLookupByLibrary.simpleMessage("Câmpul nu poate fi zero."),
     "warningFilterAlreadyDisabled" : MessageLookupByLibrary.simpleMessage("Întreg conținutul este vizibil deja."),
@@ -211,8 +221,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "warningPasswordNumber" : MessageLookupByLibrary.simpleMessage("Parola trebuie să conțină cel puțin un număr."),
     "warningPasswordSpecialCharacters" : MessageLookupByLibrary.simpleMessage("Parola trebuie să conțină cel puțin un simbol."),
     "warningPasswordUppercase" : MessageLookupByLibrary.simpleMessage("Parola trebuie să conțină cel putin o majusculă."),
+    "warningSamePassword" : MessageLookupByLibrary.simpleMessage("Parola trebuie sa fie diferită de cea veche."),
     "warningTryAgainLater" : MessageLookupByLibrary.simpleMessage("Încercați mai târziu."),
-    "warningUseProvider" : m6,
+    "warningUseProvider" : m7,
     "warningWebsiteNameExists" : MessageLookupByLibrary.simpleMessage("Există deja un site cu același nume."),
     "websiteCategoryAdministrative" : MessageLookupByLibrary.simpleMessage("Administrativ"),
     "websiteCategoryAssociations" : MessageLookupByLibrary.simpleMessage("Asociații"),

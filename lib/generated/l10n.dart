@@ -1,6 +1,7 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+
 import 'intl/messages_all.dart';
 
 // **************************************************************************
@@ -113,11 +114,41 @@ class S {
     );
   }
 
+  /// `Old password`
+  String get labelOldPassword {
+    return Intl.message(
+      'Old password',
+      name: 'labelOldPassword',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `New password`
+  String get labelNewPassword {
+    return Intl.message(
+      'New password',
+      name: 'labelNewPassword',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Confirm password`
   String get labelConfirmPassword {
     return Intl.message(
       'Confirm password',
       name: 'labelConfirmPassword',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Confirm new password`
+  String get labelConfirmNewPassword {
+    return Intl.message(
+      'Confirm new password',
+      name: 'labelConfirmNewPassword',
       desc: '',
       args: [],
     );
@@ -633,6 +664,16 @@ class S {
     );
   }
 
+  /// `Change email`
+  String get actionChangeEmail {
+    return Intl.message(
+      'Change email',
+      name: 'actionChangeEmail',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Send e-mail again?`
   String get actionSendVerificationAgain {
     return Intl.message(
@@ -648,6 +689,16 @@ class S {
     return Intl.message(
       'Delete account',
       name: 'actionDeleteAccount',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Change password`
+  String get actionChangePassword {
+    return Intl.message(
+      'Change password',
+      name: 'actionChangePassword',
       desc: '',
       args: [],
     );
@@ -948,6 +999,16 @@ class S {
     return Intl.message(
       'The password must be 8 characters long or more.',
       name: 'warningPasswordLength',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `The password must be different from the old one.`
+  String get warningSamePassword {
+    return Intl.message(
+      'The password must be different from the old one.',
+      name: 'warningSamePassword',
       desc: '',
       args: [],
     );
@@ -1633,6 +1694,16 @@ class S {
     );
   }
 
+  /// `Are you sure you want to change the account email to {email}?`
+  String messageChangeEmail(Object email) {
+    return Intl.message(
+      'Are you sure you want to change the account email to $email?',
+      name: 'messageChangeEmail',
+      desc: '',
+      args: [email],
+    );
+  }
+
   /// `Under construction`
   String get messageUnderConstruction {
     return Intl.message(
@@ -1778,6 +1849,26 @@ class S {
     return Intl.message(
       'Profile updated successfully.',
       name: 'messageEditProfileSuccess',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Password changed successfully.`
+  String get messageChangePasswordSuccess {
+    return Intl.message(
+      'Password changed successfully.',
+      name: 'messageChangePasswordSuccess',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Email changed successfully`
+  String get messageChangeEmailSuccess {
+    return Intl.message(
+      'Email changed successfully',
+      name: 'messageChangeEmailSuccess',
       desc: '',
       args: [],
     );
