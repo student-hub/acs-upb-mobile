@@ -74,8 +74,11 @@ void main() {
 
   group('Login', () {
     testWidgets('Anonymous login', (WidgetTester tester) async {
-      await tester.pumpWidget(ChangeNotifierProvider<AuthProvider>(
-          create: (_) => mockAuthProvider, child: MyApp()));
+      await tester.pumpWidget(MultiProvider(providers: [
+        ChangeNotifierProvider<AuthProvider>(create: (_) => mockAuthProvider),
+        ChangeNotifierProvider<WebsiteProvider>(
+            create: (_) => mockWebsiteProvider)
+      ], child: MyApp()));
       await tester.pumpAndSettle();
 
       await tester.runAsync(() async {
@@ -98,8 +101,11 @@ void main() {
     });
 
     testWidgets('Credential login', (WidgetTester tester) async {
-      await tester.pumpWidget(ChangeNotifierProvider<AuthProvider>(
-          create: (_) => mockAuthProvider, child: MyApp()));
+      await tester.pumpWidget(MultiProvider(providers: [
+        ChangeNotifierProvider<AuthProvider>(create: (_) => mockAuthProvider),
+        ChangeNotifierProvider<WebsiteProvider>(
+            create: (_) => mockWebsiteProvider)
+      ], child: MyApp()));
       await tester.pumpAndSettle();
 
       await tester.runAsync(() async {
@@ -325,7 +331,9 @@ void main() {
       await tester.pumpWidget(MultiProvider(providers: [
         ChangeNotifierProvider<AuthProvider>(create: (_) => mockAuthProvider),
         ChangeNotifierProvider<FilterProvider>(
-            create: (_) => mockFilterProvider)
+            create: (_) => mockFilterProvider),
+        ChangeNotifierProvider<WebsiteProvider>(
+            create: (_) => mockWebsiteProvider)
       ], child: MyApp(navigationObservers: [mockObserver])));
       await tester.pumpAndSettle();
 
