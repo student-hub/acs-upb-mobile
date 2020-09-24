@@ -8,7 +8,6 @@ import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
 import 'package:acs_upb_mobile/pages/home/home_page.dart';
 import 'package:acs_upb_mobile/pages/people/service/person_provider.dart';
 import 'package:acs_upb_mobile/pages/portal/service/website_provider.dart';
-import 'package:acs_upb_mobile/authentication/view/profile_page.dart';
 import 'package:acs_upb_mobile/widgets/form/form_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -46,6 +45,8 @@ void main() {
     when(mockAuthProvider.isAuthenticatedFromCache).thenReturn(false);
     when(mockAuthProvider.isAuthenticatedFromService)
         .thenAnswer((realInvocation) => Future.value(false));
+    when(mockAuthProvider.currentUser).thenAnswer((_) => Future.value(null));
+    when(mockAuthProvider.isAnonymous).thenReturn(true);
 
     mockWebsiteProvider = MockWebsiteProvider();
     // ignore: invalid_use_of_protected_member
@@ -574,11 +575,6 @@ void main() {
       verify(mockObserver.didPush(any, any));
       expect(find.byType(HomePage), findsOneWidget);
 
-      // Open profile page
-      await tester.tap(find.byIcon(Icons.person));
-      await tester.pumpAndSettle();
-
-      expect(find.byType(ProfilePage), findsOneWidget);
       expect(find.text('Anonymous'), findsOneWidget);
 
       // Press log in button
@@ -608,11 +604,6 @@ void main() {
       verify(mockObserver.didPush(any, any));
       expect(find.byType(HomePage), findsOneWidget);
 
-      // Open profile page
-      await tester.tap(find.byIcon(Icons.person));
-      await tester.pumpAndSettle();
-
-      expect(find.byType(ProfilePage), findsOneWidget);
       expect(find.text('John Doe'), findsOneWidget);
 
       // Press log out button
