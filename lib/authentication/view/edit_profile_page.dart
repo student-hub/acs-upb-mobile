@@ -69,7 +69,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
   Widget build(BuildContext context) {
     AuthProvider authProvider = Provider.of<AuthProvider>(context);
     return AppScaffold(
-      title: S.of(context).actionEditProfile,
+      title: Text(S.of(context).actionEditProfile),
       actions: [
         AppScaffoldAction(
             text: S.of(context).buttonSave,

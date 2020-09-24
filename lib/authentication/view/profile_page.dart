@@ -64,7 +64,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         builder: (context) => EditProfilePage()));
                   })
       ],
-      title: S.of(context).navigationProfile,
+      title: Text(S.of(context).navigationProfile),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: FutureBuilder(

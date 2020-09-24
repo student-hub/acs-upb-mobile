@@ -147,7 +147,7 @@ class FilterPageState extends State<FilterPage> {
     var filterProvider = Provider.of<FilterProvider>(context);
 
     return AppScaffold(
-      title: widget.title ?? S.of(context).navigationFilter,
+      title: Text(widget.title ?? S.of(context).navigationFilter),
       actions: [
         AppScaffoldAction(
           text: widget.buttonText ?? S.of(context).buttonApply,

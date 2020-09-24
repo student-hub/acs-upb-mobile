@@ -65,7 +65,7 @@ class _EventViewState extends State<EventView> {
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
-      title: S.of(context).navigationEventDetails,
+      title: Text(S.of(context).navigationEventDetails),
       body: SafeArea(
         child: ListView(children: [
           Padding(

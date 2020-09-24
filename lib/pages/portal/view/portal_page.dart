@@ -228,7 +228,7 @@ class _PortalPageState extends State<PortalPage>
     CircularProgressIndicator progressIndicator = CircularProgressIndicator();
 
     return AppScaffold(
-      title: S.of(context).navigationPortal,
+      title: Text(S.of(context).navigationPortal),
       actions: [
         AppScaffoldAction(
           icon: editingEnabled ? CustomIcons.edit_slash : Icons.edit,

@@ -6,9 +6,11 @@ import 'package:acs_upb_mobile/pages/timetable/model/events/uni_event.dart';
 import 'package:acs_upb_mobile/pages/timetable/service/uni_event_provider.dart';
 import 'package:acs_upb_mobile/pages/timetable/view/uni_event_widget.dart';
 import 'package:acs_upb_mobile/resources/custom_icons.dart';
+import 'package:acs_upb_mobile/resources/locale_provider.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:recase/recase.dart';
 import 'package:time_machine/time_machine.dart';
 import 'package:timetable/timetable.dart';
 
@@ -39,7 +41,13 @@ class _TimetablePageState extends State<TimetablePage> {
     }
 
     return AppScaffold(
-      title: S.of(context).navigationTimetable,
+      title: AnimatedBuilder(
+        animation: _controller.dateListenable,
+        builder: (context, child) => Text(LocalDateTime(
+                2020, _controller.dateListenable.value.monthOfYear, 1, 1, 1, 1)
+            .toString('MMMM', LocaleProvider.culture)
+            .titleCase),
+      ),
       needsToBeAuthenticated: true,
       leading: AppScaffoldAction(
         icon: Icons.today,

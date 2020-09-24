@@ -21,7 +21,7 @@ class SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
-      title: S.of(context).navigationSettings,
+      title: Text(S.of(context).navigationSettings),
       body: Builder(
         builder: (BuildContext context) {
           return Column(

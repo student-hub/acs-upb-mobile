@@ -14,7 +14,7 @@ class HomePage extends StatelessWidget {
     AuthProvider authProvider = Provider.of<AuthProvider>(context);
 
     return AppScaffold(
-      title: S.of(context).navigationHome,
+      title: Text(S.of(context).navigationHome),
       actions: [
         AppScaffoldAction(
           icon: Icons.settings,

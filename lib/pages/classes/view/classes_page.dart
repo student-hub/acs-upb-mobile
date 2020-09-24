@@ -93,7 +93,7 @@ class _ClassesPageState extends State<ClassesPage> {
     AuthProvider authProvider = Provider.of<AuthProvider>(context);
 
     return AppScaffold(
-      title: S.of(context).navigationClasses,
+      title: Text(S.of(context).navigationClasses),
       // TODO: Simply show all classes if user is not authenticated
       needsToBeAuthenticated: true,
       actions: [
@@ -189,7 +189,7 @@ class _AddClassesPageState extends State<AddClassesPage> {
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
-      title: S.of(context).actionAddClasses,
+      title: Text(S.of(context).actionAddClasses),
       actions: [
         AppScaffoldAction(
           text: S.of(context).buttonSave,

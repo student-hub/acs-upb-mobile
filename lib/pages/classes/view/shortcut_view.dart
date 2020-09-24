@@ -24,7 +24,7 @@ class _ShortcutViewState extends State<ShortcutView> {
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
-      title: S.of(context).actionAddShortcut,
+      title: Text(S.of(context).actionAddShortcut),
       actions: [
         AppScaffoldAction(
             text: S.of(context).buttonSave,
