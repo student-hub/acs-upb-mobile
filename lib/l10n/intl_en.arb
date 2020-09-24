@@ -8,7 +8,10 @@
 
   "labelEmail": "Email",
   "labelPassword": "Password",
+  "labelOldPassword": "Old password",
+  "labelNewPassword": "New password",
   "labelConfirmPassword": "Confirm password",
+  "labelConfirmNewPassword": "Confirm new password",
   "labelFirstName": "First name",
   "labelLastName": "Last name",
   "labelName": "Name",
@@ -64,8 +67,10 @@
   "actionSignInWith": "Sign in with {provider}",
   "actionResetPassword": "Reset password",
   "actionSendEmail": "Send e-mail",
+  "actionChangeEmail": "Change email",
   "actionSendVerificationAgain": "Send e-mail again?",
   "actionDeleteAccount": "Delete account",
+  "actionChangePassword": "Change password",
   "actionAddWebsite": "Add website",
   "actionEditWebsite": "Edit website",
   "actionDeleteWebsite": "Delete website",
@@ -98,6 +103,7 @@
 
   "warningInternetConnection": "Please make sure you are connected to the internet.",
   "warningPasswordLength": "The password must be 8 characters long or more.",
+  "warningSamePassword": "The password must be different from the old one.",
   "warningPasswordUppercase": "The password must include at least one uppercase letter.",
   "warningPasswordLowercase": "The password must include at least one lowercase letter.",
   "warningPasswordSpecialCharacters": "The password must include at least one special character.",
@@ -173,6 +179,7 @@
   "messageResetPassword": "Enter your e-mai in order to receive instructions on how to reset your password.",
   "messageDeleteAccount": "Are you sure you want to delete your account?",
   "messageCannotBeUndone": "This action cannot be undone.",
+  "messageChangeEmail": "Are you sure you want to change the account email to {email}?",
   "messageUnderConstruction": "Under construction",
   "messageWebsitePreview": "Try tapping/long-pressing/hovering the preview to test the new website.",
   "messageAddCustomWebsite": "Try adding a custom website.",
@@ -188,6 +195,8 @@
   "messageGetStartedPlusButton": "Get started by pressing the + button above.",
   "messageIAgreeToThe": "I agree to the ",
   "messageEditProfileSuccess": "Profile updated successfully.",
+  "messageChangePasswordSuccess": "Password changed successfully.",
+  "messageChangeEmailSuccess": "Email changed successfully",
 
   "infoPasswordResetEmailSent": "Please check your inbox for the password reset e-mail.",
   "infoRelevance": "Try to choose the most restrictive category.",
@@ -195,8 +204,10 @@
   "infoRelevanceExample": "For instance, if something is only relevant for \"314CB\" and \"315CB\", don't just set \"CB\".",
   "infoPassword": "It must contain lower and uppercase letters, one number and one special character, and have a minimum length of 8.",
   "infoAppIsOpenSource": "ACS UPB Mobile is open source.",
+  "infoEmail": "This is the same username you use to log in to {forum}.",
 
   "stringEmailDomain": "@stud.acs.upb.ro",
+  "stringForum": "cs.curs.pub.ro",
   "stringAnonymous": "Anonymous",
 
   "fileAcsBanner": "assets/images/acs_banner_en.png"

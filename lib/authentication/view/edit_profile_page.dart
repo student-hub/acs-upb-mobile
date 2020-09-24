@@ -1,10 +1,12 @@
 import 'package:acs_upb_mobile/authentication/model/user.dart';
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
-import 'package:acs_upb_mobile/authentication/view/dropdown_tree.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
+import 'package:acs_upb_mobile/pages/filter/view/filter_dropdown.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
+import 'package:acs_upb_mobile/resources/validator.dart';
 import 'package:acs_upb_mobile/widgets/button.dart';
 import 'package:acs_upb_mobile/widgets/dialog.dart';
+import 'package:acs_upb_mobile/widgets/icon_text.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:flutter/cupertino.dart';
@@ -22,9 +24,104 @@ class EditProfilePage extends StatefulWidget {
 class _EditProfilePageState extends State<EditProfilePage> {
   final firstNameController = TextEditingController();
   final lastNameController = TextEditingController();
-  final dropdownController = DropdownTreeController();
+  final emailController = TextEditingController();
+  final dropdownController = FilterDropdownController();
 
   final formKey = GlobalKey<FormState>();
+
+  AppDialog _changePasswordDialog(BuildContext context) {
+    final newPasswordController = TextEditingController();
+    final oldPasswordController = TextEditingController();
+    final changePasswordKey = GlobalKey<FormState>();
+
+    AuthProvider authProvider =
+        Provider.of<AuthProvider>(context, listen: false);
+    return AppDialog(
+      title: S.of(context).actionChangePassword,
+      content: [
+        Form(
+          key: changePasswordKey,
+          child: Column(
+            children: [
+              TextFormField(
+                obscureText: true,
+                decoration: InputDecoration(
+                  labelText: S.of(context).labelOldPassword,
+                  hintText: S.of(context).hintPassword,
+                  errorMaxLines: 2,
+                ),
+                controller: oldPasswordController,
+                validator: (value) {
+                  if (value?.isEmpty ?? true) {
+                    return S.of(context).errorNoPassword;
+                  }
+                  return null;
+                },
+              ),
+              TextFormField(
+                obscureText: true,
+                decoration: InputDecoration(
+                  labelText: S.of(context).labelNewPassword,
+                  hintText: S.of(context).hintPassword,
+                  errorMaxLines: 2,
+                ),
+                controller: newPasswordController,
+                validator: (value) {
+                  if (value?.isEmpty ?? true) {
+                    return S.of(context).errorNoPassword;
+                  }
+                  if (value == oldPasswordController.text) {
+                    return S.of(context).warningSamePassword;
+                  }
+                  String result = AppValidator.isStrongPassword(value, context);
+                  if (result != null) {
+                    return result;
+                  }
+                  return null;
+                },
+              ),
+              TextFormField(
+                  obscureText: true,
+                  decoration: InputDecoration(
+                    labelText: S.of(context).labelConfirmNewPassword,
+                    hintText: S.of(context).hintPassword,
+                    errorMaxLines: 2,
+                  ),
+                  validator: (value) {
+                    if (value?.isEmpty ?? true) {
+                      return S.of(context).errorNoPassword;
+                    }
+                    if (value == newPasswordController.text) {
+                      return S.of(context).errorPasswordsDiffer;
+                    }
+                    return null;
+                  }),
+            ],
+          ),
+        )
+      ],
+      actions: [
+        AppButton(
+          key: ValueKey('change_password_button'),
+          text: S.of(context).actionChangePassword.toUpperCase(),
+          color: Theme.of(context).accentColor,
+          width: 130,
+          onTap: () async {
+            if (changePasswordKey.currentState.validate()) {
+              if (await authProvider.verifyPassword(
+                  password: oldPasswordController.text, context: context)) {
+                if (await authProvider.changePassword(
+                    password: newPasswordController.text, context: context)) {
+                  AppToast.show(S.of(context).messageChangePasswordSuccess);
+                  Navigator.pop(context);
+                }
+              }
+            }
+          },
+        )
+      ],
+    );
+  }
 
   AppDialog _deletionConfirmationDialog(BuildContext context) {
     final passwordController = TextEditingController();
@@ -65,9 +162,52 @@ class _EditProfilePageState extends State<EditProfilePage> {
     );
   }
 
+  AppDialog _changeEmailConfirmationDialog(BuildContext context) {
+    final passwordController = TextEditingController();
+    return AppDialog(
+      title: S.of(context).actionChangeEmail,
+      message: S.of(context).messageChangeEmail(
+          emailController.text + S.of(context).stringEmailDomain),
+      content: [
+        TextFormField(
+          decoration: InputDecoration(
+            labelText: S.of(context).labelConfirmPassword,
+            hintText: S.of(context).hintPassword,
+          ),
+          obscureText: true,
+          controller: passwordController,
+        ),
+      ],
+      actions: [
+        AppButton(
+          key: ValueKey('change_email_button'),
+          text: S.of(context).actionChangeEmail,
+          color: Theme.of(context).accentColor,
+          width: 130,
+          onTap: () async {
+            AuthProvider authProvider =
+                Provider.of<AuthProvider>(context, listen: false);
+            if (await authProvider.verifyPassword(
+                password: passwordController.text, context: context)) {
+              if (await authProvider.changeEmail(
+                  email: emailController.text + S.of(context).stringEmailDomain,
+                  context: context)) {
+                AppToast.show(S.of(context).messageChangeEmailSuccess);
+                Navigator.pop(context, true);
+              } else {
+                Navigator.pop(context, false);
+              }
+            }
+          },
+        )
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     AuthProvider authProvider = Provider.of<AuthProvider>(context);
+    String emailDomain = S.of(context).stringEmailDomain;
     return AppScaffold(
       title: S.of(context).actionEditProfile,
       actions: [
@@ -83,20 +223,30 @@ class _EditProfilePageState extends State<EditProfilePage> {
               }
 
               if (formKey.currentState.validate()) {
-                bool result = await authProvider.updateProfile(
-                  info: info,
-                  context: context,
-                );
-
+                bool result = true;
+                if (!authProvider.isVerifiedFromCache &&
+                    emailController.text + emailDomain != authProvider.email) {
+                  await showDialog(
+                          context: context,
+                          child: _changeEmailConfirmationDialog(context))
+                      .then((value) => result = value ?? false);
+                }
                 if (result) {
-                  AppToast.show(S.of(context).messageEditProfileSuccess);
-                  Navigator.pop(context);
+                  if (await authProvider.updateProfile(
+                    info: info,
+                    context: context,
+                  )) {
+                    AppToast.show(S.of(context).messageEditProfileSuccess);
+                    Navigator.pop(context);
+                  }
                 }
               }
             }),
         AppScaffoldAction(
           icon: Icons.more_vert,
           items: {
+            S.of(context).actionChangePassword: () => showDialog(
+                context: context, child: _changePasswordDialog(context)),
             S.of(context).actionDeleteAccount: () => showDialog(
                 context: context, child: _deletionConfirmationDialog(context))
           },
@@ -112,9 +262,13 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 User user = snap.data;
                 lastNameController.text = user.lastName;
                 firstNameController.text = user.firstName;
+                if (!authProvider.isVerifiedFromCache) {
+                  emailController.text = authProvider.email.split('@')[0];
+                }
                 path = user.classes;
                 return Container(
                   child: ListView(children: [
+                    AccountNotVerifiedWarning(),
                     PreferenceTitle(
                       S.of(context).labelPersonalInformation,
                       leftPadding: 0,
@@ -131,7 +285,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                             ),
                             controller: firstNameController,
                             validator: (value) {
-                              if (value.isEmpty || value == null) {
+                              if (value?.isEmpty ?? true) {
                                 return S.of(context).errorMissingFirstName;
                               }
                               return null;
@@ -151,6 +305,22 @@ class _EditProfilePageState extends State<EditProfilePage> {
                               return null;
                             },
                           ),
+                          if (!authProvider.isVerifiedFromCache)
+                            TextFormField(
+                              decoration: InputDecoration(
+                                prefixIcon: Icon(Icons.alternate_email),
+                                labelText: S.of(context).labelEmail,
+                                hintText: S.of(context).hintEmail,
+                                suffix: Text(emailDomain),
+                              ),
+                              controller: emailController,
+                              validator: (value) {
+                                if (value?.isEmpty ?? true) {
+                                  return S.of(context).errorMissingLastName;
+                                }
+                                return null;
+                              },
+                            )
                         ],
                       ),
                     ),
@@ -158,7 +328,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       S.of(context).labelClass,
                       leftPadding: 0,
                     ),
-                    DropdownTree(
+                    FilterDropdown(
                       initialPath: path,
                       controller: dropdownController,
                       leftPadding: 10.0,
@@ -166,7 +336,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                           .textTheme
                           .caption
                           .apply(color: Theme.of(context).hintColor),
-                    )
+                    ),
                   ]),
                 );
               } else {
@@ -174,6 +344,46 @@ class _EditProfilePageState extends State<EditProfilePage> {
               }
             }),
       ),
+    );
+  }
+}
+
+class AccountNotVerifiedWarning extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    AuthProvider authProvider = Provider.of<AuthProvider>(context);
+
+    if (!authProvider.isAuthenticatedFromCache || authProvider.isAnonymous) {
+      return Container();
+    }
+
+    return FutureBuilder(
+      future: authProvider.isVerifiedFromService,
+      builder: (BuildContext context, AsyncSnapshot<bool> snap) {
+        if (!snap.hasData || snap.data) {
+          return Container();
+        }
+        return Padding(
+          padding: const EdgeInsets.only(top: 8.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              IconText(
+                align: TextAlign.center,
+                icon: Icons.error_outline,
+                text: S.of(context).messageEmailNotVerified,
+                actionText: S.of(context).actionSendVerificationAgain,
+                style: Theme.of(context)
+                    .textTheme
+                    .caption
+                    .copyWith(color: Theme.of(context).hintColor),
+                onTap: () =>
+                    authProvider.sendEmailVerification(context: context),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }

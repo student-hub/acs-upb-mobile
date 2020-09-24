@@ -684,6 +684,7 @@ void main() {
 
   group('Edit Profile', () {
     setUp(() {
+      when(mockAuthProvider.isVerifiedFromCache).thenReturn(true);
       when(mockAuthProvider.isAuthenticatedFromCache).thenReturn(true);
       when(mockAuthProvider.isAnonymous).thenReturn(false);
       when(mockAuthProvider.currentUser).thenAnswer((realInvocation) =>
