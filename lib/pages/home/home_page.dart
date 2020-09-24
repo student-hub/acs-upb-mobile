@@ -9,14 +9,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class HomePage extends StatefulWidget {
+class HomePage extends StatelessWidget {
   HomePage({Key key}) : super(key: key);
 
-  @override
-  _HomePageState createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
@@ -113,21 +108,21 @@ class ProfileCard extends StatelessWidget {
                             ),
                           ),
                         ),
-                        if(user != null)
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            IconButton(
-                              icon: Icon(Icons.edit),
-                              color: Theme.of(context).textTheme.button.color,
-                              onPressed: ()  => Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (context) => EditProfilePage(),
+                        if (user != null)
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              IconButton(
+                                icon: Icon(Icons.edit),
+                                color: Theme.of(context).textTheme.button.color,
+                                onPressed: () => Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) => EditProfilePage(),
+                                  ),
                                 ),
                               ),
-                            ),
-                          ],
-                        ),
+                            ],
+                          ),
                       ],
                     ),
                     AccountNotVerifiedWarning(),
