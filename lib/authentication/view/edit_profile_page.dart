@@ -204,43 +204,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
     );
   }
 
-  Widget accountNotVerifiedFooter(BuildContext context) {
-    AuthProvider authProvider = Provider.of<AuthProvider>(context);
-
-    if (!authProvider.isAuthenticatedFromCache || authProvider.isAnonymous) {
-      return Container();
-    }
-
-    return FutureBuilder(
-      future: authProvider.isVerifiedFromService,
-      builder: (BuildContext context, AsyncSnapshot<bool> snap) {
-        if (!snap.hasData || snap.data) {
-          return Container();
-        }
-        return Padding(
-          padding: const EdgeInsets.only(top: 8.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              IconText(
-                align: TextAlign.center,
-                icon: Icons.error_outline,
-                text: S.of(context).messageEmailNotVerified,
-                actionText: S.of(context).actionSendVerificationAgain,
-                style: Theme.of(context)
-                    .textTheme
-                    .caption
-                    .copyWith(color: Theme.of(context).hintColor),
-                onTap: () =>
-                    authProvider.sendEmailVerification(context: context),
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     AuthProvider authProvider = Provider.of<AuthProvider>(context);
@@ -305,7 +268,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 path = user.classes;
                 return Container(
                   child: ListView(children: [
-                    accountNotVerifiedFooter(context),
+                    AccountNotVerifiedWarning(),
                     PreferenceTitle(
                       S.of(context).labelPersonalInformation,
                       leftPadding: 0,
@@ -381,6 +344,46 @@ class _EditProfilePageState extends State<EditProfilePage> {
               }
             }),
       ),
+    );
+  }
+}
+
+class AccountNotVerifiedWarning extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    AuthProvider authProvider = Provider.of<AuthProvider>(context);
+
+    if (!authProvider.isAuthenticatedFromCache || authProvider.isAnonymous) {
+      return Container();
+    }
+
+    return FutureBuilder(
+      future: authProvider.isVerifiedFromService,
+      builder: (BuildContext context, AsyncSnapshot<bool> snap) {
+        if (!snap.hasData || snap.data) {
+          return Container();
+        }
+        return Padding(
+          padding: const EdgeInsets.only(top: 8.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              IconText(
+                align: TextAlign.center,
+                icon: Icons.error_outline,
+                text: S.of(context).messageEmailNotVerified,
+                actionText: S.of(context).actionSendVerificationAgain,
+                style: Theme.of(context)
+                    .textTheme
+                    .caption
+                    .copyWith(color: Theme.of(context).hintColor),
+                onTap: () =>
+                    authProvider.sendEmailVerification(context: context),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }
