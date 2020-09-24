@@ -380,8 +380,7 @@ class AuthProvider with ChangeNotifier {
         return false;
       }
 
-      String errorString = await AppValidator.isStrongPassword(
-          password: password, context: context);
+      String errorString = AppValidator.isStrongPassword(password, context);
       if (errorString != null) {
         AppToast.show(errorString);
         return false;

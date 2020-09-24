@@ -22,55 +22,48 @@ void main() {
 
   group('Password Validation', () {
     testWidgets('Valid password', (tester) async {
-      await tester.pumpWidget(testLocalized((context) => expect(
-          AppValidator.isStrongPassword(password: 'Aa12345@', context: context),
-          null)));
+      await tester.pumpWidget(testLocalized((context) =>
+          expect(AppValidator.isStrongPassword('Aa12345@', context), null)));
       await tester.pumpAndSettle();
     });
 
     testWidgets('Invalid password - length', (tester) async {
       await tester.pumpWidget(testLocalized((context) => expect(
-          AppValidator.isStrongPassword(password: 'Aa1@2', context: context),
+          AppValidator.isStrongPassword('Aa1@2', context),
           'The password must be 8 characters long or more.')));
       await tester.pumpAndSettle();
     });
 
     testWidgets('Invalid password - uppercase', (tester) async {
       await tester.pumpWidget(testLocalized((context) => expect(
-          AppValidator.isStrongPassword(
-              password: 'bba12345@', context: context),
+          AppValidator.isStrongPassword('bba12345@', context),
           'The password must include at least one uppercase letter.')));
       await tester.pumpAndSettle();
     });
 
     testWidgets('Invalid password - lowercase', (tester) async {
       await tester.pumpWidget(testLocalized((context) => expect(
-          AppValidator.isStrongPassword(
-              password: 'AAA12345@', context: context),
+          AppValidator.isStrongPassword('AAA12345@', context),
           'The password must include at least one lowercase letter.')));
       await tester.pumpAndSettle();
     });
 
     testWidgets('Invalid password - number', (tester) async {
       await tester.pumpWidget(testLocalized((context) => expect(
-          AppValidator.isStrongPassword(
-              password: 'AAAaaaaaa@', context: context),
+          AppValidator.isStrongPassword('AAAaaaaaa@', context),
           'The password must include at least one number.')));
       await tester.pumpAndSettle();
     });
 
     testWidgets('Invalid password - Japanese', (tester) async {
       await tester.pumpWidget(testLocalized((context) => expect(
-          AppValidator.isStrongPassword(
-              password: 'こんにちはこんにちは', context: context),
-          isNotNull)));
+          AppValidator.isStrongPassword('こんにちはこんにちは', context), isNotNull)));
       await tester.pumpAndSettle();
     });
 
     testWidgets('Invalid password - special character', (tester) async {
       await tester.pumpWidget(testLocalized((context) => expect(
-          AppValidator.isStrongPassword(
-              password: 'AAAaaaaaa1', context: context),
+          AppValidator.isStrongPassword('AAAaaaaaa1', context),
           'The password must include at least one special character.')));
       await tester.pumpAndSettle();
     });

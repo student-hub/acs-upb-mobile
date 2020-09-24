@@ -81,9 +81,7 @@ class _SignUpViewState extends State<SignUpView> {
         obscureText: true,
         autofillHints: [AutofillHints.newPassword],
         check: (password, {BuildContext context}) async =>
-            await AppValidator.isStrongPassword(
-                password: password, context: context) ==
-            null,
+            AppValidator.isStrongPassword(password, context) == null,
       ),
       FormItem(
         label: S.of(context).labelConfirmPassword,

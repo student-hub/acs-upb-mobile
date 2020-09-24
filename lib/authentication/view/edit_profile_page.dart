@@ -73,8 +73,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   if (value == oldPasswordController.text) {
                     return S.of(context).warningSamePassword;
                   }
-                  String result = AppValidator.isStrongPassword(
-                      password: value, context: context);
+                  String result = AppValidator.isStrongPassword(value, context);
                   if (result != null) {
                     return result;
                   }
