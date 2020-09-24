@@ -29,16 +29,24 @@ class HomePage extends StatelessWidget {
       ],
       body: ListView(
         children: [
-          favouriteWebsites(context),
+          FavouriteWebsitesCard(
+            onSeeMore: () => tabController?.animateTo(2),
+          ),
         ],
       ),
     );
   }
+}
 
-  Padding favouriteWebsites(BuildContext context) {
+class FavouriteWebsitesCard extends StatelessWidget {
+  final Function onSeeMore;
+
+  FavouriteWebsitesCard({this.onSeeMore});
+
+  @override
+  Widget build(BuildContext context) {
     var websitesFuture =
         Provider.of<WebsiteProvider>(context).fetchWebsites(null);
-
     return Padding(
         padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 8.0),
         child: FutureBuilder(
@@ -66,7 +74,7 @@ class HomePage extends StatelessWidget {
                                   .copyWith(fontSize: 18),
                             ),
                             GestureDetector(
-                              onTap: () => tabController?.animateTo(2),
+                              onTap: () => onSeeMore,
                               child: Row(
                                 children: <Widget>[
                                   Text(
@@ -147,12 +155,12 @@ class HomePage extends StatelessWidget {
               );
             }));
   }
-
-  Widget noneYet(BuildContext context) => Container(
-      height: 100,
-      child: Center(
-          child: Text(
-        S.of(context).warningNoneYet,
-        style: TextStyle(color: Theme.of(context).disabledColor),
-      )));
 }
+
+Widget noneYet(BuildContext context) => Container(
+    height: 100,
+    child: Center(
+        child: Text(
+      S.of(context).warningNoneYet,
+      style: TextStyle(color: Theme.of(context).disabledColor),
+    )));
