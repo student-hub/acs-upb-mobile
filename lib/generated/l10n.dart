@@ -123,10 +123,10 @@ class S {
     );
   }
 
-  /// `Ask permissions!`
+  /// `Request editing permissions`
   String get labelAskPermissions {
     return Intl.message(
-      'Ask permissions!',
+      'Request editing permissions',
       name: 'labelAskPermissions',
       desc: '',
       args: [],
@@ -1773,21 +1773,31 @@ class S {
     );
   }
 
-  /// `Why do you want edit permissions for ACS UPB MOBILE?`
+  /// `Why do you want edit permissions for ACS UPB Mobile?`
   String get messageAskPermissionToEdit {
     return Intl.message(
-      'Why do you want edit permissions for ACS UPB MOBILE?',
+      'Why do you want edit permissions for ACS UPB Mobile?',
       name: 'messageAskPermissionToEdit',
       desc: '',
       args: [],
     );
   }
 
-  /// `The request has been sent succesfully`
+  /// `The request has been sent succesfully.`
   String get messageRequestHasBeenSent {
     return Intl.message(
-      'The request has been sent succesfully',
+      'The request has been sent succesfully.',
       name: 'messageRequestHasBeenSent',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You have already submitted a request. If you want to overwrite it, please press 'Save' again.`
+  String get messageRequestAlreadyExists {
+    return Intl.message(
+      'You have already submitted a request. If you want to overwrite it, please press \'Save\' again.',
+      name: 'messageRequestAlreadyExists',
       desc: '',
       args: [],
     );

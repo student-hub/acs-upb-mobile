@@ -10,7 +10,7 @@ import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:preferences/preferences.dart';
 
-import 'ask_permissions.dart';
+import 'package:acs_upb_mobile/pages/settings/view/ask_permissions.dart';
 
 class SettingsPage extends StatefulWidget {
   static const String routeName = '/settings';

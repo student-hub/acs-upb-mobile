@@ -9,7 +9,7 @@
   "labelEmail": "Email",
   "labelPassword": "Parolă",
   "labelConfirmPassword": "Confirmare parolă",
-  "labelAskPermissions": "Cere permisiuni!",
+  "labelAskPermissions": "Cere permisiuni de editare",
   "labelFirstName": "Prenume",
   "labelLastName": "Nume",
   "labelName": "Nume",
@@ -117,7 +117,7 @@
   "warningFieldCannotBeEmpty": "Câmpul nu poate fi gol.",
   "warningFieldCannotBeZero": "Câmpul nu poate fi zero.",
   "warningNoneYet": "Nu există încă",
-  "warningRequestEmpty": "Textul cererii nu poate să fie gol",
+  "warningRequestEmpty": "Textul cererii nu poate să fie gol.",
   "warningAgreeTo": "Trebuie să fiți de acord cu ",
 
   "navigationAskPermissions": "Cere permisiuni",
@@ -187,8 +187,9 @@
   "messageShortcutDeleted": "Scurtătura a fost ștearsă cu succes.",
   "messageNoClassesYet": "Nu ați adăugat nici o materie încă.",
   "messageGetStartedPlusButton": "Începeți prin a apăsa butonul + de mai sus.",
-  "messageAskPermissionToEdit": "De ce dorești să primești permisiuni de editare în ACS UPB MOBILE?",
+  "messageAskPermissionToEdit": "De ce dorești să primești permisiuni de editare în ACS UPB Mobile?",
   "messageRequestHasBeenSent": "Cererea a fost transmisă cu succes",
+  "messageRequestAlreadyExists": "Ați trimis deja o cerere. Daca doriți să o suprascrieți, vă rugăm sa apasați 'Salvare' din nou.",
   "messageIAgreeToThe": "Sunt de acord cu ",
   "messageAgreePermissions": "Voi încărca doar informații corecte si precise. Înțeleg că încărcarea informațiilor eronate sau ofensatoare în mod intenționat va conduce la blocarea permisiunilor mele permanent.",
 

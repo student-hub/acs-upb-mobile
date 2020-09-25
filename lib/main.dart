@@ -33,7 +33,7 @@ main() async {
     ChangeNotifierProvider<AuthProvider>(create: (_) => AuthProvider()),
     ChangeNotifierProvider<StorageProvider>(create: (_) => StorageProvider()),
     ChangeNotifierProvider<WebsiteProvider>(create: (_) => WebsiteProvider()),
-    ChangeNotifierProvider<RequestProvider>(create: (_) => RequestProvider()),
+    Provider<RequestProvider>(create: (_) => RequestProvider()),
     ChangeNotifierProvider<ClassProvider>(create: (_) => ClassProvider()),
     ChangeNotifierProvider<FilterProvider>(
         create: (_) => FilterProvider(global: true)),

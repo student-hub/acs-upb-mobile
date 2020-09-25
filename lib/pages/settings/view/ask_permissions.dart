@@ -3,16 +3,14 @@ import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/settings/model/request.dart';
 import 'package:acs_upb_mobile/pages/settings/service/request_provider.dart';
-import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
-import 'package:flutter/gestures.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class AskPermissions extends StatefulWidget {
-  static const String routeName = '/askPermissions';
+  static const String routeName = '/requestPermissions';
 
   @override
   State<StatefulWidget> createState() => AskPermissionsState();
@@ -20,8 +18,14 @@ class AskPermissions extends StatefulWidget {
 
 class AskPermissionsState extends State<AskPermissions> {
   User user;
-  String requestBody = "";
-  bool agreedToResponsabilities = false;
+  String requestBody = '';
+  bool agreedToResponsibilities = false;
+
+  /*
+   * This flag is used whenever an user has already submitted a request in order
+   * to verify if he is actually wants to resubmit another request.
+   */
+  bool informedAboutExistingRequest = false;
 
   _fetchUser() async {
     AuthProvider authProvider = Provider.of(context, listen: false);
@@ -45,25 +49,44 @@ class AskPermissionsState extends State<AskPermissions> {
         title: S.of(context).navigationAskPermissions,
         actions: [
           AppScaffoldAction(
-              icon: Icons.save,
-              onPressed: () {
-                if (!agreedToResponsabilities) {
+              text: S.of(context).buttonSave,
+              onPressed: () async {
+                if (!agreedToResponsibilities) {
                   AppToast.show(S.of(context).warningAgreeTo +
                       S.of(context).labelPermissionsConsent +
                       '.');
                   return;
                 }
 
-                if (requestBody == "") {
+                if (requestBody == '') {
                   AppToast.show(S.of(context).warningRequestEmpty);
                   return;
                 }
 
-                requestProvider.addForm(
-                    new Request(user.uid, requestBody), context);
+                final Request myRequest = Request(user.uid, requestBody);
 
-                AppToast.show(S.of(context).messageRequestHasBeenSent);
-                Navigator.of(context).pop();
+                /*
+                 * Check if there is already a request registered for the current
+                 * user.
+                 */
+                var queryResult =
+                    await requestProvider.isAlreadyRequested(myRequest);
+
+                if (queryResult && !informedAboutExistingRequest) {
+                  AppToast.show(S.of(context).messageRequestAlreadyExists);
+                  informedAboutExistingRequest = true;
+                  return;
+                }
+
+                queryResult = await requestProvider.makeRequest(
+                    Request(user.uid, requestBody),
+                    context: context);
+                if (queryResult) {
+                  AppToast.show(S.of(context).messageRequestHasBeenSent);
+                  Navigator.of(context).pop();
+                } else {
+                  AppToast.show(S.of(context).errorSomethingWentWrong);
+                }
               })
         ],
         body: ListView(
@@ -72,8 +95,7 @@ class AskPermissionsState extends State<AskPermissions> {
               padding: const EdgeInsets.only(top: 10.0),
               child: Container(
                   height: MediaQuery.of(context).size.height / 4,
-                  child: Image.asset(
-                      'assets/illustrations/undraw_hiring_cyhs.png')),
+                  child: Image.asset('assets/illustrations/undraw_hiring.png')),
             ),
             Padding(
               padding: const EdgeInsets.all(20.0),
@@ -96,10 +118,10 @@ class AskPermissionsState extends State<AskPermissions> {
               padding: const EdgeInsets.all(10.0),
               child: Row(children: [
                 Checkbox(
-                  value: agreedToResponsabilities,
+                  value: agreedToResponsibilities,
                   visualDensity: VisualDensity.compact,
                   onChanged: (value) =>
-                      setState(() => agreedToResponsabilities = value),
+                      setState(() => agreedToResponsibilities = value),
                 ),
                 Expanded(
                     child: Text(

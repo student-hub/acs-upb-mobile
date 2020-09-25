@@ -17,10 +17,10 @@ extension RequestExtension on Request {
   }
 }
 
-class RequestProvider with ChangeNotifier {
+class RequestProvider {
   final Firestore _db = Firestore.instance;
 
-  Future<bool> addForm(Request request, BuildContext context) async {
+  Future<bool> makeRequest(Request request, {BuildContext context}) async {
     assert(request.requestBody != null);
 
     try {
@@ -33,7 +33,27 @@ class RequestProvider with ChangeNotifier {
       return true;
     } catch (e) {
       print(e);
-      AppToast.show(S.of(context).errorSomethingWentWrong);
+      if (context != null) {
+        AppToast.show(S.of(context).errorSomethingWentWrong);
+      }
+      return false;
+    }
+  }
+
+  Future<bool> isAlreadyRequested(Request request,
+      {BuildContext context}) async {
+    try {
+      DocumentSnapshot snap =
+          await _db.collection('forms').document(request.userId).get();
+      if (snap != null) {
+        return true;
+      }
+      return false;
+    } catch (e) {
+      print(e);
+      if (context != null) {
+        AppToast.show(S.of(context).errorSomethingWentWrong);
+      }
       return false;
     }
   }

@@ -5,11 +5,10 @@
   "buttonSend": "Send",
   "buttonApply": "Apply",
   "buttonSet": "Set",
-
   "labelEmail": "Email",
   "labelPassword": "Password",
   "labelConfirmPassword": "Confirm password",
-  "labelAskPermissions": "Ask permissions!",
+  "labelAskPermissions": "Request editing permissions",
   "labelFirstName": "First name",
   "labelLastName": "Last name",
   "labelName": "Name",
@@ -33,19 +32,16 @@
   "labelPoints": "Points",
   "labelPrivacyPolicy": "Privacy Policy",
   "labelPermissionsConsent": "consent for editing rights",
-
   "sectionShortcuts": "Shortcuts",
   "sectionEvents": "Events",
   "sectionFrequentlyAccessedWebsites": "Favourite websites",
   "sectionEventsComingUp": "Events coming up",
   "sectionFAQ": "FAQ",
   "sectionGrading": "Grading",
-
   "shortcutTypeMain": "Main page",
   "shortcutTypeClassbook": "Classbook",
   "shortcutTypeResource": "Resource",
   "shortcutTypeOther": "Other",
-
   "hintEmail": "john.doe",
   "hintPassword": "····················",
   "hintFirstName": "John",
@@ -55,7 +51,6 @@
   "hintWebsiteLink": "http://google.com",
   "hintEvaluation": "Final exam",
   "hintPoints": "4.0",
-
   "actionSignUp": "Sign up",
   "actionLogIn": "Log in",
   "actionLogOut": "Log out",
@@ -81,7 +76,6 @@
   "actionShowMore": "Show more",
   "actionEditGrading": "Edit grading",
   "actionContribute": "Contribute",
-
   "errorSomethingWentWrong": "Something went wrong.",
   "errorPasswordsDiffer": "The two passwords differ.",
   "errorIncorrectPassword": "The password you entered is incorrect.",
@@ -95,7 +89,6 @@
   "errorTooManyRequests": "There have been too many requests from this device.",
   "errorCouldNotLaunchURL": "Could not launch '{url}'.",
   "errorPermissionDenied": "You do not have permission to do that.",
-
   "warningInternetConnection": "Please make sure you are connected to the internet.",
   "warningPasswordLength": "The password must be 8 characters long or more.",
   "warningPasswordUppercase": "The password must include at least one uppercase letter.",
@@ -119,7 +112,6 @@
   "warningNoneYet": "None yet",
   "warningAgreeTo": "You need to agree to the ",
   "warningRequestEmpty": "The request must not be empty",
-
   "navigationAskPermissions": "Ask for permissions",
   "navigationHome": "Home",
   "navigationTimetable": "Timetable",
@@ -130,14 +122,11 @@
   "navigationFilter": "Filter",
   "navigationClasses": "Classes",
   "navigationEventDetails": "Event details",
-
   "filterMenuShowAll": "Show all",
   "filterMenuShowMine": "Show only mine",
   "filterMenuRelevance": "Filter by relevance",
-
   "relevanceOnlyMe": "Only me",
   "relevanceAnyone": "Anyone",
-
   "settingsTitlePersonalization": "Personalization",
   "settingsItemDarkMode": "Dark Mode",
   "settingsTitleLocalization": "Localization",
@@ -146,13 +135,11 @@
   "settingsItemLanguageRomanian": "Romanian",
   "settingsItemLanguageAuto": "Auto",
   "settingsRelevanceFilter": "Relevance filter",
-
   "websiteCategoryLearning": "Learning",
   "websiteCategoryAdministrative": "Administrative",
   "websiteCategoryAssociations": "Associations",
   "websiteCategoryResources": "Resources",
   "websiteCategoryOthers": "Others",
-
   "uniEventTypeLab": "Lab",
   "uniEventTypeSeminar": "Seminar",
   "uniEventTypeLecture": "Lecture",
@@ -163,7 +150,6 @@
   "uniEventTypeTest": "Test",
   "uniEventTypePractical": "Practical",
   "uniEventTypeResearch": "Research",
-
   "messageWelcomeSimple": "Welcome!",
   "messageWelcomeName": "Welcome, {name}!",
   "messageNewUser": "New user?",
@@ -187,19 +173,17 @@
   "messageShortcutDeleted": "Shortcut deleted successfully.",
   "messageNoClassesYet": "You have not added any classes yet.",
   "messageGetStartedPlusButton": "Get started by pressing the + button above.",
-  "messageAskPermissionToEdit": "Why do you want edit permissions for ACS UPB MOBILE?",
-  "messageRequestHasBeenSent": "The request has been sent succesfully",
+  "messageAskPermissionToEdit": "Why do you want edit permissions for ACS UPB Mobile?",
+  "messageRequestHasBeenSent": "The request has been sent succesfully.",
+  "messageRequestAlreadyExists": "You have already submitted a request. If you want to overwrite it, please press 'Save' again.",
   "messageIAgreeToThe": "I agree to the ",
   "messageAgreePermissions": "I will only upload information that is correct and accurate, to the best of my knowledge. I understand that submitting erroneous or offensive information on purpose will lead to my editing permissions being permanently revoked.",
-
   "infoPasswordResetEmailSent": "Please check your inbox for the password reset e-mail.",
   "infoRelevance": "Try to choose the most restrictive category.",
   "infoRelevanceExample": "For instance, if something is only relevant for \"314CB\" and \"315CB\", don't just set \"CB\".",
   "infoPassword": "It must contain lower and uppercase letters, one number and one special character, and have a minimum length of 8.",
   "infoAppIsOpenSource": "ACS UPB Mobile is open source.",
-
   "stringEmailDomain": "@stud.acs.upb.ro",
   "stringAnonymous": "Anonymous",
-
   "fileAcsBanner": "assets/images/acs_banner_en.png"
 }
