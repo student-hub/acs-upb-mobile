@@ -17,14 +17,27 @@ class QuestionsProvider {
     }
   }
 
+  Future<QuerySnapshot> getPreviewDocuments(BuildContext context) {
+    try {
+      return Firestore().collection('faq').limit(2).getDocuments();
+    } catch (e) {
+      print(e);
+      if (context != null) {
+        AppToast.show(S.of(context).errorSomethingWentWrong);
+      }
+      return null;
+    }
+  }
+
   List<Question> getQuestions(QuerySnapshot snapshot) {
     return snapshot.documents
-        .map((documentSnapshot) => DatabaseQustion.fromSnap(documentSnapshot))
+        .map((documentSnapshot) => DatabaseQuestion.fromSnap(documentSnapshot))
         .toList();
   }
+
 }
 
-extension DatabaseQustion on Question {
+extension DatabaseQuestion on Question {
   static Question fromSnap(DocumentSnapshot snap) {
     String question = snap.data['question'];
     String answer = snap.data['answer'];

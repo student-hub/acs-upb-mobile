@@ -3,6 +3,9 @@ import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/authentication/view/edit_profile_page.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/navigation/routes.dart';
+import 'package:acs_upb_mobile/pages/faq/model/question.dart';
+import 'package:acs_upb_mobile/pages/faq/service/question_provider.dart';
+import 'package:acs_upb_mobile/pages/faq/view/faq_page.dart';
 import 'package:acs_upb_mobile/pages/portal/model/website.dart';
 import 'package:acs_upb_mobile/pages/portal/service/website_provider.dart';
 import 'package:acs_upb_mobile/resources/locale_provider.dart';
@@ -11,6 +14,7 @@ import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/widgets/circle_image.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -36,6 +40,13 @@ class HomePage extends StatelessWidget {
           ProfileCard(),
           FavouriteWebsitesCard(
             onSeeMore: () => tabController?.animateTo(2),
+          ),
+          FaqCard(
+            onSeeMore: () => Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (BuildContext context) => FaqPage(),
+              ),
+            ),
           ),
         ],
       ),
@@ -250,6 +261,104 @@ class FavouriteWebsitesCard extends StatelessWidget {
                                       ),
                                     ),
                                   ))
+                              .toList(),
+                        ),
+                    ],
+                  ),
+                ),
+              );
+            }
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }),
+    );
+  }
+
+  Widget noneYet(BuildContext context) => Container(
+        height: 100,
+        child: Center(
+          child: Text(
+            S.of(context).warningNoneYet,
+            style: TextStyle(color: Theme.of(context).disabledColor),
+          ),
+        ),
+      );
+}
+
+class FaqCard extends StatelessWidget {
+  final Function onSeeMore;
+
+  FaqCard({this.onSeeMore});
+
+  @override
+  Widget build(BuildContext context) {
+    var questionsFuture = QuestionsProvider().getPreviewDocuments(context);
+    return Padding(
+      padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 8.0),
+      child: FutureBuilder(
+          future: questionsFuture,
+          builder: (_, snapshot) {
+            if (snapshot.connectionState == ConnectionState.done) {
+              List<Question> questions =
+                  QuestionsProvider().getQuestions(snapshot.data);
+              return Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    children: <Widget>[
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            S.of(context).sectionFAQ,
+                            style: Theme.of(context)
+                                .textTheme
+                                .headline6
+                                .copyWith(fontSize: 18),
+                          ),
+                          GestureDetector(
+                            onTap: onSeeMore,
+                            child: Row(
+                              children: <Widget>[
+                                Text(
+                                  S.of(context).actionShowMore,
+                                  style: Theme.of(context)
+                                      .accentTextTheme
+                                      .subtitle2
+                                      .copyWith(
+                                          color: Theme.of(context).accentColor),
+                                ),
+                                Icon(
+                                  Icons.arrow_forward_ios,
+                                  color: Theme.of(context).accentColor,
+                                  size: Theme.of(context)
+                                      .textTheme
+                                      .subtitle2
+                                      .fontSize,
+                                )
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 12),
+                      if (questions.isEmpty)
+                        noneYet(context)
+                      else
+                        Column(
+                          children: questions
+                              .map(
+                                (q) => ListTile(
+                                  title: Text(q.question),
+                                  subtitle: AutoSizeText(
+                                    q.answer,
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  contentPadding: EdgeInsets.zero,
+                                ),
+                              )
                               .toList(),
                         ),
                     ],
