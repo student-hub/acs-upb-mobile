@@ -6,8 +6,8 @@ class User {
   String firstName;
   String lastName;
 
-    /// Info about the user's assigned group (including degree, year of study, series etc)
-    List<String> classes;
+  /// Info about the user's assigned group (including degree, year of study, series etc)
+  List<String> classes;
 
   int permissionLevel;
 
