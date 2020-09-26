@@ -43,7 +43,7 @@ extension ClassHeaderExtension on ClassHeader {
       return null;
     }
     return ClassHeader(
-      id: snap.documentID,
+      id: snap.data['shortname'],
       name: snap.data['fullname'],
       acronym: snap.data['shortname'].split('-')[3],
       category: snap.data['category_path'],
