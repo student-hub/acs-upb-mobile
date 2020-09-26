@@ -218,17 +218,14 @@ class _WebsiteViewState extends State<WebsiteView> {
                       Provider.of<WebsiteProvider>(context, listen: false);
 
                   bool res = false;
-                  if (_relevanceController.private ||
-                      _relevanceController.anyone) {
-                    res = await websiteProvider.addWebsite(
+                  if (widget.updateExisting) {
+                    res = await websiteProvider.updateWebsite(
                       _buildWebsite(),
-                      updateExisting: widget.updateExisting,
                       context: context,
                     );
                   } else {
                     res = await websiteProvider.addWebsite(
                       _buildWebsite(),
-                      updateExisting: widget.updateExisting,
                       context: context,
                     );
                   }
