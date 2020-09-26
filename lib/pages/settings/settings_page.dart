@@ -65,34 +65,39 @@ class SettingsPageState extends State<SettingsPage> {
                       ),
                     ),
                     Divider(),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: IconText(
-                        icon: Icons.lock_outline,
-                        text: S.of(context).labelPrivacyPolicy,
-                        align: TextAlign.center,
-                        onTap: () => Utils.launchURL(
-                            'https://www.websitepolicies.com/policies/view/IIUFv381',
-                            context: context),
-                      ),
+                    Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: IconText(
+                            icon: Icons.lock_outline,
+                            text: S.of(context).labelPrivacyPolicy,
+                            align: TextAlign.center,
+                            onTap: () => Utils.launchURL(
+                                'https://www.websitepolicies.com/policies/view/IIUFv381',
+                                context: context),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: IconText(
+                            icon: CustomIcons.github_brands,
+                            text: S.of(context).infoAppIsOpenSource,
+                            actionText: S.of(context).actionContribute,
+                            actionArrow: true,
+                            align: TextAlign.center,
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyText1
+                                .apply(color: Theme.of(context).hintColor),
+                            onTap: () => Utils.launchURL(
+                                'https://github.com/acs-upb-mobile/acs-upb-mobile',
+                                context: context),
+                          ),
+                        ),
+                      ],
                     ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: IconText(
-                        icon: CustomIcons.github_brands,
-                        text: S.of(context).infoAppIsOpenSource,
-                        actionText: S.of(context).actionContribute,
-                        actionArrow: true,
-                        align: TextAlign.center,
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodyText1
-                            .apply(color: Theme.of(context).hintColor),
-                        onTap: () => Utils.launchURL(
-                            'https://github.com/acs-upb-mobile/acs-upb-mobile',
-                            context: context),
-                      ),
-                    )
                   ],
                 ),
               ),

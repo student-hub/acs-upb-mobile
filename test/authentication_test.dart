@@ -6,7 +6,9 @@ import 'package:acs_upb_mobile/main.dart';
 import 'package:acs_upb_mobile/pages/filter/model/filter.dart';
 import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
 import 'package:acs_upb_mobile/pages/home/home_page.dart';
+import 'package:acs_upb_mobile/pages/people/service/person_provider.dart';
 import 'package:acs_upb_mobile/pages/portal/service/website_provider.dart';
+import 'package:acs_upb_mobile/widgets/form/form_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
@@ -21,10 +23,13 @@ class MockFilterProvider extends Mock implements FilterProvider {}
 
 class MockWebsiteProvider extends Mock implements WebsiteProvider {}
 
+class MockPersonProvider extends Mock implements PersonProvider {}
+
 void main() {
   AuthProvider mockAuthProvider;
   WebsiteProvider mockWebsiteProvider;
   FilterProvider mockFilterProvider;
+  PersonProvider mockPersonProvider;
 
   setUp(() async {
     WidgetsFlutterBinding.ensureInitialized();
@@ -40,6 +45,8 @@ void main() {
     when(mockAuthProvider.isAuthenticatedFromCache).thenReturn(false);
     when(mockAuthProvider.isAuthenticatedFromService)
         .thenAnswer((realInvocation) => Future.value(false));
+    when(mockAuthProvider.currentUser).thenAnswer((_) => Future.value(null));
+    when(mockAuthProvider.isAnonymous).thenReturn(true);
 
     mockWebsiteProvider = MockWebsiteProvider();
     // ignore: invalid_use_of_protected_member
@@ -57,12 +64,21 @@ void main() {
         .thenAnswer((_) => Future.value(Filter(localizedLevelNames: [
               {'en': 'Level', 'ro': 'Nivel'}
             ], root: FilterNode(name: 'root'))));
+
+    mockPersonProvider = MockPersonProvider();
+    // ignore: invalid_use_of_protected_member
+    when(mockPersonProvider.hasListeners).thenReturn(false);
+    when(mockPersonProvider.fetchPeople(context: anyNamed('context')))
+        .thenAnswer((_) => Future.value([]));
   });
 
   group('Login', () {
     testWidgets('Anonymous login', (WidgetTester tester) async {
-      await tester.pumpWidget(ChangeNotifierProvider<AuthProvider>(
-          create: (_) => mockAuthProvider, child: MyApp()));
+      await tester.pumpWidget(MultiProvider(providers: [
+        ChangeNotifierProvider<AuthProvider>(create: (_) => mockAuthProvider),
+        ChangeNotifierProvider<WebsiteProvider>(
+            create: (_) => mockWebsiteProvider)
+      ], child: MyApp()));
       await tester.pumpAndSettle();
 
       await tester.runAsync(() async {
@@ -85,8 +101,11 @@ void main() {
     });
 
     testWidgets('Credential login', (WidgetTester tester) async {
-      await tester.pumpWidget(ChangeNotifierProvider<AuthProvider>(
-          create: (_) => mockAuthProvider, child: MyApp()));
+      await tester.pumpWidget(MultiProvider(providers: [
+        ChangeNotifierProvider<AuthProvider>(create: (_) => mockAuthProvider),
+        ChangeNotifierProvider<WebsiteProvider>(
+            create: (_) => mockWebsiteProvider)
+      ], child: MyApp()));
       await tester.pumpAndSettle();
 
       await tester.runAsync(() async {
@@ -201,37 +220,92 @@ void main() {
                     {'en': 'Major', 'ro': 'Specializare'},
                     {'en': 'Year', 'ro': 'An'},
                     {'en': 'Series', 'ro': 'Serie'},
-                    {'en': 'Group', 'ro': 'Group'}
+                    {'en': 'Group', 'ro': 'Group'},
+                    {'en': 'Subgroup', 'ro': 'Semigrupă'}
                   ],
                   root: FilterNode(name: 'All', value: true, children: [
                     FilterNode(name: 'BSc', value: true, children: [
                       FilterNode(name: 'CTI', value: true, children: [
-                        FilterNode(name: 'CTI-1', value: true, children: [
-                          FilterNode(name: '1-CA'),
-                          FilterNode(
-                            name: '1-CB',
-                            value: true,
-                            children: [
-                              FilterNode(name: '311CB'),
-                              FilterNode(name: '312CB'),
-                              FilterNode(name: '313CB'),
+                        FilterNode(
+                          name: 'CTI-1',
+                          value: true,
+                          children: [
+                            FilterNode(name: '1-CA'),
+                            FilterNode(
+                              name: '1-CB',
+                              value: true,
+                              children: [
+                                FilterNode(
+                                  name: '311CB',
+                                  value: true,
+                                  children: [
+                                    FilterNode(name: '311CBa'),
+                                    FilterNode(name: '311CBb'),
+                                  ],
+                                ),
+                                FilterNode(
+                                  name: '312CB',
+                                  value: true,
+                                  children: [
+                                    FilterNode(name: '312CBa'),
+                                    FilterNode(name: '312CBb'),
+                                  ],
+                                ),
+                                FilterNode(
+                                  name: '313CB',
+                                  value: true,
+                                  children: [
+                                    FilterNode(name: '313CBa'),
+                                    FilterNode(name: '313CBb'),
+                                  ],
+                                ),
+                                FilterNode(
+                                  name: '314CB',
+                                  value: true,
+                                  children: [
+                                    FilterNode(name: '314CBa'),
+                                    FilterNode(name: '314CBb'),
+                                  ],
+                                ),
+                              ],
+                            ),
+                            FilterNode(name: '1-CC'),
+                            FilterNode(name: '1-CD', children: [
                               FilterNode(
-                                name: '314CB',
+                                name: '311CD',
                                 value: true,
+                                children: [
+                                  FilterNode(name: '311CDa'),
+                                  FilterNode(name: '311CDb'),
+                                ],
                               ),
-                            ],
-                          ),
-                          FilterNode(name: '1-CC'),
-                          FilterNode(
-                            name: '1-CD',
-                            children: [
-                              FilterNode(name: '311CD'),
-                              FilterNode(name: '312CD'),
-                              FilterNode(name: '313CD'),
-                              FilterNode(name: '314CD'),
-                            ],
-                          ),
-                        ]),
+                              FilterNode(
+                                name: '312CD',
+                                value: true,
+                                children: [
+                                  FilterNode(name: '312CDa'),
+                                  FilterNode(name: '312CDb'),
+                                ],
+                              ),
+                              FilterNode(
+                                name: '313CD',
+                                value: true,
+                                children: [
+                                  FilterNode(name: '313CDa'),
+                                  FilterNode(name: '313CDb'),
+                                ],
+                              ),
+                              FilterNode(
+                                name: '314CD',
+                                value: true,
+                                children: [
+                                  FilterNode(name: '314CDa'),
+                                  FilterNode(name: '314CDb'),
+                                ],
+                              ),
+                            ]),
+                          ],
+                        ),
                         FilterNode(
                           name: 'CTI-2',
                         ),
@@ -257,7 +331,9 @@ void main() {
       await tester.pumpWidget(MultiProvider(providers: [
         ChangeNotifierProvider<AuthProvider>(create: (_) => mockAuthProvider),
         ChangeNotifierProvider<FilterProvider>(
-            create: (_) => mockFilterProvider)
+            create: (_) => mockFilterProvider),
+        ChangeNotifierProvider<WebsiteProvider>(
+            create: (_) => mockWebsiteProvider)
       ], child: MyApp(navigationObservers: [mockObserver])));
       await tester.pumpAndSettle();
 
@@ -278,16 +354,139 @@ void main() {
       when(mockAuthProvider.canSignUpWithEmail(email: anyNamed('email')))
           .thenAnswer((realInvocation) => Future.value(true));
 
-      // Enter info
+      // Test parser from email
+      final FormTextField firstName = tester
+          .widget<FormTextField>(find.byKey(ValueKey('first_name_text_field')));
+      final FormTextField lastName = tester
+          .widget<FormTextField>(find.byKey(ValueKey('last_name_text_field')));
+
       await tester.enterText(
-          find.byKey(ValueKey('email_text_field'), skipOffstage: true), 'test');
+          find.byKey(ValueKey('email_text_field'), skipOffstage: true),
+          'john_alexander.doe123');
+      expect(firstName.controller.text, equals('John Alexander'));
+      expect(lastName.controller.text, equals('Doe'));
+
+      await tester.enterText(
+          find.byKey(ValueKey('email_text_field'), skipOffstage: true),
+          'john.doe');
+      expect(firstName.controller.text, equals('John'));
+      expect(lastName.controller.text, equals('Doe'));
+
+      await tester.enterText(
+          find.byKey(ValueKey('email_text_field'), skipOffstage: true),
+          '1234john.doe');
+      expect(firstName.controller.text, equals('John'));
+      expect(lastName.controller.text, equals('Doe'));
+
+      await tester.enterText(
+          find.byKey(ValueKey('email_text_field'), skipOffstage: true),
+          'john1234.doe');
+      expect(firstName.controller.text, equals('John'));
+      expect(lastName.controller.text, equals('Doe'));
+
+      await tester.enterText(
+          find.byKey(ValueKey('email_text_field'), skipOffstage: true),
+          'john.1234doe');
+      expect(firstName.controller.text, equals('John'));
+      expect(lastName.controller.text, equals('Doe'));
+
+      await tester.enterText(
+          find.byKey(ValueKey('email_text_field'), skipOffstage: true),
+          'john.doe1234');
+      expect(firstName.controller.text, equals('John'));
+      expect(lastName.controller.text, equals('Doe'));
+
+      await tester.enterText(
+          find.byKey(ValueKey('email_text_field'), skipOffstage: true),
+          '1234john_alexander.doe');
+      expect(firstName.controller.text, equals('John Alexander'));
+      expect(lastName.controller.text, equals('Doe'));
+
+      await tester.enterText(
+          find.byKey(ValueKey('email_text_field'), skipOffstage: true),
+          'john1234_alexander.doe');
+      expect(firstName.controller.text, equals('John Alexander'));
+      expect(lastName.controller.text, equals('Doe'));
+
+      await tester.enterText(
+          find.byKey(ValueKey('email_text_field'), skipOffstage: true),
+          'john_1234alexander.doe');
+      expect(firstName.controller.text, equals('John Alexander'));
+      expect(lastName.controller.text, equals('Doe'));
+
+      await tester.enterText(
+          find.byKey(ValueKey('email_text_field'), skipOffstage: true),
+          'john_alexander1234.doe');
+      expect(firstName.controller.text, equals('John Alexander'));
+      expect(lastName.controller.text, equals('Doe'));
+
+      await tester.enterText(
+          find.byKey(ValueKey('email_text_field'), skipOffstage: true),
+          'john_alexander.1234doe');
+      expect(firstName.controller.text, equals('John Alexander'));
+      expect(lastName.controller.text, equals('Doe'));
+
+      await tester.enterText(
+          find.byKey(ValueKey('email_text_field'), skipOffstage: true),
+          '!@#%^&*()=-+john_alexander.doe');
+      expect(firstName.controller.text, equals('John Alexander'));
+      expect(lastName.controller.text, equals('Doe'));
+
+      await tester.enterText(
+          find.byKey(ValueKey('email_text_field'), skipOffstage: true),
+          'john!@#%^&*()=-+_alexander.doe');
+      expect(firstName.controller.text, equals('John Alexander'));
+      expect(lastName.controller.text, equals('Doe'));
+
+      await tester.enterText(
+          find.byKey(ValueKey('email_text_field'), skipOffstage: true),
+          'john_!@#%^&*()=-+alexander.doe');
+      expect(firstName.controller.text, equals('John Alexander'));
+      expect(lastName.controller.text, equals('Doe'));
+
+      await tester.enterText(
+          find.byKey(ValueKey('email_text_field'), skipOffstage: true),
+          'john_alexander!@#%^&*()=-+.doe');
+      expect(firstName.controller.text, equals('John Alexander'));
+      expect(lastName.controller.text, equals('Doe'));
+
+      await tester.enterText(
+          find.byKey(ValueKey('email_text_field'), skipOffstage: true),
+          'john_alexander.!@#%^&*()=-+doe');
+      expect(firstName.controller.text, equals('John Alexander'));
+      expect(lastName.controller.text, equals('Doe'));
+
+      await tester.enterText(
+          find.byKey(ValueKey('email_text_field'), skipOffstage: true),
+          'john_alexander.doe!@#%^&*()=-+');
+      expect(firstName.controller.text, equals('John Alexander'));
+      expect(lastName.controller.text, equals('Doe'));
+
+      await tester.enterText(
+          find.byKey(ValueKey('email_text_field'), skipOffstage: true),
+          '!@#%^&*()=-+john!@#%^&*()=-+_!@#%^&*()=-+alexander!@#%^&*()=-+.!@#%^&*()=-+1234!@#%^&*()=-+doe!@#%^&*()=-+');
+      expect(firstName.controller.text, equals('John Alexander'));
+      expect(lastName.controller.text, equals('Doe'));
+
+      await tester.enterText(
+          find.byKey(ValueKey('email_text_field'), skipOffstage: true),
+          'j12o##h&n_alexand@-er.do***e');
+      expect(firstName.controller.text, equals('John Alexander'));
+      expect(lastName.controller.text, equals('Doe'));
+
+      await tester.enterText(
+          find.byKey(ValueKey('email_text_field'), skipOffstage: true),
+          'john_alexander.doe1234');
+
+      ///////////////////////
+
       await tester.enterText(
           find.byKey(ValueKey('password_text_field'), skipOffstage: true),
           'password');
       await tester.enterText(
           find.byKey(ValueKey('confirm_password_text_field')), 'password');
       await tester.enterText(
-          find.byKey(ValueKey('first_name_text_field')), 'John');
+          find.byKey(ValueKey('first_name_text_field')), 'John Alexander');
       await tester.enterText(
           find.byKey(ValueKey('last_name_text_field')), 'Doe');
       // TODO: Test dropdown buttons
@@ -305,10 +504,10 @@ void main() {
       verify(mockAuthProvider.signUp(
           info: argThat(
               equals({
-                'Email': 'test@stud.acs.upb.ro',
+                'Email': 'john_alexander.doe1234@stud.acs.upb.ro',
                 'Password': 'password',
                 'Confirm password': 'password',
-                'First name': 'John',
+                'First name': 'John Alexander',
                 'Last name': 'Doe',
               }),
               named: 'info'),
@@ -376,15 +575,13 @@ void main() {
             create: (_) => mockFilterProvider),
         ChangeNotifierProvider<WebsiteProvider>(
             create: (_) => mockWebsiteProvider),
+        ChangeNotifierProvider<PersonProvider>(
+            create: (_) => mockPersonProvider),
       ], child: MyApp(navigationObservers: [mockObserver])));
       await tester.pumpAndSettle();
 
       verify(mockObserver.didPush(any, any));
       expect(find.byType(HomePage), findsOneWidget);
-
-      // Open profile page
-      await tester.tap(find.byIcon(Icons.person));
-      await tester.pumpAndSettle();
 
       expect(find.text('Anonymous'), findsOneWidget);
 
@@ -407,15 +604,13 @@ void main() {
             create: (_) => mockFilterProvider),
         ChangeNotifierProvider<WebsiteProvider>(
             create: (_) => mockWebsiteProvider),
+        ChangeNotifierProvider<PersonProvider>(
+            create: (_) => mockPersonProvider),
       ], child: MyApp(navigationObservers: [mockObserver])));
       await tester.pumpAndSettle();
 
       verify(mockObserver.didPush(any, any));
       expect(find.byType(HomePage), findsOneWidget);
-
-      // Open profile page
-      await tester.tap(find.byIcon(Icons.person));
-      await tester.pumpAndSettle();
 
       expect(find.text('John Doe'), findsOneWidget);
 

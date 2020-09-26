@@ -20,9 +20,11 @@ and ask anything on the **#ama** channel.
 
 <img src=screenshots/app/light_login_ro.png height=500><img src=screenshots/app/dark_login_en.png height=500>
 
-<img src=screenshots/app/light_settings_ro.png height=500><img src=screenshots/app/dark_settings_en.png height=500>
-
 <img src=screenshots/app/light_portal_ro.png height=500><img src=screenshots/app/dark_portal_en.png height=500>
+
+<img src=screenshots/app/light_classes_ro.png height=500><img src=screenshots/app/dark_classes_en.png height=500>
+
+<img src=screenshots/app/light_people_ro.png height=500><img src=screenshots/app/dark_people_en.png height=500>
 
 ## Contributors
 * [Ioana Alexandru](https://github.com/IoanaAlexandru)
@@ -30,6 +32,7 @@ and ask anything on the **#ama** channel.
 * [Adrian Mărgineanu](https://github.com/AdrianMargineanu)
 * [Alex Conțiu](https://github.com/AlexContiu)
 * [Eric Postolache](https://github.com/ericpostolache)
+* [Gabriel Gavriluță](https://github.com/gabrielGavriluta)
 
 ## Building from source with Android Studio
 

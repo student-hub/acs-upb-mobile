@@ -1,16 +1,17 @@
+import 'package:acs_upb_mobile/authentication/model/user.dart';
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
+import 'package:acs_upb_mobile/authentication/view/edit_profile_page.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/navigation/routes.dart';
-import 'package:acs_upb_mobile/pages/classes/model/class.dart';
-import 'package:acs_upb_mobile/pages/classes/view/class_view.dart';
-import 'package:acs_upb_mobile/pages/faq/view/faq_page.dart';
 import 'package:acs_upb_mobile/pages/portal/model/website.dart';
+import 'package:acs_upb_mobile/pages/portal/service/website_provider.dart';
 import 'package:acs_upb_mobile/resources/locale_provider.dart';
 import 'package:acs_upb_mobile/resources/storage_provider.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
+import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/widgets/circle_image.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
-import 'package:black_hole_flutter/black_hole_flutter.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -32,281 +33,244 @@ class HomePage extends StatelessWidget {
       ],
       body: ListView(
         children: [
-          favouriteWebsites(context),
-          upcomingEvents(context),
-          faq(context),
+          ProfileCard(),
+          FavouriteWebsitesCard(
+            onSeeMore: () => tabController?.animateTo(2),
+          ),
         ],
       ),
     );
   }
+}
 
-  Padding favouriteWebsites(BuildContext context) {
-    var websites = [
-      Website(
-        id: '1',
-        relevance: null,
-        category: WebsiteCategory.learning,
-        iconPath: 'icons/websites/moodle.png',
-        infoByLocale: {'en': 'info-en', 'ro': 'info-ro'},
-        label: 'Moodle',
-        link: 'http://acs.curs.pub.ro/',
-        isPrivate: false,
-      ),
-      Website(
-        id: '2',
-        relevance: null,
-        category: WebsiteCategory.learning,
-        iconPath: 'icons/websites/ocw.png',
-        infoByLocale: {},
-        label: 'OCW',
-        link: 'https://ocw.cs.pub.ro/',
-        isPrivate: false,
-      ),
-      Website(
-        id: '3',
-        relevance: null,
-        category: WebsiteCategory.administrative,
-        iconPath: 'icons/websites/studenti.png',
-        infoByLocale: {},
-        label: 'studenti',
-        link: 'https://studenti.pub.ro/',
-        isPrivate: false,
-      ),
-    ];
+class ProfileCard extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    AuthProvider authProvider = Provider.of<AuthProvider>(context);
 
-    return Padding(
-      padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 8.0),
-      child: Card(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            children: <Widget>[
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    S.of(context).sectionFrequentlyAccessedWebsites,
-                    style: Theme.of(context)
-                        .textTheme
-                        .headline6
-                        .copyWith(fontSize: 18),
-                  ),
-                  GestureDetector(
-                    onTap: () => tabController?.animateTo(2),
-                    child: Row(
+    return FutureBuilder(
+      future: authProvider.currentUser,
+      builder: (BuildContext context, AsyncSnapshot<User> snap) {
+        if (snap.connectionState == ConnectionState.done) {
+          String userName;
+          String userGroup;
+          User user = snap.data;
+          if (user != null) {
+            userName = user.firstName + ' ' + user.lastName;
+            userGroup = user.classes != null ? user.classes.last : null;
+          }
+          return Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Card(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                child: Column(
+                  children: [
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
-                        Text(
-                          S.of(context).actionShowMore,
-                          style: Theme.of(context)
-                              .accentTextTheme
-                              .subtitle2
-                              .copyWith(color: Theme.of(context).accentColor),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                          child: CircleAvatar(
+                            radius: 40,
+                            child: Image(
+                                image: AssetImage(
+                                    'assets/illustrations/undraw_profile_pic.png')),
+                          ),
                         ),
-                        Icon(
-                          Icons.arrow_forward_ios,
-                          color: Theme.of(context).accentColor,
-                          size: Theme.of(context).textTheme.subtitle2.fontSize,
-                        )
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 5.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: <Widget>[
+                                FittedBox(
+                                  child: Text(
+                                    userName ?? S.of(context).stringAnonymous,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .subtitle1
+                                        .apply(fontWeightDelta: 2),
+                                  ),
+                                ),
+                                if (userGroup != null)
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 4.0),
+                                    child: Text(userGroup,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .subtitle1),
+                                  ),
+                                InkWell(
+                                  onTap: () {
+                                    Utils.signOut(context);
+                                  },
+                                  child: Text(
+                                      authProvider.isAnonymous
+                                          ? S.of(context).actionLogIn
+                                          : S.of(context).actionLogOut,
+                                      style: Theme.of(context)
+                                          .accentTextTheme
+                                          .subtitle2
+                                          .copyWith(
+                                              fontWeight: FontWeight.w500)),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        if (user != null)
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              IconButton(
+                                icon: Icon(Icons.edit),
+                                color: Theme.of(context).textTheme.button.color,
+                                onPressed: () => Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) => EditProfilePage(),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
                       ],
                     ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 12),
-              if (isMainUser(context))
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: websites
-                      .map((website) => Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: FutureBuilder<ImageProvider<dynamic>>(
-                        future: Provider.of<StorageProvider>(context,
-                            listen: false)
-                            .imageFromPath(website.iconPath),
-                        builder: (context, snapshot) {
-                          ImageProvider<dynamic> image = AssetImage(
-                              'assets/icons/websites/globe.png');
-                          if (snapshot.hasData) {
-                            image = snapshot.data;
-                          }
-                          return CircleImage(
-                            label: website.label,
-                            onTap: () => Utils.launchURL(website.link,
-                                context: context),
-                            image: image,
-                            tooltip: website.infoByLocale[
-                            LocaleProvider.localeString],
-                          );
-                        },
-                      ),
-                    ),
-                  ))
-                      .toList(),
+                    AccountNotVerifiedWarning(),
+                  ],
                 ),
-              if (!isMainUser(context)) noneYet(context)
-            ],
-          ),
-        ),
-      ),
+              ),
+            ),
+          );
+        }
+        return Container();
+      },
     );
   }
+}
 
-  bool isMainUser(BuildContext context) {
-    // AuthenticationProvider authProvider =
-    // Provider.of<AuthenticationProvider>(context, listen: false);
-    // return authProvider.uid == 'P1Ziec4xuEOjem3NIMWzyTfORTU2';
-    return false;
+class FavouriteWebsitesCard extends StatelessWidget {
+  final Function onSeeMore;
+
+  FavouriteWebsitesCard({this.onSeeMore});
+
+  @override
+  Widget build(BuildContext context) {
+    var websitesFuture =
+        Provider.of<WebsiteProvider>(context).fetchWebsites(null);
+    return Padding(
+      padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 8.0),
+      child: FutureBuilder(
+          future: websitesFuture,
+          builder: (_, snapshot) {
+            if (snapshot.connectionState == ConnectionState.done) {
+              List<Website> websites = snapshot.data;
+              websites =
+                  websites.where((w) => w.numberOfVisits > 0).take(3).toList();
+              return Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    children: <Widget>[
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            S.of(context).sectionFrequentlyAccessedWebsites,
+                            style: Theme.of(context)
+                                .textTheme
+                                .headline6
+                                .copyWith(fontSize: 18),
+                          ),
+                          GestureDetector(
+                            onTap: onSeeMore,
+                            child: Row(
+                              children: <Widget>[
+                                Text(
+                                  S.of(context).actionShowMore,
+                                  style: Theme.of(context)
+                                      .accentTextTheme
+                                      .subtitle2
+                                      .copyWith(
+                                          color: Theme.of(context).accentColor),
+                                ),
+                                Icon(
+                                  Icons.arrow_forward_ios,
+                                  color: Theme.of(context).accentColor,
+                                  size: Theme.of(context)
+                                      .textTheme
+                                      .subtitle2
+                                      .fontSize,
+                                )
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 12),
+                      if (websites.isEmpty)
+                        noneYet(context)
+                      else
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: websites
+                              .take(3)
+                              .map((website) => Expanded(
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child:
+                                          FutureBuilder<ImageProvider<dynamic>>(
+                                        future: Provider.of<StorageProvider>(
+                                                context,
+                                                listen: false)
+                                            .imageFromPath(website.iconPath),
+                                        builder: (context, snapshot) {
+                                          ImageProvider<dynamic> image = AssetImage(
+                                              'assets/icons/websites/globe.png');
+                                          if (snapshot.hasData) {
+                                            image = snapshot.data;
+                                          }
+                                          return CircleImage(
+                                            label: website.label,
+                                            onTap: () {
+                                              Provider.of<WebsiteProvider>(
+                                                      context,
+                                                      listen: false)
+                                                  .incrementNumberOfVisits(
+                                                      website);
+                                              Utils.launchURL(website.link,
+                                                  context: context);
+                                            },
+                                            image: image,
+                                            tooltip: website.infoByLocale[
+                                                LocaleProvider.localeString],
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                  ))
+                              .toList(),
+                        ),
+                    ],
+                  ),
+                ),
+              );
+            }
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }),
+    );
   }
 
   Widget noneYet(BuildContext context) => Container(
-      height: 100,
-      child: Center(
+        height: 100,
+        child: Center(
           child: Text(
             S.of(context).warningNoneYet,
             style: TextStyle(color: Theme.of(context).disabledColor),
-          )));
-
-  Widget upcomingEvents(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 8.0),
-      child: Card(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            children: <Widget>[
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    S.of(context).sectionEventsComingUp,
-                    style: Theme.of(context)
-                        .textTheme
-                        .headline6
-                        .copyWith(fontSize: 18),
-                  ),
-                  GestureDetector(
-                    onTap: () => tabController?.animateTo(1),
-                    child: Row(
-                      children: <Widget>[
-                        Text(
-                          S.of(context).actionShowMore,
-                          style: Theme.of(context)
-                              .accentTextTheme
-                              .subtitle2
-                              .copyWith(color: Theme.of(context).accentColor),
-                        ),
-                        Icon(
-                          Icons.arrow_forward_ios,
-                          color: Theme.of(context).accentColor,
-                          size: Theme.of(context).textTheme.subtitle2.fontSize,
-                        )
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-              if (isMainUser(context))
-                ListTile(
-                  leading: CircleAvatar(
-                    backgroundColor:
-                    ClassHeader(acronym: 'PC').colorFromAcronym,
-                    child: Icon(Icons.laptop,
-                        color: ClassHeader(acronym: 'PC')
-                            .colorFromAcronym
-                            .highEmphasisOnColor),
-                  ),
-                  title: Text('PC - Tema 1'),
-                  subtitle: Text('5 Oct 2020 | 23:55'),
-                  contentPadding: EdgeInsets.zero,
-                ),
-              if (isMainUser(context))
-                ListTile(
-                  leading: CircleAvatar(
-                    backgroundColor:
-                    ClassHeader(acronym: 'USO').colorFromAcronym,
-                    child: Icon(Icons.spellcheck,
-                        color: ClassHeader(acronym: 'USO')
-                            .colorFromAcronym
-                            .highEmphasisOnColor),
-                  ),
-                  title: Text('USO - Test'),
-                  subtitle: Text('1 Nov 2020 | 16:00'),
-                  contentPadding: EdgeInsets.zero,
-                ),
-              if (!isMainUser(context)) noneYet(context)
-            ],
           ),
         ),
-      ),
-    );
-  }
-
-  Padding faq(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 8.0),
-      child: Card(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            children: <Widget>[
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    S.of(context).sectionFAQ,
-                    style: Theme.of(context)
-                        .textTheme
-                        .headline6
-                        .copyWith(fontSize: 18),
-                  ),
-                  GestureDetector(
-                    onTap: () => Navigator.of(context).push(
-                        MaterialPageRoute(builder: (BuildContext context) {
-                          return FaqPage();
-                        })),
-                    child: Row(
-                      children: <Widget>[
-                        Text(
-                          S.of(context).actionShowMore,
-                          style: Theme.of(context)
-                              .accentTextTheme
-                              .subtitle2
-                              .copyWith(color: Theme.of(context).accentColor),
-                        ),
-                        Icon(
-                          Icons.arrow_forward_ios,
-                          color: Theme.of(context).accentColor,
-                          size: Theme.of(context).textTheme.subtitle2.fontSize,
-                        )
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-              ListTile(
-                title: Text('Cum mă conectez la eduroam?'),
-                subtitle: Text(
-                  'Conectarea în rețeaua eduroam se face pe baza aceluiași cont folosit și pe site-ul de cursuri. Pentru rețeaua eduroam datele de identificare vor fi de forma:',
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                contentPadding: EdgeInsets.zero,
-              ),
-              ListTile(
-                title: Text('Care este programul la secretariat??'),
-                subtitle: Text(
-                  'Secretariatul este deschis în timpul săptămânii între orele 9:00 si 11:00.',
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                contentPadding: EdgeInsets.zero,
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
+      );
 }

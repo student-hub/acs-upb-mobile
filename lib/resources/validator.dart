@@ -1,51 +1,47 @@
 import 'package:acs_upb_mobile/generated/l10n.dart';
-import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:flutter/cupertino.dart';
 
 class AppValidator {
-   static Future<bool> isStrongPassword({String password, BuildContext context}) async {
+  static String isStrongPassword(String password, BuildContext context) {
+    assert(password != null);
+    assert(context != null);
+
     if (password.length < 8) {
       if (context != null) {
-        AppToast.show(S.of(context).warningPasswordLength);
+        return S.of(context).warningPasswordLength;
       }
-      return false;
     }
-    String pattern  = r'(?=.*?[A-ZĂÂÎȘȚ]).{8,}$';
+    String pattern = r'(?=.*?[A-ZĂÂÎȘȚ]).{8,}$';
     RegExp regExp = RegExp(pattern);
-    if(!regExp.hasMatch(password)){
-      if(context != null){
-        AppToast.show(S.of(context).warningPasswordUppercase);
+    if (!regExp.hasMatch(password)) {
+      if (context != null) {
+        return S.of(context).warningPasswordUppercase;
       }
-      return false;
     }
 
     pattern = r'^(?=.*?[a-zăâîșț]).{8,}$';
     regExp = RegExp(pattern);
-    if(!regExp.hasMatch(password)){
-      if(context != null){
-        AppToast.show(S.of(context).warningPasswordLowercase);
+    if (!regExp.hasMatch(password)) {
+      if (context != null) {
+        return S.of(context).warningPasswordLowercase;
       }
-      return false;
     }
 
     pattern = r'^(?=.*?[0-9]).{8,}$';
     regExp = RegExp(pattern);
-    if(!regExp.hasMatch(password)){
-      if(context != null){
-        AppToast.show(S.of(context).warningPasswordNumber);
+    if (!regExp.hasMatch(password)) {
+      if (context != null) {
+        return S.of(context).warningPasswordNumber;
       }
-      return false;
     }
 
     pattern = r'^(?=.*?[!@#$&*~`%^_+=(){};:"<>/.,\[\]\|\\]).{8,}$';
     regExp = RegExp(pattern);
-    if(!regExp.hasMatch(password)){
-      if(context != null){
-        AppToast.show(S.of(context).warningPasswordSpecialCharacters);
+    if (!regExp.hasMatch(password)) {
+      if (context != null) {
+        return S.of(context).warningPasswordSpecialCharacters;
       }
-      return false;
     }
-    return true;
+    return null;
   }
-
 }

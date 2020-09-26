@@ -29,15 +29,16 @@ class FilterProvider with ChangeNotifier {
 
   bool _enabled;
   List<String> _relevantNodes;
+  final List<String> defaultRelevance;
 
   FilterProvider(
       {this.global = false,
       bool filterEnabled,
       this.defaultDegree,
-      List<String> defaultRelevance})
-      : _enabled = filterEnabled ?? PrefService.get('relevance_filter') ?? true,
-        _relevantNodes = defaultRelevance {
-    if (defaultRelevance != null) {
+      this.defaultRelevance})
+      : _enabled =
+            filterEnabled ?? PrefService.get('relevance_filter') ?? true {
+    if (defaultRelevance != null && !defaultRelevance.contains('All')) {
       if (this.defaultDegree == null) {
         throw ArgumentError(
             'If the relevance is not null, the degree cannot be null.');
@@ -76,13 +77,22 @@ class FilterProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  void updateFilter(Filter filter) {
+    _relevanceFilter = filter;
+    if (global) {
+      PrefService.setStringList(
+          'relevant_nodes', _relevanceFilter.relevantNodes);
+    }
+    notifyListeners();
+  }
+
   bool get filterEnabled => _enabled;
 
-  Filter get cachedFilter => _relevanceFilter;
+  Filter get cachedFilter => _relevanceFilter.clone();
 
   Future<Filter> fetchFilter(BuildContext context) async {
     if (_relevanceFilter != null) {
-      return _relevanceFilter;
+      return cachedFilter;
     }
 
     try {
@@ -106,19 +116,16 @@ class FilterProvider with ChangeNotifier {
 
       Map<String, dynamic> root = data['root'];
       _relevanceFilter = Filter(
-          localizedLevelNames: levelNames,
-          root: FilterNodeExtension.fromMap(root, 'All'),
-          listener: () {
-            if (global) {
-              PrefService.setStringList(
-                  'relevant_nodes', _relevanceFilter.relevantNodes);
-            }
-            notifyListeners();
-          });
+        localizedLevelNames: levelNames,
+        root: FilterNodeExtension.fromMap(root, 'All'),
+      );
 
-      if (_relevantNodes != null && defaultDegree != null) {
+      if (_relevantNodes == null && defaultRelevance != null) {
+        _relevantNodes = defaultRelevance;
         _relevantNodes.forEach((node) =>
             _relevanceFilter.setRelevantUpToRoot(node, defaultDegree));
+      } else if (_relevantNodes != null) {
+        _relevanceFilter.setRelevantNodes(_relevantNodes);
       } else {
         // No previous setting or defaults => set the user's group
         AuthProvider authProvider =
@@ -126,19 +133,13 @@ class FilterProvider with ChangeNotifier {
         if (authProvider.isAuthenticatedFromCache) {
           User user = await authProvider.currentUser;
           // Try to set the default from the user data
-          if (user != null) {
-            _relevanceFilter.setRelevantNodes([
-              user.degree,
-              user.domain,
-              user.year,
-              user.series,
-              user.group
-            ].where((element) => element != null).toList());
+          if (user != null && user.classes != null) {
+            _relevanceFilter.setRelevantNodes(user.classes);
           }
         }
       }
 
-      return _relevanceFilter;
+      return cachedFilter;
     } catch (e, stackTrace) {
       print(e);
       print(stackTrace);

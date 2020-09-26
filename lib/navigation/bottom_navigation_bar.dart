@@ -1,8 +1,8 @@
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/classes/view/classes_page.dart';
 import 'package:acs_upb_mobile/pages/home/home_page.dart';
+import 'package:acs_upb_mobile/pages/people/view/people_page.dart';
 import 'package:acs_upb_mobile/pages/portal/view/portal_page.dart';
-import 'package:acs_upb_mobile/pages/profile/profile_page.dart';
 import 'package:flutter/material.dart';
 
 class AppBottomNavigationBar extends StatefulWidget {
@@ -25,10 +25,10 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar>
     super.initState();
     tabController = TabController(vsync: this, length: 4);
     tabs = [
-      HomePage(key: PageStorageKey('Home')),
+      HomePage(key: PageStorageKey('Home'), tabController: tabController),
       ClassesPage(key: PageStorageKey('Classes')),
       PortalPage(key: PageStorageKey('Portal')),
-      ProfilePage(key: PageStorageKey('Profile')),
+      PeoplePage(key: PageStorageKey('People')),
     ];
   }
 
@@ -69,8 +69,8 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar>
                 iconMargin: EdgeInsets.all(0),
               ),
               Tab(
-                icon: Icon(Icons.person),
-                text: S.of(context).navigationProfile,
+                icon: Icon(Icons.people),
+                text: S.of(context).navigationPeople,
                 iconMargin: EdgeInsets.all(0),
               ),
             ],

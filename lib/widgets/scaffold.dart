@@ -1,6 +1,6 @@
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
-import 'package:acs_upb_mobile/navigation/routes.dart';
+import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -66,9 +66,7 @@ class AppScaffold extends StatelessWidget {
     return action?.items != null
         ? PopupMenuButton<String>(
             icon: Icon(action.icon),
-            tooltip: action.tooltip ??
-                action.text ??
-                S.of(context).navigationSettings,
+            tooltip: action.tooltip ?? action.text,
             onSelected: (selected) => action.items[selected](),
             itemBuilder: (BuildContext context) {
               return action.items.keys
@@ -81,9 +79,7 @@ class AppScaffold extends StatelessWidget {
             offset: Offset(0, 100),
           )
         : Tooltip(
-            message: action?.tooltip ??
-                action?.text ??
-                S.of(context).navigationSettings,
+            message: action?.tooltip ?? action?.text ?? '',
             child: action?.text != null
                 ? ButtonTheme(
                     minWidth: 8.0,
@@ -132,13 +128,6 @@ class AppScaffold extends StatelessWidget {
         ),
       );
 
-  Future<void> _signOut(BuildContext context) async {
-    AuthProvider authProvider =
-        Provider.of<AuthProvider>(context, listen: false);
-    authProvider.signOut(context);
-    Navigator.pushReplacementNamed(context, Routes.login);
-  }
-
   Widget _needsAuthenticationPage({@required BuildContext context}) => Padding(
         padding: const EdgeInsets.all(10.0),
         child: Column(
@@ -171,7 +160,7 @@ class AppScaffold extends StatelessWidget {
                   ),
                   InkWell(
                     onTap: () {
-                      _signOut(context);
+                      Utils.signOut(context);
                     },
                     child: Text(S.of(context).actionLogIn,
                         style: Theme.of(context)

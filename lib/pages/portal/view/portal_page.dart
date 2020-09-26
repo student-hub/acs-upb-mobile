@@ -4,9 +4,9 @@ import 'dart:math';
 import 'package:acs_upb_mobile/authentication/model/user.dart';
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
-import 'package:acs_upb_mobile/navigation/routes.dart';
 import 'package:acs_upb_mobile/pages/filter/model/filter.dart';
 import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
+import 'package:acs_upb_mobile/pages/filter/view/filter_page.dart';
 import 'package:acs_upb_mobile/pages/portal/model/website.dart';
 import 'package:acs_upb_mobile/pages/portal/service/website_provider.dart';
 import 'package:acs_upb_mobile/pages/portal/view/website_view.dart';
@@ -33,6 +33,7 @@ class _PortalPageState extends State<PortalPage>
     with AutomaticKeepAliveClientMixin {
   Filter filterCache;
   List<Website> websites = [];
+  FilterProvider filterProvider;
 
   // Only show user-added websites
   bool userOnly = false;
@@ -64,7 +65,7 @@ class _PortalPageState extends State<PortalPage>
       updating = true;
     }
 
-    FilterProvider filterProvider =
+    FilterProvider filterProvider = this.filterProvider ??
         Provider.of<FilterProvider>(context, listen: false);
     filterCache = await filterProvider.fetchFilter(context);
 
@@ -98,19 +99,25 @@ class _PortalPageState extends State<PortalPage>
             image: image,
             enableOverlay: canEdit,
             circleSize: size,
-            onTap: () => canEdit
-                ? Navigator.of(context).push(MaterialPageRoute(
-                    builder: (_) => ChangeNotifierProvider<FilterProvider>(
-                      create: (_) => FilterProvider(
-                          defaultDegree: website.degree,
-                          defaultRelevance: website.relevance),
-                      child: WebsiteView(
-                        website: website,
-                        updateExisting: true,
-                      ),
+            onTap: () {
+              if (canEdit) {
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (_) => ChangeNotifierProvider<FilterProvider>(
+                    create: (_) => FilterProvider(
+                        defaultDegree: website.degree,
+                        defaultRelevance: website.relevance),
+                    child: WebsiteView(
+                      website: website,
+                      updateExisting: true,
                     ),
-                  ))
-                : Utils.launchURL(website.link, context: context),
+                  ),
+                ));
+              } else {
+                Provider.of<WebsiteProvider>(context, listen: false)
+                    .incrementNumberOfVisits(website);
+                Utils.launchURL(website.link);
+              }
+            },
           );
         },
       ),
@@ -137,12 +144,13 @@ class _PortalPageState extends State<PortalPage>
     if (!hasContent) {
       // Display just the plus button (but set the height to mimic the rows with
       // content)
-      content = Container(
-        width: circleSize + 16.0,
-        height: circleSize +
-            16.0 + // padding
-            40.0, // text
-        child: Center(
+      content = Align(
+        alignment: Alignment.centerLeft,
+        child: Container(
+          width: circleSize + 16.0,
+          height: circleSize +
+              16.0 + // padding
+              40.0, // text
           child: _AddWebsiteButton(
               key: ValueKey('add_website_' +
                   ReCase(category.toLocalizedString(context)).snakeCase),
@@ -185,7 +193,7 @@ class _PortalPageState extends State<PortalPage>
       padding: const EdgeInsets.only(left: 8.0, right: 8.0),
       child: AppSpoiler(
         title: category.toLocalizedString(context),
-        initialExpanded: hasContent,
+        initiallyExpanded: hasContent,
         content: content,
       ),
     );
@@ -212,10 +220,8 @@ class _PortalPageState extends State<PortalPage>
 
   @override
   Widget build(BuildContext context) {
-    super.build(context);
-
     WebsiteProvider websiteProvider = Provider.of<WebsiteProvider>(context);
-    FilterProvider filterProvider = Provider.of<FilterProvider>(context);
+    filterProvider = Provider.of<FilterProvider>(context);
     AuthProvider authProvider = Provider.of<AuthProvider>(context);
 
     CircularProgressIndicator progressIndicator = CircularProgressIndicator();
@@ -254,9 +260,15 @@ class _PortalPageState extends State<PortalPage>
           tooltip: S.of(context).navigationFilter,
           items: {
             S.of(context).filterMenuRelevance: () {
-              _updateFilter();
               userOnly = false;
-              Navigator.pushNamed(context, Routes.filter);
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => FilterPage(
+                    onSubmit: _updateFilter,
+                  ),
+                ),
+              );
             },
             S.of(context).filterMenuShowMine: () {
               if (authProvider.isAuthenticatedFromCache &&
@@ -303,7 +315,7 @@ class _PortalPageState extends State<PortalPage>
                   websites = websiteSnap.data;
                   return SingleChildScrollView(
                     child: Padding(
-                      padding: EdgeInsets.only(top: 12.0),
+                      padding: EdgeInsets.only(top: 8.0),
                       child: Column(
                         children: listWebsitesByCategory(websites),
                       ),
