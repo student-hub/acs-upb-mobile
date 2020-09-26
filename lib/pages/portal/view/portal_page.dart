@@ -167,7 +167,7 @@ class _PortalPageState extends State<PortalPage>
         }
 
         // Add trailing "plus" button
-        if (i == websites.length - 1 || i == websites.length) {
+        if (i == websites.length) {
           if (children.length == circlesPerRow) {
             rows.add(Row(children: children));
             children = [];
