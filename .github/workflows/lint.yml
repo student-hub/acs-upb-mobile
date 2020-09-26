@@ -28,7 +28,8 @@ jobs:
       - name: Install ruby gems
         run: |
           gem install bundler
-          bundle install --without documentation
+          bundle config set without 'documentation'
+          bundle install
         if: github.event_name == 'pull_request'
       - name: Run danger on generated report
         uses: MeilCli/danger-action@v1
