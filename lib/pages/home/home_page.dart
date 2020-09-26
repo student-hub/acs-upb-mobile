@@ -293,15 +293,14 @@ class FaqCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var questionsFuture = QuestionsProvider().getPreviewDocuments(context);
+    var questionsFuture = Provider.of<QuestionProvider>(context).fetchQuestions(context: null, limit: 2);
     return Padding(
       padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 8.0),
       child: FutureBuilder(
           future: questionsFuture,
           builder: (_, snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
-              List<Question> questions =
-                  QuestionsProvider().getQuestions(snapshot.data);
+              List<Question> questions = snapshot.data;
               return Card(
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),

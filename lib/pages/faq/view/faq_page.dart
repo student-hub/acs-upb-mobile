@@ -8,6 +8,7 @@ import 'package:dynamic_text_highlighting/dynamic_text_highlighting.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:provider/provider.dart';
 import 'package:markdown/markdown.dart' as md;
 
 class FaqPage extends StatefulWidget {
@@ -21,6 +22,15 @@ class _FaqPageState extends State<FaqPage> {
   String filter = '';
   bool searchClosed = true;
   List<String> activeTags = List<String>();
+  Future<List<Question>> futureQuestions;
+
+  @override
+  void initState() {
+    QuestionProvider questionProvider =
+        Provider.of<QuestionProvider>(context, listen: false);
+    futureQuestions = questionProvider.fetchQuestions(context: context);
+    super.initState();
+  }
 
   Widget categoryList() => ListView(
         scrollDirection: Axis.horizontal,
@@ -59,10 +69,10 @@ class _FaqPageState extends State<FaqPage> {
         )
       ],
       body: FutureBuilder(
-          future: QuestionsProvider().getDocuments(context),
+          future: futureQuestions,
           builder: (context, snapshot) {
             if (!snapshot.hasData) return LinearProgressIndicator();
-            questions = QuestionsProvider().getQuestions(snapshot.data);
+            questions = snapshot.data;
             categories = questions.expand((e) => e.tags).toSet().toList();
             return ListView(
               children: [

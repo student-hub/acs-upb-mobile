@@ -49,7 +49,7 @@ dependencies:
   # Highlight words
   dynamic_text_highlighting: ^2.2.0
 
-  #Display markdown-formatted text
+  # Display markdown-formatted text
   flutter_markdown: ^0.4.4
 
   # Dart helper methods

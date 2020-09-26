@@ -4,10 +4,20 @@ import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 
-class QuestionsProvider {
-  Future<QuerySnapshot> getDocuments(BuildContext context) {
+class QuestionProvider with ChangeNotifier {
+  Future<List<Question>> fetchQuestions(
+      {BuildContext context, int limit}) async {
     try {
-      return Firestore().collection('faq').getDocuments();
+      QuerySnapshot qSnapshot = limit == null
+          ? await Firestore.instance.collection("faq").getDocuments()
+          : await Firestore.instance
+              .collection("faq")
+              .limit(limit)
+              .getDocuments();
+      return qSnapshot.documents
+          .map(
+              (documentSnapshot) => DatabaseQuestion.fromSnap(documentSnapshot))
+          .toList();
     } catch (e) {
       print(e);
       if (context != null) {
@@ -16,25 +26,6 @@ class QuestionsProvider {
       return null;
     }
   }
-
-  Future<QuerySnapshot> getPreviewDocuments(BuildContext context) {
-    try {
-      return Firestore().collection('faq').limit(2).getDocuments();
-    } catch (e) {
-      print(e);
-      if (context != null) {
-        AppToast.show(S.of(context).errorSomethingWentWrong);
-      }
-      return null;
-    }
-  }
-
-  List<Question> getQuestions(QuerySnapshot snapshot) {
-    return snapshot.documents
-        .map((documentSnapshot) => DatabaseQuestion.fromSnap(documentSnapshot))
-        .toList();
-  }
-
 }
 
 extension DatabaseQuestion on Question {
