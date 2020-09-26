@@ -281,23 +281,28 @@ void main() {
     test('findNodesByPath valid and incomplete input', () {
       expect(
           testFilter
-              .findNodesByPath(['BSc', 'CTI', 'CTI-1',])
+              .findNodesByPath([
+                'BSc',
+                'CTI',
+                'CTI-1',
+              ])
               .map((e) => e.name)
               .toList(),
-          ['All', 'BSc', 'CTI', 'CTI-1',]);
+          [
+            'All',
+            'BSc',
+            'CTI',
+            'CTI-1',
+          ]);
     });
 
     test('findNodesByPath invalid input', () {
-      expect(
-          testFilter
-              .findNodesByPath(['aa','bb','cc','dd','ff','ee']),
-         null);
+      expect(testFilter.findNodesByPath(['aa', 'bb', 'cc', 'dd', 'ff', 'ee']),
+          null);
     });
 
     test('findNodesByPath part invalid input', () {
-      expect(
-          testFilter
-              .findNodesByPath(['BSc','bb','cc','dd','ff','ee']),
+      expect(testFilter.findNodesByPath(['BSc', 'bb', 'cc', 'dd', 'ff', 'ee']),
           null);
     });
   });

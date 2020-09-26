@@ -184,8 +184,8 @@ class FilterNode {
   set listener(Function() listener) => _valueNotifier.addListener(listener);
 
   FilterNode clone() => FilterNode(
-    name: name,
-    value: value,
-    children: children?.map((c) => c.clone())?.toList(),
-  );
+        name: name,
+        value: value,
+        children: children?.map((c) => c.clone())?.toList(),
+      );
 }

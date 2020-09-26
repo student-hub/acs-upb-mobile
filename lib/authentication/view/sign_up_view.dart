@@ -1,7 +1,7 @@
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
-import 'package:acs_upb_mobile/authentication/view/dropdown_tree.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/navigation/routes.dart';
+import 'package:acs_upb_mobile/pages/filter/view/filter_dropdown.dart';
 import 'package:acs_upb_mobile/resources/banner.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/resources/validator.dart';
@@ -27,7 +27,7 @@ class _SignUpViewState extends State<SignUpView> {
 
   bool agreedToPolicy = false;
 
-  final dropdownController = DropdownTreeController();
+  final dropdownController = FilterDropdownController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController firstNameController = TextEditingController();
   TextEditingController lastNameController = TextEditingController();
@@ -39,7 +39,8 @@ class _SignUpViewState extends State<SignUpView> {
   /// *Format example:* firstnameone_firstnametwo.lastname123@stud.acs.pub.ro
   void parseNameFromEmail(TextEditingController email,
       TextEditingController firstName, TextEditingController lastName) {
-    String emailWithoutNumbers = email.text.replaceAll(RegExp('[^a-zA-Z._]'), '');
+    String emailWithoutNumbers =
+        email.text.replaceAll(RegExp('[^a-zA-Z._]'), '');
     List<String> names = emailWithoutNumbers.split('.');
 
     if (!names[0].contains('_')) {
@@ -64,6 +65,7 @@ class _SignUpViewState extends State<SignUpView> {
       FormItem(
         label: S.of(context).labelEmail,
         hint: S.of(context).hintEmail,
+        additionalHint: S.of(context).infoEmail(S.of(context).stringForum),
         controller: emailController,
         suffix: emailDomain,
         autocorrect: false,
@@ -80,8 +82,8 @@ class _SignUpViewState extends State<SignUpView> {
         controller: passwordController,
         obscureText: true,
         autofillHints: [AutofillHints.newPassword],
-        check: (password, {BuildContext context}) =>
-            AppValidator.isStrongPassword(password: password, context: context),
+        check: (password, {BuildContext context}) async =>
+            AppValidator.isStrongPassword(password, context) == null,
       ),
       FormItem(
         label: S.of(context).labelConfirmPassword,
@@ -151,9 +153,7 @@ class _SignUpViewState extends State<SignUpView> {
       title: S.of(context).actionSignUp,
       items: _buildFormItems(),
       trailing: <Widget>[
-        DropdownTree(
-          controller: dropdownController,
-        ),
+        FilterDropdown(controller: dropdownController),
         _privacyPolicy()
       ],
       submitOnEnter: false,

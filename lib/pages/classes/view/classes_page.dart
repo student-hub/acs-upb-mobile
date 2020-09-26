@@ -279,7 +279,7 @@ class ClassList extends StatelessWidget {
         children.add(AppSpoiler(
           title: section,
           level: level,
-          initialExpanded: false,
+          initiallyExpanded: false,
           content: Padding(
             padding: const EdgeInsets.only(left: 16.0),
             child: Column(

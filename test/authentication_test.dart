@@ -8,7 +8,6 @@ import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
 import 'package:acs_upb_mobile/pages/home/home_page.dart';
 import 'package:acs_upb_mobile/pages/people/service/person_provider.dart';
 import 'package:acs_upb_mobile/pages/portal/service/website_provider.dart';
-import 'package:acs_upb_mobile/authentication/view/profile_page.dart';
 import 'package:acs_upb_mobile/widgets/form/form_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -46,6 +45,8 @@ void main() {
     when(mockAuthProvider.isAuthenticatedFromCache).thenReturn(false);
     when(mockAuthProvider.isAuthenticatedFromService)
         .thenAnswer((realInvocation) => Future.value(false));
+    when(mockAuthProvider.currentUser).thenAnswer((_) => Future.value(null));
+    when(mockAuthProvider.isAnonymous).thenReturn(true);
 
     mockWebsiteProvider = MockWebsiteProvider();
     // ignore: invalid_use_of_protected_member
@@ -73,8 +74,11 @@ void main() {
 
   group('Login', () {
     testWidgets('Anonymous login', (WidgetTester tester) async {
-      await tester.pumpWidget(ChangeNotifierProvider<AuthProvider>(
-          create: (_) => mockAuthProvider, child: MyApp()));
+      await tester.pumpWidget(MultiProvider(providers: [
+        ChangeNotifierProvider<AuthProvider>(create: (_) => mockAuthProvider),
+        ChangeNotifierProvider<WebsiteProvider>(
+            create: (_) => mockWebsiteProvider)
+      ], child: MyApp()));
       await tester.pumpAndSettle();
 
       await tester.runAsync(() async {
@@ -97,8 +101,11 @@ void main() {
     });
 
     testWidgets('Credential login', (WidgetTester tester) async {
-      await tester.pumpWidget(ChangeNotifierProvider<AuthProvider>(
-          create: (_) => mockAuthProvider, child: MyApp()));
+      await tester.pumpWidget(MultiProvider(providers: [
+        ChangeNotifierProvider<AuthProvider>(create: (_) => mockAuthProvider),
+        ChangeNotifierProvider<WebsiteProvider>(
+            create: (_) => mockWebsiteProvider)
+      ], child: MyApp()));
       await tester.pumpAndSettle();
 
       await tester.runAsync(() async {
@@ -325,7 +332,9 @@ void main() {
         ChangeNotifierProvider<AuthProvider>(
             create: (_) => mockAuthProvider),
         ChangeNotifierProvider<FilterProvider>(
-            create: (_) => mockFilterProvider)
+            create: (_) => mockFilterProvider),
+        ChangeNotifierProvider<WebsiteProvider>(
+            create: (_) => mockWebsiteProvider)
       ], child: MyApp(navigationObservers: [mockObserver])));
       await tester.pumpAndSettle();
 
@@ -577,11 +586,6 @@ void main() {
       verify(mockObserver.didPush(any, any));
       expect(find.byType(HomePage), findsOneWidget);
 
-      // Open profile page
-      await tester.tap(find.byIcon(Icons.person));
-      await tester.pumpAndSettle();
-
-      expect(find.byType(ProfilePage), findsOneWidget);
       expect(find.text('Anonymous'), findsOneWidget);
 
       // Press log in button
@@ -612,11 +616,6 @@ void main() {
       verify(mockObserver.didPush(any, any));
       expect(find.byType(HomePage), findsOneWidget);
 
-      // Open profile page
-      await tester.tap(find.byIcon(Icons.person));
-      await tester.pumpAndSettle();
-
-      expect(find.byType(ProfilePage), findsOneWidget);
       expect(find.text('John Doe'), findsOneWidget);
 
       // Press log out button

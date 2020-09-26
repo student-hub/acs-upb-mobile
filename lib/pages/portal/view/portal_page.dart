@@ -145,12 +145,13 @@ class _PortalPageState extends State<PortalPage>
     if (!hasContent) {
       // Display just the plus button (but set the height to mimic the rows with
       // content)
-      content = Container(
-        width: circleSize + 16.0,
-        height: circleSize +
-            16.0 + // padding
-            40.0, // text
-        child: Center(
+      content = Align(
+        alignment: Alignment.centerLeft,
+        child: Container(
+          width: circleSize + 16.0,
+          height: circleSize +
+              16.0 + // padding
+              40.0, // text
           child: _AddWebsiteButton(
               key: ValueKey('add_website_' +
                   ReCase(category.toLocalizedString(context)).snakeCase),
@@ -167,7 +168,7 @@ class _PortalPageState extends State<PortalPage>
         }
 
         // Add trailing "plus" button
-        if (i == websites.length - 1 || i == websites.length) {
+        if (i == websites.length) {
           if (children.length == circlesPerRow) {
             rows.add(Row(children: children));
             children = [];
@@ -193,7 +194,7 @@ class _PortalPageState extends State<PortalPage>
       padding: const EdgeInsets.only(left: 8.0, right: 8.0),
       child: AppSpoiler(
         title: category.toLocalizedString(context),
-        initialExpanded: hasContent,
+        initiallyExpanded: hasContent,
         content: content,
       ),
     );
@@ -220,6 +221,8 @@ class _PortalPageState extends State<PortalPage>
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
+
     WebsiteProvider websiteProvider = Provider.of<WebsiteProvider>(context);
     filterProvider = Provider.of<FilterProvider>(context);
     AuthProvider authProvider =
@@ -316,7 +319,7 @@ class _PortalPageState extends State<PortalPage>
                   websites = websiteSnap.data;
                   return SingleChildScrollView(
                     child: Padding(
-                      padding: EdgeInsets.only(top: 12.0),
+                      padding: EdgeInsets.only(top: 8.0),
                       child: Column(
                         children: listWebsitesByCategory(websites),
                       ),

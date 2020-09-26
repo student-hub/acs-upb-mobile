@@ -6,20 +6,20 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class DropdownTreeController {
-  _DropdownTreeState _dropdownTreeState;
+class FilterDropdownController {
+  _FilterDropdownState _dropdownTreeState;
 
   List<String> get path =>
       _dropdownTreeState.nodes.map((e) => e.name).skip(1).toList();
 }
 
-class DropdownTree extends StatefulWidget {
+class FilterDropdown extends StatefulWidget {
   final List<String> initialPath;
   final double leftPadding;
-  final DropdownTreeController controller;
+  final FilterDropdownController controller;
   final TextStyle textStyle;
 
-  DropdownTree({
+  FilterDropdown({
     Key key,
     this.initialPath,
     this.leftPadding,
@@ -28,10 +28,10 @@ class DropdownTree extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _DropdownTreeState createState() => _DropdownTreeState();
+  _FilterDropdownState createState() => _FilterDropdownState();
 }
 
-class _DropdownTreeState extends State<DropdownTree> {
+class _FilterDropdownState extends State<FilterDropdown> {
   List<FormItem> formItems;
   FilterProvider filterProvider;
   Filter filter;

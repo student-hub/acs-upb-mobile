@@ -132,7 +132,6 @@ class WebsiteProvider with ChangeNotifier {
   /// number of times the user accessed website with ID `websiteIds[i]`.
   void incrementNumberOfVisits(Website website) async {
     website.numberOfVisits++;
-    print(website.numberOfVisits);
     List<String> websiteIds =
         PrefService.sharedPreferences.getStringList('websiteIds') ?? [];
     List<String> websiteVisits =
@@ -140,7 +139,7 @@ class WebsiteProvider with ChangeNotifier {
 
     if (websiteIds.contains(website.id)) {
       int index = websiteIds.indexOf(website.id);
-      websiteVisits.insert(index, websiteVisits.toString());
+      websiteVisits.insert(index, website.numberOfVisits.toString());
     } else {
       websiteIds.add(website.id);
       websiteVisits.add(website.numberOfVisits.toString());
@@ -213,10 +212,8 @@ class WebsiteProvider with ChangeNotifier {
     }
   }
 
-  Future<bool> addWebsite(Website website,
-      {bool updateExisting = false, BuildContext context}) async {
+  Future<bool> addWebsite(Website website, {BuildContext context}) async {
     assert(website.label != null);
-    assert(context != null);
 
     try {
       DocumentReference ref;
@@ -230,15 +227,59 @@ class WebsiteProvider with ChangeNotifier {
             .document(website.id);
       }
 
-      if ((await ref.get()).data != null && !updateExisting) {
+      if ((await ref.get()).data != null) {
         // TODO: Properly check if a website with a similar name/link already exists
         print('A website with id ${website.id} already exists');
-        AppToast.show(S.of(context).warningWebsiteNameExists);
+        if (context != null) {
+          AppToast.show(S.of(context).warningWebsiteNameExists);
+        }
         return false;
       }
 
       var data = website.toData();
       await ref.setData(data);
+
+      notifyListeners();
+      return true;
+    } catch (e) {
+      _errorHandler(e, context);
+      return false;
+    }
+  }
+
+  Future<bool> updateWebsite(Website website, {BuildContext context}) async {
+    assert(website.label != null);
+
+    try {
+      DocumentReference publicRef =
+          _db.collection('websites').document(website.id);
+      DocumentReference privateRef = _db
+          .collection('users')
+          .document(website.ownerUid)
+          .collection('websites')
+          .document(website.id);
+
+      DocumentReference previousRef;
+      bool wasPrivate;
+      if ((await publicRef.get()).data != null) {
+        wasPrivate = false;
+        previousRef = publicRef;
+      } else if ((await privateRef.get()).data != null) {
+        wasPrivate = true;
+        previousRef = privateRef;
+      } else {
+        print('Website not found.');
+        return false;
+      }
+
+      if (wasPrivate == website.isPrivate) {
+        // No privacy change
+        await previousRef.updateData(website.toData());
+      } else {
+        // Privacy changed
+        await previousRef.delete();
+        await (wasPrivate ? publicRef : privateRef).setData(website.toData());
+      }
 
       notifyListeners();
       return true;

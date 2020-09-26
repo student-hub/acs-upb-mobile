@@ -144,6 +144,8 @@ class AuthProvider with ChangeNotifier {
     return _firebaseUser.uid;
   }
 
+  String get email => _firebaseUser.email;
+
   bool isOldFormat(Map<String, dynamic> userData) =>
       userData['class'] != null && userData['class'] is Map;
 
@@ -200,6 +202,28 @@ class AuthProvider with ChangeNotifier {
       _errorHandler(e, context);
       return false;
     }).then((_) => true);
+  }
+
+  Future<bool> changePassword({String password, BuildContext context}) async {
+    bool result = false;
+    await _firebaseUser.updatePassword(password).then((_) {
+      result = true;
+    }).catchError((e) {
+      _errorHandler(e, context);
+      result = false;
+    });
+    return result;
+  }
+
+  Future<bool> changeEmail({String email, BuildContext context}) async {
+    bool result = false;
+    await _firebaseUser.updateEmail(email).then((_) {
+      result = true;
+    }).catchError((e) {
+      _errorHandler(e, context);
+      result = false;
+    });
+    return result;
   }
 
   Future<bool> verifyPassword({String password, BuildContext context}) async {
@@ -355,8 +379,10 @@ class AuthProvider with ChangeNotifier {
         AppToast.show(S.of(context).errorMissingLastName);
         return false;
       }
-      if (!await AppValidator.isStrongPassword(
-          password: password, context: context)) {
+
+      String errorString = AppValidator.isStrongPassword(password, context);
+      if (errorString != null) {
+        AppToast.show(errorString);
         return false;
       }
 

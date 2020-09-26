@@ -16,9 +16,7 @@ class _FormCardState extends State<FormCard> {
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
-          color: Theme
-              .of(context)
-              .backgroundColor,
+          color: Theme.of(context).backgroundColor,
           borderRadius: BorderRadius.circular(8.0),
           boxShadow: [
             BoxShadow(
@@ -32,21 +30,20 @@ class _FormCardState extends State<FormCard> {
           ]),
       child: Padding(
         padding:
-        EdgeInsets.only(left: 16.0, right: 16.0, top: 16.0, bottom: 16.0),
+            EdgeInsets.only(left: 16.0, right: 16.0, top: 16.0, bottom: 16.0),
         child: AutofillGroup(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.only(bottom: 8.0),
-                child: Text(widget.title,
-                    style: Theme
-                        .of(context)
-                        .textTheme
-                        .headline5
-                        .copyWith(fontWeight:FontWeight.w600)),
-              )
-            ] +
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 8.0),
+                    child: Text(widget.title,
+                        style: Theme.of(context)
+                            .textTheme
+                            .headline5
+                            .copyWith(fontWeight: FontWeight.w600)),
+                  )
+                ] +
                 widget.children,
           ),
         ),
