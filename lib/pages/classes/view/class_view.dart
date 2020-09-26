@@ -159,7 +159,7 @@ class _ClassViewState extends State<ClassView> {
         return CustomIcons.book;
       case ShortcutType.resource:
         return Icons.insert_drive_file;
-      case ShortcutType.other:
+      default:
         return Icons.public;
     }
   }
