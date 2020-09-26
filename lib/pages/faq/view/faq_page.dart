@@ -2,12 +2,12 @@ import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/faq/model/question.dart';
 import 'package:acs_upb_mobile/pages/faq/service/question_provider.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
+import 'package:acs_upb_mobile/widgets/search_bar.dart';
 import 'package:acs_upb_mobile/widgets/selectable.dart';
+import 'package:dynamic_text_highlighting/dynamic_text_highlighting.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:dynamic_text_highlighting/dynamic_text_highlighting.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
-import 'package:acs_upb_mobile/widgets/search_bar.dart';
 import 'package:markdown/markdown.dart' as md;
 
 class FaqPage extends StatefulWidget {
@@ -154,7 +154,7 @@ class _QuestionsListState extends State<QuestionsList> {
                       ),
                 children: [
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                    padding: const EdgeInsets.fromLTRB(15.0, 0.0, 15.0, 15.0),
                     child: MarkdownBody(
                       data: widget.questions[index].answer
                           .replaceAll('\\n', '\n'),
