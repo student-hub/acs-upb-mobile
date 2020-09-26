@@ -16,7 +16,7 @@ class SearchBar extends StatefulWidget {
 class _SearchBarState extends State<SearchBar> {
   @override
   Widget build(BuildContext context) {
-    double widthMax = MediaQuery.of(context).size.width;
+    double maxWidth = MediaQuery.of(context).size.width;
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -24,7 +24,7 @@ class _SearchBarState extends State<SearchBar> {
         SizedBox(width: 4),
         Flexible(
           child: Container(
-            width: widthMax * .8,
+            width: maxWidth * .8,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(5),
               color: Color.fromRGBO(142, 142, 147, .15),
@@ -72,11 +72,6 @@ class SearchWidget extends StatefulWidget {
 
 class _SearchWidgetState extends State<SearchWidget> {
   TextEditingController _textEditingController = TextEditingController();
-
-  @override
-  void didUpdateWidget(SearchWidget oldWidget) {
-    super.didUpdateWidget(oldWidget);
-  }
 
   @override
   Widget build(BuildContext context) {

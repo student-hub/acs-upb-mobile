@@ -1,6 +1,6 @@
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/faq/model/question.dart';
-import 'package:acs_upb_mobile/pages/faq/service/faq_provider.dart';
+import 'package:acs_upb_mobile/pages/faq/service/question_provider.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:acs_upb_mobile/widgets/selectable.dart';
 import 'package:flutter/cupertino.dart';
@@ -59,10 +59,10 @@ class _FaqPageState extends State<FaqPage> {
         )
       ],
       body: FutureBuilder(
-          future: QuestionsService().getDocuments(),
+          future: QuestionsProvider().getDocuments(context),
           builder: (context, snapshot) {
             if (!snapshot.hasData) return LinearProgressIndicator();
-            questions = QuestionsService().getQuestions(snapshot.data);
+            questions = QuestionsProvider().getQuestions(snapshot.data);
             categories = questions.expand((e) => e.tags).toSet().toList();
             return ListView(
               children: [
