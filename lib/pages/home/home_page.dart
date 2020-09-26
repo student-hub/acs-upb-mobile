@@ -183,7 +183,7 @@ class FavouriteWebsitesCard extends StatelessWidget {
                                 .copyWith(fontSize: 18),
                           ),
                           GestureDetector(
-                            onTap: () => onSeeMore,
+                            onTap: onSeeMore,
                             child: Row(
                               children: <Widget>[
                                 Text(
