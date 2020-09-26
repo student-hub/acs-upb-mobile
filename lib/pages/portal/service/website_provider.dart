@@ -132,7 +132,6 @@ class WebsiteProvider with ChangeNotifier {
   /// number of times the user accessed website with ID `websiteIds[i]`.
   void incrementNumberOfVisits(Website website) async {
     website.numberOfVisits++;
-    print(website.numberOfVisits);
     List<String> websiteIds =
         PrefService.sharedPreferences.getStringList('websiteIds') ?? [];
     List<String> websiteVisits =
@@ -140,7 +139,7 @@ class WebsiteProvider with ChangeNotifier {
 
     if (websiteIds.contains(website.id)) {
       int index = websiteIds.indexOf(website.id);
-      websiteVisits.insert(index, websiteVisits.toString());
+      websiteVisits.insert(index, website.numberOfVisits.toString());
     } else {
       websiteIds.add(website.id);
       websiteVisits.add(website.numberOfVisits.toString());

@@ -3,14 +3,22 @@ import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/authentication/view/edit_profile_page.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/navigation/routes.dart';
+import 'package:acs_upb_mobile/pages/portal/model/website.dart';
+import 'package:acs_upb_mobile/pages/portal/service/website_provider.dart';
+import 'package:acs_upb_mobile/resources/locale_provider.dart';
+import 'package:acs_upb_mobile/resources/storage_provider.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
+import 'package:acs_upb_mobile/resources/utils.dart';
+import 'package:acs_upb_mobile/widgets/circle_image.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatelessWidget {
-  HomePage({Key key}) : super(key: key);
+  final TabController tabController;
+
+  HomePage({this.tabController, Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -26,6 +34,9 @@ class HomePage extends StatelessWidget {
       body: ListView(
         children: [
           ProfileCard(),
+          FavouriteWebsitesCard(
+            onSeeMore: () => tabController?.animateTo(2),
+          ),
         ],
       ),
     );
@@ -136,4 +147,130 @@ class ProfileCard extends StatelessWidget {
       },
     );
   }
+}
+
+class FavouriteWebsitesCard extends StatelessWidget {
+  final Function onSeeMore;
+
+  FavouriteWebsitesCard({this.onSeeMore});
+
+  @override
+  Widget build(BuildContext context) {
+    var websitesFuture =
+        Provider.of<WebsiteProvider>(context).fetchWebsites(null);
+    return Padding(
+      padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 8.0),
+      child: FutureBuilder(
+          future: websitesFuture,
+          builder: (_, snapshot) {
+            if (snapshot.connectionState == ConnectionState.done) {
+              List<Website> websites = snapshot.data;
+              websites =
+                  websites.where((w) => w.numberOfVisits > 0).take(3).toList();
+              return Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    children: <Widget>[
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            S.of(context).sectionFrequentlyAccessedWebsites,
+                            style: Theme.of(context)
+                                .textTheme
+                                .headline6
+                                .copyWith(fontSize: 18),
+                          ),
+                          GestureDetector(
+                            onTap: () => onSeeMore,
+                            child: Row(
+                              children: <Widget>[
+                                Text(
+                                  S.of(context).actionShowMore,
+                                  style: Theme.of(context)
+                                      .accentTextTheme
+                                      .subtitle2
+                                      .copyWith(
+                                          color: Theme.of(context).accentColor),
+                                ),
+                                Icon(
+                                  Icons.arrow_forward_ios,
+                                  color: Theme.of(context).accentColor,
+                                  size: Theme.of(context)
+                                      .textTheme
+                                      .subtitle2
+                                      .fontSize,
+                                )
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 12),
+                      if (websites.isEmpty)
+                        noneYet(context)
+                      else
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: websites
+                              .take(3)
+                              .map((website) => Expanded(
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child:
+                                          FutureBuilder<ImageProvider<dynamic>>(
+                                        future: Provider.of<StorageProvider>(
+                                                context,
+                                                listen: false)
+                                            .imageFromPath(website.iconPath),
+                                        builder: (context, snapshot) {
+                                          ImageProvider<dynamic> image = AssetImage(
+                                              'assets/icons/websites/globe.png');
+                                          if (snapshot.hasData) {
+                                            image = snapshot.data;
+                                          }
+                                          return CircleImage(
+                                            label: website.label,
+                                            onTap: () {
+                                              Provider.of<WebsiteProvider>(
+                                                      context,
+                                                      listen: false)
+                                                  .incrementNumberOfVisits(
+                                                      website);
+                                              Utils.launchURL(website.link,
+                                                  context: context);
+                                            },
+                                            image: image,
+                                            tooltip: website.infoByLocale[
+                                                LocaleProvider.localeString],
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                  ))
+                              .toList(),
+                        ),
+                    ],
+                  ),
+                ),
+              );
+            }
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }),
+    );
+  }
+
+  Widget noneYet(BuildContext context) => Container(
+        height: 100,
+        child: Center(
+          child: Text(
+            S.of(context).warningNoneYet,
+            style: TextStyle(color: Theme.of(context).disabledColor),
+          ),
+        ),
+      );
 }
