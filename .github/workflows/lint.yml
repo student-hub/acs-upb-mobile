@@ -23,6 +23,11 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
+      - name: Format code
+        uses: bltavares/actions/dartfmt@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.BOT_TOKEN }}
+
       - name: Run linter
         run: flutter analyze > flutter_analyze_report.txt
         continue-on-error: true
