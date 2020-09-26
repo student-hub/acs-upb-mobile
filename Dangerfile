@@ -10,7 +10,7 @@ warn("Big PR") if git.lines_of_code > 500
 
 # Ensure a clean commits history
 if git.commits.any? { |c| c.message =~ /^Merge branch/ }
-  fail('Please rebase to get rid of the merge commits in this PR')
+  warn('Please rebase to get rid of the merge commits in this PR')
 end
 
 # Flutter analyze warnings
