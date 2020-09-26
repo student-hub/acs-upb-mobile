@@ -24,6 +24,7 @@ import 'package:acs_upb_mobile/pages/portal/view/website_view.dart';
 import 'package:acs_upb_mobile/pages/settings/settings_page.dart';
 import 'package:acs_upb_mobile/pages/timetable/service/uni_event_provider.dart';
 import 'package:acs_upb_mobile/resources/custom_icons.dart';
+import 'package:acs_upb_mobile/resources/locale_provider.dart';
 import 'package:acs_upb_mobile/resources/storage_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -31,6 +32,7 @@ import 'package:mockito/mockito.dart';
 import 'package:network_image_mock/network_image_mock.dart';
 import 'package:preferences/preferences.dart';
 import 'package:provider/provider.dart';
+import 'package:time_machine/time_machine.dart';
 
 // These tests open each page in the app on multiple screen sizes to make sure
 // nothing overflows/breaks.
@@ -107,6 +109,102 @@ void main() {
     PrefService.enableCaching();
     PrefService.cache = {};
     PrefService.setString('language', 'en');
+
+    LocaleProvider.cultures = {
+      'en': Culture(
+          'en-US',
+          (DateTimeFormatBuilder()
+                ..amDesignator = 'AM'
+                ..pmDesignator = 'PM'
+                ..timeSeparator = ':'
+                ..dateSeparator = '/'
+                ..abbreviatedDayNames = const [
+                  'Sun',
+                  'Mon',
+                  'Tue',
+                  'Wed',
+                  'Thu',
+                  'Fri',
+                  'Sat'
+                ]
+                ..dayNames = const [
+                  'Sunday',
+                  'Monday',
+                  'Tuesday',
+                  'Wednesday',
+                  'Thursday',
+                  'Friday',
+                  'Saturday'
+                ]
+                ..monthNames = const [
+                  'January',
+                  'February',
+                  'March',
+                  'April',
+                  'May',
+                  'June',
+                  'July',
+                  'August',
+                  'September',
+                  'October',
+                  'November',
+                  'December',
+                  ''
+                ]
+                ..abbreviatedMonthNames = const [
+                  'Jan',
+                  'Feb',
+                  'Mar',
+                  'Apr',
+                  'May',
+                  'Jun',
+                  'Jul',
+                  'Aug',
+                  'Sep',
+                  'Oct',
+                  'Nov',
+                  'Dec',
+                  ''
+                ]
+                ..monthGenitiveNames = const [
+                  'January',
+                  'February',
+                  'March',
+                  'April',
+                  'May',
+                  'June',
+                  'July',
+                  'August',
+                  'September',
+                  'October',
+                  'November',
+                  'December',
+                  ''
+                ]
+                ..abbreviatedMonthGenitiveNames = const [
+                  'Jan',
+                  'Feb',
+                  'Mar',
+                  'Apr',
+                  'May',
+                  'Jun',
+                  'Jul',
+                  'Aug',
+                  'Sep',
+                  'Oct',
+                  'Nov',
+                  'Dec',
+                  ''
+                ]
+                ..calendar = CalendarType.gregorian
+                ..eraNames = const ['AD']
+                ..fullDateTimePattern = 'dddd, MMMM d, yyyy h:mm:ss tt'
+                ..shortDatePattern = 'M/d/yyyy'
+                ..longDatePattern = 'dddd, MMMM d, yyyy'
+                ..shortTimePattern = 'h:mm tt'
+                ..longTimePattern = 'h:mm:ss tt')
+              .Build())
+    };
 
     // Pretend an anonymous user is already logged in
     mockAuthProvider = MockAuthProvider();
