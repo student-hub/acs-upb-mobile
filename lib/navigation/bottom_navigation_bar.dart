@@ -26,7 +26,7 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar>
     tabController = TabController(vsync: this, length: 4);
     tabs = [
       HomePage(key: PageStorageKey('Home'), tabController: tabController),
-      TimetablePage(),  // Cannot preserve state with PageStorageKey
+      TimetablePage(), // Cannot preserve state with PageStorageKey
       PortalPage(key: PageStorageKey('Portal')),
       PeoplePage(key: PageStorageKey('People')),
     ];

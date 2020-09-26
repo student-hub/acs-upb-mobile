@@ -95,8 +95,7 @@ void main() {
               create: (_) => mockStorageProvider),
           ChangeNotifierProvider<FilterProvider>(
               create: (_) => mockFilterProvider),
-          ChangeNotifierProvider<AuthProvider>(
-              create: (_) => mockAuthProvider),
+          ChangeNotifierProvider<AuthProvider>(create: (_) => mockAuthProvider),
         ],
         child: MaterialApp(
           localizationsDelegates: [S.delegate],

@@ -41,7 +41,7 @@ class FilterProvider with ChangeNotifier {
       AuthProvider authProvider})
       : _enabled = filterEnabled ?? PrefService.get('relevance_filter') ?? true,
         _relevantNodes = defaultRelevance,
-        authProvider = authProvider ?? AuthProvider(){
+        authProvider = authProvider ?? AuthProvider() {
     if (defaultRelevance != null && !defaultRelevance.contains('All')) {
       if (this.defaultDegree == null) {
         throw ArgumentError(

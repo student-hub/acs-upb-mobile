@@ -101,18 +101,18 @@ class _PortalPageState extends State<PortalPage>
             circleSize: size,
             onTap: () {
               if (canEdit) {
-                 Navigator.of(context).push(MaterialPageRoute(
-                    builder: (_) => ChangeNotifierProvider<FilterProvider>(
-                      create: (_) => FilterProvider(
-                        defaultDegree: website.degree,
-                        defaultRelevance: website.relevance,
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (_) => ChangeNotifierProvider<FilterProvider>(
+                    create: (_) => FilterProvider(
+                      defaultDegree: website.degree,
+                      defaultRelevance: website.relevance,
                     ),
-                      child: WebsiteView(
-                        website: website,
-                        updateExisting: true,
-                      ),
+                    child: WebsiteView(
+                      website: website,
+                      updateExisting: true,
                     ),
-                  ));
+                  ),
+                ));
               } else {
                 Provider.of<WebsiteProvider>(context, listen: false)
                     .incrementNumberOfVisits(website);
@@ -225,8 +225,7 @@ class _PortalPageState extends State<PortalPage>
 
     WebsiteProvider websiteProvider = Provider.of<WebsiteProvider>(context);
     filterProvider = Provider.of<FilterProvider>(context);
-    AuthProvider authProvider =
-        Provider.of<AuthProvider>(context);
+    AuthProvider authProvider = Provider.of<AuthProvider>(context);
 
     CircularProgressIndicator progressIndicator = CircularProgressIndicator();
 

@@ -53,18 +53,17 @@ class UniEvent {
   final AcademicCalendar calendar;
   final List<String> relevance;
 
-  const UniEvent({
-    this.name,
-    this.location,
-    @required this.start,
-    @required this.duration,
-    @required this.id,
-    this.color,
-    this.type,
-    this.classHeader,
-    this.calendar,
-    this.relevance
-  });
+  const UniEvent(
+      {this.name,
+      this.location,
+      @required this.start,
+      @required this.duration,
+      @required this.id,
+      this.color,
+      this.type,
+      this.classHeader,
+      this.calendar,
+      this.relevance});
 
   Iterable<UniEventInstance> generateInstances(
       {DateInterval intersectingInterval}) sync* {

@@ -58,8 +58,7 @@ class _SignUpViewState extends State<SignUpView> {
       return formItems;
     }
     String emailDomain = S.of(context).stringEmailDomain;
-    AuthProvider authProvider =
-        Provider.of<AuthProvider>(context);
+    AuthProvider authProvider = Provider.of<AuthProvider>(context);
 
     formItems = <FormItem>[
       FormItem(
