@@ -72,7 +72,7 @@ class _FaqPageState extends State<FaqPage> {
           future: futureQuestions,
           builder: (context, snapshot) {
             if (!snapshot.hasData)
-              return Center(child: LinearProgressIndicator());
+              return Center(child: CircularProgressIndicator());
             questions = snapshot.data;
             categories = questions.expand((e) => e.tags).toSet().toList();
             return ListView(
@@ -159,6 +159,7 @@ class _QuestionsListState extends State<QuestionsList> {
               Padding(
                 padding: const EdgeInsets.fromLTRB(15.0, 0.0, 15.0, 15.0),
                 child: MarkdownBody(
+                  fitContent: false,
                   data: widget.questions[index].answer.replaceAll('\\n', '\n'),
                   /* Firebase database doesn't recognize endline
                    and i added \n for them. Without replaceAll is printed
