@@ -26,9 +26,9 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar>
     tabController = TabController(vsync: this, length: 4);
     tabs = [
       HomePage(key: const PageStorageKey('Home'), tabController: tabController),
-      ClassesPage(key: const PageStorageKey('Classes')),
-      PortalPage(key: const PageStorageKey('Portal')),
-      PeoplePage(key: const PageStorageKey('People')),
+      const ClassesPage(key: PageStorageKey('Classes')),
+      const PortalPage(key: PageStorageKey('Portal')),
+      const PeoplePage(key: PageStorageKey('People')),
     ];
   }
 

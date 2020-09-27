@@ -445,9 +445,11 @@ void main() {
       await tester.enterText(
           find.byKey(const ValueKey('password_text_field')), 'password');
       await tester.enterText(
-          find.byKey(const ValueKey('confirm_password_text_field')), 'password');
+          find.byKey(const ValueKey('confirm_password_text_field')),
+          'password');
       await tester.enterText(
-          find.byKey(const ValueKey('first_name_text_field')), 'John Alexander');
+          find.byKey(const ValueKey('first_name_text_field')),
+          'John Alexander');
       await tester.enterText(
           find.byKey(const ValueKey('last_name_text_field')), 'Doe');
 

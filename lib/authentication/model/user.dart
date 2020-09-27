@@ -3,10 +3,10 @@ import 'package:meta/meta.dart';
 class User {
   User(
       {@required this.uid,
-        @required this.firstName,
-        @required this.lastName,
-        this.classes,
-        int permissionLevel})
+      @required this.firstName,
+      @required this.lastName,
+      this.classes,
+      int permissionLevel})
       : permissionLevel = permissionLevel ?? 0;
 
   final String uid;

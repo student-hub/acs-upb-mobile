@@ -29,7 +29,7 @@ class PortalPage extends StatefulWidget {
   _PortalPageState createState() => _PortalPageState();
 }
 
-class _PortalPageState extends State<PortalPage>{
+class _PortalPageState extends State<PortalPage> {
   Filter filterCache;
   List<Website> websites = [];
   FilterProvider filterProvider;
