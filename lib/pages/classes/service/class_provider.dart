@@ -38,6 +38,7 @@ extension ShortcutExtension on Shortcut {
 
 extension ClassHeaderExtension on ClassHeader {
   static ClassHeader fromSnap(DocumentSnapshot snap) {
+    if (snap == null) return null;
     var splitAcronym = snap.data['shortname'].split('-');
     if (splitAcronym.length < 4) {
       return null;
@@ -148,14 +149,30 @@ class ClassProvider with ChangeNotifier {
         // Get only the user's classes
         List<String> classIds =
             await fetchUserClassIds(uid: uid, context: context) ?? [];
+        List<String> newClassIds = List<String>.from(classIds);
 
         CollectionReference col = _db.collection('import_moodle');
         for (var classId in classIds) {
-          DocumentSnapshot snap = await col.document(classId).get();
+          QuerySnapshot query = await col
+              .where('shortname', isEqualTo: classId)
+              .limit(1)
+              .getDocuments();
+          if (query == null || query.documents.isEmpty) {
+            // Class doesn't exist, remove it
+            newClassIds.remove(classId);
+            continue;
+          }
+
+          DocumentSnapshot snap = query.documents.first;
           ClassHeader header = ClassHeaderExtension.fromSnap(snap);
           if (header != null) {
             headers.add(header);
           }
+        }
+
+        // Remove non-existent classes from user data
+        if (newClassIds.length != classIds.length) {
+          setUserClassIds(classIds: newClassIds, uid: uid);
         }
 
         userClassHeadersCache = headers;
