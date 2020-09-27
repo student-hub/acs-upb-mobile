@@ -6,9 +6,9 @@ import 'package:acs_upb_mobile/pages/portal/view/portal_page.dart';
 import 'package:flutter/material.dart';
 
 class AppBottomNavigationBar extends StatefulWidget {
-  final int tabIndex;
+  const AppBottomNavigationBar({this.tabIndex = 0});
 
-  AppBottomNavigationBar({this.tabIndex = 0});
+  final int tabIndex;
 
   @override
   _AppBottomNavigationBarState createState() => _AppBottomNavigationBarState();
@@ -16,7 +16,7 @@ class AppBottomNavigationBar extends StatefulWidget {
 
 class _AppBottomNavigationBarState extends State<AppBottomNavigationBar>
     with TickerProviderStateMixin {
-  var tabs;
+  List<Widget> tabs;
   TabController tabController;
   final PageStorageBucket bucket = PageStorageBucket();
 
@@ -25,10 +25,10 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar>
     super.initState();
     tabController = TabController(vsync: this, length: 4);
     tabs = [
-      HomePage(key: PageStorageKey('Home'), tabController: tabController),
-      ClassesPage(key: PageStorageKey('Classes')),
-      PortalPage(key: PageStorageKey('Portal')),
-      PeoplePage(key: PageStorageKey('People')),
+      HomePage(key: const PageStorageKey('Home'), tabController: tabController),
+      const ClassesPage(key: PageStorageKey('Classes')),
+      const PortalPage(key: PageStorageKey('Portal')),
+      const PeoplePage(key: PageStorageKey('People')),
     ];
   }
 
@@ -54,29 +54,29 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar>
             controller: tabController,
             tabs: [
               Tab(
-                icon: Icon(Icons.home),
+                icon: const Icon(Icons.home),
                 text: S.of(context).navigationHome,
-                iconMargin: EdgeInsets.all(0),
+                iconMargin: EdgeInsets.zero,
               ),
               Tab(
-                icon: Icon(Icons.class_),
+                icon: const Icon(Icons.class_),
                 text: S.of(context).navigationClasses,
-                iconMargin: EdgeInsets.all(0),
+                iconMargin: EdgeInsets.zero,
               ),
               Tab(
-                icon: Icon(Icons.public),
+                icon: const Icon(Icons.public),
                 text: S.of(context).navigationPortal,
-                iconMargin: EdgeInsets.all(0),
+                iconMargin: EdgeInsets.zero,
               ),
               Tab(
-                icon: Icon(Icons.people),
+                icon: const Icon(Icons.people),
                 text: S.of(context).navigationPeople,
-                iconMargin: EdgeInsets.all(0),
+                iconMargin: EdgeInsets.zero,
               ),
             ],
             labelColor: Theme.of(context).accentColor,
-            labelPadding: EdgeInsets.all(0),
-            indicatorPadding: EdgeInsets.all(0),
+            labelPadding: EdgeInsets.zero,
+            indicatorPadding: EdgeInsets.zero,
             unselectedLabelColor: Theme.of(context).unselectedWidgetColor,
             indicatorColor: Theme.of(context).accentColor,
           ),

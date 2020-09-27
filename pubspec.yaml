@@ -11,7 +11,7 @@ description: A mobile application for students at ACS UPB.
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 0.7.7+1
+version: 0.7.7+2
 
 environment:
   sdk: ">=2.6.0 <3.0.0"
@@ -91,8 +91,6 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
-  pedantic: 1.8.0+1
-
   # Helps with generating Dart code with the messages from `.arb` files
   intl_translation: ^0.17.1
 
@@ -117,10 +115,10 @@ dev_dependencies:
   # Testing utils
   network_image_mock: ^1.0.1
 
-dependency_overrides:
-  # Workaround because timetable depends on pedantic 1.9.0 while flutter_test depends on pedantic 1.8.0
-  pedantic: 1.9.0
+  # Code analysis
+  extra_pedantic: 1.2.0
 
+dependency_overrides:
   # Workaround because timetable depends on dartx 0.3.0 which is incompatible with flutter_test
   dartx: ^0.5.0
 

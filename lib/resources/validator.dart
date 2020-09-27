@@ -2,6 +2,8 @@ import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:flutter/cupertino.dart';
 
 class AppValidator {
+  AppValidator._();
+
   static String isStrongPassword(String password, BuildContext context) {
     assert(password != null);
     assert(context != null);

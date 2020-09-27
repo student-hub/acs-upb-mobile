@@ -2,15 +2,15 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 
 class AppButton extends StatefulWidget {
+  const AppButton(
+      {Key key, this.color, this.text, this.textColor, this.onTap, this.width})
+      : super(key: key);
+
   final Color color;
   final String text;
   final Color textColor;
   final Future<dynamic> Function() onTap;
   final double width;
-
-  AppButton(
-      {Key key, this.color, this.text, this.textColor, this.onTap, this.width})
-      : super(key: key);
 
   @override
   _AppButtonState createState() => _AppButtonState();
@@ -26,7 +26,7 @@ class _AppButtonState extends State<AppButton> {
   }
 
   Widget _getTextWidget() {
-    return AutoSizeText(widget.text.toUpperCase() ?? "",
+    return AutoSizeText(widget.text.toUpperCase() ?? '',
         textAlign: TextAlign.center,
         minFontSize: 0,
         style: Theme.of(context)
@@ -38,20 +38,21 @@ class _AppButtonState extends State<AppButton> {
   @override
   Widget build(BuildContext context) {
     // Set default color if none is set
-    var _color = widget.color ?? Theme.of(context).backgroundColor;
+    final color = widget.color ?? Theme.of(context).backgroundColor;
 
     return InkWell(
       child: Container(
         width: widget.width ?? double.infinity,
         height: 36,
         decoration: BoxDecoration(
-            color: _color,
-            borderRadius: BorderRadius.circular(6.0),
+            color: color,
+            borderRadius: BorderRadius.circular(6),
             boxShadow: [
               BoxShadow(
-                  color: _color.withOpacity(.1),
-                  offset: Offset(0.0, 8.0),
-                  blurRadius: 8.0)
+                color: color.withOpacity(.1),
+                offset: const Offset(0, 8),
+                blurRadius: 8,
+              )
             ]),
         child: InkWell(
           onTap: () => setState(() {
@@ -59,7 +60,7 @@ class _AppButtonState extends State<AppButton> {
           }),
           child: Center(
             child: Padding(
-              padding: const EdgeInsets.all(5.0),
+              padding: const EdgeInsets.all(5),
               child: FutureBuilder(
                 future: future,
                 builder: (context, snapshot) {
