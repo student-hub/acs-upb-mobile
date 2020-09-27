@@ -3,6 +3,8 @@ import 'package:intl/intl.dart';
 import 'package:preferences/preference_service.dart';
 
 class LocaleProvider {
+  LocaleProvider._();
+
   static String defaultLocale = 'en';
   static List<String> supportedLocales = ['en', 'ro'];
 
