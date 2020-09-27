@@ -111,18 +111,23 @@ void main() {
       expect(find.text('LSAC'), findsOneWidget);
     });
 
-    testWidgets('Localization', (WidgetTester tester) async {
-      await tester.pumpWidget(buildPortalPage());
-      await tester.pumpAndSettle();
+    group('Localization', () {
+      testWidgets('en', (WidgetTester tester) async {
+        await tester.pumpWidget(buildPortalPage());
+        await tester.pumpAndSettle();
 
-      expect(find.byTooltip('info-en'), findsOneWidget);
+        expect(find.byTooltip('info-en'), findsOneWidget);
+      });
 
-      PrefService.setString('language', 'ro');
+      testWidgets('ro', (WidgetTester tester) async {
+        PrefService.setString('language', 'ro');
+        await S.load(const Locale('ro', 'RO'));
 
-      await tester.pumpWidget(buildPortalPage());
-      await tester.pumpAndSettle();
+        await tester.pumpWidget(buildPortalPage());
+        await tester.pumpAndSettle();
 
-      expect(find.byTooltip('info-ro'), findsOneWidget);
+        expect(find.byTooltip('info-ro'), findsOneWidget);
+      });
     });
 
     testWidgets('Links', (WidgetTester tester) async {
