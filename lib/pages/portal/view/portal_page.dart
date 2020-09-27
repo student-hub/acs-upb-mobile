@@ -167,7 +167,7 @@ class _PortalPageState extends State<PortalPage>
         }
 
         // Add trailing "plus" button
-        if (i == websites.length - 1 || i == websites.length) {
+        if (i == websites.length) {
           if (children.length == circlesPerRow) {
             rows.add(Row(children: children));
             children = [];
@@ -220,6 +220,8 @@ class _PortalPageState extends State<PortalPage>
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
+
     WebsiteProvider websiteProvider = Provider.of<WebsiteProvider>(context);
     filterProvider = Provider.of<FilterProvider>(context);
     AuthProvider authProvider = Provider.of<AuthProvider>(context);

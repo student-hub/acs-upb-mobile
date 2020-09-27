@@ -79,17 +79,15 @@ class _FormTextFieldState extends State<FormTextField> {
                     autofillHints: widget.autofillHints,
                     // Only show verification icon within text field if it exists
                     // and there no suffix text set
-                    decoration:
-                        widget.suffix == null && widget.suffixIcon != null
-                            ? InputDecoration(
-                                hintText:
-                                    widget.hint ?? widget.label.toLowerCase(),
-                                suffixIcon: widget.suffixIcon,
-                              )
-                            : InputDecoration(
-                                hintText:
-                                    widget.hint ?? widget.label.toLowerCase(),
-                              ),
+                    decoration: widget.suffix == null &&
+                            widget.suffixIcon != null
+                        ? InputDecoration(
+                            hintText: widget.hint ?? widget.label.toLowerCase(),
+                            suffixIcon: widget.suffixIcon,
+                          )
+                        : InputDecoration(
+                            hintText: widget.hint ?? widget.label.toLowerCase(),
+                          ),
                   ),
                 ),
                 widget.suffix != null

@@ -712,7 +712,7 @@ void main() {
         await tester.tap(find.byIcon(Icons.more_vert));
         await tester.pumpAndSettle();
 
-         await tester.tap(find.text('Delete account') );
+        await tester.tap(find.text('Delete account'));
         await tester.pumpAndSettle();
 
         expect(find.byKey(ValueKey('delete_account_button')), findsOneWidget);

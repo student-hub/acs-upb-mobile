@@ -6,5 +6,11 @@ class Person {
   final String position;
   final String photo;
 
-  Person({this.name, this.email, this.phone, this.office, this.position, this.photo});
+  Person(
+      {this.name,
+      this.email,
+      this.phone,
+      this.office,
+      this.position,
+      this.photo});
 }

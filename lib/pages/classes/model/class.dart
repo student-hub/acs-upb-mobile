@@ -42,9 +42,6 @@ class Class {
   final List<Shortcut> shortcuts;
   final Map<String, double> grading;
 
-  Class(
-      {@required this.header,
-      List<Shortcut> shortcuts,
-      this.grading})
+  Class({@required this.header, List<Shortcut> shortcuts, this.grading})
       : shortcuts = shortcuts ?? [];
 }
