@@ -91,8 +91,6 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
-  pedantic: 1.8.0+1
-
   # Helps with generating Dart code with the messages from `.arb` files
   intl_translation: ^0.17.1
 
@@ -117,10 +115,10 @@ dev_dependencies:
   # Testing utils
   network_image_mock: ^1.0.1
 
-dependency_overrides:
-  # Workaround because timetable depends on pedantic 1.9.0 while flutter_test depends on pedantic 1.8.0
-  pedantic: 1.9.0
+  # Code analysis
+  extra_pedantic: 1.2.0
 
+dependency_overrides:
   # Workaround because timetable depends on dartx 0.3.0 which is incompatible with flutter_test
   dartx: ^0.5.0
 
