@@ -5,13 +5,13 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  Widget testLocalized(Function(BuildContext context) body) => Localizations(
+  Widget testLocalized(void Function(BuildContext context) body) => Localizations(
         delegates: [
           GlobalMaterialLocalizations.delegate,
           GlobalWidgetsLocalizations.delegate,
           S.delegate
         ],
-        locale: Locale('en'),
+        locale: const Locale('en'),
         child: Builder(
           builder: (BuildContext context) {
             body(context);

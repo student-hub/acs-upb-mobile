@@ -86,7 +86,7 @@ void main() {
       await tester.tap(find.byIcon(Icons.settings));
       await tester.pumpAndSettle();
 
-      expect(find.text("Auto"), findsOneWidget);
+      expect(find.text('Auto'), findsOneWidget);
 
       // Romanian
       await tester.tap(find.text('Language'));
@@ -95,8 +95,8 @@ void main() {
       await tester.tap(find.text('Romanian'));
       await tester.pumpAndSettle();
 
-      expect(find.text("Setări"), findsOneWidget);
-      expect(find.text("Română"), findsOneWidget);
+      expect(find.text('Setări'), findsOneWidget);
+      expect(find.text('Română'), findsOneWidget);
 
       // English
       await tester.tap(find.text('Limbă'));
@@ -105,8 +105,8 @@ void main() {
       await tester.tap(find.text('Engleză'));
       await tester.pumpAndSettle();
 
-      expect(find.text("Settings"), findsOneWidget);
-      expect(find.text("English"), findsOneWidget);
+      expect(find.text('Settings'), findsOneWidget);
+      expect(find.text('English'), findsOneWidget);
 
       // Back to Auto (English)
       await tester.tap(find.text('Language'));
@@ -115,8 +115,8 @@ void main() {
       await tester.tap(find.text('Auto'));
       await tester.pumpAndSettle();
 
-      expect(find.text("Settings"), findsOneWidget);
-      expect(find.text("Auto"), findsOneWidget);
+      expect(find.text('Settings'), findsOneWidget);
+      expect(find.text('Auto'), findsOneWidget);
     });
   });
 }

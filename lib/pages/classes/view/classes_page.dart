@@ -8,10 +8,11 @@ import 'package:acs_upb_mobile/widgets/spoiler.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:black_hole_flutter/black_hole_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:pedantic/pedantic.dart';
 import 'package:provider/provider.dart';
 
 class ClassesPage extends StatefulWidget {
-  ClassesPage({Key key}) : super(key: key);
+  const ClassesPage({Key key}) : super(key: key);
 
   @override
   _ClassesPageState createState() => _ClassesPageState();
@@ -22,16 +23,16 @@ class _ClassesPageState extends State<ClassesPage> {
   List<ClassHeader> headers;
   bool updating;
 
-  void updateClasses() async {
+  Future<void> updateClasses() async {
     // If updating is null, classes haven't been initialized yet so they're not
     // technically "updating"
     if (updating != null) {
       updating = true;
     }
 
-    ClassProvider classProvider =
+    final ClassProvider classProvider =
         Provider.of<ClassProvider>(context, listen: false);
-    AuthProvider authProvider =
+    final AuthProvider authProvider =
         Provider.of<AuthProvider>(context, listen: false);
     headers = await classProvider.fetchClassHeaders(uid: authProvider.uid);
 
@@ -47,22 +48,20 @@ class _ClassesPageState extends State<ClassesPage> {
 
     updateClasses();
 
-    ClassProvider classProvider =
-        Provider.of<ClassProvider>(context, listen: false);
-    AuthProvider authProvider =
-        Provider.of<AuthProvider>(context, listen: false);
+    final classProvider = Provider.of<ClassProvider>(context, listen: false);
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
     userClassIdsFuture = classProvider.fetchUserClassIds(
         uid: authProvider.uid, context: context);
   }
 
   Widget _noClassesView() => Padding(
-        padding: const EdgeInsets.all(10.0),
+        padding: const EdgeInsets.all(10),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Expanded(flex: 1, child: Container()),
-            Expanded(
+            const Expanded(
               flex: 2,
               child: Align(
                 alignment: Alignment.bottomCenter,
@@ -71,12 +70,12 @@ class _ClassesPageState extends State<ClassesPage> {
               ),
             ),
             Padding(
-              padding: EdgeInsets.all(10.0),
+              padding: const EdgeInsets.all(10),
               child: Text(S.of(context).messageNoClassesYet,
                   style: Theme.of(context).textTheme.headline6),
             ),
             Padding(
-              padding: EdgeInsets.only(left: 10.0, right: 10.0),
+              padding: const EdgeInsets.only(left: 10, right: 10),
               child: Text(
                 S.of(context).messageGetStartedPlusButton,
                 style: Theme.of(context).textTheme.subtitle1,
@@ -89,19 +88,19 @@ class _ClassesPageState extends State<ClassesPage> {
 
   @override
   Widget build(BuildContext context) {
-    ClassProvider classProvider = Provider.of<ClassProvider>(context);
-    AuthProvider authProvider = Provider.of<AuthProvider>(context);
+    final classProvider = Provider.of<ClassProvider>(context);
+    final authProvider = Provider.of<AuthProvider>(context);
 
     return AppScaffold(
       title: S.of(context).navigationClasses,
-      // TODO: Simply show all classes if user is not authenticated
+      // TODO(IoanaAlexandru): Simply show all classes if user is not authenticated
       needsToBeAuthenticated: true,
       actions: [
         AppScaffoldAction(
           icon: Icons.add,
           tooltip: S.of(context).actionAddClasses,
           onPressed: () => Navigator.of(context).push(
-            MaterialPageRoute(
+            MaterialPageRoute<ChangeNotifierProvider>(
               builder: (_) => ChangeNotifierProvider.value(
                   value: classProvider,
                   child: FutureBuilder(
@@ -113,11 +112,11 @@ class _ClassesPageState extends State<ClassesPage> {
                             onSave: (classIds) async {
                               await classProvider.setUserClassIds(
                                   classIds: classIds, uid: authProvider.uid);
-                              updateClasses();
+                              unawaited(updateClasses());
                               Navigator.pop(context);
                             });
                       } else {
-                        return Center(child: CircularProgressIndicator());
+                        return const Center(child: CircularProgressIndicator());
                       }
                     },
                   )),
@@ -128,24 +127,25 @@ class _ClassesPageState extends State<ClassesPage> {
       body: Stack(
         children: [
           if (updating != null)
-            ((headers != null && headers.isNotEmpty)
+            headers != null && headers.isNotEmpty
                 ? ClassList(
                     classes: headers,
                     sectioned: false,
-                    onTap: (classHeader) =>
-                        Navigator.of(context).push(MaterialPageRoute(
+                    onTap: (classHeader) => Navigator.of(context)
+                        .push(MaterialPageRoute<ChangeNotifierProvider>(
                       builder: (context) => ChangeNotifierProvider.value(
                         value: classProvider,
                         child: ClassView(classHeader: classHeader),
                       ),
                     )),
                   )
-                : _noClassesView()),
-          if (updating == null) Center(child: CircularProgressIndicator()),
+                : _noClassesView(),
+          if (updating == null)
+            const Center(child: CircularProgressIndicator()),
           if (updating == true)
             Container(
                 color: Theme.of(context).disabledColor,
-                child: Center(child: CircularProgressIndicator())),
+                child: const Center(child: CircularProgressIndicator())),
         ],
       ),
     );
@@ -153,11 +153,11 @@ class _ClassesPageState extends State<ClassesPage> {
 }
 
 class AddClassesPage extends StatefulWidget {
-  final List<String> initialClassIds;
-  final Function(List<String>) onSave;
-
   const AddClassesPage({Key key, this.initialClassIds, this.onSave})
       : super(key: key);
+
+  final List<String> initialClassIds;
+  final void Function(List<String>) onSave;
 
   @override
   _AddClassesPageState createState() =>
@@ -165,15 +165,13 @@ class AddClassesPage extends StatefulWidget {
 }
 
 class _AddClassesPageState extends State<AddClassesPage> {
+  _AddClassesPageState({List<String> classIds}) : classIds = classIds ?? [];
+
   List<String> classIds;
   List<ClassHeader> headers;
 
-  _AddClassesPageState({List<String> classIds})
-      : this.classIds = classIds ?? [];
-
-  void updateClasses() async {
-    ClassProvider classProvider =
-        Provider.of<ClassProvider>(context, listen: false);
+  Future<void> updateClasses() async {
+    final classProvider = Provider.of<ClassProvider>(context, listen: false);
     headers = await classProvider.fetchClassHeaders();
     if (mounted) {
       setState(() {});
@@ -213,54 +211,48 @@ class _AddClassesPageState extends State<AddClassesPage> {
 }
 
 class ClassList extends StatelessWidget {
-  final List<ClassHeader> classes;
-  final Function(bool, String) onSelected;
-  final List<String> initiallySelected;
-  final bool selectable;
-  final Function(ClassHeader) onTap;
-  final bool sectioned;
-
   ClassList(
       {this.classes,
-      Function(bool, String) onSelected,
+      void Function(bool, String) onSelected,
       List<String> initiallySelected,
       this.selectable = false,
       this.sectioned = true,
-      Function(ClassHeader) onTap})
+      void Function(ClassHeader) onTap})
       : onSelected = onSelected ?? ((selected, classId) {}),
         onTap = onTap ?? ((_) {}),
         initiallySelected = initiallySelected ?? [];
 
+  final List<ClassHeader> classes;
+  final void Function(bool, String) onSelected;
+  final List<String> initiallySelected;
+  final bool selectable;
+  final void Function(ClassHeader) onTap;
+  final bool sectioned;
+
   String sectionName(BuildContext context, String year, String semester) =>
-      S.of(context).labelYear +
-      ' ' +
-      year +
-      ', ' +
-      S.of(context).labelSemester +
-      ' ' +
-      semester;
+      '${S.of(context).labelYear} $year, ${S.of(context).labelSemester} $semester';
 
   Map<String, dynamic> classesBySection(
       List<ClassHeader> classes, BuildContext context) {
-    Map<String, dynamic> map = {};
+    final map = <String, dynamic>{};
 
-    classes.forEach((c) {
-      List<String> category = c.category.split('/');
+    for (final c in classes) {
+      final List<String> category = c.category.split('/');
       var currentPath = map;
       for (int i = 0; i < category.length; i++) {
-        String section = category[i].trim();
+        final String section = category[i].trim();
 
         if (!currentPath.containsKey(section)) {
-          currentPath[section] = Map<String, dynamic>();
+          currentPath[section] = <String, dynamic>{};
         }
         currentPath = currentPath[section];
       }
 
       if (!currentPath.containsKey('/')) {
-        currentPath['/'] = [];
+        currentPath['/'] = <ClassHeader>[];
       }
       currentPath['/'].add(c);
-    });
+    }
 
     return map;
   }
@@ -268,20 +260,18 @@ class ClassList extends StatelessWidget {
   List<Widget> buildSections(
       BuildContext context, Map<String, dynamic> sections,
       {int level = 0}) {
-    List<Widget> children = [SizedBox(height: 4)];
+    final List<Widget> children = [const SizedBox(height: 4)];
 
     sections.forEach((section, values) {
       if (section == '/') {
-        children.addAll(values.map<Widget>(
-          (c) => buildClassItem(c),
-        ));
+        children.addAll(values.map<Widget>(buildClassItem));
       } else {
         children.add(AppSpoiler(
           title: section,
           level: level,
           initiallyExpanded: false,
           content: Padding(
-            padding: const EdgeInsets.only(left: 16.0),
+            padding: const EdgeInsets.only(left: 16),
             child: Column(
               children:
                   buildSections(context, sections[section], level: level + 1),
@@ -303,7 +293,7 @@ class ClassList extends StatelessWidget {
             onSelected: (selected) => onSelected(selected, header.id),
             onTap: () => onTap(header),
           ),
-          Divider(),
+          const Divider(),
         ],
       );
 
@@ -313,37 +303,37 @@ class ClassList extends StatelessWidget {
       return ListView(
         children: [
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(8),
             child: Column(
                 children: sectioned
                     ? buildSections(context, classesBySection(classes, context))
-                    : classes.map((c) => buildClassItem(c)).toList()),
+                    : classes.map(buildClassItem).toList()),
           ),
         ],
       );
     } else {
-      return Center(child: CircularProgressIndicator());
+      return const Center(child: CircularProgressIndicator());
     }
   }
 }
 
 class ClassListItem extends StatefulWidget {
-  final ClassHeader classHeader;
-  final bool initiallySelected;
-  final Function(bool) onSelected;
-  final bool selectable;
-  final Function() onTap;
-
   ClassListItem(
       {Key key,
       this.classHeader,
       this.initiallySelected = false,
-      Function(bool) onSelected,
+      void Function(bool) onSelected,
       this.selectable = false,
-      Function() onTap})
-      : this.onSelected = onSelected ?? ((_) {}),
-        this.onTap = onTap ?? (() {}),
+      void Function() onTap})
+      : onSelected = onSelected ?? ((_) {}),
+        onTap = onTap ?? (() {}),
         super(key: key);
+
+  final ClassHeader classHeader;
+  final bool initiallySelected;
+  final void Function(bool) onSelected;
+  final bool selectable;
+  final void Function() onTap;
 
   @override
   _ClassListItemState createState() =>
@@ -351,9 +341,9 @@ class ClassListItem extends StatefulWidget {
 }
 
 class _ClassListItemState extends State<ClassListItem> {
-  bool selected;
-
   _ClassListItemState({this.selected});
+
+  bool selected;
 
   @override
   Widget build(BuildContext context) {

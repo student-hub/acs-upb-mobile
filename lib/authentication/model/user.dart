@@ -1,6 +1,14 @@
 import 'package:meta/meta.dart';
 
 class User {
+  User(
+      {@required this.uid,
+        @required this.firstName,
+        @required this.lastName,
+        this.classes,
+        int permissionLevel})
+      : permissionLevel = permissionLevel ?? 0;
+
   final String uid;
 
   String firstName;
@@ -10,14 +18,6 @@ class User {
   List<String> classes;
 
   int permissionLevel;
-
-  User(
-      {@required this.uid,
-      @required this.firstName,
-      @required this.lastName,
-      this.classes,
-      int permissionLevel})
-      : this.permissionLevel = permissionLevel ?? 0;
 
   bool get canAddPublicWebsite => permissionLevel >= 3;
 

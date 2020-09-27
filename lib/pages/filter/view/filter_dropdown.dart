@@ -1,10 +1,11 @@
 import 'package:acs_upb_mobile/pages/filter/model/filter.dart';
 import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
 import 'package:acs_upb_mobile/resources/locale_provider.dart';
-import 'package:acs_upb_mobile/widgets/form/form.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import 'file:///C:/Users/sako_/StudioProjects/acs-upb-mobile/lib/widgets/form_card.dart';
 
 class FilterDropdownController {
   _FilterDropdownState _dropdownTreeState;
@@ -14,12 +15,7 @@ class FilterDropdownController {
 }
 
 class FilterDropdown extends StatefulWidget {
-  final List<String> initialPath;
-  final double leftPadding;
-  final FilterDropdownController controller;
-  final TextStyle textStyle;
-
-  FilterDropdown({
+  const FilterDropdown({
     Key key,
     this.initialPath,
     this.leftPadding,
@@ -27,26 +23,30 @@ class FilterDropdown extends StatefulWidget {
     this.textStyle,
   }) : super(key: key);
 
+  final List<String> initialPath;
+  final double leftPadding;
+  final FilterDropdownController controller;
+  final TextStyle textStyle;
+
   @override
   _FilterDropdownState createState() => _FilterDropdownState();
 }
 
 class _FilterDropdownState extends State<FilterDropdown> {
-  List<FormItem> formItems;
+  List<FormCardField> formItems;
   FilterProvider filterProvider;
   Filter filter;
   List<FilterNode> nodes;
 
   List<Widget> _buildDropdowns(BuildContext context) {
-    List<Widget> items = [SizedBox(height: 8)];
+    final items = <Widget>[const SizedBox(height: 8)];
     for (var i = 0; i < nodes.length; i++) {
       if (nodes[i] != null && nodes[i].children.isNotEmpty) {
         items.add(Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Padding(
-              padding:
-                  EdgeInsets.only(top: 8.0, left: widget.leftPadding ?? 0.0),
+              padding: EdgeInsets.only(top: 8, left: widget.leftPadding ?? 0.0),
               child: Text(
                 filter.localizedLevelNames[i][LocaleProvider.localeString],
                 style: widget.textStyle ??
@@ -64,15 +64,16 @@ class _FilterDropdownState extends State<FilterDropdown> {
                         value: node,
                         child: Padding(
                           padding: EdgeInsets.only(
-                              top: 8.0, left: widget.leftPadding ?? 0.0),
+                              top: 8, left: widget.leftPadding ?? 0.0),
                           child: Text(node.name),
                         ),
                       ))
                   .toList(),
               onChanged: (selected) => setState(
                 () {
-                  nodes.removeRange(i + 1, nodes.length);
-                  nodes.add(selected);
+                  nodes
+                    ..removeRange(i + 1, nodes.length)
+                    ..add(selected);
                 },
               ),
             ),
@@ -89,7 +90,7 @@ class _FilterDropdownState extends State<FilterDropdown> {
 
     return FutureBuilder(
       future: Provider.of<FilterProvider>(context).fetchFilter(context),
-      builder: (BuildContext context, AsyncSnapshot snap) {
+      builder: (context, snap) {
         if (snap.hasData) {
           filter = snap.data;
           nodes ??= widget.initialPath == null
@@ -99,7 +100,7 @@ class _FilterDropdownState extends State<FilterDropdown> {
             children: _buildDropdowns(context),
           );
         }
-        return Center(child: CircularProgressIndicator());
+        return const Center(child: CircularProgressIndicator());
       },
     );
   }

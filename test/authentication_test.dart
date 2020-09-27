@@ -8,7 +8,6 @@ import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
 import 'package:acs_upb_mobile/pages/home/home_page.dart';
 import 'package:acs_upb_mobile/pages/people/service/person_provider.dart';
 import 'package:acs_upb_mobile/pages/portal/service/website_provider.dart';
-import 'package:acs_upb_mobile/widgets/form/form_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
@@ -38,7 +37,6 @@ void main() {
     PrefService.setString('language', 'en');
 
     // Mock the behaviour of the auth provider
-    // TODO: Test AuthProvider separately
     mockAuthProvider = MockAuthProvider();
     // ignore: invalid_use_of_protected_member
     when(mockAuthProvider.hasListeners).thenReturn(false);
@@ -88,7 +86,8 @@ void main() {
             .thenAnswer((_) => Future.value(true));
 
         // Log in anonymously
-        await tester.tap(find.byKey(ValueKey('log_in_anonymously_button')));
+        await tester
+            .tap(find.byKey(const ValueKey('log_in_anonymously_button')));
         await tester.pumpAndSettle();
 
         verify(
@@ -121,11 +120,11 @@ void main() {
 
         // Enter credentials
         await tester.enterText(
-            find.byKey(ValueKey('email_text_field')), 'test');
+            find.byKey(const ValueKey('email_text_field')), 'test');
         await tester.enterText(
-            find.byKey(ValueKey('password_text_field')), 'password');
+            find.byKey(const ValueKey('password_text_field')), 'password');
 
-        await tester.tap(find.byKey(ValueKey('log_in_button')));
+        await tester.tap(find.byKey(const ValueKey('log_in_button')));
         await tester.pumpAndSettle();
 
         verify(mockAuthProvider.signIn(
@@ -162,9 +161,10 @@ void main() {
 
       // Send email
       await tester.enterText(
-          find.byKey(ValueKey('reset_password_email_text_field')), 'test');
+          find.byKey(const ValueKey('reset_password_email_text_field')),
+          'test');
 
-      await tester.tap(find.byKey(ValueKey('send_email_button')));
+      await tester.tap(find.byKey(const ValueKey('send_email_button')));
       await tester.pumpAndSettle();
 
       expect(find.byType(AlertDialog), findsNothing);
@@ -194,7 +194,7 @@ void main() {
       expect(find.byType(AlertDialog), findsOneWidget);
 
       // Close dialog
-      await tester.tap(find.byKey(ValueKey('cancel_button')));
+      await tester.tap(find.byKey(const ValueKey('cancel_button')));
       await tester.pumpAndSettle();
 
       expect(find.byType(AlertDialog), findsNothing);
@@ -205,7 +205,7 @@ void main() {
   });
 
   group('Sign up', () {
-    MockNavigatorObserver mockObserver = MockNavigatorObserver();
+    final MockNavigatorObserver mockObserver = MockNavigatorObserver();
     FilterProvider mockFilterProvider = MockFilterProvider();
 
     setUp(() {
@@ -355,150 +355,112 @@ void main() {
           .thenAnswer((realInvocation) => Future.value(true));
 
       // Test parser from email
-      final FormTextField firstName = tester
-          .widget<FormTextField>(find.byKey(ValueKey('first_name_text_field')));
-      final FormTextField lastName = tester
-          .widget<FormTextField>(find.byKey(ValueKey('last_name_text_field')));
+      final Finder email = find.byKey(const ValueKey('email_text_field'));
+      final TextField firstName = tester.widget<TextField>(
+          find.byKey(const ValueKey('first_name_text_field')));
+      final TextField lastName = tester.widget<TextField>(
+          find.byKey(const ValueKey('last_name_text_field')));
 
-      await tester.enterText(
-          find.byKey(ValueKey('email_text_field'), skipOffstage: true),
-          'john_alexander.doe123');
+      await tester.enterText(email, 'john_alexander.doe123');
       expect(firstName.controller.text, equals('John Alexander'));
       expect(lastName.controller.text, equals('Doe'));
 
-      await tester.enterText(
-          find.byKey(ValueKey('email_text_field'), skipOffstage: true),
-          'john.doe');
+      await tester.enterText(email, 'john.doe');
       expect(firstName.controller.text, equals('John'));
       expect(lastName.controller.text, equals('Doe'));
 
-      await tester.enterText(
-          find.byKey(ValueKey('email_text_field'), skipOffstage: true),
-          '1234john.doe');
+      await tester.enterText(email, '1234john.doe');
       expect(firstName.controller.text, equals('John'));
       expect(lastName.controller.text, equals('Doe'));
 
-      await tester.enterText(
-          find.byKey(ValueKey('email_text_field'), skipOffstage: true),
-          'john1234.doe');
+      await tester.enterText(email, 'john1234.doe');
       expect(firstName.controller.text, equals('John'));
       expect(lastName.controller.text, equals('Doe'));
 
-      await tester.enterText(
-          find.byKey(ValueKey('email_text_field'), skipOffstage: true),
-          'john.1234doe');
+      await tester.enterText(email, 'john.1234doe');
       expect(firstName.controller.text, equals('John'));
       expect(lastName.controller.text, equals('Doe'));
 
-      await tester.enterText(
-          find.byKey(ValueKey('email_text_field'), skipOffstage: true),
-          'john.doe1234');
+      await tester.enterText(email, 'john.doe1234');
       expect(firstName.controller.text, equals('John'));
       expect(lastName.controller.text, equals('Doe'));
 
-      await tester.enterText(
-          find.byKey(ValueKey('email_text_field'), skipOffstage: true),
-          '1234john_alexander.doe');
+      await tester.enterText(email, '1234john_alexander.doe');
       expect(firstName.controller.text, equals('John Alexander'));
       expect(lastName.controller.text, equals('Doe'));
 
-      await tester.enterText(
-          find.byKey(ValueKey('email_text_field'), skipOffstage: true),
-          'john1234_alexander.doe');
+      await tester.enterText(email, 'john1234_alexander.doe');
       expect(firstName.controller.text, equals('John Alexander'));
       expect(lastName.controller.text, equals('Doe'));
 
-      await tester.enterText(
-          find.byKey(ValueKey('email_text_field'), skipOffstage: true),
-          'john_1234alexander.doe');
+      await tester.enterText(email, 'john_1234alexander.doe');
       expect(firstName.controller.text, equals('John Alexander'));
       expect(lastName.controller.text, equals('Doe'));
 
-      await tester.enterText(
-          find.byKey(ValueKey('email_text_field'), skipOffstage: true),
-          'john_alexander1234.doe');
+      await tester.enterText(email, 'john_alexander1234.doe');
       expect(firstName.controller.text, equals('John Alexander'));
       expect(lastName.controller.text, equals('Doe'));
 
-      await tester.enterText(
-          find.byKey(ValueKey('email_text_field'), skipOffstage: true),
-          'john_alexander.1234doe');
+      await tester.enterText(email, 'john_alexander.1234doe');
       expect(firstName.controller.text, equals('John Alexander'));
       expect(lastName.controller.text, equals('Doe'));
 
-      await tester.enterText(
-          find.byKey(ValueKey('email_text_field'), skipOffstage: true),
-          '!@#%^&*()=-+john_alexander.doe');
+      await tester.enterText(email, '!@#%^&*()=-+john_alexander.doe');
       expect(firstName.controller.text, equals('John Alexander'));
       expect(lastName.controller.text, equals('Doe'));
 
-      await tester.enterText(
-          find.byKey(ValueKey('email_text_field'), skipOffstage: true),
-          'john!@#%^&*()=-+_alexander.doe');
+      await tester.enterText(email, 'john!@#%^&*()=-+_alexander.doe');
       expect(firstName.controller.text, equals('John Alexander'));
       expect(lastName.controller.text, equals('Doe'));
 
-      await tester.enterText(
-          find.byKey(ValueKey('email_text_field'), skipOffstage: true),
-          'john_!@#%^&*()=-+alexander.doe');
+      await tester.enterText(email, 'john_!@#%^&*()=-+alexander.doe');
       expect(firstName.controller.text, equals('John Alexander'));
       expect(lastName.controller.text, equals('Doe'));
 
-      await tester.enterText(
-          find.byKey(ValueKey('email_text_field'), skipOffstage: true),
-          'john_alexander!@#%^&*()=-+.doe');
+      await tester.enterText(email, 'john_alexander!@#%^&*()=-+.doe');
       expect(firstName.controller.text, equals('John Alexander'));
       expect(lastName.controller.text, equals('Doe'));
 
-      await tester.enterText(
-          find.byKey(ValueKey('email_text_field'), skipOffstage: true),
-          'john_alexander.!@#%^&*()=-+doe');
+      await tester.enterText(email, 'john_alexander.!@#%^&*()=-+doe');
       expect(firstName.controller.text, equals('John Alexander'));
       expect(lastName.controller.text, equals('Doe'));
 
-      await tester.enterText(
-          find.byKey(ValueKey('email_text_field'), skipOffstage: true),
-          'john_alexander.doe!@#%^&*()=-+');
+      await tester.enterText(email, 'john_alexander.doe!@#%^&*()=-+');
       expect(firstName.controller.text, equals('John Alexander'));
       expect(lastName.controller.text, equals('Doe'));
 
-      await tester.enterText(
-          find.byKey(ValueKey('email_text_field'), skipOffstage: true),
+      await tester.enterText(email,
           '!@#%^&*()=-+john!@#%^&*()=-+_!@#%^&*()=-+alexander!@#%^&*()=-+.!@#%^&*()=-+1234!@#%^&*()=-+doe!@#%^&*()=-+');
       expect(firstName.controller.text, equals('John Alexander'));
       expect(lastName.controller.text, equals('Doe'));
 
-      await tester.enterText(
-          find.byKey(ValueKey('email_text_field'), skipOffstage: true),
-          'j12o##h&n_alexand@-er.do***e');
+      await tester.enterText(email, 'j12o##h&n_alexand@-er.do***e');
       expect(firstName.controller.text, equals('John Alexander'));
       expect(lastName.controller.text, equals('Doe'));
 
-      await tester.enterText(
-          find.byKey(ValueKey('email_text_field'), skipOffstage: true),
-          'john_alexander.doe1234');
+      await tester.enterText(email, 'john_alexander.doe1234');
 
       ///////////////////////
 
       await tester.enterText(
-          find.byKey(ValueKey('password_text_field'), skipOffstage: true),
-          'password');
+          find.byKey(const ValueKey('password_text_field')), 'password');
       await tester.enterText(
-          find.byKey(ValueKey('confirm_password_text_field')), 'password');
+          find.byKey(const ValueKey('confirm_password_text_field')), 'password');
       await tester.enterText(
-          find.byKey(ValueKey('first_name_text_field')), 'John Alexander');
+          find.byKey(const ValueKey('first_name_text_field')), 'John Alexander');
       await tester.enterText(
-          find.byKey(ValueKey('last_name_text_field')), 'Doe');
-      // TODO: Test dropdown buttons
+          find.byKey(const ValueKey('last_name_text_field')), 'Doe');
+
+      // TODO(AdrianMargineanu): Test dropdown buttons
 
       // Scroll sign up button into view
-      await tester.ensureVisible(find.byKey(ValueKey('sign_up_button')));
+      await tester.ensureVisible(find.byKey(const ValueKey('sign_up_button')));
 
       // Check Privacy Policy
       await tester.tap(find.byType(Checkbox));
 
       // Press sign up
-      await tester.tap(find.byKey(ValueKey('sign_up_button')));
+      await tester.tap(find.byKey(const ValueKey('sign_up_button')));
       await tester.pumpAndSettle();
 
       verify(mockAuthProvider.signUp(
@@ -540,8 +502,8 @@ void main() {
           .thenAnswer((_) => Future.value(true));
 
       // Scroll cancel button into view and tap
-      await tester.ensureVisible(find.byKey(ValueKey('cancel_button')));
-      await tester.tap(find.byKey(ValueKey('cancel_button')));
+      await tester.ensureVisible(find.byKey(const ValueKey('cancel_button')));
+      await tester.tap(find.byKey(const ValueKey('cancel_button')));
       await tester.pumpAndSettle();
 
       verifyNever(mockAuthProvider.signUp(
@@ -553,7 +515,7 @@ void main() {
   });
 
   group('Sign out', () {
-    MockNavigatorObserver mockObserver = MockNavigatorObserver();
+    final MockNavigatorObserver mockObserver = MockNavigatorObserver();
 
     setUp(() {
       // Mock an anonymous user already being logged in
@@ -589,7 +551,7 @@ void main() {
       await tester.tap(find.text('Log in'));
       await tester.pumpAndSettle();
 
-      verify(mockAuthProvider.signOut(any));
+      verify(mockAuthProvider.signOut());
       expect(find.byType(LoginView), findsOneWidget);
     });
 
@@ -618,7 +580,7 @@ void main() {
       await tester.tap(find.text('Log out'));
       await tester.pumpAndSettle();
 
-      verify(mockAuthProvider.signOut(any));
+      verify(mockAuthProvider.signOut());
       expect(find.byType(LoginView), findsOneWidget);
     });
   });

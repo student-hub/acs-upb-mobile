@@ -22,7 +22,6 @@ import 'package:acs_upb_mobile/pages/portal/view/portal_page.dart';
 import 'package:acs_upb_mobile/pages/portal/view/website_view.dart';
 import 'package:acs_upb_mobile/pages/settings/settings_page.dart';
 import 'package:acs_upb_mobile/resources/custom_icons.dart';
-import 'package:acs_upb_mobile/resources/storage_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
@@ -34,8 +33,6 @@ import 'package:provider/provider.dart';
 // nothing overflows/breaks.
 
 class MockAuthProvider extends Mock implements AuthProvider {}
-
-class MockStorageProvider extends Mock implements StorageProvider {}
 
 class MockWebsiteProvider extends Mock implements WebsiteProvider {}
 
@@ -49,17 +46,16 @@ class MockNavigatorObserver extends Mock implements NavigatorObserver {}
 
 void main() {
   AuthProvider mockAuthProvider;
-  StorageProvider mockStorageProvider;
   WebsiteProvider mockWebsiteProvider;
   FilterProvider mockFilterProvider;
   ClassProvider mockClassProvider;
   PersonProvider mockPersonProvider;
 
   // Test layout for different screen sizes
-  List<Size> screenSizes = [
+  final screenSizes = <Size>[
     // Phone
-    Size(1080, 1920), Size(720, 1280), // Standard
-    Size(2200, 2480), Size(1536, 2151), // Foldable
+    const Size(1080, 1920), const Size(720, 1280), // Standard
+    const Size(2200, 2480), const Size(1536, 2151), // Foldable
     /* For some reason, Q/WVGA sizes give weird overflow errors that I can't
     replicate in the emulator with the same size, so I'll leave these commented
     for now:
@@ -67,22 +63,20 @@ void main() {
     Size(240, 432), Size(240, 400), Size(320, 480), Size(240, 320), // QVGA
    */
     // Tablet
-    Size(1800, 2560), Size(1536, 2048), Size(1200, 1920),
-    Size(1600, 2560), Size(600, 1024), Size(800, 1280),
+    const Size(1800, 2560), const Size(1536, 2048), const Size(1200, 1920),
+    const Size(1600, 2560), const Size(600, 1024), const Size(800, 1280),
   ];
 
   // Add landscape mode sizes
-  screenSizes.addAll(
-      List.from(screenSizes).map((size) => Size(size.height, size.width)));
+  screenSizes.addAll(List<Size>.from(screenSizes)
+      .map((size) => Size(size.height, size.width)));
 
   final TestWidgetsFlutterBinding binding =
       TestWidgetsFlutterBinding.ensureInitialized();
 
-  buildApp() => MultiProvider(
+  Widget buildApp() => MultiProvider(
         providers: [
           ChangeNotifierProvider<AuthProvider>(create: (_) => mockAuthProvider),
-          ChangeNotifierProvider<StorageProvider>(
-              create: (_) => mockStorageProvider),
           ChangeNotifierProvider<WebsiteProvider>(
               create: (_) => mockWebsiteProvider),
           ChangeNotifierProvider<FilterProvider>(
@@ -111,10 +105,6 @@ void main() {
         .thenAnswer((_) => Future.value(true));
     when(mockAuthProvider.currentUser)
         .thenAnswer((realInvocation) => Future.value(null));
-
-    mockStorageProvider = MockStorageProvider();
-    // ignore: invalid_use_of_protected_member
-    when(mockStorageProvider.hasListeners).thenReturn(false);
 
     mockWebsiteProvider = MockWebsiteProvider();
     // ignore: invalid_use_of_protected_member
@@ -361,7 +351,7 @@ void main() {
   });
 
   group('Home', () {
-    for (var size in screenSizes) {
+    for (final size in screenSizes) {
       testWidgets('${size.width}x${size.height}', (WidgetTester tester) async {
         await binding.setSurfaceSize(size);
 
@@ -380,7 +370,7 @@ void main() {
   });
 
   group('Class', () {
-    for (var size in screenSizes) {
+    for (final size in screenSizes) {
       testWidgets('${size.width}x${size.height}', (WidgetTester tester) async {
         await binding.setSurfaceSize(size);
 
@@ -408,7 +398,7 @@ void main() {
       when(mockAuthProvider.uid).thenReturn('0');
     });
 
-    for (var size in screenSizes) {
+    for (final size in screenSizes) {
       testWidgets('${size.width}x${size.height}', (WidgetTester tester) async {
         await binding.setSurfaceSize(size);
 
@@ -447,7 +437,7 @@ void main() {
       when(mockAuthProvider.uid).thenReturn('0');
     });
 
-    for (var size in screenSizes) {
+    for (final size in screenSizes) {
       testWidgets('${size.width}x${size.height}', (WidgetTester tester) async {
         await binding.setSurfaceSize(size);
 
@@ -490,7 +480,7 @@ void main() {
   });
 
   group('Settings', () {
-    for (var size in screenSizes) {
+    for (final size in screenSizes) {
       testWidgets('${size.width}x${size.height}', (WidgetTester tester) async {
         await binding.setSurfaceSize(size);
 
@@ -507,7 +497,7 @@ void main() {
   });
 
   group('Portal', () {
-    for (var size in screenSizes) {
+    for (final size in screenSizes) {
       testWidgets('${size.width}x${size.height}', (WidgetTester tester) async {
         await binding.setSurfaceSize(size);
 
@@ -524,7 +514,7 @@ void main() {
   });
 
   group('Filter', () {
-    for (var size in screenSizes) {
+    for (final size in screenSizes) {
       testWidgets('${size.width}x${size.height}', (WidgetTester tester) async {
         await binding.setSurfaceSize(size);
 
@@ -552,7 +542,7 @@ void main() {
       when(mockAuthProvider.isAnonymous).thenReturn(false);
     });
 
-    for (var size in screenSizes) {
+    for (final size in screenSizes) {
       testWidgets('${size.width}x${size.height}', (WidgetTester tester) async {
         await binding.setSurfaceSize(size);
 
@@ -564,7 +554,8 @@ void main() {
         await tester.pumpAndSettle();
 
         // Open add website page
-        var addWebsiteButton = find.byKey(ValueKey('add_website_associations'));
+        final addWebsiteButton =
+            find.byKey(const ValueKey('add_website_associations'));
         await tester.ensureVisible(addWebsiteButton);
         await tester.pumpAndSettle();
 
@@ -588,7 +579,7 @@ void main() {
               permissionLevel: 3)));
     });
 
-    for (var size in screenSizes) {
+    for (final size in screenSizes) {
       testWidgets('${size.width}x${size.height}', (WidgetTester tester) async {
         await binding.setSurfaceSize(size);
 
@@ -627,7 +618,7 @@ void main() {
               permissionLevel: 3)));
     });
 
-    for (var size in screenSizes) {
+    for (final size in screenSizes) {
       testWidgets('${size.width}x${size.height}', (WidgetTester tester) async {
         await binding.setSurfaceSize(size);
 
@@ -695,7 +686,7 @@ void main() {
               permissionLevel: 3)));
     });
 
-    for (var size in screenSizes) {
+    for (final size in screenSizes) {
       testWidgets('${size.width}x${size.height}', (WidgetTester tester) async {
         await binding.setSurfaceSize(size);
 
@@ -715,7 +706,8 @@ void main() {
         await tester.tap(find.text('Delete account'));
         await tester.pumpAndSettle();
 
-        expect(find.byKey(ValueKey('delete_account_button')), findsOneWidget);
+        expect(find.byKey(const ValueKey('delete_account_button')),
+            findsOneWidget);
       });
     }
   });
@@ -726,11 +718,11 @@ void main() {
       when(mockAuthProvider.isAnonymous).thenReturn(true);
     });
 
-    for (var size in screenSizes) {
+    for (final size in screenSizes) {
       testWidgets('${size.width}x${size.height}', (WidgetTester tester) async {
         await binding.setSurfaceSize(size);
 
-        mockNetworkImagesFor(() async {
+        await mockNetworkImagesFor(() async {
           await tester.pumpWidget(buildApp());
           await tester.pumpAndSettle();
 
@@ -741,8 +733,8 @@ void main() {
           expect(find.byType(PeoplePage), findsOneWidget);
 
           // Open bottom sheet with person info
-          var names = ['John Doe', 'Jane Doe', 'Mary Poppins'];
-          for (var name in names) {
+          final names = ['John Doe', 'Jane Doe', 'Mary Poppins'];
+          for (final name in names) {
             await tester.tap(find.text(name));
             await tester.pumpAndSettle();
           }
