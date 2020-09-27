@@ -105,9 +105,7 @@ class _FaqPageState extends State<FaqPage> {
                                         question.question
                                             .toLowerCase()
                                             .contains(filter)) &&
-                            (activeTags.isEmpty
-                                ? true
-                                : containsTag(activeTags, question.tags)))
+                            containsTag(activeTags, question.tags))
                         .toList(),
                     filter: filter),
               ],
@@ -117,6 +115,7 @@ class _FaqPageState extends State<FaqPage> {
   }
 
   bool containsTag(List<String> activeTags, List<String> questionTags) {
+    if (activeTags.isEmpty) return true;
     return questionTags.any(activeTags.contains);
   }
 }
@@ -160,8 +159,7 @@ class _QuestionsListState extends State<QuestionsList> {
               Padding(
                 padding: const EdgeInsets.fromLTRB(15.0, 0.0, 15.0, 15.0),
                 child: MarkdownBody(
-                  data: widget.questions[index].answer
-                      .replaceAll('\\n', '\n'),
+                  data: widget.questions[index].answer.replaceAll('\\n', '\n'),
                   /* Firebase database doesn't recognize endline
                    and i added \n for them. Without replaceAll is printed
                    '\n' instead of a new line.
