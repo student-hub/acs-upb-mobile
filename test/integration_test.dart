@@ -86,7 +86,7 @@ void main() {
           ChangeNotifierProvider<PersonProvider>(
               create: (_) => mockPersonProvider),
         ],
-        child: MyApp(),
+        child: const MyApp(),
       );
 
   setUp(() async {

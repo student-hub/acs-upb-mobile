@@ -17,10 +17,10 @@ class SelectableController {
 class Selectable extends StatefulWidget {
   const Selectable(
       {this.initiallySelected = false,
-        this.label = '',
-        this.onSelected,
-        this.controller,
-        this.disabled = false});
+      this.label = '',
+      this.onSelected,
+      this.controller,
+      this.disabled = false});
 
   final bool initiallySelected;
   final String label;

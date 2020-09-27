@@ -76,7 +76,7 @@ void main() {
         ChangeNotifierProvider<AuthProvider>(create: (_) => mockAuthProvider),
         ChangeNotifierProvider<WebsiteProvider>(
             create: (_) => mockWebsiteProvider)
-      ], child: MyApp()));
+      ], child: const MyApp()));
       await tester.pumpAndSettle();
 
       await tester.runAsync(() async {
@@ -104,7 +104,7 @@ void main() {
         ChangeNotifierProvider<AuthProvider>(create: (_) => mockAuthProvider),
         ChangeNotifierProvider<WebsiteProvider>(
             create: (_) => mockWebsiteProvider)
-      ], child: MyApp()));
+      ], child: const MyApp()));
       await tester.pumpAndSettle();
 
       await tester.runAsync(() async {
@@ -142,7 +142,7 @@ void main() {
   group('Recover password', () {
     testWidgets('Send email', (WidgetTester tester) async {
       await tester.pumpWidget(ChangeNotifierProvider<AuthProvider>(
-          create: (_) => mockAuthProvider, child: MyApp()));
+          create: (_) => mockAuthProvider, child: const MyApp()));
       await tester.pumpAndSettle();
 
       expect(find.byType(LoginView), findsOneWidget);
@@ -176,7 +176,7 @@ void main() {
 
     testWidgets('Cancel', (WidgetTester tester) async {
       await tester.pumpWidget(ChangeNotifierProvider<AuthProvider>(
-          create: (_) => mockAuthProvider, child: MyApp()));
+          create: (_) => mockAuthProvider, child: const MyApp()));
       await tester.pumpAndSettle();
 
       expect(find.byType(LoginView), findsOneWidget);

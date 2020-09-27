@@ -49,7 +49,7 @@ void main() {
         ChangeNotifierProvider<AuthProvider>(create: (_) => mockAuthProvider),
         ChangeNotifierProvider<WebsiteProvider>(
             create: (_) => mockWebsiteProvider)
-      ], child: MyApp()));
+      ], child: const MyApp()));
       await tester.pumpAndSettle();
 
       MaterialApp app = find.byType(MaterialApp).evaluate().first.widget;
@@ -79,7 +79,7 @@ void main() {
         ChangeNotifierProvider<AuthProvider>(create: (_) => mockAuthProvider),
         ChangeNotifierProvider<WebsiteProvider>(
             create: (_) => mockWebsiteProvider)
-      ], child: MyApp()));
+      ], child: const MyApp()));
       await tester.pumpAndSettle();
 
       // Open settings
