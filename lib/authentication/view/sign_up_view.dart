@@ -75,15 +75,20 @@ class _SignUpViewState extends State<SignUpView> {
             emailController, firstNameController, lastNameController),
       ),
       FormCardField(
-        label: S.of(context).labelPassword,
-        hint: S.of(context).hintPassword,
-        additionalHint: S.of(context).infoPassword,
-        controller: passwordController,
-        obscureText: true,
-        autofillHints: [AutofillHints.newPassword],
-        check: (password, {context}) async =>
-            AppValidator.isStrongPassword(password, context) == null,
-      ),
+          label: S.of(context).labelPassword,
+          hint: S.of(context).hintPassword,
+          additionalHint: S.of(context).infoPassword,
+          controller: passwordController,
+          obscureText: true,
+          autofillHints: [AutofillHints.newPassword],
+          check: (password, {context}) async {
+            final errorString =
+                AppValidator.isStrongPassword(password, context);
+            if (context != null && errorString != null) {
+              AppToast.show(errorString);
+            }
+            return errorString == null;
+          }),
       FormCardField(
         label: S.of(context).labelConfirmPassword,
         hint: S.of(context).hintPassword,

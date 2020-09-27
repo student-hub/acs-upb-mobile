@@ -11,7 +11,7 @@ class FormCardField {
     TextEditingController controller,
     FocusNode focusNode,
     void Function(String) onSubmitted,
-    this.onChanged,
+    void Function(String) onChanged,
     this.check,
     this.obscureText = false,
     this.suffix,
@@ -20,6 +20,7 @@ class FormCardField {
     this.keyboardType = TextInputType.text,
     this.autofillHints,
   })  : onSubmitted = onSubmitted ?? ((_) {}),
+        onChanged = onChanged ?? ((_) {}),
         controller = controller ?? TextEditingController(),
         focusNode = focusNode ?? FocusNode(),
         valid = Future<bool>(() => null);
