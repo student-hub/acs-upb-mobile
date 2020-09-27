@@ -5,8 +5,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'file:///C:/Users/sako_/StudioProjects/acs-upb-mobile/lib/widgets/form_card.dart';
-
 class FilterDropdownController {
   _FilterDropdownState _dropdownTreeState;
 
@@ -33,7 +31,6 @@ class FilterDropdown extends StatefulWidget {
 }
 
 class _FilterDropdownState extends State<FilterDropdown> {
-  List<FormCardField> formItems;
   FilterProvider filterProvider;
   Filter filter;
   List<FilterNode> nodes;
