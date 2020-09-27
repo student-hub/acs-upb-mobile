@@ -16,7 +16,8 @@ linter:
     avoid_field_initializers_in_const_classes: true
     avoid_function_literals_in_foreach_calls: true
     avoid_positional_boolean_parameters: true
-    avoid_print: true
+    # TODO: Enable this when we set up proper logging
+    avoid_print: false
     avoid_setters_without_getters: true
     avoid_types_on_closure_parameters: false
     camel_case_extensions: true
