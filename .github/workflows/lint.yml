@@ -37,7 +37,7 @@ jobs:
         if: github.event_name == 'pull_request'
       - name: Run danger on generated report
         uses: MeilCli/danger-action@v1
-        if: github.event_name == 'pull_request'
+        if: github.event_name == 'pull_request' && github.repository == 'acs-upb-mobile/acs-upb-mobile'
         with:
           danger_file: Dangerfile
           danger_id: "danger-pr"
