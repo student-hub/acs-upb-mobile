@@ -71,7 +71,8 @@ class _FaqPageState extends State<FaqPage> {
       body: FutureBuilder(
           future: futureQuestions,
           builder: (context, snapshot) {
-            if (!snapshot.hasData) return LinearProgressIndicator();
+            if (!snapshot.hasData)
+              return Center(child: LinearProgressIndicator());
             questions = snapshot.data;
             categories = questions.expand((e) => e.tags).toSet().toList();
             return ListView(
@@ -116,12 +117,7 @@ class _FaqPageState extends State<FaqPage> {
   }
 
   bool containsTag(List<String> activeTags, List<String> questionTags) {
-    for (String tag in activeTags) {
-      if (questionTags.contains(tag)) {
-        return true;
-      }
-    }
-    return false;
+    return questionTags.any(activeTags.contains);
   }
 }
 
@@ -140,47 +136,47 @@ class _QuestionsListState extends State<QuestionsList> {
   Widget build(BuildContext context) {
     List<String> filteredWords =
         widget.filter.split(' ').where((element) => element != '').toList();
-    return Column(
-      children: [
-        Padding(
-          padding: EdgeInsets.only(top: 12.0),
-          child: ListView.builder(
-            shrinkWrap: true,
-            physics: NeverScrollableScrollPhysics(),
-            itemCount: widget.questions.length,
-            itemBuilder: (context, index) {
-              return ExpansionTile(
-                title: filteredWords.isNotEmpty
-                    ? DynamicTextHighlighting(
-                        text: widget.questions[index].question,
-                        style: Theme.of(context).textTheme.subtitle1,
-                        highlights: filteredWords,
-                        color: Theme.of(context).accentColor,
-                        caseSensitive: false,
-                      )
-                    : Text(
-                        widget.questions[index].question,
-                        style: Theme.of(context).textTheme.subtitle1,
-                      ),
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(15.0, 0.0, 15.0, 15.0),
-                    child: MarkdownBody(
-                      data: widget.questions[index].answer
-                          .replaceAll('\\n', '\n'),
-                      extensionSet: md.ExtensionSet(
-                          md.ExtensionSet.gitHubFlavored.blockSyntaxes, [
-                        md.EmojiSyntax(),
-                        ...md.ExtensionSet.gitHubFlavored.inlineSyntaxes
-                      ]),
-                    ),
+    return Padding(
+      padding: EdgeInsets.only(top: 12.0),
+      child: ListView.builder(
+        shrinkWrap: true,
+        physics: NeverScrollableScrollPhysics(),
+        itemCount: widget.questions.length,
+        itemBuilder: (context, index) {
+          return ExpansionTile(
+            title: filteredWords.isNotEmpty
+                ? DynamicTextHighlighting(
+                    text: widget.questions[index].question,
+                    style: Theme.of(context).textTheme.subtitle1,
+                    highlights: filteredWords,
+                    color: Theme.of(context).accentColor,
+                    caseSensitive: false,
+                  )
+                : Text(
+                    widget.questions[index].question,
+                    style: Theme.of(context).textTheme.subtitle1,
                   ),
-                ],
-              );
-            },
-          ),
-        ),
-      ],
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(15.0, 0.0, 15.0, 15.0),
+                child: MarkdownBody(
+                  data: widget.questions[index].answer
+                      .replaceAll('\\n', '\n'),
+                  /* Firebase database doesn't recognize endline
+                   and i added \n for them. Without replaceAll is printed
+                   '\n' instead of a new line.
+                  */
+                  extensionSet: md.ExtensionSet(
+                      md.ExtensionSet.gitHubFlavored.blockSyntaxes, [
+                    md.EmojiSyntax(),
+                    ...md.ExtensionSet.gitHubFlavored.inlineSyntaxes
+                  ]),
+                ),
+              ),
+            ],
+          );
+        },
+      ),
     );
   }
 }
