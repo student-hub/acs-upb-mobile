@@ -160,11 +160,13 @@ class _QuestionsListState extends State<QuestionsList> {
                 padding: const EdgeInsets.fromLTRB(15.0, 0.0, 15.0, 15.0),
                 child: MarkdownBody(
                   fitContent: false,
-                  data: widget.questions[index].answer.replaceAll('\\n', '\n'),
-                  /* Firebase database doesn't recognize endline
-                   and i added \n for them. Without replaceAll is printed
-                   '\n' instead of a new line.
+                  /*
+                  This is a workaround because the strings in Firebase represent
+                  newlines as '\n' and Firebase replaces them with '\\n'. We need
+                  to replace them back for them to display properly.
+                  (See GitHub issue firebase/firebase-js-sdk#2366)
                   */
+                  data: widget.questions[index].answer.replaceAll('\\n', '\n'),
                   extensionSet: md.ExtensionSet(
                       md.ExtensionSet.gitHubFlavored.blockSyntaxes, [
                     md.EmojiSyntax(),
