@@ -285,24 +285,24 @@ class FavouriteWebsitesCard extends StatelessWidget {
 }
 
 class FaqCard extends StatelessWidget {
-  final Function onSeeMore;
+  const FaqCard({this.onSeeMore});
 
-  FaqCard({this.onSeeMore});
+  final Function onSeeMore;
 
   @override
   Widget build(BuildContext context) {
-    var questionsFuture =
+    final questionsFuture =
         Provider.of<QuestionProvider>(context).fetchQuestions(limit: 2);
     return Padding(
-      padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 8.0),
+      padding: const EdgeInsets.only(left: 8, right: 8, top: 8),
       child: FutureBuilder(
           future: questionsFuture,
           builder: (_, snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
-              List<Question> questions = snapshot.data;
+              final List<Question> questions = snapshot.data;
               return Card(
                 child: Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.all(8),
                   child: Column(
                     children: <Widget>[
                       Row(
@@ -340,7 +340,7 @@ class FaqCard extends StatelessWidget {
                           ),
                         ],
                       ),
-                      SizedBox(height: 12),
+                      const SizedBox(height: 12),
                       if (questions.isEmpty)
                         noneYet(context)
                       else
@@ -364,7 +364,7 @@ class FaqCard extends StatelessWidget {
                 ),
               );
             }
-            return Center(
+            return const Center(
               child: CircularProgressIndicator(),
             );
           }),

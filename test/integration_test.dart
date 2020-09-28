@@ -8,6 +8,8 @@ import 'package:acs_upb_mobile/pages/classes/view/class_view.dart';
 import 'package:acs_upb_mobile/pages/classes/view/classes_page.dart';
 import 'package:acs_upb_mobile/pages/classes/view/grading_view.dart';
 import 'package:acs_upb_mobile/pages/classes/view/shortcut_view.dart';
+import 'package:acs_upb_mobile/pages/faq/model/question.dart';
+import 'package:acs_upb_mobile/pages/faq/service/question_provider.dart';
 import 'package:acs_upb_mobile/pages/filter/model/filter.dart';
 import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
 import 'package:acs_upb_mobile/pages/filter/view/filter_page.dart';
@@ -42,6 +44,8 @@ class MockClassProvider extends Mock implements ClassProvider {}
 
 class MockPersonProvider extends Mock implements PersonProvider {}
 
+class MockQuestionProvider extends Mock implements QuestionProvider {}
+
 class MockNavigatorObserver extends Mock implements NavigatorObserver {}
 
 void main() {
@@ -50,6 +54,7 @@ void main() {
   FilterProvider mockFilterProvider;
   ClassProvider mockClassProvider;
   PersonProvider mockPersonProvider;
+  MockQuestionProvider mockQuestionProvider;
 
   // Test layout for different screen sizes
   final screenSizes = <Size>[
@@ -85,6 +90,8 @@ void main() {
               create: (_) => mockClassProvider),
           ChangeNotifierProvider<PersonProvider>(
               create: (_) => mockPersonProvider),
+          ChangeNotifierProvider<QuestionProvider>(
+              create: (_) => mockQuestionProvider),
         ],
         child: const MyApp(),
       );
@@ -348,6 +355,14 @@ void main() {
                 photo: 'https://cdn.worldvectorlogo.com/logos/flutter-logo.svg',
               ),
             ]));
+
+    mockQuestionProvider = MockQuestionProvider();
+    // ignore: invalid_use_of_protected_member
+    when(mockQuestionProvider.hasListeners).thenReturn(false);
+    when(mockQuestionProvider.fetchQuestions(context: anyNamed('context')))
+        .thenAnswer((realInvocation) => Future.value(<Question>[]));
+    when(mockQuestionProvider.fetchQuestions(limit: anyNamed('limit')))
+        .thenAnswer((realInvocation) => Future.value(<Question>[]));
   });
 
   group('Home', () {

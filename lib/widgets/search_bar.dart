@@ -3,11 +3,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class SearchBar extends StatefulWidget {
-  final Function() cancel;
-  final Function(String) onSearch;
-  final textController;
+  const SearchBar({this.cancel, this.textController, this.onSearch});
 
-  SearchBar({this.cancel, this.textController, this.onSearch});
+  final void Function() cancel;
+  final void Function(String) onSearch;
+  final TextEditingController textController;
 
   @override
   _SearchBarState createState() => _SearchBarState();
@@ -16,26 +16,26 @@ class SearchBar extends StatefulWidget {
 class _SearchBarState extends State<SearchBar> {
   @override
   Widget build(BuildContext context) {
-    double maxWidth = MediaQuery.of(context).size.width;
+    final double maxWidth = MediaQuery.of(context).size.width;
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: <Widget>[
-        SizedBox(width: 4),
+        const SizedBox(width: 4),
         Flexible(
           child: Container(
             width: maxWidth * .8,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(5),
-              color: Color.fromRGBO(142, 142, 147, .15),
+              color: const Color.fromRGBO(142, 142, 147, .15),
             ),
             child: Padding(
-              padding: EdgeInsets.only(left: 8.0),
+              padding: const EdgeInsets.only(left: 8),
               child: TextField(
                 autofocus: true,
                 controller: widget.textController,
                 onChanged: widget.onSearch,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   icon: Icon(Icons.search),
                   border: InputBorder.none,
                 ),
@@ -61,20 +61,20 @@ class _SearchBarState extends State<SearchBar> {
 }
 
 class SearchWidget extends StatefulWidget {
-  final Function(String) onSearch;
-  final Widget title;
-  final Function() cancelCallback;
-  final searchClosed;
-
-  SearchWidget(
+  const SearchWidget(
       {this.onSearch, this.title, this.cancelCallback, this.searchClosed});
+
+  final void Function(String) onSearch;
+  final Widget title;
+  final void Function() cancelCallback;
+  final bool searchClosed;
 
   @override
   _SearchWidgetState createState() => _SearchWidgetState();
 }
 
 class _SearchWidgetState extends State<SearchWidget> {
-  TextEditingController _textEditingController = TextEditingController();
+  final TextEditingController _textEditingController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -82,11 +82,11 @@ class _SearchWidgetState extends State<SearchWidget> {
       height: 60,
       child: widget.searchClosed
           ? Padding(
-              padding: EdgeInsets.only(left: 10, top: 20),
+              padding: const EdgeInsets.only(left: 10, top: 20),
               child: widget.title,
             )
           : Padding(
-              padding: const EdgeInsets.only(left: 10.0, top: 10.0),
+              padding: const EdgeInsets.only(left: 10, top: 10),
               child: SearchBar(
                 textController: _textEditingController,
                 onSearch: widget.onSearch,

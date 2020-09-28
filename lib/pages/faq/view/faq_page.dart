@@ -12,21 +12,24 @@ import 'package:provider/provider.dart';
 import 'package:markdown/markdown.dart' as md;
 
 class FaqPage extends StatefulWidget {
+
+  static const String routeName = '/faq';
+
   @override
   _FaqPageState createState() => _FaqPageState();
 }
 
 class _FaqPageState extends State<FaqPage> {
-  List<Question> questions = List<Question>();
+  List<Question> questions = <Question>[];
   List<String> categories;
   String filter = '';
   bool searchClosed = true;
-  List<String> activeTags = List<String>();
+  List<String> activeTags = <String>[];
   Future<List<Question>> futureQuestions;
 
   @override
   void initState() {
-    QuestionProvider questionProvider =
+    final QuestionProvider questionProvider =
         Provider.of<QuestionProvider>(context, listen: false);
     futureQuestions = questionProvider.fetchQuestions(context: context);
     super.initState();
@@ -36,7 +39,7 @@ class _FaqPageState extends State<FaqPage> {
         scrollDirection: Axis.horizontal,
         children: categories
             .map((category) => Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 3.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 3),
                   child: Selectable(
                     label: category,
                     initiallySelected: false,
@@ -71,8 +74,9 @@ class _FaqPageState extends State<FaqPage> {
       body: FutureBuilder(
           future: futureQuestions,
           builder: (context, snapshot) {
-            if (!snapshot.hasData)
-              return Center(child: CircularProgressIndicator());
+            if (!snapshot.hasData) {
+              return const Center(child: CircularProgressIndicator());
+            }
             questions = snapshot.data;
             categories = questions.expand((e) => e.tags).toSet().toList();
             return ListView(
@@ -116,10 +120,10 @@ class _FaqPageState extends State<FaqPage> {
 }
 
 class QuestionsList extends StatefulWidget {
+  const QuestionsList({this.questions, this.filter});
+
   final List<Question> questions;
   final String filter;
-
-  QuestionsList({this.questions, this.filter});
 
   @override
   _QuestionsListState createState() => _QuestionsListState();
@@ -128,13 +132,13 @@ class QuestionsList extends StatefulWidget {
 class _QuestionsListState extends State<QuestionsList> {
   @override
   Widget build(BuildContext context) {
-    List<String> filteredWords =
+    final List<String> filteredWords =
         widget.filter.split(' ').where((element) => element != '').toList();
     return Padding(
-      padding: EdgeInsets.only(top: 12.0),
+      padding: const EdgeInsets.only(top: 12),
       child: ListView.builder(
         shrinkWrap: true,
-        physics: NeverScrollableScrollPhysics(),
+        physics: const NeverScrollableScrollPhysics(),
         itemCount: widget.questions.length,
         itemBuilder: (context, index) {
           return ExpansionTile(
@@ -152,7 +156,7 @@ class _QuestionsListState extends State<QuestionsList> {
                   ),
             children: [
               Padding(
-                padding: const EdgeInsets.fromLTRB(15.0, 0.0, 15.0, 15.0),
+                padding: const EdgeInsets.fromLTRB(15, 0, 15, 15),
                 child: MarkdownBody(
                   fitContent: false,
                   /*

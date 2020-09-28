@@ -8,16 +8,13 @@ class QuestionProvider with ChangeNotifier {
   Future<List<Question>> fetchQuestions(
       {BuildContext context, int limit}) async {
     try {
-      QuerySnapshot qSnapshot = limit == null
-          ? await Firestore.instance.collection("faq").getDocuments()
+      final QuerySnapshot qSnapshot = limit == null
+          ? await Firestore.instance.collection('faq').getDocuments()
           : await Firestore.instance
-              .collection("faq")
+              .collection('faq')
               .limit(limit)
               .getDocuments();
-      return qSnapshot.documents
-          .map(
-              (documentSnapshot) => DatabaseQuestion.fromSnap(documentSnapshot))
-          .toList();
+      return qSnapshot.documents.map(DatabaseQuestion.fromSnap).toList();
     } catch (e) {
       print(e);
       if (context != null) {
@@ -30,9 +27,9 @@ class QuestionProvider with ChangeNotifier {
 
 extension DatabaseQuestion on Question {
   static Question fromSnap(DocumentSnapshot snap) {
-    String question = snap.data['question'];
-    String answer = snap.data['answer'];
-    List<String> tags = List.from(snap.data['tags']);
+    final String question = snap.data['question'];
+    final String answer = snap.data['answer'];
+    final List<String> tags = List.from(snap.data['tags']);
     return Question(question: question, answer: answer, tags: tags);
   }
 }
