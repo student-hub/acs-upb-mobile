@@ -77,7 +77,7 @@ class _ClassesPageState extends State<ClassesPage> {
             Padding(
               padding: const EdgeInsets.only(left: 10, right: 10),
               child: Text(
-                S.of(context).messageGetStartedPlusButton,
+                S.of(context).messageGetStartedButton,
                 style: Theme.of(context).textTheme.subtitle1,
               ),
             ),
@@ -97,8 +97,8 @@ class _ClassesPageState extends State<ClassesPage> {
       needsToBeAuthenticated: true,
       actions: [
         AppScaffoldAction(
-          icon: Icons.add,
-          tooltip: S.of(context).actionAddClasses,
+          icon: Icons.edit,
+          tooltip: S.of(context).actionTakeClasses,
           onPressed: () => Navigator.of(context).push(
             MaterialPageRoute<ChangeNotifierProvider>(
               builder: (_) => ChangeNotifierProvider.value(
@@ -187,7 +187,7 @@ class _AddClassesPageState extends State<AddClassesPage> {
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
-      title: S.of(context).actionAddClasses,
+      title: S.of(context).actionTakeClasses,
       actions: [
         AppScaffoldAction(
           text: S.of(context).buttonSave,

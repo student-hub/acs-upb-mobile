@@ -39,7 +39,6 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
-    "actionAddClasses" : MessageLookupByLibrary.simpleMessage("Add classes"),
     "actionAddEvent" : MessageLookupByLibrary.simpleMessage("Add event"),
     "actionAddShortcut" : MessageLookupByLibrary.simpleMessage("Add shortcut"),
     "actionAddWebsite" : MessageLookupByLibrary.simpleMessage("Add website"),
@@ -67,6 +66,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "actionSignInWith" : m0,
     "actionSignUp" : MessageLookupByLibrary.simpleMessage("Sign up"),
     "actionSocialLogin" : MessageLookupByLibrary.simpleMessage("Social login"),
+    "actionTakeClasses" : MessageLookupByLibrary.simpleMessage("Take classes"),
     "buttonApply" : MessageLookupByLibrary.simpleMessage("Apply"),
     "buttonCancel" : MessageLookupByLibrary.simpleMessage("Cancel"),
     "buttonNext" : MessageLookupByLibrary.simpleMessage("Next"),
@@ -149,7 +149,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "messageDeleteWebsite" : MessageLookupByLibrary.simpleMessage("Are you sure you want to delete this website?"),
     "messageEditProfileSuccess" : MessageLookupByLibrary.simpleMessage("Profile updated successfully."),
     "messageEmailNotVerified" : MessageLookupByLibrary.simpleMessage("Account is not verified."),
-    "messageGetStartedPlusButton" : MessageLookupByLibrary.simpleMessage("Get started by pressing the + button above."),
+    "messageGetStartedButton" : MessageLookupByLibrary.simpleMessage("Get started by pressing the button above."),
     "messageIAgreeToThe" : MessageLookupByLibrary.simpleMessage("I agree to the "),
     "messageNewUser" : MessageLookupByLibrary.simpleMessage("New user?"),
     "messageNoClassesYet" : MessageLookupByLibrary.simpleMessage("You have not added any classes yet."),

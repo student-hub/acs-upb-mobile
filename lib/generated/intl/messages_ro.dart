@@ -39,7 +39,6 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
-    "actionAddClasses" : MessageLookupByLibrary.simpleMessage("Adaugă materii"),
     "actionAddEvent" : MessageLookupByLibrary.simpleMessage("Adaugă eveniment"),
     "actionAddShortcut" : MessageLookupByLibrary.simpleMessage("Adaugă scurtătură"),
     "actionAddWebsite" : MessageLookupByLibrary.simpleMessage("Adaugă website"),
@@ -67,6 +66,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "actionSignInWith" : m0,
     "actionSignUp" : MessageLookupByLibrary.simpleMessage("Înregistrare"),
     "actionSocialLogin" : MessageLookupByLibrary.simpleMessage("Rețele sociale"),
+    "actionTakeClasses" : MessageLookupByLibrary.simpleMessage("Ia materii"),
     "buttonApply" : MessageLookupByLibrary.simpleMessage("Aplică"),
     "buttonCancel" : MessageLookupByLibrary.simpleMessage("Anulare"),
     "buttonNext" : MessageLookupByLibrary.simpleMessage("Următorul"),
@@ -149,7 +149,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "messageDeleteWebsite" : MessageLookupByLibrary.simpleMessage("Sunteți sigur că doriți să ștergeți acest website?"),
     "messageEditProfileSuccess" : MessageLookupByLibrary.simpleMessage("Profilul a fost actualizat cu succes."),
     "messageEmailNotVerified" : MessageLookupByLibrary.simpleMessage("Contul nu este verificat."),
-    "messageGetStartedPlusButton" : MessageLookupByLibrary.simpleMessage("Începeți prin a apăsa butonul + de mai sus."),
+    "messageGetStartedButton" : MessageLookupByLibrary.simpleMessage("Începeți prin a apăsa butonul de mai sus."),
     "messageIAgreeToThe" : MessageLookupByLibrary.simpleMessage("Sunt de acord cu "),
     "messageNewUser" : MessageLookupByLibrary.simpleMessage("Utilizator nou?"),
     "messageNoClassesYet" : MessageLookupByLibrary.simpleMessage("Nu ați adăugat nici o materie încă."),

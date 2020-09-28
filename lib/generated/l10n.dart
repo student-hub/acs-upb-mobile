@@ -1,6 +1,7 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+
 import 'intl/messages_all.dart';
 
 // **************************************************************************
@@ -793,11 +794,11 @@ class S {
     );
   }
 
-  /// `Add classes`
-  String get actionAddClasses {
+  /// `Take classes`
+  String get actionTakeClasses {
     return Intl.message(
-      'Add classes',
-      name: 'actionAddClasses',
+      'Take classes',
+      name: 'actionTakeClasses',
       desc: '',
       args: [],
     );
@@ -1823,11 +1824,11 @@ class S {
     );
   }
 
-  /// `Get started by pressing the + button above.`
-  String get messageGetStartedPlusButton {
+  /// `Get started by pressing the button above.`
+  String get messageGetStartedButton {
     return Intl.message(
-      'Get started by pressing the + button above.',
-      name: 'messageGetStartedPlusButton',
+      'Get started by pressing the button above.',
+      name: 'messageGetStartedButton',
       desc: '',
       args: [],
     );
