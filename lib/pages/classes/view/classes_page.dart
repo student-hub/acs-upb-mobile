@@ -3,6 +3,7 @@ import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/classes/model/class.dart';
 import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
 import 'package:acs_upb_mobile/pages/classes/view/class_view.dart';
+import 'package:acs_upb_mobile/widgets/icon_text.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:acs_upb_mobile/widgets/spoiler.dart';
 import 'package:auto_size_text/auto_size_text.dart';
@@ -98,7 +99,7 @@ class _ClassesPageState extends State<ClassesPage> {
       actions: [
         AppScaffoldAction(
           icon: Icons.edit,
-          tooltip: S.of(context).actionTakeClasses,
+          tooltip: S.of(context).actionChooseClasses,
           onPressed: () => Navigator.of(context).push(
             MaterialPageRoute<ChangeNotifierProvider>(
               builder: (_) => ChangeNotifierProvider.value(
@@ -187,7 +188,7 @@ class _AddClassesPageState extends State<AddClassesPage> {
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
-      title: S.of(context).actionTakeClasses,
+      title: S.of(context).actionChooseClasses,
       actions: [
         AppScaffoldAction(
           text: S.of(context).buttonSave,
@@ -302,6 +303,15 @@ class ClassList extends StatelessWidget {
     if (classes != null) {
       return ListView(
         children: [
+          if (sectioned)
+            Padding(
+              padding: const EdgeInsets.only(left: 10, right: 10, top: 10),
+              child: IconText(
+                icon: Icons.info,
+                text: S.of(context).infoChooseClasses,
+                style: Theme.of(context).textTheme.bodyText1,
+              ),
+            ),
           Padding(
             padding: const EdgeInsets.all(8),
             child: Column(

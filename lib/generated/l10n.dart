@@ -794,11 +794,11 @@ class S {
     );
   }
 
-  /// `Take classes`
-  String get actionTakeClasses {
+  /// `Choose classes`
+  String get actionChooseClasses {
     return Intl.message(
-      'Take classes',
-      name: 'actionTakeClasses',
+      'Choose classes',
+      name: 'actionChooseClasses',
       desc: '',
       args: [],
     );
@@ -1889,6 +1889,16 @@ class S {
     return Intl.message(
       'Try to choose the most restrictive category.',
       name: 'infoRelevance',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Select the classes you are interested in.`
+  String get infoChooseClasses {
+    return Intl.message(
+      'Select the classes you are interested in.',
+      name: 'infoChooseClasses',
       desc: '',
       args: [],
     );
