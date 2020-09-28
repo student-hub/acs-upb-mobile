@@ -15,7 +15,7 @@ import 'package:preferences/preference_title.dart';
 import 'package:provider/provider.dart';
 
 class EditProfilePage extends StatefulWidget {
-  EditProfilePage({Key key}) : super(key: key);
+  const EditProfilePage({Key key}) : super(key: key);
 
   @override
   _EditProfilePageState createState() => _EditProfilePageState();
@@ -34,8 +34,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
     final oldPasswordController = TextEditingController();
     final changePasswordKey = GlobalKey<FormState>();
 
-    AuthProvider authProvider =
-        Provider.of<AuthProvider>(context, listen: false);
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
     return AppDialog(
       title: S.of(context).actionChangePassword,
       content: [
@@ -73,7 +72,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   if (value == oldPasswordController.text) {
                     return S.of(context).warningSamePassword;
                   }
-                  String result = AppValidator.isStrongPassword(value, context);
+                  final result = AppValidator.isStrongPassword(value, context);
                   if (result != null) {
                     return result;
                   }
@@ -81,28 +80,29 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 },
               ),
               TextFormField(
-                  obscureText: true,
-                  decoration: InputDecoration(
-                    labelText: S.of(context).labelConfirmNewPassword,
-                    hintText: S.of(context).hintPassword,
-                    errorMaxLines: 2,
-                  ),
-                  validator: (value) {
-                    if (value?.isEmpty ?? true) {
-                      return S.of(context).errorNoPassword;
-                    }
-                    if (value == newPasswordController.text) {
-                      return S.of(context).errorPasswordsDiffer;
-                    }
-                    return null;
-                  }),
+                obscureText: true,
+                decoration: InputDecoration(
+                  labelText: S.of(context).labelConfirmNewPassword,
+                  hintText: S.of(context).hintPassword,
+                  errorMaxLines: 2,
+                ),
+                validator: (value) {
+                  if (value?.isEmpty ?? true) {
+                    return S.of(context).errorNoPassword;
+                  }
+                  if (value == newPasswordController.text) {
+                    return S.of(context).errorPasswordsDiffer;
+                  }
+                  return null;
+                },
+              ),
             ],
           ),
         )
       ],
       actions: [
         AppButton(
-          key: ValueKey('change_password_button'),
+          key: const ValueKey('change_password_button'),
           text: S.of(context).actionChangePassword.toUpperCase(),
           color: Theme.of(context).accentColor,
           width: 130,
@@ -126,11 +126,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
   AppDialog _deletionConfirmationDialog(BuildContext context) {
     final passwordController = TextEditingController();
     return AppDialog(
-      icon: Icon(Icons.warning, color: Colors.red),
+      icon: const Icon(Icons.warning, color: Colors.red),
       title: S.of(context).actionDeleteAccount,
-      message: S.of(context).messageDeleteAccount +
-          ' ' +
-          S.of(context).messageCannotBeUndone,
+      message:
+          '${S.of(context).messageDeleteAccount} ${S.of(context).messageCannotBeUndone}',
       content: [
         TextFormField(
           decoration: InputDecoration(
@@ -143,17 +142,17 @@ class _EditProfilePageState extends State<EditProfilePage> {
       ],
       actions: [
         AppButton(
-          key: ValueKey('delete_account_button'),
+          key: const ValueKey('delete_account_button'),
           text: S.of(context).actionDeleteAccount.toUpperCase(),
           color: Colors.red,
           width: 130,
           onTap: () async {
-            AuthProvider authProvider =
+            final authProvider =
                 Provider.of<AuthProvider>(context, listen: false);
             if (await authProvider.verifyPassword(
                 password: passwordController.text, context: context)) {
               if (await authProvider.delete(context: context)) {
-                Utils.signOut(context);
+                await Utils.signOut(context);
               }
             }
           },
@@ -180,12 +179,12 @@ class _EditProfilePageState extends State<EditProfilePage> {
       ],
       actions: [
         AppButton(
-          key: ValueKey('change_email_button'),
+          key: const ValueKey('change_email_button'),
           text: S.of(context).actionChangeEmail,
           color: Theme.of(context).accentColor,
           width: 130,
           onTap: () async {
-            AuthProvider authProvider =
+            final authProvider =
                 Provider.of<AuthProvider>(context, listen: false);
             if (await authProvider.verifyPassword(
                 password: passwordController.text, context: context)) {
@@ -206,15 +205,15 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    AuthProvider authProvider = Provider.of<AuthProvider>(context);
-    String emailDomain = S.of(context).stringEmailDomain;
+    final authProvider = Provider.of<AuthProvider>(context);
+    final emailDomain = S.of(context).stringEmailDomain;
     return AppScaffold(
       title: S.of(context).actionEditProfile,
       actions: [
         AppScaffoldAction(
             text: S.of(context).buttonSave,
             onPressed: () async {
-              Map<String, dynamic> info = {
+              final Map<String, dynamic> info = {
                 S.of(context).labelFirstName: firstNameController.text,
                 S.of(context).labelLastName: lastNameController.text,
               };
@@ -253,13 +252,13 @@ class _EditProfilePageState extends State<EditProfilePage> {
         )
       ],
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10.0),
+        padding: const EdgeInsets.symmetric(horizontal: 10),
         child: FutureBuilder(
             future: authProvider.currentUser,
-            builder: (BuildContext context, AsyncSnapshot<User> snap) {
+            builder: (context, snap) {
               List<String> path;
               if (snap.hasData) {
-                User user = snap.data;
+                final User user = snap.data;
                 lastNameController.text = user.lastName;
                 firstNameController.text = user.firstName;
                 if (!authProvider.isVerifiedFromCache) {
@@ -279,7 +278,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                         children: [
                           TextFormField(
                             decoration: InputDecoration(
-                              prefixIcon: Icon(Icons.person),
+                              prefixIcon: const Icon(Icons.person),
                               labelText: S.of(context).labelFirstName,
                               hintText: S.of(context).hintFirstName,
                             ),
@@ -293,7 +292,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                           ),
                           TextFormField(
                             decoration: InputDecoration(
-                              prefixIcon: Icon(Icons.person),
+                              prefixIcon: const Icon(Icons.person),
                               labelText: S.of(context).labelLastName,
                               hintText: S.of(context).hintLastName,
                             ),
@@ -308,7 +307,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                           if (!authProvider.isVerifiedFromCache)
                             TextFormField(
                               decoration: InputDecoration(
-                                prefixIcon: Icon(Icons.alternate_email),
+                                prefixIcon: const Icon(Icons.alternate_email),
                                 labelText: S.of(context).labelEmail,
                                 hintText: S.of(context).hintEmail,
                                 suffix: Text(emailDomain),
@@ -331,7 +330,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     FilterDropdown(
                       initialPath: path,
                       controller: dropdownController,
-                      leftPadding: 10.0,
+                      leftPadding: 10,
                       textStyle: Theme.of(context)
                           .textTheme
                           .caption
@@ -340,7 +339,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   ]),
                 );
               } else {
-                return Center(child: CircularProgressIndicator());
+                return const Center(child: CircularProgressIndicator());
               }
             }),
       ),
@@ -351,7 +350,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
 class AccountNotVerifiedWarning extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    AuthProvider authProvider = Provider.of<AuthProvider>(context);
+    final authProvider = Provider.of<AuthProvider>(context);
 
     if (!authProvider.isAuthenticatedFromCache || authProvider.isAnonymous) {
       return Container();
@@ -359,12 +358,12 @@ class AccountNotVerifiedWarning extends StatelessWidget {
 
     return FutureBuilder(
       future: authProvider.isVerifiedFromService,
-      builder: (BuildContext context, AsyncSnapshot<bool> snap) {
+      builder: (context, snap) {
         if (!snap.hasData || snap.data) {
           return Container();
         }
         return Padding(
-          padding: const EdgeInsets.only(top: 8.0),
+          padding: const EdgeInsets.only(top: 8),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [

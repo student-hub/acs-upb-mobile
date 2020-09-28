@@ -5,6 +5,16 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 class LoadingScreen extends StatefulWidget {
+  const LoadingScreen(
+      {@required this.navigateAfterFuture,
+      this.loaderColor,
+      this.onClick,
+      this.title = const Text(''),
+      this.image,
+      this.loadingText = const Text(''),
+      this.imageBackground,
+      this.gradientBackground});
+
   final Text title;
   final Future<dynamic> navigateAfterFuture;
   final dynamic onClick;
@@ -13,16 +23,6 @@ class LoadingScreen extends StatefulWidget {
   final Text loadingText;
   final ImageProvider imageBackground;
   final Gradient gradientBackground;
-
-  LoadingScreen(
-      {this.loaderColor,
-      this.onClick,
-      @required this.navigateAfterFuture,
-      this.title = const Text(''),
-      this.image,
-      this.loadingText = const Text(""),
-      this.imageBackground,
-      this.gradientBackground});
 
   @override
   _LoadingScreenState createState() => _LoadingScreenState();
@@ -39,8 +39,8 @@ class _LoadingScreenState extends State<LoadingScreen> {
         // named route component
         Navigator.of(context).pushReplacementNamed(navigateTo);
       } else if (navigateTo is Widget) {
-        Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (BuildContext context) => navigateTo));
+        Navigator.of(context).pushReplacement(MaterialPageRoute<Widget>(
+            builder: (BuildContext context) => navigateTo));
       } else {
         throw ArgumentError(
             'widget.navigateAfterSeconds must either be a String or Widget');
@@ -50,7 +50,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    double photoSize = min(MediaQuery.of(context).size.width,
+    final double photoSize = min(MediaQuery.of(context).size.width,
             MediaQuery.of(context).size.height) /
         3;
 
@@ -84,7 +84,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
                     children: <Widget>[
                       Expanded(
                         child: Padding(
-                          padding: const EdgeInsets.all(10.0),
+                          padding: const EdgeInsets.all(10),
                           child: CircleAvatar(
                             backgroundColor: Colors.transparent,
                             child: Container(child: widget.image),
@@ -104,10 +104,10 @@ class _LoadingScreenState extends State<LoadingScreen> {
                       Expanded(flex: 1, child: Container()),
                       Expanded(
                         flex: 2,
-                        child: AspectRatio(
-                          aspectRatio: 1.0,
+                        child: Align(
+                          alignment: Alignment.bottomCenter,
                           child: Padding(
-                            padding: const EdgeInsets.all(8.0),
+                            padding: const EdgeInsets.all(8),
                             child: CircularProgressIndicator(
                               valueColor: AlwaysStoppedAnimation<Color>(
                                   widget.loaderColor),
@@ -116,7 +116,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
                         ),
                       ),
                       widget.loadingText,
-                      SizedBox(height: 8.0),
+                      const SizedBox(height: 8),
                     ],
                   ),
                 ),

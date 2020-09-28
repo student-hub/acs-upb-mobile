@@ -23,39 +23,38 @@ class RelevanceController {
 
   bool get anyone =>
       _state?._anyoneController?.isSelected ??
-      (_state?.widget == null ? false : _state.widget.defaultRelevance == null);
+      _state?.widget != null && _state.widget.defaultRelevance == null;
 
   List<String> get customRelevance {
-    List<String> relevance = [];
-    Map<String, SelectableController> controllers =
-        _state?._customControllers ?? {};
-
-    controllers.forEach((node, controller) {
-      if (controller.isSelected) {
-        relevance.add(node);
-      }
-    });
+    final relevance = <String>[];
+    if (_state?._customControllers != null) {
+      _state._customControllers.forEach((node, controller) {
+        if (controller.isSelected) {
+          relevance.add(node);
+        }
+      });
+    }
 
     return relevance.isEmpty ? null : relevance;
   }
 }
 
 class RelevancePicker extends StatefulWidget {
+  const RelevancePicker(
+      {@required this.filterProvider,
+      this.defaultPrivate = true,
+      this.defaultRelevance,
+      this.controller});
+
   final FilterProvider filterProvider;
 
   /// Whether the 'Only me' option should be enabled by default
   final bool defaultPrivate;
 
-  /// This is only used if [defaultPrivate] is [false]
+  /// This is only used if [defaultPrivate] is `false`
   final List<String> defaultRelevance;
 
   final RelevanceController controller;
-
-  RelevancePicker(
-      {@required this.filterProvider,
-      this.defaultPrivate = true,
-      this.defaultRelevance,
-      this.controller});
 
   @override
   _RelevancePickerState createState() => _RelevancePickerState();
@@ -63,8 +62,8 @@ class RelevancePicker extends StatefulWidget {
 
 class _RelevancePickerState extends State<RelevancePicker> {
   // The three relevance options ("Only me", "Anyone" or an arbitrary list of nodes) are mutually exclusive
-  SelectableController _onlyMeController = SelectableController();
-  SelectableController _anyoneController = SelectableController();
+  final _onlyMeController = SelectableController();
+  final _anyoneController = SelectableController();
   Map<String, SelectableController> _customControllers = {};
 
   User _user;
@@ -72,26 +71,26 @@ class _RelevancePickerState extends State<RelevancePicker> {
 
   bool _filterApplied = false;
 
-  _fetchUser() async {
-    AuthProvider authProvider = Provider.of(context, listen: false);
+  Future<void> _fetchUser() async {
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
     _user = await authProvider.currentUser;
     setState(() {});
   }
 
-  _fetchFilter() async {
+  Future<void> _fetchFilter() async {
     _filter = await widget.filterProvider.fetchFilter(context);
     setState(() {});
   }
 
   @override
-  initState() {
+  void initState() {
     super.initState();
     _fetchUser();
     _fetchFilter();
   }
 
   Widget _customRelevanceButton() {
-    Color buttonColor = _user?.canAddPublicWebsite ?? false
+    final buttonColor = _user?.canAddPublicWebsite ?? false
         ? Theme.of(context).accentColor
         : Theme.of(context).hintColor;
 
@@ -99,15 +98,15 @@ class _RelevancePickerState extends State<RelevancePicker> {
       child: GestureDetector(
         onTap: () {
           if (_user?.canAddPublicWebsite ?? false) {
-            Navigator.of(context).push(MaterialPageRoute(
+            Navigator.of(context)
+                .push(MaterialPageRoute<ChangeNotifierProvider>(
               builder: (_) => ChangeNotifierProvider.value(
                 value: widget.filterProvider,
                 child: FilterPage(
                   title: S.of(context).labelRelevance,
                   buttonText: S.of(context).buttonSet,
-                  info: S.of(context).infoRelevanceNothingSelected +
-                      ' ' +
-                      S.of(context).infoRelevance,
+                  info:
+                      '${S.of(context).infoRelevanceNothingSelected} ${S.of(context).infoRelevance}',
                   hint: S.of(context).infoRelevanceExample,
                   onSubmit: () async {
                     // Deselect all options
@@ -160,63 +159,61 @@ class _RelevancePickerState extends State<RelevancePicker> {
       });
 
   Widget _customRelevanceSelectables() {
-    List<Widget> widgets = [];
+    final widgets = <Widget>[];
     _customControllers = {};
 
     if (_filterApplied || widget.defaultPrivate) {
       // Add strings from the filter options
-      List<String> nodes = _filter?.relevantLeaves ?? [];
-      nodes.forEach((node) {
+      for (final node in _filter?.relevantLeaves ?? []) {
         if (node != 'All') {
           // The "All" case (when nothing is selected in the filter) is handled
           // separately using [_anyoneController]
-          SelectableController controller = SelectableController();
+          final controller = SelectableController();
           _customControllers[node] = controller;
 
-          widgets.add(SizedBox(width: 8.0));
-          widgets.add(Selectable(
-            label: node,
-            controller: controller,
-            initiallySelected: _filterApplied,
-            onSelected: (selected) => setState(() {
-              if (_user?.canAddPublicWebsite ?? false) {
-                if (selected) {
-                  _onlyMeController.deselect();
-                  _anyoneController.deselect();
+          widgets
+            ..add(const SizedBox(width: 8))
+            ..add(Selectable(
+              label: node,
+              controller: controller,
+              initiallySelected: _filterApplied,
+              onSelected: (selected) => setState(() {
+                if (_user?.canAddPublicWebsite ?? false) {
+                  if (selected) {
+                    _onlyMeController.deselect();
+                    _anyoneController.deselect();
+                  }
+                } else {
+                  AppToast.show(
+                      S.of(context).warningNoPermissionToAddPublicWebsite);
                 }
-              } else {
-                AppToast.show(
-                    S.of(context).warningNoPermissionToAddPublicWebsite);
-              }
-            }),
-            disabled: !(_user?.canAddPublicWebsite ?? false),
-          ));
+              }),
+              disabled: !(_user?.canAddPublicWebsite ?? false),
+            ));
         }
-      });
+      }
     } else {
       // Add the provided website relevance strings, if applicable
       // These are selected by default
-      List<String> nodes = widget.defaultRelevance ?? [];
-      nodes.forEach((node) {
+      for (final node in widget.defaultRelevance ?? []) {
         if (!_customControllers.containsKey(node)) {
-          SelectableController controller = SelectableController();
+          final controller = SelectableController();
           _customControllers[node] = controller;
 
-          widgets.add(SizedBox(width: 8.0));
-          widgets.add(Selectable(
-            label: node,
-            controller: controller,
-            initiallySelected: true,
-            onSelected: _onCustomSelected,
-            disabled: !(_user?.canAddPublicWebsite ?? false),
-          ));
+          widgets
+            ..add(const SizedBox(width: 8))
+            ..add(Selectable(
+              label: node,
+              controller: controller,
+              initiallySelected: true,
+              onSelected: _onCustomSelected,
+              disabled: !(_user?.canAddPublicWebsite ?? false),
+            ));
         }
-      });
+      }
     }
 
-    return Row(
-      children: widgets,
-    );
+    return Row(children: widgets);
   }
 
   @override
@@ -226,12 +223,12 @@ class _RelevancePickerState extends State<RelevancePicker> {
     }
 
     return Padding(
-      padding: const EdgeInsets.only(top: 12.0, left: 12.0),
+      padding: const EdgeInsets.only(top: 12, left: 12),
       child: Row(
         children: <Widget>[
           Icon(CustomIcons.filter,
               color: CustomIcons.formIconColor(Theme.of(context))),
-          SizedBox(width: 12.0),
+          const SizedBox(width: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.end,
@@ -253,7 +250,7 @@ class _RelevancePickerState extends State<RelevancePicker> {
                         _customRelevanceButton(),
                       ],
                     ),
-                    SizedBox(height: 8.0),
+                    const SizedBox(height: 8),
                     Row(
                       children: <Widget>[
                         Expanded(
@@ -270,9 +267,10 @@ class _RelevancePickerState extends State<RelevancePicker> {
                                     if (_user?.canAddPublicWebsite ?? false) {
                                       if (selected) {
                                         _anyoneController.deselect();
-                                        _customControllers.values.forEach(
-                                            (controller) =>
-                                                controller.deselect());
+                                        for (final controller
+                                            in _customControllers.values) {
+                                          controller.deselect();
+                                        }
                                       } else {
                                         _anyoneController.select();
                                       }
@@ -282,7 +280,7 @@ class _RelevancePickerState extends State<RelevancePicker> {
                                   }),
                                   controller: _onlyMeController,
                                 ),
-                                SizedBox(width: 8.0),
+                                const SizedBox(width: 8),
                                 Selectable(
                                   label: S.of(context).relevanceAnyone,
                                   initiallySelected: !widget.defaultPrivate &&
@@ -292,9 +290,10 @@ class _RelevancePickerState extends State<RelevancePicker> {
                                       if (selected) {
                                         // Deselect all controllers
                                         _onlyMeController.deselect();
-                                        _customControllers.values.forEach(
-                                            (controller) =>
-                                                controller.deselect());
+                                        for (final controller
+                                            in _customControllers.values) {
+                                          controller.deselect();
+                                        }
                                       } else {
                                         _onlyMeController.select();
                                       }
