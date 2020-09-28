@@ -209,6 +209,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
     final emailDomain = S.of(context).stringEmailDomain;
     return AppScaffold(
       title: S.of(context).actionEditProfile,
+      needsToBeAuthenticated: true,
       actions: [
         AppScaffoldAction(
             text: S.of(context).buttonSave,
