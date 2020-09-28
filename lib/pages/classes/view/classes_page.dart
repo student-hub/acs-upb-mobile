@@ -350,20 +350,27 @@ class _ClassListItemState extends State<ClassListItem> {
     return ListTile(
       leading: CircleAvatar(
         backgroundColor: widget.classHeader.colorFromAcronym,
-        child: (widget.selectable && selected)
-            ? Icon(
-                Icons.check,
-                color: widget.classHeader.colorFromAcronym.highEmphasisOnColor,
-              )
-            : AutoSizeText(
-                widget.classHeader.acronym,
-                minFontSize: 5,
-                maxLines: 1,
-                style: TextStyle(
+        child: Container(
+          width: 30,
+          child: (widget.selectable && selected)
+              ? Icon(
+                  Icons.check,
                   color:
                       widget.classHeader.colorFromAcronym.highEmphasisOnColor,
-                ),
+                )
+              : Align(
+            alignment: Alignment.center,
+                child: AutoSizeText(
+                    widget.classHeader.acronym,
+                    minFontSize: 0,
+                    maxLines: 1,
+                    style: TextStyle(
+                      color:
+                          widget.classHeader.colorFromAcronym.highEmphasisOnColor,
+                    ),
+                  ),
               ),
+        ),
       ),
       title: Text(
         widget.classHeader.name,
@@ -373,9 +380,10 @@ class _ClassListItemState extends State<ClassListItem> {
                     .textTheme
                     .subtitle1
                     .copyWith(fontWeight: FontWeight.bold)
-                : TextStyle(
-                    color: Theme.of(context).disabledColor,
-                    fontWeight: FontWeight.normal))
+                : Theme.of(context)
+                    .textTheme
+                    .subtitle1
+                    .copyWith(color: Theme.of(context).disabledColor))
             : Theme.of(context).textTheme.subtitle1,
       ),
       onTap: () => setState(() {
