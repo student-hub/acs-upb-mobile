@@ -410,7 +410,7 @@ void main() {
         await tester.pumpAndSettle();
 
         // Open add class view
-        await tester.tap(find.byIcon(Icons.add));
+        await tester.tap(find.byIcon(Icons.edit));
         await tester.pumpAndSettle();
 
         expect(find.byType(AddClassesPage), findsOneWidget);
