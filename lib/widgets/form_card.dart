@@ -235,7 +235,7 @@ class _FormCardTextFieldState extends State<_FormCardTextField> {
                 Expanded(
                   child: TextField(
                     key: ValueKey(
-                        '${widget.field.label.snakeCase}_text_widget.field'),
+                        '${widget.field.label.snakeCase}_text_field'),
                     keyboardType: widget.field.keyboardType,
                     autocorrect: widget.field.autocorrect,
                     enableSuggestions: widget.field.enableSuggestions,
