@@ -92,27 +92,22 @@ class _FaqPageState extends State<FaqPage> {
                   },
                   searchClosed: searchClosed,
                 ),
-                QuestionsList(
-                    questions: questions
-                        .where((question) =>
-                            filter
-                                .split(' ')
-                                .where((element) => element != '')
-                                .fold(
-                                    true,
-                                    (previousValue, filter) =>
-                                        previousValue &&
-                                        question.question
-                                            .toLowerCase()
-                                            .contains(filter)) &&
-                            containsTag(activeTags, question.tags))
-                        .toList(),
-                    filter: filter),
+                QuestionsList(questions: filteredQuestions, filter: filter),
               ],
             );
           }),
     );
   }
+
+  List<Question> get filteredQuestions => questions
+      .where((question) =>
+          filter.split(' ').where((element) => element != '').fold(
+              true,
+              (previousValue, filter) =>
+                  previousValue &&
+                  question.question.toLowerCase().contains(filter)) &&
+          containsTag(activeTags, question.tags))
+      .toList();
 
   bool containsTag(List<String> activeTags, List<String> questionTags) {
     if (activeTags.isEmpty) return true;

@@ -291,7 +291,8 @@ class FaqCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var questionsFuture = Provider.of<QuestionProvider>(context).fetchQuestions(context: null, limit: 2);
+    var questionsFuture =
+        Provider.of<QuestionProvider>(context).fetchQuestions(limit: 2);
     return Padding(
       padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 8.0),
       child: FutureBuilder(
