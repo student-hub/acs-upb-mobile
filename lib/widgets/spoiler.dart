@@ -58,7 +58,6 @@ class _AppSpoilerState extends State<AppSpoiler>
           });
         });
       }
-      PageStorage.of(context)?.writeState(context, _isExpanded);
     });
   }
 
