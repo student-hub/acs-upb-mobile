@@ -270,7 +270,6 @@ class ClassList extends StatelessWidget {
             false,
             (dynamic selected, ClassHeader header) =>
                 selected || initiallySelected.contains(header.id));
-
       } else {
         final s = buildSections(context, sections[section], level: level + 1);
         expanded = expanded || s.containsSelected;
