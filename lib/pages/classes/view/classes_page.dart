@@ -258,31 +258,38 @@ class ClassList extends StatelessWidget {
     return map;
   }
 
-  List<Widget> buildSections(
-      BuildContext context, Map<String, dynamic> sections,
+  _Section buildSections(BuildContext context, Map<String, dynamic> sections,
       {int level = 0}) {
     final List<Widget> children = [const SizedBox(height: 4)];
+    bool expanded = false;
 
     sections.forEach((section, values) {
       if (section == '/') {
         children.addAll(values.map<Widget>(buildClassItem));
+        expanded = values.fold(
+            false,
+            (dynamic selected, ClassHeader header) =>
+                selected || initiallySelected.contains(header.id));
+
       } else {
+        final s = buildSections(context, sections[section], level: level + 1);
+        expanded = expanded || s.containsSelected;
+
         children.add(AppSpoiler(
           title: section,
           level: level,
-          initiallyExpanded: false,
+          initiallyExpanded: s.containsSelected,
           content: Padding(
             padding: const EdgeInsets.only(left: 16),
             child: Column(
-              children:
-                  buildSections(context, sections[section], level: level + 1),
+              children: s.widgets,
             ),
           ),
         ));
       }
     });
 
-    return children;
+    return _Section(widgets: children, containsSelected: expanded);
   }
 
   Widget buildClassItem(ClassHeader header) => Column(
@@ -316,7 +323,9 @@ class ClassList extends StatelessWidget {
             padding: const EdgeInsets.all(8),
             child: Column(
                 children: sectioned
-                    ? buildSections(context, classesBySection(classes, context))
+                    ? (buildSections(
+                            context, classesBySection(classes, context)))
+                        .widgets
                     : classes.map(buildClassItem).toList()),
           ),
         ],
@@ -325,6 +334,14 @@ class ClassList extends StatelessWidget {
       return const Center(child: CircularProgressIndicator());
     }
   }
+}
+
+// Utility class to allow `buildSections` to return two values
+class _Section {
+  _Section({this.widgets, this.containsSelected});
+
+  List<Widget> widgets;
+  bool containsSelected;
 }
 
 class ClassListItem extends StatefulWidget {
@@ -369,17 +386,17 @@ class _ClassListItemState extends State<ClassListItem> {
                       widget.classHeader.colorFromAcronym.highEmphasisOnColor,
                 )
               : Align(
-            alignment: Alignment.center,
-                child: AutoSizeText(
+                  alignment: Alignment.center,
+                  child: AutoSizeText(
                     widget.classHeader.acronym,
                     minFontSize: 0,
                     maxLines: 1,
                     style: TextStyle(
-                      color:
-                          widget.classHeader.colorFromAcronym.highEmphasisOnColor,
+                      color: widget
+                          .classHeader.colorFromAcronym.highEmphasisOnColor,
                     ),
                   ),
-              ),
+                ),
         ),
       ),
       title: Text(
