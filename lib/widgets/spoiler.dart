@@ -42,8 +42,7 @@ class _AppSpoilerState extends State<AppSpoiler>
     _controller = AnimationController(duration: _kExpand, vsync: this);
     _iconTurns = _controller.drive(_halfTween.chain(_easeInTween));
 
-    _isExpanded = PageStorage.of(context)?.readState(context) as bool ??
-        widget.initiallyExpanded;
+    _isExpanded = widget.initiallyExpanded;
     if (_isExpanded) _controller.value = 1.0;
   }
 
