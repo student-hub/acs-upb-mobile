@@ -14,7 +14,7 @@ import 'package:timetable/timetable.dart';
 
 extension EventExtension on Event {
   String get dateString {
-    LocalDateTime end = this.end.clockTime.equals(LocalTime(00, 00, 00))
+    final LocalDateTime end = this.end.clockTime.equals(LocalTime(00, 00, 00))
         ? this.end.subtractDays(1)
         : this.end;
 
@@ -22,11 +22,11 @@ extension EventExtension on Event {
         start.calendarDate.toString('dddd, dd MMMM', LocaleProvider.culture);
     if (!start.clockTime.equals(LocalTime(00, 00, 00))) {
       string +=
-          ' • ' + start.clockTime.toString('HH:mm', LocaleProvider.culture);
+          ' • ${start.clockTime.toString('HH:mm', LocaleProvider.culture)}';
     }
     if (start.calendarDate != end.calendarDate) {
-      string += ' - ' +
-          end.calendarDate.toString('dddd, dd MMMM', LocaleProvider.culture);
+      string +=
+          ' - ${end.calendarDate.toString('dddd, dd MMMM', LocaleProvider.culture)}';
     }
     if (!end.clockTime.equals(LocalTime(00, 00, 00))) {
       if (start.calendarDate != end.calendarDate) {
@@ -41,9 +41,9 @@ extension EventExtension on Event {
 }
 
 class EventView extends StatefulWidget {
-  final UniEventInstance event;
-
   const EventView({Key key, this.event}) : super(key: key);
+
+  final UniEventInstance event;
 
   @override
   _EventViewState createState() => _EventViewState();
@@ -51,12 +51,12 @@ class EventView extends StatefulWidget {
 
 class _EventViewState extends State<EventView> {
   Padding _colorIcon() => Padding(
-        padding: const EdgeInsets.all(10.0),
+        padding: const EdgeInsets.all(10),
         child: Container(
           width: 20,
           height: 20,
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(4.0)),
+            borderRadius: const BorderRadius.all(Radius.circular(4)),
             color: widget.event.color,
           ),
         ),
@@ -69,11 +69,11 @@ class _EventViewState extends State<EventView> {
       body: SafeArea(
         child: ListView(children: [
           Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(16),
             child: Row(
               children: <Widget>[
                 _colorIcon(),
-                SizedBox(width: 16),
+                const SizedBox(width: 16),
                 Expanded(
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
@@ -84,7 +84,7 @@ class _EventViewState extends State<EventView> {
                               widget.event.mainEvent.type
                                   .toLocalizedString(context),
                           style: Theme.of(context).textTheme.headline6),
-                      SizedBox(height: 4),
+                      const SizedBox(height: 4),
                       Text(widget.event.dateString),
                       if (widget.event.mainEvent is RecurringUniEvent &&
                           LocaleProvider.rruleL10n != null)
@@ -101,7 +101,8 @@ class _EventViewState extends State<EventView> {
             ClassListItem(
               classHeader: widget.event.mainEvent.classHeader,
               hint: S.of(context).messageTapForMoreInfo,
-              onTap: () => Navigator.of(context).push(MaterialPageRoute(
+              onTap: () => Navigator.of(context)
+                  .push(MaterialPageRoute<ChangeNotifierProvider>(
                 builder: (context) => ChangeNotifierProvider.value(
                   value: Provider.of<ClassProvider>(context),
                   child: ClassView(
@@ -111,14 +112,14 @@ class _EventViewState extends State<EventView> {
             ),
           if (widget.event.location != null)
             Padding(
-              padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 0.0),
+              padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
               child: Row(
                 children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
+                  const Padding(
+                    padding: EdgeInsets.all(8),
                     child: Icon(Icons.location_on),
                   ),
-                  SizedBox(width: 16),
+                  const SizedBox(width: 16),
                   Text(widget.event.location,
                       style: Theme.of(context).textTheme.subtitle1),
                 ],
@@ -126,14 +127,14 @@ class _EventViewState extends State<EventView> {
             ),
           if (widget.event.mainEvent != null)
             Padding(
-              padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 0.0),
+              padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
               child: Row(
                 children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
+                  const Padding(
+                    padding: EdgeInsets.all(8),
                     child: Icon(Icons.people),
                   ),
-                  SizedBox(width: 16),
+                  const SizedBox(width: 16),
                   Text(
                       widget.event.mainEvent.relevance == null
                           ? S.of(context).relevanceAnyone

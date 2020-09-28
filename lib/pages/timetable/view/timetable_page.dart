@@ -15,7 +15,7 @@ import 'package:time_machine/time_machine.dart';
 import 'package:timetable/timetable.dart';
 
 class TimetablePage extends StatefulWidget {
-  TimetablePage({Key key}) : super(key: key);
+  const TimetablePage({Key key}) : super(key: key);
 
   @override
   _TimetablePageState createState() => _TimetablePageState();
@@ -32,13 +32,11 @@ class _TimetablePageState extends State<TimetablePage> {
 
   @override
   Widget build(BuildContext context) {
-    if (_controller == null) {
-      _controller = TimetableController(
-          // TODO: Make initialTimeRange customizable in settings
-          initialTimeRange: InitialTimeRange.range(
-              startTime: LocalTime(7, 55, 0), endTime: LocalTime(20, 5, 0)),
-          eventProvider: Provider.of<UniEventProvider>(context));
-    }
+    _controller ??= TimetableController(
+        // TODO(IoanaAlexandru): Make initialTimeRange customizable in settings
+        initialTimeRange: InitialTimeRange.range(
+            startTime: LocalTime(7, 55, 0), endTime: LocalTime(20, 5, 0)),
+        eventProvider: Provider.of<UniEventProvider>(context));
 
     return AppScaffold(
       title: AnimatedBuilder(
@@ -58,10 +56,11 @@ class _TimetablePageState extends State<TimetablePage> {
         AppScaffoldAction(
           icon: Icons.class_,
           tooltip: S.of(context).navigationClasses,
-          onPressed: () => Navigator.of(context).push(MaterialPageRoute(
+          onPressed: () => Navigator.of(context)
+              .push(MaterialPageRoute<ChangeNotifierProvider>(
             builder: (_) => ChangeNotifierProvider.value(
                 value: Provider.of<ClassProvider>(context),
-                child: ClassesPage()),
+                child: const ClassesPage()),
           )),
         ),
         AppScaffoldAction(
@@ -69,8 +68,8 @@ class _TimetablePageState extends State<TimetablePage> {
             tooltip: S.of(context).navigationFilter,
             onPressed: () => Navigator.push(
                   context,
-                  MaterialPageRoute(
-                    builder: (_) => FilterPage(),
+                  MaterialPageRoute<FilterPage>(
+                    builder: (_) => const FilterPage(),
                   ),
                 )),
       ],

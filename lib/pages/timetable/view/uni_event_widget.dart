@@ -7,18 +7,18 @@ import 'package:timetable/src/all_day.dart';
 import 'package:timetable/timetable.dart';
 
 class UniEventWidget extends StatelessWidget {
-  final UniEventInstance event;
-
   const UniEventWidget(this.event, {Key key})
       : assert(event != null),
         super(key: key);
 
+  final UniEventInstance event;
+
   @override
   Widget build(BuildContext context) {
-    Color color = event.color ?? Theme.of(context).primaryColor;
+    final color = event.color ?? Theme.of(context).primaryColor;
 
     return GestureDetector(
-      onTap: () => Navigator.of(context).push(MaterialPageRoute(
+      onTap: () => Navigator.of(context).push(MaterialPageRoute<EventView>(
         builder: (_) => EventView(event: event),
       )),
       child: Material(
@@ -36,7 +36,7 @@ class UniEventWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.end,
           children: <Widget>[
             Padding(
-              padding: EdgeInsets.fromLTRB(4, 2, 4, 0),
+              padding: const EdgeInsets.fromLTRB(4, 2, 4, 0),
               child: AutoSizeText(
                 event.title ?? event.mainEvent?.classHeader?.acronym ?? '',
                 maxLines: 2,
@@ -49,31 +49,32 @@ class UniEventWidget extends StatelessWidget {
                     ),
               ),
             ),
-            event.mainEvent.type != null
-                ? Expanded(
-                    child: Padding(
-                      padding: EdgeInsets.fromLTRB(4, 2, 4, 2),
-                      child: AutoSizeText(
-                        event.mainEvent.type.toLocalizedString(context),
-                        wrapWords: false,
-                        minFontSize: 8,
-                        maxFontSize: 10,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: Theme.of(context).textTheme.bodyText2.copyWith(
-                              fontSize: 10,
-                              color: color.highEmphasisOnColor,
-                            ),
-                      ),
-                    ),
-                  )
-                : Container(),
+            if (event.mainEvent.type != null)
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(4, 2, 4, 2),
+                  child: AutoSizeText(
+                    event.mainEvent.type.toLocalizedString(context),
+                    wrapWords: false,
+                    minFontSize: 8,
+                    maxFontSize: 10,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: Theme.of(context).textTheme.bodyText2.copyWith(
+                          fontSize: 10,
+                          color: color.highEmphasisOnColor,
+                        ),
+                  ),
+                ),
+              )
+            else
+              Container(),
             Expanded(
               child: event.location != null || event.info != null
                   ? Align(
                       alignment: Alignment.bottomRight,
                       child: Padding(
-                        padding: EdgeInsets.fromLTRB(4, 2, 4, 2),
+                        padding: const EdgeInsets.fromLTRB(4, 2, 4, 2),
                         child: AutoSizeText(
                           event.location ?? event.info,
                           maxLines: 1,
@@ -98,8 +99,8 @@ class UniEventWidget extends StatelessWidget {
 class UniAllDayEventWidget extends StatelessWidget {
   const UniAllDayEventWidget(
     this.event, {
-    Key key,
     @required this.info,
+    Key key,
     this.borderRadius = 4,
   })  : assert(event != null),
         assert(info != null),
@@ -114,7 +115,7 @@ class UniAllDayEventWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.all(2),
+      padding: const EdgeInsets.all(2),
       child: CustomPaint(
         painter: AllDayEventBackgroundPainter(
           info: info,
@@ -130,7 +131,8 @@ class UniAllDayEventWidget extends StatelessWidget {
           clipBehavior: Clip.antiAlias,
           color: Colors.transparent,
           child: InkWell(
-            onTap: () => Navigator.of(context).push(MaterialPageRoute(
+            onTap: () =>
+                Navigator.of(context).push(MaterialPageRoute<EventView>(
               builder: (_) => EventView(event: event),
             )),
             child: _buildContent(context),
@@ -142,7 +144,7 @@ class UniAllDayEventWidget extends StatelessWidget {
 
   Widget _buildContent(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.fromLTRB(4, 2, 0, 2),
+      padding: const EdgeInsets.fromLTRB(4, 2, 0, 2),
       child: Align(
         alignment: AlignmentDirectional.centerStart,
         child: DefaultTextStyle(
@@ -150,8 +152,10 @@ class UniAllDayEventWidget extends StatelessWidget {
             fontSize: 14,
             color: event.color.highEmphasisOnColor,
           ),
-          child: Text(event.title ?? event.mainEvent?.classHeader?.acronym,
-              maxLines: 1),
+          child: Text(
+            event.title ?? event.mainEvent?.classHeader?.acronym,
+            maxLines: 1,
+          ),
         ),
       ),
     );

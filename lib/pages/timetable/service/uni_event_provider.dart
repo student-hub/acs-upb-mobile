@@ -40,7 +40,7 @@ extension UniEventTypeExtension on UniEventType {
     }
   }
 
-  get color {
+  Color get color {
     switch (this) {
       case UniEventType.lecture:
         return Colors.pinkAccent;
@@ -56,7 +56,7 @@ extension UniEventTypeExtension on UniEventType {
         return Colors.yellow;
       case UniEventType.examSession:
         return Colors.red;
-      case UniEventType.other:
+      default:
         return Colors.white;
     }
   }
@@ -80,7 +80,7 @@ extension PeriodExtension on Period {
 }
 
 extension TimestampExtension on Timestamp {
-  LocalDateTime toLocalDateTime() => LocalDateTime.dateTime(this.toDate())
+  LocalDateTime toLocalDateTime() => LocalDateTime.dateTime(toDate())
       .inZoneStrictly(DateTimeZone.utc)
       .withZone(DateTimeZone.local)
       .localDateTime;
@@ -93,7 +93,7 @@ extension UniEventExtension on UniEvent {
     if (json['start'] == null ||
         (json['duration'] == null && json['end'] == null)) return null;
 
-    UniEventType type = UniEventTypeExtension.fromString(json['type']);
+    final type = UniEventTypeExtension.fromString(json['type']);
     if (json['end'] != null) {
       return AllDayUniEvent(
         id: id,
@@ -103,7 +103,7 @@ extension UniEventExtension on UniEvent {
         start: (json['start'] as Timestamp).toLocalDateTime().calendarDate,
         end: (json['end'] as Timestamp).toLocalDateTime().calendarDate,
         location: json['location'],
-        // TODO: Allow users to set event colours in settings
+        // TODO(IoanaAlexandru): Allow users to set event colours in settings
         color: type.color,
         classHeader: classHeader,
         calendar: calendars[json['calendar']],
@@ -121,7 +121,7 @@ extension UniEventExtension on UniEvent {
         start: (json['start'] as Timestamp).toLocalDateTime(),
         duration: PeriodExtension.fromJSON(json['duration']),
         location: json['location'],
-        // TODO: Allow users to set event colours in settings
+        // TODO(IoanaAlexandru): Allow users to set event colours in settings
         color: type.color,
         classHeader: classHeader,
         calendar: calendars[json['calendar']],
@@ -138,7 +138,7 @@ extension UniEventExtension on UniEvent {
         start: (json['start'] as Timestamp).toLocalDateTime(),
         duration: PeriodExtension.fromJSON(json['duration']),
         location: json['location'],
-        // TODO: Allow users to set event colours in settings
+        // TODO(IoanaAlexandru): Allow users to set event colours in settings
         color: type.color,
         classHeader: classHeader,
         calendar: calendars[json['calendar']],
@@ -151,7 +151,8 @@ extension UniEventExtension on UniEvent {
 }
 
 extension AcademicCalendarExtension on AcademicCalendar {
-  static _eventsFromMapList(List<dynamic> list, String type) =>
+  static List<AllDayUniEvent> _eventsFromMapList(
+          List<dynamic> list, String type) =>
       List<AllDayUniEvent>.from((list ?? []).asMap().map((index, e) {
         e['type'] = type;
         return MapEntry(
@@ -169,6 +170,11 @@ extension AcademicCalendarExtension on AcademicCalendar {
 
 class UniEventProvider extends EventProvider<UniEventInstance>
     with ChangeNotifier {
+  UniEventProvider({AuthProvider authProvider})
+      : authProvider = authProvider ?? AuthProvider() {
+    fetchCalendars();
+  }
+
   Map<String, AcademicCalendar> calendars = {'2020': AcademicCalendar()};
   ClassProvider classProvider;
   FilterProvider filterProvider;
@@ -176,17 +182,12 @@ class UniEventProvider extends EventProvider<UniEventInstance>
   List<String> classIds = [];
   Filter filter;
 
-  UniEventProvider({AuthProvider authProvider})
-      : authProvider = authProvider ?? AuthProvider() {
-    fetchCalendars();
-  }
-
-  void fetchCalendars() async {
-    QuerySnapshot query =
+  Future<void> fetchCalendars() async {
+    final QuerySnapshot query =
         await Firestore.instance.collection('calendars').getDocuments();
-    query.documents.forEach((doc) {
+    for (final doc in query.documents) {
       calendars[doc.documentID] = AcademicCalendarExtension.fromSnap(doc);
-    });
+    }
     notifyListeners();
   }
 
@@ -195,19 +196,19 @@ class UniEventProvider extends EventProvider<UniEventInstance>
         filter == null ||
         calendars == null) return Stream.value([]);
 
-    List<Stream<List<UniEvent>>> streams = [];
+    final streams = <Stream<List<UniEvent>>>[];
 
-    classIds?.forEach((classId) {
-      Stream<List<UniEvent>> stream = Firestore.instance
+    for (final classId in classIds ?? []) {
+      final Stream<List<UniEvent>> stream = Firestore.instance
           .collection('events')
           .where('class', isEqualTo: classId)
           .where('relevance', arrayContainsAny: filter.relevantNodes)
           .snapshots()
           .asyncMap((snapshot) async {
-        List<UniEvent> events = [];
+        final events = <UniEvent>[];
 
         try {
-          for (var doc in snapshot.documents) {
+          for (final doc in snapshot.documents) {
             ClassHeader classHeader;
             if (doc.data['class'] != null) {
               classHeader =
@@ -224,9 +225,9 @@ class UniEventProvider extends EventProvider<UniEventInstance>
         }
       });
       streams.add(stream);
-    });
+    }
 
-    var stream = StreamZip(streams);
+    final stream = StreamZip(streams);
 
     // Flatten zipped streams
     return stream.map((events) => events.expand((i) => i).toList());
@@ -240,7 +241,7 @@ class UniEventProvider extends EventProvider<UniEventInstance>
         .expand((i) => i)
         .allDayEvents
         .followedBy(calendars.values.map((cal) {
-          List<AllDayUniEvent> events = cal.holidays + cal.exams;
+          final List<AllDayUniEvent> events = cal.holidays + cal.exams;
           return events
               .map((e) => e.generateInstances(intersectingInterval: interval))
               .expand((e) => e);
@@ -262,7 +263,7 @@ class UniEventProvider extends EventProvider<UniEventInstance>
     fetchClassIds();
   }
 
-  void fetchClassIds() async {
+  Future<void> fetchClassIds() async {
     classIds = await classProvider.fetchUserClassIds(uid: authProvider.uid);
     notifyListeners();
   }
@@ -272,13 +273,14 @@ class UniEventProvider extends EventProvider<UniEventInstance>
     fetchFilter();
   }
 
-  void fetchFilter() async {
+  Future<void> fetchFilter() async {
     filter = await filterProvider.fetchFilter();
     notifyListeners();
   }
 
   @override
+  // ignore: must_call_super
   void dispose() {
-    // TODO: Find a better way to prevent Timetable from calling dispose on this provider
+    // TODO(IoanaAlexandru): Find a better way to prevent Timetable from calling dispose on this provider
   }
 }
