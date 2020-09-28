@@ -5,9 +5,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class PersonView extends StatelessWidget {
-  final Person person;
-
   const PersonView({Key key, this.person}) : super(key: key);
+
+  final Person person;
 
   @override
   Widget build(BuildContext context) {
@@ -27,22 +27,22 @@ class PersonView extends StatelessWidget {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.all(8),
           child: Card(
             child: Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(8),
               child: Row(
                 children: [
                   Expanded(
                     child: Padding(
-                      padding: const EdgeInsets.only(left: 8.0, right: 16.0),
+                      padding: const EdgeInsets.only(left: 8, right: 16),
                       child: person.photo != null
                           ? CircleAvatar(
                               maxRadius: 50,
                               backgroundImage:
                                   CachedNetworkImageProvider(person.photo),
                             )
-                          : CircleAvatar(
+                          : const CircleAvatar(
                               radius: 50,
                               child: Icon(
                                 Icons.person,
@@ -60,17 +60,17 @@ class PersonView extends StatelessWidget {
                             icon: Icons.email,
                             text: person.email ?? '-',
                             style: Theme.of(context).textTheme.bodyText1),
-                        SizedBox(height: 8),
+                        const SizedBox(height: 8),
                         IconText(
                             icon: Icons.phone,
                             text: person.phone ?? '-',
                             style: Theme.of(context).textTheme.bodyText1),
-                        SizedBox(height: 8),
+                        const SizedBox(height: 8),
                         IconText(
                             icon: Icons.location_on,
                             text: person.office ?? '-',
                             style: Theme.of(context).textTheme.bodyText1),
-                        SizedBox(height: 8),
+                        const SizedBox(height: 8),
                         IconText(
                             icon: Icons.work,
                             text: person.position ?? '-',

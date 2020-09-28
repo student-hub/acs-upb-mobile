@@ -1,11 +1,22 @@
 import 'package:flutter/material.dart';
 
 class IconText extends StatelessWidget {
+  const IconText(
+      {@required this.icon,
+      @required this.text,
+      Key key,
+      this.actionText,
+      this.actionArrow = false,
+      this.style,
+      this.onTap,
+      this.align = TextAlign.left})
+      : super(key: key);
+
   final IconData icon;
   final String text;
 
   /// Optional "action" text. If this is specified, it will show after the
-  /// [text], have the theme's [accentColor], and will be the trigger area for
+  /// [text], have the theme's `accentColor`, and will be the trigger area for
   /// [onTap].
   final String actionText;
 
@@ -14,24 +25,13 @@ class IconText extends StatelessWidget {
   final bool actionArrow;
 
   final TextStyle style;
-  final Function() onTap;
+  final void Function() onTap;
   final TextAlign align;
-
-  const IconText(
-      {Key key,
-      @required this.icon,
-      @required this.text,
-      this.actionText,
-      this.actionArrow = false,
-      this.style,
-      this.onTap,
-      this.align = TextAlign.left})
-      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    TextStyle textStyle = style ?? Theme.of(context).textTheme.bodyText1;
-    TextStyle actionStyle = textStyle
+    final textStyle = style ?? Theme.of(context).textTheme.bodyText1;
+    final actionStyle = textStyle
         .copyWith(color: Theme.of(context).accentColor)
         .apply(fontWeightDelta: 2);
 
@@ -44,7 +44,7 @@ class IconText extends StatelessWidget {
           children: [
             WidgetSpan(
               child: Padding(
-                padding: const EdgeInsets.only(right: 4.0),
+                padding: const EdgeInsets.only(right: 4),
                 child: Icon(
                   icon,
                   color: textStyle.color,
@@ -61,7 +61,7 @@ class IconText extends StatelessWidget {
                     children: [
                       if (actionText != null && actionText != '')
                         Text(
-                          ' ' + actionText,
+                          ' $actionText',
                           style: actionStyle,
                         ),
                       if (actionArrow)

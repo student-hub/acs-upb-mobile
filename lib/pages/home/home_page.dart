@@ -19,9 +19,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatelessWidget {
-  final TabController tabController;
+  const HomePage({this.tabController, Key key}) : super(key: key);
 
-  HomePage({this.tabController, Key key}) : super(key: key);
+  final TabController tabController;
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +56,7 @@ class HomePage extends StatelessWidget {
 class ProfileCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    AuthProvider authProvider = Provider.of<AuthProvider>(context);
+    final authProvider = Provider.of<AuthProvider>(context);
 
     return FutureBuilder(
       future: authProvider.currentUser,
@@ -64,23 +64,24 @@ class ProfileCard extends StatelessWidget {
         if (snap.connectionState == ConnectionState.done) {
           String userName;
           String userGroup;
-          User user = snap.data;
+          final User user = snap.data;
           if (user != null) {
-            userName = user.firstName + ' ' + user.lastName;
-            userGroup = user.classes != null ? user.classes.last : null;
+            userName = '${user.firstName} ${user.lastName}';
+            userGroup =
+                user.classes?.isNotEmpty ?? false ? user.classes.last : null;
           }
           return Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(8),
             child: Card(
               child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                padding: const EdgeInsets.symmetric(vertical: 8),
                 child: Column(
                   children: [
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 8),
                           child: CircleAvatar(
                             radius: 40,
                             child: Image(
@@ -90,7 +91,7 @@ class ProfileCard extends StatelessWidget {
                         ),
                         Expanded(
                           child: Padding(
-                            padding: const EdgeInsets.only(left: 5.0),
+                            padding: const EdgeInsets.only(left: 5),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: <Widget>[
@@ -105,7 +106,7 @@ class ProfileCard extends StatelessWidget {
                                 ),
                                 if (userGroup != null)
                                   Padding(
-                                    padding: const EdgeInsets.only(top: 4.0),
+                                    padding: const EdgeInsets.only(top: 4),
                                     child: Text(userGroup,
                                         style: Theme.of(context)
                                             .textTheme
@@ -134,11 +135,12 @@ class ProfileCard extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               IconButton(
-                                icon: Icon(Icons.edit),
+                                icon: const Icon(Icons.edit),
                                 color: Theme.of(context).textTheme.button.color,
                                 onPressed: () => Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) => EditProfilePage(),
+                                  MaterialPageRoute<EditProfilePage>(
+                                    builder: (context) =>
+                                        const EditProfilePage(),
                                   ),
                                 ),
                               ),
@@ -160,16 +162,16 @@ class ProfileCard extends StatelessWidget {
 }
 
 class FavouriteWebsitesCard extends StatelessWidget {
-  final Function onSeeMore;
+  const FavouriteWebsitesCard({this.onSeeMore});
 
-  FavouriteWebsitesCard({this.onSeeMore});
+  final Function onSeeMore;
 
   @override
   Widget build(BuildContext context) {
-    var websitesFuture =
+    final websitesFuture =
         Provider.of<WebsiteProvider>(context).fetchWebsites(null);
     return Padding(
-      padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 8.0),
+      padding: const EdgeInsets.only(left: 8, right: 8, top: 8),
       child: FutureBuilder(
           future: websitesFuture,
           builder: (_, snapshot) {
@@ -179,7 +181,7 @@ class FavouriteWebsitesCard extends StatelessWidget {
                   websites.where((w) => w.numberOfVisits > 0).take(3).toList();
               return Card(
                 child: Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.all(8),
                   child: Column(
                     children: <Widget>[
                       Row(
@@ -217,7 +219,7 @@ class FavouriteWebsitesCard extends StatelessWidget {
                           ),
                         ],
                       ),
-                      SizedBox(height: 12),
+                      const SizedBox(height: 12),
                       if (websites.isEmpty)
                         noneYet(context)
                       else
@@ -228,16 +230,15 @@ class FavouriteWebsitesCard extends StatelessWidget {
                               .take(3)
                               .map((website) => Expanded(
                                     child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
+                                      padding: const EdgeInsets.all(8),
                                       child:
                                           FutureBuilder<ImageProvider<dynamic>>(
-                                        future: Provider.of<StorageProvider>(
-                                                context,
-                                                listen: false)
-                                            .imageFromPath(website.iconPath),
+                                        future: StorageProvider.imageFromPath(
+                                            website.iconPath),
                                         builder: (context, snapshot) {
-                                          ImageProvider<dynamic> image = AssetImage(
-                                              'assets/icons/websites/globe.png');
+                                          ImageProvider<dynamic> image =
+                                              const AssetImage(
+                                                  'assets/icons/websites/globe.png');
                                           if (snapshot.hasData) {
                                             image = snapshot.data;
                                           }
@@ -267,9 +268,7 @@ class FavouriteWebsitesCard extends StatelessWidget {
                 ),
               );
             }
-            return Center(
-              child: CircularProgressIndicator(),
-            );
+            return const Center(child: CircularProgressIndicator());
           }),
     );
   }
