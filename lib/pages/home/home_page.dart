@@ -5,7 +5,6 @@ import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/navigation/routes.dart';
 import 'package:acs_upb_mobile/pages/faq/model/question.dart';
 import 'package:acs_upb_mobile/pages/faq/service/question_provider.dart';
-import 'package:acs_upb_mobile/pages/faq/view/faq_page.dart';
 import 'package:acs_upb_mobile/pages/portal/model/website.dart';
 import 'package:acs_upb_mobile/pages/portal/service/website_provider.dart';
 import 'package:acs_upb_mobile/resources/locale_provider.dart';
@@ -41,11 +40,7 @@ class HomePage extends StatelessWidget {
             onSeeMore: () => tabController?.animateTo(2),
           ),
           FaqCard(
-            onSeeMore: () => Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (BuildContext context) => FaqPage(),
-              ),
-            ),
+            onSeeMore: () => Navigator.of(context).pushNamed(Routes.faq),
           ),
         ],
       ),
@@ -297,7 +292,7 @@ class FaqCard extends StatelessWidget {
       padding: const EdgeInsets.only(left: 8, right: 8, top: 8),
       child: FutureBuilder(
           future: questionsFuture,
-          builder: (_, snapshot) {
+          builder: (context , snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
               final List<Question> questions = snapshot.data;
               return Card(
