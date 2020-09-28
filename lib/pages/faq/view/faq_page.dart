@@ -12,7 +12,6 @@ import 'package:provider/provider.dart';
 import 'package:markdown/markdown.dart' as md;
 
 class FaqPage extends StatefulWidget {
-
   static const String routeName = '/faq';
 
   @override

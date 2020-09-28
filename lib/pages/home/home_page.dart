@@ -292,7 +292,7 @@ class FaqCard extends StatelessWidget {
       padding: const EdgeInsets.only(left: 8, right: 8, top: 8),
       child: FutureBuilder(
           future: questionsFuture,
-          builder: (context , snapshot) {
+          builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
               final List<Question> questions = snapshot.data;
               return Card(
