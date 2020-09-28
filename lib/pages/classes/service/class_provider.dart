@@ -38,7 +38,7 @@ extension ShortcutExtension on Shortcut {
 
 extension ClassHeaderExtension on ClassHeader {
   static ClassHeader fromSnap(DocumentSnapshot snap) {
-    if (snap == null) return null;
+    if (snap == null || snap.data == null) return null;
     final splitAcronym = snap.data['shortname'].split('-');
     if (splitAcronym.length < 4) {
       return null;
@@ -125,10 +125,17 @@ class ClassProvider with ChangeNotifier {
       {BuildContext context}) async {
     try {
       // Get class with id [classId]
-      DocumentSnapshot snap =
-          await _db.collection('import_moodle').document(classId).get();
+      final QuerySnapshot query = await Firestore.instance
+          .collection('import_moodle')
+          .where('shortname', isEqualTo: classId)
+          .limit(1)
+          .getDocuments();
 
-      return ClassHeaderExtension.fromSnap(snap);
+      if (query == null || query.documents.isEmpty) {
+        return null;
+      }
+
+      return ClassHeaderExtension.fromSnap(query.documents.first);
     } catch (e) {
       print(e);
       if (context != null) {
@@ -166,23 +173,14 @@ class ClassProvider with ChangeNotifier {
             await fetchUserClassIds(uid: uid, context: context) ?? [];
         final List<String> newClassIds = List<String>.from(classIds);
 
-        final CollectionReference col = _db.collection('import_moodle');
         for (final classId in classIds) {
-          final QuerySnapshot query = await col
-              .where('shortname', isEqualTo: classId)
-              .limit(1)
-              .getDocuments();
-          if (query == null || query.documents.isEmpty) {
+          final ClassHeader header = await fetchClassHeader(classId);
+          if (header == null) {
             // Class doesn't exist, remove it
             newClassIds.remove(classId);
             continue;
           }
-
-          final DocumentSnapshot snap = query.documents.first;
-          final ClassHeader header = ClassHeaderExtension.fromSnap(snap);
-          if (header != null) {
-            headers.add(header);
-          }
+          headers.add(header);
         }
 
         // Remove non-existent classes from user data
