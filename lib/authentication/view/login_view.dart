@@ -4,7 +4,7 @@ import 'package:acs_upb_mobile/navigation/routes.dart';
 import 'package:acs_upb_mobile/resources/banner.dart';
 import 'package:acs_upb_mobile/widgets/button.dart';
 import 'package:acs_upb_mobile/widgets/dialog.dart';
-import 'package:acs_upb_mobile/widgets/form/form.dart';
+import 'package:acs_upb_mobile/widgets/form_card.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -12,44 +12,40 @@ import 'package:provider/provider.dart';
 class LoginView extends StatefulWidget {
   static const String routeName = '/login';
 
-  LoginView();
-
   @override
   _LoginViewState createState() => _LoginViewState();
 }
 
 class _LoginViewState extends State<LoginView> {
   var emailController = TextEditingController();
-  List<FormItem> formItems;
+  List<FormCardField> formItems;
 
-  List<FormItem> _buildFormItems() {
+  List<FormCardField> _buildFormItems() {
     // Only build them once to avoid the cursor staying everywhere
     if (formItems != null) {
       return formItems;
     }
-    String emailDomain = S.of(context).stringEmailDomain;
+    final emailDomain = S.of(context).stringEmailDomain;
 
-    AuthProvider authProvider = Provider.of<AuthProvider>(context);
-    formItems = <FormItem>[
-      FormItem(
+    final authProvider = Provider.of<AuthProvider>(context);
+    return formItems = <FormCardField>[
+      FormCardField(
         label: S.of(context).labelEmail,
         hint: S.of(context).hintEmail,
         suffix: emailDomain,
         controller: emailController,
         autocorrect: false,
         autofillHints: [AutofillHints.username],
-        check: (email, {BuildContext context}) =>
-            authProvider.canSignInWithPassword(
-                email: email + emailDomain, context: context),
+        check: (email, {context}) => authProvider.canSignInWithPassword(
+            email: email + emailDomain, context: context),
       ),
-      FormItem(
+      FormCardField(
         label: S.of(context).labelPassword,
         hint: S.of(context).hintPassword,
         obscureText: true,
         autofillHints: [AutofillHints.password],
       ),
     ];
-    return formItems;
   }
 
   AppDialog _resetPasswordDialog(BuildContext context) => AppDialog(
@@ -60,15 +56,13 @@ class _LoginViewState extends State<LoginView> {
             children: <Widget>[
               Expanded(
                 child: TextField(
-                  key: ValueKey('reset_password_email_text_field'),
+                  key: const ValueKey('reset_password_email_text_field'),
                   controller: emailController,
                   decoration:
                       InputDecoration(hintText: S.of(context).hintEmail),
                 ),
               ),
-              SizedBox(
-                width: 4,
-              ),
+              const SizedBox(width: 4),
               Text(S.of(context).stringEmailDomain,
                   style: Theme.of(context).inputDecorationTheme.suffixStyle),
             ],
@@ -76,11 +70,11 @@ class _LoginViewState extends State<LoginView> {
         ],
         actions: [
           AppButton(
-            key: ValueKey('send_email_button'),
+            key: const ValueKey('send_email_button'),
             text: S.of(context).actionSendEmail.toUpperCase(),
             width: 130,
             onTap: () async {
-              bool success =
+              final success =
                   await Provider.of<AuthProvider>(context, listen: false)
                       .sendPasswordResetEmail(
                           email: emailController.text +
@@ -95,27 +89,25 @@ class _LoginViewState extends State<LoginView> {
         ],
       );
 
-  AppForm _buildForm(BuildContext context) {
-    AuthProvider authProvider = Provider.of<AuthProvider>(context);
+  FormCard _buildForm(BuildContext context) {
+    final authProvider = Provider.of<AuthProvider>(context);
 
-    return AppForm(
+    return FormCard(
       title: S.of(context).actionLogIn,
-      items: _buildFormItems(),
-      onSubmitted: (Map<String, dynamic> fields) async {
-        var result = await authProvider.signIn(
+      fields: _buildFormItems(),
+      onSubmitted: (fields) async {
+        final result = await authProvider.signIn(
           email: fields[S.of(context).labelEmail] +
               S.of(context).stringEmailDomain,
           password: fields[S.of(context).labelPassword],
           context: context,
         );
         if (result) {
-          Navigator.pushReplacementNamed(context, Routes.home);
+          await Navigator.pushReplacementNamed(context, Routes.home);
         }
       },
       trailing: <Widget>[
-        SizedBox(
-          height: 20,
-        ),
+        const SizedBox(height: 20),
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: <Widget>[
@@ -129,7 +121,7 @@ class _LoginViewState extends State<LoginView> {
                 ),
                 onTap: () {
                   showDialog(context: context, builder: _resetPasswordDialog);
-                  FocusScopeNode currentFocus = FocusScope.of(context);
+                  final currentFocus = FocusScope.of(context);
                   if (!currentFocus.hasPrimaryFocus) {
                     currentFocus.unfocus();
                   }
@@ -142,13 +134,13 @@ class _LoginViewState extends State<LoginView> {
 
   @override
   Widget build(BuildContext context) {
-    AuthProvider authProvider = Provider.of<AuthProvider>(context);
-    AppForm loginForm = _buildForm(context);
+    final authProvider = Provider.of<AuthProvider>(context);
+    final loginForm = _buildForm(context);
 
     return GestureDetector(
       onTap: () {
         // Remove current focus on tap
-        FocusScopeNode currentFocus = FocusScope.of(context);
+        final currentFocus = FocusScope.of(context);
         if (!currentFocus.hasPrimaryFocus) {
           currentFocus.unfocus();
         }
@@ -160,11 +152,11 @@ class _LoginViewState extends State<LoginView> {
             Align(
               alignment: FractionalOffset.topRight,
               child: Padding(
-                padding: EdgeInsets.all(10.0),
+                padding: const EdgeInsets.all(10),
                 child: Container(
                     height: MediaQuery.of(context).size.height / 3,
                     child: Image.asset(
-                        "assets/illustrations/undraw_digital_nomad.png")),
+                        'assets/illustrations/undraw_digital_nomad.png')),
               ),
             ),
             Align(
@@ -177,11 +169,11 @@ class _LoginViewState extends State<LoginView> {
                 child: FittedBox(
                   fit: BoxFit.contain,
                   child: ConstrainedBox(
-                    constraints: BoxConstraints(
+                    constraints: const BoxConstraints(
                       minWidth: 1,
                       minHeight: 1,
                     ),
-                    child: Image.asset("assets/images/city_doodle.png",
+                    child: Image.asset('assets/images/city_doodle.png',
                         color: Theme.of(context).accentColor.withOpacity(0.4)),
                   ),
                 ),
@@ -189,7 +181,7 @@ class _LoginViewState extends State<LoginView> {
             ),
             SingleChildScrollView(
               child: Padding(
-                padding: EdgeInsets.only(left: 28.0, right: 28.0, bottom: 8.0),
+                padding: const EdgeInsets.only(left: 28, right: 28, bottom: 8),
                 child: IntrinsicHeight(
                   child: Column(
                     children: <Widget>[
@@ -202,30 +194,30 @@ class _LoginViewState extends State<LoginView> {
                           ],
                         ),
                       ),
-                      SizedBox(height: 10),
+                      const SizedBox(height: 10),
                       Expanded(child: loginForm),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
                           Expanded(
                             child: AppButton(
-                              key: ValueKey('log_in_anonymously_button'),
+                              key: const ValueKey('log_in_anonymously_button'),
                               text: S.of(context).actionLogInAnonymously,
                               onTap: () async {
-                                var result = await authProvider
+                                final result = await authProvider
                                     .signInAnonymously(context: context);
                                 if (result) {
-                                  Navigator.pushReplacementNamed(
+                                  await Navigator.pushReplacementNamed(
                                       context, Routes.home);
                                 }
                               },
                             ),
                           ),
-                          SizedBox(width: 20),
+                          const SizedBox(width: 20),
                           Expanded(
                             child: AppButton(
-                              key: ValueKey('log_in_button'),
+                              key: const ValueKey('log_in_button'),
                               color: Theme.of(context).accentColor,
                               text: S.of(context).actionLogIn,
                               onTap: () => loginForm.submit(),
@@ -233,14 +225,12 @@ class _LoginViewState extends State<LoginView> {
                           ),
                         ],
                       ),
-                      SizedBox(
-                        height: 30,
-                      ),
+                      const SizedBox(height: 30),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
                           Text(
-                            S.of(context).messageNewUser + " ",
+                            '${S.of(context).messageNewUser} ',
                             style: Theme.of(context)
                                 .textTheme
                                 .subtitle1

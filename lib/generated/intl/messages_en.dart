@@ -41,12 +41,12 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
-    "actionAddClasses" : MessageLookupByLibrary.simpleMessage("Add classes"),
     "actionAddEvent" : MessageLookupByLibrary.simpleMessage("Add event"),
     "actionAddShortcut" : MessageLookupByLibrary.simpleMessage("Add shortcut"),
     "actionAddWebsite" : MessageLookupByLibrary.simpleMessage("Add website"),
     "actionChangeEmail" : MessageLookupByLibrary.simpleMessage("Change email"),
     "actionChangePassword" : MessageLookupByLibrary.simpleMessage("Change password"),
+    "actionChooseClasses" : MessageLookupByLibrary.simpleMessage("Choose classes"),
     "actionContribute" : MessageLookupByLibrary.simpleMessage("Contribute"),
     "actionDeleteAccount" : MessageLookupByLibrary.simpleMessage("Delete account"),
     "actionDeleteEvent" : MessageLookupByLibrary.simpleMessage("Delete event"),
@@ -102,6 +102,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "hintWebsiteLabel" : MessageLookupByLibrary.simpleMessage("Google"),
     "hintWebsiteLink" : MessageLookupByLibrary.simpleMessage("http://google.com"),
     "infoAppIsOpenSource" : MessageLookupByLibrary.simpleMessage("ACS UPB Mobile is open source."),
+    "infoChooseClasses" : MessageLookupByLibrary.simpleMessage("Select the classes you are interested in."),
     "infoEmail" : m2,
     "infoPassword" : MessageLookupByLibrary.simpleMessage("It must contain lower and uppercase letters, one number and one special character, and have a minimum length of 8."),
     "infoPasswordResetEmailSent" : MessageLookupByLibrary.simpleMessage("Please check your inbox for the password reset e-mail."),
@@ -151,7 +152,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "messageDeleteWebsite" : MessageLookupByLibrary.simpleMessage("Are you sure you want to delete this website?"),
     "messageEditProfileSuccess" : MessageLookupByLibrary.simpleMessage("Profile updated successfully."),
     "messageEmailNotVerified" : MessageLookupByLibrary.simpleMessage("Account is not verified."),
-    "messageGetStartedPlusButton" : MessageLookupByLibrary.simpleMessage("Get started by pressing the + button above."),
+    "messageGetStartedButton" : MessageLookupByLibrary.simpleMessage("Get started by pressing the button above."),
     "messageIAgreeToThe" : MessageLookupByLibrary.simpleMessage("I agree to the "),
     "messageNewUser" : MessageLookupByLibrary.simpleMessage("New user?"),
     "messageNoClassesYet" : MessageLookupByLibrary.simpleMessage("You have not added any classes yet."),

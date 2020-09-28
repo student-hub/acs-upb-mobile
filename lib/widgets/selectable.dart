@@ -15,18 +15,18 @@ class SelectableController {
 }
 
 class Selectable extends StatefulWidget {
-  final bool initiallySelected;
-  final String label;
-  final Function(bool) onSelected;
-  final SelectableController controller;
-  final bool disabled;
-
-  Selectable(
+  const Selectable(
       {this.initiallySelected = false,
-      this.label = "",
+      this.label = '',
       this.onSelected,
       this.controller,
       this.disabled = false});
+
+  final bool initiallySelected;
+  final String label;
+  final void Function(bool) onSelected;
+  final SelectableController controller;
+  final bool disabled;
 
   @override
   _SelectableState createState() => _SelectableState();
@@ -39,6 +39,8 @@ class _SelectableState extends State<Selectable> {
     _isSelected = newValue;
     setState(() {});
   }
+
+  bool get isSelected => _isSelected;
 
   @override
   void initState() {
@@ -57,7 +59,7 @@ class _SelectableState extends State<Selectable> {
                 ? Theme.of(context).disabledColor
                 : Theme.of(context).accentColor)
             : Colors.transparent,
-        borderRadius: const BorderRadius.all(Radius.circular(24.0)),
+        borderRadius: const BorderRadius.all(Radius.circular(24)),
         border: Border.all(
             color: widget.disabled
                 ? Theme.of(context).disabledColor
@@ -67,7 +69,7 @@ class _SelectableState extends State<Selectable> {
         color: Colors.transparent,
         child: InkWell(
           splashColor: Colors.white24,
-          borderRadius: const BorderRadius.all(Radius.circular(24.0)),
+          borderRadius: const BorderRadius.all(Radius.circular(24)),
           onTap: () {
             setState(
               () {

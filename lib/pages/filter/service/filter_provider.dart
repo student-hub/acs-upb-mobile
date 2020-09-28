@@ -1,4 +1,3 @@
-import 'package:acs_upb_mobile/authentication/model/user.dart';
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/filter/model/filter.dart';
@@ -9,30 +8,18 @@ import 'package:preferences/preference_service.dart';
 
 extension FilterNodeExtension on FilterNode {
   static FilterNode fromMap(Map<String, dynamic> map, String parentName) {
-    List<FilterNode> children = [];
+    final children = <FilterNode>[];
 
-    var sortedKeys = map.keys.toList()..sort();
-    sortedKeys.forEach(
-        (key) => children.add(FilterNodeExtension.fromMap(map[key], key)));
+    final sortedKeys = map.keys.toList()..sort();
+    for (final key in sortedKeys) {
+      children.add(FilterNodeExtension.fromMap(map[key], key));
+    }
 
     return FilterNode(name: parentName, children: children);
   }
 }
 
 class FilterProvider with ChangeNotifier {
-  final Firestore _db = Firestore.instance;
-  Filter _relevanceFilter; // filter cache
-  AuthProvider authProvider;
-
-  /// Whether this is the global filter instance and should update shared preferences
-  final bool global;
-
-  final String defaultDegree;
-
-  bool _enabled;
-  List<String> _relevantNodes;
-  final List<String> defaultRelevance;
-
   FilterProvider(
       {this.global = false,
       bool filterEnabled,
@@ -43,12 +30,26 @@ class FilterProvider with ChangeNotifier {
         _relevantNodes = defaultRelevance,
         authProvider = authProvider ?? AuthProvider() {
     if (defaultRelevance != null && !defaultRelevance.contains('All')) {
-      if (this.defaultDegree == null) {
+      if (defaultDegree == null) {
         throw ArgumentError(
             'If the relevance is not null, the degree cannot be null.');
       }
     }
   }
+
+  final Firestore _db = Firestore.instance;
+  Filter _relevanceFilter; // filter cache
+
+  /// Whether this is the global filter instance and should update shared preferences
+  final bool global;
+
+  final String defaultDegree;
+
+  bool _enabled;
+  List<String> _relevantNodes;
+  final List<String> defaultRelevance;
+
+  final AuthProvider authProvider;
 
   void resetFilter() {
     _relevanceFilter = null;
@@ -100,16 +101,17 @@ class FilterProvider with ChangeNotifier {
     }
 
     try {
-      var col = _db.collection('filters');
-      var ref = col.document('relevance');
-      var doc = await ref.get();
-      var data = doc.data;
+      final col = _db.collection('filters');
+      final ref = col.document('relevance');
+      final doc = await ref.get();
+      final data = doc.data;
 
-      List<Map<String, String>> levelNames = [];
+      final levelNames = <Map<String, String>>[];
       // Cast from List<dynamic> to List<Map<String, String>>
-      List names = data['levelNames'];
-      names.forEach(
-          (element) => levelNames.add(Map<String, String>.from(element)));
+      final names = data['levelNames'];
+      for (final name in names) {
+        levelNames.add(Map<String, String>.from(name));
+      }
 
       // Check if there is an existing setting already
       if (global) {
@@ -118,7 +120,7 @@ class FilterProvider with ChangeNotifier {
             : List<String>.from(PrefService.get('relevant_nodes'));
       }
 
-      Map<String, dynamic> root = data['root'];
+      final root = data['root'];
       _relevanceFilter = Filter(
         localizedLevelNames: levelNames,
         root: FilterNodeExtension.fromMap(root, 'All'),
@@ -126,14 +128,15 @@ class FilterProvider with ChangeNotifier {
 
       if (_relevantNodes == null && defaultRelevance != null) {
         _relevantNodes = defaultRelevance;
-        _relevantNodes.forEach((node) =>
-            _relevanceFilter.setRelevantUpToRoot(node, defaultDegree));
+        for (final node in _relevantNodes) {
+          _relevanceFilter.setRelevantUpToRoot(node, defaultDegree);
+        }
       } else if (_relevantNodes != null) {
         _relevanceFilter.setRelevantNodes(_relevantNodes);
       } else {
         // No previous setting or defaults => set the user's group
         if (authProvider.isAuthenticatedFromCache) {
-          User user = await authProvider.currentUser;
+          final user = await authProvider.currentUser;
           // Try to set the default from the user data
           if (user != null && user.classes != null) {
             _relevanceFilter.setRelevantNodes(user.classes);

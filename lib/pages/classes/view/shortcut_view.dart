@@ -7,9 +7,9 @@ import 'package:provider/provider.dart';
 import 'package:validators/validators.dart';
 
 class ShortcutView extends StatefulWidget {
-  final Function(Shortcut) onSave;
-
   const ShortcutView({Key key, this.onSave}) : super(key: key);
+
+  final void Function(Shortcut) onSave;
 
   @override
   _ShortcutViewState createState() => _ShortcutViewState();
@@ -42,13 +42,13 @@ class _ShortcutViewState extends State<ShortcutView> {
             })
       ],
       body: Padding(
-        padding: const EdgeInsets.only(left: 16.0, right: 16.0),
+        padding: const EdgeInsets.only(left: 16, right: 16),
         child: Form(
           key: formKey,
           child: ListView(
             children: <Widget>[
               Padding(
-                padding: const EdgeInsets.only(top: 10.0),
+                padding: const EdgeInsets.only(top: 10),
                 child: Container(
                     height: MediaQuery.of(context).size.height / 3,
                     child: Image.asset(
@@ -59,7 +59,7 @@ class _ShortcutViewState extends State<ShortcutView> {
                 decoration: InputDecoration(
                   labelText: S.of(context).labelName,
                   hintText: S.of(context).hintWebsiteLabel,
-                  prefixIcon: Icon(Icons.label),
+                  prefixIcon: const Icon(Icons.label),
                 ),
                 onChanged: (_) => setState(() {}),
               ),
@@ -67,7 +67,7 @@ class _ShortcutViewState extends State<ShortcutView> {
                 isExpanded: true,
                 decoration: InputDecoration(
                   labelText: S.of(context).labelType,
-                  prefixIcon: Icon(Icons.category),
+                  prefixIcon: const Icon(Icons.category),
                 ),
                 value: selectedType,
                 items: ShortcutType.values
@@ -84,9 +84,9 @@ class _ShortcutViewState extends State<ShortcutView> {
               TextFormField(
                 controller: linkController,
                 decoration: InputDecoration(
-                  labelText: S.of(context).labelLink + ' *',
+                  labelText: '${S.of(context).labelLink} *',
                   hintText: S.of(context).hintWebsiteLink,
-                  prefixIcon: Icon(Icons.public),
+                  prefixIcon: const Icon(Icons.public),
                 ),
                 validator: (value) {
                   if (!isURL(value, requireProtocol: true)) {

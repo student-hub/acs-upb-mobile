@@ -5,7 +5,6 @@ import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
 import 'package:acs_upb_mobile/pages/portal/model/website.dart';
 import 'package:acs_upb_mobile/pages/portal/service/website_provider.dart';
 import 'package:acs_upb_mobile/pages/portal/view/portal_page.dart';
-import 'package:acs_upb_mobile/resources/storage_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
@@ -15,8 +14,6 @@ import 'package:provider/provider.dart';
 import 'package:url_launcher_platform_interface/url_launcher_platform_interface.dart';
 
 class MockWebsiteProvider extends Mock implements WebsiteProvider {}
-
-class MockStorageProvider extends Mock implements StorageProvider {}
 
 class MockFilterProvider extends Mock implements FilterProvider {}
 
@@ -63,10 +60,6 @@ void main() {
         ),
       ]));
 
-  final StorageProvider mockStorageProvider = MockStorageProvider();
-  // ignore: invalid_use_of_protected_member
-  when(mockStorageProvider.hasListeners).thenReturn(false);
-
   final FilterProvider mockFilterProvider = MockFilterProvider();
   // ignore: invalid_use_of_protected_member
   when(mockFilterProvider.hasListeners).thenReturn(false);
@@ -87,17 +80,15 @@ void main() {
   when(mockAuthProvider.isAuthenticatedFromService)
       .thenAnswer((realInvocation) => Future.value(true));
 
-  final portal = () => MultiProvider(
+  Widget buildPortalPage() => MultiProvider(
         providers: [
           ChangeNotifierProvider<WebsiteProvider>(
               create: (_) => mockWebsiteProvider),
-          ChangeNotifierProvider<StorageProvider>(
-              create: (_) => mockStorageProvider),
           ChangeNotifierProvider<FilterProvider>(
               create: (_) => mockFilterProvider),
           ChangeNotifierProvider<AuthProvider>(create: (_) => mockAuthProvider),
         ],
-        child: MaterialApp(
+        child: const MaterialApp(
           localizationsDelegates: [S.delegate],
           home: PortalPage(),
         ),
@@ -112,7 +103,7 @@ void main() {
     });
 
     testWidgets('Names', (WidgetTester tester) async {
-      await tester.pumpWidget(portal());
+      await tester.pumpWidget(buildPortalPage());
       await tester.pumpAndSettle();
 
       expect(find.text('Moodle'), findsOneWidget);
@@ -120,22 +111,27 @@ void main() {
       expect(find.text('LSAC'), findsOneWidget);
     });
 
-    testWidgets('Localization', (WidgetTester tester) async {
-      await tester.pumpWidget(portal());
-      await tester.pumpAndSettle();
+    group('Localization', () {
+      testWidgets('en', (WidgetTester tester) async {
+        await tester.pumpWidget(buildPortalPage());
+        await tester.pumpAndSettle();
 
-      expect(find.byTooltip('info-en'), findsOneWidget);
+        expect(find.byTooltip('info-en'), findsOneWidget);
+      });
 
-      PrefService.setString('language', 'ro');
+      testWidgets('ro', (WidgetTester tester) async {
+        PrefService.setString('language', 'ro');
+        await S.load(const Locale('ro', 'RO'));
 
-      await tester.pumpWidget(portal());
-      await tester.pumpAndSettle();
+        await tester.pumpWidget(buildPortalPage());
+        await tester.pumpAndSettle();
 
-      expect(find.byTooltip('info-ro'), findsOneWidget);
+        expect(find.byTooltip('info-ro'), findsOneWidget);
+      });
     });
 
     testWidgets('Links', (WidgetTester tester) async {
-      await tester.pumpWidget(portal());
+      await tester.pumpWidget(buildPortalPage());
       await tester.pumpAndSettle();
 
       await tester.tap(find.text('Moodle'));

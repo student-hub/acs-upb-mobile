@@ -18,7 +18,7 @@ import 'package:provider/provider.dart';
 extension ClassExtension on ClassHeader {
   Color get colorFromAcronym {
     int r = 0, g = 0, b = 0;
-    if (acronym.length >= 1) {
+    if (acronym.isNotEmpty) {
       b = acronym[0].codeUnitAt(0);
       if (acronym.length >= 2) {
         g = acronym[1].codeUnitAt(0);
@@ -27,16 +27,16 @@ extension ClassExtension on ClassHeader {
         }
       }
     }
-    int brightnessFactor = 2;
+    const int brightnessFactor = 2;
     return Color.fromRGBO(
         r * brightnessFactor, g * brightnessFactor, b * brightnessFactor, 1);
   }
 }
 
 class ClassView extends StatefulWidget {
-  final ClassHeader classHeader;
-
   const ClassView({Key key, this.classHeader}) : super(key: key);
+
+  final ClassHeader classHeader;
 
   @override
   _ClassViewState createState() => _ClassViewState();
@@ -47,7 +47,7 @@ class _ClassViewState extends State<ClassView> {
 
   @override
   Widget build(BuildContext context) {
-    var classProvider = Provider.of<ClassProvider>(context);
+    final classProvider = Provider.of<ClassProvider>(context);
 
     return AppScaffold(
       title: Text(widget.classHeader.name),
@@ -61,11 +61,11 @@ class _ClassViewState extends State<ClassView> {
               return ListView(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
                     child: Column(
                       children: [
                         shortcuts(context),
-                        SizedBox(height: 8),
+                        const SizedBox(height: 8),
                         GradingChart(
                           grading: classInfo.grading,
                           onSave: (grading) => classProvider.setGrading(
@@ -77,18 +77,18 @@ class _ClassViewState extends State<ClassView> {
                 ],
               );
             } else {
-              return Center(child: CircularProgressIndicator());
+              return const Center(child: CircularProgressIndicator());
             }
           }),
     );
   }
 
   Widget shortcuts(BuildContext context) {
-    var classProvider = Provider.of<ClassProvider>(context);
-    var authProvider = Provider.of<AuthProvider>(context);
+    final classProvider = Provider.of<ClassProvider>(context);
+    final authProvider = Provider.of<AuthProvider>(context);
 
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.all(8),
       child: Column(
         children: [
               Row(
@@ -104,34 +104,35 @@ class _ClassViewState extends State<ClassView> {
                         : () => AppToast.show(
                             S.of(context).warningNoPermissionToEditClassInfo),
                     child: IconButton(
-                      icon: Icon(Icons.add),
-                      onPressed: authProvider
-                              .currentUserFromCache.canEditClassInfo
-                          ? () => Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) =>
-                                    ChangeNotifierProvider.value(
-                                  value: classProvider,
-                                  child: ShortcutView(onSave: (shortcut) {
-                                    setState(() =>
-                                        classInfo.shortcuts.add(shortcut));
-                                    classProvider.addShortcut(
-                                        classId: widget.classHeader.id,
-                                        shortcut: shortcut,
-                                        context: context);
-                                  }),
-                                ),
-                              ))
-                          : null,
+                      icon: const Icon(Icons.add),
+                      onPressed:
+                          authProvider.currentUserFromCache.canEditClassInfo
+                              ? () => Navigator.of(context).push(
+                                      MaterialPageRoute<ChangeNotifierProvider>(
+                                    builder: (context) =>
+                                        ChangeNotifierProvider.value(
+                                      value: classProvider,
+                                      child: ShortcutView(onSave: (shortcut) {
+                                        setState(() =>
+                                            classInfo.shortcuts.add(shortcut));
+                                        classProvider.addShortcut(
+                                            classId: widget.classHeader.id,
+                                            shortcut: shortcut,
+                                            context: context);
+                                      }),
+                                    ),
+                                  ))
+                              : null,
                     ),
                   ),
                 ],
               ),
-              Divider()
+              const Divider()
             ] +
             (classInfo.shortcuts.isEmpty
                 ? <Widget>[
                     Padding(
-                      padding: const EdgeInsets.all(8.0),
+                      padding: const EdgeInsets.all(8),
                       child: Center(
                         child: Text(
                           S.of(context).labelUnknown,
@@ -167,7 +168,7 @@ class _ClassViewState extends State<ClassView> {
   AppDialog _deletionConfirmationDialog(
           {BuildContext context, String shortcutName, Function onDelete}) =>
       AppDialog(
-        icon: Icon(Icons.delete),
+        icon: const Icon(Icons.delete),
         title: S.of(context).actionDeleteShortcut,
         message: S.of(context).messageDeleteShortcut(shortcutName),
         info: S.of(context).messageThisCouldAffectOtherStudents,
@@ -181,15 +182,15 @@ class _ClassViewState extends State<ClassView> {
       );
 
   Widget shortcut({int index, Shortcut shortcut, BuildContext context}) {
-    var classProvider = Provider.of<ClassProvider>(context);
-    var classViewContext = context;
+    final classProvider = Provider.of<ClassProvider>(context);
+    final classViewContext = context;
 
     return PositionedTapDetector(
       onTap: (_) => Utils.launchURL(shortcut.link, context: context),
       onLongPress: (position) async {
         final RenderBox overlay =
             Overlay.of(context).context.findRenderObject();
-        var option = await showMenu(
+        final option = await showMenu(
             context: context,
             position: RelativeRect.fromRect(
                 Rect.fromPoints(position.global, position.global),
@@ -201,26 +202,27 @@ class _ClassViewState extends State<ClassView> {
               )
             ]);
         if (option == S.of(context).actionDeleteShortcut) {
-          showDialog(
+          await showDialog(
+            context: context,
+            builder: (context) => _deletionConfirmationDialog(
               context: context,
-              builder: (context) => _deletionConfirmationDialog(
-                  context: context,
-                  shortcutName: shortcut.name,
-                  onDelete: () async {
-                    Navigator.pop(context); // Pop dialog window
+              shortcutName: shortcut.name,
+              onDelete: () async {
+                Navigator.pop(context); // Pop dialog window
 
-                    var success = await classProvider.deleteShortcut(
-                        classId: widget.classHeader.id,
-                        shortcutIndex: index,
-                        context: context);
-                    if (success) {
-                      setState(() {
-                        classInfo.shortcuts.removeAt(index);
-                      });
-                      AppToast.show(
-                          S.of(classViewContext).messageShortcutDeleted);
-                    }
-                  }));
+                final success = await classProvider.deleteShortcut(
+                    classId: widget.classHeader.id,
+                    shortcutIndex: index,
+                    context: context);
+                if (success) {
+                  setState(() {
+                    classInfo.shortcuts.removeAt(index);
+                  });
+                  AppToast.show(S.of(classViewContext).messageShortcutDeleted);
+                }
+              },
+            ),
+          );
         }
       },
       child: ListTile(

@@ -10,6 +10,15 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class FilterPage extends StatefulWidget {
+  const FilterPage(
+      {Key key,
+      this.title,
+      this.info,
+      this.hint,
+      this.buttonText,
+      this.onSubmit})
+      : super(key: key);
+
   static const String routeName = '/filter';
 
   /// By default, this is [S.of(context).navigationFilter]
@@ -25,16 +34,7 @@ class FilterPage extends StatefulWidget {
   final String buttonText;
 
   /// Callback after the user submits the page
-  final Function() onSubmit;
-
-  const FilterPage(
-      {Key key,
-      this.title,
-      this.info,
-      this.hint,
-      this.buttonText,
-      this.onSubmit})
-      : super(key: key);
+  final void Function() onSubmit;
 
   @override
   State<StatefulWidget> createState() => FilterPageState();
@@ -57,7 +57,7 @@ class FilterPageState extends State<FilterPage> {
 
         node.value = selection;
         if (node.children != null) {
-          for (var child in node.children) {
+          for (final child in node.children) {
             // Deselect all children
             _onSelected(false, child);
           }
@@ -68,7 +68,7 @@ class FilterPageState extends State<FilterPage> {
       bool selection, FilterNode node, List<FilterNode> nodesOnLevel) {
     // Only one node on level can be selected
     if (selection) {
-      for (var otherNode in nodesOnLevel.where((n) => n != node)) {
+      for (final otherNode in nodesOnLevel.where((n) => n != node)) {
         _onSelected(false, otherNode);
       }
     }
@@ -85,9 +85,9 @@ class FilterPageState extends State<FilterPage> {
     optionsByLevel.putIfAbsent(level, () => <Widget>[]);
 
     // Add list of options
-    List<Widget> listItems = [SizedBox(width: 10)];
+    final listItems = <Widget>[const SizedBox(width: 10)];
 
-    for (var child in node.children) {
+    for (final child in node.children) {
       // Add option
       nodeControllers.putIfAbsent(child, () => SelectableController());
       SelectableController controller = nodeControllers[child];
@@ -108,21 +108,22 @@ class FilterPageState extends State<FilterPage> {
               : _onSelectedExclusive(selection, child, node.children);
         },
       ));
-      child.listener = () {
-        if (child.value)
+      child.addListener(() {
+        if (child.value) {
           controller.select();
-        else
+        } else {
           controller.deselect();
+        }
         setState(() {});
-      };
+      });
 
       // Add padding
-      listItems.add(SizedBox(width: 10));
+      listItems.add(const SizedBox(width: 10));
     }
 
     optionsByLevel[level].add(
       Padding(
-        padding: const EdgeInsets.only(bottom: 10.0),
+        padding: const EdgeInsets.only(bottom: 10),
         child: Container(
           height: 40,
           child: ListView(
@@ -133,7 +134,7 @@ class FilterPageState extends State<FilterPage> {
       ),
     );
 
-    for (var child in node.children) {
+    for (final child in node.children) {
       // Display children if selected
       if (child.value == true) {
         _buildTree(
@@ -144,7 +145,7 @@ class FilterPageState extends State<FilterPage> {
 
   @override
   Widget build(BuildContext context) {
-    var filterProvider = Provider.of<FilterProvider>(context);
+    final filterProvider = Provider.of<FilterProvider>(context);
 
     return AppScaffold(
       title: Text(widget.title ?? S.of(context).navigationFilter),
@@ -152,8 +153,9 @@ class FilterPageState extends State<FilterPage> {
         AppScaffoldAction(
           text: widget.buttonText ?? S.of(context).buttonApply,
           onPressed: () {
-            filterProvider.enableFilter();
-            filterProvider.updateFilter(filter);
+            filterProvider
+              ..enableFilter()
+              ..updateFilter(filter);
             if (widget.onSubmit != null) {
               widget.onSubmit();
             }
@@ -167,28 +169,28 @@ class FilterPageState extends State<FilterPage> {
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               filter ??= snapshot.data;
-              List<Widget> widgets = [SizedBox(height: 10.0)];
+              final widgets = <Widget>[const SizedBox(height: 10)];
 
               selectedNodes = filter.relevantNodes.length - 1;
+              final optionsByLevel = <int, List<Widget>>{};
 
-              Map<int, List<Widget>> optionsByLevel = {};
               _buildTree(node: filter.root, optionsByLevel: optionsByLevel);
               for (var i = 0; i < filter.localizedLevelNames.length; i++) {
                 if (optionsByLevel[i] == null || optionsByLevel.isEmpty) {
                   break;
                 }
 
-                // Level name
-                widgets.add(Padding(
-                  padding: const EdgeInsets.only(left: 10.0, bottom: 8.0),
-                  child: Text(
-                      filter.localizedLevelNames[i]
-                          [LocaleProvider.localeString],
-                      style: Theme.of(context).textTheme.headline6),
-                ));
-
-                // Level options
-                widgets.addAll(optionsByLevel[i]);
+                widgets
+                  // Level name
+                  ..add(Padding(
+                    padding: const EdgeInsets.only(left: 10, bottom: 8),
+                    child: Text(
+                        filter.localizedLevelNames[i]
+                            [LocaleProvider.localeString],
+                        style: Theme.of(context).textTheme.headline6),
+                  ))
+                  // Level options
+                  ..addAll(optionsByLevel[i]);
               }
 
               return ListView(
@@ -196,7 +198,7 @@ class FilterPageState extends State<FilterPage> {
                         if (widget.info != null)
                           Padding(
                             padding: const EdgeInsets.only(
-                                left: 10.0, right: 10.0, top: 10.0),
+                                left: 10, right: 10, top: 10),
                             child: IconText(
                               icon: Icons.info,
                               text: widget.info,
@@ -206,7 +208,7 @@ class FilterPageState extends State<FilterPage> {
                         if (widget.hint != null)
                           Padding(
                             padding: const EdgeInsets.only(
-                                left: 10.0, right: 10.0, top: 5.0),
+                                left: 10, right: 10, top: 5),
                             child: Text(
                               widget.hint,
                               style:
@@ -216,7 +218,7 @@ class FilterPageState extends State<FilterPage> {
                       ] +
                       widgets);
             } else {
-              return Center(child: CircularProgressIndicator());
+              return const Center(child: CircularProgressIndicator());
             }
           }),
     );

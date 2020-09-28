@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class PeoplePage extends StatefulWidget {
-  PeoplePage({Key key}) : super(key: key);
+  const PeoplePage({Key key}) : super(key: key);
 
   @override
   _PeoplePageState createState() => _PeoplePageState();
@@ -20,8 +20,7 @@ class _PeoplePageState extends State<PeoplePage> {
   @override
   void initState() {
     super.initState();
-    PersonProvider personProvider =
-        Provider.of<PersonProvider>(context, listen: false);
+    final personProvider = Provider.of<PersonProvider>(context, listen: false);
     people = personProvider.fetchPeople(context: context);
   }
 
@@ -34,7 +33,7 @@ class _PeoplePageState extends State<PeoplePage> {
             future: people,
             builder: (_, snapshot) {
               if (snapshot.connectionState == ConnectionState.done) {
-                List<Person> peopleData = snapshot.data;
+                final List<Person> peopleData = snapshot.data;
                 return ListView.builder(
                     itemCount: peopleData.length,
                     itemBuilder: (_, index) {
@@ -49,24 +48,18 @@ class _PeoplePageState extends State<PeoplePage> {
                       );
                     });
               } else {
-                return Center(
-                  child: CircularProgressIndicator(),
-                );
+                return const Center(child: CircularProgressIndicator());
               }
             }),
       ),
     );
   }
 
-  showPersonInfo(Person person) {
+  void showPersonInfo(Person person) {
     showModalBottomSheet<dynamic>(
       isScrollControlled: true,
       context: context,
-      builder: (BuildContext buildContext) {
-        return PersonView(
-          person: person,
-        );
-      },
+      builder: (BuildContext buildContext) => PersonView(person: person),
     );
   }
 }
