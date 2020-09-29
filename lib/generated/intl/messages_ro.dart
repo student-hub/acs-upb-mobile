@@ -90,6 +90,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "filterMenuRelevance" : MessageLookupByLibrary.simpleMessage("Filtrează după relevanță"),
     "filterMenuShowAll" : MessageLookupByLibrary.simpleMessage("Arată tot"),
     "filterMenuShowMine" : MessageLookupByLibrary.simpleMessage("Arată doar pe ale mele"),
+    "filterNodeNameBCs" : MessageLookupByLibrary.simpleMessage("Licență"),
+    "filterNodeNameMSc" : MessageLookupByLibrary.simpleMessage("Masterat"),
     "hintEmail" : MessageLookupByLibrary.simpleMessage("john.doe"),
     "hintEvaluation" : MessageLookupByLibrary.simpleMessage("Examen final"),
     "hintFirstName" : MessageLookupByLibrary.simpleMessage("John"),

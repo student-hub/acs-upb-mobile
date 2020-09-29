@@ -140,6 +140,9 @@
   "filterMenuShowMine": "Show only mine",
   "filterMenuRelevance": "Filter by relevance",
 
+  "filterNodeNameBCs": "Bachelor's",
+  "filterNodeNameMSc": "Master's",
+
   "relevanceOnlyMe": "Only me",
   "relevanceAnyone": "Anyone",
 

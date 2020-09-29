@@ -1,3 +1,4 @@
+import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:flutter/cupertino.dart';
 
 /// Filter represented in the form of a tree with named levels
@@ -187,6 +188,13 @@ class FilterNode {
 
   void addListener(void Function() listener) =>
       _valueNotifier.addListener(listener);
+
+  String localizedName(BuildContext context) {
+    if (name == 'BSc') return S.of(context).filterNodeNameBCs;
+    if (name == 'MSc') return S.of(context).filterNodeNameMSc;
+
+    return name;
+  }
 
   FilterNode clone() => FilterNode(
         name: name,
