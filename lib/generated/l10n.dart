@@ -1344,10 +1344,10 @@ class S {
   }
 
   /// `Bachelor's`
-  String get filterNodeNameBCs {
+  String get filterNodeNameBSc {
     return Intl.message(
       'Bachelor\'s',
-      name: 'filterNodeNameBCs',
+      name: 'filterNodeNameBSc',
       desc: '',
       args: [],
     );
