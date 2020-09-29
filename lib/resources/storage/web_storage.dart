@@ -2,9 +2,9 @@ import 'package:firebase/firebase.dart';
 import 'package:flutter/cupertino.dart';
 
 class FireStorageService extends ChangeNotifier {
-
-  FireStorageService(){
-    initializeApp(  apiKey: "AIzaSyC6-BEfdxQHSOTdpOfqLUB8_j7CGu4DvV0",
+  FireStorageService() {
+    initializeApp(
+        apiKey: "AIzaSyC6-BEfdxQHSOTdpOfqLUB8_j7CGu4DvV0",
         authDomain: "acs-upb-mobile.firebaseapp.com",
         databaseURL: "https://acs-upb-mobile.firebaseio.com",
         projectId: "acs-upb-mobile",
