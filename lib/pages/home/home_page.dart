@@ -219,17 +219,18 @@ class FavouriteWebsitesCard extends StatelessWidget {
                               .map((website) => Expanded(
                                     child: Padding(
                                       padding: const EdgeInsets.all(8.0),
-                                      child:
-                                          FutureBuilder<ImageProvider<dynamic>>(
+                                      child: FutureBuilder(
                                         future: Provider.of<StorageProvider>(
                                                 context,
                                                 listen: false)
-                                            .imageFromPath(website.iconPath),
+                                            .findIconUrl(
+                                                context, website.iconPath),
                                         builder: (context, snapshot) {
-                                          ImageProvider<dynamic> image = AssetImage(
-                                              'assets/icons/websites/globe.png');
+                                          ImageProvider<dynamic> image =
+                                              AssetImage(
+                                                  'assets/icons/globe.png');
                                           if (snapshot.hasData) {
-                                            image = snapshot.data;
+                                            image = NetworkImage(snapshot.data);
                                           }
                                           return CircleImage(
                                             label: website.label,

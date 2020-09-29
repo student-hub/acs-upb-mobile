@@ -134,15 +134,15 @@ class _WebsiteViewState extends State<WebsiteView> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         Expanded(
-                          child: FutureBuilder<ImageProvider<dynamic>>(
+                          child: FutureBuilder(
                             future: Provider.of<StorageProvider>(context,
                                     listen: false)
-                                .imageFromPath(website.iconPath),
+                                .findIconUrl(context, website.iconPath),
                             builder: (context, snapshot) {
                               ImageProvider<dynamic> image =
-                                  AssetImage('assets/icons/websites/globe.png');
+                                  AssetImage('assets/icons/globe.png');
                               if (snapshot.hasData) {
-                                image = snapshot.data;
+                                image = NetworkImage(snapshot.data);
                               }
                               return CircleImage(
                                 label: website.label,

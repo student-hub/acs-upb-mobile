@@ -76,19 +76,17 @@ class _PortalPageState extends State<PortalPage>
   }
 
   Widget websiteCircle(Website website, double size) {
+    //print(website.iconPath);
     StorageProvider storageProvider = Provider.of<StorageProvider>(context);
-
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: FutureBuilder<ImageProvider<dynamic>>(
-        future: storageProvider.imageFromPath(website.iconPath),
+      child: FutureBuilder(
+        //future: storageProvider.imageFromPath(website.iconPath),
+        future: storageProvider.findIconUrl(context, website.iconPath),
         builder: (context, snapshot) {
           var image;
           if (snapshot.hasData) {
-            image = snapshot.data;
-          } else {
-            image = AssetImage('assets/' + website.iconPath) ??
-                AssetImage('assets/images/white.png');
+            image = NetworkImage(snapshot.data);
           }
 
           bool canEdit = editingEnabled &&
