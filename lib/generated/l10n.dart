@@ -1,7 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-
 import 'intl/messages_all.dart';
 
 // **************************************************************************
@@ -1339,6 +1338,26 @@ class S {
     return Intl.message(
       'Filter by relevance',
       name: 'filterMenuRelevance',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Bachelor's`
+  String get filterNodeNameBSc {
+    return Intl.message(
+      'Bachelor\'s',
+      name: 'filterNodeNameBSc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Master's`
+  String get filterNodeNameMSc {
+    return Intl.message(
+      'Master\'s',
+      name: 'filterNodeNameMSc',
       desc: '',
       args: [],
     );

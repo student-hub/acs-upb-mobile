@@ -62,7 +62,7 @@ class _FilterDropdownState extends State<FilterDropdown> {
                         child: Padding(
                           padding: EdgeInsets.only(
                               top: 8, left: widget.leftPadding ?? 0.0),
-                          child: Text(node.name),
+                          child: Text(node.localizedName(context)),
                         ),
                       ))
                   .toList(),
