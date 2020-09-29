@@ -11,6 +11,7 @@ import 'package:acs_upb_mobile/resources/locale_provider.dart';
 import 'package:acs_upb_mobile/resources/storage_provider.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/widgets/circle_image.dart';
+import 'package:acs_upb_mobile/widgets/info_card.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
@@ -36,11 +37,70 @@ class HomePage extends StatelessWidget {
       body: ListView(
         children: [
           ProfileCard(),
-          FavouriteWebsitesCard(
-            onSeeMore: () => tabController?.animateTo(2),
+          // Favourite websites
+          InfoCard<List<Website>>(
+            title: S.of(context).sectionFrequentlyAccessedWebsites,
+            onShowMore: () => tabController?.animateTo(2),
+            future: Provider.of<WebsiteProvider>(context).fetchWebsites(null),
+            builder: (websites) => Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: websites
+                  .take(3)
+                  .map((website) => Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8),
+                          child: FutureBuilder<ImageProvider<dynamic>>(
+                            future:
+                                StorageProvider.imageFromPath(website.iconPath),
+                            builder: (context, snapshot) {
+                              ImageProvider<dynamic> image = const AssetImage(
+                                  'assets/icons/websites/globe.png');
+                              if (snapshot.hasData) {
+                                image = snapshot.data;
+                              }
+                              return CircleImage(
+                                label: website.label,
+                                onTap: () {
+                                  Provider.of<WebsiteProvider>(context,
+                                          listen: false)
+                                      .incrementNumberOfVisits(website);
+                                  Utils.launchURL(website.link,
+                                      context: context);
+                                },
+                                image: image,
+                                tooltip: website
+                                    .infoByLocale[LocaleProvider.localeString],
+                              );
+                            },
+                          ),
+                        ),
+                      ))
+                  .toList(),
+            ),
           ),
-          FaqCard(
-            onSeeMore: () => Navigator.of(context).pushNamed(Routes.faq),
+          // FAQ
+          InfoCard<List<Question>>(
+            title: S.of(context).sectionFAQ,
+            onShowMore: () => Navigator.of(context).pushNamed(Routes.faq),
+            future:
+                Provider.of<QuestionProvider>(context).fetchQuestions(limit: 2),
+            builder: (questions) => Column(
+              children: questions
+                  .map(
+                    (q) => ListTile(
+                      title: Text(q.question),
+                      subtitle: AutoSizeText(
+                        q.answer,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      contentPadding: EdgeInsets.zero,
+                      dense: true,
+                    ),
+                  )
+                  .toList(),
+            ),
           ),
         ],
       ),
@@ -154,225 +214,4 @@ class ProfileCard extends StatelessWidget {
       },
     );
   }
-}
-
-class FavouriteWebsitesCard extends StatelessWidget {
-  const FavouriteWebsitesCard({this.onSeeMore});
-
-  final Function onSeeMore;
-
-  @override
-  Widget build(BuildContext context) {
-    final websitesFuture =
-        Provider.of<WebsiteProvider>(context).fetchWebsites(null);
-    return Padding(
-      padding: const EdgeInsets.only(left: 8, right: 8, top: 8),
-      child: FutureBuilder(
-          future: websitesFuture,
-          builder: (_, snapshot) {
-            if (snapshot.connectionState == ConnectionState.done) {
-              List<Website> websites = snapshot.data;
-              websites =
-                  websites.where((w) => w.numberOfVisits > 0).take(3).toList();
-              return Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(8),
-                  child: Column(
-                    children: <Widget>[
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            S.of(context).sectionFrequentlyAccessedWebsites,
-                            style: Theme.of(context)
-                                .textTheme
-                                .headline6
-                                .copyWith(fontSize: 18),
-                          ),
-                          GestureDetector(
-                            onTap: onSeeMore,
-                            child: Row(
-                              children: <Widget>[
-                                Text(
-                                  S.of(context).actionShowMore,
-                                  style: Theme.of(context)
-                                      .accentTextTheme
-                                      .subtitle2
-                                      .copyWith(
-                                          color: Theme.of(context).accentColor),
-                                ),
-                                Icon(
-                                  Icons.arrow_forward_ios,
-                                  color: Theme.of(context).accentColor,
-                                  size: Theme.of(context)
-                                      .textTheme
-                                      .subtitle2
-                                      .fontSize,
-                                )
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 12),
-                      if (websites.isEmpty)
-                        noneYet(context)
-                      else
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: websites
-                              .take(3)
-                              .map((website) => Expanded(
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8),
-                                      child:
-                                          FutureBuilder<ImageProvider<dynamic>>(
-                                        future: StorageProvider.imageFromPath(
-                                            website.iconPath),
-                                        builder: (context, snapshot) {
-                                          ImageProvider<dynamic> image =
-                                              const AssetImage(
-                                                  'assets/icons/websites/globe.png');
-                                          if (snapshot.hasData) {
-                                            image = snapshot.data;
-                                          }
-                                          return CircleImage(
-                                            label: website.label,
-                                            onTap: () {
-                                              Provider.of<WebsiteProvider>(
-                                                      context,
-                                                      listen: false)
-                                                  .incrementNumberOfVisits(
-                                                      website);
-                                              Utils.launchURL(website.link,
-                                                  context: context);
-                                            },
-                                            image: image,
-                                            tooltip: website.infoByLocale[
-                                                LocaleProvider.localeString],
-                                          );
-                                        },
-                                      ),
-                                    ),
-                                  ))
-                              .toList(),
-                        ),
-                    ],
-                  ),
-                ),
-              );
-            }
-            return const Center(child: CircularProgressIndicator());
-          }),
-    );
-  }
-
-  Widget noneYet(BuildContext context) => Container(
-        height: 100,
-        child: Center(
-          child: Text(
-            S.of(context).warningNoneYet,
-            style: TextStyle(color: Theme.of(context).disabledColor),
-          ),
-        ),
-      );
-}
-
-class FaqCard extends StatelessWidget {
-  const FaqCard({this.onSeeMore});
-
-  final Function onSeeMore;
-
-  @override
-  Widget build(BuildContext context) {
-    final questionsFuture =
-        Provider.of<QuestionProvider>(context).fetchQuestions(limit: 2);
-    return Padding(
-      padding: const EdgeInsets.only(left: 8, right: 8, top: 8),
-      child: FutureBuilder(
-          future: questionsFuture,
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.done) {
-              final List<Question> questions = snapshot.data;
-              return Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(8),
-                  child: Column(
-                    children: <Widget>[
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            S.of(context).sectionFAQ,
-                            style: Theme.of(context)
-                                .textTheme
-                                .headline6
-                                .copyWith(fontSize: 18),
-                          ),
-                          GestureDetector(
-                            onTap: onSeeMore,
-                            child: Row(
-                              children: <Widget>[
-                                Text(
-                                  S.of(context).actionShowMore,
-                                  style: Theme.of(context)
-                                      .accentTextTheme
-                                      .subtitle2
-                                      .copyWith(
-                                          color: Theme.of(context).accentColor),
-                                ),
-                                Icon(
-                                  Icons.arrow_forward_ios,
-                                  color: Theme.of(context).accentColor,
-                                  size: Theme.of(context)
-                                      .textTheme
-                                      .subtitle2
-                                      .fontSize,
-                                )
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 12),
-                      if (questions.isEmpty)
-                        noneYet(context)
-                      else
-                        Column(
-                          children: questions
-                              .map(
-                                (q) => ListTile(
-                                  title: Text(q.question),
-                                  subtitle: AutoSizeText(
-                                    q.answer,
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                  contentPadding: EdgeInsets.zero,
-                                ),
-                              )
-                              .toList(),
-                        ),
-                    ],
-                  ),
-                ),
-              );
-            }
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          }),
-    );
-  }
-
-  Widget noneYet(BuildContext context) => Container(
-        height: 100,
-        child: Center(
-          child: Text(
-            S.of(context).warningNoneYet,
-            style: TextStyle(color: Theme.of(context).disabledColor),
-          ),
-        ),
-      );
 }
