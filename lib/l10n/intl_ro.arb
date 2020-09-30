@@ -214,5 +214,7 @@
   "stringForum": "cs.curs.pub.ro",
   "stringAnonymous": "Anonim",
 
+  "newsFeedTitle": "Știri",
+
   "fileAcsBanner": "assets/images/acs_banner_ro.png"
 }

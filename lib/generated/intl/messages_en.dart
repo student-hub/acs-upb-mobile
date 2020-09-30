@@ -176,6 +176,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "navigationProfile" : MessageLookupByLibrary.simpleMessage("Profile"),
     "navigationSettings" : MessageLookupByLibrary.simpleMessage("Settings"),
     "navigationTimetable" : MessageLookupByLibrary.simpleMessage("Timetable"),
+    "newsFeedTitle" : MessageLookupByLibrary.simpleMessage("News feed"),
     "relevanceAnyone" : MessageLookupByLibrary.simpleMessage("Anyone"),
     "relevanceOnlyMe" : MessageLookupByLibrary.simpleMessage("Only me"),
     "sectionEvents" : MessageLookupByLibrary.simpleMessage("Events"),

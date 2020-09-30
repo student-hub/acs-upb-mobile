@@ -1,3 +1,4 @@
+import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/navigation/routes.dart';
 import 'package:acs_upb_mobile/pages/news_feed/model/news_feed_item.dart';
 import 'package:acs_upb_mobile/pages/news_feed/service/news_feed_provider.dart';
@@ -12,7 +13,7 @@ class NewsFeedCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InfoCard<List<NewsFeedItem>>(
-      title: 'News feed',
+      title: S.of(context).newsFeedTitle,
       showMoreButtonKey: const ValueKey('show_more_news_feed'),
       onShowMore: () => Navigator.of(context).pushNamed(Routes.newsFeed),
       future: Provider.of<NewsFeedProvider>(context).fetchNewsFeedItems(
