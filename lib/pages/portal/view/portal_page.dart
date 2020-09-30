@@ -74,16 +74,17 @@ class _PortalPageState extends State<PortalPage> {
   }
 
   Widget websiteCircle(Website website, double size) {
-    bool canEdit = editingEnabled &&
+    final bool canEdit = editingEnabled &&
         (website.isPrivate || (user.canEditPublicWebsite ?? false));
     return Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(8),
         child: WebsiteIcon(
           website: website,
           canEdit: canEdit,
           size: size,
           onTap:() {
             if (canEdit) {
+              // ignore: inference_failure_on_instance_creation
               Navigator.of(context).push(MaterialPageRoute(
                 builder: (_) => ChangeNotifierProvider<FilterProvider>(
                   create: (_) => FilterProvider(

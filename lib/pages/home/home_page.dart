@@ -8,10 +8,7 @@ import 'package:acs_upb_mobile/pages/faq/service/question_provider.dart';
 import 'package:acs_upb_mobile/pages/portal/model/website.dart';
 import 'package:acs_upb_mobile/pages/portal/service/website_provider.dart';
 import 'package:acs_upb_mobile/pages/portal/view/website_view.dart';
-import 'package:acs_upb_mobile/resources/locale_provider.dart';
-import 'package:acs_upb_mobile/resources/storage_provider.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
-import 'package:acs_upb_mobile/widgets/circle_image.dart';
 import 'package:acs_upb_mobile/widgets/info_card.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:auto_size_text/auto_size_text.dart';
@@ -190,16 +187,16 @@ class ProfileCard extends StatelessWidget {
 }
 
 class FavouriteWebsitesCard extends StatelessWidget {
-  final Function onSeeMore;
+  const FavouriteWebsitesCard({this.onSeeMore});
 
-  FavouriteWebsitesCard({this.onSeeMore});
+  final Function onSeeMore;
 
   @override
   Widget build(BuildContext context) {
-    var websitesFuture =
-    Provider.of<WebsiteProvider>(context).fetchWebsites(null);
+    final websitesFuture =
+        Provider.of<WebsiteProvider>(context).fetchWebsites(null);
     return Padding(
-      padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 8.0),
+      padding: const EdgeInsets.only(left: 8, right: 8, top: 8),
       child: FutureBuilder(
           future: websitesFuture,
           builder: (_, snapshot) {
@@ -209,7 +206,7 @@ class FavouriteWebsitesCard extends StatelessWidget {
                   websites.where((w) => w.numberOfVisits > 0).take(3).toList();
               return Card(
                 child: Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.all(8),
                   child: Column(
                     children: <Widget>[
                       Row(
@@ -232,7 +229,7 @@ class FavouriteWebsitesCard extends StatelessWidget {
                                       .accentTextTheme
                                       .subtitle2
                                       .copyWith(
-                                      color: Theme.of(context).accentColor),
+                                          color: Theme.of(context).accentColor),
                                 ),
                                 Icon(
                                   Icons.arrow_forward_ios,
@@ -247,7 +244,7 @@ class FavouriteWebsitesCard extends StatelessWidget {
                           ),
                         ],
                       ),
-                      SizedBox(height: 12),
+                      const SizedBox(height: 12),
                       if (websites.isEmpty)
                         noneYet(context)
                       else
@@ -257,21 +254,21 @@ class FavouriteWebsitesCard extends StatelessWidget {
                           children: websites
                               .take(3)
                               .map((website) => Expanded(
-                            child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: WebsiteIcon(
-                                  website: website,
-                                  onTap: () {
-                                    Provider.of<WebsiteProvider>(
-                                        context,
-                                        listen: false)
-                                        .incrementNumberOfVisits(
-                                        website);
-                                    Utils.launchURL(website.link,
-                                        context: context);
-                                  },
-                                )),
-                          ))
+                                    child: Padding(
+                                        padding: const EdgeInsets.all(8),
+                                        child: WebsiteIcon(
+                                          website: website,
+                                          onTap: () {
+                                            Provider.of<WebsiteProvider>(
+                                                    context,
+                                                    listen: false)
+                                                .incrementNumberOfVisits(
+                                                    website);
+                                            Utils.launchURL(website.link,
+                                                context: context);
+                                          },
+                                        )),
+                                  ))
                               .toList(),
                         ),
                     ],
@@ -279,7 +276,7 @@ class FavouriteWebsitesCard extends StatelessWidget {
                 ),
               );
             }
-            return Center(
+            return const Center(
               child: CircularProgressIndicator(),
             );
           }),

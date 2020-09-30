@@ -330,20 +330,21 @@ class _WebsiteViewState extends State<WebsiteView> {
 }
 
 class WebsiteIcon extends StatelessWidget {
+  const WebsiteIcon({this.website, this.canEdit, this.size, this.onTap});
+
   final Website website;
   final bool canEdit;
   final double size;
   final Function onTap;
-
-  WebsiteIcon({this.website, this.canEdit, this.size, this.onTap});
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
       future: StorageProvider.findImageUrl(context, website.iconPath),
       builder: (context, snapshot) {
+        // ignore: prefer_typing_uninitialized_variables, inference_failure_on_uninitialized_variable
         var image;
-        image = AssetImage('assets/icons/globe.png');
+        image = const AssetImage('assets/icons/globe.png');
         if (snapshot.hasData) {
           image = NetworkImage(snapshot.data);
         }
