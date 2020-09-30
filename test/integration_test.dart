@@ -8,6 +8,9 @@ import 'package:acs_upb_mobile/pages/classes/view/class_view.dart';
 import 'package:acs_upb_mobile/pages/classes/view/classes_page.dart';
 import 'package:acs_upb_mobile/pages/classes/view/grading_view.dart';
 import 'package:acs_upb_mobile/pages/classes/view/shortcut_view.dart';
+import 'package:acs_upb_mobile/pages/faq/model/question.dart';
+import 'package:acs_upb_mobile/pages/faq/service/question_provider.dart';
+import 'package:acs_upb_mobile/pages/faq/view/faq_page.dart';
 import 'package:acs_upb_mobile/pages/filter/model/filter.dart';
 import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
 import 'package:acs_upb_mobile/pages/filter/view/filter_page.dart';
@@ -22,7 +25,7 @@ import 'package:acs_upb_mobile/pages/portal/view/portal_page.dart';
 import 'package:acs_upb_mobile/pages/portal/view/website_view.dart';
 import 'package:acs_upb_mobile/pages/settings/settings_page.dart';
 import 'package:acs_upb_mobile/resources/custom_icons.dart';
-import 'package:acs_upb_mobile/resources/storage_provider.dart';
+import 'package:acs_upb_mobile/widgets/search_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
@@ -35,8 +38,6 @@ import 'package:provider/provider.dart';
 
 class MockAuthProvider extends Mock implements AuthProvider {}
 
-class MockStorageProvider extends Mock implements StorageProvider {}
-
 class MockWebsiteProvider extends Mock implements WebsiteProvider {}
 
 class MockFilterProvider extends Mock implements FilterProvider {}
@@ -45,21 +46,23 @@ class MockClassProvider extends Mock implements ClassProvider {}
 
 class MockPersonProvider extends Mock implements PersonProvider {}
 
+class MockQuestionProvider extends Mock implements QuestionProvider {}
+
 class MockNavigatorObserver extends Mock implements NavigatorObserver {}
 
 void main() {
   AuthProvider mockAuthProvider;
-  StorageProvider mockStorageProvider;
   WebsiteProvider mockWebsiteProvider;
   FilterProvider mockFilterProvider;
   ClassProvider mockClassProvider;
   PersonProvider mockPersonProvider;
+  MockQuestionProvider mockQuestionProvider;
 
   // Test layout for different screen sizes
-  List<Size> screenSizes = [
+  final screenSizes = <Size>[
     // Phone
-    Size(1080, 1920), Size(720, 1280), // Standard
-    Size(2200, 2480), Size(1536, 2151), // Foldable
+    const Size(1080, 1920), const Size(720, 1280), // Standard
+    const Size(2200, 2480), const Size(1536, 2151), // Foldable
     /* For some reason, Q/WVGA sizes give weird overflow errors that I can't
     replicate in the emulator with the same size, so I'll leave these commented
     for now:
@@ -67,22 +70,20 @@ void main() {
     Size(240, 432), Size(240, 400), Size(320, 480), Size(240, 320), // QVGA
    */
     // Tablet
-    Size(1800, 2560), Size(1536, 2048), Size(1200, 1920),
-    Size(1600, 2560), Size(600, 1024), Size(800, 1280),
+    const Size(1800, 2560), const Size(1536, 2048), const Size(1200, 1920),
+    const Size(1600, 2560), const Size(600, 1024), const Size(800, 1280),
   ];
 
   // Add landscape mode sizes
-  screenSizes.addAll(
-      List.from(screenSizes).map((size) => Size(size.height, size.width)));
+  screenSizes.addAll(List<Size>.from(screenSizes)
+      .map((size) => Size(size.height, size.width)));
 
   final TestWidgetsFlutterBinding binding =
       TestWidgetsFlutterBinding.ensureInitialized();
 
-  buildApp() => MultiProvider(
+  Widget buildApp() => MultiProvider(
         providers: [
           ChangeNotifierProvider<AuthProvider>(create: (_) => mockAuthProvider),
-          ChangeNotifierProvider<StorageProvider>(
-              create: (_) => mockStorageProvider),
           ChangeNotifierProvider<WebsiteProvider>(
               create: (_) => mockWebsiteProvider),
           ChangeNotifierProvider<FilterProvider>(
@@ -91,8 +92,10 @@ void main() {
               create: (_) => mockClassProvider),
           ChangeNotifierProvider<PersonProvider>(
               create: (_) => mockPersonProvider),
+          ChangeNotifierProvider<QuestionProvider>(
+              create: (_) => mockQuestionProvider),
         ],
-        child: MyApp(),
+        child: const MyApp(),
       );
 
   setUp(() async {
@@ -111,10 +114,6 @@ void main() {
         .thenAnswer((_) => Future.value(true));
     when(mockAuthProvider.currentUser)
         .thenAnswer((realInvocation) => Future.value(null));
-
-    mockStorageProvider = MockStorageProvider();
-    // ignore: invalid_use_of_protected_member
-    when(mockStorageProvider.hasListeners).thenReturn(false);
 
     mockWebsiteProvider = MockWebsiteProvider();
     // ignore: invalid_use_of_protected_member
@@ -358,10 +357,40 @@ void main() {
                 photo: 'https://cdn.worldvectorlogo.com/logos/flutter-logo.svg',
               ),
             ]));
+
+    mockQuestionProvider = MockQuestionProvider();
+    // ignore: invalid_use_of_protected_member
+    when(mockQuestionProvider.hasListeners).thenReturn(false);
+    when(mockQuestionProvider.fetchQuestions(context: anyNamed('context')))
+        .thenAnswer((realInvocation) => Future.value(<Question>[
+              Question(
+                  question: 'Care este programul la secretariat?',
+                  answer:
+                      'Secretariatul este deschis în timpul săptămânii între orele 9:00 si 11:00.',
+                  tags: ['Licență']),
+              Question(
+                  question: 'Cum mă conectez la eduroam?',
+                  answer:
+                      'Conectarea în rețeaua *eduroam* se face pe baza aceluiași cont folosit și pe site-ul de cursuri.',
+                  tags: ['Conectare', 'Informații'])
+            ]));
+    when(mockQuestionProvider.fetchQuestions(limit: anyNamed('limit')))
+        .thenAnswer((realInvocation) => Future.value(<Question>[
+              Question(
+                  question: 'Care este programul la secretariat?',
+                  answer:
+                      'Secretariatul este deschis în timpul săptămânii între orele 9:00 si 11:00.',
+                  tags: ['Licență']),
+              Question(
+                  question: 'Cum mă conectez la eduroam?',
+                  answer:
+                      'Conectarea în rețeaua *eduroam* se face pe baza aceluiași cont folosit și pe site-ul de cursuri.',
+                  tags: ['Conectare', 'Informații'])
+            ]));
   });
 
   group('Home', () {
-    for (var size in screenSizes) {
+    for (final size in screenSizes) {
       testWidgets('${size.width}x${size.height}', (WidgetTester tester) async {
         await binding.setSurfaceSize(size);
 
@@ -380,7 +409,7 @@ void main() {
   });
 
   group('Class', () {
-    for (var size in screenSizes) {
+    for (final size in screenSizes) {
       testWidgets('${size.width}x${size.height}', (WidgetTester tester) async {
         await binding.setSurfaceSize(size);
 
@@ -408,7 +437,7 @@ void main() {
       when(mockAuthProvider.uid).thenReturn('0');
     });
 
-    for (var size in screenSizes) {
+    for (final size in screenSizes) {
       testWidgets('${size.width}x${size.height}', (WidgetTester tester) async {
         await binding.setSurfaceSize(size);
 
@@ -420,7 +449,7 @@ void main() {
         await tester.pumpAndSettle();
 
         // Open add class view
-        await tester.tap(find.byIcon(Icons.add));
+        await tester.tap(find.byIcon(Icons.edit));
         await tester.pumpAndSettle();
 
         expect(find.byType(AddClassesPage), findsOneWidget);
@@ -447,7 +476,7 @@ void main() {
       when(mockAuthProvider.uid).thenReturn('0');
     });
 
-    for (var size in screenSizes) {
+    for (final size in screenSizes) {
       testWidgets('${size.width}x${size.height}', (WidgetTester tester) async {
         await binding.setSurfaceSize(size);
 
@@ -490,7 +519,7 @@ void main() {
   });
 
   group('Settings', () {
-    for (var size in screenSizes) {
+    for (final size in screenSizes) {
       testWidgets('${size.width}x${size.height}', (WidgetTester tester) async {
         await binding.setSurfaceSize(size);
 
@@ -507,7 +536,7 @@ void main() {
   });
 
   group('Portal', () {
-    for (var size in screenSizes) {
+    for (final size in screenSizes) {
       testWidgets('${size.width}x${size.height}', (WidgetTester tester) async {
         await binding.setSurfaceSize(size);
 
@@ -524,7 +553,7 @@ void main() {
   });
 
   group('Filter', () {
-    for (var size in screenSizes) {
+    for (final size in screenSizes) {
       testWidgets('${size.width}x${size.height}', (WidgetTester tester) async {
         await binding.setSurfaceSize(size);
 
@@ -552,7 +581,7 @@ void main() {
       when(mockAuthProvider.isAnonymous).thenReturn(false);
     });
 
-    for (var size in screenSizes) {
+    for (final size in screenSizes) {
       testWidgets('${size.width}x${size.height}', (WidgetTester tester) async {
         await binding.setSurfaceSize(size);
 
@@ -564,7 +593,8 @@ void main() {
         await tester.pumpAndSettle();
 
         // Open add website page
-        var addWebsiteButton = find.byKey(ValueKey('add_website_associations'));
+        final addWebsiteButton =
+            find.byKey(const ValueKey('add_website_associations'));
         await tester.ensureVisible(addWebsiteButton);
         await tester.pumpAndSettle();
 
@@ -588,7 +618,7 @@ void main() {
               permissionLevel: 3)));
     });
 
-    for (var size in screenSizes) {
+    for (final size in screenSizes) {
       testWidgets('${size.width}x${size.height}', (WidgetTester tester) async {
         await binding.setSurfaceSize(size);
 
@@ -627,7 +657,7 @@ void main() {
               permissionLevel: 3)));
     });
 
-    for (var size in screenSizes) {
+    for (final size in screenSizes) {
       testWidgets('${size.width}x${size.height}', (WidgetTester tester) async {
         await binding.setSurfaceSize(size);
 
@@ -684,7 +714,7 @@ void main() {
 
   group('Edit Profile', () {
     setUp(() {
-      when(mockAuthProvider.isVerifiedFromCache).thenReturn(true);
+      when(mockAuthProvider.isVerifiedFromCache).thenReturn(false);
       when(mockAuthProvider.isAuthenticatedFromCache).thenReturn(true);
       when(mockAuthProvider.isAnonymous).thenReturn(false);
       when(mockAuthProvider.currentUser).thenAnswer((realInvocation) =>
@@ -693,9 +723,12 @@ void main() {
               firstName: 'John',
               lastName: 'Doe',
               permissionLevel: 3)));
+      when(mockAuthProvider.currentUserFromCache).thenReturn(User(
+          uid: '1', firstName: 'John', lastName: 'Doe', permissionLevel: 3));
+      when(mockAuthProvider.email).thenReturn('john.doe@stud.acs.upb.ro');
     });
 
-    for (var size in screenSizes) {
+    for (final size in screenSizes) {
       testWidgets('${size.width}x${size.height}', (WidgetTester tester) async {
         await binding.setSurfaceSize(size);
 
@@ -707,15 +740,73 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(find.byType(EditProfilePage), findsOneWidget);
+      });
+
+      testWidgets('${size.width}x${size.height}, delete account',
+          (WidgetTester tester) async {
+        await binding.setSurfaceSize(size);
+
+        await tester.pumpWidget(buildApp());
+        await tester.pumpAndSettle();
+
+        // Open Edit Profile page
+        await tester.tap(find.byIcon(Icons.edit));
+        await tester.pumpAndSettle();
 
         //Open delete account popup
         await tester.tap(find.byIcon(Icons.more_vert));
         await tester.pumpAndSettle();
 
-         await tester.tap(find.text('Delete account') );
+        await tester.tap(find.text('Delete account'));
         await tester.pumpAndSettle();
 
-        expect(find.byKey(ValueKey('delete_account_button')), findsOneWidget);
+        expect(find.byKey(const ValueKey('delete_account_button')),
+            findsOneWidget);
+      });
+
+      testWidgets('${size.width}x${size.height}, change password',
+          (WidgetTester tester) async {
+        await binding.setSurfaceSize(size);
+
+        await tester.pumpWidget(buildApp());
+        await tester.pumpAndSettle();
+
+        // Open Edit Profile page
+        await tester.tap(find.byIcon(Icons.edit));
+        await tester.pumpAndSettle();
+
+        //Open change password popup
+        await tester.tap(find.byIcon(Icons.more_vert));
+        await tester.pumpAndSettle();
+
+        await tester.tap(find.text('Change password'));
+        await tester.pumpAndSettle();
+
+        expect(find.byKey(const ValueKey('change_password_button')),
+            findsOneWidget);
+      });
+
+      testWidgets('${size.width}x${size.height}, change email',
+          (WidgetTester tester) async {
+        await binding.setSurfaceSize(size);
+
+        await tester.pumpWidget(buildApp());
+        await tester.pumpAndSettle();
+
+        // Open Edit Profile page
+        await tester.tap(find.byIcon(Icons.edit));
+        await tester.pumpAndSettle();
+
+        // Edit the email
+        await tester.enterText(
+            find.text('john.doe'), 'johndoe@stud.acs.upb.ro');
+
+        //Open change email popup
+        await tester.tap(find.text('Save'));
+        await tester.pumpAndSettle();
+
+        expect(
+            find.byKey(const ValueKey('change_email_button')), findsOneWidget);
       });
     }
   });
@@ -726,11 +817,11 @@ void main() {
       when(mockAuthProvider.isAnonymous).thenReturn(true);
     });
 
-    for (var size in screenSizes) {
+    for (final size in screenSizes) {
       testWidgets('${size.width}x${size.height}', (WidgetTester tester) async {
         await binding.setSurfaceSize(size);
 
-        mockNetworkImagesFor(() async {
+        await mockNetworkImagesFor(() async {
           await tester.pumpWidget(buildApp());
           await tester.pumpAndSettle();
 
@@ -741,14 +832,45 @@ void main() {
           expect(find.byType(PeoplePage), findsOneWidget);
 
           // Open bottom sheet with person info
-          var names = ['John Doe', 'Jane Doe', 'Mary Poppins'];
-          for (var name in names) {
+          final names = ['John Doe', 'Jane Doe', 'Mary Poppins'];
+          for (final name in names) {
             await tester.tap(find.text(name));
             await tester.pumpAndSettle();
           }
 
           expect(find.byType(PersonView), findsOneWidget);
         });
+      });
+    }
+  });
+
+  group('Show faq page', () {
+    for (final size in screenSizes) {
+      testWidgets('${size.width}x${size.height}', (WidgetTester tester) async {
+        await binding.setSurfaceSize(size);
+
+        await tester.pumpWidget(buildApp());
+        await tester.pumpAndSettle();
+
+        // Open faq page
+        final showMoreFaq = find.byKey(const ValueKey('show_more_faq'));
+
+        await tester.tap(showMoreFaq);
+        await tester.pumpAndSettle();
+
+        expect(find.byType(FaqPage), findsOneWidget);
+
+        await tester.tap(find.byIcon(Icons.search));
+        await tester.pumpAndSettle();
+
+        expect(find.byType(SearchBar), findsOneWidget);
+
+        final cancelSearchBar = find.byKey(const ValueKey('cancel_search_bar'));
+
+        await tester.tap(cancelSearchBar);
+        await tester.pumpAndSettle();
+
+        expect(find.byType(SearchBar), findsNothing);
       });
     }
   });

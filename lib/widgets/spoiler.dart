@@ -4,21 +4,21 @@ import 'package:flutter/rendering.dart';
 const Duration _kExpand = Duration(milliseconds: 200);
 
 class AppSpoiler extends StatefulWidget {
+  AppSpoiler({
+    Key key,
+    this.title = '',
+    Widget content,
+    this.initiallyExpanded = true,
+    this.level = 0,
+  })  : content = content ?? Container(),
+        super(key: key);
+
   final String title;
   final Widget content;
   final bool initiallyExpanded;
 
   /// Level for nested spoilers; the higher the level, the smaller the font size
   final int level;
-
-  AppSpoiler({
-    Key key,
-    this.title = "",
-    Widget content,
-    this.initiallyExpanded = true,
-    this.level = 0,
-  })  : this.content = content ?? Container(),
-        super(key: key);
 
   @override
   _AppSpoilerState createState() => _AppSpoilerState();
@@ -29,7 +29,7 @@ class _AppSpoilerState extends State<AppSpoiler>
   static final Animatable<double> _easeInTween =
       CurveTween(curve: Curves.easeIn);
   static final Animatable<double> _halfTween =
-      Tween<double>(begin: 0.0, end: 0.5);
+      Tween<double>(begin: 0, end: 0.5);
 
   AnimationController _controller;
   Animation<double> _iconTurns;
@@ -42,8 +42,7 @@ class _AppSpoilerState extends State<AppSpoiler>
     _controller = AnimationController(duration: _kExpand, vsync: this);
     _iconTurns = _controller.drive(_halfTween.chain(_easeInTween));
 
-    _isExpanded = PageStorage.of(context)?.readState(context) as bool ??
-        widget.initiallyExpanded;
+    _isExpanded = widget.initiallyExpanded;
     if (_isExpanded) _controller.value = 1.0;
   }
 
@@ -59,7 +58,6 @@ class _AppSpoilerState extends State<AppSpoiler>
           });
         });
       }
-      PageStorage.of(context)?.writeState(context, _isExpanded);
     });
   }
 
@@ -68,7 +66,7 @@ class _AppSpoilerState extends State<AppSpoiler>
     return Theme(
       data: Theme.of(context).copyWith(
         dividerColor: Colors.transparent,
-        visualDensity: VisualDensity(
+        visualDensity: const VisualDensity(
           horizontal: VisualDensity.minimumDensity,
           vertical: VisualDensity.minimumDensity,
         ),
@@ -77,7 +75,7 @@ class _AppSpoilerState extends State<AppSpoiler>
         dense: true,
         child: ExpansionTile(
           title: Transform.translate(
-            offset: Offset(-20, 0),
+            offset: const Offset(-20, 0),
             child: Text(widget.title,
                 textAlign: TextAlign.left,
                 style: Theme.of(context)

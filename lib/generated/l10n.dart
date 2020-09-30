@@ -1,7 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-
 import 'intl/messages_all.dart';
 
 // **************************************************************************
@@ -794,11 +793,11 @@ class S {
     );
   }
 
-  /// `Add classes`
-  String get actionAddClasses {
+  /// `Choose classes`
+  String get actionChooseClasses {
     return Intl.message(
-      'Add classes',
-      name: 'actionAddClasses',
+      'Choose classes',
+      name: 'actionChooseClasses',
       desc: '',
       args: [],
     );
@@ -1344,6 +1343,26 @@ class S {
     );
   }
 
+  /// `Bachelor's`
+  String get filterNodeNameBSc {
+    return Intl.message(
+      'Bachelor\'s',
+      name: 'filterNodeNameBSc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Master's`
+  String get filterNodeNameMSc {
+    return Intl.message(
+      'Master\'s',
+      name: 'filterNodeNameMSc',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Only me`
   String get relevanceOnlyMe {
     return Intl.message(
@@ -1824,11 +1843,11 @@ class S {
     );
   }
 
-  /// `Get started by pressing the + button above.`
-  String get messageGetStartedPlusButton {
+  /// `Get started by pressing the button above.`
+  String get messageGetStartedButton {
     return Intl.message(
-      'Get started by pressing the + button above.',
-      name: 'messageGetStartedPlusButton',
+      'Get started by pressing the button above.',
+      name: 'messageGetStartedButton',
       desc: '',
       args: [],
     );
@@ -1889,6 +1908,16 @@ class S {
     return Intl.message(
       'Try to choose the most restrictive category.',
       name: 'infoRelevance',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Select the classes you are interested in.`
+  String get infoChooseClasses {
+    return Intl.message(
+      'Select the classes you are interested in.',
+      name: 'infoChooseClasses',
       desc: '',
       args: [],
     );

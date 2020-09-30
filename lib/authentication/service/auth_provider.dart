@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:acs_upb_mobile/authentication/model/user.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
-import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
 import 'package:acs_upb_mobile/resources/validator.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -30,20 +29,21 @@ extension DatabaseUser on User {
 }
 
 class AuthProvider with ChangeNotifier {
-  FirebaseUser _firebaseUser;
-  StreamSubscription _userAuthSub;
-  User _currentUser;
-
   AuthProvider() {
     _userAuthSub = FirebaseAuth.instance.onAuthStateChanged.listen((newUser) {
       print('AuthProvider - FirebaseAuth - onAuthStateChanged - $newUser');
       _firebaseUser = newUser;
+      _currentUser = null;
       _fetchUser();
       notifyListeners();
-    }, onError: (e) {
+    }, onError: (dynamic e) {
       print('AuthProvider - FirebaseAuth - onAuthStateChanged - $e');
     });
   }
+
+  FirebaseUser _firebaseUser;
+  StreamSubscription<FirebaseUser> _userAuthSub;
+  User _currentUser;
 
   @override
   void dispose() {
@@ -54,7 +54,7 @@ class AuthProvider with ChangeNotifier {
     super.dispose();
   }
 
-  void _errorHandler(e, context) {
+  void _errorHandler(dynamic e, BuildContext context) {
     try {
       print(e.message);
       if (context != null) {
@@ -73,9 +73,8 @@ class AuthProvider with ChangeNotifier {
             AppToast.show(S.of(context).errorAccountDisabled);
             break;
           case 'ERROR_TOO_MANY_REQUESTS':
-            AppToast.show(S.of(context).errorTooManyRequests +
-                ' ' +
-                S.of(context).warningTryAgainLater);
+            AppToast.show(
+                '${S.of(context).errorTooManyRequests} ${S.of(context).warningTryAgainLater}');
             break;
           case 'ERROR_EMAIL_ALREADY_IN_USE':
             AppToast.show(S.of(context).errorEmailInUse);
@@ -96,8 +95,8 @@ class AuthProvider with ChangeNotifier {
       return true;
     }
 
-    bool isAnonymousUser = true;
-    for (UserInfo info in _firebaseUser.providerData) {
+    var isAnonymousUser = true;
+    for (final info in _firebaseUser.providerData) {
       if (info.providerId == 'facebook.com' ||
           info.providerId == 'google.com' ||
           info.providerId == 'password') {
@@ -132,7 +131,7 @@ class AuthProvider with ChangeNotifier {
 
   /// Check the filesystem to see if there is a user authenticated.
   ///
-  /// This method is [async] and should only be necessary on app startup, since
+  /// This method is `async` and should only be necessary on app startup, since
   /// for everything else, the [AuthProvider] will notify its listeners and
   /// update the cache if the authentication state changes.
   Future<bool> get isAuthenticatedFromService async {
@@ -156,14 +155,7 @@ class AuthProvider with ChangeNotifier {
   /// In the new format, the class is simply a `List<String>` that contains the
   /// name of the nodes.
   Future<void> migrateToNewClassFormat(Map<String, dynamic> userData) async {
-    List<String> classes = [
-      'degree',
-      'domain',
-      'year',
-      'series',
-      'group',
-      'subgroup'
-    ]
+    final classes = ['degree', 'domain', 'year', 'series', 'group', 'subgroup']
         .map((key) => userData['class'][key].toString())
         .where((s) => s != 'null')
         .toList();
@@ -180,16 +172,18 @@ class AuthProvider with ChangeNotifier {
     if (isAnonymous) {
       return null;
     }
-    DocumentSnapshot snapshot = await Firestore.instance
+    final snapshot = await Firestore.instance
         .collection('users')
         .document(_firebaseUser.uid)
         .get();
     if (snapshot.data == null) return null;
 
-    if (isOldFormat(snapshot.data))
+    if (isOldFormat(snapshot.data)) {
       await migrateToNewClassFormat(snapshot.data);
+    }
 
     _currentUser = DatabaseUser.fromSnap(snapshot);
+    notifyListeners();
     return _currentUser;
   }
 
@@ -198,7 +192,7 @@ class AuthProvider with ChangeNotifier {
   User get currentUserFromCache => _currentUser;
 
   Future<bool> signInAnonymously({BuildContext context}) async {
-    return FirebaseAuth.instance.signInAnonymously().catchError((e) {
+    return FirebaseAuth.instance.signInAnonymously().catchError((dynamic e) {
       _errorHandler(e, context);
       return false;
     }).then((_) => true);
@@ -208,7 +202,7 @@ class AuthProvider with ChangeNotifier {
     bool result = false;
     await _firebaseUser.updatePassword(password).then((_) {
       result = true;
-    }).catchError((e) {
+    }).catchError((dynamic e) {
       _errorHandler(e, context);
       result = false;
     });
@@ -219,7 +213,7 @@ class AuthProvider with ChangeNotifier {
     bool result = false;
     await _firebaseUser.updateEmail(email).then((_) {
       result = true;
-    }).catchError((e) {
+    }).catchError((dynamic e) {
       _errorHandler(e, context);
       result = false;
     });
@@ -227,7 +221,7 @@ class AuthProvider with ChangeNotifier {
   }
 
   Future<bool> verifyPassword({String password, BuildContext context}) async {
-    return await signIn(
+    return signIn(
         email: _firebaseUser.email, password: password, context: context);
   }
 
@@ -241,9 +235,9 @@ class AuthProvider with ChangeNotifier {
       return false;
     }
 
-    List<String> providers = await FirebaseAuth.instance
+    final List<String> providers = await FirebaseAuth.instance
         .fetchSignInMethodsForEmail(email: email)
-        .catchError((e) {
+        .catchError((dynamic e) {
       _errorHandler(e, context);
       return null;
     });
@@ -259,33 +253,29 @@ class AuthProvider with ChangeNotifier {
       return false;
     }
 
-    AuthResult result = await FirebaseAuth.instance
+    final result = await FirebaseAuth.instance
         .signInWithEmailAndPassword(email: email, password: password)
-        .catchError((e) {
+        .catchError((dynamic e) {
       _errorHandler(e, context);
       return null;
     });
+    await _fetchUser();
     return result != null;
   }
 
-  Future<void> signOut(BuildContext context) async {
+  Future<void> signOut() async {
+    await FirebaseAuth.instance.signOut();
     if (isAnonymous) {
-      delete();
+      await delete();
     }
-
-    Provider.of<FilterProvider>(context, listen: false).resetFilter();
-    return await FirebaseAuth.instance.signOut();
   }
 
   Future<bool> delete({BuildContext context}) async {
-    if (_firebaseUser == null) {
-      _firebaseUser = await FirebaseAuth.instance.currentUser();
-    }
-
+    _firebaseUser ??= await FirebaseAuth.instance.currentUser();
     assert(_firebaseUser != null);
 
     try {
-      DocumentReference ref =
+      final DocumentReference ref =
           Firestore.instance.collection('users').document(_firebaseUser.uid);
       await ref.delete();
 
@@ -311,7 +301,7 @@ class AuthProvider with ChangeNotifier {
       _errorHandler(e, context);
       return false;
     }
-    bool accountExists = providers.contains('password');
+    final bool accountExists = providers.contains('password');
     if (!accountExists && context != null) {
       AppToast.show(S.of(context).errorEmailNotFound);
     }
@@ -327,7 +317,7 @@ class AuthProvider with ChangeNotifier {
       _errorHandler(e, context);
       return false;
     }
-    bool accountExists = providers.isNotEmpty;
+    final bool accountExists = providers.isNotEmpty;
     if (accountExists && context != null) {
       AppToast.show(S.of(context).warningEmailInUse(email));
     }
@@ -352,13 +342,13 @@ class AuthProvider with ChangeNotifier {
   /// Create a new user with the data in [info].
   Future<bool> signUp({Map<String, dynamic> info, BuildContext context}) async {
     try {
-      String email = info[S.of(context).labelEmail];
-      String password = info[S.of(context).labelPassword];
-      String confirmPassword = info[S.of(context).labelConfirmPassword];
-      String firstName = info[S.of(context).labelFirstName];
-      String lastName = info[S.of(context).labelLastName];
+      final email = info[S.of(context).labelEmail];
+      final password = info[S.of(context).labelPassword];
+      final confirmPassword = info[S.of(context).labelConfirmPassword];
+      final firstName = info[S.of(context).labelFirstName];
+      final lastName = info[S.of(context).labelLastName];
 
-      List<String> classes = info['class'] ?? null;
+      final classes = info['class'];
 
       if (email == null || email == '') {
         AppToast.show(S.of(context).errorInvalidEmail);
@@ -380,19 +370,19 @@ class AuthProvider with ChangeNotifier {
         return false;
       }
 
-      String errorString = AppValidator.isStrongPassword(password, context);
+      final errorString = AppValidator.isStrongPassword(password, context);
       if (errorString != null) {
         AppToast.show(errorString);
         return false;
       }
 
       // Create user
-      AuthResult res = await FirebaseAuth.instance
+      final AuthResult res = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(email: email, password: password);
 
       // Update display name
-      var userUpdateInfo = UserUpdateInfo();
-      userUpdateInfo.displayName = firstName + ' ' + lastName;
+      final userUpdateInfo = UserUpdateInfo()
+        ..displayName = '$firstName $lastName';
       await res.user.updateProfile(userUpdateInfo);
 
       // Update user with updated info
@@ -400,14 +390,14 @@ class AuthProvider with ChangeNotifier {
       _firebaseUser = await FirebaseAuth.instance.currentUser();
 
       // Create document in 'users'
-      var user = User(
+      final user = User(
         uid: res.user.uid,
         firstName: firstName,
         lastName: lastName,
         classes: classes,
       );
 
-      DocumentReference ref =
+      final DocumentReference ref =
           Firestore.instance.collection('users').document(user.uid);
       await ref.setData(user.toData());
 
@@ -415,9 +405,8 @@ class AuthProvider with ChangeNotifier {
       await _firebaseUser.sendEmailVerification();
 
       if (context != null) {
-        AppToast.show(S.of(context).messageAccountCreated +
-            ' ' +
-            S.of(context).messageCheckEmailVerification);
+        AppToast.show(
+            '${S.of(context).messageAccountCreated} ${S.of(context).messageCheckEmailVerification}');
       }
 
       notifyListeners();
@@ -449,24 +438,25 @@ class AuthProvider with ChangeNotifier {
   Future<bool> updateProfile(
       {Map<String, dynamic> info, BuildContext context}) async {
     try {
-      String firstName = info[S.of(context).labelFirstName];
-      String lastName = info[S.of(context).labelLastName];
+      final firstName = info[S.of(context).labelFirstName];
+      final lastName = info[S.of(context).labelLastName];
 
-      List<String> classes = info['class'] ?? null;
+      final classes = info['class'];
 
-      User user =
-          await Provider.of<AuthProvider>(context, listen: false).currentUser;
-      user.firstName = firstName;
-      user.lastName = lastName;
-      user.classes = classes;
+      final User user =
+          await Provider.of<AuthProvider>(context, listen: false).currentUser
+            ..firstName = firstName
+            ..lastName = lastName
+            ..classes = classes;
 
-      Firestore.instance
+      await Firestore.instance
           .collection('users')
           .document(user.uid)
           .updateData(user.toData());
 
-      var userUpdateInfo = UserUpdateInfo();
-      userUpdateInfo.displayName = firstName + ' ' + lastName;
+      // Update display name
+      final userUpdateInfo = UserUpdateInfo()
+        ..displayName = '$firstName $lastName';
       await _firebaseUser.updateProfile(userUpdateInfo);
 
       notifyListeners();

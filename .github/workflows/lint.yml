@@ -1,4 +1,9 @@
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+
 name: Linter
 jobs:
   lint:
@@ -6,9 +11,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
-      - uses: actions/setup-java@v1
-        with:
-          java-version: '12.x'
       - uses: subosito/flutter-action@v1
         with:
           channel: 'beta'
@@ -28,13 +30,17 @@ jobs:
       - name: Install ruby gems
         run: |
           gem install bundler
-          bundle install --without documentation
+          bundle config set without 'documentation'
+          bundle install
         if: github.event_name == 'pull_request'
       - name: Run danger on generated report
         uses: MeilCli/danger-action@v1
-        if: github.event_name == 'pull_request'
+        if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
         with:
           danger_file: Dangerfile
           danger_id: "danger-pr"
         env:
-          DANGER_GITHUB_API_TOKEN: ${{ secrets.GH_TOKEN }}
+          DANGER_GITHUB_API_TOKEN: ${{ secrets.BOT_TOKEN }}
+
+      - name: Check formattting
+        run: find . -name *.dart -not -path "./lib/generated/*" -exec flutter format --set-exit-if-changed --dry-run {} +

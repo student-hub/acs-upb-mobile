@@ -80,7 +80,7 @@
   "actionAddEvent": "Adaugă eveniment",
   "actionEditEvent": "Modifică eveniment",
   "actionDeleteEvent": "Șterge eveniment",
-  "actionAddClasses": "Adaugă materii",
+  "actionChooseClasses": "Alege materii",
   "actionAddShortcut": "Adaugă scurtătură",
   "actionDeleteShortcut": "Șterge scurtătură",
   "actionShowMore": "Arată mai multe",
@@ -139,6 +139,9 @@
   "filterMenuShowAll": "Arată tot",
   "filterMenuShowMine": "Arată doar pe ale mele",
   "filterMenuRelevance": "Filtrează după relevanță",
+
+  "filterNodeNameBSc": "Licență",
+  "filterNodeNameMSc": "Masterat",
 
   "relevanceOnlyMe": "Doar eu",
   "relevanceAnyone": "Oricine",
@@ -200,6 +203,7 @@
 
   "infoPasswordResetEmailSent": "Please check your inbox for the password reset e-mail.",
   "infoRelevance": "Încercați să selectați cea mai restrictivă categorie.",
+  "infoChooseClasses": "Selectați materiile care vă interesează.",
   "infoRelevanceNothingSelected": "Nu selectați nimic dacă este relevant pentru toată lumea.",
   "infoRelevanceExample": "De exemplu, dacă ceva este relevant doar pentru \"314CB\" și \"315CB\", nu setați direct \"CB\".",
   "infoPassword": "Aceasta trebuie să conțină majuscule, minuscule și cel puțin un număr sau un simbol, având minimum 8 caractere.",

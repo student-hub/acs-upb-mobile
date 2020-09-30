@@ -2,8 +2,6 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 
 class CustomBoxShadow extends BoxShadow {
-  final BlurStyle blurStyle;
-
   const CustomBoxShadow({
     Color color = Colors.black12,
     Offset offset = Offset.zero,
@@ -11,11 +9,13 @@ class CustomBoxShadow extends BoxShadow {
     this.blurStyle = BlurStyle.outer,
   }) : super(color: color, offset: offset, blurRadius: blurRadius);
 
+  final BlurStyle blurStyle;
+
   @override
   Paint toPaint() {
     final Paint result = Paint()
       ..color = color
-      ..maskFilter = MaskFilter.blur(this.blurStyle, blurSigma);
+      ..maskFilter = MaskFilter.blur(blurStyle, blurSigma);
     assert(() {
       if (debugDisableShadows) result.maskFilter = null;
       return true;
@@ -25,12 +25,27 @@ class CustomBoxShadow extends BoxShadow {
 }
 
 class CircleImage extends StatelessWidget {
+  const CircleImage(
+      {Key key,
+        this.image,
+        this.icon,
+        this.onTap,
+        this.label,
+        this.tooltip,
+        double circleSize,
+        bool enableOverlay,
+        this.overlayIcon,
+        this.overlayColor})
+      : circleSize = circleSize ?? 80,
+        enableOverlay = enableOverlay ?? false,
+        super(key: key);
+
   final ImageProvider<dynamic> image;
 
   /// An icon can be used if no image is provided
   final Icon icon;
 
-  final Function() onTap;
+  final void Function() onTap;
 
   final String label;
 
@@ -45,24 +60,9 @@ class CircleImage extends StatelessWidget {
 
   final Color overlayColor;
 
-  const CircleImage(
-      {Key key,
-      this.image,
-      this.icon,
-      this.onTap,
-      this.label,
-      this.tooltip,
-      double circleSize,
-      bool enableOverlay,
-      this.overlayIcon,
-      this.overlayColor})
-      : circleSize = circleSize ?? 80,
-        enableOverlay = enableOverlay ?? false,
-        super(key: key);
-
   @override
   Widget build(BuildContext context) {
-    var circleImage = GestureDetector(
+    final circleImage = GestureDetector(
       onTap: onTap,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -78,8 +78,8 @@ class CircleImage extends StatelessWidget {
                   decoration: image != null
                       ? BoxDecoration(
                           boxShadow: [
-                            CustomBoxShadow(blurRadius: 12.0),
-                            CustomBoxShadow(blurRadius: 10.0),
+                            const CustomBoxShadow(blurRadius: 12),
+                            const CustomBoxShadow(blurRadius: 10),
                           ],
                           shape: BoxShape.circle,
                           image: DecorationImage(
@@ -94,8 +94,8 @@ class CircleImage extends StatelessWidget {
                         )
                       : BoxDecoration(
                           boxShadow: [
-                            CustomBoxShadow(blurRadius: 12.0),
-                            CustomBoxShadow(blurRadius: 10.0),
+                            const CustomBoxShadow(blurRadius: 12),
+                            const CustomBoxShadow(blurRadius: 10),
                           ],
                           shape: BoxShape.circle,
                           color: Theme.of(context)
@@ -104,36 +104,35 @@ class CircleImage extends StatelessWidget {
                         ),
                   child: icon,
                 ),
-                enableOverlay
-                    ? Container(
-                        width: circleSize,
-                        height: circleSize,
-                        child: Center(
-                          child: overlayIcon ??
-                              Icon(
-                                Icons.edit,
-                                color: Colors.grey[700],
-                              ),
-                        ),
-                      )
-                    : Container(),
+                if (enableOverlay)
+                  Container(
+                    width: circleSize,
+                    height: circleSize,
+                    child: Center(
+                      child: overlayIcon ??
+                          Icon(
+                            Icons.edit,
+                            color: Colors.grey[700],
+                          ),
+                    ),
+                  ),
               ],
             ),
           ),
-          label != null
-              ? Container(
-                  height: 40.0,
-                  width: circleSize,
-                  child: Center(
-                    child: AutoSizeText(
-                      label,
-                      textAlign: TextAlign.center,
-                      minFontSize: 10,
-                      maxLines: 2,
-                      wrapWords: false,
-                    ),
-                  ))
-              : Container(),
+          if (label != null)
+            Container(
+              height: 40,
+              width: circleSize,
+              child: Center(
+                child: AutoSizeText(
+                  label,
+                  textAlign: TextAlign.center,
+                  minFontSize: 10,
+                  maxLines: 2,
+                  wrapWords: false,
+                ),
+              ),
+            ),
         ],
       ),
     );

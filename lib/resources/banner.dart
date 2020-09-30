@@ -7,17 +7,17 @@ class UniBanner extends StatelessWidget {
   Widget build(BuildContext context) => Row(
         children: <Widget>[
           Padding(
-            padding: const EdgeInsets.only(bottom: 4.0),
+            padding: const EdgeInsets.only(bottom: 4),
             child: Row(
               children: <Widget>[
                 Image.asset(
-                  "assets/icons/acs_logo.png",
-                  height: 80.0,
+                  'assets/icons/acs_logo.png',
+                  height: 80,
                 ),
                 Image.asset(
                   S.of(context).fileAcsBanner,
                   color: Theme.of(context).textTheme.headline6.color,
-                  height: 50.0,
+                  height: 50,
                 ),
               ],
             ),

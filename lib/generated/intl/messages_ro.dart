@@ -39,12 +39,12 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
-    "actionAddClasses" : MessageLookupByLibrary.simpleMessage("Adaugă materii"),
     "actionAddEvent" : MessageLookupByLibrary.simpleMessage("Adaugă eveniment"),
     "actionAddShortcut" : MessageLookupByLibrary.simpleMessage("Adaugă scurtătură"),
     "actionAddWebsite" : MessageLookupByLibrary.simpleMessage("Adaugă website"),
     "actionChangeEmail" : MessageLookupByLibrary.simpleMessage("Schimbă email"),
     "actionChangePassword" : MessageLookupByLibrary.simpleMessage("Schimbă parola"),
+    "actionChooseClasses" : MessageLookupByLibrary.simpleMessage("Alege materii"),
     "actionContribute" : MessageLookupByLibrary.simpleMessage("Contribuie"),
     "actionDeleteAccount" : MessageLookupByLibrary.simpleMessage("Ștergere cont"),
     "actionDeleteEvent" : MessageLookupByLibrary.simpleMessage("Șterge eveniment"),
@@ -90,6 +90,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "filterMenuRelevance" : MessageLookupByLibrary.simpleMessage("Filtrează după relevanță"),
     "filterMenuShowAll" : MessageLookupByLibrary.simpleMessage("Arată tot"),
     "filterMenuShowMine" : MessageLookupByLibrary.simpleMessage("Arată doar pe ale mele"),
+    "filterNodeNameBSc" : MessageLookupByLibrary.simpleMessage("Licență"),
+    "filterNodeNameMSc" : MessageLookupByLibrary.simpleMessage("Masterat"),
     "hintEmail" : MessageLookupByLibrary.simpleMessage("john.doe"),
     "hintEvaluation" : MessageLookupByLibrary.simpleMessage("Examen final"),
     "hintFirstName" : MessageLookupByLibrary.simpleMessage("John"),
@@ -100,6 +102,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "hintWebsiteLabel" : MessageLookupByLibrary.simpleMessage("Google"),
     "hintWebsiteLink" : MessageLookupByLibrary.simpleMessage("http://google.com"),
     "infoAppIsOpenSource" : MessageLookupByLibrary.simpleMessage("ACS UPB Mobile este open source."),
+    "infoChooseClasses" : MessageLookupByLibrary.simpleMessage("Selectați materiile care vă interesează."),
     "infoEmail" : m2,
     "infoPassword" : MessageLookupByLibrary.simpleMessage("Aceasta trebuie să conțină majuscule, minuscule și cel puțin un număr sau un simbol, având minimum 8 caractere."),
     "infoPasswordResetEmailSent" : MessageLookupByLibrary.simpleMessage("Please check your inbox for the password reset e-mail."),
@@ -149,7 +152,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "messageDeleteWebsite" : MessageLookupByLibrary.simpleMessage("Sunteți sigur că doriți să ștergeți acest website?"),
     "messageEditProfileSuccess" : MessageLookupByLibrary.simpleMessage("Profilul a fost actualizat cu succes."),
     "messageEmailNotVerified" : MessageLookupByLibrary.simpleMessage("Contul nu este verificat."),
-    "messageGetStartedPlusButton" : MessageLookupByLibrary.simpleMessage("Începeți prin a apăsa butonul + de mai sus."),
     "messageIAgreeToThe" : MessageLookupByLibrary.simpleMessage("Sunt de acord cu "),
     "messageNewUser" : MessageLookupByLibrary.simpleMessage("Utilizator nou?"),
     "messageNoClassesYet" : MessageLookupByLibrary.simpleMessage("Nu ați adăugat nici o materie încă."),

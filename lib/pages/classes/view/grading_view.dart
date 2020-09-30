@@ -10,31 +10,30 @@ import 'package:provider/provider.dart';
 import 'package:quiver/iterables.dart';
 
 class GradingChart extends StatefulWidget {
-  final Map<String, double> grading;
-  final bool withHeader;
-  final Function(Map<String, double>) onSave;
-
   const GradingChart(
       {Key key, this.grading, this.withHeader = true, this.onSave})
       : super(key: key);
+
+  final Map<String, double> grading;
+  final bool withHeader;
+  final void Function(Map<String, double>) onSave;
 
   @override
   _GradingChartState createState() => _GradingChartState();
 }
 
 class _GradingChartState extends State<GradingChart> {
-  Map<String, double> get gradingDataMap =>
-      widget.grading?.map((name, value) => MapEntry(
-          (name ?? '') + '\n' + (value ?? 0.0).toString() + 'p', value ?? 0.0));
+  Map<String, double> get gradingDataMap => widget.grading?.map((name, value) =>
+      MapEntry('${name ?? ''}\n${value ?? 0.0}p', value ?? 0.0));
 
   @override
   Widget build(BuildContext context) {
-    ClassProvider classProvider = Provider.of<ClassProvider>(context);
-    AuthProvider authProvider = Provider.of<AuthProvider>(context);
+    final classProvider = Provider.of<ClassProvider>(context);
+    final authProvider = Provider.of<AuthProvider>(context);
 
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(8),
         child: Column(
           children: <Widget>[
             if (widget.withHeader)
@@ -51,46 +50,47 @@ class _GradingChartState extends State<GradingChart> {
                         : () => AppToast.show(
                             S.of(context).warningNoPermissionToEditClassInfo),
                     child: IconButton(
-                      icon: Icon(Icons.edit),
-                      onPressed: authProvider
-                              .currentUserFromCache.canEditClassInfo
-                          ? () => Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) =>
-                                    ChangeNotifierProvider.value(
-                                  value: classProvider,
-                                  child: GradingView(
-                                    grading: widget.grading,
-                                    onSave: widget.onSave,
-                                  ),
-                                ),
-                              ))
-                          : null,
+                      icon: const Icon(Icons.edit),
+                      onPressed:
+                          authProvider.currentUserFromCache.canEditClassInfo
+                              ? () => Navigator.of(context).push(
+                                      MaterialPageRoute<ChangeNotifierProvider>(
+                                    builder: (context) =>
+                                        ChangeNotifierProvider.value(
+                                      value: classProvider,
+                                      child: GradingView(
+                                        grading: widget.grading,
+                                        onSave: widget.onSave,
+                                      ),
+                                    ),
+                                  ))
+                              : null,
                     ),
                   ),
                 ],
               ),
-            gradingDataMap != null
-                ? PieChart(
-                    dataMap: gradingDataMap,
-                    legendPosition: LegendPosition.left,
-                    legendStyle: Theme.of(context).textTheme.subtitle2,
-                    chartRadius: 250,
-                    chartValueStyle: Theme.of(context)
-                        .textTheme
-                        .subtitle2
-                        .copyWith(fontWeight: FontWeight.bold, fontSize: 12),
-                    decimalPlaces: 1,
-                  )
-                : Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Center(
-                      child: Text(
-                        S.of(context).labelUnknown,
-                        style:
-                            TextStyle(color: Theme.of(context).disabledColor),
-                      ),
-                    ),
+            if (gradingDataMap != null)
+              PieChart(
+                dataMap: gradingDataMap,
+                legendPosition: LegendPosition.left,
+                legendStyle: Theme.of(context).textTheme.subtitle2,
+                chartRadius: 250,
+                chartValueStyle: Theme.of(context)
+                    .textTheme
+                    .subtitle2
+                    .copyWith(fontWeight: FontWeight.bold, fontSize: 12),
+                decimalPlaces: 1,
+              )
+            else
+              Padding(
+                padding: const EdgeInsets.all(8),
+                child: Center(
+                  child: Text(
+                    S.of(context).labelUnknown,
+                    style: TextStyle(color: Theme.of(context).disabledColor),
                   ),
+                ),
+              ),
           ],
         ),
       ),
@@ -99,10 +99,10 @@ class _GradingChartState extends State<GradingChart> {
 }
 
 class GradingView extends StatefulWidget {
-  final Map<String, double> grading;
-  final Function(Map<String, double>) onSave;
-
   const GradingView({Key key, this.grading, this.onSave}) : super(key: key);
+
+  final Map<String, double> grading;
+  final void Function(Map<String, double>) onSave;
 
   @override
   _GradingViewState createState() => _GradingViewState();
@@ -133,17 +133,17 @@ class _GradingViewState extends State<GradingView> {
     updateTotal();
   }
 
-  void updateTotal() async {
+  Future<void> updateTotal() async {
     double total = 0;
-    valueControllers.forEach((controller) {
+    for (final controller in valueControllers) {
       if (controller.text != '' && controller.text != null) {
         total += double.parse(controller.text);
       }
-    });
+    }
     totalController.text = total.toString();
   }
 
-  void updateChart() async {
+  Future<void> updateChart() async {
     grading = {};
     nameControllers.asMap().forEach((i, nameController) {
       if (nameController.text != '' && nameController.text != null) {
@@ -158,7 +158,7 @@ class _GradingViewState extends State<GradingView> {
     setState(() {});
   }
 
-  void updateTextFields() async {
+  Future<void> updateTextFields() async {
     // Add new entry if last one is filled out
     if (nameControllers.last.text != '' &&
         nameControllers.last.text != null &&
@@ -171,14 +171,14 @@ class _GradingViewState extends State<GradingView> {
       focusNodes.add(FocusNode());
     }
 
-    for (var i in range(nameControllers.length - 1)) {
+    for (final i in range(nameControllers.length - 1)) {
       // Remove empty entries
       if ((nameControllers[i].text == '' || nameControllers[i].text == null) &&
           (valueControllers[i].text == '' ||
               valueControllers[i].text == null ||
               double.parse(valueControllers[i].text) == 0)) {
         // Remove focus
-        FocusScopeNode currentFocus = FocusScope.of(context);
+        final currentFocus = FocusScope.of(context);
         if (!currentFocus.hasPrimaryFocus) {
           currentFocus.unfocus();
         }
@@ -196,11 +196,11 @@ class _GradingViewState extends State<GradingView> {
   }
 
   List<Widget> buildTextFields() {
-    List<Widget> widgets = [];
+    final widgets = <Widget>[];
 
     for (var i = 0; i < focusNodes.length - 1; i += 2) {
-      var nameController = nameControllers[i ~/ 2];
-      var valueController = valueControllers[i ~/ 2];
+      final nameController = nameControllers[i ~/ 2];
+      final valueController = valueControllers[i ~/ 2];
 
       widgets.add(Row(
         children: [
@@ -211,7 +211,7 @@ class _GradingViewState extends State<GradingView> {
               controller: nameController,
               decoration: InputDecoration(
                 hintText: S.of(context).hintEvaluation,
-                prefixIcon: Icon(Icons.label),
+                prefixIcon: const Icon(Icons.label),
               ),
               validator: (value) {
                 if (i == focusNodes.length - 2) {
@@ -231,12 +231,13 @@ class _GradingViewState extends State<GradingView> {
                   FocusScope.of(context).requestFocus(focusNodes[i + 1]),
             ),
           ),
-          SizedBox(width: 16),
+          const SizedBox(width: 16),
           Expanded(
             child: TextFormField(
               focusNode: focusNodes[i + 1],
               controller: valueController,
-              keyboardType: TextInputType.numberWithOptions(decimal: true),
+              keyboardType:
+                  const TextInputType.numberWithOptions(decimal: true),
               decoration: InputDecoration(
                 hintText: S.of(context).hintPoints,
               ),
@@ -272,7 +273,7 @@ class _GradingViewState extends State<GradingView> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        FocusScopeNode currentFocus = FocusScope.of(context);
+        final currentFocus = FocusScope.of(context);
 
         if (!currentFocus.hasPrimaryFocus) {
           currentFocus.unfocus();
@@ -293,20 +294,20 @@ class _GradingViewState extends State<GradingView> {
         body: ListView(
           children: [
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(8),
               child: GradingChart(
                 grading: grading,
                 withHeader: false,
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(left: 16.0, right: 16.0),
+              padding: const EdgeInsets.only(left: 16, right: 16),
               child: Form(
                 key: formKey,
                 child: Column(
                   children: <Widget>[
                         Padding(
-                          padding: const EdgeInsets.all(8.0),
+                          padding: const EdgeInsets.all(8),
                           child: Row(
                             children: [
                               Expanded(
@@ -334,13 +335,13 @@ class _GradingViewState extends State<GradingView> {
                       ] +
                       buildTextFields() +
                       [
-                        Divider(),
+                        const Divider(),
                         Row(
                           children: [
                             Expanded(
                               flex: 3,
                               child: Padding(
-                                padding: const EdgeInsets.only(right: 16.0),
+                                padding: const EdgeInsets.only(right: 16),
                                 child: Text(
                                   'Total:',
                                   textAlign: TextAlign.right,

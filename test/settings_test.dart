@@ -1,5 +1,7 @@
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/main.dart';
+import 'package:acs_upb_mobile/pages/faq/model/question.dart';
+import 'package:acs_upb_mobile/pages/faq/service/question_provider.dart';
 import 'package:acs_upb_mobile/pages/portal/service/website_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -12,9 +14,12 @@ class MockAuthProvider extends Mock implements AuthProvider {}
 
 class MockWebsiteProvider extends Mock implements WebsiteProvider {}
 
+class MockQuestionProvider extends Mock implements QuestionProvider {}
+
 void main() {
   AuthProvider mockAuthProvider;
   WebsiteProvider mockWebsiteProvider;
+  MockQuestionProvider mockQuestionProvider;
 
   group('Settings', () {
     setUpAll(() async {
@@ -42,14 +47,24 @@ void main() {
           .thenAnswer((realInvocation) => Future.value(true));
       when(mockWebsiteProvider.fetchWebsites(any))
           .thenAnswer((_) => Future.value([]));
+
+      mockQuestionProvider = MockQuestionProvider();
+      // ignore: invalid_use_of_protected_member
+      when(mockQuestionProvider.hasListeners).thenReturn(false);
+      when(mockQuestionProvider.fetchQuestions(context: anyNamed('context')))
+          .thenAnswer((realInvocation) => Future.value(<Question>[]));
+      when(mockQuestionProvider.fetchQuestions(limit: anyNamed('limit')))
+          .thenAnswer((realInvocation) => Future.value(<Question>[]));
     });
 
     testWidgets('Dark Mode', (WidgetTester tester) async {
       await tester.pumpWidget(MultiProvider(providers: [
         ChangeNotifierProvider<AuthProvider>(create: (_) => mockAuthProvider),
         ChangeNotifierProvider<WebsiteProvider>(
-            create: (_) => mockWebsiteProvider)
-      ], child: MyApp()));
+            create: (_) => mockWebsiteProvider),
+        ChangeNotifierProvider<QuestionProvider>(
+            create: (_) => mockQuestionProvider)
+      ], child: const MyApp()));
       await tester.pumpAndSettle();
 
       MaterialApp app = find.byType(MaterialApp).evaluate().first.widget;
@@ -78,15 +93,17 @@ void main() {
       await tester.pumpWidget(MultiProvider(providers: [
         ChangeNotifierProvider<AuthProvider>(create: (_) => mockAuthProvider),
         ChangeNotifierProvider<WebsiteProvider>(
-            create: (_) => mockWebsiteProvider)
-      ], child: MyApp()));
+            create: (_) => mockWebsiteProvider),
+        ChangeNotifierProvider<QuestionProvider>(
+            create: (_) => mockQuestionProvider)
+      ], child: const MyApp()));
       await tester.pumpAndSettle();
 
       // Open settings
       await tester.tap(find.byIcon(Icons.settings));
       await tester.pumpAndSettle();
 
-      expect(find.text("Auto"), findsOneWidget);
+      expect(find.text('Auto'), findsOneWidget);
 
       // Romanian
       await tester.tap(find.text('Language'));
@@ -95,8 +112,8 @@ void main() {
       await tester.tap(find.text('Romanian'));
       await tester.pumpAndSettle();
 
-      expect(find.text("Setări"), findsOneWidget);
-      expect(find.text("Română"), findsOneWidget);
+      expect(find.text('Setări'), findsOneWidget);
+      expect(find.text('Română'), findsOneWidget);
 
       // English
       await tester.tap(find.text('Limbă'));
@@ -105,8 +122,8 @@ void main() {
       await tester.tap(find.text('Engleză'));
       await tester.pumpAndSettle();
 
-      expect(find.text("Settings"), findsOneWidget);
-      expect(find.text("English"), findsOneWidget);
+      expect(find.text('Settings'), findsOneWidget);
+      expect(find.text('English'), findsOneWidget);
 
       // Back to Auto (English)
       await tester.tap(find.text('Language'));
@@ -115,8 +132,8 @@ void main() {
       await tester.tap(find.text('Auto'));
       await tester.pumpAndSettle();
 
-      expect(find.text("Settings"), findsOneWidget);
-      expect(find.text("Auto"), findsOneWidget);
+      expect(find.text('Settings'), findsOneWidget);
+      expect(find.text('Auto'), findsOneWidget);
     });
   });
 }
