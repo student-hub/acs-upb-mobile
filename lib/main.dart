@@ -30,7 +30,6 @@ main() async {
 
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider<AuthProvider>(create: (_) => AuthProvider()),
-    ChangeNotifierProvider<StorageProvider>(create: (_) => StorageProvider()),
     ChangeNotifierProvider<WebsiteProvider>(create: (_) => WebsiteProvider()),
     ChangeNotifierProvider<ClassProvider>(create: (_) => ClassProvider()),
     ChangeNotifierProvider<PersonProvider>(create: (_) => PersonProvider()),

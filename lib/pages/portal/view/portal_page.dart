@@ -11,8 +11,6 @@ import 'package:acs_upb_mobile/pages/portal/model/website.dart';
 import 'package:acs_upb_mobile/pages/portal/service/website_provider.dart';
 import 'package:acs_upb_mobile/pages/portal/view/website_view.dart';
 import 'package:acs_upb_mobile/resources/custom_icons.dart';
-import 'package:acs_upb_mobile/resources/locale_provider.dart';
-import 'package:acs_upb_mobile/resources/storage_provider.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/widgets/circle_image.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
@@ -76,50 +74,34 @@ class _PortalPageState extends State<PortalPage>
   }
 
   Widget websiteCircle(Website website, double size) {
-    //print(website.iconPath);
-    StorageProvider storageProvider = Provider.of<StorageProvider>(context);
+    bool canEdit = editingEnabled &&
+        (website.isPrivate || (user.canEditPublicWebsite ?? false));
     return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: FutureBuilder(
-        //future: storageProvider.imageFromPath(website.iconPath),
-        future: storageProvider.findIconUrl(context, website.iconPath),
-        builder: (context, snapshot) {
-          var image;
-          if (snapshot.hasData) {
-            image = NetworkImage(snapshot.data);
-          }
-
-          bool canEdit = editingEnabled &&
-              (website.isPrivate || (user.canEditPublicWebsite ?? false));
-          return CircleImage(
-            label: website.label,
-            tooltip: website.infoByLocale[LocaleProvider.localeString],
-            image: image,
-            enableOverlay: canEdit,
-            circleSize: size,
-            onTap: () {
-              if (canEdit) {
-                Navigator.of(context).push(MaterialPageRoute(
-                  builder: (_) => ChangeNotifierProvider<FilterProvider>(
-                    create: (_) => FilterProvider(
-                        defaultDegree: website.degree,
-                        defaultRelevance: website.relevance),
-                    child: WebsiteView(
-                      website: website,
-                      updateExisting: true,
-                    ),
+        padding: const EdgeInsets.all(8.0),
+        child: WebsiteIcon(
+          website: website,
+          canEdit: canEdit,
+          size: size,
+          showWebsite: () {
+            if (canEdit) {
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (_) => ChangeNotifierProvider<FilterProvider>(
+                  create: (_) => FilterProvider(
+                      defaultDegree: website.degree,
+                      defaultRelevance: website.relevance),
+                  child: WebsiteView(
+                    website: website,
+                    updateExisting: true,
                   ),
-                ));
-              } else {
-                Provider.of<WebsiteProvider>(context, listen: false)
-                    .incrementNumberOfVisits(website);
-                Utils.launchURL(website.link);
-              }
-            },
-          );
-        },
-      ),
-    );
+                ),
+              ));
+            } else {
+              Provider.of<WebsiteProvider>(context, listen: false)
+                  .incrementNumberOfVisits(website);
+              Utils.launchURL(website.link);
+            }
+          },
+        ));
   }
 
   Widget listCategory(WebsiteCategory category, List<Website> websites) {

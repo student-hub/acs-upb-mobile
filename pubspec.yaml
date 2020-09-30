@@ -141,7 +141,6 @@ flutter:
 
   assets:
     - assets/icons/
-    - assets/icons/websites/
     - assets/illustrations/
     - assets/images/
     - packages/time_machine/data/cultures/cultures.bin

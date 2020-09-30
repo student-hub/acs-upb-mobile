@@ -134,27 +134,12 @@ class _WebsiteViewState extends State<WebsiteView> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         Expanded(
-                          child: FutureBuilder(
-                            future: Provider.of<StorageProvider>(context,
-                                    listen: false)
-                                .findIconUrl(context, website.iconPath),
-                            builder: (context, snapshot) {
-                              ImageProvider<dynamic> image =
-                                  AssetImage('assets/icons/globe.png');
-                              if (snapshot.hasData) {
-                                image = NetworkImage(snapshot.data);
-                              }
-                              return CircleImage(
-                                label: website.label,
-                                onTap: () => Utils.launchURL(website.link,
-                                    context: context),
-                                image: image,
-                                tooltip: website
-                                    .infoByLocale[LocaleProvider.localeString],
-                              );
-                            },
-                          ),
-                        ),
+                            child: WebsiteIcon(
+                          website: website,
+                          showWebsite: () {
+                            Utils.launchURL(website.link, context: context);
+                          },
+                        )),
                       ],
                     ),
                   ),
@@ -351,6 +336,37 @@ class _WebsiteViewState extends State<WebsiteView> {
           ],
         ),
       ),
+    );
+  }
+}
+
+class WebsiteIcon extends StatelessWidget {
+  final Website website;
+  final bool canEdit;
+  final double size;
+  final Function showWebsite;
+
+  WebsiteIcon({this.website, this.canEdit, this.size, this.showWebsite});
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+      future: StorageProvider.findImageUrl(context, website.iconPath),
+      builder: (context, snapshot) {
+        var image;
+        image = AssetImage('assets/icons/globe.png');
+        if (snapshot.hasData) {
+          image = NetworkImage(snapshot.data);
+        }
+
+        return CircleImage(
+            label: website.label,
+            tooltip: website.infoByLocale[LocaleProvider.localeString],
+            image: image,
+            enableOverlay: canEdit,
+            circleSize: size,
+            onTap: showWebsite);
+      },
     );
   }
 }
