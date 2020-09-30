@@ -562,7 +562,7 @@ void main() {
         ChangeNotifierProvider<PersonProvider>(
             create: (_) => mockPersonProvider),
         ChangeNotifierProvider<QuestionProvider>(
-            create: (_) => mockQuestionProvider)
+            create: (_) => mockQuestionProvider),
       ], child: MyApp(navigationObservers: [mockObserver])));
       await tester.pumpAndSettle();
 
