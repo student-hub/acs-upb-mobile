@@ -113,11 +113,41 @@ class S {
     );
   }
 
+  /// `Old password`
+  String get labelOldPassword {
+    return Intl.message(
+      'Old password',
+      name: 'labelOldPassword',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `New password`
+  String get labelNewPassword {
+    return Intl.message(
+      'New password',
+      name: 'labelNewPassword',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Confirm password`
   String get labelConfirmPassword {
     return Intl.message(
       'Confirm password',
       name: 'labelConfirmPassword',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Confirm new password`
+  String get labelConfirmNewPassword {
+    return Intl.message(
+      'Confirm new password',
+      name: 'labelConfirmNewPassword',
       desc: '',
       args: [],
     );
@@ -348,6 +378,16 @@ class S {
     return Intl.message(
       'Privacy Policy',
       name: 'labelPrivacyPolicy',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Personal information`
+  String get labelPersonalInformation {
+    return Intl.message(
+      'Personal information',
+      name: 'labelPersonalInformation',
       desc: '',
       args: [],
     );
@@ -593,6 +633,16 @@ class S {
     );
   }
 
+  /// `Edit profile`
+  String get actionEditProfile {
+    return Intl.message(
+      'Edit profile',
+      name: 'actionEditProfile',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Social login`
   String get actionSocialLogin {
     return Intl.message(
@@ -633,6 +683,16 @@ class S {
     );
   }
 
+  /// `Change email`
+  String get actionChangeEmail {
+    return Intl.message(
+      'Change email',
+      name: 'actionChangeEmail',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Send e-mail again?`
   String get actionSendVerificationAgain {
     return Intl.message(
@@ -648,6 +708,16 @@ class S {
     return Intl.message(
       'Delete account',
       name: 'actionDeleteAccount',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Change password`
+  String get actionChangePassword {
+    return Intl.message(
+      'Change password',
+      name: 'actionChangePassword',
       desc: '',
       args: [],
     );
@@ -743,11 +813,11 @@ class S {
     );
   }
 
-  /// `Add classes`
-  String get actionAddClasses {
+  /// `Choose classes`
+  String get actionChooseClasses {
     return Intl.message(
-      'Add classes',
-      name: 'actionAddClasses',
+      'Choose classes',
+      name: 'actionChooseClasses',
       desc: '',
       args: [],
     );
@@ -948,6 +1018,16 @@ class S {
     return Intl.message(
       'The password must be 8 characters long or more.',
       name: 'warningPasswordLength',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `The password must be different from the old one.`
+  String get warningSamePassword {
+    return Intl.message(
+      'The password must be different from the old one.',
+      name: 'warningSamePassword',
       desc: '',
       args: [],
     );
@@ -1223,6 +1303,16 @@ class S {
     );
   }
 
+  /// `People`
+  String get navigationPeople {
+    return Intl.message(
+      'People',
+      name: 'navigationPeople',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Settings`
   String get navigationSettings {
     return Intl.message(
@@ -1288,6 +1378,26 @@ class S {
     return Intl.message(
       'Filter by relevance',
       name: 'filterMenuRelevance',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Bachelor's`
+  String get filterNodeNameBSc {
+    return Intl.message(
+      'Bachelor\'s',
+      name: 'filterNodeNameBSc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Master's`
+  String get filterNodeNameMSc {
+    return Intl.message(
+      'Master\'s',
+      name: 'filterNodeNameMSc',
       desc: '',
       args: [],
     );
@@ -1643,6 +1753,16 @@ class S {
     );
   }
 
+  /// `Are you sure you want to change the account email to {email}?`
+  String messageChangeEmail(Object email) {
+    return Intl.message(
+      'Are you sure you want to change the account email to $email?',
+      name: 'messageChangeEmail',
+      desc: '',
+      args: [email],
+    );
+  }
+
   /// `Under construction`
   String get messageUnderConstruction {
     return Intl.message(
@@ -1763,11 +1883,11 @@ class S {
     );
   }
 
-  /// `Get started by pressing the + button above.`
-  String get messageGetStartedPlusButton {
+  /// `Get started by pressing the button above.`
+  String get messageGetStartedButton {
     return Intl.message(
-      'Get started by pressing the + button above.',
-      name: 'messageGetStartedPlusButton',
+      'Get started by pressing the button above.',
+      name: 'messageGetStartedButton',
       desc: '',
       args: [],
     );
@@ -1813,6 +1933,36 @@ class S {
     );
   }
 
+  /// `Profile updated successfully.`
+  String get messageEditProfileSuccess {
+    return Intl.message(
+      'Profile updated successfully.',
+      name: 'messageEditProfileSuccess',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Password changed successfully.`
+  String get messageChangePasswordSuccess {
+    return Intl.message(
+      'Password changed successfully.',
+      name: 'messageChangePasswordSuccess',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Email changed successfully`
+  String get messageChangeEmailSuccess {
+    return Intl.message(
+      'Email changed successfully',
+      name: 'messageChangeEmailSuccess',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `I will only upload information that is correct and accurate, to the best of my knowledge. I understand that submitting erroneous or offensive information on purpose will lead to my editing permissions being permanently revoked.`
   String get messageAgreePermissions {
     return Intl.message(
@@ -1838,6 +1988,26 @@ class S {
     return Intl.message(
       'Try to choose the most restrictive category.',
       name: 'infoRelevance',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Select the classes you are interested in.`
+  String get infoChooseClasses {
+    return Intl.message(
+      'Select the classes you are interested in.',
+      name: 'infoChooseClasses',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `If this is relevant for everyone, don't select anything .`
+  String get infoRelevanceNothingSelected {
+    return Intl.message(
+      'If this is relevant for everyone, don\'t select anything .',
+      name: 'infoRelevanceNothingSelected',
       desc: '',
       args: [],
     );
@@ -1873,11 +2043,31 @@ class S {
     );
   }
 
+  /// `This is the same username you use to log in to {forum}.`
+  String infoEmail(Object forum) {
+    return Intl.message(
+      'This is the same username you use to log in to $forum.',
+      name: 'infoEmail',
+      desc: '',
+      args: [forum],
+    );
+  }
+
   /// `@stud.acs.upb.ro`
   String get stringEmailDomain {
     return Intl.message(
       '@stud.acs.upb.ro',
       name: 'stringEmailDomain',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `cs.curs.pub.ro`
+  String get stringForum {
+    return Intl.message(
+      'cs.curs.pub.ro',
+      name: 'stringForum',
       desc: '',
       args: [],
     );

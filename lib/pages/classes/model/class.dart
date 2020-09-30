@@ -20,31 +20,28 @@ extension ShortcutTypeExtension on ShortcutType {
 }
 
 class Shortcut {
+  Shortcut({this.type, this.name, this.link, this.ownerUid});
+
   final ShortcutType type;
   final String name;
   final String link;
   final String ownerUid;
-
-  Shortcut({this.type, this.name, this.link, this.ownerUid});
 }
 
 class ClassHeader {
+  ClassHeader({this.id, this.name, this.acronym, this.category});
+
   final String id;
   final String name;
   final String acronym;
   final String category;
-
-  ClassHeader({this.id, this.name, this.acronym, this.category});
 }
 
 class Class {
+  Class({@required this.header, List<Shortcut> shortcuts, this.grading})
+      : shortcuts = shortcuts ?? [];
+
   ClassHeader header;
   final List<Shortcut> shortcuts;
   final Map<String, double> grading;
-
-  Class(
-      {@required this.header,
-      List<Shortcut> shortcuts,
-      this.grading})
-      : shortcuts = shortcuts ?? [];
 }

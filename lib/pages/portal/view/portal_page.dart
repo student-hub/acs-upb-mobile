@@ -4,9 +4,9 @@ import 'dart:math';
 import 'package:acs_upb_mobile/authentication/model/user.dart';
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
-import 'package:acs_upb_mobile/navigation/routes.dart';
 import 'package:acs_upb_mobile/pages/filter/model/filter.dart';
 import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
+import 'package:acs_upb_mobile/pages/filter/view/filter_page.dart';
 import 'package:acs_upb_mobile/pages/portal/model/website.dart';
 import 'package:acs_upb_mobile/pages/portal/service/website_provider.dart';
 import 'package:acs_upb_mobile/pages/portal/view/website_view.dart';
@@ -23,16 +23,16 @@ import 'package:provider/provider.dart';
 import 'package:recase/recase.dart';
 
 class PortalPage extends StatefulWidget {
-  PortalPage({Key key}) : super(key: key);
+  const PortalPage({Key key}) : super(key: key);
 
   @override
   _PortalPageState createState() => _PortalPageState();
 }
 
-class _PortalPageState extends State<PortalPage>
-    with AutomaticKeepAliveClientMixin {
+class _PortalPageState extends State<PortalPage> {
   Filter filterCache;
   List<Website> websites = [];
+  FilterProvider filterProvider;
 
   // Only show user-added websites
   bool userOnly = false;
@@ -43,28 +43,29 @@ class _PortalPageState extends State<PortalPage>
 
   bool updating;
 
-  _fetchUser() async {
-    AuthProvider authProvider = Provider.of(context, listen: false);
+  Future<void> _fetchUser() async {
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
     user = await authProvider.currentUser;
     if (mounted) {
       setState(() {});
     }
   }
 
-  initState() {
+  @override
+  void initState() {
     super.initState();
     _fetchUser();
     _updateFilter();
   }
 
-  _updateFilter() async {
+  Future<void> _updateFilter() async {
     // If updating is null, filter hasn't been initialized yet so it's not
     // technically "updating"
     if (updating != null) {
       updating = true;
     }
 
-    FilterProvider filterProvider =
+    final filterProvider = this.filterProvider ??
         Provider.of<FilterProvider>(context, listen: false);
     filterCache = await filterProvider.fetchFilter(context);
 
@@ -75,22 +76,20 @@ class _PortalPageState extends State<PortalPage>
   }
 
   Widget websiteCircle(Website website, double size) {
-    StorageProvider storageProvider = Provider.of<StorageProvider>(context);
-
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.all(8),
       child: FutureBuilder<ImageProvider<dynamic>>(
-        future: storageProvider.imageFromPath(website.iconPath),
+        future: StorageProvider.imageFromPath(website.iconPath),
         builder: (context, snapshot) {
-          var image;
+          ImageProvider image;
           if (snapshot.hasData) {
             image = snapshot.data;
           } else {
-            image = AssetImage('assets/' + website.iconPath) ??
-                AssetImage('assets/images/white.png');
+            image = AssetImage('assets/${website.iconPath}') ??
+                const AssetImage('assets/images/white.png');
           }
 
-          bool canEdit = editingEnabled &&
+          final bool canEdit = editingEnabled &&
               (website.isPrivate || (user.canEditPublicWebsite ?? false));
           return CircleImage(
             label: website.label,
@@ -98,19 +97,26 @@ class _PortalPageState extends State<PortalPage>
             image: image,
             enableOverlay: canEdit,
             circleSize: size,
-            onTap: () => canEdit
-                ? Navigator.of(context).push(MaterialPageRoute(
-                    builder: (_) => ChangeNotifierProvider<FilterProvider>(
-                      create: (_) => FilterProvider(
-                          defaultDegree: website.degree,
-                          defaultRelevance: website.relevance),
-                      child: WebsiteView(
-                        website: website,
-                        updateExisting: true,
-                      ),
+            onTap: () {
+              if (canEdit) {
+                Navigator.of(context)
+                    .push(MaterialPageRoute<ChangeNotifierProvider>(
+                  builder: (_) => ChangeNotifierProvider<FilterProvider>(
+                    create: (_) => FilterProvider(
+                        defaultDegree: website.degree,
+                        defaultRelevance: website.relevance),
+                    child: WebsiteView(
+                      website: website,
+                      updateExisting: true,
                     ),
-                  ))
-                : Utils.launchURL(website.link, context: context),
+                  ),
+                ));
+              } else {
+                Provider.of<WebsiteProvider>(context, listen: false)
+                    .incrementNumberOfVisits(website);
+                Utils.launchURL(website.link);
+              }
+            },
           );
         },
       ),
@@ -118,39 +124,41 @@ class _PortalPageState extends State<PortalPage>
   }
 
   Widget listCategory(WebsiteCategory category, List<Website> websites) {
-    bool hasContent = websites != null && websites.isNotEmpty;
+    final bool hasContent = websites != null && websites.isNotEmpty;
 
     // The width available for displaying the circles (screen width minus a left
     // right padding of 8)
-    double availableWidth = MediaQuery.of(context).size.width - 16;
+    final double availableWidth = MediaQuery.of(context).size.width - 16;
     // The maximum size of a circle, regardless of screen size
-    double maxCircleSize = 80;
+    const double maxCircleSize = 80;
     // The amount of circles that can fit on one row (given the screen size,
     // maximum circle size and the fact that there need to be at least 4 circles
     // on a row), including the padding.
-    int circlesPerRow = max(4, (availableWidth / (maxCircleSize + 16)).floor());
+    final int circlesPerRow =
+        max(4, (availableWidth / (maxCircleSize + 16)).floor());
     // The exact size of a circle (without the padding), so that they fit
     // perfectly in a row
-    double circleSize = availableWidth / circlesPerRow - 16;
+    final double circleSize = availableWidth / circlesPerRow - 16;
 
     Widget content;
     if (!hasContent) {
       // Display just the plus button (but set the height to mimic the rows with
       // content)
-      content = Container(
-        width: circleSize + 16.0,
-        height: circleSize +
-            16.0 + // padding
-            40.0, // text
-        child: Center(
+      content = Align(
+        alignment: Alignment.centerLeft,
+        child: Container(
+          width: circleSize + 16.0,
+          height: circleSize +
+              16.0 + // padding
+              40.0, // text
           child: _AddWebsiteButton(
-              key: ValueKey('add_website_' +
-                  ReCase(category.toLocalizedString(context)).snakeCase),
+              key: ValueKey(
+                  'add_website_${ReCase(category.toLocalizedString(context)).snakeCase}'),
               category: category),
         ),
       );
     } else {
-      List<Row> rows = [];
+      final rows = <Row>[];
 
       for (var i = 0; i < websites.length;) {
         List<Widget> children = [];
@@ -159,7 +167,7 @@ class _PortalPageState extends State<PortalPage>
         }
 
         // Add trailing "plus" button
-        if (i == websites.length - 1 || i == websites.length) {
+        if (i == websites.length) {
           if (children.length == circlesPerRow) {
             rows.add(Row(children: children));
             children = [];
@@ -167,8 +175,8 @@ class _PortalPageState extends State<PortalPage>
           children.add(Container(
             width: circleSize + 16,
             child: _AddWebsiteButton(
-              key: ValueKey('add_website_' +
-                  ReCase(category.toLocalizedString(context)).snakeCase),
+              key: ValueKey(
+                  'add_website_${ReCase(category.toLocalizedString(context)).snakeCase}'),
               category: category,
               size: circleSize * 0.6,
             ),
@@ -182,10 +190,10 @@ class _PortalPageState extends State<PortalPage>
     }
 
     return Padding(
-      padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+      padding: const EdgeInsets.only(left: 8, right: 8),
       child: AppSpoiler(
         title: category.toLocalizedString(context),
-        initialExpanded: hasContent,
+        initiallyExpanded: hasContent,
         content: content,
       ),
     );
@@ -194,12 +202,12 @@ class _PortalPageState extends State<PortalPage>
   List<Widget> listWebsitesByCategory(List<Website> websites) {
     assert(websites != null);
 
-    Map<WebsiteCategory, List<Website>> map = Map();
-    websites.forEach((website) {
-      var category = website.category;
-      map.putIfAbsent(category, () => List<Website>());
+    final map = <WebsiteCategory, List<Website>>{};
+    for (final website in websites) {
+      final category = website.category;
+      map.putIfAbsent(category, () => <Website>[]);
       map[category].add(website);
-    });
+    }
 
     return [
       WebsiteCategory.learning,
@@ -212,13 +220,12 @@ class _PortalPageState extends State<PortalPage>
 
   @override
   Widget build(BuildContext context) {
-    super.build(context);
+    final websiteProvider = Provider.of<WebsiteProvider>(context);
+    filterProvider = Provider.of<FilterProvider>(context);
+    final authProvider = Provider.of<AuthProvider>(context);
 
-    WebsiteProvider websiteProvider = Provider.of<WebsiteProvider>(context);
-    FilterProvider filterProvider = Provider.of<FilterProvider>(context);
-    AuthProvider authProvider = Provider.of<AuthProvider>(context);
-
-    CircularProgressIndicator progressIndicator = CircularProgressIndicator();
+    const CircularProgressIndicator progressIndicator =
+        CircularProgressIndicator();
 
     return AppScaffold(
       title: S.of(context).navigationPortal,
@@ -229,17 +236,17 @@ class _PortalPageState extends State<PortalPage>
               ? S.of(context).actionDisableEditing
               : S.of(context).actionEnableEditing,
           onPressed: () {
-            AuthProvider authProvider =
+            final authProvider =
                 Provider.of<AuthProvider>(context, listen: false);
             if (authProvider.isAuthenticatedFromCache &&
                 !authProvider.isAnonymous) {
               // Show message if there is nothing the user can edit
               if (!editingEnabled) {
                 user.hasEditableWebsites.then((canEdit) {
-                  if (!canEdit)
-                    AppToast.show(S.of(context).warningNothingToEdit +
-                        ' ' +
-                        S.of(context).messageAddCustomWebsite);
+                  if (!canEdit) {
+                    AppToast.show(
+                        '${S.of(context).warningNothingToEdit} ${S.of(context).messageAddCustomWebsite}');
+                  }
                 });
               }
 
@@ -254,9 +261,15 @@ class _PortalPageState extends State<PortalPage>
           tooltip: S.of(context).navigationFilter,
           items: {
             S.of(context).filterMenuRelevance: () {
-              _updateFilter();
               userOnly = false;
-              Navigator.pushNamed(context, Routes.filter);
+              Navigator.push(
+                context,
+                MaterialPageRoute<FilterPage>(
+                  builder: (_) => FilterPage(
+                    onSubmit: _updateFilter,
+                  ),
+                ),
+              );
             },
             S.of(context).filterMenuShowMine: () {
               if (authProvider.isAuthenticatedFromCache &&
@@ -264,8 +277,9 @@ class _PortalPageState extends State<PortalPage>
                 // Show message if user has no private websites
                 if (!userOnly) {
                   user.hasPrivateWebsites.then((hasPrivate) {
-                    if (!hasPrivate)
+                    if (!hasPrivate) {
                       AppToast.show(S.of(context).warningNoPrivateWebsite);
+                    }
                   });
 
                   _updateFilter();
@@ -303,7 +317,7 @@ class _PortalPageState extends State<PortalPage>
                   websites = websiteSnap.data;
                   return SingleChildScrollView(
                     child: Padding(
-                      padding: EdgeInsets.only(top: 12.0),
+                      padding: const EdgeInsets.only(top: 8),
                       child: Column(
                         children: listWebsitesByCategory(websites),
                       ),
@@ -311,50 +325,49 @@ class _PortalPageState extends State<PortalPage>
                   );
                 } else if (websiteSnap.hasError) {
                   print(websiteSnap.error);
-                  // TODO: Show error toast
+                  // TODO(IoanaAlexandru): Show error toast
                   return Container();
                 } else {
-                  return Center(child: progressIndicator);
+                  return const Center(child: progressIndicator);
                 }
               }),
           if (updating == true)
             Container(
                 color: Theme.of(context).disabledColor,
-                child: Center(child: CircularProgressIndicator())),
+                child: const Center(child: CircularProgressIndicator())),
         ],
       ),
     );
   }
-
-  @override
-  bool get wantKeepAlive => true;
 }
 
 class _AddWebsiteButton extends StatelessWidget {
-  final WebsiteCategory category;
-  final double size;
-
   const _AddWebsiteButton(
       {Key key, this.category = WebsiteCategory.learning, this.size = 50})
       : super(key: key);
+
+  final WebsiteCategory category;
+  final double size;
 
   @override
   Widget build(BuildContext context) => Tooltip(
         message: S.of(context).actionAddWebsite,
         child: GestureDetector(
           onTap: () {
-            AuthProvider authProvider =
+            final authProvider =
                 Provider.of<AuthProvider>(context, listen: false);
             if (authProvider.isAuthenticatedFromCache &&
                 !authProvider.isAnonymous) {
-              Navigator.of(context).push(MaterialPageRoute(
+              Navigator.of(context)
+                  .push(MaterialPageRoute<ChangeNotifierProvider>(
                 builder: (_) => ChangeNotifierProvider<FilterProvider>(
                     create: (_) => FilterProvider(),
                     child: WebsiteView(
                       website: Website(
+                          relevance: null,
                           id: null,
                           isPrivate: true,
-                          link: "",
+                          link: '',
                           category: category),
                     )),
               ));
@@ -363,13 +376,13 @@ class _AddWebsiteButton extends StatelessWidget {
             }
           },
           child: Padding(
-            padding: const EdgeInsets.only(top: 8.0, left: 8.0, right: 8.0),
+            padding: const EdgeInsets.only(top: 8, left: 8, right: 8),
             child: CircleImage(
               icon: Icon(
                 Icons.add,
                 color: Theme.of(context).unselectedWidgetColor,
               ),
-              label: "",
+              label: '',
               circleSize: size,
             ),
           ),

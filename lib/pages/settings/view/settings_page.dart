@@ -32,7 +32,7 @@ class SettingsPageState extends State<SettingsPage> {
                 child: PreferencePage(
                   [
                     Padding(
-                      padding: const EdgeInsets.only(top: 10.0),
+                      padding: const EdgeInsets.only(top: 10),
                       child: Container(
                           height: MediaQuery.of(context).size.height / 3,
                           child: Image.asset(
@@ -41,7 +41,7 @@ class SettingsPageState extends State<SettingsPage> {
                     PreferenceTitle(S.of(context).settingsTitlePersonalization),
                     SwitchPreference(
                       S.of(context).settingsItemDarkMode,
-                      "dark_mode",
+                      'dark_mode',
                       onEnable: () {
                         DynamicTheme.of(context).setBrightness(Brightness.dark);
                       },
@@ -66,45 +66,50 @@ class SettingsPageState extends State<SettingsPage> {
                         onlySaveOnSubmit: false,
                       ),
                     ),
-                    Divider(),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: IconText(
-                        icon: Icons.lock_outline,
-                        text: S.of(context).labelPrivacyPolicy,
-                        align: TextAlign.center,
-                        onTap: () => Utils.launchURL(
-                            'https://www.websitepolicies.com/policies/view/IIUFv381',
-                            context: context),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: IconText(
-                        icon: CustomIcons.github_brands,
-                        text: S.of(context).infoAppIsOpenSource,
-                        actionText: S.of(context).actionContribute,
-                        actionArrow: true,
-                        align: TextAlign.center,
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodyText1
-                            .apply(color: Theme.of(context).hintColor),
-                        onTap: () => Utils.launchURL(
-                            'https://github.com/acs-upb-mobile/acs-upb-mobile',
-                            context: context),
-                      ),
-                    ),
-                    Divider(),
-                    FlatButton(
-                      onPressed: () => {
-                        Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => AskPermissions())),
-                      },
-                      child: Text(
-                        S.of(context).labelAskPermissions,
-                        textAlign: TextAlign.center,
-                      ),
+                    const Divider(),
+                    Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8),
+                          child: IconText(
+                            icon: Icons.lock_outline,
+                            text: S.of(context).labelPrivacyPolicy,
+                            align: TextAlign.center,
+                            onTap: () => Utils.launchURL(
+                                'https://www.websitepolicies.com/policies/view/IIUFv381',
+                                context: context),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8),
+                          child: IconText(
+                            icon: CustomIcons.github_brands,
+                            text: S.of(context).infoAppIsOpenSource,
+                            actionText: S.of(context).actionContribute,
+                            actionArrow: true,
+                            align: TextAlign.center,
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyText1
+                                .apply(color: Theme.of(context).hintColor),
+                            onTap: () => Utils.launchURL(
+                                'https://github.com/acs-upb-mobile/acs-upb-mobile',
+                                context: context),
+                          ),
+                        ),
+                        Divider(),
+                        FlatButton(
+                          onPressed: () => {
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => AskPermissions())),
+                          },
+                          child: Text(
+                            S.of(context).labelAskPermissions,
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
@@ -116,7 +121,7 @@ class SettingsPageState extends State<SettingsPage> {
     );
   }
 
-  RadioPreference languageRadioPreference(
+  RadioPreference<String> languageRadioPreference(
       BuildContext context, String preference) {
     return RadioPreference(
       languagePrefString(context, preference),
@@ -147,7 +152,7 @@ class SettingsPageState extends State<SettingsPage> {
       case 'auto':
         return S.of(context).settingsItemLanguageAuto;
       default:
-        stderr.writeln("Invalid preference string: $preference");
+        stderr.writeln('Invalid preference string: $preference');
         return S.of(context).settingsItemLanguageAuto;
     }
   }

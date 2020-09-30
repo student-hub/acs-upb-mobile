@@ -1,11 +1,19 @@
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
-import 'package:acs_upb_mobile/navigation/routes.dart';
+import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class AppScaffoldAction {
+  AppScaffoldAction(
+      {this.icon,
+      this.route,
+      this.onPressed,
+      this.tooltip,
+      this.text,
+      this.items});
+
   // Icon for the action button
   final IconData icon;
 
@@ -13,7 +21,7 @@ class AppScaffoldAction {
   final String route;
 
   // Action that happens when the button is pressed. This overrides [route].
-  final Function() onPressed;
+  final void Function() onPressed;
 
   // Action button tooltip text
   final String tooltip;
@@ -24,24 +32,9 @@ class AppScaffoldAction {
   // Option-action map that should be specified if a popup menu is needed. It
   // overrides [route].
   final Map<String, void Function()> items;
-
-  AppScaffoldAction(
-      {this.icon,
-      this.route,
-      this.onPressed,
-      this.tooltip,
-      this.text,
-      this.items});
 }
 
 class AppScaffold extends StatelessWidget {
-  final Widget body;
-  final String title;
-  final Widget floatingActionButton;
-  final List<AppScaffoldAction> actions;
-  final AppScaffoldAction leading;
-  final bool needsToBeAuthenticated;
-
   AppScaffold({
     this.body,
     this.title,
@@ -49,7 +42,14 @@ class AppScaffold extends StatelessWidget {
     this.floatingActionButton,
     this.leading,
     this.needsToBeAuthenticated = false,
-  }) : this.actions = actions ?? [];
+  }) : actions = actions ?? [];
+
+  final Widget body;
+  final String title;
+  final Widget floatingActionButton;
+  final List<AppScaffoldAction> actions;
+  final AppScaffoldAction leading;
+  final bool needsToBeAuthenticated;
 
   Widget _widgetFromAction(AppScaffoldAction action,
       {@required bool enableContent, @required BuildContext context}) {
@@ -57,7 +57,7 @@ class AppScaffold extends StatelessWidget {
       return null;
     }
 
-    Function() onPressed =
+    final void Function() onPressed =
         !enableContent || (action?.onPressed == null && action?.route == null)
             ? null
             : action?.onPressed ??
@@ -66,9 +66,7 @@ class AppScaffold extends StatelessWidget {
     return action?.items != null
         ? PopupMenuButton<String>(
             icon: Icon(action.icon),
-            tooltip: action.tooltip ??
-                action.text ??
-                S.of(context).navigationSettings,
+            tooltip: action.tooltip ?? action.text,
             onSelected: (selected) => action.items[selected](),
             itemBuilder: (BuildContext context) {
               return action.items.keys
@@ -78,20 +76,18 @@ class AppScaffold extends StatelessWidget {
                       ))
                   .toList();
             },
-            offset: Offset(0, 100),
+            offset: const Offset(0, 100),
           )
         : Tooltip(
-            message: action?.tooltip ??
-                action?.text ??
-                S.of(context).navigationSettings,
+            message: action?.tooltip ?? action?.text ?? '',
             child: action?.text != null
                 ? ButtonTheme(
-                    minWidth: 8.0,
+                    minWidth: 8,
                     child: FlatButton(
                       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                       child: Text(
                         action.text,
-                        style: TextStyle().apply(
+                        style: const TextStyle().apply(
                             color: Theme.of(context).primaryIconTheme.color),
                       ),
                       onPressed: onPressed,
@@ -105,13 +101,13 @@ class AppScaffold extends StatelessWidget {
   }
 
   Widget _underConstructionPage({@required BuildContext context}) => Padding(
-        padding: const EdgeInsets.all(10.0),
+        padding: const EdgeInsets.all(10),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Expanded(flex: 1, child: Container()),
-            Expanded(
+            const Expanded(
               flex: 3,
               child: Align(
                 alignment: Alignment.bottomCenter,
@@ -122,7 +118,7 @@ class AppScaffold extends StatelessWidget {
             ),
             Expanded(
               child: Padding(
-                padding: EdgeInsets.all(10.0),
+                padding: const EdgeInsets.all(10),
                 child: Text(S.of(context).messageUnderConstruction,
                     style: Theme.of(context).textTheme.headline6),
               ),
@@ -132,21 +128,14 @@ class AppScaffold extends StatelessWidget {
         ),
       );
 
-  Future<void> _signOut(BuildContext context) async {
-    AuthProvider authProvider =
-        Provider.of<AuthProvider>(context, listen: false);
-    authProvider.signOut(context);
-    Navigator.pushReplacementNamed(context, Routes.login);
-  }
-
   Widget _needsAuthenticationPage({@required BuildContext context}) => Padding(
-        padding: const EdgeInsets.all(10.0),
+        padding: const EdgeInsets.all(10),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Expanded(flex: 1, child: Container()),
-            Expanded(
+            const Expanded(
               flex: 3,
               child: Align(
                 alignment: Alignment.bottomCenter,
@@ -159,7 +148,7 @@ class AppScaffold extends StatelessWidget {
               child: Column(
                 children: <Widget>[
                   Padding(
-                    padding: EdgeInsets.all(10.0),
+                    padding: const EdgeInsets.all(10),
                     child: Align(
                       alignment: Alignment.topCenter,
                       child: Text(
@@ -171,7 +160,7 @@ class AppScaffold extends StatelessWidget {
                   ),
                   InkWell(
                     onTap: () {
-                      _signOut(context);
+                      Utils.signOut(context);
                     },
                     child: Text(S.of(context).actionLogIn,
                         style: Theme.of(context)
@@ -189,15 +178,15 @@ class AppScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    AuthProvider authProvider = Provider.of<AuthProvider>(context);
-    bool isAuthenticated =
+    final authProvider = Provider.of<AuthProvider>(context);
+    final bool isAuthenticated =
         authProvider.isAuthenticatedFromCache && !authProvider.isAnonymous;
-    bool enableContent = !needsToBeAuthenticated || isAuthenticated;
+    final bool enableContent = !needsToBeAuthenticated || isAuthenticated;
 
     return GestureDetector(
       onTap: () {
         // Remove current focus on tap
-        FocusScopeNode currentFocus = FocusScope.of(context);
+        final currentFocus = FocusScope.of(context);
         if (!currentFocus.hasPrimaryFocus) {
           currentFocus.unfocus();
         }
@@ -207,7 +196,7 @@ class AppScaffold extends StatelessWidget {
             ? body ?? _underConstructionPage(context: context)
             : _needsAuthenticationPage(context: context),
         appBar: PreferredSize(
-          preferredSize: Size.fromHeight(40.0),
+          preferredSize: const Size.fromHeight(40),
           child: AppBar(
             title: Text(title),
             centerTitle: true,

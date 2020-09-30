@@ -1,154 +1,122 @@
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/navigation/routes.dart';
-import 'package:acs_upb_mobile/pages/filter/model/filter.dart';
-import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
+import 'package:acs_upb_mobile/pages/filter/view/filter_dropdown.dart';
 import 'package:acs_upb_mobile/resources/banner.dart';
-import 'package:acs_upb_mobile/resources/locale_provider.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/resources/validator.dart';
 import 'package:acs_upb_mobile/widgets/button.dart';
-import 'package:acs_upb_mobile/widgets/form/form.dart';
+import 'package:acs_upb_mobile/widgets/form_card.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:recase/recase.dart';
 
 class SignUpView extends StatefulWidget {
   static const String routeName = '/signup';
-
-  SignUpView();
 
   @override
   _SignUpViewState createState() => _SignUpViewState();
 }
 
 class _SignUpViewState extends State<SignUpView> {
-  List<FormItem> formItems;
-  Filter filter;
-  List<FilterNode> nodes;
-  FilterProvider filterProvider;
+  List<FormCardField> formItems;
+
   bool agreedToPolicy = false;
 
-  void _fetchFilter() async {
-    // Fetch filter for dropdown buttons
-    filterProvider = Provider.of<FilterProvider>(context, listen: false);
-    filter = await filterProvider.fetchFilter(context);
+  final dropdownController = FilterDropdownController();
+  TextEditingController passwordController = TextEditingController();
+  TextEditingController firstNameController = TextEditingController();
+  TextEditingController lastNameController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
 
-    // Add the first selected node and refresh
-    nodes = [filter.root];
-    setState(() {});
+  /// Attempt to guess the user's first and last name from the email, since
+  /// university e-mail addresses are standardized.
+  ///
+  /// Special characters such as ".", "_" are used to separate the names,
+  /// numbers are removed and names are capitalized.
+  /// *Format example:* firstnameone_firstnametwo.lastname123@stud.acs.pub.ro
+  void parseNameFromEmail(TextEditingController email,
+      TextEditingController firstName, TextEditingController lastName) {
+    final emailWithoutNumbers =
+        email.text.replaceAll(RegExp('[^a-zA-Z._]'), '');
+    final names = emailWithoutNumbers.split('.');
+
+    if (!names[0].contains('_')) {
+      firstName.text = names[0].titleCase;
+    } else {
+      final firstNames = names[0].split('_');
+      firstName.text = firstNames.map((s) => s.titleCase).join(' ');
+    }
+    lastName.text = names[1].titleCase;
   }
 
-  initState() {
-    super.initState();
-    _fetchFilter();
-  }
-
-  List<FormItem> _buildFormItems() {
+  List<FormCardField> _buildFormItems() {
     // Only build them once to avoid the cursor staying everywhere
     if (formItems != null) {
       return formItems;
     }
-    String emailDomain = S.of(context).stringEmailDomain;
+    final emailDomain = S.of(context).stringEmailDomain;
+    final authProvider = Provider.of<AuthProvider>(context);
 
-    TextEditingController passwordController = TextEditingController();
-    AuthProvider authProvider = Provider.of<AuthProvider>(context);
-
-    formItems = <FormItem>[
-      FormItem(
+    return formItems = <FormCardField>[
+      FormCardField(
         label: S.of(context).labelEmail,
         hint: S.of(context).hintEmail,
+        additionalHint: S.of(context).infoEmail(S.of(context).stringForum),
+        controller: emailController,
         suffix: emailDomain,
         autocorrect: false,
         autofillHints: [AutofillHints.newUsername],
-        check: (email, {BuildContext context}) => authProvider
-            .canSignUpWithEmail(email: email + emailDomain, context: context),
+        check: (email, {context}) => authProvider.canSignUpWithEmail(
+            email: email + emailDomain, context: context),
+        onChanged: (_) => parseNameFromEmail(
+            emailController, firstNameController, lastNameController),
       ),
-      FormItem(
-        label: S.of(context).labelPassword,
-        hint: S.of(context).hintPassword,
-        additionalHint: S.of(context).infoPassword,
-        controller: passwordController,
-        obscureText: true,
-        autofillHints: [AutofillHints.newPassword],
-        check: (password, {BuildContext context}) =>
-            AppValidator.isStrongPassword(password: password, context: context),
-      ),
-      FormItem(
+      FormCardField(
+          label: S.of(context).labelPassword,
+          hint: S.of(context).hintPassword,
+          additionalHint: S.of(context).infoPassword,
+          controller: passwordController,
+          obscureText: true,
+          autofillHints: [AutofillHints.newPassword],
+          check: (password, {context}) async {
+            final errorString =
+                AppValidator.isStrongPassword(password, context);
+            if (context != null && errorString != null) {
+              AppToast.show(errorString);
+            }
+            return errorString == null;
+          }),
+      FormCardField(
         label: S.of(context).labelConfirmPassword,
         hint: S.of(context).hintPassword,
         obscureText: true,
-        check: (password, {BuildContext context}) async {
-          bool ok = password == passwordController.text;
+        check: (password, {context}) async {
+          final bool ok = password == passwordController.text;
           if (!ok && context != null) {
             AppToast.show(S.of(context).errorPasswordsDiffer);
           }
           return ok;
         },
       ),
-      FormItem(
+      FormCardField(
           label: S.of(context).labelFirstName,
           hint: S.of(context).hintFirstName,
+          controller: firstNameController,
           autofillHints: [AutofillHints.givenName]),
-      FormItem(
+      FormCardField(
           label: S.of(context).labelLastName,
           hint: S.of(context).hintLastName,
+          controller: lastNameController,
           autofillHints: [AutofillHints.familyName]),
     ];
-    return formItems;
-  }
-
-  List<Widget> _dropdownTree(BuildContext context) {
-    List<Widget> items = [SizedBox(height: 8)];
-
-    if (filter == null) {
-      items.add(Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: Center(child: CircularProgressIndicator()),
-      ));
-    } else {
-      for (var i = 0; i < nodes.length; i++) {
-        if (nodes[i] != null && nodes[i].children.isNotEmpty) {
-          items.add(Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.only(top: 8.0),
-                child: Text(
-                    filter.localizedLevelNames[i][LocaleProvider.localeString],
-                    style: Theme.of(context)
-                        .textTheme
-                        .subtitle1
-                        .apply(fontSizeFactor: 1.1)),
-              ),
-              DropdownButtonFormField<FilterNode>(
-                value: nodes.length > i + 1 ? nodes[i + 1] : null,
-                items: nodes[i]
-                    .children
-                    .map((node) => DropdownMenuItem(
-                          value: node,
-                          child: Text(node.name),
-                        ))
-                    .toList(),
-                onChanged: (selected) => setState(
-                  () {
-                    nodes.removeRange(i + 1, nodes.length);
-                    nodes.add(selected);
-                  },
-                ),
-              ),
-            ],
-          ));
-        }
-      }
-    }
-    return items;
   }
 
   Widget _privacyPolicy() {
     return Padding(
-      padding: const EdgeInsets.only(top: 8.0),
+      padding: const EdgeInsets.only(top: 8),
       child: Row(
         children: [
           Checkbox(
@@ -172,7 +140,7 @@ class _SignUpViewState extends State<SignUpView> {
                           ..onTap = () => Utils.launchURL(
                               'https://www.websitepolicies.com/policies/view/IIUFv381',
                               context: context)),
-                    TextSpan(text: '.'),
+                    const TextSpan(text: '.'),
                   ]),
             ),
           ),
@@ -181,38 +149,39 @@ class _SignUpViewState extends State<SignUpView> {
     );
   }
 
-  AppForm _buildForm(BuildContext context) {
-    AuthProvider authProvider = Provider.of(context);
+  FormCard _buildForm(BuildContext context) {
+    final authProvider = Provider.of<AuthProvider>(context);
 
-    return AppForm(
+    return FormCard(
       title: S.of(context).actionSignUp,
-      items: _buildFormItems(),
-      trailing: _dropdownTree(context) + [_privacyPolicy()],
+      fields: _buildFormItems(),
+      trailing: <Widget>[
+        FilterDropdown(controller: dropdownController),
+        _privacyPolicy()
+      ],
       submitOnEnter: false,
-      onSubmitted: (Map<String, String> fields) async {
+      onSubmitted: (fields) async {
         if (!agreedToPolicy) {
-          AppToast.show(S.of(context).warningAgreeTo +
-              S.of(context).labelPrivacyPolicy +
-              '.');
+          AppToast.show(
+              '${S.of(context).warningAgreeTo}${S.of(context).labelPrivacyPolicy}.');
           return;
         }
 
         fields[S.of(context).labelEmail] += S.of(context).stringEmailDomain;
-        nodes.asMap().forEach((i, node) {
-          if (i > 0) {
-            fields[filter.localizedLevelNames[i - 1]
-                [LocaleProvider.localeString]] = node.name;
-          }
-        });
 
-        var result = await authProvider.signUp(
+        if (dropdownController.path != null &&
+            dropdownController.path.length > 1) {
+          fields['class'] = dropdownController.path;
+        }
+
+        final result = await authProvider.signUp(
           info: fields,
           context: context,
         );
 
         if (result) {
           // Remove all routes below and push home page
-          Navigator.pushNamedAndRemoveUntil(
+          await Navigator.pushNamedAndRemoveUntil(
               context, Routes.home, (route) => false);
         }
       },
@@ -221,12 +190,12 @@ class _SignUpViewState extends State<SignUpView> {
 
   @override
   Widget build(BuildContext context) {
-    AppForm signUpForm = _buildForm(context);
+    final signUpForm = _buildForm(context);
 
     return GestureDetector(
       onTap: () {
         // Remove current focus on tap
-        FocusScopeNode currentFocus = FocusScope.of(context);
+        final currentFocus = FocusScope.of(context);
         if (!currentFocus.hasPrimaryFocus) {
           currentFocus.unfocus();
         }
@@ -238,16 +207,16 @@ class _SignUpViewState extends State<SignUpView> {
             Align(
               alignment: FractionalOffset.topRight,
               child: Padding(
-                padding: EdgeInsets.all(10.0),
+                padding: const EdgeInsets.all(10),
                 child: Container(
                     height: MediaQuery.of(context).size.height / 3 - 20,
                     child: Image.asset(
-                        "assets/illustrations/undraw_personal_information.png")),
+                        'assets/illustrations/undraw_personal_information.png')),
               ),
             ),
             SingleChildScrollView(
               child: Padding(
-                padding: EdgeInsets.only(left: 28.0, right: 28.0, bottom: 8.0),
+                padding: const EdgeInsets.only(left: 28, right: 28, bottom: 8),
                 child: IntrinsicHeight(
                   child: Column(
                     children: <Widget>[
@@ -260,25 +229,25 @@ class _SignUpViewState extends State<SignUpView> {
                           ],
                         ),
                       ),
-                      SizedBox(height: 10),
+                      const SizedBox(height: 10),
                       Expanded(child: signUpForm),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
                           Expanded(
                             child: AppButton(
-                              key: ValueKey('cancel_button'),
+                              key: const ValueKey('cancel_button'),
                               text: S.of(context).buttonCancel,
                               onTap: () async {
                                 return Navigator.pop(context);
                               },
                             ),
                           ),
-                          SizedBox(width: 20),
+                          const SizedBox(width: 20),
                           Expanded(
                             child: AppButton(
-                              key: ValueKey('sign_up_button'),
+                              key: const ValueKey('sign_up_button'),
                               color: Theme.of(context).accentColor,
                               text: S.of(context).actionSignUp,
                               onTap: () => signUpForm.submit(),
@@ -286,7 +255,7 @@ class _SignUpViewState extends State<SignUpView> {
                           ),
                         ],
                       ),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                     ],
                   ),
                 ),
@@ -296,13 +265,5 @@ class _SignUpViewState extends State<SignUpView> {
         ),
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    // Reset filter so it can be reloaded after user signs in
-    filterProvider?.resetFilter();
-
-    super.dispose();
   }
 }

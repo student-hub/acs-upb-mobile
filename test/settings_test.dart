@@ -1,5 +1,6 @@
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/main.dart';
+import 'package:acs_upb_mobile/pages/portal/service/website_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
@@ -9,8 +10,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class MockAuthProvider extends Mock implements AuthProvider {}
 
+class MockWebsiteProvider extends Mock implements WebsiteProvider {}
+
 void main() {
   AuthProvider mockAuthProvider;
+  WebsiteProvider mockWebsiteProvider;
 
   group('Settings', () {
     setUpAll(() async {
@@ -28,11 +32,24 @@ void main() {
       when(mockAuthProvider.isAnonymous).thenReturn(true);
       when(mockAuthProvider.isAuthenticatedFromService)
           .thenAnswer((realInvocation) => Future.value(true));
+      when(mockAuthProvider.currentUser).thenAnswer((_) => Future.value(null));
+      when(mockAuthProvider.isAnonymous).thenReturn(true);
+
+      mockWebsiteProvider = MockWebsiteProvider();
+      // ignore: invalid_use_of_protected_member
+      when(mockWebsiteProvider.hasListeners).thenReturn(false);
+      when(mockWebsiteProvider.deleteWebsite(any, context: anyNamed('context')))
+          .thenAnswer((realInvocation) => Future.value(true));
+      when(mockWebsiteProvider.fetchWebsites(any))
+          .thenAnswer((_) => Future.value([]));
     });
 
     testWidgets('Dark Mode', (WidgetTester tester) async {
-      await tester.pumpWidget(ChangeNotifierProvider<AuthProvider>(
-          create: (_) => mockAuthProvider, child: MyApp()));
+      await tester.pumpWidget(MultiProvider(providers: [
+        ChangeNotifierProvider<AuthProvider>(create: (_) => mockAuthProvider),
+        ChangeNotifierProvider<WebsiteProvider>(
+            create: (_) => mockWebsiteProvider)
+      ], child: const MyApp()));
       await tester.pumpAndSettle();
 
       MaterialApp app = find.byType(MaterialApp).evaluate().first.widget;
@@ -58,15 +75,18 @@ void main() {
     });
 
     testWidgets('Language', (WidgetTester tester) async {
-      await tester.pumpWidget(ChangeNotifierProvider<AuthProvider>(
-          create: (_) => mockAuthProvider, child: MyApp()));
+      await tester.pumpWidget(MultiProvider(providers: [
+        ChangeNotifierProvider<AuthProvider>(create: (_) => mockAuthProvider),
+        ChangeNotifierProvider<WebsiteProvider>(
+            create: (_) => mockWebsiteProvider)
+      ], child: const MyApp()));
       await tester.pumpAndSettle();
 
       // Open settings
       await tester.tap(find.byIcon(Icons.settings));
       await tester.pumpAndSettle();
 
-      expect(find.text("Auto"), findsOneWidget);
+      expect(find.text('Auto'), findsOneWidget);
 
       // Romanian
       await tester.tap(find.text('Language'));
@@ -75,8 +95,8 @@ void main() {
       await tester.tap(find.text('Romanian'));
       await tester.pumpAndSettle();
 
-      expect(find.text("Setări"), findsOneWidget);
-      expect(find.text("Română"), findsOneWidget);
+      expect(find.text('Setări'), findsOneWidget);
+      expect(find.text('Română'), findsOneWidget);
 
       // English
       await tester.tap(find.text('Limbă'));
@@ -85,8 +105,8 @@ void main() {
       await tester.tap(find.text('Engleză'));
       await tester.pumpAndSettle();
 
-      expect(find.text("Settings"), findsOneWidget);
-      expect(find.text("English"), findsOneWidget);
+      expect(find.text('Settings'), findsOneWidget);
+      expect(find.text('English'), findsOneWidget);
 
       // Back to Auto (English)
       await tester.tap(find.text('Language'));
@@ -95,8 +115,8 @@ void main() {
       await tester.tap(find.text('Auto'));
       await tester.pumpAndSettle();
 
-      expect(find.text("Settings"), findsOneWidget);
-      expect(find.text("Auto"), findsOneWidget);
+      expect(find.text('Settings'), findsOneWidget);
+      expect(find.text('Auto'), findsOneWidget);
     });
   });
 }

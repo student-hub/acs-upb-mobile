@@ -23,22 +23,28 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static m1(url) => "Nu s-a putut deschide \'${url}\'.";
 
-  static m2(name) => "Echipa ${name}";
+  static m2(forum) => "Acesta este același username pe care îl folosești să te loghezi pe ${forum}.";
 
-  static m3(shortcutName) => "Sunteți sigur că doriți să ștergeți \"${shortcutName}\"?";
+  static m3(name) => "Echipa ${name}";
 
-  static m4(name) => "Bine ai venit, ${name}!";
+  static m4(email) => "Sunteți sigur că doriți să schimbați email-ul cu ${email}?";
 
-  static m5(email) => "Există deja un cont asociat cu adresa ${email}.";
+  static m5(shortcutName) => "Sunteți sigur că doriți să ștergeți \"${shortcutName}\"?";
 
-  static m6(provider) => "Folosiți ${provider} pentru a vă conecta.";
+  static m6(name) => "Bine ai venit, ${name}!";
+
+  static m7(email) => "Există deja un cont asociat cu adresa ${email}.";
+
+  static m8(provider) => "Folosiți ${provider} pentru a vă conecta.";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
-    "actionAddClasses" : MessageLookupByLibrary.simpleMessage("Adaugă materii"),
     "actionAddEvent" : MessageLookupByLibrary.simpleMessage("Adaugă eveniment"),
     "actionAddShortcut" : MessageLookupByLibrary.simpleMessage("Adaugă scurtătură"),
     "actionAddWebsite" : MessageLookupByLibrary.simpleMessage("Adaugă website"),
+    "actionChangeEmail" : MessageLookupByLibrary.simpleMessage("Schimbă email"),
+    "actionChangePassword" : MessageLookupByLibrary.simpleMessage("Schimbă parola"),
+    "actionChooseClasses" : MessageLookupByLibrary.simpleMessage("Alege materii"),
     "actionContribute" : MessageLookupByLibrary.simpleMessage("Contribuie"),
     "actionDeleteAccount" : MessageLookupByLibrary.simpleMessage("Ștergere cont"),
     "actionDeleteEvent" : MessageLookupByLibrary.simpleMessage("Șterge eveniment"),
@@ -47,6 +53,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "actionDisableEditing" : MessageLookupByLibrary.simpleMessage("Dezactivează modul editare"),
     "actionEditEvent" : MessageLookupByLibrary.simpleMessage("Modifică eveniment"),
     "actionEditGrading" : MessageLookupByLibrary.simpleMessage("Modifică punctaj"),
+    "actionEditProfile" : MessageLookupByLibrary.simpleMessage("Modifică profil"),
     "actionEditWebsite" : MessageLookupByLibrary.simpleMessage("Modifică website"),
     "actionEnableEditing" : MessageLookupByLibrary.simpleMessage("Activează modul editare"),
     "actionJumpToToday" : MessageLookupByLibrary.simpleMessage("Sari la ziua de azi"),
@@ -83,6 +90,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "filterMenuRelevance" : MessageLookupByLibrary.simpleMessage("Filtrează după relevanță"),
     "filterMenuShowAll" : MessageLookupByLibrary.simpleMessage("Arată tot"),
     "filterMenuShowMine" : MessageLookupByLibrary.simpleMessage("Arată doar pe ale mele"),
+    "filterNodeNameBSc" : MessageLookupByLibrary.simpleMessage("Licență"),
+    "filterNodeNameMSc" : MessageLookupByLibrary.simpleMessage("Masterat"),
     "hintEmail" : MessageLookupByLibrary.simpleMessage("john.doe"),
     "hintEvaluation" : MessageLookupByLibrary.simpleMessage("Examen final"),
     "hintFirstName" : MessageLookupByLibrary.simpleMessage("John"),
@@ -93,14 +102,18 @@ class MessageLookup extends MessageLookupByLibrary {
     "hintWebsiteLabel" : MessageLookupByLibrary.simpleMessage("Google"),
     "hintWebsiteLink" : MessageLookupByLibrary.simpleMessage("http://google.com"),
     "infoAppIsOpenSource" : MessageLookupByLibrary.simpleMessage("ACS UPB Mobile este open source."),
+    "infoChooseClasses" : MessageLookupByLibrary.simpleMessage("Selectați materiile care vă interesează."),
+    "infoEmail" : m2,
     "infoPassword" : MessageLookupByLibrary.simpleMessage("Aceasta trebuie să conțină majuscule, minuscule și cel puțin un număr sau un simbol, având minimum 8 caractere."),
     "infoPasswordResetEmailSent" : MessageLookupByLibrary.simpleMessage("Please check your inbox for the password reset e-mail."),
     "infoRelevance" : MessageLookupByLibrary.simpleMessage("Încercați să selectați cea mai restrictivă categorie."),
     "infoRelevanceExample" : MessageLookupByLibrary.simpleMessage("De exemplu, dacă ceva este relevant doar pentru \"314CB\" și \"315CB\", nu setați direct \"CB\"."),
+    "infoRelevanceNothingSelected" : MessageLookupByLibrary.simpleMessage("Nu selectați nimic dacă este relevant pentru toată lumea."),
     "labelAskPermissions" : MessageLookupByLibrary.simpleMessage("Cere permisiuni de editare"),
     "labelCategory" : MessageLookupByLibrary.simpleMessage("Categorie"),
     "labelClass" : MessageLookupByLibrary.simpleMessage("Materie"),
     "labelColor" : MessageLookupByLibrary.simpleMessage("Culoare"),
+    "labelConfirmNewPassword" : MessageLookupByLibrary.simpleMessage("Confirmare parolă nouă"),
     "labelConfirmPassword" : MessageLookupByLibrary.simpleMessage("Confirmare parolă"),
     "labelCustom" : MessageLookupByLibrary.simpleMessage("Alta"),
     "labelDescription" : MessageLookupByLibrary.simpleMessage("Descriere"),
@@ -112,15 +125,18 @@ class MessageLookup extends MessageLookupByLibrary {
     "labelLink" : MessageLookupByLibrary.simpleMessage("Link"),
     "labelLocation" : MessageLookupByLibrary.simpleMessage("Locație"),
     "labelName" : MessageLookupByLibrary.simpleMessage("Nume"),
+    "labelNewPassword" : MessageLookupByLibrary.simpleMessage("Parolă nouă"),
+    "labelOldPassword" : MessageLookupByLibrary.simpleMessage("Parolă veche"),
     "labelPassword" : MessageLookupByLibrary.simpleMessage("Parolă"),
     "labelPermissionsConsent" : MessageLookupByLibrary.simpleMessage("consimțământul pentru drepturi de editare"),
+    "labelPersonalInformation" : MessageLookupByLibrary.simpleMessage("Informații personale"),
     "labelPoints" : MessageLookupByLibrary.simpleMessage("Puncte"),
     "labelPreview" : MessageLookupByLibrary.simpleMessage("Previzualizare"),
     "labelPrivacyPolicy" : MessageLookupByLibrary.simpleMessage("Privacy Policy"),
     "labelRelevance" : MessageLookupByLibrary.simpleMessage("Relevanță"),
     "labelSemester" : MessageLookupByLibrary.simpleMessage("Semestrul"),
     "labelStart" : MessageLookupByLibrary.simpleMessage("Început"),
-    "labelTeam" : m2,
+    "labelTeam" : m3,
     "labelType" : MessageLookupByLibrary.simpleMessage("Tip"),
     "labelUnknown" : MessageLookupByLibrary.simpleMessage("Necunoscut"),
     "labelYear" : MessageLookupByLibrary.simpleMessage("Anul"),
@@ -130,13 +146,17 @@ class MessageLookup extends MessageLookupByLibrary {
     "messageAgreePermissions" : MessageLookupByLibrary.simpleMessage("Voi încărca doar informații corecte si precise. Înțeleg că încărcarea informațiilor eronate sau ofensatoare în mod intenționat va conduce la blocarea permisiunilor mele permanent."),
     "messageAskPermissionToEdit" : MessageLookupByLibrary.simpleMessage("De ce dorești să primești permisiuni de editare în ACS UPB Mobile?"),
     "messageCannotBeUndone" : MessageLookupByLibrary.simpleMessage("Această acțiune nu este reversibilă."),
+    "messageChangeEmail" : m4,
+    "messageChangeEmailSuccess" : MessageLookupByLibrary.simpleMessage("Email-ul a fost schimbat cu succes"),
+    "messageChangePasswordSuccess" : MessageLookupByLibrary.simpleMessage("Parola a fost schimbată cu succes."),
     "messageCheckEmailVerification" : MessageLookupByLibrary.simpleMessage("Verificați-vă mail-ul pentru confirmarea contului."),
     "messageDeleteAccount" : MessageLookupByLibrary.simpleMessage("Sunteți sigur că doriți să ștergeți contul?"),
     "messageDeleteEvent" : MessageLookupByLibrary.simpleMessage("Sunteți sigur că doriți să ștergeți acest eveniment?"),
-    "messageDeleteShortcut" : m3,
+    "messageDeleteShortcut" : m5,
     "messageDeleteWebsite" : MessageLookupByLibrary.simpleMessage("Sunteți sigur că doriți să ștergeți acest website?"),
+    "messageEditProfileSuccess" : MessageLookupByLibrary.simpleMessage("Profilul a fost actualizat cu succes."),
     "messageEmailNotVerified" : MessageLookupByLibrary.simpleMessage("Contul nu este verificat."),
-    "messageGetStartedPlusButton" : MessageLookupByLibrary.simpleMessage("Începeți prin a apăsa butonul + de mai sus."),
+    "messageGetStartedButton" : MessageLookupByLibrary.simpleMessage("Începeți prin a apăsa butonul de mai sus."),
     "messageIAgreeToThe" : MessageLookupByLibrary.simpleMessage("Sunt de acord cu "),
     "messageNewUser" : MessageLookupByLibrary.simpleMessage("Utilizator nou?"),
     "messageNoClassesYet" : MessageLookupByLibrary.simpleMessage("Nu ați adăugat nici o materie încă."),
@@ -150,7 +170,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "messageWebsiteDeleted" : MessageLookupByLibrary.simpleMessage("Website-ul a fost șters cu succes."),
     "messageWebsiteEdited" : MessageLookupByLibrary.simpleMessage("Website modificat cu succes."),
     "messageWebsitePreview" : MessageLookupByLibrary.simpleMessage("Încercați să apăsați, să faceți hover sau să țineți apăsat ca să testați noul website."),
-    "messageWelcomeName" : m4,
+    "messageWelcomeName" : m6,
     "messageWelcomeSimple" : MessageLookupByLibrary.simpleMessage("Bine ai venit!"),
     "navigationAskPermissions" : MessageLookupByLibrary.simpleMessage("Cere permisiuni"),
     "navigationClasses" : MessageLookupByLibrary.simpleMessage("Materii"),
@@ -158,6 +178,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "navigationFilter" : MessageLookupByLibrary.simpleMessage("Filtru"),
     "navigationHome" : MessageLookupByLibrary.simpleMessage("Acasă"),
     "navigationMap" : MessageLookupByLibrary.simpleMessage("Hartă"),
+    "navigationPeople" : MessageLookupByLibrary.simpleMessage("Persoane"),
     "navigationPortal" : MessageLookupByLibrary.simpleMessage("Portal"),
     "navigationProfile" : MessageLookupByLibrary.simpleMessage("Profil"),
     "navigationSettings" : MessageLookupByLibrary.simpleMessage("Setări"),
@@ -184,6 +205,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "shortcutTypeResource" : MessageLookupByLibrary.simpleMessage("Resursă"),
     "stringAnonymous" : MessageLookupByLibrary.simpleMessage("Anonim"),
     "stringEmailDomain" : MessageLookupByLibrary.simpleMessage("@stud.acs.upb.ro"),
+    "stringForum" : MessageLookupByLibrary.simpleMessage("cs.curs.pub.ro"),
     "uniEventTypeExam" : MessageLookupByLibrary.simpleMessage("Examen"),
     "uniEventTypeHomework" : MessageLookupByLibrary.simpleMessage("Temă"),
     "uniEventTypeLab" : MessageLookupByLibrary.simpleMessage("Laborator"),
@@ -196,7 +218,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "uniEventTypeTest" : MessageLookupByLibrary.simpleMessage("Test"),
     "warningAgreeTo" : MessageLookupByLibrary.simpleMessage("Trebuie să fiți de acord cu "),
     "warningAuthenticationNeeded" : MessageLookupByLibrary.simpleMessage("Autentificați-vă pentru a accesa această funcționalitate."),
-    "warningEmailInUse" : m5,
+    "warningEmailInUse" : m7,
     "warningFieldCannotBeEmpty" : MessageLookupByLibrary.simpleMessage("Câmpul nu poate fi gol."),
     "warningFieldCannotBeZero" : MessageLookupByLibrary.simpleMessage("Câmpul nu poate fi zero."),
     "warningFilterAlreadyDisabled" : MessageLookupByLibrary.simpleMessage("Întreg conținutul este vizibil deja."),
@@ -214,8 +236,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "warningPasswordSpecialCharacters" : MessageLookupByLibrary.simpleMessage("Parola trebuie să conțină cel puțin un simbol."),
     "warningPasswordUppercase" : MessageLookupByLibrary.simpleMessage("Parola trebuie să conțină cel putin o majusculă."),
     "warningRequestEmpty" : MessageLookupByLibrary.simpleMessage("Textul cererii nu poate să fie gol."),
+    "warningSamePassword" : MessageLookupByLibrary.simpleMessage("Parola trebuie sa fie diferită de cea veche."),
     "warningTryAgainLater" : MessageLookupByLibrary.simpleMessage("Încercați mai târziu."),
-    "warningUseProvider" : m6,
+    "warningUseProvider" : m8,
     "warningWebsiteNameExists" : MessageLookupByLibrary.simpleMessage("Există deja un site cu același nume."),
     "websiteCategoryAdministrative" : MessageLookupByLibrary.simpleMessage("Administrativ"),
     "websiteCategoryAssociations" : MessageLookupByLibrary.simpleMessage("Asociații"),

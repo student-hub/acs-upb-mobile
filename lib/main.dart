@@ -6,12 +6,11 @@ import 'package:acs_upb_mobile/navigation/bottom_navigation_bar.dart';
 import 'package:acs_upb_mobile/navigation/routes.dart';
 import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
 import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
-import 'package:acs_upb_mobile/pages/filter/view/filter_page.dart';
+import 'package:acs_upb_mobile/pages/people/service/person_provider.dart';
 import 'package:acs_upb_mobile/pages/portal/service/website_provider.dart';
 import 'package:acs_upb_mobile/pages/settings/service/request_provider.dart';
 import 'package:acs_upb_mobile/pages/settings/view/settings_page.dart';
 import 'package:acs_upb_mobile/resources/locale_provider.dart';
-import 'package:acs_upb_mobile/resources/storage_provider.dart';
 import 'package:acs_upb_mobile/widgets/loading_screen.dart';
 import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/material.dart';
@@ -23,7 +22,7 @@ import 'package:preferences/preferences.dart';
 import 'package:provider/provider.dart';
 import 'package:time_machine/time_machine.dart';
 
-main() async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await TimeMachine.initialize({'rootBundle': rootBundle});
   await PrefService.init(prefix: 'pref_');
@@ -31,30 +30,30 @@ main() async {
 
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider<AuthProvider>(create: (_) => AuthProvider()),
-    ChangeNotifierProvider<StorageProvider>(create: (_) => StorageProvider()),
     ChangeNotifierProvider<WebsiteProvider>(create: (_) => WebsiteProvider()),
     Provider<RequestProvider>(create: (_) => RequestProvider()),
     ChangeNotifierProvider<ClassProvider>(create: (_) => ClassProvider()),
+    ChangeNotifierProvider<PersonProvider>(create: (_) => PersonProvider()),
     ChangeNotifierProvider<FilterProvider>(
         create: (_) => FilterProvider(global: true)),
-  ], child: MyApp()));
+  ], child: const MyApp()));
 }
 
 class MyApp extends StatefulWidget {
-  final List<NavigatorObserver> navigationObservers;
+  const MyApp({this.navigationObservers});
 
-  MyApp({this.navigationObservers});
+  final List<NavigatorObserver> navigationObservers;
 
   @override
   _MyAppState createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> {
-  final Color _accentColor = Color(0xFF43ACCD);
+  final Color _accentColor = const Color(0xFF43ACCD);
 
   Widget buildApp(BuildContext context, ThemeData theme) {
     return MaterialApp(
-      title: "ACS UPB Mobile",
+      title: 'ACS UPB Mobile',
       debugShowCheckedModeBanner: false,
       localizationsDelegates: [
         GlobalMaterialLocalizations.delegate,
@@ -66,9 +65,8 @@ class _MyAppState extends State<MyApp> {
       initialRoute: Routes.root,
       routes: {
         Routes.root: (_) => AppLoadingScreen(),
-        Routes.home: (_) => AppBottomNavigationBar(),
+        Routes.home: (_) => const AppBottomNavigationBar(),
         Routes.settings: (_) => SettingsPage(),
-        Routes.filter: (_) => FilterPage(),
         Routes.login: (_) => LoginView(),
         Routes.signUp: (_) => SignUpView(),
       },
@@ -92,7 +90,7 @@ class _MyAppState extends State<MyApp> {
             displayColor: _accentColor),
         toggleableActiveColor: _accentColor,
         fontFamily: 'Montserrat',
-        primaryColor: Color(0xFF4DB5E4),
+        primaryColor: const Color(0xFF4DB5E4),
       ),
       themedWidgetBuilder: (context, theme) {
         return OKToast(
@@ -102,7 +100,7 @@ class _MyAppState extends State<MyApp> {
           child: GestureDetector(
             onTap: () {
               // Remove current focus on tap
-              FocusScopeNode currentFocus = FocusScope.of(context);
+              final currentFocus = FocusScope.of(context);
               if (!currentFocus.hasPrimaryFocus) {
                 currentFocus.unfocus();
               }
@@ -118,11 +116,10 @@ class _MyAppState extends State<MyApp> {
 class AppLoadingScreen extends StatelessWidget {
   Future<String> _setUpAndChooseStartScreen(BuildContext context) async {
     // Load locale from settings
-    S.load(LocaleProvider.locale);
+    await S.load(LocaleProvider.locale);
 
-    AuthProvider authProvider =
-        Provider.of<AuthProvider>(context, listen: false);
-    bool authenticated = await authProvider.isAuthenticatedFromService;
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    final bool authenticated = await authProvider.isAuthenticatedFromService;
     return authenticated ? Routes.home : Routes.login;
   }
 
@@ -130,7 +127,7 @@ class AppLoadingScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return LoadingScreen(
       navigateAfterFuture: _setUpAndChooseStartScreen(context),
-      loadingText: Text('Setting up...'),
+      loadingText: const Text('Setting up...'),
       image: Image.asset('assets/icons/acs_logo.png'),
       loaderColor: Theme.of(context).accentColor,
     );

@@ -5,6 +5,17 @@ import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 
 class AppDialog extends StatelessWidget {
+  const AppDialog(
+      {@required this.title,
+      Key key,
+      this.icon,
+      this.message,
+      this.info,
+      this.content,
+      this.actions,
+      this.enableCancelButton = true})
+      : super(key: key);
+
   /// Icon to show to the left of the dialog title
   final Icon icon;
 
@@ -27,17 +38,6 @@ class AppDialog extends StatelessWidget {
   /// Whether to display a cancel button or not
   final bool enableCancelButton;
 
-  const AppDialog(
-      {Key key,
-      this.icon,
-      @required this.title,
-      @required this.message,
-      this.info,
-      this.content,
-      this.actions,
-      this.enableCancelButton = true})
-      : super(key: key);
-
   @override
   AlertDialog build(BuildContext context) => AlertDialog(
         title: icon == null
@@ -45,7 +45,7 @@ class AppDialog extends StatelessWidget {
             : Row(
                 children: <Widget>[
                   icon,
-                  SizedBox(width: 4),
+                  const SizedBox(width: 4),
                   Text(title),
                 ],
               ),
@@ -53,11 +53,18 @@ class AppDialog extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-                  Expanded(child: Container(height: 8)),
-                  Text(message),
+                  if (message != null)
+                    Expanded(
+                      child: Column(
+                        children: [
+                          Container(height: 8),
+                          Text(message),
+                        ],
+                      ),
+                    ),
                   if (info != null)
                     Column(children: [
-                      SizedBox(height: 8),
+                      const SizedBox(height: 8),
                       IconText(
                           icon: Icons.info,
                           text: info,
@@ -72,7 +79,7 @@ class AppDialog extends StatelessWidget {
         ),
         actions: <Widget>[
               FlatButton(
-                key: ValueKey('cancel_button'),
+                key: const ValueKey('cancel_button'),
                 child: Text(
                   S.of(context).buttonCancel.toUpperCase(),
                   style: Theme.of(context).textTheme.button,

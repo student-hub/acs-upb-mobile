@@ -1,4 +1,3 @@
-import 'package:acs_upb_mobile/authentication/model/user.dart';
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/pages/filter/model/filter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -8,17 +7,33 @@ import 'package:provider/provider.dart';
 
 extension FilterNodeExtension on FilterNode {
   static FilterNode fromMap(Map<String, dynamic> map, String parentName) {
-    List<FilterNode> children = [];
+    final children = <FilterNode>[];
 
-    var sortedKeys = map.keys.toList()..sort();
-    sortedKeys.forEach(
-        (key) => children.add(FilterNodeExtension.fromMap(map[key], key)));
+    final sortedKeys = map.keys.toList()..sort();
+    for (final key in sortedKeys) {
+      children.add(FilterNodeExtension.fromMap(map[key], key));
+    }
 
     return FilterNode(name: parentName, children: children);
   }
 }
 
 class FilterProvider with ChangeNotifier {
+  FilterProvider(
+      {this.global = false,
+      bool filterEnabled,
+      this.defaultDegree,
+      this.defaultRelevance})
+      : _enabled =
+            filterEnabled ?? PrefService.get('relevance_filter') ?? true {
+    if (defaultRelevance != null && !defaultRelevance.contains('All')) {
+      if (defaultDegree == null) {
+        throw ArgumentError(
+            'If the relevance is not null, the degree cannot be null.');
+      }
+    }
+  }
+
   final Firestore _db = Firestore.instance;
   Filter _relevanceFilter; // filter cache
 
@@ -29,21 +44,7 @@ class FilterProvider with ChangeNotifier {
 
   bool _enabled;
   List<String> _relevantNodes;
-
-  FilterProvider(
-      {this.global = false,
-      bool filterEnabled,
-      this.defaultDegree,
-      List<String> defaultRelevance})
-      : _enabled = filterEnabled ?? PrefService.get('relevance_filter') ?? true,
-        _relevantNodes = defaultRelevance {
-    if (defaultRelevance != null) {
-      if (this.defaultDegree == null) {
-        throw ArgumentError(
-            'If the relevance is not null, the degree cannot be null.');
-      }
-    }
-  }
+  final List<String> defaultRelevance;
 
   void resetFilter() {
     _relevanceFilter = null;
@@ -76,26 +77,36 @@ class FilterProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  void updateFilter(Filter filter) {
+    _relevanceFilter = filter;
+    if (global) {
+      PrefService.setStringList(
+          'relevant_nodes', _relevanceFilter.relevantNodes);
+    }
+    notifyListeners();
+  }
+
   bool get filterEnabled => _enabled;
 
-  Filter get cachedFilter => _relevanceFilter;
+  Filter get cachedFilter => _relevanceFilter.clone();
 
   Future<Filter> fetchFilter(BuildContext context) async {
     if (_relevanceFilter != null) {
-      return _relevanceFilter;
+      return cachedFilter;
     }
 
     try {
-      var col = _db.collection('filters');
-      var ref = col.document('relevance');
-      var doc = await ref.get();
-      var data = doc.data;
+      final col = _db.collection('filters');
+      final ref = col.document('relevance');
+      final doc = await ref.get();
+      final data = doc.data;
 
-      List<Map<String, String>> levelNames = [];
+      final levelNames = <Map<String, String>>[];
       // Cast from List<dynamic> to List<Map<String, String>>
-      List names = data['levelNames'];
-      names.forEach(
-          (element) => levelNames.add(Map<String, String>.from(element)));
+      final names = data['levelNames'];
+      for (final name in names) {
+        levelNames.add(Map<String, String>.from(name));
+      }
 
       // Check if there is an existing setting already
       if (global) {
@@ -104,41 +115,32 @@ class FilterProvider with ChangeNotifier {
             : List<String>.from(PrefService.get('relevant_nodes'));
       }
 
-      Map<String, dynamic> root = data['root'];
+      final root = data['root'];
       _relevanceFilter = Filter(
-          localizedLevelNames: levelNames,
-          root: FilterNodeExtension.fromMap(root, 'All'),
-          listener: () {
-            if (global) {
-              PrefService.setStringList(
-                  'relevant_nodes', _relevanceFilter.relevantNodes);
-            }
-            notifyListeners();
-          });
+        localizedLevelNames: levelNames,
+        root: FilterNodeExtension.fromMap(root, 'All'),
+      );
 
-      if (_relevantNodes != null && defaultDegree != null) {
-        _relevantNodes.forEach((node) =>
-            _relevanceFilter.setRelevantUpToRoot(node, defaultDegree));
+      if (_relevantNodes == null && defaultRelevance != null) {
+        _relevantNodes = defaultRelevance;
+        for (final node in _relevantNodes) {
+          _relevanceFilter.setRelevantUpToRoot(node, defaultDegree);
+        }
+      } else if (_relevantNodes != null) {
+        _relevanceFilter.setRelevantNodes(_relevantNodes);
       } else {
         // No previous setting or defaults => set the user's group
-        AuthProvider authProvider =
-            Provider.of<AuthProvider>(context, listen: false);
+        final authProvider = Provider.of<AuthProvider>(context, listen: false);
         if (authProvider.isAuthenticatedFromCache) {
-          User user = await authProvider.currentUser;
+          final user = await authProvider.currentUser;
           // Try to set the default from the user data
-          if (user != null) {
-            _relevanceFilter.setRelevantNodes([
-              user.degree,
-              user.domain,
-              user.year,
-              user.series,
-              user.group
-            ].where((element) => element != null).toList());
+          if (user != null && user.classes != null) {
+            _relevanceFilter.setRelevantNodes(user.classes);
           }
         }
       }
 
-      return _relevanceFilter;
+      return cachedFilter;
     } catch (e, stackTrace) {
       print(e);
       print(stackTrace);

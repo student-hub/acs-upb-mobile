@@ -10,10 +10,15 @@ class CustomIcons {
   // Custom font icons (see [CONTRIBUTING.md] for more info)
   static const IconData book =
       IconData(0xe800, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+
+  // ignore: constant_identifier_names
   static const IconData github_brands =
       IconData(0xe803, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+
+  // ignore: constant_identifier_names
   static const IconData edit_slash =
       IconData(0xe804, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+
   static const IconData filter =
       IconData(0xf0b0, fontFamily: _kFontFam, fontPackage: _kFontPkg);
 
@@ -21,7 +26,7 @@ class CustomIcons {
   static const Icon invalid = Icon(Icons.cancel, color: Colors.red);
 
   // Transparent icon to be used as a placeholder
-  static const Icon empty = Icon(Icons.cancel, color: Color(0));
+  static const Icon empty = Icon(Icons.cancel, color: Color(0x00000000));
 
   static Color formIconColor(ThemeData themeData) {
     switch (themeData.brightness) {

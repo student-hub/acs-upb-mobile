@@ -3,42 +3,49 @@ import 'package:flutter/material.dart';
 class SelectableController {
   _SelectableState _selectableState;
 
-  bool get isSelected => _selectableState?.isSelected;
+  bool get isSelected => _selectableState?._isSelected;
 
   void select() {
-    _selectableState.isSelected = true;
+    if (!isSelected) _selectableState.isSelected = true;
   }
 
   void deselect() {
-    _selectableState.isSelected = false;
+    if (isSelected) _selectableState.isSelected = false;
   }
 }
 
 class Selectable extends StatefulWidget {
-  final bool initiallySelected;
-  final String label;
-  final Function(bool) onSelected;
-  final SelectableController controller;
-  final bool disabled;
-
-  Selectable(
+  const Selectable(
       {this.initiallySelected = false,
-      this.label = "",
+      this.label = '',
       this.onSelected,
       this.controller,
       this.disabled = false});
+
+  final bool initiallySelected;
+  final String label;
+  final void Function(bool) onSelected;
+  final SelectableController controller;
+  final bool disabled;
 
   @override
   _SelectableState createState() => _SelectableState();
 }
 
 class _SelectableState extends State<Selectable> {
-  bool isSelected;
+  bool _isSelected;
+
+  set isSelected(bool newValue) {
+    _isSelected = newValue;
+    setState(() {});
+  }
+
+  bool get isSelected => _isSelected;
 
   @override
   void initState() {
     super.initState();
-    isSelected = widget.initiallySelected;
+    _isSelected = widget.initiallySelected;
   }
 
   @override
@@ -47,12 +54,12 @@ class _SelectableState extends State<Selectable> {
 
     return Container(
       decoration: BoxDecoration(
-        color: isSelected
+        color: _isSelected
             ? (widget.disabled
                 ? Theme.of(context).disabledColor
                 : Theme.of(context).accentColor)
             : Colors.transparent,
-        borderRadius: const BorderRadius.all(Radius.circular(24.0)),
+        borderRadius: const BorderRadius.all(Radius.circular(24)),
         border: Border.all(
             color: widget.disabled
                 ? Theme.of(context).disabledColor
@@ -62,14 +69,14 @@ class _SelectableState extends State<Selectable> {
         color: Colors.transparent,
         child: InkWell(
           splashColor: Colors.white24,
-          borderRadius: const BorderRadius.all(Radius.circular(24.0)),
+          borderRadius: const BorderRadius.all(Radius.circular(24)),
           onTap: () {
             setState(
               () {
                 if (!widget.disabled) {
-                  isSelected = !isSelected;
+                  _isSelected = !_isSelected;
                 }
-                widget.onSelected(isSelected);
+                widget.onSelected(_isSelected);
               },
             );
           },
@@ -84,7 +91,7 @@ class _SelectableState extends State<Selectable> {
                   fontWeight: FontWeight.w600,
                   fontSize: 12,
                   letterSpacing: 0.27,
-                  color: isSelected
+                  color: _isSelected
                       ? Colors.white
                       : widget.disabled
                           ? Theme.of(context).disabledColor
