@@ -82,7 +82,7 @@ class HomePage extends StatelessWidget {
           // FAQ
           InfoCard<List<Question>>(
             title: S.of(context).sectionFAQ,
-            valueKey: 'show_more_faq',
+            showMoreButtonKey: 'show_more_faq',
             onShowMore: () => Navigator.of(context).pushNamed(Routes.faq),
             future:
                 Provider.of<QuestionProvider>(context).fetchQuestions(limit: 2),

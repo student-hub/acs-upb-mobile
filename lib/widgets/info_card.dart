@@ -7,13 +7,13 @@ class InfoCard<T> extends StatelessWidget {
       @required this.builder,
       this.onShowMore,
       this.title,
-      this.valueKey});
+      this.showMoreButtonKey});
 
   final Function onShowMore;
   final Future<T> future;
   final Widget Function(T) builder;
   final String title;
-  final String valueKey;
+  final String showMoreButtonKey;
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +38,7 @@ class InfoCard<T> extends StatelessWidget {
                   if (onShowMore != null)
                     GestureDetector(
                       onTap: onShowMore,
-                      key: ValueKey(valueKey ?? 'show_more'),
+                      key: ValueKey(showMoreButtonKey ?? 'show_more'),
                       child: Row(
                         children: <Widget>[
                           Text(
