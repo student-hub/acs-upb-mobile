@@ -185,6 +185,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "navigationProfile" : MessageLookupByLibrary.simpleMessage("Profil"),
     "navigationSettings" : MessageLookupByLibrary.simpleMessage("Setări"),
     "navigationTimetable" : MessageLookupByLibrary.simpleMessage("Orar"),
+    "newsFeedTitle" : MessageLookupByLibrary.simpleMessage("Știri"),
     "relevanceAnyone" : MessageLookupByLibrary.simpleMessage("Oricine"),
     "relevanceOnlyMe" : MessageLookupByLibrary.simpleMessage("Doar eu"),
     "sectionEvents" : MessageLookupByLibrary.simpleMessage("Evenimente"),

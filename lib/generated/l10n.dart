@@ -2114,6 +2114,16 @@ class S {
     );
   }
 
+  /// `News feed`
+  String get newsFeedTitle {
+    return Intl.message(
+      'News feed',
+      name: 'newsFeedTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `assets/images/acs_banner_en.png`
   String get fileAcsBanner {
     return Intl.message(
