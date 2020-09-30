@@ -3,6 +3,8 @@ import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/authentication/view/login_view.dart';
 import 'package:acs_upb_mobile/authentication/view/sign_up_view.dart';
 import 'package:acs_upb_mobile/main.dart';
+import 'package:acs_upb_mobile/pages/faq/model/question.dart';
+import 'package:acs_upb_mobile/pages/faq/service/question_provider.dart';
 import 'package:acs_upb_mobile/pages/filter/model/filter.dart';
 import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
 import 'package:acs_upb_mobile/pages/home/home_page.dart';
@@ -24,11 +26,14 @@ class MockWebsiteProvider extends Mock implements WebsiteProvider {}
 
 class MockPersonProvider extends Mock implements PersonProvider {}
 
+class MockQuestionProvider extends Mock implements QuestionProvider {}
+
 void main() {
   AuthProvider mockAuthProvider;
   WebsiteProvider mockWebsiteProvider;
   FilterProvider mockFilterProvider;
   PersonProvider mockPersonProvider;
+  MockQuestionProvider mockQuestionProvider;
 
   setUp(() async {
     WidgetsFlutterBinding.ensureInitialized();
@@ -68,6 +73,14 @@ void main() {
     when(mockPersonProvider.hasListeners).thenReturn(false);
     when(mockPersonProvider.fetchPeople(context: anyNamed('context')))
         .thenAnswer((_) => Future.value([]));
+
+    mockQuestionProvider = MockQuestionProvider();
+    // ignore: invalid_use_of_protected_member
+    when(mockQuestionProvider.hasListeners).thenReturn(false);
+    when(mockQuestionProvider.fetchQuestions(context: anyNamed('context')))
+        .thenAnswer((realInvocation) => Future.value(<Question>[]));
+    when(mockQuestionProvider.fetchQuestions(limit: anyNamed('limit')))
+        .thenAnswer((realInvocation) => Future.value(<Question>[]));
   });
 
   group('Login', () {
@@ -75,7 +88,9 @@ void main() {
       await tester.pumpWidget(MultiProvider(providers: [
         ChangeNotifierProvider<AuthProvider>(create: (_) => mockAuthProvider),
         ChangeNotifierProvider<WebsiteProvider>(
-            create: (_) => mockWebsiteProvider)
+            create: (_) => mockWebsiteProvider),
+        ChangeNotifierProvider<QuestionProvider>(
+            create: (_) => mockQuestionProvider)
       ], child: const MyApp()));
       await tester.pumpAndSettle();
 
@@ -103,7 +118,9 @@ void main() {
       await tester.pumpWidget(MultiProvider(providers: [
         ChangeNotifierProvider<AuthProvider>(create: (_) => mockAuthProvider),
         ChangeNotifierProvider<WebsiteProvider>(
-            create: (_) => mockWebsiteProvider)
+            create: (_) => mockWebsiteProvider),
+        ChangeNotifierProvider<QuestionProvider>(
+            create: (_) => mockQuestionProvider)
       ], child: const MyApp()));
       await tester.pumpAndSettle();
 
@@ -333,7 +350,9 @@ void main() {
         ChangeNotifierProvider<FilterProvider>(
             create: (_) => mockFilterProvider),
         ChangeNotifierProvider<WebsiteProvider>(
-            create: (_) => mockWebsiteProvider)
+            create: (_) => mockWebsiteProvider),
+        ChangeNotifierProvider<QuestionProvider>(
+            create: (_) => mockQuestionProvider)
       ], child: MyApp(navigationObservers: [mockObserver])));
       await tester.pumpAndSettle();
 
@@ -542,6 +561,8 @@ void main() {
             create: (_) => mockWebsiteProvider),
         ChangeNotifierProvider<PersonProvider>(
             create: (_) => mockPersonProvider),
+        ChangeNotifierProvider<QuestionProvider>(
+            create: (_) => mockQuestionProvider),
       ], child: MyApp(navigationObservers: [mockObserver])));
       await tester.pumpAndSettle();
 
@@ -573,6 +594,8 @@ void main() {
             create: (_) => mockWebsiteProvider),
         ChangeNotifierProvider<PersonProvider>(
             create: (_) => mockPersonProvider),
+        ChangeNotifierProvider<QuestionProvider>(
+            create: (_) => mockQuestionProvider)
       ], child: MyApp(navigationObservers: [mockObserver])));
       await tester.pumpAndSettle();
 
