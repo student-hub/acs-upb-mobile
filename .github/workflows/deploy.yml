@@ -10,6 +10,7 @@ jobs:
   deploy:
     name: Deploy
     runs-on: ubuntu-latest
+    if: github.repository == 'acs-upb-mobile/acs-upb-mobile'
 
     steps:
       - uses: actions/checkout@v1
