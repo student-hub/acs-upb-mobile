@@ -4,7 +4,6 @@ import 'package:acs_upb_mobile/authentication/view/edit_profile_page.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/navigation/routes.dart';
 import 'package:acs_upb_mobile/pages/faq/model/question.dart';
-import 'package:acs_upb_mobile/pages/classes/model/news_feed_item.dart';
 import 'package:acs_upb_mobile/pages/faq/service/question_provider.dart';
 import 'package:acs_upb_mobile/pages/portal/model/website.dart';
 import 'package:acs_upb_mobile/pages/portal/service/website_provider.dart';
@@ -16,7 +15,8 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:web_scraper/web_scraper.dart';
+
+import 'news_feed_card.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({this.tabController, Key key}) : super(key: key);
@@ -185,70 +185,6 @@ class ProfileCard extends StatelessWidget {
           ),
         ),
       ),
-    );
-  }
-}
-
-class NewsFeedCard extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8),
-      child: Card(
-        child: Padding(
-          padding: const EdgeInsets.all(8),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'News feed',
-                textAlign: TextAlign.left,
-                style: Theme
-                    .of(context)
-                    .textTheme
-                    .headline6
-                    .copyWith(fontSize: 18),
-              ),
-              _buildNewsItems(context),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  FutureBuilder<bool> _buildNewsItems(BuildContext context) {
-    final webScraper = WebScraper('https://acs.pub.ro');
-
-    return FutureBuilder(
-      future: webScraper.loadWebPage('/topic/noutati'),
-      builder: (_, snapshot) {
-        if (snapshot.connectionState == ConnectionState.done) {
-          final bool scrapeSuccess = snapshot.data;
-          if (scrapeSuccess) {
-            return Column(
-              children: NewsFeedItem.extractFromWebScraper(webScraper)
-                  .map((newsFeedItem) => Row(
-                children: [
-                  Expanded(
-                      flex: 1,
-                      child: Text(newsFeedItem.date)
-                  ),
-                  Expanded(
-                      flex: 3,
-                      child: Text(newsFeedItem.title)
-                  )
-                ],
-              )).toList(),
-            );
-          }
-
-          return const Center(child: Text('Could not load news feed.'));
-        }
-
-        return const Center(child: CircularProgressIndicator());
-      },
     );
   }
 }
