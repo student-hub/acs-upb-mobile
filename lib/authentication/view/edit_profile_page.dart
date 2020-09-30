@@ -1,3 +1,7 @@
+import 'dart:io';
+import 'dart:typed_data';
+import 'dart:ui';
+
 import 'package:acs_upb_mobile/authentication/model/user.dart';
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
@@ -11,7 +15,10 @@ import 'package:acs_upb_mobile/widgets/icon_text.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:image_picker_web/image_picker_web.dart';
 import 'package:preferences/preference_title.dart';
 import 'package:provider/provider.dart';
 
@@ -29,6 +36,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
   final dropdownController = FilterDropdownController();
 
   final formKey = GlobalKey<FormState>();
+
+  File imagePhone;
+  Uint8List imageWeb;
 
   AppDialog _changePasswordDialog(BuildContext context) {
     final newPasswordController = TextEditingController();
@@ -204,6 +214,42 @@ class _EditProfilePageState extends State<EditProfilePage> {
     );
   }
 
+  Future<void> getImage() async {
+    if (!kIsWeb) {
+      final pickedFile =
+          await ImagePicker().getImage(source: ImageSource.gallery);
+      setState(() {
+        if (pickedFile != null) {
+          imagePhone = File(pickedFile.path);
+        } else {
+          AppToast.show('No image selected.');
+        }
+      });
+    } else {
+      final Uint8List imageFile =
+          await ImagePickerWeb.getImage(outputType: ImageType.bytes);
+      setState(() {
+        if (imageFile != null) {
+          imageWeb = imageFile;
+        } else {
+          AppToast.show('No image selected.');
+        }
+      });
+    }
+  }
+
+  ImageProvider<dynamic> loadImage() {
+    if (kIsWeb) {
+      if (imageWeb != null) {
+        return MemoryImage(imageWeb);
+      }
+    }
+    if (imagePhone != null) {
+      return FileImage(imagePhone);
+    }
+    return const AssetImage('assets/illustrations/undraw_profile_pic.png');
+  }
+
   @override
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
@@ -273,15 +319,13 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     Padding(
                       padding: const EdgeInsets.all(8),
                       child: GestureDetector(
-                        child: const CircleImage(
-                          circleSize: 150,
-                          image: AssetImage(
-                            'assets/illustrations/undraw_profile_pic.png',
+                          child: CircleImage(
+                            circleSize: 150,
+                            image: loadImage(),
+                            enableOverlay: true,
+                            overlayIcon: const Icon(Icons.edit),
                           ),
-                          enableOverlay: true,
-                          overlayIcon: Icon(Icons.edit),
-                        ),
-                      ),
+                          onTap: getImage),
                     ),
                     PreferenceTitle(
                       S.of(context).labelPersonalInformation,

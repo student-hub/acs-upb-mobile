@@ -89,6 +89,9 @@ dependencies:
   # Image importer
   image_picker: ^0.6.7+4
 
+  # Web image importer
+  image_picker_web: ^1.0.9
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
