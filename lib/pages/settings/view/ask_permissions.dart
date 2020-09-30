@@ -25,7 +25,7 @@ class _AskPermissionsState extends State<AskPermissions> {
   RequestProvider requestProvider;
 
   Future<void> _fetchUser() async {
-    AuthProvider authProvider = Provider.of(context, listen: false);
+    final AuthProvider authProvider = Provider.of(context, listen: false);
     user = await authProvider.currentUser;
     if (mounted) {
       setState(() {});
@@ -53,7 +53,7 @@ class _AskPermissionsState extends State<AskPermissions> {
   }
 
   @override
-  initState() {
+  void initState() {
     super.initState();
     _fetchUser();
   }
@@ -109,20 +109,20 @@ class _AskPermissionsState extends State<AskPermissions> {
         body: ListView(
           children: [
             Padding(
-              padding: const EdgeInsets.only(top: 10.0),
+              padding: const EdgeInsets.only(top: 10),
               child: Container(
                   height: MediaQuery.of(context).size.height / 4,
                   child: Image.asset('assets/illustrations/undraw_hiring.png')),
             ),
             Padding(
-              padding: const EdgeInsets.all(20.0),
+              padding: const EdgeInsets.all(20),
               child: Text(
                 S.of(context).messageAskPermissionToEdit,
                 style: Theme.of(context).textTheme.headline6,
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(10.0),
+              padding: const EdgeInsets.all(10),
               child: TextFormField(
                 keyboardType: TextInputType.multiline,
                 minLines: 1,
@@ -132,7 +132,7 @@ class _AskPermissionsState extends State<AskPermissions> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(10.0),
+              padding: const EdgeInsets.all(10),
               child: Row(children: [
                 Checkbox(
                   value: agreedToResponsibilities,

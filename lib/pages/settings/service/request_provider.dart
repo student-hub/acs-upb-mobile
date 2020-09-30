@@ -27,7 +27,7 @@ class RequestProvider {
       DocumentReference ref;
       ref = _db.collection('forms').document(request.userId);
 
-      var data = request.toData();
+      final data = request.toData();
       await ref.setData(data);
 
       return true;
@@ -43,7 +43,7 @@ class RequestProvider {
   Future<bool> userAlreadyRequested(final String userId,
       {BuildContext context}) async {
     try {
-      DocumentSnapshot snap =
+      final DocumentSnapshot snap =
           await _db.collection('forms').document(userId).get();
       if (snap != null) {
         return true;
