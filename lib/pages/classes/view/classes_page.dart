@@ -32,9 +32,9 @@ class _ClassesPageState extends State<ClassesPage> {
     }
 
     final ClassProvider classProvider =
-        Provider.of<ClassProvider>(context, listen: false);
+    Provider.of<ClassProvider>(context, listen: false);
     final AuthProvider authProvider =
-        Provider.of<AuthProvider>(context, listen: false);
+    Provider.of<AuthProvider>(context, listen: false);
     headers = await classProvider.fetchClassHeaders(uid: authProvider.uid);
 
     updating = false;
@@ -55,7 +55,8 @@ class _ClassesPageState extends State<ClassesPage> {
         uid: authProvider.uid, context: context);
   }
 
-  Widget _noClassesView() => Padding(
+  Widget _noClassesView() =>
+      Padding(
         padding: const EdgeInsets.all(10),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -73,8 +74,13 @@ class _ClassesPageState extends State<ClassesPage> {
             Padding(
               padding: const EdgeInsets.all(10),
               child: Text(
-                S.of(context).messageNoClassesYet,
-                style: Theme.of(context).textTheme.headline6,
+                S
+                    .of(context)
+                    .messageNoClassesYet,
+                style: Theme
+                    .of(context)
+                    .textTheme
+                    .headline6,
                 textAlign: TextAlign.center,
               ),
             ),
@@ -83,25 +89,36 @@ class _ClassesPageState extends State<ClassesPage> {
               child: RichText(
                   textAlign: TextAlign.center,
                   text: TextSpan(
-                    style: Theme.of(context).textTheme.subtitle1,
+                    style: Theme
+                        .of(context)
+                        .textTheme
+                        .subtitle1,
                     children: [
                       TextSpan(
                           text:
-                              '${S.of(context).messageGetStartedByPressing} '),
+                          '${S
+                              .of(context)
+                              .messageGetStartedByPressing} '),
                       WidgetSpan(
                         alignment: PlaceholderAlignment.middle,
                         child: Icon(
                           Icons.edit,
-                          size: Theme.of(context).textTheme.subtitle1.fontSize +
+                          size: Theme
+                              .of(context)
+                              .textTheme
+                              .subtitle1
+                              .fontSize +
                               2,
                         ),
                       ),
-                      TextSpan(text: ' ${S.of(context).messageButtonAbove}.'),
+                      TextSpan(text: ' ${S
+                          .of(context)
+                          .messageButtonAbove}.'),
                     ],
                   )
-                  // S.of(context).messageGetStartedButton,
-                  // style: Theme.of(context).textTheme.subtitle1,
-                  ),
+                // S.of(context).messageGetStartedButton,
+                // style: Theme.of(context).textTheme.subtitle1,
+              ),
             ),
             Expanded(flex: 1, child: Container()),
           ],
@@ -114,36 +131,44 @@ class _ClassesPageState extends State<ClassesPage> {
     final authProvider = Provider.of<AuthProvider>(context);
 
     return AppScaffold(
-      title: Text(S.of(context).navigationClasses),
+      title: Text(S
+          .of(context)
+          .navigationClasses),
       // TODO(IoanaAlexandru): Simply show all classes if user is not authenticated
       needsToBeAuthenticated: true,
       actions: [
         AppScaffoldAction(
           icon: Icons.edit,
-          tooltip: S.of(context).actionChooseClasses,
-          onPressed: () => Navigator.of(context).push(
-            MaterialPageRoute<ChangeNotifierProvider>(
-              builder: (_) => ChangeNotifierProvider.value(
-                  value: classProvider,
-                  child: FutureBuilder(
-                    future: userClassIdsFuture,
-                    builder: (context, snap) {
-                      if (snap.hasData) {
-                        return AddClassesPage(
-                            initialClassIds: snap.data,
-                            onSave: (classIds) async {
-                              await classProvider.setUserClassIds(
-                                  classIds: classIds, uid: authProvider.uid);
-                              unawaited(updateClasses());
-                              Navigator.pop(context);
-                            });
-                      } else {
-                        return const Center(child: CircularProgressIndicator());
-                      }
-                    },
-                  )),
-            ),
-          ),
+          tooltip: S
+              .of(context)
+              .actionChooseClasses,
+          onPressed: () =>
+              Navigator.of(context).push(
+                MaterialPageRoute<ChangeNotifierProvider>(
+                  builder: (_) =>
+                      ChangeNotifierProvider.value(
+                          value: classProvider,
+                          child: FutureBuilder(
+                            future: userClassIdsFuture,
+                            builder: (context, snap) {
+                              if (snap.hasData) {
+                                return AddClassesPage(
+                                    initialClassIds: snap.data,
+                                    onSave: (classIds) async {
+                                      await classProvider.setUserClassIds(
+                                          classIds: classIds,
+                                          uid: authProvider.uid);
+                                      unawaited(updateClasses());
+                                      Navigator.pop(context);
+                                    });
+                              } else {
+                                return const Center(
+                                    child: CircularProgressIndicator());
+                              }
+                            },
+                          )),
+                ),
+              ),
         ),
       ],
       body: Stack(
@@ -151,22 +176,26 @@ class _ClassesPageState extends State<ClassesPage> {
           if (updating != null)
             headers != null && headers.isNotEmpty
                 ? ClassList(
-                    classes: headers,
-                    sectioned: false,
-                    onTap: (classHeader) => Navigator.of(context)
-                        .push(MaterialPageRoute<ChangeNotifierProvider>(
-                      builder: (context) => ChangeNotifierProvider.value(
-                        value: classProvider,
-                        child: ClassView(classHeader: classHeader),
-                      ),
-                    )),
-                  )
+              classes: headers,
+              sectioned: false,
+              onTap: (classHeader) =>
+                  Navigator.of(context)
+                      .push(MaterialPageRoute<ChangeNotifierProvider>(
+                    builder: (context) =>
+                        ChangeNotifierProvider.value(
+                          value: classProvider,
+                          child: ClassView(classHeader: classHeader),
+                        ),
+                  )),
+            )
                 : _noClassesView(),
           if (updating == null)
             const Center(child: CircularProgressIndicator()),
           if (updating == true)
             Container(
-                color: Theme.of(context).disabledColor,
+                color: Theme
+                    .of(context)
+                    .disabledColor,
                 child: const Center(child: CircularProgressIndicator())),
         ],
       ),
@@ -209,10 +238,14 @@ class _AddClassesPageState extends State<AddClassesPage> {
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
-      title: Text(S.of(context).actionChooseClasses),
+      title: Text(S
+          .of(context)
+          .actionChooseClasses),
       actions: [
         AppScaffoldAction(
-          text: S.of(context).buttonSave,
+          text: S
+              .of(context)
+              .buttonSave,
           onPressed: () => widget.onSave(classIds),
         )
       ],
@@ -233,13 +266,12 @@ class _AddClassesPageState extends State<AddClassesPage> {
 }
 
 class ClassList extends StatelessWidget {
-  ClassList(
-      {this.classes,
-      void Function(bool, String) onSelected,
-      List<String> initiallySelected,
-      this.selectable = false,
-      this.sectioned = true,
-      void Function(ClassHeader) onTap})
+  ClassList({this.classes,
+    void Function(bool, String) onSelected,
+    List<String> initiallySelected,
+    this.selectable = false,
+    this.sectioned = true,
+    void Function(ClassHeader) onTap})
       : onSelected = onSelected ?? ((selected, classId) {}),
         onTap = onTap ?? ((_) {}),
         initiallySelected = initiallySelected ?? [];
@@ -252,10 +284,14 @@ class ClassList extends StatelessWidget {
   final bool sectioned;
 
   String sectionName(BuildContext context, String year, String semester) =>
-      '${S.of(context).labelYear} $year, ${S.of(context).labelSemester} $semester';
+      '${S
+          .of(context)
+          .labelYear} $year, ${S
+          .of(context)
+          .labelSemester} $semester';
 
-  Map<String, dynamic> classesBySection(
-      List<ClassHeader> classes, BuildContext context) {
+  Map<String, dynamic> classesBySection(List<ClassHeader> classes,
+      BuildContext context) {
     final map = <String, dynamic>{};
 
     for (final c in classes) {
@@ -289,8 +325,8 @@ class ClassList extends StatelessWidget {
         children.addAll(values.map<Widget>(buildClassItem));
         expanded = values.fold(
             false,
-            (dynamic selected, ClassHeader header) =>
-                selected || initiallySelected.contains(header.id));
+                (dynamic selected, ClassHeader header) =>
+            selected || initiallySelected.contains(header.id));
       } else {
         final s = buildSections(context, sections[section], level: level + 1);
         expanded = expanded || s.containsSelected;
@@ -312,7 +348,8 @@ class ClassList extends StatelessWidget {
     return _Section(widgets: children, containsSelected: expanded);
   }
 
-  Widget buildClassItem(ClassHeader header) => Column(
+  Widget buildClassItem(ClassHeader header) =>
+      Column(
         children: [
           ClassListItem(
             selectable: selectable,
@@ -329,29 +366,33 @@ class ClassList extends StatelessWidget {
   Widget build(BuildContext context) {
     if (classes != null) {
       return ListView(
-        children: [
+          children: [
           if (sectioned)
-            Padding(
-              padding: const EdgeInsets.only(left: 10, right: 10, top: 10),
-              child: IconText(
-                icon: Icons.info,
-                text: S.of(context).infoChooseClasses,
-                style: Theme.of(context).textTheme.bodyText1,
-              ),
-            ),
-          Padding(
-            padding: const EdgeInsets.all(8),
-            child: Column(
-                children: sectioned
-                    ? (buildSections(
-                            context, classesBySection(classes, context)))
-                        .widgets
-                    : classes.map(buildClassItem).toList()),
-          ),
-        ],
-      );
+      Padding(
+        padding: const EdgeInsets.only(left: 10, right: 10, top: 10),
+        child: IconText(
+            icon: Icons.info,
+            text: '${S
+                .of(context)
+                .infoSelect} ${S
+                .of(context)
+                .infoClasses}.',
+            style: Theme.of(context).textTheme.bodyText1,
+      ),
+    ),
+    Padding(
+    padding: const EdgeInsets.all(8),
+    child: Column(
+    children: sectioned
+    ? (buildSections(
+    context, classesBySection(classes, context)))
+        .widgets
+        : classes.map(buildClassItem).toList()),
+    ),
+    ],
+    );
     } else {
-      return const Center(child: CircularProgressIndicator());
+    return const Center(child: CircularProgressIndicator());
     }
   }
 }
@@ -365,14 +406,13 @@ class _Section {
 }
 
 class ClassListItem extends StatefulWidget {
-  ClassListItem(
-      {Key key,
-      this.classHeader,
-      this.initiallySelected = false,
-      void Function(bool) onSelected,
-      this.selectable = false,
-      void Function() onTap,
-      this.hint})
+  ClassListItem({Key key,
+    this.classHeader,
+    this.initiallySelected = false,
+    void Function(bool) onSelected,
+    this.selectable = false,
+    void Function() onTap,
+    this.hint})
       : onSelected = onSelected ?? ((_) {}),
         onTap = onTap ?? (() {}),
         super(key: key);
@@ -403,46 +443,54 @@ class _ClassListItemState extends State<ClassListItem> {
           width: 30,
           child: (widget.selectable && selected)
               ? Icon(
-                  Icons.check,
-                  color:
-                      widget.classHeader.colorFromAcronym.highEmphasisOnColor,
-                )
+            Icons.check,
+            color:
+            widget.classHeader.colorFromAcronym.highEmphasisOnColor,
+          )
               : Align(
-                  alignment: Alignment.center,
-                  child: AutoSizeText(
-                    widget.classHeader.acronym,
-                    minFontSize: 0,
-                    maxLines: 1,
-                    style: TextStyle(
-                      color: widget
-                          .classHeader.colorFromAcronym.highEmphasisOnColor,
-                    ),
-                  ),
-                ),
+            alignment: Alignment.center,
+            child: AutoSizeText(
+              widget.classHeader.acronym,
+              minFontSize: 0,
+              maxLines: 1,
+              style: TextStyle(
+                color: widget
+                    .classHeader.colorFromAcronym.highEmphasisOnColor,
+              ),
+            ),
+          ),
         ),
       ),
       title: Text(
         widget.classHeader.name,
         style: widget.selectable
             ? (selected
-                ? Theme.of(context)
-                    .textTheme
-                    .subtitle1
-                    .copyWith(fontWeight: FontWeight.bold)
-                : Theme.of(context)
-                    .textTheme
-                    .subtitle1
-                    .copyWith(color: Theme.of(context).disabledColor))
-            : Theme.of(context).textTheme.subtitle1,
+            ? Theme
+            .of(context)
+            .textTheme
+            .subtitle1
+            .copyWith(fontWeight: FontWeight.bold)
+            : Theme
+            .of(context)
+            .textTheme
+            .subtitle1
+            .copyWith(color: Theme
+            .of(context)
+            .disabledColor))
+            : Theme
+            .of(context)
+            .textTheme
+            .subtitle1,
       ),
       subtitle: widget.hint != null ? Text(widget.hint) : null,
-      onTap: () => setState(() {
-        if (widget.selectable) {
-          selected = !selected;
-          widget.onSelected(selected);
-        }
-        widget.onTap();
-      }),
+      onTap: () =>
+          setState(() {
+            if (widget.selectable) {
+              selected = !selected;
+              widget.onSelected(selected);
+            }
+            widget.onTap();
+          }),
     );
   }
 }

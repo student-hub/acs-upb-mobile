@@ -8,6 +8,8 @@ import 'package:acs_upb_mobile/pages/timetable/service/uni_event_provider.dart';
 import 'package:acs_upb_mobile/pages/timetable/view/uni_event_widget.dart';
 import 'package:acs_upb_mobile/resources/custom_icons.dart';
 import 'package:acs_upb_mobile/resources/locale_provider.dart';
+import 'package:acs_upb_mobile/widgets/button.dart';
+import 'package:acs_upb_mobile/widgets/dialog.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -33,11 +35,25 @@ class _TimetablePageState extends State<TimetablePage> {
 
   @override
   Widget build(BuildContext context) {
-    _controller ??= TimetableController(
-        // TODO(IoanaAlexandru): Make initialTimeRange customizable in settings
-        initialTimeRange: InitialTimeRange.range(
-            startTime: LocalTime(7, 55, 0), endTime: LocalTime(20, 5, 0)),
-        eventProvider: Provider.of<UniEventProvider>(context));
+    final eventProvider = Provider.of<UniEventProvider>(context);
+    if (_controller == null) {
+      _controller = TimetableController(
+          // TODO(IoanaAlexandru): Make initialTimeRange customizable in settings
+          initialTimeRange: InitialTimeRange.range(
+              startTime: LocalTime(7, 55, 0), endTime: LocalTime(20, 5, 0)),
+          eventProvider: eventProvider);
+
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
+        // Slight delay between last frame and dialog
+        await Future<void>.delayed(const Duration(seconds: 1));
+        if (eventProvider.empty == true) {
+          await showDialog<String>(
+            context: context,
+            builder: buildDialog,
+          );
+        }
+      });
+    }
 
     return AppScaffold(
       title: AnimatedBuilder(
@@ -82,6 +98,67 @@ class _TimetablePageState extends State<TimetablePage> {
           info: info,
         ),
       ),
+    );
+  }
+
+  AppDialog buildDialog(BuildContext context) {
+    final classProvider = Provider.of<ClassProvider>(context);
+    final authProvider = Provider.of<AuthProvider>(context);
+    final user = authProvider.currentUserFromCache;
+
+    return AppDialog(
+      title: S.of(context).warningNoEvents,
+      content: [
+        RichText(
+          text: TextSpan(
+            style: Theme.of(context).textTheme.subtitle1,
+            children: [
+              TextSpan(text: '${S.of(context).infoYouNeedToSelect} '),
+              WidgetSpan(
+                alignment: PlaceholderAlignment.top,
+                child: Icon(
+                  Icons.class_,
+                  size: Theme.of(context).textTheme.subtitle1.fontSize + 2,
+                ),
+              ),
+              TextSpan(text: ' ${S.of(context).infoClasses}.'),
+            ],
+          ),
+        ),
+      ],
+      actions: [
+        AppButton(
+          text: S.of(context).actionChooseClasses,
+          width: 130,
+          onTap: () async {
+            // Pop the dialog
+            Navigator.of(context).pop();
+            // Push the Add classes page
+            await Navigator.of(context)
+                .push(MaterialPageRoute<ChangeNotifierProvider>(
+              builder: (_) => ChangeNotifierProvider.value(
+                  value: classProvider,
+                  child: FutureBuilder(
+                    future: classProvider.fetchUserClassIds(
+                        uid: user.uid, context: context),
+                    builder: (context, snap) {
+                      if (snap.hasData) {
+                        return AddClassesPage(
+                            initialClassIds: snap.data,
+                            onSave: (classIds) async {
+                              await classProvider.setUserClassIds(
+                                  classIds: classIds, uid: authProvider.uid);
+                              Navigator.pop(context);
+                            });
+                      } else {
+                        return const Center(child: CircularProgressIndicator());
+                      }
+                    },
+                  )),
+            ));
+          },
+        )
+      ],
     );
   }
 }

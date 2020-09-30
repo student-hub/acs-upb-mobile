@@ -171,39 +171,40 @@ extension AcademicCalendarExtension on AcademicCalendar {
 class UniEventProvider extends EventProvider<UniEventInstance>
     with ChangeNotifier {
   UniEventProvider({AuthProvider authProvider})
-      : authProvider = authProvider ?? AuthProvider() {
+      : _authProvider = authProvider ?? AuthProvider() {
     fetchCalendars();
   }
 
-  Map<String, AcademicCalendar> calendars = {'2020': AcademicCalendar()};
-  ClassProvider classProvider;
-  FilterProvider filterProvider;
-  final AuthProvider authProvider;
-  List<String> classIds = [];
-  Filter filter;
+  final Map<String, AcademicCalendar> _calendars = {};
+  ClassProvider _classProvider;
+  FilterProvider _filterProvider;
+  final AuthProvider _authProvider;
+  List<String> _classIds = [];
+  Filter _filter;
+  bool empty;
 
   Future<void> fetchCalendars() async {
     final QuerySnapshot query =
         await Firestore.instance.collection('calendars').getDocuments();
     for (final doc in query.documents) {
-      calendars[doc.documentID] = AcademicCalendarExtension.fromSnap(doc);
+      _calendars[doc.documentID] = AcademicCalendarExtension.fromSnap(doc);
     }
     notifyListeners();
   }
 
   Stream<List<UniEvent>> get _events {
-    if (!authProvider.isAuthenticatedFromCache ||
-        filter == null ||
-        calendars == null) return Stream.value([]);
+    if (!_authProvider.isAuthenticatedFromCache ||
+        _filter == null ||
+        _calendars == null) return Stream.value([]);
 
     final streams = <Stream<List<UniEvent>>>[];
 
-    for (final classId in classIds ?? []) {
+    for (final classId in _classIds ?? []) {
       final Stream<List<UniEvent>> stream = Firestore.instance
           .collection('events')
           .where('class', isEqualTo: classId)
-          .where('degree', isEqualTo: filter.baseNode)
-          .where('relevance', arrayContainsAny: filter.relevantNodes)
+          .where('degree', isEqualTo: _filter.baseNode)
+          .where('relevance', arrayContainsAny: _filter.relevantNodes)
           .snapshots()
           .asyncMap((snapshot) async {
         final events = <UniEvent>[];
@@ -213,11 +214,11 @@ class UniEventProvider extends EventProvider<UniEventInstance>
             ClassHeader classHeader;
             if (doc.data['class'] != null) {
               classHeader =
-                  await classProvider.fetchClassHeader(doc.data['class']);
+                  await _classProvider.fetchClassHeader(doc.data['class']);
             }
 
             events.add(UniEventExtension.fromJSON(doc.documentID, doc.data,
-                classHeader: classHeader, calendars: calendars));
+                classHeader: classHeader, calendars: _calendars));
           }
           return events.where((element) => element != null).toList();
         } catch (e) {
@@ -231,7 +232,14 @@ class UniEventProvider extends EventProvider<UniEventInstance>
     final stream = StreamZip(streams);
 
     // Flatten zipped streams
-    return stream.map((events) => events.expand((i) => i).toList());
+    final events = stream.map((events) => events.expand((i) => i).toList());
+
+    events.isEmpty.then((value) {
+      empty = value;
+      // notifyListeners();
+    });
+
+    return events;
   }
 
   @override
@@ -241,7 +249,7 @@ class UniEventProvider extends EventProvider<UniEventInstance>
         .map((event) => event.generateInstances(intersectingInterval: interval))
         .expand((i) => i)
         .allDayEvents
-        .followedBy(calendars.values.map((cal) {
+        .followedBy(_calendars.values.map((cal) {
           final List<AllDayUniEvent> events = cal.holidays + cal.exams;
           return events
               .map((e) => e.generateInstances(intersectingInterval: interval))
@@ -260,22 +268,22 @@ class UniEventProvider extends EventProvider<UniEventInstance>
   }
 
   void updateClasses(ClassProvider classProvider) {
-    this.classProvider = classProvider;
+    _classProvider = classProvider;
     fetchClassIds();
   }
 
   Future<void> fetchClassIds() async {
-    classIds = await classProvider.fetchUserClassIds(uid: authProvider.uid);
+    _classIds = await _classProvider.fetchUserClassIds(uid: _authProvider.uid);
     notifyListeners();
   }
 
   void updateFilter(FilterProvider filterProvider) {
-    this.filterProvider = filterProvider;
+    _filterProvider = filterProvider;
     fetchFilter();
   }
 
   Future<void> fetchFilter() async {
-    filter = await filterProvider.fetchFilter();
+    _filter = await _filterProvider.fetchFilter();
     notifyListeners();
   }
 

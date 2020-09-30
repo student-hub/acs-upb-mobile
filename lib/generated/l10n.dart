@@ -1,6 +1,7 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+
 import 'intl/messages_all.dart';
 
 // **************************************************************************
@@ -1223,6 +1224,16 @@ class S {
     );
   }
 
+  /// `No events to show`
+  String get warningNoEvents {
+    return Intl.message(
+      'No events to show',
+      name: 'warningNoEvents',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Home`
   String get navigationHome {
     return Intl.message(
@@ -1963,11 +1974,31 @@ class S {
     );
   }
 
-  /// `Select the classes you are interested in.`
-  String get infoChooseClasses {
+  /// `Select the`
+  String get infoSelect {
     return Intl.message(
-      'Select the classes you are interested in.',
-      name: 'infoChooseClasses',
+      'Select the',
+      name: 'infoSelect',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You first need to select the`
+  String get infoYouNeedToSelect {
+    return Intl.message(
+      'You first need to select the',
+      name: 'infoYouNeedToSelect',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `classes you are interested in`
+  String get infoClasses {
+    return Intl.message(
+      'classes you are interested in',
+      name: 'infoClasses',
       desc: '',
       args: [],
     );
