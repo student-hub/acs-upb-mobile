@@ -1,7 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-
 import 'intl/messages_all.dart';
 
 // **************************************************************************
@@ -1874,11 +1873,21 @@ class S {
     );
   }
 
-  /// `Get started by pressing the button above.`
-  String get messageGetStartedButton {
+  /// `Get started by pressing the`
+  String get messageGetStartedByPressing {
     return Intl.message(
-      'Get started by pressing the button above.',
-      name: 'messageGetStartedButton',
+      'Get started by pressing the',
+      name: 'messageGetStartedByPressing',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `button above`
+  String get messageButtonAbove {
+    return Intl.message(
+      'button above',
+      name: 'messageButtonAbove',
       desc: '',
       args: [],
     );

@@ -72,15 +72,36 @@ class _ClassesPageState extends State<ClassesPage> {
             ),
             Padding(
               padding: const EdgeInsets.all(10),
-              child: Text(S.of(context).messageNoClassesYet,
-                  style: Theme.of(context).textTheme.headline6),
+              child: Text(
+                S.of(context).messageNoClassesYet,
+                style: Theme.of(context).textTheme.headline6,
+                textAlign: TextAlign.center,
+              ),
             ),
             Padding(
               padding: const EdgeInsets.only(left: 10, right: 10),
-              child: Text(
-                S.of(context).messageGetStartedButton,
-                style: Theme.of(context).textTheme.subtitle1,
-              ),
+              child: RichText(
+                  textAlign: TextAlign.center,
+                  text: TextSpan(
+                    style: Theme.of(context).textTheme.subtitle1,
+                    children: [
+                      TextSpan(
+                          text:
+                              '${S.of(context).messageGetStartedByPressing} '),
+                      WidgetSpan(
+                        alignment: PlaceholderAlignment.middle,
+                        child: Icon(
+                          Icons.edit,
+                          size: Theme.of(context).textTheme.subtitle1.fontSize +
+                              2,
+                        ),
+                      ),
+                      TextSpan(text: ' ${S.of(context).messageButtonAbove}.'),
+                    ],
+                  )
+                  // S.of(context).messageGetStartedButton,
+                  // style: Theme.of(context).textTheme.subtitle1,
+                  ),
             ),
             Expanded(flex: 1, child: Container()),
           ],
