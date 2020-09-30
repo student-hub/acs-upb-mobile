@@ -449,7 +449,7 @@ void main() {
         await tester.pumpAndSettle();
 
         // Open add class view
-        await tester.tap(find.byIcon(Icons.add));
+        await tester.tap(find.byIcon(Icons.edit));
         await tester.pumpAndSettle();
 
         expect(find.byType(AddClassesPage), findsOneWidget);
@@ -714,7 +714,7 @@ void main() {
 
   group('Edit Profile', () {
     setUp(() {
-      when(mockAuthProvider.isVerifiedFromCache).thenReturn(true);
+      when(mockAuthProvider.isVerifiedFromCache).thenReturn(false);
       when(mockAuthProvider.isAuthenticatedFromCache).thenReturn(true);
       when(mockAuthProvider.isAnonymous).thenReturn(false);
       when(mockAuthProvider.currentUser).thenAnswer((realInvocation) =>
@@ -723,6 +723,9 @@ void main() {
               firstName: 'John',
               lastName: 'Doe',
               permissionLevel: 3)));
+      when(mockAuthProvider.currentUserFromCache).thenReturn(User(
+          uid: '1', firstName: 'John', lastName: 'Doe', permissionLevel: 3));
+      when(mockAuthProvider.email).thenReturn('john.doe@stud.acs.upb.ro');
     });
 
     for (final size in screenSizes) {
@@ -737,6 +740,18 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(find.byType(EditProfilePage), findsOneWidget);
+      });
+
+      testWidgets('${size.width}x${size.height}, delete account',
+          (WidgetTester tester) async {
+        await binding.setSurfaceSize(size);
+
+        await tester.pumpWidget(buildApp());
+        await tester.pumpAndSettle();
+
+        // Open Edit Profile page
+        await tester.tap(find.byIcon(Icons.edit));
+        await tester.pumpAndSettle();
 
         //Open delete account popup
         await tester.tap(find.byIcon(Icons.more_vert));
@@ -747,6 +762,51 @@ void main() {
 
         expect(find.byKey(const ValueKey('delete_account_button')),
             findsOneWidget);
+      });
+
+      testWidgets('${size.width}x${size.height}, change password',
+          (WidgetTester tester) async {
+        await binding.setSurfaceSize(size);
+
+        await tester.pumpWidget(buildApp());
+        await tester.pumpAndSettle();
+
+        // Open Edit Profile page
+        await tester.tap(find.byIcon(Icons.edit));
+        await tester.pumpAndSettle();
+
+        //Open change password popup
+        await tester.tap(find.byIcon(Icons.more_vert));
+        await tester.pumpAndSettle();
+
+        await tester.tap(find.text('Change password'));
+        await tester.pumpAndSettle();
+
+        expect(find.byKey(const ValueKey('change_password_button')),
+            findsOneWidget);
+      });
+
+      testWidgets('${size.width}x${size.height}, change email',
+          (WidgetTester tester) async {
+        await binding.setSurfaceSize(size);
+
+        await tester.pumpWidget(buildApp());
+        await tester.pumpAndSettle();
+
+        // Open Edit Profile page
+        await tester.tap(find.byIcon(Icons.edit));
+        await tester.pumpAndSettle();
+
+        // Edit the email
+        await tester.enterText(
+            find.text('john.doe'), 'johndoe@stud.acs.upb.ro');
+
+        //Open change email popup
+        await tester.tap(find.text('Save'));
+        await tester.pumpAndSettle();
+
+        expect(
+            find.byKey(const ValueKey('change_email_button')), findsOneWidget);
       });
     }
   });

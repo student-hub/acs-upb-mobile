@@ -11,7 +11,7 @@ class FormCardField {
     TextEditingController controller,
     FocusNode focusNode,
     void Function(String) onSubmitted,
-    this.onChanged,
+    void Function(String) onChanged,
     this.check,
     this.obscureText = false,
     this.suffix,
@@ -20,9 +20,9 @@ class FormCardField {
     this.keyboardType = TextInputType.text,
     this.autofillHints,
   })  : onSubmitted = onSubmitted ?? ((_) {}),
+        onChanged = onChanged ?? ((_) {}),
         controller = controller ?? TextEditingController(),
-        focusNode = focusNode ?? FocusNode(),
-        valid = Future<bool>(() => null);
+        focusNode = focusNode ?? FocusNode();
 
   final String label;
   final String additionalHint;
@@ -34,7 +34,6 @@ class FormCardField {
   final Future<bool> Function(String, {BuildContext context}) check;
   final bool obscureText;
   final String suffix;
-  Future<bool> valid;
   final bool autocorrect;
   final bool enableSuggestions;
   final TextInputType keyboardType;
@@ -70,128 +69,32 @@ class FormCard extends StatefulWidget {
 }
 
 class _FormCardState extends State<FormCard> {
-  Widget buildSuffixIcon(FormCardField field) => field.check == null
-      ? null
-      : IntrinsicWidth(
-          child: FutureBuilder(
-            future: field.valid,
-            builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-              if (snapshot.data == null) {
-                // No icon
-                return Container();
-              } else {
-                return GestureDetector(
-                  onTap: () {
-                    field.check(field.controller.text, context: context);
-                  },
-                  child: Padding(
-                      padding: const EdgeInsets.only(left: 4),
-                      child: snapshot.data
-                          ? CustomIcons.valid
-                          : CustomIcons.invalid),
-                );
-              }
-            },
-          ),
-        );
-
-  Widget buildTextField(int index, FormCardField field) {
-    final Widget suffixIcon = buildSuffixIcon(field);
-
-    return IntrinsicHeight(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.only(top: 12),
-            child: Text(field.label,
-                style: Theme.of(context)
-                    .textTheme
-                    .subtitle1
-                    .apply(fontSizeFactor: 1.1)),
-          ),
-          if (field.additionalHint != null)
-            Padding(
-              padding: const EdgeInsets.only(top: 4),
-              child: Text(
-                field.additionalHint,
-                style: TextStyle(color: Theme.of(context).hintColor),
-              ),
-            ),
-          Expanded(
-            child: Row(
-              children: <Widget>[
-                Expanded(
-                  child: TextField(
-                    key: ValueKey('${field.label.snakeCase}_text_field'),
-                    keyboardType: field.keyboardType,
-                    autocorrect: field.autocorrect,
-                    enableSuggestions: field.enableSuggestions,
-                    obscureText: field.obscureText,
-                    controller: field.controller,
-                    focusNode: field.focusNode,
-                    onChanged: (text) => setState(() {
-                      field.onChanged(text);
-                      if (text == null || text == '') {
-                        field.valid = Future<bool>(() => null);
-                      } else {
-                        field.valid = field.check(text);
-                      }
-                    }),
-                    onSubmitted: (input) {
-                      if (index < widget.fields.length - 1) {
-                        FocusScope.of(context)
-                            .requestFocus(widget.fields[index + 1].focusNode);
-                        field.onSubmitted(input);
-                      } else {
-                        if (widget.submitOnEnter) {
-                          widget.submit();
-                        } else {
-                          // Just remove focus
-                          final currentFocus = FocusScope.of(context);
-                          if (!currentFocus.hasPrimaryFocus) {
-                            currentFocus.unfocus();
-                          }
-                        }
-                      }
-                    },
-                    autofillHints: field.autofillHints,
-                    // Only show verification icon within text field if it exists
-                    // and there no suffix text set
-                    decoration: field.suffix == null && suffixIcon != null
-                        ? InputDecoration(
-                            hintText: field.hint ?? field.label.toLowerCase(),
-                            suffixIcon: suffixIcon,
-                          )
-                        : InputDecoration(
-                            hintText: field.hint ?? field.label.toLowerCase(),
-                          ),
-                  ),
-                ),
-                if (field.suffix != null)
-                  Row(
-                    children: <Widget>[
-                      const SizedBox(width: 4),
-                      Text(field.suffix,
-                          style: Theme.of(context)
-                              .inputDecorationTheme
-                              .suffixStyle),
-                      suffixIcon,
-                    ],
-                  )
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     final children = widget.fields
         .asMap()
-        .map((index, field) => MapEntry(index, buildTextField(index, field)))
+        .map((index, field) => MapEntry(
+            index,
+            _FormCardTextField(
+              field: field,
+              onSubmitted: (input) {
+                if (index < widget.fields.length - 1) {
+                  FocusScope.of(context)
+                      .requestFocus(widget.fields[index + 1].focusNode);
+                  field.onSubmitted(input);
+                } else {
+                  if (widget.submitOnEnter) {
+                    widget.submit();
+                  } else {
+                    // Just remove focus
+                    final currentFocus = FocusScope.of(context);
+                    if (!currentFocus.hasPrimaryFocus) {
+                      currentFocus.unfocus();
+                    }
+                  }
+                }
+              },
+            )))
         .values
         .toList();
 
@@ -244,5 +147,144 @@ class _FormCardState extends State<FormCard> {
       field.focusNode.dispose();
     }
     super.dispose();
+  }
+}
+
+class _FormCardTextField extends StatefulWidget {
+  const _FormCardTextField({Key key, this.field, this.onSubmitted})
+      : super(key: key);
+
+  final FormCardField field;
+  final void Function(String) onSubmitted;
+
+  @override
+  _FormCardTextFieldState createState() => _FormCardTextFieldState();
+}
+
+class _FormCardTextFieldState extends State<_FormCardTextField> {
+  Future<bool> valid;
+  bool showCursor = false;
+
+  @override
+  void initState() {
+    super.initState();
+    valid = Future.value(null);
+    // Only show cursor when field is in focus; that way, we can change the text
+    // in a controller without having the TextField scroll into view.
+    // See issue here: https://github.com/flutter/flutter/issues/50713
+    widget.field.focusNode.addListener(() {
+      if (showCursor != widget.field.focusNode.hasFocus) {
+        setState(() => showCursor = widget.field.focusNode.hasFocus);
+      }
+    });
+  }
+
+  Widget buildSuffixIcon() => widget.field.check == null
+      ? null
+      : IntrinsicWidth(
+          child: FutureBuilder(
+            future: valid,
+            builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+              if (snapshot.data == null) {
+                // No icon
+                return Container();
+              } else {
+                return GestureDetector(
+                  onTap: () {
+                    widget.field
+                        .check(widget.field.controller.text, context: context);
+                  },
+                  child: Padding(
+                      padding: const EdgeInsets.only(left: 4),
+                      child: snapshot.data
+                          ? CustomIcons.valid
+                          : CustomIcons.invalid),
+                );
+              }
+            },
+          ),
+        );
+
+  @override
+  Widget build(BuildContext context) {
+    final Widget suffixIcon = buildSuffixIcon();
+
+    return IntrinsicHeight(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.only(top: 12),
+            child: Text(widget.field.label,
+                style: Theme.of(context)
+                    .textTheme
+                    .subtitle1
+                    .apply(fontSizeFactor: 1.1)),
+          ),
+          if (widget.field.additionalHint != null)
+            Padding(
+              padding: const EdgeInsets.only(top: 4),
+              child: Text(
+                widget.field.additionalHint,
+                style: TextStyle(color: Theme.of(context).hintColor),
+              ),
+            ),
+          Expanded(
+            child: Row(
+              children: <Widget>[
+                Expanded(
+                  child: TextField(
+                    key: ValueKey('${widget.field.label.snakeCase}_text_field'),
+                    keyboardType: widget.field.keyboardType,
+                    autocorrect: widget.field.autocorrect,
+                    enableSuggestions: widget.field.enableSuggestions,
+                    obscureText: widget.field.obscureText,
+                    controller: widget.field.controller,
+                    focusNode: widget.field.focusNode,
+                    showCursor: showCursor,
+                    onChanged: (text) => setState(() {
+                      if (widget.field.onChanged != null) {
+                        widget.field.onChanged(text);
+                      }
+                      if (text == null || text == '') {
+                        valid = Future<bool>(() => null);
+                      } else {
+                        valid = widget.field.check(text);
+                      }
+                    }),
+                    onSubmitted: widget.onSubmitted,
+                    autofillHints: widget.field.autofillHints,
+                    // Only show verification icon within text widget.field if it exists
+                    // and there no suffix text set
+                    decoration:
+                        widget.field.suffix == null && suffixIcon != null
+                            ? InputDecoration(
+                                hintText: widget.field.hint ??
+                                    widget.field.label.toLowerCase(),
+                                suffixIcon: suffixIcon,
+                              )
+                            : InputDecoration(
+                                hintText: widget.field.hint ??
+                                    widget.field.label.toLowerCase(),
+                              ),
+                  ),
+                ),
+                if (widget.field.suffix != null)
+                  Row(
+                    children: <Widget>[
+                      const SizedBox(width: 4),
+                      Text(widget.field.suffix,
+                          style: Theme.of(context)
+                              .inputDecorationTheme
+                              .suffixStyle),
+                      suffixIcon,
+                    ],
+                  )
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

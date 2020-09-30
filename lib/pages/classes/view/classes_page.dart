@@ -3,6 +3,7 @@ import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/classes/model/class.dart';
 import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
 import 'package:acs_upb_mobile/pages/classes/view/class_view.dart';
+import 'package:acs_upb_mobile/widgets/icon_text.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:acs_upb_mobile/widgets/spoiler.dart';
 import 'package:auto_size_text/auto_size_text.dart';
@@ -77,7 +78,7 @@ class _ClassesPageState extends State<ClassesPage> {
             Padding(
               padding: const EdgeInsets.only(left: 10, right: 10),
               child: Text(
-                S.of(context).messageGetStartedPlusButton,
+                S.of(context).messageGetStartedButton,
                 style: Theme.of(context).textTheme.subtitle1,
               ),
             ),
@@ -97,8 +98,8 @@ class _ClassesPageState extends State<ClassesPage> {
       needsToBeAuthenticated: true,
       actions: [
         AppScaffoldAction(
-          icon: Icons.add,
-          tooltip: S.of(context).actionAddClasses,
+          icon: Icons.edit,
+          tooltip: S.of(context).actionChooseClasses,
           onPressed: () => Navigator.of(context).push(
             MaterialPageRoute<ChangeNotifierProvider>(
               builder: (_) => ChangeNotifierProvider.value(
@@ -187,7 +188,7 @@ class _AddClassesPageState extends State<AddClassesPage> {
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
-      title: S.of(context).actionAddClasses,
+      title: S.of(context).actionChooseClasses,
       actions: [
         AppScaffoldAction(
           text: S.of(context).buttonSave,
@@ -257,31 +258,37 @@ class ClassList extends StatelessWidget {
     return map;
   }
 
-  List<Widget> buildSections(
-      BuildContext context, Map<String, dynamic> sections,
+  _Section buildSections(BuildContext context, Map<String, dynamic> sections,
       {int level = 0}) {
     final List<Widget> children = [const SizedBox(height: 4)];
+    bool expanded = false;
 
     sections.forEach((section, values) {
       if (section == '/') {
         children.addAll(values.map<Widget>(buildClassItem));
+        expanded = values.fold(
+            false,
+            (dynamic selected, ClassHeader header) =>
+                selected || initiallySelected.contains(header.id));
       } else {
+        final s = buildSections(context, sections[section], level: level + 1);
+        expanded = expanded || s.containsSelected;
+
         children.add(AppSpoiler(
           title: section,
           level: level,
-          initiallyExpanded: false,
+          initiallyExpanded: s.containsSelected,
           content: Padding(
             padding: const EdgeInsets.only(left: 16),
             child: Column(
-              children:
-                  buildSections(context, sections[section], level: level + 1),
+              children: s.widgets,
             ),
           ),
         ));
       }
     });
 
-    return children;
+    return _Section(widgets: children, containsSelected: expanded);
   }
 
   Widget buildClassItem(ClassHeader header) => Column(
@@ -302,11 +309,22 @@ class ClassList extends StatelessWidget {
     if (classes != null) {
       return ListView(
         children: [
+          if (sectioned)
+            Padding(
+              padding: const EdgeInsets.only(left: 10, right: 10, top: 10),
+              child: IconText(
+                icon: Icons.info,
+                text: S.of(context).infoChooseClasses,
+                style: Theme.of(context).textTheme.bodyText1,
+              ),
+            ),
           Padding(
             padding: const EdgeInsets.all(8),
             child: Column(
                 children: sectioned
-                    ? buildSections(context, classesBySection(classes, context))
+                    ? (buildSections(
+                            context, classesBySection(classes, context)))
+                        .widgets
                     : classes.map(buildClassItem).toList()),
           ),
         ],
@@ -315,6 +333,14 @@ class ClassList extends StatelessWidget {
       return const Center(child: CircularProgressIndicator());
     }
   }
+}
+
+// Utility class to allow `buildSections` to return two values
+class _Section {
+  _Section({this.widgets, this.containsSelected});
+
+  List<Widget> widgets;
+  bool containsSelected;
 }
 
 class ClassListItem extends StatefulWidget {
@@ -350,20 +376,27 @@ class _ClassListItemState extends State<ClassListItem> {
     return ListTile(
       leading: CircleAvatar(
         backgroundColor: widget.classHeader.colorFromAcronym,
-        child: (widget.selectable && selected)
-            ? Icon(
-                Icons.check,
-                color: widget.classHeader.colorFromAcronym.highEmphasisOnColor,
-              )
-            : AutoSizeText(
-                widget.classHeader.acronym,
-                minFontSize: 5,
-                maxLines: 1,
-                style: TextStyle(
+        child: Container(
+          width: 30,
+          child: (widget.selectable && selected)
+              ? Icon(
+                  Icons.check,
                   color:
                       widget.classHeader.colorFromAcronym.highEmphasisOnColor,
+                )
+              : Align(
+                  alignment: Alignment.center,
+                  child: AutoSizeText(
+                    widget.classHeader.acronym,
+                    minFontSize: 0,
+                    maxLines: 1,
+                    style: TextStyle(
+                      color: widget
+                          .classHeader.colorFromAcronym.highEmphasisOnColor,
+                    ),
+                  ),
                 ),
-              ),
+        ),
       ),
       title: Text(
         widget.classHeader.name,
@@ -373,9 +406,10 @@ class _ClassListItemState extends State<ClassListItem> {
                     .textTheme
                     .subtitle1
                     .copyWith(fontWeight: FontWeight.bold)
-                : TextStyle(
-                    color: Theme.of(context).disabledColor,
-                    fontWeight: FontWeight.normal))
+                : Theme.of(context)
+                    .textTheme
+                    .subtitle1
+                    .copyWith(color: Theme.of(context).disabledColor))
             : Theme.of(context).textTheme.subtitle1,
       ),
       onTap: () => setState(() {

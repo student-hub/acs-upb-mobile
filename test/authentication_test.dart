@@ -90,7 +90,7 @@ void main() {
         ChangeNotifierProvider<WebsiteProvider>(
             create: (_) => mockWebsiteProvider),
         ChangeNotifierProvider<QuestionProvider>(
-            create: (_) => mockQuestionProvider)
+            create: (_) => mockQuestionProvider),
       ], child: const MyApp()));
       await tester.pumpAndSettle();
 
@@ -120,7 +120,7 @@ void main() {
         ChangeNotifierProvider<WebsiteProvider>(
             create: (_) => mockWebsiteProvider),
         ChangeNotifierProvider<QuestionProvider>(
-            create: (_) => mockQuestionProvider)
+            create: (_) => mockQuestionProvider),
       ], child: const MyApp()));
       await tester.pumpAndSettle();
 
@@ -352,7 +352,7 @@ void main() {
         ChangeNotifierProvider<WebsiteProvider>(
             create: (_) => mockWebsiteProvider),
         ChangeNotifierProvider<QuestionProvider>(
-            create: (_) => mockQuestionProvider)
+            create: (_) => mockQuestionProvider),
       ], child: MyApp(navigationObservers: [mockObserver])));
       await tester.pumpAndSettle();
 
@@ -550,6 +550,7 @@ void main() {
     testWidgets('Sign out anonymous', (WidgetTester tester) async {
       when(mockAuthProvider.currentUser)
           .thenAnswer((realInvocation) => Future.value(null));
+      when(mockAuthProvider.currentUserFromCache).thenReturn(null);
       when(mockAuthProvider.isAnonymous).thenReturn(true);
 
       await tester.pumpWidget(MultiProvider(providers: [
@@ -581,6 +582,8 @@ void main() {
     testWidgets('Sign out authenticated', (WidgetTester tester) async {
       when(mockAuthProvider.currentUser).thenAnswer((realInvocation) =>
           Future.value(User(uid: '0', firstName: 'John', lastName: 'Doe')));
+      when(mockAuthProvider.currentUserFromCache)
+          .thenReturn(User(uid: '0', firstName: 'John', lastName: 'Doe'));
       when(mockAuthProvider.isAnonymous).thenReturn(false);
 
       await tester.pumpWidget(MultiProvider(providers: [
@@ -589,10 +592,10 @@ void main() {
             create: (_) => mockFilterProvider),
         ChangeNotifierProvider<WebsiteProvider>(
             create: (_) => mockWebsiteProvider),
-        ChangeNotifierProvider<QuestionProvider>(
-            create: (_) => mockQuestionProvider),
         ChangeNotifierProvider<PersonProvider>(
             create: (_) => mockPersonProvider),
+        ChangeNotifierProvider<QuestionProvider>(
+            create: (_) => mockQuestionProvider),
       ], child: MyApp(navigationObservers: [mockObserver])));
       await tester.pumpAndSettle();
 
