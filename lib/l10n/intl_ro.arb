@@ -103,6 +103,7 @@
   "errorCouldNotLaunchURL": "Nu s-a putut deschide '{url}'.",
   "errorPermissionDenied": "Nu aveți suficiente permisiuni.",
 
+  "warning": "Atenție",
   "warningInternetConnection": "Asigurați-vă că sunteți conectat la internet.",
   "warningPasswordLength": "Parola trebuie să aibă cel puțin 8 caractere.",
   "warningSamePassword": "Parola trebuie sa fie diferită de cea veche.",
@@ -202,7 +203,7 @@
   "messageGetStartedButton": "Începeți prin a apăsa butonul de mai sus.",
   "messageAskPermissionToEdit": "De ce dorești să primești permisiuni de editare în ACS UPB Mobile?",
   "messageRequestHasBeenSent": "Cererea a fost transmisă cu succes",
-  "messageRequestAlreadyExists": "Ați trimis deja o cerere. Daca doriți să o suprascrieți, vă rugăm sa apasați 'Salvare' din nou.",
+  "messageRequestAlreadyExists": "Ați trimis deja o cerere. Daca doriți să o suprascrieți, vă rugăm sa apasați 'Salvare'.",
   "messageIAgreeToThe": "Sunt de acord cu ",
   "messageEditProfileSuccess": "Profilul a fost actualizat cu succes.",
   "messageChangePasswordSuccess": "Parola a fost schimbată cu succes.",

@@ -11,7 +11,7 @@ extension RequestExtension on Request {
     final Map<String, String> data = {};
 
     if (userId != null) data['addedBy'] = userId;
-    if (requestBody != null) data['rerequestBody'] = requestBody;
+    if (requestBody != null) data['requestBody'] = requestBody;
 
     return data;
   }
@@ -40,11 +40,11 @@ class RequestProvider {
     }
   }
 
-  Future<bool> isAlreadyRequested(Request request,
+  Future<bool> userAlreadyRequested(final String userId,
       {BuildContext context}) async {
     try {
       DocumentSnapshot snap =
-          await _db.collection('forms').document(request.userId).get();
+          await _db.collection('forms').document(userId).get();
       if (snap != null) {
         return true;
       }

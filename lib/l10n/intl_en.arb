@@ -103,6 +103,7 @@
   "errorCouldNotLaunchURL": "Could not launch '{url}'.",
   "errorPermissionDenied": "You do not have permission to do that.",
 
+  "warning": "Warning",
   "warningInternetConnection": "Please make sure you are connected to the internet.",
   "warningPasswordLength": "The password must be 8 characters long or more.",
   "warningSamePassword": "The password must be different from the old one.",
@@ -202,7 +203,7 @@
   "messageGetStartedButton": "Get started by pressing the button above.",
   "messageAskPermissionToEdit": "Why do you want edit permissions for ACS UPB Mobile?",
   "messageRequestHasBeenSent": "The request has been sent succesfully.",
-  "messageRequestAlreadyExists": "You have already submitted a request. If you want to overwrite it, please press 'Save' again.",
+  "messageRequestAlreadyExists": "You have already submitted a request. If you want to overwrite it, please press 'Send'.",
   "messageIAgreeToThe": "I agree to the ",
   "messageEditProfileSuccess": "Profile updated successfully.",
   "messageChangePasswordSuccess": "Password changed successfully.",

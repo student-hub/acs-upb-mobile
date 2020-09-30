@@ -4,6 +4,8 @@ import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/settings/model/request.dart';
 import 'package:acs_upb_mobile/pages/settings/service/request_provider.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
+import 'package:acs_upb_mobile/widgets/button.dart';
+import 'package:acs_upb_mobile/widgets/dialog.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/cupertino.dart';
@@ -13,21 +15,16 @@ class AskPermissions extends StatefulWidget {
   static const String routeName = '/requestPermissions';
 
   @override
-  State<StatefulWidget> createState() => AskPermissionsState();
+  State<StatefulWidget> createState() => _AskPermissionsState();
 }
 
-class AskPermissionsState extends State<AskPermissions> {
+class _AskPermissionsState extends State<AskPermissions> {
   User user;
   String requestBody = '';
   bool agreedToResponsibilities = false;
+  RequestProvider requestProvider;
 
-  /*
-   * This flag is used whenever an user has already submitted a request in order
-   * to verify if he is actually wants to resubmit another request.
-   */
-  bool informedAboutExistingRequest = false;
-
-  _fetchUser() async {
+  Future<void> _fetchUser() async {
     AuthProvider authProvider = Provider.of(context, listen: false);
     user = await authProvider.currentUser;
     if (mounted) {
@@ -35,15 +32,46 @@ class AskPermissionsState extends State<AskPermissions> {
     }
   }
 
+  AppDialog _informExistingRequest(BuildContext context) {
+    return AppDialog(
+      title: S.of(context).warning,
+      content: [
+        Text(S.of(context).messageRequestAlreadyExists),
+      ],
+      actions: [
+        AppButton(
+            key: const ValueKey('agree_overwrite_request'),
+            text: S.of(context).buttonSend,
+            color: Theme.of(context).accentColor,
+            width: 130,
+            onTap: () async {
+              await sendRequest(context);
+              Navigator.of(context).pop();
+            }),
+      ],
+    );
+  }
+
+  @override
   initState() {
     super.initState();
     _fetchUser();
   }
 
+  Future<void> sendRequest(BuildContext context) async {
+    final queryResult = await requestProvider
+        .makeRequest(Request(user.uid, requestBody), context: context);
+    if (queryResult) {
+      AppToast.show(S.of(context).messageRequestHasBeenSent);
+      Navigator.of(context).pop();
+    } else {
+      AppToast.show(S.of(context).errorSomethingWentWrong);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    RequestProvider requestProvider =
-        Provider.of<RequestProvider>(context, listen: false);
+    requestProvider = Provider.of<RequestProvider>(context, listen: false);
 
     return AppScaffold(
         title: S.of(context).navigationAskPermissions,
@@ -52,9 +80,8 @@ class AskPermissionsState extends State<AskPermissions> {
               text: S.of(context).buttonSave,
               onPressed: () async {
                 if (!agreedToResponsibilities) {
-                  AppToast.show(S.of(context).warningAgreeTo +
-                      S.of(context).labelPermissionsConsent +
-                      '.');
+                  AppToast.show(
+                      '${S.of(context).warningAgreeTo}${S.of(context).labelPermissionsConsent}.');
                   return;
                 }
 
@@ -63,30 +90,20 @@ class AskPermissionsState extends State<AskPermissions> {
                   return;
                 }
 
-                final Request myRequest = Request(user.uid, requestBody);
-
                 /*
                  * Check if there is already a request registered for the current
                  * user.
                  */
-                var queryResult =
-                    await requestProvider.isAlreadyRequested(myRequest);
+                final queryResult = await requestProvider
+                    .userAlreadyRequested(user.uid, context: context);
 
-                if (queryResult && !informedAboutExistingRequest) {
-                  AppToast.show(S.of(context).messageRequestAlreadyExists);
-                  informedAboutExistingRequest = true;
+                if (queryResult) {
+                  await showDialog(
+                      context: context, child: _informExistingRequest(context));
                   return;
                 }
 
-                queryResult = await requestProvider.makeRequest(
-                    Request(user.uid, requestBody),
-                    context: context);
-                if (queryResult) {
-                  AppToast.show(S.of(context).messageRequestHasBeenSent);
-                  Navigator.of(context).pop();
-                } else {
-                  AppToast.show(S.of(context).errorSomethingWentWrong);
-                }
+                await sendRequest(context);
               })
         ],
         body: ListView(

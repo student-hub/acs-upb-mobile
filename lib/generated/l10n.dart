@@ -1003,6 +1003,16 @@ class S {
     );
   }
 
+  /// `Warning`
+  String get warning {
+    return Intl.message(
+      'Warning',
+      name: 'warning',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Please make sure you are connected to the internet.`
   String get warningInternetConnection {
     return Intl.message(
@@ -1913,10 +1923,10 @@ class S {
     );
   }
 
-  /// `You have already submitted a request. If you want to overwrite it, please press 'Save' again.`
+  /// `You have already submitted a request. If you want to overwrite it, please press 'Send'.`
   String get messageRequestAlreadyExists {
     return Intl.message(
-      'You have already submitted a request. If you want to overwrite it, please press \'Save\' again.',
+      'You have already submitted a request. If you want to overwrite it, please press \'Send\'.',
       name: 'messageRequestAlreadyExists',
       desc: '',
       args: [],
