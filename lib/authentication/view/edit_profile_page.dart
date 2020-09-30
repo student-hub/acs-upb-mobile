@@ -5,6 +5,7 @@ import 'package:acs_upb_mobile/pages/filter/view/filter_dropdown.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/resources/validator.dart';
 import 'package:acs_upb_mobile/widgets/button.dart';
+import 'package:acs_upb_mobile/widgets/circle_image.dart';
 import 'package:acs_upb_mobile/widgets/dialog.dart';
 import 'package:acs_upb_mobile/widgets/icon_text.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
@@ -269,6 +270,19 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 return Container(
                   child: ListView(children: [
                     AccountNotVerifiedWarning(),
+                    Padding(
+                      padding: const EdgeInsets.all(8),
+                      child: GestureDetector(
+                        child: const CircleImage(
+                          circleSize: 150,
+                          image: AssetImage(
+                            'assets/illustrations/undraw_profile_pic.png',
+                          ),
+                          enableOverlay: true,
+                          overlayIcon: Icon(Icons.edit),
+                        ),
+                      ),
+                    ),
                     PreferenceTitle(
                       S.of(context).labelPersonalInformation,
                       leftPadding: 0,
