@@ -45,6 +45,7 @@ class _SearchBarState extends State<SearchBar> {
         ),
         GestureDetector(
           onTap: widget.cancel,
+          key: const ValueKey('cancel_search_bar'),
           child: Container(
             width: MediaQuery.of(context).size.width * .2,
             child: Container(

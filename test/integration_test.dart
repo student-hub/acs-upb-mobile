@@ -25,6 +25,7 @@ import 'package:acs_upb_mobile/pages/portal/view/portal_page.dart';
 import 'package:acs_upb_mobile/pages/portal/view/website_view.dart';
 import 'package:acs_upb_mobile/pages/settings/settings_page.dart';
 import 'package:acs_upb_mobile/resources/custom_icons.dart';
+import 'package:acs_upb_mobile/widgets/search_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
@@ -798,6 +799,18 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(find.byType(FaqPage), findsOneWidget);
+
+        await tester.tap(find.byIcon(Icons.search));
+        await tester.pumpAndSettle();
+
+        expect(find.byType(SearchBar), findsOneWidget);
+
+        final cancelSearchBar = find.byKey(const ValueKey('cancel_search_bar'));
+
+        await tester.tap(cancelSearchBar);
+        await tester.pumpAndSettle();
+
+        expect(find.byType(SearchBar), findsNothing);
       });
     }
   });
