@@ -1,3 +1,4 @@
+import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
 import 'package:acs_upb_mobile/pages/classes/view/classes_page.dart';
@@ -41,10 +42,10 @@ class _TimetablePageState extends State<TimetablePage> {
     return AppScaffold(
       title: AnimatedBuilder(
         animation: _controller.dateListenable,
-        builder: (context, child) => Text(LocalDateTime(
-                2020, _controller.dateListenable.value.monthOfYear, 1, 1, 1, 1)
-            .toString('MMMM', LocaleProvider.culture)
-            .titleCase),
+        builder: (context, child) => Text(
+            Provider.of<AuthProvider>(context).currentUserFromCache == null
+                ? S.of(context).navigationTimetable
+                : _controller.currentMonth.titleCase),
       ),
       needsToBeAuthenticated: true,
       leading: AppScaffoldAction(
@@ -83,4 +84,10 @@ class _TimetablePageState extends State<TimetablePage> {
       ),
     );
   }
+}
+
+extension MonthController on TimetableController {
+  String get currentMonth =>
+      LocalDateTime(2020, dateListenable.value.monthOfYear, 1, 1, 1, 1)
+          .toString('MMMM', LocaleProvider.culture);
 }
