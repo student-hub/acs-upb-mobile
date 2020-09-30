@@ -22,9 +22,7 @@ class NewsFeedProvider with ChangeNotifier {
     } catch (e) {
       print(e);
       if (context != null) {
-        AppToast.show(S
-            .of(context)
-            .errorSomethingWentWrong);
+        AppToast.show(S.of(context).errorSomethingWentWrong);
       }
     }
 
@@ -33,10 +31,10 @@ class NewsFeedProvider with ChangeNotifier {
 
   static Iterable<NewsFeedItem> _extractFromWebScraper(
       WebScraper webScraper, int wantedLimit) {
-    final List<Map<String, dynamic>> dates = webScraper.getElement(
-        'div.event > ul > li > div.time', []);
-    final List<Map<String, dynamic>> events = webScraper.getElement(
-        'div.event > ul > li > h3 > a', ['href']);
+    final List<Map<String, dynamic>> dates =
+        webScraper.getElement('div.event > ul > li > div.time', []);
+    final List<Map<String, dynamic>> events =
+        webScraper.getElement('div.event > ul > li > h3 > a', ['href']);
 
     final List<NewsFeedItem> newsFeed = [];
     var limit = min(dates.length, events.length);
