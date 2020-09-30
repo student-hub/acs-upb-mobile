@@ -202,6 +202,7 @@ class UniEventProvider extends EventProvider<UniEventInstance>
       final Stream<List<UniEvent>> stream = Firestore.instance
           .collection('events')
           .where('class', isEqualTo: classId)
+          .where('degree', isEqualTo: filter.baseNode)
           .where('relevance', arrayContainsAny: filter.relevantNodes)
           .snapshots()
           .asyncMap((snapshot) async {
