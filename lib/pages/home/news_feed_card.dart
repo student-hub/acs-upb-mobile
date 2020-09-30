@@ -16,22 +16,19 @@ class NewsFeedCard extends StatelessWidget {
       title: S.of(context).newsFeedTitle,
       showMoreButtonKey: const ValueKey('show_more_news_feed'),
       onShowMore: () => Navigator.of(context).pushNamed(Routes.newsFeed),
-      future: Provider.of<NewsFeedProvider>(context).fetchNewsFeedItems(
-          limit: 2),
-      builder: (newsFeedItems) =>
-          Column(
-              children: newsFeedItems.map((item) =>
-                  ListTile(
+      future:
+          Provider.of<NewsFeedProvider>(context).fetchNewsFeedItems(limit: 2),
+      builder: (newsFeedItems) => Column(
+          children: newsFeedItems
+              .map((item) => ListTile(
                     title: Text(item.title),
-                    subtitle: AutoSizeText(
-                        item.date,
-                        maxLines: 1,
-                        overflow: TextOverflow.fade),
+                    subtitle: AutoSizeText(item.date,
+                        maxLines: 1, overflow: TextOverflow.fade),
                     contentPadding: EdgeInsets.zero,
                     dense: true,
                     onTap: () => Utils.launchURL(item.link, context: context),
-                  )).toList()
-          ),
+                  ))
+              .toList()),
     );
   }
 }

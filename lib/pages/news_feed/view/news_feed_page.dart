@@ -17,8 +17,8 @@ class NewsFeedPage extends StatelessWidget {
     return AppScaffold(
       title: S.of(context).newsFeedTitle,
       body: FutureBuilder(
-        future: newsFeedProvider.fetchNewsFeedItems(
-            context: context, limit: null),
+        future:
+            newsFeedProvider.fetchNewsFeedItems(context: context, limit: null),
         builder: (_, snapshot) {
           if (snapshot.connectionState != ConnectionState.done) {
             return const Center(child: CircularProgressIndicator());
@@ -27,16 +27,16 @@ class NewsFeedPage extends StatelessWidget {
           final List<NewsFeedItem> newsFeedItems = snapshot.data;
           return ListView(
               children: ListTile.divideTiles(
-                context: context,
-                tiles: newsFeedItems.map((item) =>
-                    ListTile(
+            context: context,
+            tiles: newsFeedItems
+                .map((item) => ListTile(
                       title: Text(item.title),
                       subtitle: Text(item.date),
                       onTap: () => Utils.launchURL(item.link, context: context),
                       dense: true,
-                    )).toList(),
-              ).toList()
-          );
+                    ))
+                .toList(),
+          ).toList());
         },
       ),
     );
