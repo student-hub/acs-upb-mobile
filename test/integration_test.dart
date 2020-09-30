@@ -684,6 +684,8 @@ void main() {
               firstName: 'John',
               lastName: 'Doe',
               permissionLevel: 3)));
+      when(mockAuthProvider.currentUserFromCache).thenReturn(User(
+          uid: '1', firstName: 'John', lastName: 'Doe', permissionLevel: 3));
       when(mockAuthProvider.email).thenReturn('john.doe@stud.acs.upb.ro');
     });
 

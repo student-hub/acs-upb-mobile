@@ -59,9 +59,10 @@ void main() {
     when(mockFilterProvider.hasListeners).thenReturn(false);
     when(mockFilterProvider.filterEnabled).thenReturn(true);
     when(mockFilterProvider.fetchFilter(any))
-        .thenAnswer((_) => Future.value(Filter(localizedLevelNames: [
-              {'en': 'Level', 'ro': 'Nivel'}
-            ], root: FilterNode(name: 'root'))));
+        .thenAnswer((_) =>
+        Future.value(Filter(localizedLevelNames: [
+          {'en': 'Level', 'ro': 'Nivel'}
+        ], root: FilterNode(name: 'root'))));
 
     mockPersonProvider = MockPersonProvider();
     // ignore: invalid_use_of_protected_member
@@ -113,9 +114,9 @@ void main() {
         expect(find.text('@stud.acs.upb.ro'), findsOneWidget);
 
         when(mockAuthProvider.signIn(
-                email: anyNamed('email'),
-                password: anyNamed('password'),
-                context: anyNamed('context')))
+            email: anyNamed('email'),
+            password: anyNamed('password'),
+            context: anyNamed('context')))
             .thenAnswer((_) => Future.value(true));
 
         // Enter credentials
@@ -148,7 +149,7 @@ void main() {
       expect(find.byType(LoginView), findsOneWidget);
 
       when(mockAuthProvider.sendPasswordResetEmail(
-              email: anyNamed('email'), context: anyNamed('context')))
+          email: anyNamed('email'), context: anyNamed('context')))
           .thenAnswer((_) => Future.value(true));
 
       expect(find.byType(AlertDialog), findsNothing);
@@ -182,7 +183,7 @@ void main() {
       expect(find.byType(LoginView), findsOneWidget);
 
       when(mockAuthProvider.sendPasswordResetEmail(
-              email: anyNamed('email'), context: anyNamed('context')))
+          email: anyNamed('email'), context: anyNamed('context')))
           .thenAnswer((_) => Future.value(true));
 
       expect(find.byType(AlertDialog), findsNothing);
@@ -214,117 +215,118 @@ void main() {
       when(mockFilterProvider.hasListeners).thenReturn(false);
       when(mockFilterProvider.filterEnabled).thenReturn(true);
       when(mockFilterProvider.fetchFilter(any))
-          .thenAnswer((_) => Future.value(Filter(
-                  localizedLevelNames: [
-                    {'en': 'Degree', 'ro': 'Nivel de studiu'},
-                    {'en': 'Major', 'ro': 'Specializare'},
-                    {'en': 'Year', 'ro': 'An'},
-                    {'en': 'Series', 'ro': 'Serie'},
-                    {'en': 'Group', 'ro': 'Group'},
-                    {'en': 'Subgroup', 'ro': 'Semigrupă'}
-                  ],
-                  root: FilterNode(name: 'All', value: true, children: [
-                    FilterNode(name: 'BSc', value: true, children: [
-                      FilterNode(name: 'CTI', value: true, children: [
+          .thenAnswer((_) =>
+          Future.value(Filter(
+              localizedLevelNames: [
+                {'en': 'Degree', 'ro': 'Nivel de studiu'},
+                {'en': 'Major', 'ro': 'Specializare'},
+                {'en': 'Year', 'ro': 'An'},
+                {'en': 'Series', 'ro': 'Serie'},
+                {'en': 'Group', 'ro': 'Group'},
+                {'en': 'Subgroup', 'ro': 'Semigrupă'}
+              ],
+              root: FilterNode(name: 'All', value: true, children: [
+                FilterNode(name: 'BSc', value: true, children: [
+                  FilterNode(name: 'CTI', value: true, children: [
+                    FilterNode(
+                      name: 'CTI-1',
+                      value: true,
+                      children: [
+                        FilterNode(name: '1-CA'),
                         FilterNode(
-                          name: 'CTI-1',
+                          name: '1-CB',
                           value: true,
                           children: [
-                            FilterNode(name: '1-CA'),
                             FilterNode(
-                              name: '1-CB',
+                              name: '311CB',
                               value: true,
                               children: [
-                                FilterNode(
-                                  name: '311CB',
-                                  value: true,
-                                  children: [
-                                    FilterNode(name: '311CBa'),
-                                    FilterNode(name: '311CBb'),
-                                  ],
-                                ),
-                                FilterNode(
-                                  name: '312CB',
-                                  value: true,
-                                  children: [
-                                    FilterNode(name: '312CBa'),
-                                    FilterNode(name: '312CBb'),
-                                  ],
-                                ),
-                                FilterNode(
-                                  name: '313CB',
-                                  value: true,
-                                  children: [
-                                    FilterNode(name: '313CBa'),
-                                    FilterNode(name: '313CBb'),
-                                  ],
-                                ),
-                                FilterNode(
-                                  name: '314CB',
-                                  value: true,
-                                  children: [
-                                    FilterNode(name: '314CBa'),
-                                    FilterNode(name: '314CBb'),
-                                  ],
-                                ),
+                                FilterNode(name: '311CBa'),
+                                FilterNode(name: '311CBb'),
                               ],
                             ),
-                            FilterNode(name: '1-CC'),
-                            FilterNode(name: '1-CD', children: [
-                              FilterNode(
-                                name: '311CD',
-                                value: true,
-                                children: [
-                                  FilterNode(name: '311CDa'),
-                                  FilterNode(name: '311CDb'),
-                                ],
-                              ),
-                              FilterNode(
-                                name: '312CD',
-                                value: true,
-                                children: [
-                                  FilterNode(name: '312CDa'),
-                                  FilterNode(name: '312CDb'),
-                                ],
-                              ),
-                              FilterNode(
-                                name: '313CD',
-                                value: true,
-                                children: [
-                                  FilterNode(name: '313CDa'),
-                                  FilterNode(name: '313CDb'),
-                                ],
-                              ),
-                              FilterNode(
-                                name: '314CD',
-                                value: true,
-                                children: [
-                                  FilterNode(name: '314CDa'),
-                                  FilterNode(name: '314CDb'),
-                                ],
-                              ),
-                            ]),
+                            FilterNode(
+                              name: '312CB',
+                              value: true,
+                              children: [
+                                FilterNode(name: '312CBa'),
+                                FilterNode(name: '312CBb'),
+                              ],
+                            ),
+                            FilterNode(
+                              name: '313CB',
+                              value: true,
+                              children: [
+                                FilterNode(name: '313CBa'),
+                                FilterNode(name: '313CBb'),
+                              ],
+                            ),
+                            FilterNode(
+                              name: '314CB',
+                              value: true,
+                              children: [
+                                FilterNode(name: '314CBa'),
+                                FilterNode(name: '314CBb'),
+                              ],
+                            ),
                           ],
                         ),
-                        FilterNode(
-                          name: 'CTI-2',
-                        ),
-                        FilterNode(
-                          name: 'CTI-3',
-                        ),
-                        FilterNode(
-                          name: 'CTI-4',
-                        ),
-                      ]),
-                      FilterNode(name: 'IS')
-                    ]),
-                    FilterNode(name: 'MSc', children: [
-                      FilterNode(
-                        name: 'IA',
-                      ),
-                      FilterNode(name: 'SPRC'),
-                    ])
-                  ]))));
+                        FilterNode(name: '1-CC'),
+                        FilterNode(name: '1-CD', children: [
+                          FilterNode(
+                            name: '311CD',
+                            value: true,
+                            children: [
+                              FilterNode(name: '311CDa'),
+                              FilterNode(name: '311CDb'),
+                            ],
+                          ),
+                          FilterNode(
+                            name: '312CD',
+                            value: true,
+                            children: [
+                              FilterNode(name: '312CDa'),
+                              FilterNode(name: '312CDb'),
+                            ],
+                          ),
+                          FilterNode(
+                            name: '313CD',
+                            value: true,
+                            children: [
+                              FilterNode(name: '313CDa'),
+                              FilterNode(name: '313CDb'),
+                            ],
+                          ),
+                          FilterNode(
+                            name: '314CD',
+                            value: true,
+                            children: [
+                              FilterNode(name: '314CDa'),
+                              FilterNode(name: '314CDb'),
+                            ],
+                          ),
+                        ]),
+                      ],
+                    ),
+                    FilterNode(
+                      name: 'CTI-2',
+                    ),
+                    FilterNode(
+                      name: 'CTI-3',
+                    ),
+                    FilterNode(
+                      name: 'CTI-4',
+                    ),
+                  ]),
+                  FilterNode(name: 'IS')
+                ]),
+                FilterNode(name: 'MSc', children: [
+                  FilterNode(
+                    name: 'IA',
+                  ),
+                  FilterNode(name: 'SPRC'),
+                ])
+              ]))));
     });
 
     testWidgets('Sign up', (WidgetTester tester) async {
@@ -349,7 +351,7 @@ void main() {
       expect(find.byType(SignUpView), findsOneWidget);
 
       when(mockAuthProvider.signUp(
-              info: anyNamed('info'), context: anyNamed('context')))
+          info: anyNamed('info'), context: anyNamed('context')))
           .thenAnswer((_) => Future.value(true));
       when(mockAuthProvider.canSignUpWithEmail(email: anyNamed('email')))
           .thenAnswer((realInvocation) => Future.value(true));
@@ -500,7 +502,7 @@ void main() {
       expect(find.byType(SignUpView), findsOneWidget);
 
       when(mockAuthProvider.signUp(
-              info: anyNamed('info'), context: anyNamed('context')))
+          info: anyNamed('info'), context: anyNamed('context')))
           .thenAnswer((_) => Future.value(true));
 
       // Scroll cancel button into view and tap
@@ -531,6 +533,7 @@ void main() {
     testWidgets('Sign out anonymous', (WidgetTester tester) async {
       when(mockAuthProvider.currentUser)
           .thenAnswer((realInvocation) => Future.value(null));
+      when(mockAuthProvider.currentUserFromCache).thenReturn(null);
       when(mockAuthProvider.isAnonymous).thenReturn(true);
 
       await tester.pumpWidget(MultiProvider(providers: [
@@ -560,16 +563,18 @@ void main() {
     testWidgets('Sign out authenticated', (WidgetTester tester) async {
       when(mockAuthProvider.currentUser).thenAnswer((realInvocation) =>
           Future.value(User(uid: '0', firstName: 'John', lastName: 'Doe')));
+      when(mockAuthProvider.currentUserFromCache).thenReturn(
+          User(uid: '0', firstName: 'John', lastName: 'Doe'));
       when(mockAuthProvider.isAnonymous).thenReturn(false);
 
       await tester.pumpWidget(MultiProvider(providers: [
-        ChangeNotifierProvider<AuthProvider>(create: (_) => mockAuthProvider),
-        ChangeNotifierProvider<FilterProvider>(
-            create: (_) => mockFilterProvider),
-        ChangeNotifierProvider<WebsiteProvider>(
-            create: (_) => mockWebsiteProvider),
-        ChangeNotifierProvider<PersonProvider>(
-            create: (_) => mockPersonProvider),
+      ChangeNotifierProvider<AuthProvider>(create: (_) => mockAuthProvider),
+      ChangeNotifierProvider<FilterProvider>(
+      create: (_) => mockFilterProvider),
+      ChangeNotifierProvider<WebsiteProvider>(
+      create: (_) => mockWebsiteProvider),
+      ChangeNotifierProvider<PersonProvider>(
+      create: (_) => mockPersonProvider),
       ], child: MyApp(navigationObservers: [mockObserver])));
       await tester.pumpAndSettle();
 
