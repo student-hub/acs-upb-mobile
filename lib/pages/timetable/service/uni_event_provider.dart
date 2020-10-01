@@ -279,22 +279,18 @@ class UniEventProvider extends EventProvider<UniEventInstance>
 
   void updateClasses(ClassProvider classProvider) {
     _classProvider = classProvider;
-    fetchClassIds();
-  }
-
-  Future<void> fetchClassIds() async {
-    _classIds = await _classProvider.fetchUserClassIds(uid: _authProvider.uid);
-    notifyListeners();
+    _classProvider.fetchUserClassIds(uid: _authProvider.uid).then((classIds) {
+      _classIds = classIds;
+      notifyListeners();
+    });
   }
 
   void updateFilter(FilterProvider filterProvider) {
     _filterProvider = filterProvider;
-    fetchFilter();
-  }
-
-  Future<void> fetchFilter() async {
-    _filter = await _filterProvider.fetchFilter();
-    notifyListeners();
+    _filterProvider.fetchFilter().then((filter) {
+      _filter = filter;
+      notifyListeners();
+    });
   }
 
   @override
