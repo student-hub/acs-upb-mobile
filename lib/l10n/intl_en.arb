@@ -86,6 +86,7 @@
   "actionShowMore": "Show more",
   "actionEditGrading": "Edit grading",
   "actionContribute": "Contribute",
+  "actionOpenFilter": "Open filter",
 
   "errorSomethingWentWrong": "Something went wrong.",
   "errorPasswordsDiffer": "The two passwords differ.",
@@ -211,6 +212,7 @@
   "infoSelect": "Select the",
   "infoYouNeedToSelect": "You first need to select the",
   "infoClasses": "classes you are interested in",
+  "infoMakeSureGroupIsSelected": "Make sure your group/subgroup is selected in the",
   "infoRelevanceNothingSelected": "If this is relevant for everyone, don't select anything .",
   "infoRelevanceExample": "For instance, if something is only relevant for \"314CB\" and \"315CB\", don't just set \"CB\".",
   "infoPassword": "It must contain lower and uppercase letters, one number and one special character, and have a minimum length of 8.",

@@ -44,8 +44,16 @@ class _TimetablePageState extends State<TimetablePage> {
           eventProvider: eventProvider);
 
       WidgetsBinding.instance.addPostFrameCallback((_) async {
+        // Fetch user classes so they're cached
+        final user = Provider.of<AuthProvider>(context, listen: false)
+            .currentUserFromCache;
+        await Provider.of<ClassProvider>(context, listen: false)
+            .fetchClassHeaders(uid: user.uid);
+
         // Slight delay between last frame and dialog
-        await Future<void>.delayed(const Duration(seconds: 1));
+        await Future<void>.delayed(const Duration(milliseconds: 500));
+
+        // Show dialog if there are no events
         if (eventProvider.empty == true) {
           await showDialog<String>(
             context: context,
@@ -73,22 +81,24 @@ class _TimetablePageState extends State<TimetablePage> {
         AppScaffoldAction(
           icon: Icons.class_,
           tooltip: S.of(context).navigationClasses,
-          onPressed: () => Navigator.of(context)
-              .push(MaterialPageRoute<ChangeNotifierProvider>(
-            builder: (_) => ChangeNotifierProvider.value(
-                value: Provider.of<ClassProvider>(context),
-                child: const ClassesPage()),
-          )),
+          onPressed: () => Navigator.of(context).push(
+            MaterialPageRoute<ChangeNotifierProvider>(
+              builder: (_) => ChangeNotifierProvider.value(
+                  value: Provider.of<ClassProvider>(context),
+                  child: const ClassesPage()),
+            ),
+          ),
         ),
         AppScaffoldAction(
-            icon: CustomIcons.filter,
-            tooltip: S.of(context).navigationFilter,
-            onPressed: () => Navigator.push(
-                  context,
-                  MaterialPageRoute<FilterPage>(
-                    builder: (_) => const FilterPage(),
-                  ),
-                )),
+          icon: CustomIcons.filter,
+          tooltip: S.of(context).navigationFilter,
+          onPressed: () => Navigator.push(
+            context,
+            MaterialPageRoute<FilterPage>(
+              builder: (_) => const FilterPage(),
+            ),
+          ),
+        ),
       ],
       body: Timetable<UniEventInstance>(
         controller: _controller,
@@ -101,65 +111,108 @@ class _TimetablePageState extends State<TimetablePage> {
     );
   }
 
-  AppDialog buildDialog(BuildContext context) {
+  Widget buildDialog(BuildContext context) {
     final classProvider = Provider.of<ClassProvider>(context);
     final authProvider = Provider.of<AuthProvider>(context);
     final user = authProvider.currentUserFromCache;
 
-    return AppDialog(
-      title: S.of(context).warningNoEvents,
-      content: [
-        RichText(
-          text: TextSpan(
-            style: Theme.of(context).textTheme.subtitle1,
-            children: [
-              TextSpan(text: '${S.of(context).infoYouNeedToSelect} '),
-              WidgetSpan(
-                alignment: PlaceholderAlignment.top,
-                child: Icon(
-                  Icons.class_,
-                  size: Theme.of(context).textTheme.subtitle1.fontSize + 2,
+    if (classProvider.userClassHeadersCache?.isEmpty ?? true) {
+      return AppDialog(
+        title: S.of(context).warningNoEvents,
+        content: [
+          RichText(
+            text: TextSpan(
+              style: Theme.of(context).textTheme.subtitle1,
+              children: [
+                TextSpan(text: '${S.of(context).infoYouNeedToSelect} '),
+                WidgetSpan(
+                  alignment: PlaceholderAlignment.top,
+                  child: Icon(
+                    Icons.class_,
+                    size: Theme.of(context).textTheme.subtitle1.fontSize + 2,
+                  ),
                 ),
-              ),
-              TextSpan(text: ' ${S.of(context).infoClasses}.'),
-            ],
+                TextSpan(text: ' ${S.of(context).infoClasses}.'),
+              ],
+            ),
           ),
-        ),
-      ],
-      actions: [
-        AppButton(
-          text: S.of(context).actionChooseClasses,
-          width: 130,
-          onTap: () async {
-            // Pop the dialog
-            Navigator.of(context).pop();
-            // Push the Add classes page
-            await Navigator.of(context)
-                .push(MaterialPageRoute<ChangeNotifierProvider>(
-              builder: (_) => ChangeNotifierProvider.value(
-                  value: classProvider,
-                  child: FutureBuilder(
-                    future: classProvider.fetchUserClassIds(
-                        uid: user.uid, context: context),
-                    builder: (context, snap) {
-                      if (snap.hasData) {
-                        return AddClassesPage(
-                            initialClassIds: snap.data,
-                            onSave: (classIds) async {
-                              await classProvider.setUserClassIds(
-                                  classIds: classIds, uid: authProvider.uid);
-                              Navigator.pop(context);
-                            });
-                      } else {
-                        return const Center(child: CircularProgressIndicator());
-                      }
-                    },
-                  )),
-            ));
-          },
-        )
-      ],
-    );
+        ],
+        actions: [
+          AppButton(
+            text: S.of(context).actionChooseClasses,
+            width: 130,
+            onTap: () async {
+              // Pop the dialog
+              Navigator.of(context).pop();
+              // Push the Add classes page
+              await Navigator.of(context)
+                  .push(MaterialPageRoute<ChangeNotifierProvider>(
+                builder: (_) => ChangeNotifierProvider.value(
+                    value: classProvider,
+                    child: FutureBuilder(
+                      future: classProvider.fetchUserClassIds(
+                          uid: user.uid, context: context),
+                      builder: (context, snap) {
+                        if (snap.hasData) {
+                          return AddClassesPage(
+                              initialClassIds: snap.data,
+                              onSave: (classIds) async {
+                                await classProvider.setUserClassIds(
+                                    classIds: classIds, uid: authProvider.uid);
+                                Navigator.pop(context);
+                              });
+                        } else {
+                          return const Center(
+                              child: CircularProgressIndicator());
+                        }
+                      },
+                    )),
+              ));
+            },
+          )
+        ],
+      );
+    } else {
+      return AppDialog(
+        title: S.of(context).warningNoEvents,
+        content: [
+          RichText(
+            text: TextSpan(
+              style: Theme.of(context).textTheme.subtitle1,
+              children: [
+                TextSpan(text: '${S.of(context).infoMakeSureGroupIsSelected} '),
+                WidgetSpan(
+                  alignment: PlaceholderAlignment.top,
+                  child: Icon(
+                    CustomIcons.filter,
+                    size: Theme.of(context).textTheme.subtitle1.fontSize + 2,
+                  ),
+                ),
+                TextSpan(
+                    text: ' ${S.of(context).navigationFilter.toLowerCase()}.'),
+              ],
+            ),
+          ),
+        ],
+        actions: [
+          AppButton(
+            text: S.of(context).actionOpenFilter,
+            width: 130,
+            onTap: () async {
+              // Pop the dialog
+              Navigator.of(context).pop();
+              // Push the Filter page
+              await Navigator.push(
+                context,
+                MaterialPageRoute<FilterPage>(
+                  builder: (_) => const FilterPage(),
+                ),
+              );
+            },
+          )
+        ],
+      );
+    }
   }
 }
 

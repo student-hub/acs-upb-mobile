@@ -86,6 +86,7 @@
   "actionShowMore": "Arată mai multe",
   "actionEditGrading": "Modifică punctaj",
   "actionContribute": "Contribuie",
+  "actionOpenFilter": "Deschide filtru",
 
   "errorSomethingWentWrong": "A apărut o problemă.",
   "errorPasswordsDiffer": "Cele două parole diferă.",
@@ -212,6 +213,7 @@
   "infoSelect": "Selectați",
   "infoYouNeedToSelect": "Trebuie întâi să selectați",
   "infoClasses": "materiile care vă interesează",
+  "infoMakeSureGroupIsSelected": "Asigurați-vă că aveți grupa/semigrupa selectată în",
   "infoRelevanceNothingSelected": "Nu selectați nimic dacă este relevant pentru toată lumea.",
   "infoRelevanceExample": "De exemplu, dacă ceva este relevant doar pentru \"314CB\" și \"315CB\", nu setați direct \"CB\".",
   "infoPassword": "Aceasta trebuie să conțină majuscule, minuscule și cel puțin un număr sau un simbol, având minimum 8 caractere.",

@@ -192,6 +192,16 @@ class UniEventProvider extends EventProvider<UniEventInstance>
     notifyListeners();
   }
 
+  Future<void> checkIfEmpty(List<Stream<List<UniEvent>>> streams) async {
+    for (final stream in streams) {
+      if ((await stream.first)?.isNotEmpty ?? false) {
+        empty = false;
+        return;
+      }
+    }
+    empty = true;
+  }
+
   Stream<List<UniEvent>> get _events {
     if (!_authProvider.isAuthenticatedFromCache ||
         _filter == null ||
@@ -229,17 +239,12 @@ class UniEventProvider extends EventProvider<UniEventInstance>
       streams.add(stream);
     }
 
+    checkIfEmpty(streams);
+
     final stream = StreamZip(streams);
 
     // Flatten zipped streams
-    final events = stream.map((events) => events.expand((i) => i).toList());
-
-    events.isEmpty.then((value) {
-      empty = value;
-      // notifyListeners();
-    });
-
-    return events;
+    return stream.map((events) => events.expand((i) => i).toList());
   }
 
   @override

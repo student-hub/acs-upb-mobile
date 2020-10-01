@@ -854,6 +854,16 @@ class S {
     );
   }
 
+  /// `Open filter`
+  String get actionOpenFilter {
+    return Intl.message(
+      'Open filter',
+      name: 'actionOpenFilter',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Something went wrong.`
   String get errorSomethingWentWrong {
     return Intl.message(
@@ -1999,6 +2009,16 @@ class S {
     return Intl.message(
       'classes you are interested in',
       name: 'infoClasses',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Make sure your group/subgroup is selected in the`
+  String get infoMakeSureGroupIsSelected {
+    return Intl.message(
+      'Make sure your group/subgroup is selected in the',
+      name: 'infoMakeSureGroupIsSelected',
       desc: '',
       args: [],
     );
