@@ -5,6 +5,8 @@ import 'package:acs_upb_mobile/pages/filter/view/filter_page.dart';
 import 'package:acs_upb_mobile/pages/settings/settings_page.dart';
 
 class Routes {
+  Routes._();
+
   static const String root = '/';
   static const String home = '/home';
   static const String settings = SettingsPage.routeName;

@@ -1,5 +1,6 @@
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
+import 'package:acs_upb_mobile/navigation/routes.dart';
 import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
 import 'package:acs_upb_mobile/pages/classes/view/classes_page.dart';
 import 'package:acs_upb_mobile/pages/filter/view/filter_page.dart';
@@ -205,12 +206,7 @@ class _TimetablePageState extends State<TimetablePage> {
               // Pop the dialog
               Navigator.of(context).pop();
               // Push the Filter page
-              await Navigator.push(
-                context,
-                MaterialPageRoute<FilterPage>(
-                  builder: (_) => const FilterPage(),
-                ),
-              );
+              await Navigator.pushNamed(context, Routes.filter);
             },
           )
         ],

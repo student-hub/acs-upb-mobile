@@ -8,6 +8,7 @@ import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
 import 'package:acs_upb_mobile/pages/faq/service/question_provider.dart';
 import 'package:acs_upb_mobile/pages/faq/view/faq_page.dart';
 import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
+import 'package:acs_upb_mobile/pages/filter/view/filter_page.dart';
 import 'package:acs_upb_mobile/pages/people/service/person_provider.dart';
 import 'package:acs_upb_mobile/pages/portal/service/website_provider.dart';
 import 'package:acs_upb_mobile/pages/settings/settings_page.dart';
@@ -96,6 +97,7 @@ class _MyAppState extends State<MyApp> {
         Routes.login: (_) => LoginView(),
         Routes.signUp: (_) => SignUpView(),
         Routes.faq: (_) => FaqPage(),
+        Routes.filter: (_) => const FilterPage(),
       },
       navigatorObservers: widget.navigationObservers ?? [],
     );
