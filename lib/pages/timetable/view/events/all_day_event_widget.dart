@@ -8,6 +8,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:timetable/timetable.dart';
 
+/// Widget to display all day events in the timetable, based on
+/// [BasicAllDayEventWidget] from the timetable API.
 class UniAllDayEventWidget extends StatelessWidget {
   const UniAllDayEventWidget(
     this.event, {

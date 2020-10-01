@@ -99,9 +99,7 @@ class _TimetablePageState extends State<TimetablePage> {
           tooltip: S.of(context).navigationFilter,
           onPressed: () => Navigator.push(
             context,
-            MaterialPageRoute<FilterPage>(
-              builder: (_) => const FilterPage(),
-            ),
+            MaterialPageRoute<FilterPage>(builder: (_) => const FilterPage()),
           ),
         ),
       ],

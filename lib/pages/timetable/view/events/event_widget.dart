@@ -4,7 +4,10 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:black_hole_flutter/black_hole_flutter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:timetable/timetable.dart';
 
+/// Widget to display all day events in the timetable, based on
+/// [BasicEventWidget] from the timetable API.
 class UniEventWidget extends StatelessWidget {
   const UniEventWidget(this.event, {Key key})
       : assert(event != null),
@@ -65,9 +68,7 @@ class UniEventWidget extends StatelessWidget {
                         ),
                   ),
                 ),
-              )
-            else
-              Container(),
+              ),
             Expanded(
               child: event.location != null || event.info != null
                   ? Align(
