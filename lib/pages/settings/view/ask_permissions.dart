@@ -45,7 +45,6 @@ class _AskPermissionsState extends State<AskPermissions> {
             color: Theme.of(context).accentColor,
             width: 130,
             onTap: () async {
-              await sendRequest(context);
               Navigator.of(context).pop();
             }),
       ],
@@ -56,17 +55,6 @@ class _AskPermissionsState extends State<AskPermissions> {
   void initState() {
     super.initState();
     _fetchUser();
-  }
-
-  Future<void> sendRequest(BuildContext context) async {
-    final queryResult = await requestProvider
-        .makeRequest(Request(user.uid, requestBody), context: context);
-    if (queryResult) {
-      AppToast.show(S.of(context).messageRequestHasBeenSent);
-      Navigator.of(context).pop();
-    } else {
-      AppToast.show(S.of(context).errorSomethingWentWrong);
-    }
   }
 
   @override
@@ -94,16 +82,20 @@ class _AskPermissionsState extends State<AskPermissions> {
                  * Check if there is already a request registered for the current
                  * user.
                  */
-                final queryResult = await requestProvider
+                bool queryResult = await requestProvider
                     .userAlreadyRequested(user.uid, context: context);
 
                 if (queryResult) {
                   await showDialog(
                       context: context, child: _informExistingRequest(context));
-                  return;
                 }
 
-                await sendRequest(context);
+                queryResult = await requestProvider
+                    .makeRequest(Request(user.uid, requestBody), context: context);
+                if (queryResult) {
+                  AppToast.show(S.of(context).messageRequestHasBeenSent);
+                  Navigator.of(context).pop();
+                }
               })
         ],
         body: ListView(

@@ -156,6 +156,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "messageDeleteWebsite" : MessageLookupByLibrary.simpleMessage("Are you sure you want to delete this website?"),
     "messageEditProfileSuccess" : MessageLookupByLibrary.simpleMessage("Profile updated successfully."),
     "messageEmailNotVerified" : MessageLookupByLibrary.simpleMessage("Account is not verified."),
+    "messageEmailNotVerifiedAskPermissions" : MessageLookupByLibrary.simpleMessage("Account is not verified. For asking editing permissions, please check your email for account verification."),
     "messageGetStartedButton" : MessageLookupByLibrary.simpleMessage("Get started by pressing the button above."),
     "messageIAgreeToThe" : MessageLookupByLibrary.simpleMessage("I agree to the "),
     "messageNewUser" : MessageLookupByLibrary.simpleMessage("New user?"),

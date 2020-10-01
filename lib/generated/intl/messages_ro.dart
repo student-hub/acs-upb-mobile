@@ -156,6 +156,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "messageDeleteWebsite" : MessageLookupByLibrary.simpleMessage("Sunteți sigur că doriți să ștergeți acest website?"),
     "messageEditProfileSuccess" : MessageLookupByLibrary.simpleMessage("Profilul a fost actualizat cu succes."),
     "messageEmailNotVerified" : MessageLookupByLibrary.simpleMessage("Contul nu este verificat."),
+    "messageEmailNotVerifiedAskPermissions" : MessageLookupByLibrary.simpleMessage("Pentru a cere drepturi de editare, contul trebuie să fie verificat. Vă rugăm să vă verificați mailul."),
     "messageGetStartedButton" : MessageLookupByLibrary.simpleMessage("Începeți prin a apăsa butonul de mai sus."),
     "messageIAgreeToThe" : MessageLookupByLibrary.simpleMessage("Sunt de acord cu "),
     "messageNewUser" : MessageLookupByLibrary.simpleMessage("Utilizator nou?"),

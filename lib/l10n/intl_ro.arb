@@ -181,6 +181,7 @@
   "messageWelcomeName": "Bine ai venit, {name}!",
   "messageNewUser":"Utilizator nou?",
   "messageEmailNotVerified": "Contul nu este verificat.",
+  "messageEmailNotVerifiedAskPermissions": "Pentru a cere drepturi de editare, contul trebuie să fie verificat. Vă rugăm să vă verificați mailul.",
   "messageAccountCreated": "Contul a fost creat cu succes.",
   "messageAccountDeleted": "Contul a fost șters cu succes.",
   "messageCheckEmailVerification": "Verificați-vă mail-ul pentru confirmarea contului.",

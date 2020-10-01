@@ -1,14 +1,18 @@
 import 'dart:io';
 
+import 'package:acs_upb_mobile/authentication/model/user.dart';
+import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/resources/custom_icons.dart';
 import 'package:acs_upb_mobile/resources/locale_provider.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/widgets/icon_text.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
+import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:preferences/preferences.dart';
+import 'package:provider/provider.dart';
 
 import 'package:acs_upb_mobile/pages/settings/view/ask_permissions.dart';
 
@@ -20,6 +24,15 @@ class SettingsPage extends StatefulWidget {
 }
 
 class SettingsPageState extends State<SettingsPage> {
+  User user;
+  AuthProvider authProvider;
+
+  @override
+  void initState() {
+    super.initState();
+    authProvider = Provider.of(context, listen: false);
+  }
+
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
@@ -98,17 +111,36 @@ class SettingsPageState extends State<SettingsPage> {
                                 context: context),
                           ),
                         ),
-                        Divider(),
+                        const Divider(),
                         FlatButton(
+                          key: const ValueKey('ask_permissions'),
                           onPressed: () => {
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => AskPermissions())),
+                            if (!authProvider.isVerifiedFromCache &&
+                                !authProvider.isAnonymous)
+                              {
+                                AppToast.show(S
+                                    .of(context)
+                                    .messageEmailNotVerifiedAskPermissions)
+                              }
+                            else if (!authProvider.isAnonymous)
+                              {
+                                Navigator.of(context).push(
+                                    MaterialPageRoute<AskPermissions>(
+                                        builder: (context) =>
+                                            AskPermissions())),
+                              }
                           },
-                          child: Text(
-                            S.of(context).labelAskPermissions,
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
+                          child: Text(S.of(context).labelAskPermissions,
+                              textAlign: TextAlign.center,
+                              style: authProvider.isAnonymous
+                                  ? Theme.of(context).textTheme.bodyText1.apply(
+                                        color: Theme.of(context).disabledColor,
+                                      )
+                                  : Theme.of(context)
+                                      .textTheme
+                                      .bodyText1
+                                      .apply()),
+                        )
                       ],
                     ),
                   ],

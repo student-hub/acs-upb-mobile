@@ -1703,6 +1703,16 @@ class S {
     );
   }
 
+  /// `Account is not verified. For asking editing permissions, please check your email for account verification.`
+  String get messageEmailNotVerifiedAskPermissions {
+    return Intl.message(
+      'Account is not verified. For asking editing permissions, please check your email for account verification.',
+      name: 'messageEmailNotVerifiedAskPermissions',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Account created successfully.`
   String get messageAccountCreated {
     return Intl.message(

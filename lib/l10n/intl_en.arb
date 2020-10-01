@@ -181,6 +181,7 @@
   "messageWelcomeName": "Welcome, {name}!",
   "messageNewUser": "New user?",
   "messageEmailNotVerified": "Account is not verified.",
+  "messageEmailNotVerifiedAskPermissions": "Account is not verified. For asking editing permissions, please check your email for account verification.",
   "messageAccountCreated": "Account created successfully.",
   "messageAccountDeleted": "Account deleted successfully.",
   "messageCheckEmailVerification": "Please check your email for account verification.",
