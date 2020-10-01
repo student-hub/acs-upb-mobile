@@ -216,7 +216,8 @@ class AddClassesPage extends StatefulWidget {
 }
 
 class _AddClassesPageState extends State<AddClassesPage> {
-  _AddClassesPageState({List<String> classIds}) : classIds = classIds ?? [];
+  _AddClassesPageState({List<String> classIds})
+      : classIds = List<String>.from(classIds) ?? [];
 
   List<String> classIds;
   List<ClassHeader> headers;

@@ -1,3 +1,4 @@
+import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:flutter/cupertino.dart';
 
 /// Filter represented in the form of a tree with named levels
@@ -74,7 +75,8 @@ class Filter {
     return result;
   }
 
-  bool _relevantLeavesHelper(List<String> list, FilterNode node) {
+  bool _relevantLeavesHelper(List<String> list, FilterNode node,
+      {BuildContext context}) {
     if (node.value) {
       bool hasSelectedChildren = false;
       if (node.children != null) {
@@ -83,7 +85,9 @@ class Filter {
         }
       }
       if (!hasSelectedChildren) {
-        list.add(node.name);
+        context == null
+            ? list.add(node.name)
+            : list.add(node.localizedName(context));
       }
 
       return true;
@@ -115,6 +119,12 @@ class Filter {
       }
     }
     return null;
+  }
+
+  List<String> relevantLocalizedLeaves(BuildContext context) {
+    final list = <String>[];
+    _relevantLeavesHelper(list, root, context: context);
+    return list;
   }
 
   bool _setRelevantHelper(String nodeName, FilterNode node, bool setParents) {
@@ -187,6 +197,13 @@ class FilterNode {
 
   void addListener(void Function() listener) =>
       _valueNotifier.addListener(listener);
+
+  String localizedName(BuildContext context) {
+    if (name == 'BSc') return S.of(context).filterNodeNameBSc;
+    if (name == 'MSc') return S.of(context).filterNodeNameMSc;
+
+    return name;
+  }
 
   FilterNode clone() => FilterNode(
         name: name,

@@ -93,6 +93,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "filterMenuRelevance" : MessageLookupByLibrary.simpleMessage("Filter by relevance"),
     "filterMenuShowAll" : MessageLookupByLibrary.simpleMessage("Show all"),
     "filterMenuShowMine" : MessageLookupByLibrary.simpleMessage("Show only mine"),
+    "filterNodeNameBSc" : MessageLookupByLibrary.simpleMessage("Bachelor\'s"),
+    "filterNodeNameMSc" : MessageLookupByLibrary.simpleMessage("Master\'s"),
     "hintEmail" : MessageLookupByLibrary.simpleMessage("john.doe"),
     "hintEvaluation" : MessageLookupByLibrary.simpleMessage("Final exam"),
     "hintFirstName" : MessageLookupByLibrary.simpleMessage("John"),

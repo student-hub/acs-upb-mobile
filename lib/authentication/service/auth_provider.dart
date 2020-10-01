@@ -33,6 +33,7 @@ class AuthProvider with ChangeNotifier {
     _userAuthSub = FirebaseAuth.instance.onAuthStateChanged.listen((newUser) {
       print('AuthProvider - FirebaseAuth - onAuthStateChanged - $newUser');
       _firebaseUser = newUser;
+      _currentUser = null;
       _fetchUser();
       notifyListeners();
     }, onError: (dynamic e) {
@@ -181,7 +182,9 @@ class AuthProvider with ChangeNotifier {
       await migrateToNewClassFormat(snapshot.data);
     }
 
-    return _currentUser = DatabaseUser.fromSnap(snapshot);
+    _currentUser = DatabaseUser.fromSnap(snapshot);
+    notifyListeners();
+    return _currentUser;
   }
 
   Future<User> get currentUser => _fetchUser();
@@ -256,6 +259,7 @@ class AuthProvider with ChangeNotifier {
       _errorHandler(e, context);
       return null;
     });
+    await _fetchUser();
     return result != null;
   }
 

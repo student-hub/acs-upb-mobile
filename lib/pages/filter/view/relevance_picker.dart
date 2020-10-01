@@ -164,7 +164,7 @@ class _RelevancePickerState extends State<RelevancePicker> {
 
     if (_filterApplied || widget.defaultPrivate) {
       // Add strings from the filter options
-      for (final node in _filter?.relevantLeaves ?? []) {
+      for (final node in _filter?.relevantLocalizedLeaves(context) ?? []) {
         if (node != 'All') {
           // The "All" case (when nothing is selected in the filter) is handled
           // separately using [_anyoneController]

@@ -36,9 +36,10 @@ class Utils {
 
   static Future<void> signOut(BuildContext context) async {
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    final filterProvider = Provider.of<FilterProvider>(context, listen: false);
+    unawaited(Navigator.pushNamedAndRemoveUntil(
+        context, Routes.login, (route) => false));
     unawaited(authProvider.signOut());
-    Provider.of<FilterProvider>(context, listen: false).resetFilter();
-    await Navigator.pushNamedAndRemoveUntil(
-        context, Routes.login, (route) => false);
+    filterProvider.resetFilter();
   }
 }

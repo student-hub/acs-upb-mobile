@@ -8,6 +8,9 @@ import 'package:acs_upb_mobile/pages/classes/view/class_view.dart';
 import 'package:acs_upb_mobile/pages/classes/view/classes_page.dart';
 import 'package:acs_upb_mobile/pages/classes/view/grading_view.dart';
 import 'package:acs_upb_mobile/pages/classes/view/shortcut_view.dart';
+import 'package:acs_upb_mobile/pages/faq/model/question.dart';
+import 'package:acs_upb_mobile/pages/faq/service/question_provider.dart';
+import 'package:acs_upb_mobile/pages/faq/view/faq_page.dart';
 import 'package:acs_upb_mobile/pages/filter/model/filter.dart';
 import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
 import 'package:acs_upb_mobile/pages/filter/view/filter_page.dart';
@@ -23,6 +26,7 @@ import 'package:acs_upb_mobile/pages/portal/view/website_view.dart';
 import 'package:acs_upb_mobile/pages/settings/settings_page.dart';
 import 'package:acs_upb_mobile/pages/timetable/service/uni_event_provider.dart';
 import 'package:acs_upb_mobile/resources/custom_icons.dart';
+import 'package:acs_upb_mobile/widgets/search_bar.dart';
 import 'package:acs_upb_mobile/resources/locale_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -45,6 +49,8 @@ class MockClassProvider extends Mock implements ClassProvider {}
 
 class MockPersonProvider extends Mock implements PersonProvider {}
 
+class MockQuestionProvider extends Mock implements QuestionProvider {}
+
 class MockUniEventProvider extends Mock implements UniEventProvider {}
 
 class MockNavigatorObserver extends Mock implements NavigatorObserver {}
@@ -55,6 +61,7 @@ void main() {
   FilterProvider mockFilterProvider;
   ClassProvider mockClassProvider;
   PersonProvider mockPersonProvider;
+  MockQuestionProvider mockQuestionProvider;
   UniEventProvider mockEventProvider;
 
   // Test layout for different screen sizes
@@ -91,6 +98,8 @@ void main() {
               create: (_) => mockClassProvider),
           ChangeNotifierProvider<PersonProvider>(
               create: (_) => mockPersonProvider),
+          ChangeNotifierProvider<QuestionProvider>(
+              create: (_) => mockQuestionProvider),
           ChangeNotifierProvider<UniEventProvider>(
               create: (_) => mockEventProvider),
         ],
@@ -453,6 +462,36 @@ void main() {
               ),
             ]));
 
+    mockQuestionProvider = MockQuestionProvider();
+    // ignore: invalid_use_of_protected_member
+    when(mockQuestionProvider.hasListeners).thenReturn(false);
+    when(mockQuestionProvider.fetchQuestions(context: anyNamed('context')))
+        .thenAnswer((realInvocation) => Future.value(<Question>[
+              Question(
+                  question: 'Care este programul la secretariat?',
+                  answer:
+                      'Secretariatul este deschis în timpul săptămânii între orele 9:00 si 11:00.',
+                  tags: ['Licență']),
+              Question(
+                  question: 'Cum mă conectez la eduroam?',
+                  answer:
+                      'Conectarea în rețeaua *eduroam* se face pe baza aceluiași cont folosit și pe site-ul de cursuri.',
+                  tags: ['Conectare', 'Informații'])
+            ]));
+    when(mockQuestionProvider.fetchQuestions(limit: anyNamed('limit')))
+        .thenAnswer((realInvocation) => Future.value(<Question>[
+              Question(
+                  question: 'Care este programul la secretariat?',
+                  answer:
+                      'Secretariatul este deschis în timpul săptămânii între orele 9:00 si 11:00.',
+                  tags: ['Licență']),
+              Question(
+                  question: 'Cum mă conectez la eduroam?',
+                  answer:
+                      'Conectarea în rețeaua *eduroam* se face pe baza aceluiași cont folosit și pe site-ul de cursuri.',
+                  tags: ['Conectare', 'Informații'])
+            ]));
+
     mockEventProvider = MockUniEventProvider();
     // ignore: invalid_use_of_protected_member
     when(mockEventProvider.hasListeners).thenReturn(false);
@@ -813,6 +852,8 @@ void main() {
               firstName: 'John',
               lastName: 'Doe',
               permissionLevel: 3)));
+      when(mockAuthProvider.currentUserFromCache).thenReturn(User(
+          uid: '1', firstName: 'John', lastName: 'Doe', permissionLevel: 3));
       when(mockAuthProvider.email).thenReturn('john.doe@stud.acs.upb.ro');
     });
 
@@ -928,6 +969,37 @@ void main() {
 
           expect(find.byType(PersonView), findsOneWidget);
         });
+      });
+    }
+  });
+
+  group('Show faq page', () {
+    for (final size in screenSizes) {
+      testWidgets('${size.width}x${size.height}', (WidgetTester tester) async {
+        await binding.setSurfaceSize(size);
+
+        await tester.pumpWidget(buildApp());
+        await tester.pumpAndSettle();
+
+        // Open faq page
+        final showMoreFaq = find.byKey(const ValueKey('show_more_faq'));
+
+        await tester.tap(showMoreFaq);
+        await tester.pumpAndSettle();
+
+        expect(find.byType(FaqPage), findsOneWidget);
+
+        await tester.tap(find.byIcon(Icons.search));
+        await tester.pumpAndSettle();
+
+        expect(find.byType(SearchBar), findsOneWidget);
+
+        final cancelSearchBar = find.byKey(const ValueKey('cancel_search_bar'));
+
+        await tester.tap(cancelSearchBar);
+        await tester.pumpAndSettle();
+
+        expect(find.byType(SearchBar), findsNothing);
       });
     }
   });
