@@ -105,9 +105,10 @@ extension UniEventExtension on UniEvent {
         color: type.color,
         classHeader: classHeader,
         calendar: calendars[json['calendar']],
-        relevance: json['relevance'] != null
-            ? List<String>.from(json['relevance'])
-            : null,
+        degree: json['degree'],
+        relevance: json['relevance'] == null
+            ? null
+            : List<String>.from(json['relevance']),
       );
     } else if (json['rrule'] != null) {
       return RecurringUniEvent(
@@ -123,9 +124,10 @@ extension UniEventExtension on UniEvent {
         color: type.color,
         classHeader: classHeader,
         calendar: calendars[json['calendar']],
-        relevance: json['relevance'] != null
-            ? List<String>.from(json['relevance'])
-            : null,
+        degree: json['degree'],
+        relevance: json['relevance'] == null
+            ? null
+            : List<String>.from(json['relevance']),
       );
     } else {
       return UniEvent(
@@ -140,9 +142,10 @@ extension UniEventExtension on UniEvent {
         color: type.color,
         classHeader: classHeader,
         calendar: calendars[json['calendar']],
-        relevance: json['relevance'] != null
-            ? List<String>.from(json['relevance'])
-            : null,
+        degree: json['degree'],
+        relevance: json['relevance'] == null
+            ? null
+            : List<String>.from(json['relevance']),
       );
     }
   }
@@ -255,6 +258,10 @@ class UniEventProvider extends EventProvider<UniEventInstance>
         .followedBy(_calendars.values.map((cal) {
           final List<AllDayUniEvent> events = cal.holidays + cal.exams;
           return events
+              .where((event) =>
+                  event.relevance == null ||
+                  (event.degree == _filter.baseNode &&
+                      event.relevance.any(_filter.relevantNodes.contains)))
               .map((e) => e.generateInstances(intersectingInterval: interval))
               .expand((e) => e);
         }).expand((e) => e)));

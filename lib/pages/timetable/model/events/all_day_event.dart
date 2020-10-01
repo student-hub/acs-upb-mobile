@@ -16,6 +16,7 @@ class AllDayUniEvent extends UniEvent {
     ClassHeader classHeader,
     AcademicCalendar calendar,
     List<String> relevance,
+    String degree,
   })  : startDate = start,
         endDate = end,
         super(
@@ -28,7 +29,8 @@ class AllDayUniEvent extends UniEvent {
             type: type,
             classHeader: classHeader,
             calendar: calendar,
-            relevance: relevance);
+            relevance: relevance,
+            degree: degree);
 
   LocalDate startDate;
   LocalDate endDate;

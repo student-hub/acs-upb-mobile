@@ -48,24 +48,26 @@ class RecurringUniEvent extends UniEvent {
     @required LocalDateTime start,
     @required Period duration,
     @required String id,
+    List<String> relevance,
+    String degree,
     String name,
     String location,
     Color color,
     UniEventType type,
     ClassHeader classHeader,
     AcademicCalendar calendar,
-    List<String> relevance,
   }) : super(
             name: name,
             location: location,
             start: start,
             duration: duration,
+            degree: degree,
+            relevance: relevance,
             id: id,
             color: color,
             type: type,
             classHeader: classHeader,
-            calendar: calendar,
-            relevance: relevance);
+            calendar: calendar);
 
   final RecurrenceRule rrule;
 

@@ -42,17 +42,19 @@ extension UniEventTypeExtension on UniEventType {
 }
 
 class UniEvent {
-  const UniEvent(
-      {@required this.start,
-      @required this.duration,
-      @required this.id,
-      this.name,
-      this.location,
-      this.color,
-      this.type,
-      this.classHeader,
-      this.calendar,
-      this.relevance});
+  const UniEvent({
+    @required this.start,
+    @required this.duration,
+    @required this.id,
+    this.name,
+    this.location,
+    this.color,
+    this.type,
+    this.classHeader,
+    this.calendar,
+    this.relevance,
+    this.degree,
+  });
 
   final String id;
   final Color color;
@@ -63,6 +65,7 @@ class UniEvent {
   final String location;
   final ClassHeader classHeader;
   final AcademicCalendar calendar;
+  final String degree;
   final List<String> relevance;
 
   Iterable<UniEventInstance> generateInstances(

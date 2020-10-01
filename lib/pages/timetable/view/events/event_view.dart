@@ -138,7 +138,7 @@ class _EventViewState extends State<EventView> {
                   Text(
                       widget.event.mainEvent.relevance == null
                           ? S.of(context).relevanceAnyone
-                          : widget.event.mainEvent.relevance.join(', '),
+                          : '${widget.event.mainEvent.degree}: ${widget.event.mainEvent.relevance.join(', ')}',
                       style: Theme.of(context).textTheme.subtitle1),
                 ],
               ),
