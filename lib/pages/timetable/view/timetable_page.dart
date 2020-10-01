@@ -45,6 +45,10 @@ class _TimetablePageState extends State<TimetablePage> {
           eventProvider: eventProvider);
 
       WidgetsBinding.instance.addPostFrameCallback((_) async {
+        if (!mounted) {
+          return;
+        }
+
         // Fetch user classes so they're cached
         final user = Provider.of<AuthProvider>(context, listen: false)
             .currentUserFromCache;

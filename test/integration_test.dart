@@ -26,8 +26,8 @@ import 'package:acs_upb_mobile/pages/portal/view/website_view.dart';
 import 'package:acs_upb_mobile/pages/settings/settings_page.dart';
 import 'package:acs_upb_mobile/pages/timetable/service/uni_event_provider.dart';
 import 'package:acs_upb_mobile/resources/custom_icons.dart';
-import 'package:acs_upb_mobile/widgets/search_bar.dart';
 import 'package:acs_upb_mobile/resources/locale_provider.dart';
+import 'package:acs_upb_mobile/widgets/search_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
@@ -522,6 +522,8 @@ void main() {
     setUp(() {
       when(mockAuthProvider.currentUser).thenAnswer((_) =>
           Future.value(User(uid: '0', firstName: 'John', lastName: 'Doe')));
+      when(mockAuthProvider.currentUserFromCache)
+          .thenReturn(User(uid: '0', firstName: 'John', lastName: 'Doe'));
       when(mockAuthProvider.isAuthenticatedFromService)
           .thenAnswer((_) => Future.value(true));
       when(mockAuthProvider.isAuthenticatedFromCache).thenReturn(true);
@@ -553,6 +555,8 @@ void main() {
     setUp(() {
       when(mockAuthProvider.currentUser).thenAnswer((_) =>
           Future.value(User(uid: '0', firstName: 'John', lastName: 'Doe')));
+      when(mockAuthProvider.currentUserFromCache)
+          .thenReturn(User(uid: '0', firstName: 'John', lastName: 'Doe'));
       when(mockAuthProvider.isAuthenticatedFromService)
           .thenAnswer((_) => Future.value(true));
       when(mockAuthProvider.isAuthenticatedFromCache).thenReturn(true);
