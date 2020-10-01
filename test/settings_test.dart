@@ -1,6 +1,8 @@
 import 'package:acs_upb_mobile/authentication/model/user.dart';
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/main.dart';
+import 'package:acs_upb_mobile/pages/faq/model/question.dart';
+import 'package:acs_upb_mobile/pages/faq/service/question_provider.dart';
 import 'package:acs_upb_mobile/pages/portal/service/website_provider.dart';
 import 'package:acs_upb_mobile/pages/settings/service/request_provider.dart';
 import 'package:acs_upb_mobile/pages/settings/view/ask_permissions.dart';
@@ -17,11 +19,14 @@ class MockAuthProvider extends Mock implements AuthProvider {}
 
 class MockWebsiteProvider extends Mock implements WebsiteProvider {}
 
+class MockQuestionProvider extends Mock implements QuestionProvider {}
+
 class MockRequestProvider extends Mock implements RequestProvider {}
 
 void main() {
   AuthProvider mockAuthProvider;
   WebsiteProvider mockWebsiteProvider;
+  MockQuestionProvider mockQuestionProvider;
   RequestProvider mockRequestProvider;
 
   group('Settings', () {
@@ -50,6 +55,14 @@ void main() {
       when(mockWebsiteProvider.fetchWebsites(any))
           .thenAnswer((_) => Future.value([]));
 
+      mockQuestionProvider = MockQuestionProvider();
+      // ignore: invalid_use_of_protected_member
+      when(mockQuestionProvider.hasListeners).thenReturn(false);
+      when(mockQuestionProvider.fetchQuestions(context: anyNamed('context')))
+          .thenAnswer((realInvocation) => Future.value(<Question>[]));
+      when(mockQuestionProvider.fetchQuestions(limit: anyNamed('limit')))
+          .thenAnswer((realInvocation) => Future.value(<Question>[]));
+
       mockRequestProvider = MockRequestProvider();
       when(mockRequestProvider.makeRequest(any, context: anyNamed('context')))
           .thenAnswer((_) => Future.value(true));
@@ -62,7 +75,9 @@ void main() {
       await tester.pumpWidget(MultiProvider(providers: [
         ChangeNotifierProvider<AuthProvider>(create: (_) => mockAuthProvider),
         ChangeNotifierProvider<WebsiteProvider>(
-            create: (_) => mockWebsiteProvider)
+            create: (_) => mockWebsiteProvider),
+        ChangeNotifierProvider<QuestionProvider>(
+            create: (_) => mockQuestionProvider)
       ], child: const MyApp()));
       await tester.pumpAndSettle();
 
@@ -92,7 +107,9 @@ void main() {
       await tester.pumpWidget(MultiProvider(providers: [
         ChangeNotifierProvider<AuthProvider>(create: (_) => mockAuthProvider),
         ChangeNotifierProvider<WebsiteProvider>(
-            create: (_) => mockWebsiteProvider)
+            create: (_) => mockWebsiteProvider),
+        ChangeNotifierProvider<QuestionProvider>(
+            create: (_) => mockQuestionProvider)
       ], child: const MyApp()));
       await tester.pumpAndSettle();
 
@@ -144,6 +161,8 @@ void main() {
         ChangeNotifierProvider<AuthProvider>(create: (_) => mockAuthProvider),
         ChangeNotifierProvider<WebsiteProvider>(
             create: (_) => mockWebsiteProvider),
+        ChangeNotifierProvider<QuestionProvider>(
+            create: (_) => mockQuestionProvider),
         Provider<RequestProvider>(create: (_) => mockRequestProvider),
       ], child: const MyApp()));
       await tester.pumpAndSettle();
@@ -185,6 +204,8 @@ void main() {
         ChangeNotifierProvider<AuthProvider>(create: (_) => mockAuthProvider),
         ChangeNotifierProvider<WebsiteProvider>(
             create: (_) => mockWebsiteProvider),
+        ChangeNotifierProvider<QuestionProvider>(
+            create: (_) => mockQuestionProvider),
         Provider<RequestProvider>(create: (_) => mockRequestProvider),
       ], child: const MyApp()));
       await tester.pumpAndSettle();
@@ -231,6 +252,8 @@ void main() {
         ChangeNotifierProvider<AuthProvider>(create: (_) => mockAuthProvider),
         ChangeNotifierProvider<WebsiteProvider>(
             create: (_) => mockWebsiteProvider),
+        ChangeNotifierProvider<QuestionProvider>(
+            create: (_) => mockQuestionProvider),
         Provider<RequestProvider>(create: (_) => mockRequestProvider),
       ], child: const MyApp()));
       await tester.pumpAndSettle();
@@ -262,6 +285,8 @@ void main() {
         ChangeNotifierProvider<AuthProvider>(create: (_) => mockAuthProvider),
         ChangeNotifierProvider<WebsiteProvider>(
             create: (_) => mockWebsiteProvider),
+        ChangeNotifierProvider<QuestionProvider>(
+            create: (_) => mockQuestionProvider),
         Provider<RequestProvider>(create: (_) => mockRequestProvider),
       ], child: const MyApp()));
       await tester.pumpAndSettle();

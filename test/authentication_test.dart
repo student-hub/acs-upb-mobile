@@ -3,6 +3,8 @@ import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/authentication/view/login_view.dart';
 import 'package:acs_upb_mobile/authentication/view/sign_up_view.dart';
 import 'package:acs_upb_mobile/main.dart';
+import 'package:acs_upb_mobile/pages/faq/model/question.dart';
+import 'package:acs_upb_mobile/pages/faq/service/question_provider.dart';
 import 'package:acs_upb_mobile/pages/filter/model/filter.dart';
 import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
 import 'package:acs_upb_mobile/pages/home/home_page.dart';
@@ -24,11 +26,14 @@ class MockWebsiteProvider extends Mock implements WebsiteProvider {}
 
 class MockPersonProvider extends Mock implements PersonProvider {}
 
+class MockQuestionProvider extends Mock implements QuestionProvider {}
+
 void main() {
   AuthProvider mockAuthProvider;
   WebsiteProvider mockWebsiteProvider;
   FilterProvider mockFilterProvider;
   PersonProvider mockPersonProvider;
+  MockQuestionProvider mockQuestionProvider;
 
   setUp(() async {
     WidgetsFlutterBinding.ensureInitialized();
@@ -59,16 +64,23 @@ void main() {
     when(mockFilterProvider.hasListeners).thenReturn(false);
     when(mockFilterProvider.filterEnabled).thenReturn(true);
     when(mockFilterProvider.fetchFilter(any))
-        .thenAnswer((_) =>
-        Future.value(Filter(localizedLevelNames: [
-          {'en': 'Level', 'ro': 'Nivel'}
-        ], root: FilterNode(name: 'root'))));
+        .thenAnswer((_) => Future.value(Filter(localizedLevelNames: [
+              {'en': 'Level', 'ro': 'Nivel'}
+            ], root: FilterNode(name: 'root'))));
 
     mockPersonProvider = MockPersonProvider();
     // ignore: invalid_use_of_protected_member
     when(mockPersonProvider.hasListeners).thenReturn(false);
     when(mockPersonProvider.fetchPeople(context: anyNamed('context')))
         .thenAnswer((_) => Future.value([]));
+
+    mockQuestionProvider = MockQuestionProvider();
+    // ignore: invalid_use_of_protected_member
+    when(mockQuestionProvider.hasListeners).thenReturn(false);
+    when(mockQuestionProvider.fetchQuestions(context: anyNamed('context')))
+        .thenAnswer((realInvocation) => Future.value(<Question>[]));
+    when(mockQuestionProvider.fetchQuestions(limit: anyNamed('limit')))
+        .thenAnswer((realInvocation) => Future.value(<Question>[]));
   });
 
   group('Login', () {
@@ -76,7 +88,9 @@ void main() {
       await tester.pumpWidget(MultiProvider(providers: [
         ChangeNotifierProvider<AuthProvider>(create: (_) => mockAuthProvider),
         ChangeNotifierProvider<WebsiteProvider>(
-            create: (_) => mockWebsiteProvider)
+            create: (_) => mockWebsiteProvider),
+        ChangeNotifierProvider<QuestionProvider>(
+            create: (_) => mockQuestionProvider)
       ], child: const MyApp()));
       await tester.pumpAndSettle();
 
@@ -104,7 +118,9 @@ void main() {
       await tester.pumpWidget(MultiProvider(providers: [
         ChangeNotifierProvider<AuthProvider>(create: (_) => mockAuthProvider),
         ChangeNotifierProvider<WebsiteProvider>(
-            create: (_) => mockWebsiteProvider)
+            create: (_) => mockWebsiteProvider),
+        ChangeNotifierProvider<QuestionProvider>(
+            create: (_) => mockQuestionProvider)
       ], child: const MyApp()));
       await tester.pumpAndSettle();
 
@@ -114,9 +130,9 @@ void main() {
         expect(find.text('@stud.acs.upb.ro'), findsOneWidget);
 
         when(mockAuthProvider.signIn(
-            email: anyNamed('email'),
-            password: anyNamed('password'),
-            context: anyNamed('context')))
+                email: anyNamed('email'),
+                password: anyNamed('password'),
+                context: anyNamed('context')))
             .thenAnswer((_) => Future.value(true));
 
         // Enter credentials
@@ -149,7 +165,7 @@ void main() {
       expect(find.byType(LoginView), findsOneWidget);
 
       when(mockAuthProvider.sendPasswordResetEmail(
-          email: anyNamed('email'), context: anyNamed('context')))
+              email: anyNamed('email'), context: anyNamed('context')))
           .thenAnswer((_) => Future.value(true));
 
       expect(find.byType(AlertDialog), findsNothing);
@@ -183,7 +199,7 @@ void main() {
       expect(find.byType(LoginView), findsOneWidget);
 
       when(mockAuthProvider.sendPasswordResetEmail(
-          email: anyNamed('email'), context: anyNamed('context')))
+              email: anyNamed('email'), context: anyNamed('context')))
           .thenAnswer((_) => Future.value(true));
 
       expect(find.byType(AlertDialog), findsNothing);
@@ -215,118 +231,117 @@ void main() {
       when(mockFilterProvider.hasListeners).thenReturn(false);
       when(mockFilterProvider.filterEnabled).thenReturn(true);
       when(mockFilterProvider.fetchFilter(any))
-          .thenAnswer((_) =>
-          Future.value(Filter(
-              localizedLevelNames: [
-                {'en': 'Degree', 'ro': 'Nivel de studiu'},
-                {'en': 'Major', 'ro': 'Specializare'},
-                {'en': 'Year', 'ro': 'An'},
-                {'en': 'Series', 'ro': 'Serie'},
-                {'en': 'Group', 'ro': 'Group'},
-                {'en': 'Subgroup', 'ro': 'Semigrupă'}
-              ],
-              root: FilterNode(name: 'All', value: true, children: [
-                FilterNode(name: 'BSc', value: true, children: [
-                  FilterNode(name: 'CTI', value: true, children: [
-                    FilterNode(
-                      name: 'CTI-1',
-                      value: true,
-                      children: [
-                        FilterNode(name: '1-CA'),
+          .thenAnswer((_) => Future.value(Filter(
+                  localizedLevelNames: [
+                    {'en': 'Degree', 'ro': 'Nivel de studiu'},
+                    {'en': 'Major', 'ro': 'Specializare'},
+                    {'en': 'Year', 'ro': 'An'},
+                    {'en': 'Series', 'ro': 'Serie'},
+                    {'en': 'Group', 'ro': 'Group'},
+                    {'en': 'Subgroup', 'ro': 'Semigrupă'}
+                  ],
+                  root: FilterNode(name: 'All', value: true, children: [
+                    FilterNode(name: 'BSc', value: true, children: [
+                      FilterNode(name: 'CTI', value: true, children: [
                         FilterNode(
-                          name: '1-CB',
+                          name: 'CTI-1',
                           value: true,
                           children: [
+                            FilterNode(name: '1-CA'),
                             FilterNode(
-                              name: '311CB',
+                              name: '1-CB',
                               value: true,
                               children: [
-                                FilterNode(name: '311CBa'),
-                                FilterNode(name: '311CBb'),
+                                FilterNode(
+                                  name: '311CB',
+                                  value: true,
+                                  children: [
+                                    FilterNode(name: '311CBa'),
+                                    FilterNode(name: '311CBb'),
+                                  ],
+                                ),
+                                FilterNode(
+                                  name: '312CB',
+                                  value: true,
+                                  children: [
+                                    FilterNode(name: '312CBa'),
+                                    FilterNode(name: '312CBb'),
+                                  ],
+                                ),
+                                FilterNode(
+                                  name: '313CB',
+                                  value: true,
+                                  children: [
+                                    FilterNode(name: '313CBa'),
+                                    FilterNode(name: '313CBb'),
+                                  ],
+                                ),
+                                FilterNode(
+                                  name: '314CB',
+                                  value: true,
+                                  children: [
+                                    FilterNode(name: '314CBa'),
+                                    FilterNode(name: '314CBb'),
+                                  ],
+                                ),
                               ],
                             ),
-                            FilterNode(
-                              name: '312CB',
-                              value: true,
-                              children: [
-                                FilterNode(name: '312CBa'),
-                                FilterNode(name: '312CBb'),
-                              ],
-                            ),
-                            FilterNode(
-                              name: '313CB',
-                              value: true,
-                              children: [
-                                FilterNode(name: '313CBa'),
-                                FilterNode(name: '313CBb'),
-                              ],
-                            ),
-                            FilterNode(
-                              name: '314CB',
-                              value: true,
-                              children: [
-                                FilterNode(name: '314CBa'),
-                                FilterNode(name: '314CBb'),
-                              ],
-                            ),
+                            FilterNode(name: '1-CC'),
+                            FilterNode(name: '1-CD', children: [
+                              FilterNode(
+                                name: '311CD',
+                                value: true,
+                                children: [
+                                  FilterNode(name: '311CDa'),
+                                  FilterNode(name: '311CDb'),
+                                ],
+                              ),
+                              FilterNode(
+                                name: '312CD',
+                                value: true,
+                                children: [
+                                  FilterNode(name: '312CDa'),
+                                  FilterNode(name: '312CDb'),
+                                ],
+                              ),
+                              FilterNode(
+                                name: '313CD',
+                                value: true,
+                                children: [
+                                  FilterNode(name: '313CDa'),
+                                  FilterNode(name: '313CDb'),
+                                ],
+                              ),
+                              FilterNode(
+                                name: '314CD',
+                                value: true,
+                                children: [
+                                  FilterNode(name: '314CDa'),
+                                  FilterNode(name: '314CDb'),
+                                ],
+                              ),
+                            ]),
                           ],
                         ),
-                        FilterNode(name: '1-CC'),
-                        FilterNode(name: '1-CD', children: [
-                          FilterNode(
-                            name: '311CD',
-                            value: true,
-                            children: [
-                              FilterNode(name: '311CDa'),
-                              FilterNode(name: '311CDb'),
-                            ],
-                          ),
-                          FilterNode(
-                            name: '312CD',
-                            value: true,
-                            children: [
-                              FilterNode(name: '312CDa'),
-                              FilterNode(name: '312CDb'),
-                            ],
-                          ),
-                          FilterNode(
-                            name: '313CD',
-                            value: true,
-                            children: [
-                              FilterNode(name: '313CDa'),
-                              FilterNode(name: '313CDb'),
-                            ],
-                          ),
-                          FilterNode(
-                            name: '314CD',
-                            value: true,
-                            children: [
-                              FilterNode(name: '314CDa'),
-                              FilterNode(name: '314CDb'),
-                            ],
-                          ),
-                        ]),
-                      ],
-                    ),
-                    FilterNode(
-                      name: 'CTI-2',
-                    ),
-                    FilterNode(
-                      name: 'CTI-3',
-                    ),
-                    FilterNode(
-                      name: 'CTI-4',
-                    ),
-                  ]),
-                  FilterNode(name: 'IS')
-                ]),
-                FilterNode(name: 'MSc', children: [
-                  FilterNode(
-                    name: 'IA',
-                  ),
-                  FilterNode(name: 'SPRC'),
-                ])
-              ]))));
+                        FilterNode(
+                          name: 'CTI-2',
+                        ),
+                        FilterNode(
+                          name: 'CTI-3',
+                        ),
+                        FilterNode(
+                          name: 'CTI-4',
+                        ),
+                      ]),
+                      FilterNode(name: 'IS')
+                    ]),
+                    FilterNode(name: 'MSc', children: [
+                      FilterNode(
+                        name: 'IA',
+                      ),
+                      FilterNode(name: 'SPRC'),
+                    ])
+                  ]))));
     });
 
     testWidgets('Sign up', (WidgetTester tester) async {
@@ -335,7 +350,9 @@ void main() {
         ChangeNotifierProvider<FilterProvider>(
             create: (_) => mockFilterProvider),
         ChangeNotifierProvider<WebsiteProvider>(
-            create: (_) => mockWebsiteProvider)
+            create: (_) => mockWebsiteProvider),
+        ChangeNotifierProvider<QuestionProvider>(
+            create: (_) => mockQuestionProvider)
       ], child: MyApp(navigationObservers: [mockObserver])));
       await tester.pumpAndSettle();
 
@@ -351,7 +368,7 @@ void main() {
       expect(find.byType(SignUpView), findsOneWidget);
 
       when(mockAuthProvider.signUp(
-          info: anyNamed('info'), context: anyNamed('context')))
+              info: anyNamed('info'), context: anyNamed('context')))
           .thenAnswer((_) => Future.value(true));
       when(mockAuthProvider.canSignUpWithEmail(email: anyNamed('email')))
           .thenAnswer((realInvocation) => Future.value(true));
@@ -502,7 +519,7 @@ void main() {
       expect(find.byType(SignUpView), findsOneWidget);
 
       when(mockAuthProvider.signUp(
-          info: anyNamed('info'), context: anyNamed('context')))
+              info: anyNamed('info'), context: anyNamed('context')))
           .thenAnswer((_) => Future.value(true));
 
       // Scroll cancel button into view and tap
@@ -544,6 +561,8 @@ void main() {
             create: (_) => mockWebsiteProvider),
         ChangeNotifierProvider<PersonProvider>(
             create: (_) => mockPersonProvider),
+        ChangeNotifierProvider<QuestionProvider>(
+            create: (_) => mockQuestionProvider),
       ], child: MyApp(navigationObservers: [mockObserver])));
       await tester.pumpAndSettle();
 
@@ -563,18 +582,20 @@ void main() {
     testWidgets('Sign out authenticated', (WidgetTester tester) async {
       when(mockAuthProvider.currentUser).thenAnswer((realInvocation) =>
           Future.value(User(uid: '0', firstName: 'John', lastName: 'Doe')));
-      when(mockAuthProvider.currentUserFromCache).thenReturn(
-          User(uid: '0', firstName: 'John', lastName: 'Doe'));
+      when(mockAuthProvider.currentUserFromCache)
+          .thenReturn(User(uid: '0', firstName: 'John', lastName: 'Doe'));
       when(mockAuthProvider.isAnonymous).thenReturn(false);
 
       await tester.pumpWidget(MultiProvider(providers: [
-      ChangeNotifierProvider<AuthProvider>(create: (_) => mockAuthProvider),
-      ChangeNotifierProvider<FilterProvider>(
-      create: (_) => mockFilterProvider),
-      ChangeNotifierProvider<WebsiteProvider>(
-      create: (_) => mockWebsiteProvider),
-      ChangeNotifierProvider<PersonProvider>(
-      create: (_) => mockPersonProvider),
+        ChangeNotifierProvider<AuthProvider>(create: (_) => mockAuthProvider),
+        ChangeNotifierProvider<FilterProvider>(
+            create: (_) => mockFilterProvider),
+        ChangeNotifierProvider<WebsiteProvider>(
+            create: (_) => mockWebsiteProvider),
+        ChangeNotifierProvider<PersonProvider>(
+            create: (_) => mockPersonProvider),
+        ChangeNotifierProvider<QuestionProvider>(
+            create: (_) => mockQuestionProvider)
       ], child: MyApp(navigationObservers: [mockObserver])));
       await tester.pumpAndSettle();
 
