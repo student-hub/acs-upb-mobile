@@ -309,7 +309,7 @@ void main() {
       when(mockAuthProvider.isVerifiedFromCache).thenAnswer((_) => false);
       when(mockAuthProvider.isAnonymous).thenReturn(false);
       when(mockRequestProvider.userAlreadyRequested(any,
-          context: anyNamed('context')))
+              context: anyNamed('context')))
           .thenAnswer((_) => Future.value(true));
 
       await tester.pumpWidget(MultiProvider(providers: [
