@@ -2,6 +2,7 @@ import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
 import 'package:acs_upb_mobile/pages/classes/view/class_view.dart';
 import 'package:acs_upb_mobile/pages/classes/view/classes_page.dart';
+import 'package:acs_upb_mobile/pages/filter/model/filter.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/events/recurring_event.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/events/uni_event.dart';
 import 'package:acs_upb_mobile/resources/locale_provider.dart';
@@ -138,7 +139,7 @@ class _EventViewState extends State<EventView> {
                   Text(
                       widget.event.mainEvent.relevance == null
                           ? S.of(context).relevanceAnyone
-                          : '${widget.event.mainEvent.degree}: ${widget.event.mainEvent.relevance.join(', ')}',
+                          : '${FilterNode.localizeName(widget.event.mainEvent.degree, context)}: ${widget.event.mainEvent.relevance.join(', ')}',
                       style: Theme.of(context).textTheme.subtitle1),
                 ],
               ),
