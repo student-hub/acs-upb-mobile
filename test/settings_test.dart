@@ -5,7 +5,7 @@ import 'package:acs_upb_mobile/pages/faq/model/question.dart';
 import 'package:acs_upb_mobile/pages/faq/service/question_provider.dart';
 import 'package:acs_upb_mobile/pages/portal/service/website_provider.dart';
 import 'package:acs_upb_mobile/pages/settings/service/request_provider.dart';
-import 'package:acs_upb_mobile/pages/settings/view/ask_permissions.dart';
+import 'package:acs_upb_mobile/pages/settings/view/request_permissions.dart';
 import 'package:acs_upb_mobile/pages/settings/view/settings_page.dart';
 import 'package:acs_upb_mobile/widgets/dialog.dart';
 import 'package:flutter/material.dart';
@@ -149,13 +149,53 @@ void main() {
       expect(find.text('Settings'), findsOneWidget);
       expect(find.text('Auto'), findsOneWidget);
     });
+  });
 
-    testWidgets('Ask Permissions - normal scenario',
-        (WidgetTester tester) async {
+  group('Request permissions', () {
+    setUpAll(() async {
+      WidgetsFlutterBinding.ensureInitialized();
+      PrefService.enableCaching();
+      PrefService.cache = {};
+      // Assuming mock system language is English
+      SharedPreferences.setMockInitialValues({'language': 'auto'});
+
+      // Pretend an anonymous user is already logged in
+      mockAuthProvider = MockAuthProvider();
+      when(mockAuthProvider.isAuthenticatedFromCache).thenReturn(true);
+      // ignore: invalid_use_of_protected_member
+      when(mockAuthProvider.hasListeners).thenReturn(false);
+      when(mockAuthProvider.isAuthenticatedFromService)
+          .thenAnswer((realInvocation) => Future.value(true));
       when(mockAuthProvider.currentUser).thenAnswer((_) =>
           Future.value(User(uid: '0', firstName: 'John', lastName: 'Doe')));
-      when(mockAuthProvider.isVerifiedFromCache).thenAnswer((_) => true);
       when(mockAuthProvider.isAnonymous).thenReturn(false);
+
+      mockWebsiteProvider = MockWebsiteProvider();
+      // ignore: invalid_use_of_protected_member
+      when(mockWebsiteProvider.hasListeners).thenReturn(false);
+      when(mockWebsiteProvider.deleteWebsite(any, context: anyNamed('context')))
+          .thenAnswer((realInvocation) => Future.value(true));
+      when(mockWebsiteProvider.fetchWebsites(any))
+          .thenAnswer((_) => Future.value([]));
+
+      mockQuestionProvider = MockQuestionProvider();
+      // ignore: invalid_use_of_protected_member
+      when(mockQuestionProvider.hasListeners).thenReturn(false);
+      when(mockQuestionProvider.fetchQuestions(context: anyNamed('context')))
+          .thenAnswer((realInvocation) => Future.value(<Question>[]));
+      when(mockQuestionProvider.fetchQuestions(limit: anyNamed('limit')))
+          .thenAnswer((realInvocation) => Future.value(<Question>[]));
+
+      mockRequestProvider = MockRequestProvider();
+      when(mockRequestProvider.makeRequest(any, context: anyNamed('context')))
+          .thenAnswer((_) => Future.value(true));
+      when(mockRequestProvider.userAlreadyRequested(any,
+              context: anyNamed('context')))
+          .thenAnswer((_) => Future.value(false));
+    });
+
+    testWidgets('Normal scenario', (WidgetTester tester) async {
+      when(mockAuthProvider.isVerifiedFromCache).thenAnswer((_) => true);
 
       await tester.pumpWidget(MultiProvider(providers: [
         ChangeNotifierProvider<AuthProvider>(create: (_) => mockAuthProvider),
@@ -175,7 +215,7 @@ void main() {
       expect(find.text('Request editing permissions'), findsOneWidget);
       await tester.tap(find.byKey(const ValueKey('ask_permissions')));
       await tester.pumpAndSettle();
-      expect(find.byType(AskPermissions), findsOneWidget);
+      expect(find.byType(RequestPermissions), findsOneWidget);
 
       // Send a request
       await tester.enterText(
@@ -190,12 +230,9 @@ void main() {
       expect(find.byType(SettingsPage), findsOneWidget);
     });
 
-    testWidgets('Ask Permissions - user has already sent a request scenario',
+    testWidgets('User has already sent a request scenario',
         (WidgetTester tester) async {
-      when(mockAuthProvider.currentUser).thenAnswer((_) =>
-          Future.value(User(uid: '0', firstName: 'John', lastName: 'Doe')));
       when(mockAuthProvider.isVerifiedFromCache).thenAnswer((_) => true);
-      when(mockAuthProvider.isAnonymous).thenReturn(false);
       when(mockRequestProvider.userAlreadyRequested(any,
               context: anyNamed('context')))
           .thenAnswer((_) => Future.value(true));
@@ -218,7 +255,7 @@ void main() {
       expect(find.text('Request editing permissions'), findsOneWidget);
       await tester.tap(find.byKey(const ValueKey('ask_permissions')));
       await tester.pumpAndSettle();
-      expect(find.byType(AskPermissions), findsOneWidget);
+      expect(find.byType(RequestPermissions), findsOneWidget);
 
       // Send a request
       await tester.enterText(
@@ -238,10 +275,7 @@ void main() {
       expect(find.byType(SettingsPage), findsOneWidget);
     });
 
-    testWidgets('Ask Permissions - user is anonymous scenario',
-        (WidgetTester tester) async {
-      when(mockAuthProvider.currentUser).thenAnswer((_) =>
-          Future.value(User(uid: '0', firstName: 'John', lastName: 'Doe')));
+    testWidgets('User is anonymous scenario', (WidgetTester tester) async {
       when(mockAuthProvider.isVerifiedFromCache).thenAnswer((_) => true);
       when(mockAuthProvider.isAnonymous).thenReturn(true);
       when(mockRequestProvider.userAlreadyRequested(any,
@@ -265,20 +299,17 @@ void main() {
       // Press Ask Permissions page
       expect(find.text('Request editing permissions'), findsOneWidget);
       await tester.tap(find.byKey(const ValueKey('ask_permissions')));
-      await tester.pumpAndSettle();
+      await tester.pumpAndSettle(const Duration(seconds: 2));
 
       // Verify nothing happens
       expect(find.byType(SettingsPage), findsOneWidget);
     });
 
-    testWidgets('Ask Permissions - user is not verified scenario',
-        (WidgetTester tester) async {
-      when(mockAuthProvider.currentUser).thenAnswer((_) =>
-          Future.value(User(uid: '0', firstName: 'John', lastName: 'Doe')));
+    testWidgets('User is not verified scenario', (WidgetTester tester) async {
       when(mockAuthProvider.isVerifiedFromCache).thenAnswer((_) => false);
       when(mockAuthProvider.isAnonymous).thenReturn(false);
       when(mockRequestProvider.userAlreadyRequested(any,
-              context: anyNamed('context')))
+          context: anyNamed('context')))
           .thenAnswer((_) => Future.value(true));
 
       await tester.pumpWidget(MultiProvider(providers: [
@@ -312,7 +343,7 @@ void main() {
 
       // Verify Ask Permissions page is opened
       await tester.pumpAndSettle();
-      expect(find.byType(AskPermissions), findsOneWidget);
+      expect(find.byType(RequestPermissions), findsOneWidget);
     });
   });
 }

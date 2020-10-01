@@ -1003,11 +1003,11 @@ class S {
     );
   }
 
-  /// `Warning`
-  String get warning {
+  /// `Request already exists`
+  String get warningRequestExists {
     return Intl.message(
-      'Warning',
-      name: 'warning',
+      'Request already exists',
+      name: 'warningRequestExists',
       desc: '',
       args: [],
     );
@@ -1703,11 +1703,21 @@ class S {
     );
   }
 
-  /// `Account is not verified. For asking editing permissions, please check your email for account verification.`
-  String get messageEmailNotVerifiedAskPermissions {
+  /// `You need to be logged in to perform this action.`
+  String get messageNotLoggedIn {
     return Intl.message(
-      'Account is not verified. For asking editing permissions, please check your email for account verification.',
-      name: 'messageEmailNotVerifiedAskPermissions',
+      'You need to be logged in to perform this action.',
+      name: 'messageNotLoggedIn',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your account needs to be verified to perform this action.`
+  String get messageEmailNotVerifiedToPerformAction {
+    return Intl.message(
+      'Your account needs to be verified to perform this action.',
+      name: 'messageEmailNotVerifiedToPerformAction',
       desc: '',
       args: [],
     );

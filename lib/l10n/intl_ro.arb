@@ -103,7 +103,7 @@
   "errorCouldNotLaunchURL": "Nu s-a putut deschide '{url}'.",
   "errorPermissionDenied": "Nu aveți suficiente permisiuni.",
 
-  "warning": "Atenție",
+  "warningRequestExists": "O cerere deja există",
   "warningInternetConnection": "Asigurați-vă că sunteți conectat la internet.",
   "warningPasswordLength": "Parola trebuie să aibă cel puțin 8 caractere.",
   "warningSamePassword": "Parola trebuie sa fie diferită de cea veche.",
@@ -181,7 +181,8 @@
   "messageWelcomeName": "Bine ai venit, {name}!",
   "messageNewUser":"Utilizator nou?",
   "messageEmailNotVerified": "Contul nu este verificat.",
-  "messageEmailNotVerifiedAskPermissions": "Pentru a cere drepturi de editare, contul trebuie să fie verificat. Vă rugăm să vă verificați mailul.",
+  "messageNotLoggedIn": "Trebuie să fiți autentificat pentru a realiza această acțiune.",
+  "messageEmailNotVerifiedToPerformAction": "Contul trebuie să fie verificat pentru a realiza această acțiune.",
   "messageAccountCreated": "Contul a fost creat cu succes.",
   "messageAccountDeleted": "Contul a fost șters cu succes.",
   "messageCheckEmailVerification": "Verificați-vă mail-ul pentru confirmarea contului.",

@@ -11,18 +11,18 @@ import 'package:provider/provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class AskPermissions extends StatefulWidget {
+class RequestPermissions extends StatefulWidget {
   static const String routeName = '/requestPermissions';
 
   @override
-  State<StatefulWidget> createState() => _AskPermissionsState();
+  State<StatefulWidget> createState() => _RequestPermissionsState();
 }
 
-class _AskPermissionsState extends State<AskPermissions> {
+class _RequestPermissionsState extends State<RequestPermissions> {
   User user;
-  String requestBody = '';
   bool agreedToResponsibilities = false;
   RequestProvider requestProvider;
+  TextEditingController requestController = TextEditingController();
 
   Future<void> _fetchUser() async {
     final AuthProvider authProvider = Provider.of(context, listen: false);
@@ -32,9 +32,9 @@ class _AskPermissionsState extends State<AskPermissions> {
     }
   }
 
-  AppDialog _informExistingRequest(BuildContext context) {
+  AppDialog _requestAlreadyExistsDialog(BuildContext context) {
     return AppDialog(
-      title: S.of(context).warning,
+      title: S.of(context).warningRequestExists,
       content: [
         Text(S.of(context).messageRequestAlreadyExists),
       ],
@@ -73,7 +73,7 @@ class _AskPermissionsState extends State<AskPermissions> {
                   return;
                 }
 
-                if (requestBody == '') {
+                if (requestController.text == '') {
                   AppToast.show(S.of(context).warningRequestEmpty);
                   return;
                 }
@@ -87,11 +87,13 @@ class _AskPermissionsState extends State<AskPermissions> {
 
                 if (queryResult) {
                   await showDialog(
-                      context: context, child: _informExistingRequest(context));
+                      context: context,
+                      child: _requestAlreadyExistsDialog(context));
                 }
 
-                queryResult = await requestProvider
-                    .makeRequest(Request(user.uid, requestBody), context: context);
+                queryResult = await requestProvider.makeRequest(
+                    Request(user.uid, requestController.text),
+                    context: context);
                 if (queryResult) {
                   AppToast.show(S.of(context).messageRequestHasBeenSent);
                   Navigator.of(context).pop();
@@ -119,8 +121,7 @@ class _AskPermissionsState extends State<AskPermissions> {
                 keyboardType: TextInputType.multiline,
                 minLines: 1,
                 maxLines: 10,
-                onChanged: (newRequestBody) =>
-                    setState(() => requestBody = newRequestBody),
+                controller: requestController,
               ),
             ),
             Padding(

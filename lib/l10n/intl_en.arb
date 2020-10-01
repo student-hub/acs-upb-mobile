@@ -103,7 +103,7 @@
   "errorCouldNotLaunchURL": "Could not launch '{url}'.",
   "errorPermissionDenied": "You do not have permission to do that.",
 
-  "warning": "Warning",
+  "warningRequestExists": "Request already exists",
   "warningInternetConnection": "Please make sure you are connected to the internet.",
   "warningPasswordLength": "The password must be 8 characters long or more.",
   "warningSamePassword": "The password must be different from the old one.",
@@ -181,7 +181,8 @@
   "messageWelcomeName": "Welcome, {name}!",
   "messageNewUser": "New user?",
   "messageEmailNotVerified": "Account is not verified.",
-  "messageEmailNotVerifiedAskPermissions": "Account is not verified. For asking editing permissions, please check your email for account verification.",
+  "messageNotLoggedIn": "You need to be logged in to perform this action.",
+  "messageEmailNotVerifiedToPerformAction": "Your account needs to be verified to perform this action.",
   "messageAccountCreated": "Account created successfully.",
   "messageAccountDeleted": "Account deleted successfully.",
   "messageCheckEmailVerification": "Please check your email for account verification.",
