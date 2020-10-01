@@ -43,15 +43,13 @@ extension on RecurrenceRule {
 }
 
 class RecurringUniEvent extends UniEvent {
-  final RecurrenceRule rrule;
-
   const RecurringUniEvent({
-    String name,
-    String location,
     @required this.rrule,
     @required LocalDateTime start,
     @required Period duration,
     @required String id,
+    String name,
+    String location,
     Color color,
     UniEventType type,
     ClassHeader classHeader,
@@ -69,10 +67,13 @@ class RecurringUniEvent extends UniEvent {
             calendar: calendar,
             relevance: relevance);
 
+  final RecurrenceRule rrule;
+
+  @override
   Iterable<UniEventInstance> generateInstances(
       {DateInterval intersectingInterval}) sync* {
     if (rrule == null) {
-      LocalDateTime end = start.add(duration);
+      final LocalDateTime end = start.add(duration);
       if (intersectingInterval != null) {
         if (end.calendarDate < intersectingInterval.start ||
             start.calendarDate > intersectingInterval.end) return;
@@ -82,7 +83,7 @@ class RecurringUniEvent extends UniEvent {
         id: id,
         title: name,
         mainEvent: this,
-        color: this.color,
+        color: color,
         start: start,
         end: start.add(duration),
         location: location,
@@ -119,29 +120,29 @@ class RecurringUniEvent extends UniEvent {
 
       // Calculate recurrences
       int i = 0;
-      for (var start in rrule.getInstances(start: start)) {
-        LocalDateTime end = start.add(duration);
+      for (final start in rrule.getInstances(start: start)) {
+        final LocalDateTime end = start.add(duration);
         if (intersectingInterval != null) {
           if (end.calendarDate < intersectingInterval.start) continue;
           if (start.calendarDate > intersectingInterval.end) break;
         }
 
         bool skip = false;
-        calendar?.holidays?.forEach((holiday) {
-          DateInterval holidayInterval =
+        for (final holiday in calendar?.holidays ?? []) {
+          final holidayInterval =
               DateInterval(holiday.startDate, holiday.endDate);
           if (holidayInterval.contains(start.calendarDate)) {
             // Skip holidays
             skip = true;
           }
-        });
+        }
 
         if (!skip) {
           yield UniEventInstance(
-            id: id + '-' + i.toString(),
+            id: '$id-$i',
             title: name,
             mainEvent: this,
-            color: this.color,
+            color: color,
             start: start,
             end: end,
             location: location,

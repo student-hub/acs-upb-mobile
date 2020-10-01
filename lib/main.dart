@@ -31,15 +31,15 @@ Future<void> main() async {
   await PrefService.init(prefix: 'pref_');
   PrefService.setDefaultValues({'language': 'auto', 'relevance_filter': true});
 
-  AuthProvider authProvider = AuthProvider();
-  ClassProvider classProvider = ClassProvider();
+  final authProvider = AuthProvider();
+  final classProvider = ClassProvider();
 
   LocaleProvider.cultures = {
     'ro': await Cultures.getCulture('ro'),
     'en': await Cultures.getCulture('en')
   };
 
-  // TODO: Make `rrule` package support Romanian
+  // TODO(IoanaAlexandru): Make `rrule` package support Romanian
   LocaleProvider.rruleL10ns = {'en': await RruleL10nEn.create()};
 
   runApp(MultiProvider(providers: [

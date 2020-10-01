@@ -15,9 +15,11 @@ Iterable<int> range(int low, int high) sync* {
 }
 
 extension IterableUtils<E> on Iterable<E> {
-  Iterable<E> whereIndex(bool test(int index)) sync* {
+  Iterable<E> whereIndex(bool Function(int index) test) sync* {
     int i = 0;
-    for (var e in this) if (test(i++)) yield e;
+    for (final e in this) {
+      if (test(i++)) yield e;
+    }
   }
 }
 

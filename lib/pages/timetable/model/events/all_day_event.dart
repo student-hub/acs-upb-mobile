@@ -5,15 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:time_machine/time_machine.dart';
 
 class AllDayUniEvent extends UniEvent {
-  LocalDate startDate;
-  LocalDate endDate;
-
   AllDayUniEvent({
-    String name,
-    String location,
     @required LocalDate start,
     @required LocalDate end,
     @required String id,
+    String name,
+    String location,
     Color color,
     UniEventType type,
     ClassHeader classHeader,
@@ -33,6 +30,10 @@ class AllDayUniEvent extends UniEvent {
             calendar: calendar,
             relevance: relevance);
 
+  LocalDate startDate;
+  LocalDate endDate;
+
+  @override
   Iterable<UniEventInstance> generateInstances(
       {DateInterval intersectingInterval}) sync* {
     yield UniEventInstance(

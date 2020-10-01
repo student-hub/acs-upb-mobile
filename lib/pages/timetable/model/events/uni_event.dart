@@ -42,6 +42,18 @@ extension UniEventTypeExtension on UniEventType {
 }
 
 class UniEvent {
+  const UniEvent(
+      {@required this.start,
+      @required this.duration,
+      @required this.id,
+      this.name,
+      this.location,
+      this.color,
+      this.type,
+      this.classHeader,
+      this.calendar,
+      this.relevance});
+
   final String id;
   final Color color;
   final UniEventType type;
@@ -53,21 +65,9 @@ class UniEvent {
   final AcademicCalendar calendar;
   final List<String> relevance;
 
-  const UniEvent(
-      {this.name,
-      this.location,
-      @required this.start,
-      @required this.duration,
-      @required this.id,
-      this.color,
-      this.type,
-      this.classHeader,
-      this.calendar,
-      this.relevance});
-
   Iterable<UniEventInstance> generateInstances(
       {DateInterval intersectingInterval}) sync* {
-    LocalDateTime end = start.add(duration);
+    final LocalDateTime end = start.add(duration);
     if (intersectingInterval != null) {
       if (end.calendarDate < intersectingInterval.start ||
           start.calendarDate > intersectingInterval.end) return;
@@ -77,7 +77,7 @@ class UniEvent {
       id: id,
       title: name,
       mainEvent: this,
-      color: this.color,
+      color: color,
       start: start,
       end: start.add(duration),
       location: location,
@@ -86,24 +86,24 @@ class UniEvent {
 }
 
 class UniEventInstance extends Event {
+  UniEventInstance({
+    @required String id,
+    @required this.title,
+    @required this.mainEvent,
+    @required LocalDateTime start,
+    @required LocalDateTime end,
+    Color color,
+    this.location,
+    this.info,
+  })  : color = color ?? mainEvent?.color,
+        super(id: id, start: start, end: end);
+
   final UniEvent mainEvent;
   final String title;
 
   final Color color;
   final String location;
   final String info;
-
-  UniEventInstance(
-      {@required String id,
-      @required this.title,
-      @required this.mainEvent,
-      Color color,
-      this.location,
-      this.info,
-      @required LocalDateTime start,
-      @required LocalDateTime end})
-      : this.color = color ?? mainEvent?.color,
-        super(id: id, start: start, end: end);
 
   @override
   bool operator ==(dynamic other) =>

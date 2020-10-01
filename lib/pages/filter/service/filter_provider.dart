@@ -145,7 +145,7 @@ class FilterProvider with ChangeNotifier {
       }
 
       return cachedFilter;
-    } catch (e, stackTrace) {
+    } catch (e, _) {
       print(e);
       if (context != null) {
         AppToast.show(S.of(context).errorSomethingWentWrong);

@@ -1,24 +1,23 @@
 import 'package:acs_upb_mobile/pages/timetable/model/events/all_day_event.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
-import 'package:time_machine/src/calendars/time_machine_calendars.dart';
 import 'package:time_machine/time_machine.dart';
 
 class AcademicCalendar {
-  List<AllDayUniEvent> semesters;
-  List<AllDayUniEvent> holidays;
-  List<AllDayUniEvent> exams;
-
   AcademicCalendar(
       {this.semesters = const [],
       this.holidays = const [],
       this.exams = const []});
 
-  Map<int, Set<int>> _getWeeksByYearInInterval(DateInterval interval) {
-    Map<int, Set<int>> weeksByYear = {};
-    var rule = WeekYearRules.iso;
+  List<AllDayUniEvent> semesters;
+  List<AllDayUniEvent> holidays;
+  List<AllDayUniEvent> exams;
 
-    int firstWeek = rule.getWeekOfWeekYear(interval.start);
-    int lastWeek = rule.getWeekOfWeekYear(interval.end);
+  Map<int, Set<int>> _getWeeksByYearInInterval(DateInterval interval) {
+    final Map<int, Set<int>> weeksByYear = {};
+    final rule = WeekYearRules.iso;
+
+    final int firstWeek = rule.getWeekOfWeekYear(interval.start);
+    final int lastWeek = rule.getWeekOfWeekYear(interval.end);
 
     if (interval.start.year == interval.end.year) {
       weeksByYear[interval.start.year] = range(firstWeek, lastWeek + 1).toSet();
@@ -35,11 +34,11 @@ class AcademicCalendar {
   }
 
   Set<int> get nonHolidayWeeks {
-    Map<int, Set<int>> weeksByYear = {};
-    var rule = WeekYearRules.iso;
+    final Map<int, Set<int>> weeksByYear = {};
+    final rule = WeekYearRules.iso;
 
-    for (var semester in semesters) {
-      for (var entry in _getWeeksByYearInInterval(
+    for (final semester in semesters) {
+      for (final entry in _getWeeksByYearInInterval(
               DateInterval(semester.startDate, semester.endDate))
           .entries) {
         weeksByYear[entry.key] ??= {};
@@ -47,20 +46,20 @@ class AcademicCalendar {
       }
     }
 
-    for (var holiday in holidays) {
-      DateInterval holidayInterval =
+    for (final holiday in holidays) {
+      final DateInterval holidayInterval =
           DateInterval(holiday.startDate, holiday.endDate);
-      Map<int, Set<int>> holidayWeeksByYear =
+      final Map<int, Set<int>> holidayWeeksByYear =
           _getWeeksByYearInInterval(holidayInterval);
 
-      for (var entry in holidayWeeksByYear.entries) {
-        int year = entry.key;
-        Set<int> weeks = entry.value;
+      for (final entry in holidayWeeksByYear.entries) {
+        final int year = entry.key;
+        final Set<int> weeks = entry.value;
 
-        for (var week in weeks) {
-          LocalDate monday = rule.getLocalDate(
+        for (final week in weeks) {
+          final LocalDate monday = rule.getLocalDate(
               year, week, DayOfWeek.monday, CalendarSystem.iso);
-          LocalDate friday = rule.getLocalDate(
+          final LocalDate friday = rule.getLocalDate(
               year, week, DayOfWeek.friday, CalendarSystem.iso);
 
           // If the holiday includes Monday to Friday in a week, exclude week

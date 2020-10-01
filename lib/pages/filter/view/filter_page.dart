@@ -90,7 +90,7 @@ class FilterPageState extends State<FilterPage> {
     for (final child in node.children) {
       // Add option
       nodeControllers.putIfAbsent(child, () => SelectableController());
-      SelectableController controller = nodeControllers[child];
+      final controller = nodeControllers[child];
       listItems.add(Selectable(
         label: child.localizedName(context),
         initiallySelected: child.value,
