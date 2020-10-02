@@ -82,9 +82,10 @@ class _PortalPageState extends State<PortalPage> {
           website: website,
           canEdit: canEdit,
           size: size,
-          onTap:() {
+          onTap: () {
             if (canEdit) {
-              Navigator.of(context).push(MaterialPageRoute<ChangeNotifierProvider>(
+              Navigator.of(context)
+                  .push(MaterialPageRoute<ChangeNotifierProvider>(
                 builder: (_) => ChangeNotifierProvider<FilterProvider>(
                   create: (_) => FilterProvider(
                       defaultDegree: website.degree,
