@@ -27,15 +27,15 @@ class CustomBoxShadow extends BoxShadow {
 class CircleImage extends StatelessWidget {
   const CircleImage(
       {Key key,
-        this.image,
-        this.icon,
-        this.onTap,
-        this.label,
-        this.tooltip,
-        double circleSize,
-        bool enableOverlay,
-        this.overlayIcon,
-        this.overlayColor})
+      this.image,
+      this.icon,
+      this.onTap,
+      this.label,
+      this.tooltip,
+      double circleSize,
+      bool enableOverlay,
+      this.overlayIcon,
+      this.overlayColor})
       : circleSize = circleSize ?? 80,
         enableOverlay = enableOverlay ?? false,
         super(key: key);
