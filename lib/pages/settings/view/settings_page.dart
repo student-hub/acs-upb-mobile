@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:acs_upb_mobile/authentication/model/user.dart';
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/settings/view/request_permissions.dart';
@@ -23,12 +22,9 @@ class SettingsPage extends StatefulWidget {
 }
 
 class SettingsPageState extends State<SettingsPage> {
-  User user;
-  AuthProvider authProvider;
-
   @override
   Widget build(BuildContext context) {
-    authProvider = Provider.of(context);
+    final AuthProvider authProvider = Provider.of<AuthProvider>(context);
 
     return AppScaffold(
       title: S.of(context).navigationSettings,
