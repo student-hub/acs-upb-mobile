@@ -34,7 +34,8 @@ import 'package:mockito/mockito.dart';
 import 'package:network_image_mock/network_image_mock.dart';
 import 'package:preferences/preferences.dart';
 import 'package:provider/provider.dart';
-import 'package:time_machine/time_machine.dart';
+
+import 'test_utils.dart';
 
 // These tests open each page in the app on multiple screen sizes to make sure
 // nothing overflows/breaks.
@@ -112,101 +113,8 @@ void main() {
     PrefService.cache = {};
     PrefService.setString('language', 'en');
 
-    LocaleProvider.cultures = {
-      'en': Culture(
-          'en-US',
-          (DateTimeFormatBuilder()
-                ..amDesignator = 'AM'
-                ..pmDesignator = 'PM'
-                ..timeSeparator = ':'
-                ..dateSeparator = '/'
-                ..abbreviatedDayNames = const [
-                  'Sun',
-                  'Mon',
-                  'Tue',
-                  'Wed',
-                  'Thu',
-                  'Fri',
-                  'Sat'
-                ]
-                ..dayNames = const [
-                  'Sunday',
-                  'Monday',
-                  'Tuesday',
-                  'Wednesday',
-                  'Thursday',
-                  'Friday',
-                  'Saturday'
-                ]
-                ..monthNames = const [
-                  'January',
-                  'February',
-                  'March',
-                  'April',
-                  'May',
-                  'June',
-                  'July',
-                  'August',
-                  'September',
-                  'October',
-                  'November',
-                  'December',
-                  ''
-                ]
-                ..abbreviatedMonthNames = const [
-                  'Jan',
-                  'Feb',
-                  'Mar',
-                  'Apr',
-                  'May',
-                  'Jun',
-                  'Jul',
-                  'Aug',
-                  'Sep',
-                  'Oct',
-                  'Nov',
-                  'Dec',
-                  ''
-                ]
-                ..monthGenitiveNames = const [
-                  'January',
-                  'February',
-                  'March',
-                  'April',
-                  'May',
-                  'June',
-                  'July',
-                  'August',
-                  'September',
-                  'October',
-                  'November',
-                  'December',
-                  ''
-                ]
-                ..abbreviatedMonthGenitiveNames = const [
-                  'Jan',
-                  'Feb',
-                  'Mar',
-                  'Apr',
-                  'May',
-                  'Jun',
-                  'Jul',
-                  'Aug',
-                  'Sep',
-                  'Oct',
-                  'Nov',
-                  'Dec',
-                  ''
-                ]
-                ..calendar = CalendarType.gregorian
-                ..eraNames = const ['AD']
-                ..fullDateTimePattern = 'dddd, MMMM d, yyyy h:mm:ss tt'
-                ..shortDatePattern = 'M/d/yyyy'
-                ..longDatePattern = 'dddd, MMMM d, yyyy'
-                ..shortTimePattern = 'h:mm tt'
-                ..longTimePattern = 'h:mm:ss tt')
-              .Build())
-    };
+    LocaleProvider.cultures = testCultures;
+    LocaleProvider.rruleL10ns = {'en': await RruleL10nTest.create()};
 
     // Pretend an anonymous user is already logged in
     mockAuthProvider = MockAuthProvider();

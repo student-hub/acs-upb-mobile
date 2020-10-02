@@ -10,11 +10,14 @@ import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
 import 'package:acs_upb_mobile/pages/home/home_page.dart';
 import 'package:acs_upb_mobile/pages/people/service/person_provider.dart';
 import 'package:acs_upb_mobile/pages/portal/service/website_provider.dart';
+import 'package:acs_upb_mobile/resources/locale_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:preferences/preferences.dart';
 import 'package:provider/provider.dart';
+
+import 'test_utils.dart';
 
 class MockAuthProvider extends Mock implements AuthProvider {}
 
@@ -40,6 +43,9 @@ void main() {
     PrefService.enableCaching();
     PrefService.cache = {};
     PrefService.setString('language', 'en');
+
+    LocaleProvider.cultures = testCultures;
+    LocaleProvider.rruleL10ns = {'en': await RruleL10nTest.create()};
 
     // Mock the behaviour of the auth provider
     mockAuthProvider = MockAuthProvider();

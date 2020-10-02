@@ -136,13 +136,13 @@ class _MyAppState extends State<MyApp> {
 
 class AppLoadingScreen extends StatelessWidget {
   Future<String> _setUpAndChooseStartScreen(BuildContext context) async {
-    LocaleProvider.cultures = {
+    LocaleProvider.cultures ??= {
       'ro': await Cultures.getCulture('ro'),
       'en': await Cultures.getCulture('en')
     };
 
     // TODO(IoanaAlexandru): Make `rrule` package support Romanian
-    LocaleProvider.rruleL10ns = {'en': await RruleL10nEn.create()};
+    LocaleProvider.rruleL10ns ??= {'en': await RruleL10nEn.create()};
 
     Culture.current = LocaleProvider.cultures[LocaleProvider.localeString];
     // Load locale from settings
