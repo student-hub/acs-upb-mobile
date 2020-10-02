@@ -11,8 +11,6 @@ import 'package:acs_upb_mobile/pages/portal/model/website.dart';
 import 'package:acs_upb_mobile/pages/portal/service/website_provider.dart';
 import 'package:acs_upb_mobile/pages/portal/view/website_view.dart';
 import 'package:acs_upb_mobile/resources/custom_icons.dart';
-import 'package:acs_upb_mobile/resources/locale_provider.dart';
-import 'package:acs_upb_mobile/resources/storage_provider.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/widgets/circle_image.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
@@ -76,51 +74,35 @@ class _PortalPageState extends State<PortalPage> {
   }
 
   Widget websiteCircle(Website website, double size) {
+    final bool canEdit = editingEnabled &&
+        (website.isPrivate || (user.canEditPublicWebsite ?? false));
     return Padding(
-      padding: const EdgeInsets.all(8),
-      child: FutureBuilder<ImageProvider<dynamic>>(
-        future: StorageProvider.imageFromPath(website.iconPath),
-        builder: (context, snapshot) {
-          ImageProvider image;
-          if (snapshot.hasData) {
-            image = snapshot.data;
-          } else {
-            image = AssetImage('assets/${website.iconPath}') ??
-                const AssetImage('assets/images/white.png');
-          }
-
-          final bool canEdit = editingEnabled &&
-              (website.isPrivate || (user.canEditPublicWebsite ?? false));
-          return CircleImage(
-            label: website.label,
-            tooltip: website.infoByLocale[LocaleProvider.localeString],
-            image: image,
-            enableOverlay: canEdit,
-            circleSize: size,
-            onTap: () {
-              if (canEdit) {
-                Navigator.of(context)
-                    .push(MaterialPageRoute<ChangeNotifierProvider>(
-                  builder: (_) => ChangeNotifierProvider<FilterProvider>(
-                    create: (_) => FilterProvider(
-                        defaultDegree: website.degree,
-                        defaultRelevance: website.relevance),
-                    child: WebsiteView(
-                      website: website,
-                      updateExisting: true,
-                    ),
+        padding: const EdgeInsets.all(8),
+        child: WebsiteIcon(
+          website: website,
+          canEdit: canEdit,
+          size: size,
+          onTap: () {
+            if (canEdit) {
+              Navigator.of(context)
+                  .push(MaterialPageRoute<ChangeNotifierProvider>(
+                builder: (_) => ChangeNotifierProvider<FilterProvider>(
+                  create: (_) => FilterProvider(
+                      defaultDegree: website.degree,
+                      defaultRelevance: website.relevance),
+                  child: WebsiteView(
+                    website: website,
+                    updateExisting: true,
                   ),
-                ));
-              } else {
-                Provider.of<WebsiteProvider>(context, listen: false)
-                    .incrementNumberOfVisits(website);
-                Utils.launchURL(website.link);
-              }
-            },
-          );
-        },
-      ),
-    );
+                ),
+              ));
+            } else {
+              Provider.of<WebsiteProvider>(context, listen: false)
+                  .incrementNumberOfVisits(website);
+              Utils.launchURL(website.link);
+            }
+          },
+        ));
   }
 
   Widget listCategory(WebsiteCategory category, List<Website> websites) {
