@@ -95,14 +95,14 @@ class HomePage extends StatelessWidget {
                       title: Text(q.question),
                       subtitle: AutoSizeMarkdownBody(
                         fitContent: false,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
                         /*
                         This is a workaround because the strings in Firebase represent
                         newlines as '\n' and Firebase replaces them with '\\n'. We need
                         to replace them back for them to display properly.
                         (See GitHub issue firebase/firebase-js-sdk#2366)
                         */
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
                         data: q.answer.replaceAll('\\n', '\n'),
                         extensionSet: md.ExtensionSet(
                             md.ExtensionSet.gitHubFlavored.blockSyntaxes, [
