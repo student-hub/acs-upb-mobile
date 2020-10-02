@@ -1,8 +1,8 @@
 import 'package:firebase/firebase.dart';
 import 'package:flutter/cupertino.dart';
 
-class FireStorageService extends ChangeNotifier {
-  FireStorageService() {
+class  StorageProvider extends ChangeNotifier {
+  StorageProvider() {
     initializeApp(
         apiKey: 'AIzaSyC6-BEfdxQHSOTdpOfqLUB8_j7CGu4DvV0',
         authDomain: 'acs-upb-mobile.firebaseapp.com',
@@ -14,7 +14,7 @@ class FireStorageService extends ChangeNotifier {
         measurementId: 'G-S7BTKYBV5T');
   }
 
-  static Future<dynamic> loadImage(BuildContext context, String image) async {
+  static Future<dynamic> findImageUrl(BuildContext context, String image) async {
     final url = await storage().ref(image).getDownloadURL();
     return url;
   }

@@ -84,8 +84,7 @@ class _PortalPageState extends State<PortalPage> {
           size: size,
           onTap:() {
             if (canEdit) {
-              // ignore: inference_failure_on_instance_creation
-              Navigator.of(context).push(MaterialPageRoute(
+              Navigator.of(context).push(MaterialPageRoute<ChangeNotifierProvider>(
                 builder: (_) => ChangeNotifierProvider<FilterProvider>(
                   create: (_) => FilterProvider(
                       defaultDegree: website.degree,

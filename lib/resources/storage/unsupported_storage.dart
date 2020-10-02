@@ -1,11 +1,11 @@
 import 'package:flutter/cupertino.dart';
 
-class FireStorageService extends ChangeNotifier {
-  FireStorageService._();
+class StorageProvider extends ChangeNotifier {
+  StorageProvider._();
 
-  FireStorageService();
+  StorageProvider();
 
-  static Future<dynamic> loadImage(BuildContext context, String image) async {
+  static Future<dynamic> findImageUrl(BuildContext context, String image) async {
     // ignore: only_throw_errors
     throw 'Platform not found';
   }

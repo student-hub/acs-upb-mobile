@@ -1,12 +1,12 @@
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 
-class FireStorageService extends ChangeNotifier {
-  FireStorageService._();
+class  StorageProvider extends ChangeNotifier {
+  StorageProvider._();
 
-  FireStorageService();
+  StorageProvider();
 
-  static Future<dynamic> loadImage(BuildContext context, String image) async {
+  static Future<dynamic> findImageUrl(BuildContext context, String image) async {
     return await FirebaseStorage.instance.ref().child(image).getDownloadURL();
   }
 }

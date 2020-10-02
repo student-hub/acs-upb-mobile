@@ -7,7 +7,7 @@ import 'package:acs_upb_mobile/pages/portal/model/website.dart';
 import 'package:acs_upb_mobile/pages/portal/service/website_provider.dart';
 import 'package:acs_upb_mobile/resources/custom_icons.dart';
 import 'package:acs_upb_mobile/resources/locale_provider.dart';
-import 'package:acs_upb_mobile/resources/storage_provider.dart';
+import 'package:acs_upb_mobile/resources/storage/fire_storage_service.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/widgets/button.dart';
 import 'package:acs_upb_mobile/widgets/circle_image.dart';
@@ -342,11 +342,10 @@ class WebsiteIcon extends StatelessWidget {
     return FutureBuilder(
       future: StorageProvider.findImageUrl(context, website.iconPath),
       builder: (context, snapshot) {
-        // ignore: prefer_typing_uninitialized_variables, inference_failure_on_uninitialized_variable
-        var image;
+        ImageProvider image;
         image = const AssetImage('assets/icons/globe.png');
         if (snapshot.hasData) {
-          image = NetworkImage(snapshot.data);
+          image = NetworkImage(snapshot.data.toString());
         }
 
         return CircleImage(
