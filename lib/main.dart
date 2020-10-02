@@ -35,14 +35,6 @@ Future<void> main() async {
   final authProvider = AuthProvider();
   final classProvider = ClassProvider();
 
-  LocaleProvider.cultures = {
-    'ro': await Cultures.getCulture('ro'),
-    'en': await Cultures.getCulture('en')
-  };
-
-  // TODO(IoanaAlexandru): Make `rrule` package support Romanian
-  LocaleProvider.rruleL10ns = {'en': await RruleL10nEn.create()};
-
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider<AuthProvider>(create: (_) => authProvider),
     ChangeNotifierProvider<WebsiteProvider>(create: (_) => WebsiteProvider()),
@@ -144,6 +136,15 @@ class _MyAppState extends State<MyApp> {
 
 class AppLoadingScreen extends StatelessWidget {
   Future<String> _setUpAndChooseStartScreen(BuildContext context) async {
+    LocaleProvider.cultures = {
+      'ro': await Cultures.getCulture('ro'),
+      'en': await Cultures.getCulture('en')
+    };
+
+    // TODO(IoanaAlexandru): Make `rrule` package support Romanian
+    LocaleProvider.rruleL10ns = {'en': await RruleL10nEn.create()};
+
+    Culture.current = LocaleProvider.cultures[LocaleProvider.localeString];
     // Load locale from settings
     await S.load(LocaleProvider.locale);
 

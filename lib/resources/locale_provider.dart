@@ -43,7 +43,5 @@ class LocaleProvider {
     return localeFromString(localeString);
   }
 
-  static Culture get culture => cultures[localeString];
-
   static RruleL10n get rruleL10n => rruleL10ns[localeString];
 }

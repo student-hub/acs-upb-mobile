@@ -6,10 +6,10 @@ import 'package:acs_upb_mobile/pages/classes/view/classes_page.dart';
 import 'package:acs_upb_mobile/pages/filter/view/filter_page.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/events/uni_event.dart';
 import 'package:acs_upb_mobile/pages/timetable/service/uni_event_provider.dart';
+import 'package:acs_upb_mobile/pages/timetable/view/date_header.dart';
 import 'package:acs_upb_mobile/pages/timetable/view/events/all_day_event_widget.dart';
 import 'package:acs_upb_mobile/pages/timetable/view/events/event_widget.dart';
 import 'package:acs_upb_mobile/resources/custom_icons.dart';
-import 'package:acs_upb_mobile/resources/locale_provider.dart';
 import 'package:acs_upb_mobile/widgets/button.dart';
 import 'package:acs_upb_mobile/widgets/dialog.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
@@ -106,6 +106,7 @@ class _TimetablePageState extends State<TimetablePage> {
       ],
       body: Timetable<UniEventInstance>(
         controller: _controller,
+        dateHeaderBuilder: (_, date) => DateHeader(date),
         eventBuilder: (event) => UniEventWidget(event),
         allDayEventBuilder: (context, event, info) => UniAllDayEventWidget(
           event,
@@ -218,5 +219,5 @@ class _TimetablePageState extends State<TimetablePage> {
 extension MonthController on TimetableController {
   String get currentMonth =>
       LocalDateTime(2020, dateListenable.value.monthOfYear, 1, 1, 1, 1)
-          .toString('MMMM', LocaleProvider.culture);
+          .toString('MMMM');
 }

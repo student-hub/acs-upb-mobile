@@ -19,15 +19,12 @@ extension EventExtension on Event {
         ? this.end.subtractDays(1)
         : this.end;
 
-    String string =
-        start.calendarDate.toString('dddd, dd MMMM', LocaleProvider.culture);
+    String string = start.calendarDate.toString('dddd, dd MMMM');
     if (!start.clockTime.equals(LocalTime(00, 00, 00))) {
-      string +=
-          ' • ${start.clockTime.toString('HH:mm', LocaleProvider.culture)}';
+      string += ' • ${start.clockTime.toString('HH:mm')}';
     }
     if (start.calendarDate != end.calendarDate) {
-      string +=
-          ' - ${end.calendarDate.toString('dddd, dd MMMM', LocaleProvider.culture)}';
+      string += ' - ${end.calendarDate.toString('dddd, dd MMMM')}';
     }
     if (!end.clockTime.equals(LocalTime(00, 00, 00))) {
       if (start.calendarDate != end.calendarDate) {
@@ -35,7 +32,7 @@ extension EventExtension on Event {
       } else {
         string += '-';
       }
-      string += end.clockTime.toString('HH:mm', LocaleProvider.culture);
+      string += end.clockTime.toString('HH:mm');
     }
     return string;
   }
