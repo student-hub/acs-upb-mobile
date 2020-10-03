@@ -340,7 +340,7 @@ class WebsiteIcon extends StatelessWidget {
   Widget build(BuildContext context) {
     return FutureBuilder(
       future: StorageProvider.findImageUrl(
-          context, 'websites/${website.id}/icon.png'), //FirebaseStorage path
+          context, 'websites/${website.id}/icon.png'), //Firebase Storage path
       builder: (context, snapshot) {
         ImageProvider image;
         image = const AssetImage('assets/icons/globe.png');
