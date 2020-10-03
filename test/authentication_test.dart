@@ -104,8 +104,7 @@ void main() {
             create: (_) => mockWebsiteProvider),
         ChangeNotifierProvider<QuestionProvider>(
             create: (_) => mockQuestionProvider),
-        ChangeNotifierProvider<NewsProvider>(
-            create: (_) => mockNewsProvider),
+        ChangeNotifierProvider<NewsProvider>(create: (_) => mockNewsProvider),
       ], child: const MyApp()));
       await tester.pumpAndSettle();
 
@@ -136,8 +135,7 @@ void main() {
             create: (_) => mockWebsiteProvider),
         ChangeNotifierProvider<QuestionProvider>(
             create: (_) => mockQuestionProvider),
-        ChangeNotifierProvider<NewsProvider>(
-            create: (_) => mockNewsProvider),
+        ChangeNotifierProvider<NewsProvider>(create: (_) => mockNewsProvider),
       ], child: const MyApp()));
       await tester.pumpAndSettle();
 
@@ -370,8 +368,7 @@ void main() {
             create: (_) => mockWebsiteProvider),
         ChangeNotifierProvider<QuestionProvider>(
             create: (_) => mockQuestionProvider),
-        ChangeNotifierProvider<NewsProvider>(
-            create: (_) => mockNewsProvider),
+        ChangeNotifierProvider<NewsProvider>(create: (_) => mockNewsProvider),
       ], child: MyApp(navigationObservers: [mockObserver])));
       await tester.pumpAndSettle();
 
@@ -582,8 +579,7 @@ void main() {
             create: (_) => mockPersonProvider),
         ChangeNotifierProvider<QuestionProvider>(
             create: (_) => mockQuestionProvider),
-        ChangeNotifierProvider<NewsProvider>(
-            create: (_) => mockNewsProvider),
+        ChangeNotifierProvider<NewsProvider>(create: (_) => mockNewsProvider),
       ], child: MyApp(navigationObservers: [mockObserver])));
       await tester.pumpAndSettle();
 
@@ -617,8 +613,7 @@ void main() {
             create: (_) => mockPersonProvider),
         ChangeNotifierProvider<QuestionProvider>(
             create: (_) => mockQuestionProvider),
-        ChangeNotifierProvider<NewsProvider>(
-            create: (_) => mockNewsProvider),
+        ChangeNotifierProvider<NewsProvider>(create: (_) => mockNewsProvider),
       ], child: MyApp(navigationObservers: [mockObserver])));
       await tester.pumpAndSettle();
 

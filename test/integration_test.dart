@@ -100,8 +100,7 @@ void main() {
               create: (_) => mockPersonProvider),
           ChangeNotifierProvider<QuestionProvider>(
               create: (_) => mockQuestionProvider),
-          ChangeNotifierProvider<NewsProvider>(
-              create: (_) => mockNewsProvider),
+          ChangeNotifierProvider<NewsProvider>(create: (_) => mockNewsProvider),
         ],
         child: const MyApp(),
       );
@@ -393,26 +392,26 @@ void main() {
     when(mockNewsProvider.hasListeners).thenReturn(false);
     when(mockNewsProvider.fetchNewsFeedItems(context: anyNamed('context')))
         .thenAnswer((realInvocation) => Future.value(<NewsFeedItem>[
-          NewsFeedItem(
-              '03.10.2020',
-              'Cazarea studentilor de anul II licenta',
-              'https://acs.pub.ro/noutati/cazarea-studentilor-de-anul-ii-licenta/'),
-      NewsFeedItem(
-          '03.10.2020',
-          'Festivitatea de deschidere a anului universitar 2020-2021',
-          'https://acs.pub.ro/noutati/festivitatea-de-deschidere-a-anului-universitar-2020-2021/')
-    ]));
+              NewsFeedItem(
+                  '03.10.2020',
+                  'Cazarea studentilor de anul II licenta',
+                  'https://acs.pub.ro/noutati/cazarea-studentilor-de-anul-ii-licenta/'),
+              NewsFeedItem(
+                  '03.10.2020',
+                  'Festivitatea de deschidere a anului universitar 2020-2021',
+                  'https://acs.pub.ro/noutati/festivitatea-de-deschidere-a-anului-universitar-2020-2021/')
+            ]));
     when(mockNewsProvider.fetchNewsFeedItems(limit: anyNamed('limit')))
         .thenAnswer((realInvocation) => Future.value(<NewsFeedItem>[
-      NewsFeedItem(
-          '03.10.2020',
-          'Cazarea studentilor de anul II licenta',
-          'https://acs.pub.ro/noutati/cazarea-studentilor-de-anul-ii-licenta/'),
-      NewsFeedItem(
-          '03.10.2020',
-          'Festivitatea de deschidere a anului universitar 2020-2021',
-          'https://acs.pub.ro/noutati/festivitatea-de-deschidere-a-anului-universitar-2020-2021/')
-    ]));
+              NewsFeedItem(
+                  '03.10.2020',
+                  'Cazarea studentilor de anul II licenta',
+                  'https://acs.pub.ro/noutati/cazarea-studentilor-de-anul-ii-licenta/'),
+              NewsFeedItem(
+                  '03.10.2020',
+                  'Festivitatea de deschidere a anului universitar 2020-2021',
+                  'https://acs.pub.ro/noutati/festivitatea-de-deschidere-a-anului-universitar-2020-2021/')
+            ]));
   });
 
   group('Home', () {
@@ -878,9 +877,14 @@ void main() {
         await tester.pumpWidget(buildApp());
         await tester.pumpAndSettle();
 
-        // Open faq page
-        final showMoreFaq = find.byKey(const ValueKey('show_more_faq'));
+        final showMoreFaq =
+            find.byKey(const ValueKey('show_more_faq'), skipOffstage: false);
 
+        // Ensure FAQ card is visible
+        await tester.ensureVisible(showMoreFaq);
+        await tester.pumpAndSettle();
+
+        // Open faq page
         await tester.tap(showMoreFaq);
         await tester.pumpAndSettle();
 
@@ -910,7 +914,8 @@ void main() {
         await tester.pumpAndSettle();
 
         // Open news feed page
-        final showMoreNewsFeed = find.byKey(const ValueKey('show_more_news_feed'));
+        final showMoreNewsFeed =
+            find.byKey(const ValueKey('show_more_news_feed'));
 
         await tester.tap(showMoreNewsFeed);
         await tester.pumpAndSettle();
