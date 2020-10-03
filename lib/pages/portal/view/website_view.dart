@@ -7,7 +7,7 @@ import 'package:acs_upb_mobile/pages/portal/model/website.dart';
 import 'package:acs_upb_mobile/pages/portal/service/website_provider.dart';
 import 'package:acs_upb_mobile/resources/custom_icons.dart';
 import 'package:acs_upb_mobile/resources/locale_provider.dart';
-import 'package:acs_upb_mobile/resources/storage_provider.dart';
+import 'package:acs_upb_mobile/resources/storage/storage_provider.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/widgets/button.dart';
 import 'package:acs_upb_mobile/widgets/circle_image.dart';
@@ -134,26 +134,12 @@ class _WebsiteViewState extends State<WebsiteView> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         Expanded(
-                          child: FutureBuilder<ImageProvider<dynamic>>(
-                            future:
-                                StorageProvider.imageFromPath(website.iconPath),
-                            builder: (context, snapshot) {
-                              ImageProvider<dynamic> image = const AssetImage(
-                                  'assets/icons/websites/globe.png');
-                              if (snapshot.hasData) {
-                                image = snapshot.data;
-                              }
-                              return CircleImage(
-                                label: website.label,
-                                onTap: () => Utils.launchURL(website.link,
-                                    context: context),
-                                image: image,
-                                tooltip: website
-                                    .infoByLocale[LocaleProvider.localeString],
-                              );
-                            },
-                          ),
-                        ),
+                            child: WebsiteIcon(
+                          website: website,
+                          onTap: () {
+                            Utils.launchURL(website.link, context: context);
+                          },
+                        )),
                       ],
                     ),
                   ),
@@ -339,6 +325,37 @@ class _WebsiteViewState extends State<WebsiteView> {
           ],
         ),
       ),
+    );
+  }
+}
+
+class WebsiteIcon extends StatelessWidget {
+  const WebsiteIcon({this.website, this.canEdit, this.size, this.onTap});
+
+  final Website website;
+  final bool canEdit;
+  final double size;
+  final Function onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+      future: StorageProvider.findImageUrl(context, website.iconPath),
+      builder: (context, snapshot) {
+        ImageProvider image;
+        image = const AssetImage('assets/icons/globe.png');
+        if (snapshot.hasData) {
+          image = NetworkImage(snapshot.data.toString());
+        }
+
+        return CircleImage(
+            label: website.label,
+            tooltip: website.infoByLocale[LocaleProvider.localeString],
+            image: image,
+            enableOverlay: canEdit,
+            circleSize: size,
+            onTap: onTap);
+      },
     );
   }
 }

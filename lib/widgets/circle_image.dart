@@ -32,11 +32,13 @@ class CircleImage extends StatelessWidget {
       this.onTap,
       this.label,
       this.tooltip,
-      this.circleSize = 80,
-      this.enableOverlay = false,
+      double circleSize,
+      bool enableOverlay,
       this.overlayIcon,
       this.overlayColor})
-      : super(key: key);
+      : circleSize = circleSize ?? 80,
+        enableOverlay = enableOverlay ?? false,
+        super(key: key);
 
   final ImageProvider<dynamic> image;
 
