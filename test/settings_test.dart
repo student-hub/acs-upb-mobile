@@ -3,6 +3,8 @@ import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/main.dart';
 import 'package:acs_upb_mobile/pages/faq/model/question.dart';
 import 'package:acs_upb_mobile/pages/faq/service/question_provider.dart';
+import 'package:acs_upb_mobile/pages/news_feed/model/news_feed_item.dart';
+import 'package:acs_upb_mobile/pages/news_feed/service/news_provider.dart';
 import 'package:acs_upb_mobile/pages/portal/service/website_provider.dart';
 import 'package:acs_upb_mobile/pages/settings/service/request_provider.dart';
 import 'package:acs_upb_mobile/pages/settings/view/request_permissions.dart';
@@ -23,11 +25,14 @@ class MockQuestionProvider extends Mock implements QuestionProvider {}
 
 class MockRequestProvider extends Mock implements RequestProvider {}
 
+class MockNewsProvider extends Mock implements NewsProvider {}
+
 void main() {
   AuthProvider mockAuthProvider;
   WebsiteProvider mockWebsiteProvider;
   MockQuestionProvider mockQuestionProvider;
   RequestProvider mockRequestProvider;
+  MockNewsProvider mockNewsProvider;
 
   group('Settings', () {
     setUpAll(() async {
@@ -69,6 +74,13 @@ void main() {
       when(mockRequestProvider.userAlreadyRequested(any,
               context: anyNamed('context')))
           .thenAnswer((_) => Future.value(false));
+      mockNewsProvider = MockNewsProvider();
+      // ignore: invalid_use_of_protected_member
+      when(mockNewsProvider.hasListeners).thenReturn(false);
+      when(mockNewsProvider.fetchNewsFeedItems(context: anyNamed('context')))
+          .thenAnswer((realInvocation) => Future.value(<NewsFeedItem>[]));
+      when(mockNewsProvider.fetchNewsFeedItems(limit: anyNamed('limit')))
+          .thenAnswer((realInvocation) => Future.value(<NewsFeedItem>[]));
     });
 
     testWidgets('Dark Mode', (WidgetTester tester) async {
@@ -77,7 +89,8 @@ void main() {
         ChangeNotifierProvider<WebsiteProvider>(
             create: (_) => mockWebsiteProvider),
         ChangeNotifierProvider<QuestionProvider>(
-            create: (_) => mockQuestionProvider)
+            create: (_) => mockQuestionProvider),
+        ChangeNotifierProvider<NewsProvider>(create: (_) => mockNewsProvider),
       ], child: const MyApp()));
       await tester.pumpAndSettle();
 
@@ -109,7 +122,8 @@ void main() {
         ChangeNotifierProvider<WebsiteProvider>(
             create: (_) => mockWebsiteProvider),
         ChangeNotifierProvider<QuestionProvider>(
-            create: (_) => mockQuestionProvider)
+            create: (_) => mockQuestionProvider),
+        ChangeNotifierProvider<NewsProvider>(create: (_) => mockNewsProvider),
       ], child: const MyApp()));
       await tester.pumpAndSettle();
 

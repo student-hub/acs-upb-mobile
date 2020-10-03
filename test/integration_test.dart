@@ -15,6 +15,8 @@ import 'package:acs_upb_mobile/pages/filter/model/filter.dart';
 import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
 import 'package:acs_upb_mobile/pages/filter/view/filter_page.dart';
 import 'package:acs_upb_mobile/pages/home/home_page.dart';
+import 'package:acs_upb_mobile/pages/news_feed/model/news_feed_item.dart';
+import 'package:acs_upb_mobile/pages/news_feed/service/news_provider.dart';
 import 'package:acs_upb_mobile/pages/people/model/person.dart';
 import 'package:acs_upb_mobile/pages/people/service/person_provider.dart';
 import 'package:acs_upb_mobile/pages/people/view/people_page.dart';
@@ -50,6 +52,8 @@ class MockQuestionProvider extends Mock implements QuestionProvider {}
 
 class MockNavigatorObserver extends Mock implements NavigatorObserver {}
 
+class MockNewsProvider extends Mock implements NewsProvider {}
+
 void main() {
   AuthProvider mockAuthProvider;
   WebsiteProvider mockWebsiteProvider;
@@ -57,6 +61,7 @@ void main() {
   ClassProvider mockClassProvider;
   PersonProvider mockPersonProvider;
   MockQuestionProvider mockQuestionProvider;
+  MockNewsProvider mockNewsProvider;
 
   // Test layout for different screen sizes
   final screenSizes = <Size>[
@@ -94,6 +99,8 @@ void main() {
               create: (_) => mockPersonProvider),
           ChangeNotifierProvider<QuestionProvider>(
               create: (_) => mockQuestionProvider),
+          ChangeNotifierProvider<NewsProvider>(
+              create: (_) => mockNewsProvider),
         ],
         child: const MyApp(),
       );
@@ -379,6 +386,14 @@ void main() {
                       'Conectarea în rețeaua *eduroam* se face pe baza aceluiași cont folosit și pe site-ul de cursuri.',
                   tags: ['Conectare', 'Informații'])
             ]));
+
+    mockNewsProvider = MockNewsProvider();
+    // ignore: invalid_use_of_protected_member
+    when(mockNewsProvider.hasListeners).thenReturn(false);
+    when(mockNewsProvider.fetchNewsFeedItems(context: anyNamed('context')))
+        .thenAnswer((realInvocation) => Future.value(<NewsFeedItem>[]));
+    when(mockNewsProvider.fetchNewsFeedItems(limit: anyNamed('limit')))
+        .thenAnswer((realInvocation) => Future.value(<NewsFeedItem>[]));
   });
 
   group('Home', () {

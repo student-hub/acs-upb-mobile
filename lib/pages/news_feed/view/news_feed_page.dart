@@ -1,6 +1,6 @@
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/news_feed/model/news_feed_item.dart';
-import 'package:acs_upb_mobile/pages/news_feed/service/news_feed_provider.dart';
+import 'package:acs_upb_mobile/pages/news_feed/service/news_provider.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:flutter/cupertino.dart';
@@ -12,13 +12,12 @@ class NewsFeedPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final newsFeedProvider = Provider.of<NewsFeedProvider>(context);
+    final newsFeedProvider = Provider.of<NewsProvider>(context);
 
     return AppScaffold(
-      title: S.of(context).newsFeedTitle,
+      title: S.of(context).navigationNewsFeed,
       body: FutureBuilder(
-        future:
-            newsFeedProvider.fetchNewsFeedItems(context: context, limit: null),
+        future: newsFeedProvider.fetchNewsFeedItems(context: context),
         builder: (_, snapshot) {
           if (snapshot.connectionState != ConnectionState.done) {
             return const Center(child: CircularProgressIndicator());

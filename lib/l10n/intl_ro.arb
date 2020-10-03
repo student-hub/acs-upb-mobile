@@ -140,6 +140,7 @@
   "navigationFilter": "Filtru",
   "navigationClasses": "Materii",
   "navigationEventDetails": "Detalii eveniment",
+  "navigationNewsFeed": "Știri",
 
   "filterMenuShowAll": "Arată tot",
   "filterMenuShowMine": "Arată doar pe ale mele",
@@ -224,8 +225,6 @@
   "stringEmailDomain": "@stud.acs.upb.ro",
   "stringForum": "cs.curs.pub.ro",
   "stringAnonymous": "Anonim",
-
-  "newsFeedTitle": "Știri",
 
   "fileAcsBanner": "assets/images/acs_banner_ro.png"
 }

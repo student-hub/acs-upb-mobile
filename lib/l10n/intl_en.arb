@@ -140,6 +140,7 @@
   "navigationFilter": "Filter",
   "navigationClasses": "Classes",
   "navigationEventDetails": "Event details",
+  "navigationNewsFeed": "News feed",
 
   "filterMenuShowAll": "Show all",
   "filterMenuShowMine": "Show only mine",
@@ -224,8 +225,6 @@
   "stringEmailDomain": "@stud.acs.upb.ro",
   "stringForum": "cs.curs.pub.ro",
   "stringAnonymous": "Anonymous",
-
-  "newsFeedTitle": "News feed",
 
   "fileAcsBanner": "assets/images/acs_banner_en.png"
 }

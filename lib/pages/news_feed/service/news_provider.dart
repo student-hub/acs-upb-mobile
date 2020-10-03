@@ -5,7 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:web_scraper/web_scraper.dart';
 
-class NewsFeedProvider with ChangeNotifier {
+class NewsProvider with ChangeNotifier {
   static const _textSelector = 'title';
   static const _attributesSelector = 'attributes';
   static const _hrefSelector = 'href';
