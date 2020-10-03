@@ -7,10 +7,8 @@ import 'package:acs_upb_mobile/pages/faq/model/question.dart';
 import 'package:acs_upb_mobile/pages/faq/service/question_provider.dart';
 import 'package:acs_upb_mobile/pages/portal/model/website.dart';
 import 'package:acs_upb_mobile/pages/portal/service/website_provider.dart';
-import 'package:acs_upb_mobile/resources/locale_provider.dart';
-import 'package:acs_upb_mobile/resources/storage_provider.dart';
+import 'package:acs_upb_mobile/pages/portal/view/website_view.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
-import 'package:acs_upb_mobile/widgets/circle_image.dart';
 import 'package:acs_upb_mobile/widgets/info_card.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:auto_size_text/auto_size_text.dart';
@@ -49,32 +47,16 @@ class HomePage extends StatelessWidget {
                   .take(3)
                   .map((website) => Expanded(
                         child: Padding(
-                          padding: const EdgeInsets.all(8),
-                          child: FutureBuilder<ImageProvider<dynamic>>(
-                            future:
-                                StorageProvider.imageFromPath(website.iconPath),
-                            builder: (context, snapshot) {
-                              ImageProvider<dynamic> image = const AssetImage(
-                                  'assets/icons/websites/globe.png');
-                              if (snapshot.hasData) {
-                                image = snapshot.data;
-                              }
-                              return CircleImage(
-                                label: website.label,
-                                onTap: () {
-                                  Provider.of<WebsiteProvider>(context,
-                                          listen: false)
-                                      .incrementNumberOfVisits(website);
-                                  Utils.launchURL(website.link,
-                                      context: context);
-                                },
-                                image: image,
-                                tooltip: website
-                                    .infoByLocale[LocaleProvider.localeString],
-                              );
-                            },
-                          ),
-                        ),
+                            padding: const EdgeInsets.all(8),
+                            child: WebsiteIcon(
+                              website: website,
+                              onTap: () {
+                                Provider.of<WebsiteProvider>(context,
+                                        listen: false)
+                                    .incrementNumberOfVisits(website);
+                                Utils.launchURL(website.link, context: context);
+                              },
+                            )),
                       ))
                   .toList(),
             ),
