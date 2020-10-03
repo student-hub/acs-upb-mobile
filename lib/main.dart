@@ -10,7 +10,8 @@ import 'package:acs_upb_mobile/pages/faq/view/faq_page.dart';
 import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
 import 'package:acs_upb_mobile/pages/people/service/person_provider.dart';
 import 'package:acs_upb_mobile/pages/portal/service/website_provider.dart';
-import 'package:acs_upb_mobile/pages/settings/settings_page.dart';
+import 'package:acs_upb_mobile/pages/settings/service/request_provider.dart';
+import 'package:acs_upb_mobile/pages/settings/view/settings_page.dart';
 import 'package:acs_upb_mobile/resources/locale_provider.dart';
 import 'package:acs_upb_mobile/widgets/loading_screen.dart';
 import 'package:dynamic_theme/dynamic_theme.dart';
@@ -32,6 +33,7 @@ Future<void> main() async {
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider<AuthProvider>(create: (_) => AuthProvider()),
     ChangeNotifierProvider<WebsiteProvider>(create: (_) => WebsiteProvider()),
+    Provider<RequestProvider>(create: (_) => RequestProvider()),
     ChangeNotifierProvider<ClassProvider>(create: (_) => ClassProvider()),
     ChangeNotifierProvider<PersonProvider>(create: (_) => PersonProvider()),
     ChangeNotifierProvider<QuestionProvider>(create: (_) => QuestionProvider()),

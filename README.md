@@ -34,6 +34,7 @@ and ask anything on the **#ama** channel.
 * [Eric Postolache](https://github.com/ericpostolache)
 * [Gabriel Gavriluță](https://github.com/gabrielGavriluta)
 * [Crăciun Octavian ](https://github.com/craciunoctavian)
+* [Răzvan Rădoi ](https://github.com/razvanra2)
 
 ## Building from source with Android Studio
 
