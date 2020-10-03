@@ -74,6 +74,7 @@ void main() {
       when(mockRequestProvider.userAlreadyRequested(any,
               context: anyNamed('context')))
           .thenAnswer((_) => Future.value(false));
+
       mockNewsProvider = MockNewsProvider();
       // ignore: invalid_use_of_protected_member
       when(mockNewsProvider.hasListeners).thenReturn(false);
@@ -180,6 +181,7 @@ void main() {
           ChangeNotifierProvider<QuestionProvider>(
               create: (_) => mockQuestionProvider),
           Provider<RequestProvider>(create: (_) => mockRequestProvider),
+          ChangeNotifierProvider<NewsProvider>(create: (_) => mockNewsProvider),
         ], child: const MyApp()));
         await tester.pumpAndSettle();
 
@@ -220,6 +222,7 @@ void main() {
           ChangeNotifierProvider<QuestionProvider>(
               create: (_) => mockQuestionProvider),
           Provider<RequestProvider>(create: (_) => mockRequestProvider),
+          ChangeNotifierProvider<NewsProvider>(create: (_) => mockNewsProvider),
         ], child: const MyApp()));
         await tester.pumpAndSettle();
 
@@ -265,6 +268,7 @@ void main() {
           ChangeNotifierProvider<QuestionProvider>(
               create: (_) => mockQuestionProvider),
           Provider<RequestProvider>(create: (_) => mockRequestProvider),
+          ChangeNotifierProvider<NewsProvider>(create: (_) => mockNewsProvider),
         ], child: const MyApp()));
         await tester.pumpAndSettle();
 
@@ -295,6 +299,7 @@ void main() {
           ChangeNotifierProvider<QuestionProvider>(
               create: (_) => mockQuestionProvider),
           Provider<RequestProvider>(create: (_) => mockRequestProvider),
+          ChangeNotifierProvider<NewsProvider>(create: (_) => mockNewsProvider),
         ], child: const MyApp()));
         await tester.pumpAndSettle();
 
