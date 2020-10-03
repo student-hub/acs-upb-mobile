@@ -1,10 +1,15 @@
+import 'package:acs_upb_mobile/authentication/model/user.dart';
+import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
+import 'package:acs_upb_mobile/pages/classes/model/class.dart';
+import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/events/uni_event.dart';
 import 'package:acs_upb_mobile/widgets/button.dart';
 import 'package:acs_upb_mobile/widgets/dialog.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:provider/provider.dart';
 
 class AddEventView extends StatefulWidget {
   /// If the `id` of [initialEvent] is not null, this acts like an "Edit event"
@@ -19,18 +24,30 @@ class AddEventView extends StatefulWidget {
 }
 
 class _AddEventViewState extends State<AddEventView> {
-  final _formKey = GlobalKey<FormState>();
+  final formKey = GlobalKey<FormState>();
 
-  TextEditingController _typeController;
-  TextEditingController _locationController;
+  TextEditingController typeController;
+  TextEditingController locationController;
 
-  UniEventType _selectedEventType;
+  UniEventType selectedEventType;
+  ClassHeader selectedClass;
+
+  List<ClassHeader> classHeaders = [];
+  User user;
 
   @override
   void initState() {
     super.initState();
-    _selectedEventType = widget.initialEvent?.type ?? UniEventType.lab;
-    _locationController =
+
+    user =
+        Provider.of<AuthProvider>(context, listen: false).currentUserFromCache;
+    Provider.of<ClassProvider>(context, listen: false)
+        .fetchClassHeaders(uid: user.uid)
+        .then((headers) => setState(() => classHeaders = headers));
+
+    selectedEventType = widget.initialEvent?.type;
+    selectedClass = widget.initialEvent?.classHeader;
+    locationController =
         TextEditingController(text: widget.initialEvent?.location ?? '');
   }
 
@@ -54,7 +71,7 @@ class _AddEventViewState extends State<AddEventView> {
         text: S.of(context).buttonSave,
         onPressed: () async {
           // TODO(IoanaAlexandru): Save data
-          _formKey.currentState.validate();
+          formKey.currentState.validate();
         },
       );
 
@@ -70,7 +87,7 @@ class _AddEventViewState extends State<AddEventView> {
 
   @override
   Widget build(BuildContext context) {
-    _typeController ??= TextEditingController(
+    typeController ??= TextEditingController(
         text: widget.initialEvent?.type?.toLocalizedString(context) ?? '');
 
     return AppScaffold(
@@ -89,7 +106,7 @@ class _AddEventViewState extends State<AddEventView> {
             Padding(
               padding: const EdgeInsets.only(left: 16, right: 16),
               child: Form(
-                key: _formKey,
+                key: formKey,
                 child: Column(
                   children: <Widget>[
                     DropdownButtonFormField<UniEventType>(
@@ -97,7 +114,7 @@ class _AddEventViewState extends State<AddEventView> {
                         labelText: S.of(context).labelType,
                         prefixIcon: const Icon(Icons.category),
                       ),
-                      value: _selectedEventType,
+                      value: selectedEventType,
                       items: UniEventType.values
                           .map(
                             (type) => DropdownMenuItem<UniEventType>(
@@ -107,10 +124,23 @@ class _AddEventViewState extends State<AddEventView> {
                           )
                           .toList(),
                       onChanged: (selection) =>
-                          setState(() => _selectedEventType = selection),
+                          setState(() => selectedEventType = selection),
+                    ),
+                    DropdownButtonFormField<ClassHeader>(
+                      isExpanded: true,
+                      decoration: InputDecoration(
+                        labelText: S.of(context).labelClass,
+                        prefixIcon: const Icon(Icons.class_),
+                      ),
+                      value: selectedClass,
+                      items: classHeaders.map(
+                        (header) => DropdownMenuItem(
+                            value: header, child: Text(header.name)),
+                      ).toList(),
+                      onChanged: (selection) => selectedClass = selection,
                     ),
                     TextFormField(
-                      controller: _locationController,
+                      controller: locationController,
                       decoration: InputDecoration(
                         labelText: S.of(context).labelLocation,
                         prefixIcon: const Icon(Icons.location_on),
