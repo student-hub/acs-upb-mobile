@@ -21,6 +21,8 @@ class NewsFeedCard extends StatelessWidget {
               .map((item) => ListTile(
                     title: Text(item.title),
                     subtitle: Text(item.date),
+                    trailing: Icon(Icons.arrow_forward_ios,
+                        color: Theme.of(context).accentColor),
                     contentPadding: EdgeInsets.zero,
                     dense: true,
                     onTap: () => Utils.launchURL(item.link, context: context),

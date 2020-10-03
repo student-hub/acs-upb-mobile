@@ -31,6 +31,8 @@ class NewsFeedPage extends StatelessWidget {
                 .map((item) => ListTile(
                       title: Text(item.title),
                       subtitle: Text(item.date),
+                      trailing: Icon(Icons.arrow_forward_ios,
+                          color: Theme.of(context).accentColor),
                       onTap: () => Utils.launchURL(item.link, context: context),
                       dense: true,
                     ))
