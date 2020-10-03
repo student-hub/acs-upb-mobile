@@ -2,7 +2,7 @@ import 'package:acs_upb_mobile/authentication/view/login_view.dart';
 import 'package:acs_upb_mobile/authentication/view/sign_up_view.dart';
 import 'package:acs_upb_mobile/pages/faq/view/faq_page.dart';
 import 'package:acs_upb_mobile/pages/filter/view/filter_page.dart';
-import 'package:acs_upb_mobile/pages/settings/settings_page.dart';
+import 'package:acs_upb_mobile/pages/settings/view/settings_page.dart';
 
 class Routes {
   static const String root = '/';
