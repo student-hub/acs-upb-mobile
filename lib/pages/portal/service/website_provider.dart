@@ -53,7 +53,6 @@ extension WebsiteExtension on Website {
       isPrivate: ownerUid != null,
       editedBy: List<String>.from(snap.data['editedBy'] ?? []),
       category: WebsiteCategoryExtension.fromString(snap.data['category']),
-      iconPath: snap.data['icon'] ?? 'icons/websites/globe.png',
       label: snap.data['label'] ?? 'Website',
       link: snap.data['link'] ?? '',
       infoByLocale: snap.data['info'] == null
@@ -83,7 +82,6 @@ extension WebsiteExtension on Website {
     if (category != null) {
       data['category'] = category.toString().split('.').last;
     }
-    if (iconPath != null) data['icon'] = iconPath;
     if (link != null) data['link'] = link;
     if (infoByLocale != null) data['info'] = infoByLocale;
 

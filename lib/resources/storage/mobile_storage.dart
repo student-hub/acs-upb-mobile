@@ -6,6 +6,7 @@ class StorageProvider {
       BuildContext context, String image) async {
     final String url =
         await FirebaseStorage.instance.ref().child(image).getDownloadURL();
+    print('path:$image');
     return url;
   }
 }

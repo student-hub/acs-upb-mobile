@@ -98,7 +98,6 @@ class _WebsiteViewState extends State<WebsiteView> {
       label: _labelController.text,
       link: _linkController.text,
       category: _selectedCategory,
-      iconPath: widget.website?.iconPath ?? 'icons/websites/globe.png',
       infoByLocale: {
         'ro': _descriptionRoController.text,
         'en': _descriptionEnController.text
@@ -340,7 +339,8 @@ class WebsiteIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: StorageProvider.findImageUrl(context, website.iconPath),
+      future: StorageProvider.findImageUrl(
+          context, 'websites/${website.id}/icon.png'), //FirebaseStorage path
       builder: (context, snapshot) {
         ImageProvider image;
         image = const AssetImage('assets/icons/globe.png');

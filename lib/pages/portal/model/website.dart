@@ -33,7 +33,6 @@ class Website {
     this.degree,
     List<String> editedBy,
     this.ownerUid,
-    this.iconPath,
     String label,
     Map<String, String> infoByLocale,
   })  : editedBy = editedBy ?? [],
@@ -59,7 +58,6 @@ class Website {
   final List<String> editedBy;
 
   final WebsiteCategory category;
-  final String iconPath;
   final String label;
   final String link;
   final Map<String, String> infoByLocale;
