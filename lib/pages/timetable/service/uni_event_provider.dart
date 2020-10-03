@@ -177,13 +177,15 @@ class UniEventProvider extends EventProvider<UniEventInstance>
   List<UniEvent> eventsCache;
   bool empty;
 
-  Future<void> fetchCalendars() async {
+  Future<Map<String, AcademicCalendar>> fetchCalendars() async {
     final QuerySnapshot query =
         await Firestore.instance.collection('calendars').getDocuments();
     for (final doc in query.documents) {
       _calendars[doc.documentID] = AcademicCalendarExtension.fromSnap(doc);
     }
+
     notifyListeners();
+    return _calendars;
   }
 
   Future<List<UniEvent>> get _events async {

@@ -146,6 +146,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "labelStart" : MessageLookupByLibrary.simpleMessage("Început"),
     "labelTeam" : m3,
     "labelType" : MessageLookupByLibrary.simpleMessage("Tip"),
+    "labelUniversityYear" : MessageLookupByLibrary.simpleMessage("University year"),
     "labelUnknown" : MessageLookupByLibrary.simpleMessage("Necunoscut"),
     "labelYear" : MessageLookupByLibrary.simpleMessage("Anul"),
     "messageAccountCreated" : MessageLookupByLibrary.simpleMessage("Contul a fost creat cu succes."),

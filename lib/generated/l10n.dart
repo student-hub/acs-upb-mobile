@@ -413,6 +413,16 @@ class S {
     );
   }
 
+  /// `University year`
+  String get labelUniversityYear {
+    return Intl.message(
+      'University year',
+      name: 'labelUniversityYear',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Shortcuts`
   String get sectionShortcuts {
     return Intl.message(

@@ -146,6 +146,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "labelStart" : MessageLookupByLibrary.simpleMessage("Start"),
     "labelTeam" : m3,
     "labelType" : MessageLookupByLibrary.simpleMessage("Type"),
+    "labelUniversityYear" : MessageLookupByLibrary.simpleMessage("University year"),
     "labelUnknown" : MessageLookupByLibrary.simpleMessage("Unknown"),
     "labelYear" : MessageLookupByLibrary.simpleMessage("Year"),
     "messageAccountCreated" : MessageLookupByLibrary.simpleMessage("Account created successfully."),
