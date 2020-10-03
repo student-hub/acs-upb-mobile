@@ -9,7 +9,6 @@ import 'package:acs_upb_mobile/pages/timetable/model/academic_calendar.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/events/all_day_event.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/events/recurring_event.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/events/uni_event.dart';
-import 'package:async/async.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:rrule/rrule.dart';
@@ -182,6 +181,7 @@ class UniEventProvider extends EventProvider<UniEventInstance>
   final AuthProvider _authProvider;
   List<String> _classIds = [];
   Filter _filter;
+  List<UniEvent> _eventsCache;
   bool empty;
 
   Future<void> fetchCalendars() async {
@@ -193,65 +193,44 @@ class UniEventProvider extends EventProvider<UniEventInstance>
     notifyListeners();
   }
 
-  Future<void> checkIfEmpty(List<Stream<List<UniEvent>>> streams) async {
-    for (final stream in streams) {
-      if ((await stream.first)?.isNotEmpty ?? false) {
-        empty = false;
-        return;
-      }
-    }
-    empty = true;
-  }
+  Future<List<UniEvent>> get _events async {
+    if (_eventsCache != null) return _eventsCache;
 
-  Stream<List<UniEvent>> get _events {
     if (!_authProvider.isAuthenticatedFromCache ||
         _filter == null ||
-        _calendars == null) return Stream.value([]);
+        _calendars == null) return [];
 
-    final streams = <Stream<List<UniEvent>>>[];
+    var events = <UniEvent>[];
 
     for (final classId in _classIds ?? []) {
-      final Stream<List<UniEvent>> stream = Firestore.instance
+      final query = await Firestore.instance
           .collection('events')
           .where('class', isEqualTo: classId)
           .where('degree', isEqualTo: _filter.baseNode)
           .where('relevance', arrayContainsAny: _filter.relevantNodes)
-          .snapshots()
-          .asyncMap((snapshot) async {
-        final events = <UniEvent>[];
+          .getDocuments();
 
-        try {
-          for (final doc in snapshot.documents) {
-            ClassHeader classHeader;
-            if (doc.data['class'] != null) {
-              classHeader =
-                  await _classProvider.fetchClassHeader(doc.data['class']);
-            }
-
-            events.add(UniEventExtension.fromJSON(doc.documentID, doc.data,
-                classHeader: classHeader, calendars: _calendars));
-          }
-          return events.where((element) => element != null).toList();
-        } catch (e) {
-          print(e);
-          return events;
+      for (final doc in query.documents) {
+        ClassHeader classHeader;
+        if (doc.data['class'] != null) {
+          classHeader =
+              await _classProvider.fetchClassHeader(doc.data['class']);
         }
-      });
-      streams.add(stream);
+
+        events.add(UniEventExtension.fromJSON(doc.documentID, doc.data,
+            classHeader: classHeader, calendars: _calendars));
+      }
     }
 
-    checkIfEmpty(streams);
-
-    final stream = StreamZip(streams);
-
-    // Flatten zipped streams
-    return stream.map((events) => events.expand((i) => i).toList());
+    events = events.where((event) => event != null).toList();
+    empty = events.isEmpty;
+    return _eventsCache = events;
   }
 
   @override
   Stream<Iterable<UniEventInstance>> getAllDayEventsIntersecting(
       DateInterval interval) {
-    return _events.map((events) => events
+    return Stream<List<UniEvent>>.fromFuture(_events).map((events) => events
         .map((event) => event.generateInstances(intersectingInterval: interval))
         .expand((i) => i)
         .allDayEvents
@@ -270,7 +249,7 @@ class UniEventProvider extends EventProvider<UniEventInstance>
   @override
   Stream<Iterable<UniEventInstance>> getPartDayEventsIntersecting(
       LocalDate date) {
-    return _events.map((events) => events
+    return Stream<List<UniEvent>>.fromFuture(_events).map((events) => events
         .map((event) => event.generateInstances(
             intersectingInterval: DateInterval(date, date)))
         .expand((i) => i)
@@ -281,6 +260,7 @@ class UniEventProvider extends EventProvider<UniEventInstance>
     _classProvider = classProvider;
     _classProvider.fetchUserClassIds(uid: _authProvider.uid).then((classIds) {
       _classIds = classIds;
+      _eventsCache = null;
       notifyListeners();
     });
   }
@@ -289,6 +269,7 @@ class UniEventProvider extends EventProvider<UniEventInstance>
     _filterProvider = filterProvider;
     _filterProvider.fetchFilter().then((filter) {
       _filter = filter;
+      _eventsCache = null;
       notifyListeners();
     });
   }
