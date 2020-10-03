@@ -3,13 +3,13 @@ import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/settings/model/request.dart';
 import 'package:acs_upb_mobile/pages/settings/service/request_provider.dart';
-import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:acs_upb_mobile/widgets/button.dart';
 import 'package:acs_upb_mobile/widgets/dialog.dart';
+import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
-import 'package:provider/provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class RequestPermissions extends StatefulWidget {
   static const String routeName = '/requestPermissions';
@@ -21,11 +21,10 @@ class RequestPermissions extends StatefulWidget {
 class _RequestPermissionsState extends State<RequestPermissions> {
   User user;
   bool agreedToResponsibilities = false;
-  RequestProvider requestProvider;
   TextEditingController requestController = TextEditingController();
 
   Future<void> _fetchUser() async {
-    final AuthProvider authProvider = Provider.of(context, listen: false);
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
     user = await authProvider.currentUser;
     if (mounted) {
       setState(() {});
@@ -59,7 +58,7 @@ class _RequestPermissionsState extends State<RequestPermissions> {
 
   @override
   Widget build(BuildContext context) {
-    requestProvider = Provider.of<RequestProvider>(context, listen: false);
+    final requestProvider = Provider.of<RequestProvider>(context);
 
     return AppScaffold(
         title: S.of(context).navigationAskPermissions,
