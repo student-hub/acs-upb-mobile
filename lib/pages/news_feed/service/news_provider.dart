@@ -1,8 +1,10 @@
 import 'dart:math';
 import 'package:acs_upb_mobile/pages/news_feed/model/news_feed_item.dart';
+import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
+import 'package:flutter/foundation.dart';
 import 'package:web_scraper/web_scraper.dart';
 
 class NewsProvider with ChangeNotifier {
@@ -13,7 +15,21 @@ class NewsProvider with ChangeNotifier {
   Future<List<NewsFeedItem>> fetchNewsFeedItems(
       {BuildContext context, int limit}) async {
     try {
-      final webScraper = WebScraper('https://acs.pub.ro');
+      // The internet is a scary place. CORS (cross origin resource sharing)
+      // prevents websites from accessing resources outside the server that
+      // hosts it. Unless the server we access returns a special header, letting
+      // the browser know that it's ok to access its resources from somewhere
+      // else. In our case we can't modify the acs.pub.ro server to return this
+      // header, so we need to use a proxy. This proxy makes the request for us
+      // and returns the needed header and the content. Utils.wrapUrlWithCORS
+      // prepends the URL of the proxy to the wanted URL so that any request
+      // will go through the proxy. This is needed only for the web version,
+      // as CORS is a web browser thing.
+      // See more: https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS
+      final url = kIsWeb
+          ? Utils.wrapUrlWithCORS('https://acs.pub.ro')
+          : 'https://acs.pub.ro';
+      final webScraper = WebScraper(url);
       final bool scrapeSuccess = await webScraper.loadWebPage('/topic/noutati');
 
       if (scrapeSuccess) {

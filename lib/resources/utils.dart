@@ -29,4 +29,8 @@ class Utils {
     unawaited(authProvider.signOut());
     filterProvider.resetFilter();
   }
+
+  static String wrapUrlWithCORS(String url) {
+    return 'https://cors-anywhere.herokuapp.com/$url';
+  }
 }
