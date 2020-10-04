@@ -1,6 +1,7 @@
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/faq/model/question.dart';
 import 'package:acs_upb_mobile/pages/faq/service/question_provider.dart';
+import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:acs_upb_mobile/widgets/search_bar.dart';
 import 'package:acs_upb_mobile/widgets/selectable.dart';
@@ -10,7 +11,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:provider/provider.dart';
 import 'package:markdown/markdown.dart' as md;
-import 'package:url_launcher/url_launcher.dart';
 
 class FaqPage extends StatefulWidget {
   static const String routeName = '/faq';
@@ -159,7 +159,7 @@ class _QuestionsListState extends State<QuestionsList> {
                 padding: const EdgeInsets.fromLTRB(15, 0, 15, 15),
                 child: MarkdownBody(
                   fitContent: false,
-                  onTapLink: launch,
+                  onTapLink: Utils.launchURL,
                   /*
                   This is a workaround because the strings in Firebase represent
                   newlines as '\n' and Firebase replaces them with '\\n'. We need
