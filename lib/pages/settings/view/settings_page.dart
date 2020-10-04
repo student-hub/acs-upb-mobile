@@ -1,14 +1,18 @@
 import 'dart:io';
 
+import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
+import 'package:acs_upb_mobile/pages/settings/view/request_permissions.dart';
 import 'package:acs_upb_mobile/resources/custom_icons.dart';
 import 'package:acs_upb_mobile/resources/locale_provider.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/widgets/icon_text.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
+import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:preferences/preferences.dart';
+import 'package:provider/provider.dart';
 
 class SettingsPage extends StatefulWidget {
   static const String routeName = '/settings';
@@ -20,6 +24,8 @@ class SettingsPage extends StatefulWidget {
 class SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
+    final AuthProvider authProvider = Provider.of<AuthProvider>(context);
+
     return AppScaffold(
       title: S.of(context).navigationSettings,
       body: Builder(
@@ -96,6 +102,34 @@ class SettingsPageState extends State<SettingsPage> {
                                 context: context),
                           ),
                         ),
+                        const Divider(),
+                        FlatButton(
+                          key: const ValueKey('ask_permissions'),
+                          onPressed: () => {
+                            if (authProvider.isAnonymous)
+                              {AppToast.show(S.of(context).messageNotLoggedIn)}
+                            else if (!authProvider.isVerifiedFromCache)
+                              {
+                                AppToast.show(S
+                                    .of(context)
+                                    .messageEmailNotVerifiedToPerformAction)
+                              }
+                            else
+                              {
+                                Navigator.of(context).push(
+                                    MaterialPageRoute<RequestPermissions>(
+                                        builder: (_) => RequestPermissions())),
+                              }
+                          },
+                          child: Text(S.of(context).labelAskPermissions,
+                              textAlign: TextAlign.center,
+                              style: (authProvider.isAnonymous ||
+                                      !authProvider.isVerifiedFromCache)
+                                  ? Theme.of(context).textTheme.bodyText1.apply(
+                                        color: Theme.of(context).disabledColor,
+                                      )
+                                  : Theme.of(context).textTheme.bodyText1),
+                        )
                       ],
                     ),
                   ],
