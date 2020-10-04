@@ -140,6 +140,7 @@
   "navigationFilter": "Filter",
   "navigationClasses": "Classes",
   "navigationEventDetails": "Event details",
+  "navigationNewsFeed": "News feed",
 
   "filterMenuShowAll": "Show all",
   "filterMenuShowMine": "Show only mine",

@@ -1364,6 +1364,16 @@ class S {
     );
   }
 
+  /// `News feed`
+  String get navigationNewsFeed {
+    return Intl.message(
+      'News feed',
+      name: 'navigationNewsFeed',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Show all`
   String get filterMenuShowAll {
     return Intl.message(

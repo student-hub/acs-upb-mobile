@@ -15,6 +15,9 @@ import 'package:acs_upb_mobile/pages/filter/model/filter.dart';
 import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
 import 'package:acs_upb_mobile/pages/filter/view/filter_page.dart';
 import 'package:acs_upb_mobile/pages/home/home_page.dart';
+import 'package:acs_upb_mobile/pages/news_feed/model/news_feed_item.dart';
+import 'package:acs_upb_mobile/pages/news_feed/service/news_provider.dart';
+import 'package:acs_upb_mobile/pages/news_feed/view/news_feed_page.dart';
 import 'package:acs_upb_mobile/pages/people/model/person.dart';
 import 'package:acs_upb_mobile/pages/people/service/person_provider.dart';
 import 'package:acs_upb_mobile/pages/people/view/people_page.dart';
@@ -50,6 +53,8 @@ class MockQuestionProvider extends Mock implements QuestionProvider {}
 
 class MockNavigatorObserver extends Mock implements NavigatorObserver {}
 
+class MockNewsProvider extends Mock implements NewsProvider {}
+
 void main() {
   AuthProvider mockAuthProvider;
   WebsiteProvider mockWebsiteProvider;
@@ -57,6 +62,7 @@ void main() {
   ClassProvider mockClassProvider;
   PersonProvider mockPersonProvider;
   MockQuestionProvider mockQuestionProvider;
+  MockNewsProvider mockNewsProvider;
 
   // Test layout for different screen sizes
   final screenSizes = <Size>[
@@ -94,6 +100,7 @@ void main() {
               create: (_) => mockPersonProvider),
           ChangeNotifierProvider<QuestionProvider>(
               create: (_) => mockQuestionProvider),
+          ChangeNotifierProvider<NewsProvider>(create: (_) => mockNewsProvider),
         ],
         child: const MyApp(),
       );
@@ -378,6 +385,32 @@ void main() {
                   answer:
                       'Conectarea în rețeaua *eduroam* se face pe baza aceluiași cont folosit și pe site-ul de cursuri.',
                   tags: ['Conectare', 'Informații'])
+            ]));
+
+    mockNewsProvider = MockNewsProvider();
+    // ignore: invalid_use_of_protected_member
+    when(mockNewsProvider.hasListeners).thenReturn(false);
+    when(mockNewsProvider.fetchNewsFeedItems(context: anyNamed('context')))
+        .thenAnswer((realInvocation) => Future.value(<NewsFeedItem>[
+              NewsFeedItem(
+                  '03.10.2020',
+                  'Cazarea studentilor de anul II licenta',
+                  'https://acs.pub.ro/noutati/cazarea-studentilor-de-anul-ii-licenta/'),
+              NewsFeedItem(
+                  '03.10.2020',
+                  'Festivitatea de deschidere a anului universitar 2020-2021',
+                  'https://acs.pub.ro/noutati/festivitatea-de-deschidere-a-anului-universitar-2020-2021/')
+            ]));
+    when(mockNewsProvider.fetchNewsFeedItems(limit: anyNamed('limit')))
+        .thenAnswer((realInvocation) => Future.value(<NewsFeedItem>[
+              NewsFeedItem(
+                  '03.10.2020',
+                  'Cazarea studentilor de anul II licenta',
+                  'https://acs.pub.ro/noutati/cazarea-studentilor-de-anul-ii-licenta/'),
+              NewsFeedItem(
+                  '03.10.2020',
+                  'Festivitatea de deschidere a anului universitar 2020-2021',
+                  'https://acs.pub.ro/noutati/festivitatea-de-deschidere-a-anului-universitar-2020-2021/')
             ]));
   });
 
@@ -844,9 +877,14 @@ void main() {
         await tester.pumpWidget(buildApp());
         await tester.pumpAndSettle();
 
-        // Open faq page
-        final showMoreFaq = find.byKey(const ValueKey('show_more_faq'));
+        final showMoreFaq =
+            find.byKey(const ValueKey('show_more_faq'), skipOffstage: false);
 
+        // Ensure FAQ card is visible
+        await tester.ensureVisible(showMoreFaq);
+        await tester.pumpAndSettle();
+
+        // Open faq page
         await tester.tap(showMoreFaq);
         await tester.pumpAndSettle();
 
@@ -863,6 +901,26 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(find.byType(SearchBar), findsNothing);
+      });
+    }
+  });
+
+  group('Show news feed page', () {
+    for (final size in screenSizes) {
+      testWidgets('${size.width}x${size.height}', (WidgetTester tester) async {
+        await binding.setSurfaceSize(size);
+
+        await tester.pumpWidget(buildApp());
+        await tester.pumpAndSettle();
+
+        // Open news feed page
+        final showMoreNewsFeed =
+            find.byKey(const ValueKey('show_more_news_feed'));
+
+        await tester.tap(showMoreNewsFeed);
+        await tester.pumpAndSettle();
+
+        expect(find.byType(NewsFeedPage), findsOneWidget);
       });
     }
   });

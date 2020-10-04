@@ -11,6 +11,7 @@ import 'package:acs_upb_mobile/pages/portal/view/website_view.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/widgets/info_card.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
+import 'package:acs_upb_mobile/pages/home/news_feed_card.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -61,6 +62,7 @@ class HomePage extends StatelessWidget {
                   .toList(),
             ),
           ),
+          NewsFeedCard(),
           // FAQ
           InfoCard<List<Question>>(
             title: S.of(context).sectionFAQ,
