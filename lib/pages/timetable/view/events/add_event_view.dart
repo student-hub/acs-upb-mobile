@@ -1,6 +1,7 @@
 import 'package:acs_upb_mobile/authentication/model/user.dart';
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
+import 'package:acs_upb_mobile/navigation/routes.dart';
 import 'package:acs_upb_mobile/pages/classes/model/class.dart';
 import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
 import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
@@ -13,6 +14,7 @@ import 'package:acs_upb_mobile/widgets/button.dart';
 import 'package:acs_upb_mobile/widgets/dialog.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:acs_upb_mobile/widgets/selectable.dart';
+import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -97,14 +99,21 @@ class _AddEventViewState extends State<AddEventView> {
   AppDialog _deletionConfirmationDialog(BuildContext context) => AppDialog(
         icon: const Icon(Icons.delete),
         title: S.of(context).actionDeleteEvent,
+        info: S.of(context).messageThisCouldAffectOtherStudents,
         message: S.of(context).messageDeleteEvent,
         actions: [
           AppButton(
             text: S.of(context).actionDeleteEvent,
             width: 130,
             onTap: () async {
-              Navigator.pop(context); // Pop dialog window
-              // TODO(IoanaAlexandru): Delete event
+              final res =
+                  await Provider.of<UniEventProvider>(context, listen: false)
+                      .deleteEvent(widget.initialEvent);
+              if (res) {
+                Navigator.of(context)
+                    .popUntil(ModalRoute.withName(Routes.home));
+                AppToast.show(S.of(context).messageEventDeleted);
+              }
             },
           )
         ],

@@ -2023,6 +2023,16 @@ class S {
     );
   }
 
+  /// `Event deleted successfully.`
+  String get messageEventDeleted {
+    return Intl.message(
+      'Event deleted successfully.',
+      name: 'messageEventDeleted',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Are you sure you want to delete "{shortcutName}"?`
   String messageDeleteShortcut(Object shortcutName) {
     return Intl.message(

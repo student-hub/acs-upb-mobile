@@ -171,6 +171,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "messageEditProfileSuccess" : MessageLookupByLibrary.simpleMessage("Profilul a fost actualizat cu succes."),
     "messageEmailNotVerified" : MessageLookupByLibrary.simpleMessage("Contul nu este verificat."),
     "messageEmailNotVerifiedToPerformAction" : MessageLookupByLibrary.simpleMessage("Contul trebuie să fie verificat pentru a realiza această acțiune."),
+    "messageEventDeleted" : MessageLookupByLibrary.simpleMessage("Eveniment șters cu succes."),
     "messageGetStartedByPressing" : MessageLookupByLibrary.simpleMessage("Începeți prin a apăsa butonul"),
     "messageIAgreeToThe" : MessageLookupByLibrary.simpleMessage("Sunt de acord cu "),
     "messageNewUser" : MessageLookupByLibrary.simpleMessage("Utilizator nou?"),

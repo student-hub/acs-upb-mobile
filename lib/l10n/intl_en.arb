@@ -213,6 +213,7 @@
   "messageDeleteWebsite": "Are you sure you want to delete this website?",
   "messageWebsiteDeleted": "Website deleted successfully.",
   "messageDeleteEvent": "Are you sure you want to delete this event?",
+  "messageEventDeleted": "Event deleted successfully.",
   "messageDeleteShortcut": "Are you sure you want to delete \"{shortcutName}\"?",
   "messageThisCouldAffectOtherStudents": "This could affect other students.",
   "messageShortcutDeleted": "Shortcut deleted successfully.",

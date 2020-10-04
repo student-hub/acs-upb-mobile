@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
+import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/classes/model/class.dart';
 import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
 import 'package:acs_upb_mobile/pages/filter/model/filter.dart';
@@ -9,6 +10,7 @@ import 'package:acs_upb_mobile/pages/timetable/model/academic_calendar.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/events/all_day_event.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/events/recurring_event.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/events/uni_event.dart';
+import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:rrule/rrule.dart';
@@ -274,9 +276,34 @@ class UniEventProvider extends EventProvider<UniEventInstance>
     });
   }
 
+  Future<bool> deleteEvent(UniEvent event, {BuildContext context}) async {
+    try {
+      DocumentReference ref;
+      ref = Firestore.instance.collection('events').document(event.id);
+      await ref.delete();
+      _eventsCache = null;
+      notifyListeners();
+      return true;
+    } catch (e) {
+      _errorHandler(e, context);
+      return false;
+    }
+  }
+
   @override
   // ignore: must_call_super
   void dispose() {
     // TODO(IoanaAlexandru): Find a better way to prevent Timetable from calling dispose on this provider
+  }
+
+  void _errorHandler(dynamic e, BuildContext context) {
+    print(e.message);
+    if (context != null) {
+      if (e.message.contains('PERMISSION_DENIED')) {
+        AppToast.show(S.of(context).errorPermissionDenied);
+      } else {
+        AppToast.show(S.of(context).errorSomethingWentWrong);
+      }
+    }
   }
 }

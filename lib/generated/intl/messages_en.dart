@@ -171,6 +171,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "messageEditProfileSuccess" : MessageLookupByLibrary.simpleMessage("Profile updated successfully."),
     "messageEmailNotVerified" : MessageLookupByLibrary.simpleMessage("Account is not verified."),
     "messageEmailNotVerifiedToPerformAction" : MessageLookupByLibrary.simpleMessage("Your account needs to be verified to perform this action."),
+    "messageEventDeleted" : MessageLookupByLibrary.simpleMessage("Event deleted successfully."),
     "messageGetStartedByPressing" : MessageLookupByLibrary.simpleMessage("Get started by pressing the"),
     "messageIAgreeToThe" : MessageLookupByLibrary.simpleMessage("I agree to the "),
     "messageNewUser" : MessageLookupByLibrary.simpleMessage("New user?"),
