@@ -76,13 +76,6 @@ extension PeriodExtension on Period {
   }
 }
 
-extension TimestampExtension on Timestamp {
-  LocalDateTime toLocalDateTime() => LocalDateTime.dateTime(toDate())
-      .inZoneStrictly(DateTimeZone.utc)
-      .withZone(DateTimeZone.local)
-      .localDateTime;
-}
-
 extension UniEventExtension on UniEvent {
   static UniEvent fromJSON(String id, Map<String, dynamic> json,
       {ClassHeader classHeader,

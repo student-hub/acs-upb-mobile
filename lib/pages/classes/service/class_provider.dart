@@ -5,6 +5,7 @@ import 'package:acs_upb_mobile/pages/filter/model/filter.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:time_machine/time_machine.dart';
 
 extension UserExtension on User {
   bool get canEditClassInfo => permissionLevel >= 3;
@@ -52,6 +53,13 @@ extension ClassHeaderExtension on ClassHeader {
   }
 }
 
+extension TimestampExtension on Timestamp {
+  LocalDateTime toLocalDateTime() => LocalDateTime.dateTime(toDate())
+      .inZoneStrictly(DateTimeZone.utc)
+      .withZone(DateTimeZone.local)
+      .localDateTime;
+}
+
 extension ClassExtension on Class {
   static Class fromSnap({ClassHeader header, DocumentSnapshot snap}) {
     if (snap.data == null) {
@@ -75,10 +83,15 @@ extension ClassExtension on Class {
           (String name, dynamic value) => MapEntry(name, value.toDouble())));
     }
 
+    final gradingLastUpdated = snap.data['gradingLastUpdated'] == null
+        ? null
+        : (snap.data['gradingLastUpdated'] as Timestamp).toLocalDateTime();
+
     return Class(
       header: header,
       shortcuts: shortcuts,
       grading: grading,
+      gradingLastUpdated: gradingLastUpdated,
     );
   }
 }
@@ -274,13 +287,14 @@ class ClassProvider with ChangeNotifier {
     try {
       final DocumentReference doc = _db.collection('classes').document(classId);
       final DocumentSnapshot snap = await doc.get();
+      final Timestamp now = Timestamp.now();
 
       if (snap.data == null) {
         // Document does not exist
-        await doc.setData({'grading': grading});
+        await doc.setData({'grading': grading, 'gradingLastUpdated': now});
       } else {
         // Document exists
-        await doc.updateData({'grading': grading});
+        await doc.updateData({'grading': grading, 'gradingLastUpdated': now});
       }
 
       notifyListeners();

@@ -1,6 +1,7 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+
 import 'intl/messages_all.dart';
 
 // **************************************************************************
@@ -148,6 +149,16 @@ class S {
     return Intl.message(
       'Confirm new password',
       name: 'labelConfirmNewPassword',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Request editing permissions`
+  String get labelAskPermissions {
+    return Intl.message(
+      'Request editing permissions',
+      name: 'labelAskPermissions',
       desc: '',
       args: [],
     );
@@ -378,6 +389,26 @@ class S {
     return Intl.message(
       'Personal information',
       name: 'labelPersonalInformation',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `consent for editing rights`
+  String get labelPermissionsConsent {
+    return Intl.message(
+      'consent for editing rights',
+      name: 'labelPermissionsConsent',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Last updated`
+  String get labelLastUpdated {
+    return Intl.message(
+      'Last updated',
+      name: 'labelLastUpdated',
       desc: '',
       args: [],
     );
@@ -993,6 +1024,16 @@ class S {
     );
   }
 
+  /// `Request already exists`
+  String get warningRequestExists {
+    return Intl.message(
+      'Request already exists',
+      name: 'warningRequestExists',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Please make sure you are connected to the internet.`
   String get warningInternetConnection {
     return Intl.message(
@@ -1223,6 +1264,16 @@ class S {
     );
   }
 
+  /// `The request must not be empty`
+  String get warningRequestEmpty {
+    return Intl.message(
+      'The request must not be empty',
+      name: 'warningRequestEmpty',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Only {n} options can be selected at a time.`
   String warningOnlyNOptionsAtATime(Object n) {
     return Intl.message(
@@ -1238,6 +1289,16 @@ class S {
     return Intl.message(
       'No events to show',
       name: 'warningNoEvents',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Ask for permissions`
+  String get navigationAskPermissions {
+    return Intl.message(
+      'Ask for permissions',
+      name: 'navigationAskPermissions',
       desc: '',
       args: [],
     );
@@ -1338,6 +1399,16 @@ class S {
     return Intl.message(
       'Event details',
       name: 'navigationEventDetails',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `News feed`
+  String get navigationNewsFeed {
+    return Intl.message(
+      'News feed',
+      name: 'navigationNewsFeed',
       desc: '',
       args: [],
     );
@@ -1723,6 +1794,26 @@ class S {
     );
   }
 
+  /// `You need to be logged in to perform this action.`
+  String get messageNotLoggedIn {
+    return Intl.message(
+      'You need to be logged in to perform this action.',
+      name: 'messageNotLoggedIn',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your account needs to be verified to perform this action.`
+  String get messageEmailNotVerifiedToPerformAction {
+    return Intl.message(
+      'Your account needs to be verified to perform this action.',
+      name: 'messageEmailNotVerifiedToPerformAction',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Account created successfully.`
   String get messageAccountCreated {
     return Intl.message(
@@ -1933,6 +2024,36 @@ class S {
     );
   }
 
+  /// `Why do you want edit permissions for ACS UPB Mobile?`
+  String get messageAskPermissionToEdit {
+    return Intl.message(
+      'Why do you want edit permissions for ACS UPB Mobile?',
+      name: 'messageAskPermissionToEdit',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `The request has been sent succesfully.`
+  String get messageRequestHasBeenSent {
+    return Intl.message(
+      'The request has been sent succesfully.',
+      name: 'messageRequestHasBeenSent',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You have already submitted a request. If you want to overwrite it, please press 'Send'.`
+  String get messageRequestAlreadyExists {
+    return Intl.message(
+      'You have already submitted a request. If you want to overwrite it, please press \'Send\'.',
+      name: 'messageRequestAlreadyExists',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `I agree to the `
   String get messageIAgreeToThe {
     return Intl.message(
@@ -1978,6 +2099,16 @@ class S {
     return Intl.message(
       'Email changed successfully',
       name: 'messageChangeEmailSuccess',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `I will only upload information that is correct and accurate, to the best of my knowledge. I understand that submitting erroneous or offensive information on purpose will lead to my editing permissions being permanently revoked.`
+  String get messageAgreePermissions {
+    return Intl.message(
+      'I will only upload information that is correct and accurate, to the best of my knowledge. I understand that submitting erroneous or offensive information on purpose will lead to my editing permissions being permanently revoked.',
+      name: 'messageAgreePermissions',
       desc: '',
       args: [],
     );

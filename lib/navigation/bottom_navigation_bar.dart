@@ -48,37 +48,39 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar>
           child: TabBarView(controller: tabController, children: tabs),
           bucket: bucket,
         ),
-        bottomNavigationBar: SizedBox(
-          height: 45,
-          child: TabBar(
-            controller: tabController,
-            tabs: [
-              Tab(
-                icon: const Icon(Icons.home),
-                text: S.of(context).navigationHome,
-                iconMargin: EdgeInsets.zero,
-              ),
-              Tab(
-                icon: const Icon(Icons.calendar_today_rounded),
-                text: S.of(context).navigationTimetable,
-                iconMargin: EdgeInsets.zero,
-              ),
-              Tab(
-                icon: const Icon(Icons.public),
-                text: S.of(context).navigationPortal,
-                iconMargin: EdgeInsets.zero,
-              ),
-              Tab(
-                icon: const Icon(Icons.people),
-                text: S.of(context).navigationPeople,
-                iconMargin: EdgeInsets.zero,
-              ),
-            ],
-            labelColor: Theme.of(context).accentColor,
-            labelPadding: EdgeInsets.zero,
-            indicatorPadding: EdgeInsets.zero,
-            unselectedLabelColor: Theme.of(context).unselectedWidgetColor,
-            indicatorColor: Theme.of(context).accentColor,
+        bottomNavigationBar: SafeArea(
+          child: SizedBox(
+            height: 45,
+            child: TabBar(
+              controller: tabController,
+              tabs: [
+                Tab(
+                  icon: const Icon(Icons.home),
+                  text: S.of(context).navigationHome,
+                  iconMargin: EdgeInsets.zero,
+                ),
+                Tab(
+                  icon: const Icon(Icons.calendar_today_rounded),
+                  text: S.of(context).navigationTimetable,
+                  iconMargin: EdgeInsets.zero,
+                ),
+                Tab(
+                  icon: const Icon(Icons.public),
+                  text: S.of(context).navigationPortal,
+                  iconMargin: EdgeInsets.zero,
+                ),
+                Tab(
+                  icon: const Icon(Icons.people),
+                  text: S.of(context).navigationPeople,
+                  iconMargin: EdgeInsets.zero,
+                ),
+              ],
+              labelColor: Theme.of(context).accentColor,
+              labelPadding: EdgeInsets.zero,
+              indicatorPadding: EdgeInsets.zero,
+              unselectedLabelColor: Theme.of(context).unselectedWidgetColor,
+              indicatorColor: Theme.of(context).accentColor,
+            ),
           ),
         ),
       ),

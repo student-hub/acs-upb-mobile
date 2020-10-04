@@ -860,7 +860,7 @@ packages:
     source: hosted
     version: "1.3.0"
   time_machine:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: time_machine
       url: "https://pub.dartlang.org"
@@ -950,6 +950,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.9.7+15"
+  web_scraper:
+    dependency: "direct main"
+    description:
+      name: web_scraper
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.6"
   win32:
     dependency: transitive
     description:

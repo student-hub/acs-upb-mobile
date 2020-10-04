@@ -8,10 +8,13 @@ import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
 import 'package:acs_upb_mobile/pages/faq/service/question_provider.dart';
 import 'package:acs_upb_mobile/pages/faq/view/faq_page.dart';
 import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
+import 'package:acs_upb_mobile/pages/news_feed/service/news_provider.dart';
+import 'package:acs_upb_mobile/pages/news_feed/view/news_feed_page.dart';
 import 'package:acs_upb_mobile/pages/filter/view/filter_page.dart';
 import 'package:acs_upb_mobile/pages/people/service/person_provider.dart';
 import 'package:acs_upb_mobile/pages/portal/service/website_provider.dart';
-import 'package:acs_upb_mobile/pages/settings/settings_page.dart';
+import 'package:acs_upb_mobile/pages/settings/service/request_provider.dart';
+import 'package:acs_upb_mobile/pages/settings/view/settings_page.dart';
 import 'package:acs_upb_mobile/pages/timetable/service/uni_event_provider.dart';
 import 'package:acs_upb_mobile/resources/locale_provider.dart';
 import 'package:acs_upb_mobile/widgets/loading_screen.dart';
@@ -38,9 +41,11 @@ Future<void> main() async {
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider<AuthProvider>(create: (_) => authProvider),
     ChangeNotifierProvider<WebsiteProvider>(create: (_) => WebsiteProvider()),
+    Provider<RequestProvider>(create: (_) => RequestProvider()),
     ChangeNotifierProvider<ClassProvider>(create: (_) => classProvider),
     ChangeNotifierProvider<PersonProvider>(create: (_) => PersonProvider()),
     ChangeNotifierProvider<QuestionProvider>(create: (_) => QuestionProvider()),
+    ChangeNotifierProvider<NewsProvider>(create: (_) => NewsProvider()),
     ChangeNotifierProvider<FilterProvider>(
         create: (_) =>
             FilterProvider(global: true, authProvider: authProvider)),
@@ -90,6 +95,7 @@ class _MyAppState extends State<MyApp> {
         Routes.signUp: (_) => SignUpView(),
         Routes.faq: (_) => FaqPage(),
         Routes.filter: (_) => const FilterPage(),
+        Routes.newsFeed: (_) => NewsFeedPage(),
       },
       navigatorObservers: widget.navigationObservers ?? [],
     );

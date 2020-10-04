@@ -8,6 +8,8 @@ import 'package:acs_upb_mobile/pages/faq/service/question_provider.dart';
 import 'package:acs_upb_mobile/pages/filter/model/filter.dart';
 import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
 import 'package:acs_upb_mobile/pages/home/home_page.dart';
+import 'package:acs_upb_mobile/pages/news_feed/model/news_feed_item.dart';
+import 'package:acs_upb_mobile/pages/news_feed/service/news_provider.dart';
 import 'package:acs_upb_mobile/pages/people/service/person_provider.dart';
 import 'package:acs_upb_mobile/pages/portal/service/website_provider.dart';
 import 'package:acs_upb_mobile/resources/locale_provider.dart';
@@ -31,12 +33,15 @@ class MockPersonProvider extends Mock implements PersonProvider {}
 
 class MockQuestionProvider extends Mock implements QuestionProvider {}
 
+class MockNewsProvider extends Mock implements NewsProvider {}
+
 void main() {
   AuthProvider mockAuthProvider;
   WebsiteProvider mockWebsiteProvider;
   FilterProvider mockFilterProvider;
   PersonProvider mockPersonProvider;
   MockQuestionProvider mockQuestionProvider;
+  MockNewsProvider mockNewsProvider;
 
   setUp(() async {
     WidgetsFlutterBinding.ensureInitialized();
@@ -87,6 +92,14 @@ void main() {
         .thenAnswer((realInvocation) => Future.value(<Question>[]));
     when(mockQuestionProvider.fetchQuestions(limit: anyNamed('limit')))
         .thenAnswer((realInvocation) => Future.value(<Question>[]));
+
+    mockNewsProvider = MockNewsProvider();
+    // ignore: invalid_use_of_protected_member
+    when(mockNewsProvider.hasListeners).thenReturn(false);
+    when(mockNewsProvider.fetchNewsFeedItems(context: anyNamed('context')))
+        .thenAnswer((realInvocation) => Future.value(<NewsFeedItem>[]));
+    when(mockNewsProvider.fetchNewsFeedItems(limit: anyNamed('limit')))
+        .thenAnswer((realInvocation) => Future.value(<NewsFeedItem>[]));
   });
 
   group('Login', () {
@@ -96,7 +109,8 @@ void main() {
         ChangeNotifierProvider<WebsiteProvider>(
             create: (_) => mockWebsiteProvider),
         ChangeNotifierProvider<QuestionProvider>(
-            create: (_) => mockQuestionProvider)
+            create: (_) => mockQuestionProvider),
+        ChangeNotifierProvider<NewsProvider>(create: (_) => mockNewsProvider),
       ], child: const MyApp()));
       await tester.pumpAndSettle();
 
@@ -126,7 +140,8 @@ void main() {
         ChangeNotifierProvider<WebsiteProvider>(
             create: (_) => mockWebsiteProvider),
         ChangeNotifierProvider<QuestionProvider>(
-            create: (_) => mockQuestionProvider)
+            create: (_) => mockQuestionProvider),
+        ChangeNotifierProvider<NewsProvider>(create: (_) => mockNewsProvider),
       ], child: const MyApp()));
       await tester.pumpAndSettle();
 
@@ -358,7 +373,8 @@ void main() {
         ChangeNotifierProvider<WebsiteProvider>(
             create: (_) => mockWebsiteProvider),
         ChangeNotifierProvider<QuestionProvider>(
-            create: (_) => mockQuestionProvider)
+            create: (_) => mockQuestionProvider),
+        ChangeNotifierProvider<NewsProvider>(create: (_) => mockNewsProvider),
       ], child: MyApp(navigationObservers: [mockObserver])));
       await tester.pumpAndSettle();
 
@@ -569,6 +585,7 @@ void main() {
             create: (_) => mockPersonProvider),
         ChangeNotifierProvider<QuestionProvider>(
             create: (_) => mockQuestionProvider),
+        ChangeNotifierProvider<NewsProvider>(create: (_) => mockNewsProvider),
       ], child: MyApp(navigationObservers: [mockObserver])));
       await tester.pumpAndSettle();
 
@@ -601,7 +618,8 @@ void main() {
         ChangeNotifierProvider<PersonProvider>(
             create: (_) => mockPersonProvider),
         ChangeNotifierProvider<QuestionProvider>(
-            create: (_) => mockQuestionProvider)
+            create: (_) => mockQuestionProvider),
+        ChangeNotifierProvider<NewsProvider>(create: (_) => mockNewsProvider),
       ], child: MyApp(navigationObservers: [mockObserver])));
       await tester.pumpAndSettle();
 
