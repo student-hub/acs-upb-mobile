@@ -23,7 +23,8 @@ class RelevanceController {
 
   bool get anyone =>
       _state?._anyoneController?.isSelected ??
-      _state?.widget != null && _state.widget.defaultRelevance == null;
+      _state?.widget != null &&
+          _state.widget.filterProvider.defaultRelevance == null;
 
   List<String> get customRelevance {
     final relevance = <String>[];
@@ -44,7 +45,6 @@ class RelevancePicker extends StatefulWidget {
       {@required this.filterProvider,
       this.canBePrivate = true,
       bool defaultPrivate,
-      this.defaultRelevance,
       this.controller})
       : defaultPrivate = (defaultPrivate ?? true) && canBePrivate;
 
@@ -55,9 +55,6 @@ class RelevancePicker extends StatefulWidget {
 
   /// Whether the 'Only me' option should be enabled by default
   final bool defaultPrivate;
-
-  /// This is only used if [defaultPrivate] is `false`
-  final List<String> defaultRelevance;
 
   final RelevanceController controller;
 
@@ -79,12 +76,16 @@ class _RelevancePickerState extends State<RelevancePicker> {
   Future<void> _fetchUser() async {
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
     _user = await authProvider.currentUser;
-    setState(() {});
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   Future<void> _fetchFilter() async {
     _filter = await widget.filterProvider.fetchFilter(context: context);
-    setState(() {});
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   @override
@@ -199,7 +200,7 @@ class _RelevancePickerState extends State<RelevancePicker> {
 
     // Add the provided website relevance strings, if applicable
     // These are selected by default
-    for (final node in widget.defaultRelevance ?? []) {
+    for (final node in widget.filterProvider.defaultRelevance ?? []) {
       if (!_customControllers.containsKey(node)) {
         final controller = SelectableController();
         _customControllers[node] = controller;
@@ -288,7 +289,8 @@ class _RelevancePickerState extends State<RelevancePicker> {
                                 Selectable(
                                   label: S.of(context).relevanceAnyone,
                                   initiallySelected: !widget.defaultPrivate &&
-                                      widget.defaultRelevance == null,
+                                      widget.filterProvider.defaultRelevance ==
+                                          null,
                                   onSelected: (selected) => setState(() {
                                     if (_user?.canAddPublicWebsite ?? false) {
                                       if (selected) {

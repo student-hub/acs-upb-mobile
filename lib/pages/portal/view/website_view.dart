@@ -292,7 +292,6 @@ class _WebsiteViewState extends State<WebsiteView> {
                     RelevancePicker(
                       filterProvider: Provider.of<FilterProvider>(context),
                       defaultPrivate: widget.website?.isPrivate ?? true,
-                      defaultRelevance: widget.website?.relevance,
                       controller: _relevanceController,
                     ),
                     TextFormField(

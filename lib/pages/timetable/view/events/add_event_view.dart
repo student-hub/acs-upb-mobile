@@ -399,21 +399,22 @@ class _AddEventViewState extends State<AddEventView> {
                   if (selectedEventType != null)
                     Column(
                       children: [
-                        DropdownButtonFormField<ClassHeader>(
-                          isExpanded: true,
-                          decoration: InputDecoration(
-                            labelText: S.of(context).labelClass,
-                            prefixIcon: const Icon(Icons.class_),
+                        if (classHeaders.isNotEmpty)
+                          DropdownButtonFormField<ClassHeader>(
+                            isExpanded: true,
+                            decoration: InputDecoration(
+                              labelText: S.of(context).labelClass,
+                              prefixIcon: const Icon(Icons.class_),
+                            ),
+                            value: selectedClass,
+                            items: classHeaders
+                                .map(
+                                  (header) => DropdownMenuItem(
+                                      value: header, child: Text(header.name)),
+                                )
+                                .toList(),
+                            onChanged: (selection) => selectedClass = selection,
                           ),
-                          value: selectedClass,
-                          items: classHeaders
-                              .map(
-                                (header) => DropdownMenuItem(
-                                    value: header, child: Text(header.name)),
-                              )
-                              .toList(),
-                          onChanged: (selection) => selectedClass = selection,
-                        ),
                         timeIntervalPicker(),
                         weekPicker(),
                         dayPicker(),

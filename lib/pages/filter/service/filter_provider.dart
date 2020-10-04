@@ -126,13 +126,12 @@ class FilterProvider with ChangeNotifier {
         root: FilterNodeExtension.fromMap(root, 'All'),
       );
 
-      if (_relevantNodes == null && defaultRelevance != null) {
-        _relevantNodes = defaultRelevance;
+      if (_relevantNodes != null) {
+        _relevantNodes ??= defaultRelevance;
         for (final node in _relevantNodes) {
           _relevanceFilter.setRelevantUpToRoot(node, defaultDegree);
         }
-      } else if (_relevantNodes != null) {
-        _relevanceFilter.setRelevantNodes(_relevantNodes);
+        _relevantNodes = _relevanceFilter.relevantNodes;
       } else {
         // No previous setting or defaults => set the user's group
         if (authProvider.isAuthenticatedFromCache) {

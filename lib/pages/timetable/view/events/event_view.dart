@@ -1,12 +1,16 @@
+import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
 import 'package:acs_upb_mobile/pages/classes/view/class_view.dart';
 import 'package:acs_upb_mobile/pages/classes/view/classes_page.dart';
 import 'package:acs_upb_mobile/pages/filter/model/filter.dart';
+import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/events/recurring_event.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/events/uni_event.dart';
+import 'package:acs_upb_mobile/pages/timetable/view/events/add_event_view.dart';
 import 'package:acs_upb_mobile/resources/locale_provider.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
+import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
@@ -64,6 +68,29 @@ class _EventViewState extends State<EventView> {
   Widget build(BuildContext context) {
     return AppScaffold(
       title: Text(S.of(context).navigationEventDetails),
+      actions: [
+        AppScaffoldAction(
+            icon: Icons.edit,
+            onPressed: () {
+              final user = Provider.of<AuthProvider>(context, listen: false)
+                  .currentUserFromCache;
+              if (user.canAddEvent) {
+                Navigator.of(context).push(MaterialPageRoute<AddEventView>(
+                  builder: (_) => ChangeNotifierProvider<FilterProvider>(
+                    create: (_) => FilterProvider(
+                      defaultDegree: widget.event.mainEvent.degree,
+                      defaultRelevance: widget.event.mainEvent.relevance,
+                    ),
+                    child: AddEventView(
+                      initialEvent: widget.event.mainEvent,
+                    ),
+                  ),
+                ));
+              } else {
+                AppToast.show(S.of(context).errorPermissionDenied);
+              }
+            })
+      ],
       body: SafeArea(
         child: ListView(children: [
           Padding(

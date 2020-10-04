@@ -36,6 +36,17 @@ class ClassHeader {
   final String name;
   final String acronym;
   final String category;
+
+  @override
+  int get hashCode => id.hashCode;
+
+  @override
+  bool operator ==(Object other) {
+    if (other is ClassHeader) {
+      return other.id == id;
+    }
+    return false;
+  }
 }
 
 class Class {
