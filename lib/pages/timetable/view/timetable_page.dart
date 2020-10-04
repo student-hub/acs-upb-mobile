@@ -130,7 +130,12 @@ class _TimetablePageState extends State<TimetablePage> {
               Navigator.of(context).push(MaterialPageRoute<AddEventView>(
                 builder: (_) => ChangeNotifierProvider<FilterProvider>(
                   create: (_) => FilterProvider(),
-                  child: const AddEventView(),
+                  child: AddEventView(
+                    initialEvent: UniEvent(
+                        start: dateTime,
+                        duration: const Period(hours: 2),
+                        id: null),
+                  ),
                 ),
               ));
             } else {

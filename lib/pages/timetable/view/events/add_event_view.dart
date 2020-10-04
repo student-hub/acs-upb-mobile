@@ -8,12 +8,15 @@ import 'package:acs_upb_mobile/pages/filter/view/relevance_picker.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/academic_calendar.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/events/uni_event.dart';
 import 'package:acs_upb_mobile/pages/timetable/service/uni_event_provider.dart';
+import 'package:acs_upb_mobile/resources/custom_icons.dart';
 import 'package:acs_upb_mobile/widgets/button.dart';
 import 'package:acs_upb_mobile/widgets/dialog.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
+import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
+import 'package:time_machine/time_machine.dart';
 
 class AddEventView extends StatefulWidget {
   /// If the `id` of [initialEvent] is not null, this acts like an "Edit event"
@@ -37,6 +40,8 @@ class _AddEventViewState extends State<AddEventView> {
   UniEventType selectedEventType;
   ClassHeader selectedClass;
   String selectedCalendar;
+  LocalTime startTime;
+  Period duration;
 
   // TODO(IoanaAlexandru): Make default semester the one closest to now
   int selectedSemester = 1;
@@ -66,6 +71,10 @@ class _AddEventViewState extends State<AddEventView> {
     selectedClass = widget.initialEvent?.classHeader;
     locationController =
         TextEditingController(text: widget.initialEvent?.location ?? '');
+
+    final startHour = widget.initialEvent?.start?.hourOfDay ?? 8;
+    duration = widget.initialEvent?.duration ?? const Period(hours: 2);
+    startTime = LocalTime(startHour, 0, 0);
   }
 
   AppDialog _deletionConfirmationDialog(BuildContext context) => AppDialog(
@@ -101,6 +110,71 @@ class _AddEventViewState extends State<AddEventView> {
         onPressed: () => showDialog(
             context: context, child: _deletionConfirmationDialog(context)),
       );
+
+  Widget timeIntervalPicker() {
+    final endTime = startTime.add(duration);
+    final textColor = Theme.of(context).textTheme.headline4.color;
+    return Padding(
+      padding: const EdgeInsets.only(top: 8),
+      child: Row(
+        children: [
+          const SizedBox(width: 12),
+          Icon(
+            Icons.access_time,
+            color: CustomIcons.formIconColor(Theme.of(context)),
+          ),
+          FlatButton(
+            onPressed: () async {
+              final TimeOfDay start = await showTimePicker(
+                context: context,
+                initialTime: startTime.toTimeOfDay(),
+              );
+              setState(() => startTime = start.toLocalTime());
+            },
+            child: Text(
+              startTime.toString('HH:mm'),
+              style: Theme.of(context).textTheme.headline4,
+            ),
+          ),
+          Expanded(
+            child: Column(
+              children: [
+                Text(
+                  duration.toString().replaceAll(RegExp(r'[PT]'), ''),
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyText1
+                      .copyWith(color: textColor),
+                ),
+                DottedLine(
+                  lineThickness: 4,
+                  dashRadius: 2,
+                  dashColor: textColor,
+                ),
+                // Text-sized box so that the line is centered
+                SizedBox(
+                    height: Theme.of(context).textTheme.bodyText1.fontSize),
+              ],
+            ),
+          ),
+          FlatButton(
+            onPressed: () async {
+              final TimeOfDay end = await showTimePicker(
+                context: context,
+                initialTime: startTime.add(duration).toTimeOfDay(),
+              );
+              setState(() => duration =
+                  Period.differenceBetweenTimes(startTime, end.toLocalTime()));
+            },
+            child: Text(
+              endTime.toString('HH:mm'),
+              style: Theme.of(context).textTheme.headline4,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -199,6 +273,7 @@ class _AddEventViewState extends State<AddEventView> {
                         .toList(),
                     onChanged: (selection) => selectedClass = selection,
                   ),
+                  timeIntervalPicker(),
                   RelevancePicker(
                     canBePrivate: false,
                     filterProvider: Provider.of<FilterProvider>(context),
@@ -219,4 +294,12 @@ class _AddEventViewState extends State<AddEventView> {
       ),
     );
   }
+}
+
+extension LocalTimeConversion on LocalTime {
+  TimeOfDay toTimeOfDay() => TimeOfDay(hour: hourOfDay, minute: minuteOfHour);
+}
+
+extension TimeOfDayConversion on TimeOfDay {
+  LocalTime toLocalTime() => LocalTime(hour, minute, 0);
 }
