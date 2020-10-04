@@ -294,6 +294,25 @@ class UniEventProvider extends EventProvider<UniEventInstance>
     }
   }
 
+  Future<bool> updateEvent(UniEvent event, {BuildContext context}) async {
+    try {
+      final ref = Firestore.instance.collection('events').document(event.id);
+
+      if ((await ref.get()).data == null) {
+        print('Event not found.');
+        return false;
+      }
+
+      await ref.updateData(event.toData());
+      _eventsCache = null;
+      notifyListeners();
+      return true;
+    } catch (e) {
+      _errorHandler(e, context);
+      return false;
+    }
+  }
+
   Future<bool> deleteEvent(UniEvent event, {BuildContext context}) async {
     try {
       DocumentReference ref;

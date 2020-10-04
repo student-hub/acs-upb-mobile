@@ -7,6 +7,7 @@ import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
 import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
 import 'package:acs_upb_mobile/pages/filter/view/relevance_picker.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/academic_calendar.dart';
+import 'package:acs_upb_mobile/pages/timetable/model/events/all_day_event.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/events/recurring_event.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/events/uni_event.dart';
 import 'package:acs_upb_mobile/pages/timetable/service/uni_event_provider.dart';
@@ -47,8 +48,8 @@ class _AddEventViewState extends State<AddEventView> {
   String selectedCalendar;
   LocalTime startTime;
   Period duration;
-  bool evenWeekSelected = true;
-  bool oddWeekSelected = true;
+  bool evenWeekSelected;
+  bool oddWeekSelected;
   Map<DayOfWeek, bool> weekDaySelected = {
     DayOfWeek.monday: false,
     DayOfWeek.tuesday: false,
@@ -61,6 +62,9 @@ class _AddEventViewState extends State<AddEventView> {
 
   // TODO(IoanaAlexandru): Make default semester the one closest to now
   int selectedSemester = 1;
+
+  AllDayUniEvent get semester =>
+      calendars[selectedCalendar]?.semesters?.elementAt(selectedSemester - 1);
 
   List<ClassHeader> classHeaders = [];
   User user;
@@ -77,11 +81,37 @@ class _AddEventViewState extends State<AddEventView> {
         .then((headers) => setState(() => classHeaders = headers));
     Provider.of<UniEventProvider>(context, listen: false)
         .fetchCalendars()
-        .then((calendars) => setState(() {
-              this.calendars = calendars;
-              // TODO(IoanaAlexandru): Make the default calendar the one closest to now
-              selectedCalendar = calendars.keys.first;
-            }));
+        .then((calendars) {
+      setState(() {
+        this.calendars = calendars;
+        // TODO(IoanaAlexandru): Make the default calendar the one closest
+        // to now and extract calendar/semester from [widget.initialEvent]
+        selectedCalendar = calendars.keys.first;
+      });
+
+      if (widget.initialEvent != null &&
+          widget.initialEvent is RecurringUniEvent) {
+        final RecurringUniEvent event = widget.initialEvent;
+        if (event.rrule.interval != 1) {
+          final rule = WeekYearRules.iso;
+          if (rule.getWeekOfWeekYear(semester.start.calendarDate) ==
+              rule.getWeekOfWeekYear(event.start.calendarDate)) {
+            // Week is odd
+            evenWeekSelected = false;
+            oddWeekSelected = true;
+          } else {
+            // Week is even
+            oddWeekSelected = false;
+            evenWeekSelected = true;
+          }
+        }
+      }
+
+      setState(() {
+        oddWeekSelected ??= true;
+        evenWeekSelected ??= true;
+      });
+    });
 
     selectedEventType = widget.initialEvent?.type;
     selectedClass = widget.initialEvent?.classHeader;
@@ -92,9 +122,18 @@ class _AddEventViewState extends State<AddEventView> {
     duration = widget.initialEvent?.duration ?? const Period(hours: 2);
     startTime = LocalTime(startHour, 0, 0);
 
-    final initialWeekDay =
-        widget.initialEvent?.start?.dayOfWeek ?? DayOfWeek.monday;
-    weekDaySelected[initialWeekDay] = true;
+    var initialWeekDays = [DayOfWeek.monday];
+    if (widget.initialEvent != null &&
+        widget.initialEvent is RecurringUniEvent) {
+      initialWeekDays = (widget.initialEvent as RecurringUniEvent)
+          .rrule
+          .byWeekDays
+          .map((entry) => entry.day)
+          .toList();
+    }
+    for (final initialWeekDay in initialWeekDays) {
+      weekDaySelected[initialWeekDay] = true;
+    }
   }
 
   AppDialog _deletionConfirmationDialog(BuildContext context) => AppDialog(
@@ -126,8 +165,6 @@ class _AddEventViewState extends State<AddEventView> {
           // TODO(IoanaAlexandru): Validate fields
           formKey.currentState.validate();
 
-          final semester =
-              calendars[selectedCalendar].semesters[selectedSemester - 1];
           LocalDateTime start = semester.startDate.at(startTime);
           if (evenWeekSelected && !oddWeekSelected) {
             // Event is every even week, add a week to start date
@@ -165,6 +202,14 @@ class _AddEventViewState extends State<AddEventView> {
             if (res) {
               Navigator.of(context).pop();
               AppToast.show(S.of(context).messageEventAdded);
+            }
+          } else {
+            final res =
+                await Provider.of<UniEventProvider>(context, listen: false)
+                    .updateEvent(event);
+            if (res) {
+              Navigator.of(context).popUntil(ModalRoute.withName(Routes.home));
+              AppToast.show(S.of(context).messageEventEdited);
             }
           }
         },
@@ -466,7 +511,8 @@ class _AddEventViewState extends State<AddEventView> {
                             onChanged: (selection) => selectedClass = selection,
                           ),
                         timeIntervalPicker(),
-                        weekPicker(),
+                        if (oddWeekSelected != null && evenWeekSelected != null)
+                          weekPicker(),
                         dayPicker(),
                         TextFormField(
                           controller: locationController,
