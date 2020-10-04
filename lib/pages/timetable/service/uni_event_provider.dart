@@ -195,24 +195,26 @@ class UniEventProvider extends EventProvider<UniEventInstance>
 
     var events = <UniEvent>[];
 
-    for (final classId in _classIds ?? []) {
-      final query = await Firestore.instance
-          .collection('events')
-          .where('class', isEqualTo: classId)
-          .where('degree', isEqualTo: _filter.baseNode)
-          .where('relevance',
-              arrayContainsAny: _filter.relevantNodes..remove('All'))
-          .getDocuments();
+    if (_filter.relevantNodes.length > 1) {
+      for (final classId in _classIds ?? []) {
+        final query = await Firestore.instance
+            .collection('events')
+            .where('class', isEqualTo: classId)
+            .where('degree', isEqualTo: _filter.baseNode)
+            .where('relevance',
+            arrayContainsAny: _filter.relevantNodes..remove('All'))
+            .getDocuments();
 
-      for (final doc in query.documents) {
-        ClassHeader classHeader;
-        if (doc.data['class'] != null) {
-          classHeader =
-              await _classProvider.fetchClassHeader(doc.data['class']);
+        for (final doc in query.documents) {
+          ClassHeader classHeader;
+          if (doc.data['class'] != null) {
+            classHeader =
+            await _classProvider.fetchClassHeader(doc.data['class']);
+          }
+
+          events.add(UniEventExtension.fromJSON(doc.documentID, doc.data,
+              classHeader: classHeader, calendars: _calendars));
         }
-
-        events.add(UniEventExtension.fromJSON(doc.documentID, doc.data,
-            classHeader: classHeader, calendars: _calendars));
       }
     }
 
