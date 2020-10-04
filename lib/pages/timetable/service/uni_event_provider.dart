@@ -200,7 +200,8 @@ class UniEventProvider extends EventProvider<UniEventInstance>
           .collection('events')
           .where('class', isEqualTo: classId)
           .where('degree', isEqualTo: _filter.baseNode)
-          .where('relevance', arrayContainsAny: _filter.relevantNodes)
+          .where('relevance',
+              arrayContainsAny: _filter.relevantNodes..remove('All'))
           .getDocuments();
 
       for (final doc in query.documents) {
