@@ -404,6 +404,16 @@ class S {
     );
   }
 
+  /// `Last updated`
+  String get labelLastUpdated {
+    return Intl.message(
+      'Last updated',
+      name: 'labelLastUpdated',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Shortcuts`
   String get sectionShortcuts {
     return Intl.message(

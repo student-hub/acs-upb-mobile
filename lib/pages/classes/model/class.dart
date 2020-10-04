@@ -1,6 +1,7 @@
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:meta/meta.dart';
+import 'package:time_machine/time_machine.dart';
 
 enum ShortcutType { main, classbook, resource, other }
 
@@ -38,10 +39,15 @@ class ClassHeader {
 }
 
 class Class {
-  Class({@required this.header, List<Shortcut> shortcuts, this.grading})
+  Class(
+      {@required this.header,
+      List<Shortcut> shortcuts,
+      this.grading,
+      this.gradingLastUpdated})
       : shortcuts = shortcuts ?? [];
 
   ClassHeader header;
   final List<Shortcut> shortcuts;
   final Map<String, double> grading;
+  final LocalDateTime gradingLastUpdated;
 }
