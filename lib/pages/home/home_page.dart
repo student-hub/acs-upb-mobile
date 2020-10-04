@@ -9,13 +9,14 @@ import 'package:acs_upb_mobile/pages/portal/model/website.dart';
 import 'package:acs_upb_mobile/pages/portal/service/website_provider.dart';
 import 'package:acs_upb_mobile/pages/portal/view/website_view.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
+import 'package:acs_upb_mobile/widgets/auto_size_markdown.dart';
 import 'package:acs_upb_mobile/widgets/info_card.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:acs_upb_mobile/pages/home/news_feed_card.dart';
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:markdown/markdown.dart' as md;
 
 class HomePage extends StatelessWidget {
   const HomePage({this.tabController, Key key}) : super(key: key);
@@ -75,10 +76,22 @@ class HomePage extends StatelessWidget {
                   .map(
                     (q) => ListTile(
                       title: Text(q.question),
-                      subtitle: AutoSizeText(
-                        q.answer,
+                      subtitle: AutoSizeMarkdownBody(
+                        fitContent: false,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
+                        /*
+                        This is a workaround because the strings in Firebase represent
+                        newlines as '\n' and Firebase replaces them with '\\n'. We need
+                        to replace them back for them to display properly.
+                        (See GitHub issue firebase/firebase-js-sdk#2366)
+                        */
+                        data: q.answer.replaceAll('\\n', '\n'),
+                        extensionSet: md.ExtensionSet(
+                            md.ExtensionSet.gitHubFlavored.blockSyntaxes, [
+                          md.EmojiSyntax(),
+                          ...md.ExtensionSet.gitHubFlavored.inlineSyntaxes
+                        ]),
                       ),
                       contentPadding: EdgeInsets.zero,
                       dense: true,
