@@ -1,8 +1,10 @@
 import 'dart:math';
 import 'package:acs_upb_mobile/pages/news_feed/model/news_feed_item.dart';
+import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
+import 'package:flutter/foundation.dart';
 import 'package:web_scraper/web_scraper.dart';
 
 class NewsProvider with ChangeNotifier {
@@ -13,7 +15,10 @@ class NewsProvider with ChangeNotifier {
   Future<List<NewsFeedItem>> fetchNewsFeedItems(
       {BuildContext context, int limit}) async {
     try {
-      final webScraper = WebScraper('https://acs.pub.ro');
+      final url = kIsWeb
+          ? Utils.wrapUrlWithCORS('https://acs.pub.ro')
+          : 'https://acs.pub.ro';
+      final webScraper = WebScraper(url);
       final bool scrapeSuccess = await webScraper.loadWebPage('/topic/noutati');
 
       if (scrapeSuccess) {
