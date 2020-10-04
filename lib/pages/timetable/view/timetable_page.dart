@@ -106,8 +106,6 @@ class _TimetablePageState extends State<TimetablePage> {
       ],
       body: Stack(
         children: [
-          if (eventProvider.eventsCache == null)
-            const Center(child: CircularProgressIndicator()),
           Timetable<UniEventInstance>(
             controller: _controller,
             dateHeaderBuilder: (_, date) => DateHeader(date),
@@ -117,6 +115,8 @@ class _TimetablePageState extends State<TimetablePage> {
               info: info,
             ),
           ),
+          if (eventProvider.eventsCache == null)
+            const Center(child: CircularProgressIndicator()),
         ],
       ),
     );
