@@ -17,6 +17,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:markdown/markdown.dart' as md;
+import 'package:url_launcher/url_launcher.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({this.tabController, Key key}) : super(key: key);
@@ -80,6 +81,7 @@ class HomePage extends StatelessWidget {
                         fitContent: false,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
+                        onTapLink: launch,
                         /*
                         This is a workaround because the strings in Firebase represent
                         newlines as '\n' and Firebase replaces them with '\\n'. We need
