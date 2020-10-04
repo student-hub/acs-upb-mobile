@@ -126,10 +126,9 @@ class _AddEventViewState extends State<AddEventView> {
           // TODO(IoanaAlexandru): Validate fields
           formKey.currentState.validate();
 
-          LocalDateTime start = calendars[selectedCalendar]
-              .semesters[selectedSemester - 1]
-              .startDate
-              .at(startTime);
+          final semester =
+              calendars[selectedCalendar].semesters[selectedSemester - 1];
+          LocalDateTime start = semester.startDate.at(startTime);
           if (evenWeekSelected && !oddWeekSelected) {
             // Event is every even week, add a week to start date
             start = start.add(const Period(weeks: 1));
@@ -142,13 +141,14 @@ class _AddEventViewState extends State<AddEventView> {
                   .keys
                   .map((weekDay) => ByWeekDayEntry(weekDay))
                   .toSet(),
-              interval: oddWeekSelected != evenWeekSelected ? 2 : 1);
+              interval: oddWeekSelected != evenWeekSelected ? 2 : 1,
+              until: semester.endDate.add(const Period(days: 1)).atMidnight());
 
           final event = RecurringUniEvent(
               rrule: rrule,
               start: start,
               duration: duration,
-              id: null,
+              id: widget.initialEvent?.id,
               relevance: relevanceController.customRelevance,
               degree: relevanceController.degree,
               location: locationController.text,

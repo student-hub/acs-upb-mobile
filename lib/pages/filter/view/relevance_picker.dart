@@ -13,8 +13,7 @@ import 'package:provider/provider.dart';
 class RelevanceController {
   _RelevancePickerState _state;
 
-  String get degree =>
-      _state?._filterApplied == true ? _state?._filter?.baseNode : null;
+  String get degree => _state?._filter?.baseNode;
 
   bool get private =>
       _state?._onlyMeController?.isSelected ??
