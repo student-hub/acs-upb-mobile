@@ -8,15 +8,16 @@ import 'package:acs_upb_mobile/pages/people/view/person_view.dart';
 import 'package:acs_upb_mobile/resources/custom_icons.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/widgets/button.dart';
+import 'package:acs_upb_mobile/widgets/class_image.dart';
 import 'package:acs_upb_mobile/widgets/dialog.dart';
 import 'package:acs_upb_mobile/widgets/icon_text.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:positioned_tap_detector/positioned_tap_detector.dart';
 import 'package:provider/provider.dart';
+import 'package:black_hole_flutter/black_hole_flutter.dart';
 
 extension ClassExtension on ClassHeader {
   Color get colorFromAcronym {
@@ -253,14 +254,13 @@ class _ClassViewState extends State<ClassView> {
         padding: const EdgeInsets.all(8),
         child: Row(
           children: [
-            CircleAvatar(
-              backgroundColor: widget.classHeader.colorFromAcronym,
-              child: AutoSizeText(
-                widget.classHeader.acronym,
-                minFontSize: 4,
-                maxLines: 1,
-              ),
-            ),
+            ClassImage(
+                backgroundColor: widget.classHeader.colorFromAcronym,
+                textColor:
+                    widget.classHeader.colorFromAcronym.highEmphasisOnColor,
+                selectable: false,
+                selected: false,
+                text: widget.classHeader.acronym),
             const SizedBox(
               width: 8,
             ),

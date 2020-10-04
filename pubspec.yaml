@@ -123,6 +123,9 @@ dev_dependencies:
   # Testing utils
   network_image_mock: ^1.0.1
 
+  # Flutter utilities
+  black_hole_flutter:
+
   # Code analysis
   extra_pedantic: 1.2.0
 
