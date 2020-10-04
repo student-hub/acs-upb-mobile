@@ -181,7 +181,7 @@ class UniEventProvider extends EventProvider<UniEventInstance>
   final AuthProvider _authProvider;
   List<String> _classIds = [];
   Filter _filter;
-  List<UniEvent> _eventsCache;
+  List<UniEvent> eventsCache;
   bool empty;
 
   Future<void> fetchCalendars() async {
@@ -194,7 +194,7 @@ class UniEventProvider extends EventProvider<UniEventInstance>
   }
 
   Future<List<UniEvent>> get _events async {
-    if (_eventsCache != null) return _eventsCache;
+    if (eventsCache != null) return eventsCache;
 
     if (!_authProvider.isAuthenticatedFromCache ||
         _filter == null ||
@@ -224,7 +224,9 @@ class UniEventProvider extends EventProvider<UniEventInstance>
 
     events = events.where((event) => event != null).toList();
     empty = events.isEmpty;
-    return _eventsCache = events;
+    eventsCache = events;
+    notifyListeners();
+    return eventsCache;
   }
 
   @override
@@ -260,7 +262,7 @@ class UniEventProvider extends EventProvider<UniEventInstance>
     _classProvider = classProvider;
     _classProvider.fetchUserClassIds(uid: _authProvider.uid).then((classIds) {
       _classIds = classIds;
-      _eventsCache = null;
+      eventsCache = null;
       notifyListeners();
     });
   }
@@ -269,7 +271,7 @@ class UniEventProvider extends EventProvider<UniEventInstance>
     _filterProvider = filterProvider;
     _filterProvider.fetchFilter().then((filter) {
       _filter = filter;
-      _eventsCache = null;
+      eventsCache = null;
       notifyListeners();
     });
   }

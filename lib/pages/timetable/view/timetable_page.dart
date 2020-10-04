@@ -104,14 +104,20 @@ class _TimetablePageState extends State<TimetablePage> {
           ),
         ),
       ],
-      body: Timetable<UniEventInstance>(
-        controller: _controller,
-        dateHeaderBuilder: (_, date) => DateHeader(date),
-        eventBuilder: (event) => UniEventWidget(event),
-        allDayEventBuilder: (context, event, info) => UniAllDayEventWidget(
-          event,
-          info: info,
-        ),
+      body: Stack(
+        children: [
+          if (eventProvider.eventsCache == null)
+            const Center(child: CircularProgressIndicator()),
+          Timetable<UniEventInstance>(
+            controller: _controller,
+            dateHeaderBuilder: (_, date) => DateHeader(date),
+            eventBuilder: (event) => UniEventWidget(event),
+            allDayEventBuilder: (context, event, info) => UniAllDayEventWidget(
+              event,
+              info: info,
+            ),
+          ),
+        ],
       ),
     );
   }
