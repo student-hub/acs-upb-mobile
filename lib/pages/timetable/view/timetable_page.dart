@@ -124,9 +124,15 @@ class _TimetablePageState extends State<TimetablePage> {
             ),
             onEventBackgroundTap: (dateTime, isAllDay) {
               if (!isAllDay) {
-                Navigator.of(context).push(MaterialPageRoute<AddEventView>(
-                  builder: (_) => const AddEventView(),
-                ));
+                final user = Provider.of<AuthProvider>(context, listen: false)
+                .currentUserFromCache;
+            if (user.canAddEvent) {
+              Navigator.of(context).push(MaterialPageRoute<AddEventView>(
+                builder: (_) => const AddEventView(),
+              ));
+            } else {
+              AppToast.show(S.of(context).errorPermissionDenied);
+                }
               }
             },
           ),

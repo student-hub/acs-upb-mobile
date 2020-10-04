@@ -22,4 +22,6 @@ class User {
   bool get canAddPublicWebsite => permissionLevel >= 3;
 
   bool get canEditPublicWebsite => permissionLevel >= 3;
+
+  bool get canAddEvent => permissionLevel >= 3;
 }
