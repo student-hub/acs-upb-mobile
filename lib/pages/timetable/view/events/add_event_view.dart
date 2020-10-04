@@ -52,6 +52,8 @@ class _AddEventViewState extends State<AddEventView> {
     DayOfWeek.wednesday: false,
     DayOfWeek.thursday: false,
     DayOfWeek.friday: false,
+    DayOfWeek.saturday: false,
+    DayOfWeek.sunday: false,
   };
 
   // TODO(IoanaAlexandru): Make default semester the one closest to now
@@ -373,21 +375,6 @@ class _AddEventViewState extends State<AddEventView> {
                       ),
                     ],
                   ),
-                  DropdownButtonFormField<ClassHeader>(
-                    isExpanded: true,
-                    decoration: InputDecoration(
-                      labelText: S.of(context).labelClass,
-                      prefixIcon: const Icon(Icons.class_),
-                    ),
-                    value: selectedClass,
-                    items: classHeaders
-                        .map(
-                          (header) => DropdownMenuItem(
-                              value: header, child: Text(header.name)),
-                        )
-                        .toList(),
-                    onChanged: (selection) => selectedClass = selection,
-                  ),
                   RelevancePicker(
                     canBePrivate: false,
                     filterProvider: Provider.of<FilterProvider>(context),
@@ -398,7 +385,7 @@ class _AddEventViewState extends State<AddEventView> {
                       prefixIcon: const Icon(Icons.category),
                     ),
                     value: selectedEventType,
-                    items: UniEventType.values
+                    items: UniEventTypeExtension.classTypes
                         .map(
                           (type) => DropdownMenuItem<UniEventType>(
                             value: type,
@@ -409,17 +396,37 @@ class _AddEventViewState extends State<AddEventView> {
                     onChanged: (selection) =>
                         setState(() => selectedEventType = selection),
                   ),
-                  timeIntervalPicker(),
-                  weekPicker(),
-                  dayPicker(),
-                  TextFormField(
-                    controller: locationController,
-                    decoration: InputDecoration(
-                      labelText: S.of(context).labelLocation,
-                      prefixIcon: const Icon(Icons.location_on),
+                  if (selectedEventType != null)
+                    Column(
+                      children: [
+                        DropdownButtonFormField<ClassHeader>(
+                          isExpanded: true,
+                          decoration: InputDecoration(
+                            labelText: S.of(context).labelClass,
+                            prefixIcon: const Icon(Icons.class_),
+                          ),
+                          value: selectedClass,
+                          items: classHeaders
+                              .map(
+                                (header) => DropdownMenuItem(
+                                    value: header, child: Text(header.name)),
+                              )
+                              .toList(),
+                          onChanged: (selection) => selectedClass = selection,
+                        ),
+                        timeIntervalPicker(),
+                        weekPicker(),
+                        dayPicker(),
+                        TextFormField(
+                          controller: locationController,
+                          decoration: InputDecoration(
+                            labelText: S.of(context).labelLocation,
+                            prefixIcon: const Icon(Icons.location_on),
+                          ),
+                          onChanged: (_) => setState(() {}),
+                        ),
+                      ],
                     ),
-                    onChanged: (_) => setState(() {}),
-                  ),
                 ],
               ),
             ),

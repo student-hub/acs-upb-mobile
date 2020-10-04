@@ -39,6 +39,13 @@ extension UniEventTypeExtension on UniEventType {
         return S.of(context).uniEventTypeOther;
     }
   }
+
+  static List<UniEventType> get classTypes => [
+        UniEventType.lecture,
+        UniEventType.lab,
+        UniEventType.seminar,
+        UniEventType.sports
+      ];
 }
 
 class UniEvent {

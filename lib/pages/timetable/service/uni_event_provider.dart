@@ -15,7 +15,7 @@ import 'package:rrule/rrule.dart';
 import 'package:time_machine/time_machine.dart';
 import 'package:timetable/timetable.dart';
 
-extension UniEventTypeExtension on UniEventType {
+extension DatabaseUniEventType on UniEventType {
   static UniEventType fromString(String string) {
     switch (string) {
       case 'lab':
@@ -83,7 +83,7 @@ extension UniEventExtension on UniEvent {
     if (json['start'] == null ||
         (json['duration'] == null && json['end'] == null)) return null;
 
-    final type = UniEventTypeExtension.fromString(json['type']);
+    final type = DatabaseUniEventType.fromString(json['type']);
     if (json['end'] != null) {
       return AllDayUniEvent(
         id: id,
