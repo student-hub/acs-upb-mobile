@@ -17,50 +17,6 @@ import 'package:rrule/rrule.dart';
 import 'package:time_machine/time_machine.dart';
 import 'package:timetable/timetable.dart';
 
-extension DatabaseUniEventType on UniEventType {
-  static UniEventType fromString(String string) {
-    switch (string) {
-      case 'lab':
-        return UniEventType.lab;
-      case 'lecture':
-        return UniEventType.lecture;
-      case 'seminar':
-        return UniEventType.seminar;
-      case 'sports':
-        return UniEventType.sports;
-      case 'semester':
-        return UniEventType.semester;
-      case 'holiday':
-        return UniEventType.holiday;
-      case 'examSession':
-        return UniEventType.examSession;
-      default:
-        return UniEventType.other;
-    }
-  }
-
-  Color get color {
-    switch (this) {
-      case UniEventType.lecture:
-        return Colors.pinkAccent;
-      case UniEventType.lab:
-        return Colors.blueAccent;
-      case UniEventType.seminar:
-        return Colors.orangeAccent;
-      case UniEventType.sports:
-        return Colors.greenAccent;
-      case UniEventType.semester:
-        return Colors.transparent;
-      case UniEventType.holiday:
-        return Colors.yellow;
-      case UniEventType.examSession:
-        return Colors.red;
-      default:
-        return Colors.white;
-    }
-  }
-}
-
 extension PeriodExtension on Period {
   static Period fromJSON(Map<String, dynamic> json) {
     return Period(
@@ -76,6 +32,27 @@ extension PeriodExtension on Period {
       nanoseconds: json['nanoseconds'] ?? 0,
     );
   }
+
+  Map<String, dynamic> toJSON() {
+    final json = {
+      'years': years,
+      'months': months,
+      'weeks': weeks,
+      'days': days,
+      'hours': hours,
+      'minutes': minutes,
+      'seconds': seconds,
+      'milliseconds': milliseconds,
+      'microseconds': microseconds,
+      'nanoseconds': nanoseconds
+    };
+
+    return json..removeWhere((key, value) => value == 0);
+  }
+}
+
+extension LocalDateTimeExtension on LocalDateTime {
+  Timestamp toTimestamp() => Timestamp.fromDate(toDateTimeLocal());
 }
 
 extension UniEventExtension on UniEvent {
@@ -85,7 +62,7 @@ extension UniEventExtension on UniEvent {
     if (json['start'] == null ||
         (json['duration'] == null && json['end'] == null)) return null;
 
-    final type = DatabaseUniEventType.fromString(json['type']);
+    final type = UniEventTypeExtension.fromString(json['type']);
     if (json['end'] != null) {
       return AllDayUniEvent(
         id: id,
@@ -103,6 +80,7 @@ extension UniEventExtension on UniEvent {
         relevance: json['relevance'] == null
             ? null
             : List<String>.from(json['relevance']),
+        addedBy: json['addedBy'],
       );
     } else if (json['rrule'] != null) {
       return RecurringUniEvent(
@@ -122,6 +100,7 @@ extension UniEventExtension on UniEvent {
         relevance: json['relevance'] == null
             ? null
             : List<String>.from(json['relevance']),
+        addedBy: json['addedBy'],
       );
     } else {
       return UniEvent(
@@ -140,8 +119,35 @@ extension UniEventExtension on UniEvent {
         relevance: json['relevance'] == null
             ? null
             : List<String>.from(json['relevance']),
+        addedBy: json['addedBy'],
       );
     }
+  }
+
+  Map<String, dynamic> toData() {
+    final type = this.type.toString().split('.').last;
+
+    final json = {
+      'type': type,
+      'name': name,
+      'start': start.toTimestamp(),
+      'duration': duration.toJSON(),
+      'location': location,
+      'class': classHeader.id,
+      'degree': degree,
+      'relevance': relevance,
+      'addedBy': addedBy,
+    };
+
+    if (this is RecurringUniEvent) {
+      json['rrule'] = (this as RecurringUniEvent).rrule.toString();
+    }
+
+    if (this is AllDayUniEvent) {
+      json['end'] = (this as AllDayUniEvent).endDate.atMidnight().toTimestamp();
+    }
+
+    return json;
   }
 }
 
@@ -274,6 +280,18 @@ class UniEventProvider extends EventProvider<UniEventInstance>
       eventsCache = null;
       notifyListeners();
     });
+  }
+
+  Future<bool> addEvent(UniEvent event, {BuildContext context}) async {
+    try {
+      await Firestore.instance.collection('events').add(event.toData());
+      _eventsCache = null;
+      notifyListeners();
+      return true;
+    } catch (e) {
+      _errorHandler(e, context);
+      return false;
+    }
   }
 
   Future<bool> deleteEvent(UniEvent event, {BuildContext context}) async {

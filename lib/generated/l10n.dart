@@ -2033,6 +2033,26 @@ class S {
     );
   }
 
+  /// `Event added successfully.`
+  String get messageEventAdded {
+    return Intl.message(
+      'Event added successfully.',
+      name: 'messageEventAdded',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Event modified successfully.`
+  String get messageEventEdited {
+    return Intl.message(
+      'Event modified successfully.',
+      name: 'messageEventEdited',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Are you sure you want to delete "{shortcutName}"?`
   String messageDeleteShortcut(Object shortcutName) {
     return Intl.message(

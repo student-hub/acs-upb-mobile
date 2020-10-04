@@ -214,6 +214,8 @@
   "messageWebsiteDeleted": "Website-ul a fost șters cu succes.",
   "messageDeleteEvent": "Sunteți sigur că doriți să ștergeți acest eveniment?",
   "messageEventDeleted": "Eveniment șters cu succes.",
+  "messageEventAdded": "Eveniment adăugat cu succes.",
+  "messageEventEdited": "Eveniment modificat cu succes.",
   "messageDeleteShortcut": "Sunteți sigur că doriți să ștergeți \"{shortcutName}\"?",
   "messageThisCouldAffectOtherStudents": "Alți studenți ar putea fi afectați.",
   "messageShortcutDeleted": "Scurtătura a fost ștearsă cu succes.",

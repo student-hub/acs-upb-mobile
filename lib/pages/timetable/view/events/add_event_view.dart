@@ -7,6 +7,7 @@ import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
 import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
 import 'package:acs_upb_mobile/pages/filter/view/relevance_picker.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/academic_calendar.dart';
+import 'package:acs_upb_mobile/pages/timetable/model/events/recurring_event.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/events/uni_event.dart';
 import 'package:acs_upb_mobile/pages/timetable/service/uni_event_provider.dart';
 import 'package:acs_upb_mobile/resources/custom_icons.dart';
@@ -19,6 +20,7 @@ import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
+import 'package:rrule/rrule.dart';
 import 'package:time_machine/time_machine.dart';
 import 'package:time_machine/time_machine_text_patterns.dart';
 
@@ -37,9 +39,8 @@ class AddEventView extends StatefulWidget {
 class _AddEventViewState extends State<AddEventView> {
   final formKey = GlobalKey<FormState>();
 
-  TextEditingController typeController;
   TextEditingController locationController;
-  RelevanceController relevanceController;
+  RelevanceController relevanceController = RelevanceController();
 
   UniEventType selectedEventType;
   ClassHeader selectedClass;
@@ -122,8 +123,50 @@ class _AddEventViewState extends State<AddEventView> {
   AppScaffoldAction _saveButton() => AppScaffoldAction(
         text: S.of(context).buttonSave,
         onPressed: () async {
-          // TODO(IoanaAlexandru): Save data
+          // TODO(IoanaAlexandru): Validate fields
           formKey.currentState.validate();
+
+          LocalDateTime start = calendars[selectedCalendar]
+              .semesters[selectedSemester - 1]
+              .startDate
+              .at(startTime);
+          if (evenWeekSelected && !oddWeekSelected) {
+            // Event is every even week, add a week to start date
+            start = start.add(const Period(weeks: 1));
+          }
+
+          final rrule = RecurrenceRule(
+              frequency: Frequency.weekly,
+              byWeekDays: (Map<DayOfWeek, bool>.from(weekDaySelected)
+                    ..removeWhere((key, value) => !value))
+                  .keys
+                  .map((weekDay) => ByWeekDayEntry(weekDay))
+                  .toSet(),
+              interval: oddWeekSelected != evenWeekSelected ? 2 : 1);
+
+          final event = RecurringUniEvent(
+              rrule: rrule,
+              start: start,
+              duration: duration,
+              id: null,
+              relevance: relevanceController.customRelevance,
+              degree: relevanceController.degree,
+              location: locationController.text,
+              type: selectedEventType,
+              classHeader: selectedClass,
+              addedBy: Provider.of<AuthProvider>(context, listen: false)
+                  .currentUserFromCache
+                  .uid);
+
+          if (widget.initialEvent?.id == null) {
+            final res =
+                await Provider.of<UniEventProvider>(context, listen: false)
+                    .addEvent(event);
+            if (res) {
+              Navigator.of(context).pop();
+              AppToast.show(S.of(context).messageEventAdded);
+            }
+          }
         },
       );
 
@@ -320,9 +363,6 @@ class _AddEventViewState extends State<AddEventView> {
 
   @override
   Widget build(BuildContext context) {
-    typeController ??= TextEditingController(
-        text: widget.initialEvent?.type?.toLocalizedString(context) ?? '');
-
     return AppScaffold(
       title: Text(widget.initialEvent?.id == null
           ? S.of(context).actionAddEvent
@@ -387,6 +427,7 @@ class _AddEventViewState extends State<AddEventView> {
                   RelevancePicker(
                     canBePrivate: false,
                     filterProvider: Provider.of<FilterProvider>(context),
+                    controller: relevanceController,
                   ),
                   DropdownButtonFormField<UniEventType>(
                     decoration: InputDecoration(

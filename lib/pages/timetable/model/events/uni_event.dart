@@ -46,6 +46,48 @@ extension UniEventTypeExtension on UniEventType {
         UniEventType.seminar,
         UniEventType.sports
       ];
+
+  static UniEventType fromString(String string) {
+    switch (string) {
+      case 'lab':
+        return UniEventType.lab;
+      case 'lecture':
+        return UniEventType.lecture;
+      case 'seminar':
+        return UniEventType.seminar;
+      case 'sports':
+        return UniEventType.sports;
+      case 'semester':
+        return UniEventType.semester;
+      case 'holiday':
+        return UniEventType.holiday;
+      case 'examSession':
+        return UniEventType.examSession;
+      default:
+        return UniEventType.other;
+    }
+  }
+
+  Color get color {
+    switch (this) {
+      case UniEventType.lecture:
+        return Colors.pinkAccent;
+      case UniEventType.lab:
+        return Colors.blueAccent;
+      case UniEventType.seminar:
+        return Colors.orangeAccent;
+      case UniEventType.sports:
+        return Colors.greenAccent;
+      case UniEventType.semester:
+        return Colors.transparent;
+      case UniEventType.holiday:
+        return Colors.yellow;
+      case UniEventType.examSession:
+        return Colors.red;
+      default:
+        return Colors.white;
+    }
+  }
 }
 
 class UniEvent {
@@ -61,6 +103,7 @@ class UniEvent {
     this.calendar,
     this.relevance,
     this.degree,
+    this.addedBy,
   });
 
   final String id;
@@ -74,6 +117,7 @@ class UniEvent {
   final AcademicCalendar calendar;
   final String degree;
   final List<String> relevance;
+  final String addedBy;
 
   Iterable<UniEventInstance> generateInstances(
       {DateInterval intersectingInterval}) sync* {
