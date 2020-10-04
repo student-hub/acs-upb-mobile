@@ -136,6 +136,7 @@ extension UniEventExtension on UniEvent {
       'class': classHeader.id,
       'degree': degree,
       'relevance': relevance,
+      'calendar': calendar.id,
       'addedBy': addedBy,
     };
 
@@ -162,6 +163,7 @@ extension AcademicCalendarExtension on AcademicCalendar {
 
   static AcademicCalendar fromSnap(DocumentSnapshot snap) {
     return AcademicCalendar(
+      id: snap.documentID,
       semesters: _eventsFromMapList(snap.data['semesters'], 'semester'),
       holidays: _eventsFromMapList(snap.data['holidays'], 'holiday'),
       exams: _eventsFromMapList(snap.data['exams'], 'examSession'),

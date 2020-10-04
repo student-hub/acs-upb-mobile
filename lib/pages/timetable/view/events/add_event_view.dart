@@ -191,6 +191,7 @@ class _AddEventViewState extends State<AddEventView> {
               location: locationController.text,
               type: selectedEventType,
               classHeader: selectedClass,
+              calendar: calendars[selectedCalendar],
               addedBy: Provider.of<AuthProvider>(context, listen: false)
                   .currentUserFromCache
                   .uid);
