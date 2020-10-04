@@ -82,28 +82,28 @@ class _PortalPageState extends State<PortalPage> {
           website: website,
           canEdit: canEdit,
           size: size,
-            onTap: () {
-              if (canEdit) {
-                Navigator.of(context)
-                    .push(MaterialPageRoute<ChangeNotifierProvider>(
-                  builder: (_) => ChangeNotifierProvider<FilterProvider>(
-                    create: (_) => FilterProvider(
-                      defaultDegree: website.degree,
-                      defaultRelevance: website.relevance,
+          onTap: () {
+            if (canEdit) {
+              Navigator.of(context)
+                  .push(MaterialPageRoute<ChangeNotifierProvider>(
+                builder: (_) => ChangeNotifierProvider<FilterProvider>(
+                  create: (_) => FilterProvider(
+                    defaultDegree: website.degree,
+                    defaultRelevance: website.relevance,
                   ),
-                    child: WebsiteView(
-                      website: website,
-                      updateExisting: true,
-                    ),
+                  child: WebsiteView(
+                    website: website,
+                    updateExisting: true,
                   ),
-                ));
-              } else {
-                Provider.of<WebsiteProvider>(context, listen: false)
-                    .incrementNumberOfVisits(website);
-                Utils.launchURL(website.link);
-              }
-            },
-          ));
+                ),
+              ));
+            } else {
+              Provider.of<WebsiteProvider>(context, listen: false)
+                  .incrementNumberOfVisits(website);
+              Utils.launchURL(website.link);
+            }
+          },
+        ));
   }
 
   Widget listCategory(WebsiteCategory category, List<Website> websites) {

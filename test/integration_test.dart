@@ -430,6 +430,7 @@ void main() {
     when(mockEventProvider.hasListeners).thenReturn(false);
     when(mockEventProvider.getAllDayEventsIntersecting(any))
         .thenAnswer((_) => Stream.fromIterable([]));
+    when(mockEventProvider.eventsCache).thenReturn([]);
   });
 
   group('Home', () {

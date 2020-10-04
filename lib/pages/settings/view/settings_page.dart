@@ -12,8 +12,8 @@ import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:preferences/preferences.dart';
-import 'package:time_machine/time_machine.dart';
 import 'package:provider/provider.dart';
+import 'package:time_machine/time_machine.dart';
 
 class SettingsPage extends StatefulWidget {
   static const String routeName = '/settings';
