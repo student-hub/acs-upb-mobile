@@ -3,6 +3,8 @@ import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/classes/model/class.dart';
 import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
+import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
+import 'package:acs_upb_mobile/pages/filter/view/relevance_picker.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/academic_calendar.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/events/uni_event.dart';
 import 'package:acs_upb_mobile/pages/timetable/service/uni_event_provider.dart';
@@ -30,6 +32,7 @@ class _AddEventViewState extends State<AddEventView> {
 
   TextEditingController typeController;
   TextEditingController locationController;
+  RelevanceController relevanceController;
 
   UniEventType selectedEventType;
   ClassHeader selectedClass;
@@ -195,6 +198,10 @@ class _AddEventViewState extends State<AddEventView> {
                         )
                         .toList(),
                     onChanged: (selection) => selectedClass = selection,
+                  ),
+                  RelevancePicker(
+                    canBePrivate: false,
+                    filterProvider: Provider.of<FilterProvider>(context),
                   ),
                   TextFormField(
                     controller: locationController,

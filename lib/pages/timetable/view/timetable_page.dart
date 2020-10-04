@@ -128,7 +128,10 @@ class _TimetablePageState extends State<TimetablePage> {
                 .currentUserFromCache;
             if (user.canAddEvent) {
               Navigator.of(context).push(MaterialPageRoute<AddEventView>(
-                builder: (_) => const AddEventView(),
+                builder: (_) => ChangeNotifierProvider<FilterProvider>(
+                  create: (_) => FilterProvider(),
+                  child: const AddEventView(),
+                ),
               ));
             } else {
               AppToast.show(S.of(context).errorPermissionDenied);
