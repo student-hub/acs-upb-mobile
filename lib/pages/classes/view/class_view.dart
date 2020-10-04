@@ -4,12 +4,15 @@ import 'package:acs_upb_mobile/pages/classes/model/class.dart';
 import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
 import 'package:acs_upb_mobile/pages/classes/view/grading_view.dart';
 import 'package:acs_upb_mobile/pages/classes/view/shortcut_view.dart';
+import 'package:acs_upb_mobile/pages/people/view/person_view.dart';
 import 'package:acs_upb_mobile/resources/custom_icons.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/widgets/button.dart';
 import 'package:acs_upb_mobile/widgets/dialog.dart';
+import 'package:acs_upb_mobile/widgets/icon_text.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:positioned_tap_detector/positioned_tap_detector.dart';
@@ -50,7 +53,7 @@ class _ClassViewState extends State<ClassView> {
     final classProvider = Provider.of<ClassProvider>(context);
 
     return AppScaffold(
-      title: widget.classHeader.name,
+      title: S.of(context).classInfo,
       body: FutureBuilder(
           future: classProvider.fetchClassInfo(widget.classHeader,
               context: context),
@@ -64,6 +67,9 @@ class _ClassViewState extends State<ClassView> {
                     padding: const EdgeInsets.symmetric(horizontal: 8),
                     child: Column(
                       children: [
+                        const SizedBox(height: 8),
+                        lecturerCard(context),
+                        const SizedBox(height: 8),
                         shortcuts(context),
                         const SizedBox(height: 8),
                         GradingChart(
@@ -239,5 +245,65 @@ class _ClassViewState extends State<ClassView> {
         visualDensity: VisualDensity.compact,
       ),
     );
+  }
+
+  Widget lecturerCard(BuildContext context) {
+    return Column(mainAxisSize: MainAxisSize.min, children: [
+      Card(
+        child: Padding(
+          padding: const EdgeInsets.all(8),
+          child: Row(
+            children: [
+              CircleAvatar(
+                backgroundColor: widget.classHeader.colorFromAcronym,
+                child: AutoSizeText(
+                  widget.classHeader.acronym,
+                  minFontSize: 4,
+                  maxLines: 1,
+                ),
+              ),
+              const SizedBox(
+                width: 8,
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Row(
+                    children: [
+                      IconText(
+                          icon: Icons.class_,
+                          text: widget.classHeader.name ?? '-',
+                          style: Theme.of(context).textTheme.bodyText1),
+                    ],
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      if (classInfo.lecturer != null) {
+                        showModalBottomSheet<dynamic>(
+                            isScrollControlled: true,
+                            context: context,
+                            builder: (BuildContext buildContext) =>
+                                PersonView(person: classInfo.lecturer));
+                      }
+                    },
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        IconText(
+                            icon: Icons.person,
+                            text: classInfo.lecturer?.name ?? '-',
+                            style: Theme.of(context).textTheme.bodyText1),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    ]);
   }
 }

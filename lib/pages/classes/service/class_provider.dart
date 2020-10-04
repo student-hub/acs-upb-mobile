@@ -2,6 +2,8 @@ import 'package:acs_upb_mobile/authentication/model/user.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/classes/model/class.dart';
 import 'package:acs_upb_mobile/pages/filter/model/filter.dart';
+import 'package:acs_upb_mobile/pages/people/model/person.dart';
+import 'package:acs_upb_mobile/pages/people/service/person_provider.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -43,6 +45,7 @@ extension ClassHeaderExtension on ClassHeader {
     if (splitAcronym.length < 4) {
       return null;
     }
+
     return ClassHeader(
       id: snap.data['shortname'],
       name: snap.data['fullname'],
@@ -53,7 +56,7 @@ extension ClassHeaderExtension on ClassHeader {
 }
 
 extension ClassExtension on Class {
-  static Class fromSnap({ClassHeader header, DocumentSnapshot snap}) {
+  static Future<Class> fromSnap({ClassHeader header, DocumentSnapshot snap}) async {
     if (snap.data == null) {
       return Class(header: header);
     }
@@ -69,6 +72,11 @@ extension ClassExtension on Class {
       ));
     }
 
+    final lecturerSnap = await Firestore.instance.collection('people').document(snap['lecturer']).get();
+    Person lecturer;
+    if (lecturerSnap?.data != null) {
+      lecturer = PersonExtension.fromSnap(lecturerSnap);
+    }              
     Map<String, double> grading;
     if (snap['grading'] != null) {
       grading = Map<String, double>.from(snap['grading'].map(
@@ -79,6 +87,7 @@ extension ClassExtension on Class {
       header: header,
       shortcuts: shortcuts,
       grading: grading,
+      lecturer: lecturer,
     );
   }
 }

@@ -1,4 +1,5 @@
 import 'package:acs_upb_mobile/generated/l10n.dart';
+import 'package:acs_upb_mobile/pages/people/model/person.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:meta/meta.dart';
 
@@ -38,10 +39,15 @@ class ClassHeader {
 }
 
 class Class {
-  Class({@required this.header, List<Shortcut> shortcuts, this.grading})
+  Class(
+      {@required this.header,
+      List<Shortcut> shortcuts,
+      this.grading,
+      this.lecturer})
       : shortcuts = shortcuts ?? [];
 
   ClassHeader header;
   final List<Shortcut> shortcuts;
   final Map<String, double> grading;
+  final Person lecturer;
 }

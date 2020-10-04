@@ -73,6 +73,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "buttonSave" : MessageLookupByLibrary.simpleMessage("Salvare"),
     "buttonSend" : MessageLookupByLibrary.simpleMessage("Trimitere"),
     "buttonSet" : MessageLookupByLibrary.simpleMessage("Setează"),
+    "classInfo" : MessageLookupByLibrary.simpleMessage("Informații disciplină"),
     "errorAccountDisabled" : MessageLookupByLibrary.simpleMessage("Contul a fost dezactivat."),
     "errorCouldNotLaunchURL" : m1,
     "errorEmailInUse" : MessageLookupByLibrary.simpleMessage("Există deja un cont asociat acestui e-mail."),

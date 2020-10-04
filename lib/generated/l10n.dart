@@ -2012,6 +2012,16 @@ class S {
       args: [],
     );
   }
+
+  /// `Class information`
+  String get classInfo {
+    return Intl.message(
+      'Class information',
+      name: 'classInfo',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {
