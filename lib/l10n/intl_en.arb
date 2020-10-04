@@ -42,6 +42,7 @@
   "labelWeek": "Week",
   "labelEven": "Even",
   "labelOdd": "Odd",
+  "labelDay": "Day",
 
   "sectionShortcuts": "Shortcuts",
   "sectionEvents": "Events",

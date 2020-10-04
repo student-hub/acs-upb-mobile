@@ -18,6 +18,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 import 'package:time_machine/time_machine.dart';
+import 'package:time_machine/time_machine_text_patterns.dart';
 
 class AddEventView extends StatefulWidget {
   /// If the `id` of [initialEvent] is not null, this acts like an "Edit event"
@@ -45,6 +46,13 @@ class _AddEventViewState extends State<AddEventView> {
   Period duration;
   bool evenWeekSelected = true;
   bool oddWeekSelected = true;
+  Map<DayOfWeek, bool> weekDaySelected = {
+    DayOfWeek.monday: false,
+    DayOfWeek.tuesday: false,
+    DayOfWeek.wednesday: false,
+    DayOfWeek.thursday: false,
+    DayOfWeek.friday: false,
+  };
 
   // TODO(IoanaAlexandru): Make default semester the one closest to now
   int selectedSemester = 1;
@@ -78,6 +86,10 @@ class _AddEventViewState extends State<AddEventView> {
     final startHour = widget.initialEvent?.start?.hourOfDay ?? 8;
     duration = widget.initialEvent?.duration ?? const Period(hours: 2);
     startTime = LocalTime(startHour, 0, 0);
+
+    final initialWeekDay =
+        widget.initialEvent?.start?.dayOfWeek ?? DayOfWeek.monday;
+    weekDaySelected[initialWeekDay] = true;
   }
 
   AppDialog _deletionConfirmationDialog(BuildContext context) => AppDialog(
@@ -240,6 +252,61 @@ class _AddEventViewState extends State<AddEventView> {
     );
   }
 
+  Widget dayPicker() {
+    return IntrinsicHeight(
+      child: Padding(
+        padding: const EdgeInsets.only(top: 12, left: 12),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Icon(Icons.today,
+                color: CustomIcons.formIconColor(Theme.of(context))),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    S.of(context).labelDay,
+                    style: Theme.of(context)
+                        .textTheme
+                        .caption
+                        .apply(color: Theme.of(context).hintColor),
+                  ),
+                  const SizedBox(height: 8),
+                  Container(
+                    height: 40,
+                    child: ListView(
+                        scrollDirection: Axis.horizontal,
+                        children: weekDaySelected.keys.map((dayOfWeek) {
+                          final helperDate = LocalDate.today().next(dayOfWeek);
+                          return Row(
+                            children: [
+                              Selectable(
+                                label:
+                                    LocalDatePattern.createWithCurrentCulture(
+                                            'ddd')
+                                        .format(helperDate)
+                                        .substring(0, 3),
+                                initiallySelected: weekDaySelected[dayOfWeek],
+                                onSelected: (selected) =>
+                                    setState(() => oddWeekSelected = selected),
+                              ),
+                              const SizedBox(width: 8),
+                            ],
+                          );
+                        }).toList()),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     typeController ??= TextEditingController(
@@ -344,6 +411,7 @@ class _AddEventViewState extends State<AddEventView> {
                   ),
                   timeIntervalPicker(),
                   weekPicker(),
+                  dayPicker(),
                   TextFormField(
                     controller: locationController,
                     decoration: InputDecoration(

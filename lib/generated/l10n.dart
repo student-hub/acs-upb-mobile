@@ -453,6 +453,16 @@ class S {
     );
   }
 
+  /// `Day`
+  String get labelDay {
+    return Intl.message(
+      'Day',
+      name: 'labelDay',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Shortcuts`
   String get sectionShortcuts {
     return Intl.message(
