@@ -56,7 +56,8 @@ extension ClassHeaderExtension on ClassHeader {
 }
 
 extension ClassExtension on Class {
-  static Future<Class> fromSnap({ClassHeader header, DocumentSnapshot snap}) async {
+  static Future<Class> fromSnap(
+      {ClassHeader header, DocumentSnapshot snap}) async {
     if (snap.data == null) {
       return Class(header: header);
     }
@@ -72,11 +73,14 @@ extension ClassExtension on Class {
       ));
     }
 
-    final lecturerSnap = await Firestore.instance.collection('people').document(snap['lecturer']).get();
+    final lecturerSnap = await Firestore.instance
+        .collection('people')
+        .document(snap['lecturer'])
+        .get();
     Person lecturer;
     if (lecturerSnap?.data != null) {
       lecturer = PersonExtension.fromSnap(lecturerSnap);
-    }              
+    }
     Map<String, double> grading;
     if (snap['grading'] != null) {
       grading = Map<String, double>.from(snap['grading'].map(
