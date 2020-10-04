@@ -248,62 +248,56 @@ class _ClassViewState extends State<ClassView> {
   }
 
   Widget lecturerCard(BuildContext context) {
-    return Row(mainAxisSize: MainAxisSize.min, children: [
-      Expanded(
-        child: Card(
-          child: Padding(
-            padding: const EdgeInsets.all(8),
-            child: Row(
-              children: [
-                CircleAvatar(
-                  backgroundColor: widget.classHeader.colorFromAcronym,
-                  child: AutoSizeText(
-                    widget.classHeader.acronym,
-                    minFontSize: 4,
-                    maxLines: 1,
-                  ),
-                ),
-                const SizedBox(
-                  width: 8,
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(8),
+        child: Row(
+          children: [
+            CircleAvatar(
+              backgroundColor: widget.classHeader.colorFromAcronym,
+              child: AutoSizeText(
+                widget.classHeader.acronym,
+                minFontSize: 4,
+                maxLines: 1,
+              ),
+            ),
+            const SizedBox(
+              width: 8,
+            ),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  IconText(
+                      icon: Icons.class_,
+                      text: widget.classHeader.name ?? '-',
+                      style: Theme.of(context).textTheme.bodyText1),
+                  GestureDetector(
+                    onTap: () {
+                      if (classInfo.lecturer != null) {
+                        showModalBottomSheet<dynamic>(
+                            isScrollControlled: true,
+                            context: context,
+                            builder: (BuildContext buildContext) =>
+                                PersonView(person: classInfo.lecturer));
+                      }
+                    },
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         IconText(
-                            icon: Icons.class_,
-                            text: widget.classHeader.name ?? '-',
+                            icon: Icons.person,
+                            text: classInfo.lecturer?.name ?? '-',
                             style: Theme.of(context).textTheme.bodyText1),
                       ],
                     ),
-                    GestureDetector(
-                      onTap: () {
-                        if (classInfo.lecturer != null) {
-                          showModalBottomSheet<dynamic>(
-                              isScrollControlled: true,
-                              context: context,
-                              builder: (BuildContext buildContext) =>
-                                  PersonView(person: classInfo.lecturer));
-                        }
-                      },
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          IconText(
-                              icon: Icons.person,
-                              text: classInfo.lecturer?.name ?? '-',
-                              style: Theme.of(context).textTheme.bodyText1),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ],
+                  ),
+                ],
+              ),
             ),
-          ),
+          ],
         ),
       ),
-    ]);
+    );
   }
 }
