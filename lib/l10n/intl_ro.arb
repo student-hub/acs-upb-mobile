@@ -38,7 +38,10 @@
   "labelPersonalInformation": "Informații personale",
   "labelPermissionsConsent": "consimțământul pentru drepturi de editare",
   "labelLastUpdated": "Ultima modificare",
-  "labelUniversityYear": "University year",
+  "labelUniversityYear": "An universitar",
+  "labelWeek": "Săptămână",
+  "labelEven": "Pară",
+  "labelOdd": "Impară",
 
   "sectionShortcuts": "Scurtături",
   "sectionEvents": "Evenimente",

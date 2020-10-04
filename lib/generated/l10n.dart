@@ -423,6 +423,36 @@ class S {
     );
   }
 
+  /// `Week`
+  String get labelWeek {
+    return Intl.message(
+      'Week',
+      name: 'labelWeek',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Even`
+  String get labelEven {
+    return Intl.message(
+      'Even',
+      name: 'labelEven',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Odd`
+  String get labelOdd {
+    return Intl.message(
+      'Odd',
+      name: 'labelOdd',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Shortcuts`
   String get sectionShortcuts {
     return Intl.message(

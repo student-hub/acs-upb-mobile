@@ -12,6 +12,7 @@ import 'package:acs_upb_mobile/resources/custom_icons.dart';
 import 'package:acs_upb_mobile/widgets/button.dart';
 import 'package:acs_upb_mobile/widgets/dialog.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
+import 'package:acs_upb_mobile/widgets/selectable.dart';
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -42,6 +43,8 @@ class _AddEventViewState extends State<AddEventView> {
   String selectedCalendar;
   LocalTime startTime;
   Period duration;
+  bool evenWeekSelected = true;
+  bool oddWeekSelected = true;
 
   // TODO(IoanaAlexandru): Make default semester the one closest to now
   int selectedSemester = 1;
@@ -176,6 +179,67 @@ class _AddEventViewState extends State<AddEventView> {
     );
   }
 
+  Widget weekPicker() {
+    return IntrinsicHeight(
+      child: Padding(
+        padding: const EdgeInsets.only(top: 12, left: 12),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Icon(Icons.calendar_today,
+                color: CustomIcons.formIconColor(Theme.of(context))),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Expanded(
+                    child: Text(
+                      S.of(context).labelWeek,
+                      style: Theme.of(context)
+                          .textTheme
+                          .caption
+                          .apply(color: Theme.of(context).hintColor),
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Row(
+                    children: <Widget>[
+                      Expanded(
+                        child: Container(
+                          height: 40,
+                          child: ListView(
+                            scrollDirection: Axis.horizontal,
+                            children: <Widget>[
+                              Selectable(
+                                label: S.of(context).labelOdd,
+                                initiallySelected: oddWeekSelected,
+                                onSelected: (selected) =>
+                                    setState(() => oddWeekSelected = selected),
+                              ),
+                              const SizedBox(width: 8),
+                              Selectable(
+                                label: S.of(context).labelEven,
+                                initiallySelected: evenWeekSelected,
+                                onSelected: (selected) =>
+                                    setState(() => evenWeekSelected = selected),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     typeController ??= TextEditingController(
@@ -198,6 +262,7 @@ class _AddEventViewState extends State<AddEventView> {
             child: Form(
               key: formKey,
               child: Column(
+                mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   Row(
                     mainAxisSize: MainAxisSize.min,
@@ -241,6 +306,25 @@ class _AddEventViewState extends State<AddEventView> {
                       ),
                     ],
                   ),
+                  DropdownButtonFormField<ClassHeader>(
+                    isExpanded: true,
+                    decoration: InputDecoration(
+                      labelText: S.of(context).labelClass,
+                      prefixIcon: const Icon(Icons.class_),
+                    ),
+                    value: selectedClass,
+                    items: classHeaders
+                        .map(
+                          (header) => DropdownMenuItem(
+                              value: header, child: Text(header.name)),
+                        )
+                        .toList(),
+                    onChanged: (selection) => selectedClass = selection,
+                  ),
+                  RelevancePicker(
+                    canBePrivate: false,
+                    filterProvider: Provider.of<FilterProvider>(context),
+                  ),
                   DropdownButtonFormField<UniEventType>(
                     decoration: InputDecoration(
                       labelText: S.of(context).labelType,
@@ -258,26 +342,8 @@ class _AddEventViewState extends State<AddEventView> {
                     onChanged: (selection) =>
                         setState(() => selectedEventType = selection),
                   ),
-                  DropdownButtonFormField<ClassHeader>(
-                    isExpanded: true,
-                    decoration: InputDecoration(
-                      labelText: S.of(context).labelClass,
-                      prefixIcon: const Icon(Icons.class_),
-                    ),
-                    value: selectedClass,
-                    items: classHeaders
-                        .map(
-                          (header) => DropdownMenuItem(
-                              value: header, child: Text(header.name)),
-                        )
-                        .toList(),
-                    onChanged: (selection) => selectedClass = selection,
-                  ),
                   timeIntervalPicker(),
-                  RelevancePicker(
-                    canBePrivate: false,
-                    filterProvider: Provider.of<FilterProvider>(context),
-                  ),
+                  weekPicker(),
                   TextFormField(
                     controller: locationController,
                     decoration: InputDecoration(

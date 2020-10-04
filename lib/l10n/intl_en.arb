@@ -39,6 +39,9 @@
   "labelPermissionsConsent": "consent for editing rights",
   "labelLastUpdated": "Last updated",
   "labelUniversityYear": "University year",
+  "labelWeek": "Week",
+  "labelEven": "Even",
+  "labelOdd": "Odd",
 
   "sectionShortcuts": "Shortcuts",
   "sectionEvents": "Events",
