@@ -390,8 +390,8 @@ class _AddEventViewState extends State<AddEventView> {
                                         .format(helperDate)
                                         .substring(0, 3),
                                 initiallySelected: weekDaySelected[dayOfWeek],
-                                onSelected: (selected) =>
-                                    setState(() => oddWeekSelected = selected),
+                                onSelected: (selected) => setState(() =>
+                                    weekDaySelected[dayOfWeek] = selected),
                               ),
                               const SizedBox(width: 8),
                             ],
