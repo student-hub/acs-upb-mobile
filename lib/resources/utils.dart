@@ -8,6 +8,10 @@ import 'package:pedantic/pedantic.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+export 'package:acs_upb_mobile/resources/platform.dart'
+    if (dart.library.html) 'dart:html'
+    if (dart.library.io) 'dart:io';
+
 class Utils {
   Utils._();
 

@@ -87,9 +87,12 @@ class _PortalPageState extends State<PortalPage> {
               Navigator.of(context)
                   .push(MaterialPageRoute<ChangeNotifierProvider>(
                 builder: (_) => ChangeNotifierProvider<FilterProvider>(
-                  create: (_) => FilterProvider(
-                      defaultDegree: website.degree,
-                      defaultRelevance: website.relevance),
+                  create: (_) =>
+                      Platform.environment.containsKey('FLUTTER_TEST')
+                          ? Provider.of<FilterProvider>(context)
+                          : FilterProvider(
+                              defaultDegree: website.degree,
+                              defaultRelevance: website.relevance),
                   child: WebsiteView(
                     website: website,
                     updateExisting: true,
@@ -220,8 +223,7 @@ class _PortalPageState extends State<PortalPage> {
           onPressed: () {
             final authProvider =
                 Provider.of<AuthProvider>(context, listen: false);
-            if (authProvider.isAuthenticated &&
-                !authProvider.isAnonymous) {
+            if (authProvider.isAuthenticated && !authProvider.isAnonymous) {
               // Show message if there is nothing the user can edit
               if (!editingEnabled) {
                 user.hasEditableWebsites.then((canEdit) {
@@ -254,8 +256,7 @@ class _PortalPageState extends State<PortalPage> {
               );
             },
             S.of(context).filterMenuShowMine: () {
-              if (authProvider.isAuthenticated &&
-                  !authProvider.isAnonymous) {
+              if (authProvider.isAuthenticated && !authProvider.isAnonymous) {
                 // Show message if user has no private websites
                 if (!userOnly) {
                   user.hasPrivateWebsites.then((hasPrivate) {
@@ -338,12 +339,14 @@ class _AddWebsiteButton extends StatelessWidget {
           onTap: () {
             final authProvider =
                 Provider.of<AuthProvider>(context, listen: false);
-            if (authProvider.isAuthenticated &&
-                !authProvider.isAnonymous) {
+            if (authProvider.isAuthenticated && !authProvider.isAnonymous) {
               Navigator.of(context)
                   .push(MaterialPageRoute<ChangeNotifierProvider>(
                 builder: (_) => ChangeNotifierProvider<FilterProvider>(
-                    create: (_) => FilterProvider(),
+                    create: (_) =>
+                        Platform.environment.containsKey('FLUTTER_TEST')
+                            ? Provider.of<FilterProvider>(context)
+                            : FilterProvider(),
                     child: WebsiteView(
                       website: Website(
                           relevance: null,
