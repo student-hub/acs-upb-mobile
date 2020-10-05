@@ -8,6 +8,9 @@ import 'package:pedantic/pedantic.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+export 'package:acs_upb_mobile/resources/platform.dart'
+    if (dart.library.io) 'dart:io';
+
 Iterable<int> range(int low, int high) sync* {
   for (int i = low; i < high; ++i) {
     yield i;

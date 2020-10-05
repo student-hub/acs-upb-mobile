@@ -207,6 +207,14 @@ class _EditProfilePageState extends State<EditProfilePage> {
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
     final emailDomain = S.of(context).stringEmailDomain;
+    final User user = authProvider.currentUserFromCache;
+    lastNameController.text = user.lastName;
+    firstNameController.text = user.firstName;
+    if (!authProvider.isVerifiedFromCache) {
+      emailController.text = authProvider.email.split('@')[0];
+    }
+    final path = user.classes;
+
     return AppScaffold(
       title: Text(S.of(context).actionEditProfile),
       needsToBeAuthenticated: true,
@@ -254,95 +262,79 @@ class _EditProfilePageState extends State<EditProfilePage> {
       ],
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10),
-        child: FutureBuilder(
-            future: authProvider.currentUser,
-            builder: (context, snap) {
-              List<String> path;
-              if (snap.hasData) {
-                final User user = snap.data;
-                lastNameController.text = user.lastName;
-                firstNameController.text = user.firstName;
-                if (!authProvider.isVerifiedFromCache) {
-                  emailController.text = authProvider.email.split('@')[0];
-                }
-                path = user.classes;
-                return Container(
-                  child: ListView(children: [
-                    AccountNotVerifiedWarning(),
-                    PreferenceTitle(
-                      S.of(context).labelPersonalInformation,
-                      leftPadding: 0,
+        child: Container(
+          child: ListView(children: [
+            AccountNotVerifiedWarning(),
+            PreferenceTitle(
+              S.of(context).labelPersonalInformation,
+              leftPadding: 0,
+            ),
+            Form(
+              key: formKey,
+              child: Column(
+                children: [
+                  TextFormField(
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person),
+                      labelText: S.of(context).labelFirstName,
+                      hintText: S.of(context).hintFirstName,
                     ),
-                    Form(
-                      key: formKey,
-                      child: Column(
-                        children: [
-                          TextFormField(
-                            decoration: InputDecoration(
-                              prefixIcon: const Icon(Icons.person),
-                              labelText: S.of(context).labelFirstName,
-                              hintText: S.of(context).hintFirstName,
-                            ),
-                            controller: firstNameController,
-                            validator: (value) {
-                              if (value?.isEmpty ?? true) {
-                                return S.of(context).errorMissingFirstName;
-                              }
-                              return null;
-                            },
-                          ),
-                          TextFormField(
-                            decoration: InputDecoration(
-                              prefixIcon: const Icon(Icons.person),
-                              labelText: S.of(context).labelLastName,
-                              hintText: S.of(context).hintLastName,
-                            ),
-                            controller: lastNameController,
-                            validator: (value) {
-                              if (value?.isEmpty ?? true) {
-                                return S.of(context).errorMissingLastName;
-                              }
-                              return null;
-                            },
-                          ),
-                          if (!authProvider.isVerifiedFromCache)
-                            TextFormField(
-                              decoration: InputDecoration(
-                                prefixIcon: const Icon(Icons.alternate_email),
-                                labelText: S.of(context).labelEmail,
-                                hintText: S.of(context).hintEmail,
-                                suffix: Text(emailDomain),
-                              ),
-                              controller: emailController,
-                              validator: (value) {
-                                if (value?.isEmpty ?? true) {
-                                  return S.of(context).errorMissingLastName;
-                                }
-                                return null;
-                              },
-                            )
-                        ],
+                    controller: firstNameController,
+                    validator: (value) {
+                      if (value?.isEmpty ?? true) {
+                        return S.of(context).errorMissingFirstName;
+                      }
+                      return null;
+                    },
+                  ),
+                  TextFormField(
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person),
+                      labelText: S.of(context).labelLastName,
+                      hintText: S.of(context).hintLastName,
+                    ),
+                    controller: lastNameController,
+                    validator: (value) {
+                      if (value?.isEmpty ?? true) {
+                        return S.of(context).errorMissingLastName;
+                      }
+                      return null;
+                    },
+                  ),
+                  if (!authProvider.isVerifiedFromCache)
+                    TextFormField(
+                      decoration: InputDecoration(
+                        prefixIcon: const Icon(Icons.alternate_email),
+                        labelText: S.of(context).labelEmail,
+                        hintText: S.of(context).hintEmail,
+                        suffix: Text(emailDomain),
                       ),
-                    ),
-                    PreferenceTitle(
-                      S.of(context).labelClass,
-                      leftPadding: 0,
-                    ),
-                    FilterDropdown(
-                      initialPath: path,
-                      controller: dropdownController,
-                      leftPadding: 10,
-                      textStyle: Theme.of(context)
-                          .textTheme
-                          .caption
-                          .apply(color: Theme.of(context).hintColor),
-                    ),
-                  ]),
-                );
-              } else {
-                return const Center(child: CircularProgressIndicator());
-              }
-            }),
+                      controller: emailController,
+                      validator: (value) {
+                        if (value?.isEmpty ?? true) {
+                          return S.of(context).errorMissingLastName;
+                        }
+                        return null;
+                      },
+                    )
+                ],
+              ),
+            ),
+            PreferenceTitle(
+              S.of(context).labelClass,
+              leftPadding: 0,
+            ),
+            FilterDropdown(
+              initialPath: path,
+              controller: dropdownController,
+              leftPadding: 10,
+              textStyle: Theme.of(context)
+                  .textTheme
+                  .caption
+                  .apply(color: Theme.of(context).hintColor),
+            ),
+          ]),
+        ),
       ),
     );
   }

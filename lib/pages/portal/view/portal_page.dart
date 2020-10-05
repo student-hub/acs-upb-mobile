@@ -87,10 +87,13 @@ class _PortalPageState extends State<PortalPage> {
               Navigator.of(context)
                   .push(MaterialPageRoute<ChangeNotifierProvider>(
                 builder: (_) => ChangeNotifierProvider<FilterProvider>(
-                  create: (_) => FilterProvider(
-                    defaultDegree: website.degree,
-                    defaultRelevance: website.relevance,
-                  ),
+                  create: (_) =>
+                      Platform.environment.containsKey('FLUTTER_TEST')
+                          ? Provider.of<FilterProvider>(context)
+                          : FilterProvider(
+                              defaultDegree: website.degree,
+                              defaultRelevance: website.relevance,
+                            ),
                   child: WebsiteView(
                     website: website,
                     updateExisting: true,
@@ -344,7 +347,10 @@ class _AddWebsiteButton extends StatelessWidget {
               Navigator.of(context)
                   .push(MaterialPageRoute<ChangeNotifierProvider>(
                 builder: (_) => ChangeNotifierProvider<FilterProvider>(
-                    create: (_) => FilterProvider(),
+                    create: (_) =>
+                        Platform.environment.containsKey('FLUTTER_TEST')
+                            ? Provider.of<FilterProvider>(context)
+                            : FilterProvider(),
                     child: WebsiteView(
                       website: Website(
                           relevance: null,
