@@ -91,9 +91,9 @@ class _PortalPageState extends State<PortalPage> {
                       Platform.environment.containsKey('FLUTTER_TEST')
                           ? Provider.of<FilterProvider>(context)
                           : FilterProvider(
-                    defaultDegree: website.degree,
-                    defaultRelevance: website.relevance,
-                  ),
+                              defaultDegree: website.degree,
+                              defaultRelevance: website.relevance,
+                            ),
                   child: WebsiteView(
                     website: website,
                     updateExisting: true,
