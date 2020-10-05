@@ -1,5 +1,5 @@
-/// This helps test device environment by exporting either dart:io or dart:html
-/// based on whether we're on web or mobile.
+/// This helps check whether we're in a test environment or not. This file is
+/// imported when dart:io is not available (e.g. on web).
 class Platform {
   static Map<String, String> environment = {};
 }
