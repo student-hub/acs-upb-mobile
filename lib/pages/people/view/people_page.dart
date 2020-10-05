@@ -27,7 +27,7 @@ class _PeoplePageState extends State<PeoplePage> {
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
-      title: Text(S.of(context).navigationPeople),
+      title: S.of(context).navigationPeople,
       body: Container(
         child: FutureBuilder(
             future: people,

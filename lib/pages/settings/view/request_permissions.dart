@@ -61,7 +61,7 @@ class _RequestPermissionsState extends State<RequestPermissions> {
     final requestProvider = Provider.of<RequestProvider>(context);
 
     return AppScaffold(
-        title: Text(S.of(context).navigationAskPermissions),
+        title: S.of(context).navigationAskPermissions,
         actions: [
           AppScaffoldAction(
               text: S.of(context).buttonSave,

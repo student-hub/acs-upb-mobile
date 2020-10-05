@@ -65,7 +65,7 @@ class _PortalPageState extends State<PortalPage> {
 
     final filterProvider = this.filterProvider ??
         Provider.of<FilterProvider>(context, listen: false);
-    filterCache = await filterProvider.fetchFilter(context: context);
+    filterCache = await filterProvider.fetchFilter(context);
 
     updating = false;
     if (mounted) {
@@ -88,9 +88,8 @@ class _PortalPageState extends State<PortalPage> {
                   .push(MaterialPageRoute<ChangeNotifierProvider>(
                 builder: (_) => ChangeNotifierProvider<FilterProvider>(
                   create: (_) => FilterProvider(
-                    defaultDegree: website.degree,
-                    defaultRelevance: website.relevance,
-                  ),
+                      defaultDegree: website.degree,
+                      defaultRelevance: website.relevance),
                   child: WebsiteView(
                     website: website,
                     updateExisting: true,
@@ -211,7 +210,7 @@ class _PortalPageState extends State<PortalPage> {
         CircularProgressIndicator();
 
     return AppScaffold(
-      title: Text(S.of(context).navigationPortal),
+      title: S.of(context).navigationPortal,
       actions: [
         AppScaffoldAction(
           icon: editingEnabled ? CustomIcons.edit_slash : Icons.edit,
