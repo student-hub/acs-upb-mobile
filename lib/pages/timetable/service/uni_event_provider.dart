@@ -202,14 +202,14 @@ class UniEventProvider extends EventProvider<UniEventInstance>
             .where('class', isEqualTo: classId)
             .where('degree', isEqualTo: _filter.baseNode)
             .where('relevance',
-            arrayContainsAny: _filter.relevantNodes..remove('All'))
+                arrayContainsAny: _filter.relevantNodes..remove('All'))
             .getDocuments();
 
         for (final doc in query.documents) {
           ClassHeader classHeader;
           if (doc.data['class'] != null) {
             classHeader =
-            await _classProvider.fetchClassHeader(doc.data['class']);
+                await _classProvider.fetchClassHeader(doc.data['class']);
           }
 
           events.add(UniEventExtension.fromJSON(doc.documentID, doc.data,
