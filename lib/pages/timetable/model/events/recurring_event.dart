@@ -116,7 +116,9 @@ class RecurringUniEvent extends UniEvent {
         rrule = rrule.copyWith(
             frequency: Frequency.daily,
             interval: 1,
-            byWeekDays: {ByWeekDayEntry(start.dayOfWeek)},
+            byWeekDays: rrule.byWeekDays.isNotEmpty
+                ? rrule.byWeekDays
+                : {ByWeekDayEntry(start.dayOfWeek)},
             byWeeks: weeks);
       }
 
