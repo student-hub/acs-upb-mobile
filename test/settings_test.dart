@@ -6,7 +6,6 @@ import 'package:acs_upb_mobile/pages/faq/service/question_provider.dart';
 import 'package:acs_upb_mobile/pages/news_feed/model/news_feed_item.dart';
 import 'package:acs_upb_mobile/pages/news_feed/service/news_provider.dart';
 import 'package:acs_upb_mobile/pages/portal/service/website_provider.dart';
-import 'package:acs_upb_mobile/resources/locale_provider.dart';
 import 'package:acs_upb_mobile/pages/settings/service/request_provider.dart';
 import 'package:acs_upb_mobile/pages/settings/view/request_permissions.dart';
 import 'package:acs_upb_mobile/pages/settings/view/settings_page.dart';
@@ -17,8 +16,6 @@ import 'package:mockito/mockito.dart';
 import 'package:preferences/preferences.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import 'test_utils.dart';
 
 class MockAuthProvider extends Mock implements AuthProvider {}
 
@@ -45,14 +42,13 @@ void main() {
       // Assuming mock system language is English
       SharedPreferences.setMockInitialValues({'language': 'auto'});
 
-      LocaleProvider.cultures = testCultures;
-      LocaleProvider.rruleL10ns = {'en': await RruleL10nTest.create()};
-
       // Pretend an anonymous user is already logged in
       mockAuthProvider = MockAuthProvider();
-      when(mockAuthProvider.isAuthenticated).thenReturn(true);
+      when(mockAuthProvider.isAuthenticatedFromCache).thenReturn(true);
       // ignore: invalid_use_of_protected_member
       when(mockAuthProvider.hasListeners).thenReturn(false);
+      when(mockAuthProvider.isAuthenticatedFromService)
+          .thenAnswer((realInvocation) => Future.value(true));
       when(mockAuthProvider.currentUser).thenAnswer((_) => Future.value(null));
       when(mockAuthProvider.isAnonymous).thenReturn(true);
 

@@ -26,11 +26,8 @@ import 'package:acs_upb_mobile/pages/portal/model/website.dart';
 import 'package:acs_upb_mobile/pages/portal/service/website_provider.dart';
 import 'package:acs_upb_mobile/pages/portal/view/portal_page.dart';
 import 'package:acs_upb_mobile/pages/portal/view/website_view.dart';
-import 'package:acs_upb_mobile/pages/settings/service/request_provider.dart';
 import 'package:acs_upb_mobile/pages/settings/view/settings_page.dart';
-import 'package:acs_upb_mobile/pages/timetable/service/uni_event_provider.dart';
 import 'package:acs_upb_mobile/resources/custom_icons.dart';
-import 'package:acs_upb_mobile/resources/locale_provider.dart';
 import 'package:acs_upb_mobile/widgets/search_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -38,8 +35,6 @@ import 'package:mockito/mockito.dart';
 import 'package:network_image_mock/network_image_mock.dart';
 import 'package:preferences/preferences.dart';
 import 'package:provider/provider.dart';
-
-import 'test_utils.dart';
 
 // These tests open each page in the app on multiple screen sizes to make sure
 // nothing overflows/breaks.
@@ -56,13 +51,9 @@ class MockPersonProvider extends Mock implements PersonProvider {}
 
 class MockQuestionProvider extends Mock implements QuestionProvider {}
 
-class MockUniEventProvider extends Mock implements UniEventProvider {}
+class MockNavigatorObserver extends Mock implements NavigatorObserver {}
 
 class MockNewsProvider extends Mock implements NewsProvider {}
-
-class MockRequestProvider extends Mock implements RequestProvider {}
-
-class MockNavigatorObserver extends Mock implements NavigatorObserver {}
 
 void main() {
   AuthProvider mockAuthProvider;
@@ -72,8 +63,6 @@ void main() {
   PersonProvider mockPersonProvider;
   MockQuestionProvider mockQuestionProvider;
   MockNewsProvider mockNewsProvider;
-  UniEventProvider mockEventProvider;
-  RequestProvider mockRequestProvider;
 
   // Test layout for different screen sizes
   final screenSizes = <Size>[
@@ -112,9 +101,6 @@ void main() {
           ChangeNotifierProvider<QuestionProvider>(
               create: (_) => mockQuestionProvider),
           ChangeNotifierProvider<NewsProvider>(create: (_) => mockNewsProvider),
-          ChangeNotifierProvider<UniEventProvider>(
-              create: (_) => mockEventProvider),
-          Provider<RequestProvider>(create: (_) => mockRequestProvider),
         ],
         child: const MyApp(),
       );
@@ -125,15 +111,14 @@ void main() {
     PrefService.cache = {};
     PrefService.setString('language', 'en');
 
-    LocaleProvider.cultures = testCultures;
-    LocaleProvider.rruleL10ns = {'en': await RruleL10nTest.create()};
-
     // Pretend an anonymous user is already logged in
     mockAuthProvider = MockAuthProvider();
-    when(mockAuthProvider.isAuthenticated).thenReturn(true);
+    when(mockAuthProvider.isAuthenticatedFromCache).thenReturn(true);
     // ignore: invalid_use_of_protected_member
     when(mockAuthProvider.hasListeners).thenReturn(false);
     when(mockAuthProvider.isAnonymous).thenReturn(true);
+    when(mockAuthProvider.isAuthenticatedFromService)
+        .thenAnswer((_) => Future.value(true));
     when(mockAuthProvider.currentUser)
         .thenAnswer((realInvocation) => Future.value(null));
 
@@ -222,7 +207,7 @@ void main() {
     // ignore: invalid_use_of_protected_member
     when(mockFilterProvider.hasListeners).thenReturn(false);
     when(mockFilterProvider.filterEnabled).thenReturn(true);
-    when(mockFilterProvider.fetchFilter(context: anyNamed('context')))
+    when(mockFilterProvider.fetchFilter(any))
         .thenAnswer((_) => Future.value(Filter(
                 localizedLevelNames: [
                   {'en': 'Degree', 'ro': 'Nivel de studiu'},
@@ -427,20 +412,6 @@ void main() {
                   'Festivitatea de deschidere a anului universitar 2020-2021',
                   'https://acs.pub.ro/noutati/festivitatea-de-deschidere-a-anului-universitar-2020-2021/')
             ]));
-
-    mockEventProvider = MockUniEventProvider();
-    // ignore: invalid_use_of_protected_member
-    when(mockEventProvider.hasListeners).thenReturn(false);
-    when(mockEventProvider.getAllDayEventsIntersecting(any))
-        .thenAnswer((_) => Stream.fromIterable([]));
-    when(mockEventProvider.eventsCache).thenReturn([]);
-
-    mockRequestProvider = MockRequestProvider();
-    when(mockRequestProvider.makeRequest(any, context: anyNamed('context')))
-        .thenAnswer((_) => Future.value(true));
-    when(mockRequestProvider.userAlreadyRequested(any,
-            context: anyNamed('context')))
-        .thenAnswer((_) => Future.value(false));
   });
 
   group('Home', () {
@@ -463,16 +434,6 @@ void main() {
   });
 
   group('Class', () {
-    setUp(() {
-      when(mockAuthProvider.currentUser).thenAnswer((_) =>
-          Future.value(User(uid: '0', firstName: 'John', lastName: 'Doe')));
-      when(mockAuthProvider.currentUserFromCache)
-          .thenReturn(User(uid: '0', firstName: 'John', lastName: 'Doe'));
-      when(mockAuthProvider.isAuthenticated).thenReturn(true);
-      when(mockAuthProvider.isAnonymous).thenReturn(false);
-      when(mockAuthProvider.uid).thenReturn('0');
-    });
-
     for (final size in screenSizes) {
       testWidgets('${size.width}x${size.height}', (WidgetTester tester) async {
         await binding.setSurfaceSize(size);
@@ -481,14 +442,11 @@ void main() {
         await tester.pumpAndSettle();
 
         // Open classes
-        await tester.tap(find.byIcon(Icons.calendar_today_rounded));
-        await tester.pumpAndSettle();
-
         await tester.tap(find.byIcon(Icons.class_));
         await tester.pumpAndSettle();
 
         // Open class view
-        expect(find.byType(ClassesPage), findsOneWidget);
+        expect(find.byType(ClassesPage), findsNWidgets(1));
       });
     }
   });
@@ -497,9 +455,9 @@ void main() {
     setUp(() {
       when(mockAuthProvider.currentUser).thenAnswer((_) =>
           Future.value(User(uid: '0', firstName: 'John', lastName: 'Doe')));
-      when(mockAuthProvider.currentUserFromCache)
-          .thenReturn(User(uid: '0', firstName: 'John', lastName: 'Doe'));
-      when(mockAuthProvider.isAuthenticated).thenReturn(true);
+      when(mockAuthProvider.isAuthenticatedFromService)
+          .thenAnswer((_) => Future.value(true));
+      when(mockAuthProvider.isAuthenticatedFromCache).thenReturn(true);
       when(mockAuthProvider.isAnonymous).thenReturn(false);
       when(mockAuthProvider.uid).thenReturn('0');
     });
@@ -512,9 +470,6 @@ void main() {
         await tester.pumpAndSettle();
 
         // Open classes page
-        await tester.tap(find.byIcon(Icons.calendar_today_rounded));
-        await tester.pumpAndSettle();
-
         await tester.tap(find.byIcon(Icons.class_));
         await tester.pumpAndSettle();
 
@@ -539,7 +494,9 @@ void main() {
           uid: '0', firstName: 'John', lastName: 'Doe', permissionLevel: 3)));
       when(mockAuthProvider.currentUserFromCache).thenReturn(User(
           uid: '0', firstName: 'John', lastName: 'Doe', permissionLevel: 3));
-      when(mockAuthProvider.isAuthenticated).thenReturn(true);
+      when(mockAuthProvider.isAuthenticatedFromService)
+          .thenAnswer((_) => Future.value(true));
+      when(mockAuthProvider.isAuthenticatedFromCache).thenReturn(true);
       when(mockAuthProvider.isAnonymous).thenReturn(false);
       when(mockAuthProvider.uid).thenReturn('0');
     });
@@ -552,9 +509,6 @@ void main() {
         await tester.pumpAndSettle();
 
         // Open classes page
-        await tester.tap(find.byIcon(Icons.calendar_today_rounded));
-        await tester.pumpAndSettle();
-
         await tester.tap(find.byIcon(Icons.class_));
         await tester.pumpAndSettle();
 
@@ -648,7 +602,7 @@ void main() {
 
   group('Add website', () {
     setUp(() {
-      when(mockAuthProvider.isAuthenticated).thenReturn(true);
+      when(mockAuthProvider.isAuthenticatedFromCache).thenReturn(true);
       when(mockAuthProvider.isAnonymous).thenReturn(false);
     });
 
@@ -679,7 +633,7 @@ void main() {
 
   group('Edit website', () {
     setUp(() {
-      when(mockAuthProvider.isAuthenticated).thenReturn(true);
+      when(mockAuthProvider.isAuthenticatedFromCache).thenReturn(true);
       when(mockAuthProvider.isAnonymous).thenReturn(false);
       when(mockAuthProvider.currentUser).thenAnswer((realInvocation) =>
           Future.value(User(
@@ -718,7 +672,7 @@ void main() {
 
   group('Delete website', () {
     setUp(() {
-      when(mockAuthProvider.isAuthenticated).thenReturn(true);
+      when(mockAuthProvider.isAuthenticatedFromCache).thenReturn(true);
       when(mockAuthProvider.isAnonymous).thenReturn(false);
       when(mockAuthProvider.currentUser).thenAnswer((realInvocation) =>
           Future.value(User(
@@ -786,7 +740,7 @@ void main() {
   group('Edit Profile', () {
     setUp(() {
       when(mockAuthProvider.isVerifiedFromCache).thenReturn(false);
-      when(mockAuthProvider.isAuthenticated).thenReturn(true);
+      when(mockAuthProvider.isAuthenticatedFromCache).thenReturn(true);
       when(mockAuthProvider.isAnonymous).thenReturn(false);
       when(mockAuthProvider.currentUser).thenAnswer((realInvocation) =>
           Future.value(User(
@@ -884,7 +838,7 @@ void main() {
 
   group('People page', () {
     setUp(() {
-      when(mockAuthProvider.isAuthenticated).thenReturn(true);
+      when(mockAuthProvider.isAuthenticatedFromCache).thenReturn(true);
       when(mockAuthProvider.isAnonymous).thenReturn(true);
     });
 

@@ -208,7 +208,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
     final authProvider = Provider.of<AuthProvider>(context);
     final emailDomain = S.of(context).stringEmailDomain;
     return AppScaffold(
-      title: Text(S.of(context).actionEditProfile),
+      title: S.of(context).actionEditProfile,
       needsToBeAuthenticated: true,
       actions: [
         AppScaffoldAction(
@@ -353,7 +353,7 @@ class AccountNotVerifiedWarning extends StatelessWidget {
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
 
-    if (!authProvider.isAuthenticated || authProvider.isAnonymous) {
+    if (!authProvider.isAuthenticatedFromCache || authProvider.isAnonymous) {
       return Container();
     }
 

@@ -5,7 +5,6 @@ import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
 import 'package:acs_upb_mobile/pages/portal/model/website.dart';
 import 'package:acs_upb_mobile/pages/portal/service/website_provider.dart';
 import 'package:acs_upb_mobile/pages/portal/view/portal_page.dart';
-import 'package:acs_upb_mobile/resources/locale_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
@@ -13,8 +12,6 @@ import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 import 'package:preferences/preferences.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher_platform_interface/url_launcher_platform_interface.dart';
-
-import 'test_utils.dart';
 
 class MockWebsiteProvider extends Mock implements WebsiteProvider {}
 
@@ -63,7 +60,7 @@ void main() {
   final FilterProvider mockFilterProvider = MockFilterProvider();
   // ignore: invalid_use_of_protected_member
   when(mockFilterProvider.hasListeners).thenReturn(false);
-  when(mockFilterProvider.fetchFilter(context: anyNamed('context')))
+  when(mockFilterProvider.fetchFilter(any))
       .thenAnswer((_) => Future.value(Filter(root: FilterNode(name: 'All'))));
   when(mockFilterProvider.filterEnabled).thenReturn(true);
 
@@ -76,7 +73,9 @@ void main() {
   // ignore: invalid_use_of_protected_member
   when(mockAuthProvider.hasListeners).thenReturn(false);
   when(mockAuthProvider.isAnonymous).thenReturn(false);
-  when(mockAuthProvider.isAuthenticated).thenReturn(true);
+  when(mockAuthProvider.isAuthenticatedFromCache).thenReturn(true);
+  when(mockAuthProvider.isAuthenticatedFromService)
+      .thenAnswer((realInvocation) => Future.value(true));
 
   Widget buildPortalPage() => MultiProvider(
         providers: [
@@ -98,9 +97,6 @@ void main() {
       PrefService.enableCaching();
       PrefService.cache = {};
       PrefService.setString('language', 'en');
-
-      LocaleProvider.cultures = testCultures;
-      LocaleProvider.rruleL10ns = {'en': await RruleL10nTest.create()};
     });
 
     testWidgets('Names', (WidgetTester tester) async {

@@ -12,14 +12,11 @@ import 'package:acs_upb_mobile/pages/news_feed/model/news_feed_item.dart';
 import 'package:acs_upb_mobile/pages/news_feed/service/news_provider.dart';
 import 'package:acs_upb_mobile/pages/people/service/person_provider.dart';
 import 'package:acs_upb_mobile/pages/portal/service/website_provider.dart';
-import 'package:acs_upb_mobile/resources/locale_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:preferences/preferences.dart';
 import 'package:provider/provider.dart';
-
-import 'test_utils.dart';
 
 class MockAuthProvider extends Mock implements AuthProvider {}
 
@@ -49,14 +46,13 @@ void main() {
     PrefService.cache = {};
     PrefService.setString('language', 'en');
 
-    LocaleProvider.cultures = testCultures;
-    LocaleProvider.rruleL10ns = {'en': await RruleL10nTest.create()};
-
     // Mock the behaviour of the auth provider
     mockAuthProvider = MockAuthProvider();
     // ignore: invalid_use_of_protected_member
     when(mockAuthProvider.hasListeners).thenReturn(false);
-    when(mockAuthProvider.isAuthenticated).thenReturn(false);
+    when(mockAuthProvider.isAuthenticatedFromCache).thenReturn(false);
+    when(mockAuthProvider.isAuthenticatedFromService)
+        .thenAnswer((realInvocation) => Future.value(false));
     when(mockAuthProvider.currentUser).thenAnswer((_) => Future.value(null));
     when(mockAuthProvider.isAnonymous).thenReturn(true);
 
@@ -72,7 +68,7 @@ void main() {
     // ignore: invalid_use_of_protected_member
     when(mockFilterProvider.hasListeners).thenReturn(false);
     when(mockFilterProvider.filterEnabled).thenReturn(true);
-    when(mockFilterProvider.fetchFilter(context: anyNamed('context')))
+    when(mockFilterProvider.fetchFilter(any))
         .thenAnswer((_) => Future.value(Filter(localizedLevelNames: [
               {'en': 'Level', 'ro': 'Nivel'}
             ], root: FilterNode(name: 'root'))));
@@ -249,7 +245,7 @@ void main() {
       // ignore: invalid_use_of_protected_member
       when(mockFilterProvider.hasListeners).thenReturn(false);
       when(mockFilterProvider.filterEnabled).thenReturn(true);
-      when(mockFilterProvider.fetchFilter(context: anyNamed('context')))
+      when(mockFilterProvider.fetchFilter(any))
           .thenAnswer((_) => Future.value(Filter(
                   localizedLevelNames: [
                     {'en': 'Degree', 'ro': 'Nivel de studiu'},
@@ -560,7 +556,9 @@ void main() {
 
     setUp(() {
       // Mock an anonymous user already being logged in
-      when(mockAuthProvider.isAuthenticated).thenReturn(true);
+      when(mockAuthProvider.isAuthenticatedFromCache).thenReturn(true);
+      when(mockAuthProvider.isAuthenticatedFromService)
+          .thenAnswer((realInvocation) => Future.value(true));
       when(mockAuthProvider.isVerifiedFromService)
           .thenAnswer((realInvocation) => Future.value(false));
     });

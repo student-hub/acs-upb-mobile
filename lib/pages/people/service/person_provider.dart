@@ -7,14 +7,13 @@ import 'package:flutter/material.dart';
 
 extension PersonExtension on Person {
   static Person fromSnap(DocumentSnapshot snap) {
-    final data = snap.data();
     return Person(
-      name: data['name'],
-      email: data['email'],
-      phone: data['phone'],
-      office: data['office'],
-      position: data['position'],
-      photo: data['photo'],
+      name: snap.data['name'],
+      email: snap.data['email'],
+      phone: snap.data['phone'],
+      office: snap.data['office'],
+      position: snap.data['position'],
+      photo: snap.data['photo'],
     );
   }
 }
@@ -23,8 +22,8 @@ class PersonProvider with ChangeNotifier {
   Future<List<Person>> fetchPeople({BuildContext context}) async {
     try {
       final QuerySnapshot qSnapshot =
-          await FirebaseFirestore.instance.collection('people').get();
-      return qSnapshot.docs.map(PersonExtension.fromSnap).toList();
+          await Firestore.instance.collection('people').getDocuments();
+      return qSnapshot.documents.map(PersonExtension.fromSnap).toList();
     } catch (e) {
       print(e);
       if (context != null) {

@@ -296,7 +296,7 @@ class _GradingViewState extends State<GradingView> {
         }
       },
       child: AppScaffold(
-        title: Text(S.of(context).actionEditGrading),
+        title: S.of(context).actionEditGrading,
         actions: [
           AppScaffoldAction(
               text: S.of(context).buttonSave,

@@ -65,7 +65,7 @@ class _PortalPageState extends State<PortalPage> {
 
     final filterProvider = this.filterProvider ??
         Provider.of<FilterProvider>(context, listen: false);
-    filterCache = await filterProvider.fetchFilter(context: context);
+    filterCache = await filterProvider.fetchFilter(context);
 
     updating = false;
     if (mounted) {
@@ -92,8 +92,7 @@ class _PortalPageState extends State<PortalPage> {
                           ? Provider.of<FilterProvider>(context)
                           : FilterProvider(
                               defaultDegree: website.degree,
-                              defaultRelevance: website.relevance,
-                            ),
+                              defaultRelevance: website.relevance),
                   child: WebsiteView(
                     website: website,
                     updateExisting: true,
@@ -214,7 +213,7 @@ class _PortalPageState extends State<PortalPage> {
         CircularProgressIndicator();
 
     return AppScaffold(
-      title: Text(S.of(context).navigationPortal),
+      title: S.of(context).navigationPortal,
       actions: [
         AppScaffoldAction(
           icon: editingEnabled ? CustomIcons.edit_slash : Icons.edit,
@@ -224,7 +223,7 @@ class _PortalPageState extends State<PortalPage> {
           onPressed: () {
             final authProvider =
                 Provider.of<AuthProvider>(context, listen: false);
-            if (authProvider.isAuthenticated && !authProvider.isAnonymous) {
+            if (authProvider.isAuthenticatedFromCache && !authProvider.isAnonymous) {
               // Show message if there is nothing the user can edit
               if (!editingEnabled) {
                 user.hasEditableWebsites.then((canEdit) {
@@ -257,7 +256,7 @@ class _PortalPageState extends State<PortalPage> {
               );
             },
             S.of(context).filterMenuShowMine: () {
-              if (authProvider.isAuthenticated && !authProvider.isAnonymous) {
+              if (authProvider.isAuthenticatedFromCache && !authProvider.isAnonymous) {
                 // Show message if user has no private websites
                 if (!userOnly) {
                   user.hasPrivateWebsites.then((hasPrivate) {
@@ -340,7 +339,7 @@ class _AddWebsiteButton extends StatelessWidget {
           onTap: () {
             final authProvider =
                 Provider.of<AuthProvider>(context, listen: false);
-            if (authProvider.isAuthenticated && !authProvider.isAnonymous) {
+            if (authProvider.isAuthenticatedFromCache && !authProvider.isAnonymous) {
               Navigator.of(context)
                   .push(MaterialPageRoute<ChangeNotifierProvider>(
                 builder: (_) => ChangeNotifierProvider<FilterProvider>(
