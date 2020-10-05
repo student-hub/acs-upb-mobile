@@ -107,7 +107,7 @@ class RecurringUniEvent extends UniEvent {
         if (rrule.interval != 1) {
           weeks = weeks
               .whereIndex((index) =>
-                  index % rrule.interval ==
+                  index % rrule.interval !=
                   weeks.lookup(WeekYearRules.iso
                           .getWeekOfWeekYear(start.calendarDate)) %
                       rrule.interval)
