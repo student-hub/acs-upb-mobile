@@ -19,7 +19,6 @@ extension RequestExtension on Request {
 
 class RequestProvider {
   final Firestore _db = Firestore.instance;
-  bool userAlreadyRequestedCache;
 
   Future<bool> makeRequest(Request request, {BuildContext context}) async {
     assert(request.requestBody != null);
@@ -31,33 +30,31 @@ class RequestProvider {
       final data = request.toData();
       await ref.setData(data);
 
-      return userAlreadyRequestedCache = true;
+      return true;
     } catch (e) {
       print(e);
       if (context != null) {
         AppToast.show(S.of(context).errorSomethingWentWrong);
       }
-      return userAlreadyRequestedCache = false;
+      return false;
     }
   }
 
   Future<bool> userAlreadyRequested(final String userId,
       {BuildContext context}) async {
-    if (userAlreadyRequestedCache != null) return userAlreadyRequestedCache;
-
     try {
       final DocumentSnapshot snap =
           await _db.collection('forms').document(userId).get();
       if (snap != null) {
-        return userAlreadyRequestedCache = true;
+        return true;
       }
-      return userAlreadyRequestedCache = false;
+      return false;
     } catch (e) {
       print(e);
       if (context != null) {
         AppToast.show(S.of(context).errorSomethingWentWrong);
       }
-      return userAlreadyRequestedCache = false;
+      return false;
     }
   }
 }

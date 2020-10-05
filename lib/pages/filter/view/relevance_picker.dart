@@ -78,7 +78,7 @@ class _RelevancePickerState extends State<RelevancePicker> {
   }
 
   Future<void> _fetchFilter() async {
-    _filter = await widget.filterProvider.fetchFilter(context: context);
+    _filter = await widget.filterProvider.fetchFilter(context);
     setState(() {});
   }
 

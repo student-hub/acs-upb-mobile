@@ -9,8 +9,8 @@ import 'package:dynamic_text_highlighting/dynamic_text_highlighting.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
-import 'package:markdown/markdown.dart' as md;
 import 'package:provider/provider.dart';
+import 'package:markdown/markdown.dart' as md;
 
 class FaqPage extends StatefulWidget {
   static const String routeName = '/faq';
@@ -60,7 +60,7 @@ class _FaqPageState extends State<FaqPage> {
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
-      title: Text(S.of(context).sectionFAQ),
+      title: S.of(context).sectionFAQ,
       actions: [
         AppScaffoldAction(
           icon: Icons.search,

@@ -39,7 +39,7 @@ extension ShortcutExtension on Shortcut {
 
 extension ClassHeaderExtension on ClassHeader {
   static ClassHeader fromSnap(DocumentSnapshot snap) {
-    if (snap == null || snap.data == null) return null;
+    if (snap == null) return null;
     final splitAcronym = snap.data['shortname'].split('-');
     if (splitAcronym.length < 4) {
       return null;
@@ -134,30 +134,6 @@ class ClassProvider with ChangeNotifier {
     }
   }
 
-  Future<ClassHeader> fetchClassHeader(String classId,
-      {BuildContext context}) async {
-    try {
-      // Get class with id [classId]
-      final QuerySnapshot query = await Firestore.instance
-          .collection('import_moodle')
-          .where('shortname', isEqualTo: classId)
-          .limit(1)
-          .getDocuments();
-
-      if (query == null || query.documents.isEmpty) {
-        return null;
-      }
-
-      return ClassHeaderExtension.fromSnap(query.documents.first);
-    } catch (e) {
-      print(e);
-      if (context != null) {
-        AppToast.show(S.of(context).errorSomethingWentWrong);
-      }
-      return null;
-    }
-  }
-
   Future<List<ClassHeader>> fetchClassHeaders(
       {String uid, Filter filter, BuildContext context}) async {
     try {
@@ -186,14 +162,23 @@ class ClassProvider with ChangeNotifier {
             await fetchUserClassIds(uid: uid, context: context) ?? [];
         final List<String> newClassIds = List<String>.from(classIds);
 
+        final CollectionReference col = _db.collection('import_moodle');
         for (final classId in classIds) {
-          final ClassHeader header = await fetchClassHeader(classId);
-          if (header == null) {
+          final QuerySnapshot query = await col
+              .where('shortname', isEqualTo: classId)
+              .limit(1)
+              .getDocuments();
+          if (query == null || query.documents.isEmpty) {
             // Class doesn't exist, remove it
             newClassIds.remove(classId);
             continue;
           }
-          headers.add(header);
+
+          final DocumentSnapshot snap = query.documents.first;
+          final ClassHeader header = ClassHeaderExtension.fromSnap(snap);
+          if (header != null) {
+            headers.add(header);
+          }
         }
 
         // Remove non-existent classes from user data

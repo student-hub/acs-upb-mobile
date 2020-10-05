@@ -16,7 +16,7 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
-      title: Text(S.of(context).navigationHome),
+      title: S.of(context).navigationHome,
       actions: [
         AppScaffoldAction(
           icon: Icons.settings,

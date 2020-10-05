@@ -15,7 +15,7 @@ class NewsFeedPage extends StatelessWidget {
     final newsFeedProvider = Provider.of<NewsProvider>(context);
 
     return AppScaffold(
-      title: Text(S.of(context).navigationNewsFeed),
+      title: S.of(context).navigationNewsFeed,
       body: FutureBuilder(
         future: newsFeedProvider.fetchNewsFeedItems(context: context),
         builder: (_, snapshot) {
