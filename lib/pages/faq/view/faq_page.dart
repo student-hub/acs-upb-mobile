@@ -142,6 +142,7 @@ class _QuestionsListState extends State<QuestionsList> {
         itemCount: widget.questions.length,
         itemBuilder: (context, index) {
           return ExpansionTile(
+            key: ValueKey(widget.questions[index].question),
             title: filteredWords.isNotEmpty
                 ? DynamicTextHighlighting(
                     text: widget.questions[index].question,
