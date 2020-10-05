@@ -122,7 +122,9 @@ class _AddEventViewState extends State<AddEventView> {
     duration = widget.initialEvent?.duration ?? const Period(hours: 2);
     startTime = LocalTime(startHour, 0, 0);
 
-    var initialWeekDays = [DayOfWeek.monday];
+    var initialWeekDays = [
+      widget.initialEvent?.start?.dayOfWeek ?? DayOfWeek.monday
+    ];
     if (widget.initialEvent != null &&
         widget.initialEvent is RecurringUniEvent) {
       initialWeekDays = (widget.initialEvent as RecurringUniEvent)
