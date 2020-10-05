@@ -287,7 +287,7 @@ class UniEventProvider extends EventProvider<UniEventInstance>
   Future<bool> addEvent(UniEvent event, {BuildContext context}) async {
     try {
       await Firestore.instance.collection('events').add(event.toData());
-      _eventsCache = null;
+      eventsCache = null;
       notifyListeners();
       return true;
     } catch (e) {
@@ -306,7 +306,7 @@ class UniEventProvider extends EventProvider<UniEventInstance>
       }
 
       await ref.updateData(event.toData());
-      _eventsCache = null;
+      eventsCache = null;
       notifyListeners();
       return true;
     } catch (e) {
@@ -320,7 +320,7 @@ class UniEventProvider extends EventProvider<UniEventInstance>
       DocumentReference ref;
       ref = Firestore.instance.collection('events').document(event.id);
       await ref.delete();
-      _eventsCache = null;
+      eventsCache = null;
       notifyListeners();
       return true;
     } catch (e) {
