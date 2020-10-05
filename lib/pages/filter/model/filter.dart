@@ -198,7 +198,9 @@ class FilterNode {
   void addListener(void Function() listener) =>
       _valueNotifier.addListener(listener);
 
-  String localizedName(BuildContext context) {
+  String localizedName(BuildContext context) => localizeName(name, context);
+
+  static String localizeName(String name, BuildContext context) {
     if (name == 'BSc') return S.of(context).filterNodeNameBSc;
     if (name == 'MSc') return S.of(context).filterNodeNameMSc;
 

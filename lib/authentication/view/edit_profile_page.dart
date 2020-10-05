@@ -216,7 +216,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
     final path = user.classes;
 
     return AppScaffold(
-      title: S.of(context).actionEditProfile,
+      title: Text(S.of(context).actionEditProfile),
       needsToBeAuthenticated: true,
       actions: [
         AppScaffoldAction(

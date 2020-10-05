@@ -1,7 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-
 import 'intl/messages_all.dart';
 
 // **************************************************************************
@@ -884,6 +883,26 @@ class S {
     );
   }
 
+  /// `Open filter`
+  String get actionOpenFilter {
+    return Intl.message(
+      'Open filter',
+      name: 'actionOpenFilter',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Request permissions`
+  String get actionRequestPermissions {
+    return Intl.message(
+      'Request permissions',
+      name: 'actionRequestPermissions',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Something went wrong.`
   String get errorSomethingWentWrong {
     return Intl.message(
@@ -1259,6 +1278,26 @@ class S {
     return Intl.message(
       'The request must not be empty',
       name: 'warningRequestEmpty',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Only {n} options can be selected at a time.`
+  String warningOnlyNOptionsAtATime(Object n) {
+    return Intl.message(
+      'Only $n options can be selected at a time.',
+      name: 'warningOnlyNOptionsAtATime',
+      desc: '',
+      args: [n],
+    );
+  }
+
+  /// `No events to show`
+  String get warningNoEvents {
+    return Intl.message(
+      'No events to show',
+      name: 'warningNoEvents',
       desc: '',
       args: [],
     );
@@ -1684,6 +1723,46 @@ class S {
     );
   }
 
+  /// `Holiday`
+  String get uniEventTypeHoliday {
+    return Intl.message(
+      'Holiday',
+      name: 'uniEventTypeHoliday',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Exam session`
+  String get uniEventTypeExamSession {
+    return Intl.message(
+      'Exam session',
+      name: 'uniEventTypeExamSession',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Semester`
+  String get uniEventTypeSemester {
+    return Intl.message(
+      'Semester',
+      name: 'uniEventTypeSemester',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Other`
+  String get uniEventTypeOther {
+    return Intl.message(
+      'Other',
+      name: 'uniEventTypeOther',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Welcome!`
   String get messageWelcomeSimple {
     return Intl.message(
@@ -1934,11 +2013,21 @@ class S {
     );
   }
 
-  /// `Get started by pressing the button above.`
-  String get messageGetStartedButton {
+  /// `Get started by pressing the`
+  String get messageGetStartedByPressing {
     return Intl.message(
-      'Get started by pressing the button above.',
-      name: 'messageGetStartedButton',
+      'Get started by pressing the',
+      name: 'messageGetStartedByPressing',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `button above`
+  String get messageButtonAbove {
+    return Intl.message(
+      'button above',
+      name: 'messageButtonAbove',
       desc: '',
       args: [],
     );
@@ -1994,6 +2083,16 @@ class S {
     );
   }
 
+  /// `Tap for more info`
+  String get messageTapForMoreInfo {
+    return Intl.message(
+      'Tap for more info',
+      name: 'messageTapForMoreInfo',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Password changed successfully.`
   String get messageChangePasswordSuccess {
     return Intl.message(
@@ -2024,6 +2123,26 @@ class S {
     );
   }
 
+  /// `You can contribute to the app data, but you first need to request permissions.`
+  String get messageYouCanContribute {
+    return Intl.message(
+      'You can contribute to the app data, but you first need to request permissions.',
+      name: 'messageYouCanContribute',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `There are no events for the selected `
+  String get messageThereAreNoEventsForSelected {
+    return Intl.message(
+      'There are no events for the selected ',
+      name: 'messageThereAreNoEventsForSelected',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Please check your inbox for the password reset e-mail.`
   String get infoPasswordResetEmailSent {
     return Intl.message(
@@ -2044,11 +2163,41 @@ class S {
     );
   }
 
-  /// `Select the classes you are interested in.`
-  String get infoChooseClasses {
+  /// `Select the`
+  String get infoSelect {
     return Intl.message(
-      'Select the classes you are interested in.',
-      name: 'infoChooseClasses',
+      'Select the',
+      name: 'infoSelect',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You first need to select the`
+  String get infoYouNeedToSelect {
+    return Intl.message(
+      'You first need to select the',
+      name: 'infoYouNeedToSelect',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `classes you are interested in`
+  String get infoClasses {
+    return Intl.message(
+      'classes you are interested in',
+      name: 'infoClasses',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Make sure your group/subgroup is selected in the`
+  String get infoMakeSureGroupIsSelected {
+    return Intl.message(
+      'Make sure your group/subgroup is selected in the',
+      name: 'infoMakeSureGroupIsSelected',
       desc: '',
       args: [],
     );
@@ -2129,6 +2278,16 @@ class S {
     return Intl.message(
       'Anonymous',
       name: 'stringAnonymous',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `and`
+  String get stringAnd {
+    return Intl.message(
+      'and',
+      name: 'stringAnd',
       desc: '',
       args: [],
     );

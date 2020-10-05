@@ -6,6 +6,8 @@ import 'package:acs_upb_mobile/pages/news_feed/view/news_feed_page.dart';
 import 'package:acs_upb_mobile/pages/settings/view/settings_page.dart';
 
 class Routes {
+  Routes._();
+
   static const String root = '/';
   static const String home = '/home';
   static const String settings = SettingsPage.routeName;

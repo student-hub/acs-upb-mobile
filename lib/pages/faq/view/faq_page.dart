@@ -60,7 +60,7 @@ class _FaqPageState extends State<FaqPage> {
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
-      title: S.of(context).sectionFAQ,
+      title: Text(S.of(context).sectionFAQ),
       actions: [
         AppScaffoldAction(
           icon: Icons.search,

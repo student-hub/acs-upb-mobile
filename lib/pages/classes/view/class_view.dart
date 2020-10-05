@@ -50,7 +50,7 @@ class _ClassViewState extends State<ClassView> {
     final classProvider = Provider.of<ClassProvider>(context);
 
     return AppScaffold(
-      title: widget.classHeader.name,
+      title: Text(widget.classHeader.name),
       body: FutureBuilder(
           future: classProvider.fetchClassInfo(widget.classHeader,
               context: context),
