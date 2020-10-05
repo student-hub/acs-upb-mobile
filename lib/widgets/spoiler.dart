@@ -74,6 +74,7 @@ class _AppSpoilerState extends State<AppSpoiler>
       child: ListTileTheme(
         dense: true,
         child: ExpansionTile(
+          key: PageStorageKey(widget.title),
           title: Transform.translate(
             offset: const Offset(-20, 0),
             child: Text(widget.title,
