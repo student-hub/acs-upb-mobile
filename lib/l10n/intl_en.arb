@@ -90,6 +90,7 @@
   "actionEditGrading": "Edit grading",
   "actionContribute": "Contribute",
   "actionOpenFilter": "Open filter",
+  "actionRequestPermissions": "Request permissions",
 
   "errorSomethingWentWrong": "Something went wrong.",
   "errorPasswordsDiffer": "The two passwords differ.",
@@ -222,6 +223,8 @@
   "messageChangePasswordSuccess": "Password changed successfully.",
   "messageChangeEmailSuccess": "Email changed successfully",
   "messageAgreePermissions": "I will only upload information that is correct and accurate, to the best of my knowledge. I understand that submitting erroneous or offensive information on purpose will lead to my editing permissions being permanently revoked.",
+  "messageYouCanContribute": "You can contribute to the app data, but you first need to request permissions.",
+  "messageThereAreNoEventsForSelected": "There are no events for the selected ",
 
   "infoPasswordResetEmailSent": "Please check your inbox for the password reset e-mail.",
   "infoRelevance": "Try to choose the most restrictive category.",
@@ -238,6 +241,7 @@
   "stringEmailDomain": "@stud.acs.upb.ro",
   "stringForum": "cs.curs.pub.ro",
   "stringAnonymous": "Anonymous",
+  "stringAnd": "and",
 
   "fileAcsBanner": "assets/images/acs_banner_en.png"
 }

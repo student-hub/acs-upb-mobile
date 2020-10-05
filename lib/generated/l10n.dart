@@ -893,6 +893,16 @@ class S {
     );
   }
 
+  /// `Request permissions`
+  String get actionRequestPermissions {
+    return Intl.message(
+      'Request permissions',
+      name: 'actionRequestPermissions',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Something went wrong.`
   String get errorSomethingWentWrong {
     return Intl.message(
@@ -2113,6 +2123,26 @@ class S {
     );
   }
 
+  /// `You can contribute to the app data, but you first need to request permissions.`
+  String get messageYouCanContribute {
+    return Intl.message(
+      'You can contribute to the app data, but you first need to request permissions.',
+      name: 'messageYouCanContribute',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `There are no events for the selected `
+  String get messageThereAreNoEventsForSelected {
+    return Intl.message(
+      'There are no events for the selected ',
+      name: 'messageThereAreNoEventsForSelected',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Please check your inbox for the password reset e-mail.`
   String get infoPasswordResetEmailSent {
     return Intl.message(
@@ -2248,6 +2278,16 @@ class S {
     return Intl.message(
       'Anonymous',
       name: 'stringAnonymous',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `and`
+  String get stringAnd {
+    return Intl.message(
+      'and',
+      name: 'stringAnd',
       desc: '',
       args: [],
     );

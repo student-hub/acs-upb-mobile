@@ -90,6 +90,7 @@
   "actionEditGrading": "Modifică punctaj",
   "actionContribute": "Contribuie",
   "actionOpenFilter": "Deschide filtru",
+  "actionRequestPermissions": "Cere permisiuni",
 
   "errorSomethingWentWrong": "A apărut o problemă.",
   "errorPasswordsDiffer": "Cele două parole diferă.",
@@ -222,6 +223,8 @@
   "messageChangePasswordSuccess": "Parola a fost schimbată cu succes.",
   "messageChangeEmailSuccess": "Email-ul a fost schimbat cu succes",
   "messageAgreePermissions": "Voi încărca doar informații corecte si precise. Înțeleg că încărcarea informațiilor eronate sau ofensatoare în mod intenționat va conduce la blocarea permisiunilor mele permanent.",
+  "messageYouCanContribute": "Poți contribui la datele din aplicație, dar trebuie mai întâi să ceri permisiuni.",
+  "messageThereAreNoEventsForSelected": "Nu există evenimente pentru selecția de ",
 
   "infoPasswordResetEmailSent": "Please check your inbox for the password reset e-mail.",
   "infoRelevance": "Încercați să selectați cea mai restrictivă categorie.",
@@ -239,6 +242,7 @@
   "stringEmailDomain": "@stud.acs.upb.ro",
   "stringForum": "cs.curs.pub.ro",
   "stringAnonymous": "Anonim",
+  "stringAnd": "și",
 
   "fileAcsBanner": "assets/images/acs_banner_ro.png"
 }

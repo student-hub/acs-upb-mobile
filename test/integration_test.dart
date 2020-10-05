@@ -26,6 +26,7 @@ import 'package:acs_upb_mobile/pages/portal/model/website.dart';
 import 'package:acs_upb_mobile/pages/portal/service/website_provider.dart';
 import 'package:acs_upb_mobile/pages/portal/view/portal_page.dart';
 import 'package:acs_upb_mobile/pages/portal/view/website_view.dart';
+import 'package:acs_upb_mobile/pages/settings/service/request_provider.dart';
 import 'package:acs_upb_mobile/pages/settings/view/settings_page.dart';
 import 'package:acs_upb_mobile/pages/timetable/service/uni_event_provider.dart';
 import 'package:acs_upb_mobile/resources/custom_icons.dart';
@@ -57,9 +58,11 @@ class MockQuestionProvider extends Mock implements QuestionProvider {}
 
 class MockUniEventProvider extends Mock implements UniEventProvider {}
 
-class MockNavigatorObserver extends Mock implements NavigatorObserver {}
-
 class MockNewsProvider extends Mock implements NewsProvider {}
+
+class MockRequestProvider extends Mock implements RequestProvider {}
+
+class MockNavigatorObserver extends Mock implements NavigatorObserver {}
 
 void main() {
   AuthProvider mockAuthProvider;
@@ -70,6 +73,7 @@ void main() {
   MockQuestionProvider mockQuestionProvider;
   MockNewsProvider mockNewsProvider;
   UniEventProvider mockEventProvider;
+  RequestProvider mockRequestProvider;
 
   // Test layout for different screen sizes
   final screenSizes = <Size>[
@@ -110,6 +114,7 @@ void main() {
           ChangeNotifierProvider<NewsProvider>(create: (_) => mockNewsProvider),
           ChangeNotifierProvider<UniEventProvider>(
               create: (_) => mockEventProvider),
+          Provider<RequestProvider>(create: (_) => mockRequestProvider),
         ],
         child: const MyApp(),
       );
@@ -431,6 +436,13 @@ void main() {
     when(mockEventProvider.getAllDayEventsIntersecting(any))
         .thenAnswer((_) => Stream.fromIterable([]));
     when(mockEventProvider.eventsCache).thenReturn([]);
+
+    mockRequestProvider = MockRequestProvider();
+    when(mockRequestProvider.makeRequest(any, context: anyNamed('context')))
+        .thenAnswer((_) => Future.value(true));
+    when(mockRequestProvider.userAlreadyRequested(any,
+            context: anyNamed('context')))
+        .thenAnswer((_) => Future.value(false));
   });
 
   group('Home', () {

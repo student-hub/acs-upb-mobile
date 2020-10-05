@@ -93,7 +93,7 @@ class FilterProvider with ChangeNotifier {
 
   bool get filterEnabled => _enabled;
 
-  Filter get cachedFilter => _relevanceFilter.clone();
+  Filter get cachedFilter => _relevanceFilter?.clone();
 
   Future<Filter> fetchFilter({BuildContext context}) async {
     if (_relevanceFilter != null) {

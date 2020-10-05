@@ -3,7 +3,10 @@ import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/navigation/routes.dart';
 import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
 import 'package:acs_upb_mobile/pages/classes/view/classes_page.dart';
+import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
 import 'package:acs_upb_mobile/pages/filter/view/filter_page.dart';
+import 'package:acs_upb_mobile/pages/settings/service/request_provider.dart';
+import 'package:acs_upb_mobile/pages/settings/view/request_permissions.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/events/uni_event.dart';
 import 'package:acs_upb_mobile/pages/timetable/service/uni_event_provider.dart';
 import 'package:acs_upb_mobile/pages/timetable/view/date_header.dart';
@@ -13,6 +16,7 @@ import 'package:acs_upb_mobile/resources/custom_icons.dart';
 import 'package:acs_upb_mobile/widgets/button.dart';
 import 'package:acs_upb_mobile/widgets/dialog.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
+import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:recase/recase.dart';
@@ -50,14 +54,17 @@ class _TimetablePageState extends State<TimetablePage> {
           return;
         }
 
-        // Fetch user classes so they're cached
+        // Fetch user classes, request info and filter so they're cached
         final user = Provider.of<AuthProvider>(context, listen: false)
             .currentUserFromCache;
         await Provider.of<ClassProvider>(context, listen: false)
             .fetchClassHeaders(uid: user.uid);
+        await Provider.of<FilterProvider>(context, listen: false).fetchFilter();
+        await Provider.of<RequestProvider>(context, listen: false)
+            .userAlreadyRequested(user.uid);
 
         // Slight delay between last frame and dialog
-        await Future<void>.delayed(const Duration(milliseconds: 500));
+        await Future<void>.delayed(const Duration(milliseconds: 100));
 
         // Show dialog if there are no events
         if (eventProvider.empty == true) {
@@ -125,6 +132,8 @@ class _TimetablePageState extends State<TimetablePage> {
   Widget buildDialog(BuildContext context) {
     final classProvider = Provider.of<ClassProvider>(context);
     final authProvider = Provider.of<AuthProvider>(context);
+    final filterProvider = Provider.of<FilterProvider>(context);
+    final requestProvider = Provider.of<RequestProvider>(context);
     final user = authProvider.currentUserFromCache;
 
     if (classProvider.userClassHeadersCache?.isEmpty ?? true) {
@@ -183,7 +192,7 @@ class _TimetablePageState extends State<TimetablePage> {
           )
         ],
       );
-    } else {
+    } else if (filterProvider.cachedFilter.relevantNodes.length < 6) {
       return AppDialog(
         title: S.of(context).warningNoEvents,
         content: [
@@ -216,6 +225,67 @@ class _TimetablePageState extends State<TimetablePage> {
               await Navigator.pushNamed(context, Routes.filter);
             },
           )
+        ],
+      );
+    } else if (user.permissionLevel < 3 &&
+        requestProvider.userAlreadyRequestedCache) {
+      return AppDialog(
+        title: S.of(context).warningNoEvents,
+        content: [Text(S.of(context).messageYouCanContribute)],
+        actions: [
+          AppButton(
+            text: S.of(context).actionRequestPermissions,
+            width: 130,
+            onTap: () async {
+              // Pop the dialog
+              Navigator.of(context).pop();
+              // Push the Permissions page
+              if (authProvider.isAnonymous) {
+                AppToast.show(S.of(context).messageNotLoggedIn);
+              } else if (!authProvider.isVerifiedFromCache) {
+                AppToast.show(
+                    S.of(context).messageEmailNotVerifiedToPerformAction);
+              } else {
+                await Navigator.of(context).push(
+                    MaterialPageRoute<RequestPermissions>(
+                        builder: (_) => RequestPermissions()));
+              }
+            },
+          )
+        ],
+      );
+    } else {
+      return AppDialog(
+        title: S.of(context).warningNoEvents,
+        content: [
+          RichText(
+            text: TextSpan(
+              style: Theme.of(context).textTheme.subtitle1,
+              children: [
+                TextSpan(
+                    text: S.of(context).messageThereAreNoEventsForSelected),
+                WidgetSpan(
+                  alignment: PlaceholderAlignment.top,
+                  child: Icon(
+                    Icons.class_,
+                    size: Theme.of(context).textTheme.subtitle1.fontSize + 2,
+                  ),
+                ),
+                TextSpan(
+                    text:
+                        '${S.of(context).navigationClasses.toLowerCase()} ${S.of(context).stringAnd} '),
+                WidgetSpan(
+                  alignment: PlaceholderAlignment.top,
+                  child: Icon(
+                    CustomIcons.filter,
+                    size: Theme.of(context).textTheme.subtitle1.fontSize + 2,
+                  ),
+                ),
+                TextSpan(
+                    text: ' ${S.of(context).navigationFilter.toLowerCase()}.'),
+              ],
+            ),
+          ),
         ],
       );
     }
