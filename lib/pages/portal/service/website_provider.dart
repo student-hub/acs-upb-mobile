@@ -19,11 +19,11 @@ extension UserExtension on User {
 
   /// Check if user has at least one private website
   Future<bool> get hasPrivateWebsites async {
-    final CollectionReference ref = Firestore.instance
+    final CollectionReference ref = FirebaseFirestore.instance
         .collection('users')
-        .document(uid)
+        .doc(uid)
         .collection('websites');
-    return (await ref.getDocuments()).documents.isNotEmpty;
+    return (await ref.get()).docs.isNotEmpty;
   }
 }
 
@@ -47,24 +47,26 @@ extension WebsiteCategoryExtension on WebsiteCategory {
 extension WebsiteExtension on Website {
   // [ownerUid] should be provided if the website is user-private
   static Website fromSnap(DocumentSnapshot snap, {String ownerUid}) {
+    final data = snap.data();
+
     return Website(
-      ownerUid: ownerUid ?? snap.data['addedBy'],
-      id: snap.documentID,
+      ownerUid: ownerUid ?? data['addedBy'],
+      id: snap.id,
       isPrivate: ownerUid != null,
-      editedBy: List<String>.from(snap.data['editedBy'] ?? []),
-      category: WebsiteCategoryExtension.fromString(snap.data['category']),
-      label: snap.data['label'] ?? 'Website',
-      link: snap.data['link'] ?? '',
-      infoByLocale: snap.data['info'] == null
+      editedBy: List<String>.from(data['editedBy'] ?? []),
+      category: WebsiteCategoryExtension.fromString(data['category']),
+      label: data['label'] ?? 'Website',
+      link: data['link'] ?? '',
+      infoByLocale: data['info'] == null
           ? {}
           : {
-              'en': snap.data['info']['en'],
-              'ro': snap.data['info']['ro'],
+              'en': data['info']['en'],
+              'ro': data['info']['ro'],
             },
-      degree: snap.data['degree'],
-      relevance: snap.data['relevance'] == null
+      degree: data['degree'],
+      relevance: data['relevance'] == null
           ? null
-          : List<String>.from(snap.data['relevance']),
+          : List<String>.from(data['relevance']),
     );
   }
 
@@ -90,7 +92,7 @@ extension WebsiteExtension on Website {
 }
 
 class WebsiteProvider with ChangeNotifier {
-  final Firestore _db = Firestore.instance;
+  final FirebaseFirestore _db = FirebaseFirestore.instance;
 
   void _errorHandler(dynamic e, BuildContext context) {
     print(e.message);
@@ -157,18 +159,18 @@ class WebsiteProvider with ChangeNotifier {
       final websites = <Website>[];
 
       if (!userOnly) {
-        List<DocumentSnapshot> documents = [];
+        List<DocumentSnapshot> docs = [];
 
         if (filter == null) {
           final QuerySnapshot qSnapshot =
-              await _db.collection('websites').getDocuments();
-          documents.addAll(qSnapshot.documents);
+              await _db.collection('websites').get();
+          docs.addAll(qSnapshot.docs);
         } else {
           // Documents without a 'relevance' field are relevant for everyone
           final query =
               _db.collection('websites').where('relevance', isNull: true);
-          final QuerySnapshot qSnapshot = await query.getDocuments();
-          documents.addAll(qSnapshot.documents);
+          final QuerySnapshot qSnapshot = await query.get();
+          docs.addAll(qSnapshot.docs);
 
           for (final string in filter.relevantNodes) {
             // selected nodes
@@ -176,30 +178,27 @@ class WebsiteProvider with ChangeNotifier {
                 .collection('websites')
                 .where('degree', isEqualTo: filter.baseNode)
                 .where('relevance', arrayContains: string);
-            final QuerySnapshot qSnapshot = await query.getDocuments();
-            documents.addAll(qSnapshot.documents);
+            final QuerySnapshot qSnapshot = await query.get();
+            docs.addAll(qSnapshot.docs);
           }
         }
 
         // Remove duplicates
-        // (a document may result out of more than one query)
+        // (a doc may result out of more than one query)
         final seenDocumentIds = <String>{};
 
-        documents = documents
-            .where((doc) => seenDocumentIds.add(doc.documentID))
-            .toList();
+        docs = docs.where((doc) => seenDocumentIds.add(doc.id)).toList();
 
-        websites.addAll(documents.map(WebsiteExtension.fromSnap));
+        websites.addAll(docs.map(WebsiteExtension.fromSnap));
       }
 
       // Get user-added websites
       if (uid != null) {
         final DocumentReference ref =
-            Firestore.instance.collection('users').document(uid);
-        final QuerySnapshot qSnapshot =
-            await ref.collection('websites').getDocuments();
+            FirebaseFirestore.instance.collection('users').doc(uid);
+        final QuerySnapshot qSnapshot = await ref.collection('websites').get();
 
-        websites.addAll(qSnapshot.documents
+        websites.addAll(qSnapshot.docs
             .map((doc) => WebsiteExtension.fromSnap(doc, ownerUid: uid)));
       }
 
@@ -220,13 +219,13 @@ class WebsiteProvider with ChangeNotifier {
     try {
       DocumentReference ref;
       if (!website.isPrivate) {
-        ref = _db.collection('websites').document(website.id);
+        ref = _db.collection('websites').doc(website.id);
       } else {
         ref = _db
             .collection('users')
-            .document(website.ownerUid)
+            .doc(website.ownerUid)
             .collection('websites')
-            .document(website.id);
+            .doc(website.id);
       }
 
       if ((await ref.get()).data != null) {
@@ -239,7 +238,7 @@ class WebsiteProvider with ChangeNotifier {
       }
 
       final data = website.toData();
-      await ref.setData(data);
+      await ref.set(data);
 
       notifyListeners();
       return true;
@@ -254,12 +253,12 @@ class WebsiteProvider with ChangeNotifier {
 
     try {
       final DocumentReference publicRef =
-          _db.collection('websites').document(website.id);
+          _db.collection('websites').doc(website.id);
       final DocumentReference privateRef = _db
           .collection('users')
-          .document(website.ownerUid)
+          .doc(website.ownerUid)
           .collection('websites')
-          .document(website.id);
+          .doc(website.id);
 
       DocumentReference previousRef;
       bool wasPrivate;
@@ -276,11 +275,11 @@ class WebsiteProvider with ChangeNotifier {
 
       if (wasPrivate == website.isPrivate) {
         // No privacy change
-        await previousRef.updateData(website.toData());
+        await previousRef.update(website.toData());
       } else {
         // Privacy changed
         await previousRef.delete();
-        await (wasPrivate ? publicRef : privateRef).setData(website.toData());
+        await (wasPrivate ? publicRef : privateRef).set(website.toData());
       }
 
       notifyListeners();
@@ -295,13 +294,13 @@ class WebsiteProvider with ChangeNotifier {
     try {
       DocumentReference ref;
       if (!website.isPrivate) {
-        ref = _db.collection('websites').document(website.id);
+        ref = _db.collection('websites').doc(website.id);
       } else {
         ref = _db
             .collection('users')
-            .document(website.ownerUid)
+            .doc(website.ownerUid)
             .collection('websites')
-            .document(website.id);
+            .doc(website.id);
       }
 
       await ref.delete();

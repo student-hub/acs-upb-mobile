@@ -113,12 +113,10 @@ void main() {
 
     // Pretend an anonymous user is already logged in
     mockAuthProvider = MockAuthProvider();
-    when(mockAuthProvider.isAuthenticatedFromCache).thenReturn(true);
+    when(mockAuthProvider.isAuthenticated).thenReturn(true);
     // ignore: invalid_use_of_protected_member
     when(mockAuthProvider.hasListeners).thenReturn(false);
     when(mockAuthProvider.isAnonymous).thenReturn(true);
-    when(mockAuthProvider.isAuthenticatedFromService)
-        .thenAnswer((_) => Future.value(true));
     when(mockAuthProvider.currentUser)
         .thenAnswer((realInvocation) => Future.value(null));
 
@@ -455,9 +453,7 @@ void main() {
     setUp(() {
       when(mockAuthProvider.currentUser).thenAnswer((_) =>
           Future.value(User(uid: '0', firstName: 'John', lastName: 'Doe')));
-      when(mockAuthProvider.isAuthenticatedFromService)
-          .thenAnswer((_) => Future.value(true));
-      when(mockAuthProvider.isAuthenticatedFromCache).thenReturn(true);
+      when(mockAuthProvider.isAuthenticated).thenReturn(true);
       when(mockAuthProvider.isAnonymous).thenReturn(false);
       when(mockAuthProvider.uid).thenReturn('0');
     });
@@ -494,9 +490,7 @@ void main() {
           uid: '0', firstName: 'John', lastName: 'Doe', permissionLevel: 3)));
       when(mockAuthProvider.currentUserFromCache).thenReturn(User(
           uid: '0', firstName: 'John', lastName: 'Doe', permissionLevel: 3));
-      when(mockAuthProvider.isAuthenticatedFromService)
-          .thenAnswer((_) => Future.value(true));
-      when(mockAuthProvider.isAuthenticatedFromCache).thenReturn(true);
+      when(mockAuthProvider.isAuthenticated).thenReturn(true);
       when(mockAuthProvider.isAnonymous).thenReturn(false);
       when(mockAuthProvider.uid).thenReturn('0');
     });
@@ -602,7 +596,7 @@ void main() {
 
   group('Add website', () {
     setUp(() {
-      when(mockAuthProvider.isAuthenticatedFromCache).thenReturn(true);
+      when(mockAuthProvider.isAuthenticated).thenReturn(true);
       when(mockAuthProvider.isAnonymous).thenReturn(false);
     });
 
@@ -633,7 +627,7 @@ void main() {
 
   group('Edit website', () {
     setUp(() {
-      when(mockAuthProvider.isAuthenticatedFromCache).thenReturn(true);
+      when(mockAuthProvider.isAuthenticated).thenReturn(true);
       when(mockAuthProvider.isAnonymous).thenReturn(false);
       when(mockAuthProvider.currentUser).thenAnswer((realInvocation) =>
           Future.value(User(
@@ -672,7 +666,7 @@ void main() {
 
   group('Delete website', () {
     setUp(() {
-      when(mockAuthProvider.isAuthenticatedFromCache).thenReturn(true);
+      when(mockAuthProvider.isAuthenticated).thenReturn(true);
       when(mockAuthProvider.isAnonymous).thenReturn(false);
       when(mockAuthProvider.currentUser).thenAnswer((realInvocation) =>
           Future.value(User(
@@ -740,7 +734,7 @@ void main() {
   group('Edit Profile', () {
     setUp(() {
       when(mockAuthProvider.isVerifiedFromCache).thenReturn(false);
-      when(mockAuthProvider.isAuthenticatedFromCache).thenReturn(true);
+      when(mockAuthProvider.isAuthenticated).thenReturn(true);
       when(mockAuthProvider.isAnonymous).thenReturn(false);
       when(mockAuthProvider.currentUser).thenAnswer((realInvocation) =>
           Future.value(User(
@@ -838,7 +832,7 @@ void main() {
 
   group('People page', () {
     setUp(() {
-      when(mockAuthProvider.isAuthenticatedFromCache).thenReturn(true);
+      when(mockAuthProvider.isAuthenticated).thenReturn(true);
       when(mockAuthProvider.isAnonymous).thenReturn(true);
     });
 
