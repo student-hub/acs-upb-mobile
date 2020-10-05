@@ -189,9 +189,9 @@ class _WebsiteViewState extends State<WebsiteView> {
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
-      title: widget.updateExisting
+      title: Text(widget.updateExisting
           ? S.of(context).actionEditWebsite
-          : S.of(context).actionAddWebsite,
+          : S.of(context).actionAddWebsite),
       actions: [
             AppScaffoldAction(
               text: S.of(context).buttonSave,
