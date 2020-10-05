@@ -8,6 +8,21 @@ import 'package:pedantic/pedantic.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+Iterable<int> range(int low, int high) sync* {
+  for (int i = low; i < high; ++i) {
+    yield i;
+  }
+}
+
+extension IterableUtils<E> on Iterable<E> {
+  Iterable<E> whereIndex(bool Function(int index) test) sync* {
+    int i = 0;
+    for (final e in this) {
+      if (test(i++)) yield e;
+    }
+  }
+}
+
 class Utils {
   Utils._();
 

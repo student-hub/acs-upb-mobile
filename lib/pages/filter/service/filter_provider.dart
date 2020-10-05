@@ -1,9 +1,10 @@
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
+import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/filter/model/filter.dart';
+import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:preferences/preference_service.dart';
-import 'package:provider/provider.dart';
 
 extension FilterNodeExtension on FilterNode {
   static FilterNode fromMap(Map<String, dynamic> map, String parentName) {
@@ -23,9 +24,11 @@ class FilterProvider with ChangeNotifier {
       {this.global = false,
       bool filterEnabled,
       this.defaultDegree,
-      this.defaultRelevance})
-      : _enabled =
-            filterEnabled ?? PrefService.get('relevance_filter') ?? true {
+      this.defaultRelevance,
+      AuthProvider authProvider})
+      : _enabled = filterEnabled ?? PrefService.get('relevance_filter') ?? true,
+        _relevantNodes = defaultRelevance,
+        authProvider = authProvider ?? AuthProvider() {
     if (defaultRelevance != null && !defaultRelevance.contains('All')) {
       if (defaultDegree == null) {
         throw ArgumentError(
@@ -45,6 +48,8 @@ class FilterProvider with ChangeNotifier {
   bool _enabled;
   List<String> _relevantNodes;
   final List<String> defaultRelevance;
+
+  final AuthProvider authProvider;
 
   void resetFilter() {
     _relevanceFilter = null;
@@ -88,9 +93,9 @@ class FilterProvider with ChangeNotifier {
 
   bool get filterEnabled => _enabled;
 
-  Filter get cachedFilter => _relevanceFilter.clone();
+  Filter get cachedFilter => _relevanceFilter?.clone();
 
-  Future<Filter> fetchFilter(BuildContext context) async {
+  Future<Filter> fetchFilter({BuildContext context}) async {
     if (_relevanceFilter != null) {
       return cachedFilter;
     }
@@ -130,7 +135,6 @@ class FilterProvider with ChangeNotifier {
         _relevanceFilter.setRelevantNodes(_relevantNodes);
       } else {
         // No previous setting or defaults => set the user's group
-        final authProvider = Provider.of<AuthProvider>(context, listen: false);
         if (authProvider.isAuthenticatedFromCache) {
           final user = await authProvider.currentUser;
           // Try to set the default from the user data
@@ -141,9 +145,11 @@ class FilterProvider with ChangeNotifier {
       }
 
       return cachedFilter;
-    } catch (e, stackTrace) {
+    } catch (e, _) {
       print(e);
-      print(stackTrace);
+      if (context != null) {
+        AppToast.show(S.of(context).errorSomethingWentWrong);
+      }
       return null;
     }
   }

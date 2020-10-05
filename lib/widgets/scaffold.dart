@@ -45,7 +45,7 @@ class AppScaffold extends StatelessWidget {
   }) : actions = actions ?? [];
 
   final Widget body;
-  final String title;
+  final Widget title;
   final Widget floatingActionButton;
   final List<AppScaffoldAction> actions;
   final AppScaffoldAction leading;
@@ -198,7 +198,7 @@ class AppScaffold extends StatelessWidget {
         appBar: PreferredSize(
           preferredSize: const Size.fromHeight(40),
           child: AppBar(
-            title: Text(title),
+            title: title,
             centerTitle: true,
             toolbarOpacity: 0.8,
             leading: _widgetFromAction(leading,
