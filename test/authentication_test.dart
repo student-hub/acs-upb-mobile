@@ -56,9 +56,7 @@ void main() {
     mockAuthProvider = MockAuthProvider();
     // ignore: invalid_use_of_protected_member
     when(mockAuthProvider.hasListeners).thenReturn(false);
-    when(mockAuthProvider.isAuthenticatedFromCache).thenReturn(false);
-    when(mockAuthProvider.isAuthenticatedFromService)
-        .thenAnswer((realInvocation) => Future.value(false));
+    when(mockAuthProvider.isAuthenticated).thenReturn(false);
     when(mockAuthProvider.currentUser).thenAnswer((_) => Future.value(null));
     when(mockAuthProvider.isAnonymous).thenReturn(true);
 
@@ -562,9 +560,7 @@ void main() {
 
     setUp(() {
       // Mock an anonymous user already being logged in
-      when(mockAuthProvider.isAuthenticatedFromCache).thenReturn(true);
-      when(mockAuthProvider.isAuthenticatedFromService)
-          .thenAnswer((realInvocation) => Future.value(true));
+      when(mockAuthProvider.isAuthenticated).thenReturn(true);
       when(mockAuthProvider.isVerifiedFromService)
           .thenAnswer((realInvocation) => Future.value(false));
     });

@@ -353,7 +353,7 @@ class AccountNotVerifiedWarning extends StatelessWidget {
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
 
-    if (!authProvider.isAuthenticatedFromCache || authProvider.isAnonymous) {
+    if (!authProvider.isAuthenticated || authProvider.isAnonymous) {
       return Container();
     }
 

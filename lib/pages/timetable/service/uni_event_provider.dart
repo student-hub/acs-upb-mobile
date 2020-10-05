@@ -153,10 +153,11 @@ extension AcademicCalendarExtension on AcademicCalendar {
       }).values);
 
   static AcademicCalendar fromSnap(DocumentSnapshot snap) {
+    final data = snap.data();
     return AcademicCalendar(
-      semesters: _eventsFromMapList(snap.data['semesters'], 'semester'),
-      holidays: _eventsFromMapList(snap.data['holidays'], 'holiday'),
-      exams: _eventsFromMapList(snap.data['exams'], 'examSession'),
+      semesters: _eventsFromMapList(data['semesters'], 'semester'),
+      holidays: _eventsFromMapList(data['holidays'], 'holiday'),
+      exams: _eventsFromMapList(data['exams'], 'examSession'),
     );
   }
 }
@@ -179,9 +180,9 @@ class UniEventProvider extends EventProvider<UniEventInstance>
 
   Future<void> fetchCalendars() async {
     final QuerySnapshot query =
-        await Firestore.instance.collection('calendars').getDocuments();
-    for (final doc in query.documents) {
-      _calendars[doc.documentID] = AcademicCalendarExtension.fromSnap(doc);
+        await FirebaseFirestore.instance.collection('calendars').get();
+    for (final doc in query.docs) {
+      _calendars[doc.id] = AcademicCalendarExtension.fromSnap(doc);
     }
     notifyListeners();
   }
@@ -189,30 +190,32 @@ class UniEventProvider extends EventProvider<UniEventInstance>
   Future<List<UniEvent>> get _events async {
     if (eventsCache != null) return eventsCache;
 
-    if (!_authProvider.isAuthenticatedFromCache ||
+    if (!_authProvider.isAuthenticated ||
         _filter == null ||
-        _calendars == null) return [];
+        _calendars == null) {
+      return [];
+    }
 
     var events = <UniEvent>[];
 
     if (_filter.relevantNodes.length > 1) {
       for (final classId in _classIds ?? []) {
-        final query = await Firestore.instance
+        final query = await FirebaseFirestore.instance
             .collection('events')
             .where('class', isEqualTo: classId)
             .where('degree', isEqualTo: _filter.baseNode)
             .where('relevance',
                 arrayContainsAny: _filter.relevantNodes..remove('All'))
-            .getDocuments();
+            .get();
 
-        for (final doc in query.documents) {
+        for (final doc in query.docs) {
+          final data = doc.data();
           ClassHeader classHeader;
-          if (doc.data['class'] != null) {
-            classHeader =
-                await _classProvider.fetchClassHeader(doc.data['class']);
+          if (data['class'] != null) {
+            classHeader = await _classProvider.fetchClassHeader(data['class']);
           }
 
-          events.add(UniEventExtension.fromJSON(doc.documentID, doc.data,
+          events.add(UniEventExtension.fromJSON(doc.id, data,
               classHeader: classHeader, calendars: _calendars));
         }
       }

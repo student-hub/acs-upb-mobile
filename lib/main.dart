@@ -18,7 +18,10 @@ import 'package:acs_upb_mobile/pages/settings/view/settings_page.dart';
 import 'package:acs_upb_mobile/pages/timetable/service/uni_event_provider.dart';
 import 'package:acs_upb_mobile/resources/locale_provider.dart';
 import 'package:acs_upb_mobile/widgets/loading_screen.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dynamic_theme/dynamic_theme.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
@@ -31,9 +34,16 @@ import 'package:time_machine/time_machine.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // TODO(IonaAlexandru): Move async calls to loading page when we figure out
+  // how to make the tests work.
   await TimeMachine.initialize({'rootBundle': rootBundle});
+
   await PrefService.init(prefix: 'pref_');
   PrefService.setDefaultValues({'language': 'auto', 'relevance_filter': true});
+
+  await Firebase.initializeApp();
+  if (kIsWeb) await FirebaseFirestore.instance.enablePersistence();
 
   final authProvider = AuthProvider();
   final classProvider = ClassProvider();
@@ -155,7 +165,7 @@ class AppLoadingScreen extends StatelessWidget {
     await S.load(LocaleProvider.locale);
 
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
-    final bool authenticated = await authProvider.isAuthenticatedFromService;
+    final bool authenticated = authProvider.isAuthenticated;
     return authenticated ? Routes.home : Routes.login;
   }
 

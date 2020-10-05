@@ -40,15 +40,16 @@ extension ShortcutExtension on Shortcut {
 extension ClassHeaderExtension on ClassHeader {
   static ClassHeader fromSnap(DocumentSnapshot snap) {
     if (snap == null || snap.data == null) return null;
-    final splitAcronym = snap.data['shortname'].split('-');
+    final data = snap.data();
+    final splitAcronym = data['shortname'].split('-');
     if (splitAcronym.length < 4) {
       return null;
     }
     return ClassHeader(
-      id: snap.data['shortname'],
-      name: snap.data['fullname'],
-      acronym: snap.data['shortname'].split('-')[3],
-      category: snap.data['category_path'],
+      id: data['shortname'],
+      name: data['fullname'],
+      acronym: data['shortname'].split('-')[3],
+      category: data['category_path'],
     );
   }
 }
@@ -65,10 +66,10 @@ extension ClassExtension on Class {
     if (snap.data == null) {
       return Class(header: header);
     }
+    final data = snap.data();
 
     final shortcuts = <Shortcut>[];
-    for (final s
-        in List<Map<String, dynamic>>.from(snap.data['shortcuts'] ?? [])) {
+    for (final s in List<Map<String, dynamic>>.from(data['shortcuts'] ?? [])) {
       shortcuts.add(Shortcut(
         type: ShortcutTypeExtension.fromString(s['type']),
         name: s['name'],
@@ -83,9 +84,9 @@ extension ClassExtension on Class {
           (String name, dynamic value) => MapEntry(name, value.toDouble())));
     }
 
-    final gradingLastUpdated = snap.data['gradingLastUpdated'] == null
+    final gradingLastUpdated = data['gradingLastUpdated'] == null
         ? null
-        : (snap.data['gradingLastUpdated'] as Timestamp).toLocalDateTime();
+        : (data['gradingLastUpdated'] as Timestamp).toLocalDateTime();
 
     return Class(
       header: header,
@@ -97,7 +98,7 @@ extension ClassExtension on Class {
 }
 
 class ClassProvider with ChangeNotifier {
-  final Firestore _db = Firestore.instance;
+  final FirebaseFirestore _db = FirebaseFirestore.instance;
   List<ClassHeader> classHeadersCache;
   List<ClassHeader> userClassHeadersCache;
 
@@ -106,8 +107,8 @@ class ClassProvider with ChangeNotifier {
     try {
       // TODO(IoanaAlexandru): Get all classes if user is not authenticated
       final DocumentSnapshot snap =
-          await Firestore.instance.collection('users').document(uid).get();
-      return List<String>.from(snap.data['classes'] ?? []);
+          await FirebaseFirestore.instance.collection('users').doc(uid).get();
+      return List<String>.from(snap.data()['classes'] ?? []);
     } catch (e) {
       print(e);
       if (context != null) {
@@ -121,8 +122,8 @@ class ClassProvider with ChangeNotifier {
       {List<String> classIds, String uid, BuildContext context}) async {
     try {
       final DocumentReference ref =
-          Firestore.instance.collection('users').document(uid);
-      await ref.updateData({'classes': classIds});
+          FirebaseFirestore.instance.collection('users').doc(uid);
+      await ref.update({'classes': classIds});
       userClassHeadersCache = null;
       notifyListeners();
       return true;
@@ -138,17 +139,17 @@ class ClassProvider with ChangeNotifier {
       {BuildContext context}) async {
     try {
       // Get class with id [classId]
-      final QuerySnapshot query = await Firestore.instance
+      final QuerySnapshot query = await FirebaseFirestore.instance
           .collection('import_moodle')
           .where('shortname', isEqualTo: classId)
           .limit(1)
-          .getDocuments();
+          .get();
 
-      if (query == null || query.documents.isEmpty) {
+      if (query == null || query.docs.isEmpty) {
         return null;
       }
 
-      return ClassHeaderExtension.fromSnap(query.documents.first);
+      return ClassHeaderExtension.fromSnap(query.docs.first);
     } catch (e) {
       print(e);
       if (context != null) {
@@ -168,10 +169,10 @@ class ClassProvider with ChangeNotifier {
 
         // Get all classes
         final QuerySnapshot qSnapshot =
-            await _db.collection('import_moodle').getDocuments();
-        final List<DocumentSnapshot> documents = qSnapshot.documents;
+            await _db.collection('import_moodle').get();
+        final List<DocumentSnapshot> docs = qSnapshot.docs;
 
-        return documents
+        return docs
             .map(ClassHeaderExtension.fromSnap)
             .where((e) => e != null)
             .toList();
@@ -216,7 +217,7 @@ class ClassProvider with ChangeNotifier {
       {BuildContext context}) async {
     try {
       final DocumentSnapshot snap =
-          await _db.collection('classes').document(header.id).get();
+          await _db.collection('classes').doc(header.id).get();
       return ClassExtension.fromSnap(header: header, snap: snap);
     } catch (e) {
       print(e);
@@ -230,21 +231,21 @@ class ClassProvider with ChangeNotifier {
   Future<bool> addShortcut(
       {String classId, Shortcut shortcut, BuildContext context}) async {
     try {
-      final DocumentReference doc = _db.collection('classes').document(classId);
+      final DocumentReference doc = _db.collection('classes').doc(classId);
       final DocumentSnapshot snap = await doc.get();
 
       if (snap.data == null) {
         // Document does not exist
-        await doc.setData({
+        await doc.set({
           'shortcuts': [shortcut.toData()]
         });
       } else {
         // Document exists
         final shortcuts =
-            List<Map<String, dynamic>>.from(snap.data['shortcuts'] ?? [])
+            List<Map<String, dynamic>>.from(snap.data()['shortcuts'] ?? [])
               ..add(shortcut.toData());
 
-        await doc.updateData({'shortcuts': shortcuts});
+        await doc.update({'shortcuts': shortcuts});
       }
 
       notifyListeners();
@@ -261,13 +262,13 @@ class ClassProvider with ChangeNotifier {
   Future<bool> deleteShortcut(
       {String classId, int shortcutIndex, BuildContext context}) async {
     try {
-      final DocumentReference doc = _db.collection('classes').document(classId);
+      final DocumentReference doc = _db.collection('classes').doc(classId);
 
       final shortcuts = List<Map<String, dynamic>>.from(
-          (await doc.get()).data['shortcuts'] ?? [])
+          (await doc.get()).data()['shortcuts'] ?? [])
         ..removeAt(shortcutIndex);
 
-      await doc.updateData({'shortcuts': shortcuts});
+      await doc.update({'shortcuts': shortcuts});
 
       notifyListeners();
       return true;
@@ -285,16 +286,16 @@ class ClassProvider with ChangeNotifier {
       Map<String, double> grading,
       BuildContext context}) async {
     try {
-      final DocumentReference doc = _db.collection('classes').document(classId);
+      final DocumentReference doc = _db.collection('classes').doc(classId);
       final DocumentSnapshot snap = await doc.get();
       final Timestamp now = Timestamp.now();
 
       if (snap.data == null) {
         // Document does not exist
-        await doc.setData({'grading': grading, 'gradingLastUpdated': now});
+        await doc.set({'grading': grading, 'gradingLastUpdated': now});
       } else {
         // Document exists
-        await doc.updateData({'grading': grading, 'gradingLastUpdated': now});
+        await doc.update({'grading': grading, 'gradingLastUpdated': now});
       }
 
       notifyListeners();

@@ -1,4 +1,5 @@
 import 'package:acs_upb_mobile/pages/people/model/person.dart';
+import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/widgets/icon_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
@@ -30,7 +31,7 @@ class PersonView extends StatelessWidget {
           padding: const EdgeInsets.all(8),
           child: Card(
             child: Padding(
-              padding: const EdgeInsets.all(8),
+              padding: const EdgeInsets.all(16),
               child: Row(
                 children: [
                   Expanded(
@@ -57,20 +58,26 @@ class PersonView extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         IconText(
-                            icon: Icons.email,
-                            text: person.email ?? '-',
-                            style: Theme.of(context).textTheme.bodyText1),
-                        const SizedBox(height: 8),
+                          icon: Icons.email,
+                          text: person.email ?? '-',
+                          style: Theme.of(context).textTheme.bodyText1,
+                          onTap: () => Utils.launchURL('mailto:${person.email}',
+                              context: context),
+                        ),
+                        const SizedBox(height: 16),
                         IconText(
-                            icon: Icons.phone,
-                            text: person.phone ?? '-',
-                            style: Theme.of(context).textTheme.bodyText1),
-                        const SizedBox(height: 8),
+                          icon: Icons.phone,
+                          text: person.phone ?? '-',
+                          style: Theme.of(context).textTheme.bodyText1,
+                          onTap: () => Utils.launchURL('tel:${person.phone}',
+                              context: context),
+                        ),
+                        const SizedBox(height: 16),
                         IconText(
                             icon: Icons.location_on,
                             text: person.office ?? '-',
                             style: Theme.of(context).textTheme.bodyText1),
-                        const SizedBox(height: 8),
+                        const SizedBox(height: 16),
                         IconText(
                             icon: Icons.work,
                             text: person.position ?? '-',

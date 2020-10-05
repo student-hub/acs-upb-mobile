@@ -37,7 +37,7 @@ class FilterProvider with ChangeNotifier {
     }
   }
 
-  final Firestore _db = Firestore.instance;
+  final FirebaseFirestore _db = FirebaseFirestore.instance;
   Filter _relevanceFilter; // filter cache
 
   /// Whether this is the global filter instance and should update shared preferences
@@ -102,9 +102,9 @@ class FilterProvider with ChangeNotifier {
 
     try {
       final col = _db.collection('filters');
-      final ref = col.document('relevance');
+      final ref = col.doc('relevance');
       final doc = await ref.get();
-      final data = doc.data;
+      final data = doc.data();
 
       final levelNames = <Map<String, String>>[];
       // Cast from List<dynamic> to List<Map<String, String>>
@@ -135,7 +135,7 @@ class FilterProvider with ChangeNotifier {
         _relevanceFilter.setRelevantNodes(_relevantNodes);
       } else {
         // No previous setting or defaults => set the user's group
-        if (authProvider.isAuthenticatedFromCache) {
+        if (authProvider.isAuthenticated) {
           final user = await authProvider.currentUser;
           // Try to set the default from the user data
           if (user != null && user.classes != null) {

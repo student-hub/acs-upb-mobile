@@ -76,9 +76,7 @@ void main() {
   // ignore: invalid_use_of_protected_member
   when(mockAuthProvider.hasListeners).thenReturn(false);
   when(mockAuthProvider.isAnonymous).thenReturn(false);
-  when(mockAuthProvider.isAuthenticatedFromCache).thenReturn(true);
-  when(mockAuthProvider.isAuthenticatedFromService)
-      .thenAnswer((realInvocation) => Future.value(true));
+  when(mockAuthProvider.isAuthenticated).thenReturn(true);
 
   Widget buildPortalPage() => MultiProvider(
         providers: [
