@@ -54,20 +54,22 @@ class _TimetablePageState extends State<TimetablePage> {
           return;
         }
 
-        // Fetch user classes, request info and filter so they're cached
-        final user = Provider.of<AuthProvider>(context, listen: false)
-            .currentUserFromCache;
-        await Provider.of<ClassProvider>(context, listen: false)
-            .fetchClassHeaders(uid: user.uid);
-        await Provider.of<FilterProvider>(context, listen: false).fetchFilter();
-        await Provider.of<RequestProvider>(context, listen: false)
-            .userAlreadyRequested(user.uid);
-
-        // Slight delay between last frame and dialog
-        await Future<void>.delayed(const Duration(milliseconds: 100));
-
         // Show dialog if there are no events
-        if (eventProvider.empty == true) {
+        if (await eventProvider.empty) {
+          // Fetch user classes, request necessary info from providers so it's
+          // cached when we check in the dialog
+          final user = Provider.of<AuthProvider>(context, listen: false)
+              .currentUserFromCache;
+          await Provider.of<ClassProvider>(context, listen: false)
+              .fetchClassHeaders(uid: user.uid);
+          await Provider.of<FilterProvider>(context, listen: false)
+              .fetchFilter();
+          await Provider.of<RequestProvider>(context, listen: false)
+              .userAlreadyRequested(user.uid);
+
+          // Slight delay between last frame and dialog
+          await Future<void>.delayed(const Duration(milliseconds: 100));
+
           await showDialog<String>(
             context: context,
             builder: buildDialog,
