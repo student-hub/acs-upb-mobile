@@ -16,7 +16,8 @@ class FilterPage extends StatefulWidget {
       this.info,
       this.hint,
       this.buttonText,
-      this.onSubmit})
+      this.onSubmit,
+      this.canBeForEveryone = true})
       : super(key: key);
 
   static const String routeName = '/filter';
@@ -35,6 +36,9 @@ class FilterPage extends StatefulWidget {
 
   /// Callback after the user submits the page
   final void Function() onSubmit;
+
+  /// Whether the user has to select at least one node (no nodes mean that it is for everyone)
+  final bool canBeForEveryone;
 
   @override
   State<StatefulWidget> createState() => FilterPageState();
@@ -153,13 +157,17 @@ class FilterPageState extends State<FilterPage> {
         AppScaffoldAction(
           text: widget.buttonText ?? S.of(context).buttonApply,
           onPressed: () {
-            filterProvider
-              ..enableFilter()
-              ..updateFilter(filter);
-            if (widget.onSubmit != null) {
-              widget.onSubmit();
+            if (filter.relevantNodes.length > 1 || widget.canBeForEveryone) {
+              filterProvider
+                ..enableFilter()
+                ..updateFilter(filter);
+              if (widget.onSubmit != null) {
+                widget.onSubmit();
+              }
+              Navigator.of(context).pop();
+            } else {
+              AppToast.show(S.of(context).warningYouNeedToSelectAtLeastOne);
             }
-            Navigator.of(context).pop();
           },
         )
       ],

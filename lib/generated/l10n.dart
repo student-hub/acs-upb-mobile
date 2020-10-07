@@ -1354,6 +1354,16 @@ class S {
     );
   }
 
+  /// `You need to select at least one option.`
+  String get warningYouNeedToSelectAtLeastOne {
+    return Intl.message(
+      'You need to select at least one option.',
+      name: 'warningYouNeedToSelectAtLeastOne',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Ask for permissions`
   String get navigationAskPermissions {
     return Intl.message(

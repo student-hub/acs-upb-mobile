@@ -138,6 +138,7 @@
   "warningRequestEmpty": "The request must not be empty",
   "warningOnlyNOptionsAtATime": "Only {n} options can be selected at a time.",
   "warningNoEvents": "No events to show",
+  "warningYouNeedToSelectAtLeastOne": "You need to select at least one option.",
 
   "navigationAskPermissions": "Ask for permissions",
   "navigationHome": "Home",
