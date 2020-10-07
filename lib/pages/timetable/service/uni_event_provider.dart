@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
+import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/classes/model/class.dart';
 import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
 import 'package:acs_upb_mobile/pages/filter/model/filter.dart';
@@ -9,56 +10,13 @@ import 'package:acs_upb_mobile/pages/timetable/model/academic_calendar.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/events/all_day_event.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/events/recurring_event.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/events/uni_event.dart';
+import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:rrule/rrule.dart';
 import 'package:synchronized/synchronized.dart';
 import 'package:time_machine/time_machine.dart';
 import 'package:timetable/timetable.dart';
-
-extension UniEventTypeExtension on UniEventType {
-  static UniEventType fromString(String string) {
-    switch (string) {
-      case 'lab':
-        return UniEventType.lab;
-      case 'lecture':
-        return UniEventType.lecture;
-      case 'seminar':
-        return UniEventType.seminar;
-      case 'sports':
-        return UniEventType.sports;
-      case 'semester':
-        return UniEventType.semester;
-      case 'holiday':
-        return UniEventType.holiday;
-      case 'examSession':
-        return UniEventType.examSession;
-      default:
-        return UniEventType.other;
-    }
-  }
-
-  Color get color {
-    switch (this) {
-      case UniEventType.lecture:
-        return Colors.pinkAccent;
-      case UniEventType.lab:
-        return Colors.blueAccent;
-      case UniEventType.seminar:
-        return Colors.orangeAccent;
-      case UniEventType.sports:
-        return Colors.greenAccent;
-      case UniEventType.semester:
-        return Colors.transparent;
-      case UniEventType.holiday:
-        return Colors.yellow;
-      case UniEventType.examSession:
-        return Colors.red;
-      default:
-        return Colors.white;
-    }
-  }
-}
 
 extension PeriodExtension on Period {
   static Period fromJSON(Map<String, dynamic> json) {
@@ -75,6 +33,27 @@ extension PeriodExtension on Period {
       nanoseconds: json['nanoseconds'] ?? 0,
     );
   }
+
+  Map<String, dynamic> toJSON() {
+    final json = {
+      'years': years,
+      'months': months,
+      'weeks': weeks,
+      'days': days,
+      'hours': hours,
+      'minutes': minutes,
+      'seconds': seconds,
+      'milliseconds': milliseconds,
+      'microseconds': microseconds,
+      'nanoseconds': nanoseconds
+    };
+
+    return json..removeWhere((key, value) => value == 0);
+  }
+}
+
+extension LocalDateTimeExtension on LocalDateTime {
+  Timestamp toTimestamp() => Timestamp.fromDate(toDateTimeLocal());
 }
 
 extension UniEventExtension on UniEvent {
@@ -102,6 +81,7 @@ extension UniEventExtension on UniEvent {
         relevance: json['relevance'] == null
             ? null
             : List<String>.from(json['relevance']),
+        addedBy: json['addedBy'],
       );
     } else if (json['rrule'] != null) {
       return RecurringUniEvent(
@@ -121,6 +101,7 @@ extension UniEventExtension on UniEvent {
         relevance: json['relevance'] == null
             ? null
             : List<String>.from(json['relevance']),
+        addedBy: json['addedBy'],
       );
     } else {
       return UniEvent(
@@ -139,8 +120,36 @@ extension UniEventExtension on UniEvent {
         relevance: json['relevance'] == null
             ? null
             : List<String>.from(json['relevance']),
+        addedBy: json['addedBy'],
       );
     }
+  }
+
+  Map<String, dynamic> toData() {
+    final type = this.type.toString().split('.').last;
+
+    final json = {
+      'type': type,
+      'name': name,
+      'start': start.toTimestamp(),
+      'duration': duration.toJSON(),
+      'location': location,
+      'class': classHeader.id,
+      'degree': degree,
+      'relevance': relevance,
+      'calendar': calendar.id,
+      'addedBy': addedBy,
+    };
+
+    if (this is RecurringUniEvent) {
+      json['rrule'] = (this as RecurringUniEvent).rrule.toString();
+    }
+
+    if (this is AllDayUniEvent) {
+      json['end'] = (this as AllDayUniEvent).endDate.atMidnight().toTimestamp();
+    }
+
+    return json;
   }
 }
 
@@ -155,6 +164,7 @@ extension AcademicCalendarExtension on AcademicCalendar {
 
   static AcademicCalendar fromSnap(DocumentSnapshot snap) {
     return AcademicCalendar(
+      id: snap.documentID,
       semesters: _eventsFromMapList(snap.data['semesters'], 'semester'),
       holidays: _eventsFromMapList(snap.data['holidays'], 'holiday'),
       exams: _eventsFromMapList(snap.data['exams'], 'examSession'),
@@ -179,13 +189,15 @@ class UniEventProvider extends EventProvider<UniEventInstance>
 
   var cacheLock = Lock();
 
-  Future<void> fetchCalendars() async {
+  Future<Map<String, AcademicCalendar>> fetchCalendars() async {
     final QuerySnapshot query =
         await Firestore.instance.collection('calendars').getDocuments();
     for (final doc in query.documents) {
       _calendars[doc.documentID] = AcademicCalendarExtension.fromSnap(doc);
     }
+
     notifyListeners();
+    return _calendars;
   }
 
   Future<bool> get empty async {
@@ -297,9 +309,65 @@ class UniEventProvider extends EventProvider<UniEventInstance>
     });
   }
 
+  Future<bool> addEvent(UniEvent event, {BuildContext context}) async {
+    try {
+      await Firestore.instance.collection('events').add(event.toData());
+      eventsCache = null;
+      notifyListeners();
+      return true;
+    } catch (e) {
+      _errorHandler(e, context);
+      return false;
+    }
+  }
+
+  Future<bool> updateEvent(UniEvent event, {BuildContext context}) async {
+    try {
+      final ref = Firestore.instance.collection('events').document(event.id);
+
+      if ((await ref.get()).data == null) {
+        print('Event not found.');
+        return false;
+      }
+
+      await ref.updateData(event.toData());
+      eventsCache = null;
+      notifyListeners();
+      return true;
+    } catch (e) {
+      _errorHandler(e, context);
+      return false;
+    }
+  }
+
+  Future<bool> deleteEvent(UniEvent event, {BuildContext context}) async {
+    try {
+      DocumentReference ref;
+      ref = Firestore.instance.collection('events').document(event.id);
+      await ref.delete();
+      eventsCache = null;
+      notifyListeners();
+      return true;
+    } catch (e) {
+      _errorHandler(e, context);
+      return false;
+    }
+  }
+
   @override
   // ignore: must_call_super
   void dispose() {
     // TODO(IoanaAlexandru): Find a better way to prevent Timetable from calling dispose on this provider
+  }
+
+  void _errorHandler(dynamic e, BuildContext context) {
+    print(e.message);
+    if (context != null) {
+      if (e.message.contains('PERMISSION_DENIED')) {
+        AppToast.show(S.of(context).errorPermissionDenied);
+      } else {
+        AppToast.show(S.of(context).errorSomethingWentWrong);
+      }
+    }
   }
 }

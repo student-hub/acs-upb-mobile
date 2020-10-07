@@ -10,6 +10,7 @@ import 'package:acs_upb_mobile/pages/settings/view/request_permissions.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/events/uni_event.dart';
 import 'package:acs_upb_mobile/pages/timetable/service/uni_event_provider.dart';
 import 'package:acs_upb_mobile/pages/timetable/view/date_header.dart';
+import 'package:acs_upb_mobile/pages/timetable/view/events/add_event_view.dart';
 import 'package:acs_upb_mobile/pages/timetable/view/events/all_day_event_widget.dart';
 import 'package:acs_upb_mobile/pages/timetable/view/events/event_widget.dart';
 import 'package:acs_upb_mobile/resources/custom_icons.dart';
@@ -97,6 +98,27 @@ class _TimetablePageState extends State<TimetablePage> {
               event,
               info: info,
             ),
+            onEventBackgroundTap: (dateTime, isAllDay) {
+              if (!isAllDay) {
+                final user = Provider.of<AuthProvider>(context, listen: false)
+                    .currentUserFromCache;
+                if (user.canAddPublicInfo) {
+                  Navigator.of(context).push(MaterialPageRoute<AddEventView>(
+                    builder: (_) => ChangeNotifierProvider<FilterProvider>(
+                      create: (_) => FilterProvider(),
+                      child: AddEventView(
+                        initialEvent: UniEvent(
+                            start: dateTime,
+                            duration: const Period(hours: 2),
+                            id: null),
+                      ),
+                    ),
+                  ));
+                } else {
+                  AppToast.show(S.of(context).errorPermissionDenied);
+                }
+              }
+            },
           ),
           if (eventProvider.eventsCache == null)
             const Center(child: CircularProgressIndicator()),

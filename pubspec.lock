@@ -218,6 +218,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.0"
+  dotted_line:
+    dependency: "direct main"
+    description:
+      name: dotted_line
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.1"
   dynamic_text_highlighting:
     dependency: "direct main"
     description:
@@ -469,6 +476,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.1"
+  interval_time_picker:
+    dependency: "direct main"
+    description:
+      name: interval_time_picker
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.0+1"
   intl:
     dependency: transitive
     description:

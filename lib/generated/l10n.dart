@@ -413,6 +413,56 @@ class S {
     );
   }
 
+  /// `University year`
+  String get labelUniversityYear {
+    return Intl.message(
+      'University year',
+      name: 'labelUniversityYear',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Week`
+  String get labelWeek {
+    return Intl.message(
+      'Week',
+      name: 'labelWeek',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Even`
+  String get labelEven {
+    return Intl.message(
+      'Even',
+      name: 'labelEven',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Odd`
+  String get labelOdd {
+    return Intl.message(
+      'Odd',
+      name: 'labelOdd',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Day`
+  String get labelDay {
+    return Intl.message(
+      'Day',
+      name: 'labelDay',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Shortcuts`
   String get sectionShortcuts {
     return Intl.message(
@@ -1033,6 +1083,26 @@ class S {
     );
   }
 
+  /// `Event type cannot be empty.`
+  String get errorEventTypeCannotBeEmpty {
+    return Intl.message(
+      'Event type cannot be empty.',
+      name: 'errorEventTypeCannotBeEmpty',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Class cannot be empty.`
+  String get errorClassCannotBeEmpty {
+    return Intl.message(
+      'Class cannot be empty.',
+      name: 'errorClassCannotBeEmpty',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Request already exists`
   String get warningRequestExists {
     return Intl.message(
@@ -1298,6 +1368,16 @@ class S {
     return Intl.message(
       'No events to show',
       name: 'warningNoEvents',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You need to select at least one option.`
+  String get warningYouNeedToSelectAtLeastOne {
+    return Intl.message(
+      'You need to select at least one option.',
+      name: 'warningYouNeedToSelectAtLeastOne',
       desc: '',
       args: [],
     );
@@ -1968,6 +2048,36 @@ class S {
     return Intl.message(
       'Are you sure you want to delete this event?',
       name: 'messageDeleteEvent',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Event deleted successfully.`
+  String get messageEventDeleted {
+    return Intl.message(
+      'Event deleted successfully.',
+      name: 'messageEventDeleted',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Event added successfully.`
+  String get messageEventAdded {
+    return Intl.message(
+      'Event added successfully.',
+      name: 'messageEventAdded',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Event modified successfully.`
+  String get messageEventEdited {
+    return Intl.message(
+      'Event modified successfully.',
+      name: 'messageEventEdited',
       desc: '',
       args: [],
     );

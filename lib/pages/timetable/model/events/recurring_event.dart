@@ -56,6 +56,7 @@ class RecurringUniEvent extends UniEvent {
     UniEventType type,
     ClassHeader classHeader,
     AcademicCalendar calendar,
+    String addedBy,
   }) : super(
             name: name,
             location: location,
@@ -67,7 +68,8 @@ class RecurringUniEvent extends UniEvent {
             color: color,
             type: type,
             classHeader: classHeader,
-            calendar: calendar);
+            calendar: calendar,
+            addedBy: addedBy);
 
   final RecurrenceRule rrule;
 

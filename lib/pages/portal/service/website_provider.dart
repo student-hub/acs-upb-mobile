@@ -13,7 +13,7 @@ extension UserExtension on User {
   /// Check if there is at least one website that the [User] has permission to edit
   Future<bool> get hasEditableWebsites async {
     // We assume there is at least one public website in the database
-    if (canEditPublicWebsite) return true;
+    if (canEditPublicInfo) return true;
     return hasPrivateWebsites;
   }
 

@@ -38,6 +38,11 @@
   "labelPersonalInformation": "Informații personale",
   "labelPermissionsConsent": "consimțământul pentru drepturi de editare",
   "labelLastUpdated": "Ultima modificare",
+  "labelUniversityYear": "An universitar",
+  "labelWeek": "Săptămână",
+  "labelEven": "Pară",
+  "labelOdd": "Impară",
+  "labelDay": "Zi",
 
   "sectionShortcuts": "Scurtături",
   "sectionEvents": "Evenimente",
@@ -105,6 +110,8 @@
   "errorTooManyRequests": "Au fost trimise prea multe cereri de pe acest dispozitiv.",
   "errorCouldNotLaunchURL": "Nu s-a putut deschide '{url}'.",
   "errorPermissionDenied": "Nu aveți suficiente permisiuni.",
+  "errorEventTypeCannotBeEmpty": "Tipul de eveniment trebuie precizat.",
+  "errorClassCannotBeEmpty": "Materia trebuie precizată.",
 
   "warningRequestExists": "O cerere deja există",
   "warningInternetConnection": "Asigurați-vă că sunteți conectat la internet.",
@@ -133,6 +140,7 @@
   "warningAgreeTo": "Trebuie să fiți de acord cu ",
   "warningOnlyNOptionsAtATime": "Doar {n} opțiuni pot fi selectate la un moment dat.",
   "warningNoEvents": "Nu există evenimente de afișat",
+  "warningYouNeedToSelectAtLeastOne": "Trebuie să selectați cel puțin o opțiune.",
 
   "navigationAskPermissions": "Cere permisiuni",
   "navigationHome": "Acasă",
@@ -208,6 +216,9 @@
   "messageDeleteWebsite": "Sunteți sigur că doriți să ștergeți acest website?",
   "messageWebsiteDeleted": "Website-ul a fost șters cu succes.",
   "messageDeleteEvent": "Sunteți sigur că doriți să ștergeți acest eveniment?",
+  "messageEventDeleted": "Eveniment șters cu succes.",
+  "messageEventAdded": "Eveniment adăugat cu succes.",
+  "messageEventEdited": "Eveniment modificat cu succes.",
   "messageDeleteShortcut": "Sunteți sigur că doriți să ștergeți \"{shortcutName}\"?",
   "messageThisCouldAffectOtherStudents": "Alți studenți ar putea fi afectați.",
   "messageShortcutDeleted": "Scurtătura a fost ștearsă cu succes.",

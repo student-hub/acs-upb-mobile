@@ -13,10 +13,10 @@ description: A mobile application for students at ACS UPB.
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 #
 # ACS UPB Mobile uses semantic versioning. You can read more in the CONTRIBUTING.md file.
-version: 1.0.1+2
+version: 1.1.0+1
 
 environment:
-  sdk: ">=2.6.0 <3.0.0"
+  sdk: ">=2.7.0 <3.0.0"
 
 dependencies:
   flutter:
@@ -87,8 +87,9 @@ dependencies:
   # Color picker widget
   flutter_colorpicker: ^0.3.4
 
-  # Date & time picker widget
+  # Date & time picker widgets
   datetime_picker_formfield: ^1.0.0
+  interval_time_picker: ^0.1.0
 
   # Allows getting the position of taps
   positioned_tap_detector: ^1.0.3
@@ -104,6 +105,9 @@ dependencies:
 
   # Web scraper
   web_scraper: ^0.0.6
+
+  # Dotted line painter
+  dotted_line: ^2.0.1
 
   # Support lock/mutex
   synchronized: ^2.2.0
