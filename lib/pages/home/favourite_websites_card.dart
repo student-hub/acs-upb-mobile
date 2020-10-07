@@ -17,12 +17,11 @@ class FavouriteWebsitesCard extends StatelessWidget {
     return InfoCard<List<Website>>(
       title: S.of(context).sectionFrequentlyAccessedWebsites,
       onShowMore: onShowMore,
-      future: Provider.of<WebsiteProvider>(context).fetchWebsites(null),
+      future: Provider.of<WebsiteProvider>(context).fetchFavouriteWebsites(),
       builder: (websites) => Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.start,
         children: websites
-            .take(3)
             .map((website) => Expanded(
                   child: Padding(
                       padding: const EdgeInsets.all(8),
