@@ -50,31 +50,7 @@ class _TimetablePageState extends State<TimetablePage> {
               startTime: LocalTime(7, 55, 0), endTime: LocalTime(20, 5, 0)),
           eventProvider: eventProvider);
 
-      WidgetsBinding.instance.addPostFrameCallback((_) async {
-        if (!mounted) {
-          return;
-        }
-
-        // Fetch user classes, request info and filter so they're cached
-        final user = Provider.of<AuthProvider>(context, listen: false)
-            .currentUserFromCache;
-        await Provider.of<ClassProvider>(context, listen: false)
-            .fetchClassHeaders(uid: user.uid);
-        await Provider.of<FilterProvider>(context, listen: false).fetchFilter();
-        await Provider.of<RequestProvider>(context, listen: false)
-            .userAlreadyRequested(user.uid);
-
-        // Slight delay between last frame and dialog
-        await Future<void>.delayed(const Duration(milliseconds: 100));
-
-        // Show dialog if there are no events
-        if (eventProvider.empty == true) {
-          await showDialog<String>(
-            context: context,
-            builder: buildDialog,
-          );
-        }
-      });
+      scheduleDialog(context);
     }
 
     return AppScaffold(
@@ -149,6 +125,37 @@ class _TimetablePageState extends State<TimetablePage> {
         ],
       ),
     );
+  }
+
+  Future<void> scheduleDialog(BuildContext context) async {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      if (!mounted) {
+        return;
+      }
+
+      // Fetch user classes, request necessary info from providers so it's
+      // cached when we check in the dialog
+      final user = Provider.of<AuthProvider>(context, listen: false)
+          .currentUserFromCache;
+      await Provider.of<ClassProvider>(context, listen: false)
+          .fetchClassHeaders(uid: user.uid);
+      await Provider.of<FilterProvider>(context, listen: false).fetchFilter();
+      await Provider.of<RequestProvider>(context, listen: false)
+          .userAlreadyRequested(user.uid);
+
+      // Slight delay between last frame and dialog
+      await Future<void>.delayed(const Duration(milliseconds: 100));
+
+      // Show dialog if there are no events
+      final eventProvider =
+          Provider.of<UniEventProvider>(context, listen: false);
+      if (await eventProvider.empty) {
+        await showDialog<String>(
+          context: context,
+          builder: buildDialog,
+        );
+      }
+    });
   }
 
   Widget buildDialog(BuildContext context) {

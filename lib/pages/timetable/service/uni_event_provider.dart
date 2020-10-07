@@ -14,6 +14,7 @@ import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:rrule/rrule.dart';
+import 'package:synchronized/synchronized.dart';
 import 'package:time_machine/time_machine.dart';
 import 'package:timetable/timetable.dart';
 
@@ -180,12 +181,13 @@ class UniEventProvider extends EventProvider<UniEventInstance>
 
   final Map<String, AcademicCalendar> _calendars = {};
   ClassProvider _classProvider;
-  FilterProvider _filterProvider;
   final AuthProvider _authProvider;
   List<String> _classIds = [];
   Filter _filter;
   List<UniEvent> eventsCache;
-  bool empty;
+  bool emptyCache;
+
+  var cacheLock = Lock();
 
   Future<Map<String, AcademicCalendar>> fetchCalendars() async {
     final QuerySnapshot query =
@@ -198,6 +200,11 @@ class UniEventProvider extends EventProvider<UniEventInstance>
     return _calendars;
   }
 
+  Future<bool> get empty async {
+    if (emptyCache != null) return emptyCache;
+    return (await _events).isEmpty;
+  }
+
   Future<List<UniEvent>> get _events async {
     if (eventsCache != null) return eventsCache;
 
@@ -206,6 +213,9 @@ class UniEventProvider extends EventProvider<UniEventInstance>
         _calendars == null) return [];
 
     var events = <UniEvent>[];
+    // Set the cache to an empty list so that if [updateClasses] or [updateFilter]
+    // is called while fetching, we can invalidate the fetched data.
+    eventsCache = <UniEvent>[];
 
     if (_filter.relevantNodes.length > 1) {
       for (final classId in _classIds ?? []) {
@@ -231,10 +241,20 @@ class UniEventProvider extends EventProvider<UniEventInstance>
     }
 
     events = events.where((event) => event != null).toList();
-    empty = events.isEmpty;
-    eventsCache = events;
-    notifyListeners();
-    return eventsCache;
+    return cacheLock.synchronized(() {
+      if (eventsCache != null) {
+        // Cache was not invalidated while fetching
+        emptyCache = events.isEmpty;
+        eventsCache = events;
+        notifyListeners();
+        return eventsCache;
+      } else {
+        // Cache was invalidated while fetching - that means the filter/classes
+        // changed, so we need to try again
+        // ignore: recursive_getters
+        return _events;
+      }
+    });
   }
 
   @override
@@ -267,19 +287,24 @@ class UniEventProvider extends EventProvider<UniEventInstance>
   }
 
   void updateClasses(ClassProvider classProvider) {
-    _classProvider = classProvider;
-    _classProvider.fetchUserClassIds(uid: _authProvider.uid).then((classIds) {
+    classProvider.fetchUserClassIds(uid: _authProvider.uid).then((classIds) {
+      _classProvider = classProvider;
       _classIds = classIds;
-      eventsCache = null;
+      cacheLock.synchronized(() {
+        eventsCache = null;
+        emptyCache = null;
+      });
       notifyListeners();
     });
   }
 
   void updateFilter(FilterProvider filterProvider) {
-    _filterProvider = filterProvider;
-    _filterProvider.fetchFilter().then((filter) {
+    filterProvider.fetchFilter().then((filter) {
       _filter = filter;
-      eventsCache = null;
+      cacheLock.synchronized(() {
+        eventsCache = null;
+        emptyCache = null;
+      });
       notifyListeners();
     });
   }

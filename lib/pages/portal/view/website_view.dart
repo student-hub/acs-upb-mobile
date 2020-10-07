@@ -344,7 +344,7 @@ class WebsiteIcon extends StatelessWidget {
         ImageProvider image;
         image = const AssetImage('assets/icons/globe.png');
         if (snapshot.hasData) {
-          image = NetworkImage(snapshot.data.toString());
+          image = NetworkImage(snapshot.data);
         }
 
         return CircleImage(

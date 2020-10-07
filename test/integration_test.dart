@@ -436,6 +436,7 @@ void main() {
     when(mockEventProvider.getAllDayEventsIntersecting(any))
         .thenAnswer((_) => Stream.fromIterable([]));
     when(mockEventProvider.eventsCache).thenReturn([]);
+    when(mockEventProvider.empty).thenAnswer((_) => Future.value(true));
 
     mockRequestProvider = MockRequestProvider();
     when(mockRequestProvider.makeRequest(any, context: anyNamed('context')))
@@ -484,6 +485,14 @@ void main() {
         await tester.pumpWidget(buildApp());
         await tester.pumpAndSettle();
 
+        // Open timetable
+        await tester.tap(find.byIcon(Icons.calendar_today_rounded));
+        await tester.pumpAndSettle();
+
+        // Close "No events to show" dialog
+        await tester.tap(find.text('CANCEL'));
+        await tester.pumpAndSettle();
+
         // Open classes
         await tester.tap(find.byIcon(Icons.calendar_today_rounded));
         await tester.pumpAndSettle();
@@ -517,10 +526,15 @@ void main() {
         await tester.pumpWidget(buildApp());
         await tester.pumpAndSettle();
 
-        // Open classes page
+        // Open timetable
         await tester.tap(find.byIcon(Icons.calendar_today_rounded));
         await tester.pumpAndSettle();
 
+        // Close "No events to show" dialog
+        await tester.tap(find.text('CANCEL'));
+        await tester.pumpAndSettle();
+
+        // Open classes
         await tester.tap(find.byIcon(Icons.class_));
         await tester.pumpAndSettle();
 
@@ -559,10 +573,15 @@ void main() {
         await tester.pumpWidget(buildApp());
         await tester.pumpAndSettle();
 
-        // Open classes page
+        // Open timetable
         await tester.tap(find.byIcon(Icons.calendar_today_rounded));
         await tester.pumpAndSettle();
 
+        // Close "No events to show" dialog
+        await tester.tap(find.text('CANCEL'));
+        await tester.pumpAndSettle();
+
+        // Open classes
         await tester.tap(find.byIcon(Icons.class_));
         await tester.pumpAndSettle();
 
