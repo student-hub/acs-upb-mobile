@@ -491,27 +491,29 @@ class RelevanceFormField extends FormField<List<String>> {
             controller.onChanged = () {
               state.didChange(controller.customRelevance);
             };
+            final context = state.context;
             return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  RelevancePicker(
-                    canBePrivate: false,
-                    canBeForEveryone: false,
-                    filterProvider: Provider.of<FilterProvider>(state.context),
-                    controller: controller,
-                  ),
-                  if (state.hasError)
-                    Padding(
-                      padding: const EdgeInsets.only(top: 8),
-                      child: Text(
-                        state.errorText,
-                        style: Theme.of(state.context)
-                            .textTheme
-                            .caption
-                            .copyWith(color: Colors.red),
-                      ),
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                RelevancePicker(
+                  canBePrivate: false,
+                  canBeForEveryone: false,
+                  filterProvider: Provider.of<FilterProvider>(context),
+                  controller: controller,
+                ),
+                if (state.hasError)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8),
+                    child: Text(
+                      state.errorText,
+                      style: Theme.of(context)
+                          .textTheme
+                          .caption
+                          .copyWith(color: Theme.of(context).errorColor),
                     ),
-                ]);
+                  ),
+              ],
+            );
           },
         );
 
@@ -605,10 +607,10 @@ class SelectableFormField extends FormField<Map<Localizable, bool>> {
                     padding: const EdgeInsets.only(top: 8),
                     child: Text(
                       state.errorText,
-                      style: Theme.of(state.context)
+                      style: Theme.of(context)
                           .textTheme
                           .caption
-                          .copyWith(color: Colors.red),
+                          .copyWith(color: Theme.of(context).errorColor),
                     ),
                   ),
               ],
