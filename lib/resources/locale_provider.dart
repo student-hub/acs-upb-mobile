@@ -4,6 +4,12 @@ import 'package:preferences/preference_service.dart';
 import 'package:rrule/rrule.dart';
 import 'package:time_machine/time_machine.dart';
 
+abstract class Localizable {
+  const Localizable();
+
+  String toLocalizedString(BuildContext context);
+}
+
 class LocaleProvider {
   LocaleProvider._();
 

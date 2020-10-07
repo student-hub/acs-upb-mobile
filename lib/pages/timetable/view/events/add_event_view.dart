@@ -12,6 +12,7 @@ import 'package:acs_upb_mobile/pages/timetable/model/events/recurring_event.dart
 import 'package:acs_upb_mobile/pages/timetable/model/events/uni_event.dart';
 import 'package:acs_upb_mobile/pages/timetable/service/uni_event_provider.dart';
 import 'package:acs_upb_mobile/resources/custom_icons.dart';
+import 'package:acs_upb_mobile/resources/locale_provider.dart';
 import 'package:acs_upb_mobile/widgets/button.dart';
 import 'package:acs_upb_mobile/widgets/dialog.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
@@ -24,6 +25,37 @@ import 'package:provider/provider.dart';
 import 'package:rrule/rrule.dart';
 import 'package:time_machine/time_machine.dart';
 import 'package:time_machine/time_machine_text_patterns.dart';
+
+class WeekType extends Localizable {
+  const WeekType(this._value);
+
+  final int _value;
+
+  int get value => _value;
+
+  static const WeekType odd = WeekType(0);
+  static const WeekType even = WeekType(1);
+
+  @override
+  int get hashCode => _value.hashCode;
+
+  @override
+  bool operator ==(dynamic other) =>
+      other is WeekType && other._value == _value ||
+      other is int && other == _value;
+
+  @override
+  String toLocalizedString(BuildContext context) {
+    switch (_value) {
+      case 0:
+        return S.of(context).labelOdd;
+      case 1:
+        return S.of(context).labelEven;
+      default:
+        return '';
+    }
+  }
+}
 
 class AddEventView extends StatefulWidget {
   /// If the `id` of [initialEvent] is not null, this acts like an "Edit event"
@@ -48,8 +80,10 @@ class _AddEventViewState extends State<AddEventView> {
   String selectedCalendar;
   LocalTime startTime;
   Period duration;
-  bool evenWeekSelected;
-  bool oddWeekSelected;
+  Map<WeekType, bool> weekSelected = {
+    WeekType.odd: null,
+    WeekType.even: null,
+  };
   Map<DayOfWeek, bool> weekDaySelected = {
     DayOfWeek.monday: false,
     DayOfWeek.tuesday: false,
@@ -97,19 +131,19 @@ class _AddEventViewState extends State<AddEventView> {
           if (rule.getWeekOfWeekYear(semester.start.calendarDate) ==
               rule.getWeekOfWeekYear(event.start.calendarDate)) {
             // Week is odd
-            evenWeekSelected = false;
-            oddWeekSelected = true;
+            weekSelected[WeekType.even] = false;
+            weekSelected[WeekType.odd] = true;
           } else {
             // Week is even
-            oddWeekSelected = false;
-            evenWeekSelected = true;
+            weekSelected[WeekType.even] = true;
+            weekSelected[WeekType.odd] = false;
           }
         }
       }
 
       setState(() {
-        oddWeekSelected ??= true;
-        evenWeekSelected ??= true;
+        weekSelected[WeekType.even] ??= true;
+        weekSelected[WeekType.odd] ??= true;
       });
     });
 
@@ -265,8 +299,21 @@ class _AddEventViewState extends State<AddEventView> {
                             },
                           ),
                         timeIntervalPicker(),
-                        if (oddWeekSelected != null && evenWeekSelected != null)
-                          weekPicker(),
+                        if (weekSelected[WeekType.odd] != null &&
+                            weekSelected[WeekType.even])
+                          WeekPickerFormField(
+                            initialValues: weekSelected,
+                            validator: (selection) {
+                              if (selection.values
+                                  .where((e) => e != false)
+                                  .isEmpty) {
+                                return S
+                                    .of(context)
+                                    .warningYouNeedToSelectAtLeastOne;
+                              }
+                              return null;
+                            },
+                          ),
                         dayPicker(),
                         TextFormField(
                           controller: locationController,
@@ -316,7 +363,7 @@ class _AddEventViewState extends State<AddEventView> {
           if (!formKey.currentState.validate()) return;
 
           LocalDateTime start = semester.startDate.at(startTime);
-          if (evenWeekSelected && !oddWeekSelected) {
+          if (weekSelected[WeekType.even] && !weekSelected[WeekType.odd]) {
             // Event is every even week, add a week to start date
             start = start.add(const Period(weeks: 1));
           }
@@ -328,7 +375,10 @@ class _AddEventViewState extends State<AddEventView> {
                   .keys
                   .map((weekDay) => ByWeekDayEntry(weekDay))
                   .toSet(),
-              interval: oddWeekSelected != evenWeekSelected ? 2 : 1,
+              interval:
+                  weekSelected[WeekType.odd] != weekSelected[WeekType.even]
+                      ? 2
+                      : 1,
               until: semester.endDate.add(const Period(days: 1)).atMidnight());
 
           final event = RecurringUniEvent(
@@ -441,67 +491,6 @@ class _AddEventViewState extends State<AddEventView> {
     );
   }
 
-  Widget weekPicker() {
-    return IntrinsicHeight(
-      child: Padding(
-        padding: const EdgeInsets.only(top: 12, left: 12),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            Icon(Icons.calendar_today,
-                color: CustomIcons.formIconColor(Theme.of(context))),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Expanded(
-                    child: Text(
-                      S.of(context).labelWeek,
-                      style: Theme.of(context)
-                          .textTheme
-                          .caption
-                          .apply(color: Theme.of(context).hintColor),
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Row(
-                    children: <Widget>[
-                      Expanded(
-                        child: Container(
-                          height: 40,
-                          child: ListView(
-                            scrollDirection: Axis.horizontal,
-                            children: <Widget>[
-                              Selectable(
-                                label: S.of(context).labelOdd,
-                                initiallySelected: oddWeekSelected,
-                                onSelected: (selected) =>
-                                    setState(() => oddWeekSelected = selected),
-                              ),
-                              const SizedBox(width: 8),
-                              Selectable(
-                                label: S.of(context).labelEven,
-                                initiallySelected: evenWeekSelected,
-                                onSelected: (selected) =>
-                                    setState(() => evenWeekSelected = selected),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
   Widget dayPicker() {
     return IntrinsicHeight(
       child: Padding(
@@ -566,6 +555,7 @@ class RelevanceFormField extends FormField<List<String>> {
   }) : super(
           key: key,
           autovalidateMode: AutovalidateMode.onUserInteraction,
+          validator: validator,
           builder: (FormFieldState<List<String>> state) {
             controller.onChanged = () {
               state.didChange(controller.customRelevance);
@@ -592,10 +582,106 @@ class RelevanceFormField extends FormField<List<String>> {
                     ),
                 ]);
           },
-          validator: validator,
         );
 
   final RelevanceController controller;
+}
+
+class WeekPickerFormField extends FormField<Map<Localizable, bool>> {
+  WeekPickerFormField(
+      {@required Map<Localizable, bool> initialValues,
+      String Function(Map<Localizable, bool>) validator,
+      Key key})
+      : super(
+          autovalidateMode: AutovalidateMode.onUserInteraction,
+          initialValue: initialValues,
+          key: key,
+          validator: validator,
+          builder: (state) {
+            final context = state.context;
+            final labels = state.value.keys.toList();
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                IntrinsicHeight(
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 12, left: 12),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        Icon(Icons.calendar_today,
+                            color:
+                                CustomIcons.formIconColor(Theme.of(context))),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Expanded(
+                                child: Text(
+                                  S.of(context).labelWeek,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .caption
+                                      .apply(
+                                          color: Theme.of(context).hintColor),
+                                ),
+                              ),
+                              const SizedBox(height: 8),
+                              Row(
+                                children: <Widget>[
+                                  Expanded(
+                                    child: Container(
+                                      height: 40,
+                                      child: ListView.builder(
+                                        itemCount: labels.length,
+                                        scrollDirection: Axis.horizontal,
+                                        itemBuilder: (context, index) {
+                                          return Row(
+                                            children: [
+                                              Selectable(
+                                                label: labels[index]
+                                                    .toLocalizedString(context),
+                                                initiallySelected:
+                                                    state.value[labels[index]],
+                                                onSelected: (selected) {
+                                                  state.value[labels[index]] =
+                                                      selected;
+                                                  state.didChange(state.value);
+                                                },
+                                              ),
+                                              const SizedBox(width: 8),
+                                            ],
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                if (state.hasError)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8),
+                    child: Text(
+                      state.errorText,
+                      style: Theme.of(state.context)
+                          .textTheme
+                          .caption
+                          .copyWith(color: Colors.red),
+                    ),
+                  ),
+              ],
+            );
+          },
+        );
 }
 
 extension LocalTimeConversion on LocalTime {
