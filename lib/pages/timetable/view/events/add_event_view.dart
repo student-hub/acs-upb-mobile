@@ -23,39 +23,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 import 'package:rrule/rrule.dart';
-import 'package:time_machine/time_machine.dart';
+import 'package:time_machine/time_machine.dart' as time_machine show DayOfWeek;
+import 'package:time_machine/time_machine.dart' hide DayOfWeek;
 import 'package:time_machine/time_machine_text_patterns.dart';
-
-class WeekType extends Localizable {
-  const WeekType(this._value);
-
-  final int _value;
-
-  int get value => _value;
-
-  static const WeekType odd = WeekType(0);
-  static const WeekType even = WeekType(1);
-
-  @override
-  int get hashCode => _value.hashCode;
-
-  @override
-  bool operator ==(dynamic other) =>
-      other is WeekType && other._value == _value ||
-      other is int && other == _value;
-
-  @override
-  String toLocalizedString(BuildContext context) {
-    switch (_value) {
-      case 0:
-        return S.of(context).labelOdd;
-      case 1:
-        return S.of(context).labelEven;
-      default:
-        return '';
-    }
-  }
-}
 
 class AddEventView extends StatefulWidget {
   /// If the `id` of [initialEvent] is not null, this acts like an "Edit event"
@@ -157,14 +127,14 @@ class _AddEventViewState extends State<AddEventView> {
     startTime = LocalTime(startHour, 0, 0);
 
     var initialWeekDays = [
-      widget.initialEvent?.start?.dayOfWeek ?? DayOfWeek.monday
+      DayOfWeek.from(widget.initialEvent?.start?.dayOfWeek) ?? DayOfWeek.monday
     ];
     if (widget.initialEvent != null &&
         widget.initialEvent is RecurringUniEvent) {
       initialWeekDays = (widget.initialEvent as RecurringUniEvent)
           .rrule
           .byWeekDays
-          .map((entry) => entry.day)
+          .map((entry) => DayOfWeek.from(entry.day))
           .toList();
     }
     for (final initialWeekDay in initialWeekDays) {
@@ -301,7 +271,9 @@ class _AddEventViewState extends State<AddEventView> {
                         timeIntervalPicker(),
                         if (weekSelected[WeekType.odd] != null &&
                             weekSelected[WeekType.even])
-                          WeekPickerFormField(
+                          SelectableFormField(
+                            icon: Icons.calendar_today,
+                            label: S.of(context).labelWeek,
                             initialValues: weekSelected,
                             validator: (selection) {
                               if (selection.values
@@ -314,7 +286,21 @@ class _AddEventViewState extends State<AddEventView> {
                               return null;
                             },
                           ),
-                        dayPicker(),
+                        SelectableFormField(
+                          icon: Icons.today,
+                          label: S.of(context).labelDay,
+                          initialValues: weekDaySelected,
+                          validator: (selection) {
+                            if (selection.values
+                                .where((e) => e != false)
+                                .isEmpty) {
+                              return S
+                                  .of(context)
+                                  .warningYouNeedToSelectAtLeastOne;
+                            }
+                            return null;
+                          },
+                        ),
                         TextFormField(
                           controller: locationController,
                           decoration: InputDecoration(
@@ -490,61 +476,6 @@ class _AddEventViewState extends State<AddEventView> {
       ),
     );
   }
-
-  Widget dayPicker() {
-    return IntrinsicHeight(
-      child: Padding(
-        padding: const EdgeInsets.only(top: 12, left: 12),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            Icon(Icons.today,
-                color: CustomIcons.formIconColor(Theme.of(context))),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    S.of(context).labelDay,
-                    style: Theme.of(context)
-                        .textTheme
-                        .caption
-                        .apply(color: Theme.of(context).hintColor),
-                  ),
-                  const SizedBox(height: 8),
-                  Container(
-                    height: 40,
-                    child: ListView(
-                        scrollDirection: Axis.horizontal,
-                        children: weekDaySelected.keys.map((dayOfWeek) {
-                          final helperDate = LocalDate.today().next(dayOfWeek);
-                          return Row(
-                            children: [
-                              Selectable(
-                                label:
-                                    LocalDatePattern.createWithCurrentCulture(
-                                            'ddd')
-                                        .format(helperDate)
-                                        .substring(0, 3),
-                                initiallySelected: weekDaySelected[dayOfWeek],
-                                onSelected: (selected) => setState(() =>
-                                    weekDaySelected[dayOfWeek] = selected),
-                              ),
-                              const SizedBox(width: 8),
-                            ],
-                          );
-                        }).toList()),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 }
 
 class RelevanceFormField extends FormField<List<String>> {
@@ -587,12 +518,14 @@ class RelevanceFormField extends FormField<List<String>> {
   final RelevanceController controller;
 }
 
-class WeekPickerFormField extends FormField<Map<Localizable, bool>> {
-  WeekPickerFormField(
-      {@required Map<Localizable, bool> initialValues,
-      String Function(Map<Localizable, bool>) validator,
-      Key key})
-      : super(
+class SelectableFormField extends FormField<Map<Localizable, bool>> {
+  SelectableFormField({
+    @required Map<Localizable, bool> initialValues,
+    @required IconData icon,
+    @required String label,
+    String Function(Map<Localizable, bool>) validator,
+    Key key,
+  }) : super(
           autovalidateMode: AutovalidateMode.onUserInteraction,
           initialValue: initialValues,
           key: key,
@@ -609,7 +542,7 @@ class WeekPickerFormField extends FormField<Map<Localizable, bool>> {
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
-                        Icon(Icons.calendar_today,
+                        Icon(icon,
                             color:
                                 CustomIcons.formIconColor(Theme.of(context))),
                         const SizedBox(width: 12),
@@ -620,7 +553,7 @@ class WeekPickerFormField extends FormField<Map<Localizable, bool>> {
                             children: <Widget>[
                               Expanded(
                                 child: Text(
-                                  S.of(context).labelWeek,
+                                  label,
                                   style: Theme.of(context)
                                       .textTheme
                                       .caption
@@ -682,6 +615,60 @@ class WeekPickerFormField extends FormField<Map<Localizable, bool>> {
             );
           },
         );
+}
+
+class DayOfWeek extends time_machine.DayOfWeek with Localizable {
+  const DayOfWeek(int value) : super(value);
+
+  DayOfWeek.from(time_machine.DayOfWeek dayOfWeek) : super(dayOfWeek.value);
+
+  @override
+  String toLocalizedString(BuildContext context) {
+    final helperDate = LocalDate.today().next(this);
+    return LocalDatePattern.createWithCurrentCulture('ddd')
+        .format(helperDate)
+        .substring(0, 3);
+  }
+
+  static const DayOfWeek none = DayOfWeek(0);
+  static const DayOfWeek monday = DayOfWeek(1);
+  static const DayOfWeek tuesday = DayOfWeek(2);
+  static const DayOfWeek wednesday = DayOfWeek(3);
+  static const DayOfWeek thursday = DayOfWeek(4);
+  static const DayOfWeek friday = DayOfWeek(5);
+  static const DayOfWeek saturday = DayOfWeek(6);
+  static const DayOfWeek sunday = DayOfWeek(7);
+}
+
+class WeekType with Localizable {
+  const WeekType(this._value);
+
+  final int _value;
+
+  int get value => _value;
+
+  static const WeekType odd = WeekType(0);
+  static const WeekType even = WeekType(1);
+
+  @override
+  int get hashCode => _value.hashCode;
+
+  @override
+  bool operator ==(dynamic other) =>
+      other is WeekType && other._value == _value ||
+      other is int && other == _value;
+
+  @override
+  String toLocalizedString(BuildContext context) {
+    switch (_value) {
+      case 0:
+        return S.of(context).labelOdd;
+      case 1:
+        return S.of(context).labelEven;
+      default:
+        return '';
+    }
+  }
 }
 
 extension LocalTimeConversion on LocalTime {
