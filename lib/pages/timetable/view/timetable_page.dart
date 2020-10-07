@@ -101,21 +101,21 @@ class _TimetablePageState extends State<TimetablePage> {
             onEventBackgroundTap: (dateTime, isAllDay) {
               if (!isAllDay) {
                 final user = Provider.of<AuthProvider>(context, listen: false)
-                .currentUserFromCache;
-            if (user.canAddEvent) {
-              Navigator.of(context).push(MaterialPageRoute<AddEventView>(
-                builder: (_) => ChangeNotifierProvider<FilterProvider>(
-                  create: (_) => FilterProvider(),
-                  child: AddEventView(
-                    initialEvent: UniEvent(
-                        start: dateTime,
-                        duration: const Period(hours: 2),
-                        id: null),
-                  ),
-                ),
-              ));
-            } else {
-              AppToast.show(S.of(context).errorPermissionDenied);
+                    .currentUserFromCache;
+                if (user.canAddPublicInfo) {
+                  Navigator.of(context).push(MaterialPageRoute<AddEventView>(
+                    builder: (_) => ChangeNotifierProvider<FilterProvider>(
+                      create: (_) => FilterProvider(),
+                      child: AddEventView(
+                        initialEvent: UniEvent(
+                            start: dateTime,
+                            duration: const Period(hours: 2),
+                            id: null),
+                      ),
+                    ),
+                  ));
+                } else {
+                  AppToast.show(S.of(context).errorPermissionDenied);
                 }
               }
             },

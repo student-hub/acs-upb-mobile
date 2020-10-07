@@ -74,7 +74,7 @@ class _EventViewState extends State<EventView> {
             onPressed: () {
               final user = Provider.of<AuthProvider>(context, listen: false)
                   .currentUserFromCache;
-              if (user.canAddEvent) {
+              if (user.canAddPublicInfo) {
                 Navigator.of(context).push(MaterialPageRoute<AddEventView>(
                   builder: (_) => ChangeNotifierProvider<FilterProvider>(
                     create: (_) => FilterProvider(

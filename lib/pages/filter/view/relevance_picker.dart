@@ -11,7 +11,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class RelevanceController {
+  RelevanceController({this.onChanged});
+
   _RelevancePickerState _state;
+  void Function() onChanged;
 
   String get degree => _state?._filter?.baseNode;
 
@@ -99,14 +102,14 @@ class _RelevancePickerState extends State<RelevancePicker> {
   }
 
   Widget _customRelevanceButton() {
-    final buttonColor = _user?.canAddPublicWebsite ?? false
+    final buttonColor = _user?.canAddPublicInfo ?? false
         ? Theme.of(context).accentColor
         : Theme.of(context).hintColor;
 
     return IntrinsicWidth(
       child: GestureDetector(
         onTap: () {
-          if (_user?.canAddPublicWebsite ?? false) {
+          if (_user?.canAddPublicInfo ?? false) {
             Navigator.of(context)
                 .push(MaterialPageRoute<ChangeNotifierProvider>(
               builder: (_) => ChangeNotifierProvider.value(
@@ -158,10 +161,11 @@ class _RelevancePickerState extends State<RelevancePicker> {
   }
 
   void _onCustomSelected(bool selected) => setState(() {
-        if (_user?.canAddPublicWebsite ?? false) {
+        if (_user?.canAddPublicInfo ?? false) {
           if (selected) {
             _onlyMeController.deselect();
             _anyoneController.deselect();
+            widget.controller?.onChanged();
           }
         } else {
           AppToast.show(S.of(context).warningNoPermissionToAddPublicWebsite);
@@ -187,17 +191,18 @@ class _RelevancePickerState extends State<RelevancePicker> {
             initiallySelected: _filterApplied ||
                 (!widget.canBePrivate && !widget.canBeForEveryone),
             onSelected: (selected) => setState(() {
-              if (_user?.canAddPublicWebsite ?? false) {
+              if (_user?.canAddPublicInfo ?? false) {
                 if (selected) {
                   _onlyMeController.deselect();
                   _anyoneController.deselect();
                 }
+                widget.controller?.onChanged();
               } else {
                 AppToast.show(
                     S.of(context).warningNoPermissionToAddPublicWebsite);
               }
             }),
-            disabled: !(_user?.canAddPublicWebsite ?? false),
+            disabled: !(_user?.canAddPublicInfo ?? false),
           ))
           ..add(const SizedBox(width: 8));
       }
@@ -217,7 +222,7 @@ class _RelevancePickerState extends State<RelevancePicker> {
             controller: controller,
             initiallySelected: true,
             onSelected: _onCustomSelected,
-            disabled: !(_user?.canAddPublicWebsite ?? false),
+            disabled: !(_user?.canAddPublicInfo ?? false),
           ));
       }
     }
@@ -276,7 +281,7 @@ class _RelevancePickerState extends State<RelevancePicker> {
                                         initiallySelected:
                                             widget.defaultPrivate ?? true,
                                         onSelected: (selected) => setState(() {
-                                          if (_user?.canAddPublicWebsite ??
+                                          if (_user?.canAddPublicInfo ??
                                               false) {
                                             if (selected) {
                                               _anyoneController.deselect();
@@ -291,6 +296,7 @@ class _RelevancePickerState extends State<RelevancePicker> {
                                           } else {
                                             _onlyMeController.select();
                                           }
+                                          widget.controller?.onChanged();
                                         }),
                                         controller: _onlyMeController,
                                       ),
@@ -305,7 +311,7 @@ class _RelevancePickerState extends State<RelevancePicker> {
                                                 .defaultRelevance ==
                                             null,
                                     onSelected: (selected) => setState(() {
-                                      if (_user?.canAddPublicWebsite ?? false) {
+                                      if (_user?.canAddPublicInfo ?? false) {
                                         if (selected) {
                                           // Deselect all controllers
                                           _onlyMeController.deselect();
@@ -324,7 +330,7 @@ class _RelevancePickerState extends State<RelevancePicker> {
                                     }),
                                     controller: _anyoneController,
                                     disabled:
-                                        !(_user?.canAddPublicWebsite ?? false),
+                                        !(_user?.canAddPublicInfo ?? false),
                                   ),
                                 _customRelevanceSelectables(),
                               ],

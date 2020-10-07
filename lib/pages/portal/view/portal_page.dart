@@ -75,7 +75,7 @@ class _PortalPageState extends State<PortalPage> {
 
   Widget websiteCircle(Website website, double size) {
     final bool canEdit = editingEnabled &&
-        (website.isPrivate || (user.canEditPublicWebsite ?? false));
+        (website.isPrivate || (user.canEditPublicInfo ?? false));
     return Padding(
         padding: const EdgeInsets.all(8),
         child: WebsiteIcon(

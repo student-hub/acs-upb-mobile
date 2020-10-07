@@ -201,11 +201,15 @@ class _AddEventViewState extends State<AddEventView> {
                       ),
                     ],
                   ),
-                  RelevancePicker(
-                    canBePrivate: false,
-                    canBeForEveryone: false,
-                    filterProvider: Provider.of<FilterProvider>(context),
+                  RelevanceFormField(
                     controller: relevanceController,
+                    validator: (_) {
+                      if (relevanceController.customRelevance?.isEmpty ??
+                          true) {
+                        return S.of(context).warningYouNeedToSelectAtLeastOne;
+                      }
+                      return null;
+                    },
                   ),
                   DropdownButtonFormField<UniEventType>(
                     decoration: InputDecoration(
@@ -552,6 +556,46 @@ class _AddEventViewState extends State<AddEventView> {
       ),
     );
   }
+}
+
+class RelevanceFormField extends FormField<List<String>> {
+  RelevanceFormField({
+    @required this.controller,
+    String Function(List<String>) validator,
+    Key key,
+  }) : super(
+          key: key,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
+          builder: (FormFieldState<List<String>> state) {
+            controller.onChanged = () {
+              state.didChange(controller.customRelevance);
+            };
+            return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  RelevancePicker(
+                    canBePrivate: false,
+                    canBeForEveryone: false,
+                    filterProvider: Provider.of<FilterProvider>(state.context),
+                    controller: controller,
+                  ),
+                  if (state.hasError)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 8),
+                      child: Text(
+                        state.errorText,
+                        style: Theme.of(state.context)
+                            .textTheme
+                            .caption
+                            .copyWith(color: Colors.red),
+                      ),
+                    ),
+                ]);
+          },
+          validator: validator,
+        );
+
+  final RelevanceController controller;
 }
 
 extension LocalTimeConversion on LocalTime {
