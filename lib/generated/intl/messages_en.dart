@@ -159,6 +159,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "messageAccountDeleted" : MessageLookupByLibrary.simpleMessage("Account deleted successfully."),
     "messageAddCustomWebsite" : MessageLookupByLibrary.simpleMessage("Try adding a custom website."),
     "messageAgreePermissions" : MessageLookupByLibrary.simpleMessage("I will only upload information that is correct and accurate, to the best of my knowledge. I understand that submitting erroneous or offensive information on purpose will lead to my editing permissions being permanently revoked."),
+    "messageAnnouncedOnMail" : MessageLookupByLibrary.simpleMessage("You will receive a mail confirmation if your request is approved."),
     "messageAskPermissionToEdit" : MessageLookupByLibrary.simpleMessage("Why do you want edit permissions for ACS UPB Mobile?"),
     "messageButtonAbove" : MessageLookupByLibrary.simpleMessage("button above"),
     "messageCannotBeUndone" : MessageLookupByLibrary.simpleMessage("This action cannot be undone."),

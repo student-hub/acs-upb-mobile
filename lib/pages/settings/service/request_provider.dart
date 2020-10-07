@@ -7,11 +7,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 
 extension RequestExtension on Request {
-  Map<String, String> toData() {
-    final Map<String, String> data = {};
+  Map<String, dynamic> toData() {
+    final Map<String, dynamic> data = {};
 
     if (userId != null) data['addedBy'] = userId;
     if (requestBody != null) data['requestBody'] = requestBody;
+    data['done'] = processed;
 
     return data;
   }

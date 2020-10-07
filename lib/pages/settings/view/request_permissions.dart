@@ -108,11 +108,17 @@ class _RequestPermissionsState extends State<RequestPermissions> {
                   child: Image.asset('assets/illustrations/undraw_hiring.png')),
             ),
             Padding(
-              padding: const EdgeInsets.all(20),
+              padding: const EdgeInsets.fromLTRB(20, 20, 20, 8),
               child: Text(
                 S.of(context).messageAskPermissionToEdit,
                 style: Theme.of(context).textTheme.headline6,
               ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 20),
+              child: Text(S.of(context).messageAnnouncedOnMail,
+                  style: Theme.of(context).textTheme.caption.apply(
+                      color: Theme.of(context).textTheme.headline5.color)),
             ),
             Padding(
               padding: const EdgeInsets.all(10),
@@ -125,19 +131,26 @@ class _RequestPermissionsState extends State<RequestPermissions> {
             ),
             Padding(
               padding: const EdgeInsets.all(10),
-              child: Row(children: [
-                Checkbox(
-                  value: agreedToResponsibilities,
-                  visualDensity: VisualDensity.compact,
-                  onChanged: (value) =>
-                      setState(() => agreedToResponsibilities = value),
-                ),
-                Expanded(
-                    child: Text(
-                  S.of(context).messageAgreePermissions,
-                  style: Theme.of(context).textTheme.subtitle1,
-                )),
-              ]),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Checkbox(
+                    value: agreedToResponsibilities,
+                    visualDensity: VisualDensity.compact,
+                    onChanged: (value) =>
+                        setState(() => agreedToResponsibilities = value),
+                  ),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 10.25),
+                      child: Text(
+                        S.of(context).messageAgreePermissions,
+                        style: Theme.of(context).textTheme.subtitle1,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ],
         ));

@@ -203,6 +203,7 @@
   "messageEmailNotVerifiedToPerformAction": "Contul trebuie să fie verificat pentru a realiza această acțiune.",
   "messageAccountCreated": "Contul a fost creat cu succes.",
   "messageAccountDeleted": "Contul a fost șters cu succes.",
+  "messageAnnouncedOnMail": "Veți primi o confirmare pe mail dacă vi se acceptă cererea.",
   "messageCheckEmailVerification": "Verificați-vă mail-ul pentru confirmarea contului.",
   "messageResetPassword": "Introduceți mail-ul pentru a primi instrucțiuni de resetare a parolei.",
   "messageDeleteAccount": "Sunteți sigur că doriți să ștergeți contul?",

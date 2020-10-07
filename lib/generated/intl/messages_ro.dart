@@ -159,6 +159,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "messageAccountDeleted" : MessageLookupByLibrary.simpleMessage("Contul a fost șters cu succes."),
     "messageAddCustomWebsite" : MessageLookupByLibrary.simpleMessage("Încercați să adăugați un website."),
     "messageAgreePermissions" : MessageLookupByLibrary.simpleMessage("Voi încărca doar informații corecte si precise. Înțeleg că încărcarea informațiilor eronate sau ofensatoare în mod intenționat va conduce la blocarea permisiunilor mele permanent."),
+    "messageAnnouncedOnMail" : MessageLookupByLibrary.simpleMessage("Veți primi o confirmare pe mail dacă vi se acceptă cererea."),
     "messageAskPermissionToEdit" : MessageLookupByLibrary.simpleMessage("De ce dorești să primești permisiuni de editare în ACS UPB Mobile?"),
     "messageButtonAbove" : MessageLookupByLibrary.simpleMessage("de mai sus."),
     "messageCannotBeUndone" : MessageLookupByLibrary.simpleMessage("Această acțiune nu este reversibilă."),

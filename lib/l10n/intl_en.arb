@@ -203,6 +203,7 @@
   "messageEmailNotVerifiedToPerformAction": "Your account needs to be verified to perform this action.",
   "messageAccountCreated": "Account created successfully.",
   "messageAccountDeleted": "Account deleted successfully.",
+  "messageAnnouncedOnMail": "You will receive a mail confirmation if your request is approved.",
   "messageCheckEmailVerification": "Please check your email for account verification.",
   "messageResetPassword": "Enter your e-mai in order to receive instructions on how to reset your password.",
   "messageDeleteAccount": "Are you sure you want to delete your account?",
