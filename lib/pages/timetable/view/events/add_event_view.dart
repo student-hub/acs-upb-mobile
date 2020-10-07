@@ -138,6 +138,151 @@ class _AddEventViewState extends State<AddEventView> {
     }
   }
 
+  @override
+  Widget build(BuildContext context) {
+    return AppScaffold(
+      title: Text(widget.initialEvent?.id == null
+          ? S.of(context).actionAddEvent
+          : S.of(context).actionEditEvent),
+      actions: widget.initialEvent?.id == null
+          ? [_saveButton()]
+          : [
+              _saveButton(),
+              _deleteButton(),
+            ],
+      body: ListView(
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.only(left: 16, right: 16),
+            child: Form(
+              key: formKey,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Expanded(
+                        child: DropdownButtonFormField<String>(
+                          decoration: InputDecoration(
+                            labelText: S.of(context).labelUniversityYear,
+                            prefixIcon: const Icon(Icons.calendar_today),
+                          ),
+                          value: selectedCalendar,
+                          items: calendars.keys.map((key) {
+                            final year = int.tryParse(key);
+                            return DropdownMenuItem<String>(
+                              value: key,
+                              child: Text(
+                                  year != null ? '$year-${year + 1}' : key),
+                            );
+                          }).toList(),
+                          onChanged: (selection) =>
+                              selectedCalendar = selection,
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: DropdownButtonFormField<int>(
+                          decoration: InputDecoration(
+                            labelText: S.of(context).labelSemester,
+                            prefixIcon: const Icon(Icons.calendar_view_day),
+                          ),
+                          value: selectedSemester,
+                          items: [1, 2]
+                              .map((semester) => DropdownMenuItem<int>(
+                                    value: semester,
+                                    child: Text(semester.toString()),
+                                  ))
+                              .toList(),
+                          onChanged: (selection) =>
+                              selectedSemester = selection,
+                        ),
+                      ),
+                    ],
+                  ),
+                  RelevancePicker(
+                    canBePrivate: false,
+                    canBeForEveryone: false,
+                    filterProvider: Provider.of<FilterProvider>(context),
+                    controller: relevanceController,
+                  ),
+                  DropdownButtonFormField<UniEventType>(
+                    decoration: InputDecoration(
+                      labelText: S.of(context).labelType,
+                      prefixIcon: const Icon(Icons.category),
+                    ),
+                    value: selectedEventType,
+                    items: UniEventTypeExtension.classTypes
+                        .map(
+                          (type) => DropdownMenuItem<UniEventType>(
+                            value: type,
+                            child: Text(type.toLocalizedString(context)),
+                          ),
+                        )
+                        .toList(),
+                    onChanged: (selection) {
+                      formKey.currentState.validate();
+                      setState(() => selectedEventType = selection);
+                    },
+                    validator: (selection) {
+                      if (selection == null) {
+                        return S.of(context).errorEventTypeCannotBeEmpty;
+                      }
+                      return null;
+                    },
+                  ),
+                  if (selectedEventType != null)
+                    Column(
+                      children: [
+                        if (classHeaders.isNotEmpty)
+                          DropdownButtonFormField<ClassHeader>(
+                            isExpanded: true,
+                            decoration: InputDecoration(
+                              labelText: S.of(context).labelClass,
+                              prefixIcon: const Icon(Icons.class_),
+                            ),
+                            value: selectedClass,
+                            items: classHeaders
+                                .map(
+                                  (header) => DropdownMenuItem(
+                                      value: header, child: Text(header.name)),
+                                )
+                                .toList(),
+                            onChanged: (selection) {
+                              formKey.currentState.validate();
+                              setState(() => selectedClass = selection);
+                            },
+                            validator: (selection) {
+                              if (selection == null) {
+                                return S.of(context).errorClassCannotBeEmpty;
+                              }
+                              return null;
+                            },
+                          ),
+                        timeIntervalPicker(),
+                        if (oddWeekSelected != null && evenWeekSelected != null)
+                          weekPicker(),
+                        dayPicker(),
+                        TextFormField(
+                          controller: locationController,
+                          decoration: InputDecoration(
+                            labelText: S.of(context).labelLocation,
+                            prefixIcon: const Icon(Icons.location_on),
+                          ),
+                          onChanged: (_) => setState(() {}),
+                        ),
+                      ],
+                    ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   AppDialog _deletionConfirmationDialog(BuildContext context) => AppDialog(
         icon: const Icon(Icons.delete),
         title: S.of(context).actionDeleteEvent,
@@ -404,146 +549,6 @@ class _AddEventViewState extends State<AddEventView> {
             ),
           ],
         ),
-      ),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return AppScaffold(
-      title: Text(widget.initialEvent?.id == null
-          ? S.of(context).actionAddEvent
-          : S.of(context).actionEditEvent),
-      actions: widget.initialEvent?.id == null
-          ? [_saveButton()]
-          : [
-              _saveButton(),
-              _deleteButton(),
-            ],
-      body: ListView(
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.only(left: 16, right: 16),
-            child: Form(
-              key: formKey,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Expanded(
-                        child: DropdownButtonFormField<String>(
-                          decoration: InputDecoration(
-                            labelText: S.of(context).labelUniversityYear,
-                            prefixIcon: const Icon(Icons.calendar_today),
-                          ),
-                          value: selectedCalendar,
-                          items: calendars.keys.map((key) {
-                            final year = int.tryParse(key);
-                            return DropdownMenuItem<String>(
-                              value: key,
-                              child: Text(
-                                  year != null ? '$year-${year + 1}' : key),
-                            );
-                          }).toList(),
-                          onChanged: (selection) =>
-                              selectedCalendar = selection,
-                        ),
-                      ),
-                      const SizedBox(width: 16),
-                      Expanded(
-                        child: DropdownButtonFormField<int>(
-                          decoration: InputDecoration(
-                            labelText: S.of(context).labelSemester,
-                            prefixIcon: const Icon(Icons.calendar_view_day),
-                          ),
-                          value: selectedSemester,
-                          items: [1, 2]
-                              .map((semester) => DropdownMenuItem<int>(
-                                    value: semester,
-                                    child: Text(semester.toString()),
-                                  ))
-                              .toList(),
-                          onChanged: (selection) =>
-                              selectedSemester = selection,
-                        ),
-                      ),
-                    ],
-                  ),
-                  RelevancePicker(
-                    canBePrivate: false,
-                    canBeForEveryone: false,
-                    filterProvider: Provider.of<FilterProvider>(context),
-                    controller: relevanceController,
-                  ),
-                  DropdownButtonFormField<UniEventType>(
-                    decoration: InputDecoration(
-                      labelText: S.of(context).labelType,
-                      prefixIcon: const Icon(Icons.category),
-                    ),
-                    value: selectedEventType,
-                    items: UniEventTypeExtension.classTypes
-                        .map(
-                          (type) => DropdownMenuItem<UniEventType>(
-                            value: type,
-                            child: Text(type.toLocalizedString(context)),
-                          ),
-                        )
-                        .toList(),
-                    onChanged: (selection) =>
-                        setState(() => selectedEventType = selection),
-                    validator: (selection) {
-                      if (selection == null) {
-                        return S.of(context).errorEventTypeCannotBeEmpty;
-                      }
-                      return null;
-                    },
-                  ),
-                  if (selectedEventType != null)
-                    Column(
-                      children: [
-                        if (classHeaders.isNotEmpty)
-                          DropdownButtonFormField<ClassHeader>(
-                            isExpanded: true,
-                            decoration: InputDecoration(
-                              labelText: S.of(context).labelClass,
-                              prefixIcon: const Icon(Icons.class_),
-                            ),
-                            value: selectedClass,
-                            items: classHeaders
-                                .map(
-                                  (header) => DropdownMenuItem(
-                                      value: header, child: Text(header.name)),
-                                )
-                                .toList(),
-                            onChanged: (selection) => selectedClass = selection,
-                            validator: (selection) {
-                              if (selection == null) {
-                                return S.of(context).errorClassCannotBeEmpty;
-                              }
-                              return null;
-                            },
-                          ),
-                        timeIntervalPicker(),
-                        if (oddWeekSelected != null && evenWeekSelected != null)
-                          weekPicker(),
-                        dayPicker(),
-                        TextFormField(
-                          controller: locationController,
-                          decoration: InputDecoration(
-                            labelText: S.of(context).labelLocation,
-                            prefixIcon: const Icon(Icons.location_on),
-                          ),
-                          onChanged: (_) => setState(() {}),
-                        ),
-                      ],
-                    ),
-                ],
-              ),
-            ),
-          ),
-        ],
       ),
     );
   }
