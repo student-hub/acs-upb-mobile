@@ -278,7 +278,10 @@ class UniEventProvider extends EventProvider<UniEventInstance>
     classProvider.fetchUserClassIds(uid: _authProvider.uid).then((classIds) {
       _classProvider = classProvider;
       _classIds = classIds;
-      cacheLock.synchronized(() => eventsCache = null);
+      cacheLock.synchronized(() {
+        eventsCache = null;
+        emptyCache = null;
+      });
       notifyListeners();
     });
   }
@@ -286,7 +289,10 @@ class UniEventProvider extends EventProvider<UniEventInstance>
   void updateFilter(FilterProvider filterProvider) {
     filterProvider.fetchFilter().then((filter) {
       _filter = filter;
-      cacheLock.synchronized(() => eventsCache = null);
+      cacheLock.synchronized(() {
+        eventsCache = null;
+        emptyCache = null;
+      });
       notifyListeners();
     });
   }
