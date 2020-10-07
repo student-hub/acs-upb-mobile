@@ -6,10 +6,10 @@ import 'package:acs_upb_mobile/pages/faq/service/question_provider.dart';
 import 'package:acs_upb_mobile/pages/news_feed/model/news_feed_item.dart';
 import 'package:acs_upb_mobile/pages/news_feed/service/news_provider.dart';
 import 'package:acs_upb_mobile/pages/portal/service/website_provider.dart';
-import 'package:acs_upb_mobile/resources/locale_provider.dart';
 import 'package:acs_upb_mobile/pages/settings/service/request_provider.dart';
 import 'package:acs_upb_mobile/pages/settings/view/request_permissions.dart';
 import 'package:acs_upb_mobile/pages/settings/view/settings_page.dart';
+import 'package:acs_upb_mobile/resources/locale_provider.dart';
 import 'package:acs_upb_mobile/widgets/dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -65,6 +65,8 @@ void main() {
           .thenAnswer((realInvocation) => Future.value(true));
       when(mockWebsiteProvider.fetchWebsites(any))
           .thenAnswer((_) => Future.value([]));
+      when(mockWebsiteProvider.fetchFavouriteWebsites())
+          .thenAnswer((_) => Future.value(null));
 
       mockQuestionProvider = MockQuestionProvider();
       // ignore: invalid_use_of_protected_member

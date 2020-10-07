@@ -69,6 +69,8 @@ void main() {
         .thenAnswer((realInvocation) => Future.value(true));
     when(mockWebsiteProvider.fetchWebsites(any))
         .thenAnswer((_) => Future.value([]));
+    when(mockWebsiteProvider.fetchFavouriteWebsites())
+        .thenAnswer((_) => Future.value(null));
 
     mockFilterProvider = MockFilterProvider();
     // ignore: invalid_use_of_protected_member
