@@ -43,6 +43,7 @@ class RelevancePicker extends StatefulWidget {
   const RelevancePicker(
       {@required this.filterProvider,
       this.canBePrivate = true,
+      this.canBeForEveryone = true,
       bool defaultPrivate,
       this.controller})
       : defaultPrivate = (defaultPrivate ?? true) && canBePrivate;
@@ -51,6 +52,9 @@ class RelevancePicker extends StatefulWidget {
 
   /// Whether 'Only me' is an option (this overrides [defaultPrivate])
   final bool canBePrivate;
+
+  /// Whether 'Anyone' is an option
+  final bool canBeForEveryone;
 
   /// Whether the 'Only me' option should be enabled by default
   final bool defaultPrivate;
@@ -176,11 +180,11 @@ class _RelevancePickerState extends State<RelevancePicker> {
         _customControllers[node] = controller;
 
         widgets
-          ..add(const SizedBox(width: 8))
           ..add(Selectable(
             label: node,
             controller: controller,
-            initiallySelected: _filterApplied,
+            initiallySelected: _filterApplied ||
+                (!widget.canBePrivate && !widget.canBeForEveryone),
             onSelected: (selected) => setState(() {
               if (_user?.canAddPublicWebsite ?? false) {
                 if (selected) {
@@ -193,7 +197,8 @@ class _RelevancePickerState extends State<RelevancePicker> {
               }
             }),
             disabled: !(_user?.canAddPublicWebsite ?? false),
-          ));
+          ))
+          ..add(const SizedBox(width: 8));
       }
     }
 
@@ -263,55 +268,63 @@ class _RelevancePickerState extends State<RelevancePicker> {
                               scrollDirection: Axis.horizontal,
                               children: <Widget>[
                                 if (widget.canBePrivate)
+                                  Row(
+                                    children: [
+                                      Selectable(
+                                        label: S.of(context).relevanceOnlyMe,
+                                        initiallySelected:
+                                            widget.defaultPrivate ?? true,
+                                        onSelected: (selected) => setState(() {
+                                          if (_user?.canAddPublicWebsite ??
+                                              false) {
+                                            if (selected) {
+                                              _anyoneController.deselect();
+                                              for (final controller
+                                                  in _customControllers
+                                                      .values) {
+                                                controller.deselect();
+                                              }
+                                            } else {
+                                              _anyoneController.select();
+                                            }
+                                          } else {
+                                            _onlyMeController.select();
+                                          }
+                                        }),
+                                        controller: _onlyMeController,
+                                      ),
+                                      const SizedBox(width: 8),
+                                    ],
+                                  ),
+                                if (widget.canBeForEveryone)
                                   Selectable(
-                                    label: S.of(context).relevanceOnlyMe,
-                                    initiallySelected:
-                                        widget.defaultPrivate ?? true,
+                                    label: S.of(context).relevanceAnyone,
+                                    initiallySelected: !widget.defaultPrivate &&
+                                        widget.filterProvider
+                                                .defaultRelevance ==
+                                            null,
                                     onSelected: (selected) => setState(() {
                                       if (_user?.canAddPublicWebsite ?? false) {
                                         if (selected) {
-                                          _anyoneController.deselect();
+                                          // Deselect all controllers
+                                          _onlyMeController.deselect();
                                           for (final controller
                                               in _customControllers.values) {
                                             controller.deselect();
                                           }
                                         } else {
-                                          _anyoneController.select();
+                                          _onlyMeController.select();
                                         }
                                       } else {
-                                        _onlyMeController.select();
+                                        AppToast.show(S
+                                            .of(context)
+                                            .warningNoPermissionToAddPublicWebsite);
                                       }
                                     }),
-                                    controller: _onlyMeController,
+                                    controller: _anyoneController,
+                                    disabled:
+                                        !(_user?.canAddPublicWebsite ?? false),
                                   ),
-                                const SizedBox(width: 8),
-                                Selectable(
-                                  label: S.of(context).relevanceAnyone,
-                                  initiallySelected: !widget.defaultPrivate &&
-                                      widget.filterProvider.defaultRelevance ==
-                                          null,
-                                  onSelected: (selected) => setState(() {
-                                    if (_user?.canAddPublicWebsite ?? false) {
-                                      if (selected) {
-                                        // Deselect all controllers
-                                        _onlyMeController.deselect();
-                                        for (final controller
-                                            in _customControllers.values) {
-                                          controller.deselect();
-                                        }
-                                      } else {
-                                        _onlyMeController.select();
-                                      }
-                                    } else {
-                                      AppToast.show(S
-                                          .of(context)
-                                          .warningNoPermissionToAddPublicWebsite);
-                                    }
-                                  }),
-                                  controller: _anyoneController,
-                                  disabled:
-                                      !(_user?.canAddPublicWebsite ?? false),
-                                ),
                                 _customRelevanceSelectables(),
                               ],
                             ),

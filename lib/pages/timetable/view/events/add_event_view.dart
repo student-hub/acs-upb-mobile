@@ -474,6 +474,7 @@ class _AddEventViewState extends State<AddEventView> {
                   ),
                   RelevancePicker(
                     canBePrivate: false,
+                    canBeForEveryone: false,
                     filterProvider: Provider.of<FilterProvider>(context),
                     controller: relevanceController,
                   ),
