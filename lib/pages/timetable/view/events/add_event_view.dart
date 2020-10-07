@@ -164,8 +164,7 @@ class _AddEventViewState extends State<AddEventView> {
   AppScaffoldAction _saveButton() => AppScaffoldAction(
         text: S.of(context).buttonSave,
         onPressed: () async {
-          // TODO(IoanaAlexandru): Validate fields
-          formKey.currentState.validate();
+          if (!formKey.currentState.validate()) return;
 
           LocalDateTime start = semester.startDate.at(startTime);
           if (evenWeekSelected && !oddWeekSelected) {
@@ -494,6 +493,12 @@ class _AddEventViewState extends State<AddEventView> {
                         .toList(),
                     onChanged: (selection) =>
                         setState(() => selectedEventType = selection),
+                    validator: (selection) {
+                      if (selection == null) {
+                        return S.of(context).errorEventTypeCannotBeEmpty;
+                      }
+                      return null;
+                    },
                   ),
                   if (selectedEventType != null)
                     Column(
@@ -513,6 +518,12 @@ class _AddEventViewState extends State<AddEventView> {
                                 )
                                 .toList(),
                             onChanged: (selection) => selectedClass = selection,
+                            validator: (selection) {
+                              if (selection == null) {
+                                return S.of(context).errorClassCannotBeEmpty;
+                              }
+                              return null;
+                            },
                           ),
                         timeIntervalPicker(),
                         if (oddWeekSelected != null && evenWeekSelected != null)

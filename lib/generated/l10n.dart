@@ -1084,6 +1084,26 @@ class S {
     );
   }
 
+  /// `Event type cannot be empty.`
+  String get errorEventTypeCannotBeEmpty {
+    return Intl.message(
+      'Event type cannot be empty.',
+      name: 'errorEventTypeCannotBeEmpty',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Class cannot be empty.`
+  String get errorClassCannotBeEmpty {
+    return Intl.message(
+      'Class cannot be empty.',
+      name: 'errorClassCannotBeEmpty',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Request already exists`
   String get warningRequestExists {
     return Intl.message(

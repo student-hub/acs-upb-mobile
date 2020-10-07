@@ -110,6 +110,8 @@
   "errorTooManyRequests": "There have been too many requests from this device.",
   "errorCouldNotLaunchURL": "Could not launch '{url}'.",
   "errorPermissionDenied": "You do not have permission to do that.",
+  "errorEventTypeCannotBeEmpty": "Event type cannot be empty.",
+  "errorClassCannotBeEmpty": "Class cannot be empty.",
 
   "warningRequestExists": "Request already exists",
   "warningInternetConnection": "Please make sure you are connected to the internet.",

@@ -110,6 +110,8 @@
   "errorTooManyRequests": "Au fost trimise prea multe cereri de pe acest dispozitiv.",
   "errorCouldNotLaunchURL": "Nu s-a putut deschide '{url}'.",
   "errorPermissionDenied": "Nu aveți suficiente permisiuni.",
+  "errorEventTypeCannotBeEmpty": "Tipul de eveniment trebuie precizat.",
+  "errorClassCannotBeEmpty": "Materia trebuie precizată.",
 
   "warningRequestExists": "O cerere deja există",
   "warningInternetConnection": "Asigurați-vă că sunteți conectat la internet.",
