@@ -496,9 +496,6 @@ void main() {
         await tester.pumpAndSettle();
 
         // Open classes
-        await tester.tap(find.byIcon(Icons.calendar_today_rounded));
-        await tester.pumpAndSettle();
-
         await tester.tap(find.byIcon(Icons.class_));
         await tester.pumpAndSettle();
 
