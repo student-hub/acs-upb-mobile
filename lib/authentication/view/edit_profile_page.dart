@@ -1,9 +1,11 @@
 import 'dart:io';
+import 'dart:html' as html;
 import 'dart:typed_data';
 import 'dart:ui';
 
 import 'package:acs_upb_mobile/authentication/model/user.dart';
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
+import 'package:acs_upb_mobile/authentication/service/image_picker_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/filter/view/filter_dropdown.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
@@ -17,8 +19,6 @@ import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:image_picker_web/image_picker_web.dart';
 import 'package:preferences/preference_title.dart';
 import 'package:provider/provider.dart';
 
@@ -39,6 +39,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   File imagePhone;
   Uint8List imageWeb;
+  File test;
 
   AppDialog _changePasswordDialog(BuildContext context) {
     final newPasswordController = TextEditingController();
@@ -216,18 +217,16 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   Future<void> getImage() async {
     if (!kIsWeb) {
-      final pickedFile =
-          await ImagePicker().getImage(source: ImageSource.gallery);
+      final File image = await ImagePickerProvider.getImage();
       setState(() {
-        if (pickedFile != null) {
-          imagePhone = File(pickedFile.path);
+        if (image != null) {
+          imagePhone = image;
         } else {
           AppToast.show('No image selected.');
         }
       });
     } else {
-      final Uint8List imageFile =
-          await ImagePickerWeb.getImage(outputType: ImageType.bytes);
+      final  imageFile = await ImagePickerProvider.getImage();
       setState(() {
         if (imageFile != null) {
           imageWeb = imageFile;
@@ -240,8 +239,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   ImageProvider<dynamic> loadImage() {
     if (kIsWeb) {
-      if (imageWeb != null) {
-        return MemoryImage(imageWeb);
+      if (test != null) {
+        return FileImage(test);
       }
     }
     if (imagePhone != null) {
@@ -277,6 +276,11 @@ class _EditProfilePageState extends State<EditProfilePage> {
                           context: context,
                           child: _changeEmailConfirmationDialog(context))
                       .then((value) => result = value ?? false);
+                }
+                if (imagePhone != null) {
+                  Uri uri = await authProvider.uploadProfilePicture(
+                      imagePhone, context);
+                  debugPrint(uri.toString());
                 }
                 if (result) {
                   if (await authProvider.updateProfile(
