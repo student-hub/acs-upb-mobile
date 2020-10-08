@@ -13,7 +13,7 @@ to [create an issue](https://github.com/acs-upb-mobile/acs-upb-mobile/issues/new
 if you encounter any problem.
 
 If you would like to contribute and don't know where to start, or you have any questions about this
-project, feel free to [join us on Slack](https://join.slack.com/t/acs-upb-mobile/shared_invite/zt-gz48csbn-iVYTE04sFaawINPTlV4oew)
+project, feel free to [join us on Slack](https://join.slack.com/t/acs-upb-mobile/shared_invite/zt-hxf5qs1e-Elv6~8cg7YXA9idS8oZjsg)
 and ask anything on the **#ama** channel.
 
 ## Screenshots
