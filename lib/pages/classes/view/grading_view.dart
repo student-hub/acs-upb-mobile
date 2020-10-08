@@ -8,15 +8,21 @@ import 'package:flutter/material.dart';
 import 'package:pie_chart/pie_chart.dart';
 import 'package:provider/provider.dart';
 import 'package:quiver/iterables.dart';
+import 'package:time_machine/time_machine.dart';
 
 class GradingChart extends StatefulWidget {
   const GradingChart(
-      {Key key, this.grading, this.withHeader = true, this.onSave})
+      {Key key,
+      this.grading,
+      this.withHeader = true,
+      this.onSave,
+      this.lastUpdated})
       : super(key: key);
 
   final Map<String, double> grading;
   final bool withHeader;
   final void Function(Map<String, double>) onSave;
+  final LocalDateTime lastUpdated;
 
   @override
   _GradingChartState createState() => _GradingChartState();
@@ -40,9 +46,19 @@ class _GradingChartState extends State<GradingChart> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    S.of(context).sectionGrading,
-                    style: Theme.of(context).textTheme.headline6,
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        S.of(context).sectionGrading,
+                        style: Theme.of(context).textTheme.headline6,
+                      ),
+                      if (widget.grading != null)
+                        Text(
+                          '${S.of(context).labelLastUpdated}: ${widget.lastUpdated?.toString('dd/MM/yyyy') ?? '?'}',
+                          textAlign: TextAlign.left,
+                        ),
+                    ],
                   ),
                   GestureDetector(
                     onTap: authProvider.currentUserFromCache.canEditClassInfo
@@ -280,7 +296,7 @@ class _GradingViewState extends State<GradingView> {
         }
       },
       child: AppScaffold(
-        title: S.of(context).actionEditGrading,
+        title: Text(S.of(context).actionEditGrading),
         actions: [
           AppScaffoldAction(
               text: S.of(context).buttonSave,

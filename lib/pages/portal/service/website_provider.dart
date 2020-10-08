@@ -13,7 +13,7 @@ extension UserExtension on User {
   /// Check if there is at least one website that the [User] has permission to edit
   Future<bool> get hasEditableWebsites async {
     // We assume there is at least one public website in the database
-    if (canEditPublicWebsite) return true;
+    if (canEditPublicInfo) return true;
     return hasPrivateWebsites;
   }
 
@@ -53,7 +53,6 @@ extension WebsiteExtension on Website {
       isPrivate: ownerUid != null,
       editedBy: List<String>.from(snap.data['editedBy'] ?? []),
       category: WebsiteCategoryExtension.fromString(snap.data['category']),
-      iconPath: snap.data['icon'] ?? 'icons/websites/globe.png',
       label: snap.data['label'] ?? 'Website',
       link: snap.data['link'] ?? '',
       infoByLocale: snap.data['info'] == null
@@ -83,7 +82,6 @@ extension WebsiteExtension on Website {
     if (category != null) {
       data['category'] = category.toString().split('.').last;
     }
-    if (iconPath != null) data['icon'] = iconPath;
     if (link != null) data['link'] = link;
     if (infoByLocale != null) data['info'] = infoByLocale;
 
@@ -118,8 +116,10 @@ class WebsiteProvider with ChangeNotifier {
         PrefService.sharedPreferences.getStringList('websiteVisits') ?? [];
 
     final visitsByWebsiteId = Map<String, int>.from(websiteIds.asMap().map(
-        (index, key) =>
-            MapEntry(key, int.tryParse(websiteVisits[index] ?? 0))));
+        (index, key) => MapEntry(
+            key,
+            int.tryParse(
+                websiteVisits.length > index ? websiteVisits[index] : '0'))));
 
     for (final website in websites) {
       website.numberOfVisits = visitsByWebsiteId[website.id] ?? 0;
@@ -214,6 +214,17 @@ class WebsiteProvider with ChangeNotifier {
       _errorHandler(e, null);
       return null;
     }
+  }
+
+  Future<List<Website>> fetchFavouriteWebsites({int limit = 3}) async {
+    final favouriteWebsites = (await fetchWebsites(null))
+        .where((website) => website.numberOfVisits > 0)
+        .take(limit)
+        .toList();
+    if (favouriteWebsites.isEmpty) {
+      return null;
+    }
+    return favouriteWebsites;
   }
 
   Future<bool> addWebsite(Website website, {BuildContext context}) async {

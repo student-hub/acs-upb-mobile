@@ -253,8 +253,16 @@ class _EditProfilePageState extends State<EditProfilePage> {
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
     final emailDomain = S.of(context).stringEmailDomain;
+    final User user = authProvider.currentUserFromCache;
+    lastNameController.text = user.lastName;
+    firstNameController.text = user.firstName;
+    if (!authProvider.isVerifiedFromCache) {
+      emailController.text = authProvider.email.split('@')[0];
+    }
+    final path = user.classes;
+
     return AppScaffold(
-      title: S.of(context).actionEditProfile,
+      title: Text(S.of(context).actionEditProfile),
       needsToBeAuthenticated: true,
       actions: [
         AppScaffoldAction(
@@ -305,22 +313,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
       ],
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10),
-        child: FutureBuilder(
-            future: authProvider.currentUser,
-            builder: (context, snap) {
-              List<String> path;
-              if (snap.hasData) {
-                final User user = snap.data;
-                lastNameController.text = user.lastName;
-                firstNameController.text = user.firstName;
-                if (!authProvider.isVerifiedFromCache) {
-                  emailController.text = authProvider.email.split('@')[0];
-                }
-                path = user.classes;
-                return Container(
-                  child: ListView(children: [
-                    AccountNotVerifiedWarning(),
-                    Padding(
+        child: Container(
+          child: ListView(children: [
+            AccountNotVerifiedWarning(),
+            Padding(
                       padding: const EdgeInsets.all(8),
                       child: GestureDetector(
                           child: CircleImage(
@@ -400,11 +396,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                           .apply(color: Theme.of(context).hintColor),
                     ),
                   ]),
-                );
-              } else {
-                return const Center(child: CircularProgressIndicator());
-              }
-            }),
+                ),
       ),
     );
   }

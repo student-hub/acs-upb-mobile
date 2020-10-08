@@ -8,10 +8,16 @@ import 'package:acs_upb_mobile/pages/classes/view/class_view.dart';
 import 'package:acs_upb_mobile/pages/classes/view/classes_page.dart';
 import 'package:acs_upb_mobile/pages/classes/view/grading_view.dart';
 import 'package:acs_upb_mobile/pages/classes/view/shortcut_view.dart';
+import 'package:acs_upb_mobile/pages/faq/model/question.dart';
+import 'package:acs_upb_mobile/pages/faq/service/question_provider.dart';
+import 'package:acs_upb_mobile/pages/faq/view/faq_page.dart';
 import 'package:acs_upb_mobile/pages/filter/model/filter.dart';
 import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
 import 'package:acs_upb_mobile/pages/filter/view/filter_page.dart';
 import 'package:acs_upb_mobile/pages/home/home_page.dart';
+import 'package:acs_upb_mobile/pages/news_feed/model/news_feed_item.dart';
+import 'package:acs_upb_mobile/pages/news_feed/service/news_provider.dart';
+import 'package:acs_upb_mobile/pages/news_feed/view/news_feed_page.dart';
 import 'package:acs_upb_mobile/pages/people/model/person.dart';
 import 'package:acs_upb_mobile/pages/people/service/person_provider.dart';
 import 'package:acs_upb_mobile/pages/people/view/people_page.dart';
@@ -20,14 +26,20 @@ import 'package:acs_upb_mobile/pages/portal/model/website.dart';
 import 'package:acs_upb_mobile/pages/portal/service/website_provider.dart';
 import 'package:acs_upb_mobile/pages/portal/view/portal_page.dart';
 import 'package:acs_upb_mobile/pages/portal/view/website_view.dart';
-import 'package:acs_upb_mobile/pages/settings/settings_page.dart';
+import 'package:acs_upb_mobile/pages/settings/service/request_provider.dart';
+import 'package:acs_upb_mobile/pages/settings/view/settings_page.dart';
+import 'package:acs_upb_mobile/pages/timetable/service/uni_event_provider.dart';
 import 'package:acs_upb_mobile/resources/custom_icons.dart';
+import 'package:acs_upb_mobile/resources/locale_provider.dart';
+import 'package:acs_upb_mobile/widgets/search_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:network_image_mock/network_image_mock.dart';
 import 'package:preferences/preferences.dart';
 import 'package:provider/provider.dart';
+
+import 'test_utils.dart';
 
 // These tests open each page in the app on multiple screen sizes to make sure
 // nothing overflows/breaks.
@@ -42,6 +54,14 @@ class MockClassProvider extends Mock implements ClassProvider {}
 
 class MockPersonProvider extends Mock implements PersonProvider {}
 
+class MockQuestionProvider extends Mock implements QuestionProvider {}
+
+class MockUniEventProvider extends Mock implements UniEventProvider {}
+
+class MockNewsProvider extends Mock implements NewsProvider {}
+
+class MockRequestProvider extends Mock implements RequestProvider {}
+
 class MockNavigatorObserver extends Mock implements NavigatorObserver {}
 
 void main() {
@@ -50,6 +70,10 @@ void main() {
   FilterProvider mockFilterProvider;
   ClassProvider mockClassProvider;
   PersonProvider mockPersonProvider;
+  MockQuestionProvider mockQuestionProvider;
+  MockNewsProvider mockNewsProvider;
+  UniEventProvider mockEventProvider;
+  RequestProvider mockRequestProvider;
 
   // Test layout for different screen sizes
   final screenSizes = <Size>[
@@ -85,6 +109,12 @@ void main() {
               create: (_) => mockClassProvider),
           ChangeNotifierProvider<PersonProvider>(
               create: (_) => mockPersonProvider),
+          ChangeNotifierProvider<QuestionProvider>(
+              create: (_) => mockQuestionProvider),
+          ChangeNotifierProvider<NewsProvider>(create: (_) => mockNewsProvider),
+          ChangeNotifierProvider<UniEventProvider>(
+              create: (_) => mockEventProvider),
+          Provider<RequestProvider>(create: (_) => mockRequestProvider),
         ],
         child: const MyApp(),
       );
@@ -94,6 +124,9 @@ void main() {
     PrefService.enableCaching();
     PrefService.cache = {};
     PrefService.setString('language', 'en');
+
+    LocaleProvider.cultures = testCultures;
+    LocaleProvider.rruleL10ns = {'en': await RruleL10nTest.create()};
 
     // Pretend an anonymous user is already logged in
     mockAuthProvider = MockAuthProvider();
@@ -117,7 +150,6 @@ void main() {
                 id: '1',
                 relevance: null,
                 category: WebsiteCategory.learning,
-                iconPath: 'icons/websites/moodle.png',
                 infoByLocale: {'en': 'info-en', 'ro': 'info-ro'},
                 label: 'Moodle1',
                 link: 'http://acs.curs.pub.ro/',
@@ -127,7 +159,6 @@ void main() {
                 id: '2',
                 relevance: null,
                 category: WebsiteCategory.learning,
-                iconPath: 'icons/websites/ocw.png',
                 infoByLocale: {},
                 label: 'OCW1',
                 link: 'https://ocw.cs.pub.ro/',
@@ -137,7 +168,6 @@ void main() {
                 id: '3',
                 relevance: null,
                 category: WebsiteCategory.learning,
-                iconPath: 'icons/websites/moodle.png',
                 infoByLocale: {'en': 'info-en', 'ro': 'info-ro'},
                 label: 'Moodle2',
                 link: 'http://acs.curs.pub.ro/',
@@ -147,7 +177,6 @@ void main() {
                 id: '4',
                 relevance: null,
                 category: WebsiteCategory.learning,
-                iconPath: 'icons/websites/ocw.png',
                 infoByLocale: {},
                 label: 'OCW2',
                 link: 'https://ocw.cs.pub.ro/',
@@ -157,7 +186,6 @@ void main() {
                 id: '5',
                 relevance: null,
                 category: WebsiteCategory.association,
-                iconPath: 'icons/websites/lsac.png',
                 infoByLocale: {},
                 label: 'LSAC1',
                 link: 'https://lsacbucuresti.ro/',
@@ -167,7 +195,6 @@ void main() {
                 id: '6',
                 relevance: null,
                 category: WebsiteCategory.administrative,
-                iconPath: 'icons/websites/lsac.png',
                 infoByLocale: {},
                 label: 'LSAC2',
                 link: 'https://lsacbucuresti.ro/',
@@ -177,7 +204,6 @@ void main() {
                 id: '7',
                 relevance: null,
                 category: WebsiteCategory.resource,
-                iconPath: 'icons/websites/lsac.png',
                 infoByLocale: {},
                 label: 'LSAC3',
                 link: 'https://lsacbucuresti.ro/',
@@ -187,19 +213,20 @@ void main() {
                 id: '8',
                 relevance: null,
                 category: WebsiteCategory.other,
-                iconPath: 'icons/websites/lsac.png',
                 infoByLocale: {},
                 label: 'LSAC4',
                 link: 'https://lsacbucuresti.ro/',
                 isPrivate: false,
               ),
             ]));
+    when(mockWebsiteProvider.fetchFavouriteWebsites()).thenAnswer(
+        (_) async => (await mockWebsiteProvider.fetchWebsites(any)).take(3));
 
     mockFilterProvider = MockFilterProvider();
     // ignore: invalid_use_of_protected_member
     when(mockFilterProvider.hasListeners).thenReturn(false);
     when(mockFilterProvider.filterEnabled).thenReturn(true);
-    when(mockFilterProvider.fetchFilter(any))
+    when(mockFilterProvider.fetchFilter(context: anyNamed('context')))
         .thenAnswer((_) => Future.value(Filter(
                 localizedLevelNames: [
                   {'en': 'Degree', 'ro': 'Nivel de studiu'},
@@ -348,6 +375,77 @@ void main() {
                 photo: 'https://cdn.worldvectorlogo.com/logos/flutter-logo.svg',
               ),
             ]));
+
+    mockQuestionProvider = MockQuestionProvider();
+    // ignore: invalid_use_of_protected_member
+    when(mockQuestionProvider.hasListeners).thenReturn(false);
+    when(mockQuestionProvider.fetchQuestions(context: anyNamed('context')))
+        .thenAnswer((realInvocation) => Future.value(<Question>[
+              Question(
+                  question: 'Care este programul la secretariat?',
+                  answer:
+                      'Secretariatul este deschis în timpul săptămânii între orele 9:00 si 11:00.',
+                  tags: ['Licență']),
+              Question(
+                  question: 'Cum mă conectez la eduroam?',
+                  answer:
+                      'Conectarea în rețeaua *eduroam* se face pe baza aceluiași cont folosit și pe site-ul de cursuri.',
+                  tags: ['Conectare', 'Informații'])
+            ]));
+    when(mockQuestionProvider.fetchQuestions(limit: anyNamed('limit')))
+        .thenAnswer((realInvocation) => Future.value(<Question>[
+              Question(
+                  question: 'Care este programul la secretariat?',
+                  answer:
+                      'Secretariatul este deschis în timpul săptămânii între orele 9:00 si 11:00.',
+                  tags: ['Licență']),
+              Question(
+                  question: 'Cum mă conectez la eduroam?',
+                  answer:
+                      'Conectarea în rețeaua *eduroam* se face pe baza aceluiași cont folosit și pe site-ul de cursuri.',
+                  tags: ['Conectare', 'Informații'])
+            ]));
+
+    mockNewsProvider = MockNewsProvider();
+    // ignore: invalid_use_of_protected_member
+    when(mockNewsProvider.hasListeners).thenReturn(false);
+    when(mockNewsProvider.fetchNewsFeedItems(context: anyNamed('context')))
+        .thenAnswer((realInvocation) => Future.value(<NewsFeedItem>[
+              NewsFeedItem(
+                  '03.10.2020',
+                  'Cazarea studentilor de anul II licenta',
+                  'https://acs.pub.ro/noutati/cazarea-studentilor-de-anul-ii-licenta/'),
+              NewsFeedItem(
+                  '03.10.2020',
+                  'Festivitatea de deschidere a anului universitar 2020-2021',
+                  'https://acs.pub.ro/noutati/festivitatea-de-deschidere-a-anului-universitar-2020-2021/')
+            ]));
+    when(mockNewsProvider.fetchNewsFeedItems(limit: anyNamed('limit')))
+        .thenAnswer((realInvocation) => Future.value(<NewsFeedItem>[
+              NewsFeedItem(
+                  '03.10.2020',
+                  'Cazarea studentilor de anul II licenta',
+                  'https://acs.pub.ro/noutati/cazarea-studentilor-de-anul-ii-licenta/'),
+              NewsFeedItem(
+                  '03.10.2020',
+                  'Festivitatea de deschidere a anului universitar 2020-2021',
+                  'https://acs.pub.ro/noutati/festivitatea-de-deschidere-a-anului-universitar-2020-2021/')
+            ]));
+
+    mockEventProvider = MockUniEventProvider();
+    // ignore: invalid_use_of_protected_member
+    when(mockEventProvider.hasListeners).thenReturn(false);
+    when(mockEventProvider.getAllDayEventsIntersecting(any))
+        .thenAnswer((_) => Stream.fromIterable([]));
+    when(mockEventProvider.eventsCache).thenReturn([]);
+    when(mockEventProvider.empty).thenAnswer((_) => Future.value(true));
+
+    mockRequestProvider = MockRequestProvider();
+    when(mockRequestProvider.makeRequest(any, context: anyNamed('context')))
+        .thenAnswer((_) => Future.value(true));
+    when(mockRequestProvider.userAlreadyRequested(any,
+            context: anyNamed('context')))
+        .thenAnswer((_) => Future.value(false));
   });
 
   group('Home', () {
@@ -370,27 +468,11 @@ void main() {
   });
 
   group('Class', () {
-    for (final size in screenSizes) {
-      testWidgets('${size.width}x${size.height}', (WidgetTester tester) async {
-        await binding.setSurfaceSize(size);
-
-        await tester.pumpWidget(buildApp());
-        await tester.pumpAndSettle();
-
-        // Open classes
-        await tester.tap(find.byIcon(Icons.class_));
-        await tester.pumpAndSettle();
-
-        // Open class view
-        expect(find.byType(ClassesPage), findsNWidgets(1));
-      });
-    }
-  });
-
-  group('Add class', () {
     setUp(() {
       when(mockAuthProvider.currentUser).thenAnswer((_) =>
           Future.value(User(uid: '0', firstName: 'John', lastName: 'Doe')));
+      when(mockAuthProvider.currentUserFromCache)
+          .thenReturn(User(uid: '0', firstName: 'John', lastName: 'Doe'));
       when(mockAuthProvider.isAuthenticatedFromService)
           .thenAnswer((_) => Future.value(true));
       when(mockAuthProvider.isAuthenticatedFromCache).thenReturn(true);
@@ -405,7 +487,53 @@ void main() {
         await tester.pumpWidget(buildApp());
         await tester.pumpAndSettle();
 
-        // Open classes page
+        // Open timetable
+        await tester.tap(find.byIcon(Icons.calendar_today_rounded));
+        await tester.pumpAndSettle();
+
+        // Close "No events to show" dialog
+        await tester.tap(find.text('CANCEL'));
+        await tester.pumpAndSettle();
+
+        // Open classes
+        await tester.tap(find.byIcon(Icons.class_));
+        await tester.pumpAndSettle();
+
+        // Open class view
+        expect(find.byType(ClassesPage), findsOneWidget);
+      });
+    }
+  });
+
+  group('Add class', () {
+    setUp(() {
+      when(mockAuthProvider.currentUser).thenAnswer((_) =>
+          Future.value(User(uid: '0', firstName: 'John', lastName: 'Doe')));
+      when(mockAuthProvider.currentUserFromCache)
+          .thenReturn(User(uid: '0', firstName: 'John', lastName: 'Doe'));
+      when(mockAuthProvider.isAuthenticatedFromService)
+          .thenAnswer((_) => Future.value(true));
+      when(mockAuthProvider.isAuthenticatedFromCache).thenReturn(true);
+      when(mockAuthProvider.isAnonymous).thenReturn(false);
+      when(mockAuthProvider.uid).thenReturn('0');
+    });
+
+    for (final size in screenSizes) {
+      testWidgets('${size.width}x${size.height}', (WidgetTester tester) async {
+        await binding.setSurfaceSize(size);
+
+        await tester.pumpWidget(buildApp());
+        await tester.pumpAndSettle();
+
+        // Open timetable
+        await tester.tap(find.byIcon(Icons.calendar_today_rounded));
+        await tester.pumpAndSettle();
+
+        // Close "No events to show" dialog
+        await tester.tap(find.text('CANCEL'));
+        await tester.pumpAndSettle();
+
+        // Open classes
         await tester.tap(find.byIcon(Icons.class_));
         await tester.pumpAndSettle();
 
@@ -444,7 +572,15 @@ void main() {
         await tester.pumpWidget(buildApp());
         await tester.pumpAndSettle();
 
-        // Open classes page
+        // Open timetable
+        await tester.tap(find.byIcon(Icons.calendar_today_rounded));
+        await tester.pumpAndSettle();
+
+        // Close "No events to show" dialog
+        await tester.tap(find.text('CANCEL'));
+        await tester.pumpAndSettle();
+
+        // Open classes
         await tester.tap(find.byIcon(Icons.class_));
         await tester.pumpAndSettle();
 
@@ -684,6 +820,8 @@ void main() {
               firstName: 'John',
               lastName: 'Doe',
               permissionLevel: 3)));
+      when(mockAuthProvider.currentUserFromCache).thenReturn(User(
+          uid: '1', firstName: 'John', lastName: 'Doe', permissionLevel: 3));
       when(mockAuthProvider.email).thenReturn('john.doe@stud.acs.upb.ro');
     });
 
@@ -799,6 +937,62 @@ void main() {
 
           expect(find.byType(PersonView), findsOneWidget);
         });
+      });
+    }
+  });
+
+  group('Show faq page', () {
+    for (final size in screenSizes) {
+      testWidgets('${size.width}x${size.height}', (WidgetTester tester) async {
+        await binding.setSurfaceSize(size);
+
+        await tester.pumpWidget(buildApp());
+        await tester.pumpAndSettle();
+
+        final showMoreFaq =
+            find.byKey(const ValueKey('show_more_faq'), skipOffstage: false);
+
+        // Ensure FAQ card is visible
+        await tester.ensureVisible(showMoreFaq);
+        await tester.pumpAndSettle();
+
+        // Open faq page
+        await tester.tap(showMoreFaq);
+        await tester.pumpAndSettle();
+
+        expect(find.byType(FaqPage), findsOneWidget);
+
+        await tester.tap(find.byIcon(Icons.search));
+        await tester.pumpAndSettle();
+
+        expect(find.byType(SearchBar), findsOneWidget);
+
+        final cancelSearchBar = find.byKey(const ValueKey('cancel_search_bar'));
+
+        await tester.tap(cancelSearchBar);
+        await tester.pumpAndSettle();
+
+        expect(find.byType(SearchBar), findsNothing);
+      });
+    }
+  });
+
+  group('Show news feed page', () {
+    for (final size in screenSizes) {
+      testWidgets('${size.width}x${size.height}', (WidgetTester tester) async {
+        await binding.setSurfaceSize(size);
+
+        await tester.pumpWidget(buildApp());
+        await tester.pumpAndSettle();
+
+        // Open news feed page
+        final showMoreNewsFeed =
+            find.byKey(const ValueKey('show_more_news_feed'));
+
+        await tester.tap(showMoreNewsFeed);
+        await tester.pumpAndSettle();
+
+        expect(find.byType(NewsFeedPage), findsOneWidget);
       });
     }
   });

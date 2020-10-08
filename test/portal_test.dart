@@ -5,6 +5,7 @@ import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
 import 'package:acs_upb_mobile/pages/portal/model/website.dart';
 import 'package:acs_upb_mobile/pages/portal/service/website_provider.dart';
 import 'package:acs_upb_mobile/pages/portal/view/portal_page.dart';
+import 'package:acs_upb_mobile/resources/locale_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
@@ -12,6 +13,8 @@ import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 import 'package:preferences/preferences.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher_platform_interface/url_launcher_platform_interface.dart';
+
+import 'test_utils.dart';
 
 class MockWebsiteProvider extends Mock implements WebsiteProvider {}
 
@@ -32,7 +35,6 @@ void main() {
           id: '1',
           relevance: null,
           category: WebsiteCategory.learning,
-          iconPath: 'icons/websites/moodle.png',
           infoByLocale: {'en': 'info-en', 'ro': 'info-ro'},
           label: 'Moodle',
           link: 'http://acs.curs.pub.ro/',
@@ -42,7 +44,6 @@ void main() {
           id: '2',
           relevance: null,
           category: WebsiteCategory.learning,
-          iconPath: 'icons/websites/ocw.png',
           infoByLocale: {},
           label: 'OCW',
           link: 'https://ocw.cs.pub.ro/',
@@ -52,18 +53,19 @@ void main() {
           id: '3',
           relevance: null,
           category: WebsiteCategory.association,
-          iconPath: 'icons/websites/lsac.png',
           infoByLocale: {},
           label: 'LSAC',
           link: 'https://lsacbucuresti.ro/',
           isPrivate: false,
         ),
       ]));
+  when(mockWebsiteProvider.fetchFavouriteWebsites()).thenAnswer(
+      (_) async => (await mockWebsiteProvider.fetchWebsites(any)).take(3));
 
   final FilterProvider mockFilterProvider = MockFilterProvider();
   // ignore: invalid_use_of_protected_member
   when(mockFilterProvider.hasListeners).thenReturn(false);
-  when(mockFilterProvider.fetchFilter(any))
+  when(mockFilterProvider.fetchFilter(context: anyNamed('context')))
       .thenAnswer((_) => Future.value(Filter(root: FilterNode(name: 'All'))));
   when(mockFilterProvider.filterEnabled).thenReturn(true);
 
@@ -100,6 +102,9 @@ void main() {
       PrefService.enableCaching();
       PrefService.cache = {};
       PrefService.setString('language', 'en');
+
+      LocaleProvider.cultures = testCultures;
+      LocaleProvider.rruleL10ns = {'en': await RruleL10nTest.create()};
     });
 
     testWidgets('Names', (WidgetTester tester) async {

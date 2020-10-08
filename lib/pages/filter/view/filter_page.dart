@@ -5,6 +5,7 @@ import 'package:acs_upb_mobile/resources/locale_provider.dart';
 import 'package:acs_upb_mobile/widgets/icon_text.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:acs_upb_mobile/widgets/selectable.dart';
+import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -15,7 +16,8 @@ class FilterPage extends StatefulWidget {
       this.info,
       this.hint,
       this.buttonText,
-      this.onSubmit})
+      this.onSubmit,
+      this.canBeForEveryone = true})
       : super(key: key);
 
   static const String routeName = '/filter';
@@ -35,6 +37,9 @@ class FilterPage extends StatefulWidget {
   /// Callback after the user submits the page
   final void Function() onSubmit;
 
+  /// Whether the user has to select at least one node (no nodes mean that it is for everyone)
+  final bool canBeForEveryone;
+
   @override
   State<StatefulWidget> createState() => FilterPageState();
 }
@@ -42,16 +47,26 @@ class FilterPage extends StatefulWidget {
 class FilterPageState extends State<FilterPage> {
   Filter filter;
   Map<FilterNode, SelectableController> nodeControllers = {};
+  int selectedNodes = 0;
+  final int maxSelectedNodes = 10;
 
-  void _onSelected(bool selection, FilterNode node) {
-    if (selection != node.value) node.value = selection;
-    if (node.children != null) {
-      for (final child in node.children) {
-        // Deselect all children
-        _onSelected(false, child);
-      }
-    }
-  }
+  void _onSelected(bool selection, FilterNode node) => setState(() {
+        if (node.value == selection) return;
+
+        if (selection) {
+          selectedNodes++;
+        } else {
+          selectedNodes--;
+        }
+
+        node.value = selection;
+        if (node.children != null) {
+          for (final child in node.children) {
+            // Deselect all children
+            _onSelected(false, child);
+          }
+        }
+      });
 
   void _onSelectedExclusive(
       bool selection, FilterNode node, List<FilterNode> nodesOnLevel) {
@@ -79,19 +94,29 @@ class FilterPageState extends State<FilterPage> {
     for (final child in node.children) {
       // Add option
       nodeControllers.putIfAbsent(child, () => SelectableController());
+      final controller = nodeControllers[child];
       listItems.add(Selectable(
         label: child.localizedName(context),
         initiallySelected: child.value,
-        controller: nodeControllers[child],
-        onSelected: (selection) => level != 0
-            ? _onSelected(selection, child)
-            : _onSelectedExclusive(selection, child, node.children),
+        controller: controller,
+        onSelected: (selection) {
+          if (selection && selectedNodes >= maxSelectedNodes) {
+            AppToast.show(
+                S.of(context).warningOnlyNOptionsAtATime(maxSelectedNodes));
+            controller.deselect();
+            return;
+          }
+
+          level != 0
+              ? _onSelected(selection, child)
+              : _onSelectedExclusive(selection, child, node.children);
+        },
       ));
       child.addListener(() {
         if (child.value) {
-          nodeControllers[child].select();
+          controller.select();
         } else {
-          nodeControllers[child].deselect();
+          controller.deselect();
         }
         setState(() {});
       });
@@ -127,29 +152,36 @@ class FilterPageState extends State<FilterPage> {
     final filterProvider = Provider.of<FilterProvider>(context);
 
     return AppScaffold(
-      title: widget.title ?? S.of(context).navigationFilter,
+      title: Text(widget.title ?? S.of(context).navigationFilter),
       actions: [
         AppScaffoldAction(
           text: widget.buttonText ?? S.of(context).buttonApply,
           onPressed: () {
-            filterProvider
-              ..enableFilter()
-              ..updateFilter(filter);
-            if (widget.onSubmit != null) {
-              widget.onSubmit();
+            if (filter.relevantNodes.length > 1 || widget.canBeForEveryone) {
+              filterProvider
+                ..enableFilter()
+                ..updateFilter(filter);
+              if (widget.onSubmit != null) {
+                widget.onSubmit();
+              }
+              Navigator.of(context).pop();
+            } else {
+              AppToast.show(S.of(context).warningYouNeedToSelectAtLeastOne);
             }
-            Navigator.of(context).pop();
           },
         )
       ],
       body: FutureBuilder<Filter>(
-          future: Provider.of<FilterProvider>(context).fetchFilter(context),
+          future: Provider.of<FilterProvider>(context)
+              .fetchFilter(context: context),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               filter ??= snapshot.data;
               final widgets = <Widget>[const SizedBox(height: 10)];
 
+              selectedNodes = filter.relevantNodes.length - 1;
               final optionsByLevel = <int, List<Widget>>{};
+
               _buildTree(node: filter.root, optionsByLevel: optionsByLevel);
               for (var i = 0; i < filter.localizedLevelNames.length; i++) {
                 if (optionsByLevel[i] == null || optionsByLevel.isEmpty) {

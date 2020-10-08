@@ -72,15 +72,36 @@ class _ClassesPageState extends State<ClassesPage> {
             ),
             Padding(
               padding: const EdgeInsets.all(10),
-              child: Text(S.of(context).messageNoClassesYet,
-                  style: Theme.of(context).textTheme.headline6),
+              child: Text(
+                S.of(context).messageNoClassesYet,
+                style: Theme.of(context).textTheme.headline6,
+                textAlign: TextAlign.center,
+              ),
             ),
             Padding(
               padding: const EdgeInsets.only(left: 10, right: 10),
-              child: Text(
-                S.of(context).messageGetStartedButton,
-                style: Theme.of(context).textTheme.subtitle1,
-              ),
+              child: RichText(
+                  textAlign: TextAlign.center,
+                  text: TextSpan(
+                    style: Theme.of(context).textTheme.subtitle1,
+                    children: [
+                      TextSpan(
+                          text:
+                              '${S.of(context).messageGetStartedByPressing} '),
+                      WidgetSpan(
+                        alignment: PlaceholderAlignment.middle,
+                        child: Icon(
+                          Icons.edit,
+                          size: Theme.of(context).textTheme.subtitle1.fontSize +
+                              2,
+                        ),
+                      ),
+                      TextSpan(text: ' ${S.of(context).messageButtonAbove}.'),
+                    ],
+                  )
+                  // S.of(context).messageGetStartedButton,
+                  // style: Theme.of(context).textTheme.subtitle1,
+                  ),
             ),
             Expanded(flex: 1, child: Container()),
           ],
@@ -93,7 +114,7 @@ class _ClassesPageState extends State<ClassesPage> {
     final authProvider = Provider.of<AuthProvider>(context);
 
     return AppScaffold(
-      title: S.of(context).navigationClasses,
+      title: Text(S.of(context).navigationClasses),
       // TODO(IoanaAlexandru): Simply show all classes if user is not authenticated
       needsToBeAuthenticated: true,
       actions: [
@@ -166,7 +187,8 @@ class AddClassesPage extends StatefulWidget {
 }
 
 class _AddClassesPageState extends State<AddClassesPage> {
-  _AddClassesPageState({List<String> classIds}) : classIds = classIds ?? [];
+  _AddClassesPageState({List<String> classIds})
+      : classIds = List<String>.from(classIds) ?? [];
 
   List<String> classIds;
   List<ClassHeader> headers;
@@ -188,7 +210,7 @@ class _AddClassesPageState extends State<AddClassesPage> {
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
-      title: S.of(context).actionChooseClasses,
+      title: Text(S.of(context).actionChooseClasses),
       actions: [
         AppScaffoldAction(
           text: S.of(context).buttonSave,
@@ -314,7 +336,8 @@ class ClassList extends StatelessWidget {
               padding: const EdgeInsets.only(left: 10, right: 10, top: 10),
               child: IconText(
                 icon: Icons.info,
-                text: S.of(context).infoChooseClasses,
+                text:
+                    '${S.of(context).infoSelect} ${S.of(context).infoClasses}.',
                 style: Theme.of(context).textTheme.bodyText1,
               ),
             ),
@@ -350,7 +373,8 @@ class ClassListItem extends StatefulWidget {
       this.initiallySelected = false,
       void Function(bool) onSelected,
       this.selectable = false,
-      void Function() onTap})
+      void Function() onTap,
+      this.hint})
       : onSelected = onSelected ?? ((_) {}),
         onTap = onTap ?? (() {}),
         super(key: key);
@@ -360,6 +384,7 @@ class ClassListItem extends StatefulWidget {
   final void Function(bool) onSelected;
   final bool selectable;
   final void Function() onTap;
+  final String hint;
 
   @override
   _ClassListItemState createState() =>
@@ -412,6 +437,7 @@ class _ClassListItemState extends State<ClassListItem> {
                     .copyWith(color: Theme.of(context).disabledColor))
             : Theme.of(context).textTheme.subtitle1,
       ),
+      subtitle: widget.hint != null ? Text(widget.hint) : null,
       onTap: () => setState(() {
         if (widget.selectable) {
           selected = !selected;

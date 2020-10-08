@@ -6,10 +6,12 @@ class SelectableController {
   bool get isSelected => _selectableState?._isSelected;
 
   void select() {
+    if (_selectableState == null) return;
     if (!isSelected) _selectableState.isSelected = true;
   }
 
   void deselect() {
+    if (_selectableState == null) return;
     if (isSelected) _selectableState.isSelected = false;
   }
 }
