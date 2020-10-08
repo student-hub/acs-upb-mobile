@@ -13,6 +13,7 @@ extension RequestExtension on Request {
     if (userId != null) data['addedBy'] = userId;
     if (requestBody != null) data['requestBody'] = requestBody;
     data['done'] = processed;
+    data['dateSubmitted'] = timestamp.toDate().toString();
 
     return data;
   }

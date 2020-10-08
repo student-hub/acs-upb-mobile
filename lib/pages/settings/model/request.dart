@@ -1,5 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class Request {
-  Request(this.userId, this.requestBody);
+  Request(this.userId, this.requestBody, this.timestamp);
 
   /// The user who created this request
   final String userId;
@@ -9,4 +11,7 @@ class Request {
 
   /// Boolean value represented whether the request has been processed by mods
   final bool processed = false;
+
+  /// Timestamp representing the moment when a request is sent
+  final Timestamp timestamp;
 }
