@@ -7,7 +7,6 @@ import 'package:acs_upb_mobile/widgets/button.dart';
 import 'package:acs_upb_mobile/widgets/dialog.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -92,7 +91,7 @@ class _RequestPermissionsState extends State<RequestPermissions> {
                 }
 
                 queryResult = await requestProvider.makeRequest(
-                    Request(user.uid, requestController.text, Timestamp.now(),
+                    Request(user.uid, requestController.text, false,
                         RequestType.permissions),
                     context: context);
                 if (queryResult) {
