@@ -182,7 +182,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "messageNewUser" : MessageLookupByLibrary.simpleMessage("Utilizator nou?"),
     "messageNoClassesYet" : MessageLookupByLibrary.simpleMessage("Nu ați adăugat nici o materie încă."),
     "messageNotLoggedIn" : MessageLookupByLibrary.simpleMessage("Trebuie să fiți autentificat pentru a realiza această acțiune."),
-    "messageRequestAlreadyExists" : MessageLookupByLibrary.simpleMessage("Ați trimis deja o cerere. Daca doriți să o suprascrieți, vă rugăm sa apasați \'Salvare\'."),
+    "messageRequestAlreadyExists" : MessageLookupByLibrary.simpleMessage("Ați trimis deja o cerere. Daca doriți să adăugați una nouă, vă rugăm sa apasați \'Salvare\'."),
     "messageRequestHasBeenSent" : MessageLookupByLibrary.simpleMessage("Cererea a fost transmisă cu succes"),
     "messageResetPassword" : MessageLookupByLibrary.simpleMessage("Introduceți mail-ul pentru a primi instrucțiuni de resetare a parolei."),
     "messageShortcutDeleted" : MessageLookupByLibrary.simpleMessage("Scurtătura a fost ștearsă cu succes."),

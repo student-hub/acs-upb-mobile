@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Request {
-  Request(this.userId, this.requestBody, this.timestamp);
+  Request(this.userId, this.requestBody, this.timestamp, this.typeOfRequest);
 
   /// The user who created this request
   final String userId;
@@ -14,4 +14,17 @@ class Request {
 
   /// Timestamp representing the moment when a request is sent
   final Timestamp timestamp;
+
+  /// Type of the request
+  final RequestType typeOfRequest;
+}
+
+enum RequestType {
+  permissions
+}
+
+extension ParseToString on RequestType {
+  String toShortString() {
+    return toString().split('.').last;
+  }
 }

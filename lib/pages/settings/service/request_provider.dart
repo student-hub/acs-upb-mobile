@@ -14,6 +14,7 @@ extension RequestExtension on Request {
     if (requestBody != null) data['requestBody'] = requestBody;
     data['done'] = processed;
     data['dateSubmitted'] = timestamp.toDate().toString();
+    data['type'] = typeOfRequest.toShortString();
 
     return data;
   }
@@ -27,11 +28,11 @@ class RequestProvider {
     assert(request.requestBody != null);
 
     try {
-      DocumentReference ref;
-      ref = _db.collection('forms').document(request.userId);
+      CollectionReference ref;
+      ref = _db.collection('forms');
 
       final data = request.toData();
-      await ref.setData(data);
+      await ref.add(data);
 
       return userAlreadyRequestedCache = true;
     } catch (e) {

@@ -2173,10 +2173,10 @@ class S {
     );
   }
 
-  /// `You have already submitted a request. If you want to overwrite it, please press 'Send'.`
+  /// `You have already submitted a request. If you want to add another one, please press 'Send'.`
   String get messageRequestAlreadyExists {
     return Intl.message(
-      'You have already submitted a request. If you want to overwrite it, please press \'Send\'.',
+      'You have already submitted a request. If you want to add another one, please press \'Send\'.',
       name: 'messageRequestAlreadyExists',
       desc: '',
       args: [],
