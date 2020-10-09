@@ -304,33 +304,41 @@ class _RelevancePickerState extends State<RelevancePicker> {
                                     ],
                                   ),
                                 if (widget.canBeForEveryone)
-                                  Selectable(
-                                    label: S.of(context).relevanceAnyone,
-                                    initiallySelected: !widget.defaultPrivate &&
-                                        widget.filterProvider
-                                                .defaultRelevance ==
-                                            null,
-                                    onSelected: (selected) => setState(() {
-                                      if (_user?.canAddPublicInfo ?? false) {
-                                        if (selected) {
-                                          // Deselect all controllers
-                                          _onlyMeController.deselect();
-                                          for (final controller
-                                              in _customControllers.values) {
-                                            controller.deselect();
+                                  Row(
+                                    children: [
+                                      Selectable(
+                                        label: S.of(context).relevanceAnyone,
+                                        initiallySelected:
+                                            !widget.defaultPrivate &&
+                                                widget.filterProvider
+                                                        .defaultRelevance ==
+                                                    null,
+                                        onSelected: (selected) => setState(() {
+                                          if (_user?.canAddPublicInfo ??
+                                              false) {
+                                            if (selected) {
+                                              // Deselect all controllers
+                                              _onlyMeController.deselect();
+                                              for (final controller
+                                                  in _customControllers
+                                                      .values) {
+                                                controller.deselect();
+                                              }
+                                            } else {
+                                              _onlyMeController.select();
+                                            }
+                                          } else {
+                                            AppToast.show(S
+                                                .of(context)
+                                                .warningNoPermissionToAddPublicWebsite);
                                           }
-                                        } else {
-                                          _onlyMeController.select();
-                                        }
-                                      } else {
-                                        AppToast.show(S
-                                            .of(context)
-                                            .warningNoPermissionToAddPublicWebsite);
-                                      }
-                                    }),
-                                    controller: _anyoneController,
-                                    disabled:
-                                        !(_user?.canAddPublicInfo ?? false),
+                                        }),
+                                        controller: _anyoneController,
+                                        disabled:
+                                            !(_user?.canAddPublicInfo ?? false),
+                                      ),
+                                      const SizedBox(width: 8),
+                                    ],
                                   ),
                                 _customRelevanceSelectables(),
                               ],
