@@ -77,8 +77,6 @@ class _RelevancePickerState extends State<RelevancePicker> {
   User _user;
   Filter _filter;
 
-  bool _filterApplied = false;
-
   Future<void> _fetchUser() async {
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
     _user = await authProvider.currentUser;
@@ -128,9 +126,12 @@ class _RelevancePickerState extends State<RelevancePicker> {
 
                     // Select the new options
                     await _fetchFilter();
-                    setState(() => _filterApplied = true);
                     if (_filter.relevantLeaves.contains('All')) {
                       _anyoneController.select();
+                    } else {
+                      for (final controller in _customControllers.values) {
+                        controller.select();
+                      }
                     }
                   },
                 ),
@@ -188,8 +189,7 @@ class _RelevancePickerState extends State<RelevancePicker> {
           ..add(Selectable(
             label: node,
             controller: controller,
-            initiallySelected: _filterApplied ||
-                (!_onlyMeController.isSelected &&
+            initiallySelected: (!_onlyMeController.isSelected &&
                     !_anyoneController.isSelected) ||
                 (!widget.canBePrivate && !widget.canBeForEveryone),
             onSelected: (selected) => setState(() {
