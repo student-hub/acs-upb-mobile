@@ -189,6 +189,8 @@ class _RelevancePickerState extends State<RelevancePicker> {
             label: node,
             controller: controller,
             initiallySelected: _filterApplied ||
+                (!_onlyMeController.isSelected &&
+                    !_anyoneController.isSelected) ||
                 (!widget.canBePrivate && !widget.canBeForEveryone),
             onSelected: (selected) => setState(() {
               if (_user?.canAddPublicInfo ?? false) {
