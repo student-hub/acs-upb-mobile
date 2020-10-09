@@ -198,7 +198,9 @@ class _RelevancePickerState extends State<RelevancePicker> {
                   _onlyMeController.deselect();
                   _anyoneController.deselect();
                 }
-                widget.controller?.onChanged();
+                if (widget.controller?.onChanged != null) {
+                  widget.controller.onChanged();
+                }
               } else {
                 AppToast.show(
                     S.of(context).warningNoPermissionToAddPublicWebsite);
