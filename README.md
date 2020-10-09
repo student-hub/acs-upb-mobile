@@ -14,7 +14,7 @@ if you encounter any problem.
 
 If you would like to contribute and don't know where to start, or you have any questions about this
 project, feel free to [join us on Slack](https://join.slack.com/t/acs-upb-mobile/shared_invite/zt-hxf5qs1e-Elv6~8cg7YXA9idS8oZjsg)
-and ask anything on the **#ama** channel.
+and ask anything on the **#questions** channel.
 
 ## Screenshots
 
