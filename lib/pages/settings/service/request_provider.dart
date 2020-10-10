@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/settings/model/request.dart';
+import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
@@ -14,7 +15,7 @@ extension RequestExtension on Request {
     if (requestBody != null) data['requestBody'] = requestBody;
     data['done'] = processed;
     data['dateSubmitted'] = Timestamp.now();
-    data['type'] = typeOfRequest.toShortString();
+    data['type'] = type.toShortString();
 
     return data;
   }

@@ -1,5 +1,6 @@
 class Request {
-  Request(this.userId, this.requestBody, this.processed, this.typeOfRequest);
+  Request(this.userId, this.requestBody,
+      {this.processed = false, this.type = RequestType.permissions});
 
   /// The user who created this request
   final String userId;
@@ -11,13 +12,7 @@ class Request {
   final bool processed;
 
   /// Type of the request
-  final RequestType typeOfRequest;
+  final RequestType type;
 }
 
 enum RequestType { permissions }
-
-extension ParseToString on RequestType {
-  String toShortString() {
-    return toString().split('.').last;
-  }
-}

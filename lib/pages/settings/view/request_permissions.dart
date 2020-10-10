@@ -91,8 +91,7 @@ class _RequestPermissionsState extends State<RequestPermissions> {
                 }
 
                 queryResult = await requestProvider.makeRequest(
-                    Request(user.uid, requestController.text, false,
-                        RequestType.permissions),
+                    Request(user.uid, requestController.text),
                     context: context);
                 if (queryResult) {
                   AppToast.show(S.of(context).messageRequestHasBeenSent);
