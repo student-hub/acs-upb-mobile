@@ -2,6 +2,7 @@ import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/people/model/person.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:meta/meta.dart';
+import 'package:time_machine/time_machine.dart';
 
 enum ShortcutType { main, classbook, resource, other }
 
@@ -36,6 +37,17 @@ class ClassHeader {
   final String name;
   final String acronym;
   final String category;
+
+  @override
+  int get hashCode => id.hashCode;
+
+  @override
+  bool operator ==(Object other) {
+    if (other is ClassHeader) {
+      return other.id == id;
+    }
+    return false;
+  }
 }
 
 class Class {
@@ -43,11 +55,13 @@ class Class {
       {@required this.header,
       List<Shortcut> shortcuts,
       this.grading,
+      this.gradingLastUpdated,
       this.lecturer})
       : shortcuts = shortcuts ?? [];
 
   ClassHeader header;
   final List<Shortcut> shortcuts;
   final Map<String, double> grading;
+  final LocalDateTime gradingLastUpdated;
   final Person lecturer;
 }

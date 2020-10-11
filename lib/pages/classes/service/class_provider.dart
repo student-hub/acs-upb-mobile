@@ -7,6 +7,7 @@ import 'package:acs_upb_mobile/pages/people/service/person_provider.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:time_machine/time_machine.dart';
 
 extension UserExtension on User {
   bool get canEditClassInfo => permissionLevel >= 3;
@@ -40,7 +41,7 @@ extension ShortcutExtension on Shortcut {
 
 extension ClassHeaderExtension on ClassHeader {
   static ClassHeader fromSnap(DocumentSnapshot snap) {
-    if (snap == null) return null;
+    if (snap == null || snap.data == null) return null;
     final splitAcronym = snap.data['shortname'].split('-');
     if (splitAcronym.length < 4) {
       return null;
@@ -53,6 +54,13 @@ extension ClassHeaderExtension on ClassHeader {
       category: snap.data['category_path'],
     );
   }
+}
+
+extension TimestampExtension on Timestamp {
+  LocalDateTime toLocalDateTime() => LocalDateTime.dateTime(toDate())
+      .inZoneStrictly(DateTimeZone.utc)
+      .withZone(DateTimeZone.local)
+      .localDateTime;
 }
 
 extension ClassExtension on Class {
@@ -87,10 +95,15 @@ extension ClassExtension on Class {
           (String name, dynamic value) => MapEntry(name, value.toDouble())));
     }
 
+    final gradingLastUpdated = snap.data['gradingLastUpdated'] == null
+        ? null
+        : (snap.data['gradingLastUpdated'] as Timestamp).toLocalDateTime();
+
     return Class(
       header: header,
       shortcuts: shortcuts,
       grading: grading,
+      gradingLastUpdated: gradingLastUpdated,
       lecturer: lecturer,
     );
   }
@@ -134,6 +147,30 @@ class ClassProvider with ChangeNotifier {
     }
   }
 
+  Future<ClassHeader> fetchClassHeader(String classId,
+      {BuildContext context}) async {
+    try {
+      // Get class with id [classId]
+      final QuerySnapshot query = await Firestore.instance
+          .collection('import_moodle')
+          .where('shortname', isEqualTo: classId)
+          .limit(1)
+          .getDocuments();
+
+      if (query == null || query.documents.isEmpty) {
+        return null;
+      }
+
+      return ClassHeaderExtension.fromSnap(query.documents.first);
+    } catch (e) {
+      print(e);
+      if (context != null) {
+        AppToast.show(S.of(context).errorSomethingWentWrong);
+      }
+      return null;
+    }
+  }
+
   Future<List<ClassHeader>> fetchClassHeaders(
       {String uid, Filter filter, BuildContext context}) async {
     try {
@@ -162,23 +199,14 @@ class ClassProvider with ChangeNotifier {
             await fetchUserClassIds(uid: uid, context: context) ?? [];
         final List<String> newClassIds = List<String>.from(classIds);
 
-        final CollectionReference col = _db.collection('import_moodle');
         for (final classId in classIds) {
-          final QuerySnapshot query = await col
-              .where('shortname', isEqualTo: classId)
-              .limit(1)
-              .getDocuments();
-          if (query == null || query.documents.isEmpty) {
+          final ClassHeader header = await fetchClassHeader(classId);
+          if (header == null) {
             // Class doesn't exist, remove it
             newClassIds.remove(classId);
             continue;
           }
-
-          final DocumentSnapshot snap = query.documents.first;
-          final ClassHeader header = ClassHeaderExtension.fromSnap(snap);
-          if (header != null) {
-            headers.add(header);
-          }
+          headers.add(header);
         }
 
         // Remove non-existent classes from user data
@@ -272,13 +300,14 @@ class ClassProvider with ChangeNotifier {
     try {
       final DocumentReference doc = _db.collection('classes').document(classId);
       final DocumentSnapshot snap = await doc.get();
+      final Timestamp now = Timestamp.now();
 
       if (snap.data == null) {
         // Document does not exist
-        await doc.setData({'grading': grading});
+        await doc.setData({'grading': grading, 'gradingLastUpdated': now});
       } else {
         // Document exists
-        await doc.updateData({'grading': grading});
+        await doc.updateData({'grading': grading, 'gradingLastUpdated': now});
       }
 
       notifyListeners();

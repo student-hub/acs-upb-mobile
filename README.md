@@ -13,8 +13,8 @@ to [create an issue](https://github.com/acs-upb-mobile/acs-upb-mobile/issues/new
 if you encounter any problem.
 
 If you would like to contribute and don't know where to start, or you have any questions about this
-project, feel free to [join us on Slack](https://join.slack.com/t/acs-upb-mobile/shared_invite/zt-gz48csbn-iVYTE04sFaawINPTlV4oew)
-and ask anything on the **#ama** channel.
+project, feel free to [join us on Slack](https://join.slack.com/t/acs-upb-mobile/shared_invite/zt-hxf5qs1e-Elv6~8cg7YXA9idS8oZjsg)
+and ask anything on the **#questions** channel.
 
 ## Screenshots
 
@@ -34,6 +34,8 @@ and ask anything on the **#ama** channel.
 * [Eric Postolache](https://github.com/ericpostolache)
 * [Gabriel Gavriluță](https://github.com/gabrielGavriluta)
 * [Crăciun Octavian ](https://github.com/craciunoctavian)
+* [Răzvan Rădoi ](https://github.com/razvanra2)
+* [George Diaconu](https://github.com/GeorgeMD)
 
 ## Building from source with Android Studio
 

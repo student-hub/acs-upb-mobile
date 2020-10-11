@@ -65,7 +65,7 @@ class _PortalPageState extends State<PortalPage> {
 
     final filterProvider = this.filterProvider ??
         Provider.of<FilterProvider>(context, listen: false);
-    filterCache = await filterProvider.fetchFilter(context);
+    filterCache = await filterProvider.fetchFilter(context: context);
 
     updating = false;
     if (mounted) {
@@ -75,7 +75,7 @@ class _PortalPageState extends State<PortalPage> {
 
   Widget websiteCircle(Website website, double size) {
     final bool canEdit = editingEnabled &&
-        (website.isPrivate || (user.canEditPublicWebsite ?? false));
+        (website.isPrivate || (user.canEditPublicInfo ?? false));
     return Padding(
         padding: const EdgeInsets.all(8),
         child: WebsiteIcon(
@@ -87,9 +87,13 @@ class _PortalPageState extends State<PortalPage> {
               Navigator.of(context)
                   .push(MaterialPageRoute<ChangeNotifierProvider>(
                 builder: (_) => ChangeNotifierProvider<FilterProvider>(
-                  create: (_) => FilterProvider(
-                      defaultDegree: website.degree,
-                      defaultRelevance: website.relevance),
+                  create: (_) =>
+                      Platform.environment.containsKey('FLUTTER_TEST')
+                          ? Provider.of<FilterProvider>(context)
+                          : FilterProvider(
+                              defaultDegree: website.degree,
+                              defaultRelevance: website.relevance,
+                            ),
                   child: WebsiteView(
                     website: website,
                     updateExisting: true,
@@ -210,7 +214,7 @@ class _PortalPageState extends State<PortalPage> {
         CircularProgressIndicator();
 
     return AppScaffold(
-      title: S.of(context).navigationPortal,
+      title: Text(S.of(context).navigationPortal),
       actions: [
         AppScaffoldAction(
           icon: editingEnabled ? CustomIcons.edit_slash : Icons.edit,
@@ -343,7 +347,10 @@ class _AddWebsiteButton extends StatelessWidget {
               Navigator.of(context)
                   .push(MaterialPageRoute<ChangeNotifierProvider>(
                 builder: (_) => ChangeNotifierProvider<FilterProvider>(
-                    create: (_) => FilterProvider(),
+                    create: (_) =>
+                        Platform.environment.containsKey('FLUTTER_TEST')
+                            ? Provider.of<FilterProvider>(context)
+                            : FilterProvider(),
                     child: WebsiteView(
                       website: Website(
                           relevance: null,

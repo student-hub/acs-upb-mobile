@@ -75,6 +75,7 @@ class _ClassViewState extends State<ClassView> {
                         const SizedBox(height: 8),
                         GradingChart(
                           grading: classInfo.grading,
+                          lastUpdated: classInfo.gradingLastUpdated,
                           onSave: (grading) => classProvider.setGrading(
                               classId: widget.classHeader.id, grading: grading),
                         ),

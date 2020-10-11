@@ -98,7 +98,6 @@ class _WebsiteViewState extends State<WebsiteView> {
       label: _labelController.text,
       link: _linkController.text,
       category: _selectedCategory,
-      iconPath: widget.website?.iconPath ?? 'icons/websites/globe.png',
       infoByLocale: {
         'ro': _descriptionRoController.text,
         'en': _descriptionEnController.text
@@ -190,9 +189,9 @@ class _WebsiteViewState extends State<WebsiteView> {
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
-      title: widget.updateExisting
+      title: Text(widget.updateExisting
           ? S.of(context).actionEditWebsite
-          : S.of(context).actionAddWebsite,
+          : S.of(context).actionAddWebsite),
       actions: [
             AppScaffoldAction(
               text: S.of(context).buttonSave,
@@ -293,7 +292,6 @@ class _WebsiteViewState extends State<WebsiteView> {
                     RelevancePicker(
                       filterProvider: Provider.of<FilterProvider>(context),
                       defaultPrivate: widget.website?.isPrivate ?? true,
-                      defaultRelevance: widget.website?.relevance,
                       controller: _relevanceController,
                     ),
                     TextFormField(
@@ -340,12 +338,13 @@ class WebsiteIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: StorageProvider.findImageUrl(context, website.iconPath),
+      future: StorageProvider.findImageUrl(
+          context, 'websites/${website.id}/icon.png'), //Firebase Storage path
       builder: (context, snapshot) {
         ImageProvider image;
         image = const AssetImage('assets/icons/globe.png');
         if (snapshot.hasData) {
-          image = NetworkImage(snapshot.data.toString());
+          image = NetworkImage(snapshot.data);
         }
 
         return CircleImage(

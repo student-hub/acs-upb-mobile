@@ -8,13 +8,18 @@ import 'package:acs_upb_mobile/pages/faq/service/question_provider.dart';
 import 'package:acs_upb_mobile/pages/filter/model/filter.dart';
 import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
 import 'package:acs_upb_mobile/pages/home/home_page.dart';
+import 'package:acs_upb_mobile/pages/news_feed/model/news_feed_item.dart';
+import 'package:acs_upb_mobile/pages/news_feed/service/news_provider.dart';
 import 'package:acs_upb_mobile/pages/people/service/person_provider.dart';
 import 'package:acs_upb_mobile/pages/portal/service/website_provider.dart';
+import 'package:acs_upb_mobile/resources/locale_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:preferences/preferences.dart';
 import 'package:provider/provider.dart';
+
+import 'test_utils.dart';
 
 class MockAuthProvider extends Mock implements AuthProvider {}
 
@@ -28,18 +33,24 @@ class MockPersonProvider extends Mock implements PersonProvider {}
 
 class MockQuestionProvider extends Mock implements QuestionProvider {}
 
+class MockNewsProvider extends Mock implements NewsProvider {}
+
 void main() {
   AuthProvider mockAuthProvider;
   WebsiteProvider mockWebsiteProvider;
   FilterProvider mockFilterProvider;
   PersonProvider mockPersonProvider;
   MockQuestionProvider mockQuestionProvider;
+  MockNewsProvider mockNewsProvider;
 
   setUp(() async {
     WidgetsFlutterBinding.ensureInitialized();
     PrefService.enableCaching();
     PrefService.cache = {};
     PrefService.setString('language', 'en');
+
+    LocaleProvider.cultures = testCultures;
+    LocaleProvider.rruleL10ns = {'en': await RruleL10nTest.create()};
 
     // Mock the behaviour of the auth provider
     mockAuthProvider = MockAuthProvider();
@@ -58,12 +69,14 @@ void main() {
         .thenAnswer((realInvocation) => Future.value(true));
     when(mockWebsiteProvider.fetchWebsites(any))
         .thenAnswer((_) => Future.value([]));
+    when(mockWebsiteProvider.fetchFavouriteWebsites())
+        .thenAnswer((_) => Future.value(null));
 
     mockFilterProvider = MockFilterProvider();
     // ignore: invalid_use_of_protected_member
     when(mockFilterProvider.hasListeners).thenReturn(false);
     when(mockFilterProvider.filterEnabled).thenReturn(true);
-    when(mockFilterProvider.fetchFilter(any))
+    when(mockFilterProvider.fetchFilter(context: anyNamed('context')))
         .thenAnswer((_) => Future.value(Filter(localizedLevelNames: [
               {'en': 'Level', 'ro': 'Nivel'}
             ], root: FilterNode(name: 'root'))));
@@ -81,6 +94,14 @@ void main() {
         .thenAnswer((realInvocation) => Future.value(<Question>[]));
     when(mockQuestionProvider.fetchQuestions(limit: anyNamed('limit')))
         .thenAnswer((realInvocation) => Future.value(<Question>[]));
+
+    mockNewsProvider = MockNewsProvider();
+    // ignore: invalid_use_of_protected_member
+    when(mockNewsProvider.hasListeners).thenReturn(false);
+    when(mockNewsProvider.fetchNewsFeedItems(context: anyNamed('context')))
+        .thenAnswer((realInvocation) => Future.value(<NewsFeedItem>[]));
+    when(mockNewsProvider.fetchNewsFeedItems(limit: anyNamed('limit')))
+        .thenAnswer((realInvocation) => Future.value(<NewsFeedItem>[]));
   });
 
   group('Login', () {
@@ -90,7 +111,8 @@ void main() {
         ChangeNotifierProvider<WebsiteProvider>(
             create: (_) => mockWebsiteProvider),
         ChangeNotifierProvider<QuestionProvider>(
-            create: (_) => mockQuestionProvider)
+            create: (_) => mockQuestionProvider),
+        ChangeNotifierProvider<NewsProvider>(create: (_) => mockNewsProvider),
       ], child: const MyApp()));
       await tester.pumpAndSettle();
 
@@ -120,7 +142,8 @@ void main() {
         ChangeNotifierProvider<WebsiteProvider>(
             create: (_) => mockWebsiteProvider),
         ChangeNotifierProvider<QuestionProvider>(
-            create: (_) => mockQuestionProvider)
+            create: (_) => mockQuestionProvider),
+        ChangeNotifierProvider<NewsProvider>(create: (_) => mockNewsProvider),
       ], child: const MyApp()));
       await tester.pumpAndSettle();
 
@@ -230,7 +253,7 @@ void main() {
       // ignore: invalid_use_of_protected_member
       when(mockFilterProvider.hasListeners).thenReturn(false);
       when(mockFilterProvider.filterEnabled).thenReturn(true);
-      when(mockFilterProvider.fetchFilter(any))
+      when(mockFilterProvider.fetchFilter(context: anyNamed('context')))
           .thenAnswer((_) => Future.value(Filter(
                   localizedLevelNames: [
                     {'en': 'Degree', 'ro': 'Nivel de studiu'},
@@ -352,7 +375,8 @@ void main() {
         ChangeNotifierProvider<WebsiteProvider>(
             create: (_) => mockWebsiteProvider),
         ChangeNotifierProvider<QuestionProvider>(
-            create: (_) => mockQuestionProvider)
+            create: (_) => mockQuestionProvider),
+        ChangeNotifierProvider<NewsProvider>(create: (_) => mockNewsProvider),
       ], child: MyApp(navigationObservers: [mockObserver])));
       await tester.pumpAndSettle();
 
@@ -563,6 +587,7 @@ void main() {
             create: (_) => mockPersonProvider),
         ChangeNotifierProvider<QuestionProvider>(
             create: (_) => mockQuestionProvider),
+        ChangeNotifierProvider<NewsProvider>(create: (_) => mockNewsProvider),
       ], child: MyApp(navigationObservers: [mockObserver])));
       await tester.pumpAndSettle();
 
@@ -595,7 +620,8 @@ void main() {
         ChangeNotifierProvider<PersonProvider>(
             create: (_) => mockPersonProvider),
         ChangeNotifierProvider<QuestionProvider>(
-            create: (_) => mockQuestionProvider)
+            create: (_) => mockQuestionProvider),
+        ChangeNotifierProvider<NewsProvider>(create: (_) => mockNewsProvider),
       ], child: MyApp(navigationObservers: [mockObserver])));
       await tester.pumpAndSettle();
 

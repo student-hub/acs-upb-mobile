@@ -8,6 +8,24 @@ import 'package:pedantic/pedantic.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+export 'package:acs_upb_mobile/resources/platform.dart'
+    if (dart.library.io) 'dart:io';
+
+Iterable<int> range(int low, int high) sync* {
+  for (int i = low; i < high; ++i) {
+    yield i;
+  }
+}
+
+extension IterableUtils<E> on Iterable<E> {
+  Iterable<E> whereIndex(bool Function(int index) test) sync* {
+    int i = 0;
+    for (final e in this) {
+      if (test(i++)) yield e;
+    }
+  }
+}
+
 class Utils {
   Utils._();
 
@@ -28,5 +46,9 @@ class Utils {
         context, Routes.login, (route) => false));
     unawaited(authProvider.signOut());
     filterProvider.resetFilter();
+  }
+
+  static String wrapUrlWithCORS(String url) {
+    return 'https://cors-anywhere.herokuapp.com/$url';
   }
 }

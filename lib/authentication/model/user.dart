@@ -19,7 +19,7 @@ class User {
 
   int permissionLevel;
 
-  bool get canAddPublicWebsite => permissionLevel >= 3;
+  bool get canAddPublicInfo => permissionLevel >= 3;
 
-  bool get canEditPublicWebsite => permissionLevel >= 3;
+  bool get canEditPublicInfo => permissionLevel >= 3;
 }

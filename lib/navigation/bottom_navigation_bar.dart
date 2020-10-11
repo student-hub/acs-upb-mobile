@@ -1,8 +1,8 @@
 import 'package:acs_upb_mobile/generated/l10n.dart';
-import 'package:acs_upb_mobile/pages/classes/view/classes_page.dart';
 import 'package:acs_upb_mobile/pages/home/home_page.dart';
 import 'package:acs_upb_mobile/pages/people/view/people_page.dart';
 import 'package:acs_upb_mobile/pages/portal/view/portal_page.dart';
+import 'package:acs_upb_mobile/pages/timetable/view/timetable_page.dart';
 import 'package:flutter/material.dart';
 
 class AppBottomNavigationBar extends StatefulWidget {
@@ -26,7 +26,7 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar>
     tabController = TabController(vsync: this, length: 4);
     tabs = [
       HomePage(key: const PageStorageKey('Home'), tabController: tabController),
-      const ClassesPage(key: PageStorageKey('Classes')),
+      const TimetablePage(), // Cannot preserve state with PageStorageKey
       const PortalPage(key: PageStorageKey('Portal')),
       const PeoplePage(key: PageStorageKey('People')),
     ];
@@ -48,37 +48,39 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar>
           child: TabBarView(controller: tabController, children: tabs),
           bucket: bucket,
         ),
-        bottomNavigationBar: SizedBox(
-          height: 45,
-          child: TabBar(
-            controller: tabController,
-            tabs: [
-              Tab(
-                icon: const Icon(Icons.home),
-                text: S.of(context).navigationHome,
-                iconMargin: EdgeInsets.zero,
-              ),
-              Tab(
-                icon: const Icon(Icons.class_),
-                text: S.of(context).navigationClasses,
-                iconMargin: EdgeInsets.zero,
-              ),
-              Tab(
-                icon: const Icon(Icons.public),
-                text: S.of(context).navigationPortal,
-                iconMargin: EdgeInsets.zero,
-              ),
-              Tab(
-                icon: const Icon(Icons.people),
-                text: S.of(context).navigationPeople,
-                iconMargin: EdgeInsets.zero,
-              ),
-            ],
-            labelColor: Theme.of(context).accentColor,
-            labelPadding: EdgeInsets.zero,
-            indicatorPadding: EdgeInsets.zero,
-            unselectedLabelColor: Theme.of(context).unselectedWidgetColor,
-            indicatorColor: Theme.of(context).accentColor,
+        bottomNavigationBar: SafeArea(
+          child: SizedBox(
+            height: 45,
+            child: TabBar(
+              controller: tabController,
+              tabs: [
+                Tab(
+                  icon: const Icon(Icons.home),
+                  text: S.of(context).navigationHome,
+                  iconMargin: EdgeInsets.zero,
+                ),
+                Tab(
+                  icon: const Icon(Icons.calendar_today_rounded),
+                  text: S.of(context).navigationTimetable,
+                  iconMargin: EdgeInsets.zero,
+                ),
+                Tab(
+                  icon: const Icon(Icons.public),
+                  text: S.of(context).navigationPortal,
+                  iconMargin: EdgeInsets.zero,
+                ),
+                Tab(
+                  icon: const Icon(Icons.people),
+                  text: S.of(context).navigationPeople,
+                  iconMargin: EdgeInsets.zero,
+                ),
+              ],
+              labelColor: Theme.of(context).accentColor,
+              labelPadding: EdgeInsets.zero,
+              indicatorPadding: EdgeInsets.zero,
+              unselectedLabelColor: Theme.of(context).unselectedWidgetColor,
+              indicatorColor: Theme.of(context).accentColor,
+            ),
           ),
         ),
       ),

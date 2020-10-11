@@ -153,6 +153,16 @@ class S {
     );
   }
 
+  /// `Request editing permissions`
+  String get labelAskPermissions {
+    return Intl.message(
+      'Request editing permissions',
+      name: 'labelAskPermissions',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `First name`
   String get labelFirstName {
     return Intl.message(
@@ -378,6 +388,76 @@ class S {
     return Intl.message(
       'Personal information',
       name: 'labelPersonalInformation',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `consent for editing rights`
+  String get labelPermissionsConsent {
+    return Intl.message(
+      'consent for editing rights',
+      name: 'labelPermissionsConsent',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Last updated`
+  String get labelLastUpdated {
+    return Intl.message(
+      'Last updated',
+      name: 'labelLastUpdated',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `University year`
+  String get labelUniversityYear {
+    return Intl.message(
+      'University year',
+      name: 'labelUniversityYear',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Week`
+  String get labelWeek {
+    return Intl.message(
+      'Week',
+      name: 'labelWeek',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Even`
+  String get labelEven {
+    return Intl.message(
+      'Even',
+      name: 'labelEven',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Odd`
+  String get labelOdd {
+    return Intl.message(
+      'Odd',
+      name: 'labelOdd',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Day`
+  String get labelDay {
+    return Intl.message(
+      'Day',
+      name: 'labelDay',
       desc: '',
       args: [],
     );
@@ -853,6 +933,26 @@ class S {
     );
   }
 
+  /// `Open filter`
+  String get actionOpenFilter {
+    return Intl.message(
+      'Open filter',
+      name: 'actionOpenFilter',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Request permissions`
+  String get actionRequestPermissions {
+    return Intl.message(
+      'Request permissions',
+      name: 'actionRequestPermissions',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Something went wrong.`
   String get errorSomethingWentWrong {
     return Intl.message(
@@ -978,6 +1078,36 @@ class S {
     return Intl.message(
       'You do not have permission to do that.',
       name: 'errorPermissionDenied',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Event type cannot be empty.`
+  String get errorEventTypeCannotBeEmpty {
+    return Intl.message(
+      'Event type cannot be empty.',
+      name: 'errorEventTypeCannotBeEmpty',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Class cannot be empty.`
+  String get errorClassCannotBeEmpty {
+    return Intl.message(
+      'Class cannot be empty.',
+      name: 'errorClassCannotBeEmpty',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Request already exists`
+  String get warningRequestExists {
+    return Intl.message(
+      'Request already exists',
+      name: 'warningRequestExists',
       desc: '',
       args: [],
     );
@@ -1213,6 +1343,56 @@ class S {
     );
   }
 
+  /// `The request must not be empty`
+  String get warningRequestEmpty {
+    return Intl.message(
+      'The request must not be empty',
+      name: 'warningRequestEmpty',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Only {n} options can be selected at a time.`
+  String warningOnlyNOptionsAtATime(Object n) {
+    return Intl.message(
+      'Only $n options can be selected at a time.',
+      name: 'warningOnlyNOptionsAtATime',
+      desc: '',
+      args: [n],
+    );
+  }
+
+  /// `No events to show`
+  String get warningNoEvents {
+    return Intl.message(
+      'No events to show',
+      name: 'warningNoEvents',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You need to select at least one option.`
+  String get warningYouNeedToSelectAtLeastOne {
+    return Intl.message(
+      'You need to select at least one option.',
+      name: 'warningYouNeedToSelectAtLeastOne',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Ask for permissions`
+  String get navigationAskPermissions {
+    return Intl.message(
+      'Ask for permissions',
+      name: 'navigationAskPermissions',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Home`
   String get navigationHome {
     return Intl.message(
@@ -1308,6 +1488,16 @@ class S {
     return Intl.message(
       'Event details',
       name: 'navigationEventDetails',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `News feed`
+  String get navigationNewsFeed {
+    return Intl.message(
+      'News feed',
+      name: 'navigationNewsFeed',
       desc: '',
       args: [],
     );
@@ -1613,6 +1803,46 @@ class S {
     );
   }
 
+  /// `Holiday`
+  String get uniEventTypeHoliday {
+    return Intl.message(
+      'Holiday',
+      name: 'uniEventTypeHoliday',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Exam session`
+  String get uniEventTypeExamSession {
+    return Intl.message(
+      'Exam session',
+      name: 'uniEventTypeExamSession',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Semester`
+  String get uniEventTypeSemester {
+    return Intl.message(
+      'Semester',
+      name: 'uniEventTypeSemester',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Other`
+  String get uniEventTypeOther {
+    return Intl.message(
+      'Other',
+      name: 'uniEventTypeOther',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Welcome!`
   String get messageWelcomeSimple {
     return Intl.message(
@@ -1648,6 +1878,26 @@ class S {
     return Intl.message(
       'Account is not verified.',
       name: 'messageEmailNotVerified',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You need to be logged in to perform this action.`
+  String get messageNotLoggedIn {
+    return Intl.message(
+      'You need to be logged in to perform this action.',
+      name: 'messageNotLoggedIn',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your account needs to be verified to perform this action.`
+  String get messageEmailNotVerifiedToPerformAction {
+    return Intl.message(
+      'Your account needs to be verified to perform this action.',
+      name: 'messageEmailNotVerifiedToPerformAction',
       desc: '',
       args: [],
     );
@@ -1803,6 +2053,36 @@ class S {
     );
   }
 
+  /// `Event deleted successfully.`
+  String get messageEventDeleted {
+    return Intl.message(
+      'Event deleted successfully.',
+      name: 'messageEventDeleted',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Event added successfully.`
+  String get messageEventAdded {
+    return Intl.message(
+      'Event added successfully.',
+      name: 'messageEventAdded',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Event modified successfully.`
+  String get messageEventEdited {
+    return Intl.message(
+      'Event modified successfully.',
+      name: 'messageEventEdited',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Are you sure you want to delete "{shortcutName}"?`
   String messageDeleteShortcut(Object shortcutName) {
     return Intl.message(
@@ -1843,11 +2123,51 @@ class S {
     );
   }
 
-  /// `Get started by pressing the button above.`
-  String get messageGetStartedButton {
+  /// `Get started by pressing the`
+  String get messageGetStartedByPressing {
     return Intl.message(
-      'Get started by pressing the button above.',
-      name: 'messageGetStartedButton',
+      'Get started by pressing the',
+      name: 'messageGetStartedByPressing',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `button above`
+  String get messageButtonAbove {
+    return Intl.message(
+      'button above',
+      name: 'messageButtonAbove',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Why do you want edit permissions for ACS UPB Mobile?`
+  String get messageAskPermissionToEdit {
+    return Intl.message(
+      'Why do you want edit permissions for ACS UPB Mobile?',
+      name: 'messageAskPermissionToEdit',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `The request has been sent succesfully.`
+  String get messageRequestHasBeenSent {
+    return Intl.message(
+      'The request has been sent succesfully.',
+      name: 'messageRequestHasBeenSent',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You have already submitted a request. If you want to overwrite it, please press 'Send'.`
+  String get messageRequestAlreadyExists {
+    return Intl.message(
+      'You have already submitted a request. If you want to overwrite it, please press \'Send\'.',
+      name: 'messageRequestAlreadyExists',
       desc: '',
       args: [],
     );
@@ -1873,6 +2193,16 @@ class S {
     );
   }
 
+  /// `Tap for more info`
+  String get messageTapForMoreInfo {
+    return Intl.message(
+      'Tap for more info',
+      name: 'messageTapForMoreInfo',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Password changed successfully.`
   String get messageChangePasswordSuccess {
     return Intl.message(
@@ -1888,6 +2218,36 @@ class S {
     return Intl.message(
       'Email changed successfully',
       name: 'messageChangeEmailSuccess',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `I will only upload information that is correct and accurate, to the best of my knowledge. I understand that submitting erroneous or offensive information on purpose will lead to my editing permissions being permanently revoked.`
+  String get messageAgreePermissions {
+    return Intl.message(
+      'I will only upload information that is correct and accurate, to the best of my knowledge. I understand that submitting erroneous or offensive information on purpose will lead to my editing permissions being permanently revoked.',
+      name: 'messageAgreePermissions',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You can contribute to the app data, but you first need to request permissions.`
+  String get messageYouCanContribute {
+    return Intl.message(
+      'You can contribute to the app data, but you first need to request permissions.',
+      name: 'messageYouCanContribute',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `There are no events for the selected `
+  String get messageThereAreNoEventsForSelected {
+    return Intl.message(
+      'There are no events for the selected ',
+      name: 'messageThereAreNoEventsForSelected',
       desc: '',
       args: [],
     );
@@ -1913,11 +2273,41 @@ class S {
     );
   }
 
-  /// `Select the classes you are interested in.`
-  String get infoChooseClasses {
+  /// `Select the`
+  String get infoSelect {
     return Intl.message(
-      'Select the classes you are interested in.',
-      name: 'infoChooseClasses',
+      'Select the',
+      name: 'infoSelect',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You first need to select the`
+  String get infoYouNeedToSelect {
+    return Intl.message(
+      'You first need to select the',
+      name: 'infoYouNeedToSelect',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `classes you are interested in`
+  String get infoClasses {
+    return Intl.message(
+      'classes you are interested in',
+      name: 'infoClasses',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Make sure your group/subgroup is selected in the`
+  String get infoMakeSureGroupIsSelected {
+    return Intl.message(
+      'Make sure your group/subgroup is selected in the',
+      name: 'infoMakeSureGroupIsSelected',
       desc: '',
       args: [],
     );
@@ -1998,6 +2388,16 @@ class S {
     return Intl.message(
       'Anonymous',
       name: 'stringAnonymous',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `and`
+  String get stringAnd {
+    return Intl.message(
+      'and',
+      name: 'stringAnd',
       desc: '',
       args: [],
     );
