@@ -7,7 +7,6 @@ import 'package:acs_upb_mobile/widgets/class_image.dart';
 import 'package:acs_upb_mobile/widgets/icon_text.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:acs_upb_mobile/widgets/spoiler.dart';
-import 'package:black_hole_flutter/black_hole_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:pedantic/pedantic.dart';
 import 'package:provider/provider.dart';
@@ -399,12 +398,9 @@ class _ClassListItemState extends State<ClassListItem> {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      leading: ClassImage(
-        backgroundColor: widget.classHeader.colorFromAcronym,
-        textColor: widget.classHeader.colorFromAcronym.highEmphasisOnColor,
-        selectable: widget.selectable,
-        selected: selected,
-        text: widget.classHeader.acronym,
+      leading: ClassIcon(
+        classHeader: widget.classHeader,
+        selected: widget.selectable && selected,
       ),
       title: Text(
         widget.classHeader.name,

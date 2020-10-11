@@ -17,25 +17,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:positioned_tap_detector/positioned_tap_detector.dart';
 import 'package:provider/provider.dart';
-import 'package:black_hole_flutter/black_hole_flutter.dart';
-
-extension ClassExtension on ClassHeader {
-  Color get colorFromAcronym {
-    int r = 0, g = 0, b = 0;
-    if (acronym.isNotEmpty) {
-      b = acronym[0].codeUnitAt(0);
-      if (acronym.length >= 2) {
-        g = acronym[1].codeUnitAt(0);
-        if (acronym.length >= 3) {
-          r = acronym[2].codeUnitAt(0);
-        }
-      }
-    }
-    const int brightnessFactor = 2;
-    return Color.fromRGBO(
-        r * brightnessFactor, g * brightnessFactor, b * brightnessFactor, 1);
-  }
-}
 
 class ClassView extends StatefulWidget {
   const ClassView({Key key, this.classHeader}) : super(key: key);
@@ -54,7 +35,7 @@ class _ClassViewState extends State<ClassView> {
     final classProvider = Provider.of<ClassProvider>(context);
 
     return AppScaffold(
-      title: Text(S.of(context).classInfo),
+      title: Text(S.of(context).navigationClassInfo),
       body: FutureBuilder(
           future: classProvider.fetchClassInfo(widget.classHeader,
               context: context),
@@ -77,7 +58,9 @@ class _ClassViewState extends State<ClassView> {
                           grading: classInfo.grading,
                           lastUpdated: classInfo.gradingLastUpdated,
                           onSave: (grading) => classProvider.setGrading(
-                              classId: widget.classHeader.id, grading: grading),
+                            classId: widget.classHeader.id,
+                            grading: grading,
+                          ),
                         ),
                       ],
                     ),
@@ -144,8 +127,9 @@ class _ClassViewState extends State<ClassView> {
                       child: Center(
                         child: Text(
                           S.of(context).labelUnknown,
-                          style:
-                              TextStyle(color: Theme.of(context).disabledColor),
+                          style: TextStyle(
+                            color: Theme.of(context).disabledColor,
+                          ),
                         ),
                       ),
                     )
@@ -153,7 +137,12 @@ class _ClassViewState extends State<ClassView> {
                 : classInfo.shortcuts
                     .asMap()
                     .map((i, s) => MapEntry(
-                        i, shortcut(index: i, shortcut: s, context: context)))
+                        i,
+                        shortcut(
+                          index: i,
+                          shortcut: s,
+                          context: context,
+                        )))
                     .values
                     .toList()),
       ),
@@ -226,7 +215,9 @@ class _ClassViewState extends State<ClassView> {
                   setState(() {
                     classInfo.shortcuts.removeAt(index);
                   });
-                  AppToast.show(S.of(classViewContext).messageShortcutDeleted);
+                  AppToast.show(
+                    S.of(classViewContext).messageShortcutDeleted,
+                  );
                 }
               },
             ),
@@ -255,13 +246,9 @@ class _ClassViewState extends State<ClassView> {
         padding: const EdgeInsets.all(8),
         child: Row(
           children: [
-            ClassImage(
-                backgroundColor: widget.classHeader.colorFromAcronym,
-                textColor:
-                    widget.classHeader.colorFromAcronym.highEmphasisOnColor,
-                selectable: false,
-                selected: false,
-                text: widget.classHeader.acronym),
+            ClassIcon(
+              classHeader: widget.classHeader,
+            ),
             const SizedBox(
               width: 8,
             ),
@@ -270,9 +257,10 @@ class _ClassViewState extends State<ClassView> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   IconText(
-                      icon: Icons.class_,
-                      text: widget.classHeader.name ?? '-',
-                      style: Theme.of(context).textTheme.bodyText1),
+                    icon: Icons.class_,
+                    text: widget.classHeader.name ?? '-',
+                    style: Theme.of(context).textTheme.bodyText1,
+                  ),
                   GestureDetector(
                     onTap: () {
                       if (classInfo.lecturer != null) {
@@ -287,9 +275,10 @@ class _ClassViewState extends State<ClassView> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         IconText(
-                            icon: Icons.person,
-                            text: classInfo.lecturer?.name ?? '-',
-                            style: Theme.of(context).textTheme.bodyText1),
+                          icon: Icons.person,
+                          text: classInfo.lecturer?.name ?? '-',
+                          style: Theme.of(context).textTheme.bodyText1,
+                        ),
                       ],
                     ),
                   ),

@@ -154,6 +154,7 @@
   "navigationClasses": "Classes",
   "navigationEventDetails": "Event details",
   "navigationNewsFeed": "News feed",
+  "navigationClassInfo": "Class information",
 
   "filterMenuShowAll": "Show all",
   "filterMenuShowMine": "Show only mine",
@@ -254,7 +255,6 @@
   "stringAnonymous": "Anonymous",
   "stringAnd": "and",
 
-  "fileAcsBanner": "assets/images/acs_banner_en.png",
+  "fileAcsBanner": "assets/images/acs_banner_en.png"
 
-  "classInfo": "Class information"
 }

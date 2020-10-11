@@ -154,6 +154,7 @@
   "navigationClasses": "Materii",
   "navigationEventDetails": "Detalii eveniment",
   "navigationNewsFeed": "Știri",
+  "navigationClassInfo": "Informații materie",
 
   "filterMenuShowAll": "Arată tot",
   "filterMenuShowMine": "Arată doar pe ale mele",
@@ -255,7 +256,6 @@
   "stringAnonymous": "Anonim",
   "stringAnd": "și",
 
-  "fileAcsBanner": "assets/images/acs_banner_ro.png",
+  "fileAcsBanner": "assets/images/acs_banner_ro.png"
 
-  "classInfo": "Informații disciplină"
 }

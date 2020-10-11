@@ -1503,6 +1503,16 @@ class S {
     );
   }
 
+  /// `Class information`
+  String get navigationClassInfo {
+    return Intl.message(
+      'Class information',
+      name: 'navigationClassInfo',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Show all`
   String get filterMenuShowAll {
     return Intl.message(
@@ -2408,16 +2418,6 @@ class S {
     return Intl.message(
       'assets/images/acs_banner_en.png',
       name: 'fileAcsBanner',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Class information`
-  String get classInfo {
-    return Intl.message(
-      'Class information',
-      name: 'classInfo',
       desc: '',
       args: [],
     );
