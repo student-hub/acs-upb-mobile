@@ -20,7 +20,6 @@ class ClassesPage extends StatefulWidget {
 }
 
 class _ClassesPageState extends State<ClassesPage> {
-  Future<List<String>> userClassIdsFuture;
   Set<ClassHeader> headers;
   bool updating;
 
@@ -49,11 +48,6 @@ class _ClassesPageState extends State<ClassesPage> {
     super.initState();
 
     updateClasses();
-
-    final classProvider = Provider.of<ClassProvider>(context, listen: false);
-    final authProvider = Provider.of<AuthProvider>(context, listen: false);
-    userClassIdsFuture = classProvider.fetchUserClassIds(
-        uid: authProvider.uid, context: context);
   }
 
   Widget _noClassesView() => Padding(
@@ -127,7 +121,10 @@ class _ClassesPageState extends State<ClassesPage> {
               builder: (_) => ChangeNotifierProvider.value(
                   value: classProvider,
                   child: FutureBuilder(
-                    future: userClassIdsFuture,
+                    future: classProvider.fetchUserClassIds(
+                      uid: authProvider.uid,
+                      context: context,
+                    ),
                     builder: (context, snap) {
                       if (snap.hasData) {
                         return AddClassesPage(
