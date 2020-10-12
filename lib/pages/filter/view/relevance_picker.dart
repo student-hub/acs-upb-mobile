@@ -43,13 +43,13 @@ class RelevanceController {
 }
 
 class RelevancePicker extends StatefulWidget {
-  const RelevancePicker(
-      {@required this.filterProvider,
-      this.canBePrivate = true,
-      this.canBeForEveryone = true,
-      bool defaultPrivate,
-      this.controller})
-      : defaultPrivate = (defaultPrivate ?? true) && canBePrivate;
+  const RelevancePicker({
+    @required this.filterProvider,
+    this.canBePrivate = true,
+    this.canBeForEveryone = true,
+    bool defaultPrivate,
+    this.controller,
+  }) : defaultPrivate = (defaultPrivate ?? true) && canBePrivate;
 
   final FilterProvider filterProvider;
 
@@ -189,8 +189,8 @@ class _RelevancePickerState extends State<RelevancePicker> {
           ..add(Selectable(
             label: node,
             controller: controller,
-            initiallySelected: (!_onlyMeController.isSelected &&
-                    !_anyoneController.isSelected) ||
+            initiallySelected: (!(_onlyMeController?.isSelected ?? false) &&
+                    !(_anyoneController?.isSelected ?? false)) ||
                 (!widget.canBePrivate && !widget.canBeForEveryone),
             onSelected: (selected) => setState(() {
               if (_user?.canAddPublicInfo ?? false) {
