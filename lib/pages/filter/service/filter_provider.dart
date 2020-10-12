@@ -57,11 +57,36 @@ class FilterProvider with ChangeNotifier {
     _relevantNodes = null;
     if (global) {
       // Reset defaults
-      PrefService.setStringList('relevant_nodes', null);
+      //PrefService.setStringList('relevant_nodes', null);
+      setRelevantNodes(null);
       PrefService.setBool('relevance_filter', true);
     }
   }
-
+  Future<bool> setRelevantNodes(List<String> relevantNodes) async{
+    try {
+      final DocumentReference doc = _db.collection('users').document(
+          authProvider.uid);
+      final DocumentSnapshot snap = await doc.get();
+      await doc.updateData({'filter_nodes': relevantNodes});
+      return true;
+    }
+    catch(e){
+      print(e);
+      return false;
+    }
+  }
+  Future<List<String>> getRelevantNodes() async{
+    try {
+      final DocumentReference doc = _db.collection('users').document(
+          authProvider.uid);
+      final DocumentSnapshot snap = await doc.get();
+        return await snap.data['filter_nodes'];
+    }
+    catch(e){
+      print(e);
+      return null;
+    }
+  }
   void enableFilter() {
     _enabled = true;
     if (global) {
@@ -85,8 +110,8 @@ class FilterProvider with ChangeNotifier {
   void updateFilter(Filter filter) {
     _relevanceFilter = filter;
     if (global) {
-      PrefService.setStringList(
-          'relevant_nodes', _relevanceFilter.relevantNodes);
+      //PrefService.setStringList('relevant_nodes', _relevanceFilter.relevantNodes);
+      setRelevantNodes(_relevanceFilter.relevantNodes);
     }
     notifyListeners();
   }
@@ -115,9 +140,7 @@ class FilterProvider with ChangeNotifier {
 
       // Check if there is an existing setting already
       if (global) {
-        _relevantNodes = PrefService.get('relevant_nodes') == null
-            ? null
-            : List<String>.from(PrefService.get('relevant_nodes'));
+        _relevantNodes = await getRelevantNodes();
       }
 
       final root = data['root'];
