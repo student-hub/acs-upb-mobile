@@ -120,8 +120,6 @@ class _TimetablePageState extends State<TimetablePage> {
               }
             },
           ),
-          if (eventProvider.eventsCache == null)
-            const Center(child: CircularProgressIndicator()),
         ],
       ),
     );
@@ -149,7 +147,7 @@ class _TimetablePageState extends State<TimetablePage> {
       // Show dialog if there are no events
       final eventProvider =
           Provider.of<UniEventProvider>(context, listen: false);
-      if (await eventProvider.empty) {
+      if (eventProvider.empty) {
         await showDialog<String>(
           context: context,
           builder: buildDialog,
