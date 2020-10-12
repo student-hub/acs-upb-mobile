@@ -38,8 +38,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
   final formKey = GlobalKey<FormState>();
 
   Uint8List image;
-  im.Image decodedImage;
-
 
   AppDialog _changePasswordDialog(BuildContext context) {
     final newPasswordController = TextEditingController();
@@ -216,46 +214,49 @@ class _EditProfilePageState extends State<EditProfilePage> {
   }
 
   Future<void> getImage() async {
-      final Uint8List image = await ImagePickerProvider.getImage();
-      setState(() {
-        if (image != null) {
-          this.image = image;
-          decodedImage = im.decodeImage(image);
-        } else {
-          AppToast.show('No image selected.');
-        }
-      });
+    final Uint8List image = await ImagePickerProvider.getImage();
+    setState(() {
+      if (image != null) {
+        this.image = image;
+      } else {
+        AppToast.show('No image selected.');
+      }
+    });
   }
 
   Widget loadImage() {
     final AuthProvider authProvider = Provider.of<AuthProvider>(context);
-      if (image != null) {
-        return CircleImage(
-          circleSize: 150,
-          image: MemoryImage(image),
-          enableOverlay: true,
-          overlayIcon: const Icon(Icons.edit),
-        );
-      }
-      return FutureBuilder(
-          future: StorageProvider.findImageUrl(
-              context, 'users/${authProvider.uid}/picture.png'),
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              return CircleImage(
-                circleSize: 150,
-                image: NetworkImage(snapshot.data),
-                enableOverlay: true,
-                overlayIcon: const Icon(Icons.edit),
-              );
-            }
-            return const CircleImage(
-                circleSize: 150,
-                image: AssetImage(
-                    'assets/illustrations/undraw_profile_pic.png'),
-                enableOverlay: true,
-                overlayIcon: Icon(Icons.edit));
-          });
+    if (image != null) {
+      return CircleImage(
+        circleSize: 150,
+        image: MemoryImage(image),
+        enableOverlay: true,
+        overlayIcon: const Icon(Icons.edit),
+      );
+    }
+    return FutureBuilder(
+        future: StorageProvider.findImageUrl(
+            context, 'users/${authProvider.uid}/picture.png'),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return CircleImage(
+              circleSize: 150,
+              image: NetworkImage(snapshot.data),
+              enableOverlay: true,
+              overlayIcon: const Icon(Icons.edit),
+            );
+          }
+          return const CircleImage(
+              circleSize: 150,
+              image: AssetImage('assets/illustrations/undraw_profile_pic.png'),
+              enableOverlay: true,
+              overlayIcon: Icon(Icons.edit));
+        });
+  }
+
+    Future<Uint8List> codeToPNG(Uint8List image) async {
+    final decodedImage = im.decodeImage(image);
+    return im.encodePng(decodedImage);
   }
 
   @override
@@ -265,6 +266,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
     final User user = authProvider.currentUserFromCache;
     lastNameController.text = user.lastName;
     firstNameController.text = user.firstName;
+    Uint8List uploadImage;
+    if(image != null) {
+      codeToPNG(image).then((value) => uploadImage = value);
+    }
     if (!authProvider.isVerifiedFromCache) {
       emailController.text = authProvider.email.split('@')[0];
     }
@@ -295,9 +300,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       .then((value) => result = value ?? false);
                 }
                 if (image != null) {
-                  final file = im.encodePng(decodedImage);
-                 result =
-                      await authProvider.uploadProfilePicture(file, context);
+                   authProvider.uploadProfilePicture(
+                      uploadImage, context).whenComplete(() => AppToast.show('Profile picture updated'));
+                  result = true;
                 }
                 if (result) {
                   if (await authProvider.updateProfile(
@@ -327,9 +332,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
             AccountNotVerifiedWarning(),
             Padding(
               padding: const EdgeInsets.all(8),
-              child: GestureDetector(
-                  child: loadImage(),
-                  onTap: getImage),
+              child: GestureDetector(child: loadImage(), onTap: getImage),
             ),
             PreferenceTitle(
               S.of(context).labelPersonalInformation,

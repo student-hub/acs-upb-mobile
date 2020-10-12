@@ -22,11 +22,13 @@ class StorageProvider {
 
       final StorageUploadTask uploadTask = reference.putData(file);
 
-      if (uploadTask.isSuccessful ) {
+      await uploadTask.onComplete;
+      if(uploadTask.isSuccessful){
         return true;
-      } else {
+      }else{
         return false;
       }
+
     } catch (e) {
       return false;
     }
