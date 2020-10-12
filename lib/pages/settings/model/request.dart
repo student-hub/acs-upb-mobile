@@ -1,6 +1,12 @@
+import 'package:flutter/foundation.dart';
+
 class Request {
-  Request(this.userId, this.requestBody,
-      {this.processed = false, this.type = RequestType.permissions});
+  Request({
+    @required this.userId,
+    @required this.requestBody,
+    this.processed = false,
+    this.type = RequestType.permissions,
+  });
 
   /// The user who created this request
   final String userId;
