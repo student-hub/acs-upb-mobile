@@ -103,6 +103,12 @@ dependencies:
   # Image importer
   image_picker: ^0.6.7+4
 
+  # Web image importer
+  image_picker_web: ^1.0.9
+
+  #Image decoder
+  image: ^2.1.18
+
   # Web scraper
   web_scraper: ^0.0.6
 

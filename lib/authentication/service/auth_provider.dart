@@ -1,15 +1,13 @@
 import 'dart:async';
-import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:acs_upb_mobile/authentication/model/user.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
+import 'package:acs_upb_mobile/resources/storage/storage_provider.dart';
 import 'package:acs_upb_mobile/resources/validator.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
-// import 'package:firebase/firebase.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -65,37 +63,23 @@ class AuthProvider with ChangeNotifier {
         switch (e.code) {
           case 'ERROR_INVALID_EMAIL':
           case 'ERROR_INVALID_CREDENTIAL':
-            AppToast.show(S
-                .of(context)
-                .errorInvalidEmail);
+            AppToast.show(S.of(context).errorInvalidEmail);
             break;
           case 'ERROR_WRONG_PASSWORD':
-            AppToast.show(S
-                .of(context)
-                .errorIncorrectPassword);
+            AppToast.show(S.of(context).errorIncorrectPassword);
             break;
           case 'ERROR_USER_NOT_FOUND':
-            AppToast.show(S
-                .of(context)
-                .errorEmailNotFound);
+            AppToast.show(S.of(context).errorEmailNotFound);
             break;
           case 'ERROR_USER_DISABLED':
-            AppToast.show(S
-                .of(context)
-                .errorAccountDisabled);
+            AppToast.show(S.of(context).errorAccountDisabled);
             break;
           case 'ERROR_TOO_MANY_REQUESTS':
             AppToast.show(
-                '${S
-                    .of(context)
-                    .errorTooManyRequests} ${S
-                    .of(context)
-                    .warningTryAgainLater}');
+                '${S.of(context).errorTooManyRequests} ${S.of(context).warningTryAgainLater}');
             break;
           case 'ERROR_EMAIL_ALREADY_IN_USE':
-            AppToast.show(S
-                .of(context)
-                .errorEmailInUse);
+            AppToast.show(S.of(context).errorEmailInUse);
             break;
           default:
             AppToast.show(e.message);
@@ -104,9 +88,7 @@ class AuthProvider with ChangeNotifier {
     } catch (_) {
       // Unknown exception
       print(e);
-      AppToast.show(S
-          .of(context)
-          .errorSomethingWentWrong);
+      AppToast.show(S.of(context).errorSomethingWentWrong);
     }
   }
 
@@ -248,14 +230,10 @@ class AuthProvider with ChangeNotifier {
   Future<bool> signIn(
       {String email, String password, BuildContext context}) async {
     if (email == null || email == '') {
-      AppToast.show(S
-          .of(context)
-          .errorInvalidEmail);
+      AppToast.show(S.of(context).errorInvalidEmail);
       return false;
     } else if (password == null || password == '') {
-      AppToast.show(S
-          .of(context)
-          .errorNoPassword);
+      AppToast.show(S.of(context).errorNoPassword);
       return false;
     }
 
@@ -300,7 +278,7 @@ class AuthProvider with ChangeNotifier {
 
     try {
       final DocumentReference ref =
-      Firestore.instance.collection('users').document(_firebaseUser.uid);
+          Firestore.instance.collection('users').document(_firebaseUser.uid);
       await ref.delete();
 
       await _firebaseUser.delete();
@@ -310,9 +288,7 @@ class AuthProvider with ChangeNotifier {
     }
 
     if (context != null) {
-      AppToast.show(S
-          .of(context)
-          .messageAccountDeleted);
+      AppToast.show(S.of(context).messageAccountDeleted);
     }
     return true;
   }
@@ -322,16 +298,14 @@ class AuthProvider with ChangeNotifier {
     List<String> providers = [];
     try {
       providers =
-      await FirebaseAuth.instance.fetchSignInMethodsForEmail(email: email);
+          await FirebaseAuth.instance.fetchSignInMethodsForEmail(email: email);
     } catch (e) {
       _errorHandler(e, context);
       return false;
     }
     final bool accountExists = providers.contains('password');
     if (!accountExists && context != null) {
-      AppToast.show(S
-          .of(context)
-          .errorEmailNotFound);
+      AppToast.show(S.of(context).errorEmailNotFound);
     }
     return accountExists;
   }
@@ -340,7 +314,7 @@ class AuthProvider with ChangeNotifier {
     List<String> providers = [];
     try {
       providers =
-      await FirebaseAuth.instance.fetchSignInMethodsForEmail(email: email);
+          await FirebaseAuth.instance.fetchSignInMethodsForEmail(email: email);
     } catch (e) {
       _errorHandler(e, context);
       return false;
@@ -358,9 +332,7 @@ class AuthProvider with ChangeNotifier {
       await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
 
       if (context != null) {
-        AppToast.show(S
-            .of(context)
-            .infoPasswordResetEmailSent);
+        AppToast.show(S.of(context).infoPasswordResetEmailSent);
       }
       return true;
     } catch (e) {
@@ -372,51 +344,31 @@ class AuthProvider with ChangeNotifier {
   /// Create a new user with the data in [info].
   Future<bool> signUp({Map<String, dynamic> info, BuildContext context}) async {
     try {
-      final email = info[S
-          .of(context)
-          .labelEmail];
-      final password = info[S
-          .of(context)
-          .labelPassword];
-      final confirmPassword = info[S
-          .of(context)
-          .labelConfirmPassword];
-      final firstName = info[S
-          .of(context)
-          .labelFirstName];
-      final lastName = info[S
-          .of(context)
-          .labelLastName];
+      final email = info[S.of(context).labelEmail];
+      final password = info[S.of(context).labelPassword];
+      final confirmPassword = info[S.of(context).labelConfirmPassword];
+      final firstName = info[S.of(context).labelFirstName];
+      final lastName = info[S.of(context).labelLastName];
 
       final classes = info['class'];
 
       if (email == null || email == '') {
-        AppToast.show(S
-            .of(context)
-            .errorInvalidEmail);
+        AppToast.show(S.of(context).errorInvalidEmail);
         return false;
       } else if (password == null || password == '') {
-        AppToast.show(S
-            .of(context)
-            .errorNoPassword);
+        AppToast.show(S.of(context).errorNoPassword);
         return false;
       }
       if (confirmPassword == null || confirmPassword != password) {
-        AppToast.show(S
-            .of(context)
-            .errorPasswordsDiffer);
+        AppToast.show(S.of(context).errorPasswordsDiffer);
         return false;
       }
       if (firstName == null || firstName == '') {
-        AppToast.show(S
-            .of(context)
-            .errorMissingFirstName);
+        AppToast.show(S.of(context).errorMissingFirstName);
         return false;
       }
       if (lastName == null || lastName == '') {
-        AppToast.show(S
-            .of(context)
-            .errorMissingLastName);
+        AppToast.show(S.of(context).errorMissingLastName);
         return false;
       }
 
@@ -448,7 +400,7 @@ class AuthProvider with ChangeNotifier {
       );
 
       final DocumentReference ref =
-      Firestore.instance.collection('users').document(user.uid);
+          Firestore.instance.collection('users').document(user.uid);
       await ref.setData(user.toData());
 
       // Send verification e-mail
@@ -456,11 +408,7 @@ class AuthProvider with ChangeNotifier {
 
       if (context != null) {
         AppToast.show(
-            '${S
-                .of(context)
-                .messageAccountCreated} ${S
-                .of(context)
-                .messageCheckEmailVerification}');
+            '${S.of(context).messageAccountCreated} ${S.of(context).messageCheckEmailVerification}');
       }
 
       notifyListeners();
@@ -483,9 +431,7 @@ class AuthProvider with ChangeNotifier {
     }
 
     if (context != null) {
-      AppToast.show(S
-          .of(context)
-          .messageCheckEmailVerification);
+      AppToast.show(S.of(context).messageCheckEmailVerification);
     }
     return true;
   }
@@ -494,22 +440,16 @@ class AuthProvider with ChangeNotifier {
   Future<bool> updateProfile(
       {Map<String, dynamic> info, BuildContext context}) async {
     try {
-      final firstName = info[S
-          .of(context)
-          .labelFirstName];
-      final lastName = info[S
-          .of(context)
-          .labelLastName];
+      final firstName = info[S.of(context).labelFirstName];
+      final lastName = info[S.of(context).labelLastName];
 
       final classes = info['class'];
 
       final User user =
-      await Provider
-          .of<AuthProvider>(context, listen: false)
-          .currentUser
-        ..firstName = firstName
-        ..lastName = lastName
-        ..classes = classes;
+          await Provider.of<AuthProvider>(context, listen: false).currentUser
+            ..firstName = firstName
+            ..lastName = lastName
+            ..classes = classes;
 
       await Firestore.instance
           .collection('users')
@@ -529,18 +469,9 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
-  //Phone
-  Future<Uri> uploadProfilePicture(File file, BuildContext context) async {
-    try {
-      final StorageReference reference =
-      FirebaseStorage.instance.ref().child('users/${_firebaseUser.uid}/picture');
-
-      final StorageUploadTask uploadTask = reference.putFile(file);
-
-      final Uri location = await reference.getDownloadURL();
-      return location;
-    } catch (e) {
-      return null;
-    }
+  Future<bool> uploadProfilePicture(
+      Uint8List file, BuildContext context) async {
+    return StorageProvider.uploadImage(
+        context, file, 'users/${_firebaseUser.uid}/picture.png');
   }
 }

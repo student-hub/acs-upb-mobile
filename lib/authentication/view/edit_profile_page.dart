@@ -1,5 +1,3 @@
-import 'dart:io';
-import 'dart:html' as html;
 import 'dart:typed_data';
 import 'dart:ui';
 
@@ -8,6 +6,7 @@ import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/authentication/service/image_picker_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/filter/view/filter_dropdown.dart';
+import 'package:acs_upb_mobile/resources/storage/storage_provider.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/resources/validator.dart';
 import 'package:acs_upb_mobile/widgets/button.dart';
@@ -21,6 +20,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:preferences/preference_title.dart';
 import 'package:provider/provider.dart';
+import 'package:image/image.dart' as im;
 
 class EditProfilePage extends StatefulWidget {
   const EditProfilePage({Key key}) : super(key: key);
@@ -37,9 +37,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   final formKey = GlobalKey<FormState>();
 
-  File imagePhone;
-  Uint8List imageWeb;
-  File test;
+  Uint8List image;
+  im.Image decodedImage;
+
 
   AppDialog _changePasswordDialog(BuildContext context) {
     final newPasswordController = TextEditingController();
@@ -216,37 +216,46 @@ class _EditProfilePageState extends State<EditProfilePage> {
   }
 
   Future<void> getImage() async {
-    if (!kIsWeb) {
-      final File image = await ImagePickerProvider.getImage();
+      final Uint8List image = await ImagePickerProvider.getImage();
       setState(() {
         if (image != null) {
-          imagePhone = image;
+          this.image = image;
+          decodedImage = im.decodeImage(image);
         } else {
           AppToast.show('No image selected.');
         }
       });
-    } else {
-      final  imageFile = await ImagePickerProvider.getImage();
-      setState(() {
-        if (imageFile != null) {
-          imageWeb = imageFile;
-        } else {
-          AppToast.show('No image selected.');
-        }
-      });
-    }
   }
 
-  ImageProvider<dynamic> loadImage() {
-    if (kIsWeb) {
-      if (test != null) {
-        return FileImage(test);
+  Widget loadImage() {
+    final AuthProvider authProvider = Provider.of<AuthProvider>(context);
+      if (image != null) {
+        return CircleImage(
+          circleSize: 150,
+          image: MemoryImage(image),
+          enableOverlay: true,
+          overlayIcon: const Icon(Icons.edit),
+        );
       }
-    }
-    if (imagePhone != null) {
-      return FileImage(imagePhone);
-    }
-    return const AssetImage('assets/illustrations/undraw_profile_pic.png');
+      return FutureBuilder(
+          future: StorageProvider.findImageUrl(
+              context, 'users/${authProvider.uid}/picture.png'),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return CircleImage(
+                circleSize: 150,
+                image: NetworkImage(snapshot.data),
+                enableOverlay: true,
+                overlayIcon: const Icon(Icons.edit),
+              );
+            }
+            return const CircleImage(
+                circleSize: 150,
+                image: AssetImage(
+                    'assets/illustrations/undraw_profile_pic.png'),
+                enableOverlay: true,
+                overlayIcon: Icon(Icons.edit));
+          });
   }
 
   @override
@@ -285,10 +294,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
                           child: _changeEmailConfirmationDialog(context))
                       .then((value) => result = value ?? false);
                 }
-                if (imagePhone != null) {
-                  Uri uri = await authProvider.uploadProfilePicture(
-                      imagePhone, context);
-                  debugPrint(uri.toString());
+                if (image != null) {
+                  final file = im.encodePng(decodedImage);
+                 result =
+                      await authProvider.uploadProfilePicture(file, context);
                 }
                 if (result) {
                   if (await authProvider.updateProfile(
@@ -317,86 +326,81 @@ class _EditProfilePageState extends State<EditProfilePage> {
           child: ListView(children: [
             AccountNotVerifiedWarning(),
             Padding(
-                      padding: const EdgeInsets.all(8),
-                      child: GestureDetector(
-                          child: CircleImage(
-                            circleSize: 150,
-                            image: loadImage(),
-                            enableOverlay: true,
-                            overlayIcon: const Icon(Icons.edit),
-                          ),
-                          onTap: getImage),
+              padding: const EdgeInsets.all(8),
+              child: GestureDetector(
+                  child: loadImage(),
+                  onTap: getImage),
+            ),
+            PreferenceTitle(
+              S.of(context).labelPersonalInformation,
+              leftPadding: 0,
+            ),
+            Form(
+              key: formKey,
+              child: Column(
+                children: [
+                  TextFormField(
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person),
+                      labelText: S.of(context).labelFirstName,
+                      hintText: S.of(context).hintFirstName,
                     ),
-                    PreferenceTitle(
-                      S.of(context).labelPersonalInformation,
-                      leftPadding: 0,
+                    controller: firstNameController,
+                    validator: (value) {
+                      if (value?.isEmpty ?? true) {
+                        return S.of(context).errorMissingFirstName;
+                      }
+                      return null;
+                    },
+                  ),
+                  TextFormField(
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person),
+                      labelText: S.of(context).labelLastName,
+                      hintText: S.of(context).hintLastName,
                     ),
-                    Form(
-                      key: formKey,
-                      child: Column(
-                        children: [
-                          TextFormField(
-                            decoration: InputDecoration(
-                              prefixIcon: const Icon(Icons.person),
-                              labelText: S.of(context).labelFirstName,
-                              hintText: S.of(context).hintFirstName,
-                            ),
-                            controller: firstNameController,
-                            validator: (value) {
-                              if (value?.isEmpty ?? true) {
-                                return S.of(context).errorMissingFirstName;
-                              }
-                              return null;
-                            },
-                          ),
-                          TextFormField(
-                            decoration: InputDecoration(
-                              prefixIcon: const Icon(Icons.person),
-                              labelText: S.of(context).labelLastName,
-                              hintText: S.of(context).hintLastName,
-                            ),
-                            controller: lastNameController,
-                            validator: (value) {
-                              if (value?.isEmpty ?? true) {
-                                return S.of(context).errorMissingLastName;
-                              }
-                              return null;
-                            },
-                          ),
-                          if (!authProvider.isVerifiedFromCache)
-                            TextFormField(
-                              decoration: InputDecoration(
-                                prefixIcon: const Icon(Icons.alternate_email),
-                                labelText: S.of(context).labelEmail,
-                                hintText: S.of(context).hintEmail,
-                                suffix: Text(emailDomain),
-                              ),
-                              controller: emailController,
-                              validator: (value) {
-                                if (value?.isEmpty ?? true) {
-                                  return S.of(context).errorMissingLastName;
-                                }
-                                return null;
-                              },
-                            )
-                        ],
+                    controller: lastNameController,
+                    validator: (value) {
+                      if (value?.isEmpty ?? true) {
+                        return S.of(context).errorMissingLastName;
+                      }
+                      return null;
+                    },
+                  ),
+                  if (!authProvider.isVerifiedFromCache)
+                    TextFormField(
+                      decoration: InputDecoration(
+                        prefixIcon: const Icon(Icons.alternate_email),
+                        labelText: S.of(context).labelEmail,
+                        hintText: S.of(context).hintEmail,
+                        suffix: Text(emailDomain),
                       ),
-                    ),
-                    PreferenceTitle(
-                      S.of(context).labelClass,
-                      leftPadding: 0,
-                    ),
-                    FilterDropdown(
-                      initialPath: path,
-                      controller: dropdownController,
-                      leftPadding: 10,
-                      textStyle: Theme.of(context)
-                          .textTheme
-                          .caption
-                          .apply(color: Theme.of(context).hintColor),
-                    ),
-                  ]),
-                ),
+                      controller: emailController,
+                      validator: (value) {
+                        if (value?.isEmpty ?? true) {
+                          return S.of(context).errorMissingLastName;
+                        }
+                        return null;
+                      },
+                    )
+                ],
+              ),
+            ),
+            PreferenceTitle(
+              S.of(context).labelClass,
+              leftPadding: 0,
+            ),
+            FilterDropdown(
+              initialPath: path,
+              controller: dropdownController,
+              leftPadding: 10,
+              textStyle: Theme.of(context)
+                  .textTheme
+                  .caption
+                  .apply(color: Theme.of(context).hintColor),
+            ),
+          ]),
+        ),
       ),
     );
   }
