@@ -11,10 +11,10 @@ import 'package:acs_upb_mobile/pages/timetable/model/events/all_day_event.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/events/recurring_event.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/events/uni_event.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
+import 'package:async/async.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:rrule/rrule.dart';
-import 'package:synchronized/synchronized.dart';
 import 'package:time_machine/time_machine.dart';
 import 'package:timetable/timetable.dart';
 
@@ -181,13 +181,11 @@ class UniEventProvider extends EventProvider<UniEventInstance>
 
   final Map<String, AcademicCalendar> _calendars = {};
   ClassProvider _classProvider;
+  FilterProvider _filterProvider;
   final AuthProvider _authProvider;
   List<String> _classIds = [];
   Filter _filter;
-  List<UniEvent> eventsCache;
-  bool emptyCache;
-
-  var cacheLock = Lock();
+  bool empty;
 
   Future<Map<String, AcademicCalendar>> fetchCalendars() async {
     final QuerySnapshot query =
@@ -200,67 +198,68 @@ class UniEventProvider extends EventProvider<UniEventInstance>
     return _calendars;
   }
 
-  Future<bool> get empty async {
-    if (emptyCache != null) return emptyCache;
-    return (await _events).isEmpty;
+  Future<void> checkIfEmpty(List<Stream<List<UniEvent>>> streams) async {
+    for (final stream in streams) {
+      if ((await stream.first)?.isNotEmpty ?? false) {
+        empty = false;
+        return;
+      }
+    }
+    empty = true;
   }
 
-  Future<List<UniEvent>> get _events async {
-    if (eventsCache != null) return eventsCache;
-
+  Stream<List<UniEvent>> get _events {
     if (!_authProvider.isAuthenticatedFromCache ||
         _filter == null ||
-        _calendars == null) return [];
+        _calendars == null) return Stream.value([]);
 
-    var events = <UniEvent>[];
-    // Set the cache to an empty list so that if [updateClasses] or [updateFilter]
-    // is called while fetching, we can invalidate the fetched data.
-    eventsCache = <UniEvent>[];
+    final streams = <Stream<List<UniEvent>>>[];
 
     if (_filter.relevantNodes.length > 1) {
       for (final classId in _classIds ?? []) {
-        final query = await Firestore.instance
+        final Stream<List<UniEvent>> stream = Firestore.instance
             .collection('events')
             .where('class', isEqualTo: classId)
             .where('degree', isEqualTo: _filter.baseNode)
             .where('relevance',
                 arrayContainsAny: _filter.relevantNodes..remove('All'))
-            .getDocuments();
+            .snapshots()
+            .asyncMap((snapshot) async {
+          final events = <UniEvent>[];
 
-        for (final doc in query.documents) {
-          ClassHeader classHeader;
-          if (doc.data['class'] != null) {
-            classHeader =
-                await _classProvider.fetchClassHeader(doc.data['class']);
+          try {
+            for (final doc in snapshot.documents) {
+              ClassHeader classHeader;
+              if (doc.data['class'] != null) {
+                classHeader =
+                    await _classProvider.fetchClassHeader(doc.data['class']);
+              }
+
+              events.add(UniEventExtension.fromJSON(doc.documentID, doc.data,
+                  classHeader: classHeader, calendars: _calendars));
+            }
+            return events.where((element) => element != null).toList();
+          } catch (e) {
+            print(e);
+            return events;
           }
-
-          events.add(UniEventExtension.fromJSON(doc.documentID, doc.data,
-              classHeader: classHeader, calendars: _calendars));
-        }
+        });
+        streams.add(stream);
       }
     }
 
-    events = events.where((event) => event != null).toList();
-    return cacheLock.synchronized(() {
-      if (eventsCache != null) {
-        // Cache was not invalidated while fetching
-        emptyCache = events.isEmpty;
-        eventsCache = events;
-        notifyListeners();
-        return eventsCache;
-      } else {
-        // Cache was invalidated while fetching - that means the filter/classes
-        // changed, so we need to try again
-        // ignore: recursive_getters
-        return _events;
-      }
-    });
+    checkIfEmpty(streams);
+
+    final stream = StreamZip(streams);
+
+    // Flatten zipped streams
+    return stream.map((events) => events.expand((i) => i).toList());
   }
 
   @override
   Stream<Iterable<UniEventInstance>> getAllDayEventsIntersecting(
       DateInterval interval) {
-    return Stream<List<UniEvent>>.fromFuture(_events).map((events) => events
+    return _events.map((events) => events
         .map((event) => event.generateInstances(intersectingInterval: interval))
         .expand((i) => i)
         .allDayEvents
@@ -279,7 +278,7 @@ class UniEventProvider extends EventProvider<UniEventInstance>
   @override
   Stream<Iterable<UniEventInstance>> getPartDayEventsIntersecting(
       LocalDate date) {
-    return Stream<List<UniEvent>>.fromFuture(_events).map((events) => events
+    return _events.map((events) => events
         .map((event) => event.generateInstances(
             intersectingInterval: DateInterval(date, date)))
         .expand((i) => i)
@@ -287,24 +286,17 @@ class UniEventProvider extends EventProvider<UniEventInstance>
   }
 
   void updateClasses(ClassProvider classProvider) {
-    classProvider.fetchUserClassIds(uid: _authProvider.uid).then((classIds) {
-      _classProvider = classProvider;
+    _classProvider = classProvider;
+    _classProvider.fetchUserClassIds(uid: _authProvider.uid).then((classIds) {
       _classIds = classIds;
-      cacheLock.synchronized(() {
-        eventsCache = null;
-        emptyCache = null;
-      });
       notifyListeners();
     });
   }
 
   void updateFilter(FilterProvider filterProvider) {
-    filterProvider.fetchFilter().then((filter) {
+    _filterProvider = filterProvider;
+    _filterProvider.fetchFilter().then((filter) {
       _filter = filter;
-      cacheLock.synchronized(() {
-        eventsCache = null;
-        emptyCache = null;
-      });
       notifyListeners();
     });
   }
@@ -312,7 +304,6 @@ class UniEventProvider extends EventProvider<UniEventInstance>
   Future<bool> addEvent(UniEvent event, {BuildContext context}) async {
     try {
       await Firestore.instance.collection('events').add(event.toData());
-      eventsCache = null;
       notifyListeners();
       return true;
     } catch (e) {
@@ -331,7 +322,6 @@ class UniEventProvider extends EventProvider<UniEventInstance>
       }
 
       await ref.updateData(event.toData());
-      eventsCache = null;
       notifyListeners();
       return true;
     } catch (e) {
@@ -345,7 +335,6 @@ class UniEventProvider extends EventProvider<UniEventInstance>
       DocumentReference ref;
       ref = Firestore.instance.collection('events').document(event.id);
       await ref.delete();
-      eventsCache = null;
       notifyListeners();
       return true;
     } catch (e) {
