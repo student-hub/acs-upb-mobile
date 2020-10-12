@@ -21,7 +21,7 @@ class ClassesPage extends StatefulWidget {
 
 class _ClassesPageState extends State<ClassesPage> {
   Future<List<String>> userClassIdsFuture;
-  List<ClassHeader> headers;
+  Set<ClassHeader> headers;
   bool updating;
 
   Future<void> updateClasses() async {
@@ -35,7 +35,8 @@ class _ClassesPageState extends State<ClassesPage> {
         Provider.of<ClassProvider>(context, listen: false);
     final AuthProvider authProvider =
         Provider.of<AuthProvider>(context, listen: false);
-    headers = await classProvider.fetchClassHeaders(uid: authProvider.uid);
+    headers =
+        (await classProvider.fetchClassHeaders(uid: authProvider.uid)).toSet();
 
     updating = false;
     if (mounted) {
@@ -183,19 +184,19 @@ class AddClassesPage extends StatefulWidget {
 
   @override
   _AddClassesPageState createState() =>
-      _AddClassesPageState(classIds: initialClassIds);
+      _AddClassesPageState(classIds: initialClassIds.toSet());
 }
 
 class _AddClassesPageState extends State<AddClassesPage> {
-  _AddClassesPageState({List<String> classIds})
-      : classIds = List<String>.from(classIds) ?? [];
+  _AddClassesPageState({Set<String> classIds})
+      : classIds = Set<String>.from(classIds) ?? {};
 
-  List<String> classIds;
-  List<ClassHeader> headers;
+  Set<String> classIds;
+  Set<ClassHeader> headers;
 
   Future<void> updateClasses() async {
     final classProvider = Provider.of<ClassProvider>(context, listen: false);
-    headers = await classProvider.fetchClassHeaders();
+    headers = (await classProvider.fetchClassHeaders()).toSet();
     if (mounted) {
       setState(() {});
     }
@@ -214,7 +215,7 @@ class _AddClassesPageState extends State<AddClassesPage> {
       actions: [
         AppScaffoldAction(
           text: S.of(context).buttonSave,
-          onPressed: () => widget.onSave(classIds),
+          onPressed: () => widget.onSave(classIds.toList()),
         )
       ],
       body: ClassList(
@@ -237,17 +238,17 @@ class ClassList extends StatelessWidget {
   ClassList(
       {this.classes,
       void Function(bool, String) onSelected,
-      List<String> initiallySelected,
+      Set<String> initiallySelected,
       this.selectable = false,
       this.sectioned = true,
       void Function(ClassHeader) onTap})
       : onSelected = onSelected ?? ((selected, classId) {}),
         onTap = onTap ?? ((_) {}),
-        initiallySelected = initiallySelected ?? [];
+        initiallySelected = initiallySelected ?? {};
 
-  final List<ClassHeader> classes;
+  final Set<ClassHeader> classes;
   final void Function(bool, String) onSelected;
-  final List<String> initiallySelected;
+  final Set<String> initiallySelected;
   final bool selectable;
   final void Function(ClassHeader) onTap;
   final bool sectioned;
@@ -256,7 +257,7 @@ class ClassList extends StatelessWidget {
       '${S.of(context).labelYear} $year, ${S.of(context).labelSemester} $semester';
 
   Map<String, dynamic> classesBySection(
-      List<ClassHeader> classes, BuildContext context) {
+      Set<ClassHeader> classes, BuildContext context) {
     final map = <String, dynamic>{};
 
     for (final c in classes) {
@@ -272,7 +273,7 @@ class ClassList extends StatelessWidget {
       }
 
       if (!currentPath.containsKey('/')) {
-        currentPath['/'] = <ClassHeader>[];
+        currentPath['/'] = <ClassHeader>{};
       }
       currentPath['/'].add(c);
     }
