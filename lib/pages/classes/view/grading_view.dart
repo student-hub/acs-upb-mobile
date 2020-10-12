@@ -85,7 +85,7 @@ class _GradingChartState extends State<GradingChart> {
                   ),
                 ],
               ),
-            if (gradingDataMap != null)
+            if (gradingDataMap != null && gradingDataMap.isNotEmpty)
               PieChart(
                 dataMap: gradingDataMap,
                 legendPosition: LegendPosition.left,
