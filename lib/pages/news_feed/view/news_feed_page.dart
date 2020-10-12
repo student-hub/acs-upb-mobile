@@ -24,6 +24,15 @@ class NewsFeedPage extends StatelessWidget {
           }
 
           final List<NewsFeedItem> newsFeedItems = snapshot.data;
+          if (newsFeedItems == null || newsFeedItems.isEmpty) {
+            return Center(
+                child: Text(
+                  S.of(context).warningNoneYet,
+                  style: TextStyle(color: Theme.of(context).disabledColor),
+                )
+            );
+          }
+
           return ListView(
               children: ListTile.divideTiles(
             context: context,

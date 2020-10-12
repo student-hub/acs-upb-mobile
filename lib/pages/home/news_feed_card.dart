@@ -16,17 +16,28 @@ class NewsFeedCard extends StatelessWidget {
       showMoreButtonKey: const ValueKey('show_more_news_feed'),
       onShowMore: () => Navigator.of(context).pushNamed(Routes.newsFeed),
       future: Provider.of<NewsProvider>(context).fetchNewsFeedItems(limit: 2),
-      builder: (newsFeedItems) => Column(
-          children: newsFeedItems
-              .map((item) => ListTile(
-                    title: Text(item.title),
-                    subtitle: Text(item.date),
-                    trailing: const Icon(Icons.arrow_forward_ios),
-                    contentPadding: EdgeInsets.zero,
-                    dense: true,
-                    onTap: () => Utils.launchURL(item.link, context: context),
-                  ))
-              .toList()),
+      builder: (newsFeedItems) {
+        if (newsFeedItems == null || newsFeedItems.isEmpty) {
+          return Center(
+              child: Text(
+                S.of(context).warningNoneYet,
+                style: TextStyle(color: Theme.of(context).disabledColor),
+              ));
+        }
+
+        return Column(
+            children: newsFeedItems
+                .map((item) =>
+                ListTile(
+                  title: Text(item.title),
+                  subtitle: Text(item.date),
+                  trailing: const Icon(Icons.arrow_forward_ios),
+                  contentPadding: EdgeInsets.zero,
+                  dense: true,
+                  onTap: () => Utils.launchURL(item.link, context: context),
+                ))
+                .toList());
+      }
     );
   }
 }
