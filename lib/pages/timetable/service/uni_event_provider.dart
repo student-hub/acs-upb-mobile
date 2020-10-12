@@ -10,6 +10,7 @@ import 'package:acs_upb_mobile/pages/timetable/model/academic_calendar.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/events/all_day_event.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/events/recurring_event.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/events/uni_event.dart';
+import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:async/async.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -126,7 +127,7 @@ extension UniEventExtension on UniEvent {
   }
 
   Map<String, dynamic> toData() {
-    final type = this.type.toString().split('.').last;
+    final type = this.type.toShortString();
 
     final json = {
       'type': type,

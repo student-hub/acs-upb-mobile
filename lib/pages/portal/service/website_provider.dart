@@ -4,6 +4,7 @@ import 'package:acs_upb_mobile/authentication/model/user.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/filter/model/filter.dart';
 import 'package:acs_upb_mobile/pages/portal/model/website.dart';
+import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -80,7 +81,7 @@ extension WebsiteExtension on Website {
 
     if (label != null) data['label'] = label;
     if (category != null) {
-      data['category'] = category.toString().split('.').last;
+      data['category'] = category.toShortString();
     }
     if (link != null) data['link'] = link;
     if (infoByLocale != null) data['info'] = infoByLocale;

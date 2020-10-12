@@ -26,6 +26,12 @@ extension IterableUtils<E> on Iterable<E> {
   }
 }
 
+extension EnumUtils on Object {
+  String toShortString() {
+    return toString().split('.').last;
+  }
+}
+
 class Utils {
   Utils._();
 
