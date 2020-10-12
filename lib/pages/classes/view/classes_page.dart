@@ -231,7 +231,7 @@ class _AddClassesPageState extends State<AddClassesPage> {
   }
 }
 
-class ClassList extends StatelessWidget {
+class ClassList extends StatefulWidget {
   ClassList(
       {this.classes,
       void Function(bool, String) onSelected,
@@ -249,6 +249,19 @@ class ClassList extends StatelessWidget {
   final bool selectable;
   final void Function(ClassHeader) onTap;
   final bool sectioned;
+
+  @override
+  _ClassListState createState() => _ClassListState();
+}
+
+class _ClassListState extends State<ClassList> {
+  Set<String> selectedClasses;
+
+  @override
+  void initState() {
+    super.initState();
+    selectedClasses = widget.initiallySelected;
+  }
 
   String sectionName(BuildContext context, String year, String semester) =>
       '${S.of(context).labelYear} $year, ${S.of(context).labelSemester} $semester';
@@ -289,7 +302,7 @@ class ClassList extends StatelessWidget {
         expanded = values.fold(
             false,
             (dynamic selected, ClassHeader header) =>
-                selected || initiallySelected.contains(header.id));
+                selected || widget.initiallySelected.contains(header.id));
       } else {
         final s = buildSections(context, sections[section], level: level + 1);
         expanded = expanded || s.containsSelected;
@@ -314,11 +327,19 @@ class ClassList extends StatelessWidget {
   Widget buildClassItem(ClassHeader header) => Column(
         children: [
           ClassListItem(
-            selectable: selectable,
-            initiallySelected: initiallySelected.contains(header.id),
+            selectable: widget.selectable,
+            initiallySelected: selectedClasses.contains(header.id),
             classHeader: header,
-            onSelected: (selected) => onSelected(selected, header.id),
-            onTap: () => onTap(header),
+            onSelected: (selected) {
+              if (selected) {
+                selectedClasses.add(header.id);
+              } else {
+                selectedClasses.remove(header.id);
+              }
+              setState(() {});
+              widget.onSelected(selected, header.id);
+            },
+            onTap: () => widget.onTap(header),
           ),
           const Divider(),
         ],
@@ -326,10 +347,10 @@ class ClassList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (classes != null) {
+    if (widget.classes != null) {
       return ListView(
         children: [
-          if (sectioned)
+          if (widget.sectioned)
             Padding(
               padding: const EdgeInsets.only(left: 10, right: 10, top: 10),
               child: IconText(
@@ -342,11 +363,11 @@ class ClassList extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(8),
             child: Column(
-                children: sectioned
+                children: widget.sectioned
                     ? (buildSections(
-                            context, classesBySection(classes, context)))
+                            context, classesBySection(widget.classes, context)))
                         .widgets
-                    : classes.map(buildClassItem).toList()),
+                    : widget.classes.map(buildClassItem).toList()),
           ),
         ],
       );
