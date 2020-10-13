@@ -2,9 +2,7 @@
 on:
   push:
     tags:
-      - '*'
-    branches:
-      - master
+      - 'v*'
 
 name: Deployment
 
