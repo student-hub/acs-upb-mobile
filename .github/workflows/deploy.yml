@@ -1,8 +1,10 @@
-# Trigger workflow on tag created
+# Trigger workflow on tag created in master branch
 on:
-  create:
+  push:
     tags:
       - '*'
+    branches:
+      - master
 
 name: Deployment
 
