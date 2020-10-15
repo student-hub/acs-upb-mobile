@@ -1383,6 +1383,16 @@ class S {
     );
   }
 
+  /// `Unable to reach the news feed. Make sure you are connected to the internet.`
+  String get warningUnableToReachNewsFeed {
+    return Intl.message(
+      'Unable to reach the news feed. Make sure you are connected to the internet.',
+      name: 'warningUnableToReachNewsFeed',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Ask for permissions`
   String get navigationAskPermissions {
     return Intl.message(

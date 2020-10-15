@@ -272,6 +272,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "warningRequestExists" : MessageLookupByLibrary.simpleMessage("Request already exists"),
     "warningSamePassword" : MessageLookupByLibrary.simpleMessage("The password must be different from the old one."),
     "warningTryAgainLater" : MessageLookupByLibrary.simpleMessage("Please try again later."),
+    "warningUnableToReachNewsFeed" : MessageLookupByLibrary.simpleMessage("Unable to reach the news feed. Make sure you are connected to the internet."),
     "warningUseProvider" : m9,
     "warningWebsiteNameExists" : MessageLookupByLibrary.simpleMessage("A website with the same name already exists."),
     "warningYouNeedToSelectAtLeastOne" : MessageLookupByLibrary.simpleMessage("You need to select at least one option."),

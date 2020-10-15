@@ -272,6 +272,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "warningRequestExists" : MessageLookupByLibrary.simpleMessage("O cerere deja există"),
     "warningSamePassword" : MessageLookupByLibrary.simpleMessage("Parola trebuie sa fie diferită de cea veche."),
     "warningTryAgainLater" : MessageLookupByLibrary.simpleMessage("Încercați mai târziu."),
+    "warningUnableToReachNewsFeed" : MessageLookupByLibrary.simpleMessage("Nu am putut încărca fluxul de știri. Asigurați-vă că există o conexiune la internet."),
     "warningUseProvider" : m9,
     "warningWebsiteNameExists" : MessageLookupByLibrary.simpleMessage("Există deja un site cu același nume."),
     "warningYouNeedToSelectAtLeastOne" : MessageLookupByLibrary.simpleMessage("Trebuie să selectați cel puțin o opțiune."),

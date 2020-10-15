@@ -24,13 +24,21 @@ class NewsFeedPage extends StatelessWidget {
           }
 
           final List<NewsFeedItem> newsFeedItems = snapshot.data;
-          if (newsFeedItems == null || newsFeedItems.isEmpty) {
+          if (newsFeedItems == null) {
+            return Center(
+                child: Padding(
+                    padding: const EdgeInsets.all(8),
+                    child: Text(
+                      S.of(context).warningUnableToReachNewsFeed,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: Theme.of(context).disabledColor),
+                    )));
+          } else if (newsFeedItems.isEmpty) {
             return Center(
                 child: Text(
-                  S.of(context).warningNoneYet,
-                  style: TextStyle(color: Theme.of(context).disabledColor),
-                )
-            );
+              S.of(context).warningNoneYet,
+              style: TextStyle(color: Theme.of(context).disabledColor),
+            ));
           }
 
           return ListView(

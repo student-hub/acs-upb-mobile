@@ -141,6 +141,7 @@
   "warningOnlyNOptionsAtATime": "Only {n} options can be selected at a time.",
   "warningNoEvents": "No events to show",
   "warningYouNeedToSelectAtLeastOne": "You need to select at least one option.",
+  "warningUnableToReachNewsFeed": "Unable to reach the news feed. Make sure you are connected to the internet.",
 
   "navigationAskPermissions": "Ask for permissions",
   "navigationHome": "Home",
