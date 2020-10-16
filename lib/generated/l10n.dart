@@ -1933,6 +1933,16 @@ class S {
     );
   }
 
+  /// `You will receive a mail confirmation if your request is approved.`
+  String get messageAnnouncedOnMail {
+    return Intl.message(
+      'You will receive a mail confirmation if your request is approved.',
+      name: 'messageAnnouncedOnMail',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Please check your email for account verification.`
   String get messageCheckEmailVerification {
     return Intl.message(
@@ -2173,10 +2183,10 @@ class S {
     );
   }
 
-  /// `You have already submitted a request. If you want to overwrite it, please press 'Send'.`
+  /// `You have already submitted a request. If you want to add another one, please press 'Send'.`
   String get messageRequestAlreadyExists {
     return Intl.message(
-      'You have already submitted a request. If you want to overwrite it, please press \'Send\'.',
+      'You have already submitted a request. If you want to add another one, please press \'Send\'.',
       name: 'messageRequestAlreadyExists',
       desc: '',
       args: [],

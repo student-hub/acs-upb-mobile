@@ -2,16 +2,20 @@ import 'dart:async';
 
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/settings/model/request.dart';
+import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 
 extension RequestExtension on Request {
-  Map<String, String> toData() {
-    final Map<String, String> data = {};
+  Map<String, dynamic> toData() {
+    final Map<String, dynamic> data = {};
 
     if (userId != null) data['addedBy'] = userId;
     if (requestBody != null) data['requestBody'] = requestBody;
+    data['done'] = processed;
+    data['dateSubmitted'] = Timestamp.now();
+    data['type'] = type.toShortString();
 
     return data;
   }
@@ -25,11 +29,11 @@ class RequestProvider {
     assert(request.requestBody != null);
 
     try {
-      DocumentReference ref;
-      ref = _db.collection('forms').document(request.userId);
+      CollectionReference ref;
+      ref = _db.collection('forms');
 
       final data = request.toData();
-      await ref.setData(data);
+      await ref.add(data);
 
       return userAlreadyRequestedCache = true;
     } catch (e) {
