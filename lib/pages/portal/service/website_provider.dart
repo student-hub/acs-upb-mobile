@@ -7,7 +7,6 @@ import 'package:acs_upb_mobile/pages/portal/model/website.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:preferences/preference_service.dart';
 
 extension UserExtension on User {
   /// Check if there is at least one website that the [User] has permission to edit
@@ -103,54 +102,36 @@ class WebsiteProvider with ChangeNotifier {
     }
   }
 
-  /// Initializes the number of visits of websites with the value stored locally.
-  ///
-  /// Because [PrefService] doesn't support storing maps, the
-  /// data is stored in 2 lists: the list of website IDs (`websiteIds`) and the list
-  /// with the number of visits (`websiteVisits`), where `websiteVisits[i]` is the
-  /// number of times the user accessed website with ID `websiteIds[i]`.
-  void initializeNumberOfVisits(List<Website> websites) {
-    final List<String> websiteIds =
-        PrefService.sharedPreferences.getStringList('websiteIds') ?? [];
-    final List<String> websiteVisits =
-        PrefService.sharedPreferences.getStringList('websiteVisits') ?? [];
-
-    final visitsByWebsiteId = Map<String, int>.from(websiteIds.asMap().map(
-        (index, key) => MapEntry(
-            key,
-            int.tryParse(
-                websiteVisits.length > index ? websiteVisits[index] : '0'))));
-
-    for (final website in websites) {
-      website.numberOfVisits = visitsByWebsiteId[website.id] ?? 0;
+  /// Initializes the number of visits of websites with the value stored from Firebase.
+  Future<void> initializeNumberOfVisits(
+      List<Website> websites, String uid) async {
+    try {
+      final DocumentReference doc = _db.collection('users').document(uid);
+      final DocumentSnapshot snap = await doc.get();
+      final websiteVisits = Map<String, dynamic>.from(
+          snap.data['websiteVisits'] ?? <String, String>{});
+      for (final website in websites) {
+        website.numberOfVisits = websiteVisits[website.id] ?? 0;
+      }
+    } catch (e) {
+      print(e);
     }
   }
 
-  /// Increments the number of visits of [website], both in-memory and on the local storage.
-  ///
-  /// Because [PrefService] doesn't support storing maps, the
-  /// data is stored in 2 lists: the list of website IDs (`websiteIds`) and the list
-  /// with the number of visits (`websiteVisits`), where `websiteVisits[i]` is the
-  /// number of times the user accessed website with ID `websiteIds[i]`.
-  Future<void> incrementNumberOfVisits(Website website) async {
+  /// Increments the number of visits of [website], both in-memory and on Firebase.
+  Future<void> incrementNumberOfVisits(Website website, String uid) async {
     website.numberOfVisits++;
-    final List<String> websiteIds =
-        PrefService.sharedPreferences.getStringList('websiteIds') ?? [];
-    final List<String> websiteVisits =
-        PrefService.sharedPreferences.getStringList('websiteVisits') ?? [];
-
-    if (websiteIds.contains(website.id)) {
-      final int index = websiteIds.indexOf(website.id);
-      websiteVisits.insert(index, website.numberOfVisits.toString());
-    } else {
-      websiteIds.add(website.id);
-      websiteVisits.add(website.numberOfVisits.toString());
-      await PrefService.sharedPreferences
-          .setStringList('websiteIds', websiteIds);
+    try {
+      final DocumentReference doc = _db.collection('users').document(uid);
+      final DocumentSnapshot snap = await doc.get();
+      final websiteVisits = Map<String, dynamic>.from(
+          snap.data['websiteVisits'] ?? <String, String>{});
+      websiteVisits[website.id] = website.numberOfVisits++;
+      await doc.updateData({'websiteVisits': websiteVisits});
+      notifyListeners();
+    } catch (e) {
+      print(e);
     }
-    await PrefService.sharedPreferences
-        .setStringList('websiteVisits', websiteVisits);
-    notifyListeners();
   }
 
   Future<List<Website>> fetchWebsites(Filter filter,
@@ -205,7 +186,7 @@ class WebsiteProvider with ChangeNotifier {
             .map((doc) => WebsiteExtension.fromSnap(doc, ownerUid: uid)));
       }
 
-      initializeNumberOfVisits(websites);
+      await initializeNumberOfVisits(websites, uid);
       websites.sort((website1, website2) =>
           website2.numberOfVisits.compareTo(website1.numberOfVisits));
 
@@ -216,11 +197,13 @@ class WebsiteProvider with ChangeNotifier {
     }
   }
 
-  Future<List<Website>> fetchFavouriteWebsites({int limit = 3}) async {
-    final favouriteWebsites = (await fetchWebsites(null))
-        .where((website) => website.numberOfVisits > 0)
-        .take(limit)
-        .toList();
+  Future<List<Website>> fetchFavouriteWebsites(String uid,
+      {int limit = 3}) async {
+    final favouriteWebsites =
+        (await fetchWebsites(null, userOnly: false, uid: uid))
+            .where((website) => website.numberOfVisits > 0)
+            .take(limit)
+            .toList();
     if (favouriteWebsites.isEmpty) {
       return null;
     }

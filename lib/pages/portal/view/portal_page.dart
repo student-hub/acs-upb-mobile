@@ -102,7 +102,7 @@ class _PortalPageState extends State<PortalPage> {
               ));
             } else {
               Provider.of<WebsiteProvider>(context, listen: false)
-                  .incrementNumberOfVisits(website);
+                  .incrementNumberOfVisits(website, user.uid);
               Utils.launchURL(website.link);
             }
           },
