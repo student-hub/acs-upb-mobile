@@ -3,6 +3,24 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:black_hole_flutter/black_hole_flutter.dart';
 
+extension ClassExtension on ClassHeader {
+  Color get colorFromAcronym {
+    int r = 0, g = 0, b = 0;
+    if (acronym.isNotEmpty) {
+      b = acronym[0].codeUnitAt(0);
+      if (acronym.length >= 2) {
+        g = acronym[1].codeUnitAt(0);
+        if (acronym.length >= 3) {
+          r = acronym[2].codeUnitAt(0);
+        }
+      }
+    }
+    const int brightnessFactor = 2;
+    return Color.fromRGBO(
+        r * brightnessFactor, g * brightnessFactor, b * brightnessFactor, 1);
+  }
+}
+
 class ClassIcon extends StatelessWidget {
   const ClassIcon({
     @required this.classHeader,

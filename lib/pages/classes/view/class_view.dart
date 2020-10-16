@@ -246,12 +246,8 @@ class _ClassViewState extends State<ClassView> {
         padding: const EdgeInsets.all(8),
         child: Row(
           children: [
-            ClassIcon(
-              classHeader: widget.classHeader,
-            ),
-            const SizedBox(
-              width: 8,
-            ),
+            ClassIcon(classHeader: widget.classHeader),
+            const SizedBox(width: 8),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
