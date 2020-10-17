@@ -15,11 +15,12 @@ class FavouriteWebsitesCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final String userId = Provider.of<AuthProvider>(context, listen: false).uid;
+    final WebsiteProvider websiteProvider = Provider.of<WebsiteProvider>(context);
     return InfoCard<List<Website>>(
       title: S.of(context).sectionFrequentlyAccessedWebsites,
       onShowMore: onShowMore,
-      future: Provider.of<WebsiteProvider>(context).fetchFavouriteWebsites(
-          Provider.of<AuthProvider>(context, listen: false).uid),
+      future:websiteProvider.fetchFavouriteWebsites(userId),
       builder: (websites) => Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.start,

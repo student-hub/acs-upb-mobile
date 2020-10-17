@@ -104,18 +104,20 @@ class WebsiteProvider with ChangeNotifier {
   }
 
   /// Initializes the number of visits of websites with the value stored from Firebase.
-  Future<void> initializeNumberOfVisits(
+  Future<bool> initializeNumberOfVisits(
       List<Website> websites, String uid) async {
     try {
       final DocumentReference doc = _db.collection('users').document(uid);
       final DocumentSnapshot snap = await doc.get();
       final websiteVisits = Map<String, dynamic>.from(
-          snap.data['websiteVisits'] ?? <String, String>{});
+          snap.data['websiteVisits'] ?? {});
       for (final website in websites) {
         website.numberOfVisits = websiteVisits[website.id] ?? 0;
       }
+      return true;
     } catch (e) {
       print(e);
+      return false;
     }
   }
 
@@ -126,8 +128,9 @@ class WebsiteProvider with ChangeNotifier {
       final DocumentReference doc = _db.collection('users').document(uid);
       final DocumentSnapshot snap = await doc.get();
       final websiteVisits = Map<String, dynamic>.from(
-          snap.data['websiteVisits'] ?? <String, String>{});
+          snap.data['websiteVisits'] ?? {});
       websiteVisits[website.id] = website.numberOfVisits++;
+      
       await doc.updateData({'websiteVisits': websiteVisits});
       notifyListeners();
     } catch (e) {
@@ -187,7 +190,10 @@ class WebsiteProvider with ChangeNotifier {
             .map((doc) => WebsiteExtension.fromSnap(doc, ownerUid: uid)));
       }
 
-      await initializeNumberOfVisits(websites, uid);
+      final bool initializeReturn = await initializeNumberOfVisits(websites, uid);
+      if(!initializeReturn){
+        print('Initialize number of visits failed!');
+      }
       websites.sort((website1, website2) =>
           website2.numberOfVisits.compareTo(website1.numberOfVisits));
 
@@ -201,7 +207,7 @@ class WebsiteProvider with ChangeNotifier {
   Future<List<Website>> fetchFavouriteWebsites(String uid,
       {int limit = 3}) async {
     final favouriteWebsites =
-        (await fetchWebsites(null, userOnly: false, uid: uid))
+        (await fetchWebsites(null, uid: uid))
             .where((website) => website.numberOfVisits > 0)
             .take(limit)
             .toList();
