@@ -219,7 +219,7 @@ void main() {
                 isPrivate: false,
               ),
             ]));
-    when(mockWebsiteProvider.fetchFavouriteWebsites()).thenAnswer(
+    when(mockWebsiteProvider.fetchFavouriteWebsites(mockAuthProvider.uid)).thenAnswer(
         (_) async => (await mockWebsiteProvider.fetchWebsites(any)).take(3));
 
     mockFilterProvider = MockFilterProvider();
