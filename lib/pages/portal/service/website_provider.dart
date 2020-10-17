@@ -195,7 +195,7 @@ class WebsiteProvider with ChangeNotifier {
       final bool initializeReturn =
           await initializeNumberOfVisits(websites, uid);
       if (!initializeReturn) {
-        print('Initialize number of visits failed!');
+        AppToast.show('Initialize number of visits failed!');
       }
       websites.sort((website1, website2) =>
           website2.numberOfVisits.compareTo(website1.numberOfVisits));
