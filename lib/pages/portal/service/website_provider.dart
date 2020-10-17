@@ -122,7 +122,7 @@ class WebsiteProvider with ChangeNotifier {
   }
 
   /// Increments the number of visits of [website], both in-memory and on Firebase.
-  Future<void> incrementNumberOfVisits(Website website, String uid) async {
+  Future<bool> incrementNumberOfVisits(Website website, {String uid}) async {
     website.numberOfVisits++;
     try {
       final DocumentReference doc = _db.collection('users').document(uid);
@@ -133,8 +133,10 @@ class WebsiteProvider with ChangeNotifier {
 
       await doc.updateData({'websiteVisits': websiteVisits});
       notifyListeners();
+      return true;
     } catch (e) {
       print(e);
+      return false;
     }
   }
 
@@ -205,8 +207,8 @@ class WebsiteProvider with ChangeNotifier {
     }
   }
 
-  Future<List<Website>> fetchFavouriteWebsites(String uid,
-      {int limit = 3}) async {
+  Future<List<Website>> fetchFavouriteWebsites(
+      {int limit = 3, String uid}) async {
     final favouriteWebsites = (await fetchWebsites(null, uid: uid))
         .where((website) => website.numberOfVisits > 0)
         .take(limit)

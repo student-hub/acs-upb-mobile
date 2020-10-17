@@ -28,7 +28,6 @@ class MockUrlLauncher extends Mock
 
 void main() {
   final WebsiteProvider mockWebsiteProvider = MockWebsiteProvider();
-  final MockAuthProvider mockAuthProvider = MockAuthProvider();
   // ignore: invalid_use_of_protected_member
   when(mockWebsiteProvider.hasListeners).thenReturn(false);
   when(mockWebsiteProvider.fetchWebsites(any)).thenAnswer((_) => Future.value([
@@ -60,9 +59,10 @@ void main() {
           isPrivate: false,
         ),
       ]));
-  when(mockWebsiteProvider.fetchFavouriteWebsites(mockAuthProvider.uid))
+  when(mockWebsiteProvider.fetchFavouriteWebsites(uid: anyNamed('uid')))
       .thenAnswer(
           (_) async => (await mockWebsiteProvider.fetchWebsites(any)).take(3));
+
 
   final FilterProvider mockFilterProvider = MockFilterProvider();
   // ignore: invalid_use_of_protected_member
@@ -76,6 +76,8 @@ void main() {
   when(mockUrlLauncher.canLaunch(any))
       .thenAnswer((realInvocation) => Future.value(true));
 
+
+  final MockAuthProvider mockAuthProvider = MockAuthProvider();
   // ignore: invalid_use_of_protected_member
   when(mockAuthProvider.hasListeners).thenReturn(false);
   when(mockAuthProvider.isAnonymous).thenReturn(false);
