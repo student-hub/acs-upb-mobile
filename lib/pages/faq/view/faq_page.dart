@@ -109,7 +109,8 @@ class _FaqPageState extends State<FaqPage> {
               true,
               (previousValue, filter) =>
                   previousValue &&
-                  question.question.toLowerCase().contains(filter)) &&
+                  removeDiacritics(question.question.toLowerCase())
+                      .contains(removeDiacritics(filter))) &&
           containsTag(activeTags, question.tags))
       .toList();
 
@@ -182,3 +183,10 @@ class _QuestionsListState extends State<QuestionsList> {
     );
   }
 }
+
+String removeDiacritics(String word) => word
+    .replaceAll('ă', 'a')
+    .replaceAll('â', 'a')
+    .replaceAll('ș', 's')
+    .replaceAll('ț', 't')
+    .replaceAll('î', 'i');
