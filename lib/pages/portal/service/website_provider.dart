@@ -109,8 +109,8 @@ class WebsiteProvider with ChangeNotifier {
     try {
       final DocumentReference doc = _db.collection('users').document(uid);
       final DocumentSnapshot snap = await doc.get();
-      final websiteVisits = Map<String, dynamic>.from(
-          snap.data['websiteVisits'] ?? {});
+      final websiteVisits =
+          Map<String, dynamic>.from(snap.data['websiteVisits'] ?? {});
       for (final website in websites) {
         website.numberOfVisits = websiteVisits[website.id] ?? 0;
       }
@@ -127,10 +127,10 @@ class WebsiteProvider with ChangeNotifier {
     try {
       final DocumentReference doc = _db.collection('users').document(uid);
       final DocumentSnapshot snap = await doc.get();
-      final websiteVisits = Map<String, dynamic>.from(
-          snap.data['websiteVisits'] ?? {});
+      final websiteVisits =
+          Map<String, dynamic>.from(snap.data['websiteVisits'] ?? {});
       websiteVisits[website.id] = website.numberOfVisits++;
-      
+
       await doc.updateData({'websiteVisits': websiteVisits});
       notifyListeners();
     } catch (e) {
@@ -190,8 +190,9 @@ class WebsiteProvider with ChangeNotifier {
             .map((doc) => WebsiteExtension.fromSnap(doc, ownerUid: uid)));
       }
 
-      final bool initializeReturn = await initializeNumberOfVisits(websites, uid);
-      if(!initializeReturn){
+      final bool initializeReturn =
+          await initializeNumberOfVisits(websites, uid);
+      if (!initializeReturn) {
         print('Initialize number of visits failed!');
       }
       websites.sort((website1, website2) =>
@@ -206,11 +207,10 @@ class WebsiteProvider with ChangeNotifier {
 
   Future<List<Website>> fetchFavouriteWebsites(String uid,
       {int limit = 3}) async {
-    final favouriteWebsites =
-        (await fetchWebsites(null, uid: uid))
-            .where((website) => website.numberOfVisits > 0)
-            .take(limit)
-            .toList();
+    final favouriteWebsites = (await fetchWebsites(null, uid: uid))
+        .where((website) => website.numberOfVisits > 0)
+        .take(limit)
+        .toList();
     if (favouriteWebsites.isEmpty) {
       return null;
     }

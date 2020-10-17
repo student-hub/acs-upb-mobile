@@ -60,8 +60,9 @@ void main() {
           isPrivate: false,
         ),
       ]));
-  when(mockWebsiteProvider.fetchFavouriteWebsites(mockAuthProvider.uid)).thenAnswer(
-      (_) async => (await mockWebsiteProvider.fetchWebsites(any)).take(3));
+  when(mockWebsiteProvider.fetchFavouriteWebsites(mockAuthProvider.uid))
+      .thenAnswer(
+          (_) async => (await mockWebsiteProvider.fetchWebsites(any)).take(3));
 
   final FilterProvider mockFilterProvider = MockFilterProvider();
   // ignore: invalid_use_of_protected_member
