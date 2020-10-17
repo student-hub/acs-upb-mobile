@@ -15,24 +15,18 @@ class FavouriteWebsitesCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final String userId = Provider
-        .of<AuthProvider>(context, listen: false)
-        .uid;
-    final WebsiteProvider websiteProvider = Provider.of<WebsiteProvider>(
-        context);
+    final String userId = Provider.of<AuthProvider>(context, listen: false).uid;
+    final WebsiteProvider websiteProvider =
+        Provider.of<WebsiteProvider>(context);
     return InfoCard<List<Website>>(
-      title: S
-          .of(context)
-          .sectionFrequentlyAccessedWebsites,
+      title: S.of(context).sectionFrequentlyAccessedWebsites,
       onShowMore: onShowMore,
       future: websiteProvider.fetchFavouriteWebsites(userId),
-      builder: (websites) =>
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: websites
-                .map((website) =>
-                Expanded(
+      builder: (websites) => Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: websites
+            .map((website) => Expanded(
                   child: Padding(
                       padding: const EdgeInsets.all(8),
                       child: WebsiteIcon(
@@ -40,17 +34,16 @@ class FavouriteWebsitesCard extends StatelessWidget {
                         onTap: () {
                           Provider.of<WebsiteProvider>(context, listen: false)
                               .incrementNumberOfVisits(
-                              website,
-                              Provider
-                                  .of<AuthProvider>(context,
-                                  listen: false)
-                                  .uid);
+                                  website,
+                                  Provider.of<AuthProvider>(context,
+                                          listen: false)
+                                      .uid);
                           Utils.launchURL(website.link, context: context);
                         },
                       )),
                 ))
-                .toList(),
-          ),
+            .toList(),
+      ),
     );
   }
 }
