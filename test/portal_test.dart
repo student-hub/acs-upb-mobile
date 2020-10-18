@@ -63,8 +63,8 @@ void main() {
   when(mockWebsiteProvider.fetchFavouriteWebsites(uid: anyNamed('uid')))
       .thenAnswer(
           (_) async => (await mockWebsiteProvider.fetchWebsites(any)).take(3));
-  when(mockWebsiteProvider.incrementNumberOfVisits(any, uid: anyNamed('uid'))).thenAnswer((_) => Future.value(true));
-
+  when(mockWebsiteProvider.incrementNumberOfVisits(any, uid: anyNamed('uid')))
+      .thenAnswer((_) => Future.value(true));
 
   final FilterProvider mockFilterProvider = MockFilterProvider();
   // ignore: invalid_use_of_protected_member
@@ -77,7 +77,6 @@ void main() {
   UrlLauncherPlatform.instance = mockUrlLauncher;
   when(mockUrlLauncher.canLaunch(any))
       .thenAnswer((realInvocation) => Future.value(true));
-
 
   final MockAuthProvider mockAuthProvider = MockAuthProvider();
   // ignore: invalid_use_of_protected_member

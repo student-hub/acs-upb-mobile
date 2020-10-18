@@ -122,7 +122,8 @@ class WebsiteProvider with ChangeNotifier {
   }
 
   /// Increments the number of visits of [website], both in-memory and on Firebase.
-  Future<bool> incrementNumberOfVisits(Website website, {@required String uid}) async {
+  Future<bool> incrementNumberOfVisits(Website website,
+      {@required String uid}) async {
     website.numberOfVisits++;
     try {
       final DocumentReference doc = _db.collection('users').document(uid);

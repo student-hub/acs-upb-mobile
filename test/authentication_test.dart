@@ -69,7 +69,7 @@ void main() {
         .thenAnswer((realInvocation) => Future.value(true));
     when(mockWebsiteProvider.fetchWebsites(any))
         .thenAnswer((_) => Future.value([]));
-    when(mockWebsiteProvider.fetchFavouriteWebsites(uid:mockAuthProvider.uid))
+    when(mockWebsiteProvider.fetchFavouriteWebsites(uid: mockAuthProvider.uid))
         .thenAnswer((_) => Future.value(null));
 
     mockFilterProvider = MockFilterProvider();
