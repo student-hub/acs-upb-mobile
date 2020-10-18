@@ -14,6 +14,7 @@ jobs:
       - uses: subosito/flutter-action@v1
         with:
           channel: 'beta'
+          flutter-version: '1.22.x'
 
       - name: Install dependencies
         run: flutter pub get
