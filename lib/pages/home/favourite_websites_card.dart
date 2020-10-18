@@ -16,7 +16,7 @@ class FavouriteWebsitesCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final AuthProvider authProvider =
-        Provider.of<AuthProvider>(context, listen: false);
+        Provider.of<AuthProvider>(context);
     final String uid = authProvider.uid;
     final WebsiteProvider websiteProvider =
         Provider.of<WebsiteProvider>(context);
