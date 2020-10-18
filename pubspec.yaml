@@ -138,7 +138,7 @@ dev_dependencies:
   plugin_platform_interface: ^1.0.0
 
   # Testing utils
-  network_image_mock: ^1.0.1
+  network_image_mock: ^1.0.2
 
   # Code analysis
   extra_pedantic: 1.2.0
