@@ -15,13 +15,15 @@ class FavouriteWebsitesCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final String userId = Provider.of<AuthProvider>(context, listen: false).uid;
+    final AuthProvider authProvider =
+        Provider.of<AuthProvider>(context, listen: false);
+    final String uid = authProvider.uid;
     final WebsiteProvider websiteProvider =
         Provider.of<WebsiteProvider>(context);
     return InfoCard<List<Website>>(
       title: S.of(context).sectionFrequentlyAccessedWebsites,
       onShowMore: onShowMore,
-      future: websiteProvider.fetchFavouriteWebsites(uid: userId),
+      future: websiteProvider.fetchFavouriteWebsites(uid: uid),
       builder: (websites) => Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.start,
@@ -32,12 +34,8 @@ class FavouriteWebsitesCard extends StatelessWidget {
                       child: WebsiteIcon(
                         website: website,
                         onTap: () {
-                          Provider.of<WebsiteProvider>(context, listen: false)
-                              .incrementNumberOfVisits(
-                                  website, uid:
-                                  Provider.of<AuthProvider>(context,
-                                          listen: false)
-                                      .uid);
+                          websiteProvider.incrementNumberOfVisits(website,
+                              uid: uid);
                           Utils.launchURL(website.link, context: context);
                         },
                       )),

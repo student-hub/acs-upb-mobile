@@ -1,3 +1,4 @@
+import 'package:acs_upb_mobile/authentication/model/user.dart';
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/filter/model/filter.dart';
@@ -62,6 +63,7 @@ void main() {
   when(mockWebsiteProvider.fetchFavouriteWebsites(uid: anyNamed('uid')))
       .thenAnswer(
           (_) async => (await mockWebsiteProvider.fetchWebsites(any)).take(3));
+  when(mockWebsiteProvider.incrementNumberOfVisits(any, uid: anyNamed('uid'))).thenAnswer((_) => Future.value(true));
 
 
   final FilterProvider mockFilterProvider = MockFilterProvider();
@@ -84,6 +86,10 @@ void main() {
   when(mockAuthProvider.isAuthenticatedFromCache).thenReturn(true);
   when(mockAuthProvider.isAuthenticatedFromService)
       .thenAnswer((realInvocation) => Future.value(true));
+  when(mockAuthProvider.currentUser).thenAnswer((realInvocation) =>
+      Future.value(User(uid: '0', firstName: 'John', lastName: 'Doe')));
+  when(mockAuthProvider.currentUserFromCache)
+      .thenReturn(User(uid: '0', firstName: 'John', lastName: 'Doe'));
 
   Widget buildPortalPage() => MultiProvider(
         providers: [

@@ -122,7 +122,7 @@ class WebsiteProvider with ChangeNotifier {
   }
 
   /// Increments the number of visits of [website], both in-memory and on Firebase.
-  Future<bool> incrementNumberOfVisits(Website website, {String uid}) async {
+  Future<bool> incrementNumberOfVisits(Website website, {@required String uid}) async {
     website.numberOfVisits++;
     try {
       final DocumentReference doc = _db.collection('users').document(uid);
@@ -195,7 +195,8 @@ class WebsiteProvider with ChangeNotifier {
       final bool initializeReturn =
           await initializeNumberOfVisits(websites, uid);
       if (!initializeReturn) {
-        AppToast.show('Initialize number of visits failed!');
+        const String failedReadMessage = 'Could not read favourite websites.';
+        AppToast.show(failedReadMessage);
       }
       websites.sort((website1, website2) =>
           website2.numberOfVisits.compareTo(website1.numberOfVisits));
