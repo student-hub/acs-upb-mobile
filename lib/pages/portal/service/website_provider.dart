@@ -104,7 +104,7 @@ class WebsiteProvider with ChangeNotifier {
   }
 
   /// Initializes the number of visits of websites with the value stored from Firebase.
-  Future<bool> initializeNumberOfVisits(
+  Future<bool> _initializeNumberOfVisits(
       List<Website> websites, String uid) async {
     try {
       final DocumentReference doc = _db.collection('users').document(uid);
@@ -194,7 +194,7 @@ class WebsiteProvider with ChangeNotifier {
       }
 
       final bool initializeReturn =
-          await initializeNumberOfVisits(websites, uid);
+          await _initializeNumberOfVisits(websites, uid);
       if (!initializeReturn) {
         const String failedReadMessage = 'Could not read favourite websites.';
         AppToast.show(failedReadMessage);
