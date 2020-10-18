@@ -249,7 +249,9 @@ class _FormCardTextFieldState extends State<_FormCardTextField> {
                       if (text == null || text == '') {
                         valid = Future<bool>(() => null);
                       } else {
-                        valid = widget.field.check(text);
+                        if (widget.field.check != null) {
+                          valid = widget.field.check(text);
+                        }
                       }
                     }),
                     onSubmitted: widget.onSubmitted,
