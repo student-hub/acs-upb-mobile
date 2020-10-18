@@ -63,10 +63,10 @@ class _SearchBarState extends State<SearchBar> {
 
 class SearchWidget extends StatefulWidget {
   const SearchWidget(
-      {this.onSearch, this.title, this.cancelCallback, this.searchClosed});
+      {this.onSearch, this.header, this.cancelCallback, this.searchClosed});
 
   final void Function(String) onSearch;
-  final Widget title;
+  final Widget header;
   final void Function() cancelCallback;
   final bool searchClosed;
 
@@ -84,7 +84,11 @@ class _SearchWidgetState extends State<SearchWidget> {
       child: widget.searchClosed
           ? Padding(
               padding: const EdgeInsets.only(left: 10, top: 20),
-              child: widget.title,
+              child: widget.header ??
+                  Visibility(
+                    visible: !widget.searchClosed,
+                    child: const SearchWidget(),
+                  ),
             )
           : Padding(
               padding: const EdgeInsets.only(left: 10, top: 10),

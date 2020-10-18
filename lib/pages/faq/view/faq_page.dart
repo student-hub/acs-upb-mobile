@@ -82,7 +82,7 @@ class _FaqPageState extends State<FaqPage> {
             return ListView(
               children: [
                 SearchWidget(
-                  title: categoryList(),
+                  header: categoryList(),
                   onSearch: (searchText) {
                     setState(() {
                       filter = searchText;
