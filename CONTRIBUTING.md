@@ -93,6 +93,35 @@ This application uses [flutterfire](https://github.com/FirebaseExtended/flutterf
 order to access Firebase services. They are already enabled in the [pubspec](pubspec.yaml) file and
 ready to import and use in the code.
 
+### Authentication
+
+Firebase provides an entire suite of back-end services and SDKs for authenticating users within an
+application, through [FirebaseAuth](https://firebase.google.com/docs/auth).
+
+For our application, we use the following features:
+* account creation
+* login
+* password reset via e-mail
+* account verification via e-mail
+* account deletion
+
+Firebase Authentication stores
+[user information](https://firebase.google.com/docs/cli/auth#file_format) such as *UID*, *email*,
+*name* and *password hash*. In order to store additional information such as *user preferences* and
+*group*, when a new user signs up, a corresponding document is created in the
+[users](#users-collection) collection.
+
+This service automatically *handles the authentication tokens* and *enforces security rules*, which
+is particularly useful for an open-source application which users can fiddle with, such as ours. For
+example, multiple failed authentication attempts lead to a temporary timeout, and a user cannot
+delete their account unless they have logged in very recently (or refreshed their authentication
+token).
+
+[Firestore security rules](#firestore-security) can be enforced based on the user’s UID. This method
+means that, even though users can access the database connection string through the public
+repository, they can only do a limited set of actions on the database, depending on whether they are
+authenticated and their permissions.
+
 ### Firestore
 [Cloud Firestore](https://firebase.google.com/docs/firestore) is a noSQL database that organises
 its data in *collections* and *documents*.
@@ -113,7 +142,7 @@ within the database.
 More information about the Firestore data model can be found
 [here](https://firebase.google.com/docs/firestore/data-model).
 
-#### Security
+<h4 id="firestore-security">Security</h4>
 
 Firestore allows for defining specific security rules for each collection. Rules can be applied for
 each different type of transaction - `reads` (where single-document reads - `get` - and queries -
@@ -127,7 +156,7 @@ More information on Firestore security rules can be found
 The project database contains the following collections:
 
 <details>
-<summary><b>users</b></summary>
+<summary class="collection" id="users-collection"><b>users</b></summary>
 This collection stores per-user data. The document key is the user's `uid` (from
 <a href=https://firebase.google.com/docs/auth>FirebaseAuth</a>).
 
