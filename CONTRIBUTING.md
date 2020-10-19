@@ -25,13 +25,13 @@ the change is necessary.
 
 * Make sure you have the *Project* view open in the *Project* tab on the left in Android Studio (not
 *Android*).
-* Flutter comes with *Hot Reload* (the lightning icon, or *Ctrl+\\* / *⌘\\*), which allows you to
+* Flutter comes with *Hot Reload* (the lightning icon, or *Ctrl+\\* or *⌘\\*), which allows you to
 load changes in the code quickly into an already running app, without you needing to reinstall it.
 It's a very handy feature, but it doesn't work all the time - if you change the code, use Hot Reload
 but don't see the expected changes, or see some weird behaviour, you may need to close and restart
 the app (or even reinstall).
 * If running on web doesn't give the expected results after changing some code, you may need to
-clear the cache (in *Chrome*: *Ctrl+Shift+C* / *⌘+Shift+C* to open the Inspect menu, then
+clear the cache (in *Chrome*: *Ctrl+Shift+C* or *⌘+Shift+C* to open the Inspect menu, then
 right-click the *Refresh* button, and select *Empty cache and Hard reload*.)
 
 ## Style guide
@@ -40,12 +40,17 @@ This project uses
 [the official Dart style guide](https://dart.dev/guides/language/effective-dart/style)  with the
 following mentions:
 
-* Android Studio (IntelliJ) with the `dartfmt` tool is used to automatically format the code,
-including the order of imports.
-* For consistency, the `new` keyword (which is optional in Dart) should **not** be used.
-* Where necessary, comments should use Markdown formatting (e.g. backticks - \` - for code snippets
-and `[brackets]` for code references).
-* Use only single apostrophes - ' - for strings (e.g. `'hello'` instead of `"hello"`)
+* Android Studio (IntelliJ) with the `dartfmt` tool is used to automatically format the code
+  (*Ctrl+Alt+L* or *⌥+⌘+L*), including the order of imports (*Ctrl+Alt+O* or *⌥+⌘+O*).
+* The [extra_pedantic](https://pub.dev/packages/extra_pedantic) package is used for static analysis:
+  it automatically highlights warnings related to the
+  [recommended dart style](https://dart.dev/guides/language/effective-dart/style). Most of them can be
+  fixed automatically by invoking Context Actions (place the cursor on the warning and press
+  *Alt+Enter*) and selecting the correct action. **Do not suppress a warning** unless you know what
+  you're doing - if you don't know how to fix it and Android Studio doesn't help, hover over the
+  warning and you'll see a link to the documentation that can help you understand.
+* Where necessary, comments should use Markdown formatting (e.g. backticks - `\` - for code snippets
+  and `[brackets]` for code references).
 
 ## Working with Firebase
 This application uses [Firebase](https://firebase.google.com/) to manage remote storage and
