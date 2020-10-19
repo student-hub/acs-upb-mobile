@@ -226,6 +226,12 @@ All the documents in the collection share the same structure:
     <th>Additional info</th>
   </tr>
   <tr>
+    <td>addedBy</td>
+    <td><code>string</code></td>
+    <td>🗹</td>
+    <td>ID of user who created this website</td>
+  </tr>
+  <tr>
     <td>category</td>
     <td><code>string</code></td>
     <td>🗹</td>
@@ -375,7 +381,7 @@ be editable directly through the app. Therefore for this collection, _anyone can
 <summary class="collection" id="classes-collection"><b>classes</b></summary>
 This collection stores information about classes defined in the
 <a href=#import_moodle-collection>import_moodle</a> collection. The ID of a document in this
-collection corresponds to an ID of a document in
+collection corresponds to the shortname of a document in
 <a href=#import_moodle-collection>import_moodle</a>.
 
 ###### Fields
@@ -483,6 +489,204 @@ This is public information already available on
 [the official website](https://cs.pub.ro/index.php/?option=com_comprofiler&task=userslist&listid=2),
 and currently cannot be edited through the app due to privacy concerns. Therefore for this
 collection, _anyone can **read**_ but _no one can **write**_.
+
+</details>
+
+<details>
+<summary class="collection" id="calendars-collection"><b>calendars</b></summary>
+This collection stores academic calendar information, used to calculate recurrences of events in the
+<a href=#events-collection>events</a> collection. This information is generally posted yearly on the
+university website (for example
+<a href="https://upb.ro/wp-content/uploads/2020/03/UPB-Structura-an-universitar-2020-2021.pdf">here
+</a> for the year 2020).
+
+The ID of a document in this collection is the academic year it corresponds to (for academic year
+2020-2021, the ID is simply "2020").
+
+###### Fields
+All the documents in the collection share the same structure:
+<table>
+  <tr>
+    <th>Field</th>
+    <th>Type</th>
+    <th>Required?</th>
+    <th>Additional info</th>
+  </tr>
+  <tr>
+    <td>exams</td>
+    <td><code>array&lt</code>event*<code>&gt</code></td>
+    <td>🗹</td>
+    <td>exam sessions defined in the academic year</td>
+  </tr>
+  <tr>
+    <td>holidays</td>
+    <td><code>array&lt</code>event*<code>&gt</code></td>
+    <td>🗹</td>
+    <td>holiday intervals defined in the academic year</td>
+  </tr>
+  <tr>
+    <td>semester</td>
+    <td><code>array&lt</code>event*<code>&gt</code></td>
+    <td>🗹</td>
+    <td>semesters defined in the academic year, in chronological order</td>
+  </tr>
+</table>
+
+*An event is a `map<string, dynamic>` with the following fields:
+<table>
+  <tr>
+    <th>Field</th>
+    <th>Type</th>
+    <th>Required?</th>
+    <th>Additional info</th>
+  </tr>
+  <tr>
+    <td>name</td>
+    <td><code>string</code></td>
+    <td>⍰</td>
+    <td>The name of the time interval defined in the calendar. This needs to be specified for
+    everything but semesters, where the name is automatically set as the index of the event in the
+    list (starting from 1).</td>
+  </tr>
+  <tr>
+    <td>start</td>
+    <td><code>timestamp</code></td>
+    <td>🗹</td>
+    <td>The first day of the interval. The hour is irrelevant, it should be set to 00:00.</td>
+  </tr>
+  <tr>
+    <td>end</td>
+    <td><code>timestamp</code></td>
+    <td>🗹</td>
+    <td>The last day of the interval. The hour is irrelevant, it should be set to 00:00.</td>
+  </tr>
+  <tr>
+    <td>degree</td>
+    <td><code>string</code></td>
+    <td>⍰</td>
+    <td>“BSc” or “MSc”, must be specified if relevance is specified and not <code>null</code></td>
+  </tr>
+  <tr>
+    <td>relevance</td>
+    <td><code>null / list&lt;string&gt;</code></td>
+    <td>☐</td>
+    <td><code>null</code> if relevant for everyone, otherwise a string of filter node names</td>
+  </tr>
+</table>
+
+###### Rules
+
+Academic calendars are public information and should never (or very rarely) need to be modified,
+therefore for this collection, _anyone can **read**_ but _no one can **write**_.
+
+</details>
+
+<details>
+<summary class="collection" id="events-collection"><b>events</b></summary>
+This collection stores timetable events, shown in the app under the *Timetable* page.
+
+###### Fields
+All the documents in the collection share the same structure:
+<table>
+  <tr>
+    <th>Field</th>
+    <th>Type</th>
+    <th>Required?</th>
+    <th>Additional info</th>
+  </tr>
+  <tr>
+    <td>addedBy</td>
+    <td><code>string</code></td>
+    <td>🗹</td>
+    <td>ID of user who created this website</td>
+  </tr>
+  <tr>
+    <td>editedBy</td>
+    <td><code>array&lt;string&gt;</code></td>
+    <td>🗹</td>
+    <td>list of user IDs of users who edited this event</td>
+  </tr>
+  <tr>
+    <td>calendar</td>
+    <td><code>string</code></td>
+    <td>🗹</td>
+    <td>ID of a calendar in the <a href=#calendars-collection>calendars</a> collection; it is used
+    to calculate recurrences and skip holidays correctly</td>
+  </tr>
+  <tr>
+    <td>class</td>
+    <td><code>string</code></td>
+    <td>🗹</td>
+    <td>ID of a class in the <a href=#classes-collection>classes</a> collection</td>
+  </tr>
+  <tr>
+    <td>name</td>
+    <td><code>string</code></td>
+    <td>☐</td>
+    <td>Optional event name. If this is not specified, the class acronym will be used instead.</td>
+  </tr>
+  <tr>
+    <td>start</td>
+    <td><code>timestamp</code></td>
+    <td>🗹</td>
+    <td>The first instance of the event.</td>
+  </tr>
+  <tr>
+    <td>duration</td>
+    <td><code>map<string, number></code></td>
+    <td>🗹</td>
+    <td>A map containing duration keys like "hours", "minutes" etc.</td>
+  </tr>
+  <tr>
+    <td>location</td>
+    <td><code>string</code></td>
+    <td>☐</td>
+    <td>Optional event location, if applicable.</td>
+  </tr>
+  <tr>
+    <td>type</td>
+    <td><code>string</code></td>
+    <td>🗹</td>
+    <td>One of "lecture", "lab", "seminar", "sports", "other"</td>
+  </tr>
+  <tr>
+    <td>rrule</td>
+    <td><code>string</code></td>
+    <td>☐</td>
+    <td>If the event repeats, a recurrence rule in the format defined in <a
+    href="https://icalendar.org/iCalendar-RFC-5545/3-8-5-3-recurrence-rule.html">RFC-5543</a>, for
+    example "RRULE:FREQ=WEEKLY;UNTIL=20210131T000000;INTERVAL=2;BYDAY=TH" for an event that repeats
+    every second Thursday until Jan 31st 2021</td>
+  </tr>
+  <tr>
+    <td>degree</td>
+    <td><code>string</code></td>
+    <td>⍰</td>
+    <td>“BSc” or “MSc”, must be specified if relevance is specified and not <code>null</code></td>
+  </tr>
+  <tr>
+    <td>relevance</td>
+    <td><code>null / list&lt;string&gt;</code></td>
+    <td>☐</td>
+    <td><code>null</code> if relevant for everyone, otherwise a string of filter node names</td>
+  </tr>
+</table>
+
+
+###### Rules
+
+Since events in this collection are public information (_anyone can **read**_), altering and
+adding data here is a privilege and needs to be monitored, therefore _anyone who wants to modify
+this data needs to be authenticated_ in the first place.
+
+Users can **create** a new event only _if their `permissionLevel` is equal to or greater than three
+and they sign the data by putting their `uid` in the `addedBy` field_.
+
+Users can **update** an event _if they do not modify the `addedBy` field and they sign the
+modification by adding their `uid` at the end of the `editedBy` list_.
+
+Users can only **delete** an event _if they are the ones who created it_ (their `uid` is equal to
+the `addedBy` field) _or if their `permissionLevel` is equal to or greater than four_.
 
 </details>
 
