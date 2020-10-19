@@ -85,13 +85,18 @@ The following actions are currently set up:
   you are doing.
 
 ## Working with Firebase
-This application uses [Firebase](https://firebase.google.com/) to manage remote storage and
-authentication.
+ACS UPB Mobile uses [Firebase](https://firebase.google.com/) - an app development platform built on
+Google infrastructure and using [Google Cloud Platform](https://cloud.google.com/) - to manage
+remote storage and authentication, as well as other cloud resources.
 
 ### Setup
 This application uses [flutterfire](https://github.com/FirebaseExtended/flutterfire) plugins in
 order to access Firebase services. They are already enabled in the [pubspec](pubspec.yaml) file and
 ready to import and use in the code.
+
+:exclamation: FlutterFire only has [Cloud Storage](#storage) support for Android and iOS. The web
+version needs a special implementation. See [resources/storage](lib/resources/storage) for an
+example.
 
 ### Authentication
 
@@ -718,6 +723,35 @@ Users can only **delete** an event _if they are the ones who created it_ (their 
 the `addedBy` field) _or if their `permissionLevel` is equal to or greater than four_.
 
 </details>
+
+### Storage
+[Cloud Storage](https://firebase.google.com/docs/storage) complements Firestore by allowing storage
+of binary files, such as photos and videos.
+
+#### Structure
+The Cloud Storage is structured in **directories** and **files** (also referred to as **objects**),
+much like any other type of storage. These are placed inside a
+**[bucket](https://cloud.google.com/storage/docs/key-terms#buckets)** - the basic container that
+holds data. You can think of buckets like a physical storage device - they have a location (and
+their own security rules and permissions), and unlike directories, cannot be nested.
+
+The main bucket of the app (`acs-upb-mobile.appspot.com`) can be accessed via the Firebase console.
+It contains app resources such as icons and profile pictures, organised similarly to the data in
+Firestore:
+* **Website icons** are stored in the `websites/` directory. The icon of a website in Firestore
+that has the ID "abcd" will be in storage under `websites/abcd/icon.png`.
+* **Profile pictures** are stored in the `users/` directory. The picture of a user with the UID
+"abcd" would be in storage under `users/abcd/picture.png`.
+
+#### Security
+
+Storage security rules are similar to [Firestore security rules](#firestore-security). One of the
+reasons for keeping the storage structure as close to possible to the Firestore structure is the
+ability to have similar security rules (for example, if, in Firestore, a user can only access their
+own document, the same rule can be applied for a user's folder inside Storage).
+
+More information on Storage security rules can be found
+[here](https://firebase.google.com/docs/storage/security).
 
 ## Internationalization
 
