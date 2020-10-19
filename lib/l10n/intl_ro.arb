@@ -141,6 +141,7 @@
   "warningOnlyNOptionsAtATime": "Doar {n} opțiuni pot fi selectate la un moment dat.",
   "warningNoEvents": "Nu există evenimente de afișat",
   "warningYouNeedToSelectAtLeastOne": "Trebuie să selectați cel puțin o opțiune.",
+  "warningFavouriteWebsitesInitializationFailed": "Nu se pot citi datele despre site-urile favorite.",
 
   "navigationAskPermissions": "Cere permisiuni",
   "navigationHome": "Acasă",

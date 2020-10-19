@@ -141,6 +141,7 @@
   "warningOnlyNOptionsAtATime": "Only {n} options can be selected at a time.",
   "warningNoEvents": "No events to show",
   "warningYouNeedToSelectAtLeastOne": "You need to select at least one option.",
+  "warningFavouriteWebsitesInitializationFailed": "Could not read favourite websites.",
 
   "navigationAskPermissions": "Ask for permissions",
   "navigationHome": "Home",
