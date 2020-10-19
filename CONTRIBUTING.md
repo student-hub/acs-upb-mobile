@@ -4,7 +4,7 @@ It is recommended that you go through
 [our workshop](https://github.com/acs-upb-mobile/flutter-workshop) first, to familiarize yourself
 with the technologies and the contribution process.
 
-## Pull Request process
+## Pull Request (contribution) process
 
 1. Check out [this](https://opensource.com/article/19/7/create-pull-request-github) tutorial if you
 don't know how to make a PR.
@@ -20,6 +20,12 @@ guidelines in mind:
 3. Document any non-obvious parts of the code and make sure the commit description is clear on why
 the change is necessary.
 4. If it's a new feature, write at least one test for it.
+
+Please note that in order for a PR to be merged (accepted), all of the tests need to pass,
+including the linter (which checks for coding style and warnings, see [Style guide](#style-guide)).
+These checks are ran automatically using [GitHub Actions](#github-actions). You also need at least
+one approval from a maintainer - after submitting a PR, you can request a review from the top right
+Reviewers menu on the Pull Request page.
 
 ## Development tips
 
@@ -51,6 +57,32 @@ following mentions:
   warning and you'll see a link to the documentation that can help you understand.
 * Where necessary, comments should use Markdown formatting (e.g. backticks - `\` - for code snippets
   and `[brackets]` for code references).
+
+## GitHub Actions
+
+This project uses [GitHub Actions](https://github.com/features/actions) for CI/CD. That means that
+testing and deployment are automated.
+
+The following actions are currently set up:
+* [Linter](https://github.com/acs-upb-mobile/acs-upb-mobile/actions?query=workflow%3ALinter): Checks
+  for warnings and coding style issues. Runs on every push and pull request.
+  - If your PR is made from a branch inside the repository (rather
+    than a fork), it should automatically *add code review comments pointing out any warnings*.
+  - If you have formatting issues, the "Check formatting" step will *point out the files that need
+    to be formatted* and the workflow will fail.
+* [Tests](https://github.com/acs-upb-mobile/acs-upb-mobile/actions?query=workflow%3ATests): Runs all
+  tests in the [test/](test) directory and submits a coverage report to
+  [codecov](https://codecov.io/gh/acs-upb-mobile/acs-upb-mobile). This action is triggered on every
+  push and pull request.
+  - If at least one test fails, this workflow will fail.
+  - The *coverage* is the percentage of lines of code that are executed at least once in tests. This
+    project aims to keep coverage above 70% at all times.
+* [Deployment](https://github.com/acs-upb-mobile/acs-upb-mobile/actions?query=workflow%3ADeployment):
+  Deploys the web version of the app to the website
+  ([acs-upb-mobile.web.app](https://acs-upb-mobile.web.app/)) and creates a corresponding [GitHub
+  Release](https://github.com/acs-upb-mobile/acs-upb-mobile/releases) including the apk. This action
+  is triggered when a new version tag is pushed. **Do not push version tags** unless you know what
+  you are doing.
 
 ## Working with Firebase
 This application uses [Firebase](https://firebase.google.com/) to manage remote storage and
