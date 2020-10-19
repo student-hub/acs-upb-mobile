@@ -109,6 +109,7 @@ class WebsiteProvider with ChangeNotifier {
     try {
       final DocumentReference doc = _db.collection('users').document(uid);
       final DocumentSnapshot snap = await doc.get();
+
       final websiteVisits =
           Map<String, dynamic>.from(snap.data['websiteVisits'] ?? {});
       for (final website in websites) {
@@ -193,12 +194,7 @@ class WebsiteProvider with ChangeNotifier {
             .map((doc) => WebsiteExtension.fromSnap(doc, ownerUid: uid)));
       }
 
-      final bool initializeReturn =
-          await _initializeNumberOfVisits(websites, uid);
-      if (!initializeReturn) {
-        const String failedReadMessage = 'Could not read favourite websites.';
-        AppToast.show(failedReadMessage);
-      }
+      await _initializeNumberOfVisits(websites, uid);
       websites.sort((website1, website2) =>
           website2.numberOfVisits.compareTo(website1.numberOfVisits));
 
