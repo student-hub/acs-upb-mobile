@@ -254,9 +254,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
         });
   }
 
-    Future<Uint8List> codeToPNG(Uint8List image) async {
+  Future<Uint8List> codeToPNG(Uint8List image) async {
     final decodedImage = im.decodeImage(image);
-    return im.encodePng(im.copyResize(decodedImage,width: 500,height: 500),level: 9);
+    return im.encodePng(im.copyResize(decodedImage, width: 500, height: 500),
+        level: 9);
   }
 
   @override
@@ -267,7 +268,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
     lastNameController.text = user.lastName;
     firstNameController.text = user.firstName;
     Uint8List uploadImage;
-    if(image != null) {
+    if (image != null) {
       codeToPNG(image).then((value) => uploadImage = value);
     }
     if (!authProvider.isVerifiedFromCache) {
@@ -302,7 +303,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 if (image != null) {
                   result = await authProvider.uploadProfilePicture(
                       uploadImage, context);
-                  if(result){
+                  if (result) {
                     AppToast.show(S.of(context).messagePictureUpdatedSuccess);
                   }
                 }
