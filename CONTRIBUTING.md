@@ -753,6 +753,17 @@ own document, the same rule can be applied for a user's folder inside Storage).
 More information on Storage security rules can be found
 [here](https://firebase.google.com/docs/storage/security).
 
+### Functions
+[Cloud Functions for Firebase](https://firebase.google.com/docs/functions) is a serverless solution
+for running bits of code in response to events or at scheduled time intervals. They are, for all
+intents and purposes, JavaScript/TypeScript functions that run directly "in the cloud", without
+needing to be tied to an app or device.
+
+The project currently has two functions set up to perform daily backups of the data in Firestore
+([backupFirestore](functions/src/firestore-backup.js)) and Storage
+([backupStorage](functions/src/storage-backup.js)). They are scheduled to run automatically, every
+day at 00:00 EEST.
+
 ## Internationalization
 
 ### On-device
