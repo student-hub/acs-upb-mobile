@@ -28,7 +28,9 @@ class UniAllDayEventWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = event.color ?? Theme.of(context).primaryColor;
+    final color = event.color ??
+        event?.mainEvent?.color ??
+        Theme.of(context).primaryColor;
 
     return Padding(
       padding: const EdgeInsets.all(2),

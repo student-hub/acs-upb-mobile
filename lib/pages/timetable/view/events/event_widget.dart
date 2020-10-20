@@ -17,7 +17,9 @@ class UniEventWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = event.color ?? Theme.of(context).primaryColor;
+    final color = event.color ??
+        event?.mainEvent?.color ??
+        Theme.of(context).primaryColor;
 
     return GestureDetector(
       onTap: () => Navigator.of(context).push(MaterialPageRoute<EventView>(
