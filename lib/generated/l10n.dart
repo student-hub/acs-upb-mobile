@@ -1103,6 +1103,26 @@ class S {
     );
   }
 
+  /// `Please select a picture tha is less then 5Mb`
+  String get errorPictureSizeToBig {
+    return Intl.message(
+      'Please select a picture tha is less then 5Mb',
+      name: 'errorPictureSizeToBig',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `The image could not be loaded`
+  String get errorImage {
+    return Intl.message(
+      'The image could not be loaded',
+      name: 'errorImage',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Request already exists`
   String get warningRequestExists {
     return Intl.message(
@@ -2248,6 +2268,16 @@ class S {
     return Intl.message(
       'There are no events for the selected ',
       name: 'messageThereAreNoEventsForSelected',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Profile picture update successfully`
+  String get messagePictureUpdatedSuccess {
+    return Intl.message(
+      'Profile picture update successfully',
+      name: 'messagePictureUpdatedSuccess',
       desc: '',
       args: [],
     );

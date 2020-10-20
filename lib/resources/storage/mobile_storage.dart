@@ -22,7 +22,6 @@ class StorageProvider {
           FirebaseStorage.instance.ref().child(ref);
 
       final StorageUploadTask uploadTask = reference.putData(file);
-
       await uploadTask.onComplete;
       if (uploadTask.isSuccessful) {
         return true;
@@ -38,6 +37,9 @@ class StorageProvider {
     final pickedFile =
         await ImagePicker().getImage(source: ImageSource.gallery,
         maxHeight: 500, maxWidth: 500);
+    if(pickedFile == null){
+      return null;
+    }
     return pickedFile.readAsBytes();
   }
 }

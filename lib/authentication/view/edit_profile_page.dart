@@ -219,7 +219,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
       if (image != null) {
         this.image = image;
       } else {
-        AppToast.show('No image selected.');
+        AppToast.show(S.of(context).errorImage);
       }
     });
   }
@@ -300,10 +300,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       .then((value) => result = value ?? false);
                 }
                 if (image != null) {
-                  result = await  authProvider.uploadProfilePicture(
+                  result = await authProvider.uploadProfilePicture(
                       uploadImage, context);
                   if(result){
-                    AppToast.show('Profile picture updated');
+                    AppToast.show(S.of(context).messagePictureUpdatedSuccess);
                   }
                 }
                 if (result) {

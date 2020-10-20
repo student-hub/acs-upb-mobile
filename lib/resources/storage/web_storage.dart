@@ -26,11 +26,9 @@ class StorageProvider {
       if (uploadTaskSnapshot.state == TaskState.SUCCESS) {
         return true;
       } else {
-        print(uploadTaskSnapshot.state.toString());
         return false;
       }
     } catch (e) {
-      print(e.toString());
       return false;
     }
   }

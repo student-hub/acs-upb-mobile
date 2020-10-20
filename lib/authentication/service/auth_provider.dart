@@ -471,7 +471,15 @@ class AuthProvider with ChangeNotifier {
 
   Future<bool> uploadProfilePicture(
       Uint8List file, BuildContext context) async {
-    return StorageProvider.uploadImage(
+    final result =  await StorageProvider.uploadImage(
         context, file, 'users/${_firebaseUser.uid}/picture.png');
+    if(!result){
+      if(file.length > 5 * 1024 * 1024){
+        AppToast.show(S.of(context).errorPictureSizeToBig);
+      }else{
+        AppToast.show(S.of(context).errorSomethingWentWrong);
+      }
+    }
+    return result;
   }
 }
