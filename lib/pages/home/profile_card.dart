@@ -32,24 +32,28 @@ class ProfileCard extends StatelessWidget {
                 children: <Widget>[
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 8),
-                    child: FutureBuilder(
-                        future: StorageProvider.findImageUrl(
-                            context, 'users/${authProvider.uid}/picture.png'),
-                        builder: (context, snapshot) {
-                          if (snapshot.hasData) {
-                            return CircleAvatar(
-                              radius: 40,
-                              child: CircleImage(image: NetworkImage(snapshot.data),
-                              /* Image(image: NetworkImage(snapshot.data),*/)
-                            );
-                          }
-                          return const CircleAvatar(
-                            radius: 40,
-                            child: Image(
-                                image: AssetImage(
-                                    'assets/illustrations/undraw_profile_pic.png')),
-                          );
-                        }),
+                    child: CircleAvatar(
+                      radius: 40,
+                      child: user != null
+                          ? FutureBuilder(
+                              future: StorageProvider.findImageUrl(context,
+                                  'users/${authProvider.uid}/picture.png'),
+                              builder: (context, snapshot) {
+                                if (snapshot.hasData) {
+                                  return CircleImage(
+                                    image: NetworkImage(snapshot.data),
+                                  );
+                                }
+                                return const Image(
+                                  image: AssetImage(
+                                    'assets/illustrations/undraw_profile_pic.png',
+                                  ));
+                              })
+                          : const Image(
+                              image: AssetImage(
+                                'assets/illustrations/undraw_profile_pic.png',
+                              )),
+                    ),
                   ),
                   Expanded(
                     child: Padding(
