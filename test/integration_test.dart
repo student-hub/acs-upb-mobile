@@ -437,8 +437,7 @@ void main() {
     when(mockEventProvider.hasListeners).thenReturn(false);
     when(mockEventProvider.getAllDayEventsIntersecting(any))
         .thenAnswer((_) => Stream.fromIterable([]));
-    when(mockEventProvider.eventsCache).thenReturn([]);
-    when(mockEventProvider.empty).thenAnswer((_) => Future.value(true));
+    when(mockEventProvider.empty).thenReturn(true);
 
     mockRequestProvider = MockRequestProvider();
     when(mockRequestProvider.makeRequest(any, context: anyNamed('context')))

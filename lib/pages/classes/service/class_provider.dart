@@ -2,6 +2,7 @@ import 'package:acs_upb_mobile/authentication/model/user.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/classes/model/class.dart';
 import 'package:acs_upb_mobile/pages/filter/model/filter.dart';
+import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -29,7 +30,7 @@ extension ShortcutTypeExtension on ShortcutType {
 extension ShortcutExtension on Shortcut {
   Map<String, dynamic> toData() {
     return {
-      'type': type.toString().split('.').last,
+      'type': type.toShortString(),
       'name': name,
       'link': link,
       'addedBy': ownerUid

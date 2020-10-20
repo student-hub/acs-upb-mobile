@@ -43,13 +43,13 @@ class RelevanceController {
 }
 
 class RelevancePicker extends StatefulWidget {
-  const RelevancePicker(
-      {@required this.filterProvider,
-      this.canBePrivate = true,
-      this.canBeForEveryone = true,
-      bool defaultPrivate,
-      this.controller})
-      : defaultPrivate = (defaultPrivate ?? true) && canBePrivate;
+  const RelevancePicker({
+    @required this.filterProvider,
+    this.canBePrivate = true,
+    this.canBeForEveryone = true,
+    bool defaultPrivate,
+    this.controller,
+  }) : defaultPrivate = (defaultPrivate ?? true) && canBePrivate;
 
   final FilterProvider filterProvider;
 
@@ -76,8 +76,6 @@ class _RelevancePickerState extends State<RelevancePicker> {
 
   User _user;
   Filter _filter;
-
-  bool _filterApplied = false;
 
   Future<void> _fetchUser() async {
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
@@ -128,9 +126,12 @@ class _RelevancePickerState extends State<RelevancePicker> {
 
                     // Select the new options
                     await _fetchFilter();
-                    setState(() => _filterApplied = true);
                     if (_filter.relevantLeaves.contains('All')) {
                       _anyoneController.select();
+                    } else {
+                      for (final controller in _customControllers.values) {
+                        controller.select();
+                      }
                     }
                   },
                 ),
@@ -188,7 +189,8 @@ class _RelevancePickerState extends State<RelevancePicker> {
           ..add(Selectable(
             label: node,
             controller: controller,
-            initiallySelected: _filterApplied ||
+            initiallySelected: (!(_onlyMeController?.isSelected ?? false) &&
+                    !(_anyoneController?.isSelected ?? false)) ||
                 (!widget.canBePrivate && !widget.canBeForEveryone),
             onSelected: (selected) => setState(() {
               if (_user?.canAddPublicInfo ?? false) {
@@ -196,7 +198,9 @@ class _RelevancePickerState extends State<RelevancePicker> {
                   _onlyMeController.deselect();
                   _anyoneController.deselect();
                 }
-                widget.controller?.onChanged();
+                if (widget.controller?.onChanged != null) {
+                  widget.controller.onChanged();
+                }
               } else {
                 AppToast.show(
                     S.of(context).warningNoPermissionToAddPublicWebsite);
@@ -304,33 +308,41 @@ class _RelevancePickerState extends State<RelevancePicker> {
                                     ],
                                   ),
                                 if (widget.canBeForEveryone)
-                                  Selectable(
-                                    label: S.of(context).relevanceAnyone,
-                                    initiallySelected: !widget.defaultPrivate &&
-                                        widget.filterProvider
-                                                .defaultRelevance ==
-                                            null,
-                                    onSelected: (selected) => setState(() {
-                                      if (_user?.canAddPublicInfo ?? false) {
-                                        if (selected) {
-                                          // Deselect all controllers
-                                          _onlyMeController.deselect();
-                                          for (final controller
-                                              in _customControllers.values) {
-                                            controller.deselect();
+                                  Row(
+                                    children: [
+                                      Selectable(
+                                        label: S.of(context).relevanceAnyone,
+                                        initiallySelected:
+                                            !widget.defaultPrivate &&
+                                                widget.filterProvider
+                                                        .defaultRelevance ==
+                                                    null,
+                                        onSelected: (selected) => setState(() {
+                                          if (_user?.canAddPublicInfo ??
+                                              false) {
+                                            if (selected) {
+                                              // Deselect all controllers
+                                              _onlyMeController.deselect();
+                                              for (final controller
+                                                  in _customControllers
+                                                      .values) {
+                                                controller.deselect();
+                                              }
+                                            } else {
+                                              _onlyMeController.select();
+                                            }
+                                          } else {
+                                            AppToast.show(S
+                                                .of(context)
+                                                .warningNoPermissionToAddPublicWebsite);
                                           }
-                                        } else {
-                                          _onlyMeController.select();
-                                        }
-                                      } else {
-                                        AppToast.show(S
-                                            .of(context)
-                                            .warningNoPermissionToAddPublicWebsite);
-                                      }
-                                    }),
-                                    controller: _anyoneController,
-                                    disabled:
-                                        !(_user?.canAddPublicInfo ?? false),
+                                        }),
+                                        controller: _anyoneController,
+                                        disabled:
+                                            !(_user?.canAddPublicInfo ?? false),
+                                      ),
+                                      const SizedBox(width: 8),
+                                    ],
                                   ),
                                 _customRelevanceSelectables(),
                               ],

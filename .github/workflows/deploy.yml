@@ -1,8 +1,8 @@
-# Trigger workflow on tag created
+# Trigger workflow on tag created in master branch
 on:
-  create:
+  push:
     tags:
-      - '*'
+      - 'v*'
 
 name: Deployment
 
@@ -20,6 +20,7 @@ jobs:
       - uses: subosito/flutter-action@v1
         with:
           channel: 'beta'
+          flutter-version: '1.22.x'
 
       - name: Get packages
         run: flutter pub get

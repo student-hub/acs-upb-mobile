@@ -272,6 +272,7 @@ class _AddEventViewState extends State<AddEventView> {
                         if (weekSelected[WeekType.odd] != null &&
                             weekSelected[WeekType.even])
                           SelectableFormField(
+                            key: const ValueKey('week_picker'),
                             icon: Icons.calendar_today,
                             label: S.of(context).labelWeek,
                             initialValues: weekSelected,
@@ -287,6 +288,7 @@ class _AddEventViewState extends State<AddEventView> {
                             },
                           ),
                         SelectableFormField(
+                          key: const ValueKey('day_picker'),
                           icon: Icons.today,
                           label: S.of(context).labelDay,
                           initialValues: weekDaySelected,
