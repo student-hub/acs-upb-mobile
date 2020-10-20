@@ -219,7 +219,7 @@ class _TimetablePageState extends State<TimetablePage> {
           )
         ],
       );
-    } else if (filterProvider.cachedFilter.relevantNodes.length < 6) {
+    } else if ((filterProvider.cachedFilter?.relevantNodes?.length ?? 0) < 6) {
       return AppDialog(
         title: S.of(context).warningNoEvents,
         content: [
@@ -254,8 +254,8 @@ class _TimetablePageState extends State<TimetablePage> {
           )
         ],
       );
-    } else if (user.permissionLevel < 3 &&
-        requestProvider.userAlreadyRequestedCache) {
+    } else if (user.permissionLevel < 3) {
+      // TODO(IoanaAlexandru): Check if user already requested and show a different message
       return AppDialog(
         title: S.of(context).warningNoEvents,
         content: [Text(S.of(context).messageYouCanContribute)],
@@ -274,8 +274,8 @@ class _TimetablePageState extends State<TimetablePage> {
                     S.of(context).messageEmailNotVerifiedToPerformAction);
               } else {
                 await Navigator.of(context).push(
-                    MaterialPageRoute<RequestPermissions>(
-                        builder: (_) => RequestPermissions()));
+                    MaterialPageRoute<RequestPermissionsPage>(
+                        builder: (_) => RequestPermissionsPage()));
               }
             },
           )
@@ -286,6 +286,7 @@ class _TimetablePageState extends State<TimetablePage> {
         title: S.of(context).warningNoEvents,
         content: [
           RichText(
+            key: const ValueKey('no_events_message'),
             text: TextSpan(
               style: Theme.of(context).textTheme.subtitle1,
               children: [
