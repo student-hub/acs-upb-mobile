@@ -32,6 +32,7 @@ import 'package:acs_upb_mobile/pages/settings/view/settings_page.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/academic_calendar.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/events/all_day_event.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/events/recurring_event.dart';
+import 'package:acs_upb_mobile/pages/timetable/model/events/uni_event.dart';
 import 'package:acs_upb_mobile/pages/timetable/service/uni_event_provider.dart';
 import 'package:acs_upb_mobile/pages/timetable/view/events/add_event_view.dart';
 import 'package:acs_upb_mobile/pages/timetable/view/events/event_view.dart';
@@ -565,6 +566,10 @@ void main() {
       ),
       RecurringUniEvent(
         classHeader: userClassHeaders[0],
+        type: UniEventType.lab,
+        location: 'AB123',
+        degree: 'BSc',
+        relevance: ['314CB'],
         calendar: calendar,
         rrule: rruleEveryWeek,
         start: weekStart.addDays(3).at(LocalTime(10, 0, 0)),
@@ -573,6 +578,10 @@ void main() {
       ),
       RecurringUniEvent(
         classHeader: userClassHeaders[1],
+        type: UniEventType.lecture,
+        location: 'AB123',
+        degree: 'BSc',
+        relevance: ['314CB'],
         calendar: calendar,
         rrule: rruleEveryTwoWeeks,
         start: weekStart.addDays(3).at(LocalTime(12, 0, 0)),
@@ -613,7 +622,11 @@ void main() {
           .expand((e) => e));
     });
     when(mockEventProvider.empty).thenReturn(false);
-    when(mockEventProvider.deleteEvent(any))
+    when(mockEventProvider.deleteEvent(any, context: anyNamed('context')))
+        .thenAnswer((_) => Future.value(true));
+    when(mockEventProvider.updateEvent(any, context: anyNamed('context')))
+        .thenAnswer((_) => Future.value(true));
+    when(mockEventProvider.addEvent(any, context: anyNamed('context')))
         .thenAnswer((_) => Future.value(true));
 
     mockRequestProvider = MockRequestProvider();
@@ -929,7 +942,7 @@ void main() {
       }
     });
 
-    group('Event page', () {
+    group('Event page -  edit event', () {
       for (final size in screenSizes) {
         testWidgets('${size.width}x${size.height}',
             (WidgetTester tester) async {
@@ -942,7 +955,7 @@ void main() {
           await tester.tap(find.byIcon(Icons.calendar_today_rounded));
           await tester.pumpAndSettle();
 
-          // Open PC event
+          // Open PH event
           await tester.tap(find.text('PC'));
           await tester.pumpAndSettle();
 
@@ -956,6 +969,40 @@ void main() {
 
           // Press back
           await tester.tap(find.byIcon(Icons.arrow_back));
+          await tester.pumpAndSettle();
+
+          expect(find.byType(EventView), findsOneWidget);
+
+          // Open edit event page
+          await tester.tap(find.byIcon(Icons.edit));
+          await tester.pumpAndSettle();
+
+          expect(find.byType(AddEventView), findsOneWidget);
+
+          // Press save
+          await tester.tap(find.text('Save'));
+          await tester.pumpAndSettle(const Duration(seconds: 5));
+
+          expect(find.byType(TimetablePage), findsOneWidget);
+        });
+      }
+    });
+
+    group('Event page - delete event', () {
+      for (final size in screenSizes) {
+        testWidgets('${size.width}x${size.height}',
+            (WidgetTester tester) async {
+          await binding.setSurfaceSize(size);
+
+          await tester.pumpWidget(buildApp());
+          await tester.pumpAndSettle();
+
+          // Open timetable
+          await tester.tap(find.byIcon(Icons.calendar_today_rounded));
+          await tester.pumpAndSettle();
+
+          // Open PH event
+          await tester.tap(find.text('PH'));
           await tester.pumpAndSettle();
 
           expect(find.byType(EventView), findsOneWidget);

@@ -160,7 +160,6 @@ class _TimetablePageState extends State<TimetablePage> {
     final classProvider = Provider.of<ClassProvider>(context);
     final authProvider = Provider.of<AuthProvider>(context);
     final filterProvider = Provider.of<FilterProvider>(context);
-    final requestProvider = Provider.of<RequestProvider>(context);
     final user = authProvider.currentUserFromCache;
 
     if (classProvider.userClassHeadersCache?.isEmpty ?? true) {

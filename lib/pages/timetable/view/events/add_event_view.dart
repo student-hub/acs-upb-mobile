@@ -131,7 +131,11 @@ class _AddEventViewState extends State<AddEventView> {
           _DayOfWeek.monday
     ];
     if (widget.initialEvent != null &&
-        widget.initialEvent is RecurringUniEvent) {
+        widget.initialEvent is RecurringUniEvent &&
+        (widget.initialEvent as RecurringUniEvent)
+            .rrule
+            .byWeekDays
+            .isNotEmpty) {
       initialWeekDays = (widget.initialEvent as RecurringUniEvent)
           .rrule
           .byWeekDays
@@ -335,7 +339,7 @@ class _AddEventViewState extends State<AddEventView> {
             onTap: () async {
               final res =
                   await Provider.of<UniEventProvider>(context, listen: false)
-                      .deleteEvent(widget.initialEvent);
+                      .deleteEvent(widget.initialEvent, context: context);
               if (res) {
                 Navigator.of(context)
                     .popUntil(ModalRoute.withName(Routes.home));
@@ -388,7 +392,7 @@ class _AddEventViewState extends State<AddEventView> {
           if (widget.initialEvent?.id == null) {
             final res =
                 await Provider.of<UniEventProvider>(context, listen: false)
-                    .addEvent(event);
+                    .addEvent(event, context: context);
             if (res) {
               Navigator.of(context).pop();
               AppToast.show(S.of(context).messageEventAdded);
@@ -396,7 +400,7 @@ class _AddEventViewState extends State<AddEventView> {
           } else {
             final res =
                 await Provider.of<UniEventProvider>(context, listen: false)
-                    .updateEvent(event);
+                    .updateEvent(event, context: context);
             if (res) {
               Navigator.of(context).popUntil(ModalRoute.withName(Routes.home));
               AppToast.show(S.of(context).messageEventEdited);
@@ -635,7 +639,6 @@ class _DayOfWeek extends time_machine.DayOfWeek with Localizable {
         .substring(0, 3);
   }
 
-  static const _DayOfWeek none = _DayOfWeek(0);
   static const _DayOfWeek monday = _DayOfWeek(1);
   static const _DayOfWeek tuesday = _DayOfWeek(2);
   static const _DayOfWeek wednesday = _DayOfWeek(3);
