@@ -942,7 +942,44 @@ void main() {
       }
     });
 
-    group('Event page -  edit event', () {
+    group('Event page - add event', () {
+      for (final size in screenSizes) {
+        testWidgets('${size.width}x${size.height}',
+            (WidgetTester tester) async {
+          await binding.setSurfaceSize(size);
+
+          await tester.pumpWidget(buildApp());
+          await tester.pumpAndSettle();
+
+          // Open timetable
+          await tester.tap(find.byIcon(Icons.calendar_today_rounded));
+          await tester.pumpAndSettle();
+
+          // Open add event page
+          // await tester.tapAt(
+          //     tester.getCenter(find.byType(TimetablePage)).translate(0, 100));
+          await tester
+              .tapAt(tester.getCenter(find.text('Sat')).translate(0, 100));
+          await tester.pumpAndSettle();
+
+          expect(find.byType(AddEventView), findsOneWidget);
+
+          // Select type
+          await tester.tap(find.text('Type'));
+          await tester.pumpAndSettle();
+          await tester.tap(find.text('Seminar').last);
+          await tester.pumpAndSettle();
+
+          // Select class
+          await tester.tap(find.text('Class'));
+          await tester.pumpAndSettle();
+          await tester.tap(find.text('Programming').last);
+          await tester.pumpAndSettle();
+        });
+      }
+    });
+
+    group('Event page - edit event', () {
       for (final size in screenSizes) {
         testWidgets('${size.width}x${size.height}',
             (WidgetTester tester) async {
