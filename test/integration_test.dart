@@ -942,6 +942,40 @@ void main() {
       }
     });
 
+    group('Event page - open all day event', () {
+      for (final size in screenSizes) {
+        testWidgets('${size.width}x${size.height}',
+            (WidgetTester tester) async {
+          await binding.setSurfaceSize(size);
+
+          await tester.pumpWidget(buildApp());
+          await tester.pumpAndSettle();
+
+          // Open timetable
+          await tester.tap(find.byIcon(Icons.calendar_today_rounded));
+          await tester.pumpAndSettle();
+
+          // Expect current week
+          final currentWeek =
+              WeekYearRules.iso.getWeekOfWeekYear(LocalDate.today());
+          expect(find.text(currentWeek.toString()), findsOneWidget);
+
+          // Scroll to next week
+          await tester.drag(find.text('Sun'), Offset(-size.width + 10, 0));
+          await tester.pumpAndSettle();
+
+          // Expect next week
+          expect(find.text((currentWeek + 1).toString()), findsOneWidget);
+
+          // Open holiday event
+          await tester.tap(find.text('Holiday'));
+          await tester.pumpAndSettle();
+
+          expect(find.byType(EventView), findsOneWidget);
+        });
+      }
+    });
+
     group('Event page - add event', () {
       for (final size in screenSizes) {
         testWidgets('${size.width}x${size.height}',
