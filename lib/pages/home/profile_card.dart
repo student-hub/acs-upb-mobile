@@ -45,14 +45,14 @@ class ProfileCard extends StatelessWidget {
                                   );
                                 }
                                 return const Image(
-                                  image: AssetImage(
-                                    'assets/illustrations/undraw_profile_pic.png',
-                                  ));
+                                    image: AssetImage(
+                                  'assets/illustrations/undraw_profile_pic.png',
+                                ));
                               })
                           : const Image(
                               image: AssetImage(
-                                'assets/illustrations/undraw_profile_pic.png',
-                              )),
+                              'assets/illustrations/undraw_profile_pic.png',
+                            )),
                     ),
                   ),
                   Expanded(

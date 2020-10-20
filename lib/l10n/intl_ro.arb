@@ -5,7 +5,6 @@
   "buttonSend": "Trimitere",
   "buttonApply": "Aplică",
   "buttonSet": "Setează",
-
   "labelEmail": "Email",
   "labelPassword": "Parolă",
   "labelOldPassword": "Parolă veche",
@@ -43,19 +42,16 @@
   "labelEven": "Pară",
   "labelOdd": "Impară",
   "labelDay": "Zi",
-
   "sectionShortcuts": "Scurtături",
   "sectionEvents": "Evenimente",
   "sectionFrequentlyAccessedWebsites": "Website-uri favorite",
   "sectionEventsComingUp": "Evenimente următoare",
   "sectionFAQ": "Întrebări frecvente",
   "sectionGrading": "Punctaj",
-
   "shortcutTypeMain": "Pagina principală",
   "shortcutTypeClassbook": "Catalog",
   "shortcutTypeResource": "Resursă",
   "shortcutTypeOther": "Alta",
-
   "hintEmail": "john.doe",
   "hintPassword": "····················",
   "hintFirstName": "John",
@@ -65,7 +61,6 @@
   "hintWebsiteLink": "http://google.com",
   "hintEvaluation": "Examen final",
   "hintPoints": "4.0",
-
   "actionSignUp": "Înregistrare",
   "actionLogIn": "Conectare",
   "actionLogOut": "Deconectare",
@@ -96,7 +91,6 @@
   "actionContribute": "Contribuie",
   "actionOpenFilter": "Deschide filtru",
   "actionRequestPermissions": "Cere permisiuni",
-
   "errorSomethingWentWrong": "A apărut o problemă.",
   "errorPasswordsDiffer": "Cele două parole diferă.",
   "errorIncorrectPassword": "Parola introdusă nu este corectă.",
@@ -114,7 +108,6 @@
   "errorClassCannotBeEmpty": "Materia trebuie precizată.",
   "errorPictureSizeToBig": "Selectați o fotograie care are mai puțin de 5Mb",
   "errorImage": "Imaginea nu a fost incarcată",
-
   "warningRequestExists": "O cerere deja există",
   "warningInternetConnection": "Asigurați-vă că sunteți conectat la internet.",
   "warningPasswordLength": "Parola trebuie să aibă cel puțin 8 caractere.",
@@ -122,7 +115,7 @@
   "warningPasswordUppercase": "Parola trebuie să conțină cel putin o majusculă.",
   "warningPasswordLowercase": "Parola trebuie să conțină cel putin o minusculă.",
   "warningPasswordSpecialCharacters": "Parola trebuie să conțină cel puțin un simbol.",
-  "warningPasswordNumber" :"Parola trebuie să conțină cel puțin un număr.",
+  "warningPasswordNumber": "Parola trebuie să conțină cel puțin un număr.",
   "warningEmailInUse": "Există deja un cont asociat cu adresa {email}.",
   "warningUseProvider": "Folosiți {provider} pentru a vă conecta.",
   "warningTryAgainLater": "Încercați mai târziu.",
@@ -143,7 +136,6 @@
   "warningOnlyNOptionsAtATime": "Doar {n} opțiuni pot fi selectate la un moment dat.",
   "warningNoEvents": "Nu există evenimente de afișat",
   "warningYouNeedToSelectAtLeastOne": "Trebuie să selectați cel puțin o opțiune.",
-
   "navigationAskPermissions": "Cere permisiuni",
   "navigationHome": "Acasă",
   "navigationTimetable": "Orar",
@@ -156,17 +148,13 @@
   "navigationClasses": "Materii",
   "navigationEventDetails": "Detalii eveniment",
   "navigationNewsFeed": "Știri",
-
   "filterMenuShowAll": "Arată tot",
   "filterMenuShowMine": "Arată doar pe ale mele",
   "filterMenuRelevance": "Filtrează după relevanță",
-
   "filterNodeNameBSc": "Licență",
   "filterNodeNameMSc": "Master",
-
   "relevanceOnlyMe": "Doar eu",
   "relevanceAnyone": "Oricine",
-
   "settingsTitlePersonalization": "Personalizare",
   "settingsItemDarkMode": "Mod Întunecat",
   "settingsTitleLocalization": "Localizare",
@@ -175,13 +163,11 @@
   "settingsItemLanguageRomanian": "Română",
   "settingsItemLanguageAuto": "Auto",
   "settingsRelevanceFilter": "Filtru de relevanță",
-
   "websiteCategoryLearning": "Cursuri",
   "websiteCategoryAdministrative": "Administrativ",
   "websiteCategoryAssociations": "Asociații",
   "websiteCategoryResources": "Resurse",
   "websiteCategoryOthers": "Altele",
-
   "uniEventTypeLab": "Laborator",
   "uniEventTypeSeminar": "Seminar",
   "uniEventTypeLecture": "Curs",
@@ -196,10 +182,9 @@
   "uniEventTypeExamSession": "Sesiune de examene",
   "uniEventTypeSemester": "Semestru",
   "uniEventTypeOther": "Altul",
-
   "messageWelcomeSimple": "Bine ai venit!",
   "messageWelcomeName": "Bine ai venit, {name}!",
-  "messageNewUser":"Utilizator nou?",
+  "messageNewUser": "Utilizator nou?",
   "messageEmailNotVerified": "Contul nu este verificat.",
   "messageNotLoggedIn": "Trebuie să fiți autentificat pentru a realiza această acțiune.",
   "messageEmailNotVerifiedToPerformAction": "Contul trebuie să fie verificat pentru a realiza această acțiune.",
@@ -240,7 +225,6 @@
   "messageYouCanContribute": "Poți contribui la datele din aplicație, dar trebuie mai întâi să ceri permisiuni.",
   "messageThereAreNoEventsForSelected": "Nu există evenimente pentru selecția de ",
   "messagePictureUpdatedSuccess": "Poza a fost actualizată cu succes",
-
   "infoPasswordResetEmailSent": "Please check your inbox for the password reset e-mail.",
   "infoRelevance": "Încercați să selectați cea mai restrictivă categorie.",
   "infoChooseClasses": "Selectați materiile care vă interesează.",
@@ -253,11 +237,9 @@
   "infoPassword": "Aceasta trebuie să conțină majuscule, minuscule și cel puțin un număr sau un simbol, având minimum 8 caractere.",
   "infoAppIsOpenSource": "ACS UPB Mobile este open source.",
   "infoEmail": "Acesta este același username pe care îl folosești să te loghezi pe {forum}.",
-
   "stringEmailDomain": "@stud.acs.upb.ro",
   "stringForum": "cs.curs.pub.ro",
   "stringAnonymous": "Anonim",
   "stringAnd": "și",
-
   "fileAcsBanner": "assets/images/acs_banner_ro.png"
 }

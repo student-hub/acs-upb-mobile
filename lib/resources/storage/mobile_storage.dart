@@ -34,10 +34,9 @@ class StorageProvider {
   }
 
   static Future<dynamic> getImage() async {
-    final pickedFile =
-        await ImagePicker().getImage(source: ImageSource.gallery,
-        maxHeight: 500, maxWidth: 500);
-    if(pickedFile == null){
+    final pickedFile = await ImagePicker()
+        .getImage(source: ImageSource.gallery, maxHeight: 500, maxWidth: 500);
+    if (pickedFile == null) {
       return null;
     }
     return pickedFile.readAsBytes();
