@@ -33,6 +33,8 @@ import 'package:acs_upb_mobile/pages/timetable/model/academic_calendar.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/events/all_day_event.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/events/recurring_event.dart';
 import 'package:acs_upb_mobile/pages/timetable/service/uni_event_provider.dart';
+import 'package:acs_upb_mobile/pages/timetable/view/events/add_event_view.dart';
+import 'package:acs_upb_mobile/pages/timetable/view/events/event_view.dart';
 import 'package:acs_upb_mobile/pages/timetable/view/timetable_page.dart';
 import 'package:acs_upb_mobile/resources/custom_icons.dart';
 import 'package:acs_upb_mobile/resources/locale_provider.dart';
@@ -485,6 +487,8 @@ void main() {
       ],
       holidays: holidays,
     );
+    when(mockEventProvider.fetchCalendars())
+        .thenAnswer((_) => Future.value({'2020': calendar}));
     final rruleEveryWeekFirstSem = RecurrenceRule(
       frequency: Frequency.weekly,
       interval: 1,
@@ -609,6 +613,8 @@ void main() {
           .expand((e) => e));
     });
     when(mockEventProvider.empty).thenReturn(false);
+    when(mockEventProvider.deleteEvent(any))
+        .thenAnswer((_) => Future.value(true));
 
     mockRequestProvider = MockRequestProvider();
     when(mockRequestProvider.makeRequest(any, context: anyNamed('context')))
@@ -919,6 +925,63 @@ void main() {
 
           // Expect current week
           expect(find.text(currentWeek.toString()), findsOneWidget);
+        });
+      }
+    });
+
+    group('Event page', () {
+      for (final size in screenSizes) {
+        testWidgets('${size.width}x${size.height}',
+            (WidgetTester tester) async {
+          await binding.setSurfaceSize(size);
+
+          await tester.pumpWidget(buildApp());
+          await tester.pumpAndSettle();
+
+          // Open timetable
+          await tester.tap(find.byIcon(Icons.calendar_today_rounded));
+          await tester.pumpAndSettle();
+
+          // Open PC event
+          await tester.tap(find.text('PC'));
+          await tester.pumpAndSettle();
+
+          expect(find.byType(EventView), findsOneWidget);
+
+          // Open class page
+          await tester.tap(find.text('Programming'));
+          await tester.pumpAndSettle();
+
+          expect(find.byType(ClassView), findsOneWidget);
+
+          // Press back
+          await tester.tap(find.byIcon(Icons.arrow_back));
+          await tester.pumpAndSettle();
+
+          expect(find.byType(EventView), findsOneWidget);
+
+          // Open edit event page
+          await tester.tap(find.byIcon(Icons.edit));
+          await tester.pumpAndSettle();
+
+          expect(find.byType(AddEventView), findsOneWidget);
+
+          // Open delete dialog
+          await tester.tap(find.byIcon(Icons.more_vert));
+          await tester.pumpAndSettle();
+
+          await tester.tap(find.text('Delete event'));
+          await tester.pumpAndSettle();
+
+          // Confirm deletion
+          expect(find.text('Are you sure you want to delete this event?'),
+              findsOneWidget);
+          await tester.tap(find.text('DELETE EVENT'));
+          await tester.pumpAndSettle(const Duration(seconds: 5));
+
+          verify(
+              mockEventProvider.deleteEvent(any, context: anyNamed('context')));
+          expect(find.byType(TimetablePage), findsOneWidget);
         });
       }
     });
