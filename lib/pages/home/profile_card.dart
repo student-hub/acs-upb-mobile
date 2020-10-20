@@ -2,7 +2,9 @@ import 'package:acs_upb_mobile/authentication/model/user.dart';
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/authentication/view/edit_profile_page.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
+import 'package:acs_upb_mobile/resources/storage/storage_provider.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
+import 'package:acs_upb_mobile/widgets/circle_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -28,14 +30,26 @@ class ProfileCard extends StatelessWidget {
               Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
-                  const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 8),
-                    child: CircleAvatar(
-                      radius: 40,
-                      child: Image(
-                          image: AssetImage(
-                              'assets/illustrations/undraw_profile_pic.png')),
-                    ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    child: FutureBuilder(
+                        future: StorageProvider.findImageUrl(
+                            context, 'users/${authProvider.uid}/picture.png'),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            return CircleAvatar(
+                              radius: 40,
+                              child: CircleImage(image: NetworkImage(snapshot.data),
+                              /* Image(image: NetworkImage(snapshot.data),*/)
+                            );
+                          }
+                          return const CircleAvatar(
+                            radius: 40,
+                            child: Image(
+                                image: AssetImage(
+                                    'assets/illustrations/undraw_profile_pic.png')),
+                          );
+                        }),
                   ),
                   Expanded(
                     child: Padding(

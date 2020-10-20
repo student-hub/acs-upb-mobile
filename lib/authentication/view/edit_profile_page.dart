@@ -3,7 +3,7 @@ import 'dart:ui';
 
 import 'package:acs_upb_mobile/authentication/model/user.dart';
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
-import 'package:acs_upb_mobile/authentication/service/image_picker_provider.dart';
+
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/filter/view/filter_dropdown.dart';
 import 'package:acs_upb_mobile/resources/storage/storage_provider.dart';
@@ -214,7 +214,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
   }
 
   Future<void> getImage() async {
-    final Uint8List image = await ImagePickerProvider.getImage();
+    final Uint8List image = await StorageProvider.getImage();
     setState(() {
       if (image != null) {
         this.image = image;
@@ -256,7 +256,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
     Future<Uint8List> codeToPNG(Uint8List image) async {
     final decodedImage = im.decodeImage(image);
-    return im.encodePng(decodedImage);
+    return im.encodePng(im.copyResize(decodedImage,width: 500,height: 500),level: 9);
   }
 
   @override
@@ -300,9 +300,11 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       .then((value) => result = value ?? false);
                 }
                 if (image != null) {
-                   authProvider.uploadProfilePicture(
-                      uploadImage, context).whenComplete(() => AppToast.show('Profile picture updated'));
-                  result = true;
+                  result = await  authProvider.uploadProfilePicture(
+                      uploadImage, context);
+                  if(result){
+                    AppToast.show('Profile picture updated');
+                  }
                 }
                 if (result) {
                   if (await authProvider.updateProfile(
