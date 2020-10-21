@@ -65,8 +65,9 @@ class InfoCard<T> extends StatelessWidget {
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.done) {
                       if (snapshot.hasData) {
-                        if ((snapshot.data is Map || snapshot.data is Iterable)
-                            && snapshot.data.isEmpty) {
+                        if ((snapshot.data is Map ||
+                                snapshot.data is Iterable) &&
+                            snapshot.data.isEmpty) {
                           return noneYet(context);
                         }
 

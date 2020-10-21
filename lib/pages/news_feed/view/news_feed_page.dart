@@ -11,32 +11,32 @@ class NewsFeedPage extends StatelessWidget {
   static const String routeName = '/news_feed';
 
   Widget _noNewsWidget(BuildContext context) => Padding(
-    padding: const EdgeInsets.all(10),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        Expanded(flex: 1, child: Container()),
-        const Expanded(
-          flex: 2,
-          child: Align(
-            alignment: Alignment.bottomCenter,
-            child: Image(
-                image: AssetImage('assets/illustrations/undraw_empty.png')),
-          ),
+        padding: const EdgeInsets.all(10),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Expanded(flex: 1, child: Container()),
+            const Expanded(
+              flex: 2,
+              child: Align(
+                alignment: Alignment.bottomCenter,
+                child: Image(
+                    image: AssetImage('assets/illustrations/undraw_empty.png')),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(10),
+              child: Text(
+                S.of(context).warningNoNews,
+                style: Theme.of(context).textTheme.headline6,
+                textAlign: TextAlign.center,
+              ),
+            ),
+            Expanded(flex: 1, child: Container()),
+          ],
         ),
-        Padding(
-          padding: const EdgeInsets.all(10),
-          child: Text(
-            S.of(context).warningNoNews,
-            style: Theme.of(context).textTheme.headline6,
-            textAlign: TextAlign.center,
-          ),
-        ),
-        Expanded(flex: 1, child: Container()),
-      ],
-    ),
-  );
+      );
 
   @override
   Widget build(BuildContext context) {
@@ -54,14 +54,14 @@ class NewsFeedPage extends StatelessWidget {
           final List<NewsFeedItem> newsFeedItems = snapshot.data;
           if (newsFeedItems == null) {
             return Center(
-                child: Padding(
-                    padding: const EdgeInsets.all(8),
-                    child: Text(
-                      S.of(context).warningUnableToReachNewsFeed,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(color: Theme.of(context).disabledColor),
-                    ),
+              child: Padding(
+                padding: const EdgeInsets.all(8),
+                child: Text(
+                  S.of(context).warningUnableToReachNewsFeed,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: Theme.of(context).disabledColor),
                 ),
+              ),
             );
           } else if (newsFeedItems.isEmpty) {
             return _noNewsWidget(context);
