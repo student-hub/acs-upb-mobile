@@ -86,23 +86,12 @@ void main() {
   RequestProvider mockRequestProvider;
 
   // Test layout for different screen sizes
-  // TODO(IoanaAlexandru): Use Flutter driver for integration tests, setting screen sizes here isn't reliable
-  // I had to comment out most of the sizes because the timetable seemed to have an odd
-  // behaviour - showing the Monday on the next week on some sizes
+  // TODO(AdrianMargineanu): Use Flutter driver for integration tests, setting screen sizes here isn't reliable
   final screenSizes = <Size>[
     // Phone
-    /*const Size(1080, 1920),*/ const Size(720, 1280), // Standard
-    /*const Size(2200, 2480), const Size(1536, 2151),*/ // Foldable
-    /* For some reason, Q/WVGA sizes give weird overflow errors that I can't
-    replicate in the emulator with the same size, so I'll leave these commented
-    for now:
-    Size(480, 800), Size(480, 854), // WVGA
-    Size(240, 432), Size(240, 400), Size(320, 480), Size(240, 320), // QVGA
-   */
+    const Size(720, 1280),
     // Tablet
-    /*const Size(1800, 2560), const Size(1536, 2048), const Size(1200, 1920),*/
-    /*const Size(1600, 2560),*/ const Size(
-        600, 1024), /*const Size(800, 1280),*/
+    const Size(600, 1024),
   ];
 
   // Add landscape mode sizes
