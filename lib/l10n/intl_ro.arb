@@ -142,6 +142,7 @@
   "warningNoEvents": "Nu există evenimente de afișat",
   "warningYouNeedToSelectAtLeastOne": "Trebuie să selectați cel puțin o opțiune.",
   "warningUnableToReachNewsFeed": "Nu am putut încărca fluxul de știri. Asigurați-vă că există o conexiune la internet.",
+  "warningNoNews": "Nu au fost postate știri încă.",
 
   "navigationAskPermissions": "Cere permisiuni",
   "navigationHome": "Acasă",

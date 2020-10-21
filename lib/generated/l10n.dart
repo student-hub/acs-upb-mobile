@@ -1393,6 +1393,16 @@ class S {
     );
   }
 
+  /// `There are no news yet.`
+  String get warningNoNews {
+    return Intl.message(
+      'There are no news yet.',
+      name: 'warningNoNews',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Ask for permissions`
   String get navigationAskPermissions {
     return Intl.message(

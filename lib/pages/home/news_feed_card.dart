@@ -17,14 +17,6 @@ class NewsFeedCard extends StatelessWidget {
         onShowMore: () => Navigator.of(context).pushNamed(Routes.newsFeed),
         future: Provider.of<NewsProvider>(context).fetchNewsFeedItems(limit: 2),
         builder: (newsFeedItems) {
-          if (newsFeedItems.isEmpty) {
-            return Center(
-                child: Text(
-              S.of(context).warningNoneYet,
-              style: TextStyle(color: Theme.of(context).disabledColor),
-            ));
-          }
-
           return Column(
               children: newsFeedItems
                   .map((item) => ListTile(

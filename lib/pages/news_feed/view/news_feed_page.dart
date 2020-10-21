@@ -10,6 +10,34 @@ import 'package:provider/provider.dart';
 class NewsFeedPage extends StatelessWidget {
   static const String routeName = '/news_feed';
 
+  Widget _noNewsWidget(BuildContext context) => Padding(
+    padding: const EdgeInsets.all(10),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        Expanded(flex: 1, child: Container()),
+        const Expanded(
+          flex: 2,
+          child: Align(
+            alignment: Alignment.bottomCenter,
+            child: Image(
+                image: AssetImage('assets/illustrations/undraw_empty.png')),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(10),
+          child: Text(
+            S.of(context).warningNoNews,
+            style: Theme.of(context).textTheme.headline6,
+            textAlign: TextAlign.center,
+          ),
+        ),
+        Expanded(flex: 1, child: Container()),
+      ],
+    ),
+  );
+
   @override
   Widget build(BuildContext context) {
     final newsFeedProvider = Provider.of<NewsProvider>(context);
@@ -32,13 +60,11 @@ class NewsFeedPage extends StatelessWidget {
                       S.of(context).warningUnableToReachNewsFeed,
                       textAlign: TextAlign.center,
                       style: TextStyle(color: Theme.of(context).disabledColor),
-                    )));
+                    ),
+                ),
+            );
           } else if (newsFeedItems.isEmpty) {
-            return Center(
-                child: Text(
-              S.of(context).warningNoneYet,
-              style: TextStyle(color: Theme.of(context).disabledColor),
-            ));
+            return _noNewsWidget(context);
           }
 
           return ListView(
