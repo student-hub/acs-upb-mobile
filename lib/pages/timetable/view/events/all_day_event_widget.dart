@@ -28,12 +28,16 @@ class UniAllDayEventWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final color = event.color ??
+        event?.mainEvent?.color ??
+        Theme.of(context).primaryColor;
+
     return Padding(
       padding: const EdgeInsets.all(2),
       child: CustomPaint(
         painter: AllDayEventBackgroundPainter(
           info: info,
-          color: event.color,
+          color: color,
           borderRadius: borderRadius,
         ),
         child: Material(
@@ -57,6 +61,8 @@ class UniAllDayEventWidget extends StatelessWidget {
   }
 
   Widget _buildContent(BuildContext context) {
+    final color = event.color ?? Theme.of(context).primaryColor;
+
     return Padding(
       padding: const EdgeInsets.fromLTRB(4, 2, 0, 2),
       child: Align(
@@ -64,7 +70,7 @@ class UniAllDayEventWidget extends StatelessWidget {
         child: DefaultTextStyle(
           style: context.textTheme.bodyText2.copyWith(
             fontSize: 14,
-            color: event.color.highEmphasisOnColor,
+            color: color.highEmphasisOnColor,
           ),
           child: Text(
             event.title ?? event.mainEvent?.classHeader?.acronym,
