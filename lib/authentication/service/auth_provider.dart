@@ -483,8 +483,8 @@ class AuthProvider with ChangeNotifier {
     return result;
   }
 
-  Future<String> getProfilePicture(BuildContext context){
-    return StorageProvider.findImageUrl(context,
-        'users/${_firebaseUser.uid}/picture.png');
+  Future<String> getProfilePicture(BuildContext context) {
+    return StorageProvider.findImageUrl(
+        context, 'users/${_firebaseUser.uid}/picture.png');
   }
 }
