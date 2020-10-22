@@ -19,7 +19,6 @@ import 'package:flutter/cupertino.dart';
 ///                     __|...
 ///                   /   |
 ///               331CA 332CA ...                              // Group
-///
 class Filter {
   Filter({this.root, this.localizedLevelNames}) {
     root.value = true; // root value is true by default

@@ -33,7 +33,7 @@ class StorageProvider {
     }
   }
 
-  static Future<dynamic> getImage() async {
+  static Future<dynamic> showImagePicker() async {
     final Uint8List image =
         await ImagePickerWeb.getImage(outputType: ImageType.bytes);
     return image;

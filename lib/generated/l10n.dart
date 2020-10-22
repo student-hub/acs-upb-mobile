@@ -1103,20 +1103,20 @@ class S {
     );
   }
 
-  /// `Please select a picture tha is less then 5Mb`
+  /// `Please select a picture tha is less then 5MB.`
   String get errorPictureSizeToBig {
     return Intl.message(
-      'Please select a picture tha is less then 5Mb',
+      'Please select a picture tha is less then 5MB.',
       name: 'errorPictureSizeToBig',
       desc: '',
       args: [],
     );
   }
 
-  /// `The image could not be loaded`
+  /// `The image could not be loaded.`
   String get errorImage {
     return Intl.message(
-      'The image could not be loaded',
+      'The image could not be loaded.',
       name: 'errorImage',
       desc: '',
       args: [],
@@ -2283,10 +2283,10 @@ class S {
     );
   }
 
-  /// `Profile picture update successfully`
+  /// `Profile picture update successfully.`
   String get messagePictureUpdatedSuccess {
     return Intl.message(
-      'Profile picture update successfully',
+      'Profile picture update successfully.',
       name: 'messagePictureUpdatedSuccess',
       desc: '',
       args: [],

@@ -14,7 +14,7 @@ class StorageProvider extends ChangeNotifier {
     throw error;
   }
 
-  static Future<dynamic> getImage() async {
+  static Future<dynamic> showImagePicker() async {
     final Error error = ArgumentError('Platform not found!');
     throw error;
   }

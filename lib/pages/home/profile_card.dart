@@ -2,7 +2,6 @@ import 'package:acs_upb_mobile/authentication/model/user.dart';
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/authentication/view/edit_profile_page.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
-import 'package:acs_upb_mobile/resources/storage/storage_provider.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/widgets/circle_image.dart';
 import 'package:flutter/material.dart';
@@ -36,8 +35,7 @@ class ProfileCard extends StatelessWidget {
                       radius: 40,
                       child: user != null
                           ? FutureBuilder(
-                              future: StorageProvider.findImageUrl(context,
-                                  'users/${authProvider.uid}/picture.png'),
+                              future: authProvider.getProfilePicture(context),
                               builder: (context, snapshot) {
                                 if (snapshot.hasData) {
                                   return CircleImage(

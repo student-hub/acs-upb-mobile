@@ -106,7 +106,7 @@ dependencies:
   # Web image importer
   image_picker_web: ^1.0.9
 
-  #Image decoder
+  # Image decoder
   image: ^2.1.18
 
   # Web scraper
