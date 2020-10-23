@@ -10,25 +10,25 @@ import 'package:provider/provider.dart';
 class NewsFeedPage extends StatelessWidget {
   static const String routeName = '/news_feed';
 
-  Widget _noNewsWidget(BuildContext context) => Padding(
+  Widget _errorWidget(BuildContext context, String imgPath, String message) =>
+      Padding(
         padding: const EdgeInsets.all(10),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Expanded(flex: 1, child: Container()),
-            const Expanded(
+            Expanded(
               flex: 2,
               child: Align(
                 alignment: Alignment.bottomCenter,
-                child: Image(
-                    image: AssetImage('assets/illustrations/undraw_empty.png')),
+                child: Image(image: AssetImage(imgPath)),
               ),
             ),
             Padding(
               padding: const EdgeInsets.all(10),
               child: Text(
-                S.of(context).warningNoNews,
+                message,
                 style: Theme.of(context).textTheme.headline6,
                 textAlign: TextAlign.center,
               ),
@@ -53,18 +53,15 @@ class NewsFeedPage extends StatelessWidget {
 
           final List<NewsFeedItem> newsFeedItems = snapshot.data;
           if (newsFeedItems == null) {
-            return Center(
-              child: Padding(
-                padding: const EdgeInsets.all(8),
-                child: Text(
-                  S.of(context).warningUnableToReachNewsFeed,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(color: Theme.of(context).disabledColor),
-                ),
-              ),
-            );
+            return _errorWidget(
+                context,
+                'assets/illustrations/undraw_warning_cyit.png',
+                S.of(context).warningUnableToReachNewsFeed);
           } else if (newsFeedItems.isEmpty) {
-            return _noNewsWidget(context);
+            return _errorWidget(
+                context,
+                'assets/illustrations/undraw_empty.png',
+                S.of(context).warningNoNews);
           }
 
           return ListView(
