@@ -209,7 +209,7 @@ class WebsiteProvider with ChangeNotifier {
 
   Future<List<Website>> fetchFavouriteWebsites(
       {int limit = 3, String uid, BuildContext context}) async {
-    final favouriteWebsites = (await fetchWebsites(null, uid: uid))
+    final favouriteWebsites = (await fetchWebsites(null, uid: uid, context: context))
         .where((website) => website.numberOfVisits > 0)
         .take(limit)
         .toList();
