@@ -67,9 +67,10 @@ void main() {
     when(mockWebsiteProvider.hasListeners).thenReturn(false);
     when(mockWebsiteProvider.deleteWebsite(any, context: anyNamed('context')))
         .thenAnswer((realInvocation) => Future.value(true));
-    when(mockWebsiteProvider.fetchWebsites(any))
+    when(mockWebsiteProvider.fetchWebsites(any, context: anyNamed('context')))
         .thenAnswer((_) => Future.value([]));
-    when(mockWebsiteProvider.fetchFavouriteWebsites(uid: mockAuthProvider.uid))
+    when(mockWebsiteProvider.fetchFavouriteWebsites(
+            uid: mockAuthProvider.uid, context: anyNamed('context')))
         .thenAnswer((_) => Future.value(null));
 
     mockFilterProvider = MockFilterProvider();

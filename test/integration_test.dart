@@ -144,7 +144,7 @@ void main() {
     when(mockWebsiteProvider.hasListeners).thenReturn(false);
     when(mockWebsiteProvider.deleteWebsite(any, context: anyNamed('context')))
         .thenAnswer((realInvocation) => Future.value(true));
-    when(mockWebsiteProvider.fetchWebsites(any))
+    when(mockWebsiteProvider.fetchWebsites(any, context: anyNamed('context')))
         .thenAnswer((_) => Future.value([
               Website(
                 id: '1',
@@ -219,9 +219,11 @@ void main() {
                 isPrivate: false,
               ),
             ]));
-    when(mockWebsiteProvider.fetchFavouriteWebsites(uid: anyNamed('uid')))
-        .thenAnswer((_) async =>
-            (await mockWebsiteProvider.fetchWebsites(any)).take(3));
+    when(mockWebsiteProvider.fetchFavouriteWebsites(
+            uid: anyNamed('uid'), context: anyNamed('context')))
+        .thenAnswer((_) async => (await mockWebsiteProvider.fetchWebsites(any,
+                context: anyNamed('context')))
+            .take(3));
 
     mockFilterProvider = MockFilterProvider();
     // ignore: invalid_use_of_protected_member

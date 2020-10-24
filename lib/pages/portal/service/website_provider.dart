@@ -193,9 +193,11 @@ class WebsiteProvider with ChangeNotifier {
             .map((doc) => WebsiteExtension.fromSnap(doc, ownerUid: uid)));
       }
 
-      final bool initializeReturnSuccess =  await _initializeNumberOfVisits(websites, uid);
-      if(!initializeReturnSuccess){
-        AppToast.show(S.of(context).warningFavouriteWebsitesInitializationFailed);
+      final bool initializeReturnSuccess =
+          await _initializeNumberOfVisits(websites, uid);
+      if (!initializeReturnSuccess) {
+        AppToast.show(
+            S.of(context).warningFavouriteWebsitesInitializationFailed);
       }
       websites.sort((website1, website2) =>
           website2.numberOfVisits.compareTo(website1.numberOfVisits));
@@ -209,10 +211,11 @@ class WebsiteProvider with ChangeNotifier {
 
   Future<List<Website>> fetchFavouriteWebsites(
       {int limit = 3, String uid, BuildContext context}) async {
-    final favouriteWebsites = (await fetchWebsites(null, uid: uid, context: context))
-        .where((website) => website.numberOfVisits > 0)
-        .take(limit)
-        .toList();
+    final favouriteWebsites =
+        (await fetchWebsites(null, uid: uid, context: context))
+            .where((website) => website.numberOfVisits > 0)
+            .take(limit)
+            .toList();
     if (favouriteWebsites.isEmpty) {
       return null;
     }
