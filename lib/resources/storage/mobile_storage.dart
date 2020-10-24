@@ -23,9 +23,8 @@ class StorageProvider {
       bool result = false;
       final StorageUploadTask uploadTask = reference.putData(file);
       await uploadTask.onComplete.whenComplete(() => result = true).catchError(
-          (dynamic error) => {
-                print('Mobile_Storage - StorageUploadTask - uploadImage $error')
-              });
+          (dynamic error) =>
+              print('Mobile_Storage - StorageUploadTask - uploadImage $error'));
       return result;
     } catch (e) {
       return false;

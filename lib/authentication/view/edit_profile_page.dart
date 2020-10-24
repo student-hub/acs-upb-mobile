@@ -40,6 +40,15 @@ class _EditProfilePageState extends State<EditProfilePage> {
   Uint8List uploadedImage;
   ImageProvider imageWidget;
 
+  @override
+  void initState() {
+    super.initState();
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    authProvider.getProfilePictureURL(context: context).then((value) => {
+          if (value != null) {setState(() => imageWidget = NetworkImage(value))}
+        });
+  }
+
   AppDialog _changePasswordDialog(BuildContext context) {
     final newPasswordController = TextEditingController();
     final oldPasswordController = TextEditingController();
@@ -215,17 +224,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
   }
 
   Widget buildEditableAvatar(BuildContext context) {
-    final AuthProvider authProvider = Provider.of<AuthProvider>(context);
-    if (imageWidget == null) {
-      authProvider.getProfilePictureURL(context: context).then((value) => {
-            if (value != null && value != '')
-              {
-                setState(() {
-                  imageWidget = NetworkImage(value);
-                })
-              }
-          });
-    }
     return Padding(
       padding: const EdgeInsets.all(8),
       child: GestureDetector(
@@ -265,9 +263,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
     lastNameController.text = user.lastName;
     firstNameController.text = user.firstName;
     Uint8List imageAsPNG;
-    // if (uploadedImage != null) {
-    //   convertToPNG(uploadedImage).then((value) => imageAsPNG = value);
-    // }
     if (!authProvider.isVerifiedFromCache) {
       emailController.text = authProvider.email.split('@')[0];
     }

@@ -26,7 +26,7 @@ class StorageProvider {
           .future
           .whenComplete(() => result = true)
           .catchError((dynamic error) =>
-              {print('Web_Storage - StorageUploadTask - uploadImage $error')});
+              print('Web_Storage - StorageUploadTask - uploadImage $error'));
       return result;
     } catch (e) {
       return false;

@@ -43,16 +43,19 @@
   "labelEven": "Pară",
   "labelOdd": "Impară",
   "labelDay": "Zi",
+
   "sectionShortcuts": "Scurtături",
   "sectionEvents": "Evenimente",
   "sectionFrequentlyAccessedWebsites": "Website-uri favorite",
   "sectionEventsComingUp": "Evenimente următoare",
   "sectionFAQ": "Întrebări frecvente",
   "sectionGrading": "Punctaj",
+
   "shortcutTypeMain": "Pagina principală",
   "shortcutTypeClassbook": "Catalog",
   "shortcutTypeResource": "Resursă",
   "shortcutTypeOther": "Alta",
+
   "hintEmail": "john.doe",
   "hintPassword": "····················",
   "hintFirstName": "John",
@@ -62,6 +65,7 @@
   "hintWebsiteLink": "http://google.com",
   "hintEvaluation": "Examen final",
   "hintPoints": "4.0",
+
   "actionSignUp": "Înregistrare",
   "actionLogIn": "Conectare",
   "actionLogOut": "Deconectare",
