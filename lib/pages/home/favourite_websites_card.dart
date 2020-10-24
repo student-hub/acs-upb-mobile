@@ -22,7 +22,8 @@ class FavouriteWebsitesCard extends StatelessWidget {
     return InfoCard<List<Website>>(
       title: S.of(context).sectionFrequentlyAccessedWebsites,
       onShowMore: onShowMore,
-      future: websiteProvider.fetchFavouriteWebsites(uid: uid, context: context),
+      future:
+          websiteProvider.fetchFavouriteWebsites(uid: uid, context: context),
       builder: (websites) => Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.start,
