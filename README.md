@@ -2,6 +2,7 @@
 [![License](https://img.shields.io/badge/license-MIT-green.svg?style=flat)](https://github.com/IoanaAlexandru/acs_upb_mobile/blob/master/LICENSE.txt)
 [![Tests](https://github.com/acs-upb-mobile/acs-upb-mobile/workflows/Tests/badge.svg)](https://github.com/acs-upb-mobile/acs-upb-mobile/actions?query=workflow%3ATests)
 [![codecov](https://codecov.io/gh/acs-upb-mobile/acs-upb-mobile/branch/master/graph/badge.svg)](https://codecov.io/gh/acs-upb-mobile/acs-upb-mobile)
+[![extra_pedantic on pub.dev](https://img.shields.io/badge/style-extra__pedantic-blue)](https://pub.dev/packages/extra_pedantic)
 
 A mobile application for students at [ACS UPB](http://acs.pub.ro/). For now, you can try it out by
 accessing [https://acs-upb-mobile.web.app/](https://acs-upb-mobile.web.app/). Android users can also
@@ -68,19 +69,19 @@ flutter pub get
 
 * Install and run an emulator in Android Studio (using AVD Manager), or connect a physical Android
 device (make sure USB debugging is enabled).
-* Select your device from the dropdown list and hit the play button (*Shift+F10* / *^R*).
+* Select your device from the dropdown list and hit the play button (*Shift+F10* or *^R*).
 
 ### Building for iOS (MacOS only)
 
 * Make sure you have Xcode installed and up to date (it is free on the App Store).
 * Connect a physical iOS device or select *Open iOS Simulator* from the device drop-down menu to
 power on Xcode's simulator.
-* Select your device from the dropdown list and hit the play button (*Shift+F10* / *^R*).
+* Select your device from the dropdown list and hit the play button (*Shift+F10* or *^R*).
 
 ### Building for Web
 
 * You need to have *Chrome* installed in order to be able to run the web version of the app.
-* Select *Chrome* from the dropdown list and hit the play button (*Shift+F10* / *^R*).
+* Select *Chrome* from the dropdown list and hit the play button (*Shift+F10* or *^R*).
 
 ### Not working?
 

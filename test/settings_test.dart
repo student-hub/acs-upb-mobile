@@ -202,7 +202,7 @@ void main() {
         expect(find.text('Request editing permissions'), findsOneWidget);
         await tester.tap(find.byKey(const ValueKey('ask_permissions')));
         await tester.pumpAndSettle();
-        expect(find.byType(RequestPermissions), findsOneWidget);
+        expect(find.byType(RequestPermissionsPage), findsOneWidget);
 
         // Send a request
         await tester.enterText(
@@ -243,7 +243,7 @@ void main() {
         expect(find.text('Request editing permissions'), findsOneWidget);
         await tester.tap(find.byKey(const ValueKey('ask_permissions')));
         await tester.pumpAndSettle();
-        expect(find.byType(RequestPermissions), findsOneWidget);
+        expect(find.byType(RequestPermissionsPage), findsOneWidget);
 
         // Send a request
         await tester.enterText(
@@ -333,7 +333,7 @@ void main() {
 
         // Verify Ask Permissions page is opened
         await tester.pumpAndSettle();
-        expect(find.byType(RequestPermissions), findsOneWidget);
+        expect(find.byType(RequestPermissionsPage), findsOneWidget);
       });
     });
   });
