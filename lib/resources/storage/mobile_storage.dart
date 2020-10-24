@@ -20,14 +20,13 @@ class StorageProvider {
     try {
       final StorageReference reference =
           FirebaseStorage.instance.ref().child(ref);
-
+      bool result = false;
       final StorageUploadTask uploadTask = reference.putData(file);
-      await uploadTask.onComplete;
-      if (uploadTask.isSuccessful) {
-        return true;
-      } else {
-        return false;
-      }
+      await uploadTask.onComplete.whenComplete(() => result = true).catchError(
+          (dynamic error) => {
+                print('Mobile_Storage - StorageUploadTask - uploadImage $error')
+              });
+      return result;
     } catch (e) {
       return false;
     }

@@ -83,7 +83,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "errorEmailInUse" : MessageLookupByLibrary.simpleMessage("Există deja un cont asociat acestui e-mail."),
     "errorEmailNotFound" : MessageLookupByLibrary.simpleMessage("Nu am putut găsi un cont asociat cu adresa de mail. Vă rugăm să vă înregistrați."),
     "errorEventTypeCannotBeEmpty" : MessageLookupByLibrary.simpleMessage("Tipul de eveniment trebuie precizat."),
-    "errorImage" : MessageLookupByLibrary.simpleMessage("Imaginea nu a fost incarcată."),
+    "errorImage" : MessageLookupByLibrary.simpleMessage("Imaginea nu putut fi încărcată."),
     "errorIncorrectPassword" : MessageLookupByLibrary.simpleMessage("Parola introdusă nu este corectă."),
     "errorInvalidEmail" : MessageLookupByLibrary.simpleMessage("Trebuie să introduceți un e-mail valid."),
     "errorMissingFirstName" : MessageLookupByLibrary.simpleMessage("Introduceți prenumele."),

@@ -20,14 +20,14 @@ class StorageProvider {
     try {
       final StorageReference storageReference = storage().ref('').child(ref);
 
-      final UploadTaskSnapshot uploadTaskSnapshot =
-          await storageReference.put(file).future;
-
-      if (uploadTaskSnapshot.state == TaskState.SUCCESS) {
-        return true;
-      } else {
-        return false;
-      }
+      bool result;
+      await storageReference
+          .put(file)
+          .future
+          .whenComplete(() => result = true)
+          .catchError((dynamic error) =>
+              {print('Web_Storage - StorageUploadTask - uploadImage $error')});
+      return result;
     } catch (e) {
       return false;
     }

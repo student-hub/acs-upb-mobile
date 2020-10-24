@@ -108,7 +108,7 @@
   "errorEventTypeCannotBeEmpty": "Tipul de eveniment trebuie precizat.",
   "errorClassCannotBeEmpty": "Materia trebuie precizată.",
   "errorPictureSizeToBig": "Selectați o fotografie care are mai puțin de 5MB.",
-  "errorImage": "Imaginea nu a fost incarcată.",
+  "errorImage": "Imaginea nu putut fi încărcată.",
 
   "warningRequestExists": "O cerere deja există",
   "warningInternetConnection": "Asigurați-vă că sunteți conectat la internet.",

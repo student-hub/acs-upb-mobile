@@ -1105,10 +1105,10 @@ class S {
     );
   }
 
-  /// `Please select a picture tha is less then 5MB.`
+  /// `Please select a picture that is less than 5MB.`
   String get errorPictureSizeToBig {
     return Intl.message(
-      'Please select a picture tha is less then 5MB.',
+      'Please select a picture that is less than 5MB.',
       name: 'errorPictureSizeToBig',
       desc: '',
       args: [],
@@ -2285,10 +2285,10 @@ class S {
     );
   }
 
-  /// `Profile picture update successfully.`
+  /// `Profile picture updated successfully.`
   String get messagePictureUpdatedSuccess {
     return Intl.message(
-      'Profile picture update successfully.',
+      'Profile picture updated successfully.',
       name: 'messagePictureUpdatedSuccess',
       desc: '',
       args: [],

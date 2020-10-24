@@ -216,23 +216,22 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   Widget buildEditableAvatar(BuildContext context) {
     final AuthProvider authProvider = Provider.of<AuthProvider>(context);
-    ImageProvider<dynamic> image;
-    if (imageWidget != null) {
-      image = imageWidget;
-    } else {
-      authProvider.getProfilePicture(context).then((value) => {
-            image = NetworkImage(value),
-            setState(() {
-              imageWidget = image;
-            })
-          });
+    if (imageWidget == null) {
+      authProvider.getProfilePictureURL(context: context).then((value) =>
+      {
+        if(value != null && value != ''){
+          setState(() {
+            imageWidget = NetworkImage(value);
+          })
+        }
+      });
     }
     return Padding(
       padding: const EdgeInsets.all(8),
       child: GestureDetector(
         child: CircleImage(
             circleSize: 150,
-            image: image ??
+            image: imageWidget ??
                 const AssetImage('assets/illustrations/undraw_profile_pic.png'),
             enableOverlay: true,
             overlayIcon: const Icon(Icons.edit)),
@@ -266,9 +265,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
     lastNameController.text = user.lastName;
     firstNameController.text = user.firstName;
     Uint8List imageAsPNG;
-    if (uploadedImage != null) {
-      convertToPNG(uploadedImage).then((value) => imageAsPNG = value);
-    }
+    // if (uploadedImage != null) {
+    //   convertToPNG(uploadedImage).then((value) => imageAsPNG = value);
+    // }
     if (!authProvider.isVerifiedFromCache) {
       emailController.text = authProvider.email.split('@')[0];
     }
@@ -299,6 +298,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       .then((value) => result = value ?? false);
                 }
                 if (uploadedImage != null) {
+                  imageAsPNG = await convertToPNG(uploadedImage);
                   result = await authProvider.uploadProfilePicture(
                       imageAsPNG, context);
                   if (result) {
