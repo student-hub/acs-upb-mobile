@@ -250,6 +250,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "warningAgreeTo" : MessageLookupByLibrary.simpleMessage("Trebuie să fiți de acord cu "),
     "warningAuthenticationNeeded" : MessageLookupByLibrary.simpleMessage("Autentificați-vă pentru a accesa această funcționalitate."),
     "warningEmailInUse" : m7,
+    "warningFavouriteWebsitesInitializationFailed" : MessageLookupByLibrary.simpleMessage("Nu se pot citi date despre site-urile favorite."),
     "warningFieldCannotBeEmpty" : MessageLookupByLibrary.simpleMessage("Câmpul nu poate fi gol."),
     "warningFieldCannotBeZero" : MessageLookupByLibrary.simpleMessage("Câmpul nu poate fi zero."),
     "warningFilterAlreadyDisabled" : MessageLookupByLibrary.simpleMessage("Întreg conținutul este vizibil deja."),

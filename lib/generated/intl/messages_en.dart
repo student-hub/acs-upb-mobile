@@ -250,6 +250,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "warningAgreeTo" : MessageLookupByLibrary.simpleMessage("You need to agree to the "),
     "warningAuthenticationNeeded" : MessageLookupByLibrary.simpleMessage("Please authenticate in order to access this feature."),
     "warningEmailInUse" : m7,
+    "warningFavouriteWebsitesInitializationFailed" : MessageLookupByLibrary.simpleMessage("Could not read favourite websites."),
     "warningFieldCannotBeEmpty" : MessageLookupByLibrary.simpleMessage("Field cannot be empty."),
     "warningFieldCannotBeZero" : MessageLookupByLibrary.simpleMessage("Field cannot be zero."),
     "warningFilterAlreadyDisabled" : MessageLookupByLibrary.simpleMessage("Already showing all content."),
