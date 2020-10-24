@@ -45,7 +45,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
     super.initState();
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
     authProvider.getProfilePictureURL(context: context).then((value) =>
-        setState(() => {if (value == null) imageWidget = NetworkImage(value)}));
+        setState(() => {if (value != null) imageWidget = NetworkImage(value)}));
   }
 
   AppDialog _changePasswordDialog(BuildContext context) {
