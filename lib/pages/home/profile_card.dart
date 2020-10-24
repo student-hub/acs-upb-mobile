@@ -6,7 +6,25 @@ import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class ProfileCard extends StatelessWidget {
+class ProfileCard extends StatefulWidget {
+  @override
+  _ProfileCardState createState() => _ProfileCardState();
+}
+
+class _ProfileCardState extends State<ProfileCard> {
+  String profilePictureURL;
+
+  @override
+  void initState() {
+    super.initState();
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    authProvider
+        .getProfilePictureURL(context: context)
+        .then((value) => setState(() {
+              profilePictureURL = value;
+            }));
+  }
+
   @override
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
@@ -28,14 +46,16 @@ class ProfileCard extends StatelessWidget {
               Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
-                  const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 8),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
                     child: CircleAvatar(
-                      radius: 40,
-                      child: Image(
-                          image: AssetImage(
-                              'assets/illustrations/undraw_profile_pic.png')),
-                    ),
+                        radius: 40,
+                        backgroundImage:
+                            user != null && profilePictureURL != null
+                                ? NetworkImage(profilePictureURL)
+                                : const AssetImage(
+                                    'assets/illustrations/undraw_profile_pic.png',
+                                  )),
                   ),
                   Expanded(
                     child: Padding(

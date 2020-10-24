@@ -9,6 +9,8 @@ import 'intl/messages_all.dart';
 // **************************************************************************
 
 // ignore_for_file: non_constant_identifier_names, lines_longer_than_80_chars
+// ignore_for_file: join_return_with_assignment, prefer_final_in_for_each
+// ignore_for_file: avoid_redundant_argument_values
 
 class S {
   S();
@@ -1098,6 +1100,26 @@ class S {
     return Intl.message(
       'Class cannot be empty.',
       name: 'errorClassCannotBeEmpty',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please select a picture that is less than 5MB.`
+  String get errorPictureSizeToBig {
+    return Intl.message(
+      'Please select a picture that is less than 5MB.',
+      name: 'errorPictureSizeToBig',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `The image could not be loaded.`
+  String get errorImage {
+    return Intl.message(
+      'The image could not be loaded.',
+      name: 'errorImage',
       desc: '',
       args: [],
     );
@@ -2258,6 +2280,16 @@ class S {
     return Intl.message(
       'There are no events for the selected ',
       name: 'messageThereAreNoEventsForSelected',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Profile picture updated successfully.`
+  String get messagePictureUpdatedSuccess {
+    return Intl.message(
+      'Profile picture updated successfully.',
+      name: 'messagePictureUpdatedSuccess',
       desc: '',
       args: [],
     );
