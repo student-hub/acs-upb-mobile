@@ -217,14 +217,14 @@ class _EditProfilePageState extends State<EditProfilePage> {
   Widget buildEditableAvatar(BuildContext context) {
     final AuthProvider authProvider = Provider.of<AuthProvider>(context);
     if (imageWidget == null) {
-      authProvider.getProfilePictureURL(context: context).then((value) =>
-      {
-        if(value != null && value != ''){
-          setState(() {
-            imageWidget = NetworkImage(value);
-          })
-        }
-      });
+      authProvider.getProfilePictureURL(context: context).then((value) => {
+            if (value != null && value != '')
+              {
+                setState(() {
+                  imageWidget = NetworkImage(value);
+                })
+              }
+          });
     }
     return Padding(
       padding: const EdgeInsets.all(8),
