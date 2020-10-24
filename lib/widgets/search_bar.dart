@@ -76,37 +76,37 @@ class SearchWidget extends StatefulWidget {
 
 class _SearchWidgetState extends State<SearchWidget> {
   final TextEditingController _textEditingController = TextEditingController();
-  bool widgetVisibility;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 60,
-      child: widget.searchClosed
-          ? Padding(
-              padding: const EdgeInsets.only(left: 10, top: 20),
-              child: widget.header == null
-                  ? Visibility(
-                      visible: widgetVisibility,
-                      child: const SearchWidget(),
-                    )
-                  : widget.searchClosed == true
-                      ? widget.header
-                      : const SearchWidget(),
-            )
-          : Padding(
-              padding: const EdgeInsets.only(left: 10, top: 10),
-              child: SearchBar(
-                textController: _textEditingController,
-                onSearch: widget.onSearch,
-                cancel: () {
-                  setState(() {
-                    _textEditingController.clear();
-                    widget.cancelCallback();
-                  });
-                },
-              ),
-            ),
+    return Visibility(
+      visible: !widget.searchClosed || widget.header != null,
+      child: Container(
+        height: 60,
+        child: widget.searchClosed
+            ? widget.header ??
+                Visibility(
+                  visible: !widget.searchClosed,
+                  child: createSearchBar(),
+                )
+            : createSearchBar(),
+      ),
+    );
+  }
+
+  Widget createSearchBar() {
+    return Padding(
+      padding: const EdgeInsets.only(left: 10, top: 10),
+      child: SearchBar(
+        textController: _textEditingController,
+        onSearch: widget.onSearch,
+        cancel: () {
+          setState(() {
+            _textEditingController.clear();
+            widget.cancelCallback();
+          });
+        },
+      ),
     );
   }
 }
