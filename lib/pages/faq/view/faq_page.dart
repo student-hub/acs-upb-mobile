@@ -35,26 +35,29 @@ class _FaqPageState extends State<FaqPage> {
     super.initState();
   }
 
-  Widget categoryList() => ListView(
-        scrollDirection: Axis.horizontal,
-        children: categories
-            .map((category) => Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 3),
-                  child: Selectable(
-                    label: category,
-                    initiallySelected: false,
-                    onSelected: (selection) {
-                      setState(() {
-                        if (selection) {
-                          activeTags.add(category);
-                        } else {
-                          activeTags.remove(category);
-                        }
-                      });
-                    },
-                  ),
-                ))
-            .toList(),
+  Widget categoryList() => Padding(
+        padding: const EdgeInsets.only(left: 10, top: 20),
+        child: ListView(
+          scrollDirection: Axis.horizontal,
+          children: categories
+              .map((category) => Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 3),
+                    child: Selectable(
+                      label: category,
+                      initiallySelected: false,
+                      onSelected: (selection) {
+                        setState(() {
+                          if (selection) {
+                            activeTags.add(category);
+                          } else {
+                            activeTags.remove(category);
+                          }
+                        });
+                      },
+                    ),
+                  ))
+              .toList(),
+        ),
       );
 
   @override
@@ -82,7 +85,7 @@ class _FaqPageState extends State<FaqPage> {
             return ListView(
               children: [
                 SearchWidget(
-                  title: categoryList(),
+                  header: categoryList(),
                   onSearch: (searchText) {
                     setState(() {
                       filter = searchText;

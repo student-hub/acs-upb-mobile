@@ -11,14 +11,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class RequestPermissions extends StatefulWidget {
+class RequestPermissionsPage extends StatefulWidget {
   static const String routeName = '/requestPermissions';
 
   @override
-  State<StatefulWidget> createState() => _RequestPermissionsState();
+  State<StatefulWidget> createState() => _RequestPermissionsPageState();
 }
 
-class _RequestPermissionsState extends State<RequestPermissions> {
+class _RequestPermissionsPageState extends State<RequestPermissionsPage> {
   User user;
   bool agreedToResponsibilities = false;
   TextEditingController requestController = TextEditingController();

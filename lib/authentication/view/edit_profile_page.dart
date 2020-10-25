@@ -1,18 +1,26 @@
+import 'dart:typed_data';
+import 'dart:ui';
+
 import 'package:acs_upb_mobile/authentication/model/user.dart';
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
+
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/filter/view/filter_dropdown.dart';
+import 'package:acs_upb_mobile/resources/storage/storage_provider.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/resources/validator.dart';
 import 'package:acs_upb_mobile/widgets/button.dart';
+import 'package:acs_upb_mobile/widgets/circle_image.dart';
 import 'package:acs_upb_mobile/widgets/dialog.dart';
 import 'package:acs_upb_mobile/widgets/icon_text.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:preferences/preference_title.dart';
 import 'package:provider/provider.dart';
+import 'package:image/image.dart' as im;
 
 class EditProfilePage extends StatefulWidget {
   const EditProfilePage({Key key}) : super(key: key);
@@ -28,6 +36,17 @@ class _EditProfilePageState extends State<EditProfilePage> {
   final dropdownController = FilterDropdownController();
 
   final formKey = GlobalKey<FormState>();
+
+  Uint8List uploadedImage;
+  ImageProvider imageWidget;
+
+  @override
+  void initState() {
+    super.initState();
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    authProvider.getProfilePictureURL(context: context).then((value) =>
+        setState(() => {if (value != null) imageWidget = NetworkImage(value)}));
+  }
 
   AppDialog _changePasswordDialog(BuildContext context) {
     final newPasswordController = TextEditingController();
@@ -203,6 +222,38 @@ class _EditProfilePageState extends State<EditProfilePage> {
     );
   }
 
+  Widget buildEditableAvatar(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8),
+      child: GestureDetector(
+        child: CircleImage(
+            circleSize: 150,
+            image: imageWidget ??
+                const AssetImage('assets/illustrations/undraw_profile_pic.png'),
+            enableOverlay: true,
+            overlayIcon: const Icon(Icons.edit)),
+        onTap: () async {
+          final Uint8List uploadedImage =
+              await StorageProvider.showImagePicker();
+          setState(() {
+            if (uploadedImage != null) {
+              this.uploadedImage = uploadedImage;
+              imageWidget = MemoryImage(uploadedImage);
+            } else {
+              AppToast.show(S.of(context).errorImage);
+            }
+          });
+        },
+      ),
+    );
+  }
+
+  Future<Uint8List> convertToPNG(Uint8List image) async {
+    final decodedImage = im.decodeImage(image);
+    return im.encodePng(im.copyResize(decodedImage, width: 500, height: 500),
+        level: 9);
+  }
+
   @override
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
@@ -210,6 +261,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
     final User user = authProvider.currentUserFromCache;
     lastNameController.text = user.lastName;
     firstNameController.text = user.firstName;
+    Uint8List imageAsPNG;
     if (!authProvider.isVerifiedFromCache) {
       emailController.text = authProvider.email.split('@')[0];
     }
@@ -239,6 +291,14 @@ class _EditProfilePageState extends State<EditProfilePage> {
                           child: _changeEmailConfirmationDialog(context))
                       .then((value) => result = value ?? false);
                 }
+                if (uploadedImage != null) {
+                  imageAsPNG = await convertToPNG(uploadedImage);
+                  result = await authProvider.uploadProfilePicture(
+                      imageAsPNG, context);
+                  if (result) {
+                    AppToast.show(S.of(context).messagePictureUpdatedSuccess);
+                  }
+                }
                 if (result) {
                   if (await authProvider.updateProfile(
                     info: info,
@@ -265,6 +325,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
         child: Container(
           child: ListView(children: [
             AccountNotVerifiedWarning(),
+            buildEditableAvatar(context),
             PreferenceTitle(
               S.of(context).labelPersonalInformation,
               leftPadding: 0,

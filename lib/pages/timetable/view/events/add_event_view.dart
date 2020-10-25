@@ -54,14 +54,14 @@ class _AddEventViewState extends State<AddEventView> {
     WeekType.odd: null,
     WeekType.even: null,
   };
-  Map<DayOfWeek, bool> weekDaySelected = {
-    DayOfWeek.monday: false,
-    DayOfWeek.tuesday: false,
-    DayOfWeek.wednesday: false,
-    DayOfWeek.thursday: false,
-    DayOfWeek.friday: false,
-    DayOfWeek.saturday: false,
-    DayOfWeek.sunday: false,
+  Map<_DayOfWeek, bool> weekDaySelected = {
+    _DayOfWeek.monday: false,
+    _DayOfWeek.tuesday: false,
+    _DayOfWeek.wednesday: false,
+    _DayOfWeek.thursday: false,
+    _DayOfWeek.friday: false,
+    _DayOfWeek.saturday: false,
+    _DayOfWeek.sunday: false,
   };
 
   // TODO(IoanaAlexandru): Make default semester the one closest to now
@@ -127,14 +127,19 @@ class _AddEventViewState extends State<AddEventView> {
     startTime = LocalTime(startHour, 0, 0);
 
     var initialWeekDays = [
-      DayOfWeek.from(widget.initialEvent?.start?.dayOfWeek) ?? DayOfWeek.monday
+      _DayOfWeek.from(widget.initialEvent?.start?.dayOfWeek) ??
+          _DayOfWeek.monday
     ];
     if (widget.initialEvent != null &&
-        widget.initialEvent is RecurringUniEvent) {
+        widget.initialEvent is RecurringUniEvent &&
+        (widget.initialEvent as RecurringUniEvent)
+            .rrule
+            .byWeekDays
+            .isNotEmpty) {
       initialWeekDays = (widget.initialEvent as RecurringUniEvent)
           .rrule
           .byWeekDays
-          .map((entry) => DayOfWeek.from(entry.day))
+          .map((entry) => _DayOfWeek.from(entry.day))
           .toList();
     }
     for (final initialWeekDay in initialWeekDays) {
@@ -334,7 +339,7 @@ class _AddEventViewState extends State<AddEventView> {
             onTap: () async {
               final res =
                   await Provider.of<UniEventProvider>(context, listen: false)
-                      .deleteEvent(widget.initialEvent);
+                      .deleteEvent(widget.initialEvent, context: context);
               if (res) {
                 Navigator.of(context)
                     .popUntil(ModalRoute.withName(Routes.home));
@@ -358,7 +363,7 @@ class _AddEventViewState extends State<AddEventView> {
 
           final rrule = RecurrenceRule(
               frequency: Frequency.weekly,
-              byWeekDays: (Map<DayOfWeek, bool>.from(weekDaySelected)
+              byWeekDays: (Map<_DayOfWeek, bool>.from(weekDaySelected)
                     ..removeWhere((key, value) => !value))
                   .keys
                   .map((weekDay) => ByWeekDayEntry(weekDay))
@@ -387,7 +392,7 @@ class _AddEventViewState extends State<AddEventView> {
           if (widget.initialEvent?.id == null) {
             final res =
                 await Provider.of<UniEventProvider>(context, listen: false)
-                    .addEvent(event);
+                    .addEvent(event, context: context);
             if (res) {
               Navigator.of(context).pop();
               AppToast.show(S.of(context).messageEventAdded);
@@ -395,7 +400,7 @@ class _AddEventViewState extends State<AddEventView> {
           } else {
             final res =
                 await Provider.of<UniEventProvider>(context, listen: false)
-                    .updateEvent(event);
+                    .updateEvent(event, context: context);
             if (res) {
               Navigator.of(context).popUntil(ModalRoute.withName(Routes.home));
               AppToast.show(S.of(context).messageEventEdited);
@@ -621,10 +626,10 @@ class SelectableFormField extends FormField<Map<Localizable, bool>> {
         );
 }
 
-class DayOfWeek extends time_machine.DayOfWeek with Localizable {
-  const DayOfWeek(int value) : super(value);
+class _DayOfWeek extends time_machine.DayOfWeek with Localizable {
+  const _DayOfWeek(int value) : super(value);
 
-  DayOfWeek.from(time_machine.DayOfWeek dayOfWeek) : super(dayOfWeek.value);
+  _DayOfWeek.from(time_machine.DayOfWeek dayOfWeek) : super(dayOfWeek.value);
 
   @override
   String toLocalizedString(BuildContext context) {
@@ -634,14 +639,13 @@ class DayOfWeek extends time_machine.DayOfWeek with Localizable {
         .substring(0, 3);
   }
 
-  static const DayOfWeek none = DayOfWeek(0);
-  static const DayOfWeek monday = DayOfWeek(1);
-  static const DayOfWeek tuesday = DayOfWeek(2);
-  static const DayOfWeek wednesday = DayOfWeek(3);
-  static const DayOfWeek thursday = DayOfWeek(4);
-  static const DayOfWeek friday = DayOfWeek(5);
-  static const DayOfWeek saturday = DayOfWeek(6);
-  static const DayOfWeek sunday = DayOfWeek(7);
+  static const _DayOfWeek monday = _DayOfWeek(1);
+  static const _DayOfWeek tuesday = _DayOfWeek(2);
+  static const _DayOfWeek wednesday = _DayOfWeek(3);
+  static const _DayOfWeek thursday = _DayOfWeek(4);
+  static const _DayOfWeek friday = _DayOfWeek(5);
+  static const _DayOfWeek saturday = _DayOfWeek(6);
+  static const _DayOfWeek sunday = _DayOfWeek(7);
 }
 
 class WeekType with Localizable {

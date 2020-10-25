@@ -61,6 +61,8 @@ void main() {
         .thenAnswer((realInvocation) => Future.value(false));
     when(mockAuthProvider.currentUser).thenAnswer((_) => Future.value(null));
     when(mockAuthProvider.isAnonymous).thenReturn(true);
+    when(mockAuthProvider.getProfilePictureURL(context: anyNamed('context')))
+        .thenAnswer((realInvocation) => Future.value(null));
 
     mockWebsiteProvider = MockWebsiteProvider();
     // ignore: invalid_use_of_protected_member
