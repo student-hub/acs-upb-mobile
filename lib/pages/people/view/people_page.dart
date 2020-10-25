@@ -36,9 +36,7 @@ class _PeoplePageState extends State<PeoplePage> {
         AppScaffoldAction(
           icon: Icons.search,
           onPressed: () {
-            setState(() {
-              searchClosed = !searchClosed;
-            });
+            setState(() => searchClosed = !searchClosed);
           },
         )
       ],
@@ -53,9 +51,7 @@ class _PeoplePageState extends State<PeoplePage> {
                   children: [
                     SearchWidget(
                       onSearch: (searchText) {
-                        setState(() {
-                          filter = searchText;
-                        });
+                        setState(() => filter = searchText);
                       },
                       cancelCallback: () {
                         setState(() {
