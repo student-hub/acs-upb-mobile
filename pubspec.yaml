@@ -13,7 +13,7 @@ description: A mobile application for students at ACS UPB.
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 #
 # ACS UPB Mobile uses semantic versioning. You can read more in the CONTRIBUTING.md file.
-version: 1.2.0+3
+version: 1.2.1+2
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
