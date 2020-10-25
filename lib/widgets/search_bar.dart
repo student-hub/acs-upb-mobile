@@ -83,13 +83,7 @@ class _SearchWidgetState extends State<SearchWidget> {
       visible: !widget.searchClosed || widget.header != null,
       child: Container(
         height: 60,
-        child: widget.searchClosed
-            ? widget.header ??
-                Visibility(
-                  visible: !widget.searchClosed,
-                  child: createSearchBar(),
-                )
-            : createSearchBar(),
+        child: widget.searchClosed ? widget.header : createSearchBar(),
       ),
     );
   }
