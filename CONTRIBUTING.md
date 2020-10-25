@@ -4,7 +4,7 @@ It is recommended that you go through
 [our workshop](https://github.com/acs-upb-mobile/flutter-workshop) first, to familiarize yourself
 with the technologies and the contribution process.
 
-## Pull Request process
+## Pull Request (contribution) process
 
 1. Check out [this](https://opensource.com/article/19/7/create-pull-request-github) tutorial if you
 don't know how to make a PR.
@@ -21,17 +21,23 @@ guidelines in mind:
 the change is necessary.
 4. If it's a new feature, write at least one test for it.
 
+Please note that in order for a PR to be merged (accepted), all of the tests need to pass,
+including the linter (which checks for coding style and warnings, see [Style guide](#style-guide)).
+These checks are ran automatically using [GitHub Actions](#github-actions). You also need at least
+one approval from a maintainer - after submitting a PR, you can request a review from the top right
+Reviewers menu on the Pull Request page.
+
 ## Development tips
 
 * Make sure you have the *Project* view open in the *Project* tab on the left in Android Studio (not
 *Android*).
-* Flutter comes with *Hot Reload* (the lightning icon, or *Ctrl+\\* / *⌘\\*), which allows you to
+* Flutter comes with *Hot Reload* (the lightning icon, or *Ctrl+\\* or *⌘\\*), which allows you to
 load changes in the code quickly into an already running app, without you needing to reinstall it.
 It's a very handy feature, but it doesn't work all the time - if you change the code, use Hot Reload
 but don't see the expected changes, or see some weird behaviour, you may need to close and restart
 the app (or even reinstall).
 * If running on web doesn't give the expected results after changing some code, you may need to
-clear the cache (in *Chrome*: *Ctrl+Shift+C* / *⌘+Shift+C* to open the Inspect menu, then
+clear the cache (in *Chrome*: *Ctrl+Shift+C* or *⌘+Shift+C* to open the Inspect menu, then
 right-click the *Refresh* button, and select *Empty cache and Hard reload*.)
 
 ## Style guide
@@ -40,21 +46,86 @@ This project uses
 [the official Dart style guide](https://dart.dev/guides/language/effective-dart/style)  with the
 following mentions:
 
-* Android Studio (IntelliJ) with the `dartfmt` tool is used to automatically format the code,
-including the order of imports.
-* For consistency, the `new` keyword (which is optional in Dart) should **not** be used.
-* Where necessary, comments should use Markdown formatting (e.g. backticks - \` - for code snippets
-and `[brackets]` for code references).
-* Use only single apostrophes - ' - for strings (e.g. `'hello'` instead of `"hello"`)
+* Android Studio (IntelliJ) with the `dartfmt` tool is used to automatically format the code
+  (*Ctrl+Alt+L* or *⌥+⌘+L*), including the order of imports (*Ctrl+Alt+O* or *⌥+⌘+O*).
+* The [extra_pedantic](https://pub.dev/packages/extra_pedantic) package is used for static analysis:
+  it automatically highlights warnings related to the
+  [recommended dart style](https://dart.dev/guides/language/effective-dart/style). Most of them can be
+  fixed automatically by invoking Context Actions (place the cursor on the warning and press
+  *Alt+Enter*) and selecting the correct action. **Do not suppress a warning** unless you know what
+  you're doing - if you don't know how to fix it and Android Studio doesn't help, hover over the
+  warning and you'll see a link to the documentation that can help you understand.
+* Where necessary, comments should use Markdown formatting (e.g. backticks - `\` - for code snippets
+  and `[brackets]` for code references).
+
+## GitHub Actions
+
+This project uses [GitHub Actions](https://github.com/features/actions) for CI/CD. That means that
+testing and deployment are automated.
+
+The following actions are currently set up:
+* [Linter](https://github.com/acs-upb-mobile/acs-upb-mobile/actions?query=workflow%3ALinter): Checks
+  for warnings and coding style issues. Runs on every push and pull request.
+  - If your PR is made from a branch inside the repository (rather
+    than a fork), it should automatically *add code review comments pointing out any warnings*.
+  - If you have formatting issues, the "Check formatting" step will *point out the files that need
+    to be formatted* and the workflow will fail.
+* [Tests](https://github.com/acs-upb-mobile/acs-upb-mobile/actions?query=workflow%3ATests): Runs all
+  tests in the [test/](test) directory and submits a coverage report to
+  [codecov](https://codecov.io/gh/acs-upb-mobile/acs-upb-mobile). This action is triggered on every
+  push and pull request.
+  - If at least one test fails, this workflow will fail.
+  - The *coverage* is the percentage of lines of code that are executed at least once in tests. This
+    project aims to keep coverage above 70% at all times.
+* [Deployment](https://github.com/acs-upb-mobile/acs-upb-mobile/actions?query=workflow%3ADeployment):
+  Deploys the web version of the app to the website
+  ([acs-upb-mobile.web.app](https://acs-upb-mobile.web.app/)) and creates a corresponding [GitHub
+  Release](https://github.com/acs-upb-mobile/acs-upb-mobile/releases) including the apk. This action
+  is triggered when a new version tag is pushed. **Do not push version tags** unless you know what
+  you are doing.
 
 ## Working with Firebase
-This application uses [Firebase](https://firebase.google.com/) to manage remote storage and
-authentication.
+ACS UPB Mobile uses [Firebase](https://firebase.google.com/) - an app development platform built on
+Google infrastructure and using [Google Cloud Platform](https://cloud.google.com/) - to manage
+remote storage and authentication, as well as other cloud resources.
 
 ### Setup
 This application uses [flutterfire](https://github.com/FirebaseExtended/flutterfire) plugins in
 order to access Firebase services. They are already enabled in the [pubspec](pubspec.yaml) file and
 ready to import and use in the code.
+
+:exclamation: FlutterFire only has [Cloud Storage](#storage) support for Android and iOS. The web
+version needs a special implementation. See [resources/storage](lib/resources/storage) for an
+example.
+
+### Authentication
+
+Firebase provides an entire suite of back-end services and SDKs for authenticating users within an
+application, through [FirebaseAuth](https://firebase.google.com/docs/auth).
+
+For our application, we use the following features:
+* account creation
+* login
+* password reset via e-mail
+* account verification via e-mail
+* account deletion
+
+Firebase Authentication stores
+[user information](https://firebase.google.com/docs/cli/auth#file_format) such as *UID*, *email*,
+*name* and *password hash*. In order to store additional information such as *user preferences* and
+*group*, when a new user signs up, a corresponding document is created in the
+[users](#users-collection) collection.
+
+This service automatically *handles the authentication tokens* and *enforces security rules*, which
+is particularly useful for an open-source application which users can fiddle with, such as ours. For
+example, multiple failed authentication attempts lead to a temporary timeout, and a user cannot
+delete their account unless they have logged in very recently (or refreshed their authentication
+token).
+
+[Firestore security rules](#firestore-security) can be enforced based on the user’s UID. This method
+means that, even though users can access the database connection string through the public
+repository, they can only do a limited set of actions on the database, depending on whether they are
+authenticated and their permissions.
 
 ### Firestore
 [Cloud Firestore](https://firebase.google.com/docs/firestore) is a noSQL database that organises
@@ -76,7 +147,7 @@ within the database.
 More information about the Firestore data model can be found
 [here](https://firebase.google.com/docs/firestore/data-model).
 
-#### Security
+<h4 id="firestore-security">Security</h4>
 
 Firestore allows for defining specific security rules for each collection. Rules can be applied for
 each different type of transaction - `reads` (where single-document reads - `get` - and queries -
@@ -90,7 +161,7 @@ More information on Firestore security rules can be found
 The project database contains the following collections:
 
 <details>
-<summary><b>users</b></summary>
+<summary class="collection" id="users-collection"><b>users</b></summary>
 This collection stores per-user data. The document key is the user's `uid` (from
 <a href=https://firebase.google.com/docs/auth>FirebaseAuth</a>).
 
@@ -187,6 +258,12 @@ All the documents in the collection share the same structure:
     <th>Type</th>
     <th>Required?</th>
     <th>Additional info</th>
+  </tr>
+  <tr>
+    <td>addedBy</td>
+    <td><code>string</code></td>
+    <td>🗹</td>
+    <td>ID of user who created this website</td>
   </tr>
   <tr>
     <td>category</td>
@@ -338,7 +415,7 @@ be editable directly through the app. Therefore for this collection, _anyone can
 <summary class="collection" id="classes-collection"><b>classes</b></summary>
 This collection stores information about classes defined in the
 <a href=#import_moodle-collection>import_moodle</a> collection. The ID of a document in this
-collection corresponds to an ID of a document in
+collection corresponds to the shortname of a document in
 <a href=#import_moodle-collection>import_moodle</a>.
 
 ###### Fields
@@ -448,6 +525,244 @@ and currently cannot be edited through the app due to privacy concerns. Therefor
 collection, _anyone can **read**_ but _no one can **write**_.
 
 </details>
+
+<details>
+<summary class="collection" id="calendars-collection"><b>calendars</b></summary>
+This collection stores academic calendar information, used to calculate recurrences of events in the
+<a href=#events-collection>events</a> collection. This information is generally posted yearly on the
+university website (for example
+<a href="https://upb.ro/wp-content/uploads/2020/03/UPB-Structura-an-universitar-2020-2021.pdf">here
+</a> for the year 2020).
+
+The ID of a document in this collection is the academic year it corresponds to (for academic year
+2020-2021, the ID is simply "2020").
+
+###### Fields
+All the documents in the collection share the same structure:
+<table>
+  <tr>
+    <th>Field</th>
+    <th>Type</th>
+    <th>Required?</th>
+    <th>Additional info</th>
+  </tr>
+  <tr>
+    <td>exams</td>
+    <td><code>array&lt</code>event*<code>&gt</code></td>
+    <td>🗹</td>
+    <td>exam sessions defined in the academic year</td>
+  </tr>
+  <tr>
+    <td>holidays</td>
+    <td><code>array&lt</code>event*<code>&gt</code></td>
+    <td>🗹</td>
+    <td>holiday intervals defined in the academic year</td>
+  </tr>
+  <tr>
+    <td>semester</td>
+    <td><code>array&lt</code>event*<code>&gt</code></td>
+    <td>🗹</td>
+    <td>semesters defined in the academic year, in chronological order</td>
+  </tr>
+</table>
+
+*An event is a `map<string, dynamic>` with the following fields:
+<table>
+  <tr>
+    <th>Field</th>
+    <th>Type</th>
+    <th>Required?</th>
+    <th>Additional info</th>
+  </tr>
+  <tr>
+    <td>name</td>
+    <td><code>string</code></td>
+    <td>⍰</td>
+    <td>The name of the time interval defined in the calendar. This needs to be specified for
+    everything but semesters, where the name is automatically set as the index of the event in the
+    list (starting from 1).</td>
+  </tr>
+  <tr>
+    <td>start</td>
+    <td><code>timestamp</code></td>
+    <td>🗹</td>
+    <td>The first day of the interval. The hour is irrelevant, it should be set to 00:00.</td>
+  </tr>
+  <tr>
+    <td>end</td>
+    <td><code>timestamp</code></td>
+    <td>🗹</td>
+    <td>The last day of the interval. The hour is irrelevant, it should be set to 00:00.</td>
+  </tr>
+  <tr>
+    <td>degree</td>
+    <td><code>string</code></td>
+    <td>⍰</td>
+    <td>“BSc” or “MSc”, must be specified if relevance is specified and not <code>null</code></td>
+  </tr>
+  <tr>
+    <td>relevance</td>
+    <td><code>null / list&lt;string&gt;</code></td>
+    <td>☐</td>
+    <td><code>null</code> if relevant for everyone, otherwise a string of filter node names</td>
+  </tr>
+</table>
+
+###### Rules
+
+Academic calendars are public information and should never (or very rarely) need to be modified,
+therefore for this collection, _anyone can **read**_ but _no one can **write**_.
+
+</details>
+
+<details>
+<summary class="collection" id="events-collection"><b>events</b></summary>
+This collection stores timetable events, shown in the app under the *Timetable* page.
+
+###### Fields
+All the documents in the collection share the same structure:
+<table>
+  <tr>
+    <th>Field</th>
+    <th>Type</th>
+    <th>Required?</th>
+    <th>Additional info</th>
+  </tr>
+  <tr>
+    <td>addedBy</td>
+    <td><code>string</code></td>
+    <td>🗹</td>
+    <td>ID of user who created this website</td>
+  </tr>
+  <tr>
+    <td>editedBy</td>
+    <td><code>array&lt;string&gt;</code></td>
+    <td>🗹</td>
+    <td>list of user IDs of users who edited this event</td>
+  </tr>
+  <tr>
+    <td>calendar</td>
+    <td><code>string</code></td>
+    <td>🗹</td>
+    <td>ID of a calendar in the <a href=#calendars-collection>calendars</a> collection; it is used
+    to calculate recurrences and skip holidays correctly</td>
+  </tr>
+  <tr>
+    <td>class</td>
+    <td><code>string</code></td>
+    <td>🗹</td>
+    <td>ID of a class in the <a href=#classes-collection>classes</a> collection</td>
+  </tr>
+  <tr>
+    <td>name</td>
+    <td><code>string</code></td>
+    <td>☐</td>
+    <td>Optional event name. If this is not specified, the class acronym will be used instead.</td>
+  </tr>
+  <tr>
+    <td>start</td>
+    <td><code>timestamp</code></td>
+    <td>🗹</td>
+    <td>The first instance of the event.</td>
+  </tr>
+  <tr>
+    <td>duration</td>
+    <td><code>map<string, number></code></td>
+    <td>🗹</td>
+    <td>A map containing duration keys like "hours", "minutes" etc.</td>
+  </tr>
+  <tr>
+    <td>location</td>
+    <td><code>string</code></td>
+    <td>☐</td>
+    <td>Optional event location, if applicable.</td>
+  </tr>
+  <tr>
+    <td>type</td>
+    <td><code>string</code></td>
+    <td>🗹</td>
+    <td>One of "lecture", "lab", "seminar", "sports", "other"</td>
+  </tr>
+  <tr>
+    <td>rrule</td>
+    <td><code>string</code></td>
+    <td>☐</td>
+    <td>If the event repeats, a recurrence rule in the format defined in <a
+    href="https://icalendar.org/iCalendar-RFC-5545/3-8-5-3-recurrence-rule.html">RFC-5543</a>, for
+    example "RRULE:FREQ=WEEKLY;UNTIL=20210131T000000;INTERVAL=2;BYDAY=TH" for an event that repeats
+    every second Thursday until Jan 31st 2021</td>
+  </tr>
+  <tr>
+    <td>degree</td>
+    <td><code>string</code></td>
+    <td>⍰</td>
+    <td>“BSc” or “MSc”, must be specified if relevance is specified and not <code>null</code></td>
+  </tr>
+  <tr>
+    <td>relevance</td>
+    <td><code>null / list&lt;string&gt;</code></td>
+    <td>☐</td>
+    <td><code>null</code> if relevant for everyone, otherwise a string of filter node names</td>
+  </tr>
+</table>
+
+
+###### Rules
+
+Since events in this collection are public information (_anyone can **read**_), altering and
+adding data here is a privilege and needs to be monitored, therefore _anyone who wants to modify
+this data needs to be authenticated_ in the first place.
+
+Users can **create** a new event only _if their `permissionLevel` is equal to or greater than three
+and they sign the data by putting their `uid` in the `addedBy` field_.
+
+Users can **update** an event _if they do not modify the `addedBy` field and they sign the
+modification by adding their `uid` at the end of the `editedBy` list_.
+
+Users can only **delete** an event _if they are the ones who created it_ (their `uid` is equal to
+the `addedBy` field) _or if their `permissionLevel` is equal to or greater than four_.
+
+</details>
+
+### Storage
+[Cloud Storage](https://firebase.google.com/docs/storage) complements Firestore by allowing storage
+of binary files, such as photos and videos.
+
+#### Structure
+The Cloud Storage is structured in **directories** and **files** (also referred to as **objects**),
+much like any other type of storage. These are placed inside a
+**[bucket](https://cloud.google.com/storage/docs/key-terms#buckets)** - the basic container that
+holds data. You can think of buckets like a physical storage device - they have a location (and
+their own security rules and permissions), and unlike directories, cannot be nested.
+
+The main bucket of the app (`acs-upb-mobile.appspot.com`) can be accessed via the Firebase console.
+It contains app resources such as icons and profile pictures, organised similarly to the data in
+Firestore:
+* **Website icons** are stored in the `websites/` directory. The icon of a website in Firestore
+that has the ID "abcd" will be in storage under `websites/abcd/icon.png`.
+* **Profile pictures** are stored in the `users/` directory. The picture of a user with the UID
+"abcd" would be in storage under `users/abcd/picture.png`.
+
+#### Security
+
+Storage security rules are similar to [Firestore security rules](#firestore-security). One of the
+reasons for keeping the storage structure as close to possible to the Firestore structure is the
+ability to have similar security rules (for example, if, in Firestore, a user can only access their
+own document, the same rule can be applied for a user's folder inside Storage).
+
+More information on Storage security rules can be found
+[here](https://firebase.google.com/docs/storage/security).
+
+### Functions
+[Cloud Functions for Firebase](https://firebase.google.com/docs/functions) is a serverless solution
+for running bits of code in response to events or at scheduled time intervals. They are, for all
+intents and purposes, JavaScript/TypeScript functions that run directly "in the cloud", without
+needing to be tied to an app or device.
+
+The project currently has two functions set up to perform daily backups of the data in Firestore
+([backupFirestore](functions/src/firestore-backup.js)) and Storage
+([backupStorage](functions/src/storage-backup.js)). They are scheduled to run automatically, every
+day at 00:00 EEST.
 
 ## Internationalization
 
