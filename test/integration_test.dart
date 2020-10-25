@@ -147,6 +147,8 @@ void main() {
     when(mockWebsiteProvider.hasListeners).thenReturn(false);
     when(mockWebsiteProvider.deleteWebsite(any, context: anyNamed('context')))
         .thenAnswer((realInvocation) => Future.value(true));
+    when(mockAuthProvider.getProfilePictureURL(context: anyNamed('context')))
+        .thenAnswer((realInvocation) => Future.value(null));
     when(mockWebsiteProvider.fetchWebsites(any, context: anyNamed('context')))
         .thenAnswer((_) => Future.value([
               Website(
@@ -1431,7 +1433,6 @@ void main() {
       });
     }
   });
-
   group('Edit Profile', () {
     setUp(() {
       when(mockAuthProvider.isVerifiedFromCache).thenReturn(false);
@@ -1446,6 +1447,8 @@ void main() {
       when(mockAuthProvider.currentUserFromCache).thenReturn(User(
           uid: '1', firstName: 'John', lastName: 'Doe', permissionLevel: 3));
       when(mockAuthProvider.email).thenReturn('john.doe@stud.acs.upb.ro');
+      when(mockAuthProvider.getProfilePictureURL(context: anyNamed('context')))
+          .thenAnswer((realInvocation) => Future.value(null));
     });
 
     for (final size in screenSizes) {
