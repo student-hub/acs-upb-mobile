@@ -21,7 +21,6 @@ class _PeoplePageState extends State<PeoplePage> {
   bool searchClosed = true;
   Future<List<Person>> people;
   List<Person> peopleData;
-  bool visibilitySearchBar = false;
 
   @override
   void initState() {
@@ -39,7 +38,6 @@ class _PeoplePageState extends State<PeoplePage> {
           onPressed: () {
             setState(() {
               searchClosed = !searchClosed;
-              visibilitySearchBar = !visibilitySearchBar;
             });
           },
         )
@@ -51,27 +49,25 @@ class _PeoplePageState extends State<PeoplePage> {
             builder: (_, snapshot) {
               if (snapshot.connectionState == ConnectionState.done) {
                 peopleData = snapshot.data;
-                return ListView(
+                return Column(
                   children: [
-                    Visibility(
-                      visible: visibilitySearchBar,
-                      child: SearchWidget(
-                        onSearch: (searchText) {
-                          setState(() {
-                            filter = searchText;
-                          });
-                        },
-                        cancelCallback: () {
-                          setState(() {
-                            searchClosed = true;
-                            visibilitySearchBar = false;
-                            filter = '';
-                          });
-                        },
-                        searchClosed: searchClosed,
-                      ),
+                    SearchWidget(
+                      onSearch: (searchText) {
+                        setState(() {
+                          filter = searchText;
+                        });
+                      },
+                      cancelCallback: () {
+                        setState(() {
+                          searchClosed = true;
+                          filter = '';
+                        });
+                      },
+                      searchClosed: searchClosed,
                     ),
-                    PeopleList(people: filteredPeople, filter: filter)
+                    Expanded(
+                        child:
+                            PeopleList(people: filteredPeople, filter: filter))
                   ],
                 );
               } else {
@@ -89,7 +85,8 @@ class _PeoplePageState extends State<PeoplePage> {
           .fold(
               true,
               (previousValue, filter) =>
-                  previousValue && person.name.toLowerCase().contains(filter)))
+                  previousValue &&
+                  person.name.toLowerCase().contains(filter.toLowerCase())))
       .toList();
 }
 
@@ -106,13 +103,16 @@ class PeopleList extends StatefulWidget {
 class _PeopleListState extends State<PeopleList> {
   @override
   Widget build(BuildContext context) {
-    final List<String> filteredWords =
-        widget.filter.split(' ').where((element) => element != '').toList();
+    final List<String> filteredWords = widget.filter
+        .toLowerCase()
+        .split(' ')
+        .where((element) => element != '')
+        .toList();
+
     return Padding(
       padding: const EdgeInsets.only(top: 12),
       child: ListView.builder(
         shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
         itemCount: widget.people.length,
         itemBuilder: (context, index) {
           return ListTile(
