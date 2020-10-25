@@ -1405,6 +1405,16 @@ class S {
     );
   }
 
+  /// `Could not read favourite websites.`
+  String get warningFavouriteWebsitesInitializationFailed {
+    return Intl.message(
+      'Could not read favourite websites.',
+      name: 'warningFavouriteWebsitesInitializationFailed',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Ask for permissions`
   String get navigationAskPermissions {
     return Intl.message(
