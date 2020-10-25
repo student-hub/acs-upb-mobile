@@ -83,23 +83,21 @@ class _SearchWidgetState extends State<SearchWidget> {
       visible: !widget.searchClosed || widget.header != null,
       child: Container(
         height: 60,
-        child: widget.searchClosed ? widget.header : createSearchBar(),
-      ),
-    );
-  }
-
-  Widget createSearchBar() {
-    return Padding(
-      padding: const EdgeInsets.only(left: 10, top: 10),
-      child: SearchBar(
-        textController: _textEditingController,
-        onSearch: widget.onSearch,
-        cancel: () {
-          setState(() {
-            _textEditingController.clear();
-            widget.cancelCallback();
-          });
-        },
+        child: widget.searchClosed
+            ? widget.header
+            : Padding(
+                padding: const EdgeInsets.only(left: 10, top: 10),
+                child: SearchBar(
+                  textController: _textEditingController,
+                  onSearch: widget.onSearch,
+                  cancel: () {
+                    setState(() {
+                      _textEditingController.clear();
+                      widget.cancelCallback();
+                    });
+                  },
+                ),
+              ),
       ),
     );
   }
