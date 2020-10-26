@@ -60,19 +60,23 @@ class FilterProvider with ChangeNotifier {
       PrefService.setBool('relevance_filter', true);
     }
   }
-  Future<void> setFilterNodes(List<String> nodes) async{
+
+  Future<void> setFilterNodes(List<String> nodes) async {
     try {
-      final DocumentReference doc = _db.collection('users').document(authProvider.uid);
+      final DocumentReference doc =
+          _db.collection('users').document(authProvider.uid);
       await doc.updateData({'filter_nodes': nodes});
     } catch (e) {
       print(e);
     }
   }
-  Future<List<String>> getFilterNodes(String nodes) async{
+
+  Future<List<String>> getFilterNodes(String nodes) async {
     try {
-      final DocumentReference doc = _db.collection('users').document(authProvider.uid);
+      final DocumentReference doc =
+          _db.collection('users').document(authProvider.uid);
       final DocumentSnapshot snap = await doc.get();
-      final filterNodes =  List<String>.from(snap['filter_nodes'] ?? []);
+      final filterNodes = List<String>.from(snap['filter_nodes'] ?? []);
       return filterNodes;
     } catch (e) {
       print(e);
@@ -122,7 +126,8 @@ class FilterProvider with ChangeNotifier {
       final ref = col.document('relevance');
       final doc = await ref.get();
       final data = doc.data;
-      final DocumentReference docUsers = _db.collection('users').document(authProvider.uid);
+      final DocumentReference docUsers =
+          _db.collection('users').document(authProvider.uid);
       final DocumentSnapshot snapUsers = await docUsers.get();
 
       final levelNames = <Map<String, String>>[];
@@ -153,7 +158,7 @@ class FilterProvider with ChangeNotifier {
         notifyListeners();
       }
 
-      if(_relevantNodes == null){
+      if (_relevantNodes == null) {
         // No previous setting or defaults => set the user's group
         if (authProvider.isAuthenticatedFromCache) {
           final user = await authProvider.currentUser;
