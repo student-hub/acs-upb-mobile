@@ -56,9 +56,27 @@ class FilterProvider with ChangeNotifier {
 
     _relevantNodes = null;
     if (global) {
-      // Reset defaults
-      PrefService.setStringList('relevant_nodes', null);
+      setFilterNodes(null);
       PrefService.setBool('relevance_filter', true);
+    }
+  }
+  Future<void> setFilterNodes(List<String> nodes) async{
+    try {
+      final DocumentReference doc = _db.collection('users').document(authProvider.uid);
+      await doc.updateData({'filter_nodes': nodes});
+    } catch (e) {
+      print(e);
+    }
+  }
+  Future<List<String>> getFilterNodes(String nodes) async{
+    try {
+      final DocumentReference doc = _db.collection('users').document(authProvider.uid);
+      final DocumentSnapshot snap = await doc.get();
+      final filterNodes =  List<String>.from(snap['filter_nodes'] ?? []);
+      return filterNodes;
+    } catch (e) {
+      print(e);
+      return null;
     }
   }
 
@@ -85,8 +103,7 @@ class FilterProvider with ChangeNotifier {
   void updateFilter(Filter filter) {
     _relevanceFilter = filter;
     if (global) {
-      PrefService.setStringList(
-          'relevant_nodes', _relevanceFilter.relevantNodes);
+      setFilterNodes(_relevanceFilter.relevantNodes);
     }
     notifyListeners();
   }
@@ -105,6 +122,8 @@ class FilterProvider with ChangeNotifier {
       final ref = col.document('relevance');
       final doc = await ref.get();
       final data = doc.data;
+      final DocumentReference docUsers = _db.collection('users').document(authProvider.uid);
+      final DocumentSnapshot snapUsers = await docUsers.get();
 
       final levelNames = <Map<String, String>>[];
       // Cast from List<dynamic> to List<Map<String, String>>
@@ -113,32 +132,35 @@ class FilterProvider with ChangeNotifier {
         levelNames.add(Map<String, String>.from(name));
       }
 
-      // Check if there is an existing setting already
-      if (global) {
-        _relevantNodes = PrefService.get('relevant_nodes') == null
-            ? null
-            : List<String>.from(PrefService.get('relevant_nodes'));
-      }
-
       final root = data['root'];
       _relevanceFilter = Filter(
         localizedLevelNames: levelNames,
         root: FilterNodeExtension.fromMap(root, 'All'),
       );
 
-      if (_relevantNodes != null) {
-        _relevantNodes ??= defaultRelevance;
-        for (final node in _relevantNodes) {
+      //Set the default relevance, if provided
+      if (defaultRelevance != null) {
+        for (final node in defaultRelevance) {
           _relevanceFilter.setRelevantUpToRoot(node, defaultDegree);
         }
         _relevantNodes = _relevanceFilter.relevantNodes;
-      } else {
+      }
+
+      // Check if there is an existing setting already
+      if (global) {
+        _relevantNodes = List<String>.from(snapUsers['filter_nodes']);
+        _relevanceFilter.setRelevantNodes(_relevantNodes);
+        notifyListeners();
+      }
+
+      if(_relevantNodes == null){
         // No previous setting or defaults => set the user's group
         if (authProvider.isAuthenticatedFromCache) {
           final user = await authProvider.currentUser;
           // Try to set the default from the user data
           if (user != null && user.classes != null) {
             _relevanceFilter.setRelevantNodes(user.classes);
+            notifyListeners();
           }
         }
       }
