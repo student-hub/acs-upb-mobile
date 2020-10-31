@@ -126,9 +126,6 @@ class FilterProvider with ChangeNotifier {
       final ref = col.document('relevance');
       final doc = await ref.get();
       final data = doc.data;
-      final DocumentReference docUsers =
-          _db.collection('users').document(authProvider.uid);
-      final DocumentSnapshot snapUsers = await docUsers.get();
 
       final levelNames = <Map<String, String>>[];
       // Cast from List<dynamic> to List<Map<String, String>>
@@ -152,10 +149,14 @@ class FilterProvider with ChangeNotifier {
       }
 
       // Check if there is an existing setting already
-      if (global) {
+      if (global && authProvider.isAuthenticatedFromCache && ! authProvider.isAnonymous) {
+
+        final DocumentReference docUsers =
+        _db.collection('users').document(authProvider.uid);
+        final DocumentSnapshot snapUsers = await docUsers.get();
+
         _relevantNodes = List<String>.from(snapUsers['filter_nodes']);
         _relevanceFilter.setRelevantNodes(_relevantNodes);
-        notifyListeners();
       }
 
       if (_relevantNodes == null) {
