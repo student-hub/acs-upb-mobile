@@ -2,11 +2,14 @@ import 'dart:async';
 import 'package:acs_upb_mobile/authentication/model/user.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/filter/model/filter.dart';
+import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/pages/portal/model/website.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:preferences/preference_service.dart';
+import 'package:provider/provider.dart';
 
 extension UserExtension on User {
   /// Check if there is at least one website that the [User] has permission to edit
@@ -105,6 +108,9 @@ class WebsiteProvider with ChangeNotifier {
   /// Initializes the number of visits of websites with the value stored from Firebase.
   Future<bool> _initializeNumberOfVisits(
       List<Website> websites, String uid) async {
+    if (uid == null) {
+      return _initializeNumberOfVisitsLocally(websites);
+    }
     try {
       final DocumentReference doc = _db.collection('users').document(uid);
       final DocumentSnapshot snap = await doc.get();
@@ -121,11 +127,41 @@ class WebsiteProvider with ChangeNotifier {
     }
   }
 
+  /// Initializes the number of visits of websites with the value stored locally.
+  /// This method is used when user is anonymous because he hasn't info saved on Firestore
+  ///
+  /// Because [PrefService] doesn't support storing maps, the
+  /// data is stored in 2 lists: the list of website IDs ([websiteIds]) and the list
+  /// with the number of visits ([websiteVisits]), where `websiteVisits[i]` is the
+  /// number of times the user accessed website with ID `websiteIds[i]`.
+  Future<bool> _initializeNumberOfVisitsLocally(List<Website> websites) async {
+    try {
+      final List<String> websiteIds =
+          PrefService.sharedPreferences.getStringList('websiteIds') ?? [];
+      final List<String> websiteVisits =
+          PrefService.sharedPreferences.getStringList('websiteVisits') ?? [];
+
+      final visitsByWebsiteId = Map<String, int>.from(websiteIds.asMap().map(
+          (index, key) =>
+              MapEntry(key, int.tryParse(websiteVisits[index] ?? 0))));
+      for (final Website website in websites) {
+        website.numberOfVisits = visitsByWebsiteId[website.id] ?? 0;
+      }
+      return true;
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
   /// Increments the number of visits of [website], both in-memory and on Firebase.
   Future<bool> incrementNumberOfVisits(Website website,
       {@required String uid}) async {
-    website.numberOfVisits++;
     try {
+      website.numberOfVisits++;
+      if (uid == null) {
+        return await incrementNumberOfVisitsLocally(website);
+      }
       final DocumentReference doc = _db.collection('users').document(uid);
       final DocumentSnapshot snap = await doc.get();
       final websiteVisits =
@@ -133,6 +169,40 @@ class WebsiteProvider with ChangeNotifier {
       websiteVisits[website.id] = website.numberOfVisits++;
 
       await doc.updateData({'websiteVisits': websiteVisits});
+      notifyListeners();
+      return true;
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
+  /// Increments the number of visits of [website], both in-memory and on the local storage.
+  /// This method is used when user is anonymous because he hasn't info saved on Firestore
+  ///
+  /// Because [PrefService] doesn't support storing maps, the
+  /// data is stored in 2 lists: the list of website IDs ([websiteIds]) and the list
+  /// with the number of visits ([websiteVisits]), where `websiteVisits[i]` is the
+  /// number of times the user accessed website with ID `websiteIds[i]`.
+  Future<bool> incrementNumberOfVisitsLocally(Website website) async {
+    try {
+      website.numberOfVisits++;
+      final List<String> websiteIds =
+          PrefService.sharedPreferences.getStringList('websiteIds') ?? [];
+      final List<String> websiteVisits =
+          PrefService.sharedPreferences.getStringList('websiteVisits') ?? [];
+
+      if (websiteIds.contains(website.id)) {
+        final int index = websiteIds.indexOf(website.id);
+        websiteVisits.insert(index, website.numberOfVisits.toString());
+      } else {
+        websiteIds.add(website.id);
+        websiteVisits.add(website.numberOfVisits.toString());
+        await PrefService.sharedPreferences
+            .setStringList('websiteIds', websiteIds);
+      }
+      await PrefService.sharedPreferences
+          .setStringList('websiteVisits', websiteVisits);
       notifyListeners();
       return true;
     } catch (e) {
@@ -193,8 +263,11 @@ class WebsiteProvider with ChangeNotifier {
             .map((doc) => WebsiteExtension.fromSnap(doc, ownerUid: uid)));
       }
 
-      final bool initializeReturnSuccess =
-          await _initializeNumberOfVisits(websites, uid);
+      final bool initializeReturnSuccess = await _initializeNumberOfVisits(
+          websites,
+          Provider.of<AuthProvider>(context, listen: false).isAnonymous == null
+              ? null
+              : uid);
       if (!initializeReturnSuccess) {
         AppToast.show(
             S.of(context).warningFavouriteWebsitesInitializationFailed);
