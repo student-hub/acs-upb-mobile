@@ -886,7 +886,7 @@ packages:
       name: timetable
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.2.8"
+    version: "0.2.9"
   typed_data:
     dependency: transitive
     description:
@@ -1001,4 +1001,4 @@ packages:
     version: "2.2.1"
 sdks:
   dart: ">=2.10.0-110 <=2.11.0-213.1.beta"
-  flutter: ">=1.20.0 <2.0.0"
+  flutter: ">=1.23.0-13.0.pre <2.0.0"

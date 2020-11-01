@@ -76,7 +76,7 @@ dependencies:
   rxdart: ^0.24.1
 
   # Timetable widget
-  timetable: ^0.2.7
+  timetable: ^0.2.9
 
   # Event recurrence rule handler
   rrule: ^0.1.1
