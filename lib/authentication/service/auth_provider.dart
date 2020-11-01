@@ -450,9 +450,9 @@ class AuthProvider with ChangeNotifier {
       final classes = info['class'];
 
       _currentUser
-            ..firstName = firstName
-            ..lastName = lastName
-            ..classes = classes;
+        ..firstName = firstName
+        ..lastName = lastName
+        ..classes = classes;
 
       await Firestore.instance
           .collection('users')
