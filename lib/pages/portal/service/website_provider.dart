@@ -131,8 +131,8 @@ class WebsiteProvider with ChangeNotifier {
   /// This method is used when user is anonymous because he hasn't info saved on Firestore
   ///
   /// Because [PrefService] doesn't support storing maps, the
-  /// data is stored in 2 lists: the list of website IDs ([websiteIds]) and the list
-  /// with the number of visits ([websiteVisits]), where `websiteVisits[i]` is the
+  /// data is stored in 2 lists: the list of website IDs ('websiteIds') and the list
+  /// with the number of visits ('websiteVisits'), where `websiteVisits[i]` is the
   /// number of times the user accessed website with ID `websiteIds[i]`.
   Future<bool> _initializeNumberOfVisitsLocally(List<Website> websites) async {
     try {
@@ -181,8 +181,8 @@ class WebsiteProvider with ChangeNotifier {
   /// This method is used when user is anonymous because he hasn't info saved on Firestore
   ///
   /// Because [PrefService] doesn't support storing maps, the
-  /// data is stored in 2 lists: the list of website IDs ([websiteIds]) and the list
-  /// with the number of visits [websiteVisits], where `websiteVisits[i]` is the
+  /// data is stored in 2 lists: the list of website IDs ('websiteIds') and the list
+  /// with the number of visits 'websiteVisits', where `websiteVisits[i]` is the
   /// number of times the user accessed website with ID `websiteIds[i]`.
   Future<bool> incrementNumberOfVisitsLocally(Website website) async {
     try {
