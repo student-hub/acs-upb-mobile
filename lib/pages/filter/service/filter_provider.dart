@@ -56,31 +56,18 @@ class FilterProvider with ChangeNotifier {
 
     _relevantNodes = null;
     if (global) {
-      setFilterNodes(null);
+      _setFilterNodes(null);
       PrefService.setBool('relevance_filter', true);
     }
   }
 
-  Future<void> setFilterNodes(List<String> nodes) async {
+  Future<void> _setFilterNodes(List<String> nodes) async {
     try {
       final DocumentReference doc =
           _db.collection('users').document(authProvider.uid);
       await doc.updateData({'filter_nodes': nodes});
     } catch (e) {
       print(e);
-    }
-  }
-
-  Future<List<String>> getFilterNodes(String nodes) async {
-    try {
-      final DocumentReference doc =
-          _db.collection('users').document(authProvider.uid);
-      final DocumentSnapshot snap = await doc.get();
-      final filterNodes = List<String>.from(snap['filter_nodes'] ?? []);
-      return filterNodes;
-    } catch (e) {
-      print(e);
-      return null;
     }
   }
 
@@ -107,7 +94,7 @@ class FilterProvider with ChangeNotifier {
   void updateFilter(Filter filter) {
     _relevanceFilter = filter;
     if (global) {
-      setFilterNodes(_relevanceFilter.relevantNodes);
+      _setFilterNodes(_relevanceFilter.relevantNodes);
     }
     notifyListeners();
   }
@@ -140,7 +127,7 @@ class FilterProvider with ChangeNotifier {
         root: FilterNodeExtension.fromMap(root, 'All'),
       );
 
-      //Set the default relevance, if provided
+      // Set the default relevance, if provided
       if (defaultRelevance != null) {
         for (final node in defaultRelevance) {
           _relevanceFilter.setRelevantUpToRoot(node, defaultDegree);
@@ -156,6 +143,7 @@ class FilterProvider with ChangeNotifier {
             _db.collection('users').document(authProvider.uid);
         final DocumentSnapshot snapUsers = await docUsers.get();
 
+        //Load filter_nodes from Firestore
         _relevantNodes = List<String>.from(snapUsers['filter_nodes']);
         _relevanceFilter.setRelevantNodes(_relevantNodes);
       }
