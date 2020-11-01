@@ -1,7 +1,9 @@
 import 'dart:async';
+import 'dart:typed_data';
 
 import 'package:acs_upb_mobile/authentication/model/user.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
+import 'package:acs_upb_mobile/resources/storage/storage_provider.dart';
 import 'package:acs_upb_mobile/resources/validator.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -465,5 +467,24 @@ class AuthProvider with ChangeNotifier {
       _errorHandler(e, context);
       return false;
     }
+  }
+
+  Future<bool> uploadProfilePicture(
+      Uint8List file, BuildContext context) async {
+    final result = await StorageProvider.uploadImage(
+        context, file, 'users/${_firebaseUser.uid}/picture.png');
+    if (!result) {
+      if (file.length > 5 * 1024 * 1024) {
+        AppToast.show(S.of(context).errorPictureSizeToBig);
+      } else {
+        AppToast.show(S.of(context).errorSomethingWentWrong);
+      }
+    }
+    return result;
+  }
+
+  Future<String> getProfilePictureURL({BuildContext context}) {
+    return StorageProvider.findImageUrl(
+        context, 'users/${_firebaseUser.uid}/picture.png');
   }
 }

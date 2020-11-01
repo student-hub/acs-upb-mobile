@@ -63,10 +63,10 @@ class _SearchBarState extends State<SearchBar> {
 
 class SearchWidget extends StatefulWidget {
   const SearchWidget(
-      {this.onSearch, this.title, this.cancelCallback, this.searchClosed});
+      {this.onSearch, this.header, this.cancelCallback, this.searchClosed});
 
   final void Function(String) onSearch;
-  final Widget title;
+  final Widget header;
   final void Function() cancelCallback;
   final bool searchClosed;
 
@@ -79,26 +79,26 @@ class _SearchWidgetState extends State<SearchWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 60,
-      child: widget.searchClosed
-          ? Padding(
-              padding: const EdgeInsets.only(left: 10, top: 20),
-              child: widget.title,
-            )
-          : Padding(
-              padding: const EdgeInsets.only(left: 10, top: 10),
-              child: SearchBar(
-                textController: _textEditingController,
-                onSearch: widget.onSearch,
-                cancel: () {
-                  setState(() {
-                    _textEditingController.clear();
-                    widget.cancelCallback();
-                  });
-                },
+    return Visibility(
+      visible: !widget.searchClosed || widget.header != null,
+      child: Container(
+        height: 60,
+        child: widget.searchClosed
+            ? widget.header
+            : Padding(
+                padding: const EdgeInsets.only(left: 10, top: 10),
+                child: SearchBar(
+                  textController: _textEditingController,
+                  onSearch: widget.onSearch,
+                  cancel: () {
+                    setState(() {
+                      _textEditingController.clear();
+                      widget.cancelCallback();
+                    });
+                  },
+                ),
               ),
-            ),
+      ),
     );
   }
 }

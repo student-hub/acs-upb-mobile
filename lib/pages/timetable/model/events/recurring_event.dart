@@ -91,9 +91,11 @@ class RecurringUniEvent extends UniEvent {
       // an "odd" week, even though its number in the calendar would have the
       // same parity as the week before the holiday.
       if (rrule.interval != 1) {
+        // Check whether the first calendar week is odd
+        final bool startOdd = weeks.first % 2 == 1;
         weeks = weeks
             .whereIndex((index) =>
-                index % rrule.interval !=
+                (startOdd ? index : index + 1) % rrule.interval !=
                 weeks.lookup(WeekYearRules.iso
                         .getWeekOfWeekYear(start.calendarDate)) %
                     rrule.interval)
