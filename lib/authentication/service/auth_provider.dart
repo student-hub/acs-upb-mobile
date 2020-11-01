@@ -404,7 +404,7 @@ class AuthProvider with ChangeNotifier {
       await ref.setData(_currentUser.toData());
 
       // Try to set the default from the user data
-      if (_currentUser.classes != null && isAuthenticatedFromCache) {
+      if (_currentUser.classes != null) {
         await ref.updateData({'filter_nodes': _currentUser.classes});
       }
       // Send verification e-mail
