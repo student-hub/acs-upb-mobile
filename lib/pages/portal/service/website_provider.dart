@@ -264,7 +264,7 @@ class WebsiteProvider with ChangeNotifier {
 
       final bool initializeReturnSuccess = await _initializeNumberOfVisits(
           websites,
-          Provider.of<AuthProvider>(context, listen: false).isAnonymous == true
+          Provider.of<AuthProvider>(context, listen: false).isAnonymous
               ? null
               : uid);
       if (!initializeReturnSuccess) {
