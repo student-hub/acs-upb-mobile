@@ -182,7 +182,7 @@ class WebsiteProvider with ChangeNotifier {
   ///
   /// Because [PrefService] doesn't support storing maps, the
   /// data is stored in 2 lists: the list of website IDs ([websiteIds]) and the list
-  /// with the number of visits ([websiteVisits]), where `websiteVisits[i]` is the
+  /// with the number of visits [websiteVisits], where `websiteVisits[i]` is the
   /// number of times the user accessed website with ID `websiteIds[i]`.
   Future<bool> incrementNumberOfVisitsLocally(Website website) async {
     try {
@@ -265,7 +265,7 @@ class WebsiteProvider with ChangeNotifier {
 
       final bool initializeReturnSuccess = await _initializeNumberOfVisits(
           websites,
-          Provider.of<AuthProvider>(context, listen: false).isAnonymous == null
+          Provider.of<AuthProvider>(context, listen: false).isAnonymous == true
               ? null
               : uid);
       if (!initializeReturnSuccess) {
