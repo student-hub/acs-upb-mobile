@@ -149,26 +149,15 @@ class FilterProvider with ChangeNotifier {
       }
 
       // Check if there is an existing setting already
-      if (global && authProvider.isAuthenticatedFromCache && ! authProvider.isAnonymous) {
-
+      if (global &&
+          authProvider.isAuthenticatedFromCache &&
+          !authProvider.isAnonymous) {
         final DocumentReference docUsers =
-        _db.collection('users').document(authProvider.uid);
+            _db.collection('users').document(authProvider.uid);
         final DocumentSnapshot snapUsers = await docUsers.get();
 
         _relevantNodes = List<String>.from(snapUsers['filter_nodes']);
         _relevanceFilter.setRelevantNodes(_relevantNodes);
-      }
-
-      if (_relevantNodes == null) {
-        // No previous setting or defaults => set the user's group
-        if (authProvider.isAuthenticatedFromCache) {
-          final user = await authProvider.currentUser;
-          // Try to set the default from the user data
-          if (user != null && user.classes != null) {
-            _relevanceFilter.setRelevantNodes(user.classes);
-            notifyListeners();
-          }
-        }
       }
 
       return cachedFilter;
