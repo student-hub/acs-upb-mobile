@@ -112,6 +112,8 @@
   "errorPermissionDenied": "Nu aveți suficiente permisiuni.",
   "errorEventTypeCannotBeEmpty": "Tipul de eveniment trebuie precizat.",
   "errorClassCannotBeEmpty": "Materia trebuie precizată.",
+  "errorPictureSizeToBig": "Selectați o fotografie care are mai puțin de 5MB.",
+  "errorImage": "Imaginea nu putut fi încărcată.",
 
   "warningRequestExists": "O cerere deja există",
   "warningInternetConnection": "Asigurați-vă că sunteți conectat la internet.",
@@ -120,7 +122,7 @@
   "warningPasswordUppercase": "Parola trebuie să conțină cel putin o majusculă.",
   "warningPasswordLowercase": "Parola trebuie să conțină cel putin o minusculă.",
   "warningPasswordSpecialCharacters": "Parola trebuie să conțină cel puțin un simbol.",
-  "warningPasswordNumber" :"Parola trebuie să conțină cel puțin un număr.",
+  "warningPasswordNumber": "Parola trebuie să conțină cel puțin un număr.",
   "warningEmailInUse": "Există deja un cont asociat cu adresa {email}.",
   "warningUseProvider": "Folosiți {provider} pentru a vă conecta.",
   "warningTryAgainLater": "Încercați mai târziu.",
@@ -141,6 +143,7 @@
   "warningOnlyNOptionsAtATime": "Doar {n} opțiuni pot fi selectate la un moment dat.",
   "warningNoEvents": "Nu există evenimente de afișat",
   "warningYouNeedToSelectAtLeastOne": "Trebuie să selectați cel puțin o opțiune.",
+  "warningFavouriteWebsitesInitializationFailed": "Nu se pot citi date despre site-urile favorite.",
 
   "navigationAskPermissions": "Cere permisiuni",
   "navigationHome": "Acasă",
@@ -197,7 +200,7 @@
 
   "messageWelcomeSimple": "Bine ai venit!",
   "messageWelcomeName": "Bine ai venit, {name}!",
-  "messageNewUser":"Utilizator nou?",
+  "messageNewUser": "Utilizator nou?",
   "messageEmailNotVerified": "Contul nu este verificat.",
   "messageNotLoggedIn": "Trebuie să fiți autentificat pentru a realiza această acțiune.",
   "messageEmailNotVerifiedToPerformAction": "Contul trebuie să fie verificat pentru a realiza această acțiune.",
@@ -237,6 +240,7 @@
   "messageAgreePermissions": "Voi încărca doar informații corecte si precise. Înțeleg că încărcarea informațiilor eronate sau ofensatoare în mod intenționat va conduce la blocarea permisiunilor mele permanent.",
   "messageYouCanContribute": "Poți contribui la datele din aplicație, dar trebuie mai întâi să ceri permisiuni.",
   "messageThereAreNoEventsForSelected": "Nu există evenimente pentru selecția de ",
+  "messagePictureUpdatedSuccess": "Poza a fost actualizată cu succes.",
 
   "infoPasswordResetEmailSent": "Please check your inbox for the password reset e-mail.",
   "infoRelevance": "Încercați să selectați cea mai restrictivă categorie.",

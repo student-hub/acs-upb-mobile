@@ -1,3 +1,4 @@
+import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/portal/model/website.dart';
 import 'package:acs_upb_mobile/pages/portal/service/website_provider.dart';
@@ -14,10 +15,15 @@ class FavouriteWebsitesCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final AuthProvider authProvider = Provider.of<AuthProvider>(context);
+    final String uid = authProvider.uid;
+    final WebsiteProvider websiteProvider =
+        Provider.of<WebsiteProvider>(context);
     return InfoCard<List<Website>>(
       title: S.of(context).sectionFrequentlyAccessedWebsites,
       onShowMore: onShowMore,
-      future: Provider.of<WebsiteProvider>(context).fetchFavouriteWebsites(),
+      future:
+          websiteProvider.fetchFavouriteWebsites(uid: uid, context: context),
       builder: (websites) => Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.start,
@@ -28,8 +34,8 @@ class FavouriteWebsitesCard extends StatelessWidget {
                       child: WebsiteIcon(
                         website: website,
                         onTap: () {
-                          Provider.of<WebsiteProvider>(context, listen: false)
-                              .incrementNumberOfVisits(website);
+                          websiteProvider.incrementNumberOfVisits(website,
+                              uid: uid);
                           Utils.launchURL(website.link, context: context);
                         },
                       )),

@@ -112,6 +112,8 @@
   "errorPermissionDenied": "You do not have permission to do that.",
   "errorEventTypeCannotBeEmpty": "Event type cannot be empty.",
   "errorClassCannotBeEmpty": "Class cannot be empty.",
+  "errorPictureSizeToBig": "Please select a picture that is less than 5MB.",
+  "errorImage": "The image could not be loaded.",
 
   "warningRequestExists": "Request already exists",
   "warningInternetConnection": "Please make sure you are connected to the internet.",
@@ -141,6 +143,7 @@
   "warningOnlyNOptionsAtATime": "Only {n} options can be selected at a time.",
   "warningNoEvents": "No events to show",
   "warningYouNeedToSelectAtLeastOne": "You need to select at least one option.",
+  "warningFavouriteWebsitesInitializationFailed": "Could not read favourite websites.",
 
   "navigationAskPermissions": "Ask for permissions",
   "navigationHome": "Home",
@@ -237,6 +240,7 @@
   "messageAgreePermissions": "I will only upload information that is correct and accurate, to the best of my knowledge. I understand that submitting erroneous or offensive information on purpose will lead to my editing permissions being permanently revoked.",
   "messageYouCanContribute": "You can contribute to the app data, but you first need to request permissions.",
   "messageThereAreNoEventsForSelected": "There are no events for the selected ",
+  "messagePictureUpdatedSuccess": "Profile picture updated successfully.",
 
   "infoPasswordResetEmailSent": "Please check your inbox for the password reset e-mail.",
   "infoRelevance": "Try to choose the most restrictive category.",

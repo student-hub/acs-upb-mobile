@@ -57,7 +57,8 @@ class RecurringUniEvent extends UniEvent {
     ClassHeader classHeader,
     AcademicCalendar calendar,
     String addedBy,
-  }) : super(
+  })  : assert(rrule != null),
+        super(
             name: name,
             location: location,
             start: start,
@@ -76,87 +77,71 @@ class RecurringUniEvent extends UniEvent {
   @override
   Iterable<UniEventInstance> generateInstances(
       {DateInterval intersectingInterval}) sync* {
-    if (rrule == null) {
+    RecurrenceRule rrule = this.rrule;
+    if (calendar != null && rrule.frequency == Frequency.weekly) {
+      var weeks = calendar.nonHolidayWeeks;
+
+      // Get the correct sequence of weeks for this event.
+      //
+      // For example, if the first academic calendar week is 40 and the event
+      // starts on week 41 and repeats every two weeks - get every odd-index
+      // week in the non holiday weeks.
+      // This is necessary because if an "even" week is followed by a one-week
+      // holiday, the week that comes after the holiday should be considered
+      // an "odd" week, even though its number in the calendar would have the
+      // same parity as the week before the holiday.
+      if (rrule.interval != 1) {
+        // Check whether the first calendar week is odd
+        final bool startOdd = weeks.first % 2 == 1;
+        weeks = weeks
+            .whereIndex((index) =>
+                (startOdd ? index : index + 1) % rrule.interval !=
+                weeks.lookup(WeekYearRules.iso
+                        .getWeekOfWeekYear(start.calendarDate)) %
+                    rrule.interval)
+            .toSet();
+      }
+      rrule = rrule.copyWith(
+          frequency: Frequency.daily,
+          interval: 1,
+          byWeekDays: rrule.byWeekDays.isNotEmpty
+              ? rrule.byWeekDays
+              : {ByWeekDayEntry(start.dayOfWeek)},
+          byWeeks: weeks);
+    }
+
+    // Calculate recurrences
+    int i = 0;
+    for (final start in rrule.getInstances(start: start)) {
       final LocalDateTime end = start.add(duration);
       if (intersectingInterval != null) {
-        if (end.calendarDate < intersectingInterval.start ||
-            start.calendarDate > intersectingInterval.end) return;
+        if (end.calendarDate < intersectingInterval.start) continue;
+        if (start.calendarDate > intersectingInterval.end) break;
       }
 
-      yield UniEventInstance(
-        id: id,
-        title: name,
-        mainEvent: this,
-        color: color,
-        start: start,
-        end: start.add(duration),
-        location: location,
-      );
-    } else {
-      RecurrenceRule rrule = this.rrule;
-      if (calendar != null && rrule.frequency == Frequency.weekly) {
-        var weeks = calendar.nonHolidayWeeks;
-
-        // Get the correct sequence of weeks for this event.
-        //
-        // For example, if the first academic calendar week is 40 and the event
-        // starts on week 41 and repeats every two weeks - get every odd-index
-        // week in the non holiday weeks.
-        // This is necessary because if an "even" week is followed by a one-week
-        // holiday, the week that comes after the holiday should be considered
-        // an "odd" week, even though its number in the calendar would have the
-        // same parity as the week before the holiday.
-        if (rrule.interval != 1) {
-          weeks = weeks
-              .whereIndex((index) =>
-                  index % rrule.interval !=
-                  weeks.lookup(WeekYearRules.iso
-                          .getWeekOfWeekYear(start.calendarDate)) %
-                      rrule.interval)
-              .toSet();
+      bool skip = false;
+      for (final holiday in calendar?.holidays ?? []) {
+        final holidayInterval =
+            DateInterval(holiday.startDate, holiday.endDate);
+        if (holidayInterval.contains(start.calendarDate)) {
+          // Skip holidays
+          skip = true;
         }
-        rrule = rrule.copyWith(
-            frequency: Frequency.daily,
-            interval: 1,
-            byWeekDays: rrule.byWeekDays.isNotEmpty
-                ? rrule.byWeekDays
-                : {ByWeekDayEntry(start.dayOfWeek)},
-            byWeeks: weeks);
       }
 
-      // Calculate recurrences
-      int i = 0;
-      for (final start in rrule.getInstances(start: start)) {
-        final LocalDateTime end = start.add(duration);
-        if (intersectingInterval != null) {
-          if (end.calendarDate < intersectingInterval.start) continue;
-          if (start.calendarDate > intersectingInterval.end) break;
-        }
-
-        bool skip = false;
-        for (final holiday in calendar?.holidays ?? []) {
-          final holidayInterval =
-              DateInterval(holiday.startDate, holiday.endDate);
-          if (holidayInterval.contains(start.calendarDate)) {
-            // Skip holidays
-            skip = true;
-          }
-        }
-
-        if (!skip) {
-          yield UniEventInstance(
-            id: '$id-$i',
-            title: name,
-            mainEvent: this,
-            color: color,
-            start: start,
-            end: end,
-            location: location,
-          );
-        }
-
-        i++;
+      if (!skip) {
+        yield UniEventInstance(
+          id: '$id-$i',
+          title: name,
+          mainEvent: this,
+          color: color,
+          start: start,
+          end: end,
+          location: location,
+        );
       }
+
+      i++;
     }
   }
 }
