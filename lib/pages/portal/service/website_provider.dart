@@ -106,6 +106,7 @@ class WebsiteProvider with ChangeNotifier {
   }
 
   /// Initializes the number of visits of websites with the value stored from Firebase.
+  ///If no [uid] is provided, store the data locally instead.
   Future<bool> _initializeNumberOfVisits(
       List<Website> websites, String uid) async {
     if (uid == null) {
@@ -128,7 +129,6 @@ class WebsiteProvider with ChangeNotifier {
   }
 
   /// Initializes the number of visits of websites with the value stored locally.
-  /// This method is used when user is anonymous because he hasn't info saved on Firestore
   ///
   /// Because [PrefService] doesn't support storing maps, the
   /// data is stored in 2 lists: the list of website IDs ('websiteIds') and the list
@@ -155,8 +155,9 @@ class WebsiteProvider with ChangeNotifier {
   }
 
   /// Increments the number of visits of [website], both in-memory and on Firebase.
+  /// If no [uid] is provided, update data in the local storage.
   Future<bool> incrementNumberOfVisits(Website website,
-      {@required String uid}) async {
+      {String uid}) async {
     try {
       website.numberOfVisits++;
       if (uid == null) {
@@ -178,7 +179,6 @@ class WebsiteProvider with ChangeNotifier {
   }
 
   /// Increments the number of visits of [website], both in-memory and on the local storage.
-  /// This method is used when user is anonymous because he hasn't info saved on Firestore
   ///
   /// Because [PrefService] doesn't support storing maps, the
   /// data is stored in 2 lists: the list of website IDs ('websiteIds') and the list
