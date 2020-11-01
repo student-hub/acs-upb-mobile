@@ -106,7 +106,7 @@ class WebsiteProvider with ChangeNotifier {
   }
 
   /// Initializes the number of visits of websites with the value stored from Firebase.
-  ///If no [uid] is provided, store the data locally instead.
+  /// If no [uid] is provided, store the data locally instead.
   Future<bool> _initializeNumberOfVisits(
       List<Website> websites, String uid) async {
     if (uid == null) {
