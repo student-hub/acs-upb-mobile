@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 class ErrorPage extends StatelessWidget {
   const ErrorPage({
-    @required this.errorMessage,
     this.imgPath = 'assets/illustrations/undraw_warning.png',
+    this.errorMessage,
     this.info,
     this.actionText,
     this.actionOnTap,
@@ -27,20 +27,24 @@ class ErrorPage extends StatelessWidget {
               flex: 2,
               child: Align(
                 alignment: Alignment.bottomCenter,
-                child: Image(image: AssetImage(imgPath)),
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 10),
+                  child: Image(image: AssetImage(imgPath)),
+                ),
               ),
             ),
             Expanded(
               child: Column(
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.all(10),
-                    child: Text(
-                      errorMessage,
-                      style: Theme.of(context).textTheme.headline6,
-                      textAlign: TextAlign.center,
+                  if (errorMessage != null)
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
+                      child: Text(
+                        errorMessage,
+                        style: Theme.of(context).textTheme.headline6,
+                        textAlign: TextAlign.center,
+                      ),
                     ),
-                  ),
                   if (info != null)
                     Padding(
                       padding: const EdgeInsets.only(left: 10, right: 10),
