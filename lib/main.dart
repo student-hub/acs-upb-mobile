@@ -164,9 +164,11 @@ class AppLoadingScreen extends StatelessWidget {
 
       Culture.current = LocaleProvider.cultures[LocaleProvider.localeString];
     }
+
     // Load locale from settings
     await S.load(LocaleProvider.locale);
 
+    // Choose start screen
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
     final bool authenticated = await authProvider.isAuthenticatedFromService;
     return authenticated ? Routes.home : Routes.login;
@@ -176,7 +178,6 @@ class AppLoadingScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return LoadingScreen(
       navigateAfterFuture: _setUpAndChooseStartScreen(context),
-      loadingText: const Text('Setting up...'),
       image: Image.asset('assets/icons/acs_logo.png'),
       loaderColor: Theme.of(context).accentColor,
     );
