@@ -96,6 +96,7 @@
   "actionContribute": "Contribute",
   "actionOpenFilter": "Open filter",
   "actionRequestPermissions": "Request permissions",
+  "actionRefresh": "Refresh",
 
   "errorSomethingWentWrong": "Something went wrong.",
   "errorPasswordsDiffer": "The two passwords differ.",
@@ -116,7 +117,7 @@
   "errorImage": "The image could not be loaded.",
 
   "warningRequestExists": "Request already exists",
-  "warningInternetConnection": "Please make sure you are connected to the internet.",
+  "warningInternetConnection": "Please make sure you have an internet connection.",
   "warningPasswordLength": "The password must be 8 characters long or more.",
   "warningSamePassword": "The password must be different from the old one.",
   "warningPasswordUppercase": "The password must include at least one uppercase letter.",
@@ -144,7 +145,7 @@
   "warningNoEvents": "No events to show",
   "warningYouNeedToSelectAtLeastOne": "You need to select at least one option.",
   "warningFavouriteWebsitesInitializationFailed": "Could not read favourite websites.",
-  "warningUnableToReachNewsFeed": "Unable to reach the news feed. Make sure you are connected to the internet.",
+  "warningUnableToReachNewsFeed": "Unable to reach the news feed.",
   "warningNoNews": "There are no news yet.",
 
   "navigationAskPermissions": "Ask for permissions",

@@ -1,6 +1,7 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+
 import 'intl/messages_all.dart';
 
 // **************************************************************************
@@ -955,6 +956,16 @@ class S {
     );
   }
 
+  /// `Refresh`
+  String get actionRefresh {
+    return Intl.message(
+      'Refresh',
+      name: 'actionRefresh',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Something went wrong.`
   String get errorSomethingWentWrong {
     return Intl.message(
@@ -1135,10 +1146,10 @@ class S {
     );
   }
 
-  /// `Please make sure you are connected to the internet.`
+  /// `Please make sure you have an internet connection.`
   String get warningInternetConnection {
     return Intl.message(
-      'Please make sure you are connected to the internet.',
+      'Please make sure you have an internet connection.',
       name: 'warningInternetConnection',
       desc: '',
       args: [],
@@ -1410,6 +1421,26 @@ class S {
     return Intl.message(
       'Could not read favourite websites.',
       name: 'warningFavouriteWebsitesInitializationFailed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Unable to reach the news feed.`
+  String get warningUnableToReachNewsFeed {
+    return Intl.message(
+      'Unable to reach the news feed.',
+      name: 'warningUnableToReachNewsFeed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `There are no news yet.`
+  String get warningNoNews {
+    return Intl.message(
+      'There are no news yet.',
+      name: 'warningNoNews',
       desc: '',
       args: [],
     );

@@ -96,6 +96,7 @@
   "actionContribute": "Contribuie",
   "actionOpenFilter": "Deschide filtru",
   "actionRequestPermissions": "Cere permisiuni",
+  "actionRefresh": "Reîncarcă",
 
   "errorSomethingWentWrong": "A apărut o problemă.",
   "errorPasswordsDiffer": "Cele două parole diferă.",
@@ -144,7 +145,7 @@
   "warningNoEvents": "Nu există evenimente de afișat",
   "warningYouNeedToSelectAtLeastOne": "Trebuie să selectați cel puțin o opțiune.",
   "warningFavouriteWebsitesInitializationFailed": "Nu se pot citi date despre site-urile favorite.",
-  "warningUnableToReachNewsFeed": "Nu am putut încărca fluxul de știri. Asigurați-vă că există o conexiune la internet.",
+  "warningUnableToReachNewsFeed": "Nu am putut încărca fluxul de știri.",
   "warningNoNews": "Nu au fost postate știri încă.",
 
   "navigationAskPermissions": "Cere permisiuni",
