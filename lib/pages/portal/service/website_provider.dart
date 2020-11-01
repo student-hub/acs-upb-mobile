@@ -156,8 +156,7 @@ class WebsiteProvider with ChangeNotifier {
 
   /// Increments the number of visits of [website], both in-memory and on Firebase.
   /// If no [uid] is provided, update data in the local storage.
-  Future<bool> incrementNumberOfVisits(Website website,
-      {String uid}) async {
+  Future<bool> incrementNumberOfVisits(Website website, {String uid}) async {
     try {
       website.numberOfVisits++;
       if (uid == null) {
