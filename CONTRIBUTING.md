@@ -5,7 +5,7 @@ It is recommended that you go through
 with the technologies and the contribution process.
 
 ## Pull Request (contribution) process
-
+### Guidelines
 1. Check out [this](https://opensource.com/article/19/7/create-pull-request-github) tutorial if you
 don't know how to make a PR.
 2. Increase the version number in the [`pubspec.yaml`](pubspec.yaml) file with the following
@@ -26,7 +26,54 @@ including the linter (which checks for coding style and warnings, see [Style gui
 These checks are ran automatically using [GitHub Actions](#github-actions). You also need at least
 one approval from a maintainer - after submitting a PR, you can request a review from the top right
 Reviewers menu on the Pull Request page.
+### Branches
+Please use the following structure for creating new development branches:
+```
+[username]/[snake_case_branch_name]
+```
+This will make branches easier to find and search for.<br>
+Examples:
+```
+razvanra2/add_authoring_policy
+luigi/dev_eng_improv
+auditore/fix_md_typo
+torvalds/android_speedups
+```
+### Merging
+When developing a new feature or working on a bug, your pull request will end up containing fixup commits (commits that change the same line of code repeatedly) or too fine-grained commits. An issue that can arise from this is that the main branch history will become poluted with unnecessary commits. To avoid it, we implement and enforce a squash policy.
+All commits that are merged intro the main development branch have to be squashed ahead of the merge.
+You can do so by pressing "squash and merge", or, alternetively, following the generic local squash routine outlined bellow:
+```
+git checkout your_branch_name
+git rebase -i HEAD~n
+# n is normally the number of commits in the pull request.
+# Set commits (except the one in the first line) from 'pick' to 'squash', save and quit.
+# On the next screen, edit/refine commit messages.
+# Save and quit.
+git push -f # (force push to GitHub)
+```
+Please update the resulting commit message, if needed. It should read as a coherent message. In most cases, this means not just listing the interim commits.
 
+Please refrain from creating several pull requests for the same change. Use the pull request that is already open (or was created earlier) to amend changes. This preserves the discussion and review that happened earlier for the respective change set.
+Similarly, please create one PR per development item, instead of bundling multiple fixes and improvments in a singule PR.
+The length of time required for peer review is unpredictable and will vary from pull request to pull request.
+
+Please also prefix the issue number between square brackets in the title of a PR. This will, in the future, make it simpler to track how various decisions where taken during the development process.<br>
+As examples:<br>
+Good PR titles:
+```
+[60] Update Documentation to Include YAML Guidelines
+[420] Add Caching Feature to Classes Update
+[97] Fix Login Bug using Universal Pass
+```
+Bad PR titles:
+```
+Fix Stuff
+Add Auto Calendar Feature
+[421] Yeet this BS
+(917) Fix Login Bug using Universal Pass
+[321][21][54][12] Fix Login Issue, Add new Job Pipeline, Reconfigure XML architecture, Redo Pass Fix
+```
 ## Development tips
 
 * Make sure you have the *Project* view open in the *Project* tab on the left in Android Studio (not
