@@ -39,7 +39,7 @@ If you would like to contribute and don't know where to start, or you have any q
 * Open Android Studio.
 * Make sure you have the [Flutter plugin](https://plugins.jetbrains.com/plugin/9212-flutter) installed, as well as the [Dart plugin](https://plugins.jetbrains.com/plugin/6351-dart) dependency. Restart the IDE if necessary.
 * Use the *Check out project from Version Control* option (or *File > New > Project from Version
-Control*) to clone the repository from https://github.com/acs-upb-mobile/acs_upb_mobile.
+Control*) to clone the repository from https://github.com/acs-upb-mobile/acs-upb-mobile.
 * If the plugins are installed, Android Studio should automatically recognise it as being a Flutter project, so you should be able to just click *Next* on everything and create a new project.
 * When prompted, set up the Flutter SDK (the location is the `flutter/` folder you downloaded when you installed it) and Dart SDK (it comes bundled with Flutter at `flutter/bin/cache/dart-sdk/`).
 * Open the project terminal and switch to the Beta Flutter channel in order to enable web support:
