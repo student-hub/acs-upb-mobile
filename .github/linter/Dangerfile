@@ -14,5 +14,6 @@ flutter_lint.report_path = "flutter_analyze_report.txt"
 flutter_lint.lint(inline_mode: true)
 
 # Analyze documentation
+textlint.config_file = '.github/linter/.textlintrc'
 textlint.max_severity = "warn"
 textlint.lint

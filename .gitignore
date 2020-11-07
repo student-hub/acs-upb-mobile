@@ -36,7 +36,7 @@ lib/generated_plugin_registrant.dart
 
 # Others
 .firebase
-node_modules
+*node_modules
 
 # Exceptions to above rules.
 !/packages/flutter_tools/test/data/dart_dependencies_test/**/.packages
