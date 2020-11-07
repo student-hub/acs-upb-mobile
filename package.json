@@ -1,0 +1,13 @@
+{
+  "name": "acs-upb-mobile",
+  "version": "1.0.0",
+  "bugs": {
+    "url": "https://github.com/acs-upb-mobile/acs-upb-mobile/issues"
+  },
+  "homepage": "https://github.com/acs-upb-mobile/acs-upb-mobile#readme",
+  "dependencies": {
+    "textlint": "^11.2.3",
+    "textlint-rule-ginger": "^2.2.1",
+    "textlint-rule-spellchecker": "^2.2.1"
+  }
+}

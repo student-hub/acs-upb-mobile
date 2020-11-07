@@ -1,0 +1,8 @@
+# Configuration file for textlint, the documentation linter
+
+{
+    "rules": {
+        "textlint-rule-ginger": true,
+        "textlint-rule-spellchecker": true
+    }
+}

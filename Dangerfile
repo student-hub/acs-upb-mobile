@@ -12,3 +12,7 @@ warn("Big PR") if git.lines_of_code > 500
 flutter_lint.only_modified_files = true
 flutter_lint.report_path = "flutter_analyze_report.txt"
 flutter_lint.lint(inline_mode: true)
+
+# Analyze documentation
+textlint.max_severity = "warn"
+textlint.lint
