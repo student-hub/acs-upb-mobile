@@ -39,6 +39,12 @@ jobs:
           node-version: '12'
       - name: Install Node packages
         run: npm install
+      - name: Install Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+      - name: Install proselint
+        run: pip install proselint
       - name: Run danger on generated report
         uses: MeilCli/danger-action@v1
         if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository

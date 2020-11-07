@@ -16,3 +16,4 @@ flutter_lint.lint(inline_mode: true)
 # Analyze documentation
 textlint.max_severity = "warn"
 textlint.lint
+prose.lint_files

@@ -29,6 +29,8 @@ GEM
       flutter_analyze_parser (~> 0.1.2)
     danger-plugin-api (1.0.0)
       danger (> 2.0)
+    danger-prose (2.0.7)
+      danger
     danger-textlint (2.0.1)
       danger-plugin-api (~> 1.0)
     faraday (1.0.1)
@@ -65,6 +67,7 @@ PLATFORMS
 DEPENDENCIES
   danger
   danger-flutter_lint
+  danger-prose
   danger-textlint
 
 BUNDLED WITH
