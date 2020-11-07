@@ -1,15 +1,15 @@
 # ACS UPB Mobile
-[![License](https://img.shields.io/badge/license-MIT-green.svg?style=flat)](https://github.com/IoanaAlexandru/acs_upb_mobile/blob/master/LICENSE.txt)
+[![License](https://img.shields.io/badge/license-MIT-green.svg?style=flat)](LICENSE.txt)
 [![Tests](https://github.com/acs-upb-mobile/acs-upb-mobile/workflows/Tests/badge.svg)](https://github.com/acs-upb-mobile/acs-upb-mobile/actions?query=workflow%3ATests)
 [![codecov](https://codecov.io/gh/acs-upb-mobile/acs-upb-mobile/branch/master/graph/badge.svg)](https://codecov.io/gh/acs-upb-mobile/acs-upb-mobile)
 [![extra_pedantic on pub.dev](https://img.shields.io/badge/style-extra__pedantic-blue)](https://pub.dev/packages/extra_pedantic)
 
 
-A mobile application for students at [ACS UPB](http://acs.pub.ro/). For now, you can try it out by accessing [https://acs-upb-mobile.web.app/](https://acs-upb-mobile.web.app/). Android users can also download the apk from the latest [release](https://github.com/acs-upb-mobile/acs-upb-mobile/releases).
+A mobile application for students at [ACS UPB](https://acs.pub.ro/). For now, you can try it out by accessing [https://acs-upb-mobile.web.app/](https://acs-upb-mobile.web.app/). Android users can also download the apk from the latest [release](https://github.com/acs-upb-mobile/acs-upb-mobile/releases).
 
 Please note that some features may not work perfectly in the web version, as [Flutter web support](https://flutter.dev/web) is currently still in beta. However, please feel free to [create an issue](https://github.com/acs-upb-mobile/acs-upb-mobile/issues/new?&template=bug_report.md) if you encounter any problem.
 
-If you would like to contribute and don't know where to start, or you have any questions about this project, feel free to [join us on Slack](https://join.slack.com/t/acs-upb-mobile/shared_invite/zt-hxf5qs1e-Elv6~8cg7YXA9idS8oZjsg) and ask anything on the **#questions** channel.
+If you would like to contribute and don't know where to start, or you have any questions about this project, feel free to [join us on Slack](https://acs-upb-mobile.slack.com/join/shared_invite/zt-j3w0ksxt-ilq9x5Et8lxnG_y5YzfQeQ) and ask anything on the **#questions** channel.
 
 ## Screenshots
 
@@ -82,4 +82,4 @@ Test your setup by creating and running a new Flutter project (Android Studio pr
 
 ## License  
 
-This project is under the [MIT License](https://github.com/IoanaAlexandru/acs_upb_mobile/blob/master/LICENSE.txt), which means that you can do whatever you want with it, as long as you add a copy of the original MIT license and copyright notice to your work.
+This project is under the [MIT License](LICENSE.txt), which means that you can do whatever you want with it, as long as you add a copy of the original MIT license and copyright notice to your work.

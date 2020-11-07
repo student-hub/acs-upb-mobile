@@ -316,7 +316,7 @@ All of the fields are `strings`. In the app, `shortname` is used to extract the 
 
 ###### Rules
 
-This is public information already available on [Moodle](https://acs.curs.pub.ro/), and will never be editable directly through the app. Therefore for this collection, _anyone can **read**_ but _no one can **write**_.
+This is public information already available on [Moodle](https://curs.upb.ro/), and will never be editable directly through the app. Therefore for this collection, _anyone can **read**_ but _no one can **write**_.
 
 </details>
 
@@ -641,7 +641,7 @@ These will have a corresponding `Map` variable in the Dart code (e.g. `Map<Strin
 
 
 ### Changing the locale
-Changing the app's language is done via the [settings page](lib/pages/settings/settings_page.dart).
+Changing the app's language is done via the [settings page](lib/pages/settings/).
 
 ### Fetching the locale
 The [`LocaleProvider`](lib/resources/locale_provider.dart) class offers utility methods for fetching the current locale string. See [`PortalPage`](lib/pages/portal/view/portal_page.dart) for a usage example.
@@ -649,7 +649,7 @@ The [`LocaleProvider`](lib/resources/locale_provider.dart) class offers utility 
 ## Custom icons
 
 If you need to use icons other than the ones provided by the
-[Material library](https://material.io/resources/icons), the process is as follows:
+[Material library](https://material.io/resources/icons/), the process is as follows:
 
 ### Generating the font file
 * Convert the `.ttf` [custom font](assets/fonts/CustomIcons/CustomIcons.ttf) in the project to an `.svg` font (using a tool such as [this one](https://convertio.co/ttf-svg/)).
@@ -662,4 +662,4 @@ If you need to use icons other than the ones provided by the
 * Copy the IconData definitions from the `.dart` file in the archive and replace the corresponding definitions in the [`CustomIcons`](lib/resources/custom_icons.dart) class;
 * Check that everything still works correctly :)
 
-**Note**: [FontAwesome](https://fontawesome.com/icons?d=gallery) icons are recommended, where possible, because they are consistent with the overall style. For additional action icons check out [FontAwesomeActions](https://github.com/nyon/fontawesome-actions) - the repo provides an [`.svg` font](https://github.com/nyon/fontawesome-actions/blob/master/dist/fonts/fontawesome-webfont.svg) you can upload directly into [FlutterIcon](https://fluttericon.com/).
+**Note**: [FontAwesome](https://fontawesome.com/icons?d=gallery) icons are recommended, where possible, because they are consistent with the overall style. For additional action icons check out [FontAwesomeActions](https://github.com/nyon/fontawesome-actions) - the repo provides an [`.svg` font](https://github.com/nyon/fontawesome-actions/blob/master/dist/fonts/fontawesome-webfont.svg) you can upload directly into [FlutterIcon](https://www.fluttericon.com/).
