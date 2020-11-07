@@ -1,6 +1,5 @@
 # Contributing
 
-
 It is recommended that you go through [our workshop](https://github.com/acs-upb-mobile/flutter-workshop) first, to familiarize yourself with the technologies and the contribution process.
 
 ## Pull Request (contribution) process
@@ -79,7 +78,7 @@ This service automatically *handles the authentication tokens* and *enforces sec
 **Collections** are simply a list of documents, where each document has an ID within the collection.
 
 **Documents** are similar to a JSON file (or a C `struct`, if you prefer), in that they contain different fields which have three important components: a ***name*** - what we use to refer to the field, similar to a dictionary key -, a ***type*** (which can be one of `string`, `number`, `boolean`, `map`, `array`, `null` - yeah *null* is its own type -, `timestamp`, `geopoint`, `reference` - sort of like a pointer to another document), and the actual ***value***, the data contained in the field.
-In addition to fields, documents can contain collections... which contain other documents... which can contain collections, and so on and so forth, allowing us to create a hierarchical structure within the database.
+In addition to fields, documents can contain collections… which contain other documents… which can contain collections, and so on and so forth, allowing us to create a hierarchical structure within the database.
 
 More information about the Firestore data model can be found [here](https://firebase.google.com/docs/firestore/data-model).
 
@@ -256,18 +255,18 @@ These are basically trees with named nodes and levels. In the case of the releva
                     _______________|_______________
                   /                                \
                 BSc                               MSc       // Degree
-         ________|________                 ________|__ ...
+         ________|________                 ________|__ …
        /                  \              /     |
-      IS                 CTI            IA   SPRC ...       // Specialization
-   ...|...          ______|______       ⋮      ⋮
+      IS                 CTI            IA   SPRC …       // Specialization
+   …|…          ______|______       ⋮      ⋮
                   /    |     |   \
                CTI-1 CTI-2 CTI-3 CTI-4                      // Year
-                  ⋮    ⋮   __|... ⋮
+                  ⋮    ⋮   __|… ⋮
                         /   |
-                     3-CA 3-CB ...                          // Series
-                     __|...
+                     3-CA 3-CB …                          // Series
+                     __|…
                    /   |
-               331CA 332CA ...                              // Group
+               331CA 332CA …                              // Group
 ```
 
 ###### Fields
@@ -288,7 +287,7 @@ All the documents in the collection share the same structure:
   </tr>
   <tr>
     <td>root</td>
-    <td><code>map&lt;string, map&lt;string, map&lt;...&gt;&gt;&gt;</code></td>
+    <td><code>map&lt;string, map&lt;string, map&lt;…&gt;&gt;&gt;</code></td>
     <td>🗹</td>
     <td>nested map representing the tree structure, where the key is the name of the node and the value is a map of its children; the leaf nodes have an empty map as a value, **not** *null* or something else</td>
   </tr>
@@ -653,7 +652,7 @@ If you need to use icons other than the ones provided by the
 
 ### Generating the font file
 * Convert the `.ttf` [custom font](assets/fonts/CustomIcons/CustomIcons.ttf) in the project to an `.svg` font (using a tool such as [this one](https://convertio.co/ttf-svg/)).
-* Go to [FlutterIcon](https://fluttericon.com/) and upload (drag & drop) the file you obtained earlier in order to import the icons.
+* Go to [FlutterIcon](https://www.fluttericon.com/) and upload (drag & drop) the file you obtained earlier in order to import the icons.
 * Check that the imported icons are the ones defined in the [`CustomIcons`](lib/resources/custom_icons.dart) class to make sure nothing went wrong with the conversion, and select all of them.
 * (Upload and) select any additional icons that you want to use in the project, then click **Download**.
 

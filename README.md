@@ -4,7 +4,6 @@
 [![codecov](https://codecov.io/gh/acs-upb-mobile/acs-upb-mobile/branch/master/graph/badge.svg)](https://codecov.io/gh/acs-upb-mobile/acs-upb-mobile)
 [![extra_pedantic on pub.dev](https://img.shields.io/badge/style-extra__pedantic-blue)](https://pub.dev/packages/extra_pedantic)
 
-
 A mobile application for students at [ACS UPB](https://acs.pub.ro/). For now, you can try it out by accessing [https://acs-upb-mobile.web.app/](https://acs-upb-mobile.web.app/). Android users can also download the apk from the latest [release](https://github.com/acs-upb-mobile/acs-upb-mobile/releases).
 
 Please note that some features may not work perfectly in the web version, as [Flutter web support](https://flutter.dev/web) is currently still in beta. However, please feel free to [create an issue](https://github.com/acs-upb-mobile/acs-upb-mobile/issues/new?&template=bug_report.md) if you encounter any problem.
@@ -40,7 +39,7 @@ If you would like to contribute and don't know where to start, or you have any q
 * Open Android Studio.
 * Make sure you have the [Flutter plugin](https://plugins.jetbrains.com/plugin/9212-flutter) installed, as well as the [Dart plugin](https://plugins.jetbrains.com/plugin/6351-dart) dependency. Restart the IDE if necessary.
 * Use the *Check out project from Version Control* option (or *File > New > Project from Version
-Control*) to clone the repository from https://github.com/IoanaAlexandru/acs_upb_mobile.
+Control*) to clone the repository from https://github.com/acs-upb-mobile/acs_upb_mobile.
 * If the plugins are installed, Android Studio should automatically recognise it as being a Flutter project, so you should be able to just click *Next* on everything and create a new project.
 * When prompted, set up the Flutter SDK (the location is the `flutter/` folder you downloaded when you installed it) and Dart SDK (it comes bundled with Flutter at `flutter/bin/cache/dart-sdk/`).
 * Open the project terminal and switch to the Beta Flutter channel in order to enable web support:
