@@ -1,5 +1,6 @@
 # Contributing
 
+
 It is recommended that you go through
 [our workshop](https://github.com/acs-upb-mobile/flutter-workshop) first, to familiarize yourself
 with the technologies and the contribution process.

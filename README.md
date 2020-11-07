@@ -4,6 +4,7 @@
 [![codecov](https://codecov.io/gh/acs-upb-mobile/acs-upb-mobile/branch/master/graph/badge.svg)](https://codecov.io/gh/acs-upb-mobile/acs-upb-mobile)
 [![extra_pedantic on pub.dev](https://img.shields.io/badge/style-extra__pedantic-blue)](https://pub.dev/packages/extra_pedantic)
 
+
 A mobile application for students at [ACS UPB](http://acs.pub.ro/). For now, you can try it out by
 accessing [https://acs-upb-mobile.web.app/](https://acs-upb-mobile.web.app/). Android users can also
 download the apk from the latest [release](https://github.com/acs-upb-mobile/acs-upb-mobile/releases).
