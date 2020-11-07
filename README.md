@@ -1,5 +1,6 @@
 # ACS UPB Mobile
 [![License](https://img.shields.io/badge/license-MIT-green.svg?style=flat)](LICENSE.txt)
+[![Linter](https://github.com/acs-upb-mobile/acs-upb-mobile/workflows/Linter/badge.svg)](https://github.com/acs-upb-mobile/acs-upb-mobile/actions?query=workflow%3ALinter)
 [![Tests](https://github.com/acs-upb-mobile/acs-upb-mobile/workflows/Tests/badge.svg)](https://github.com/acs-upb-mobile/acs-upb-mobile/actions?query=workflow%3ATests)
 [![codecov](https://codecov.io/gh/acs-upb-mobile/acs-upb-mobile/branch/master/graph/badge.svg)](https://codecov.io/gh/acs-upb-mobile/acs-upb-mobile)
 [![extra_pedantic on pub.dev](https://img.shields.io/badge/style-extra__pedantic-blue)](https://pub.dev/packages/extra_pedantic)
