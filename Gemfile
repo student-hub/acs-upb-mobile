@@ -7,4 +7,3 @@ git_source(:github) {|repo_name| "https://github.com/#{repo_name}" }
 gem 'danger'
 gem 'danger-flutter_lint'
 gem 'danger-textlint'
-gem 'danger-prose'

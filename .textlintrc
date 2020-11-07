@@ -3,6 +3,7 @@
 {
     "rules": {
         "@textlint-rule/textlint-rule-no-unmatched-pair": true,
+        "@textlint-rule/textlint-rule-proselint": true,
         "textlint-rule-no-dead-link": true
     }
 }

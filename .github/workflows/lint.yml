@@ -45,6 +45,8 @@ jobs:
           python-version: '3.x'
       - name: Install proselint
         run: pip install proselint
+      - name: Set up proselint config
+        run: cp .proselintrc ~/.proselintrc
       - name: Run danger on generated report
         uses: MeilCli/danger-action@v1
         if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
