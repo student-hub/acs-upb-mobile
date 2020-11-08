@@ -1,6 +1,7 @@
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
+import 'package:acs_upb_mobile/widgets/error_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -100,82 +101,6 @@ class AppScaffold extends StatelessWidget {
           );
   }
 
-  Widget _underConstructionPage({@required BuildContext context}) => Padding(
-        padding: const EdgeInsets.all(10),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Expanded(flex: 1, child: Container()),
-            const Expanded(
-              flex: 3,
-              child: Align(
-                alignment: Alignment.bottomCenter,
-                child: Image(
-                    image: AssetImage(
-                        'assets/illustrations/undraw_under_construction.png')),
-              ),
-            ),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.all(10),
-                child: Text(S.of(context).messageUnderConstruction,
-                    style: Theme.of(context).textTheme.headline6),
-              ),
-            ),
-            Expanded(child: Container()),
-          ],
-        ),
-      );
-
-  Widget _needsAuthenticationPage({@required BuildContext context}) => Padding(
-        padding: const EdgeInsets.all(10),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Expanded(flex: 1, child: Container()),
-            const Expanded(
-              flex: 3,
-              child: Align(
-                alignment: Alignment.bottomCenter,
-                child: Image(
-                    image:
-                        AssetImage('assets/illustrations/undraw_sign_in.png')),
-              ),
-            ),
-            Expanded(
-              child: Column(
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.all(10),
-                    child: Align(
-                      alignment: Alignment.topCenter,
-                      child: Text(
-                        S.of(context).warningAuthenticationNeeded,
-                        style: Theme.of(context).textTheme.subtitle1,
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                  ),
-                  InkWell(
-                    onTap: () {
-                      Utils.signOut(context);
-                    },
-                    child: Text(S.of(context).actionLogIn,
-                        style: Theme.of(context)
-                            .accentTextTheme
-                            .subtitle2
-                            .copyWith(fontWeight: FontWeight.w500)),
-                  ),
-                ],
-              ),
-            ),
-            Expanded(child: Container()),
-          ],
-        ),
-      );
-
   @override
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
@@ -193,8 +118,19 @@ class AppScaffold extends StatelessWidget {
       },
       child: Scaffold(
         body: enableContent
-            ? body ?? _underConstructionPage(context: context)
-            : _needsAuthenticationPage(context: context),
+            ? body ??
+                ErrorPage(
+                  imgPath: 'assets/illustrations/undraw_under_construction.png',
+                  errorMessage: S.of(context).messageUnderConstruction,
+                )
+            : ErrorPage(
+                imgPath: 'assets/illustrations/undraw_sign_in.png',
+                info: [
+                  TextSpan(text: S.of(context).warningAuthenticationNeeded)
+                ],
+                actionText: S.of(context).actionLogIn,
+                actionOnTap: () => Utils.signOut(context),
+              ),
         appBar: PreferredSize(
           preferredSize: const Size.fromHeight(40),
           child: AppBar(

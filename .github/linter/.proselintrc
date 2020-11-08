@@ -1,0 +1,6 @@
+{
+  "checks": {
+    "cliches.misc": false,
+    "weasel_words.very": false
+  }
+}
