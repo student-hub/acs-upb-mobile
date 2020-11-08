@@ -77,7 +77,7 @@ class AppScaffold extends StatelessWidget {
                       ))
                   .toList();
             },
-            offset: const Offset(0, 100),
+            offset: const Offset(0, 15),
           )
         : Tooltip(
             message: action?.tooltip ?? action?.text ?? '',
