@@ -141,7 +141,7 @@ class AuthProvider with ChangeNotifier {
   }
 
   String get uid {
-    return _firebaseUser.uid;
+    return _firebaseUser?.uid;
   }
 
   String get email => _firebaseUser.email;

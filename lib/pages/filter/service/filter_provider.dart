@@ -24,11 +24,9 @@ class FilterProvider with ChangeNotifier {
       {this.global = false,
       bool filterEnabled,
       this.defaultDegree,
-      this.defaultRelevance,
-      AuthProvider authProvider})
+      this.defaultRelevance})
       : _enabled = filterEnabled ?? PrefService.get('relevance_filter') ?? true,
-        _relevantNodes = defaultRelevance,
-        authProvider = authProvider ?? AuthProvider() {
+        _relevantNodes = defaultRelevance {
     if (defaultRelevance != null && !defaultRelevance.contains('All')) {
       if (defaultDegree == null) {
         throw ArgumentError(
@@ -49,22 +47,29 @@ class FilterProvider with ChangeNotifier {
   List<String> _relevantNodes;
   final List<String> defaultRelevance;
 
-  final AuthProvider authProvider;
+  AuthProvider _authProvider;
 
-  void resetFilter() {
+  void updateAuth(AuthProvider authProvider) {
+    _authProvider = authProvider;
+    clearCache();
+  }
+
+  void clearCache() {
     _relevanceFilter = null;
-
     _relevantNodes = null;
+
     if (global) {
-      _setFilterNodes(null);
+      // TODO(IoanaAlexandru): Remove this property
       PrefService.setBool('relevance_filter', true);
     }
+
+    notifyListeners();
   }
 
   Future<void> _setFilterNodes(List<String> nodes) async {
     try {
       final DocumentReference doc =
-          _db.collection('users').document(authProvider.uid);
+          _db.collection('users').document(_authProvider.uid);
       await doc.updateData({'filter_nodes': nodes});
     } catch (e) {
       print(e);
@@ -137,10 +142,10 @@ class FilterProvider with ChangeNotifier {
 
       // Check if there is an existing setting already
       if (global &&
-          authProvider.isAuthenticatedFromCache &&
-          !authProvider.isAnonymous) {
+          _authProvider.isAuthenticatedFromCache &&
+          !_authProvider.isAnonymous) {
         final DocumentReference docUsers =
-            _db.collection('users').document(authProvider.uid);
+            _db.collection('users').document(_authProvider.uid);
         final DocumentSnapshot snapUsers = await docUsers.get();
 
         //Load filter_nodes from Firestore
