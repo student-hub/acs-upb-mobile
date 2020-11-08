@@ -46,9 +46,12 @@ Future<void> main() async {
     ChangeNotifierProvider<PersonProvider>(create: (_) => PersonProvider()),
     ChangeNotifierProvider<QuestionProvider>(create: (_) => QuestionProvider()),
     ChangeNotifierProvider<NewsProvider>(create: (_) => NewsProvider()),
-    ChangeNotifierProvider<FilterProvider>(
-        create: (_) =>
-            FilterProvider(global: true, authProvider: authProvider)),
+    ChangeNotifierProxyProvider<AuthProvider, FilterProvider>(
+      create: (_) => FilterProvider(global: true),
+      update: (context, authProvider, filterProvider) {
+        return filterProvider..updateAuth(authProvider);
+      },
+    ),
     ChangeNotifierProxyProvider2<ClassProvider, FilterProvider,
         UniEventProvider>(
       create: (_) => UniEventProvider(
