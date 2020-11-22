@@ -82,7 +82,7 @@ dependencies:
   rrule: ^0.1.1
 
   # DateTime utilities
-  time_machine:
+  time_machine: ^0.9.16
 
   # Color picker widget
   flutter_colorpicker: ^0.3.4
@@ -148,10 +148,6 @@ dev_dependencies:
 
   # Code analysis
   extra_pedantic: 1.2.0
-
-dependency_overrides:
-  # More recent versions of meta break time_machine (https://github.com/Dana-Ferguson/time_machine/issues/44)
-  meta: 1.3.0-nullsafety.3
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
