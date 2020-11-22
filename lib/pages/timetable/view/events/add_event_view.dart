@@ -275,7 +275,7 @@ class _AddEventViewState extends State<AddEventView> {
                           ),
                         timeIntervalPicker(),
                         if (weekSelected[WeekType.odd] != null &&
-                            weekSelected[WeekType.even])
+                            weekSelected[WeekType.even] != null)
                           SelectableFormField(
                             key: const ValueKey('week_picker'),
                             icon: Icons.calendar_today,
