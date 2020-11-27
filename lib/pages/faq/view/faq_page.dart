@@ -26,6 +26,7 @@ class _FaqPageState extends State<FaqPage> {
   bool searchClosed = true;
   List<String> activeTags = <String>[];
   Future<List<Question>> futureQuestions;
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
@@ -71,6 +72,9 @@ class _FaqPageState extends State<FaqPage> {
           icon: Icons.search,
           onPressed: () {
             setState(() {
+              _scrollController.animateTo(0,
+                  curve: Curves.easeOut,
+                  duration: const Duration(milliseconds: 500));
               searchClosed = !searchClosed;
             });
           },
@@ -85,6 +89,7 @@ class _FaqPageState extends State<FaqPage> {
             questions = snapshot.data;
             categories = questions.expand((e) => e.tags).toSet().toList();
             return ListView(
+              controller: _scrollController,
               children: [
                 SearchWidget(
                   header: categoryList(),
