@@ -90,7 +90,7 @@ class _FaqPageState extends State<FaqPage> {
                   header: categoryList(),
                   onSearch: (searchText) {
                     setState(() {
-                      filter = searchText;
+                      filter = searchText.toLowerCase();
                     });
                   },
                   cancelCallback: () {
