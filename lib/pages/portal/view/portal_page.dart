@@ -102,7 +102,7 @@ class _PortalPageState extends State<PortalPage> {
               ));
             } else {
               Provider.of<WebsiteProvider>(context, listen: false)
-                  .incrementNumberOfVisits(website);
+                  .incrementNumberOfVisits(website, uid: user?.uid);
               Utils.launchURL(website.link);
             }
           },
@@ -297,6 +297,7 @@ class _PortalPageState extends State<PortalPage> {
                 filterProvider.filterEnabled ? filterCache : null,
                 userOnly: userOnly,
                 uid: authProvider.uid,
+                context: context,
               ),
               builder: (context, AsyncSnapshot<List<Website>> websiteSnap) {
                 if (websiteSnap.hasData) {

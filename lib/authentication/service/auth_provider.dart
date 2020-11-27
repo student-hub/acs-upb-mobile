@@ -1,13 +1,14 @@
 import 'dart:async';
+import 'dart:typed_data';
 
 import 'package:acs_upb_mobile/authentication/model/user.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
+import 'package:acs_upb_mobile/resources/storage/storage_provider.dart';
 import 'package:acs_upb_mobile/resources/validator.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 extension DatabaseUser on User {
   static User fromSnap(DocumentSnapshot snap) {
@@ -140,7 +141,7 @@ class AuthProvider with ChangeNotifier {
   }
 
   String get uid {
-    return _firebaseUser.uid;
+    return _firebaseUser?.uid;
   }
 
   String get email => _firebaseUser.email;
@@ -390,7 +391,7 @@ class AuthProvider with ChangeNotifier {
       _firebaseUser = await FirebaseAuth.instance.currentUser();
 
       // Create document in 'users'
-      final user = User(
+      _currentUser = User(
         uid: res.user.uid,
         firstName: firstName,
         lastName: lastName,
@@ -398,9 +399,13 @@ class AuthProvider with ChangeNotifier {
       );
 
       final DocumentReference ref =
-          Firestore.instance.collection('users').document(user.uid);
-      await ref.setData(user.toData());
+          Firestore.instance.collection('users').document(_currentUser.uid);
+      await ref.setData(_currentUser.toData());
 
+      // Try to set the default from the user data
+      if (_currentUser.classes != null) {
+        await ref.updateData({'filter_nodes': _currentUser.classes});
+      }
       // Send verification e-mail
       await _firebaseUser.sendEmailVerification();
 
@@ -443,16 +448,15 @@ class AuthProvider with ChangeNotifier {
 
       final classes = info['class'];
 
-      final User user =
-          await Provider.of<AuthProvider>(context, listen: false).currentUser
-            ..firstName = firstName
-            ..lastName = lastName
-            ..classes = classes;
+      _currentUser
+        ..firstName = firstName
+        ..lastName = lastName
+        ..classes = classes;
 
       await Firestore.instance
           .collection('users')
-          .document(user.uid)
-          .updateData(user.toData());
+          .document(_currentUser.uid)
+          .updateData(_currentUser.toData());
 
       // Update display name
       final userUpdateInfo = UserUpdateInfo()
@@ -465,5 +469,24 @@ class AuthProvider with ChangeNotifier {
       _errorHandler(e, context);
       return false;
     }
+  }
+
+  Future<bool> uploadProfilePicture(
+      Uint8List file, BuildContext context) async {
+    final result = await StorageProvider.uploadImage(
+        context, file, 'users/${_firebaseUser.uid}/picture.png');
+    if (!result) {
+      if (file.length > 5 * 1024 * 1024) {
+        AppToast.show(S.of(context).errorPictureSizeToBig);
+      } else {
+        AppToast.show(S.of(context).errorSomethingWentWrong);
+      }
+    }
+    return result;
+  }
+
+  Future<String> getProfilePictureURL({BuildContext context}) {
+    return StorageProvider.findImageUrl(
+        context, 'users/${_firebaseUser.uid}/picture.png');
   }
 }

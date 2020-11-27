@@ -1,15 +1,11 @@
 # Contributing
 
-It is recommended that you go through
-[our workshop](https://github.com/acs-upb-mobile/flutter-workshop) first, to familiarize yourself
-with the technologies and the contribution process.
+It is recommended that you go through [our workshop](https://github.com/acs-upb-mobile/flutter-workshop) first, to familiarize yourself with the technologies and the contribution process.
 
-## Pull Request process
+## Pull Request (contribution) process
 
-1. Check out [this](https://opensource.com/article/19/7/create-pull-request-github) tutorial if you
-don't know how to make a PR.
-2. Increase the version number in the [`pubspec.yaml`](pubspec.yaml) file with the following
-guidelines in mind:
+1. Check out [this](https://opensource.com/article/19/7/create-pull-request-github) tutorial if you don't know how to make a PR.
+2. Increase the version number in the [`pubspec.yaml`](pubspec.yaml) file with the following guidelines in mind:
     - **Build number** (0.2.1+**4**) is for very small changes and bug fixes (usually not visible to
       the end user).
     - **Patch version** (0.2.**1**+4) is for minor improvements that may be visible to an attentive
@@ -17,82 +13,87 @@ guidelines in mind:
     - **Minor version** (0.**2**.1+4) is for added functionality (i.e. merging a branch that
       introduces a new feature).
     - **Major version** (**0**.2.1+4) marks important project milestones.
-3. Document any non-obvious parts of the code and make sure the commit description is clear on why
-the change is necessary.
+3. Document any non-obvious parts of the code and make sure the commit description is clear on why the change is necessary.
 4. If it's a new feature, write at least one test for it.
+
+Please note that in order for a PR to be merged (accepted), all of the tests need to pass, including the linter (which checks for coding style and warnings, see [Style guide](#style-guide)). These checks are ran automatically using [GitHub Actions](#github-actions). You also need at least one approval from a maintainer - after submitting a PR, you can request a review from the top right Reviewers menu on the Pull Request page.
 
 ## Development tips
 
-* Make sure you have the *Project* view open in the *Project* tab on the left in Android Studio (not
-*Android*).
-* Flutter comes with *Hot Reload* (the lightning icon, or *Ctrl+\\* / *⌘\\*), which allows you to
-load changes in the code quickly into an already running app, without you needing to reinstall it.
-It's a very handy feature, but it doesn't work all the time - if you change the code, use Hot Reload
-but don't see the expected changes, or see some weird behaviour, you may need to close and restart
-the app (or even reinstall).
-* If running on web doesn't give the expected results after changing some code, you may need to
-clear the cache (in *Chrome*: *Ctrl+Shift+C* / *⌘+Shift+C* to open the Inspect menu, then
-right-click the *Refresh* button, and select *Empty cache and Hard reload*.)
+* Make sure you have the *Project* view open in the *Project* tab on the left in Android Studio (not *Android*).
+* Flutter comes with *Hot Reload* (the lightning icon, or *Ctrl+\\* or *⌘\\*), which allows you to load changes in the code quickly into an already running app, without you needing to reinstall it. It's a very handy feature, but it doesn't work all the time - if you change the code, use Hot Reload but don't see the expected changes, or see some weird behaviour, you may need to close and restart the app (or even reinstall).
+* If running on web doesn't give the expected results after changing some code, you may need to clear the cache (in *Chrome*: *Ctrl+Shift+C* or *⌘+Shift+C* to open the Inspect menu, then right-click the *Refresh* button, and select *Empty cache and Hard reload*.)
 
 ## Style guide
 
-This project uses
-[the official Dart style guide](https://dart.dev/guides/language/effective-dart/style)  with the
-following mentions:
+This project uses [the official Dart style guide](https://dart.dev/guides/language/effective-dart/style)  with the following mentions:
 
-* Android Studio (IntelliJ) with the `dartfmt` tool is used to automatically format the code,
-including the order of imports.
-* For consistency, the `new` keyword (which is optional in Dart) should **not** be used.
-* Where necessary, comments should use Markdown formatting (e.g. backticks - \` - for code snippets
-and `[brackets]` for code references).
-* Use only single apostrophes - ' - for strings (e.g. `'hello'` instead of `"hello"`)
+* Android Studio (IntelliJ) with the `dartfmt` tool is used to automatically format the code (*Ctrl+Alt+L* or *⌥+⌘+L*), including the order of imports (*Ctrl+Alt+O* or *⌥+⌘+O*).
+* The [extra_pedantic](https://pub.dev/packages/extra_pedantic) package is used for static analysis: it automatically highlights warnings related to the [recommended dart style](https://dart.dev/guides/language/effective-dart/style). Most of them can be fixed automatically by invoking Context Actions (place the cursor on the warning and press *Alt+Enter*) and selecting the correct action. **Do not suppress a warning** unless you know what you're doing - if you don't know how to fix it and Android Studio doesn't help, hover over the warning and you'll see a link to the documentation that can help you understand.
+* Where necessary, comments should use Markdown formatting (e.g. backticks - `\` - for code snippets and `[brackets]` for code references).
+
+## GitHub Actions
+
+This project uses [GitHub Actions](https://github.com/features/actions) for CI/CD. That means that testing and deployment are automated.
+
+The following actions are currently set up:
+* [Linter](https://github.com/acs-upb-mobile/acs-upb-mobile/actions?query=workflow%3ALinter): Checks for warnings and coding style issues. Runs on every push and pull request.
+  - If your PR is made from a branch inside the repository (rather than a fork), it should automatically *add code review comments pointing out any warnings*.
+  - If you have formatting issues, the "Check formatting" step will *point out the files that need to be formatted* and the workflow will fail.
+* [Tests](https://github.com/acs-upb-mobile/acs-upb-mobile/actions?query=workflow%3ATests): Runs all tests in the [test/](test) directory and submits a coverage report to [codecov](https://codecov.io/gh/acs-upb-mobile/acs-upb-mobile). This action is triggered on every push and pull request.
+  - If at least one test fails, this workflow will fail.
+  - The *coverage* is the percentage of lines of code that are executed at least once in tests. This project aims to keep coverage above 70% at all times.
+* [Deployment](https://github.com/acs-upb-mobile/acs-upb-mobile/actions?query=workflow%3ADeployment):
+  Deploys the web version of the app to the website ([acs-upb-mobile.web.app](https://acs-upb-mobile.web.app/)) and creates a corresponding [GitHub Release](https://github.com/acs-upb-mobile/acs-upb-mobile/releases) including the APK. This action is triggered when a new version tag is pushed. **Do not push version tags** unless you know what you are doing.
 
 ## Working with Firebase
-This application uses [Firebase](https://firebase.google.com/) to manage remote storage and
-authentication.
+ACS UPB Mobile uses [Firebase](https://firebase.google.com/) - an app development platform built on Google infrastructure and using [Google Cloud Platform](https://cloud.google.com/) - to manage remote storage and authentication, as well as other cloud resources.
 
 ### Setup
-This application uses [flutterfire](https://github.com/FirebaseExtended/flutterfire) plugins in
-order to access Firebase services. They are already enabled in the [pubspec](pubspec.yaml) file and
-ready to import and use in the code.
+This application uses [flutterfire](https://github.com/FirebaseExtended/flutterfire) plugins in order to access Firebase services. They are already enabled in the [pubspec](pubspec.yaml) file and ready to import and use in the code.
+
+:exclamation: FlutterFire only has [Cloud Storage](#storage) support for Android and iOS. The web version needs a special implementation. See [resources/storage](lib/resources/storage) for an example.
+
+### Authentication
+
+Firebase provides an entire suite of back-end services and SDKs for authenticating users within an application, through [FirebaseAuth](https://firebase.google.com/docs/auth).
+
+For our application, we use the following features:
+* account creation
+* login
+* password reset via e-mail
+* account verification via e-mail
+* account deletion
+
+Firebase Authentication stores [user information](https://firebase.google.com/docs/cli/auth#file_format) such as *UID*, *email*, *name* and *password hash*. In order to store additional information such as *user preferences* and *group*, when a new user signs up, a corresponding document is created in the [users](#users-collection) collection.
+
+This service automatically *handles the authentication tokens* and *enforces security rules*, which is particularly useful for an open-source application which users can fiddle with, such as ours. For example, multiple failed authentication attempts lead to a temporary timeout, and a user cannot delete their account unless they have logged in very recently (or refreshed their authentication token).
+
+[Firestore security rules](#firestore-security) can be enforced based on the user’s UID. This method means that, even though users can access the database connection string through the public repository, they can only do a limited set of actions on the database, depending on whether they are authenticated and their permissions.
 
 ### Firestore
-[Cloud Firestore](https://firebase.google.com/docs/firestore) is a noSQL database that organises
-its data in *collections* and *documents*.
+[Cloud Firestore](https://firebase.google.com/docs/firestore) is a noSQL database that organises its data in *collections* and *documents*.
 
 #### Data model
 **Collections** are simply a list of documents, where each document has an ID within the collection.
 
-**Documents** are similar to a JSON file (or a C `struct`, if you prefer), in that they contain
-different fields which have three important components: a ***name*** - what we use to refer to the
-field, similar to a dictionary key -, a ***type*** (which can be one of `string`, `number`,
-`boolean`, `map`, `array`, `null` - yeah *null* is its own type -, `timestamp`, `geopoint`,
-`reference` - sort of like a pointer to another document), and the actual ***value***, the data
-contained in the field.  
-In addition to fields, documents can contain collections... which contain other documents... which
-can contain collections, and so on and so forth, allowing us to create a hierarchical structure
-within the database.
+**Documents** are similar to a JSON file (or a C `struct`, if you prefer), in that they contain different fields which have three important components: a ***name*** - what we use to refer to the field, similar to a dictionary key -, a ***type*** (which can be one of `string`, `number`, `boolean`, `map`, `array`, `null` - yeah *null* is its own type -, `timestamp`, `geopoint`, `reference` - sort of like a pointer to another document), and the actual ***value***, the data contained in the field.
+In addition to fields, documents can contain collections… which contain other documents… which can contain collections, and so on and so forth, allowing us to create a hierarchical structure within the database.
 
-More information about the Firestore data model can be found
-[here](https://firebase.google.com/docs/firestore/data-model).
+More information about the Firestore data model can be found [here](https://firebase.google.com/docs/firestore/data-model).
 
-#### Security
+<h4 id="firestore-security">Security</h4>
 
-Firestore allows for defining specific security rules for each collection. Rules can be applied for
-each different type of transaction - `reads` (where single-document reads - `get` - and queries -
-`list` - can have different rules) and `writes` (where `create`, `delete` and `update` can be
-treated separately).
+Firestore allows for defining specific security rules for each collection. Rules can be applied for each different type of transaction - `reads` (where single-document reads - `get` - and queries - `list` - can have different rules) and `writes` (where `create`, `delete` and `update` can be treated separately).
 
-More information on Firestore security rules can be found
-[here](https://firebase.google.com/docs/firestore/security/rules-structure).
+More information on Firestore security rules can be found [here](https://firebase.google.com/docs/firestore/security/rules-structure).
 
 #### Project database
 The project database contains the following collections:
 
 <details>
-<summary><b>users</b></summary>
-This collection stores per-user data. The document key is the user's `uid` (from
-<a href=https://firebase.google.com/docs/auth>FirebaseAuth</a>).
+<summary class="collection" id="users-collection"><b>users</b></summary>
+This collection stores per-user data. The document key is the user's `uid` (from <a href=https://firebase.google.com/docs/auth>FirebaseAuth</a>).
 
 ###### Fields
 All the documents in the collection share the same structure:
@@ -120,16 +121,13 @@ All the documents in the collection share the same structure:
     <td>permissionLevel</td>
     <td><code>number</code></td>
     <td>☐</td>
-    <td>a numeric value that defines what the user is allowed to do; if missing, it is treated as
-    being equal to zero</td>
+    <td>a numeric value that defines what the user is allowed to do; if missing, it is treated as being equal to zero</td>
   </tr>
 </table>
 
 ###### Sub-collections
 * **websites**  
-A user can define their own websites, that only they have access to. These will reside in the
-__websites__ sub-collection, and have the following field structure, similar to the one in the
-root-level <a href=#websites-collection>websites</a> collection:
+A user can define their own websites, that only they have access to. These will reside in the __websites__ sub-collection, and have the following field structure, similar to the one in the root-level <a href=#websites-collection>websites</a> collection:
 <table>
   <tr>
     <th>Field</th>
@@ -165,18 +163,15 @@ root-level <a href=#websites-collection>websites</a> collection:
 
 ###### Rules
 
-Anyone can **create** a new user (a new document in this collection) _if the `permissionLevel` of
-the created user is 0, null or not set at all_.
+Anyone can **create** a new user (a new document in this collection) _if the `permissionLevel` of the created user is 0, null or not set at all_.
 
-Authenticated users can only **read**, **delete** and **update** their own document (including its
-subcollections) and no one else's. However, they cannot modify the `permissionLevel` field.
+Authenticated users can only **read**, **delete** and **update** their own document (including its subcollections) and no one else's. However, they cannot modify the `permissionLevel` field.
 
 </details>
 
 <details>
 <summary class="collection" id="websites-collection"><b>websites</b></summary>
-This collection stores useful websites, shown in the app under the *Portal* page. Who they are
-relevant for depends on the `degree` and `relevance` fields (for more information, see the
+This collection stores useful websites, shown in the app under the *Portal* page. Who they are relevant for depends on the `degree` and `relevance` fields (for more information, see the
 <a href=#filters-collection>filters</a> collection).
 
 ###### Fields
@@ -187,6 +182,12 @@ All the documents in the collection share the same structure:
     <th>Type</th>
     <th>Required?</th>
     <th>Additional info</th>
+  </tr>
+  <tr>
+    <td>addedBy</td>
+    <td><code>string</code></td>
+    <td>🗹</td>
+    <td>ID of user who created this website</td>
   </tr>
   <tr>
     <td>category</td>
@@ -234,44 +235,38 @@ All the documents in the collection share the same structure:
 
 ###### Rules
 
-Since websites in this collection are public information (_anyone can **read**_), altering and
-adding data here is a privilege and needs to be monitored, therefore _anyone who wants to modify
-this data needs to be authenticated_ in the first place.
+Since websites in this collection are public information (_anyone can **read**_), altering and adding data here is a privilege and needs to be monitored, therefore _anyone who wants to modify this data needs to be authenticated_ in the first place.
 
-Users can **create** a new public website only _if their `permissionLevel` is equal to or greater
-than three and they sign the data by putting their `uid` in the `addedBy` field_.
+Users can **create** a new public website only _if their `permissionLevel` is equal to or greater than three and they sign the data by putting their `uid` in the `addedBy` field_.
 
-Users can **update** a website _if they do not modify the `addedBy` field and they sign the
-modification by adding their `uid` at the end of the `editedBy` list_.
+Users can **update** a website _if they do not modify the `addedBy` field and they sign the modification by adding their `uid` at the end of the `editedBy` list_.
 
-Users can only **delete** a website _if they are the ones who created it_ (their `uid` is equal to
-the `addedBy` field) _or if their `permissionLevel` is equal to or greater than four_.
+Users can only **delete** a website _if they are the ones who created it_ (their `uid` is equal to the `addedBy` field) _or if their `permissionLevel` is equal to or greater than four_.
 
 </details>
 
 <details>
 <summary class="collection" id="filters-collection"><b>filters</b></summary>
 This collection stores <a href=lib/pages/filter/model/filter.dart><code>Filter</code></a> objects.
-These are basically trees with named nodes and levels. In the case of the relevance filter, they are
-meant to represent the way the University organises students:
+These are basically trees with named nodes and levels. In the case of the relevance filter, they are meant to represent the way the University organises students:
 
 ```
                                   All
                     _______________|_______________
                   /                                \
                 BSc                               MSc       // Degree
-         ________|________                 ________|__ ...
+         ________|________                 ________|__ …
        /                  \              /     |
-      IS                 CTI            IA   SPRC ...       // Specialization
-   ...|...          ______|______       ⋮      ⋮
+      IS                 CTI            IA   SPRC …       // Specialization
+   …|…          ______|______       ⋮      ⋮
                   /    |     |   \
                CTI-1 CTI-2 CTI-3 CTI-4                      // Year
-                  ⋮    ⋮   __|... ⋮
+                  ⋮    ⋮   __|… ⋮
                         /   |
-                     3-CA 3-CB ...                          // Series
-                     __|...
+                     3-CA 3-CB …                          // Series
+                     __|…
                    /   |
-               331CA 332CA ...                              // Group
+               331CA 332CA …                              // Group
 ```
 
 ###### Fields
@@ -288,23 +283,19 @@ All the documents in the collection share the same structure:
     <td>levelNames</td>
     <td><code>array&lt;map&lt;string, string&gt;&gt;</code></td>
     <td>🗹</td>
-    <td>localized names for each tree level (e.g. "Year"); the map keys are the locale strings
-    ("en", "ro")</td>
+    <td>localized names for each tree level (e.g. "Year"); the map keys are the locale strings ("en", "ro")</td>
   </tr>
   <tr>
     <td>root</td>
-    <td><code>map&lt;string, map&lt;string, map&lt;...&gt;&gt;&gt;</code></td>
+    <td><code>map&lt;string, map&lt;string, map&lt;…&gt;&gt;&gt;</code></td>
     <td>🗹</td>
-    <td>nested map representing the tree structure, where the key is the name of the node and the
-    value is a map of its children; the leaf nodes have an empty map as a value, **not** *null* or
-    something else</td>
+    <td>nested map representing the tree structure, where the key is the name of the node and the value is a map of its children; the leaf nodes have an empty map as a value, **not** *null* or something else</td>
   </tr>
 </table>
 
 ###### Rules
 
-Filter structure is public information and should never (or very rarely) need to be modified,
-therefore for this collection, _anyone can **read**_ but _no one can **write**_.
+Filter structure is public information and should never (or very rarely) need to be modified, therefore for this collection, _anyone can **read**_ but _no one can **write**_.
 
 </details>
 
@@ -312,9 +303,7 @@ therefore for this collection, _anyone can **read**_ but _no one can **write**_.
 
 <details>
 <summary class="collection" id="import_moodle-collection"><b>import_moodle</b></summary>
-This collection contains class data imported directly from the University's Moodle instance. The
-data is exported as a spreadsheet from Moodle, and imported to our app's Firestore using
-<a href="https://github.com/acs-upb-mobile/data-import/blob/master/import.js">a Node.js script</a>.
+This collection contains class data imported directly from the University's Moodle instance. The data is exported as a spreadsheet from Moodle, and imported to our app's Firestore using <a href="https://github.com/acs-upb-mobile/data-import/blob/master/import.js">a Node.js script</a>.
 Additional information about classes is stored in the <a href=#classes-collection>classes</a> collection.
 
 ###### Fields
@@ -322,24 +311,17 @@ The structure of the documents in the collection is the same as the columns in t
 
 <img src="screenshots/other/import_moodle.png"><br>
 
-All of the fields are `strings`. In the app, `shortname` is used to extract the class' acronym,
-`fullname` is the class' name, and `category_path` defines the category under which the class is
-listed on the [ClassesPage](lib/pages/classes/view/classes_page.dart).
+All of the fields are `strings`. In the app, `shortname` is used to extract the class' acronym, `fullname` is the class' name, and `category_path` defines the category under which the class is listed on the [ClassesPage](lib/pages/classes/view/classes_page.dart).
 
 ###### Rules
 
-This is public information already available on [Moodle](https://acs.curs.pub.ro/), and will never
-be editable directly through the app. Therefore for this collection, _anyone can **read**_ but
- _no one can **write**_.
+This is public information already available on [Moodle](https://curs.upb.ro/), and will never be editable directly through the app. Therefore for this collection, _anyone can **read**_ but _no one can **write**_.
 
 </details>
 
 <details>
 <summary class="collection" id="classes-collection"><b>classes</b></summary>
-This collection stores information about classes defined in the
-<a href=#import_moodle-collection>import_moodle</a> collection. The ID of a document in this
-collection corresponds to an ID of a document in
-<a href=#import_moodle-collection>import_moodle</a>.
+This collection stores information about classes defined in the <a href=#import_moodle-collection>import_moodle</a> collection. The ID of a document in this collection corresponds to the shortname of a document in <a href=#import_moodle-collection>import_moodle</a>.
 
 ###### Fields
 All the documents in the collection share the same structure:
@@ -354,8 +336,7 @@ All the documents in the collection share the same structure:
     <td>grading</td>
     <td><code>map&lt;string, number&gt;</code></td>
     <td>☐</td>
-    <td>map where the key is the name of the evaluation (e.g. “Exam”) and the value is the number
-    of points that specific evaluation weighs (generally out of 10 total)</td>
+    <td>map where the key is the name of the evaluation (e.g. “Exam”) and the value is the number of points that specific evaluation weighs (generally out of 10 total)</td>
   </tr>
   <tr>
     <td>lecturer</td>
@@ -367,21 +348,15 @@ All the documents in the collection share the same structure:
     <td>shortcuts</td>
     <td><code>array&lt;map&lt;string, string&gt;&gt;</code></td>
     <td>☐</td>
-    <td>array of maps representing relevant links for a class, similar to websites; map keys are
-    "addedBy", "link", "name", and "type", with "type" being one of "main", "classbook", "resource"
-    and  "other"</td>
+    <td>array of maps representing relevant links for a class, similar to websites; map keys are "addedBy", "link", "name", and "type", with "type" being one of "main", "classbook", "resource" and  "other"</td>
   </tr>
 </table>
 
 ###### Rules
 
-Since classes in this collection are public information (_anyone can **read**_), altering and
-adding data here is a privilege and needs to be monitored, therefore _anyone who wants to modify
-this data needs to be authenticated_ in the first place.
+Since classes in this collection are public information (_anyone can **read**_), altering and adding data here is a privilege and needs to be monitored, therefore _anyone who wants to modify this data needs to be authenticated_ in the first place.
 
-Users can **update** an existing class document _if their `permissionLevel` is equal to or greater
-than three_. Additionally, they can only **create** a new class document if a document with that
-specific ID exists in the <a href=#import_moodle-collection>import_moodle</a> collection.
+Users can **update** an existing class document _if their `permissionLevel` is equal to or greater than three_. Additionally, they can only **create** a new class document if a document with that specific ID exists in the <a href=#import_moodle-collection>import_moodle</a> collection.
 
 Documents in this collection cannot be **delete**d.
 
@@ -389,9 +364,7 @@ Documents in this collection cannot be **delete**d.
 
 <details>
 <summary class="collection" id="people-collection"><b>people</b></summary>
-This collection currently contains information about faculty staff, extracted from the
-<a href="https://cs.pub.ro/index.php/?option=com_comprofiler&task=userslist&listid=2">official
-website</a> using <a href="https://github.com/acs-upb-mobile/data-import/blob/master/crawlers/prof_info_scraper.py">a Python scraper</a>.
+This collection currently contains information about faculty staff, extracted from the <a href="https://cs.pub.ro/index.php/?option=com_comprofiler&task=userslist&listid=2">official website</a> using <a href="https://github.com/acs-upb-mobile/data-import/blob/master/crawlers/prof_info_scraper.py">a Python scraper</a>.
 
 ###### Fields
 All the documents in the collection share the same structure:
@@ -442,21 +415,218 @@ All the documents in the collection share the same structure:
 
 ###### Rules
 
-This is public information already available on
-[the official website](https://cs.pub.ro/index.php/?option=com_comprofiler&task=userslist&listid=2),
-and currently cannot be edited through the app due to privacy concerns. Therefore for this
-collection, _anyone can **read**_ but _no one can **write**_.
+This is public information already available on [the official website](https://cs.pub.ro/index.php/?option=com_comprofiler&task=userslist&listid=2), and currently cannot be edited through the app due to privacy concerns. Therefore for this collection, _anyone can **read**_ but _no one can **write**_.
 
 </details>
+
+<details>
+<summary class="collection" id="calendars-collection"><b>calendars</b></summary>
+This collection stores academic calendar information, used to calculate recurrences of events in the <a href=#events-collection>events</a> collection. This information is generally posted yearly on the university website (for example <a href="https://upb.ro/wp-content/uploads/2020/03/UPB-Structura-an-universitar-2020-2021.pdf">here </a> for the year 2020).
+
+The ID of a document in this collection is the academic year it corresponds to (for academic year 2020-2021, the ID is simply "2020").
+
+###### Fields
+All the documents in the collection share the same structure:
+<table>
+  <tr>
+    <th>Field</th>
+    <th>Type</th>
+    <th>Required?</th>
+    <th>Additional info</th>
+  </tr>
+  <tr>
+    <td>exams</td>
+    <td><code>array&lt</code>event*<code>&gt</code></td>
+    <td>🗹</td>
+    <td>exam sessions defined in the academic year</td>
+  </tr>
+  <tr>
+    <td>holidays</td>
+    <td><code>array&lt</code>event*<code>&gt</code></td>
+    <td>🗹</td>
+    <td>holiday intervals defined in the academic year</td>
+  </tr>
+  <tr>
+    <td>semester</td>
+    <td><code>array&lt</code>event*<code>&gt</code></td>
+    <td>🗹</td>
+    <td>semesters defined in the academic year, in chronological order</td>
+  </tr>
+</table>
+
+*An event is a `map<string, dynamic>` with the following fields:
+<table>
+  <tr>
+    <th>Field</th>
+    <th>Type</th>
+    <th>Required?</th>
+    <th>Additional info</th>
+  </tr>
+  <tr>
+    <td>name</td>
+    <td><code>string</code></td>
+    <td>⍰</td>
+    <td>The name of the time interval defined in the calendar. This needs to be specified for everything but semesters, where the name is automatically set as the index of the event in the list (starting from 1).</td>
+  </tr>
+  <tr>
+    <td>start</td>
+    <td><code>timestamp</code></td>
+    <td>🗹</td>
+    <td>The first day of the interval. The hour is irrelevant, it should be set to 00:00.</td>
+  </tr>
+  <tr>
+    <td>end</td>
+    <td><code>timestamp</code></td>
+    <td>🗹</td>
+    <td>The last day of the interval. The hour is irrelevant, it should be set to 00:00.</td>
+  </tr>
+  <tr>
+    <td>degree</td>
+    <td><code>string</code></td>
+    <td>⍰</td>
+    <td>“BSc” or “MSc”, must be specified if relevance is specified and not <code>null</code></td>
+  </tr>
+  <tr>
+    <td>relevance</td>
+    <td><code>null / list&lt;string&gt;</code></td>
+    <td>☐</td>
+    <td><code>null</code> if relevant for everyone, otherwise a string of filter node names</td>
+  </tr>
+</table>
+
+###### Rules
+
+Academic calendars are public information and should never (or very rarely) need to be modified, therefore for this collection, _anyone can **read**_ but _no one can **write**_.
+
+</details>
+
+<details>
+<summary class="collection" id="events-collection"><b>events</b></summary>
+This collection stores timetable events, shown in the app under the *Timetable* page.
+
+###### Fields
+All the documents in the collection share the same structure:
+<table>
+  <tr>
+    <th>Field</th>
+    <th>Type</th>
+    <th>Required?</th>
+    <th>Additional info</th>
+  </tr>
+  <tr>
+    <td>addedBy</td>
+    <td><code>string</code></td>
+    <td>🗹</td>
+    <td>ID of user who created this website</td>
+  </tr>
+  <tr>
+    <td>editedBy</td>
+    <td><code>array&lt;string&gt;</code></td>
+    <td>🗹</td>
+    <td>list of user IDs of users who edited this event</td>
+  </tr>
+  <tr>
+    <td>calendar</td>
+    <td><code>string</code></td>
+    <td>🗹</td>
+    <td>ID of a calendar in the <a href=#calendars-collection>calendars</a> collection; it is used to calculate recurrences and skip holidays correctly</td>
+  </tr>
+  <tr>
+    <td>class</td>
+    <td><code>string</code></td>
+    <td>🗹</td>
+    <td>ID of a class in the <a href=#classes-collection>classes</a> collection</td>
+  </tr>
+  <tr>
+    <td>name</td>
+    <td><code>string</code></td>
+    <td>☐</td>
+    <td>Optional event name. If this is not specified, the class acronym will be used instead.</td>
+  </tr>
+  <tr>
+    <td>start</td>
+    <td><code>timestamp</code></td>
+    <td>🗹</td>
+    <td>The first instance of the event.</td>
+  </tr>
+  <tr>
+    <td>duration</td>
+    <td><code>map<string, number></code></td>
+    <td>🗹</td>
+    <td>A map containing duration keys like "hours", "minutes" etc.</td>
+  </tr>
+  <tr>
+    <td>location</td>
+    <td><code>string</code></td>
+    <td>☐</td>
+    <td>Optional event location, if applicable.</td>
+  </tr>
+  <tr>
+    <td>type</td>
+    <td><code>string</code></td>
+    <td>🗹</td>
+    <td>One of "lecture", "lab", "seminar", "sports", "other"</td>
+  </tr>
+  <tr>
+    <td>rrule</td>
+    <td><code>string</code></td>
+    <td>☐</td>
+    <td>If the event repeats, a recurrence rule in the format defined in <a href="https://icalendar.org/iCalendar-RFC-5545/3-8-5-3-recurrence-rule.html">RFC-5543</a>, for example "RRULE:FREQ=WEEKLY;UNTIL=20210131T000000;INTERVAL=2;BYDAY=TH" for an event that repeats every second Thursday until Jan 31st 2021</td>
+  </tr>
+  <tr>
+    <td>degree</td>
+    <td><code>string</code></td>
+    <td>⍰</td>
+    <td>“BSc” or “MSc”, must be specified if relevance is specified and not <code>null</code></td>
+  </tr>
+  <tr>
+    <td>relevance</td>
+    <td><code>null / list&lt;string&gt;</code></td>
+    <td>☐</td>
+    <td><code>null</code> if relevant for everyone, otherwise a string of filter node names</td>
+  </tr>
+</table>
+
+
+###### Rules
+
+Since events in this collection are public information (_anyone can **read**_), altering and adding data here is a privilege and needs to be monitored, therefore _anyone who wants to modify this data needs to be authenticated_ in the first place.
+
+Users can **create** a new event only _if their `permissionLevel` is equal to or greater than three and they sign the data by putting their `uid` in the `addedBy` field_.
+
+Users can **update** an event _if they do not modify the `addedBy` field and they sign the modification by adding their `uid` at the end of the `editedBy` list_.
+
+Users can only **delete** an event _if they are the ones who created it_ (their `uid` is equal to the `addedBy` field) _or if their `permissionLevel` is equal to or greater than four_.
+
+</details>
+
+### Storage
+[Cloud Storage](https://firebase.google.com/docs/storage) complements Firestore by allowing storage of binary files, such as photos and videos.
+
+#### Structure
+The Cloud Storage is structured in **directories** and **files** (also referred to as **objects**), much like any other type of storage. These are placed inside a
+**[bucket](https://cloud.google.com/storage/docs/key-terms#buckets)** - the basic container that holds data. You can think of buckets like a physical storage device - they have a location (and their own security rules and permissions), and unlike directories, cannot be nested.
+
+The main bucket of the app (`acs-upb-mobile.appspot.com`) can be accessed via the Firebase console.
+It contains app resources such as icons and profile pictures, organised similarly to the data in Firestore:
+* **Website icons** are stored in the `websites/` directory. The icon of a website in Firestore that has the ID "abcd" will be in storage under `websites/abcd/icon.png`.
+* **Profile pictures** are stored in the `users/` directory. The picture of a user with the UID "abcd" would be in storage under `users/abcd/picture.png`.
+
+#### Security
+
+Storage security rules are similar to [Firestore security rules](#firestore-security). One of the reasons for keeping the storage structure as close to possible to the Firestore structure is the ability to have similar security rules (for example, if, in Firestore, a user can only access their own document, the same rule can be applied for a user's folder inside Storage).
+
+More information on Storage security rules can be found [here](https://firebase.google.com/docs/storage/security).
+
+### Functions
+[Cloud Functions for Firebase](https://firebase.google.com/docs/functions) is a serverless solution for running bits of code in response to events or at scheduled time intervals. They are, for all intents and purposes, JavaScript/TypeScript functions that run directly "in the cloud", without needing to be tied to an app or device.
+
+The project currently has two functions set up to perform daily backups of the data in Firestore ([backupFirestore](functions/src/firestore-backup.js)) and Storage ([backupStorage](functions/src/storage-backup.js)). They are scheduled to run automatically, every day at 00:00 EEST.
 
 ## Internationalization
 
 ### On-device
-All strings that are visible to the user should be internationalised and set in the corresponding
-`.arb` files within the [`l10n`](lib/l10n) folder. The
-[Flutter Intl](https://plugins.jetbrains.com/plugin/13666-flutter-intl) Android Studio plugin does
-all the hard work for you by generating the code when you save an `.arb` file. Strings can then be
-accessed using `S.of(context).stringID`.
+All strings that are visible to the user should be internationalised and set in the corresponding `.arb` files within the [`l10n`](lib/l10n) folder. The [Flutter Intl](https://plugins.jetbrains.com/plugin/13666-flutter-intl) Android Studio plugin does all the hard work for you by generating the code when you save an `.arb` file. Strings can then be accessed using `S.of(context).stringID`.
 
 ### Remote
 In the database, internationalized strings are saved as a dictionary where the locale is the key:
@@ -466,44 +636,29 @@ In the database, internationalized strings are saved as a dictionary where the l
     'en': 'I like Flutter!'
 }
 ```
-These will have a corresponding `Map` variable in the Dart code (e.g. `Map<String, String>
-infoByLocale`). See [`WebsiteProvider`](lib/pages/portal/service/website_provider.dart) for a
-serialization/deserialization example.
+These will have a corresponding `Map` variable in the Dart code (e.g. `Map<String, String> infoByLocale`). See [`WebsiteProvider`](lib/pages/portal/service/website_provider.dart) for a serialization/deserialization example.
 
 
 ### Changing the locale
-Changing the app's language is done via the [settings page](lib/pages/settings/settings_page.dart).
+Changing the app's language is done via the [settings page](lib/pages/settings/).
 
 ### Fetching the locale
-The [`LocaleProvider`](lib/resources/locale_provider.dart) class offers utility methods for
-fetching the current locale string. See [`PortalPage`](lib/pages/portal/view/portal_page.dart)
-for a usage example.
+The [`LocaleProvider`](lib/resources/locale_provider.dart) class offers utility methods for fetching the current locale string. See [`PortalPage`](lib/pages/portal/view/portal_page.dart) for a usage example.
 
 ## Custom icons
 
 If you need to use icons other than the ones provided by the
-[Material library](https://material.io/resources/icons), the process is as follows:
+[Material library](https://material.io/resources/icons/), the process is as follows:
 
 ### Generating the font file
-* Convert the `.ttf` [custom font](assets/fonts/CustomIcons/CustomIcons.ttf) in the project to an
-`.svg` font (using a tool such as [this one](https://convertio.co/ttf-svg/)).
-* Go to [FlutterIcon](https://fluttericon.com/) and upload (drag & drop) the file you obtained
-earlier in order to import the icons.
-* Check that the imported icons are the ones defined in the
-[`CustomIcons`](lib/resources/custom_icons.dart) class to make sure nothing went wrong with the
-conversion, and select all of them.
-* (Upload and) select any additional icons that you want to use in the project, then click
-**Download**.
+* Convert the `.ttf` [custom font](assets/fonts/CustomIcons/CustomIcons.ttf) in the project to an `.svg` font (using a tool such as [this one](https://convertio.co/ttf-svg/)).
+* Go to [FlutterIcon](https://www.fluttericon.com/) and upload (drag & drop) the file you obtained earlier in order to import the icons.
+* Check that the imported icons are the ones defined in the [`CustomIcons`](lib/resources/custom_icons.dart) class to make sure nothing went wrong with the conversion, and select all of them.
+* (Upload and) select any additional icons that you want to use in the project, then click **Download**.
 
 ### Updating the project
-* Rename the font file in the archive downloaded earlier to `CustomIcons.ttf` and replace the
-[custom font](assets/fonts/CustomIcons/CustomIcons.ttf) in the project.
-* Copy the IconData definitions from the `.dart` file in the archive and replace the corresponding
-definitions in the [`CustomIcons`](lib/resources/custom_icons.dart) class;
+* Rename the font file in the archive downloaded earlier to `CustomIcons.ttf` and replace the [custom font](assets/fonts/CustomIcons/CustomIcons.ttf) in the project.
+* Copy the IconData definitions from the `.dart` file in the archive and replace the corresponding definitions in the [`CustomIcons`](lib/resources/custom_icons.dart) class;
 * Check that everything still works correctly :)
 
-**Note**: [FontAwesome](https://fontawesome.com/icons?d=gallery) icons are recommended, where
-possible, because they are consistent with the overall style. For additional action icons check out
-[FontAwesomeActions](https://github.com/nyon/fontawesome-actions) - the repo provides an [`.svg`
-font](https://github.com/nyon/fontawesome-actions/blob/master/dist/fonts/fontawesome-webfont.svg)
-you can upload directly into [FlutterIcon](https://fluttericon.com/).
+**Note**: [FontAwesome](https://fontawesome.com/icons?d=gallery) icons are recommended, where possible, because they are consistent with the overall style. For additional action icons check out [FontAwesomeActions](https://github.com/nyon/fontawesome-actions) - the repo provides an [`.svg` font](https://github.com/nyon/fontawesome-actions/blob/master/dist/fonts/fontawesome-webfont.svg) you can upload directly into [FlutterIcon](https://www.fluttericon.com/).

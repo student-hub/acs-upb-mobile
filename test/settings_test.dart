@@ -57,15 +57,18 @@ void main() {
           .thenAnswer((realInvocation) => Future.value(true));
       when(mockAuthProvider.currentUser).thenAnswer((_) => Future.value(null));
       when(mockAuthProvider.isAnonymous).thenReturn(true);
+      when(mockAuthProvider.getProfilePictureURL(context: anyNamed('context')))
+          .thenAnswer((realInvocation) => Future.value(null));
 
       mockWebsiteProvider = MockWebsiteProvider();
       // ignore: invalid_use_of_protected_member
       when(mockWebsiteProvider.hasListeners).thenReturn(false);
       when(mockWebsiteProvider.deleteWebsite(any, context: anyNamed('context')))
           .thenAnswer((realInvocation) => Future.value(true));
-      when(mockWebsiteProvider.fetchWebsites(any))
+      when(mockWebsiteProvider.fetchWebsites(any, context: anyNamed('context')))
           .thenAnswer((_) => Future.value([]));
-      when(mockWebsiteProvider.fetchFavouriteWebsites())
+      when(mockWebsiteProvider.fetchFavouriteWebsites(
+              uid: anyNamed('uid'), context: anyNamed('context')))
           .thenAnswer((_) => Future.value(null));
 
       mockQuestionProvider = MockQuestionProvider();
@@ -201,7 +204,7 @@ void main() {
         expect(find.text('Request editing permissions'), findsOneWidget);
         await tester.tap(find.byKey(const ValueKey('ask_permissions')));
         await tester.pumpAndSettle();
-        expect(find.byType(RequestPermissions), findsOneWidget);
+        expect(find.byType(RequestPermissionsPage), findsOneWidget);
 
         // Send a request
         await tester.enterText(
@@ -242,7 +245,7 @@ void main() {
         expect(find.text('Request editing permissions'), findsOneWidget);
         await tester.tap(find.byKey(const ValueKey('ask_permissions')));
         await tester.pumpAndSettle();
-        expect(find.byType(RequestPermissions), findsOneWidget);
+        expect(find.byType(RequestPermissionsPage), findsOneWidget);
 
         // Send a request
         await tester.enterText(
@@ -332,7 +335,7 @@ void main() {
 
         // Verify Ask Permissions page is opened
         await tester.pumpAndSettle();
-        expect(find.byType(RequestPermissions), findsOneWidget);
+        expect(find.byType(RequestPermissionsPage), findsOneWidget);
       });
     });
   });

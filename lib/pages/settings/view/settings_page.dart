@@ -118,8 +118,9 @@ class SettingsPageState extends State<SettingsPage> {
                             else
                               {
                                 Navigator.of(context).push(
-                                    MaterialPageRoute<RequestPermissions>(
-                                        builder: (_) => RequestPermissions())),
+                                    MaterialPageRoute<RequestPermissionsPage>(
+                                        builder: (_) =>
+                                            RequestPermissionsPage())),
                               }
                           },
                           child: Text(S.of(context).labelAskPermissions,

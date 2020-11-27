@@ -24,11 +24,9 @@ class FilterProvider with ChangeNotifier {
       {this.global = false,
       bool filterEnabled,
       this.defaultDegree,
-      this.defaultRelevance,
-      AuthProvider authProvider})
+      this.defaultRelevance})
       : _enabled = filterEnabled ?? PrefService.get('relevance_filter') ?? true,
-        _relevantNodes = defaultRelevance,
-        authProvider = authProvider ?? AuthProvider() {
+        _relevantNodes = defaultRelevance {
     if (defaultRelevance != null && !defaultRelevance.contains('All')) {
       if (defaultDegree == null) {
         throw ArgumentError(
@@ -49,16 +47,32 @@ class FilterProvider with ChangeNotifier {
   List<String> _relevantNodes;
   final List<String> defaultRelevance;
 
-  final AuthProvider authProvider;
+  AuthProvider _authProvider;
 
-  void resetFilter() {
+  void updateAuth(AuthProvider authProvider) {
+    _authProvider = authProvider;
+    clearCache();
+  }
+
+  void clearCache() {
     _relevanceFilter = null;
-
     _relevantNodes = null;
+
     if (global) {
-      // Reset defaults
-      PrefService.setStringList('relevant_nodes', null);
+      // TODO(IoanaAlexandru): Remove this property
       PrefService.setBool('relevance_filter', true);
+    }
+
+    notifyListeners();
+  }
+
+  Future<void> _setFilterNodes(List<String> nodes) async {
+    try {
+      final DocumentReference doc =
+          _db.collection('users').document(_authProvider.uid);
+      await doc.updateData({'filter_nodes': nodes});
+    } catch (e) {
+      print(e);
     }
   }
 
@@ -85,8 +99,7 @@ class FilterProvider with ChangeNotifier {
   void updateFilter(Filter filter) {
     _relevanceFilter = filter;
     if (global) {
-      PrefService.setStringList(
-          'relevant_nodes', _relevanceFilter.relevantNodes);
+      _setFilterNodes(_relevanceFilter.relevantNodes);
     }
     notifyListeners();
   }
@@ -113,34 +126,31 @@ class FilterProvider with ChangeNotifier {
         levelNames.add(Map<String, String>.from(name));
       }
 
-      // Check if there is an existing setting already
-      if (global) {
-        _relevantNodes = PrefService.get('relevant_nodes') == null
-            ? null
-            : List<String>.from(PrefService.get('relevant_nodes'));
-      }
-
       final root = data['root'];
       _relevanceFilter = Filter(
         localizedLevelNames: levelNames,
         root: FilterNodeExtension.fromMap(root, 'All'),
       );
 
-      if (_relevantNodes != null) {
-        _relevantNodes ??= defaultRelevance;
-        for (final node in _relevantNodes) {
+      // Set the default relevance, if provided
+      if (defaultRelevance != null) {
+        for (final node in defaultRelevance) {
           _relevanceFilter.setRelevantUpToRoot(node, defaultDegree);
         }
         _relevantNodes = _relevanceFilter.relevantNodes;
-      } else {
-        // No previous setting or defaults => set the user's group
-        if (authProvider.isAuthenticatedFromCache) {
-          final user = await authProvider.currentUser;
-          // Try to set the default from the user data
-          if (user != null && user.classes != null) {
-            _relevanceFilter.setRelevantNodes(user.classes);
-          }
-        }
+      }
+
+      // Check if there is an existing setting already
+      if (global &&
+          _authProvider.isAuthenticatedFromCache &&
+          !_authProvider.isAnonymous) {
+        final DocumentReference docUsers =
+            _db.collection('users').document(_authProvider.uid);
+        final DocumentSnapshot snapUsers = await docUsers.get();
+
+        //Load filter_nodes from Firestore
+        _relevantNodes = List<String>.from(snapUsers['filter_nodes']);
+        _relevanceFilter.setRelevantNodes(_relevantNodes);
       }
 
       return cachedFilter;
