@@ -412,11 +412,11 @@ class _AddEventViewState extends State<AddEventView> {
   AppScaffoldAction _deleteButton() => AppScaffoldAction(
         icon: Icons.more_vert,
         items: {
-          S.of(context).actionDeleteEvent: () => showDialog(
-              context: context, child: _deletionConfirmationDialog(context))
+          S.of(context).actionDeleteEvent: () =>
+              showDialog(context: context, builder: _deletionConfirmationDialog)
         },
-        onPressed: () => showDialog(
-            context: context, child: _deletionConfirmationDialog(context)),
+        onPressed: () =>
+            showDialog(context: context, builder: _deletionConfirmationDialog),
       );
 
   Widget timeIntervalPicker() {

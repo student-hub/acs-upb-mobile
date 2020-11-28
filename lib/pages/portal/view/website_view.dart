@@ -229,11 +229,10 @@ class _WebsiteViewState extends State<WebsiteView> {
                     items: {
                       S.of(context).actionDeleteWebsite: () => showDialog(
                           context: context,
-                          child: _deletionConfirmationDialog(context))
+                          builder: _deletionConfirmationDialog)
                     },
                     onPressed: () => showDialog(
-                        context: context,
-                        child: _deletionConfirmationDialog(context)),
+                        context: context, builder: _deletionConfirmationDialog),
                   )
                 ]
               : <AppScaffoldAction>[]),

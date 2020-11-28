@@ -86,8 +86,7 @@ class _RequestPermissionsPageState extends State<RequestPermissionsPage> {
 
                 if (queryResult) {
                   await showDialog(
-                      context: context,
-                      child: _requestAlreadyExistsDialog(context));
+                      context: context, builder: _requestAlreadyExistsDialog);
                 }
 
                 queryResult = await requestProvider.makeRequest(
