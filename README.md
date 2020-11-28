@@ -60,7 +60,7 @@ flutter pub get
 * Install and run an emulator in Android Studio (using AVD Manager), or connect a physical Android device (make sure USB debugging is enabled).
 * Select your device from the dropdown list and hit the play button (*Shift+F10* or *^R*). Note that Android Studio runs the app in debug mode by default.
 
-| :exclamation: | On Android, ACS UPB Mobile uses **a separate (development) environment in debug mode**. That means completely different Firebase project - separate data, including user info. In order to try the release (production) version, you need to run `flutter run --release`.|
+| :exclamation: | On Android, ACS UPB Mobile uses **a separate (development) environment in debug mode**. That means a completely different Firebase project - separate data, including user info. In order to try the release (production) version, you need to run `flutter run --release`.|
 |---------------|:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 
 ### Building for iOS (MacOS only)

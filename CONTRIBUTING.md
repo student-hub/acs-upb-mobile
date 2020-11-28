@@ -22,13 +22,13 @@ Please note that in order for a PR to be merged (accepted), all of the tests nee
 * If **running on web** doesn't give the expected results after changing some code, you may need to clear the cache (in *Chrome*: *Ctrl+Shift+C* or *⌘+Shift+C* to open the Inspect menu, then right-click the *Refresh* button, and select *Empty cache and Hard reload*.)
 * By default, **Flutter apps run in debug mode**. That means a DEBUG banner is shown on the upper right corner of the app, and errors and overflows are marked quite visibly in the UI.
   - If you'd like to temporarily hide the debug mode banner (to take a screenshot, for instance), open the *Flutter Inspector* tab from the right hand edge of Android Studio, click *More actions* and select *Hide debug mode banner*.
+  - Note that Flutter's debug mode is different from the Android Studio debugging (bug button), which is meant to allow you to use breakpoints and other debugging tools.
   - If you need to test the release version, run `flutter run --release` from the Terminal.
-    * Note that Flutter's debug mode is different from the Android Studio debugging (bug button), which is meant to allow you to use breakpoints and other debugging tools.
     * For simplicity, you could call the default "main.dart" configuration in Android Studio "Debug", duplicate it and call the second one "Release", with `--release` as an argument. For example:
     <img src=screenshots/other/release_configuration.png>
 * [Flutter Inspector](https://flutter.dev/docs/development/tools/devtools/inspector) is a powerful tool which allows you to visualize and explore Flutter widget trees. You can use it to find out where a specific part of the UI is defined in the code (by turning on *Select widget mode* and selecting the widget you'd like to find), it can help you debug layouts (by enabling *Debug Paint*, you can visualize padding, alignments and widget borders) and much more.
 
-| :exclamation: | On Android, ACS UPB Mobile uses **a separate (development) environment in debug mode**. That means completely different Firebase project - separate data, including user info. In order to try the release (production) version, you need to run `flutter run --release`.|
+| :exclamation: | On Android, ACS UPB Mobile uses **a separate (development) environment in debug mode**. That means a completely different Firebase project - separate data, including user info. In order to try the release (production) version, you need to run `flutter run --release`.|
 |---------------|:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 
 ## Style guide
@@ -45,7 +45,8 @@ This project uses [GitHub Actions](https://github.com/features/actions) for CI/C
 
 The following actions are currently set up:
 * [Linter](https://github.com/acs-upb-mobile/acs-upb-mobile/actions?query=workflow%3ALinter): Checks for warnings and coding style issues. Runs on every push and pull request.
-  - If your PR is made from a branch inside the repository (rather than a fork), it should automatically *add code review comments pointing out any warnings*.
+  - If your PR is made from a branch inside the repository (rather than a fork), [acs-upb-mobile-bot](https://github.com/acs-upb-mobile-bot) should automatically *add code review comments pointing out any warnings*.
+    * Sometimes, the automatic check for dead links in documentation fails with "429 too many requests" (see [this issue](https://github.com/textlint-rule/textlint-rule-no-dead-link/issues/135)). You can ignore those if you know the links in question are good.
   - If you have formatting issues, the "Check formatting" step will *point out the files that need to be formatted* and the workflow will fail.
 * [Tests](https://github.com/acs-upb-mobile/acs-upb-mobile/actions?query=workflow%3ATests): Runs all tests in the [test/](test) directory and submits a coverage report to [codecov](https://codecov.io/gh/acs-upb-mobile/acs-upb-mobile). This action is triggered on every push and pull request.
   - If at least one test fails, this workflow will fail.
