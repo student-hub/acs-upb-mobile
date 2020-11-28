@@ -17,8 +17,11 @@ import 'package:acs_upb_mobile/pages/settings/service/request_provider.dart';
 import 'package:acs_upb_mobile/pages/settings/view/settings_page.dart';
 import 'package:acs_upb_mobile/pages/timetable/service/uni_event_provider.dart';
 import 'package:acs_upb_mobile/resources/locale_provider.dart';
+import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/widgets/loading_screen.dart';
 import 'package:dynamic_theme/dynamic_theme.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
@@ -31,9 +34,6 @@ import 'package:time_machine/time_machine.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await TimeMachine.initialize({'rootBundle': rootBundle});
-  await PrefService.init(prefix: 'pref_');
-  PrefService.setDefaultValues({'language': 'auto', 'relevance_filter': true});
 
   final authProvider = AuthProvider();
   final classProvider = ClassProvider();
@@ -81,7 +81,6 @@ class _MyAppState extends State<MyApp> {
   Widget buildApp(BuildContext context, ThemeData theme) {
     return MaterialApp(
       title: 'ACS UPB Mobile',
-      debugShowCheckedModeBanner: false,
       localizationsDelegates: [
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
@@ -145,18 +144,34 @@ class _MyAppState extends State<MyApp> {
 
 class AppLoadingScreen extends StatelessWidget {
   Future<String> _setUpAndChooseStartScreen(BuildContext context) async {
-    LocaleProvider.cultures ??= {
-      'ro': await Cultures.getCulture('ro'),
-      'en': await Cultures.getCulture('en')
-    };
+    // Make initializations if this is not a test
+    if (!Platform.environment.containsKey('FLUTTER_TEST')) {
+      await TimeMachine.initialize({'rootBundle': rootBundle});
+      await PrefService.init(prefix: 'pref_');
+      PrefService.setDefaultValues(
+          {'language': 'auto', 'relevance_filter': true});
 
-    // TODO(IoanaAlexandru): Make `rrule` package support Romanian
-    LocaleProvider.rruleL10ns ??= {'en': await RruleL10nEn.create()};
+      if (kDebugMode || kProfileMode) {
+        await FirebaseAnalytics().setAnalyticsCollectionEnabled(false);
+      } else if (kReleaseMode) {
+        await FirebaseAnalytics().setAnalyticsCollectionEnabled(true);
+      }
 
-    Culture.current = LocaleProvider.cultures[LocaleProvider.localeString];
+      LocaleProvider.cultures ??= {
+        'ro': await Cultures.getCulture('ro'),
+        'en': await Cultures.getCulture('en')
+      };
+
+      // TODO(IoanaAlexandru): Make `rrule` package support Romanian
+      LocaleProvider.rruleL10ns ??= {'en': await RruleL10nEn.create()};
+
+      Culture.current = LocaleProvider.cultures[LocaleProvider.localeString];
+    }
+
     // Load locale from settings
     await S.load(LocaleProvider.locale);
 
+    // Choose start screen
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
     final bool authenticated = await authProvider.isAuthenticatedFromService;
     return authenticated ? Routes.home : Routes.login;
@@ -166,7 +181,6 @@ class AppLoadingScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return LoadingScreen(
       navigateAfterFuture: _setUpAndChooseStartScreen(context),
-      loadingText: const Text('Setting up...'),
       image: Image.asset('assets/icons/acs_logo.png'),
       loaderColor: Theme.of(context).accentColor,
     );
