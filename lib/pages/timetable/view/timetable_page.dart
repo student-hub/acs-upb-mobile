@@ -268,7 +268,7 @@ class _TimetablePageState extends State<TimetablePage> {
               // Push the Permissions page
               if (authProvider.isAnonymous) {
                 AppToast.show(S.of(context).messageNotLoggedIn);
-              } else if (!authProvider.isVerifiedFromCache) {
+              } else if (await authProvider.isVerified) {
                 AppToast.show(
                     S.of(context).messageEmailNotVerifiedToPerformAction);
               } else {

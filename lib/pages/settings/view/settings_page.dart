@@ -19,10 +19,22 @@ class SettingsPage extends StatefulWidget {
   static const String routeName = '/settings';
 
   @override
-  State<StatefulWidget> createState() => SettingsPageState();
+  State<StatefulWidget> createState() => _SettingsPageState();
 }
 
-class SettingsPageState extends State<SettingsPage> {
+class _SettingsPageState extends State<SettingsPage> {
+  // Whether the user verified their email; this can be true, false or null if
+  // the async check hasn't completed yet.
+  bool isVerified;
+
+  @override
+  void initState() {
+    super.initState();
+    Provider.of<AuthProvider>(context, listen: false)
+        .isVerified
+        .then((value) => setState(() => isVerified = value));
+  }
+
   @override
   Widget build(BuildContext context) {
     final AuthProvider authProvider = Provider.of<AuthProvider>(context);
@@ -109,7 +121,7 @@ class SettingsPageState extends State<SettingsPage> {
                           onPressed: () => {
                             if (authProvider.isAnonymous)
                               {AppToast.show(S.of(context).messageNotLoggedIn)}
-                            else if (!authProvider.isVerifiedFromCache)
+                            else if (isVerified != true)
                               {
                                 AppToast.show(S
                                     .of(context)
@@ -126,7 +138,7 @@ class SettingsPageState extends State<SettingsPage> {
                           child: Text(S.of(context).labelAskPermissions,
                               textAlign: TextAlign.center,
                               style: (authProvider.isAnonymous ||
-                                      !authProvider.isVerifiedFromCache)
+                                      isVerified != true)
                                   ? Theme.of(context).textTheme.bodyText1.apply(
                                         color: Theme.of(context).disabledColor,
                                       )

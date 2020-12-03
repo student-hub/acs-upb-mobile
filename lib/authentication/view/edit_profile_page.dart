@@ -40,10 +40,15 @@ class _EditProfilePageState extends State<EditProfilePage> {
   Uint8List uploadedImage;
   ImageProvider imageWidget;
 
+  // Whether the user verified their email; this can be true, false or null if
+  // the async check hasn't completed yet.
+  bool isVerified;
+
   @override
   void initState() {
     super.initState();
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    authProvider.isVerified.then((value) => setState(() => isVerified = value));
     authProvider.getProfilePictureURL(context: context).then((value) =>
         setState(() => {if (value != null) imageWidget = NetworkImage(value)}));
   }
@@ -259,10 +264,16 @@ class _EditProfilePageState extends State<EditProfilePage> {
     final authProvider = Provider.of<AuthProvider>(context);
     final emailDomain = S.of(context).stringEmailDomain;
     final User user = authProvider.currentUserFromCache;
+
+    if (user == null) {
+      // TODO(AdrianMargineanu): Show error page if user is not authenticated
+      return Container();
+    }
+
     lastNameController.text = user.lastName;
     firstNameController.text = user.firstName;
     Uint8List imageAsPNG;
-    if (!authProvider.isVerifiedFromCache) {
+    if (isVerified == false) {
       emailController.text = authProvider.email.split('@')[0];
     }
     final path = user.classes;
@@ -284,7 +295,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
               if (formKey.currentState.validate()) {
                 bool result = true;
-                if (!authProvider.isVerifiedFromCache &&
+                if (isVerified == false &&
                     emailController.text + emailDomain != authProvider.email) {
                   await showDialog(
                           context: context,
@@ -362,7 +373,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       return null;
                     },
                   ),
-                  if (!authProvider.isVerifiedFromCache)
+                  if (isVerified == false)
                     TextFormField(
                       decoration: InputDecoration(
                         prefixIcon: const Icon(Icons.alternate_email),
@@ -406,12 +417,13 @@ class AccountNotVerifiedWarning extends StatelessWidget {
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
 
-    if (!authProvider.isAuthenticatedFromCache || authProvider.isAnonymous) {
+    if (!authProvider.isAuthenticated ||
+        authProvider.isAnonymous) {
       return Container();
     }
 
     return FutureBuilder(
-      future: authProvider.isVerifiedFromService,
+      future: authProvider.isVerified,
       builder: (context, snap) {
         if (!snap.hasData || snap.data) {
           return Container();

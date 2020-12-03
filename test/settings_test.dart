@@ -50,21 +50,19 @@ void main() {
 
       // Pretend an anonymous user is already logged in
       mockAuthProvider = MockAuthProvider();
-      when(mockAuthProvider.isAuthenticatedFromCache).thenReturn(true);
+      when(mockAuthProvider.isAuthenticated).thenReturn(true);
       // ignore: invalid_use_of_protected_member
       when(mockAuthProvider.hasListeners).thenReturn(false);
-      when(mockAuthProvider.isAuthenticatedFromService)
-          .thenAnswer((realInvocation) => Future.value(true));
       when(mockAuthProvider.currentUser).thenAnswer((_) => Future.value(null));
       when(mockAuthProvider.isAnonymous).thenReturn(true);
       when(mockAuthProvider.getProfilePictureURL(context: anyNamed('context')))
-          .thenAnswer((realInvocation) => Future.value(null));
+          .thenAnswer((_) => Future.value(null));
 
       mockWebsiteProvider = MockWebsiteProvider();
       // ignore: invalid_use_of_protected_member
       when(mockWebsiteProvider.hasListeners).thenReturn(false);
       when(mockWebsiteProvider.deleteWebsite(any, context: anyNamed('context')))
-          .thenAnswer((realInvocation) => Future.value(true));
+          .thenAnswer((_) => Future.value(true));
       when(mockWebsiteProvider.fetchWebsites(any, context: anyNamed('context')))
           .thenAnswer((_) => Future.value([]));
       when(mockWebsiteProvider.fetchFavouriteWebsites(
@@ -75,9 +73,9 @@ void main() {
       // ignore: invalid_use_of_protected_member
       when(mockQuestionProvider.hasListeners).thenReturn(false);
       when(mockQuestionProvider.fetchQuestions(context: anyNamed('context')))
-          .thenAnswer((realInvocation) => Future.value(<Question>[]));
+          .thenAnswer((_) => Future.value(<Question>[]));
       when(mockQuestionProvider.fetchQuestions(limit: anyNamed('limit')))
-          .thenAnswer((realInvocation) => Future.value(<Question>[]));
+          .thenAnswer((_) => Future.value(<Question>[]));
 
       mockRequestProvider = MockRequestProvider();
       when(mockRequestProvider.makeRequest(any, context: anyNamed('context')))
@@ -90,9 +88,9 @@ void main() {
       // ignore: invalid_use_of_protected_member
       when(mockNewsProvider.hasListeners).thenReturn(false);
       when(mockNewsProvider.fetchNewsFeedItems(context: anyNamed('context')))
-          .thenAnswer((realInvocation) => Future.value(<NewsFeedItem>[]));
+          .thenAnswer((_) => Future.value(<NewsFeedItem>[]));
       when(mockNewsProvider.fetchNewsFeedItems(limit: anyNamed('limit')))
-          .thenAnswer((realInvocation) => Future.value(<NewsFeedItem>[]));
+          .thenAnswer((_) => Future.value(<NewsFeedItem>[]));
     });
 
     testWidgets('Dark Mode', (WidgetTester tester) async {
@@ -183,7 +181,7 @@ void main() {
       });
 
       testWidgets('Normal scenario', (WidgetTester tester) async {
-        when(mockAuthProvider.isVerifiedFromCache).thenAnswer((_) => true);
+        when(mockAuthProvider.isVerified).thenAnswer((_) => Future.value(true));
 
         await tester.pumpWidget(MultiProvider(providers: [
           ChangeNotifierProvider<AuthProvider>(create: (_) => mockAuthProvider),
@@ -221,7 +219,7 @@ void main() {
 
       testWidgets('User has already sent a request scenario',
           (WidgetTester tester) async {
-        when(mockAuthProvider.isVerifiedFromCache).thenAnswer((_) => true);
+        when(mockAuthProvider.isVerified).thenAnswer((_) => Future.value(true));
         when(mockRequestProvider.userAlreadyRequested(any,
                 context: anyNamed('context')))
             .thenAnswer((_) => Future.value(true));
@@ -266,7 +264,7 @@ void main() {
       });
 
       testWidgets('User is anonymous scenario', (WidgetTester tester) async {
-        when(mockAuthProvider.isVerifiedFromCache).thenAnswer((_) => true);
+        when(mockAuthProvider.isVerified).thenAnswer((_) => Future.value(true));
         when(mockAuthProvider.isAnonymous).thenReturn(true);
         when(mockRequestProvider.userAlreadyRequested(any,
                 context: anyNamed('context')))
@@ -297,7 +295,8 @@ void main() {
       });
 
       testWidgets('User is not verified scenario', (WidgetTester tester) async {
-        when(mockAuthProvider.isVerifiedFromCache).thenAnswer((_) => false);
+        when(mockAuthProvider.isVerified)
+            .thenAnswer((_) => Future.value(false));
         when(mockAuthProvider.isAnonymous).thenReturn(false);
         when(mockRequestProvider.userAlreadyRequested(any,
                 context: anyNamed('context')))
@@ -327,7 +326,7 @@ void main() {
         expect(find.byType(SettingsPage), findsOneWidget);
 
         // Verify account
-        when(mockAuthProvider.isVerifiedFromCache).thenAnswer((_) => true);
+        when(mockAuthProvider.isVerified).thenAnswer((_) => Future.value(true));
 
         // Press Ask Permissions page
         expect(find.text('Request editing permissions'), findsOneWidget);

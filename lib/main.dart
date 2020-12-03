@@ -21,6 +21,7 @@ import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/widgets/loading_screen.dart';
 import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -34,6 +35,8 @@ import 'package:time_machine/time_machine.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  await Firebase.initializeApp();
 
   final authProvider = AuthProvider();
   final classProvider = ClassProvider();
@@ -173,8 +176,7 @@ class AppLoadingScreen extends StatelessWidget {
 
     // Choose start screen
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
-    final bool authenticated = await authProvider.isAuthenticatedFromService;
-    return authenticated ? Routes.home : Routes.login;
+    return authProvider.isAuthenticated ? Routes.home : Routes.login;
   }
 
   @override

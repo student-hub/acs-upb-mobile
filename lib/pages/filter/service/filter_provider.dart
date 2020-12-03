@@ -35,7 +35,7 @@ class FilterProvider with ChangeNotifier {
     }
   }
 
-  final Firestore _db = Firestore.instance;
+  final FirebaseFirestore _db = FirebaseFirestore.instance;
   Filter _relevanceFilter; // filter cache
 
   /// Whether this is the global filter instance and should update shared preferences
@@ -69,8 +69,8 @@ class FilterProvider with ChangeNotifier {
   Future<void> _setFilterNodes(List<String> nodes) async {
     try {
       final DocumentReference doc =
-          _db.collection('users').document(_authProvider.uid);
-      await doc.updateData({'filter_nodes': nodes});
+          _db.collection('users').doc(_authProvider.uid);
+      await doc.update({'filter_nodes': nodes});
     } catch (e) {
       print(e);
     }
@@ -115,9 +115,9 @@ class FilterProvider with ChangeNotifier {
 
     try {
       final col = _db.collection('filters');
-      final ref = col.document('relevance');
+      final ref = col.doc('relevance');
       final doc = await ref.get();
-      final data = doc.data;
+      final data = doc.data();
 
       final levelNames = <Map<String, String>>[];
       // Cast from List<dynamic> to List<Map<String, String>>
@@ -142,10 +142,10 @@ class FilterProvider with ChangeNotifier {
 
       // Check if there is an existing setting already
       if (global &&
-          _authProvider.isAuthenticatedFromCache &&
+          _authProvider.isAuthenticated &&
           !_authProvider.isAnonymous) {
         final DocumentReference docUsers =
-            _db.collection('users').document(_authProvider.uid);
+            _db.collection('users').doc(_authProvider.uid);
         final DocumentSnapshot snapUsers = await docUsers.get();
 
         //Load filter_nodes from Firestore

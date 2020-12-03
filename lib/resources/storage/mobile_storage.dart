@@ -18,11 +18,10 @@ class StorageProvider {
   static Future<bool> uploadImage(
       BuildContext context, Uint8List file, String ref) async {
     try {
-      final StorageReference reference =
-          FirebaseStorage.instance.ref().child(ref);
+      final Reference reference = FirebaseStorage.instance.ref().child(ref);
       bool result = false;
-      final StorageUploadTask uploadTask = reference.putData(file);
-      await uploadTask.onComplete.whenComplete(() => result = true).catchError(
+      final UploadTask uploadTask = reference.putData(file);
+      await uploadTask.whenComplete(() => result = true).catchError(
           (dynamic error) =>
               print('Mobile_Storage - StorageUploadTask - uploadImage $error'));
       return result;

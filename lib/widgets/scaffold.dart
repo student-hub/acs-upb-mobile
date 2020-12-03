@@ -104,7 +104,7 @@ class AppScaffold extends StatelessWidget {
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
     final bool isAuthenticated =
-        authProvider.isAuthenticatedFromCache && !authProvider.isAnonymous;
+        authProvider.isAuthenticated && !authProvider.isAnonymous;
     final bool enableContent = !needsToBeAuthenticated || isAuthenticated;
 
     return GestureDetector(
