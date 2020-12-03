@@ -245,12 +245,10 @@ class AuthProvider with ChangeNotifier {
   }
 
   Future<void> signOut() async {
-    if (isAnonymous) {
-      await FirebaseAuth.instance.signOut();
+    if (isAuthenticated && isAnonymous) {
       await delete();
-    } else {
-      await FirebaseAuth.instance.signOut();
     }
+    await FirebaseAuth.instance.signOut();
   }
 
   Future<bool> delete({BuildContext context}) async {
