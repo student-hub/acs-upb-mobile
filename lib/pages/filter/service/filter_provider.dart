@@ -144,13 +144,12 @@ class FilterProvider with ChangeNotifier {
       if (global &&
           _authProvider.isAuthenticated &&
           !_authProvider.isAnonymous) {
-        final DocumentReference docUsers =
-            _db.collection('users').doc(_authProvider.uid);
-        final DocumentSnapshot snapUsers = await docUsers.get();
+        final userSnap =
+            await _db.collection('users').doc(_authProvider.uid).get();
 
         //Load filter_nodes from Firestore
-        _relevantNodes = List<String>.from(snapUsers['filter_nodes']);
-        _relevanceFilter.setRelevantNodes(_relevantNodes);
+        _relevantNodes = List<String>.from(userSnap['filter_nodes']);
+        _relevanceFilter?.setRelevantNodes(_relevantNodes);
       }
 
       return cachedFilter;
