@@ -114,15 +114,20 @@ class WebsiteProvider with ChangeNotifier {
       return _initializeNumberOfVisitsLocally(websites);
     }
     try {
-      final DocumentReference doc = _db.collection('users').doc(uid);
-      final DocumentSnapshot snap = await doc.get();
+      final DocumentReference userDoc = _db.collection('users').doc(uid);
+      final userData = (await userDoc.get()).data();
 
-      final websiteVisits =
-          Map<String, dynamic>.from(snap.data()['websiteVisits'] ?? {});
-      for (final website in websites) {
-        website.numberOfVisits = websiteVisits[website.id] ?? 0;
+      if (userData != null) {
+        final websiteVisits =
+            Map<String, dynamic>.from(userData['websiteVisits'] ?? {});
+        for (final website in websites) {
+          website.numberOfVisits = websiteVisits[website.id] ?? 0;
+        }
+        return true;
+      } else {
+        print('User not found.');
+        return false;
       }
-      return true;
     } catch (e) {
       print(e);
       return false;
@@ -163,15 +168,22 @@ class WebsiteProvider with ChangeNotifier {
       if (uid == null) {
         return await incrementNumberOfVisitsLocally(website);
       }
-      final DocumentReference doc = _db.collection('users').doc(uid);
-      final DocumentSnapshot snap = await doc.get();
-      final websiteVisits =
-          Map<String, dynamic>.from(snap.data()['websiteVisits'] ?? {});
-      websiteVisits[website.id] = website.numberOfVisits++;
 
-      await doc.update({'websiteVisits': websiteVisits});
-      notifyListeners();
-      return true;
+      final DocumentReference userDoc = _db.collection('users').doc(uid);
+      final userData = (await userDoc.get()).data();
+
+      if (userData != null) {
+        final websiteVisits =
+            Map<String, dynamic>.from(userData['websiteVisits'] ?? {});
+        websiteVisits[website.id] = website.numberOfVisits++;
+
+        await userDoc.update({'websiteVisits': websiteVisits});
+        notifyListeners();
+        return true;
+      } else {
+        print('User not found.');
+        return false;
+      }
     } catch (e) {
       print(e);
       return false;
