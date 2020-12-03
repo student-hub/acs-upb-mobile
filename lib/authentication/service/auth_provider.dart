@@ -358,10 +358,6 @@ class AuthProvider with ChangeNotifier {
       final UserCredential credential = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(email: email, password: password);
 
-      // Update display name
-      await credential.user.updateProfile(displayName: '$firstName $lastName');
-      await credential.user.reload();
-
       // Create document in 'users'
       _currentUser = User(
         uid: credential.user.uid,
@@ -429,10 +425,6 @@ class AuthProvider with ChangeNotifier {
           .collection('users')
           .doc(_currentUser.uid)
           .update(_currentUser.toData());
-
-      // Update display name
-      await _firebaseUser.updateProfile(displayName: '$firstName $lastName');
-      await _firebaseUser.reload();
 
       notifyListeners();
       return true;
