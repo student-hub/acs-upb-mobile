@@ -320,7 +320,7 @@ class WebsiteProvider with ChangeNotifier {
             .doc(website.id);
       }
 
-      if ((await ref.get()).data != null) {
+      if ((await ref.get()).data() != null) {
         // TODO(IoanaAlexandru): Properly check if a website with a similar name/link already exists
         print('A website with id ${website.id} already exists');
         if (context != null) {
@@ -354,10 +354,10 @@ class WebsiteProvider with ChangeNotifier {
 
       DocumentReference previousRef;
       bool wasPrivate;
-      if ((await publicRef.get()).data != null) {
+      if ((await publicRef.get()).data() != null) {
         wasPrivate = false;
         previousRef = publicRef;
-      } else if ((await privateRef.get()).data != null) {
+      } else if ((await privateRef.get()).data() != null) {
         wasPrivate = true;
         previousRef = privateRef;
       } else {

@@ -323,7 +323,7 @@ class UniEventProvider extends EventProvider<UniEventInstance>
       final ref =
           FirebaseFirestore.instance.collection('events').doc(event.id);
 
-      if ((await ref.get()).data == null) {
+      if ((await ref.get()).data() == null) {
         print('Event not found.');
         return false;
       }
