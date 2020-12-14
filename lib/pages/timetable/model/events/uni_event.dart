@@ -149,6 +149,7 @@ class UniEventInstance extends Event {
     Color color,
     this.location,
     this.info,
+    this.active = true
   })  : color = color ?? mainEvent?.color,
         super(id: id, start: start, end: end);
 
@@ -158,6 +159,7 @@ class UniEventInstance extends Event {
   final Color color;
   final String location;
   final String info;
+  final bool active;
 
   @override
   bool operator ==(dynamic other) =>
@@ -165,7 +167,8 @@ class UniEventInstance extends Event {
       color == other.color &&
       location == other.location &&
       mainEvent == other.mainEvent &&
-      title == other.title;
+      title == other.title &&
+      active == other.active;
 
   @override
   int get hashCode =>

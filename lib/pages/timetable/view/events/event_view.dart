@@ -52,6 +52,7 @@ class EventView extends StatefulWidget {
 }
 
 class _EventViewState extends State<EventView> {
+  final _formKey = GlobalKey<FormState>();
   Padding _colorIcon() => Padding(
         padding: const EdgeInsets.all(10),
         child: Container(
@@ -74,7 +75,7 @@ class _EventViewState extends State<EventView> {
             onPressed: () {
               final user = Provider.of<AuthProvider>(context, listen: false)
                   .currentUserFromCache;
-              if (user.canAddPublicInfo) {
+              if (!user.canAddPublicInfo) {
                 Navigator.of(context).push(MaterialPageRoute<AddEventView>(
                   builder: (_) => ChangeNotifierProvider<FilterProvider>(
                     create: (_) => FilterProvider(
@@ -86,6 +87,72 @@ class _EventViewState extends State<EventView> {
                     ),
                   ),
                 ));
+              } else {
+                AppToast.show(S.of(context).errorPermissionDenied);
+              }
+            }),
+        AppScaffoldAction(
+            icon: Icons.delete,
+            onPressed: () {
+              final user = Provider.of<AuthProvider>(context, listen: false)
+                  .currentUserFromCache;
+              if (!user.canEditPublicInfo) {
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        content: Stack(
+                          clipBehavior: Clip.none,
+                          children: <Widget>[
+                            Positioned(
+                              right: -40,
+                              top: -40,
+                              child: InkResponse(
+                                onTap: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: CircleAvatar(
+                                  child: Icon(Icons.cancel),
+                                  backgroundColor: widget.event.color,
+                                ),
+                              ),
+                            ),
+                            Form(
+                              key: _formKey,
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: <Widget>[
+                                  Padding(
+                                    padding: EdgeInsets.all(16),
+                                    // Add custom warning
+                                    child: Text(
+                                        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline6),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.all(16),
+                                    child: TextFormField(),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: RaisedButton(
+                                      child: Text("Confirm"),
+                                      onPressed: () {
+                                        if (_formKey.currentState.validate()) {
+                                          _formKey.currentState.save();
+                                        }
+                                      },
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    });
               } else {
                 AppToast.show(S.of(context).errorPermissionDenied);
               }
@@ -168,6 +235,15 @@ class _EventViewState extends State<EventView> {
                 ],
               ),
             ),
+          Padding(
+              padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+              child: Row(
+                children: <Widget>[
+                  const Padding(
+                      padding: EdgeInsets.all(8), child: Icon(Icons.delete)),
+                  const SizedBox(width: 16),
+                ],
+              ))
         ]),
       ),
     );

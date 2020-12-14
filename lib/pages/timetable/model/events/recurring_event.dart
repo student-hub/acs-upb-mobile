@@ -92,7 +92,7 @@ class RecurringUniEvent extends UniEvent {
           skip = true;
         }
       }
-
+      bool active = true;
       if (!skip) {
         yield UniEventInstance(
           id: '$id-$i',
@@ -102,6 +102,7 @@ class RecurringUniEvent extends UniEvent {
           start: start,
           end: end,
           location: location,
+          active: active,
         );
       }
 
