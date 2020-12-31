@@ -161,6 +161,9 @@ dev_dependencies:
   # Using Provider for state management
   provider: ^4.0.4
 
+dependency_overrides:
+  # Downgrade the version till version of intl_translation will be fixed
+  intl: ^0.17.0-nullsafety.2
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
