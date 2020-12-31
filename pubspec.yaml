@@ -162,7 +162,7 @@ dev_dependencies:
   provider: ^4.0.4
 
 dependency_overrides:
-  # Downgrade the version till version of intl_translation will be fixed
+  # Temporary workaround to bypass intl_translation incompatibility
   intl: ^0.17.0-nullsafety.2
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
