@@ -100,8 +100,8 @@ class _ProfileCardState extends State<ProfileCard> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         IconButton(
-                          icon: const Icon(Icons.edit),
-                          color: Theme.of(context).textTheme.button.color,
+                            icon: const Icon(Icons.edit),
+                            color: Theme.of(context).textTheme.button.color,
                             onPressed: () async {
                               await Navigator.of(context).push(
                                 MaterialPageRoute<EditProfilePage>(
