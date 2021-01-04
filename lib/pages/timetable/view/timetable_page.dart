@@ -6,7 +6,6 @@ import 'package:acs_upb_mobile/pages/classes/view/classes_page.dart';
 import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
 import 'package:acs_upb_mobile/pages/filter/view/filter_page.dart';
 import 'package:acs_upb_mobile/pages/settings/service/request_provider.dart';
-import 'package:acs_upb_mobile/pages/settings/view/request_permissions.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/events/uni_event.dart';
 import 'package:acs_upb_mobile/pages/timetable/service/uni_event_provider.dart';
 import 'package:acs_upb_mobile/pages/timetable/view/date_header.dart';
@@ -263,18 +262,19 @@ class _TimetablePageState extends State<TimetablePage> {
             text: S.of(context).actionRequestPermissions,
             width: 130,
             onTap: () async {
+              // Check if user is verified
+              final bool isVerified = await authProvider.isVerified;
               // Pop the dialog
               Navigator.of(context).pop();
               // Push the Permissions page
               if (authProvider.isAnonymous) {
                 AppToast.show(S.of(context).messageNotLoggedIn);
-              } else if (await authProvider.isVerified) {
+              } else if (!isVerified) {
                 AppToast.show(
                     S.of(context).messageEmailNotVerifiedToPerformAction);
               } else {
-                await Navigator.of(context).push(
-                    MaterialPageRoute<RequestPermissionsPage>(
-                        builder: (_) => RequestPermissionsPage()));
+                await Navigator.of(context)
+                    .pushNamed(Routes.requestPermissions);
               }
             },
           )

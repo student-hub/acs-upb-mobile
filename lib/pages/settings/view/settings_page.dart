@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
-import 'package:acs_upb_mobile/pages/settings/view/request_permissions.dart';
+import 'package:acs_upb_mobile/navigation/routes.dart';
 import 'package:acs_upb_mobile/resources/custom_icons.dart';
 import 'package:acs_upb_mobile/resources/locale_provider.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
@@ -129,10 +129,8 @@ class _SettingsPageState extends State<SettingsPage> {
                               }
                             else
                               {
-                                Navigator.of(context).push(
-                                    MaterialPageRoute<RequestPermissionsPage>(
-                                        builder: (_) =>
-                                            RequestPermissionsPage())),
+                                Navigator.of(context)
+                                    .pushNamed(Routes.requestPermissions),
                               }
                           },
                           child: Text(S.of(context).labelAskPermissions,
