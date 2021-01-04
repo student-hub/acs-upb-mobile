@@ -224,8 +224,7 @@ class _PortalPageState extends State<PortalPage> {
           onPressed: () {
             final authProvider =
                 Provider.of<AuthProvider>(context, listen: false);
-            if (authProvider.isAuthenticated &&
-                !authProvider.isAnonymous) {
+            if (authProvider.isAuthenticated && !authProvider.isAnonymous) {
               // Show message if there is nothing the user can edit
               if (!editingEnabled) {
                 user.hasEditableWebsites.then((canEdit) {
@@ -258,8 +257,7 @@ class _PortalPageState extends State<PortalPage> {
               );
             },
             S.of(context).filterMenuShowMine: () {
-              if (authProvider.isAuthenticated &&
-                  !authProvider.isAnonymous) {
+              if (authProvider.isAuthenticated && !authProvider.isAnonymous) {
                 // Show message if user has no private websites
                 if (!userOnly) {
                   user.hasPrivateWebsites.then((hasPrivate) {
@@ -343,8 +341,7 @@ class _AddWebsiteButton extends StatelessWidget {
           onTap: () {
             final authProvider =
                 Provider.of<AuthProvider>(context, listen: false);
-            if (authProvider.isAuthenticated &&
-                !authProvider.isAnonymous) {
+            if (authProvider.isAuthenticated && !authProvider.isAnonymous) {
               Navigator.of(context)
                   .push(MaterialPageRoute<ChangeNotifierProvider>(
                 builder: (_) => ChangeNotifierProvider<FilterProvider>(

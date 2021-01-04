@@ -320,8 +320,7 @@ class UniEventProvider extends EventProvider<UniEventInstance>
 
   Future<bool> updateEvent(UniEvent event, {BuildContext context}) async {
     try {
-      final ref =
-          FirebaseFirestore.instance.collection('events').doc(event.id);
+      final ref = FirebaseFirestore.instance.collection('events').doc(event.id);
 
       if ((await ref.get()).data() == null) {
         print('Event not found.');
