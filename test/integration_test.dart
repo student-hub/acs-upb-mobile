@@ -145,6 +145,7 @@ Future<void> main() async {
     when(mockAuthProvider.hasListeners).thenReturn(false);
     when(mockAuthProvider.isAnonymous).thenReturn(true);
     when(mockAuthProvider.currentUser).thenAnswer((_) => Future.value(null));
+    when(mockAuthProvider.isVerified).thenAnswer((_) => Future.value(false));
 
     mockWebsiteProvider = MockWebsiteProvider();
     // ignore: invalid_use_of_protected_member
