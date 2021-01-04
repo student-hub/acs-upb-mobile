@@ -40,6 +40,7 @@ import 'package:acs_upb_mobile/pages/timetable/view/timetable_page.dart';
 import 'package:acs_upb_mobile/resources/custom_icons.dart';
 import 'package:acs_upb_mobile/resources/locale_provider.dart';
 import 'package:acs_upb_mobile/widgets/search_bar.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
@@ -49,6 +50,7 @@ import 'package:provider/provider.dart';
 import 'package:rrule/rrule.dart';
 import 'package:time_machine/time_machine.dart' hide Offset;
 
+import 'firebase_mock.dart';
 import 'test_utils.dart';
 
 // These tests open each page in the app on multiple screen sizes to make sure
@@ -74,7 +76,7 @@ class MockRequestProvider extends Mock implements RequestProvider {}
 
 class MockNavigatorObserver extends Mock implements NavigatorObserver {}
 
-void main() {
+Future<void> main() async {
   AuthProvider mockAuthProvider;
   WebsiteProvider mockWebsiteProvider;
   FilterProvider mockFilterProvider;
@@ -84,6 +86,9 @@ void main() {
   MockNewsProvider mockNewsProvider;
   UniEventProvider mockEventProvider;
   RequestProvider mockRequestProvider;
+
+  setupFirebaseAuthMocks();
+  await Firebase.initializeApp();
 
   // Test layout for different screen sizes
   // TODO(AdrianMargineanu): Use Flutter driver for integration tests, setting screen sizes here isn't reliable
@@ -127,6 +132,8 @@ void main() {
     PrefService.enableCaching();
     PrefService.cache = {};
     PrefService.setString('language', 'en');
+
+    await Firebase.initializeApp();
 
     LocaleProvider.cultures = testCultures;
     LocaleProvider.rruleL10ns = {'en': await RruleL10nTest.create()};
