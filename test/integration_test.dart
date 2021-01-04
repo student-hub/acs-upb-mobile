@@ -819,9 +819,9 @@ void main() {
           await tester.pumpAndSettle();
 
           // Expect previous week
-          final currentWeek =
-              WeekYearRules.iso.getWeekOfWeekYear(LocalDate.today());
-          expect(find.text((currentWeek - 1).toString()), findsOneWidget);
+          final previousWeek = WeekYearRules.iso
+              .getWeekOfWeekYear(LocalDate.today().subtractWeeks(1));
+          expect(find.text(previousWeek.toString()), findsOneWidget);
 
           expect(find.text('Holiday'), findsNothing);
           expect(find.text('Inter-semester holiday'), findsNothing);
@@ -842,6 +842,8 @@ void main() {
           await tester.pumpAndSettle();
 
           // Expect current week
+          final currentWeek =
+              WeekYearRules.iso.getWeekOfWeekYear(LocalDate.today());
           expect(find.text(currentWeek.toString()), findsOneWidget);
 
           expect(find.text('Holiday'), findsNothing);
@@ -863,7 +865,9 @@ void main() {
           await tester.pumpAndSettle();
 
           // Expect next week
-          expect(find.text((currentWeek + 1).toString()), findsOneWidget);
+          final nextWeek = WeekYearRules.iso
+              .getWeekOfWeekYear(LocalDate.today().addWeeks(1));
+          expect(find.text(nextWeek.toString()), findsOneWidget);
 
           expect(find.text('Holiday'), findsOneWidget);
           expect(find.text('Inter-semester holiday'), findsOneWidget);
@@ -884,7 +888,9 @@ void main() {
           await tester.pumpAndSettle();
 
           // Expect next week
-          expect(find.text((currentWeek + 2).toString()), findsOneWidget);
+          final nextNextWeek = WeekYearRules.iso
+              .getWeekOfWeekYear(LocalDate.today().addWeeks(2));
+          expect(find.text(nextNextWeek.toString()), findsOneWidget);
 
           expect(find.text('Holiday'), findsNothing);
           expect(find.text('Inter-semester holiday'), findsOneWidget);
@@ -905,7 +911,9 @@ void main() {
           await tester.pumpAndSettle();
 
           // Expect next week
-          expect(find.text((currentWeek + 3).toString()), findsOneWidget);
+          final nextNextNextWeek = WeekYearRules.iso
+              .getWeekOfWeekYear(LocalDate.today().addWeeks(3));
+          expect(find.text(nextNextNextWeek.toString()), findsOneWidget);
 
           expect(find.text('Holiday'), findsNothing);
           expect(find.text('Inter-semester holiday'), findsNothing);
@@ -954,7 +962,9 @@ void main() {
           await tester.pumpAndSettle();
 
           // Expect next week
-          expect(find.text((currentWeek + 1).toString()), findsOneWidget);
+          final nextWeek = WeekYearRules.iso
+              .getWeekOfWeekYear(LocalDate.today().addWeeks(1));
+          expect(find.text(nextWeek.toString()), findsOneWidget);
 
           // Open holiday event
           await tester.tap(find.text('Holiday'));
@@ -979,8 +989,6 @@ void main() {
           await tester.pumpAndSettle();
 
           // Open add event page
-          // await tester.tapAt(
-          //     tester.getCenter(find.byType(TimetablePage)).translate(0, 100));
           await tester
               .tapAt(tester.getCenter(find.text('Sat')).translate(0, 100));
           await tester.pumpAndSettle();
