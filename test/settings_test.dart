@@ -57,6 +57,7 @@ void main() {
       when(mockAuthProvider.isAnonymous).thenReturn(true);
       when(mockAuthProvider.getProfilePictureURL(context: anyNamed('context')))
           .thenAnswer((_) => Future.value(null));
+      when(mockAuthProvider.isVerified).thenAnswer((_) => Future.value(true));
 
       mockWebsiteProvider = MockWebsiteProvider();
       // ignore: invalid_use_of_protected_member
@@ -324,9 +325,16 @@ void main() {
         // Verify Ask Permissions page is not opened
         await tester.pumpAndSettle(const Duration(seconds: 4));
         expect(find.byType(SettingsPage), findsOneWidget);
+        expect(find.byType(RequestPermissionsPage), findsNothing);
 
         // Verify account
         when(mockAuthProvider.isVerified).thenAnswer((_) => Future.value(true));
+
+        // Go back and open settings again
+        await tester.tap(find.byIcon(Icons.arrow_back));
+        await tester.pumpAndSettle();
+        await tester.tap(find.byIcon(Icons.settings));
+        await tester.pumpAndSettle();
 
         // Press Ask Permissions page
         expect(find.text('Request editing permissions'), findsOneWidget);
