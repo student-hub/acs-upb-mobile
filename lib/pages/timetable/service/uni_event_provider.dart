@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/classes/model/class.dart';
+import 'package:acs_upb_mobile/pages/people/model/person.dart';
 import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
 import 'package:acs_upb_mobile/pages/filter/model/filter.dart';
 import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
@@ -60,11 +61,13 @@ extension LocalDateTimeExtension on LocalDateTime {
 extension UniEventExtension on UniEvent {
   static UniEvent fromJSON(String id, Map<String, dynamic> json,
       {ClassHeader classHeader,
+      Person person,
       Map<String, AcademicCalendar> calendars = const {}}) {
     if (json['start'] == null ||
         (json['duration'] == null && json['end'] == null)) return null;
 
     final type = UniEventTypeExtension.fromString(json['type']);
+
     if (json['end'] != null) {
       return AllDayUniEvent(
         id: id,
@@ -77,6 +80,7 @@ extension UniEventExtension on UniEvent {
         // TODO(IoanaAlexandru): Allow users to set event colours in settings
         color: type.color,
         classHeader: classHeader,
+        person: person,
         calendar: calendars[json['calendar']],
         degree: json['degree'],
         relevance: json['relevance'] == null
@@ -97,6 +101,7 @@ extension UniEventExtension on UniEvent {
         // TODO(IoanaAlexandru): Allow users to set event colours in settings
         color: type.color,
         classHeader: classHeader,
+        person: person,
         calendar: calendars[json['calendar']],
         degree: json['degree'],
         relevance: json['relevance'] == null
@@ -116,6 +121,7 @@ extension UniEventExtension on UniEvent {
         // TODO(IoanaAlexandru): Allow users to set event colours in settings
         color: type.color,
         classHeader: classHeader,
+        person: person,
         calendar: calendars[json['calendar']],
         degree: json['degree'],
         relevance: json['relevance'] == null
@@ -136,6 +142,7 @@ extension UniEventExtension on UniEvent {
       'duration': duration.toJSON(),
       'location': location,
       'class': classHeader.id,
+      'lecturer': person.name,
       'degree': degree,
       'relevance': relevance,
       'calendar': calendar.id,

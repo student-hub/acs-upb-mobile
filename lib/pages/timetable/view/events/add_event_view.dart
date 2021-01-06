@@ -26,6 +26,8 @@ import 'package:rrule/rrule.dart';
 import 'package:time_machine/time_machine.dart' as time_machine show DayOfWeek;
 import 'package:time_machine/time_machine.dart' hide DayOfWeek;
 import 'package:time_machine/time_machine_text_patterns.dart';
+import 'package:acs_upb_mobile/pages/people/model/person.dart';
+import 'package:acs_upb_mobile/pages/people/service/person_provider.dart';
 
 class AddEventView extends StatefulWidget {
   /// If the `id` of [initialEvent] is not null, this acts like an "Edit event"
@@ -47,6 +49,7 @@ class _AddEventViewState extends State<AddEventView> {
 
   UniEventType selectedEventType;
   ClassHeader selectedClass;
+  Person selectedPerson;
   String selectedCalendar;
   LocalTime startTime;
   Period duration;
@@ -71,6 +74,7 @@ class _AddEventViewState extends State<AddEventView> {
       calendars[selectedCalendar]?.semesters?.elementAt(selectedSemester - 1);
 
   List<ClassHeader> classHeaders = [];
+  List<Person> classPersons = [];
   User user;
   Map<String, AcademicCalendar> calendars = {};
 
@@ -83,6 +87,9 @@ class _AddEventViewState extends State<AddEventView> {
     Provider.of<ClassProvider>(context, listen: false)
         .fetchClassHeaders(uid: user.uid)
         .then((headers) => setState(() => classHeaders = headers));
+    Provider.of<PersonProvider>(context, listen: false)
+        .fetchPeople(context: context)
+        .then((persons) => setState(() => classPersons = persons));
     Provider.of<UniEventProvider>(context, listen: false)
         .fetchCalendars()
         .then((calendars) {
@@ -119,6 +126,7 @@ class _AddEventViewState extends State<AddEventView> {
 
     selectedEventType = widget.initialEvent?.type;
     selectedClass = widget.initialEvent?.classHeader;
+    selectedPerson = widget.initialEvent?.person;
     locationController =
         TextEditingController(text: widget.initialEvent?.location ?? '');
 
@@ -316,6 +324,30 @@ class _AddEventViewState extends State<AddEventView> {
                           ),
                           onChanged: (_) => setState(() {}),
                         ),
+                        DropdownButtonFormField<Person>(
+                          isExpanded: true,
+                          decoration: InputDecoration(
+                            labelText: S.of(context).labelLecturer,
+                            prefixIcon: const Icon(Icons.person),
+                          ),
+                          value: selectedPerson,
+                          items: classPersons
+                              .map(
+                                (person) => DropdownMenuItem(
+                                    value: person, child: Text(person.name)),
+                              )
+                              .toList(),
+                          onChanged: (selection) {
+                            formKey.currentState.validate();
+                            setState(() => selectedPerson = selection);
+                          },
+                          validator: (selection) {
+                            if (selection == null) {
+                              return S.of(context).errorLecturerCannotBeEmpty;
+                            }
+                            return null;
+                          },
+                        ),
                       ],
                     ),
                 ],
@@ -384,6 +416,7 @@ class _AddEventViewState extends State<AddEventView> {
               location: locationController.text,
               type: selectedEventType,
               classHeader: selectedClass,
+              person: selectedPerson,
               calendar: calendars[selectedCalendar],
               addedBy: Provider.of<AuthProvider>(context, listen: false)
                   .currentUserFromCache

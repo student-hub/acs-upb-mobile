@@ -1,4 +1,5 @@
 import 'package:acs_upb_mobile/pages/classes/model/class.dart';
+import 'package:acs_upb_mobile/pages/people/model/person.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/academic_calendar.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/events/uni_event.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
@@ -19,6 +20,7 @@ class RecurringUniEvent extends UniEvent {
     Color color,
     UniEventType type,
     ClassHeader classHeader,
+    Person person,
     AcademicCalendar calendar,
     String addedBy,
   })  : assert(rrule != null),
@@ -33,6 +35,7 @@ class RecurringUniEvent extends UniEvent {
             color: color,
             type: type,
             classHeader: classHeader,
+            person: person,
             calendar: calendar,
             addedBy: addedBy);
 
@@ -102,6 +105,7 @@ class RecurringUniEvent extends UniEvent {
           start: start,
           end: end,
           location: location,
+          person: person,
         );
       }
 

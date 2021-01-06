@@ -168,6 +168,24 @@ class _EventViewState extends State<EventView> {
                 ],
               ),
             ),
+          if (widget.event.mainEvent != null)
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+              child: Row(
+                children: <Widget>[
+                  const Padding(
+                    padding: EdgeInsets.all(8),
+                    child: Icon(Icons.person),
+                  ),
+                  const SizedBox(width: 16),
+                  Text(
+                      widget.event.person == null
+                          ? S.of(context).labelUnknown
+                          : widget.event.person.name,
+                      style: Theme.of(context).textTheme.subtitle1),
+                ],
+              ),
+            ),
         ]),
       ),
     );

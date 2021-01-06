@@ -28,6 +28,7 @@
   "labelStart": "Început",
   "labelEnd": "Sfârșit",
   "labelClass": "Materie",
+  "labelLecturer": "Profesor",
   "labelYear": "Anul",
   "labelSemester": "Semestrul",
   "labelTeam": "Echipa {name}",
@@ -113,6 +114,7 @@
   "errorPermissionDenied": "Nu aveți suficiente permisiuni.",
   "errorEventTypeCannotBeEmpty": "Tipul de eveniment trebuie precizat.",
   "errorClassCannotBeEmpty": "Materia trebuie precizată.",
+  "errorLecturerCannotBeEmpty": "Profesorul trebuie precizat.",
   "errorPictureSizeToBig": "Selectați o fotografie care are mai puțin de 5MB.",
   "errorImage": "Imaginea nu putut fi încărcată.",
 
@@ -265,3 +267,4 @@
 
   "fileAcsBanner": "assets/images/acs_banner_ro.png"
 }
+
