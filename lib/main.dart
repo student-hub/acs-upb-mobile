@@ -37,13 +37,14 @@ Future<void> main() async {
 
   final authProvider = AuthProvider();
   final classProvider = ClassProvider();
+  final personProvider = PersonProvider();
 
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider<AuthProvider>(create: (_) => authProvider),
     ChangeNotifierProvider<WebsiteProvider>(create: (_) => WebsiteProvider()),
     Provider<RequestProvider>(create: (_) => RequestProvider()),
     ChangeNotifierProvider<ClassProvider>(create: (_) => classProvider),
-    ChangeNotifierProvider<PersonProvider>(create: (_) => PersonProvider()),
+    ChangeNotifierProvider<PersonProvider>(create: (_) => personProvider),
     ChangeNotifierProvider<QuestionProvider>(create: (_) => QuestionProvider()),
     ChangeNotifierProvider<NewsProvider>(create: (_) => NewsProvider()),
     ChangeNotifierProxyProvider<AuthProvider, FilterProvider>(
@@ -56,6 +57,7 @@ Future<void> main() async {
         UniEventProvider>(
       create: (_) => UniEventProvider(
         authProvider: authProvider,
+        personProvider: personProvider,
       ),
       update: (context, classProvider, filterProvider, uniEventProvider) {
         return uniEventProvider

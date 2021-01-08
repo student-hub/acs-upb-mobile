@@ -51,7 +51,7 @@ class UniAllDayEventWidget extends StatelessWidget {
           child: InkWell(
             onTap: () =>
                 Navigator.of(context).push(MaterialPageRoute<EventView>(
-              builder: (_) => EventView(event: event),
+              builder: (_) => EventView(eventInstance: event),
             )),
             child: _buildContent(context),
           ),

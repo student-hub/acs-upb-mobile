@@ -315,6 +315,16 @@ class S {
     );
   }
 
+  /// `Lecturer`
+  String get labelLecturer {
+    return Intl.message(
+      'Lecturer',
+      name: 'labelLecturer',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Year`
   String get labelYear {
     return Intl.message(
@@ -1110,6 +1120,16 @@ class S {
     return Intl.message(
       'Class cannot be empty.',
       name: 'errorClassCannotBeEmpty',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Lecturer cannot be empty.`
+  String get errorLecturerCannotBeEmpty {
+    return Intl.message(
+      'Lecturer cannot be empty.',
+      name: 'errorLecturerCannotBeEmpty',
       desc: '',
       args: [],
     );

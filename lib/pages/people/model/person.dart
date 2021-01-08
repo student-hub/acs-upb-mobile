@@ -13,4 +13,15 @@ class Person {
   final String office;
   final String position;
   final String photo;
+
+  @override
+  int get hashCode => name.hashCode;
+
+  @override
+  bool operator ==(Object other) {
+    if (other is Person) {
+      return other.name == name;
+    }
+    return false;
+  }
 }

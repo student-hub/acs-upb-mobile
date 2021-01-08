@@ -101,7 +101,6 @@ class UniEvent {
     this.color,
     this.type,
     this.classHeader,
-    this.person,
     this.calendar,
     this.relevance,
     this.degree,
@@ -116,7 +115,6 @@ class UniEvent {
   final String name;
   final String location;
   final ClassHeader classHeader;
-  final Person person;
   final AcademicCalendar calendar;
   final String degree;
   final List<String> relevance;
@@ -138,7 +136,6 @@ class UniEvent {
       start: start,
       end: start.add(duration),
       location: location,
-      person: person,
     );
   }
 }
@@ -152,7 +149,6 @@ class UniEventInstance extends Event {
     @required LocalDateTime end,
     Color color,
     this.location,
-    this.person,
     this.info,
   })  : color = color ?? mainEvent?.color,
         super(id: id, start: start, end: end);
@@ -162,7 +158,6 @@ class UniEventInstance extends Event {
 
   final Color color;
   final String location;
-  final Person person;
   final String info;
 
   @override
@@ -170,11 +165,10 @@ class UniEventInstance extends Event {
       super == other &&
       color == other.color &&
       location == other.location &&
-      person == other.person &&
       mainEvent == other.mainEvent &&
       title == other.title;
 
   @override
   int get hashCode =>
-      hashList([super.hashCode, color, location, person, mainEvent, title]);
+      hashList([super.hashCode, color, location, mainEvent, title]);
 }

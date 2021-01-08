@@ -1,5 +1,4 @@
 import 'package:acs_upb_mobile/pages/classes/model/class.dart';
-import 'package:acs_upb_mobile/pages/people/model/person.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/academic_calendar.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/events/uni_event.dart';
 import 'package:flutter/material.dart';
@@ -15,7 +14,6 @@ class AllDayUniEvent extends UniEvent {
     Color color,
     UniEventType type,
     ClassHeader classHeader,
-    Person person,
     AcademicCalendar calendar,
     List<String> relevance,
     String degree,
@@ -31,7 +29,6 @@ class AllDayUniEvent extends UniEvent {
             color: color,
             type: type,
             classHeader: classHeader,
-            person: person,
             calendar: calendar,
             relevance: relevance,
             degree: degree,
