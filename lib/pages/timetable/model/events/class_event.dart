@@ -23,8 +23,7 @@ class ClassEvent extends RecurringUniEvent {
     ClassHeader classHeader,
     AcademicCalendar calendar,
     String addedBy,
-  })  : assert(teacher != null),
-        super(
+  }) : super(
             rrule: rrule,
             name: name,
             location: location,

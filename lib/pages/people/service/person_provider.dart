@@ -43,9 +43,7 @@ class PersonProvider with ChangeNotifier {
           .getDocuments();
 
       if (query == null || query.documents.isEmpty) {
-        //TODO return person only with name
         return Person(name: personName);
-        return null;
       }
 
       return PersonExtension.fromSnap(query.documents.first);

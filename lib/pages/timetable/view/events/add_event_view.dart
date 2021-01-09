@@ -327,8 +327,7 @@ class _AddEventViewState extends State<AddEventView> {
                           ),
                           onChanged: (_) => setState(() {}),
                         ),
-                        if ([UniEventType.lecture]
-                            .contains(selectedEventType))
+                        if ([UniEventType.lecture].contains(selectedEventType))
                           DropdownButtonFormField<Person>(
                             isExpanded: true,
                             decoration: InputDecoration(

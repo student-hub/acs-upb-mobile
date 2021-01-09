@@ -21,7 +21,6 @@ import 'package:flutter/material.dart';
 import 'package:rrule/rrule.dart';
 import 'package:time_machine/time_machine.dart';
 import 'package:timetable/timetable.dart';
-import 'package:provider/provider.dart';
 
 extension PeriodExtension on Period {
   static Period fromJSON(Map<String, dynamic> json) {
@@ -268,7 +267,8 @@ class UniEventProvider extends EventProvider<UniEventInstance>
                     await _classProvider.fetchClassHeader(doc.data['class']);
               }
               if (doc.data['teacher'] != null) {
-                teacher = await _personProvider.fetchPerson(doc.data['teacher']);
+                teacher =
+                    await _personProvider.fetchPerson(doc.data['teacher']);
               }
 
               events.add(UniEventExtension.fromJSON(doc.documentID, doc.data,

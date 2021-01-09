@@ -80,7 +80,8 @@ class _EventViewState extends State<EventView> {
                   builder: (_) => ChangeNotifierProvider<FilterProvider>(
                     create: (_) => FilterProvider(
                       defaultDegree: widget.eventInstance.mainEvent.degree,
-                      defaultRelevance: widget.eventInstance.mainEvent.relevance,
+                      defaultRelevance:
+                          widget.eventInstance.mainEvent.relevance,
                     ),
                     child: AddEventView(
                       initialEvent: widget.eventInstance.mainEvent,
@@ -114,7 +115,8 @@ class _EventViewState extends State<EventView> {
                       Text(widget.eventInstance.dateString),
                       if (widget.eventInstance.mainEvent is RecurringUniEvent &&
                           LocaleProvider.rruleL10n != null)
-                        Text((widget.eventInstance.mainEvent as RecurringUniEvent)
+                        Text((widget.eventInstance.mainEvent
+                                as RecurringUniEvent)
                             .rrule
                             .toText(l10n: LocaleProvider.rruleL10n)),
                     ],
@@ -180,7 +182,9 @@ class _EventViewState extends State<EventView> {
                   ),
                   const SizedBox(width: 16),
                   Text(
-                      (widget.eventInstance.mainEvent as ClassEvent).teacher.name ??
+                      (widget.eventInstance.mainEvent as ClassEvent)
+                              .teacher
+                              .name ??
                           S.of(context).labelUnknown,
                       style: Theme.of(context).textTheme.subtitle1),
                 ],

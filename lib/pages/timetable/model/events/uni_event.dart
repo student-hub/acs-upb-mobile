@@ -2,7 +2,6 @@ import 'dart:core';
 
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/classes/model/class.dart';
-import 'package:acs_upb_mobile/pages/people/model/person.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/academic_calendar.dart';
 import 'package:flutter/material.dart';
 import 'package:time_machine/time_machine.dart';
