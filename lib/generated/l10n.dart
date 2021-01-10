@@ -876,11 +876,11 @@ class S {
     );
   }
 
-  /// `Disable instance of event`
-  String get actionDisableInstance {
+  /// `Cancel instance of event`
+  String get actionCancelInstance {
     return Intl.message(
-      'Disable Instance',
-      name: 'actionDisableInstance',
+      'Cancel Instance',
+      name: 'actionCancelInstance',
       desc: '',
       args: [],
     );
@@ -2146,21 +2146,21 @@ class S {
     );
   }
 
-  /// 'Are you sure you want to disable this instance of the event?'
-  String get messageDisableInstance {
+  /// 'Are you sure you want to cancel this instance of the event?'
+  String get messageCancelInstance {
     return Intl.message(
-      'Are you sure you want to disable this instance of the event?',
-      name: 'messageDisableInstance',
+      'Are you sure you want to cancel this instance of the event?',
+      name: 'messageCancelInstance',
       desc: '',
       args: [],
     );
   }
 
   /// `Instance disabled successfully.`
-  String get messageInstanceDisabled {
+  String get messageInstanceCanceled {
     return Intl.message(
-      'Instance disabled successfully.',
-      name: 'messageInstanceDisabled',
+      'Instance canceled successfully.',
+      name: 'messageInstanceCanceled',
       desc: '',
       args: [],
     );

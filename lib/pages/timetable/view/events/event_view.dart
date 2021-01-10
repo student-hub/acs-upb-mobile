@@ -181,12 +181,12 @@ class _EventViewState extends State<EventView> {
 
   AppDialog _disableConfirmationDialog(BuildContext context) => AppDialog(
         icon: const Icon(Icons.delete),
-        title: S.of(context).actionDisableInstance,
+        title: S.of(context).actionCancelInstance,
         info: S.of(context).messageThisCouldAffectOtherStudents,
-        message: S.of(context).messageDisableInstance,
+        message: S.of(context).messageCancelInstance,
         actions: [
           AppButton(
-            text: S.of(context).actionDisableInstance,
+            text: S.of(context).actionCancelInstance,
             width: 130,
             onTap: () async {
               final res =
@@ -195,7 +195,7 @@ class _EventViewState extends State<EventView> {
               if (res) {
                 Navigator.of(context)
                     .popUntil(ModalRoute.withName(Routes.home));
-                AppToast.show(S.of(context).messageInstanceDisabled);
+                AppToast.show(S.of(context).messageInstanceCanceled);
               }
             },
           )
@@ -205,7 +205,7 @@ class _EventViewState extends State<EventView> {
   AppScaffoldAction _disableInstanceButton() => AppScaffoldAction(
         icon: Icons.more_vert,
         items: {
-          S.of(context).actionDisableInstance: () =>
+          S.of(context).actionCancelInstance: () =>
               showDialog(context: context, builder: _disableConfirmationDialog)
         },
         onPressed: () =>
