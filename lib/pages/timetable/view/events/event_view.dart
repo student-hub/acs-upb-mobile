@@ -14,6 +14,10 @@ import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
+import 'package:acs_upb_mobile/widgets/button.dart';
+import 'package:acs_upb_mobile/widgets/dialog.dart';
+import 'package:acs_upb_mobile/pages/timetable/service/uni_event_provider.dart';
+import 'package:acs_upb_mobile/navigation/routes.dart';
 import 'package:time_machine/time_machine.dart';
 import 'package:timetable/timetable.dart';
 
@@ -91,72 +95,7 @@ class _EventViewState extends State<EventView> {
                 AppToast.show(S.of(context).errorPermissionDenied);
               }
             }),
-        AppScaffoldAction(
-            icon: Icons.delete,
-            onPressed: () {
-              final user = Provider.of<AuthProvider>(context, listen: false)
-                  .currentUserFromCache;
-              if (!user.canEditPublicInfo) {
-                showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        content: Stack(
-                          clipBehavior: Clip.none,
-                          children: <Widget>[
-                            Positioned(
-                              right: -40,
-                              top: -40,
-                              child: InkResponse(
-                                onTap: () {
-                                  Navigator.of(context).pop();
-                                },
-                                child: CircleAvatar(
-                                  child: Icon(Icons.cancel),
-                                  backgroundColor: widget.event.color,
-                                ),
-                              ),
-                            ),
-                            Form(
-                              key: _formKey,
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: <Widget>[
-                                  Padding(
-                                    padding: EdgeInsets.all(16),
-                                    // Add custom warning
-                                    child: Text(
-                                        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .headline6),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.all(16),
-                                    child: TextFormField(),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: RaisedButton(
-                                      child: Text("Confirm"),
-                                      onPressed: () {
-                                        if (_formKey.currentState.validate()) {
-                                          _formKey.currentState.save();
-                                        }
-                                      },
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      );
-                    });
-              } else {
-                AppToast.show(S.of(context).errorPermissionDenied);
-              }
-            })
+        _disableInstanceButton()
       ],
       body: SafeArea(
         child: ListView(children: [
@@ -235,17 +174,41 @@ class _EventViewState extends State<EventView> {
                 ],
               ),
             ),
-          Padding(
-              padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
-              child: Row(
-                children: <Widget>[
-                  const Padding(
-                      padding: EdgeInsets.all(8), child: Icon(Icons.delete)),
-                  const SizedBox(width: 16),
-                ],
-              ))
         ]),
       ),
     );
   }
+
+  AppDialog _disableConfirmationDialog(BuildContext context) => AppDialog(
+        icon: const Icon(Icons.delete),
+        title: S.of(context).actionDisableInstance,
+        info: S.of(context).messageThisCouldAffectOtherStudents,
+        message: S.of(context).messageDisableInstance,
+        actions: [
+          AppButton(
+            text: S.of(context).actionDisableInstance,
+            width: 130,
+            onTap: () async {
+              final res =
+                  await Provider.of<UniEventProvider>(context, listen: false)
+                      .disableInstance(widget.event, context: context);
+              if (res) {
+                Navigator.of(context)
+                    .popUntil(ModalRoute.withName(Routes.home));
+                AppToast.show(S.of(context).messageInstanceDisabled);
+              }
+            },
+          )
+        ],
+      );
+
+  AppScaffoldAction _disableInstanceButton() => AppScaffoldAction(
+        icon: Icons.more_vert,
+        items: {
+          S.of(context).actionDisableInstance: () =>
+              showDialog(context: context, builder: _disableConfirmationDialog)
+        },
+        onPressed: () =>
+            showDialog(context: context, builder: _disableConfirmationDialog),
+      );
 }
