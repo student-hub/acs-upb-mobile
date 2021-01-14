@@ -41,7 +41,7 @@ torvalds/android_speedups
 ```
 ### Merging
 When developing a new feature or working on a bug, your pull request will end up containing fixup commits (commits that change the same line of code repeatedly) or too fine-grained commits. An issue that can arise from this is that the main branch history will become poluted with unnecessary commits. To avoid it, we implement and enforce a squash policy.
-All commits that are merged intro the main development branch have to be squashed ahead of the merge.
+All commits that are merged into the main development branch have to be squashed ahead of the merge.
 You can do so by pressing "squash and merge", or, alternetively, following the generic local squash routine outlined bellow:
 ```
 git checkout your_branch_name
@@ -55,25 +55,8 @@ git push -f # (force push to GitHub)
 Please update the resulting commit message, if needed. It should read as a coherent message. In most cases, this means not just listing the interim commits.
 
 Please refrain from creating several pull requests for the same change. Use the pull request that is already open (or was created earlier) to amend changes. This preserves the discussion and review that happened earlier for the respective change set.
-Similarly, please create one PR per development item, instead of bundling multiple fixes and improvments in a singule PR.
-The length of time required for peer review is unpredictable and will vary from pull request to pull request.
+Similarly, please create one PR per development item, instead of bundling multiple fixes and improvements in a singule PR.
 
-Please also prefix the issue number between square brackets in the title of a PR. This will, in the future, make it simpler to track how various decisions where taken during the development process.<br>
-As examples:<br>
-Good PR titles:
-```
-[60] Update Documentation to Include YAML Guidelines
-[420] Add Caching Feature to Classes Update
-[97] Fix Login Bug using Universal Pass
-```
-Bad PR titles:
-```
-Fix Stuff
-Add Auto Calendar Feature
-[421] Yeet this BS
-(917) Fix Login Bug using Universal Pass
-[321][21][54][12] Fix Login Issue, Add new Job Pipeline, Reconfigure XML architecture, Redo Pass Fix
-```
 ## Development tips
 
 * Make sure you have the *Project* view open in the *Project* tab on the left in Android Studio (not
