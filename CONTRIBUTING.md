@@ -8,7 +8,8 @@ with the technologies and the contribution process.
 ### Guidelines
 1. Check out [this](https://opensource.com/article/19/7/create-pull-request-github) tutorial if you
 don't know how to make a PR.
-2. Increase the version number in the [`pubspec.yaml`](pubspec.yaml) file with the following
+2. If there is an open issue related to your PR, link your PR to it either manually or by using a keyword like "Fixes #issue_number" in the description (more information [here](https://docs.github.com/en/github/managing-your-work-on-github/linking-a-pull-request-to-an-issue#linking-a-pull-request-to-an-issue-using-a-keyword)). If there is no open issue, consider creating one so it's easier to understand what problem your PR fixes.
+3. Increase the version number in the [`pubspec.yaml`](pubspec.yaml) file with the following
 guidelines in mind:
     - **Build number** (0.2.1+**4**) is for very small changes and bug fixes (usually not visible to
       the end user).
@@ -17,9 +18,9 @@ guidelines in mind:
     - **Minor version** (0.**2**.1+4) is for added functionality (i.e. merging a branch that
       introduces a new feature).
     - **Major version** (**0**.2.1+4) marks important project milestones.
-3. Document any non-obvious parts of the code and make sure the commit description is clear on why
+4. Document any non-obvious parts of the code and make sure the commit description is clear on why
 the change is necessary.
-4. If it's a new feature, write at least one test for it.
+5. If it's a new feature, write at least one test for it.
 
 Please note that in order for a PR to be merged (accepted), all of the tests need to pass,
 including the linter (which checks for coding style and warnings, see [Style guide](#style-guide)).
