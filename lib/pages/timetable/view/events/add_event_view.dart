@@ -30,7 +30,6 @@ import 'package:time_machine/time_machine.dart' hide DayOfWeek;
 import 'package:time_machine/time_machine_text_patterns.dart';
 import 'package:acs_upb_mobile/pages/people/model/person.dart';
 import 'package:acs_upb_mobile/pages/people/service/person_provider.dart';
-import 'package:autocomplete_textfield/autocomplete_textfield.dart';
 
 class AddEventView extends StatefulWidget {
   /// If the `id` of [initialEvent] is not null, this acts like an "Edit event"
@@ -48,12 +47,7 @@ class _AddEventViewState extends State<AddEventView> {
   final formKey = GlobalKey<FormState>();
 
   TextEditingController locationController;
-  TextEditingController teacherController;
   RelevanceController relevanceController = RelevanceController();
-  AutoCompleteTextField<Person> searchTextField;
-
-  //GlobalKey<AutoCompleteTextFieldState<Person>> key = GlobalKey();
-  GlobalKey key = GlobalKey<AutoCompleteTextFieldState<Person>>();
 
   UniEventType selectedEventType;
   ClassHeader selectedClass;
@@ -139,8 +133,6 @@ class _AddEventViewState extends State<AddEventView> {
         : null;
     locationController =
         TextEditingController(text: widget.initialEvent?.location ?? '');
-    teacherController =
-        TextEditingController(text: selectedTeacher?.name ?? '');
 
     final startHour = widget.initialEvent?.start?.hourOfDay ?? 8;
     duration = widget.initialEvent?.duration ?? const Period(hours: 2);
@@ -301,6 +293,8 @@ class _AddEventViewState extends State<AddEventView> {
                                   TextEditingController textEditingController,
                                   FocusNode focusNode,
                                   VoidCallback onFieldSubmitted) {
+                                textEditingController.text =
+                                    selectedTeacher.name;
                                 return TextFormField(
                                   controller: textEditingController,
                                   decoration: InputDecoration(
@@ -335,10 +329,17 @@ class _AddEventViewState extends State<AddEventView> {
                               onSelected: (selection) {
                                 formKey.currentState.validate();
                                 setState(() {
-                                  teacherController.text = selection.name;
                                   selectedTeacher = selection;
                                 });
                               }),
+                        TextFormField(
+                          controller: locationController,
+                          decoration: InputDecoration(
+                            labelText: S.of(context).labelLocation,
+                            prefixIcon: const Icon(Icons.location_on),
+                          ),
+                          onChanged: (_) => setState(() {}),
+                        ),
                         timeIntervalPicker(),
                         if (weekSelected[WeekType.odd] != null &&
                             weekSelected[WeekType.even] != null)
@@ -374,75 +375,6 @@ class _AddEventViewState extends State<AddEventView> {
                             return null;
                           },
                         ),
-                        TextFormField(
-                          controller: locationController,
-                          decoration: InputDecoration(
-                            labelText: S.of(context).labelLocation,
-                            prefixIcon: const Icon(Icons.location_on),
-                          ),
-                          onChanged: (_) => setState(() {}),
-                        ),
-                        /*searchTextField = AutoCompleteTextField<Person>(
-                              clearOnSubmit: false,
-                              itemSubmitted: (selection) {
-                                formKey.currentState.validate();
-                                setState(() {
-                                  searchTextField.textField.controller.text =
-                                      selection.name;
-                                  teacherController.text = selection.name;
-                                  selectedTeacher = selection;
-                                });
-                              },
-                              key: key,
-                              controller: teacherController,
-                              suggestions: classTeachers.toList(),
-                              decoration: InputDecoration(
-                                labelText: S.of(context).labelLecturer,
-                                prefixIcon: const Icon(Icons.person),
-                              ),
-                              itemBuilder: (context, teacher) {
-                                return row(teacher);
-                              },
-                              itemSorter: (a, b) {
-                                return a.name.compareTo(b.name);
-                              },
-                              itemFilter: (item, query) {
-                                return query
-                                    .split(' ')
-                                    .where((element) => element != '')
-                                    .fold(
-                                        true,
-                                        (previousValue, filter) =>
-                                            previousValue &&
-                                            item.name
-                                                .toLowerCase()
-                                                .contains(query.toLowerCase()));
-                              })*/
-                        /*DropdownButtonFormField<Person>(
-                            isExpanded: true,
-                            decoration: InputDecoration(
-                              labelText: S.of(context).labelLecturer,
-                              prefixIcon: const Icon(Icons.person),
-                            ),
-                            value: selectedTeacher,
-                            items: classTeachers
-                                .map(
-                                  (teacher) => DropdownMenuItem(
-                                      value: teacher,
-                                      child: Text(teacher.name)),
-                                )
-                                .toList(),
-                            onChanged: (selection) {
-                              formKey.currentState.validate();
-                              setState(() => selectedTeacher = selection);
-                            },
-                            validator: (selection) {
-                              if (selection == null) {
-                                return S.of(context).errorLecturerCannotBeEmpty;
-                              }
-                              return null;
-                            },
-                          ),*/
                       ],
                     ),
                   const SizedBox(width: 16),

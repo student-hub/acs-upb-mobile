@@ -25,9 +25,6 @@ dependencies:
   # Helps with sizing text to fit container
   auto_size_text: ^2.1.0
 
-  # Autocomplete textfield utility
-  autocomplete_textfield: ^1.7.3
-
   # Dart helper methods
   basic_utils: ^1.2.0
 

@@ -5,7 +5,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
-String _displayStringForOption(dynamic option)=>option.toString();
+String _displayStringForOption(dynamic option) => option.toString();
 
 /// {@macro flutter.widgets.RawAutocomplete.RawAutocomplete}
 ///
@@ -128,7 +128,7 @@ class Autocomplete<T extends Object> extends StatelessWidget {
     this.fieldViewBuilder = _defaultFieldViewBuilder,
     this.onSelected,
     this.optionsViewBuilder,
-  }) :assert(optionsBuilder != null),
+  })  : assert(optionsBuilder != null),
         super(key: key);
 
   /// {@macro flutter.widgets.RawAutocomplete.displayStringForOption}
@@ -152,7 +152,11 @@ class Autocomplete<T extends Object> extends StatelessWidget {
   /// default.
   final AutocompleteOptionsViewBuilder<T> optionsViewBuilder;
 
-  static Widget _defaultFieldViewBuilder(BuildContext context, TextEditingController textEditingController, FocusNode focusNode, VoidCallback onFieldSubmitted) {
+  static Widget _defaultFieldViewBuilder(
+      BuildContext context,
+      TextEditingController textEditingController,
+      FocusNode focusNode,
+      VoidCallback onFieldSubmitted) {
     return _AutocompleteField(
       focusNode: focusNode,
       textEditingController: textEditingController,
@@ -166,13 +170,15 @@ class Autocomplete<T extends Object> extends StatelessWidget {
       displayStringForOption: displayStringForOption,
       fieldViewBuilder: fieldViewBuilder,
       optionsBuilder: optionsBuilder,
-      optionsViewBuilder: optionsViewBuilder ?? (BuildContext context, AutocompleteOnSelected<T> onSelected, Iterable<T> options) {
-        return _AutocompleteOptions<T>(
-          displayStringForOption: displayStringForOption,
-          onSelected: onSelected,
-          options: options,
-        );
-      },
+      optionsViewBuilder: optionsViewBuilder ??
+          (BuildContext context, AutocompleteOnSelected<T> onSelected,
+              Iterable<T> options) {
+            return _AutocompleteOptions<T>(
+              displayStringForOption: displayStringForOption,
+              onSelected: onSelected,
+              options: options,
+            );
+          },
       onSelected: onSelected,
     );
   }
