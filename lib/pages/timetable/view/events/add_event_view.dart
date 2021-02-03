@@ -14,6 +14,7 @@ import 'package:acs_upb_mobile/pages/timetable/model/events/uni_event.dart';
 import 'package:acs_upb_mobile/pages/timetable/service/uni_event_provider.dart';
 import 'package:acs_upb_mobile/resources/custom_icons.dart';
 import 'package:acs_upb_mobile/resources/locale_provider.dart';
+import 'package:acs_upb_mobile/widgets/autocomplete.dart';
 import 'package:acs_upb_mobile/widgets/button.dart';
 import 'package:acs_upb_mobile/widgets/dialog.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
@@ -50,6 +51,7 @@ class _AddEventViewState extends State<AddEventView> {
   TextEditingController teacherController;
   RelevanceController relevanceController = RelevanceController();
   AutoCompleteTextField<Person> searchTextField;
+
   //GlobalKey<AutoCompleteTextFieldState<Person>> key = GlobalKey();
   GlobalKey key = GlobalKey<AutoCompleteTextFieldState<Person>>();
 
@@ -164,6 +166,8 @@ class _AddEventViewState extends State<AddEventView> {
       weekDaySelected[initialWeekDay] = true;
     }
   }
+
+  static String _displayStringForOption(Person person) => person.name;
 
   @override
   Widget build(BuildContext context) {
@@ -291,6 +295,50 @@ class _AddEventViewState extends State<AddEventView> {
                               return null;
                             },
                           ),
+                        if ([UniEventType.lecture].contains(selectedEventType))
+                          Autocomplete<Person>(
+                              fieldViewBuilder: (BuildContext context,
+                                  TextEditingController textEditingController,
+                                  FocusNode focusNode,
+                                  VoidCallback onFieldSubmitted) {
+                                return TextFormField(
+                                  controller: textEditingController,
+                                  decoration: InputDecoration(
+                                    labelText: S.of(context).labelLecturer,
+                                    prefixIcon: const Icon(Icons.person),
+                                  ),
+                                  focusNode: focusNode,
+                                  validator: (selection) {
+                                    if (selection == null) {
+                                      return S
+                                          .of(context)
+                                          .errorLecturerCannotBeEmpty;
+                                    }
+                                    return null;
+                                  },
+                                  onFieldSubmitted: (String value) {
+                                    onFieldSubmitted();
+                                  },
+                                );
+                              },
+                              displayStringForOption: _displayStringForOption,
+                              optionsBuilder:
+                                  (TextEditingValue textEditingValue) {
+                                if (textEditingValue.text == '') {
+                                  return const Iterable<Person>.empty();
+                                }
+                                return classTeachers.where((Person person) {
+                                  return person.name.toLowerCase().contains(
+                                      textEditingValue.text.toLowerCase());
+                                });
+                              },
+                              onSelected: (selection) {
+                                formKey.currentState.validate();
+                                setState(() {
+                                  teacherController.text = selection.name;
+                                  selectedTeacher = selection;
+                                });
+                              }),
                         timeIntervalPicker(),
                         if (weekSelected[WeekType.odd] != null &&
                             weekSelected[WeekType.even] != null)
@@ -334,8 +382,7 @@ class _AddEventViewState extends State<AddEventView> {
                           ),
                           onChanged: (_) => setState(() {}),
                         ),
-                        if ([UniEventType.lecture].contains(selectedEventType))
-                          searchTextField = AutoCompleteTextField<Person>(
+                        /*searchTextField = AutoCompleteTextField<Person>(
                               clearOnSubmit: false,
                               itemSubmitted: (selection) {
                                 formKey.currentState.validate();
@@ -370,7 +417,7 @@ class _AddEventViewState extends State<AddEventView> {
                                             item.name
                                                 .toLowerCase()
                                                 .contains(query.toLowerCase()));
-                              })
+                              })*/
                         /*DropdownButtonFormField<Person>(
                             isExpanded: true,
                             decoration: InputDecoration(
