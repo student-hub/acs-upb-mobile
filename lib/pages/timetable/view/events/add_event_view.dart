@@ -294,7 +294,7 @@ class _AddEventViewState extends State<AddEventView> {
                                   FocusNode focusNode,
                                   VoidCallback onFieldSubmitted) {
                                 textEditingController.text =
-                                    selectedTeacher.name;
+                                    selectedTeacher?.name;
                                 return TextFormField(
                                   controller: textEditingController,
                                   decoration: InputDecoration(
