@@ -289,49 +289,50 @@ class _AddEventViewState extends State<AddEventView> {
                           ),
                         if ([UniEventType.lecture].contains(selectedEventType))
                           Autocomplete<Person>(
-                              fieldViewBuilder: (BuildContext context,
-                                  TextEditingController textEditingController,
-                                  FocusNode focusNode,
-                                  VoidCallback onFieldSubmitted) {
-                                textEditingController.text =
-                                    selectedTeacher?.name;
-                                return TextFormField(
-                                  controller: textEditingController,
-                                  decoration: InputDecoration(
-                                    labelText: S.of(context).labelLecturer,
-                                    prefixIcon: const Icon(Icons.person),
-                                  ),
-                                  focusNode: focusNode,
-                                  validator: (selection) {
-                                    if (selection == null) {
-                                      return S
-                                          .of(context)
-                                          .errorLecturerCannotBeEmpty;
-                                    }
-                                    return null;
-                                  },
-                                  onFieldSubmitted: (String value) {
-                                    onFieldSubmitted();
-                                  },
-                                );
-                              },
-                              displayStringForOption: _displayStringForOption,
-                              optionsBuilder:
-                                  (TextEditingValue textEditingValue) {
-                                if (textEditingValue.text == '') {
-                                  return const Iterable<Person>.empty();
-                                }
-                                return classTeachers.where((Person person) {
-                                  return person.name.toLowerCase().contains(
-                                      textEditingValue.text.toLowerCase());
-                                });
-                              },
-                              onSelected: (selection) {
-                                formKey.currentState.validate();
-                                setState(() {
-                                  selectedTeacher = selection;
-                                });
-                              }),
+                            fieldViewBuilder: (BuildContext context,
+                                TextEditingController textEditingController,
+                                FocusNode focusNode,
+                                VoidCallback onFieldSubmitted) {
+                              textEditingController.text =
+                                  selectedTeacher?.name;
+                              return TextFormField(
+                                controller: textEditingController,
+                                decoration: InputDecoration(
+                                  labelText: S.of(context).labelLecturer,
+                                  prefixIcon: const Icon(Icons.person),
+                                ),
+                                focusNode: focusNode,
+                                validator: (selection) {
+                                  if (selection == null) {
+                                    return S
+                                        .of(context)
+                                        .errorLecturerCannotBeEmpty;
+                                  }
+                                  return null;
+                                },
+                                onFieldSubmitted: (String value) {
+                                  onFieldSubmitted();
+                                },
+                              );
+                            },
+                            displayStringForOption: _displayStringForOption,
+                            optionsBuilder:
+                                (TextEditingValue textEditingValue) {
+                              if (textEditingValue.text == '') {
+                                return const Iterable<Person>.empty();
+                              }
+                              return classTeachers.where((Person person) {
+                                return person.name.toLowerCase().contains(
+                                    textEditingValue.text.toLowerCase());
+                              });
+                            },
+                            onSelected: (selection) {
+                              formKey.currentState.validate();
+                              setState(() {
+                                selectedTeacher = selection;
+                              });
+                            },
+                          ),
                         TextFormField(
                           controller: locationController,
                           decoration: InputDecoration(
@@ -544,16 +545,6 @@ class _AddEventViewState extends State<AddEventView> {
       ),
     );
   }
-}
-
-Widget row(Person person) {
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    mainAxisAlignment: MainAxisAlignment.start,
-    children: <Widget>[
-      Text(person.name),
-    ],
-  );
 }
 
 class RelevanceFormField extends FormField<List<String>> {
