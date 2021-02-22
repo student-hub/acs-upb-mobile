@@ -269,7 +269,8 @@ class UniEventProvider extends EventProvider<UniEventInstance>
           return events
               .where((event) =>
                   event.relevance == null ||
-                  (event.degree == _filter.baseNode &&
+                  (_filter != null &&
+                      event.degree == _filter.baseNode &&
                       event.relevance.any(_filter.relevantNodes.contains)))
               .map((e) => e.generateInstances(intersectingInterval: interval))
               .expand((e) => e);

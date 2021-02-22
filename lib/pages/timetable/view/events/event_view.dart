@@ -135,7 +135,7 @@ class _EventViewState extends State<EventView> {
                 ),
               )),
             ),
-          if (widget.event.location != null)
+          if (widget.event.location?.isNotEmpty ?? false)
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
               child: Row(

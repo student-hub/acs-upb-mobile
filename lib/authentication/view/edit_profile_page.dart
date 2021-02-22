@@ -288,7 +288,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     emailController.text + emailDomain != authProvider.email) {
                   await showDialog(
                           context: context,
-                          child: _changeEmailConfirmationDialog(context))
+                          builder: _changeEmailConfirmationDialog)
                       .then((value) => result = value ?? false);
                 }
                 if (uploadedImage != null) {
@@ -313,10 +313,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
         AppScaffoldAction(
           icon: Icons.more_vert,
           items: {
-            S.of(context).actionChangePassword: () => showDialog(
-                context: context, child: _changePasswordDialog(context)),
+            S.of(context).actionChangePassword: () =>
+                showDialog(context: context, builder: _changePasswordDialog),
             S.of(context).actionDeleteAccount: () => showDialog(
-                context: context, child: _deletionConfirmationDialog(context))
+                context: context, builder: _deletionConfirmationDialog)
           },
         )
       ],

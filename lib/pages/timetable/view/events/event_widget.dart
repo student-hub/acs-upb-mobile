@@ -20,6 +20,8 @@ class UniEventWidget extends StatelessWidget {
     final color = event.color ??
         event?.mainEvent?.color ??
         Theme.of(context).primaryColor;
+    final footer =
+        (event.location?.isNotEmpty ?? false) ? event.location : event.info;
 
     return GestureDetector(
       onTap: () => Navigator.of(context).push(MaterialPageRoute<EventView>(
@@ -72,13 +74,13 @@ class UniEventWidget extends StatelessWidget {
                 ),
               ),
             Expanded(
-              child: event.location != null || event.info != null
+              child: footer?.isNotEmpty ?? false
                   ? Align(
                       alignment: Alignment.bottomRight,
                       child: Padding(
                         padding: const EdgeInsets.fromLTRB(4, 2, 4, 2),
                         child: AutoSizeText(
-                          event.location ?? event.info,
+                          footer,
                           maxLines: 1,
                           minFontSize: 10,
                           overflow: TextOverflow.ellipsis,
