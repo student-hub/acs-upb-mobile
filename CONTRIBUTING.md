@@ -46,17 +46,6 @@ Please update the resulting commit message, if needed. It should read as a coher
 Please refrain from creating several pull requests for the same change. Use the pull request that is already open (or was created earlier) to amend changes. This preserves the discussion and review that happened earlier for the respective change set.
 Similarly, please create one PR per development item, instead of bundling multiple fixes and improvements in a single PR.
 
-1. Check out [this](https://opensource.com/article/19/7/create-pull-request-github) tutorial if you don't know how to make a PR.
-2. Increase the version number in the [`pubspec.yaml`](pubspec.yaml) file with the following guidelines in mind:
-    - **Build number** (0.2.1+**4**) is for very small changes and bug fixes (usually not visible to the end user).
-    - **Patch version** (0.2.**1**+4) is for minor improvements that may be visible to an attentive end user.
-    - **Minor version** (0.**2**.1+4) is for added functionality (i.e. merging a branch that introduces a new feature).
-    - **Major version** (**0**.2.1+4) marks important project milestones.
-3. Document any non-obvious parts of the code and make sure the commit description is clear on why the change is necessary.
-4. If it's a new feature, write at least one test for it.
-
-Please note that in order for a PR to be merged (accepted), all of the tests need to pass, including the linter (which checks for coding style and warnings, see [Style guide](#style-guide)). These checks are ran automatically using [GitHub Actions](#github-actions). You also need at least one approval from a maintainer - after submitting a PR, you can request a review from the top right Reviewers menu on the Pull Request page.
-
 ## Development tips
 
 * Make sure you have the *Project* view open in the **Project** tab on the left in Android Studio (not *Android*).
