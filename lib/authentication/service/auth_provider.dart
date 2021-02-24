@@ -24,7 +24,8 @@ extension DatabaseUser on User {
     return {
       'name': {'first': firstName, 'last': lastName},
       'class': classes,
-      'permissionLevel': permissionLevel
+      'permissionLevel': permissionLevel,
+      'sources': sources
     };
   }
 }
@@ -437,6 +438,22 @@ class AuthProvider with ChangeNotifier {
       AppToast.show(S.of(context).messageCheckEmailVerification);
     }
     return true;
+  }
+
+  Future<bool> setSourcePreferences(List<String> sources,
+      {BuildContext context}) async {
+    try {
+      _currentUser.sources = sources;
+      await Firestore.instance
+          .collection('users')
+          .document(_currentUser.uid)
+          .updateData(_currentUser.toData());
+      notifyListeners();
+      return true;
+    } catch (e) {
+      _errorHandler(e, context);
+      return false;
+    }
   }
 
   /// Update the user information with the data in [info].
