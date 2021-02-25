@@ -326,7 +326,7 @@ class _AddEventViewState extends State<AddEventView> {
                                     textEditingValue.text.toLowerCase());
                               });
                             },
-                            onSelected: (selection) {
+                            onSelected: (Person selection) {
                               formKey.currentState.validate();
                               setState(() {
                                 selectedTeacher = selection;
