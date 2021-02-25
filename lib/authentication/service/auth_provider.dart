@@ -17,7 +17,8 @@ extension DatabaseUser on User {
         firstName: snap.data['name']['first'],
         lastName: snap.data['name']['last'],
         classes: List.from(snap.data['class'] ?? []),
-        permissionLevel: snap.data['permissionLevel']);
+        permissionLevel: snap.data['permissionLevel'],
+        sources: List.from(snap.data['sources']) ?? []);
   }
 
   Map<String, dynamic> toData() {

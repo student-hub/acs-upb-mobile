@@ -1,4 +1,4 @@
-import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
+der.dart';
 import 'package:acs_upb_mobile/authentication/view/source_page.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/navigation/routes.dart';

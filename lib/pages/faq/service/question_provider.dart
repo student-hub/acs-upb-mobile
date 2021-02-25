@@ -10,18 +10,16 @@ import 'package:flutter/cupertino.dart';
 class QuestionProvider with ChangeNotifier {
   Future<List<Question>> fetchQuestions(
       {BuildContext context, int limit}) async {
-    User user = Provider.of<AuthProvider>(context).currentUserFromCache;
+    final User user = Provider.of<AuthProvider>(context, listen: false).currentUserFromCache;
     try {
       final QuerySnapshot qSnapshot = limit == null
-          ? await Firestore.instance.collection('faq').getDocuments()
+          ? await Firestore.instance.collection('faq').where('source',whereIn: user.sources).getDocuments()
           : await Firestore.instance
               .collection('faq')
               .limit(limit)
-              //.where('source',whereIn: user.sources)
+              .where('source',whereIn: user.sources)
               .getDocuments();
-      List<Question> list = qSnapshot.documents.map(DatabaseQuestion.fromSnap).toList();
-      print(list.length);
-      return list;
+      return qSnapshot.documents.map(DatabaseQuestion.fromSnap).toList();
     } catch (e) {
       print(e);
       if (context != null) {
