@@ -1,3 +1,4 @@
+import 'package:acs_upb_mobile/authentication/model/user.dart';
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/authentication/view/source_page.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
@@ -18,13 +19,6 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final authProvider = Provider.of<AuthProvider>(context);
-    if (!authProvider.isAnonymous &&
-        authProvider.currentUserFromCache.sources == null) {
-      WidgetsBinding.instance.addPostFrameCallback(
-              (_) async => Navigator.of(context).push( MaterialPageRoute<SourcePage>(
-                builder: (context) => SourcePage())));
-    }
     return AppScaffold(
       title: Text(S.of(context).navigationHome),
       actions: [

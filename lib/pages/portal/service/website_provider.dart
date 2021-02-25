@@ -50,6 +50,7 @@ extension WebsiteExtension on Website {
   // [ownerUid] should be provided if the website is user-private
   static Website fromSnap(DocumentSnapshot snap, {String ownerUid}) {
     return Website(
+      source: snap.data['source'],
       ownerUid: ownerUid ?? snap.data['addedBy'],
       id: snap.documentID,
       isPrivate: ownerUid != null,
