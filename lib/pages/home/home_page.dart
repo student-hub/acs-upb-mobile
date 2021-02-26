@@ -20,7 +20,7 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
     if (!authProvider.isAnonymous &&
-        authProvider.currentUserFromCache.sources == null) {
+        (authProvider.currentUserFromCache.sources?.isEmpty ?? true)) {
       WidgetsBinding.instance.addPostFrameCallback((_) async =>
           Navigator.of(context).push(MaterialPageRoute<SourcePage>(
               builder: (context) => SourcePage())));
