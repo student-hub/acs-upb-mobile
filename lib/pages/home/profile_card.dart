@@ -111,14 +111,23 @@ class _ProfileCardState extends State<ProfileCard> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         IconButton(
-                          icon: const Icon(Icons.edit),
-                          color: Theme.of(context).textTheme.button.color,
-                          onPressed: () => Navigator.of(context).push(
-                            MaterialPageRoute<EditProfilePage>(
-                              builder: (context) => const EditProfilePage(),
-                            ),
-                          ),
-                        ),
+                            icon: const Icon(Icons.edit),
+                            color: Theme.of(context).textTheme.button.color,
+                            onPressed: () async {
+                              await Navigator.of(context).push(
+                                MaterialPageRoute<EditProfilePage>(
+                                  builder: (context) => const EditProfilePage(),
+                                ),
+                              );
+                              final authProvider = Provider.of<AuthProvider>(
+                                  context,
+                                  listen: false);
+                              final value = await authProvider
+                                  .getProfilePictureURL(context: context);
+                              setState(() {
+                                profilePictureURL = value;
+                              });
+                            }),
                       ],
                     ),
                 ],
