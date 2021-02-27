@@ -829,7 +829,7 @@ void main() {
               .getWeekOfWeekYear(LocalDate.today().subtractWeeks(1));
           expect(
               find.byWidgetPredicate((widget) =>
-              widget is WeekIndicator &&
+                  widget is WeekIndicator &&
                   widget.week.toString() == previousWeek.toString()),
               findsOneWidget);
 
@@ -856,7 +856,7 @@ void main() {
               WeekYearRules.iso.getWeekOfWeekYear(LocalDate.today());
           expect(
               find.byWidgetPredicate((widget) =>
-              widget is WeekIndicator &&
+                  widget is WeekIndicator &&
                   widget.week.toString() == currentWeek.toString()),
               findsOneWidget);
 
@@ -883,7 +883,7 @@ void main() {
               .getWeekOfWeekYear(LocalDate.today().addWeeks(1));
           expect(
               find.byWidgetPredicate((widget) =>
-              widget is WeekIndicator &&
+                  widget is WeekIndicator &&
                   widget.week.toString() == nextWeek.toString()),
               findsOneWidget);
 
@@ -910,7 +910,7 @@ void main() {
               .getWeekOfWeekYear(LocalDate.today().addWeeks(2));
           expect(
               find.byWidgetPredicate((widget) =>
-              widget is WeekIndicator &&
+                  widget is WeekIndicator &&
                   widget.week.toString() == nextNextWeek.toString()),
               findsOneWidget);
 
@@ -937,7 +937,7 @@ void main() {
               .getWeekOfWeekYear(LocalDate.today().addWeeks(3));
           expect(
               find.byWidgetPredicate((widget) =>
-              widget is WeekIndicator &&
+                  widget is WeekIndicator &&
                   widget.week.toString() == nextNextNextWeek.toString()),
               findsOneWidget);
 
@@ -962,7 +962,7 @@ void main() {
           // Expect current week
           expect(
               find.byWidgetPredicate((widget) =>
-              widget is WeekIndicator &&
+                  widget is WeekIndicator &&
                   widget.week.toString() == currentWeek.toString()),
               findsOneWidget);
         });
@@ -987,7 +987,7 @@ void main() {
               WeekYearRules.iso.getWeekOfWeekYear(LocalDate.today());
           expect(
               find.byWidgetPredicate((widget) =>
-              widget is WeekIndicator &&
+                  widget is WeekIndicator &&
                   widget.week.toString() == currentWeek.toString()),
               findsOneWidget);
 
@@ -1000,7 +1000,7 @@ void main() {
               .getWeekOfWeekYear(LocalDate.today().addWeeks(1));
           expect(
               find.byWidgetPredicate((widget) =>
-              widget is WeekIndicator &&
+                  widget is WeekIndicator &&
                   widget.week.toString() == nextWeek.toString()),
               findsOneWidget);
 
