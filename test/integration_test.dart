@@ -48,6 +48,7 @@ import 'package:preferences/preferences.dart';
 import 'package:provider/provider.dart';
 import 'package:rrule/rrule.dart';
 import 'package:time_machine/time_machine.dart' hide Offset;
+import 'package:timetable/src/header/week_indicator.dart';
 
 import 'test_utils.dart';
 
@@ -826,7 +827,11 @@ void main() {
           // Expect previous week
           final previousWeek = WeekYearRules.iso
               .getWeekOfWeekYear(LocalDate.today().subtractWeeks(1));
-          expect(find.text(previousWeek.toString()), findsOneWidget);
+          expect(
+              find.byWidgetPredicate((widget) =>
+              widget is WeekIndicator &&
+                  widget.week.toString() == previousWeek.toString()),
+              findsOneWidget);
 
           expect(find.text('Holiday'), findsNothing);
           expect(find.text('Inter-semester holiday'), findsNothing);
@@ -849,7 +854,11 @@ void main() {
           // Expect current week
           final currentWeek =
               WeekYearRules.iso.getWeekOfWeekYear(LocalDate.today());
-          expect(find.text(currentWeek.toString()), findsOneWidget);
+          expect(
+              find.byWidgetPredicate((widget) =>
+              widget is WeekIndicator &&
+                  widget.week.toString() == currentWeek.toString()),
+              findsOneWidget);
 
           expect(find.text('Holiday'), findsNothing);
           expect(find.text('Inter-semester holiday'), findsNothing);
@@ -872,7 +881,11 @@ void main() {
           // Expect next week
           final nextWeek = WeekYearRules.iso
               .getWeekOfWeekYear(LocalDate.today().addWeeks(1));
-          expect(find.text(nextWeek.toString()), findsOneWidget);
+          expect(
+              find.byWidgetPredicate((widget) =>
+              widget is WeekIndicator &&
+                  widget.week.toString() == nextWeek.toString()),
+              findsOneWidget);
 
           expect(find.text('Holiday'), findsOneWidget);
           expect(find.text('Inter-semester holiday'), findsOneWidget);
@@ -895,7 +908,11 @@ void main() {
           // Expect next week
           final nextNextWeek = WeekYearRules.iso
               .getWeekOfWeekYear(LocalDate.today().addWeeks(2));
-          expect(find.text(nextNextWeek.toString()), findsOneWidget);
+          expect(
+              find.byWidgetPredicate((widget) =>
+              widget is WeekIndicator &&
+                  widget.week.toString() == nextNextWeek.toString()),
+              findsOneWidget);
 
           expect(find.text('Holiday'), findsNothing);
           expect(find.text('Inter-semester holiday'), findsOneWidget);
@@ -918,7 +935,11 @@ void main() {
           // Expect next week
           final nextNextNextWeek = WeekYearRules.iso
               .getWeekOfWeekYear(LocalDate.today().addWeeks(3));
-          expect(find.text(nextNextNextWeek.toString()), findsOneWidget);
+          expect(
+              find.byWidgetPredicate((widget) =>
+              widget is WeekIndicator &&
+                  widget.week.toString() == nextNextNextWeek.toString()),
+              findsOneWidget);
 
           expect(find.text('Holiday'), findsNothing);
           expect(find.text('Inter-semester holiday'), findsNothing);
@@ -939,7 +960,11 @@ void main() {
           await tester.pumpAndSettle();
 
           // Expect current week
-          expect(find.text(currentWeek.toString()), findsOneWidget);
+          expect(
+              find.byWidgetPredicate((widget) =>
+              widget is WeekIndicator &&
+                  widget.week.toString() == currentWeek.toString()),
+              findsOneWidget);
         });
       }
     });
@@ -960,7 +985,11 @@ void main() {
           // Expect current week
           final currentWeek =
               WeekYearRules.iso.getWeekOfWeekYear(LocalDate.today());
-          expect(find.text(currentWeek.toString()), findsOneWidget);
+          expect(
+              find.byWidgetPredicate((widget) =>
+              widget is WeekIndicator &&
+                  widget.week.toString() == currentWeek.toString()),
+              findsOneWidget);
 
           // Scroll to next week
           await tester.drag(find.text('Sun'), Offset(-size.width + 10, 0));
@@ -969,7 +998,11 @@ void main() {
           // Expect next week
           final nextWeek = WeekYearRules.iso
               .getWeekOfWeekYear(LocalDate.today().addWeeks(1));
-          expect(find.text(nextWeek.toString()), findsOneWidget);
+          expect(
+              find.byWidgetPredicate((widget) =>
+              widget is WeekIndicator &&
+                  widget.week.toString() == nextWeek.toString()),
+              findsOneWidget);
 
           // Open holiday event
           await tester.tap(find.text('Holiday'));
