@@ -40,6 +40,7 @@ import 'package:acs_upb_mobile/pages/timetable/view/timetable_page.dart';
 import 'package:acs_upb_mobile/resources/custom_icons.dart';
 import 'package:acs_upb_mobile/resources/locale_provider.dart';
 import 'package:acs_upb_mobile/widgets/search_bar.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
@@ -50,6 +51,7 @@ import 'package:rrule/rrule.dart';
 import 'package:time_machine/time_machine.dart' hide Offset;
 import 'package:timetable/src/header/week_indicator.dart';
 
+import 'firebase_mock.dart';
 import 'test_utils.dart';
 
 // These tests open each page in the app on multiple screen sizes to make sure
@@ -75,7 +77,7 @@ class MockRequestProvider extends Mock implements RequestProvider {}
 
 class MockNavigatorObserver extends Mock implements NavigatorObserver {}
 
-void main() {
+Future<void> main() async {
   AuthProvider mockAuthProvider;
   WebsiteProvider mockWebsiteProvider;
   FilterProvider mockFilterProvider;
@@ -85,6 +87,9 @@ void main() {
   MockNewsProvider mockNewsProvider;
   UniEventProvider mockEventProvider;
   RequestProvider mockRequestProvider;
+
+  setupFirebaseAuthMocks();
+  await Firebase.initializeApp();
 
   // Test layout for different screen sizes
   // TODO(AdrianMargineanu): Use Flutter driver for integration tests, setting screen sizes here isn't reliable
@@ -129,27 +134,27 @@ void main() {
     PrefService.cache = {};
     PrefService.setString('language', 'en');
 
+    await Firebase.initializeApp();
+
     LocaleProvider.cultures = testCultures;
     LocaleProvider.rruleL10ns = {'en': await RruleL10nTest.create()};
 
     // Pretend an anonymous user is already logged in
     mockAuthProvider = MockAuthProvider();
-    when(mockAuthProvider.isAuthenticatedFromCache).thenReturn(true);
+    when(mockAuthProvider.isAuthenticated).thenReturn(true);
     // ignore: invalid_use_of_protected_member
     when(mockAuthProvider.hasListeners).thenReturn(false);
     when(mockAuthProvider.isAnonymous).thenReturn(true);
-    when(mockAuthProvider.isAuthenticatedFromService)
-        .thenAnswer((_) => Future.value(true));
-    when(mockAuthProvider.currentUser)
-        .thenAnswer((realInvocation) => Future.value(null));
+    when(mockAuthProvider.currentUser).thenAnswer((_) => Future.value(null));
+    when(mockAuthProvider.isVerified).thenAnswer((_) => Future.value(false));
 
     mockWebsiteProvider = MockWebsiteProvider();
     // ignore: invalid_use_of_protected_member
     when(mockWebsiteProvider.hasListeners).thenReturn(false);
     when(mockWebsiteProvider.deleteWebsite(any, context: anyNamed('context')))
-        .thenAnswer((realInvocation) => Future.value(true));
+        .thenAnswer((_) => Future.value(true));
     when(mockAuthProvider.getProfilePictureURL(context: anyNamed('context')))
-        .thenAnswer((realInvocation) => Future.value(null));
+        .thenAnswer((_) => Future.value(null));
     when(mockWebsiteProvider.fetchWebsites(any, context: anyNamed('context')))
         .thenAnswer((_) => Future.value([
               Website(
@@ -395,7 +400,7 @@ void main() {
     // ignore: invalid_use_of_protected_member
     when(mockQuestionProvider.hasListeners).thenReturn(false);
     when(mockQuestionProvider.fetchQuestions(context: anyNamed('context')))
-        .thenAnswer((realInvocation) => Future.value(<Question>[
+        .thenAnswer((_) => Future.value(<Question>[
               Question(
                   question: 'Care este programul la secretariat?',
                   answer:
@@ -408,7 +413,7 @@ void main() {
                   tags: ['Conectare', 'Informații'])
             ]));
     when(mockQuestionProvider.fetchQuestions(limit: anyNamed('limit')))
-        .thenAnswer((realInvocation) => Future.value(<Question>[
+        .thenAnswer((_) => Future.value(<Question>[
               Question(
                   question: 'Care este programul la secretariat?',
                   answer:
@@ -425,7 +430,7 @@ void main() {
     // ignore: invalid_use_of_protected_member
     when(mockNewsProvider.hasListeners).thenReturn(false);
     when(mockNewsProvider.fetchNewsFeedItems(context: anyNamed('context')))
-        .thenAnswer((realInvocation) => Future.value(<NewsFeedItem>[
+        .thenAnswer((_) => Future.value(<NewsFeedItem>[
               NewsFeedItem(
                   '03.10.2020',
                   'Cazarea studentilor de anul II licenta',
@@ -436,7 +441,7 @@ void main() {
                   'https://acs.pub.ro/noutati/festivitatea-de-deschidere-a-anului-universitar-2020-2021/')
             ]));
     when(mockNewsProvider.fetchNewsFeedItems(limit: anyNamed('limit')))
-        .thenAnswer((realInvocation) => Future.value(<NewsFeedItem>[
+        .thenAnswer((_) => Future.value(<NewsFeedItem>[
               NewsFeedItem(
                   '03.10.2020',
                   'Cazarea studentilor de anul II licenta',
@@ -657,9 +662,7 @@ void main() {
           uid: '0', firstName: 'John', lastName: 'Doe', permissionLevel: 3)));
       when(mockAuthProvider.currentUserFromCache).thenReturn(User(
           uid: '0', firstName: 'John', lastName: 'Doe', permissionLevel: 3));
-      when(mockAuthProvider.isAuthenticatedFromService)
-          .thenAnswer((_) => Future.value(true));
-      when(mockAuthProvider.isAuthenticatedFromCache).thenReturn(true);
+      when(mockAuthProvider.isAuthenticated).thenReturn(true);
       when(mockAuthProvider.isAnonymous).thenReturn(false);
       when(mockAuthProvider.uid).thenReturn('0');
     });
@@ -739,7 +742,7 @@ void main() {
         when(mockAuthProvider.currentUserFromCache).thenReturn(User(
             uid: '0', firstName: 'John', lastName: 'Doe', permissionLevel: 0));
         when(mockAuthProvider.isAnonymous).thenReturn(false);
-        when(mockAuthProvider.isVerifiedFromCache).thenReturn(true);
+        when(mockAuthProvider.isVerified).thenAnswer((_) => Future.value(true));
 
         when(mockEventProvider.getAllDayEventsIntersecting(any))
             .thenAnswer((_) => Stream.value([]));
@@ -1147,9 +1150,7 @@ void main() {
             Future.value(User(uid: '0', firstName: 'John', lastName: 'Doe')));
         when(mockAuthProvider.currentUserFromCache)
             .thenReturn(User(uid: '0', firstName: 'John', lastName: 'Doe'));
-        when(mockAuthProvider.isAuthenticatedFromService)
-            .thenAnswer((_) => Future.value(true));
-        when(mockAuthProvider.isAuthenticatedFromCache).thenReturn(true);
+        when(mockAuthProvider.isAuthenticated).thenReturn(true);
         when(mockAuthProvider.isAnonymous).thenReturn(false);
         when(mockAuthProvider.uid).thenReturn('0');
       });
@@ -1182,9 +1183,7 @@ void main() {
             Future.value(User(uid: '0', firstName: 'John', lastName: 'Doe')));
         when(mockAuthProvider.currentUserFromCache)
             .thenReturn(User(uid: '0', firstName: 'John', lastName: 'Doe'));
-        when(mockAuthProvider.isAuthenticatedFromService)
-            .thenAnswer((_) => Future.value(true));
-        when(mockAuthProvider.isAuthenticatedFromCache).thenReturn(true);
+        when(mockAuthProvider.isAuthenticated).thenReturn(true);
         when(mockAuthProvider.isAnonymous).thenReturn(false);
         when(mockAuthProvider.uid).thenReturn('0');
       });
@@ -1226,9 +1225,7 @@ void main() {
             uid: '0', firstName: 'John', lastName: 'Doe', permissionLevel: 3)));
         when(mockAuthProvider.currentUserFromCache).thenReturn(User(
             uid: '0', firstName: 'John', lastName: 'Doe', permissionLevel: 3));
-        when(mockAuthProvider.isAuthenticatedFromService)
-            .thenAnswer((_) => Future.value(true));
-        when(mockAuthProvider.isAuthenticatedFromCache).thenReturn(true);
+        when(mockAuthProvider.isAuthenticated).thenReturn(true);
         when(mockAuthProvider.isAnonymous).thenReturn(false);
         when(mockAuthProvider.uid).thenReturn('0');
       });
@@ -1340,7 +1337,7 @@ void main() {
 
   group('Add website', () {
     setUp(() {
-      when(mockAuthProvider.isAuthenticatedFromCache).thenReturn(true);
+      when(mockAuthProvider.isAuthenticated).thenReturn(true);
       when(mockAuthProvider.isAnonymous).thenReturn(false);
     });
 
@@ -1371,14 +1368,10 @@ void main() {
 
   group('Edit website', () {
     setUp(() {
-      when(mockAuthProvider.isAuthenticatedFromCache).thenReturn(true);
+      when(mockAuthProvider.isAuthenticated).thenReturn(true);
       when(mockAuthProvider.isAnonymous).thenReturn(false);
-      when(mockAuthProvider.currentUser).thenAnswer((realInvocation) =>
-          Future.value(User(
-              uid: '1',
-              firstName: 'John',
-              lastName: 'Doe',
-              permissionLevel: 3)));
+      when(mockAuthProvider.currentUser).thenAnswer((_) => Future.value(User(
+          uid: '1', firstName: 'John', lastName: 'Doe', permissionLevel: 3)));
     });
 
     for (final size in screenSizes) {
@@ -1410,14 +1403,10 @@ void main() {
 
   group('Delete website', () {
     setUp(() {
-      when(mockAuthProvider.isAuthenticatedFromCache).thenReturn(true);
+      when(mockAuthProvider.isAuthenticated).thenReturn(true);
       when(mockAuthProvider.isAnonymous).thenReturn(false);
-      when(mockAuthProvider.currentUser).thenAnswer((realInvocation) =>
-          Future.value(User(
-              uid: '1',
-              firstName: 'John',
-              lastName: 'Doe',
-              permissionLevel: 3)));
+      when(mockAuthProvider.currentUser).thenAnswer((_) => Future.value(User(
+          uid: '1', firstName: 'John', lastName: 'Doe', permissionLevel: 3)));
     });
 
     for (final size in screenSizes) {
@@ -1476,20 +1465,16 @@ void main() {
   });
   group('Edit Profile', () {
     setUp(() {
-      when(mockAuthProvider.isVerifiedFromCache).thenReturn(false);
-      when(mockAuthProvider.isAuthenticatedFromCache).thenReturn(true);
+      when(mockAuthProvider.isVerified).thenAnswer((_) => Future.value(false));
+      when(mockAuthProvider.isAuthenticated).thenReturn(true);
       when(mockAuthProvider.isAnonymous).thenReturn(false);
-      when(mockAuthProvider.currentUser).thenAnswer((realInvocation) =>
-          Future.value(User(
-              uid: '1',
-              firstName: 'John',
-              lastName: 'Doe',
-              permissionLevel: 3)));
+      when(mockAuthProvider.currentUser).thenAnswer((_) => Future.value(User(
+          uid: '1', firstName: 'John', lastName: 'Doe', permissionLevel: 3)));
       when(mockAuthProvider.currentUserFromCache).thenReturn(User(
           uid: '1', firstName: 'John', lastName: 'Doe', permissionLevel: 3));
       when(mockAuthProvider.email).thenReturn('john.doe@stud.acs.upb.ro');
       when(mockAuthProvider.getProfilePictureURL(context: anyNamed('context')))
-          .thenAnswer((realInvocation) => Future.value(null));
+          .thenAnswer((_) => Future.value(null));
     });
 
     for (final size in screenSizes) {
@@ -1577,7 +1562,7 @@ void main() {
 
   group('People page', () {
     setUp(() {
-      when(mockAuthProvider.isAuthenticatedFromCache).thenReturn(true);
+      when(mockAuthProvider.isAuthenticated).thenReturn(true);
       when(mockAuthProvider.isAnonymous).thenReturn(true);
     });
 

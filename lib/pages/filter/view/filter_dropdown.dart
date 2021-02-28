@@ -98,7 +98,10 @@ class _FilterDropdownState extends State<FilterDropdown> {
             children: _buildDropdowns(context),
           );
         }
-        return const Center(child: CircularProgressIndicator());
+        return const Padding(
+          padding: EdgeInsets.only(top: 16),
+          child: Center(child: CircularProgressIndicator()),
+        );
       },
     );
   }
