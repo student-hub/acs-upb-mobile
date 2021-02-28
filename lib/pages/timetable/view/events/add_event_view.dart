@@ -89,13 +89,12 @@ class _AddEventViewState extends State<AddEventView> {
       setState(() {
         this.calendars = calendars;
         // TODO(IoanaAlexandru): Make the default calendar the one closest
-        // to now and extract calendar/semester from [widget.initialEvent]
+        // to now and extract calendar/semester from  [widget.initialEvent]
 
         selectedSemester =
             widget.initialEvent.start.toDateTimeLocal().compareTo(secondSemesterStartDate.toDateTimeUnspecified()) > 0
                 ? 2
                 : 1;
-
 
         selectedCalendar = calendars.keys.first;
       });
