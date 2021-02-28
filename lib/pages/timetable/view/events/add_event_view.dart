@@ -30,6 +30,7 @@ import 'package:time_machine/time_machine.dart' hide DayOfWeek;
 import 'package:time_machine/time_machine_text_patterns.dart';
 import 'package:acs_upb_mobile/pages/people/model/person.dart';
 import 'package:acs_upb_mobile/pages/people/service/person_provider.dart';
+import 'package:recase/recase.dart';
 
 class AddEventView extends StatefulWidget {
   /// If the `id` of [initialEvent] is not null, this acts like an "Edit event"
@@ -300,14 +301,6 @@ class _AddEventViewState extends State<AddEventView> {
                                   prefixIcon: const Icon(Icons.person),
                                 ),
                                 focusNode: focusNode,
-                                validator: (selection) {
-                                  if (selection == null) {
-                                    return S
-                                        .of(context)
-                                        .errorLecturerCannotBeEmpty;
-                                  }
-                                  return null;
-                                },
                                 onFieldSubmitted: (String value) {
                                   onFieldSubmitted();
                                 },
@@ -317,9 +310,21 @@ class _AddEventViewState extends State<AddEventView> {
                                 person.name,
                             optionsBuilder:
                                 (TextEditingValue textEditingValue) {
-                              if (textEditingValue.text == '') {
+                              if (textEditingValue.text == '' ||
+                                  textEditingValue.text.isEmpty) {
                                 return const Iterable<Person>.empty();
                               }
+                              if (classTeachers.where((Person person) {
+                                return person.name.toLowerCase().contains(
+                                    textEditingValue.text.toLowerCase());
+                              }).isEmpty) {
+                                final List<Person> inputTeachers = [];
+                                final Person inputTeacher = Person(
+                                    name: textEditingValue.text.titleCase);
+                                inputTeachers.add(inputTeacher);
+                                return inputTeachers;
+                              }
+
                               return classTeachers.where((Person person) {
                                 return person.name.toLowerCase().contains(
                                     textEditingValue.text.toLowerCase());

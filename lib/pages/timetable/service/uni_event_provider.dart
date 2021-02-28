@@ -175,7 +175,7 @@ extension UniEventExtension on UniEvent {
     }
 
     if (this is ClassEvent) {
-      json['teacher'] = (this as ClassEvent).teacher.name;
+      json['teacher'] = (this as ClassEvent).teacher?.name;
     }
 
     return json;
