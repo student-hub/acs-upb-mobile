@@ -13,6 +13,7 @@
   "labelConfirmPassword": "Confirm password",
   "labelConfirmNewPassword": "Confirm new password",
   "labelAskPermissions": "Request editing permissions",
+  "labelVersion": "Version",
   "labelFirstName": "First name",
   "labelLastName": "Last name",
   "labelName": "Name",

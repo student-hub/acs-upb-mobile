@@ -127,6 +127,9 @@ dependencies:
   # Web scraper
   web_scraper: ^0.0.6
 
+  # App information
+  package_info_plus: ^0.6.4
+
 dev_dependencies:
   # Code analysis
   extra_pedantic: 1.2.0
