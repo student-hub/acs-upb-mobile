@@ -37,17 +37,17 @@ class PersonProvider with ChangeNotifier {
   Future<Person> fetchPerson(String personName, {BuildContext context}) async {
     try {
       // Get person with name [personName]
-      final QuerySnapshot query = await Firestore.instance
+      final QuerySnapshot query = await FirebaseFirestore.instance
           .collection('people')
           .where('name', isEqualTo: personName)
           .limit(1)
-          .getDocuments();
+          .get();
 
-      if (query == null || query.documents.isEmpty) {
+      if (query == null || query.docs.isEmpty) {
         return Person(name: personName);
       }
 
-      return PersonExtension.fromSnap(query.documents.first);
+      return PersonExtension.fromSnap(query.docs.first);
     } catch (e) {
       print(e);
       if (context != null) {

@@ -240,9 +240,8 @@ class UniEventProvider extends EventProvider<UniEventInstance>
   }
 
   Stream<List<UniEvent>> get _events {
-    if (!_authProvider.isAuthenticated ||
-        _filter == null ||
-        _calendars == null) return Stream.value([]);
+    if (!_authProvider.isAuthenticated || _filter == null || _calendars == null)
+      return Stream.value([]);
 
     final streams = <Stream<List<UniEvent>>>[];
 
