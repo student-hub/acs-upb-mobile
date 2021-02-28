@@ -159,8 +159,6 @@ class _AddEventViewState extends State<AddEventView> {
     }
   }
 
-  static String _displayStringForOption(Person person) => person.name;
-
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
@@ -315,7 +313,8 @@ class _AddEventViewState extends State<AddEventView> {
                                 },
                               );
                             },
-                            displayStringForOption: _displayStringForOption,
+                            displayStringForOption: (Person person) =>
+                                person.name,
                             optionsBuilder:
                                 (TextEditingValue textEditingValue) {
                               if (textEditingValue.text == '') {

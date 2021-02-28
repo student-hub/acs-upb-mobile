@@ -2,6 +2,12 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+// This code was taken from the following resource:
+// https://github.com/flutter/flutter/blob/master/packages/flutter/lib/src/material/autocomplete.dart
+// AutocompleteCore feature is currently in 1.24.0-6.0.pre Flutter version
+// and it has not reached production yet, reason why we had to copy the code.
+// This file will be removed as soon as it is released officially.
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
