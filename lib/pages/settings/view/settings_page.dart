@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
+import 'package:acs_upb_mobile/authentication/view/source_page.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/settings/view/request_permissions.dart';
 import 'package:acs_upb_mobile/resources/custom_icons.dart';
@@ -102,6 +103,22 @@ class SettingsPageState extends State<SettingsPage> {
                                 'https://github.com/acs-upb-mobile/acs-upb-mobile',
                                 context: context),
                           ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8),
+                          child: IconText(
+                              icon: Icons.info,
+                              text: 'here',
+                              actionText: 'here',
+                              actionArrow: true,
+                              align: TextAlign.center,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyText1
+                                  .apply(color: Theme.of(context).hintColor),
+                              onTap: () => Navigator.of(context).push(
+                                  MaterialPageRoute<SourcePage>(
+                                      builder: (context) => SourcePage()))),
                         ),
                         const Divider(),
                         FlatButton(

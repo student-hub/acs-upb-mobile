@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
+import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -23,7 +24,6 @@ class _SourcePageState extends State<SourcePage> {
 
     authProvider = Provider.of<AuthProvider>(context,listen: false);
     final user = authProvider.currentUserFromCache;
-    wantsOfficialInfo = user.canReadFacultyInfo ?? false;
     wantsOrganizationInfo = user.canReadOrganizationInfo ?? false;
     wantsStudentsInfo = user.canReadStudentInfo ?? false;
   }
@@ -36,8 +36,7 @@ class _SourcePageState extends State<SourcePage> {
         AppScaffoldAction(
             text: 'Salvare',
             onPressed: () async {
-              final List<String> sources = [];
-              if (wantsOfficialInfo) sources.add('official');
+              final List<String> sources = ['official'];
               if (wantsOrganizationInfo) sources.add('organizations');
               if (wantsStudentsInfo) sources.add('students');
               await authProvider.setSourcePreferences(sources);
@@ -65,16 +64,12 @@ class _SourcePageState extends State<SourcePage> {
             ),
           ),
           const SizedBox(height: 10),
-          CheckboxListTile(
-            value: wantsOfficialInfo,
-            onChanged: (value) {
-              setState(() {
-                wantsOfficialInfo = value;
-              });
-            },
-            title: const Text('Site-uri oficiale'),
+         const CheckboxListTile(
+            value: true,
+            onChanged: null,
+            title: Text('Site-uri oficiale'),
             subtitle:
-                const Text('acs.pub.ro, upb.ro, curs.upb.ro, studenti.pub.ro'),
+                Text('acs.pub.ro, upb.ro, curs.upb.ro, studenti.pub.ro'),
             controlAffinity: ListTileControlAffinity.leading,
           ),
           CheckboxListTile(
