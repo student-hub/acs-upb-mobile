@@ -78,18 +78,15 @@ void main() {
 
   final MockUrlLauncher mockUrlLauncher = MockUrlLauncher();
   UrlLauncherPlatform.instance = mockUrlLauncher;
-  when(mockUrlLauncher.canLaunch(any))
-      .thenAnswer((realInvocation) => Future.value(true));
+  when(mockUrlLauncher.canLaunch(any)).thenAnswer((_) => Future.value(true));
 
   final MockAuthProvider mockAuthProvider = MockAuthProvider();
   // ignore: invalid_use_of_protected_member
   when(mockAuthProvider.hasListeners).thenReturn(false);
   when(mockAuthProvider.isAnonymous).thenReturn(false);
-  when(mockAuthProvider.isAuthenticatedFromCache).thenReturn(true);
-  when(mockAuthProvider.isAuthenticatedFromService)
-      .thenAnswer((realInvocation) => Future.value(true));
-  when(mockAuthProvider.currentUser).thenAnswer((realInvocation) =>
-      Future.value(User(uid: '0', firstName: 'John', lastName: 'Doe')));
+  when(mockAuthProvider.isAuthenticated).thenReturn(true);
+  when(mockAuthProvider.currentUser).thenAnswer(
+      (_) => Future.value(User(uid: '0', firstName: 'John', lastName: 'Doe')));
   when(mockAuthProvider.currentUserFromCache)
       .thenReturn(User(uid: '0', firstName: 'John', lastName: 'Doe'));
 
