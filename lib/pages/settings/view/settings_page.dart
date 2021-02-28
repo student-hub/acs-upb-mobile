@@ -129,7 +129,7 @@ class _SettingsPageState extends State<SettingsPage> {
                           ),
                         ),
                         const Divider(),
-                        FlatButton(
+                        TextButton(
                           key: const ValueKey('ask_permissions'),
                           onPressed: () => {
                             if (authProvider.isAnonymous)
