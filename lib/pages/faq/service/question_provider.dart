@@ -13,13 +13,12 @@ class QuestionProvider with ChangeNotifier {
     final User user = Provider.of<AuthProvider>(context, listen: false).currentUserFromCache;
     try {
       final QuerySnapshot qSnapshot = limit == null
-          ? await Firestore.instance.collection('faq').where('source',whereIn: user.sources).getDocuments()
-          : await Firestore.instance
+          ? await FirebaseFirestore.instance.collection('faq').where('source',whereIn: user.sources).get()
+          : await FirebaseFirestore.instance
               .collection('faq')
-              .limit(limit)
-              .where('source',whereIn: user.sources)
-              .getDocuments();
-      return qSnapshot.documents.map(DatabaseQuestion.fromSnap).toList();
+              .limit(limit).where('source',whereIn: user.sources)
+              .get();
+      return qSnapshot.docs.map(DatabaseQuestion.fromSnap).toList();
     } catch (e) {
       print(e);
       if (context != null) {
@@ -32,9 +31,12 @@ class QuestionProvider with ChangeNotifier {
 
 extension DatabaseQuestion on Question {
   static Question fromSnap(DocumentSnapshot snap) {
-    final String question = snap.data['question'];
-    final String answer = snap.data['answer'];
-    final List<String> tags = List.from(snap.data['tags']);
+    final data = snap.data();
+
+    final String question = data['question'];
+    final String answer = data['answer'];
+    final List<String> tags = List.from(data['tags']);
+
     final String source = snap.data['source'];
     return Question(source: source, question: question, answer: answer, tags: tags);
   }

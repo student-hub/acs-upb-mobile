@@ -36,8 +36,10 @@ class HomePage extends StatelessWidget {
       ],
       body: ListView(
         children: [
-          ProfileCard(),
-          FavouriteWebsitesCard(onShowMore: () => tabController?.animateTo(2)),
+          if (authProvider.isAuthenticated) ProfileCard(),
+          if (authProvider.isAuthenticated)
+            FavouriteWebsitesCard(
+                onShowMore: () => tabController?.animateTo(2)),
           NewsFeedCard(),
           FaqCard(),
         ],

@@ -63,7 +63,7 @@ class _SignUpViewState extends State<SignUpView> {
       return formItems;
     }
     final emailDomain = S.of(context).stringEmailDomain;
-    final authProvider = Provider.of<AuthProvider>(context);
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
 
     return formItems = <FormCardField>[
       FormCardField(
@@ -155,7 +155,7 @@ class _SignUpViewState extends State<SignUpView> {
   }
 
   FormCard _buildForm(BuildContext context) {
-    final authProvider = Provider.of<AuthProvider>(context);
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
 
     return FormCard(
       title: S.of(context).actionSignUp,
