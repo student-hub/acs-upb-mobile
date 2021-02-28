@@ -165,7 +165,9 @@ class _SettingsPageState extends State<SettingsPage> {
                             textAlign: TextAlign.center,
                             style: Theme.of(context).textTheme.bodyText1
                         ),
-                        SizedBox(height: 8,),
+                        const Padding(
+                        padding: EdgeInsets.only(top: 8),
+                        )
                       ],
                     ),
                   ],
