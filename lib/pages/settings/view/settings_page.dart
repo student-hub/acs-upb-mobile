@@ -159,8 +159,12 @@ class _SettingsPageState extends State<SettingsPage> {
                                   : Theme.of(context).textTheme.bodyText1),
                         ),
                         const Divider(),
-                        Text(S.of(context).labelVersion, textAlign: TextAlign.center, style: Theme.of(context).textTheme.bodyText1),
-                        Text(_packageInfo.version, textAlign: TextAlign.center, style: Theme.of(context).textTheme.bodyText1),
+                        Text(S.of(context).labelVersion,
+                            textAlign: TextAlign.center,
+                            style: Theme.of(context).textTheme.bodyText1),
+                        Text(_packageInfo.version,
+                            textAlign: TextAlign.center,
+                            style: Theme.of(context).textTheme.bodyText1),
                         const Padding(
                           padding: EdgeInsets.only(top: 8),
                         )
