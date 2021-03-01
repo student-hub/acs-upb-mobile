@@ -118,16 +118,25 @@ class _AddEventViewState extends State<AddEventView> {
                 ? 2
                 : 1;
       } else {
-        for (final calendar in calendars.entries.toList().reversed) {
-          for (final semester in calendar.value.semesters.reversed) {
+        bool foundSemester = false;
+        for (final calendar in calendars.entries) {
+          for (final semester in calendar.value.semesters) {
             final LocalDate date =
                 widget.initialEvent.start.calendarDate ?? LocalDate.today();
             if (date.isBeforeOrDuring(semester)) {
               selectedSemester =
                   1 + int.tryParse(semester.id[semester.id.length - 1]);
               selectedCalendar = calendar.key;
+              foundSemester = true;
+              break;
             }
           }
+          if (foundSemester == true) break;
+        }
+        if(foundSemester == false){
+          selectedCalendar = calendars.entries.last.value.id;
+          selectedSemester =  2;
+
         }
       }
 
