@@ -345,6 +345,11 @@ class UniEventProvider extends EventProvider<UniEventInstance>
     }
   }
 
+  Future<bool> disableInstance(UniEventInstance event,
+      {BuildContext context}) async {
+    return true;
+  }
+
   @override
   // ignore: must_call_super
   void dispose() {
