@@ -114,7 +114,6 @@
   "errorPermissionDenied": "You do not have permission to do that.",
   "errorEventTypeCannotBeEmpty": "Event type cannot be empty.",
   "errorClassCannotBeEmpty": "Class cannot be empty.",
-  "errorLecturerCannotBeEmpty": "Lecturer cannot be empty.",
   "errorPictureSizeToBig": "Please select a picture that is less than 5MB.",
   "errorImage": "The image could not be loaded.",
 

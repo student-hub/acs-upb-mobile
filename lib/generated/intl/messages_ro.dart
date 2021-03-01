@@ -87,7 +87,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "errorImage" : MessageLookupByLibrary.simpleMessage("Imaginea nu putut fi încărcată."),
     "errorIncorrectPassword" : MessageLookupByLibrary.simpleMessage("Parola introdusă nu este corectă."),
     "errorInvalidEmail" : MessageLookupByLibrary.simpleMessage("Trebuie să introduceți un e-mail valid."),
-    "errorLecturerCannotBeEmpty" : MessageLookupByLibrary.simpleMessage("Profesorul trebuie precizat."),
     "errorMissingFirstName" : MessageLookupByLibrary.simpleMessage("Introduceți prenumele."),
     "errorMissingLastName" : MessageLookupByLibrary.simpleMessage("Introduceți numele de familie."),
     "errorNoPassword" : MessageLookupByLibrary.simpleMessage("Trebuie să introduceți parola."),

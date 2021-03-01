@@ -264,16 +264,16 @@ class UniEventProvider extends EventProvider<UniEventInstance>
             for (final doc in snapshot.docs) {
               ClassHeader classHeader;
               Person teacher;
-              if (doc.data()['class'] != null) {
+              final data = doc.data();
+              if (data['class'] != null) {
                 classHeader =
-                    await _classProvider.fetchClassHeader(doc.data()['class']);
+                    await _classProvider.fetchClassHeader(data['class']);
               }
-              if (doc.data()['teacher'] != null) {
-                teacher =
-                    await _personProvider.fetchPerson(doc.data()['teacher']);
+              if (data['teacher'] != null) {
+                teacher = await _personProvider.fetchPerson(data['teacher']);
               }
 
-              events.add(UniEventExtension.fromJSON(doc.id, doc.data(),
+              events.add(UniEventExtension.fromJSON(doc.id, data,
                   classHeader: classHeader,
                   teacher: teacher,
                   calendars: _calendars));

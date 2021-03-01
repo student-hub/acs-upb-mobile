@@ -87,7 +87,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "errorImage" : MessageLookupByLibrary.simpleMessage("The image could not be loaded."),
     "errorIncorrectPassword" : MessageLookupByLibrary.simpleMessage("The password you entered is incorrect."),
     "errorInvalidEmail" : MessageLookupByLibrary.simpleMessage("You need to provide a valid e-mail address."),
-    "errorLecturerCannotBeEmpty" : MessageLookupByLibrary.simpleMessage("Lecturer cannot be empty."),
     "errorMissingFirstName" : MessageLookupByLibrary.simpleMessage("Please provide your first name(s)."),
     "errorMissingLastName" : MessageLookupByLibrary.simpleMessage("Please provide your last name(s)."),
     "errorNoPassword" : MessageLookupByLibrary.simpleMessage("You need to provide a password."),

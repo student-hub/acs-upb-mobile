@@ -1125,16 +1125,6 @@ class S {
     );
   }
 
-  /// `Lecturer cannot be empty.`
-  String get errorLecturerCannotBeEmpty {
-    return Intl.message(
-      'Lecturer cannot be empty.',
-      name: 'errorLecturerCannotBeEmpty',
-      desc: '',
-      args: [],
-    );
-  }
-
   /// `Please select a picture that is less than 5MB.`
   String get errorPictureSizeToBig {
     return Intl.message(
