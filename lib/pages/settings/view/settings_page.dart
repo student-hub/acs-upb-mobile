@@ -29,6 +29,7 @@ class _SettingsPageState extends State<SettingsPage> {
   );
 
   Future<void> _initPackageInfo() async {
+    // Package_info_plus is not compatible with Flutter_Test
     if (!Platform.environment.containsKey('FLUTTER_TEST')) {
       final info = await PackageInfo.fromPlatform();
       setState(() {
@@ -47,7 +48,6 @@ class _SettingsPageState extends State<SettingsPage> {
     Provider.of<AuthProvider>(context, listen: false)
         .isVerified
         .then((value) => setState(() => isVerified = value));
-    // Initialisation of Package information
     _initPackageInfo();
   }
 
@@ -159,12 +159,8 @@ class _SettingsPageState extends State<SettingsPage> {
                                   : Theme.of(context).textTheme.bodyText1),
                         ),
                         const Divider(),
-                        Text(S.of(context).labelVersion,
-                            textAlign: TextAlign.center,
-                            style: Theme.of(context).textTheme.bodyText1),
-                        Text(_packageInfo.version,
-                            textAlign: TextAlign.center,
-                            style: Theme.of(context).textTheme.bodyText1),
+                        Text(S.of(context).labelVersion, textAlign: TextAlign.center, style: Theme.of(context).textTheme.bodyText1),
+                        Text(_packageInfo.version, textAlign: TextAlign.center, style: Theme.of(context).textTheme.bodyText1),
                         const Padding(
                           padding: EdgeInsets.only(top: 8),
                         )
