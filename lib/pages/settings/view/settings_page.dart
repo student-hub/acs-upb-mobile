@@ -1,4 +1,5 @@
 import 'dart:io';
+
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
@@ -28,10 +29,12 @@ class _SettingsPageState extends State<SettingsPage> {
   );
 
   Future<void> _initPackageInfo() async {
-    final info = await PackageInfo.fromPlatform();
-    setState(() {
-      _packageInfo = info;
-    });
+    if (!Platform.environment.containsKey('FLUTTER_TEST')) {
+      final info = await PackageInfo.fromPlatform();
+      setState(() {
+        _packageInfo = info;
+      });
+    }
   }
 
   // Whether the user verified their email; this can be true, false or null if
@@ -158,15 +161,12 @@ class _SettingsPageState extends State<SettingsPage> {
                         const Divider(),
                         Text(S.of(context).labelVersion,
                             textAlign: TextAlign.center,
-                            style: Theme.of(context).textTheme.bodyText1
-                        ),
-                        Text(
-                            _packageInfo.version,
+                            style: Theme.of(context).textTheme.bodyText1),
+                        Text(_packageInfo.version,
                             textAlign: TextAlign.center,
-                            style: Theme.of(context).textTheme.bodyText1
-                        ),
+                            style: Theme.of(context).textTheme.bodyText1),
                         const Padding(
-                        padding: EdgeInsets.only(top: 8),
+                          padding: EdgeInsets.only(top: 8),
                         )
                       ],
                     ),
