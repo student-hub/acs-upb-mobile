@@ -164,11 +164,12 @@ extension AcademicCalendarExtension on AcademicCalendar {
       }).values);
 
   static AcademicCalendar fromSnap(DocumentSnapshot snap) {
+    final data = snap.data();
     return AcademicCalendar(
-      id: snap.documentID,
-      semesters: _eventsFromMapList(snap.data['semesters'], 'semester'),
-      holidays: _eventsFromMapList(snap.data['holidays'], 'holiday'),
-      exams: _eventsFromMapList(snap.data['exams'], 'examSession'),
+      id: snap.id,
+      semesters: _eventsFromMapList(data['semesters'], 'semester'),
+      holidays: _eventsFromMapList(data['holidays'], 'holiday'),
+      exams: _eventsFromMapList(data['exams'], 'examSession'),
     );
   }
 }
@@ -190,9 +191,9 @@ class UniEventProvider extends EventProvider<UniEventInstance>
 
   Future<Map<String, AcademicCalendar>> fetchCalendars() async {
     final QuerySnapshot query =
-        await Firestore.instance.collection('calendars').getDocuments();
-    for (final doc in query.documents) {
-      _calendars[doc.documentID] = AcademicCalendarExtension.fromSnap(doc);
+        await FirebaseFirestore.instance.collection('calendars').get();
+    for (final doc in query.docs) {
+      _calendars[doc.id] = AcademicCalendarExtension.fromSnap(doc);
     }
 
     notifyListeners();
@@ -210,15 +211,17 @@ class UniEventProvider extends EventProvider<UniEventInstance>
   }
 
   Stream<List<UniEvent>> get _events {
-    if (!_authProvider.isAuthenticatedFromCache ||
+    if (!_authProvider.isAuthenticated ||
         _filter == null ||
-        _calendars == null) return Stream.value([]);
+        _calendars == null) {
+      return Stream.value([]);
+    }
 
     final streams = <Stream<List<UniEvent>>>[];
 
     if (_filter.relevantNodes.length > 1) {
       for (final classId in _classIds ?? []) {
-        final Stream<List<UniEvent>> stream = Firestore.instance
+        final Stream<List<UniEvent>> stream = FirebaseFirestore.instance
             .collection('events')
             .where('class', isEqualTo: classId)
             .where('degree', isEqualTo: _filter.baseNode)
@@ -229,14 +232,15 @@ class UniEventProvider extends EventProvider<UniEventInstance>
           final events = <UniEvent>[];
 
           try {
-            for (final doc in snapshot.documents) {
+            for (final doc in snapshot.docs) {
               ClassHeader classHeader;
-              if (doc.data['class'] != null) {
+              final data = doc.data();
+              if (data['class'] != null) {
                 classHeader =
-                    await _classProvider.fetchClassHeader(doc.data['class']);
+                    await _classProvider.fetchClassHeader(data['class']);
               }
 
-              events.add(UniEventExtension.fromJSON(doc.documentID, doc.data,
+              events.add(UniEventExtension.fromJSON(doc.id, data,
                   classHeader: classHeader, calendars: _calendars));
             }
             return events.where((element) => element != null).toList();
@@ -305,7 +309,7 @@ class UniEventProvider extends EventProvider<UniEventInstance>
 
   Future<bool> addEvent(UniEvent event, {BuildContext context}) async {
     try {
-      await Firestore.instance.collection('events').add(event.toData());
+      await FirebaseFirestore.instance.collection('events').add(event.toData());
       notifyListeners();
       return true;
     } catch (e) {
@@ -316,14 +320,14 @@ class UniEventProvider extends EventProvider<UniEventInstance>
 
   Future<bool> updateEvent(UniEvent event, {BuildContext context}) async {
     try {
-      final ref = Firestore.instance.collection('events').document(event.id);
+      final ref = FirebaseFirestore.instance.collection('events').doc(event.id);
 
-      if ((await ref.get()).data == null) {
+      if ((await ref.get()).data() == null) {
         print('Event not found.');
         return false;
       }
 
-      await ref.updateData(event.toData());
+      await ref.update(event.toData());
       notifyListeners();
       return true;
     } catch (e) {
@@ -335,7 +339,7 @@ class UniEventProvider extends EventProvider<UniEventInstance>
   Future<bool> deleteEvent(UniEvent event, {BuildContext context}) async {
     try {
       DocumentReference ref;
-      ref = Firestore.instance.collection('events').document(event.id);
+      ref = FirebaseFirestore.instance.collection('events').doc(event.id);
       await ref.delete();
       notifyListeners();
       return true;

@@ -56,19 +56,17 @@ void main() {
     mockAuthProvider = MockAuthProvider();
     // ignore: invalid_use_of_protected_member
     when(mockAuthProvider.hasListeners).thenReturn(false);
-    when(mockAuthProvider.isAuthenticatedFromCache).thenReturn(false);
-    when(mockAuthProvider.isAuthenticatedFromService)
-        .thenAnswer((realInvocation) => Future.value(false));
+    when(mockAuthProvider.isAuthenticated).thenReturn(false);
     when(mockAuthProvider.currentUser).thenAnswer((_) => Future.value(null));
     when(mockAuthProvider.isAnonymous).thenReturn(true);
     when(mockAuthProvider.getProfilePictureURL(context: anyNamed('context')))
-        .thenAnswer((realInvocation) => Future.value(null));
+        .thenAnswer((_) => Future.value(null));
 
     mockWebsiteProvider = MockWebsiteProvider();
     // ignore: invalid_use_of_protected_member
     when(mockWebsiteProvider.hasListeners).thenReturn(false);
     when(mockWebsiteProvider.deleteWebsite(any, context: anyNamed('context')))
-        .thenAnswer((realInvocation) => Future.value(true));
+        .thenAnswer((_) => Future.value(true));
     when(mockWebsiteProvider.fetchWebsites(any, context: anyNamed('context')))
         .thenAnswer((_) => Future.value([]));
     when(mockWebsiteProvider.fetchFavouriteWebsites(
@@ -94,17 +92,17 @@ void main() {
     // ignore: invalid_use_of_protected_member
     when(mockQuestionProvider.hasListeners).thenReturn(false);
     when(mockQuestionProvider.fetchQuestions(context: anyNamed('context')))
-        .thenAnswer((realInvocation) => Future.value(<Question>[]));
+        .thenAnswer((_) => Future.value(<Question>[]));
     when(mockQuestionProvider.fetchQuestions(limit: anyNamed('limit')))
-        .thenAnswer((realInvocation) => Future.value(<Question>[]));
+        .thenAnswer((_) => Future.value(<Question>[]));
 
     mockNewsProvider = MockNewsProvider();
     // ignore: invalid_use_of_protected_member
     when(mockNewsProvider.hasListeners).thenReturn(false);
     when(mockNewsProvider.fetchNewsFeedItems(context: anyNamed('context')))
-        .thenAnswer((realInvocation) => Future.value(<NewsFeedItem>[]));
+        .thenAnswer((_) => Future.value(<NewsFeedItem>[]));
     when(mockNewsProvider.fetchNewsFeedItems(limit: anyNamed('limit')))
-        .thenAnswer((realInvocation) => Future.value(<NewsFeedItem>[]));
+        .thenAnswer((_) => Future.value(<NewsFeedItem>[]));
   });
 
   group('Login', () {
@@ -398,7 +396,7 @@ void main() {
               info: anyNamed('info'), context: anyNamed('context')))
           .thenAnswer((_) => Future.value(true));
       when(mockAuthProvider.canSignUpWithEmail(email: anyNamed('email')))
-          .thenAnswer((realInvocation) => Future.value(true));
+          .thenAnswer((_) => Future.value(true));
 
       // Test parser from email
       final Finder email = find.byKey(const ValueKey('email_text_field'));
@@ -567,16 +565,12 @@ void main() {
 
     setUp(() {
       // Mock an anonymous user already being logged in
-      when(mockAuthProvider.isAuthenticatedFromCache).thenReturn(true);
-      when(mockAuthProvider.isAuthenticatedFromService)
-          .thenAnswer((realInvocation) => Future.value(true));
-      when(mockAuthProvider.isVerifiedFromService)
-          .thenAnswer((realInvocation) => Future.value(false));
+      when(mockAuthProvider.isAuthenticated).thenReturn(true);
+      when(mockAuthProvider.isVerified).thenAnswer((_) => Future.value(false));
     });
 
     testWidgets('Sign out anonymous', (WidgetTester tester) async {
-      when(mockAuthProvider.currentUser)
-          .thenAnswer((realInvocation) => Future.value(null));
+      when(mockAuthProvider.currentUser).thenAnswer((_) => Future.value(null));
       when(mockAuthProvider.currentUserFromCache).thenReturn(null);
       when(mockAuthProvider.isAnonymous).thenReturn(true);
 
@@ -608,7 +602,7 @@ void main() {
     });
 
     testWidgets('Sign out authenticated', (WidgetTester tester) async {
-      when(mockAuthProvider.currentUser).thenAnswer((realInvocation) =>
+      when(mockAuthProvider.currentUser).thenAnswer((_) =>
           Future.value(User(uid: '0', firstName: 'John', lastName: 'Doe')));
       when(mockAuthProvider.currentUserFromCache)
           .thenReturn(User(uid: '0', firstName: 'John', lastName: 'Doe'));
