@@ -118,11 +118,11 @@ class _AddEventViewState extends State<AddEventView> {
                 ? 2
                 : 1;
       } else {
-        for (final calendar in calendars.entries) {
-          for (final semester in calendar.value.semesters) {
+        for (final calendar in calendars.entries.toList().reversed) {
+          for (final semester in calendar.value.semesters.reversed) {
             final LocalDate date =
                 widget.initialEvent.start.calendarDate ?? LocalDate.today();
-            if (date.isDuring(semester)) {
+            if (date.isBeforeOrDuring(semester)) {
               selectedSemester =
                   1 + int.tryParse(semester.id[semester.id.length - 1]);
               selectedCalendar = calendar.key;
