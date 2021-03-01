@@ -133,10 +133,9 @@ class _AddEventViewState extends State<AddEventView> {
           }
           if (foundSemester == true) break;
         }
-        if(foundSemester == false){
+        if (foundSemester == false) {
           selectedCalendar = calendars.entries.last.value.id;
-          selectedSemester =  2;
-
+          selectedSemester = 2;
         }
       }
 
