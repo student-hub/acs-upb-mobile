@@ -64,7 +64,6 @@ class _AddEventViewState extends State<AddEventView> {
     _DayOfWeek.sunday: false,
   };
 
-  // TODO(IoanaAlexandru): Make default semester the one closest to now
   int selectedSemester = 1;
 
   AllDayUniEvent get semester =>
@@ -88,8 +87,6 @@ class _AddEventViewState extends State<AddEventView> {
         .then((calendars) {
       setState(() {
         this.calendars = calendars;
-        // TODO(IoanaAlexandru): Make the default calendar the one closest
-        // to now and extract calendar/semester from [widget.initialEvent]
         selectedCalendar = calendars.keys.first;
       });
 
@@ -123,13 +120,12 @@ class _AddEventViewState extends State<AddEventView> {
       } else {
         for (final calendar in calendars.entries) {
           for (final semester in calendar.value.semesters) {
-            LocalDate date =
+            final LocalDate date =
                 widget.initialEvent.start.calendarDate ?? LocalDate.today();
             if (date.isBeforeOrDuring(semester)) {
-              selectedSemester = 1 + int.tryParse(semester.id[semester.id.length - 1]);
+              selectedSemester =
+                  1 + int.tryParse(semester.id[semester.id.length - 1]);
               selectedCalendar = calendar.key;
-
-              /// !!!!
             }
           }
         }
