@@ -122,7 +122,7 @@ class _AddEventViewState extends State<AddEventView> {
           for (final semester in calendar.value.semesters) {
             final LocalDate date =
                 widget.initialEvent.start.calendarDate ?? LocalDate.today();
-            if (date.isBeforeOrDuring(semester)) {
+            if (date.isDuring(semester)) {
               selectedSemester =
                   1 + int.tryParse(semester.id[semester.id.length - 1]);
               selectedCalendar = calendar.key;
@@ -708,12 +708,16 @@ extension TimeOfDayConversion on TimeOfDay {
 }
 
 extension LocalDateComparisons on LocalDate {
-  bool isBeforeOrDuring(AllDayUniEvent semester) {
-    if (compareTo(semester.startDate) < 0) return true;
-
+  bool isDuring(AllDayUniEvent semester) {
     if (DateInterval(semester.startDate, semester.endDate).contains(this)) {
       return true;
     }
     return false;
+  }
+
+  bool isBeforeOrDuring(AllDayUniEvent semester) {
+    if (compareTo(semester.startDate) < 0) return true;
+
+    return isDuring(semester);
   }
 }
