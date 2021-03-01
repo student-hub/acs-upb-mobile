@@ -344,19 +344,24 @@ class _AddWebsiteButton extends StatelessWidget {
             if (authProvider.isAuthenticated && !authProvider.isAnonymous) {
               Navigator.of(context)
                   .push(MaterialPageRoute<ChangeNotifierProvider>(
-                builder: (_) => ChangeNotifierProvider<FilterProvider>(
-                    create: (_) =>
-                        Platform.environment.containsKey('FLUTTER_TEST')
-                            ? Provider.of<FilterProvider>(context)
-                            : FilterProvider(),
-                    child: WebsiteView(
-                      website: Website(
-                          relevance: null,
-                          id: null,
-                          isPrivate: true,
-                          link: '',
-                          category: category),
-                    )),
+                builder: (_) =>
+                    ChangeNotifierProxyProvider<AuthProvider, FilterProvider>(
+                  create: (_) =>
+                      Platform.environment.containsKey('FLUTTER_TEST')
+                          ? Provider.of<FilterProvider>(context)
+                          : FilterProvider(),
+                  update: (context, authProvider, filterProvider) {
+                    return filterProvider..updateAuth(authProvider);
+                  },
+                  child: WebsiteView(
+                    website: Website(
+                        relevance: null,
+                        id: null,
+                        isPrivate: true,
+                        link: '',
+                        category: category),
+                  ),
+                ),
               ));
             } else {
               AppToast.show(S.of(context).warningAuthenticationNeeded);

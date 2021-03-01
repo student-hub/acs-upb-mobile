@@ -103,8 +103,12 @@ class _TimetablePageState extends State<TimetablePage> {
                     .currentUserFromCache;
                 if (user.canAddPublicInfo) {
                   Navigator.of(context).push(MaterialPageRoute<AddEventView>(
-                    builder: (_) => ChangeNotifierProvider<FilterProvider>(
+                    builder: (_) => ChangeNotifierProxyProvider<AuthProvider,
+                        FilterProvider>(
                       create: (_) => FilterProvider(),
+                      update: (context, authProvider, filterProvider) {
+                        return filterProvider..updateAuth(authProvider);
+                      },
                       child: AddEventView(
                         initialEvent: UniEvent(
                             start: dateTime,
