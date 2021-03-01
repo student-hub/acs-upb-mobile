@@ -141,7 +141,7 @@ class FilterProvider with ChangeNotifier {
       }
 
       // Check if there is an existing setting already
-      if (global &&
+      if (_authProvider != null &&
           _authProvider.isAuthenticated &&
           !_authProvider.isAnonymous) {
         final userSnap =
@@ -152,6 +152,7 @@ class FilterProvider with ChangeNotifier {
         _relevanceFilter?.setRelevantNodes(_relevantNodes);
       }
 
+      notifyListeners();
       return cachedFilter;
     } catch (e, _) {
       print(e);
