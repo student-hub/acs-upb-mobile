@@ -67,7 +67,8 @@ class _AddEventViewState extends State<AddEventView> {
   // TODO(IoanaAlexandru): Make default semester the one closest to now
   int selectedSemester = 1;
 
-  AllDayUniEvent get semester => calendars[selectedCalendar]?.semesters?.elementAt(selectedSemester - 1);
+  AllDayUniEvent get semester =>
+      calendars[selectedCalendar]?.semesters?.elementAt(selectedSemester - 1);
 
   List<ClassHeader> classHeaders = [];
   User user;
@@ -77,15 +78,20 @@ class _AddEventViewState extends State<AddEventView> {
   void initState() {
     super.initState();
 
-    final LocalDate secondSemesterStartDate = widget.initialEvent?.calendar?.semesters?.last?.startDate;
+    final LocalDate secondSemesterStartDate =
+        widget.initialEvent?.calendar?.semesters?.last?.startDate;
 
-    selectedSemester = LocalDate.today().compareTo(secondSemesterStartDate) > 0 ? 2 : 1;
+    selectedSemester =
+        LocalDate.today().compareTo(secondSemesterStartDate) > 0 ? 2 : 1;
 
-    user = Provider.of<AuthProvider>(context, listen: false).currentUserFromCache;
+    user =
+        Provider.of<AuthProvider>(context, listen: false).currentUserFromCache;
     Provider.of<ClassProvider>(context, listen: false)
         .fetchClassHeaders(uid: user.uid)
         .then((headers) => setState(() => classHeaders = headers));
-    Provider.of<UniEventProvider>(context, listen: false).fetchCalendars().then((calendars) {
+    Provider.of<UniEventProvider>(context, listen: false)
+        .fetchCalendars()
+        .then((calendars) {
       setState(() {
         this.calendars = calendars;
         // TODO(IoanaAlexandru): Make the default calendar the one closest
@@ -94,17 +100,24 @@ class _AddEventViewState extends State<AddEventView> {
         selectedCalendar = calendars.keys.first;
       });
 
-      final AllDayUniEvent secondSemester = widget.initialEvent.calendar.semesters.last;
+      final AllDayUniEvent secondSemester =
+          widget.initialEvent.calendar.semesters.last;
       if (widget.initialEvent != null) {
         if (widget.initialEvent.calendar != null) {
           selectedCalendar = widget.initialEvent.calendar.id;
-          final DateInterval secondSemesterInterval = DateInterval(secondSemester.startDate, secondSemester.endDate);
-          selectedSemester = secondSemesterInterval.contains(widget.initialEvent.start.calendarDate) ? 2 : 1;
+          final DateInterval secondSemesterInterval =
+              DateInterval(secondSemester.startDate, secondSemester.endDate);
+          selectedSemester = secondSemesterInterval
+                  .contains(widget.initialEvent.start.calendarDate)
+              ? 2
+              : 1;
         } else {
-          final Iterable<MapEntry<String, AcademicCalendar>> entries = calendars.entries;
+          final Iterable<MapEntry<String, AcademicCalendar>> entries =
+              calendars.entries;
           for (final calendar in entries) {
             for (final semester in calendar.value.semesters) {
-              final LocalDate localDate = widget.initialEvent.start.calendarDate ?? LocalDate.today();
+              final LocalDate localDate =
+                  widget.initialEvent.start.calendarDate ?? LocalDate.today();
               if (localDate.isBeforeOrDuring(semester)) {
                 selectedCalendar = calendar.key;
                 selectedSemester = semester as int;
@@ -143,16 +156,23 @@ class _AddEventViewState extends State<AddEventView> {
 
     selectedEventType = widget.initialEvent?.type;
     selectedClass = widget.initialEvent?.classHeader;
-    locationController = TextEditingController(text: widget.initialEvent?.location ?? '');
+    locationController =
+        TextEditingController(text: widget.initialEvent?.location ?? '');
 
     final startHour = widget.initialEvent?.start?.hourOfDay ?? 8;
     duration = widget.initialEvent?.duration ?? const Period(hours: 2);
     startTime = LocalTime(startHour, 0, 0);
 
-    var initialWeekDays = [_DayOfWeek.from(widget.initialEvent?.start?.dayOfWeek) ?? _DayOfWeek.monday];
+    var initialWeekDays = [
+      _DayOfWeek.from(widget.initialEvent?.start?.dayOfWeek) ??
+          _DayOfWeek.monday
+    ];
     if (widget.initialEvent != null &&
         widget.initialEvent is RecurringUniEvent &&
-        (widget.initialEvent as RecurringUniEvent).rrule.byWeekDays.isNotEmpty) {
+        (widget.initialEvent as RecurringUniEvent)
+            .rrule
+            .byWeekDays
+            .isNotEmpty) {
       initialWeekDays = (widget.initialEvent as RecurringUniEvent)
           .rrule
           .byWeekDays
@@ -167,7 +187,9 @@ class _AddEventViewState extends State<AddEventView> {
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
-      title: Text(widget.initialEvent?.id == null ? S.of(context).actionAddEvent : S.of(context).actionEditEvent),
+      title: Text(widget.initialEvent?.id == null
+          ? S.of(context).actionAddEvent
+          : S.of(context).actionEditEvent),
       actions: widget.initialEvent?.id == null
           ? [_saveButton()]
           : [
@@ -197,10 +219,12 @@ class _AddEventViewState extends State<AddEventView> {
                             final year = int.tryParse(key);
                             return DropdownMenuItem<String>(
                               value: key,
-                              child: Text(year != null ? '$year-${year + 1}' : key),
+                              child: Text(
+                                  year != null ? '$year-${year + 1}' : key),
                             );
                           }).toList(),
-                          onChanged: (selection) => selectedCalendar = selection,
+                          onChanged: (selection) =>
+                              selectedCalendar = selection,
                         ),
                       ),
                       const SizedBox(width: 16),
@@ -217,7 +241,8 @@ class _AddEventViewState extends State<AddEventView> {
                                     child: Text(semester.toString()),
                                   ))
                               .toList(),
-                          onChanged: (selection) => selectedSemester = selection,
+                          onChanged: (selection) =>
+                              selectedSemester = selection,
                         ),
                       ),
                     ],
@@ -225,7 +250,8 @@ class _AddEventViewState extends State<AddEventView> {
                   RelevanceFormField(
                     controller: relevanceController,
                     validator: (_) {
-                      if (relevanceController.customRelevance?.isEmpty ?? true) {
+                      if (relevanceController.customRelevance?.isEmpty ??
+                          true) {
                         return S.of(context).warningYouNeedToSelectAtLeastOne;
                       }
                       return null;
@@ -269,7 +295,8 @@ class _AddEventViewState extends State<AddEventView> {
                             value: selectedClass,
                             items: classHeaders
                                 .map(
-                                  (header) => DropdownMenuItem(value: header, child: Text(header.name)),
+                                  (header) => DropdownMenuItem(
+                                      value: header, child: Text(header.name)),
                                 )
                                 .toList(),
                             onChanged: (selection) {
@@ -284,15 +311,20 @@ class _AddEventViewState extends State<AddEventView> {
                             },
                           ),
                         timeIntervalPicker(),
-                        if (weekSelected[WeekType.odd] != null && weekSelected[WeekType.even] != null)
+                        if (weekSelected[WeekType.odd] != null &&
+                            weekSelected[WeekType.even] != null)
                           SelectableFormField(
                             key: const ValueKey('week_picker'),
                             icon: Icons.calendar_today,
                             label: S.of(context).labelWeek,
                             initialValues: weekSelected,
                             validator: (selection) {
-                              if (selection.values.where((e) => e != false).isEmpty) {
-                                return S.of(context).warningYouNeedToSelectAtLeastOne;
+                              if (selection.values
+                                  .where((e) => e != false)
+                                  .isEmpty) {
+                                return S
+                                    .of(context)
+                                    .warningYouNeedToSelectAtLeastOne;
                               }
                               return null;
                             },
@@ -303,8 +335,12 @@ class _AddEventViewState extends State<AddEventView> {
                           label: S.of(context).labelDay,
                           initialValues: weekDaySelected,
                           validator: (selection) {
-                            if (selection.values.where((e) => e != false).isEmpty) {
-                              return S.of(context).warningYouNeedToSelectAtLeastOne;
+                            if (selection.values
+                                .where((e) => e != false)
+                                .isEmpty) {
+                              return S
+                                  .of(context)
+                                  .warningYouNeedToSelectAtLeastOne;
                             }
                             return null;
                           },
@@ -338,10 +374,12 @@ class _AddEventViewState extends State<AddEventView> {
             text: S.of(context).actionDeleteEvent,
             width: 130,
             onTap: () async {
-              final res = await Provider.of<UniEventProvider>(context, listen: false)
-                  .deleteEvent(widget.initialEvent, context: context);
+              final res =
+                  await Provider.of<UniEventProvider>(context, listen: false)
+                      .deleteEvent(widget.initialEvent, context: context);
               if (res) {
-                Navigator.of(context).popUntil(ModalRoute.withName(Routes.home));
+                Navigator.of(context)
+                    .popUntil(ModalRoute.withName(Routes.home));
                 AppToast.show(S.of(context).messageEventDeleted);
               }
             },
@@ -362,11 +400,15 @@ class _AddEventViewState extends State<AddEventView> {
 
           final rrule = RecurrenceRule(
               frequency: Frequency.weekly,
-              byWeekDays: (Map<_DayOfWeek, bool>.from(weekDaySelected)..removeWhere((key, value) => !value))
+              byWeekDays: (Map<_DayOfWeek, bool>.from(weekDaySelected)
+                    ..removeWhere((key, value) => !value))
                   .keys
                   .map((weekDay) => ByWeekDayEntry(weekDay))
                   .toSet(),
-              interval: weekSelected[WeekType.odd] != weekSelected[WeekType.even] ? 2 : 1,
+              interval:
+                  weekSelected[WeekType.odd] != weekSelected[WeekType.even]
+                      ? 2
+                      : 1,
               until: semester.endDate.add(const Period(days: 1)).atMidnight());
 
           final event = RecurringUniEvent(
@@ -380,17 +422,22 @@ class _AddEventViewState extends State<AddEventView> {
               type: selectedEventType,
               classHeader: selectedClass,
               calendar: calendars[selectedCalendar],
-              addedBy: Provider.of<AuthProvider>(context, listen: false).currentUserFromCache.uid);
+              addedBy: Provider.of<AuthProvider>(context, listen: false)
+                  .currentUserFromCache
+                  .uid);
 
           if (widget.initialEvent?.id == null) {
-            final res = await Provider.of<UniEventProvider>(context, listen: false).addEvent(event, context: context);
+            final res =
+                await Provider.of<UniEventProvider>(context, listen: false)
+                    .addEvent(event, context: context);
             if (res) {
               Navigator.of(context).pop();
               AppToast.show(S.of(context).messageEventAdded);
             }
           } else {
             final res =
-                await Provider.of<UniEventProvider>(context, listen: false).updateEvent(event, context: context);
+                await Provider.of<UniEventProvider>(context, listen: false)
+                    .updateEvent(event, context: context);
             if (res) {
               Navigator.of(context).popUntil(ModalRoute.withName(Routes.home));
               AppToast.show(S.of(context).messageEventEdited);
@@ -402,9 +449,11 @@ class _AddEventViewState extends State<AddEventView> {
   AppScaffoldAction _deleteButton() => AppScaffoldAction(
         icon: Icons.more_vert,
         items: {
-          S.of(context).actionDeleteEvent: () => showDialog(context: context, builder: _deletionConfirmationDialog)
+          S.of(context).actionDeleteEvent: () =>
+              showDialog(context: context, builder: _deletionConfirmationDialog)
         },
-        onPressed: () => showDialog(context: context, builder: _deletionConfirmationDialog),
+        onPressed: () =>
+            showDialog(context: context, builder: _deletionConfirmationDialog),
       );
 
   Widget timeIntervalPicker() {
@@ -437,7 +486,10 @@ class _AddEventViewState extends State<AddEventView> {
               children: [
                 Text(
                   duration.toString().replaceAll(RegExp(r'[PT]'), ''),
-                  style: Theme.of(context).textTheme.bodyText1.copyWith(color: textColor),
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyText1
+                      .copyWith(color: textColor),
                 ),
                 DottedLine(
                   lineThickness: 4,
@@ -445,7 +497,8 @@ class _AddEventViewState extends State<AddEventView> {
                   dashColor: textColor,
                 ),
                 // Text-sized box so that the line is centered
-                SizedBox(height: Theme.of(context).textTheme.bodyText1.fontSize),
+                SizedBox(
+                    height: Theme.of(context).textTheme.bodyText1.fontSize),
               ],
             ),
           ),
@@ -455,7 +508,8 @@ class _AddEventViewState extends State<AddEventView> {
                 context: context,
                 initialTime: startTime.add(duration).toTimeOfDay(),
               );
-              setState(() => duration = Period.differenceBetweenTimes(startTime, end.toLocalTime()));
+              setState(() => duration =
+                  Period.differenceBetweenTimes(startTime, end.toLocalTime()));
             },
             child: Text(
               endTime.toString('HH:mm'),
@@ -496,7 +550,10 @@ class RelevanceFormField extends FormField<List<String>> {
                     padding: const EdgeInsets.only(top: 8),
                     child: Text(
                       state.errorText,
-                      style: Theme.of(context).textTheme.caption.copyWith(color: Theme.of(context).errorColor),
+                      style: Theme.of(context)
+                          .textTheme
+                          .caption
+                          .copyWith(color: Theme.of(context).errorColor),
                     ),
                   ),
               ],
@@ -531,7 +588,9 @@ class SelectableFormField extends FormField<Map<Localizable, bool>> {
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
-                        Icon(icon, color: CustomIcons.formIconColor(Theme.of(context))),
+                        Icon(icon,
+                            color:
+                                CustomIcons.formIconColor(Theme.of(context))),
                         const SizedBox(width: 12),
                         Expanded(
                           child: Column(
@@ -541,7 +600,11 @@ class SelectableFormField extends FormField<Map<Localizable, bool>> {
                               Expanded(
                                 child: Text(
                                   label,
-                                  style: Theme.of(context).textTheme.caption.apply(color: Theme.of(context).hintColor),
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .caption
+                                      .apply(
+                                          color: Theme.of(context).hintColor),
                                 ),
                               ),
                               const SizedBox(height: 8),
@@ -557,10 +620,13 @@ class SelectableFormField extends FormField<Map<Localizable, bool>> {
                                           return Row(
                                             children: [
                                               Selectable(
-                                                label: labels[index].toLocalizedString(context),
-                                                initiallySelected: state.value[labels[index]],
+                                                label: labels[index]
+                                                    .toLocalizedString(context),
+                                                initiallySelected:
+                                                    state.value[labels[index]],
                                                 onSelected: (selected) {
-                                                  state.value[labels[index]] = selected;
+                                                  state.value[labels[index]] =
+                                                      selected;
                                                   state.didChange(state.value);
                                                 },
                                               ),
@@ -585,7 +651,10 @@ class SelectableFormField extends FormField<Map<Localizable, bool>> {
                     padding: const EdgeInsets.only(top: 8),
                     child: Text(
                       state.errorText,
-                      style: Theme.of(context).textTheme.caption.copyWith(color: Theme.of(context).errorColor),
+                      style: Theme.of(context)
+                          .textTheme
+                          .caption
+                          .copyWith(color: Theme.of(context).errorColor),
                     ),
                   ),
               ],
@@ -602,7 +671,9 @@ class _DayOfWeek extends time_machine.DayOfWeek with Localizable {
   @override
   String toLocalizedString(BuildContext context) {
     final helperDate = LocalDate.today().next(this);
-    return LocalDatePattern.createWithCurrentCulture('ddd').format(helperDate).substring(0, 3);
+    return LocalDatePattern.createWithCurrentCulture('ddd')
+        .format(helperDate)
+        .substring(0, 3);
   }
 
   static const _DayOfWeek monday = _DayOfWeek(1);
@@ -628,7 +699,9 @@ class WeekType with Localizable {
   int get hashCode => _value.hashCode;
 
   @override
-  bool operator ==(dynamic other) => other is WeekType && other._value == _value || other is int && other == _value;
+  bool operator ==(dynamic other) =>
+      other is WeekType && other._value == _value ||
+      other is int && other == _value;
 
   @override
   String toLocalizedString(BuildContext context) {
@@ -653,11 +726,13 @@ extension TimeOfDayConversion on TimeOfDay {
 
 extension LocalDateExtension on LocalDate {
   bool isBeforeOrDuring(AllDayUniEvent semester) {
-    final DateInterval semesterInterval = DateInterval(semester.startDate, semester.endDate);
+    final DateInterval semesterInterval =
+        DateInterval(semester.startDate, semester.endDate);
     if (semesterInterval.contains(this)) {
       return true;
     }
-    if (toDateTimeUnspecified().isBefore(semester.startDate.toDateTimeUnspecified())) {
+    if (toDateTimeUnspecified()
+        .isBefore(semester.startDate.toDateTimeUnspecified())) {
       return true;
     }
 
