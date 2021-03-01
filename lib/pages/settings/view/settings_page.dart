@@ -28,10 +28,12 @@ class _SettingsPageState extends State<SettingsPage> {
   );
 
   Future<void> _initPackageInfo() async {
-    final info = await PackageInfo.fromPlatform();
-    setState(() {
-      _packageInfo = info;
-    });
+    if (!Platform.environment.containsKey('FLUTTER_TEST')) {
+      final info = await PackageInfo.fromPlatform();
+      setState(() {
+        _packageInfo = info;
+      });
+    }
   }
 
   // Whether the user verified their email; this can be true, false or null if
