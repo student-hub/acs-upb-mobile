@@ -30,6 +30,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
   Future<void> _initPackageInfo() async {
     // package_info_plus is not compatible with flutter_test
+    // link to the issue: https://github.com/fluttercommunity/plus_plugins/issues/172
     if (!Platform.environment.containsKey('FLUTTER_TEST')) {
       final info = await PackageInfo.fromPlatform();
       setState(() {
@@ -160,7 +161,7 @@ class _SettingsPageState extends State<SettingsPage> {
                         ),
                         const Divider(),
                         Text(
-                            '${S.of(context).labelVersion}\n${_packageInfo.version}',
+                            '${S.of(context).labelVersion} ${_packageInfo.version}',
                             textAlign: TextAlign.center,
                             style: Theme.of(context).textTheme.bodyText1),
                         const Padding(
