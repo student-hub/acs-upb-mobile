@@ -192,11 +192,12 @@ extension AcademicCalendarExtension on AcademicCalendar {
       }).values);
 
   static AcademicCalendar fromSnap(DocumentSnapshot snap) {
+    final data = snap.data();
     return AcademicCalendar(
       id: snap.id,
-      semesters: _eventsFromMapList(snap.data()['semesters'], 'semester'),
-      holidays: _eventsFromMapList(snap.data()['holidays'], 'holiday'),
-      exams: _eventsFromMapList(snap.data()['exams'], 'examSession'),
+      semesters: _eventsFromMapList(data['semesters'], 'semester'),
+      holidays: _eventsFromMapList(data['holidays'], 'holiday'),
+      exams: _eventsFromMapList(data['exams'], 'examSession'),
     );
   }
 }
