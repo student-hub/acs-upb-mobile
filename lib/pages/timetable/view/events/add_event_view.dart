@@ -91,29 +91,49 @@ class _AddEventViewState extends State<AddEventView> {
         // TODO(IoanaAlexandru): Make the default calendar the one closest
         // to now and extract calendar/semester from  [widget.initialEvent]
 
-        selectedSemester =
-            widget.initialEvent.start.toDateTimeLocal().compareTo(secondSemesterStartDate.toDateTimeUnspecified()) > 0
-                ? 2
-                : 1;
-
         selectedCalendar = calendars.keys.first;
       });
 
-      if (widget.initialEvent != null && widget.initialEvent is RecurringUniEvent) {
-        final RecurringUniEvent event = widget.initialEvent;
-        if (event.rrule.interval != 1) {
-          final rule = WeekYearRules.iso;
-          if (rule.getWeekOfWeekYear(semester.start.calendarDate) == rule.getWeekOfWeekYear(event.start.calendarDate)) {
-            // Week is odd
-            weekSelected[WeekType.even] = false;
-            weekSelected[WeekType.odd] = true;
-          } else {
-            // Week is even
-            weekSelected[WeekType.even] = true;
-            weekSelected[WeekType.odd] = false;
+      final AllDayUniEvent secondSemester = widget.initialEvent.calendar.semesters.last;
+      if (widget.initialEvent != null) {
+        if (widget.initialEvent.calendar != null) {
+          selectedCalendar = widget.initialEvent.calendar.id;
+          final DateInterval secondSemesterInterval = DateInterval(secondSemester.startDate, secondSemester.endDate);
+          selectedSemester = secondSemesterInterval.contains(widget.initialEvent.start.calendarDate) ? 2 : 1;
+        } else {
+          final Iterable<MapEntry<String, AcademicCalendar>> entries = calendars.entries;
+          for (final calendar in entries) {
+            for (final semester in calendar.value.semesters) {
+              final LocalDate localDate = widget.initialEvent.start.calendarDate ?? LocalDate.today();
+              if (localDate.isBeforeOrDuring(semester)) {
+                selectedCalendar = calendar.key;
+                selectedSemester = semester as int;
+                break;
+              }
+            }
+          }
+        }
+        // selectedSemester
+
+        if (widget.initialEvent is RecurringUniEvent) {
+          final RecurringUniEvent event = widget.initialEvent;
+          if (event.rrule.interval != 1) {
+            final rule = WeekYearRules.iso;
+            if (rule.getWeekOfWeekYear(semester.start.calendarDate) ==
+                rule.getWeekOfWeekYear(event.start.calendarDate)) {
+              // Week is odd
+              weekSelected[WeekType.even] = false;
+              weekSelected[WeekType.odd] = true;
+            } else {
+              // Week is even
+              weekSelected[WeekType.even] = true;
+              weekSelected[WeekType.odd] = false;
+            }
           }
         }
       }
+
+      // if (widget.initialEvent != null && widget.initialEvent is RecurringUniEvent) {}
 
       setState(() {
         weekSelected[WeekType.even] ??= true;
@@ -629,4 +649,18 @@ extension LocalTimeConversion on LocalTime {
 
 extension TimeOfDayConversion on TimeOfDay {
   LocalTime toLocalTime() => LocalTime(hour, minute, 0);
+}
+
+extension LocalDateExtension on LocalDate {
+  bool isBeforeOrDuring(AllDayUniEvent semester) {
+    final DateInterval semesterInterval = DateInterval(semester.startDate, semester.endDate);
+    if (semesterInterval.contains(this)) {
+      return true;
+    }
+    if (toDateTimeUnspecified().isBefore(semester.startDate.toDateTimeUnspecified())) {
+      return true;
+    }
+
+    return false;
+  }
 }
