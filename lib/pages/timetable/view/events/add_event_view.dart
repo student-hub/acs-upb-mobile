@@ -111,6 +111,30 @@ class _AddEventViewState extends State<AddEventView> {
         }
       }
 
+      if (widget.initialEvent?.id != null) {
+        selectedCalendar = widget.initialEvent.calendar.id;
+        final AllDayUniEvent secondSemester =
+            widget.initialEvent.calendar.semesters.last;
+        selectedSemester =
+            DateInterval(secondSemester.startDate, secondSemester.endDate)
+                    .contains(widget.initialEvent.start.calendarDate)
+                ? 2
+                : 1;
+      } else {
+        for (final calendar in calendars.entries) {
+          for (final semester in calendar.value.semesters) {
+            LocalDate date =
+                widget.initialEvent.start.calendarDate ?? LocalDate.today();
+            if (date.isBeforeOrDuring(semester)) {
+              selectedSemester = semester.id[semester.id.length - 1] as int;
+              selectedCalendar = calendar.key;
+
+              /// !!!!
+            }
+          }
+        }
+      }
+
       setState(() {
         weekSelected[WeekType.even] ??= true;
         weekSelected[WeekType.odd] ??= true;
@@ -685,4 +709,15 @@ extension LocalTimeConversion on LocalTime {
 
 extension TimeOfDayConversion on TimeOfDay {
   LocalTime toLocalTime() => LocalTime(hour, minute, 0);
+}
+
+extension LocalDateComparisons on LocalDate {
+  bool isBeforeOrDuring(AllDayUniEvent semester) {
+    if (compareTo(semester.startDate) < 0) return true;
+
+    if (DateInterval(semester.startDate, semester.endDate).contains(this)) {
+      return true;
+    }
+    return false;
+  }
 }
