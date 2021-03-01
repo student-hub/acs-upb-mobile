@@ -723,7 +723,6 @@ extension LocalDateComparisons on LocalDate {
 
   bool isBeforeOrDuring(AllDayUniEvent semester) {
     if (compareTo(semester.startDate) < 0) return true;
-
     return isDuring(semester);
   }
 }
