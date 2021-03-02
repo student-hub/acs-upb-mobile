@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/navigation/routes.dart';
@@ -23,6 +24,22 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
+  PackageInfo _packageInfo = PackageInfo(
+    version: 'Unknown',
+    buildNumber: 'Unknown',
+  );
+
+  Future<void> _initPackageInfo() async {
+    // package_info_plus is not compatible with flutter_test
+    // link to the issue: https://github.com/fluttercommunity/plus_plugins/issues/172
+    if (!Platform.environment.containsKey('FLUTTER_TEST')) {
+      final info = await PackageInfo.fromPlatform();
+      setState(() {
+        _packageInfo = info;
+      });
+    }
+  }
+
   // Whether the user verified their email; this can be true, false or null if
   // the async check hasn't completed yet.
   bool isVerified;
@@ -33,6 +50,7 @@ class _SettingsPageState extends State<SettingsPage> {
     Provider.of<AuthProvider>(context, listen: false)
         .isVerified
         .then((value) => setState(() => isVerified = value));
+    _initPackageInfo();
   }
 
   @override
@@ -116,7 +134,7 @@ class _SettingsPageState extends State<SettingsPage> {
                           ),
                         ),
                         const Divider(),
-                        FlatButton(
+                        TextButton(
                           key: const ValueKey('ask_permissions'),
                           onPressed: () => {
                             if (authProvider.isAnonymous)
@@ -141,6 +159,14 @@ class _SettingsPageState extends State<SettingsPage> {
                                         color: Theme.of(context).disabledColor,
                                       )
                                   : Theme.of(context).textTheme.bodyText1),
+                        ),
+                        const Divider(),
+                        Text(
+                            '${S.of(context).labelVersion} ${_packageInfo.version}+${_packageInfo.buildNumber}',
+                            textAlign: TextAlign.center,
+                            style: Theme.of(context).textTheme.bodyText1),
+                        const Padding(
+                          padding: EdgeInsets.only(top: 8),
                         )
                       ],
                     ),
