@@ -26,6 +26,7 @@ class SettingsPage extends StatefulWidget {
 class _SettingsPageState extends State<SettingsPage> {
   PackageInfo _packageInfo = PackageInfo(
     version: 'Unknown',
+    buildNumber: 'Unknown',
   );
 
   Future<void> _initPackageInfo() async {
@@ -161,7 +162,7 @@ class _SettingsPageState extends State<SettingsPage> {
                         ),
                         const Divider(),
                         Text(
-                            '${S.of(context).labelVersion} ${_packageInfo.version}',
+                            '${S.of(context).labelVersion} ${_packageInfo.version}+${(int.tryParse(_packageInfo.buildNumber) + 1).toString()}',
                             textAlign: TextAlign.center,
                             style: Theme.of(context).textTheme.bodyText1),
                         const Padding(
