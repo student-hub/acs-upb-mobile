@@ -21,6 +21,7 @@ class RecurringUniEvent extends UniEvent {
     ClassHeader classHeader,
     AcademicCalendar calendar,
     String addedBy,
+    Map<String, dynamic> modifiedInstances,
   })  : assert(rrule != null),
         super(
             name: name,
@@ -34,7 +35,8 @@ class RecurringUniEvent extends UniEvent {
             type: type,
             classHeader: classHeader,
             calendar: calendar,
-            addedBy: addedBy);
+            addedBy: addedBy,
+            modifiedInstances: modifiedInstances);
 
   final RecurrenceRule rrule;
 
@@ -92,7 +94,14 @@ class RecurringUniEvent extends UniEvent {
           skip = true;
         }
       }
+
       bool active = true;
+      if (modifiedInstances != null) {
+        Map<String, dynamic> demo;
+        if (modifiedInstances.containsKey('$i')) {
+          active = modifiedInstances['$i']['active'];
+        }
+      }
       if (!skip) {
         yield UniEventInstance(
           id: '$id-$i',

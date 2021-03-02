@@ -103,6 +103,9 @@ extension UniEventExtension on UniEvent {
             ? null
             : List<String>.from(json['relevance']),
         addedBy: json['addedBy'],
+        modifiedInstances: json['modifiedInstances'] == null
+            ? null
+            : Map<String, dynamic>.from(json['modifiedInstances']),
       );
     } else {
       return UniEvent(
@@ -144,6 +147,8 @@ extension UniEventExtension on UniEvent {
 
     if (this is RecurringUniEvent) {
       json['rrule'] = (this as RecurringUniEvent).rrule.toString();
+      json['modifiedInstances'] =
+          (this as RecurringUniEvent).modifiedInstances.toString();
     }
 
     if (this is AllDayUniEvent) {

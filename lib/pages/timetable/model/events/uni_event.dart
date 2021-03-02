@@ -104,6 +104,7 @@ class UniEvent {
     this.relevance,
     this.degree,
     this.addedBy,
+    this.modifiedInstances,
   });
 
   final String id;
@@ -118,6 +119,7 @@ class UniEvent {
   final String degree;
   final List<String> relevance;
   final String addedBy;
+  final Map<String, dynamic> modifiedInstances;
 
   Iterable<UniEventInstance> generateInstances(
       {DateInterval intersectingInterval}) sync* {
@@ -140,17 +142,17 @@ class UniEvent {
 }
 
 class UniEventInstance extends Event {
-  UniEventInstance({
-    @required String id,
-    @required this.title,
-    @required this.mainEvent,
-    @required LocalDateTime start,
-    @required LocalDateTime end,
-    Color color,
-    this.location,
-    this.info,
-    this.active = true
-  })  : color = color ?? mainEvent?.color,
+  UniEventInstance(
+      {@required String id,
+      @required this.title,
+      @required this.mainEvent,
+      @required LocalDateTime start,
+      @required LocalDateTime end,
+      Color color,
+      this.location,
+      this.info,
+      this.active})
+      : color = color ?? mainEvent?.color,
         super(id: id, start: start, end: end);
 
   final UniEvent mainEvent;
