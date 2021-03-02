@@ -81,8 +81,8 @@ extension ClassExtension on Class {
     }
 
     Map<String, double> grading;
-    if (snap['grading'] != null) {
-      grading = Map<String, double>.from(snap['grading'].map(
+    if (data['grading'] != null) {
+      grading = Map<String, double>.from(data['grading'].map(
           (String name, dynamic value) => MapEntry(name, value.toDouble())));
     }
 
@@ -236,7 +236,7 @@ class ClassProvider with ChangeNotifier {
       final DocumentReference doc = _db.collection('classes').doc(classId);
       final DocumentSnapshot snap = await doc.get();
 
-      if (snap.data == null) {
+      if (snap.data() == null) {
         // Document does not exist
         await doc.set({
           'shortcuts': [shortcut.toData()]
@@ -292,7 +292,7 @@ class ClassProvider with ChangeNotifier {
       final DocumentSnapshot snap = await doc.get();
       final Timestamp now = Timestamp.now();
 
-      if (snap.data == null) {
+      if (snap.data() == null) {
         // Document does not exist
         await doc.set({'grading': grading, 'gradingLastUpdated': now});
       } else {
