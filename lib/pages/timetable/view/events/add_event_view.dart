@@ -124,7 +124,7 @@ class _AddEventViewState extends State<AddEventView> {
             final LocalDate date =
                 widget.initialEvent.start.calendarDate ?? LocalDate.today();
             if (date.isBeforeOrDuring(semester)) {
-              // semester.id is represented as "semesterN", the (N+1)th semester"
+              // semester.id is represented as "semesterN", the (N-1)th semester"
               selectedSemester =
                   1 + int.tryParse(semester.id[semester.id.length - 1]);
               selectedCalendar = calendar.key;
