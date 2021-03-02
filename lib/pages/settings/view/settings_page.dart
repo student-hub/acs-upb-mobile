@@ -162,7 +162,7 @@ class _SettingsPageState extends State<SettingsPage> {
                         ),
                         const Divider(),
                         Text(
-                            '${S.of(context).labelVersion} ${_packageInfo.version}+${(int.tryParse(_packageInfo.buildNumber) + 1).toString()}',
+                            '${S.of(context).labelVersion} ${_packageInfo.version}+${_packageInfo.buildNumber}',
                             textAlign: TextAlign.center,
                             style: Theme.of(context).textTheme.bodyText1),
                         const Padding(
