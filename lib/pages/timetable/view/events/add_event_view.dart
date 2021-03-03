@@ -90,24 +90,6 @@ class _AddEventViewState extends State<AddEventView> {
         selectedCalendar = calendars.keys.first;
       });
 
-      if (widget.initialEvent != null &&
-          widget.initialEvent is RecurringUniEvent) {
-        final RecurringUniEvent event = widget.initialEvent;
-        if (event.rrule.interval != 1) {
-          final rule = WeekYearRules.iso;
-          if (rule.getWeekOfWeekYear(semester.start.calendarDate) ==
-              rule.getWeekOfWeekYear(event.start.calendarDate)) {
-            // Week is odd
-            weekSelected[WeekType.even] = false;
-            weekSelected[WeekType.odd] = true;
-          } else {
-            // Week is even
-            weekSelected[WeekType.even] = true;
-            weekSelected[WeekType.odd] = false;
-          }
-        }
-      }
-
       if (widget.initialEvent?.id != null) {
         selectedCalendar = widget.initialEvent.calendar.id;
         final AllDayUniEvent secondSemester =
@@ -139,7 +121,23 @@ class _AddEventViewState extends State<AddEventView> {
           selectedSemester = 2;
         }
       }
-
+      if (widget.initialEvent != null &&
+          widget.initialEvent is RecurringUniEvent) {
+        final RecurringUniEvent event = widget.initialEvent;
+        if (event.rrule.interval != 1) {
+          final rule = WeekYearRules.iso;
+          if (rule.getWeekOfWeekYear(semester.start.calendarDate) ==
+              rule.getWeekOfWeekYear(event.start.calendarDate)) {
+            // Week is odd
+            weekSelected[WeekType.even] = false;
+            weekSelected[WeekType.odd] = true;
+          } else {
+            // Week is even
+            weekSelected[WeekType.even] = true;
+            weekSelected[WeekType.odd] = false;
+          }
+        }
+      }
       setState(() {
         weekSelected[WeekType.even] ??= true;
         weekSelected[WeekType.odd] ??= true;
