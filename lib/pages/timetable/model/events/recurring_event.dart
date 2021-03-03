@@ -97,7 +97,6 @@ class RecurringUniEvent extends UniEvent {
 
       bool active = true;
       if (modifiedInstances != null) {
-        Map<String, dynamic> demo;
         if (modifiedInstances.containsKey('$i')) {
           active = modifiedInstances['$i']['active'];
         }
@@ -107,7 +106,7 @@ class RecurringUniEvent extends UniEvent {
           id: '$id-$i',
           title: name,
           mainEvent: this,
-          color: color,
+          color: active == true ? color : Colors.black45,
           start: start,
           end: end,
           location: location,
