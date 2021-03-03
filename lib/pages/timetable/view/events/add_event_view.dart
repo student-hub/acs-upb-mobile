@@ -189,6 +189,58 @@ class _AddEventViewState extends State<AddEventView> {
     }
   }
 
+  Widget autocompleteLecturer(BuildContext context) {
+    return Autocomplete<Person>(
+      key: const Key('Autocomplete'),
+      fieldViewBuilder: (BuildContext context,
+          TextEditingController textEditingController,
+          FocusNode focusNode,
+          VoidCallback onFieldSubmitted) {
+        textEditingController.text = selectedTeacher?.name;
+        return TextFormField(
+          controller: textEditingController,
+          decoration: InputDecoration(
+            labelText: S.of(context).labelLecturer,
+            prefixIcon: const Icon(Icons.person),
+          ),
+          focusNode: focusNode,
+          onFieldSubmitted: (String value) {
+            onFieldSubmitted();
+          },
+        );
+      },
+      displayStringForOption: (Person person) => person.name,
+      optionsBuilder: (TextEditingValue textEditingValue) {
+        if (textEditingValue.text == '' || textEditingValue.text.isEmpty) {
+          return const Iterable<Person>.empty();
+        }
+        if (classTeachers.where((Person person) {
+          return person.name
+              .toLowerCase()
+              .contains(textEditingValue.text.toLowerCase());
+        }).isEmpty) {
+          final List<Person> inputTeachers = [];
+          final Person inputTeacher =
+              Person(name: textEditingValue.text.titleCase);
+          inputTeachers.add(inputTeacher);
+          return inputTeachers;
+        }
+
+        return classTeachers.where((Person person) {
+          return person.name
+              .toLowerCase()
+              .contains(textEditingValue.text.toLowerCase());
+        });
+      },
+      onSelected: (Person selection) {
+        formKey.currentState.validate();
+        setState(() {
+          selectedTeacher = selection;
+        });
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
@@ -316,57 +368,7 @@ class _AddEventViewState extends State<AddEventView> {
                             },
                           ),
                         if ([UniEventType.lecture].contains(selectedEventType))
-                          Autocomplete<Person>(
-                            key: const Key('Autocomplete'),
-                            fieldViewBuilder: (BuildContext context,
-                                TextEditingController textEditingController,
-                                FocusNode focusNode,
-                                VoidCallback onFieldSubmitted) {
-                              textEditingController.text =
-                                  selectedTeacher?.name;
-                              return TextFormField(
-                                controller: textEditingController,
-                                decoration: InputDecoration(
-                                  labelText: S.of(context).labelLecturer,
-                                  prefixIcon: const Icon(Icons.person),
-                                ),
-                                focusNode: focusNode,
-                                onFieldSubmitted: (String value) {
-                                  onFieldSubmitted();
-                                },
-                              );
-                            },
-                            displayStringForOption: (Person person) =>
-                                person.name,
-                            optionsBuilder:
-                                (TextEditingValue textEditingValue) {
-                              if (textEditingValue.text == '' ||
-                                  textEditingValue.text.isEmpty) {
-                                return const Iterable<Person>.empty();
-                              }
-                              if (classTeachers.where((Person person) {
-                                return person.name.toLowerCase().contains(
-                                    textEditingValue.text.toLowerCase());
-                              }).isEmpty) {
-                                final List<Person> inputTeachers = [];
-                                final Person inputTeacher = Person(
-                                    name: textEditingValue.text.titleCase);
-                                inputTeachers.add(inputTeacher);
-                                return inputTeachers;
-                              }
-
-                              return classTeachers.where((Person person) {
-                                return person.name.toLowerCase().contains(
-                                    textEditingValue.text.toLowerCase());
-                              });
-                            },
-                            onSelected: (Person selection) {
-                              formKey.currentState.validate();
-                              setState(() {
-                                selectedTeacher = selection;
-                              });
-                            },
-                          ),
+                          autocompleteLecturer(context),
                         TextFormField(
                           controller: locationController,
                           decoration: InputDecoration(

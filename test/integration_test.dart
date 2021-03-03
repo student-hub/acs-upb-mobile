@@ -1104,8 +1104,8 @@ Future<void> main() async {
           await tester.tap(find.byIcon(Icons.calendar_today_rounded));
           await tester.pumpAndSettle();
 
-          // Open PH event
-          await tester.tap(find.text('PH'));
+          // Open PC event
+          await tester.tap(find.text('PC'));
           await tester.pumpAndSettle();
 
           expect(find.byType(EventView), findsOneWidget);
