@@ -139,6 +139,7 @@ class _AddEventViewState extends State<AddEventView> {
           }
         }
       }
+
       setState(() {
         weekSelected[WeekType.even] ??= true;
         weekSelected[WeekType.odd] ??= true;
