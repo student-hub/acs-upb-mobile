@@ -121,6 +121,7 @@ class _AddEventViewState extends State<AddEventView> {
           selectedSemester = 2;
         }
       }
+
       if (widget.initialEvent != null &&
           widget.initialEvent is RecurringUniEvent) {
         final RecurringUniEvent event = widget.initialEvent;
