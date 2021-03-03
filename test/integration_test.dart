@@ -1068,8 +1068,24 @@ Future<void> main() async {
           await tester.tap(find.byIcon(Icons.person));
           await tester.pumpAndSettle();
           await tester.enterText(
+              find.byKey(const Key('Autocomplete')), 'John Doe');
+          await tester.tap(find.text('John Doe'));
+          await tester.pumpAndSettle();
+
+          // Select lecturer
+          await tester.tap(find.byIcon(Icons.person));
+          await tester.pumpAndSettle();
+          await tester.enterText(
               find.byKey(const Key('Autocomplete')), 'Jane Doe');
-          await tester.tap(find.text('Jane Doe').last);
+          await tester.tap(find.text('Jane Doe'));
+          await tester.pumpAndSettle();
+
+          // Select lecturer
+          await tester.tap(find.byIcon(Icons.person));
+          await tester.pumpAndSettle();
+          await tester.enterText(
+              find.byKey(const Key('Autocomplete')), 'Isabel Steward');
+          await tester.tap(find.textContaining('Isabel'));
           await tester.pumpAndSettle();
         });
       }
@@ -1089,39 +1105,10 @@ Future<void> main() async {
           await tester.pumpAndSettle();
 
           // Open PH event
-          await tester.tap(find.text('PC'));
+          await tester.tap(find.text('PH'));
           await tester.pumpAndSettle();
 
           expect(find.byType(EventView), findsOneWidget);
-          expect(find.byIcon(Icons.person), findsNothing);
-
-          await tester.tap(find.byIcon(Icons.edit));
-          await tester.pumpAndSettle();
-
-          expect(find.byType(AddEventView), findsOneWidget);
-
-          // Select type
-          await tester.tap(find.text('Type'));
-          await tester.pumpAndSettle();
-          await tester.tap(find.text('Lecture').last);
-          await tester.pumpAndSettle();
-
-          await tester.ensureVisible(find.byIcon(Icons.person));
-          await tester.pumpAndSettle();
-          
-          // Select lecturer
-          await tester.tap(find.byIcon(Icons.person));
-          await tester.pumpAndSettle();
-          await tester.enterText(
-              find.byKey(const Key('Autocomplete')), 'Jane Doe');
-          await tester.tap(find.text('Jane Doe').last);
-          await tester.pumpAndSettle();
-
-          // Press save
-          await tester.tap(find.text('Save'));
-          await tester.pumpAndSettle(const Duration(seconds: 5));
-
-          expect(find.byType(TimetablePage), findsOneWidget);
 
           // Open class page
           await tester.tap(find.text('Programming'));
