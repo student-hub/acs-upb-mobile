@@ -317,6 +317,7 @@ class _AddEventViewState extends State<AddEventView> {
                           ),
                         if ([UniEventType.lecture].contains(selectedEventType))
                           Autocomplete<Person>(
+                            key: const Key('Autocomplete'),
                             fieldViewBuilder: (BuildContext context,
                                 TextEditingController textEditingController,
                                 FocusNode focusNode,

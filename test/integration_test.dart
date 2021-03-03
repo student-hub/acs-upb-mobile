@@ -1047,6 +1047,30 @@ Future<void> main() async {
           await tester.pumpAndSettle();
           await tester.tap(find.text('Programming').last);
           await tester.pumpAndSettle();
+
+          // Press back
+          await tester.tap(find.byIcon(Icons.arrow_back));
+          await tester.pumpAndSettle();
+
+          await tester
+              .tapAt(tester.getCenter(find.text('Sat')).translate(0, 100));
+          await tester.pumpAndSettle();
+
+          expect(find.byType(AddEventView), findsOneWidget);
+
+          // Select type
+          await tester.tap(find.text('Type'));
+          await tester.pumpAndSettle();
+          await tester.tap(find.text('Lecture').last);
+          await tester.pumpAndSettle();
+
+          // Select lecturer
+          await tester.tap(find.byIcon(Icons.person));
+          await tester.pumpAndSettle();
+          await tester.enterText(
+              find.byKey(const Key('Autocomplete')), 'Jane Doe');
+          await tester.tap(find.text('Jane Doe').last);
+          await tester.pumpAndSettle();
         });
       }
     });
