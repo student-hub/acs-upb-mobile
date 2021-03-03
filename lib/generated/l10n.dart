@@ -165,6 +165,16 @@ class S {
     );
   }
 
+  /// `Version`
+  String get labelVersion {
+    return Intl.message(
+      'Version',
+      name: 'labelVersion',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `First name`
   String get labelFirstName {
     return Intl.message(

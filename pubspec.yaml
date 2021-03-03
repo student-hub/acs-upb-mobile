@@ -88,6 +88,9 @@ dependencies:
   # Allows querying the app version number
   package_info: ^0.4.0+13
 
+  # App information
+  package_info_plus: ^0.6.4
+
   # Draws pie charts
   pie_chart: ^3.1.1
 

@@ -70,7 +70,6 @@ class _AddEventViewState extends State<AddEventView> {
     _DayOfWeek.sunday: false,
   };
 
-  // TODO(IoanaAlexandru): Make default semester the one closest to now
   int selectedSemester = 1;
 
   AllDayUniEvent get semester =>
@@ -98,8 +97,6 @@ class _AddEventViewState extends State<AddEventView> {
         .then((calendars) {
       setState(() {
         this.calendars = calendars;
-        // TODO(IoanaAlexandru): Make the default calendar the one closest
-        // to now and extract calendar/semester from [widget.initialEvent]
         selectedCalendar = calendars.keys.first;
       });
 
@@ -118,6 +115,38 @@ class _AddEventViewState extends State<AddEventView> {
             weekSelected[WeekType.even] = true;
             weekSelected[WeekType.odd] = false;
           }
+        }
+      }
+
+      if (widget.initialEvent?.id != null) {
+        selectedCalendar = widget.initialEvent.calendar.id;
+        final AllDayUniEvent secondSemester =
+            widget.initialEvent.calendar.semesters.last;
+        selectedSemester =
+            DateInterval(secondSemester.startDate, secondSemester.endDate)
+                    .contains(widget.initialEvent.start.calendarDate)
+                ? 2
+                : 1;
+      } else {
+        bool foundSemester = false;
+        for (final calendar in calendars.entries) {
+          for (final semester in calendar.value.semesters) {
+            final LocalDate date =
+                widget.initialEvent.start.calendarDate ?? LocalDate.today();
+            if (date.isBeforeOrDuring(semester)) {
+              // semester.id is represented as "semesterN", where "semester0" is the first semester
+              selectedSemester =
+                  1 + int.tryParse(semester.id[semester.id.length - 1]);
+              selectedCalendar = calendar.key;
+              foundSemester = true;
+              break;
+            }
+          }
+          if (foundSemester) break;
+        }
+        if (!foundSemester) {
+          selectedCalendar = calendars.entries.last.value.id;
+          selectedSemester = 2;
         }
       }
 
@@ -751,4 +780,15 @@ extension LocalTimeConversion on LocalTime {
 
 extension TimeOfDayConversion on TimeOfDay {
   LocalTime toLocalTime() => LocalTime(hour, minute, 0);
+}
+
+extension LocalDateComparisons on LocalDate {
+  bool isDuring(AllDayUniEvent semester) {
+    return DateInterval(semester.startDate, semester.endDate).contains(this);
+  }
+
+  bool isBeforeOrDuring(AllDayUniEvent semester) {
+    if (compareTo(semester.startDate) < 0) return true;
+    return isDuring(semester);
+  }
 }
