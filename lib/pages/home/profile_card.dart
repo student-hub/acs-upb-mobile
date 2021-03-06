@@ -3,6 +3,7 @@ import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/authentication/view/edit_profile_page.dart';
 import 'package:acs_upb_mobile/authentication/view/source_page.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
+import 'package:acs_upb_mobile/navigation/bottom_navigation_bar.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -15,17 +16,31 @@ class ProfileCard extends StatefulWidget {
 class _ProfileCardState extends State<ProfileCard> {
   String profilePictureURL;
   User user;
+
   @override
   void initState() {
     super.initState();
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
     user = authProvider.currentUserFromCache;
+    if (user != null) {
+      if (user.sources == null && !AppBottomNavigationBar.didOpenSourcePage) {
+        AppBottomNavigationBar.didOpenSourcePage = true;
+        debugPrint(AppBottomNavigationBar.didOpenSourcePage.toString());
+        Navigator.of(context)
+            .push(MaterialPageRoute<SourcePage>(builder: (context) =>
+            SourcePage()
+        ));
+
+      }
+    }
     authProvider
         .getProfilePictureURL(context: context)
         .then((value) => setState(() {
               profilePictureURL = value;
             }));
-    authProvider.currentUser.then((value) => setState(() {user = value;}));
+    authProvider.currentUser.then((value) => setState(() {
+          user = value;
+        }));
   }
 
   @override
@@ -39,14 +54,17 @@ class _ProfileCardState extends State<ProfileCard> {
       userGroup = user.classes?.isNotEmpty ?? false ? user.classes.last : null;
     }
 
-    if (user != null ) {
-      if(user.sources == null) {
-        WidgetsBinding.instance.addPostFrameCallback(
-                (_) async =>
-                Navigator.of(context).push(MaterialPageRoute<SourcePage>(
-                    builder: (context) => SourcePage())));
-      }
-    }
+    // if (user != null) {
+    //   if (user.sources == null && !AppBottomNavigationBar.didOpenSourcePage) {
+    //     AppBottomNavigationBar.didOpenSourcePage = true;
+    //     debugPrint(AppBottomNavigationBar.didOpenSourcePage.toString());
+    //       Navigator.of(context)
+    //           .push(MaterialPageRoute<SourcePage>(builder: (context) =>
+    //         SourcePage()
+    //       ));
+    //
+    //   }
+    // }
     return Padding(
       padding: const EdgeInsets.all(8),
       child: Card(

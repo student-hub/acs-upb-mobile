@@ -8,6 +8,8 @@ import 'package:flutter/material.dart';
 class AppBottomNavigationBar extends StatefulWidget {
   const AppBottomNavigationBar({this.tabIndex = 0});
 
+  static bool didOpenSourcePage;
+
   final int tabIndex;
 
   @override
