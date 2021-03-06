@@ -296,6 +296,8 @@ class _PortalPageState extends State<PortalPage> {
                 userOnly: userOnly,
                 uid: authProvider.uid,
                 context: context,
+                sources: user?.sources ?? []
+
               ),
               builder: (context, AsyncSnapshot<List<Website>> websiteSnap) {
                 if (websiteSnap.hasData) {

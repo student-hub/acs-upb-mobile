@@ -10,14 +10,29 @@ import 'package:flutter/cupertino.dart';
 class QuestionProvider with ChangeNotifier {
   Future<List<Question>> fetchQuestions(
       {BuildContext context, int limit}) async {
-    final User user = Provider.of<AuthProvider>(context, listen: false).currentUserFromCache;
+    final User user =
+        Provider.of<AuthProvider>(context, listen: false).currentUserFromCache;
     try {
-      final QuerySnapshot qSnapshot = limit == null
-          ? await FirebaseFirestore.instance.collection('faq').where('source',whereIn: user.sources).get()
-          : await FirebaseFirestore.instance
-              .collection('faq')
-              .limit(limit).where('source',whereIn: user.sources)
-              .get();
+      QuerySnapshot qSnapshot;
+      if (user != null) {
+        qSnapshot = limit == null
+            ? await FirebaseFirestore.instance
+                .collection('faq')
+                .where('source', whereIn: user.sources)
+                .get()
+            : await FirebaseFirestore.instance
+                .collection('faq')
+                .limit(limit)
+                .where('source', whereIn: user.sources)
+                .get();
+      } else {
+        qSnapshot = limit == null
+            ? await FirebaseFirestore.instance.collection('faq').get()
+            : await FirebaseFirestore.instance
+                .collection('faq')
+                .limit(limit)
+                .get();
+      }
       return qSnapshot.docs.map(DatabaseQuestion.fromSnap).toList();
     } catch (e) {
       print(e);
@@ -38,6 +53,7 @@ extension DatabaseQuestion on Question {
     final List<String> tags = List.from(data['tags']);
 
     final String source = data['source'];
-    return Question(source: source, question: question, answer: answer, tags: tags);
+    return Question(
+        source: source, question: question, answer: answer, tags: tags);
   }
 }
