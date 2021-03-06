@@ -33,4 +33,27 @@ class PersonProvider with ChangeNotifier {
       return null;
     }
   }
+
+  Future<Person> fetchPerson(String personName, {BuildContext context}) async {
+    try {
+      // Get person with name [personName]
+      final QuerySnapshot query = await FirebaseFirestore.instance
+          .collection('people')
+          .where('name', isEqualTo: personName)
+          .limit(1)
+          .get();
+
+      if (query == null || query.docs.isEmpty) {
+        return Person(name: personName);
+      }
+
+      return PersonExtension.fromSnap(query.docs.first);
+    } catch (e) {
+      print(e);
+      if (context != null) {
+        AppToast.show(S.of(context).errorSomethingWentWrong);
+      }
+      return null;
+    }
+  }
 }

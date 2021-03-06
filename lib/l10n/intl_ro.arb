@@ -29,6 +29,7 @@
   "labelStart": "Început",
   "labelEnd": "Sfârșit",
   "labelClass": "Materie",
+  "labelLecturer": "Profesor",
   "labelYear": "Anul",
   "labelSemester": "Semestrul",
   "labelTeam": "Echipa {name}",

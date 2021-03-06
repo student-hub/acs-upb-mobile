@@ -325,6 +325,16 @@ class S {
     );
   }
 
+  /// `Lecturer`
+  String get labelLecturer {
+    return Intl.message(
+      'Lecturer',
+      name: 'labelLecturer',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Year`
   String get labelYear {
     return Intl.message(

@@ -29,6 +29,7 @@
   "labelStart": "Start",
   "labelEnd": "End",
   "labelClass": "Class",
+  "labelLecturer": "Lecturer",
   "labelYear": "Year",
   "labelSemester": "Semester",
   "labelTeam": "{name} team",

@@ -25,7 +25,7 @@ class UniEventWidget extends StatelessWidget {
 
     return GestureDetector(
       onTap: () => Navigator.of(context).push(MaterialPageRoute<EventView>(
-        builder: (_) => EventView(event: event),
+        builder: (_) => EventView(eventInstance: event),
       )),
       child: Material(
         shape: RoundedRectangleBorder(
