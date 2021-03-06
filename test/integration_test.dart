@@ -1064,28 +1064,32 @@ Future<void> main() async {
           await tester.tap(find.text('Lecture').last);
           await tester.pumpAndSettle();
 
-          // Select lecturer
+          // Select lecturer - partial name
           await tester.tap(find.byIcon(Icons.person));
           await tester.pumpAndSettle();
-          await tester.enterText(
-              find.byKey(const Key('Autocomplete')), 'John Doe');
+          await tester.enterText(find.byKey(const Key('Autocomplete')), 'John');
+          await tester.pumpAndSettle();
           await tester.tap(find.text('John Doe'));
           await tester.pumpAndSettle();
 
-          // Select lecturer
-          await tester.tap(find.byIcon(Icons.person));
-          await tester.pumpAndSettle();
-          await tester.enterText(
-              find.byKey(const Key('Autocomplete')), 'Jane Doe');
-          await tester.tap(find.text('Jane Doe'));
-          await tester.pumpAndSettle();
-
-          // Select lecturer
+          // Select lecturer - new name
           await tester.tap(find.byIcon(Icons.person));
           await tester.pumpAndSettle();
           await tester.enterText(
               find.byKey(const Key('Autocomplete')), 'Isabel Steward');
-          await tester.tap(find.textContaining('Isabel'));
+          await tester.tap(find.text('Isabel Steward'));
+          await tester.pumpAndSettle();
+
+          // Select lecturer - check autocomplete suggestions
+          await tester.tap(find.byIcon(Icons.person));
+          await tester.pumpAndSettle();
+          await tester.enterText(find.byKey(const Key('Autocomplete')), 'Doe');
+          await tester.pumpAndSettle();
+
+          expect(find.text('Jane Doe'), findsOneWidget);
+          expect(find.text('John Doe'), findsOneWidget);
+
+          await tester.tap(find.text('Jane Doe'));
           await tester.pumpAndSettle();
         });
       }
