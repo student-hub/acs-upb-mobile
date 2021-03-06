@@ -38,7 +38,7 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar>
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
     if (!authProvider.isAnonymous) {
       authProvider.currentUser.then((user) {
-        if (user.sources?.isEmpty ?? true) {
+        if (user?.sources?.isEmpty ?? true) {
           Navigator.of(context).push(MaterialPageRoute<SourcePage>(
               builder: (context) => SourcePage()));
         }

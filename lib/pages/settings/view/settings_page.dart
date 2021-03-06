@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:acs_upb_mobile/authentication/model/user.dart';
+import 'package:acs_upb_mobile/pages/settings/service/request_provider.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/pages/settings/view/source_page.dart';
@@ -113,7 +114,8 @@ class _SettingsPageState extends State<SettingsPage> {
                           builder: (context, snap) {
                             if (snap.hasData) {
                               final sources = snap.data.sources;
-                              return Text(((sources?.isEmpty ?? true) || sources.length == 3)
+                              return Text(((sources?.isEmpty ?? true) ||
+                                      sources.length == 3)
                                   ? S.of(context).labelAll
                                   : sources
                                       .map(localizedSourceString)
@@ -123,6 +125,27 @@ class _SettingsPageState extends State<SettingsPage> {
                               return Container();
                             }
                           }),
+                    ),
+                    ListTile(
+                      key: const ValueKey('ask_permissions'),
+                      onTap: () {
+                        if (authProvider.isAnonymous) {
+                          AppToast.show(S.of(context).messageNotLoggedIn);
+                        } else if (isVerified != true) {
+                          AppToast.show(S
+                              .of(context)
+                              .messageEmailNotVerifiedToPerformAction);
+                        } else {
+                          Navigator.of(context)
+                              .pushNamed(Routes.requestPermissions);
+                        }
+                      },
+                      title: Text('Editing permissions'),
+                      subtitle: FutureBuilder<String>(
+                        future: userPermissionsString(),
+                        builder: (context, snap) =>
+                            snap.hasData ? Text(snap.data) : Container(),
+                      ),
                     ),
                     const Divider(),
                     Column(
@@ -157,40 +180,16 @@ class _SettingsPageState extends State<SettingsPage> {
                           ),
                         ),
                         const Divider(),
-                        TextButton(
-                          key: const ValueKey('ask_permissions'),
-                          onPressed: () => {
-                            if (authProvider.isAnonymous)
-                              {AppToast.show(S.of(context).messageNotLoggedIn)}
-                            else if (isVerified != true)
-                              {
-                                AppToast.show(S
-                                    .of(context)
-                                    .messageEmailNotVerifiedToPerformAction)
-                              }
-                            else
-                              {
-                                Navigator.of(context)
-                                    .pushNamed(Routes.requestPermissions),
-                              }
-                          },
-                          child: Text(S.of(context).labelAskPermissions,
-                              textAlign: TextAlign.center,
-                              style: (authProvider.isAnonymous ||
-                                      isVerified != true)
-                                  ? Theme.of(context).textTheme.bodyText1.apply(
-                                        color: Theme.of(context).disabledColor,
-                                      )
-                                  : Theme.of(context).textTheme.bodyText1),
-                        ),
-                        const Divider(),
-                        Text(
+                        Padding(
+                          padding: const EdgeInsets.all(8),
+                          child: Text(
                             '${S.of(context).labelVersion} ${_packageInfo.version}+${_packageInfo.buildNumber}',
                             textAlign: TextAlign.center,
-                            style: Theme.of(context).textTheme.bodyText1),
-                        const Padding(
-                          padding: EdgeInsets.only(top: 8),
-                        )
+                            style: Theme.of(context).textTheme.bodyText1.apply(
+                                  color: Theme.of(context).disabledColor,
+                                ),
+                          ),
+                        ),
                       ],
                     ),
                   ],
@@ -251,5 +250,22 @@ class _SettingsPageState extends State<SettingsPage> {
       default:
         return source;
     }
+  }
+
+  Future<String> userPermissionsString() async {
+    final authProvider = Provider.of<AuthProvider>(context);
+    final requestProvider = Provider.of<RequestProvider>(context);
+
+    if (authProvider.isAuthenticated && !authProvider.isAnonymous) {
+      final user = await authProvider.currentUser;
+      if (user.canEditPublicInfo) {
+        return 'Permission to edit public info';
+      } else if (user.canAddPublicInfo) {
+        return 'Permission to add public info';
+      } else if (await requestProvider.userAlreadyRequested(user.uid)) {
+        return 'Request already sent';
+      }
+    }
+    return 'No permissions';
   }
 }
