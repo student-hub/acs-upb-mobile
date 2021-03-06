@@ -45,6 +45,7 @@
   "labelEven": "Pară",
   "labelOdd": "Impară",
   "labelDay": "Zi",
+  "labelAll": "Toate",
 
   "sectionShortcuts": "Scurtături",
   "sectionEvents": "Evenimente",
@@ -189,6 +190,7 @@
   "settingsItemLanguageEnglish": "Engleză",
   "settingsItemLanguageRomanian": "Română",
   "settingsItemLanguageAuto": "Auto",
+  "settingsTitleData": "Date",
   "settingsRelevanceFilter": "Filtru de relevanță",
 
   "websiteCategoryLearning": "Cursuri",

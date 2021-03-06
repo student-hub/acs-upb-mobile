@@ -45,6 +45,7 @@
   "labelEven": "Even",
   "labelOdd": "Odd",
   "labelDay": "Day",
+  "labelAll": "All",
 
   "sectionShortcuts": "Shortcuts",
   "sectionEvents": "Events",
@@ -189,6 +190,7 @@
   "settingsItemLanguageEnglish": "English",
   "settingsItemLanguageRomanian": "Romanian",
   "settingsItemLanguageAuto": "Auto",
+  "settingsTitleData": "Data",
   "settingsRelevanceFilter": "Relevance filter",
 
   "websiteCategoryLearning": "Learning",

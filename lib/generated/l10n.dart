@@ -485,6 +485,16 @@ class S {
     );
   }
 
+  /// `All`
+  String get labelAll {
+    return Intl.message(
+      'All',
+      name: 'labelAll',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Shortcuts`
   String get sectionShortcuts {
     return Intl.message(
@@ -1800,6 +1810,16 @@ class S {
     return Intl.message(
       'Auto',
       name: 'settingsItemLanguageAuto',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Data`
+  String get settingsTitleData {
+    return Intl.message(
+      'Data',
+      name: 'settingsTitleData',
       desc: '',
       args: [],
     );

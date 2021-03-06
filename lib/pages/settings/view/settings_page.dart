@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:acs_upb_mobile/authentication/model/user.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/pages/settings/view/source_page.dart';
@@ -91,8 +92,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     PreferenceTitle(S.of(context).settingsTitleLocalization),
                     PreferenceDialogLink(
                       S.of(context).settingsItemLanguage,
-                      desc: languagePrefString(
-                          context, PrefService.get('language')),
+                      desc: languagePrefString(PrefService.get('language')),
                       dialog: PreferenceDialog(
                         [
                           languageRadioPreference(context, 'ro'),
@@ -101,6 +101,28 @@ class _SettingsPageState extends State<SettingsPage> {
                         ],
                         onlySaveOnSubmit: false,
                       ),
+                    ),
+                    PreferenceTitle(S.of(context).settingsTitleData),
+                    ListTile(
+                      onTap: () => Navigator.of(context).push(
+                          MaterialPageRoute<SourcePage>(
+                              builder: (context) => SourcePage())),
+                      title: Text(S.of(context).sectionInformationSources),
+                      subtitle: FutureBuilder<User>(
+                          future: authProvider.currentUser,
+                          builder: (context, snap) {
+                            if (snap.hasData) {
+                              final sources = snap.data.sources;
+                              return Text(((sources?.isEmpty ?? true) || sources.length == 3)
+                                  ? S.of(context).labelAll
+                                  : sources
+                                      .map(localizedSourceString)
+                                      .toList()
+                                      .join(', '));
+                            } else {
+                              return Container();
+                            }
+                          }),
                     ),
                     const Divider(),
                     Column(
@@ -133,22 +155,6 @@ class _SettingsPageState extends State<SettingsPage> {
                                 'https://github.com/acs-upb-mobile/acs-upb-mobile',
                                 context: context),
                           ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8),
-                          child: IconText(
-                              icon: Icons.info,
-                              text: 'here',
-                              actionText: 'here',
-                              actionArrow: true,
-                              align: TextAlign.center,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyText1
-                                  .apply(color: Theme.of(context).hintColor),
-                              onTap: () => Navigator.of(context).push(
-                                  MaterialPageRoute<SourcePage>(
-                                      builder: (context) => SourcePage()))),
                         ),
                         const Divider(),
                         TextButton(
@@ -200,7 +206,7 @@ class _SettingsPageState extends State<SettingsPage> {
   RadioPreference<String> languageRadioPreference(
       BuildContext context, String preference) {
     return RadioPreference(
-      languagePrefString(context, preference),
+      languagePrefString(preference),
       preference,
       'language',
       onSelect: () {
@@ -220,7 +226,7 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 
-  String languagePrefString(BuildContext context, String preference) {
+  String languagePrefString(String preference) {
     switch (preference) {
       case 'en':
         return S.of(context).settingsItemLanguageEnglish;
@@ -231,6 +237,19 @@ class _SettingsPageState extends State<SettingsPage> {
       default:
         stderr.writeln('Invalid preference string: $preference');
         return S.of(context).settingsItemLanguageAuto;
+    }
+  }
+
+  String localizedSourceString(String source) {
+    switch (source) {
+      case 'official':
+        return S.of(context).sourceOfficial;
+      case 'organizations':
+        return S.of(context).sourceOrganization;
+      case 'students':
+        return S.of(context).sourceStudentRepresentative;
+      default:
+        return source;
     }
   }
 }
