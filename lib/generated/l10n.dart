@@ -525,6 +525,16 @@ class S {
     );
   }
 
+  /// `Information sources`
+  String get sectionInformationSources {
+    return Intl.message(
+      'Information sources',
+      name: 'sectionInformationSources',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Main page`
   String get shortcutTypeMain {
     return Intl.message(
@@ -655,10 +665,10 @@ class S {
     );
   }
 
-  /// `Please select the information sources that you want`
+  /// `Please select the sources that you want to see information from:`
   String get hintSelectSources {
     return Intl.message(
-      'Please select the information sources that you want',
+      'Please select the sources that you want to see information from:',
       name: 'hintSelectSources',
       desc: '',
       args: [],
@@ -970,16 +980,6 @@ class S {
     return Intl.message(
       'Refresh',
       name: 'actionRefresh',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Information sources`
-  String get actionSource {
-    return Intl.message(
-      'Information sources',
-      name: 'actionSource',
       desc: '',
       args: [],
     );
@@ -1635,41 +1635,41 @@ class S {
     );
   }
 
-  /// `Student organization*`
-  String get sourcesOrganization {
+  /// `Student organizations`
+  String get sourceOrganization {
     return Intl.message(
-      'Student organization*',
-      name: 'sourcesOrganization',
+      'Student organizations',
+      name: 'sourceOrganization',
       desc: '',
       args: [],
     );
   }
 
   /// `LSAC, BEST, MLSA`
-  String get sourcesStudentOrganizations {
+  String get sourceStudentOrganizations {
     return Intl.message(
       'LSAC, BEST, MLSA',
-      name: 'sourcesStudentOrganizations',
+      name: 'sourceStudentOrganizations',
       desc: '',
       args: [],
     );
   }
 
-  /// `Representative students*`
-  String get sourcesStudentRepresentative {
+  /// `Representative students`
+  String get sourceStudentRepresentative {
     return Intl.message(
-      'Representative students*',
-      name: 'sourcesStudentRepresentative',
+      'Representative students',
+      name: 'sourceStudentRepresentative',
       desc: '',
       args: [],
     );
   }
 
-  /// `group leaders, Series and student counselors`
-  String get sourcesStudentExamples {
+  /// `group/series representatives, student council members`
+  String get sourceStudentExamples {
     return Intl.message(
-      'group leaders, Series and student counselors',
-      name: 'sourcesStudentExamples',
+      'group/series representatives, student council members',
+      name: 'sourceStudentExamples',
       desc: '',
       args: [],
     );
@@ -2415,10 +2415,10 @@ class S {
     );
   }
 
-  /// `ACS UPB Mobile application is an information hub with information about the faculty, it collects date from different sources (official or unofficial).`
+  /// `ACS UPB Mobile aims to be an information hub for students, therefore it aggregates data from various sources (official or unofficial).`
   String get messageSelectSource {
     return Intl.message(
-      'ACS UPB Mobile application is an information hub with information about the faculty, it collects date from different sources (official or unofficial).',
+      'ACS UPB Mobile aims to be an information hub for students, therefore it aggregates data from various sources (official or unofficial).',
       name: 'messageSelectSource',
       desc: '',
       args: [],
@@ -2535,10 +2535,10 @@ class S {
     );
   }
 
-  /// `* The Faculty of Automatic Control and Computers is not responsible for information provided by unofficial sources.`
+  /// `The Faculty of Automatic Control and Computers is not responsible for information originating from unofficial sources.`
   String get infoAdditionInformationSources {
     return Intl.message(
-      '* The Faculty of Automatic Control and Computers is not responsible for information provided by unofficial sources.',
+      'The Faculty of Automatic Control and Computers is not responsible for information originating from unofficial sources.',
       name: 'infoAdditionInformationSources',
       desc: '',
       args: [],

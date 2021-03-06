@@ -43,14 +43,14 @@ class _SourcePageState extends State<SourcePage> {
             })
       ],
       title: Text(
-        S.of(context).actionSource,
+        S.of(context).sectionInformationSources,
         style: const TextStyle(fontSize: 19.5),
       ),
       body: Column(
         children: [
           Padding(
             padding: const EdgeInsets.all(10),
-            child: Text(S.of(context).messageSelectSource),
+            child: Text('${S.of(context).messageSelectSource}*'),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -74,8 +74,8 @@ class _SourcePageState extends State<SourcePage> {
                 wantsOrganizationInfo = value;
               });
             },
-            title: Text(S.of(context).sourcesOrganization),
-            subtitle: Text(S.of(context).sourcesStudentOrganizations),
+            title: Text('${S.of(context).sourceOrganization}*'),
+            subtitle: Text(S.of(context).sourceStudentOrganizations),
             controlAffinity: ListTileControlAffinity.leading,
           ),
           CheckboxListTile(
@@ -85,14 +85,14 @@ class _SourcePageState extends State<SourcePage> {
                 wantsStudentsInfo = value;
               });
             },
-            title: Text(S.of(context).sourcesStudentRepresentative),
-            subtitle: Text(S.of(context).sourcesStudentExamples),
+            title: Text('${S.of(context).sourceStudentRepresentative}*'),
+            subtitle: Text(S.of(context).sourceStudentExamples),
             controlAffinity: ListTileControlAffinity.leading,
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10),
             child: Text(
-              S.of(context).infoAdditionInformationSources,
+              '* ${S.of(context).infoAdditionInformationSources}',
               style: TextStyle(color: Theme.of(context).hintColor),
             ),
           ),
