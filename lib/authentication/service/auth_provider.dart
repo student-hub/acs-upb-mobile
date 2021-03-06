@@ -177,7 +177,7 @@ class AuthProvider with ChangeNotifier {
   Future<bool> signInAnonymously({BuildContext context}) async {
     return FirebaseAuth.instance.signInAnonymously().catchError((dynamic e) {
       _errorHandler(e, context);
-      return false;
+      return FutureOr;
     }).then((_) => true);
   }
 
@@ -413,10 +413,11 @@ class AuthProvider with ChangeNotifier {
       {BuildContext context}) async {
     try {
       _currentUser.sources = sources;
-      await Firestore.instance
+      await FirebaseFirestore.instance
           .collection('users')
-          .document(_currentUser.uid)
-          .updateData(_currentUser.toData());
+          .doc(_currentUser.uid)
+          .update(_currentUser.toData());
+
       notifyListeners();
       return true;
     } catch (e) {

@@ -1,8 +1,12 @@
 import 'package:meta/meta.dart';
 
 class Question {
-  Question({this.source,
-      @required this.question, @required this.answer, @required this.tags});
+  Question({
+    @required this.question,
+    @required this.answer,
+    @required this.tags,
+    this.source,
+  });
 
   String question;
   String answer;
