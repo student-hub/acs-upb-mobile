@@ -31,6 +31,7 @@ import 'package:acs_upb_mobile/pages/settings/view/request_permissions.dart';
 import 'package:acs_upb_mobile/pages/settings/view/settings_page.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/academic_calendar.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/events/all_day_event.dart';
+import 'package:acs_upb_mobile/pages/timetable/model/events/class_event.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/events/recurring_event.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/events/uni_event.dart';
 import 'package:acs_upb_mobile/pages/timetable/service/uni_event_provider.dart';
@@ -564,9 +565,10 @@ Future<void> main() async {
         duration: duration,
         id: '6',
       ),
-      RecurringUniEvent(
+      ClassEvent(
         classHeader: userClassHeaders[0],
-        type: UniEventType.lab,
+        type: UniEventType.lecture,
+        teacher: Person(name: 'Jane Doe'),
         location: 'AB123',
         degree: 'BSc',
         relevance: ['314CB'],
@@ -1125,16 +1127,59 @@ Future<void> main() async {
           await tester.pumpAndSettle();
 
           expect(find.byType(EventView), findsOneWidget);
+          expect(find.byIcon(Icons.person), findsOneWidget);
+          expect(find.text('Jane Doe'), findsOneWidget);
 
           // Open edit event page
           await tester.tap(find.byIcon(Icons.edit));
           await tester.pumpAndSettle();
 
           expect(find.byType(AddEventView), findsOneWidget);
+          expect(find.text('Lecturer'), findsOneWidget);
+          expect(find.text('Location'), findsOneWidget);
+          expect(find.text('Week'), findsOneWidget);
+          expect(find.text('Day'), findsOneWidget);
+
+          // Select lecturer
+          await tester.tap(find.text('Lecturer'));
+          await tester.pumpAndSettle();
+          await tester.enterText(find.byKey(const Key('Autocomplete')), 'Doe');
+          await tester.pumpAndSettle();
+
+          expect(find.text('Jane Doe'), findsOneWidget);
+          expect(find.text('John Doe'), findsOneWidget);
+
+          await tester.enterText(
+              find.byKey(const Key('Autocomplete')), 'John Doe');
+          await tester.pumpAndSettle();
+
+          FocusManager.instance.primaryFocus.unfocus();
+          await tester.pumpAndSettle();
+          await tester.tap(find.text('John Doe').last);
+          await tester.pumpAndSettle();
+
+          FocusManager.instance.primaryFocus.unfocus();
+          await tester.pumpAndSettle();
+
+          expect(find.text('Jane Doe'), findsNothing);
+          expect(find.text('John Doe'), findsOneWidget);
 
           // Press save
           await tester.tap(find.text('Save'));
           await tester.pumpAndSettle(const Duration(seconds: 5));
+
+          expect(find.byType(TimetablePage), findsOneWidget);
+
+          // Open PC event
+          await tester.tap(find.text('PC'));
+          await tester.pumpAndSettle();
+
+          expect(find.byType(EventView), findsOneWidget);
+          expect(find.byIcon(Icons.person), findsOneWidget);
+
+          // Press back
+          await tester.tap(find.byIcon(Icons.arrow_back));
+          await tester.pumpAndSettle();
 
           expect(find.byType(TimetablePage), findsOneWidget);
         });
