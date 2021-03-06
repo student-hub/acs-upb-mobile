@@ -50,31 +50,33 @@ void main() {
 
       // Pretend an anonymous user is already logged in
       mockAuthProvider = MockAuthProvider();
-      when(mockAuthProvider.isAuthenticatedFromCache).thenReturn(true);
+      when(mockAuthProvider.isAuthenticated).thenReturn(true);
       // ignore: invalid_use_of_protected_member
       when(mockAuthProvider.hasListeners).thenReturn(false);
-      when(mockAuthProvider.isAuthenticatedFromService)
-          .thenAnswer((realInvocation) => Future.value(true));
       when(mockAuthProvider.currentUser).thenAnswer((_) => Future.value(null));
       when(mockAuthProvider.isAnonymous).thenReturn(true);
+      when(mockAuthProvider.getProfilePictureURL(context: anyNamed('context')))
+          .thenAnswer((_) => Future.value(null));
+      when(mockAuthProvider.isVerified).thenAnswer((_) => Future.value(true));
 
       mockWebsiteProvider = MockWebsiteProvider();
       // ignore: invalid_use_of_protected_member
       when(mockWebsiteProvider.hasListeners).thenReturn(false);
       when(mockWebsiteProvider.deleteWebsite(any, context: anyNamed('context')))
-          .thenAnswer((realInvocation) => Future.value(true));
-      when(mockWebsiteProvider.fetchWebsites(any))
+          .thenAnswer((_) => Future.value(true));
+      when(mockWebsiteProvider.fetchWebsites(any, context: anyNamed('context')))
           .thenAnswer((_) => Future.value([]));
-      when(mockWebsiteProvider.fetchFavouriteWebsites())
+      when(mockWebsiteProvider.fetchFavouriteWebsites(
+              uid: anyNamed('uid'), context: anyNamed('context')))
           .thenAnswer((_) => Future.value(null));
 
       mockQuestionProvider = MockQuestionProvider();
       // ignore: invalid_use_of_protected_member
       when(mockQuestionProvider.hasListeners).thenReturn(false);
       when(mockQuestionProvider.fetchQuestions(context: anyNamed('context')))
-          .thenAnswer((realInvocation) => Future.value(<Question>[]));
+          .thenAnswer((_) => Future.value(<Question>[]));
       when(mockQuestionProvider.fetchQuestions(limit: anyNamed('limit')))
-          .thenAnswer((realInvocation) => Future.value(<Question>[]));
+          .thenAnswer((_) => Future.value(<Question>[]));
 
       mockRequestProvider = MockRequestProvider();
       when(mockRequestProvider.makeRequest(any, context: anyNamed('context')))
@@ -87,9 +89,9 @@ void main() {
       // ignore: invalid_use_of_protected_member
       when(mockNewsProvider.hasListeners).thenReturn(false);
       when(mockNewsProvider.fetchNewsFeedItems(context: anyNamed('context')))
-          .thenAnswer((realInvocation) => Future.value(<NewsFeedItem>[]));
+          .thenAnswer((_) => Future.value(<NewsFeedItem>[]));
       when(mockNewsProvider.fetchNewsFeedItems(limit: anyNamed('limit')))
-          .thenAnswer((realInvocation) => Future.value(<NewsFeedItem>[]));
+          .thenAnswer((_) => Future.value(<NewsFeedItem>[]));
     });
 
     testWidgets('Dark Mode', (WidgetTester tester) async {
@@ -180,7 +182,7 @@ void main() {
       });
 
       testWidgets('Normal scenario', (WidgetTester tester) async {
-        when(mockAuthProvider.isVerifiedFromCache).thenAnswer((_) => true);
+        when(mockAuthProvider.isVerified).thenAnswer((_) => Future.value(true));
 
         await tester.pumpWidget(MultiProvider(providers: [
           ChangeNotifierProvider<AuthProvider>(create: (_) => mockAuthProvider),
@@ -201,7 +203,7 @@ void main() {
         expect(find.text('Request editing permissions'), findsOneWidget);
         await tester.tap(find.byKey(const ValueKey('ask_permissions')));
         await tester.pumpAndSettle();
-        expect(find.byType(RequestPermissions), findsOneWidget);
+        expect(find.byType(RequestPermissionsPage), findsOneWidget);
 
         // Send a request
         await tester.enterText(
@@ -218,7 +220,7 @@ void main() {
 
       testWidgets('User has already sent a request scenario',
           (WidgetTester tester) async {
-        when(mockAuthProvider.isVerifiedFromCache).thenAnswer((_) => true);
+        when(mockAuthProvider.isVerified).thenAnswer((_) => Future.value(true));
         when(mockRequestProvider.userAlreadyRequested(any,
                 context: anyNamed('context')))
             .thenAnswer((_) => Future.value(true));
@@ -242,7 +244,7 @@ void main() {
         expect(find.text('Request editing permissions'), findsOneWidget);
         await tester.tap(find.byKey(const ValueKey('ask_permissions')));
         await tester.pumpAndSettle();
-        expect(find.byType(RequestPermissions), findsOneWidget);
+        expect(find.byType(RequestPermissionsPage), findsOneWidget);
 
         // Send a request
         await tester.enterText(
@@ -263,7 +265,7 @@ void main() {
       });
 
       testWidgets('User is anonymous scenario', (WidgetTester tester) async {
-        when(mockAuthProvider.isVerifiedFromCache).thenAnswer((_) => true);
+        when(mockAuthProvider.isVerified).thenAnswer((_) => Future.value(true));
         when(mockAuthProvider.isAnonymous).thenReturn(true);
         when(mockRequestProvider.userAlreadyRequested(any,
                 context: anyNamed('context')))
@@ -294,7 +296,8 @@ void main() {
       });
 
       testWidgets('User is not verified scenario', (WidgetTester tester) async {
-        when(mockAuthProvider.isVerifiedFromCache).thenAnswer((_) => false);
+        when(mockAuthProvider.isVerified)
+            .thenAnswer((_) => Future.value(false));
         when(mockAuthProvider.isAnonymous).thenReturn(false);
         when(mockRequestProvider.userAlreadyRequested(any,
                 context: anyNamed('context')))
@@ -322,9 +325,16 @@ void main() {
         // Verify Ask Permissions page is not opened
         await tester.pumpAndSettle(const Duration(seconds: 4));
         expect(find.byType(SettingsPage), findsOneWidget);
+        expect(find.byType(RequestPermissionsPage), findsNothing);
 
         // Verify account
-        when(mockAuthProvider.isVerifiedFromCache).thenAnswer((_) => true);
+        when(mockAuthProvider.isVerified).thenAnswer((_) => Future.value(true));
+
+        // Go back and open settings again
+        await tester.tap(find.byIcon(Icons.arrow_back));
+        await tester.pumpAndSettle();
+        await tester.tap(find.byIcon(Icons.settings));
+        await tester.pumpAndSettle();
 
         // Press Ask Permissions page
         expect(find.text('Request editing permissions'), findsOneWidget);
@@ -332,7 +342,7 @@ void main() {
 
         // Verify Ask Permissions page is opened
         await tester.pumpAndSettle();
-        expect(find.byType(RequestPermissions), findsOneWidget);
+        expect(find.byType(RequestPermissionsPage), findsOneWidget);
       });
     });
   });

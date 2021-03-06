@@ -9,6 +9,8 @@ import 'intl/messages_all.dart';
 // **************************************************************************
 
 // ignore_for_file: non_constant_identifier_names, lines_longer_than_80_chars
+// ignore_for_file: join_return_with_assignment, prefer_final_in_for_each
+// ignore_for_file: avoid_redundant_argument_values
 
 class S {
   S();
@@ -163,6 +165,16 @@ class S {
     );
   }
 
+  /// `Version`
+  String get labelVersion {
+    return Intl.message(
+      'Version',
+      name: 'labelVersion',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `First name`
   String get labelFirstName {
     return Intl.message(
@@ -308,6 +320,16 @@ class S {
     return Intl.message(
       'Class',
       name: 'labelClass',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Lecturer`
+  String get labelLecturer {
+    return Intl.message(
+      'Lecturer',
+      name: 'labelLecturer',
       desc: '',
       args: [],
     );
@@ -953,6 +975,16 @@ class S {
     );
   }
 
+  /// `Refresh`
+  String get actionRefresh {
+    return Intl.message(
+      'Refresh',
+      name: 'actionRefresh',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Something went wrong.`
   String get errorSomethingWentWrong {
     return Intl.message(
@@ -1103,6 +1135,26 @@ class S {
     );
   }
 
+  /// `Please select a picture that is less than 5MB.`
+  String get errorPictureSizeToBig {
+    return Intl.message(
+      'Please select a picture that is less than 5MB.',
+      name: 'errorPictureSizeToBig',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `The image could not be loaded.`
+  String get errorImage {
+    return Intl.message(
+      'The image could not be loaded.',
+      name: 'errorImage',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Request already exists`
   String get warningRequestExists {
     return Intl.message(
@@ -1113,10 +1165,10 @@ class S {
     );
   }
 
-  /// `Please make sure you are connected to the internet.`
+  /// `Please make sure you have an internet connection.`
   String get warningInternetConnection {
     return Intl.message(
-      'Please make sure you are connected to the internet.',
+      'Please make sure you have an internet connection.',
       name: 'warningInternetConnection',
       desc: '',
       args: [],
@@ -1378,6 +1430,36 @@ class S {
     return Intl.message(
       'You need to select at least one option.',
       name: 'warningYouNeedToSelectAtLeastOne',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Could not read favourite websites.`
+  String get warningFavouriteWebsitesInitializationFailed {
+    return Intl.message(
+      'Could not read favourite websites.',
+      name: 'warningFavouriteWebsitesInitializationFailed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Unable to reach the news feed.`
+  String get warningUnableToReachNewsFeed {
+    return Intl.message(
+      'Unable to reach the news feed.',
+      name: 'warningUnableToReachNewsFeed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `There are no news yet.`
+  String get warningNoNews {
+    return Intl.message(
+      'There are no news yet.',
+      name: 'warningNoNews',
       desc: '',
       args: [],
     );
@@ -2268,6 +2350,16 @@ class S {
     return Intl.message(
       'There are no events for the selected ',
       name: 'messageThereAreNoEventsForSelected',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Profile picture updated successfully.`
+  String get messagePictureUpdatedSuccess {
+    return Intl.message(
+      'Profile picture updated successfully.',
+      name: 'messagePictureUpdatedSuccess',
       desc: '',
       args: [],
     );

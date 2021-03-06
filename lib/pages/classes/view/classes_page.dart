@@ -3,6 +3,7 @@ import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/classes/model/class.dart';
 import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
 import 'package:acs_upb_mobile/pages/classes/view/class_view.dart';
+import 'package:acs_upb_mobile/widgets/error_page.dart';
 import 'package:acs_upb_mobile/widgets/class_image.dart';
 import 'package:acs_upb_mobile/widgets/icon_text.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
@@ -48,59 +49,6 @@ class _ClassesPageState extends State<ClassesPage> {
 
     updateClasses();
   }
-
-  Widget _noClassesView() => Padding(
-        padding: const EdgeInsets.all(10),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Expanded(flex: 1, child: Container()),
-            const Expanded(
-              flex: 2,
-              child: Align(
-                alignment: Alignment.bottomCenter,
-                child: Image(
-                    image: AssetImage('assets/illustrations/undraw_empty.png')),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(10),
-              child: Text(
-                S.of(context).messageNoClassesYet,
-                style: Theme.of(context).textTheme.headline6,
-                textAlign: TextAlign.center,
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 10, right: 10),
-              child: RichText(
-                  textAlign: TextAlign.center,
-                  text: TextSpan(
-                    style: Theme.of(context).textTheme.subtitle1,
-                    children: [
-                      TextSpan(
-                          text:
-                              '${S.of(context).messageGetStartedByPressing} '),
-                      WidgetSpan(
-                        alignment: PlaceholderAlignment.middle,
-                        child: Icon(
-                          Icons.edit,
-                          size: Theme.of(context).textTheme.subtitle1.fontSize +
-                              2,
-                        ),
-                      ),
-                      TextSpan(text: ' ${S.of(context).messageButtonAbove}.'),
-                    ],
-                  )
-                  // S.of(context).messageGetStartedButton,
-                  // style: Theme.of(context).textTheme.subtitle1,
-                  ),
-            ),
-            Expanded(flex: 1, child: Container()),
-          ],
-        ),
-      );
 
   @override
   Widget build(BuildContext context) {
@@ -158,7 +106,24 @@ class _ClassesPageState extends State<ClassesPage> {
                       ),
                     )),
                   )
-                : _noClassesView(),
+                : ErrorPage(
+                    errorMessage: S.of(context).messageNoClassesYet,
+                    imgPath: 'assets/illustrations/undraw_empty.png',
+                    info: [
+                        TextSpan(
+                            text:
+                                '${S.of(context).messageGetStartedByPressing} '),
+                        WidgetSpan(
+                          alignment: PlaceholderAlignment.middle,
+                          child: Icon(
+                            Icons.edit,
+                            size:
+                                Theme.of(context).textTheme.subtitle1.fontSize +
+                                    2,
+                          ),
+                        ),
+                        TextSpan(text: ' ${S.of(context).messageButtonAbove}.'),
+                      ]),
           if (updating == null)
             const Center(child: CircularProgressIndicator()),
           if (updating == true)

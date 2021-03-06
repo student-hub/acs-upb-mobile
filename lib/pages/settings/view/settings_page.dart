@@ -1,8 +1,9 @@
 import 'dart:io';
 
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
-import 'package:acs_upb_mobile/pages/settings/view/request_permissions.dart';
+import 'package:acs_upb_mobile/navigation/routes.dart';
 import 'package:acs_upb_mobile/resources/custom_icons.dart';
 import 'package:acs_upb_mobile/resources/locale_provider.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
@@ -19,10 +20,39 @@ class SettingsPage extends StatefulWidget {
   static const String routeName = '/settings';
 
   @override
-  State<StatefulWidget> createState() => SettingsPageState();
+  State<StatefulWidget> createState() => _SettingsPageState();
 }
 
-class SettingsPageState extends State<SettingsPage> {
+class _SettingsPageState extends State<SettingsPage> {
+  PackageInfo _packageInfo = PackageInfo(
+    version: 'Unknown',
+    buildNumber: 'Unknown',
+  );
+
+  Future<void> _initPackageInfo() async {
+    // package_info_plus is not compatible with flutter_test
+    // link to the issue: https://github.com/fluttercommunity/plus_plugins/issues/172
+    if (!Platform.environment.containsKey('FLUTTER_TEST')) {
+      final info = await PackageInfo.fromPlatform();
+      setState(() {
+        _packageInfo = info;
+      });
+    }
+  }
+
+  // Whether the user verified their email; this can be true, false or null if
+  // the async check hasn't completed yet.
+  bool isVerified;
+
+  @override
+  void initState() {
+    super.initState();
+    Provider.of<AuthProvider>(context, listen: false)
+        .isVerified
+        .then((value) => setState(() => isVerified = value));
+    _initPackageInfo();
+  }
+
   @override
   Widget build(BuildContext context) {
     final AuthProvider authProvider = Provider.of<AuthProvider>(context);
@@ -104,12 +134,12 @@ class SettingsPageState extends State<SettingsPage> {
                           ),
                         ),
                         const Divider(),
-                        FlatButton(
+                        TextButton(
                           key: const ValueKey('ask_permissions'),
                           onPressed: () => {
                             if (authProvider.isAnonymous)
                               {AppToast.show(S.of(context).messageNotLoggedIn)}
-                            else if (!authProvider.isVerifiedFromCache)
+                            else if (isVerified != true)
                               {
                                 AppToast.show(S
                                     .of(context)
@@ -117,19 +147,26 @@ class SettingsPageState extends State<SettingsPage> {
                               }
                             else
                               {
-                                Navigator.of(context).push(
-                                    MaterialPageRoute<RequestPermissions>(
-                                        builder: (_) => RequestPermissions())),
+                                Navigator.of(context)
+                                    .pushNamed(Routes.requestPermissions),
                               }
                           },
                           child: Text(S.of(context).labelAskPermissions,
                               textAlign: TextAlign.center,
                               style: (authProvider.isAnonymous ||
-                                      !authProvider.isVerifiedFromCache)
+                                      isVerified != true)
                                   ? Theme.of(context).textTheme.bodyText1.apply(
                                         color: Theme.of(context).disabledColor,
                                       )
                                   : Theme.of(context).textTheme.bodyText1),
+                        ),
+                        const Divider(),
+                        Text(
+                            '${S.of(context).labelVersion} ${_packageInfo.version}+${_packageInfo.buildNumber}',
+                            textAlign: TextAlign.center,
+                            style: Theme.of(context).textTheme.bodyText1),
+                        const Padding(
+                          padding: EdgeInsets.only(top: 8),
                         )
                       ],
                     ),

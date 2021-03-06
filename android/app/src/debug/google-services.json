@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "712935993826",
+    "firebase_url": "https://acs-upb-mobile-dev.firebaseio.com",
+    "project_id": "acs-upb-mobile-dev",
+    "storage_bucket": "acs-upb-mobile-dev.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:712935993826:android:a7b44be5c7b63b71a849bb",
+        "android_client_info": {
+          "package_name": "ro.pub.acs.acs_upb_mobile"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "712935993826-ls9214s326pj3rdf4oqpr15ktp2d2faq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAJZe5j_CwX-ACG-qMCZFt8xzgSPmooA64"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "712935993826-ls9214s326pj3rdf4oqpr15ktp2d2faq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

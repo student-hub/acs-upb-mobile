@@ -27,18 +27,32 @@ import 'package:acs_upb_mobile/pages/portal/service/website_provider.dart';
 import 'package:acs_upb_mobile/pages/portal/view/portal_page.dart';
 import 'package:acs_upb_mobile/pages/portal/view/website_view.dart';
 import 'package:acs_upb_mobile/pages/settings/service/request_provider.dart';
+import 'package:acs_upb_mobile/pages/settings/view/request_permissions.dart';
 import 'package:acs_upb_mobile/pages/settings/view/settings_page.dart';
+import 'package:acs_upb_mobile/pages/timetable/model/academic_calendar.dart';
+import 'package:acs_upb_mobile/pages/timetable/model/events/all_day_event.dart';
+import 'package:acs_upb_mobile/pages/timetable/model/events/class_event.dart';
+import 'package:acs_upb_mobile/pages/timetable/model/events/recurring_event.dart';
+import 'package:acs_upb_mobile/pages/timetable/model/events/uni_event.dart';
 import 'package:acs_upb_mobile/pages/timetable/service/uni_event_provider.dart';
+import 'package:acs_upb_mobile/pages/timetable/view/events/add_event_view.dart';
+import 'package:acs_upb_mobile/pages/timetable/view/events/event_view.dart';
+import 'package:acs_upb_mobile/pages/timetable/view/timetable_page.dart';
 import 'package:acs_upb_mobile/resources/custom_icons.dart';
 import 'package:acs_upb_mobile/resources/locale_provider.dart';
 import 'package:acs_upb_mobile/widgets/search_bar.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:network_image_mock/network_image_mock.dart';
 import 'package:preferences/preferences.dart';
 import 'package:provider/provider.dart';
+import 'package:rrule/rrule.dart';
+import 'package:time_machine/time_machine.dart' hide Offset;
+import 'package:timetable/src/header/week_indicator.dart';
 
+import 'firebase_mock.dart';
 import 'test_utils.dart';
 
 // These tests open each page in the app on multiple screen sizes to make sure
@@ -64,7 +78,7 @@ class MockRequestProvider extends Mock implements RequestProvider {}
 
 class MockNavigatorObserver extends Mock implements NavigatorObserver {}
 
-void main() {
+Future<void> main() async {
   AuthProvider mockAuthProvider;
   WebsiteProvider mockWebsiteProvider;
   FilterProvider mockFilterProvider;
@@ -75,20 +89,16 @@ void main() {
   UniEventProvider mockEventProvider;
   RequestProvider mockRequestProvider;
 
+  setupFirebaseAuthMocks();
+  await Firebase.initializeApp();
+
   // Test layout for different screen sizes
+  // TODO(AdrianMargineanu): Use Flutter driver for integration tests, setting screen sizes here isn't reliable
   final screenSizes = <Size>[
     // Phone
-    const Size(1080, 1920), const Size(720, 1280), // Standard
-    const Size(2200, 2480), const Size(1536, 2151), // Foldable
-    /* For some reason, Q/WVGA sizes give weird overflow errors that I can't
-    replicate in the emulator with the same size, so I'll leave these commented
-    for now:
-    Size(480, 800), Size(480, 854), // WVGA
-    Size(240, 432), Size(240, 400), Size(320, 480), Size(240, 320), // QVGA
-   */
+    const Size(720, 1280),
     // Tablet
-    const Size(1800, 2560), const Size(1536, 2048), const Size(1200, 1920),
-    const Size(1600, 2560), const Size(600, 1024), const Size(800, 1280),
+    const Size(600, 1024),
   ];
 
   // Add landscape mode sizes
@@ -125,26 +135,28 @@ void main() {
     PrefService.cache = {};
     PrefService.setString('language', 'en');
 
+    await Firebase.initializeApp();
+
     LocaleProvider.cultures = testCultures;
     LocaleProvider.rruleL10ns = {'en': await RruleL10nTest.create()};
 
     // Pretend an anonymous user is already logged in
     mockAuthProvider = MockAuthProvider();
-    when(mockAuthProvider.isAuthenticatedFromCache).thenReturn(true);
+    when(mockAuthProvider.isAuthenticated).thenReturn(true);
     // ignore: invalid_use_of_protected_member
     when(mockAuthProvider.hasListeners).thenReturn(false);
     when(mockAuthProvider.isAnonymous).thenReturn(true);
-    when(mockAuthProvider.isAuthenticatedFromService)
-        .thenAnswer((_) => Future.value(true));
-    when(mockAuthProvider.currentUser)
-        .thenAnswer((realInvocation) => Future.value(null));
+    when(mockAuthProvider.currentUser).thenAnswer((_) => Future.value(null));
+    when(mockAuthProvider.isVerified).thenAnswer((_) => Future.value(false));
 
     mockWebsiteProvider = MockWebsiteProvider();
     // ignore: invalid_use_of_protected_member
     when(mockWebsiteProvider.hasListeners).thenReturn(false);
     when(mockWebsiteProvider.deleteWebsite(any, context: anyNamed('context')))
-        .thenAnswer((realInvocation) => Future.value(true));
-    when(mockWebsiteProvider.fetchWebsites(any))
+        .thenAnswer((_) => Future.value(true));
+    when(mockAuthProvider.getProfilePictureURL(context: anyNamed('context')))
+        .thenAnswer((_) => Future.value(null));
+    when(mockWebsiteProvider.fetchWebsites(any, context: anyNamed('context')))
         .thenAnswer((_) => Future.value([
               Website(
                 id: '1',
@@ -219,74 +231,94 @@ void main() {
                 isPrivate: false,
               ),
             ]));
-    when(mockWebsiteProvider.fetchFavouriteWebsites()).thenAnswer(
-        (_) async => (await mockWebsiteProvider.fetchWebsites(any)).take(3));
+    when(mockWebsiteProvider.fetchFavouriteWebsites(
+            uid: anyNamed('uid'), context: anyNamed('context')))
+        .thenAnswer((_) async => (await mockWebsiteProvider.fetchWebsites(any,
+                context: anyNamed('context')))
+            .take(3));
 
     mockFilterProvider = MockFilterProvider();
     // ignore: invalid_use_of_protected_member
     when(mockFilterProvider.hasListeners).thenReturn(false);
     when(mockFilterProvider.filterEnabled).thenReturn(true);
-    when(mockFilterProvider.fetchFilter(context: anyNamed('context')))
-        .thenAnswer((_) => Future.value(Filter(
-                localizedLevelNames: [
-                  {'en': 'Degree', 'ro': 'Nivel de studiu'},
-                  {'en': 'Major', 'ro': 'Specializare'},
-                  {'en': 'Year', 'ro': 'An'},
-                  {'en': 'Series', 'ro': 'Serie'},
-                  {'en': 'Group', 'ro': 'Group'}
-                ],
-                root: FilterNode(name: 'All', value: true, children: [
-                  FilterNode(name: 'BSc', value: true, children: [
-                    FilterNode(name: 'CTI', value: true, children: [
-                      FilterNode(name: 'CTI-1', value: true, children: [
-                        FilterNode(name: '1-CA'),
-                        FilterNode(
-                          name: '1-CB',
-                          value: true,
-                          children: [
-                            FilterNode(name: '311CB'),
-                            FilterNode(name: '312CB'),
-                            FilterNode(name: '313CB'),
-                            FilterNode(
-                              name: '314CB',
-                              value: true,
-                            ),
-                          ],
-                        ),
-                        FilterNode(name: '1-CC'),
-                        FilterNode(
-                          name: '1-CD',
-                          children: [
-                            FilterNode(name: '311CD'),
-                            FilterNode(name: '312CD'),
-                            FilterNode(name: '313CD'),
-                            FilterNode(name: '314CD'),
-                          ],
-                        ),
-                      ]),
-                      FilterNode(
-                        name: 'CTI-2',
-                      ),
-                      FilterNode(
-                        name: 'CTI-3',
-                      ),
-                      FilterNode(
-                        name: 'CTI-4',
-                      ),
-                    ]),
-                    FilterNode(name: 'IS')
-                  ]),
-                  FilterNode(name: 'MSc', children: [
+    final filter = Filter(
+        localizedLevelNames: [
+          {'en': 'Degree', 'ro': 'Nivel de studiu'},
+          {'en': 'Major', 'ro': 'Specializare'},
+          {'en': 'Year', 'ro': 'An'},
+          {'en': 'Series', 'ro': 'Serie'},
+          {'en': 'Group', 'ro': 'Group'}
+        ],
+        root: FilterNode(name: 'All', value: true, children: [
+          FilterNode(name: 'BSc', value: true, children: [
+            FilterNode(name: 'CTI', value: true, children: [
+              FilterNode(name: 'CTI-1', value: true, children: [
+                FilterNode(name: '1-CA'),
+                FilterNode(
+                  name: '1-CB',
+                  value: true,
+                  children: [
+                    FilterNode(name: '311CB'),
+                    FilterNode(name: '312CB'),
+                    FilterNode(name: '313CB'),
                     FilterNode(
-                      name: 'IA',
+                      name: '314CB',
+                      value: true,
                     ),
-                    FilterNode(name: 'SPRC'),
-                  ])
-                ]))));
+                  ],
+                ),
+                FilterNode(name: '1-CC'),
+                FilterNode(
+                  name: '1-CD',
+                  children: [
+                    FilterNode(name: '311CD'),
+                    FilterNode(name: '312CD'),
+                    FilterNode(name: '313CD'),
+                    FilterNode(name: '314CD'),
+                  ],
+                ),
+              ]),
+              FilterNode(
+                name: 'CTI-2',
+              ),
+              FilterNode(
+                name: 'CTI-3',
+              ),
+              FilterNode(
+                name: 'CTI-4',
+              ),
+            ]),
+            FilterNode(name: 'IS')
+          ]),
+          FilterNode(name: 'MSc', children: [
+            FilterNode(
+              name: 'IA',
+            ),
+            FilterNode(name: 'SPRC'),
+          ])
+        ]));
+    when(mockFilterProvider.cachedFilter).thenReturn(filter);
+    when(mockFilterProvider.fetchFilter(context: anyNamed('context')))
+        .thenAnswer((_) => Future.value(filter));
 
     mockClassProvider = MockClassProvider();
     // ignore: invalid_use_of_protected_member
     when(mockClassProvider.hasListeners).thenReturn(false);
+    final userClassHeaders = [
+      ClassHeader(
+        id: '3',
+        name: 'Programming',
+        acronym: 'PC',
+        category: 'A',
+      ),
+      ClassHeader(
+        id: '4',
+        name: 'Physics',
+        acronym: 'PH',
+        category: 'D',
+      )
+    ];
+    when(mockClassProvider.userClassHeadersCache).thenReturn(userClassHeaders);
     when(mockClassProvider.fetchClassHeaders(uid: anyNamed('uid')))
         .thenAnswer((_) => Future.value([
               ClassHeader(
@@ -301,22 +333,11 @@ void main() {
                 acronym: 'M2',
                 category: 'A/C',
               ),
-              ClassHeader(
-                id: '3',
-                name: 'Programming',
-                acronym: 'PC',
-                category: 'A',
-              ),
-              ClassHeader(
-                id: '4',
-                name: 'Physics',
-                acronym: 'PH',
-                category: 'D',
-              ),
-            ]));
+            ] +
+            userClassHeaders));
     when(mockClassProvider.fetchUserClassIds(
             uid: anyNamed('uid'), context: anyNamed('context')))
-        .thenAnswer((_) => Future.value(['3']));
+        .thenAnswer((_) => Future.value(['3', '4']));
     when(mockClassProvider.fetchClassInfo(any, context: anyNamed('context')))
         .thenAnswer((_) => Future.value(
               Class(
@@ -380,7 +401,7 @@ void main() {
     // ignore: invalid_use_of_protected_member
     when(mockQuestionProvider.hasListeners).thenReturn(false);
     when(mockQuestionProvider.fetchQuestions(context: anyNamed('context')))
-        .thenAnswer((realInvocation) => Future.value(<Question>[
+        .thenAnswer((_) => Future.value(<Question>[
               Question(
                   question: 'Care este programul la secretariat?',
                   answer:
@@ -393,7 +414,7 @@ void main() {
                   tags: ['Conectare', 'Informații'])
             ]));
     when(mockQuestionProvider.fetchQuestions(limit: anyNamed('limit')))
-        .thenAnswer((realInvocation) => Future.value(<Question>[
+        .thenAnswer((_) => Future.value(<Question>[
               Question(
                   question: 'Care este programul la secretariat?',
                   answer:
@@ -410,7 +431,7 @@ void main() {
     // ignore: invalid_use_of_protected_member
     when(mockNewsProvider.hasListeners).thenReturn(false);
     when(mockNewsProvider.fetchNewsFeedItems(context: anyNamed('context')))
-        .thenAnswer((realInvocation) => Future.value(<NewsFeedItem>[
+        .thenAnswer((_) => Future.value(<NewsFeedItem>[
               NewsFeedItem(
                   '03.10.2020',
                   'Cazarea studentilor de anul II licenta',
@@ -421,7 +442,7 @@ void main() {
                   'https://acs.pub.ro/noutati/festivitatea-de-deschidere-a-anului-universitar-2020-2021/')
             ]));
     when(mockNewsProvider.fetchNewsFeedItems(limit: anyNamed('limit')))
-        .thenAnswer((realInvocation) => Future.value(<NewsFeedItem>[
+        .thenAnswer((_) => Future.value(<NewsFeedItem>[
               NewsFeedItem(
                   '03.10.2020',
                   'Cazarea studentilor de anul II licenta',
@@ -435,9 +456,180 @@ void main() {
     mockEventProvider = MockUniEventProvider();
     // ignore: invalid_use_of_protected_member
     when(mockEventProvider.hasListeners).thenReturn(false);
+    final now = LocalDate.today();
+    final weekStart = now.subtractDays(now.dayOfWeek - DayOfWeek.monday);
+    final holidays = [
+      // Holiday on Tuesday and Wednesday next week
+      AllDayUniEvent(
+        name: 'Holiday',
+        start: weekStart.addWeeks(1).addDays(1),
+        end: weekStart.addWeeks(1).addDays(2),
+        id: 'holiday0',
+      ),
+      AllDayUniEvent(
+        name: 'Inter-semester holiday',
+        start: weekStart.addWeeks(2).subtractDays(2),
+        end: weekStart.addWeeks(3).subtractDays(1),
+        id: 'holiday1',
+      ),
+    ];
+    final calendar = AcademicCalendar(
+      id: '2020',
+      semesters: [
+        AllDayUniEvent(
+          start: weekStart,
+          end: weekStart.addWeeks(2).subtractDays(3),
+          id: 'semester1',
+        ),
+        AllDayUniEvent(
+          start: weekStart.addWeeks(3),
+          end: weekStart.addWeeks(5).subtractDays(3),
+          id: 'semester2',
+        ),
+      ],
+      holidays: holidays,
+    );
+    when(mockEventProvider.fetchCalendars())
+        .thenAnswer((_) => Future.value({'2020': calendar}));
+    final rruleEveryWeekFirstSem = RecurrenceRule(
+      frequency: Frequency.weekly,
+      interval: 1,
+      until: weekStart.addWeeks(2).subtractDays(3).atMidnight(),
+    );
+    final rruleEveryTwoWeeksFirstSem = RecurrenceRule(
+      frequency: Frequency.weekly,
+      interval: 2,
+      until: weekStart.addWeeks(2).subtractDays(3).atMidnight(),
+    );
+    final rruleEveryWeek = RecurrenceRule(
+      frequency: Frequency.weekly,
+      interval: 1,
+    );
+    final rruleEveryTwoWeeks = RecurrenceRule(
+      frequency: Frequency.weekly,
+      interval: 2,
+    );
+    const duration = Period(hours: 2);
+    final events = [
+      RecurringUniEvent(
+        name: 'M1',
+        calendar: calendar,
+        rrule: rruleEveryWeekFirstSem,
+        start: weekStart.at(LocalTime(8, 0, 0)),
+        duration: duration,
+        id: '0',
+      ),
+      RecurringUniEvent(
+        name: 'M2',
+        calendar: calendar,
+        rrule: rruleEveryTwoWeeksFirstSem,
+        start: weekStart.at(LocalTime(10, 0, 0)),
+        duration: duration,
+        id: '1',
+      ),
+      RecurringUniEvent(
+        name: 'T1',
+        calendar: calendar,
+        rrule: rruleEveryWeekFirstSem,
+        start: weekStart.addDays(1).at(LocalTime(8, 0, 0)),
+        duration: duration,
+        id: '2',
+      ),
+      RecurringUniEvent(
+        name: 'T2',
+        calendar: calendar,
+        rrule: rruleEveryTwoWeeksFirstSem,
+        start: weekStart.addDays(1).at(LocalTime(9, 0, 0)),
+        duration: duration,
+        id: '3',
+      ),
+      RecurringUniEvent(
+        name: 'W1',
+        calendar: calendar,
+        rrule: rruleEveryWeekFirstSem,
+        start: weekStart.addDays(2).at(LocalTime(8, 0, 0)),
+        duration: duration,
+        id: '4',
+      ),
+      RecurringUniEvent(
+        name: 'W2',
+        rrule: rruleEveryWeek,
+        start: weekStart.addDays(2).at(LocalTime(10, 0, 0)),
+        duration: duration,
+        id: '5',
+      ),
+      RecurringUniEvent(
+        name: 'W3',
+        rrule: rruleEveryTwoWeeks,
+        start: weekStart.addDays(2).at(LocalTime(12, 0, 0)),
+        duration: duration,
+        id: '6',
+      ),
+      ClassEvent(
+        classHeader: userClassHeaders[0],
+        type: UniEventType.lecture,
+        teacher: Person(name: 'Jane Doe'),
+        location: 'AB123',
+        degree: 'BSc',
+        relevance: ['314CB'],
+        calendar: calendar,
+        rrule: rruleEveryWeek,
+        start: weekStart.addDays(3).at(LocalTime(10, 0, 0)),
+        duration: duration,
+        id: '7',
+      ),
+      RecurringUniEvent(
+        classHeader: userClassHeaders[1],
+        type: UniEventType.lecture,
+        location: 'AB123',
+        degree: 'BSc',
+        relevance: ['314CB'],
+        calendar: calendar,
+        rrule: rruleEveryTwoWeeks,
+        start: weekStart.addDays(3).at(LocalTime(12, 0, 0)),
+        duration: duration,
+        id: '8',
+      ),
+      RecurringUniEvent(
+        name: 'F1',
+        calendar: calendar,
+        rrule: rruleEveryWeek,
+        start: weekStart.addDays(4).at(LocalTime(10, 0, 0)),
+        duration: duration,
+        id: '9',
+      ),
+      RecurringUniEvent(
+        name: 'F2',
+        calendar: calendar,
+        rrule: rruleEveryTwoWeeks,
+        start: weekStart.addDays(4).at(LocalTime(12, 0, 0)),
+        duration: duration,
+        id: '10',
+      ),
+    ];
     when(mockEventProvider.getAllDayEventsIntersecting(any))
-        .thenAnswer((_) => Stream.fromIterable([]));
-    when(mockEventProvider.empty).thenReturn(true);
+        .thenAnswer((invocation) {
+      final DateInterval interval = invocation.positionalArguments[0];
+      return Stream.value(holidays
+          .map((holiday) =>
+              holiday.generateInstances(intersectingInterval: interval))
+          .expand((e) => e));
+    });
+    when(mockEventProvider.getPartDayEventsIntersecting(any))
+        .thenAnswer((invocation) {
+      final LocalDate date = invocation.positionalArguments[0];
+      return Stream.value(events
+          .map((event) => event.generateInstances(
+              intersectingInterval: DateInterval(date, date)))
+          .expand((e) => e));
+    });
+    when(mockEventProvider.empty).thenReturn(false);
+    when(mockEventProvider.deleteEvent(any, context: anyNamed('context')))
+        .thenAnswer((_) => Future.value(true));
+    when(mockEventProvider.updateEvent(any, context: anyNamed('context')))
+        .thenAnswer((_) => Future.value(true));
+    when(mockEventProvider.addEvent(any, context: anyNamed('context')))
+        .thenAnswer((_) => Future.value(true));
 
     mockRequestProvider = MockRequestProvider();
     when(mockRequestProvider.makeRequest(any, context: anyNamed('context')))
@@ -466,152 +658,713 @@ void main() {
     }
   });
 
-  group('Class', () {
-    setUp(() {
-      when(mockAuthProvider.currentUser).thenAnswer((_) =>
-          Future.value(User(uid: '0', firstName: 'John', lastName: 'Doe')));
-      when(mockAuthProvider.currentUserFromCache)
-          .thenReturn(User(uid: '0', firstName: 'John', lastName: 'Doe'));
-      when(mockAuthProvider.isAuthenticatedFromService)
-          .thenAnswer((_) => Future.value(true));
-      when(mockAuthProvider.isAuthenticatedFromCache).thenReturn(true);
-      when(mockAuthProvider.isAnonymous).thenReturn(false);
-      when(mockAuthProvider.uid).thenReturn('0');
-    });
-
-    for (final size in screenSizes) {
-      testWidgets('${size.width}x${size.height}', (WidgetTester tester) async {
-        await binding.setSurfaceSize(size);
-
-        await tester.pumpWidget(buildApp());
-        await tester.pumpAndSettle();
-
-        // Open timetable
-        await tester.tap(find.byIcon(Icons.calendar_today_rounded));
-        await tester.pumpAndSettle();
-
-        // Close "No events to show" dialog
-        await tester.tap(find.text('CANCEL'));
-        await tester.pumpAndSettle();
-
-        // Open classes
-        await tester.tap(find.byIcon(Icons.class_));
-        await tester.pumpAndSettle();
-
-        // Open class view
-        expect(find.byType(ClassesPage), findsOneWidget);
-      });
-    }
-  });
-
-  group('Add class', () {
-    setUp(() {
-      when(mockAuthProvider.currentUser).thenAnswer((_) =>
-          Future.value(User(uid: '0', firstName: 'John', lastName: 'Doe')));
-      when(mockAuthProvider.currentUserFromCache)
-          .thenReturn(User(uid: '0', firstName: 'John', lastName: 'Doe'));
-      when(mockAuthProvider.isAuthenticatedFromService)
-          .thenAnswer((_) => Future.value(true));
-      when(mockAuthProvider.isAuthenticatedFromCache).thenReturn(true);
-      when(mockAuthProvider.isAnonymous).thenReturn(false);
-      when(mockAuthProvider.uid).thenReturn('0');
-    });
-
-    for (final size in screenSizes) {
-      testWidgets('${size.width}x${size.height}', (WidgetTester tester) async {
-        await binding.setSurfaceSize(size);
-
-        await tester.pumpWidget(buildApp());
-        await tester.pumpAndSettle();
-
-        // Open timetable
-        await tester.tap(find.byIcon(Icons.calendar_today_rounded));
-        await tester.pumpAndSettle();
-
-        // Close "No events to show" dialog
-        await tester.tap(find.text('CANCEL'));
-        await tester.pumpAndSettle();
-
-        // Open classes
-        await tester.tap(find.byIcon(Icons.class_));
-        await tester.pumpAndSettle();
-
-        // Open add class view
-        await tester.tap(find.byIcon(Icons.edit));
-        await tester.pumpAndSettle();
-
-        expect(find.byType(AddClassesPage), findsOneWidget);
-
-        // Save
-        await tester.tap(find.text('Save'));
-        await tester.pumpAndSettle();
-
-        expect(find.byType(ClassesPage), findsOneWidget);
-      });
-    }
-  });
-
-  group('Class view', () {
+  group('Timetable', () {
     setUp(() {
       when(mockAuthProvider.currentUser).thenAnswer((_) => Future.value(User(
           uid: '0', firstName: 'John', lastName: 'Doe', permissionLevel: 3)));
       when(mockAuthProvider.currentUserFromCache).thenReturn(User(
           uid: '0', firstName: 'John', lastName: 'Doe', permissionLevel: 3));
-      when(mockAuthProvider.isAuthenticatedFromService)
-          .thenAnswer((_) => Future.value(true));
-      when(mockAuthProvider.isAuthenticatedFromCache).thenReturn(true);
+      when(mockAuthProvider.isAuthenticated).thenReturn(true);
       when(mockAuthProvider.isAnonymous).thenReturn(false);
       when(mockAuthProvider.uid).thenReturn('0');
     });
 
-    for (final size in screenSizes) {
-      testWidgets('${size.width}x${size.height}', (WidgetTester tester) async {
-        await binding.setSurfaceSize(size);
+    group('Timetable no events/no classes', () {
+      setUp(() {
+        when(mockEventProvider.getAllDayEventsIntersecting(any))
+            .thenAnswer((_) => Stream.value([]));
+        when(mockEventProvider.getPartDayEventsIntersecting(any))
+            .thenAnswer((_) => Stream.value([]));
+        when(mockEventProvider.empty).thenReturn(true);
 
-        await tester.pumpWidget(buildApp());
-        await tester.pumpAndSettle();
-
-        // Open timetable
-        await tester.tap(find.byIcon(Icons.calendar_today_rounded));
-        await tester.pumpAndSettle();
-
-        // Close "No events to show" dialog
-        await tester.tap(find.text('CANCEL'));
-        await tester.pumpAndSettle();
-
-        // Open classes
-        await tester.tap(find.byIcon(Icons.class_));
-        await tester.pumpAndSettle();
-
-        // Open class view
-        await tester.tap(find.text('PC'));
-        await tester.pumpAndSettle();
-
-        expect(find.byType(ClassView), findsOneWidget);
-
-        // Open add shortcut view
-        await tester.tap(find.byIcon(Icons.add));
-        await tester.pumpAndSettle();
-
-        expect(find.byType(ShortcutView), findsOneWidget);
-
-        await tester.tap(find.byIcon(Icons.arrow_back));
-        await tester.pumpAndSettle();
-
-        expect(find.byType(ClassView), findsOneWidget);
-
-        // Open grading view
-        await tester.tap(find.byIcon(Icons.edit));
-        await tester.pumpAndSettle();
-
-        expect(find.byType(GradingView), findsOneWidget);
-
-        await tester.tap(find.text('Save'));
-        await tester.pumpAndSettle();
-
-        expect(find.byType(ClassView), findsOneWidget);
+        when(mockClassProvider.userClassHeadersCache).thenReturn(null);
       });
-    }
+
+      for (final size in screenSizes) {
+        testWidgets('${size.width}x${size.height}',
+            (WidgetTester tester) async {
+          await binding.setSurfaceSize(size);
+
+          await tester.pumpWidget(buildApp());
+          await tester.pumpAndSettle();
+
+          // Open timetable
+          await tester.tap(find.byIcon(Icons.calendar_today_rounded));
+          await tester.pumpAndSettle();
+
+          expect(find.byType(TimetablePage), findsOneWidget);
+          expect(find.text('No events to show'), findsOneWidget);
+
+          await tester.tap(find.text('CHOOSE CLASSES'));
+          await tester.pumpAndSettle();
+
+          expect(find.byType(AddClassesPage), findsOneWidget);
+        });
+      }
+    });
+
+    group('Timetable no events/no filter', () {
+      setUp(() {
+        when(mockEventProvider.getAllDayEventsIntersecting(any))
+            .thenAnswer((_) => Stream.value([]));
+        when(mockEventProvider.getPartDayEventsIntersecting(any))
+            .thenAnswer((_) => Stream.value([]));
+        when(mockEventProvider.empty).thenReturn(true);
+
+        when(mockFilterProvider.cachedFilter).thenReturn(null);
+      });
+
+      for (final size in screenSizes) {
+        testWidgets('${size.width}x${size.height}',
+            (WidgetTester tester) async {
+          await binding.setSurfaceSize(size);
+
+          await tester.pumpWidget(buildApp());
+          await tester.pumpAndSettle();
+
+          // Open timetable
+          await tester.tap(find.byIcon(Icons.calendar_today_rounded));
+          await tester.pumpAndSettle();
+
+          expect(find.byType(TimetablePage), findsOneWidget);
+          expect(find.text('No events to show'), findsOneWidget);
+
+          await tester.tap(find.text('OPEN FILTER'));
+          await tester.pumpAndSettle();
+
+          expect(find.byType(FilterPage), findsOneWidget);
+        });
+      }
+    });
+
+    group('Timetable no events/no permissions', () {
+      setUp(() {
+        when(mockAuthProvider.currentUser).thenAnswer((_) => Future.value(User(
+            uid: '0', firstName: 'John', lastName: 'Doe', permissionLevel: 0)));
+        when(mockAuthProvider.currentUserFromCache).thenReturn(User(
+            uid: '0', firstName: 'John', lastName: 'Doe', permissionLevel: 0));
+        when(mockAuthProvider.isAnonymous).thenReturn(false);
+        when(mockAuthProvider.isVerified).thenAnswer((_) => Future.value(true));
+
+        when(mockEventProvider.getAllDayEventsIntersecting(any))
+            .thenAnswer((_) => Stream.value([]));
+        when(mockEventProvider.getPartDayEventsIntersecting(any))
+            .thenAnswer((_) => Stream.value([]));
+        when(mockEventProvider.empty).thenReturn(true);
+      });
+
+      for (final size in screenSizes) {
+        testWidgets('${size.width}x${size.height}',
+            (WidgetTester tester) async {
+          await binding.setSurfaceSize(size);
+
+          await tester.pumpWidget(buildApp());
+          await tester.pumpAndSettle();
+
+          // Open timetable
+          await tester.tap(find.byIcon(Icons.calendar_today_rounded));
+          await tester.pumpAndSettle();
+
+          expect(find.byType(TimetablePage), findsOneWidget);
+          expect(find.text('No events to show'), findsOneWidget);
+
+          await tester.tap(find.text('REQUEST PERMISSIONS'));
+          await tester.pumpAndSettle();
+
+          expect(find.byType(RequestPermissionsPage), findsOneWidget);
+        });
+      }
+    });
+
+    group('Timetable no events/add some', () {
+      setUp(() {
+        when(mockEventProvider.getAllDayEventsIntersecting(any))
+            .thenAnswer((_) => Stream.value([]));
+        when(mockEventProvider.getPartDayEventsIntersecting(any))
+            .thenAnswer((_) => Stream.value([]));
+        when(mockEventProvider.empty).thenReturn(true);
+      });
+
+      for (final size in screenSizes) {
+        testWidgets('${size.width}x${size.height}',
+            (WidgetTester tester) async {
+          await binding.setSurfaceSize(size);
+
+          await tester.pumpWidget(buildApp());
+          await tester.pumpAndSettle();
+
+          // Open timetable
+          await tester.tap(find.byIcon(Icons.calendar_today_rounded));
+          await tester.pumpAndSettle();
+
+          expect(find.byType(TimetablePage), findsOneWidget);
+          expect(find.text('No events to show'), findsOneWidget);
+          expect(
+              find.byKey(const ValueKey('no_events_message')), findsOneWidget);
+
+          await tester.tap(find.text('CANCEL'));
+          await tester.pumpAndSettle();
+
+          expect(find.text('No events to show'), findsNothing);
+        });
+      }
+    });
+
+    group('Timetable events', () {
+      for (final size in screenSizes) {
+        testWidgets('${size.width}x${size.height}',
+            (WidgetTester tester) async {
+          await binding.setSurfaceSize(size);
+
+          await tester.pumpWidget(buildApp());
+          await tester.pumpAndSettle();
+
+          // Open timetable
+          await tester.tap(find.byIcon(Icons.calendar_today_rounded));
+          await tester.pumpAndSettle();
+
+          expect(find.byType(TimetablePage), findsOneWidget);
+
+          // Scroll to previous week
+          await tester.drag(find.text('Tue'), Offset(size.width - 30, 0));
+          await tester.pumpAndSettle();
+
+          // Expect previous week
+          final previousWeek = WeekYearRules.iso
+              .getWeekOfWeekYear(LocalDate.today().subtractWeeks(1));
+          expect(
+              find.byWidgetPredicate((widget) =>
+                  widget is WeekIndicator &&
+                  widget.week.toString() == previousWeek.toString()),
+              findsOneWidget);
+
+          expect(find.text('Holiday'), findsNothing);
+          expect(find.text('Inter-semester holiday'), findsNothing);
+          expect(find.text('M1'), findsNothing);
+          expect(find.text('M2'), findsNothing);
+          expect(find.text('T1'), findsNothing);
+          expect(find.text('T2'), findsNothing);
+          expect(find.text('W1'), findsNothing);
+          expect(find.text('W2'), findsNothing);
+          expect(find.text('W3'), findsNothing);
+          expect(find.text('PC'), findsNothing);
+          expect(find.text('PH'), findsNothing);
+          expect(find.text('F1'), findsNothing);
+          expect(find.text('F2'), findsNothing);
+
+          // Scroll back to current week
+          await tester.drag(find.text('Sun'), Offset(-size.width + 10, 0));
+          await tester.pumpAndSettle();
+
+          // Expect current week
+          final currentWeek =
+              WeekYearRules.iso.getWeekOfWeekYear(LocalDate.today());
+          expect(
+              find.byWidgetPredicate((widget) =>
+                  widget is WeekIndicator &&
+                  widget.week.toString() == currentWeek.toString()),
+              findsOneWidget);
+
+          expect(find.text('Holiday'), findsNothing);
+          expect(find.text('Inter-semester holiday'), findsNothing);
+          expect(find.text('M1'), findsOneWidget);
+          expect(find.text('M2'), findsOneWidget);
+          expect(find.text('T1'), findsOneWidget);
+          expect(find.text('T2'), findsOneWidget);
+          expect(find.text('W1'), findsOneWidget);
+          expect(find.text('W2'), findsOneWidget);
+          expect(find.text('W3'), findsOneWidget);
+          expect(find.text('PC'), findsOneWidget);
+          expect(find.text('PH'), findsOneWidget);
+          expect(find.text('F1'), findsOneWidget);
+          expect(find.text('F2'), findsOneWidget);
+
+          // Scroll to next week
+          await tester.drag(find.text('Sun'), Offset(-size.width + 10, 0));
+          await tester.pumpAndSettle();
+
+          // Expect next week
+          final nextWeek = WeekYearRules.iso
+              .getWeekOfWeekYear(LocalDate.today().addWeeks(1));
+          expect(
+              find.byWidgetPredicate((widget) =>
+                  widget is WeekIndicator &&
+                  widget.week.toString() == nextWeek.toString()),
+              findsOneWidget);
+
+          expect(find.text('Holiday'), findsOneWidget);
+          expect(find.text('Inter-semester holiday'), findsOneWidget);
+          expect(find.text('M1'), findsOneWidget);
+          expect(find.text('M2'), findsNothing);
+          expect(find.text('T1'), findsNothing);
+          expect(find.text('T2'), findsNothing);
+          expect(find.text('W1'), findsNothing);
+          expect(find.text('W2'), findsOneWidget);
+          expect(find.text('W3'), findsNothing);
+          expect(find.text('PC'), findsOneWidget);
+          expect(find.text('PH'), findsNothing);
+          expect(find.text('F1'), findsOneWidget);
+          expect(find.text('F2'), findsNothing);
+
+          // Scroll to next week
+          await tester.drag(find.text('Sun'), Offset(-size.width + 10, 0));
+          await tester.pumpAndSettle();
+
+          // Expect next week
+          final nextNextWeek = WeekYearRules.iso
+              .getWeekOfWeekYear(LocalDate.today().addWeeks(2));
+          expect(
+              find.byWidgetPredicate((widget) =>
+                  widget is WeekIndicator &&
+                  widget.week.toString() == nextNextWeek.toString()),
+              findsOneWidget);
+
+          expect(find.text('Holiday'), findsNothing);
+          expect(find.text('Inter-semester holiday'), findsOneWidget);
+          expect(find.text('M1'), findsNothing);
+          expect(find.text('M2'), findsNothing);
+          expect(find.text('T1'), findsNothing);
+          expect(find.text('T2'), findsNothing);
+          expect(find.text('W1'), findsNothing);
+          expect(find.text('W2'), findsOneWidget);
+          expect(find.text('W3'), findsOneWidget);
+          expect(find.text('PC'), findsNothing);
+          expect(find.text('PH'), findsNothing);
+          expect(find.text('F1'), findsNothing);
+          expect(find.text('F2'), findsNothing);
+
+          // Scroll to next week
+          await tester.drag(find.text('Sun'), Offset(-size.width + 10, 0));
+          await tester.pumpAndSettle();
+
+          // Expect next week
+          final nextNextNextWeek = WeekYearRules.iso
+              .getWeekOfWeekYear(LocalDate.today().addWeeks(3));
+          expect(
+              find.byWidgetPredicate((widget) =>
+                  widget is WeekIndicator &&
+                  widget.week.toString() == nextNextNextWeek.toString()),
+              findsOneWidget);
+
+          expect(find.text('Holiday'), findsNothing);
+          expect(find.text('Inter-semester holiday'), findsNothing);
+          expect(find.text('M1'), findsNothing);
+          expect(find.text('M2'), findsNothing);
+          expect(find.text('T1'), findsNothing);
+          expect(find.text('T2'), findsNothing);
+          expect(find.text('W1'), findsNothing);
+          expect(find.text('W2'), findsOneWidget);
+          expect(find.text('W3'), findsNothing);
+          expect(find.text('PC'), findsOneWidget);
+          expect(find.text('PH'), findsOneWidget);
+          expect(find.text('F1'), findsOneWidget);
+          expect(find.text('F2'), findsOneWidget);
+
+          // Navigate to today
+          await tester.tap(find.byIcon(Icons.today));
+          await tester.pumpAndSettle();
+
+          // Expect current week
+          expect(
+              find.byWidgetPredicate((widget) =>
+                  widget is WeekIndicator &&
+                  widget.week.toString() == currentWeek.toString()),
+              findsOneWidget);
+        });
+      }
+    });
+
+    group('Event page - open all day event', () {
+      for (final size in screenSizes) {
+        testWidgets('${size.width}x${size.height}',
+            (WidgetTester tester) async {
+          await binding.setSurfaceSize(size);
+
+          await tester.pumpWidget(buildApp());
+          await tester.pumpAndSettle();
+
+          // Open timetable
+          await tester.tap(find.byIcon(Icons.calendar_today_rounded));
+          await tester.pumpAndSettle();
+
+          // Expect current week
+          final currentWeek =
+              WeekYearRules.iso.getWeekOfWeekYear(LocalDate.today());
+          expect(
+              find.byWidgetPredicate((widget) =>
+                  widget is WeekIndicator &&
+                  widget.week.toString() == currentWeek.toString()),
+              findsOneWidget);
+
+          // Scroll to next week
+          await tester.drag(find.text('Sun'), Offset(-size.width + 10, 0));
+          await tester.pumpAndSettle();
+
+          // Expect next week
+          final nextWeek = WeekYearRules.iso
+              .getWeekOfWeekYear(LocalDate.today().addWeeks(1));
+          expect(
+              find.byWidgetPredicate((widget) =>
+                  widget is WeekIndicator &&
+                  widget.week.toString() == nextWeek.toString()),
+              findsOneWidget);
+
+          // Open holiday event
+          await tester.tap(find.text('Holiday'));
+          await tester.pumpAndSettle();
+
+          expect(find.byType(EventView), findsOneWidget);
+        });
+      }
+    });
+
+    group('Event page - add event', () {
+      for (final size in screenSizes) {
+        testWidgets('${size.width}x${size.height}',
+            (WidgetTester tester) async {
+          await binding.setSurfaceSize(size);
+
+          await tester.pumpWidget(buildApp());
+          await tester.pumpAndSettle();
+
+          // Open timetable
+          await tester.tap(find.byIcon(Icons.calendar_today_rounded));
+          await tester.pumpAndSettle();
+
+          // Open add event page
+          await tester
+              .tapAt(tester.getCenter(find.text('Sat')).translate(0, 100));
+          await tester.pumpAndSettle();
+
+          expect(find.byType(AddEventView), findsOneWidget);
+
+          // Select type
+          await tester.tap(find.text('Type'));
+          await tester.pumpAndSettle();
+          await tester.tap(find.text('Seminar').last);
+          await tester.pumpAndSettle();
+
+          // Select class
+          await tester.tap(find.text('Class'));
+          await tester.pumpAndSettle();
+          await tester.tap(find.text('Programming').last);
+          await tester.pumpAndSettle();
+
+          // Press back
+          await tester.tap(find.byIcon(Icons.arrow_back));
+          await tester.pumpAndSettle();
+
+          await tester
+              .tapAt(tester.getCenter(find.text('Sat')).translate(0, 100));
+          await tester.pumpAndSettle();
+
+          expect(find.byType(AddEventView), findsOneWidget);
+
+          // Select type
+          await tester.tap(find.text('Type'));
+          await tester.pumpAndSettle();
+          await tester.tap(find.text('Lecture').last);
+          await tester.pumpAndSettle();
+
+          // Select lecturer - partial name
+          await tester.tap(find.byIcon(Icons.person));
+          await tester.pumpAndSettle();
+          await tester.enterText(find.byKey(const Key('Autocomplete')), 'John');
+          await tester.pumpAndSettle();
+          await tester.tap(find.text('John Doe'));
+          await tester.pumpAndSettle();
+
+          // Select lecturer - new name
+          await tester.tap(find.byIcon(Icons.person));
+          await tester.pumpAndSettle();
+          await tester.enterText(
+              find.byKey(const Key('Autocomplete')), 'Isabel Steward');
+          await tester.tap(find.text('Isabel Steward'));
+          await tester.pumpAndSettle();
+
+          // Select lecturer - check autocomplete suggestions
+          await tester.tap(find.byIcon(Icons.person));
+          await tester.pumpAndSettle();
+          await tester.enterText(find.byKey(const Key('Autocomplete')), 'Doe');
+          await tester.pumpAndSettle();
+
+          expect(find.text('Jane Doe'), findsOneWidget);
+          expect(find.text('John Doe'), findsOneWidget);
+
+          await tester.tap(find.text('Jane Doe'));
+          await tester.pumpAndSettle();
+        });
+      }
+    });
+
+    group('Event page - edit event', () {
+      for (final size in screenSizes) {
+        testWidgets('${size.width}x${size.height}',
+            (WidgetTester tester) async {
+          await binding.setSurfaceSize(size);
+
+          await tester.pumpWidget(buildApp());
+          await tester.pumpAndSettle();
+
+          // Open timetable
+          await tester.tap(find.byIcon(Icons.calendar_today_rounded));
+          await tester.pumpAndSettle();
+
+          // Open PC event
+          await tester.tap(find.text('PC'));
+          await tester.pumpAndSettle();
+
+          expect(find.byType(EventView), findsOneWidget);
+
+          // Open class page
+          await tester.tap(find.text('Programming'));
+          await tester.pumpAndSettle();
+
+          expect(find.byType(ClassView), findsOneWidget);
+
+          // Press back
+          await tester.tap(find.byIcon(Icons.arrow_back));
+          await tester.pumpAndSettle();
+
+          expect(find.byType(EventView), findsOneWidget);
+          expect(find.byIcon(Icons.person), findsOneWidget);
+          expect(find.text('Jane Doe'), findsOneWidget);
+
+          // Open edit event page
+          await tester.tap(find.byIcon(Icons.edit));
+          await tester.pumpAndSettle();
+
+          expect(find.byType(AddEventView), findsOneWidget);
+          expect(find.text('Lecturer'), findsOneWidget);
+          expect(find.text('Location'), findsOneWidget);
+          expect(find.text('Week'), findsOneWidget);
+          expect(find.text('Day'), findsOneWidget);
+
+          // Select lecturer
+          await tester.tap(find.text('Lecturer'));
+          await tester.pumpAndSettle();
+          await tester.enterText(find.byKey(const Key('Autocomplete')), 'Doe');
+          await tester.pumpAndSettle();
+
+          expect(find.text('Jane Doe'), findsOneWidget);
+          expect(find.text('John Doe'), findsOneWidget);
+
+          await tester.enterText(
+              find.byKey(const Key('Autocomplete')), 'John Doe');
+          await tester.pumpAndSettle();
+
+          FocusManager.instance.primaryFocus.unfocus();
+          await tester.pumpAndSettle();
+          await tester.tap(find.text('John Doe').last);
+          await tester.pumpAndSettle();
+
+          FocusManager.instance.primaryFocus.unfocus();
+          await tester.pumpAndSettle();
+
+          expect(find.text('Jane Doe'), findsNothing);
+          expect(find.text('John Doe'), findsOneWidget);
+
+          // Press save
+          await tester.tap(find.text('Save'));
+          await tester.pumpAndSettle(const Duration(seconds: 5));
+
+          expect(find.byType(TimetablePage), findsOneWidget);
+
+          // Open PC event
+          await tester.tap(find.text('PC'));
+          await tester.pumpAndSettle();
+
+          expect(find.byType(EventView), findsOneWidget);
+          expect(find.byIcon(Icons.person), findsOneWidget);
+
+          // Press back
+          await tester.tap(find.byIcon(Icons.arrow_back));
+          await tester.pumpAndSettle();
+
+          expect(find.byType(TimetablePage), findsOneWidget);
+        });
+      }
+    });
+
+    group('Event page - delete event', () {
+      for (final size in screenSizes) {
+        testWidgets('${size.width}x${size.height}',
+            (WidgetTester tester) async {
+          await binding.setSurfaceSize(size);
+
+          await tester.pumpWidget(buildApp());
+          await tester.pumpAndSettle();
+
+          // Open timetable
+          await tester.tap(find.byIcon(Icons.calendar_today_rounded));
+          await tester.pumpAndSettle();
+
+          // Open PH event
+          await tester.tap(find.text('PH'));
+          await tester.pumpAndSettle();
+
+          expect(find.byType(EventView), findsOneWidget);
+
+          // Open edit event page
+          await tester.tap(find.byIcon(Icons.edit));
+          await tester.pumpAndSettle();
+
+          expect(find.byType(AddEventView), findsOneWidget);
+
+          // Open delete dialog
+          await tester.tap(find.byIcon(Icons.more_vert));
+          await tester.pumpAndSettle();
+
+          await tester.tap(find.text('Delete event'));
+          await tester.pumpAndSettle();
+
+          // Confirm deletion
+          expect(find.text('Are you sure you want to delete this event?'),
+              findsOneWidget);
+          await tester.tap(find.text('DELETE EVENT'));
+          await tester.pumpAndSettle(const Duration(seconds: 5));
+
+          verify(
+              mockEventProvider.deleteEvent(any, context: anyNamed('context')));
+          expect(find.byType(TimetablePage), findsOneWidget);
+        });
+      }
+    });
+  });
+
+  group('Classes', () {
+    group('Class', () {
+      setUp(() {
+        when(mockAuthProvider.currentUser).thenAnswer((_) =>
+            Future.value(User(uid: '0', firstName: 'John', lastName: 'Doe')));
+        when(mockAuthProvider.currentUserFromCache)
+            .thenReturn(User(uid: '0', firstName: 'John', lastName: 'Doe'));
+        when(mockAuthProvider.isAuthenticated).thenReturn(true);
+        when(mockAuthProvider.isAnonymous).thenReturn(false);
+        when(mockAuthProvider.uid).thenReturn('0');
+      });
+
+      for (final size in screenSizes) {
+        testWidgets('${size.width}x${size.height}',
+            (WidgetTester tester) async {
+          await binding.setSurfaceSize(size);
+
+          await tester.pumpWidget(buildApp());
+          await tester.pumpAndSettle();
+
+          // Open timetable
+          await tester.tap(find.byIcon(Icons.calendar_today_rounded));
+          await tester.pumpAndSettle();
+
+          // Open classes
+          await tester.tap(find.byIcon(Icons.class_));
+          await tester.pumpAndSettle();
+
+          // Open class view
+          expect(find.byType(ClassesPage), findsOneWidget);
+        });
+      }
+    });
+
+    group('Add class', () {
+      setUp(() {
+        when(mockAuthProvider.currentUser).thenAnswer((_) =>
+            Future.value(User(uid: '0', firstName: 'John', lastName: 'Doe')));
+        when(mockAuthProvider.currentUserFromCache)
+            .thenReturn(User(uid: '0', firstName: 'John', lastName: 'Doe'));
+        when(mockAuthProvider.isAuthenticated).thenReturn(true);
+        when(mockAuthProvider.isAnonymous).thenReturn(false);
+        when(mockAuthProvider.uid).thenReturn('0');
+      });
+
+      for (final size in screenSizes) {
+        testWidgets('${size.width}x${size.height}',
+            (WidgetTester tester) async {
+          await binding.setSurfaceSize(size);
+
+          await tester.pumpWidget(buildApp());
+          await tester.pumpAndSettle();
+
+          // Open timetable
+          await tester.tap(find.byIcon(Icons.calendar_today_rounded));
+          await tester.pumpAndSettle();
+
+          // Open classes
+          await tester.tap(find.byIcon(Icons.class_));
+          await tester.pumpAndSettle();
+
+          // Open add class view
+          await tester.tap(find.byIcon(Icons.edit));
+          await tester.pumpAndSettle();
+
+          expect(find.byType(AddClassesPage), findsOneWidget);
+
+          // Save
+          await tester.tap(find.text('Save'));
+          await tester.pumpAndSettle();
+
+          expect(find.byType(ClassesPage), findsOneWidget);
+        });
+      }
+    });
+
+    group('Class view', () {
+      setUp(() {
+        when(mockAuthProvider.currentUser).thenAnswer((_) => Future.value(User(
+            uid: '0', firstName: 'John', lastName: 'Doe', permissionLevel: 3)));
+        when(mockAuthProvider.currentUserFromCache).thenReturn(User(
+            uid: '0', firstName: 'John', lastName: 'Doe', permissionLevel: 3));
+        when(mockAuthProvider.isAuthenticated).thenReturn(true);
+        when(mockAuthProvider.isAnonymous).thenReturn(false);
+        when(mockAuthProvider.uid).thenReturn('0');
+      });
+
+      for (final size in screenSizes) {
+        testWidgets('${size.width}x${size.height}',
+            (WidgetTester tester) async {
+          await binding.setSurfaceSize(size);
+
+          await tester.pumpWidget(buildApp());
+          await tester.pumpAndSettle();
+
+          // Open timetable
+          await tester.tap(find.byIcon(Icons.calendar_today_rounded));
+          await tester.pumpAndSettle();
+
+          // Open classes
+          await tester.tap(find.byIcon(Icons.class_));
+          await tester.pumpAndSettle();
+
+          // Open class view
+          await tester.tap(find.text('PC'));
+          await tester.pumpAndSettle();
+
+          expect(find.byType(ClassView), findsOneWidget);
+
+          // Open add shortcut view
+          await tester.tap(find.byIcon(Icons.add));
+          await tester.pumpAndSettle();
+
+          expect(find.byType(ShortcutView), findsOneWidget);
+
+          await tester.tap(find.byIcon(Icons.arrow_back));
+          await tester.pumpAndSettle();
+
+          expect(find.byType(ClassView), findsOneWidget);
+
+          // Open grading view
+          await tester.tap(find.byIcon(Icons.edit));
+          await tester.pumpAndSettle();
+
+          expect(find.byType(GradingView), findsOneWidget);
+
+          await tester.tap(find.text('Save'));
+          await tester.pumpAndSettle();
+
+          expect(find.byType(ClassView), findsOneWidget);
+        });
+      }
+    });
   });
 
   group('Settings', () {
@@ -673,7 +1426,7 @@ void main() {
 
   group('Add website', () {
     setUp(() {
-      when(mockAuthProvider.isAuthenticatedFromCache).thenReturn(true);
+      when(mockAuthProvider.isAuthenticated).thenReturn(true);
       when(mockAuthProvider.isAnonymous).thenReturn(false);
     });
 
@@ -704,14 +1457,10 @@ void main() {
 
   group('Edit website', () {
     setUp(() {
-      when(mockAuthProvider.isAuthenticatedFromCache).thenReturn(true);
+      when(mockAuthProvider.isAuthenticated).thenReturn(true);
       when(mockAuthProvider.isAnonymous).thenReturn(false);
-      when(mockAuthProvider.currentUser).thenAnswer((realInvocation) =>
-          Future.value(User(
-              uid: '1',
-              firstName: 'John',
-              lastName: 'Doe',
-              permissionLevel: 3)));
+      when(mockAuthProvider.currentUser).thenAnswer((_) => Future.value(User(
+          uid: '1', firstName: 'John', lastName: 'Doe', permissionLevel: 3)));
     });
 
     for (final size in screenSizes) {
@@ -743,14 +1492,10 @@ void main() {
 
   group('Delete website', () {
     setUp(() {
-      when(mockAuthProvider.isAuthenticatedFromCache).thenReturn(true);
+      when(mockAuthProvider.isAuthenticated).thenReturn(true);
       when(mockAuthProvider.isAnonymous).thenReturn(false);
-      when(mockAuthProvider.currentUser).thenAnswer((realInvocation) =>
-          Future.value(User(
-              uid: '1',
-              firstName: 'John',
-              lastName: 'Doe',
-              permissionLevel: 3)));
+      when(mockAuthProvider.currentUser).thenAnswer((_) => Future.value(User(
+          uid: '1', firstName: 'John', lastName: 'Doe', permissionLevel: 3)));
     });
 
     for (final size in screenSizes) {
@@ -807,21 +1552,18 @@ void main() {
       });
     }
   });
-
   group('Edit Profile', () {
     setUp(() {
-      when(mockAuthProvider.isVerifiedFromCache).thenReturn(false);
-      when(mockAuthProvider.isAuthenticatedFromCache).thenReturn(true);
+      when(mockAuthProvider.isVerified).thenAnswer((_) => Future.value(false));
+      when(mockAuthProvider.isAuthenticated).thenReturn(true);
       when(mockAuthProvider.isAnonymous).thenReturn(false);
-      when(mockAuthProvider.currentUser).thenAnswer((realInvocation) =>
-          Future.value(User(
-              uid: '1',
-              firstName: 'John',
-              lastName: 'Doe',
-              permissionLevel: 3)));
+      when(mockAuthProvider.currentUser).thenAnswer((_) => Future.value(User(
+          uid: '1', firstName: 'John', lastName: 'Doe', permissionLevel: 3)));
       when(mockAuthProvider.currentUserFromCache).thenReturn(User(
           uid: '1', firstName: 'John', lastName: 'Doe', permissionLevel: 3));
       when(mockAuthProvider.email).thenReturn('john.doe@stud.acs.upb.ro');
+      when(mockAuthProvider.getProfilePictureURL(context: anyNamed('context')))
+          .thenAnswer((_) => Future.value(null));
     });
 
     for (final size in screenSizes) {
@@ -909,7 +1651,7 @@ void main() {
 
   group('People page', () {
     setUp(() {
-      when(mockAuthProvider.isAuthenticatedFromCache).thenReturn(true);
+      when(mockAuthProvider.isAuthenticated).thenReturn(true);
       when(mockAuthProvider.isAnonymous).thenReturn(true);
     });
 

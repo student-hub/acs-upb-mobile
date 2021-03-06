@@ -102,7 +102,7 @@ class _PortalPageState extends State<PortalPage> {
               ));
             } else {
               Provider.of<WebsiteProvider>(context, listen: false)
-                  .incrementNumberOfVisits(website);
+                  .incrementNumberOfVisits(website, uid: user?.uid);
               Utils.launchURL(website.link);
             }
           },
@@ -224,8 +224,7 @@ class _PortalPageState extends State<PortalPage> {
           onPressed: () {
             final authProvider =
                 Provider.of<AuthProvider>(context, listen: false);
-            if (authProvider.isAuthenticatedFromCache &&
-                !authProvider.isAnonymous) {
+            if (authProvider.isAuthenticated && !authProvider.isAnonymous) {
               // Show message if there is nothing the user can edit
               if (!editingEnabled) {
                 user.hasEditableWebsites.then((canEdit) {
@@ -258,8 +257,7 @@ class _PortalPageState extends State<PortalPage> {
               );
             },
             S.of(context).filterMenuShowMine: () {
-              if (authProvider.isAuthenticatedFromCache &&
-                  !authProvider.isAnonymous) {
+              if (authProvider.isAuthenticated && !authProvider.isAnonymous) {
                 // Show message if user has no private websites
                 if (!userOnly) {
                   user.hasPrivateWebsites.then((hasPrivate) {
@@ -297,6 +295,7 @@ class _PortalPageState extends State<PortalPage> {
                 filterProvider.filterEnabled ? filterCache : null,
                 userOnly: userOnly,
                 uid: authProvider.uid,
+                context: context,
               ),
               builder: (context, AsyncSnapshot<List<Website>> websiteSnap) {
                 if (websiteSnap.hasData) {
@@ -342,23 +341,27 @@ class _AddWebsiteButton extends StatelessWidget {
           onTap: () {
             final authProvider =
                 Provider.of<AuthProvider>(context, listen: false);
-            if (authProvider.isAuthenticatedFromCache &&
-                !authProvider.isAnonymous) {
+            if (authProvider.isAuthenticated && !authProvider.isAnonymous) {
               Navigator.of(context)
                   .push(MaterialPageRoute<ChangeNotifierProvider>(
-                builder: (_) => ChangeNotifierProvider<FilterProvider>(
-                    create: (_) =>
-                        Platform.environment.containsKey('FLUTTER_TEST')
-                            ? Provider.of<FilterProvider>(context)
-                            : FilterProvider(),
-                    child: WebsiteView(
-                      website: Website(
-                          relevance: null,
-                          id: null,
-                          isPrivate: true,
-                          link: '',
-                          category: category),
-                    )),
+                builder: (_) =>
+                    ChangeNotifierProxyProvider<AuthProvider, FilterProvider>(
+                  create: (_) =>
+                      Platform.environment.containsKey('FLUTTER_TEST')
+                          ? Provider.of<FilterProvider>(context)
+                          : FilterProvider(),
+                  update: (context, authProvider, filterProvider) {
+                    return filterProvider..updateAuth(authProvider);
+                  },
+                  child: WebsiteView(
+                    website: Website(
+                        relevance: null,
+                        id: null,
+                        isPrivate: true,
+                        link: '',
+                        category: category),
+                  ),
+                ),
               ));
             } else {
               AppToast.show(S.of(context).warningAuthenticationNeeded);

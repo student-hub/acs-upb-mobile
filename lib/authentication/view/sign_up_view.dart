@@ -43,13 +43,18 @@ class _SignUpViewState extends State<SignUpView> {
         email.text.replaceAll(RegExp('[^a-zA-Z._]'), '');
     final names = emailWithoutNumbers.split('.');
 
-    if (!names[0].contains('_')) {
-      firstName.text = names[0].titleCase;
-    } else {
-      final firstNames = names[0].split('_');
-      firstName.text = firstNames.map((s) => s.titleCase).join(' ');
+    if (names.isNotEmpty) {
+      if (!names[0].contains('_')) {
+        firstName.text = names[0].titleCase;
+      } else {
+        final firstNames = names[0].split('_');
+        firstName.text = firstNames.map((s) => s.titleCase).join(' ');
+      }
+
+      if (names.length > 1) {
+        lastName.text = names[1].titleCase;
+      }
     }
-    lastName.text = names[1].titleCase;
   }
 
   List<FormCardField> _buildFormItems() {
@@ -58,7 +63,7 @@ class _SignUpViewState extends State<SignUpView> {
       return formItems;
     }
     final emailDomain = S.of(context).stringEmailDomain;
-    final authProvider = Provider.of<AuthProvider>(context);
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
 
     return formItems = <FormCardField>[
       FormCardField(
@@ -150,7 +155,7 @@ class _SignUpViewState extends State<SignUpView> {
   }
 
   FormCard _buildForm(BuildContext context) {
-    final authProvider = Provider.of<AuthProvider>(context);
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
 
     return FormCard(
       title: S.of(context).actionSignUp,

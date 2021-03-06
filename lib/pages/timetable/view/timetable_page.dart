@@ -6,7 +6,6 @@ import 'package:acs_upb_mobile/pages/classes/view/classes_page.dart';
 import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
 import 'package:acs_upb_mobile/pages/filter/view/filter_page.dart';
 import 'package:acs_upb_mobile/pages/settings/service/request_provider.dart';
-import 'package:acs_upb_mobile/pages/settings/view/request_permissions.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/events/uni_event.dart';
 import 'package:acs_upb_mobile/pages/timetable/service/uni_event_provider.dart';
 import 'package:acs_upb_mobile/pages/timetable/view/date_header.dart';
@@ -104,8 +103,12 @@ class _TimetablePageState extends State<TimetablePage> {
                     .currentUserFromCache;
                 if (user.canAddPublicInfo) {
                   Navigator.of(context).push(MaterialPageRoute<AddEventView>(
-                    builder: (_) => ChangeNotifierProvider<FilterProvider>(
+                    builder: (_) => ChangeNotifierProxyProvider<AuthProvider,
+                        FilterProvider>(
                       create: (_) => FilterProvider(),
+                      update: (context, authProvider, filterProvider) {
+                        return filterProvider..updateAuth(authProvider);
+                      },
                       child: AddEventView(
                         initialEvent: UniEvent(
                             start: dateTime,
@@ -160,7 +163,6 @@ class _TimetablePageState extends State<TimetablePage> {
     final classProvider = Provider.of<ClassProvider>(context);
     final authProvider = Provider.of<AuthProvider>(context);
     final filterProvider = Provider.of<FilterProvider>(context);
-    final requestProvider = Provider.of<RequestProvider>(context);
     final user = authProvider.currentUserFromCache;
 
     if (classProvider.userClassHeadersCache?.isEmpty ?? true) {
@@ -219,7 +221,7 @@ class _TimetablePageState extends State<TimetablePage> {
           )
         ],
       );
-    } else if (filterProvider.cachedFilter.relevantNodes.length < 6) {
+    } else if ((filterProvider.cachedFilter?.relevantNodes?.length ?? 0) < 6) {
       return AppDialog(
         title: S.of(context).warningNoEvents,
         content: [
@@ -254,8 +256,8 @@ class _TimetablePageState extends State<TimetablePage> {
           )
         ],
       );
-    } else if (user.permissionLevel < 3 &&
-        requestProvider.userAlreadyRequestedCache) {
+    } else if (user.permissionLevel < 3) {
+      // TODO(IoanaAlexandru): Check if user already requested and show a different message
       return AppDialog(
         title: S.of(context).warningNoEvents,
         content: [Text(S.of(context).messageYouCanContribute)],
@@ -264,18 +266,19 @@ class _TimetablePageState extends State<TimetablePage> {
             text: S.of(context).actionRequestPermissions,
             width: 130,
             onTap: () async {
+              // Check if user is verified
+              final bool isVerified = await authProvider.isVerified;
               // Pop the dialog
               Navigator.of(context).pop();
               // Push the Permissions page
               if (authProvider.isAnonymous) {
                 AppToast.show(S.of(context).messageNotLoggedIn);
-              } else if (!authProvider.isVerifiedFromCache) {
+              } else if (!isVerified) {
                 AppToast.show(
                     S.of(context).messageEmailNotVerifiedToPerformAction);
               } else {
-                await Navigator.of(context).push(
-                    MaterialPageRoute<RequestPermissions>(
-                        builder: (_) => RequestPermissions()));
+                await Navigator.of(context)
+                    .pushNamed(Routes.requestPermissions);
               }
             },
           )
@@ -286,6 +289,7 @@ class _TimetablePageState extends State<TimetablePage> {
         title: S.of(context).warningNoEvents,
         content: [
           RichText(
+            key: const ValueKey('no_events_message'),
             text: TextSpan(
               style: Theme.of(context).textTheme.subtitle1,
               children: [

@@ -1,16 +1,23 @@
+import 'dart:typed_data';
+import 'dart:ui';
+
 import 'package:acs_upb_mobile/authentication/model/user.dart';
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/filter/view/filter_dropdown.dart';
+import 'package:acs_upb_mobile/resources/storage/storage_provider.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/resources/validator.dart';
 import 'package:acs_upb_mobile/widgets/button.dart';
+import 'package:acs_upb_mobile/widgets/circle_image.dart';
 import 'package:acs_upb_mobile/widgets/dialog.dart';
 import 'package:acs_upb_mobile/widgets/icon_text.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:image/image.dart' as im;
 import 'package:preferences/preference_title.dart';
 import 'package:provider/provider.dart';
 
@@ -28,6 +35,22 @@ class _EditProfilePageState extends State<EditProfilePage> {
   final dropdownController = FilterDropdownController();
 
   final formKey = GlobalKey<FormState>();
+
+  Uint8List uploadedImage;
+  ImageProvider imageWidget;
+
+  // Whether the user verified their email; this can be true, false or null if
+  // the async check hasn't completed yet.
+  bool isVerified;
+
+  @override
+  void initState() {
+    super.initState();
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    authProvider.isVerified.then((value) => setState(() => isVerified = value));
+    authProvider.getProfilePictureURL(context: context).then((value) =>
+        setState(() => {if (value != null) imageWidget = NetworkImage(value)}));
+  }
 
   AppDialog _changePasswordDialog(BuildContext context) {
     final newPasswordController = TextEditingController();
@@ -203,14 +226,53 @@ class _EditProfilePageState extends State<EditProfilePage> {
     );
   }
 
+  Widget buildEditableAvatar(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8),
+      child: GestureDetector(
+        child: CircleImage(
+            circleSize: 150,
+            image: imageWidget ??
+                const AssetImage('assets/illustrations/undraw_profile_pic.png'),
+            enableOverlay: true,
+            overlayIcon: const Icon(Icons.edit)),
+        onTap: () async {
+          final Uint8List uploadedImage =
+              await StorageProvider.showImagePicker();
+          setState(() {
+            if (uploadedImage != null) {
+              this.uploadedImage = uploadedImage;
+              imageWidget = MemoryImage(uploadedImage);
+            } else {
+              AppToast.show(S.of(context).errorImage);
+            }
+          });
+        },
+      ),
+    );
+  }
+
+  Future<Uint8List> convertToPNG(Uint8List image) async {
+    final decodedImage = im.decodeImage(image);
+    return im.encodePng(im.copyResize(decodedImage, width: 500, height: 500),
+        level: 9);
+  }
+
   @override
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
     final emailDomain = S.of(context).stringEmailDomain;
     final User user = authProvider.currentUserFromCache;
+
+    if (user == null) {
+      // TODO(AdrianMargineanu): Show error page if user is not authenticated
+      return Container();
+    }
+
     lastNameController.text = user.lastName;
     firstNameController.text = user.firstName;
-    if (!authProvider.isVerifiedFromCache) {
+    Uint8List imageAsPNG;
+    if (isVerified == false) {
       emailController.text = authProvider.email.split('@')[0];
     }
     final path = user.classes;
@@ -232,12 +294,20 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
               if (formKey.currentState.validate()) {
                 bool result = true;
-                if (!authProvider.isVerifiedFromCache &&
+                if (isVerified == false &&
                     emailController.text + emailDomain != authProvider.email) {
                   await showDialog(
                           context: context,
-                          child: _changeEmailConfirmationDialog(context))
+                          builder: _changeEmailConfirmationDialog)
                       .then((value) => result = value ?? false);
+                }
+                if (uploadedImage != null) {
+                  imageAsPNG = await convertToPNG(uploadedImage);
+                  result = await authProvider.uploadProfilePicture(
+                      imageAsPNG, context);
+                  if (result) {
+                    AppToast.show(S.of(context).messagePictureUpdatedSuccess);
+                  }
                 }
                 if (result) {
                   if (await authProvider.updateProfile(
@@ -253,10 +323,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
         AppScaffoldAction(
           icon: Icons.more_vert,
           items: {
-            S.of(context).actionChangePassword: () => showDialog(
-                context: context, child: _changePasswordDialog(context)),
+            S.of(context).actionChangePassword: () =>
+                showDialog(context: context, builder: _changePasswordDialog),
             S.of(context).actionDeleteAccount: () => showDialog(
-                context: context, child: _deletionConfirmationDialog(context))
+                context: context, builder: _deletionConfirmationDialog)
           },
         )
       ],
@@ -265,6 +335,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
         child: Container(
           child: ListView(children: [
             AccountNotVerifiedWarning(),
+            buildEditableAvatar(context),
             PreferenceTitle(
               S.of(context).labelPersonalInformation,
               leftPadding: 0,
@@ -301,7 +372,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       return null;
                     },
                   ),
-                  if (!authProvider.isVerifiedFromCache)
+                  if (isVerified == false)
                     TextFormField(
                       decoration: InputDecoration(
                         prefixIcon: const Icon(Icons.alternate_email),
@@ -345,12 +416,12 @@ class AccountNotVerifiedWarning extends StatelessWidget {
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
 
-    if (!authProvider.isAuthenticatedFromCache || authProvider.isAnonymous) {
+    if (!authProvider.isAuthenticated || authProvider.isAnonymous) {
       return Container();
     }
 
     return FutureBuilder(
-      future: authProvider.isVerifiedFromService,
+      future: authProvider.isVerified,
       builder: (context, snap) {
         if (!snap.hasData || snap.data) {
           return Container();

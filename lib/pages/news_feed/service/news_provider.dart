@@ -37,9 +37,12 @@ class NewsProvider with ChangeNotifier {
         return _extractFromWebScraper(webScraper, limit);
       }
     } catch (e) {
-      print(e);
-      if (context != null) {
-        AppToast.show(S.of(context).errorSomethingWentWrong);
+      // Ignore "no internet" error
+      if (!e.message.contains('Failed host lookup')) {
+        print(e);
+        if (context != null) {
+          AppToast.show(S.of(context).errorSomethingWentWrong);
+        }
       }
     }
 
