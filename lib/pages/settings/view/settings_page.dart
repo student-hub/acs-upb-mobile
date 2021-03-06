@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
-
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/navigation/routes.dart';
 import 'package:acs_upb_mobile/pages/settings/view/source_page.dart';
