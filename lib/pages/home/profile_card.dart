@@ -1,9 +1,7 @@
 import 'package:acs_upb_mobile/authentication/model/user.dart';
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/authentication/view/edit_profile_page.dart';
-import 'package:acs_upb_mobile/pages/settings/view/source_page.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
-import 'package:acs_upb_mobile/navigation/bottom_navigation_bar.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -22,17 +20,6 @@ class _ProfileCardState extends State<ProfileCard> {
     super.initState();
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
     user = authProvider.currentUserFromCache;
-    if (user != null) {
-      if (user.sources == null && !AppBottomNavigationBar.didOpenSourcePage) {
-        AppBottomNavigationBar.didOpenSourcePage = true;
-        debugPrint(AppBottomNavigationBar.didOpenSourcePage.toString());
-        Navigator.of(context)
-            .push(MaterialPageRoute<SourcePage>(builder: (context) =>
-            SourcePage()
-        ));
-
-      }
-    }
     authProvider
         .getProfilePictureURL(context: context)
         .then((value) => setState(() {
@@ -47,24 +34,12 @@ class _ProfileCardState extends State<ProfileCard> {
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
     String userName;
-    //final User user = authProvider.currentUserFromCache;
     String userGroup;
     if (user != null) {
       userName = '${user.firstName} ${user.lastName}';
       userGroup = user.classes?.isNotEmpty ?? false ? user.classes.last : null;
     }
 
-    // if (user != null) {
-    //   if (user.sources == null && !AppBottomNavigationBar.didOpenSourcePage) {
-    //     AppBottomNavigationBar.didOpenSourcePage = true;
-    //     debugPrint(AppBottomNavigationBar.didOpenSourcePage.toString());
-    //       Navigator.of(context)
-    //           .push(MaterialPageRoute<SourcePage>(builder: (context) =>
-    //         SourcePage()
-    //       ));
-    //
-    //   }
-    // }
     return Padding(
       padding: const EdgeInsets.all(8),
       child: Card(
