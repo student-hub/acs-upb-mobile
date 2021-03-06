@@ -2,7 +2,7 @@ import 'dart:ui';
 
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
-import 'package:acs_upb_mobile/widgets/toast.dart';
+import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -22,7 +22,7 @@ class _SourcePageState extends State<SourcePage> {
   void initState() {
     super.initState();
 
-    authProvider = Provider.of<AuthProvider>(context,listen: false);
+    authProvider = Provider.of<AuthProvider>(context, listen: false);
     final user = authProvider.currentUserFromCache;
     wantsOrganizationInfo = user.canReadOrganizationInfo ?? false;
     wantsStudentsInfo = user.canReadStudentInfo ?? false;
@@ -30,11 +30,10 @@ class _SourcePageState extends State<SourcePage> {
 
   @override
   Widget build(BuildContext context) {
-
     return AppScaffold(
       actions: [
         AppScaffoldAction(
-            text: 'Salvare',
+            text: S.of(context).buttonSave,
             onPressed: () async {
               final List<String> sources = ['official'];
               if (wantsOrganizationInfo) sources.add('organizations');
@@ -43,33 +42,29 @@ class _SourcePageState extends State<SourcePage> {
               Navigator.of(context).pop();
             })
       ],
-      title: const Text(
-        'Surse de informații',
-        style: TextStyle(fontSize: 19.5),
+      title: Text(
+        S.of(context).actionSource,
+        style: const TextStyle(fontSize: 19.5),
       ),
       body: Column(
         children: [
-          const Padding(
-            padding: EdgeInsets.all(10),
-            child: Text(
-                'Aplicația ACS UPB Mobile își propune să fie un hub de informații '
-                'despre facultate, așadar culege date din diverse surse (oficiale '
-                'sau neoficiale).'),
+          Padding(
+            padding: const EdgeInsets.all(10),
+            child: Text(S.of(context).messageSelectSource),
           ),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 10),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
             child: Text(
-              'Selectează sursele de informații pe care dorești să le folosești:',
-              style: TextStyle(fontWeight: FontWeight.bold),
+              S.of(context).hintSelectSources,
+              style: const TextStyle(fontWeight: FontWeight.bold),
             ),
           ),
           const SizedBox(height: 10),
-         const CheckboxListTile(
+          CheckboxListTile(
             value: true,
             onChanged: null,
-            title: Text('Site-uri oficiale'),
-            subtitle:
-                Text('acs.pub.ro, upb.ro, curs.upb.ro, studenti.pub.ro'),
+            title: Text(S.of(context).sourceOfficial),
+            subtitle: Text(S.of(context).sourceOfficialWebPages),
             controlAffinity: ListTileControlAffinity.leading,
           ),
           CheckboxListTile(
@@ -79,8 +74,8 @@ class _SourcePageState extends State<SourcePage> {
                 wantsOrganizationInfo = value;
               });
             },
-            title: const Text('Organizații studențești*'),
-            subtitle: const Text('LSAC, BEST, MLSA'),
+            title: Text(S.of(context).sourcesOrganization),
+            subtitle: Text(S.of(context).sourcesStudentOrganizations),
             controlAffinity: ListTileControlAffinity.leading,
           ),
           CheckboxListTile(
@@ -90,16 +85,14 @@ class _SourcePageState extends State<SourcePage> {
                 wantsStudentsInfo = value;
               });
             },
-            title: const Text('Studenți reprezentanți*'),
-            subtitle:
-                const Text('șefi de grupă, serie și studenții consilieri'),
+            title: Text(S.of(context).sourcesStudentRepresentative),
+            subtitle: Text(S.of(context).sourcesStudentExamples),
             controlAffinity: ListTileControlAffinity.leading,
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10),
             child: Text(
-              '* Facultatea de Automatică și Calculatoare nu își asumă răspunderea '
-              'pentru informațiile provenite din surse neoficiale.',
+              S.of(context).infoAdditionInformationSources,
               style: TextStyle(color: Theme.of(context).hintColor),
             ),
           ),

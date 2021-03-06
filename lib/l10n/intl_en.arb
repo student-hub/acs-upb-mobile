@@ -65,6 +65,7 @@
   "hintWebsiteLink": "http://google.com",
   "hintEvaluation": "Final exam",
   "hintPoints": "4.0",
+  "hintSelectSources": "Please select the information sources that you want",
 
   "actionSignUp": "Sign up",
   "actionLogIn": "Log in",
@@ -97,6 +98,7 @@
   "actionOpenFilter": "Open filter",
   "actionRequestPermissions": "Request permissions",
   "actionRefresh": "Refresh",
+  "actionSource": "Information sources",
 
   "errorSomethingWentWrong": "Something went wrong.",
   "errorPasswordsDiffer": "The two passwords differ.",
@@ -164,6 +166,13 @@
   "filterMenuShowAll": "Show all",
   "filterMenuShowMine": "Show only mine",
   "filterMenuRelevance": "Filter by relevance",
+
+  "sourceOfficial": "Official web pages",
+  "sourceOfficialWebPages": "acs.pub.ro, upb.ro, curs.upb.ro, studenti.pub.ro",
+  "sourcesOrganization": "Student organization*",
+  "sourcesStudentOrganizations": "LSAC, BEST, MLSA",
+  "sourcesStudentRepresentative": "Representative students*",
+  "sourcesStudentExamples": "group leaders, Series and student counselors",
 
   "filterNodeNameBSc": "Bachelor's",
   "filterNodeNameMSc": "Master's",
@@ -244,6 +253,7 @@
   "messageYouCanContribute": "You can contribute to the app data, but you first need to request permissions.",
   "messageThereAreNoEventsForSelected": "There are no events for the selected ",
   "messagePictureUpdatedSuccess": "Profile picture updated successfully.",
+  "messageSelectSource": "ACS UPB Mobile application is an information hub with information about the faculty, it collects date from different sources (official or unofficial).",
 
   "infoPasswordResetEmailSent": "Please check your inbox for the password reset e-mail.",
   "infoRelevance": "Try to choose the most restrictive category.",
@@ -256,6 +266,7 @@
   "infoPassword": "It must contain lower and uppercase letters, one number and one special character, and have a minimum length of 8.",
   "infoAppIsOpenSource": "ACS UPB Mobile is open source.",
   "infoEmail": "This is the same username you use to log in to {forum}.",
+  "infoAdditionInformationSources": "* The Faculty of Automatic Control and Computers is not responsible for information provided by unofficial sources.",
 
   "stringEmailDomain": "@stud.acs.upb.ro",
   "stringForum": "cs.curs.pub.ro",

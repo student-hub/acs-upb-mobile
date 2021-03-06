@@ -1,7 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-
 import 'intl/messages_all.dart';
 
 // **************************************************************************
@@ -15,23 +14,22 @@ import 'intl/messages_all.dart';
 
 class S {
   S();
-
+  
   static S current;
-
-  static const AppLocalizationDelegate delegate = AppLocalizationDelegate();
+  
+  static const AppLocalizationDelegate delegate =
+    AppLocalizationDelegate();
 
   static Future<S> load(Locale locale) {
-    final name = (locale.countryCode?.isEmpty ?? false)
-        ? locale.languageCode
-        : locale.toString();
-    final localeName = Intl.canonicalizedLocale(name);
+    final name = (locale.countryCode?.isEmpty ?? false) ? locale.languageCode : locale.toString();
+    final localeName = Intl.canonicalizedLocale(name); 
     return initializeMessages(localeName).then((_) {
       Intl.defaultLocale = localeName;
       S.current = S();
-
+      
       return S.current;
     });
-  }
+  } 
 
   static S of(BuildContext context) {
     return Localizations.of<S>(context, S);
@@ -657,6 +655,16 @@ class S {
     );
   }
 
+  /// `Please select the information sources that you want`
+  String get hintSelectSources {
+    return Intl.message(
+      'Please select the information sources that you want',
+      name: 'hintSelectSources',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Sign up`
   String get actionSignUp {
     return Intl.message(
@@ -962,6 +970,16 @@ class S {
     return Intl.message(
       'Refresh',
       name: 'actionRefresh',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Information sources`
+  String get actionSource {
+    return Intl.message(
+      'Information sources',
+      name: 'actionSource',
       desc: '',
       args: [],
     );
@@ -1592,6 +1610,66 @@ class S {
     return Intl.message(
       'Filter by relevance',
       name: 'filterMenuRelevance',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Official web pages`
+  String get sourceOfficial {
+    return Intl.message(
+      'Official web pages',
+      name: 'sourceOfficial',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `acs.pub.ro, upb.ro, curs.upb.ro, studenti.pub.ro`
+  String get sourceOfficialWebPages {
+    return Intl.message(
+      'acs.pub.ro, upb.ro, curs.upb.ro, studenti.pub.ro',
+      name: 'sourceOfficialWebPages',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Student organization*`
+  String get sourcesOrganization {
+    return Intl.message(
+      'Student organization*',
+      name: 'sourcesOrganization',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `LSAC, BEST, MLSA`
+  String get sourcesStudentOrganizations {
+    return Intl.message(
+      'LSAC, BEST, MLSA',
+      name: 'sourcesStudentOrganizations',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Representative students*`
+  String get sourcesStudentRepresentative {
+    return Intl.message(
+      'Representative students*',
+      name: 'sourcesStudentRepresentative',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `group leaders, Series and student counselors`
+  String get sourcesStudentExamples {
+    return Intl.message(
+      'group leaders, Series and student counselors',
+      name: 'sourcesStudentExamples',
       desc: '',
       args: [],
     );
@@ -2337,6 +2415,16 @@ class S {
     );
   }
 
+  /// `ACS UPB Mobile application is an information hub with information about the faculty, it collects date from different sources (official or unofficial).`
+  String get messageSelectSource {
+    return Intl.message(
+      'ACS UPB Mobile application is an information hub with information about the faculty, it collects date from different sources (official or unofficial).',
+      name: 'messageSelectSource',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Please check your inbox for the password reset e-mail.`
   String get infoPasswordResetEmailSent {
     return Intl.message(
@@ -2444,6 +2532,16 @@ class S {
       name: 'infoEmail',
       desc: '',
       args: [forum],
+    );
+  }
+
+  /// `* The Faculty of Automatic Control and Computers is not responsible for information provided by unofficial sources.`
+  String get infoAdditionInformationSources {
+    return Intl.message(
+      '* The Faculty of Automatic Control and Computers is not responsible for information provided by unofficial sources.',
+      name: 'infoAdditionInformationSources',
+      desc: '',
+      args: [],
     );
   }
 

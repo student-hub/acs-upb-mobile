@@ -37,7 +37,7 @@ extension DatabaseQuestion on Question {
     final String answer = data['answer'];
     final List<String> tags = List.from(data['tags']);
 
-    final String source = snap.data['source'];
+    final String source = data['source'];
     return Question(source: source, question: question, answer: answer, tags: tags);
   }
 }

@@ -51,7 +51,7 @@ extension WebsiteExtension on Website {
   static Website fromSnap(DocumentSnapshot snap, {String ownerUid}) {
     final data = snap.data();
     return Website(
-      source: snap.data['source'],
+      source: data['source'],
       ownerUid: ownerUid ?? data['addedBy'],
       id: snap.id,
       isPrivate: ownerUid != null,

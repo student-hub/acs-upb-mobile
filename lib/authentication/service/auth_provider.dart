@@ -20,7 +20,7 @@ extension DatabaseUser on User {
         lastName: data['name']['last'],
         classes: List.from(data['class'] ?? []),
         permissionLevel: data['permissionLevel'],
-        sources: List.from(snap.data['sources'] ?? []));
+        sources: List.from(data['sources'] ?? []));
   }
 
   Map<String, dynamic> toData() {
