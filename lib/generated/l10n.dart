@@ -165,6 +165,16 @@ class S {
     );
   }
 
+  /// `Version`
+  String get labelVersion {
+    return Intl.message(
+      'Version',
+      name: 'labelVersion',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `First name`
   String get labelFirstName {
     return Intl.message(
@@ -310,6 +320,16 @@ class S {
     return Intl.message(
       'Class',
       name: 'labelClass',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Lecturer`
+  String get labelLecturer {
+    return Intl.message(
+      'Lecturer',
+      name: 'labelLecturer',
       desc: '',
       args: [],
     );

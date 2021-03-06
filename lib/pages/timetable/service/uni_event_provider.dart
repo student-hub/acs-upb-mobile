@@ -3,11 +3,14 @@ import 'dart:async';
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/classes/model/class.dart';
+import 'package:acs_upb_mobile/pages/people/model/person.dart';
 import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
 import 'package:acs_upb_mobile/pages/filter/model/filter.dart';
 import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
+import 'package:acs_upb_mobile/pages/people/service/person_provider.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/academic_calendar.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/events/all_day_event.dart';
+import 'package:acs_upb_mobile/pages/timetable/model/events/class_event.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/events/recurring_event.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/events/uni_event.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
@@ -60,11 +63,13 @@ extension LocalDateTimeExtension on LocalDateTime {
 extension UniEventExtension on UniEvent {
   static UniEvent fromJSON(String id, Map<String, dynamic> json,
       {ClassHeader classHeader,
+      Person teacher,
       Map<String, AcademicCalendar> calendars = const {}}) {
     if (json['start'] == null ||
         (json['duration'] == null && json['end'] == null)) return null;
 
     final type = UniEventTypeExtension.fromString(json['type']);
+
     if (json['end'] != null) {
       return AllDayUniEvent(
         id: id,
@@ -84,7 +89,7 @@ extension UniEventExtension on UniEvent {
             : List<String>.from(json['relevance']),
         addedBy: json['addedBy'],
       );
-    } else if (json['rrule'] != null) {
+    } else if (json['rrule'] != null && json['teacher'] == null) {
       return RecurringUniEvent(
         rrule: RecurrenceRule.fromString(json['rrule']),
         id: id,
@@ -95,6 +100,25 @@ extension UniEventExtension on UniEvent {
         duration: PeriodExtension.fromJSON(json['duration']),
         location: json['location'],
         // TODO(IoanaAlexandru): Allow users to set event colours in settings
+        color: type.color,
+        classHeader: classHeader,
+        calendar: calendars[json['calendar']],
+        degree: json['degree'],
+        relevance: json['relevance'] == null
+            ? null
+            : List<String>.from(json['relevance']),
+        addedBy: json['addedBy'],
+      );
+    } else if (json['rrule'] != null && json['teacher'] != null) {
+      return ClassEvent(
+        teacher: teacher,
+        rrule: RecurrenceRule.fromString(json['rrule']),
+        id: id,
+        type: type,
+        name: json['name'],
+        start: (json['start'] as Timestamp).toLocalDateTime(),
+        duration: PeriodExtension.fromJSON(json['duration']),
+        location: json['location'],
         color: type.color,
         classHeader: classHeader,
         calendar: calendars[json['calendar']],
@@ -150,6 +174,10 @@ extension UniEventExtension on UniEvent {
       json['end'] = (this as AllDayUniEvent).endDate.atMidnight().toTimestamp();
     }
 
+    if (this is ClassEvent) {
+      json['teacher'] = (this as ClassEvent).teacher?.name;
+    }
+
     return json;
   }
 }
@@ -176,8 +204,9 @@ extension AcademicCalendarExtension on AcademicCalendar {
 
 class UniEventProvider extends EventProvider<UniEventInstance>
     with ChangeNotifier {
-  UniEventProvider({AuthProvider authProvider})
-      : _authProvider = authProvider ?? AuthProvider() {
+  UniEventProvider({AuthProvider authProvider, PersonProvider personProvider})
+      : _authProvider = authProvider ?? AuthProvider(),
+        _personProvider = personProvider ?? PersonProvider() {
     fetchCalendars();
   }
 
@@ -185,6 +214,7 @@ class UniEventProvider extends EventProvider<UniEventInstance>
   ClassProvider _classProvider;
   FilterProvider _filterProvider;
   final AuthProvider _authProvider;
+  final PersonProvider _personProvider;
   List<String> _classIds = [];
   Filter _filter;
   bool empty;
@@ -234,14 +264,20 @@ class UniEventProvider extends EventProvider<UniEventInstance>
           try {
             for (final doc in snapshot.docs) {
               ClassHeader classHeader;
+              Person teacher;
               final data = doc.data();
               if (data['class'] != null) {
                 classHeader =
                     await _classProvider.fetchClassHeader(data['class']);
               }
+              if (data['teacher'] != null) {
+                teacher = await _personProvider.fetchPerson(data['teacher']);
+              }
 
               events.add(UniEventExtension.fromJSON(doc.id, data,
-                  classHeader: classHeader, calendars: _calendars));
+                  classHeader: classHeader,
+                  teacher: teacher,
+                  calendars: _calendars));
             }
             return events.where((element) => element != null).toList();
           } catch (e) {
@@ -322,7 +358,7 @@ class UniEventProvider extends EventProvider<UniEventInstance>
     try {
       final ref = FirebaseFirestore.instance.collection('events').doc(event.id);
 
-      if ((await ref.get()).data() == null) {
+      if ((await ref.get()).data == null) {
         print('Event not found.');
         return false;
       }
