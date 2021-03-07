@@ -67,7 +67,7 @@ class Website {
   final List<String> relevance;
   int numberOfVisits = 0;
 
-  final String source;
+  String source;
 
   static String labelFromLink(String link) => link.split('://').last;
 }
