@@ -52,7 +52,7 @@ class RequestProvider {
     try {
       final DocumentSnapshot snap =
           await _db.collection('forms').doc(userId).get();
-      if (snap != null) {
+      if (snap.data() != null) {
         return userAlreadyRequestedCache = true;
       }
       return userAlreadyRequestedCache = false;

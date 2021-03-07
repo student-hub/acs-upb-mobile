@@ -137,6 +137,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "labelFirstName" : MessageLookupByLibrary.simpleMessage("First name"),
     "labelLastName" : MessageLookupByLibrary.simpleMessage("Last name"),
     "labelLastUpdated" : MessageLookupByLibrary.simpleMessage("Last updated"),
+    "labelLecturer" : MessageLookupByLibrary.simpleMessage("Lecturer"),
     "labelLink" : MessageLookupByLibrary.simpleMessage("Link"),
     "labelLocation" : MessageLookupByLibrary.simpleMessage("Location"),
     "labelName" : MessageLookupByLibrary.simpleMessage("Name"),
