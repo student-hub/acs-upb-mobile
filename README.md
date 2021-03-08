@@ -31,6 +31,7 @@ If you would like to contribute and don't know where to start, or you have any q
 * [Crăciun Octavian ](https://github.com/craciunoctavian)
 * [Răzvan Rădoi ](https://github.com/razvanra2)
 * [George Diaconu](https://github.com/GeorgeMD)
+* [Maria Stoichițescu](https://github.com/stoichitescumaria)
 
 ## Building from source with Android Studio
 
