@@ -22,7 +22,7 @@ extension RequestExtension on Request {
 }
 
 class RequestProvider {
-  final Firestore _db = Firestore.instance;
+  final FirebaseFirestore _db = FirebaseFirestore.instance;
   bool userAlreadyRequestedCache;
 
   Future<bool> makeRequest(Request request, {BuildContext context}) async {
@@ -51,8 +51,8 @@ class RequestProvider {
 
     try {
       final DocumentSnapshot snap =
-          await _db.collection('forms').document(userId).get();
-      if (snap != null) {
+          await _db.collection('forms').doc(userId).get();
+      if (snap.data() != null) {
         return userAlreadyRequestedCache = true;
       }
       return userAlreadyRequestedCache = false;

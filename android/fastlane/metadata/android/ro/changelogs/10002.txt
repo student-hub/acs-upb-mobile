@@ -1,0 +1,8 @@
+Rezolvat
+  - Semestrul afișat greșit la editarea/adăugarea unui eveniment
+  - Paritatea unui eveniment greșită uneori la editare
+  - Bug la trimiterea unei noi cereri de permisiuni, unde părea că există deja o cerere
+
+Adăugat
+  - Afișarea versiunii aplicației în pagina de setări
+  - Asocierea unui profesor la evenimente de tip "curs"

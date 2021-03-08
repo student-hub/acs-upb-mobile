@@ -8,11 +8,13 @@ import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
 import 'package:acs_upb_mobile/pages/filter/view/relevance_picker.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/academic_calendar.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/events/all_day_event.dart';
+import 'package:acs_upb_mobile/pages/timetable/model/events/class_event.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/events/recurring_event.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/events/uni_event.dart';
 import 'package:acs_upb_mobile/pages/timetable/service/uni_event_provider.dart';
 import 'package:acs_upb_mobile/resources/custom_icons.dart';
 import 'package:acs_upb_mobile/resources/locale_provider.dart';
+import 'package:acs_upb_mobile/widgets/autocomplete.dart';
 import 'package:acs_upb_mobile/widgets/button.dart';
 import 'package:acs_upb_mobile/widgets/dialog.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
@@ -26,6 +28,9 @@ import 'package:rrule/rrule.dart';
 import 'package:time_machine/time_machine.dart' as time_machine show DayOfWeek;
 import 'package:time_machine/time_machine.dart' hide DayOfWeek;
 import 'package:time_machine/time_machine_text_patterns.dart';
+import 'package:acs_upb_mobile/pages/people/model/person.dart';
+import 'package:acs_upb_mobile/pages/people/service/person_provider.dart';
+import 'package:recase/recase.dart';
 
 class AddEventView extends StatefulWidget {
   /// If the `id` of [initialEvent] is not null, this acts like an "Edit event"
@@ -47,6 +52,7 @@ class _AddEventViewState extends State<AddEventView> {
 
   UniEventType selectedEventType;
   ClassHeader selectedClass;
+  Person selectedTeacher;
   String selectedCalendar;
   LocalTime startTime;
   Period duration;
@@ -64,13 +70,13 @@ class _AddEventViewState extends State<AddEventView> {
     _DayOfWeek.sunday: false,
   };
 
-  // TODO(IoanaAlexandru): Make default semester the one closest to now
   int selectedSemester = 1;
 
   AllDayUniEvent get semester =>
       calendars[selectedCalendar]?.semesters?.elementAt(selectedSemester - 1);
 
   List<ClassHeader> classHeaders = [];
+  List<Person> classTeachers = [];
   User user;
   Map<String, AcademicCalendar> calendars = {};
 
@@ -83,15 +89,48 @@ class _AddEventViewState extends State<AddEventView> {
     Provider.of<ClassProvider>(context, listen: false)
         .fetchClassHeaders(uid: user.uid)
         .then((headers) => setState(() => classHeaders = headers));
+    Provider.of<PersonProvider>(context, listen: false)
+        .fetchPeople(context: context)
+        .then((teachers) => setState(() => classTeachers = teachers));
     Provider.of<UniEventProvider>(context, listen: false)
         .fetchCalendars()
         .then((calendars) {
       setState(() {
         this.calendars = calendars;
-        // TODO(IoanaAlexandru): Make the default calendar the one closest
-        // to now and extract calendar/semester from [widget.initialEvent]
         selectedCalendar = calendars.keys.first;
       });
+
+      if (widget.initialEvent?.id != null) {
+        selectedCalendar = widget.initialEvent.calendar.id;
+        final AllDayUniEvent secondSemester =
+            widget.initialEvent.calendar.semesters.last;
+        selectedSemester =
+            DateInterval(secondSemester.startDate, secondSemester.endDate)
+                    .contains(widget.initialEvent.start.calendarDate)
+                ? 2
+                : 1;
+      } else {
+        bool foundSemester = false;
+        for (final calendar in calendars.entries) {
+          for (final semester in calendar.value.semesters) {
+            final LocalDate date =
+                widget.initialEvent.start.calendarDate ?? LocalDate.today();
+            if (date.isBeforeOrDuring(semester)) {
+              // semester.id is represented as "semesterN", where "semester0" is the first semester
+              selectedSemester =
+                  1 + int.tryParse(semester.id[semester.id.length - 1]);
+              selectedCalendar = calendar.key;
+              foundSemester = true;
+              break;
+            }
+          }
+          if (foundSemester) break;
+        }
+        if (!foundSemester) {
+          selectedCalendar = calendars.entries.last.value.id;
+          selectedSemester = 2;
+        }
+      }
 
       if (widget.initialEvent != null &&
           widget.initialEvent is RecurringUniEvent) {
@@ -119,6 +158,9 @@ class _AddEventViewState extends State<AddEventView> {
 
     selectedEventType = widget.initialEvent?.type;
     selectedClass = widget.initialEvent?.classHeader;
+    selectedTeacher = widget.initialEvent is ClassEvent
+        ? (widget.initialEvent as ClassEvent).teacher
+        : null;
     locationController =
         TextEditingController(text: widget.initialEvent?.location ?? '');
 
@@ -145,6 +187,58 @@ class _AddEventViewState extends State<AddEventView> {
     for (final initialWeekDay in initialWeekDays) {
       weekDaySelected[initialWeekDay] = true;
     }
+  }
+
+  Widget autocompleteLecturer(BuildContext context) {
+    return Autocomplete<Person>(
+      key: const Key('Autocomplete'),
+      fieldViewBuilder: (BuildContext context,
+          TextEditingController textEditingController,
+          FocusNode focusNode,
+          VoidCallback onFieldSubmitted) {
+        textEditingController.text = selectedTeacher?.name;
+        return TextFormField(
+          controller: textEditingController,
+          decoration: InputDecoration(
+            labelText: S.of(context).labelLecturer,
+            prefixIcon: const Icon(Icons.person),
+          ),
+          focusNode: focusNode,
+          onFieldSubmitted: (String value) {
+            onFieldSubmitted();
+          },
+        );
+      },
+      displayStringForOption: (Person person) => person.name,
+      optionsBuilder: (TextEditingValue textEditingValue) {
+        if (textEditingValue.text == '' || textEditingValue.text.isEmpty) {
+          return const Iterable<Person>.empty();
+        }
+        if (classTeachers.where((Person person) {
+          return person.name
+              .toLowerCase()
+              .contains(textEditingValue.text.toLowerCase());
+        }).isEmpty) {
+          final List<Person> inputTeachers = [];
+          final Person inputTeacher =
+              Person(name: textEditingValue.text.titleCase);
+          inputTeachers.add(inputTeacher);
+          return inputTeachers;
+        }
+
+        return classTeachers.where((Person person) {
+          return person.name
+              .toLowerCase()
+              .contains(textEditingValue.text.toLowerCase());
+        });
+      },
+      onSelected: (Person selection) {
+        formKey.currentState.validate();
+        setState(() {
+          selectedTeacher = selection;
+        });
+      },
+    );
   }
 
   @override
@@ -273,6 +367,16 @@ class _AddEventViewState extends State<AddEventView> {
                               return null;
                             },
                           ),
+                        if ([UniEventType.lecture].contains(selectedEventType))
+                          autocompleteLecturer(context),
+                        TextFormField(
+                          controller: locationController,
+                          decoration: InputDecoration(
+                            labelText: S.of(context).labelLocation,
+                            prefixIcon: const Icon(Icons.location_on),
+                          ),
+                          onChanged: (_) => setState(() {}),
+                        ),
                         timeIntervalPicker(),
                         if (weekSelected[WeekType.odd] != null &&
                             weekSelected[WeekType.even] != null)
@@ -308,16 +412,9 @@ class _AddEventViewState extends State<AddEventView> {
                             return null;
                           },
                         ),
-                        TextFormField(
-                          controller: locationController,
-                          decoration: InputDecoration(
-                            labelText: S.of(context).labelLocation,
-                            prefixIcon: const Icon(Icons.location_on),
-                          ),
-                          onChanged: (_) => setState(() {}),
-                        ),
                       ],
                     ),
+                  const SizedBox(width: 16),
                 ],
               ),
             ),
@@ -374,7 +471,8 @@ class _AddEventViewState extends State<AddEventView> {
                       : 1,
               until: semester.endDate.add(const Period(days: 1)).atMidnight());
 
-          final event = RecurringUniEvent(
+          final event = ClassEvent(
+              teacher: selectedTeacher,
               rrule: rrule,
               start: start,
               duration: duration,
@@ -685,4 +783,15 @@ extension LocalTimeConversion on LocalTime {
 
 extension TimeOfDayConversion on TimeOfDay {
   LocalTime toLocalTime() => LocalTime(hour, minute, 0);
+}
+
+extension LocalDateComparisons on LocalDate {
+  bool isDuring(AllDayUniEvent semester) {
+    return DateInterval(semester.startDate, semester.endDate).contains(this);
+  }
+
+  bool isBeforeOrDuring(AllDayUniEvent semester) {
+    if (compareTo(semester.startDate) < 0) return true;
+    return isDuring(semester);
+  }
 }
