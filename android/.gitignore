@@ -5,3 +5,10 @@ gradle-wrapper.jar
 /gradlew.bat
 /local.properties
 GeneratedPluginRegistrant.java
+
+# Ignore Android keys
+# Used tutorial here: https://joshuamdeguzman.com/continuous-delivery-for-flutter-using-fastlane-and-github-actions-pt-2-android/
+key.jks
+key.properties
+service_account_key.json
+android_keys.zip

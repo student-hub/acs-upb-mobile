@@ -1,0 +1,8 @@
+Fixed
+  - Default displayed semester when adding/deleting an event
+  - Event parity sometimes displaying wrong when editing an event
+  - Bug where users could not send a new permissions request, as if they had already sent one
+
+Added
+  - Display app version number on settings page
+  - Ability to associate a lecturer name to a "lecture" event
