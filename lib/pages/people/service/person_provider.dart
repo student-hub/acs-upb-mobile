@@ -7,13 +7,14 @@ import 'package:flutter/material.dart';
 
 extension PersonExtension on Person {
   static Person fromSnap(DocumentSnapshot snap) {
+    final data = snap.data();
     return Person(
-      name: snap.data['name'],
-      email: snap.data['email'],
-      phone: snap.data['phone'],
-      office: snap.data['office'],
-      position: snap.data['position'],
-      photo: snap.data['photo'],
+      name: data['name'],
+      email: data['email'],
+      phone: data['phone'],
+      office: data['office'],
+      position: data['position'],
+      photo: data['photo'],
     );
   }
 }
@@ -22,8 +23,31 @@ class PersonProvider with ChangeNotifier {
   Future<List<Person>> fetchPeople({BuildContext context}) async {
     try {
       final QuerySnapshot qSnapshot =
-          await Firestore.instance.collection('people').getDocuments();
-      return qSnapshot.documents.map(PersonExtension.fromSnap).toList();
+          await FirebaseFirestore.instance.collection('people').get();
+      return qSnapshot.docs.map(PersonExtension.fromSnap).toList();
+    } catch (e) {
+      print(e);
+      if (context != null) {
+        AppToast.show(S.of(context).errorSomethingWentWrong);
+      }
+      return null;
+    }
+  }
+
+  Future<Person> fetchPerson(String personName, {BuildContext context}) async {
+    try {
+      // Get person with name [personName]
+      final QuerySnapshot query = await FirebaseFirestore.instance
+          .collection('people')
+          .where('name', isEqualTo: personName)
+          .limit(1)
+          .get();
+
+      if (query == null || query.docs.isEmpty) {
+        return Person(name: personName);
+      }
+
+      return PersonExtension.fromSnap(query.docs.first);
     } catch (e) {
       print(e);
       if (context != null) {

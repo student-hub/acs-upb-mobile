@@ -14,6 +14,7 @@ import 'package:acs_upb_mobile/pages/news_feed/view/news_feed_page.dart';
 import 'package:acs_upb_mobile/pages/people/service/person_provider.dart';
 import 'package:acs_upb_mobile/pages/portal/service/website_provider.dart';
 import 'package:acs_upb_mobile/pages/settings/service/request_provider.dart';
+import 'package:acs_upb_mobile/pages/settings/view/request_permissions.dart';
 import 'package:acs_upb_mobile/pages/settings/view/settings_page.dart';
 import 'package:acs_upb_mobile/pages/timetable/service/uni_event_provider.dart';
 import 'package:acs_upb_mobile/resources/locale_provider.dart';
@@ -21,6 +22,7 @@ import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/widgets/loading_screen.dart';
 import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -35,15 +37,18 @@ import 'package:time_machine/time_machine.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  await Firebase.initializeApp();
+
   final authProvider = AuthProvider();
   final classProvider = ClassProvider();
+  final personProvider = PersonProvider();
 
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider<AuthProvider>(create: (_) => authProvider),
     ChangeNotifierProvider<WebsiteProvider>(create: (_) => WebsiteProvider()),
     Provider<RequestProvider>(create: (_) => RequestProvider()),
     ChangeNotifierProvider<ClassProvider>(create: (_) => classProvider),
-    ChangeNotifierProvider<PersonProvider>(create: (_) => PersonProvider()),
+    ChangeNotifierProvider<PersonProvider>(create: (_) => personProvider),
     ChangeNotifierProvider<QuestionProvider>(create: (_) => QuestionProvider()),
     ChangeNotifierProvider<NewsProvider>(create: (_) => NewsProvider()),
     ChangeNotifierProxyProvider<AuthProvider, FilterProvider>(
@@ -56,6 +61,7 @@ Future<void> main() async {
         UniEventProvider>(
       create: (_) => UniEventProvider(
         authProvider: authProvider,
+        personProvider: personProvider,
       ),
       update: (context, classProvider, filterProvider, uniEventProvider) {
         return uniEventProvider
@@ -98,6 +104,7 @@ class _MyAppState extends State<MyApp> {
         Routes.faq: (_) => FaqPage(),
         Routes.filter: (_) => const FilterPage(),
         Routes.newsFeed: (_) => NewsFeedPage(),
+        Routes.requestPermissions: (_) => RequestPermissionsPage(),
       },
       navigatorObservers: widget.navigationObservers ?? [],
     );
@@ -173,8 +180,7 @@ class AppLoadingScreen extends StatelessWidget {
 
     // Choose start screen
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
-    final bool authenticated = await authProvider.isAuthenticatedFromService;
-    return authenticated ? Routes.home : Routes.login;
+    return authProvider.isAuthenticated ? Routes.home : Routes.login;
   }
 
   @override
