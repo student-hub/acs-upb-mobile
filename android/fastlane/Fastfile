@@ -39,7 +39,7 @@ platform :android do
     )
     upload_to_play_store(
       aab: '../build/app/outputs/bundle/release/app-release.aab',
-      version_code: flutter_version()["version_code"],
+      version_code: flutter_version()["version_code"] + 10000,
     )
   end
 end
