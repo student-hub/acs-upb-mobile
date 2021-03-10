@@ -239,14 +239,12 @@ class _EditProfilePageState extends State<EditProfilePage> {
         onTap: () async {
           final Uint8List uploadedImage =
               await StorageProvider.showImagePicker();
-          setState(() {
-            if (uploadedImage != null) {
+          if (uploadedImage != null) {
+              setState(() {
               this.uploadedImage = uploadedImage;
               imageWidget = MemoryImage(uploadedImage);
-            } else {
-              AppToast.show(S.of(context).errorImage);
-            }
-          });
+              });
+          }
         },
       ),
     );
