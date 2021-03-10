@@ -240,10 +240,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
           final Uint8List uploadedImage =
               await StorageProvider.showImagePicker();
           if (uploadedImage != null) {
-              setState(() {
+            setState(() {
               this.uploadedImage = uploadedImage;
               imageWidget = MemoryImage(uploadedImage);
-              });
+            });
           }
         },
       ),
