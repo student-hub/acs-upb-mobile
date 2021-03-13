@@ -34,6 +34,8 @@ extension EnumUtils on Object {
 class Utils {
   Utils._();
 
+  static const String corsProxyUrl = 'https://cors-anywhere.herokuapp.com';
+
   static Future<void> launchURL(String url, {BuildContext context}) async {
     if (await canLaunch(url)) {
       await launch(url);
@@ -52,6 +54,6 @@ class Utils {
   }
 
   static String wrapUrlWithCORS(String url) {
-    return 'https://cors-anywhere.herokuapp.com/$url';
+    return '${Utils.corsProxyUrl}/$url';
   }
 }

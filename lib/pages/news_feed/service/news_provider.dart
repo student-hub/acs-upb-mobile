@@ -27,11 +27,11 @@ class NewsProvider with ChangeNotifier {
       // will go through the proxy. This is needed only for the web version,
       // as CORS is a web browser thing.
       // See more: https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS
-      final url = kIsWeb
-          ? Utils.wrapUrlWithCORS('https://acs.pub.ro')
-          : 'https://acs.pub.ro';
+      final url = kIsWeb ? Utils.corsProxyUrl : 'https://acs.pub.ro';
+      final path =
+          kIsWeb ? '/https://acs.pub.ro/topic/noutati' : '/topic/noutati';
       final webScraper = WebScraper(url);
-      final bool scrapeSuccess = await webScraper.loadWebPage('/topic/noutati');
+      final bool scrapeSuccess = await webScraper.loadWebPage(path);
 
       if (scrapeSuccess) {
         return _extractFromWebScraper(webScraper, limit);
