@@ -132,6 +132,12 @@ dependencies:
 
 dev_dependencies:
 
+  # Flutter utilities
+  black_hole_flutter:
+
+  # Code analysis
+  extra_pedantic: 1.2.0
+
   # Simplifies updating the launcher icon
   flutter_launcher_icons: ^0.7.4
 
@@ -151,20 +157,14 @@ dev_dependencies:
   # Mocking utility used for testing
   mockito: ^4.1.1
 
+  # Testing utils
+  network_image_mock: ^1.0.1
+
   # Provider platform interfaces of federated flutter plugins, for testing (like url_launcher)
   plugin_platform_interface: ^1.0.0
 
   # Using Provider for state management
   provider: ^4.0.4
-
-  # Testing utils
-  network_image_mock: ^1.0.1
-
-  # Flutter utilities
-  black_hole_flutter:
-
-  # Code analysis
-  extra_pedantic: 1.2.0
 
 dependency_overrides:
   # Temporary workaround to bypass intl_translation incompatibility
