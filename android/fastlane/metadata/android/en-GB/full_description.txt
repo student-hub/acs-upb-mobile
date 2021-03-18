@@ -1,0 +1,12 @@
+ACS UPB Mobile is an information hub for students at the Faculty of Automatic Control and Computers, University "Politehnica" of Bucharest. It aggregates information from both official sources as well as user-provided*.
+
+Features include:
+- news
+- timetable
+- frequently asked questions about the university/secretariat/student dorms etc.
+- class information
+- contact information for teachers
+- various relevant websites
+and more!
+
+* The Faculty of Automatic Control and Computers is not responsible for information added by users.
