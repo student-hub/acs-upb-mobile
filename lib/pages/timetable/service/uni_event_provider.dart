@@ -272,6 +272,19 @@ class UniEventProvider extends EventProvider<UniEventInstance>
               }
               if (data['teacher'] != null) {
                 teacher = await _personProvider.fetchPerson(data['teacher']);
+                final String teacherId = await getTeacherDocumentId(teacher);
+                if (teacherId == '-') {
+                  await FirebaseFirestore.instance
+                      .collection('classes')
+                      .doc(classHeader.id)
+                      .update(
+                          {'teacher': teacherId, 'teacher_name': teacher.name});
+                } else {
+                  await FirebaseFirestore.instance
+                      .collection('classes')
+                      .doc(classHeader.id)
+                      .update({'teacher': teacherId});
+                }
               }
 
               events.add(UniEventExtension.fromJSON(doc.id, data,
@@ -295,6 +308,22 @@ class UniEventProvider extends EventProvider<UniEventInstance>
 
     // Flatten zipped streams
     return stream.map((events) => events.expand((i) => i).toList());
+  }
+
+  Future<String> getTeacherDocumentId(Person teacher) async {
+    String teacherDocumentId = '-';
+    await FirebaseFirestore.instance
+        .collection('people')
+        .where('name', isEqualTo: teacher.name)
+        .get()
+        .then(
+      (QuerySnapshot snapshot) {
+        for (final DocumentSnapshot doc in snapshot.docs) {
+          teacherDocumentId = doc.reference.id;
+        }
+      },
+    );
+    return teacherDocumentId;
   }
 
   @override

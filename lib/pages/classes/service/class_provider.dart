@@ -84,14 +84,17 @@ extension ClassExtension on Class {
       ));
     }
 
-    final lecturerSnap = await Firestore.instance
+    final lecturerSnap = await FirebaseFirestore.instance
         .collection('people')
-        .document(snap['lecturer'])
+        .doc(snap['teacher'])
         .get();
     Person lecturer;
-    if (lecturerSnap?.data != null) {
+    if (lecturerSnap?.data != null && snap['teacher'] != '-') {
       lecturer = PersonExtension.fromSnap(lecturerSnap);
+    } else {
+      lecturer = Person(name: snap['teacher_name']);
     }
+
     Map<String, double> grading;
     if (data['grading'] != null) {
       grading = Map<String, double>.from(data['grading'].map(
