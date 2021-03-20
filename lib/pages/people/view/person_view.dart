@@ -63,17 +63,24 @@ class PersonView extends StatelessWidget {
                             icon: Icons.email,
                             text: person.email ?? '-',
                             style: Theme.of(context).textTheme.bodyText1,
-                            onTap: () => Utils.launchURL(
-                                'mailto:${person.email}',
-                                context: context),
+                            onTap: isPressable(person.email)
+                                ? () {
+                                    Utils.launchURL('mailto:${person.email}',
+                                        context: context);
+                                  }
+                                : null,
                           ),
                           const SizedBox(height: 16),
                           IconText(
                             icon: Icons.phone,
                             text: person.phone ?? '-',
                             style: Theme.of(context).textTheme.bodyText1,
-                            onTap: () => Utils.launchURL('tel:${person.phone}',
-                                context: context),
+                            onTap: isPressable(person.phone)
+                                ? () {
+                                    Utils.launchURL('tel:${person.phone}',
+                                        context: context);
+                                  }
+                                : null,
                           ),
                           const SizedBox(height: 16),
                           IconText(
@@ -96,5 +103,13 @@ class PersonView extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  bool isPressable(String label) {
+    if (label == '-') {
+      return false;
+    } else {
+      return true;
+    }
   }
 }
