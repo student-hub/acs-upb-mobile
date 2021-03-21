@@ -4,34 +4,20 @@ import 'package:acs_upb_mobile/pages/classes/model/class.dart';
 import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
 import 'package:acs_upb_mobile/pages/classes/view/grading_view.dart';
 import 'package:acs_upb_mobile/pages/classes/view/shortcut_view.dart';
+import 'package:acs_upb_mobile/pages/people/service/person_provider.dart';
+import 'package:acs_upb_mobile/pages/people/view/person_view.dart';
 import 'package:acs_upb_mobile/resources/custom_icons.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/widgets/button.dart';
+import 'package:acs_upb_mobile/widgets/class_icon.dart';
 import 'package:acs_upb_mobile/widgets/dialog.dart';
+import 'package:acs_upb_mobile/widgets/icon_text.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:positioned_tap_detector/positioned_tap_detector.dart';
 import 'package:provider/provider.dart';
-
-extension ClassExtension on ClassHeader {
-  Color get colorFromAcronym {
-    int r = 0, g = 0, b = 0;
-    if (acronym.isNotEmpty) {
-      b = acronym[0].codeUnitAt(0);
-      if (acronym.length >= 2) {
-        g = acronym[1].codeUnitAt(0);
-        if (acronym.length >= 3) {
-          r = acronym[2].codeUnitAt(0);
-        }
-      }
-    }
-    const int brightnessFactor = 2;
-    return Color.fromRGBO(
-        r * brightnessFactor, g * brightnessFactor, b * brightnessFactor, 1);
-  }
-}
 
 class ClassView extends StatefulWidget {
   const ClassView({Key key, this.classHeader}) : super(key: key);
@@ -64,6 +50,9 @@ class _ClassViewState extends State<ClassView> {
                     padding: const EdgeInsets.symmetric(horizontal: 8),
                     child: Column(
                       children: [
+                        const SizedBox(height: 8),
+                        lecturerCard(context),
+                        const SizedBox(height: 8),
                         shortcuts(context),
                         const SizedBox(height: 8),
                         GradingChart(
@@ -238,6 +227,68 @@ class _ClassViewState extends State<ClassView> {
         contentPadding: EdgeInsets.zero,
         dense: true,
         visualDensity: VisualDensity.compact,
+      ),
+    );
+  }
+
+  Widget lecturerCard(BuildContext context) {
+    final personProvider = Provider.of<PersonProvider>(context);
+
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(8),
+        child: Row(
+          children: [
+            ClassIcon(classHeader: widget.classHeader),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  IconText(
+                    icon: Icons.class_,
+                    text: widget.classHeader.name ?? '-',
+                    style: Theme.of(context).textTheme.bodyText1,
+                  ),
+                  FutureBuilder(
+                    future: personProvider
+                        .mostRecentLecturer(widget.classHeader.id),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.done) {
+                        final data = snapshot.data;
+                        return GestureDetector(
+                          onTap: () async {
+                            final lecturer =
+                                await personProvider.fetchPerson(data);
+                            if (lecturer != null) {
+                              await showModalBottomSheet<dynamic>(
+                                  isScrollControlled: true,
+                                  context: context,
+                                  builder: (BuildContext buildContext) =>
+                                      PersonView(person: lecturer));
+                            }
+                          },
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              IconText(
+                                icon: Icons.person,
+                                text: data ?? '-',
+                                style: Theme.of(context).textTheme.bodyText1,
+                              ),
+                            ],
+                          ),
+                        );
+                      } else {
+                        return const CircularProgressIndicator();
+                      }
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
