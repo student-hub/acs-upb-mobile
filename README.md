@@ -29,6 +29,8 @@ If you would like to contribute and don't know where to start, or you have any q
 * [Crăciun Octavian ](https://github.com/craciunoctavian)
 * [Răzvan Rădoi ](https://github.com/razvanra2)
 * [George Diaconu](https://github.com/GeorgeMD)
+* [Maria Stoichițescu](https://github.com/stoichitescumaria)
+* [Anghel Andrei](https://github.com/AnghelAndrei28)
 
 ## Building from source with Android Studio
 
@@ -58,14 +60,15 @@ flutter pub get
 * Install and run an emulator in Android Studio (using AVD Manager), or connect a physical Android device (make sure USB debugging is enabled).
 * Select your device from the dropdown list and hit the play button (*Shift+F10* or *^R*). Note that Android Studio runs the app in debug mode by default.
 
-| :exclamation: | On Android, ACS UPB Mobile uses **a separate (development) environment in debug mode**. That means a completely different Firebase project - separate data, including user info. In order to try the release (production) version, you need to run `flutter run --release`.|
-|---------------|:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| :exclamation: | On Android, ACS UPB Mobile uses **a separate (development) environment in debug mode**. That means a completely different Firebase project - separate data, including user info.|
+|---------------|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+|     :bulb:    | In order to try the release (production) version, the recommended approach is to download an APK from the [Releases](https://github.com/acs-upb-mobile/acs-upb-mobile/releases) page. If you really need to test the release version from AS (make sure you know what you're doing), you need to change the `signingConfig signingConfigs.release` line to `signingConfig signingConfigs.debug` in [android/app/build.gradle](android/app/build.gradle), and then run `flutter run --release`. Do note that the release version *cannot* be ran on an emulator.|
 
 ### Building for iOS (MacOS only)
 
 * Make sure you have Xcode installed and up to date (it is free on the App Store).
 * Connect a physical iOS device or select *Open iOS Simulator* from the device drop-down menu to power on Xcode's simulator.
-* Select your device from the dropdown list and hit the play button (*Shift+F10* or *^R*).
+* Select your device from the dropdown list and hit the play button (*^R*).
 
 ### Building for Web
 
