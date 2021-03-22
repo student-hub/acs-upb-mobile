@@ -235,6 +235,7 @@ class _ClassViewState extends State<ClassView> {
     final personProvider = Provider.of<PersonProvider>(context);
 
     return Card(
+      key: const Key('LecturerCard'),
       child: Padding(
         padding: const EdgeInsets.all(8),
         child: Row(
@@ -280,7 +281,7 @@ class _ClassViewState extends State<ClassView> {
                           ),
                         );
                       } else {
-                        return const CircularProgressIndicator();
+                        return const Center(child: CircularProgressIndicator());
                       }
                     },
                   ),
