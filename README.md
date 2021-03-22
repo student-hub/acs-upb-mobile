@@ -11,15 +11,13 @@ Please note that some features may not work perfectly in the web version, as [Fl
 
 If you would like to contribute and don't know where to start, or you have any questions about this project, feel free to [join us on Slack](https://acs-upb-mobile.slack.com/join/shared_invite/zt-j3w0ksxt-ilq9x5Et8lxnG_y5YzfQeQ) and ask anything on the **#questions** channel.
 
-## Screenshots
+## Preview
 
-<img src=screenshots/app/light_login_ro.png height=500><img src=screenshots/app/dark_login_en.png height=500>
+<img src=screenshots/app/login.gif height=500> <img src=screenshots/app/home.gif height=500> <img src=screenshots/app/classes.gif height=500>
 
-<img src=screenshots/app/light_portal_ro.png height=500><img src=screenshots/app/dark_portal_en.png height=500>
+<img src=screenshots/app/portal.gif height=500> <img src=screenshots/app/people.gif height=500> <img src=screenshots/app/classes_edit.gif height=500>
 
-<img src=screenshots/app/light_classes_ro.png height=500><img src=screenshots/app/dark_classes_en.png height=500>
-
-<img src=screenshots/app/light_people_ro.png height=500><img src=screenshots/app/dark_people_en.png height=500>
+<img src=screenshots/app/portal_edit.gif height=500> <img src=screenshots/app/themes.gif height=500> <img src=screenshots/app/languages.gif height=500>
 
 ## Contributors
 * [Ioana Alexandru](https://github.com/IoanaAlexandru)
