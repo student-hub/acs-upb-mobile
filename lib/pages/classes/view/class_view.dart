@@ -256,11 +256,11 @@ class _ClassViewState extends State<ClassView> {
                         .mostRecentLecturer(widget.classHeader.id),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.done) {
-                        final data = snapshot.data;
+                        final lecturerName = snapshot.data;
                         return GestureDetector(
                           onTap: () async {
                             final lecturer =
-                                await personProvider.fetchPerson(data);
+                                await personProvider.fetchPerson(lecturerName);
                             if (lecturer != null) {
                               await showModalBottomSheet<dynamic>(
                                   isScrollControlled: true,
@@ -274,7 +274,7 @@ class _ClassViewState extends State<ClassView> {
                             children: [
                               IconText(
                                 icon: Icons.person,
-                                text: data ?? '-',
+                                text: lecturerName ?? '-',
                                 style: Theme.of(context).textTheme.bodyText1,
                               ),
                             ],
