@@ -3,12 +3,11 @@ import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/classes/model/class.dart';
 import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
 import 'package:acs_upb_mobile/pages/classes/view/class_view.dart';
+import 'package:acs_upb_mobile/widgets/class_icon.dart';
 import 'package:acs_upb_mobile/widgets/error_page.dart';
 import 'package:acs_upb_mobile/widgets/icon_text.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:acs_upb_mobile/widgets/spoiler.dart';
-import 'package:auto_size_text/auto_size_text.dart';
-import 'package:black_hole_flutter/black_hole_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:pedantic/pedantic.dart';
 import 'package:provider/provider.dart';
@@ -383,29 +382,9 @@ class _ClassListItemState extends State<ClassListItem> {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      leading: CircleAvatar(
-        backgroundColor: widget.classHeader.colorFromAcronym,
-        child: Container(
-          width: 30,
-          child: (widget.selectable && selected)
-              ? Icon(
-                  Icons.check,
-                  color:
-                      widget.classHeader.colorFromAcronym.highEmphasisOnColor,
-                )
-              : Align(
-                  alignment: Alignment.center,
-                  child: AutoSizeText(
-                    widget.classHeader.acronym,
-                    minFontSize: 0,
-                    maxLines: 1,
-                    style: TextStyle(
-                      color: widget
-                          .classHeader.colorFromAcronym.highEmphasisOnColor,
-                    ),
-                  ),
-                ),
-        ),
+      leading: ClassIcon(
+        classHeader: widget.classHeader,
+        selected: widget.selectable && selected,
       ),
       title: Text(
         widget.classHeader.name,

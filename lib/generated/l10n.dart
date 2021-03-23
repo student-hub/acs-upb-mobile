@@ -1583,6 +1583,16 @@ class S {
     );
   }
 
+  /// `Class information`
+  String get navigationClassInfo {
+    return Intl.message(
+      'Class information',
+      name: 'navigationClassInfo',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Show all`
   String get filterMenuShowAll {
     return Intl.message(
