@@ -30,6 +30,7 @@
   "labelEnd": "End",
   "labelClass": "Class",
   "labelLecturer": "Lecturer",
+  "labelAssistant": "Assistant",
   "labelYear": "Year",
   "labelSemester": "Semester",
   "labelTeam": "{name} team",
@@ -52,6 +53,8 @@
   "sectionEventsComingUp": "Events coming up",
   "sectionFAQ": "FAQ",
   "sectionGrading": "Grading",
+  "sectionGeneralQuestions": "General questions",
+  "sectionPersonalComments": "Personal comments",
 
   "shortcutTypeMain": "Main page",
   "shortcutTypeClassbook": "Classbook",
@@ -163,6 +166,7 @@
   "navigationEventDetails": "Event details",
   "navigationNewsFeed": "News feed",
   "navigationClassInfo": "Class information",
+  "navigationClassFeedback": "Feedback form",
 
   "filterMenuShowAll": "Show all",
   "filterMenuShowMine": "Show only mine",
@@ -244,6 +248,7 @@
   "messageChangePasswordSuccess": "Password changed successfully.",
   "messageChangeEmailSuccess": "Email changed successfully",
   "messageAgreePermissions": "I will only upload information that is correct and accurate, to the best of my knowledge. I understand that submitting erroneous or offensive information on purpose will lead to my editing permissions being permanently revoked.",
+  "messageAgreeFeedbackPolicy": "I understand this survey is extremely important for the continuous development of the educational process and I will not address insults or use any obscene words.",
   "messageYouCanContribute": "You can contribute to the app data, but you first need to request permissions.",
   "messageThereAreNoEventsForSelected": "There are no events for the selected ",
   "messagePictureUpdatedSuccess": "Profile picture updated successfully.",

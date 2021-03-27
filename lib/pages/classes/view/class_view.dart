@@ -1,5 +1,6 @@
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
+import 'package:acs_upb_mobile/pages/class_feedback/class_feedback_view.dart';
 import 'package:acs_upb_mobile/pages/classes/model/class.dart';
 import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
 import 'package:acs_upb_mobile/pages/classes/view/grading_view.dart';
@@ -37,6 +38,18 @@ class _ClassViewState extends State<ClassView> {
 
     return AppScaffold(
       title: Text(S.of(context).navigationClassInfo),
+      actions: [
+        AppScaffoldAction(
+            icon: Icons.comment,
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute<ClassFeedbackView>(
+                  builder: (_) =>
+                      ClassFeedbackView(classHeader: widget.classHeader),
+                ),
+              );
+            }),
+      ],
       body: FutureBuilder(
           future: classProvider.fetchClassInfo(widget.classHeader,
               context: context),

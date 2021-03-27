@@ -9,6 +9,8 @@ import 'intl/messages_all.dart';
 // **************************************************************************
 
 // ignore_for_file: non_constant_identifier_names, lines_longer_than_80_chars
+// ignore_for_file: join_return_with_assignment, prefer_final_in_for_each
+// ignore_for_file: avoid_redundant_argument_values
 
 class S {
   S();
@@ -333,6 +335,16 @@ class S {
     );
   }
 
+  /// `Assistant`
+  String get labelAssistant {
+    return Intl.message(
+      'Assistant',
+      name: 'labelAssistant',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Year`
   String get labelYear {
     return Intl.message(
@@ -538,6 +550,26 @@ class S {
     return Intl.message(
       'Grading',
       name: 'sectionGrading',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `General questions`
+  String get sectionGeneralQuestions {
+    return Intl.message(
+      'General questions',
+      name: 'sectionGeneralQuestions',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Personal comments`
+  String get sectionPersonalComments {
+    return Intl.message(
+      'Personal comments',
+      name: 'sectionPersonalComments',
       desc: '',
       args: [],
     );
@@ -1593,6 +1625,16 @@ class S {
     );
   }
 
+  /// `Feedback form`
+  String get navigationClassFeedback {
+    return Intl.message(
+      'Feedback form',
+      name: 'navigationClassFeedback',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Show all`
   String get filterMenuShowAll {
     return Intl.message(
@@ -2328,6 +2370,16 @@ class S {
     return Intl.message(
       'I will only upload information that is correct and accurate, to the best of my knowledge. I understand that submitting erroneous or offensive information on purpose will lead to my editing permissions being permanently revoked.',
       name: 'messageAgreePermissions',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `I understand this survey is extremely important for the continuous development of the educational process and I will not address insults or use any obscene words.`
+  String get messageAgreeFeedbackPolicy {
+    return Intl.message(
+      'I understand this survey is extremely important for the continuous development of the educational process and I will not address insults or use any obscene words.',
+      name: 'messageAgreeFeedbackPolicy',
       desc: '',
       args: [],
     );

@@ -30,6 +30,7 @@
   "labelEnd": "Sfârșit",
   "labelClass": "Materie",
   "labelLecturer": "Profesor",
+  "labelAssistant": "Asistent",
   "labelYear": "Anul",
   "labelSemester": "Semestrul",
   "labelTeam": "Echipa {name}",
@@ -52,6 +53,8 @@
   "sectionEventsComingUp": "Evenimente următoare",
   "sectionFAQ": "Întrebări frecvente",
   "sectionGrading": "Punctaj",
+  "sectionGeneralQuestions": "Întrebări generale",
+  "sectionPersonalComments": "Comentarii personale",
 
   "shortcutTypeMain": "Pagina principală",
   "shortcutTypeClassbook": "Catalog",
@@ -163,6 +166,7 @@
   "navigationEventDetails": "Detalii eveniment",
   "navigationNewsFeed": "Știri",
   "navigationClassInfo": "Informații materie",
+  "navigationClassFeedback": "Formular feedback",
 
   "filterMenuShowAll": "Arată tot",
   "filterMenuShowMine": "Arată doar pe ale mele",
@@ -244,6 +248,7 @@
   "messageChangePasswordSuccess": "Parola a fost schimbată cu succes.",
   "messageChangeEmailSuccess": "Email-ul a fost schimbat cu succes",
   "messageAgreePermissions": "Voi încărca doar informații corecte si precise. Înțeleg că încărcarea informațiilor eronate sau ofensatoare în mod intenționat va conduce la blocarea permisiunilor mele permanent.",
+  "messageAgreeFeedbackPolicy": "Înțeleg că acest sondaj este extrem de important pentru dezvoltarea continuă a procesului educațional și nu voi adresa insulte sau folosi cuvinte obscene.",
   "messageYouCanContribute": "Poți contribui la datele din aplicație, dar trebuie mai întâi să ceri permisiuni.",
   "messageThereAreNoEventsForSelected": "Nu există evenimente pentru selecția de ",
   "messagePictureUpdatedSuccess": "Poza a fost actualizată cu succes.",
