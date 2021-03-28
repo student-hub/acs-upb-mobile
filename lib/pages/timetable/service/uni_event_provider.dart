@@ -297,6 +297,26 @@ class UniEventProvider extends EventProvider<UniEventInstance>
     return stream.map((events) => events.expand((i) => i).toList());
   }
 
+  Future<void> exportToGoogleCalendar() async {
+    final Stream<Iterable<UniEventInstance>> eventsStream =
+        getAllDayEventsIntersecting(
+            DateInterval(LocalDate(2020, 1, 1), LocalDate(2021, 12, 31)));
+
+/*
+    final StreamSubscription<Iterable<UniEventInstance>> subscription =
+        eventsStream.listen(
+      (Iterable<UniEventInstance> event) {
+        print('Event: ${event.toList()}');
+      },
+    );
+    await subscription.cancel();
+*/
+
+    var eventsList =  await eventsStream.toList();
+
+    print("test");
+  }
+
   @override
   Stream<Iterable<UniEventInstance>> getAllDayEventsIntersecting(
       DateInterval interval) {

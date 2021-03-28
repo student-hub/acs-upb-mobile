@@ -125,6 +125,14 @@ class _TimetablePageState extends State<TimetablePage> {
           ),
         ],
       ),
+      floatingActionButton: FloatingActionButton(
+        child: const Icon(Icons.sync),
+        onPressed: () async {
+          final eventProvider =
+              Provider.of<UniEventProvider>(context, listen: false);
+          await eventProvider.exportToGoogleCalendar();
+        },
+      ),
     );
   }
 
