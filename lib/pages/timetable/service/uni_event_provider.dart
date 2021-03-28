@@ -66,8 +66,8 @@ extension LocalDateTimeExtension on LocalDateTime {
 extension UniEventExtension on UniEvent {
   static UniEvent fromJSON(String id, Map<String, dynamic> json,
       {ClassHeader classHeader,
-      Person teacher,
-      Map<String, AcademicCalendar> calendars = const {}}) {
+        Person teacher,
+        Map<String, AcademicCalendar> calendars = const {}}) {
     if (json['start'] == null ||
         (json['duration'] == null && json['end'] == null)) return null;
 
@@ -79,8 +79,12 @@ extension UniEventExtension on UniEvent {
         type: type,
         name: json['name'],
         // Convert time to UTC and then to local time
-        start: (json['start'] as Timestamp).toLocalDateTime().calendarDate,
-        end: (json['end'] as Timestamp).toLocalDateTime().calendarDate,
+        start: (json['start'] as Timestamp)
+            .toLocalDateTime()
+            .calendarDate,
+        end: (json['end'] as Timestamp)
+            .toLocalDateTime()
+            .calendarDate,
         location: json['location'],
         // TODO(IoanaAlexandru): Allow users to set event colours in settings
         color: type.color,
@@ -186,8 +190,8 @@ extension UniEventExtension on UniEvent {
 }
 
 extension AcademicCalendarExtension on AcademicCalendar {
-  static List<AllDayUniEvent> _eventsFromMapList(
-          List<dynamic> list, String type) =>
+  static List<AllDayUniEvent> _eventsFromMapList(List<dynamic> list,
+      String type) =>
       List<AllDayUniEvent>.from((list ?? []).asMap().map((index, e) {
         e['type'] = type;
         return MapEntry(
@@ -224,7 +228,7 @@ class UniEventProvider extends EventProvider<UniEventInstance>
 
   Future<Map<String, AcademicCalendar>> fetchCalendars() async {
     final QuerySnapshot query =
-        await FirebaseFirestore.instance.collection('calendars').get();
+    await FirebaseFirestore.instance.collection('calendars').get();
     for (final doc in query.docs) {
       _calendars[doc.id] = AcademicCalendarExtension.fromSnap(doc);
     }
@@ -259,7 +263,7 @@ class UniEventProvider extends EventProvider<UniEventInstance>
             .where('class', isEqualTo: classId)
             .where('degree', isEqualTo: _filter.baseNode)
             .where('relevance',
-                arrayContainsAny: _filter.relevantNodes..remove('All'))
+            arrayContainsAny: _filter.relevantNodes..remove('All'))
             .snapshots()
             .asyncMap((snapshot) async {
           final events = <UniEvent>[];
@@ -271,7 +275,7 @@ class UniEventProvider extends EventProvider<UniEventInstance>
               final data = doc.data();
               if (data['class'] != null) {
                 classHeader =
-                    await _classProvider.fetchClassHeader(data['class']);
+                await _classProvider.fetchClassHeader(data['class']);
               }
               if (data['teacher'] != null) {
                 teacher = await _personProvider.fetchPerson(data['teacher']);
@@ -311,14 +315,26 @@ class UniEventProvider extends EventProvider<UniEventInstance>
 
       final g_cal.Event event = g_cal.Event();
 
+      final g_cal.EventDateTime start = g_cal.EventDateTime();
+      final DateTime startDateTime = eventInstance.start.toDateTimeLocal();
+
+      start.dateTime = startDateTime;
+      event.start = start;
+
+
+      final Period eventPeriod = eventInstance.duration;
+      final Duration duration = Duration(
+          hours: eventPeriod.hours, minutes: eventPeriod.minutes);
+
+      final g_cal.EventDateTime end = g_cal.EventDateTime();
+      end.dateTime = startDateTime.add(duration);
+      event.end = end;
+
       final ClassHeader classHeader = eventInstance.classHeader;
       event.summary = classHeader.acronym;
 
-      final g_cal.EventDateTime start = g_cal.EventDateTime();
-      start.dateTime = eventInstance.start.toDateTimeLocal();
-      event.start = start;
-
-    }
+      event.recurrence = ['RRULE:FREQ=WEEKLY;UNTIL=20110701T170000Z'];
+  }
 
     //event.summary = summaryText;
 
@@ -343,18 +359,20 @@ class UniEventProvider extends EventProvider<UniEventInstance>
   @override
   Stream<Iterable<UniEventInstance>> getAllDayEventsIntersecting(
       DateInterval interval) {
-    return _events.map((events) => events
-        .map((event) => event.generateInstances(intersectingInterval: interval))
-        .expand((i) => i)
-        .allDayEvents
-        .followedBy(_calendars.values.map((cal) {
+    return _events.map((events) =>
+        events
+            .map((event) =>
+            event.generateInstances(intersectingInterval: interval))
+            .expand((i) => i)
+            .allDayEvents
+            .followedBy(_calendars.values.map((cal) {
           final List<AllDayUniEvent> events = cal.holidays + cal.exams;
           return events
               .where((event) =>
-                  event.relevance == null ||
-                  (_filter != null &&
-                      event.degree == _filter.baseNode &&
-                      event.relevance.any(_filter.relevantNodes.contains)))
+          event.relevance == null ||
+              (_filter != null &&
+                  event.degree == _filter.baseNode &&
+                  event.relevance.any(_filter.relevantNodes.contains)))
               .map((e) => e.generateInstances(intersectingInterval: interval))
               .expand((e) => e);
         }).expand((e) => e)));
@@ -363,8 +381,10 @@ class UniEventProvider extends EventProvider<UniEventInstance>
   @override
   Stream<Iterable<UniEventInstance>> getPartDayEventsIntersecting(
       LocalDate date) {
-    return _events.map((events) => events
-        .map((event) => event.generateInstances(
+    return _events.map((events) =>
+    events
+        .map((event) =>
+        event.generateInstances(
             intersectingInterval: DateInterval(date, date)))
         .expand((i) => i)
         .partDayEvents);
@@ -438,9 +458,13 @@ class UniEventProvider extends EventProvider<UniEventInstance>
     print(e.message);
     if (context != null) {
       if (e.message.contains('PERMISSION_DENIED')) {
-        AppToast.show(S.of(context).errorPermissionDenied);
+        AppToast.show(S
+            .of(context)
+            .errorPermissionDenied);
       } else {
-        AppToast.show(S.of(context).errorSomethingWentWrong);
+        AppToast.show(S
+            .of(context)
+            .errorSomethingWentWrong);
       }
     }
   }
