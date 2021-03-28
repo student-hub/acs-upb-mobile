@@ -22,6 +22,9 @@ import 'package:rrule/rrule.dart';
 import 'package:time_machine/time_machine.dart';
 import 'package:timetable/timetable.dart';
 
+import 'package:googleapis_auth/auth_io.dart';
+import 'package:googleapis/calendar/v3.dart' as g_cal;
+
 extension PeriodExtension on Period {
   static Period fromJSON(Map<String, dynamic> json) {
     return Period(
@@ -302,10 +305,22 @@ class UniEventProvider extends EventProvider<UniEventInstance>
     final Stream<List<UniEvent>> eventsStream = _events;
     final List<UniEvent> streamElement = await eventsStream.first;
 
-    for (UniEvent eventInstance in streamElement) {
+    for (final UniEvent eventInstance in streamElement) {
       print('found event : ${eventInstance.classHeader.acronym}');
       print('which is a ${eventInstance.type}');
+
+      final g_cal.Event event = g_cal.Event();
+
+      final ClassHeader classHeader = eventInstance.classHeader;
+      event.summary = classHeader.acronym;
+
+      final g_cal.EventDateTime start = g_cal.EventDateTime();
+      start.dateTime = eventInstance.start.toDateTimeLocal();
+      event.start = start;
+
     }
+
+    //event.summary = summaryText;
 
 /*
     final subscription = eventsStream.listen(

@@ -162,6 +162,15 @@ dev_dependencies:
   # Using Provider for state management
   provider: ^4.0.4
 
+  # Exporting to Google Calendar
+  googleapis: 0.55.0
+
+  # Creating OAuth Access Credentials for Google Calendar
+  googleapis_auth: 0.2.12
+
+  # Launching URL in browser in order to ask the user for permission to access GCal
+  url_launcher: 5.5.0
+
 dependency_overrides:
   # Temporary workaround to bypass intl_translation incompatibility
   intl: ^0.17.0-nullsafety.2
