@@ -29,6 +29,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:oktoast/oktoast.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:preferences/preferences.dart';
 import 'package:provider/provider.dart';
 import 'package:rrule/rrule.dart';
@@ -163,6 +164,10 @@ class AppLoadingScreen extends StatelessWidget {
       } else if (kReleaseMode) {
         await FirebaseAnalytics().setAnalyticsCollectionEnabled(true);
       }
+
+      // package_info_plus is not compatible with flutter_test
+      // link to the issue: https://github.com/fluttercommunity/plus_plugins/issues/172
+      Utils.packageInfo = await PackageInfo.fromPlatform();
 
       LocaleProvider.cultures ??= {
         'ro': await Cultures.getCulture('ro'),
