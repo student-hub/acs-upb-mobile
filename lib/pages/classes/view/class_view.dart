@@ -261,7 +261,7 @@ class _ClassViewState extends State<ClassView> {
                           onTap: () async {
                             final lecturer =
                                 await personProvider.fetchPerson(lecturerName);
-                            if (lecturer != null) {
+                            if (lecturer != null && lecturerName != null) {
                               await showModalBottomSheet<dynamic>(
                                   isScrollControlled: true,
                                   context: context,
