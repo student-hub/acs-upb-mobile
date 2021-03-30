@@ -1,0 +1,7 @@
+Rezolvat
+  - Mesaj de eroare afișat la anularea selectării imaginii de profil
+
+Adăugat
+  - Card care conține numele materiei și cadrul didactic titular pe pagina de informații a unei materii
+  - Posibilitatea de a apăsa pe un profesor asociat unui eveniment și de a afișa mai multe
+   detalii despre acesta

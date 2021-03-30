@@ -5,6 +5,7 @@ import 'package:acs_upb_mobile/pages/classes/view/class_view.dart';
 import 'package:acs_upb_mobile/pages/classes/view/classes_page.dart';
 import 'package:acs_upb_mobile/pages/filter/model/filter.dart';
 import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
+import 'package:acs_upb_mobile/pages/people/view/person_view.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/events/class_event.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/events/recurring_event.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/events/uni_event.dart';
@@ -174,20 +175,34 @@ class _EventViewState extends State<EventView> {
           if (widget.eventInstance.mainEvent is ClassEvent)
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
-              child: Row(
-                children: <Widget>[
-                  const Padding(
-                    padding: EdgeInsets.all(8),
-                    child: Icon(Icons.person),
-                  ),
-                  const SizedBox(width: 16),
-                  Text(
-                      (widget.eventInstance.mainEvent as ClassEvent)
-                              .teacher
-                              .name ??
-                          S.of(context).labelUnknown,
-                      style: Theme.of(context).textTheme.subtitle1),
-                ],
+              child: GestureDetector(
+                onTap: () {
+                  if ((widget.eventInstance.mainEvent as ClassEvent).teacher !=
+                      null) {
+                    showModalBottomSheet<dynamic>(
+                        isScrollControlled: true,
+                        context: context,
+                        builder: (BuildContext buildContext) => PersonView(
+                            person:
+                                (widget.eventInstance.mainEvent as ClassEvent)
+                                    .teacher));
+                  }
+                },
+                child: Row(
+                  children: <Widget>[
+                    const Padding(
+                      padding: EdgeInsets.all(8),
+                      child: Icon(Icons.person),
+                    ),
+                    const SizedBox(width: 16),
+                    Text(
+                        (widget.eventInstance.mainEvent as ClassEvent)
+                                .teacher
+                                .name ??
+                            S.of(context).labelUnknown,
+                        style: Theme.of(context).textTheme.subtitle1),
+                  ],
+                ),
               ),
             ),
         ]),

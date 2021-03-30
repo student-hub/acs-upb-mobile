@@ -56,4 +56,28 @@ class PersonProvider with ChangeNotifier {
       return null;
     }
   }
+
+  Future<String> mostRecentLecturer(String classId,
+      {BuildContext context}) async {
+    try {
+      final QuerySnapshot query = await FirebaseFirestore.instance
+          .collection('events')
+          .where('class', isEqualTo: classId)
+          .where('type', isEqualTo: 'lecture')
+          .orderBy('start', descending: true)
+          .limit(1)
+          .get();
+
+      if (query == null || query.docs.isEmpty) {
+        return null;
+      }
+      return query.docs.first.get('teacher');
+    } catch (e) {
+      print(e);
+      if (context != null) {
+        AppToast.show(S.of(context).errorSomethingWentWrong);
+      }
+      return null;
+    }
+  }
 }

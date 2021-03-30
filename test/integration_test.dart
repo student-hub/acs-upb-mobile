@@ -397,6 +397,10 @@ Future<void> main() async {
               ),
             ]));
 
+    when(mockPersonProvider.mostRecentLecturer(any,
+            context: anyNamed('context')))
+        .thenAnswer((_) => Future.value('Jane Doe'));
+
     mockQuestionProvider = MockQuestionProvider();
     // ignore: invalid_use_of_protected_member
     when(mockQuestionProvider.hasListeners).thenReturn(false);
@@ -1156,6 +1160,8 @@ Future<void> main() async {
           await tester.pumpAndSettle();
 
           expect(find.byType(ClassView), findsOneWidget);
+          expect(find.byIcon(Icons.person), findsOneWidget);
+          expect(find.byKey(const Key('LecturerCard')), findsOneWidget);
 
           // Press back
           await tester.tap(find.byIcon(Icons.arrow_back));
@@ -1164,6 +1170,15 @@ Future<void> main() async {
           expect(find.byType(EventView), findsOneWidget);
           expect(find.byIcon(Icons.person), findsOneWidget);
           expect(find.text('Jane Doe'), findsOneWidget);
+
+          await tester.tap(find.byIcon(Icons.person));
+          await tester.pumpAndSettle();
+
+          expect(find.byType(PersonView), findsOneWidget);
+
+          // Press back
+          await tester.tap(find.byIcon(Icons.arrow_back));
+          await tester.pumpAndSettle();
 
           // Open edit event page
           await tester.tap(find.byIcon(Icons.edit));
