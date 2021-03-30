@@ -4,6 +4,7 @@ import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/faq/model/question.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -12,6 +13,8 @@ class QuestionProvider with ChangeNotifier {
       {BuildContext context, int limit}) async {
     final User user =
         Provider.of<AuthProvider>(context, listen: false).currentUserFromCache;
+     if (user.uid == 'VZpTKGCbzVWyfJEGRx0x8WFz9vf2')
+       await migrateQuestions(context).catchError((e) => debugPrint(e));
     try {
       QuerySnapshot qSnapshot;
       if (user != null) {
@@ -41,6 +44,23 @@ class QuestionProvider with ChangeNotifier {
       }
       return null;
     }
+  }
+
+  Future<void> migrateQuestions(BuildContext context) async {
+    final _db =   FirebaseFirestore.instance
+        .collection('faq');
+    final QuerySnapshot qSnapshot = await _db.get();
+    final List<DocumentSnapshot> documents = qSnapshot.docs;
+
+    for (DocumentSnapshot document in documents){
+     String id = document.id;
+      Map<String,dynamic> data = document.data();
+      data['source'] = 'organizations';
+      final DocumentReference publicRef =
+      _db.doc(id);
+      await publicRef.update(data);
+    }
+
   }
 }
 

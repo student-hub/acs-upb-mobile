@@ -227,7 +227,6 @@ class WebsiteProvider with ChangeNotifier {
   }
 
   Future<void> migrateWebsites(BuildContext context) async {
-    debugPrint('Lets`start');
     final QuerySnapshot qSnapshot = await _db.collection('websites').get();
     final List<DocumentSnapshot> documents = qSnapshot.docs.toList();
     final List<Website> websites =
@@ -260,7 +259,6 @@ class WebsiteProvider with ChangeNotifier {
               infoByLocale: web.infoByLocale),
           context: context);
     }
-    debugPrint('Done');
   }
 
   Future<List<Website>> fetchWebsites(Filter filter,
@@ -271,8 +269,8 @@ class WebsiteProvider with ChangeNotifier {
     try {
       final websites = <Website>[];
 
-/*      if (uid == 'VZpTKGCbzVWyfJEGRx0x8WFz9vf2')
-        await migrateWebsites(context).catchError((e) => debugPrint(e));*/
+      // if (uid == 'VZpTKGCbzVWyfJEGRx0x8WFz9vf2')
+      //   await migrateWebsites(context).catchError((e) => debugPrint(e));
       if (!userOnly) {
         List<DocumentSnapshot> documents = [];
 
