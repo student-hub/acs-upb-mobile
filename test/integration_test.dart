@@ -40,12 +40,14 @@ import 'package:acs_upb_mobile/pages/timetable/view/events/event_view.dart';
 import 'package:acs_upb_mobile/pages/timetable/view/timetable_page.dart';
 import 'package:acs_upb_mobile/resources/custom_icons.dart';
 import 'package:acs_upb_mobile/resources/locale_provider.dart';
+import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/widgets/search_bar.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:network_image_mock/network_image_mock.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:preferences/preferences.dart';
 import 'package:provider/provider.dart';
 import 'package:rrule/rrule.dart';
@@ -139,6 +141,8 @@ Future<void> main() async {
 
     LocaleProvider.cultures = testCultures;
     LocaleProvider.rruleL10ns = {'en': await RruleL10nTest.create()};
+
+    Utils.packageInfo = PackageInfo(version: '1.2.7', buildNumber: '6');
 
     // Pretend an anonymous user is already logged in
     mockAuthProvider = MockAuthProvider();
