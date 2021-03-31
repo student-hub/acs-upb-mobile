@@ -351,6 +351,8 @@ class UniEventProvider extends EventProvider<UniEventInstance>
     }
 
     _gCalEvents.forEach(insertGoogleEvent);
+    // TODO(bogpie): Remember if a user already gave access to his Google Calendar
+    // TODO(bogpie): Simplify code; maybe find a way to batch insert ?
   }
 
   void prompt(String url) async {
