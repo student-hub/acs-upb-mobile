@@ -1,29 +1,31 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/classes/model/class.dart';
-import 'package:acs_upb_mobile/pages/people/model/person.dart';
 import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
 import 'package:acs_upb_mobile/pages/filter/model/filter.dart';
 import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
+import 'package:acs_upb_mobile/pages/people/model/person.dart';
 import 'package:acs_upb_mobile/pages/people/service/person_provider.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/academic_calendar.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/events/all_day_event.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/events/class_event.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/events/recurring_event.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/events/uni_event.dart';
+import 'package:acs_upb_mobile/resources/google_apis.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:async/async.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:googleapis/calendar/v3.dart' as g_cal;
+import 'package:googleapis_auth/auth_io.dart';
 import 'package:rrule/rrule.dart';
 import 'package:time_machine/time_machine.dart';
 import 'package:timetable/timetable.dart';
-
-import 'package:googleapis_auth/auth_io.dart';
-import 'package:googleapis/calendar/v3.dart' as g_cal;
+import 'package:url_launcher/url_launcher.dart';
 
 extension PeriodExtension on Period {
   static Period fromJSON(Map<String, dynamic> json) {
@@ -66,8 +68,8 @@ extension LocalDateTimeExtension on LocalDateTime {
 extension UniEventExtension on UniEvent {
   static UniEvent fromJSON(String id, Map<String, dynamic> json,
       {ClassHeader classHeader,
-        Person teacher,
-        Map<String, AcademicCalendar> calendars = const {}}) {
+      Person teacher,
+      Map<String, AcademicCalendar> calendars = const {}}) {
     if (json['start'] == null ||
         (json['duration'] == null && json['end'] == null)) return null;
 
@@ -79,12 +81,8 @@ extension UniEventExtension on UniEvent {
         type: type,
         name: json['name'],
         // Convert time to UTC and then to local time
-        start: (json['start'] as Timestamp)
-            .toLocalDateTime()
-            .calendarDate,
-        end: (json['end'] as Timestamp)
-            .toLocalDateTime()
-            .calendarDate,
+        start: (json['start'] as Timestamp).toLocalDateTime().calendarDate,
+        end: (json['end'] as Timestamp).toLocalDateTime().calendarDate,
         location: json['location'],
         // TODO(IoanaAlexandru): Allow users to set event colours in settings
         color: type.color,
@@ -190,8 +188,8 @@ extension UniEventExtension on UniEvent {
 }
 
 extension AcademicCalendarExtension on AcademicCalendar {
-  static List<AllDayUniEvent> _eventsFromMapList(List<dynamic> list,
-      String type) =>
+  static List<AllDayUniEvent> _eventsFromMapList(
+          List<dynamic> list, String type) =>
       List<AllDayUniEvent>.from((list ?? []).asMap().map((index, e) {
         e['type'] = type;
         return MapEntry(
@@ -228,7 +226,7 @@ class UniEventProvider extends EventProvider<UniEventInstance>
 
   Future<Map<String, AcademicCalendar>> fetchCalendars() async {
     final QuerySnapshot query =
-    await FirebaseFirestore.instance.collection('calendars').get();
+        await FirebaseFirestore.instance.collection('calendars').get();
     for (final doc in query.docs) {
       _calendars[doc.id] = AcademicCalendarExtension.fromSnap(doc);
     }
@@ -263,7 +261,7 @@ class UniEventProvider extends EventProvider<UniEventInstance>
             .where('class', isEqualTo: classId)
             .where('degree', isEqualTo: _filter.baseNode)
             .where('relevance',
-            arrayContainsAny: _filter.relevantNodes..remove('All'))
+                arrayContainsAny: _filter.relevantNodes..remove('All'))
             .snapshots()
             .asyncMap((snapshot) async {
           final events = <UniEvent>[];
@@ -275,7 +273,7 @@ class UniEventProvider extends EventProvider<UniEventInstance>
               final data = doc.data();
               if (data['class'] != null) {
                 classHeader =
-                await _classProvider.fetchClassHeader(data['class']);
+                    await _classProvider.fetchClassHeader(data['class']);
               }
               if (data['teacher'] != null) {
                 teacher = await _personProvider.fetchPerson(data['teacher']);
@@ -304,75 +302,110 @@ class UniEventProvider extends EventProvider<UniEventInstance>
     return stream.map((events) => events.expand((i) => i).toList());
   }
 
+  g_cal.Event convertEvent(UniEvent eventInstance) {
+    final g_cal.Event _gCalEvent = g_cal.Event();
+
+    final g_cal.EventDateTime start = g_cal.EventDateTime();
+    final DateTime startDateTime = eventInstance.start.toDateTimeLocal();
+    const String timeZone = 'Europe/Bucharest';
+
+    start
+      ..timeZone = timeZone
+      ..dateTime = startDateTime;
+    final Period eventPeriod = eventInstance.duration;
+    final Duration duration =
+        Duration(hours: eventPeriod.hours, minutes: eventPeriod.minutes);
+
+    final g_cal.EventDateTime end = g_cal.EventDateTime();
+    final DateTime endDateTime = startDateTime.add(duration);
+    end
+      ..timeZone = timeZone
+      ..dateTime = endDateTime;
+
+    final ClassHeader classHeader = eventInstance.classHeader;
+    _gCalEvent
+      ..start = start
+      ..end = end
+      ..summary = classHeader.acronym
+      ..location = eventInstance.location;
+
+    if (eventInstance is RecurringUniEvent) {
+      _gCalEvent.recurrence = <String>[];
+      _gCalEvent.recurrence.add(eventInstance.rrule.toString());
+    }
+
+    return _gCalEvent;
+  }
+
   Future<void> exportToGoogleCalendar() async {
-    print('test before stream');
     final Stream<List<UniEvent>> eventsStream = _events;
     final List<UniEvent> streamElement = await eventsStream.first;
 
+    List<g_cal.Event> _gCalEvents = [];
+
     for (final UniEvent eventInstance in streamElement) {
-      print('found event : ${eventInstance.classHeader.acronym}');
-      print('which is a ${eventInstance.type}');
+      //print('found event : ${eventInstance.classHeader.acronym}');
+      //print('which is a ${eventInstance.type}');
+      final g_cal.Event _gCalEvent = convertEvent(eventInstance);
+      _gCalEvents.add(_gCalEvent);
+    }
 
-      final g_cal.Event event = g_cal.Event();
-
-      final g_cal.EventDateTime start = g_cal.EventDateTime();
-      final DateTime startDateTime = eventInstance.start.toDateTimeLocal();
-
-      start.dateTime = startDateTime;
-      event.start = start;
-
-
-      final Period eventPeriod = eventInstance.duration;
-      final Duration duration = Duration(
-          hours: eventPeriod.hours, minutes: eventPeriod.minutes);
-
-      final g_cal.EventDateTime end = g_cal.EventDateTime();
-      end.dateTime = startDateTime.add(duration);
-      event.end = end;
-
-      final ClassHeader classHeader = eventInstance.classHeader;
-      event.summary = classHeader.acronym;
-
-      event.recurrence = ['RRULE:FREQ=WEEKLY;UNTIL=20110701T170000Z'];
+    _gCalEvents.forEach(insertGoogleEvent);
   }
 
-    //event.summary = summaryText;
+  void prompt(String url) async {
+    print('Please go to the following URL and grant access:');
+    print('  => $url');
+    print('');
 
-/*
-    final subscription = eventsStream.listen(
-      (data) {
-        print('Data: $data');
-      },
-      onError: (err) {
-        print('Error!');
-      },
-      cancelOnError: false,
-      onDone: () {
-        print('Done!');
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
+
+  void insertGoogleEvent(g_cal.Event event) {
+    clientViaUserConsent(
+            GoogleApiHelper.credentials, GoogleApiHelper.scopes, prompt)
+        .then(
+      (AuthClient client) {
+        final g_cal.CalendarApi calendar = g_cal.CalendarApi(client);
+
+        const String calendarId = 'primary';
+        try {
+          calendar.events.insert(event, calendarId).then(
+            (value) {
+              print('ADDEDDD_________________${value.status}');
+              if (value.status == 'confirmed') {
+                log('Event added in google calendar');
+              } else {
+                log('Unable to add event in google calendar');
+              }
+            },
+          );
+        } catch (e) {
+          log('Error creating event $e');
+        }
       },
     );
-    await Future.delayed(const Duration(seconds: 5));
-    await subscription.cancel();
-*/
   }
 
   @override
   Stream<Iterable<UniEventInstance>> getAllDayEventsIntersecting(
       DateInterval interval) {
-    return _events.map((events) =>
-        events
-            .map((event) =>
-            event.generateInstances(intersectingInterval: interval))
-            .expand((i) => i)
-            .allDayEvents
-            .followedBy(_calendars.values.map((cal) {
+    return _events.map((events) => events
+        .map((event) => event.generateInstances(intersectingInterval: interval))
+        .expand((i) => i)
+        .allDayEvents
+        .followedBy(_calendars.values.map((cal) {
           final List<AllDayUniEvent> events = cal.holidays + cal.exams;
           return events
               .where((event) =>
-          event.relevance == null ||
-              (_filter != null &&
-                  event.degree == _filter.baseNode &&
-                  event.relevance.any(_filter.relevantNodes.contains)))
+                  event.relevance == null ||
+                  (_filter != null &&
+                      event.degree == _filter.baseNode &&
+                      event.relevance.any(_filter.relevantNodes.contains)))
               .map((e) => e.generateInstances(intersectingInterval: interval))
               .expand((e) => e);
         }).expand((e) => e)));
@@ -381,10 +414,8 @@ class UniEventProvider extends EventProvider<UniEventInstance>
   @override
   Stream<Iterable<UniEventInstance>> getPartDayEventsIntersecting(
       LocalDate date) {
-    return _events.map((events) =>
-    events
-        .map((event) =>
-        event.generateInstances(
+    return _events.map((events) => events
+        .map((event) => event.generateInstances(
             intersectingInterval: DateInterval(date, date)))
         .expand((i) => i)
         .partDayEvents);
@@ -458,13 +489,9 @@ class UniEventProvider extends EventProvider<UniEventInstance>
     print(e.message);
     if (context != null) {
       if (e.message.contains('PERMISSION_DENIED')) {
-        AppToast.show(S
-            .of(context)
-            .errorPermissionDenied);
+        AppToast.show(S.of(context).errorPermissionDenied);
       } else {
-        AppToast.show(S
-            .of(context)
-            .errorSomethingWentWrong);
+        AppToast.show(S.of(context).errorSomethingWentWrong);
       }
     }
   }
