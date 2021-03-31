@@ -341,7 +341,7 @@ class UniEventProvider extends EventProvider<UniEventInstance>
     final Stream<List<UniEvent>> eventsStream = _events;
     final List<UniEvent> streamElement = await eventsStream.first;
 
-    List<g_cal.Event> _gCalEvents = [];
+    final List<g_cal.Event> _gCalEvents = [];
 
     for (final UniEvent eventInstance in streamElement) {
       //print('found event : ${eventInstance.classHeader.acronym}');
@@ -350,8 +350,8 @@ class UniEventProvider extends EventProvider<UniEventInstance>
       _gCalEvents.add(_gCalEvent);
     }
 
-    _gCalEvents.forEach(insertGoogleEvent);
-    // TODO(bogpie): Remember if a user already gave access to his Google Calendar
+    insertGoogleEvents(_gCalEvents);
+
     // TODO(bogpie): Simplify code; maybe find a way to batch insert ?
   }
 
@@ -367,27 +367,33 @@ class UniEventProvider extends EventProvider<UniEventInstance>
     }
   }
 
-  void insertGoogleEvent(g_cal.Event event) {
+  void insertGoogleEvents(List<g_cal.Event> _gCalEvents) {
     clientViaUserConsent(
             GoogleApiHelper.credentials, GoogleApiHelper.scopes, prompt)
         .then(
       (AuthClient client) {
+        // TODO(bogpie): Remember if a user already gave access to his Google Calendar
+        // TODO(bogpie): Automatically close browser
+
         final g_cal.CalendarApi calendar = g_cal.CalendarApi(client);
 
         const String calendarId = 'primary';
-        try {
-          calendar.events.insert(event, calendarId).then(
-            (value) {
-              print('ADDEDDD_________________${value.status}');
-              if (value.status == 'confirmed') {
-                log('Event added in google calendar');
-              } else {
-                log('Unable to add event in google calendar');
-              }
-            },
-          );
-        } catch (e) {
-          log('Error creating event $e');
+
+        for (g_cal.Event event in _gCalEvents) {
+          try {
+            calendar.events.insert(event, calendarId).then(
+              (value) {
+                print('ADDEDDD_________________${value.status}');
+                if (value.status == 'confirmed') {
+                  print('Event added in google calendar'); //log
+                } else {
+                  print('Unable to add event in google calendar');
+                }
+              },
+            );
+          } catch (e) {
+            print('Error creating event $e');
+          }
         }
       },
     );
