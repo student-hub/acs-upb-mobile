@@ -307,10 +307,10 @@ class UniEventProvider extends EventProvider<UniEventInstance>
 
     final g_cal.EventDateTime start = g_cal.EventDateTime();
     final DateTime startDateTime = eventInstance.start.toDateTimeLocal();
-    const String timeZone = 'Europe/Bucharest';
 
     start
-      ..timeZone = timeZone
+      //..timeZone = startDateTime.timeZoneName
+      ..timeZone = 'Europe/Bucharest'
       ..dateTime = startDateTime;
     final Period eventPeriod = eventInstance.duration;
     final Duration duration =
@@ -319,7 +319,8 @@ class UniEventProvider extends EventProvider<UniEventInstance>
     final g_cal.EventDateTime end = g_cal.EventDateTime();
     final DateTime endDateTime = startDateTime.add(duration);
     end
-      ..timeZone = timeZone
+      //..timeZone = endDateTime.timeZoneName
+      ..timeZone = 'Europe/Bucharest'
       ..dateTime = endDateTime;
 
     final ClassHeader classHeader = eventInstance.classHeader;
@@ -331,7 +332,11 @@ class UniEventProvider extends EventProvider<UniEventInstance>
 
     if (eventInstance is RecurringUniEvent) {
       _gCalEvent.recurrence = <String>[];
-      _gCalEvent.recurrence.add(eventInstance.rrule.toString());
+
+      String rrule = eventInstance.rrule.toString();
+      final String rruleNew = rrule.replaceAll(RegExp(r'T000000'), '');
+
+      _gCalEvent.recurrence.add(rruleNew);
     }
 
     return _gCalEvent;
@@ -350,9 +355,19 @@ class UniEventProvider extends EventProvider<UniEventInstance>
       _gCalEvents.add(_gCalEvent);
     }
 
+    // _gCalEvents.removeRange(1, _gCalEvents.length);
+    //_gCalEvents.first.recurrence.first =
+    //    'RRULE:FREQ=WEEKLY;UNTIL=20210605;INTERVAL=1;BYDAY=WE';
+
+    ///RRULE:FREQ=WEEKLY;UNTIL=20210605 works
+    ///RRULE:FREQ=WEEKLY;UNTIL=20210605T000000 doesn't work
+    ///RRULE:FREQ=WEEKLY;UNTIL=20210605T000000;INTERVAL=1;BYDAY=WE doesn't work
+
     insertGoogleEvents(_gCalEvents);
 
     // TODO(bogpie): Simplify code; maybe find a way to batch insert ?
+    // TODO(bogpie): Take into account the holidays! Maybe multiple rrules?
+    // TODO(bogpie): Make a new calendar, stop adding to primary; lazy idea for updating - delete that calendar and reupload the timetable
   }
 
   void prompt(String url) async {
@@ -375,19 +390,19 @@ class UniEventProvider extends EventProvider<UniEventInstance>
         // TODO(bogpie): Remember if a user already gave access to his Google Calendar
         // TODO(bogpie): Automatically close browser
 
-        final g_cal.CalendarApi calendar = g_cal.CalendarApi(client);
+        final g_cal.CalendarApi calendarApi = g_cal.CalendarApi(client);
 
         const String calendarId = 'primary';
 
-        for (g_cal.Event event in _gCalEvents) {
+        for (final g_cal.Event event in _gCalEvents) {
           try {
-            calendar.events.insert(event, calendarId).then(
+            calendarApi.events.insert(event, calendarId).then(
               (value) {
-                print('ADDEDDD_________________${value.status}');
+                print('ADDED_________________${value.status}');
                 if (value.status == 'confirmed') {
-                  print('Event added in google calendar'); //log
+                  print('Event added in google calendarApi'); //log
                 } else {
-                  print('Unable to add event in google calendar');
+                  print('Unable to add event in google calendarApi');
                 }
               },
             );
