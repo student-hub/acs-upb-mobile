@@ -102,7 +102,9 @@ class _SettingsPageState extends State<SettingsPage> {
                           padding: const EdgeInsets.all(8),
                           child: IconText(
                             icon: CustomIcons.github_brands,
-                            text: S.of(context).infoAppIsOpenSource(Utils.packageInfo.appName),
+                            text: S
+                                .of(context)
+                                .infoAppIsOpenSource(Utils.packageInfo.appName),
                             actionText: S.of(context).actionContribute,
                             actionArrow: true,
                             align: TextAlign.center,
