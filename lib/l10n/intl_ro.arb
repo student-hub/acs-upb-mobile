@@ -235,7 +235,7 @@
   "messageNoClassesYet": "Nu ați adăugat nici o materie încă.",
   "messageGetStartedByPressing": "Începeți prin a apăsa butonul",
   "messageButtonAbove": "de mai sus.",
-  "messageAskPermissionToEdit": "De ce dorești să primești permisiuni de editare în ACS UPB Mobile?",
+  "messageAskPermissionToEdit": "De ce dorești să primești permisiuni de editare în {appName}?",
   "messageRequestHasBeenSent": "Cererea a fost transmisă cu succes",
   "messageRequestAlreadyExists": "Ați trimis deja o cerere. Daca doriți să adăugați una nouă, vă rugăm sa apasați 'Salvare'.",
   "messageIAgreeToThe": "Sunt de acord cu ",
@@ -258,7 +258,7 @@
   "infoRelevanceNothingSelected": "Nu selectați nimic dacă este relevant pentru toată lumea.",
   "infoRelevanceExample": "De exemplu, dacă ceva este relevant doar pentru \"314CB\" și \"315CB\", nu setați direct \"CB\".",
   "infoPassword": "Aceasta trebuie să conțină majuscule, minuscule și cel puțin un număr sau un simbol, având minimum 8 caractere.",
-  "infoAppIsOpenSource": "ACS UPB Mobile este open source.",
+  "infoAppIsOpenSource": "{appName} este open source.",
   "infoEmail": "Acesta este același username pe care îl folosești să te loghezi pe {forum}.",
 
   "stringEmailDomain": "@stud.acs.upb.ro",

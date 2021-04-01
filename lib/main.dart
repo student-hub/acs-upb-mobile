@@ -87,7 +87,7 @@ class _MyAppState extends State<MyApp> {
 
   Widget buildApp(BuildContext context, ThemeData theme) {
     return MaterialApp(
-      title: 'ACS UPB Mobile',
+      title: Utils.packageInfo.appName,
       localizationsDelegates: [
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,

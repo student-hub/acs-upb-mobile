@@ -50,7 +50,7 @@ void main() {
       LocaleProvider.cultures = testCultures;
       LocaleProvider.rruleL10ns = {'en': await RruleL10nTest.create()};
 
-      Utils.packageInfo = PackageInfo(version: '1.2.7', buildNumber: '6');
+      Utils.packageInfo = PackageInfo(version: '1.2.7', buildNumber: '6', appName: 'ACS UPB Mobile');
 
       // Pretend an anonymous user is already logged in
       mockAuthProvider = MockAuthProvider();
