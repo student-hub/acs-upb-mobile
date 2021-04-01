@@ -41,7 +41,7 @@ class _PlannerPageState extends State<PlannerPage> {
           },
         )
       ],
-      title: Text(S.of(context).navigationPeople),
+      title: Text(S.of(context).navigationPlanner),
       body: Container(
         child: FutureBuilder(
             future: assignemnts,
@@ -79,6 +79,7 @@ class _PlannerPageState extends State<PlannerPage> {
       .where((assignment) => filter.split(' ').fold(
           true,
           (previousValue, filter) =>
+              assignment.name != null &&
               previousValue &&
               assignment.name.toLowerCase().contains(filter.toLowerCase())))
       .toList();
@@ -121,7 +122,7 @@ class _AssignmentsListState extends State<AssignmentsList> {
                 : Text(
                     widget.assignments[index].name,
                   ),
-            //onTap: () => showPersonInfo(widget.people[index]),
+            subtitle: Text('Deadline ${widget.assignments[index]?.deadline}'),
           );
         },
       ),

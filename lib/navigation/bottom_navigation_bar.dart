@@ -78,7 +78,7 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar>
                 ),
                 Tab(
                   icon: const Icon(Icons.analytics_rounded),
-                  text: S.of(context).navigationTimetable,
+                  text: S.of(context).navigationPlanner,
                   iconMargin: EdgeInsets.zero,
                 ),
               ],

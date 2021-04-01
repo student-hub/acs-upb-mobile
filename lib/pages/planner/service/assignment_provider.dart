@@ -7,7 +7,7 @@ import 'package:acs_upb_mobile/widgets/toast.dart';
 extension AssignmentExtension on Assignment {
   static Assignment fromSnap(DocumentSnapshot snap) {
     final data = snap.data();
-    return Assignment(name: data['name']);
+    return Assignment(name: data['name'], deadline: data['deadline']);
   }
 }
 
