@@ -38,6 +38,10 @@ import 'package:time_machine/time_machine.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  // package_info_plus is not compatible with flutter_test
+  // link to the issue: https://github.com/fluttercommunity/plus_plugins/issues/172
+  Utils.packageInfo = await PackageInfo.fromPlatform();
+
   await Firebase.initializeApp();
 
   final authProvider = AuthProvider();
@@ -164,10 +168,6 @@ class AppLoadingScreen extends StatelessWidget {
       } else if (kReleaseMode) {
         await FirebaseAnalytics().setAnalyticsCollectionEnabled(true);
       }
-
-      // package_info_plus is not compatible with flutter_test
-      // link to the issue: https://github.com/fluttercommunity/plus_plugins/issues/172
-      Utils.packageInfo = await PackageInfo.fromPlatform();
 
       LocaleProvider.cultures ??= {
         'ro': await Cultures.getCulture('ro'),
