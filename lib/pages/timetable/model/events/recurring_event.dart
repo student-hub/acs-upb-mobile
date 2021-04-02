@@ -21,25 +21,24 @@ class RecurringUniEvent extends UniEvent {
     ClassHeader classHeader,
     AcademicCalendar calendar,
     String addedBy,
-  })
-      : assert(rrule != null),
+  })  : assert(rrule != null),
         super(
-          name: name,
-          location: location,
-          start: start,
-          duration: duration,
-          degree: degree,
-          relevance: relevance,
-          id: id,
-          color: color,
-          type: type,
-          classHeader: classHeader,
-          calendar: calendar,
-          addedBy: addedBy);
+            name: name,
+            location: location,
+            start: start,
+            duration: duration,
+            degree: degree,
+            relevance: relevance,
+            id: id,
+            color: color,
+            type: type,
+            classHeader: classHeader,
+            calendar: calendar,
+            addedBy: addedBy);
 
   final RecurrenceRule rrule;
 
-  RecurrenceRule get newRrule{
+  RecurrenceRule get newRrule {
     final RecurrenceRule rrule = this.rrule;
     if (calendar != null && rrule.frequency == Frequency.weekly) {
       var weeks = calendar.nonHolidayWeeks;
@@ -58,10 +57,10 @@ class RecurringUniEvent extends UniEvent {
         final bool startOdd = weeks.first % 2 == 1;
         weeks = weeks
             .whereIndex((index) =>
-        (startOdd ? index : index + 1) % rrule.interval !=
-            weeks.lookup(WeekYearRules.iso
-                .getWeekOfWeekYear(start.calendarDate)) %
-                rrule.interval)
+                (startOdd ? index : index + 1) % rrule.interval !=
+                weeks.lookup(WeekYearRules.iso
+                        .getWeekOfWeekYear(start.calendarDate)) %
+                    rrule.interval)
             .toSet();
       }
       return rrule.copyWith(
@@ -71,10 +70,9 @@ class RecurringUniEvent extends UniEvent {
               ? rrule.byWeekDays
               : {ByWeekDayEntry(start.dayOfWeek)},
           byWeeks: weeks);
-
     }
+    return rrule;
   }
-
 
   @override
   Iterable<UniEventInstance> generateInstances(
@@ -97,10 +95,10 @@ class RecurringUniEvent extends UniEvent {
         final bool startOdd = weeks.first % 2 == 1;
         weeks = weeks
             .whereIndex((index) =>
-        (startOdd ? index : index + 1) % rrule.interval !=
-            weeks.lookup(WeekYearRules.iso
-                .getWeekOfWeekYear(start.calendarDate)) %
-                rrule.interval)
+                (startOdd ? index : index + 1) % rrule.interval !=
+                weeks.lookup(WeekYearRules.iso
+                        .getWeekOfWeekYear(start.calendarDate)) %
+                    rrule.interval)
             .toSet();
       }
       rrule = rrule.copyWith(
@@ -124,7 +122,7 @@ class RecurringUniEvent extends UniEvent {
       bool skip = false;
       for (final holiday in calendar?.holidays ?? []) {
         final holidayInterval =
-        DateInterval(holiday.startDate, holiday.endDate);
+            DateInterval(holiday.startDate, holiday.endDate);
         if (holidayInterval.contains(start.calendarDate)) {
           // Skip holidays
           skip = true;
