@@ -206,6 +206,22 @@ extension AcademicCalendarExtension on AcademicCalendar {
   }
 }
 
+enum googleCalendarColors {
+  undefined,
+  lavender,
+  sage,
+  grape,
+  flamingo,
+  banana,
+  tangerine,
+  peacock,
+  graphite,
+  blueberry,
+  basil,
+  tomato
+}
+// TODO(bogpie): "Closest" color (from a list) - GCal works with limited no. of colors
+
 class UniEventProvider extends EventProvider<UniEventInstance>
     with ChangeNotifier {
   UniEventProvider({AuthProvider authProvider, PersonProvider personProvider})
@@ -331,6 +347,7 @@ class UniEventProvider extends EventProvider<UniEventInstance>
       ..start = start
       ..end = end
       ..summary = classHeader.acronym
+      ..colorId = eventInstance.type.index.toString()
       ..location = eventInstance.location;
 
     if (eventInstance is RecurringUniEvent) {
@@ -390,15 +407,24 @@ class UniEventProvider extends EventProvider<UniEventInstance>
 
         final g_cal.Calendar calendar = g_cal.Calendar();
 
-        final g_cal.CalendarList calendarListNonIterable =
-            await calendarApi.calendarList.list();
+        g_cal.CalendarList calendarListNonIterable;
+        try {
+          calendarListNonIterable = await calendarApi.calendarList.list();
+        } catch (e) {
+          print('Error $e in getting calendars as a list');
+          return;
+        }
 
-        List<g_cal.CalendarListEntry> calendarList =
+        final List<g_cal.CalendarListEntry> calendarList =
             calendarListNonIterable.items;
 
         for (final g_cal.CalendarListEntry calendar in calendarList) {
           if (calendar.summary == 'ACS UPB Mobile') {
-            await calendarApi.calendars.delete(calendar.id);
+            try {
+              await calendarApi.calendars.delete(calendar.id);
+            } catch (e) {
+              print('Error $e in deleting calendar');
+            }
             break;
           }
         }
