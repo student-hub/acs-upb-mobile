@@ -341,6 +341,7 @@ class UniEventProvider extends EventProvider<UniEventInstance>
       ..dateTime = endDateTime;
 
     // TODO(bogpie): Recreate timezone from existing information
+    // TODO(bogpie): Require user to input how many minutes before a notification from GCal (including the "no notification" option)
 
     final ClassHeader classHeader = eventInstance.classHeader;
     _gCalEvent
