@@ -384,10 +384,24 @@ class UniEventProvider extends EventProvider<UniEventInstance>
       (AuthClient client) async {
         // TODO(bogpie): Remember if a user already gave access to his Google Calendar
         // TODO(bogpie): Automatically close browser
+        // TODO(bogpie): Try / catch errors
 
         final g_cal.CalendarApi calendarApi = g_cal.CalendarApi(client);
 
         final g_cal.Calendar calendar = g_cal.Calendar();
+
+        final g_cal.CalendarList calendarListNonIterable =
+            await calendarApi.calendarList.list();
+
+        List<g_cal.CalendarListEntry> calendarList =
+            calendarListNonIterable.items;
+
+        for (final g_cal.CalendarListEntry calendar in calendarList) {
+          if (calendar.summary == 'ACS UPB Mobile') {
+            await calendarApi.calendars.delete(calendar.id);
+            break;
+          }
+        }
 
         // ignore: cascade_invocations
         calendar
