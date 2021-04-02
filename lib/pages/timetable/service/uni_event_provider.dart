@@ -358,7 +358,7 @@ class UniEventProvider extends EventProvider<UniEventInstance>
     ///RRULE:FREQ=WEEKLY;UNTIL=20210605T000000 doesn't work
     ///RRULE:FREQ=WEEKLY;UNTIL=20210605T000000;INTERVAL=1;BYDAY=WE doesn't work
 
-    insertGoogleEvents(_gCalEvents);
+    await insertGoogleEvents(_gCalEvents);
 
     // TODO(bogpie): Simplify code; maybe find a way to batch insert ?
     // TODO(bogpie): Take into account the holidays! Maybe multiple rrules?
@@ -377,8 +377,8 @@ class UniEventProvider extends EventProvider<UniEventInstance>
     }
   }
 
-  void insertGoogleEvents(List<g_cal.Event> _gCalEvents) {
-    clientViaUserConsent(
+  Future<void> insertGoogleEvents(List<g_cal.Event> _gCalEvents) async {
+    await clientViaUserConsent(
             GoogleApiHelper.credentials, GoogleApiHelper.scopes, prompt)
         .then(
       (AuthClient client) {
@@ -398,37 +398,33 @@ class UniEventProvider extends EventProvider<UniEventInstance>
         g_cal.Calendar returnedCalendar;
 
         calendarApi.calendars.insert(calendar).then(
-          (value) {
-            if (value != null && value is g_cal.Calendar) {
+          (returnedCalendar) {
+            if (returnedCalendar is g_cal.Calendar) {
               print('TESTING INSERTION OF SECONDARY CALENDAR');
-              print(value.runtimeType);
-              returnedCalendar = value;
+
+              String calendarId;
+              calendarId = returnedCalendar.id;
+              //calendarId = 'primary';
+
+              for (final g_cal.Event event in _gCalEvents) {
+                try {
+                  calendarApi.events.insert(event, calendarId).then(
+                    (value) {
+                      print('ADDED EVENT ${value.status}');
+                      if (value.status == 'confirmed') {
+                        print('Event added in google calendarApi'); //log
+                      } else {
+                        print('Unable to add event in google calendarApi');
+                      }
+                    },
+                  );
+                } catch (e) {
+                  print('Error creating event $e');
+                }
+              }
             }
           },
         );
-
-        print('ID: ${returnedCalendar.id}');
-
-        String calendarId;
-        calendarId = calendar.id;
-        calendarId = 'primary';
-
-        for (final g_cal.Event event in _gCalEvents) {
-          try {
-            calendarApi.events.insert(event, calendarId).then(
-              (value) {
-                print('ADDED EVENT ${value.status}');
-                if (value.status == 'confirmed') {
-                  print('Event added in google calendarApi'); //log
-                } else {
-                  print('Unable to add event in google calendarApi');
-                }
-              },
-            );
-          } catch (e) {
-            print('Error creating event $e');
-          }
-        }
       },
     );
   }
