@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
 
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
@@ -319,7 +318,7 @@ class UniEventProvider extends EventProvider<UniEventInstance>
     final g_cal.EventDateTime end = g_cal.EventDateTime();
     final DateTime endDateTime = startDateTime.add(duration);
     end
-      //..timeZone = endDateTime.timeZoneName
+      //..timeZone = endDateTime.timeZoneName TODO recreate timezone format from existing stirng
       ..timeZone = 'Europe/Bucharest'
       ..dateTime = endDateTime;
 
@@ -333,10 +332,10 @@ class UniEventProvider extends EventProvider<UniEventInstance>
     if (eventInstance is RecurringUniEvent) {
       _gCalEvent.recurrence = <String>[];
 
-      String rrule = eventInstance.rrule.toString();
-      final String rruleNew = rrule.replaceAll(RegExp(r'T000000'), '');
+      final String newRruleString =
+          eventInstance.newRrule.toString().replaceAll(RegExp(r'T000000'), '');
 
-      _gCalEvent.recurrence.add(rruleNew);
+      _gCalEvent.recurrence.add(newRruleString);
     }
 
     return _gCalEvent;
@@ -354,10 +353,6 @@ class UniEventProvider extends EventProvider<UniEventInstance>
       final g_cal.Event _gCalEvent = convertEvent(eventInstance);
       _gCalEvents.add(_gCalEvent);
     }
-
-    // _gCalEvents.removeRange(1, _gCalEvents.length);
-    //_gCalEvents.first.recurrence.first =
-    //    'RRULE:FREQ=WEEKLY;UNTIL=20210605;INTERVAL=1;BYDAY=WE';
 
     ///RRULE:FREQ=WEEKLY;UNTIL=20210605 works
     ///RRULE:FREQ=WEEKLY;UNTIL=20210605T000000 doesn't work
@@ -392,13 +387,37 @@ class UniEventProvider extends EventProvider<UniEventInstance>
 
         final g_cal.CalendarApi calendarApi = g_cal.CalendarApi(client);
 
-        const String calendarId = 'primary';
+        final g_cal.Calendar calendar = g_cal.Calendar();
+
+        // ignore: cascade_invocations
+        calendar
+          ..timeZone = 'Europe/Bucharest'
+          ..summary = 'ACS UPB Mobile'
+          ..description = 'Timetable imported from ACS UPB Mobile';
+
+        g_cal.Calendar returnedCalendar;
+
+        calendarApi.calendars.insert(calendar).then(
+          (value) {
+            if (value != null && value is g_cal.Calendar) {
+              print('TESTING INSERTION OF SECONDARY CALENDAR');
+              print(value.runtimeType);
+              returnedCalendar = value;
+            }
+          },
+        );
+
+        print('ID: ${returnedCalendar.id}');
+
+        String calendarId;
+        calendarId = calendar.id;
+        calendarId = 'primary';
 
         for (final g_cal.Event event in _gCalEvents) {
           try {
             calendarApi.events.insert(event, calendarId).then(
               (value) {
-                print('ADDED_________________${value.status}');
+                print('ADDED EVENT ${value.status}');
                 if (value.status == 'confirmed') {
                   print('Event added in google calendarApi'); //log
                 } else {
