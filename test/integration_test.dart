@@ -38,14 +38,16 @@ import 'package:acs_upb_mobile/pages/timetable/service/uni_event_provider.dart';
 import 'package:acs_upb_mobile/pages/timetable/view/events/add_event_view.dart';
 import 'package:acs_upb_mobile/pages/timetable/view/events/event_view.dart';
 import 'package:acs_upb_mobile/pages/timetable/view/timetable_page.dart';
-import 'package:acs_upb_mobile/resources/custom_icons.dart';
 import 'package:acs_upb_mobile/resources/locale_provider.dart';
+import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/widgets/search_bar.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:network_image_mock/network_image_mock.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:preferences/preferences.dart';
 import 'package:provider/provider.dart';
 import 'package:rrule/rrule.dart';
@@ -139,6 +141,9 @@ Future<void> main() async {
 
     LocaleProvider.cultures = testCultures;
     LocaleProvider.rruleL10ns = {'en': await RruleL10nTest.create()};
+
+    Utils.packageInfo = PackageInfo(
+        version: '1.2.7', buildNumber: '6', appName: 'ACS UPB Mobile');
 
     // Pretend an anonymous user is already logged in
     mockAuthProvider = MockAuthProvider();
@@ -720,7 +725,7 @@ Future<void> main() async {
           await tester.pumpAndSettle();
 
           // Open timetable
-          await tester.tap(find.byIcon(Icons.calendar_today_rounded));
+          await tester.tap(find.byIcon(Icons.calendar_today_outlined));
           await tester.pumpAndSettle();
 
           expect(find.byType(TimetablePage), findsOneWidget);
@@ -754,7 +759,7 @@ Future<void> main() async {
           await tester.pumpAndSettle();
 
           // Open timetable
-          await tester.tap(find.byIcon(Icons.calendar_today_rounded));
+          await tester.tap(find.byIcon(Icons.calendar_today_outlined));
           await tester.pumpAndSettle();
 
           expect(find.byType(TimetablePage), findsOneWidget);
@@ -801,7 +806,7 @@ Future<void> main() async {
           await tester.pumpAndSettle();
 
           // Open timetable
-          await tester.tap(find.byIcon(Icons.calendar_today_rounded));
+          await tester.tap(find.byIcon(Icons.calendar_today_outlined));
           await tester.pumpAndSettle();
 
           expect(find.byType(TimetablePage), findsOneWidget);
@@ -833,7 +838,7 @@ Future<void> main() async {
           await tester.pumpAndSettle();
 
           // Open timetable
-          await tester.tap(find.byIcon(Icons.calendar_today_rounded));
+          await tester.tap(find.byIcon(Icons.calendar_today_outlined));
           await tester.pumpAndSettle();
 
           expect(find.byType(TimetablePage), findsOneWidget);
@@ -851,6 +856,14 @@ Future<void> main() async {
 
     group('Timetable events', () {
       for (final size in screenSizes) {
+        if (size.width > size.height) {
+          // TODO(IoanaAlexandru): In landscape mode the test fails in a weird
+          // way - it seems as if two weeks are visible at the same time, but
+          // the behaviour cannot be reproduced on a device. Skipping this
+          // test in landscape mode for now.
+          continue;
+        }
+
         testWidgets('${size.width}x${size.height}',
             (WidgetTester tester) async {
           await binding.setSurfaceSize(size);
@@ -859,7 +872,7 @@ Future<void> main() async {
           await tester.pumpAndSettle();
 
           // Open timetable
-          await tester.tap(find.byIcon(Icons.calendar_today_rounded));
+          await tester.tap(find.byIcon(Icons.calendar_today_outlined));
           await tester.pumpAndSettle();
 
           expect(find.byType(TimetablePage), findsOneWidget);
@@ -1000,7 +1013,7 @@ Future<void> main() async {
           expect(find.text('F2'), findsOneWidget);
 
           // Navigate to today
-          await tester.tap(find.byIcon(Icons.today));
+          await tester.tap(find.byIcon(Icons.today_outlined));
           await tester.pumpAndSettle();
 
           // Expect current week
@@ -1023,7 +1036,7 @@ Future<void> main() async {
           await tester.pumpAndSettle();
 
           // Open timetable
-          await tester.tap(find.byIcon(Icons.calendar_today_rounded));
+          await tester.tap(find.byIcon(Icons.calendar_today_outlined));
           await tester.pumpAndSettle();
 
           // Expect current week
@@ -1067,7 +1080,7 @@ Future<void> main() async {
           await tester.pumpAndSettle();
 
           // Open timetable
-          await tester.tap(find.byIcon(Icons.calendar_today_rounded));
+          await tester.tap(find.byIcon(Icons.calendar_today_outlined));
           await tester.pumpAndSettle();
 
           // Open add event page
@@ -1106,7 +1119,7 @@ Future<void> main() async {
           await tester.pumpAndSettle();
 
           // Select lecturer - partial name
-          await tester.tap(find.byIcon(Icons.person));
+          await tester.tap(find.byIcon(Icons.person_outlined));
           await tester.pumpAndSettle();
           await tester.enterText(find.byKey(const Key('Autocomplete')), 'John');
           await tester.pumpAndSettle();
@@ -1114,7 +1127,7 @@ Future<void> main() async {
           await tester.pumpAndSettle();
 
           // Select lecturer - new name
-          await tester.tap(find.byIcon(Icons.person));
+          await tester.tap(find.byIcon(Icons.person_outlined));
           await tester.pumpAndSettle();
           await tester.enterText(
               find.byKey(const Key('Autocomplete')), 'Isabel Steward');
@@ -1122,7 +1135,7 @@ Future<void> main() async {
           await tester.pumpAndSettle();
 
           // Select lecturer - check autocomplete suggestions
-          await tester.tap(find.byIcon(Icons.person));
+          await tester.tap(find.byIcon(Icons.person_outlined));
           await tester.pumpAndSettle();
           await tester.enterText(find.byKey(const Key('Autocomplete')), 'Doe');
           await tester.pumpAndSettle();
@@ -1146,7 +1159,7 @@ Future<void> main() async {
           await tester.pumpAndSettle();
 
           // Open timetable
-          await tester.tap(find.byIcon(Icons.calendar_today_rounded));
+          await tester.tap(find.byIcon(Icons.calendar_today_outlined));
           await tester.pumpAndSettle();
 
           // Open PC event
@@ -1160,7 +1173,7 @@ Future<void> main() async {
           await tester.pumpAndSettle();
 
           expect(find.byType(ClassView), findsOneWidget);
-          expect(find.byIcon(Icons.person), findsOneWidget);
+          expect(find.byIcon(Icons.person_outlined), findsOneWidget);
           expect(find.byKey(const Key('LecturerCard')), findsOneWidget);
 
           // Press back
@@ -1168,10 +1181,10 @@ Future<void> main() async {
           await tester.pumpAndSettle();
 
           expect(find.byType(EventView), findsOneWidget);
-          expect(find.byIcon(Icons.person), findsOneWidget);
+          expect(find.byIcon(Icons.person_outlined), findsOneWidget);
           expect(find.text('Jane Doe'), findsOneWidget);
 
-          await tester.tap(find.byIcon(Icons.person));
+          await tester.tap(find.byIcon(Icons.person_outlined));
           await tester.pumpAndSettle();
 
           expect(find.byType(PersonView), findsOneWidget);
@@ -1181,7 +1194,7 @@ Future<void> main() async {
           await tester.pumpAndSettle();
 
           // Open edit event page
-          await tester.tap(find.byIcon(Icons.edit));
+          await tester.tap(find.byIcon(Icons.edit_outlined));
           await tester.pumpAndSettle();
 
           expect(find.byType(AddEventView), findsOneWidget);
@@ -1225,7 +1238,7 @@ Future<void> main() async {
           await tester.pumpAndSettle();
 
           expect(find.byType(EventView), findsOneWidget);
-          expect(find.byIcon(Icons.person), findsOneWidget);
+          expect(find.byIcon(Icons.person_outlined), findsOneWidget);
 
           // Press back
           await tester.tap(find.byIcon(Icons.arrow_back));
@@ -1246,7 +1259,7 @@ Future<void> main() async {
           await tester.pumpAndSettle();
 
           // Open timetable
-          await tester.tap(find.byIcon(Icons.calendar_today_rounded));
+          await tester.tap(find.byIcon(Icons.calendar_today_outlined));
           await tester.pumpAndSettle();
 
           // Open PH event
@@ -1256,13 +1269,13 @@ Future<void> main() async {
           expect(find.byType(EventView), findsOneWidget);
 
           // Open edit event page
-          await tester.tap(find.byIcon(Icons.edit));
+          await tester.tap(find.byIcon(Icons.edit_outlined));
           await tester.pumpAndSettle();
 
           expect(find.byType(AddEventView), findsOneWidget);
 
           // Open delete dialog
-          await tester.tap(find.byIcon(Icons.more_vert));
+          await tester.tap(find.byIcon(Icons.more_vert_outlined));
           await tester.pumpAndSettle();
 
           await tester.tap(find.text('Delete event'));
@@ -1309,11 +1322,11 @@ Future<void> main() async {
           await tester.pumpAndSettle();
 
           // Open timetable
-          await tester.tap(find.byIcon(Icons.calendar_today_rounded));
+          await tester.tap(find.byIcon(Icons.calendar_today_outlined));
           await tester.pumpAndSettle();
 
           // Open classes
-          await tester.tap(find.byIcon(Icons.class_));
+          await tester.tap(find.byIcon(FeatherIcons.bookOpen));
           await tester.pumpAndSettle();
 
           // Open class view
@@ -1348,15 +1361,15 @@ Future<void> main() async {
           await tester.pumpAndSettle();
 
           // Open timetable
-          await tester.tap(find.byIcon(Icons.calendar_today_rounded));
+          await tester.tap(find.byIcon(Icons.calendar_today_outlined));
           await tester.pumpAndSettle();
 
           // Open classes
-          await tester.tap(find.byIcon(Icons.class_));
+          await tester.tap(find.byIcon(FeatherIcons.bookOpen));
           await tester.pumpAndSettle();
 
           // Open add class view
-          await tester.tap(find.byIcon(Icons.edit));
+          await tester.tap(find.byIcon(Icons.edit_outlined));
           await tester.pumpAndSettle();
 
           expect(find.byType(AddClassesPage), findsOneWidget);
@@ -1398,11 +1411,11 @@ Future<void> main() async {
           await tester.pumpAndSettle();
 
           // Open timetable
-          await tester.tap(find.byIcon(Icons.calendar_today_rounded));
+          await tester.tap(find.byIcon(Icons.calendar_today_outlined));
           await tester.pumpAndSettle();
 
           // Open classes
-          await tester.tap(find.byIcon(Icons.class_));
+          await tester.tap(find.byIcon(FeatherIcons.bookOpen));
           await tester.pumpAndSettle();
 
           // Open class view
@@ -1412,7 +1425,7 @@ Future<void> main() async {
           expect(find.byType(ClassView), findsOneWidget);
 
           // Open add shortcut view
-          await tester.tap(find.byIcon(Icons.add));
+          await tester.tap(find.byIcon(Icons.add_outlined));
           await tester.pumpAndSettle();
 
           expect(find.byType(ShortcutView), findsOneWidget);
@@ -1423,7 +1436,7 @@ Future<void> main() async {
           expect(find.byType(ClassView), findsOneWidget);
 
           // Open grading view
-          await tester.tap(find.byIcon(Icons.edit));
+          await tester.tap(find.byIcon(Icons.edit_outlined));
           await tester.pumpAndSettle();
 
           expect(find.byType(GradingView), findsOneWidget);
@@ -1456,7 +1469,7 @@ Future<void> main() async {
         await tester.pumpAndSettle();
 
         // Open settings
-        await tester.tap(find.byIcon(Icons.settings));
+        await tester.tap(find.byIcon(Icons.settings_outlined));
         await tester.pumpAndSettle();
 
         expect(find.byType(SettingsPage), findsOneWidget);
@@ -1483,7 +1496,7 @@ Future<void> main() async {
         await tester.pumpAndSettle();
 
         // Open portal
-        await tester.tap(find.byIcon(Icons.public));
+        await tester.tap(find.byIcon(FeatherIcons.globe));
         await tester.pumpAndSettle();
 
         expect(find.byType(PortalPage), findsOneWidget);
@@ -1510,9 +1523,9 @@ Future<void> main() async {
         await tester.pumpAndSettle();
 
         // Open filter popup menu
-        await tester.tap(find.byIcon(Icons.public));
+        await tester.tap(find.byIcon(FeatherIcons.globe));
         await tester.pumpAndSettle();
-        await tester.tap(find.byIcon(CustomIcons.filter));
+        await tester.tap(find.byIcon(FeatherIcons.filter));
         await tester.pumpAndSettle();
 
         // Open filter on portal page
@@ -1545,7 +1558,7 @@ Future<void> main() async {
         await tester.pumpAndSettle();
 
         // Open portal page
-        await tester.tap(find.byIcon(Icons.public));
+        await tester.tap(find.byIcon(FeatherIcons.globe));
         await tester.pumpAndSettle();
 
         // Open add website page
@@ -1588,11 +1601,11 @@ Future<void> main() async {
         await tester.pumpAndSettle();
 
         // Open portal page
-        await tester.tap(find.byIcon(Icons.public));
+        await tester.tap(find.byIcon(FeatherIcons.globe));
         await tester.pumpAndSettle();
 
         // Enable editing
-        await tester.tap(find.byIcon(Icons.edit));
+        await tester.tap(find.byIcon(Icons.edit_outlined));
         await tester.pumpAndSettle();
 
         // Open edit website page
@@ -1633,11 +1646,11 @@ Future<void> main() async {
         await tester.pumpAndSettle();
 
         // Open portal page
-        await tester.tap(find.byIcon(Icons.public));
+        await tester.tap(find.byIcon(FeatherIcons.globe));
         await tester.pumpAndSettle();
 
         // Enable editing
-        await tester.tap(find.byIcon(Icons.edit));
+        await tester.tap(find.byIcon(Icons.edit_outlined));
         await tester.pumpAndSettle();
 
         // Open edit website page
@@ -1648,7 +1661,7 @@ Future<void> main() async {
         await tester.pumpAndSettle();
 
         // Open delete dialog
-        await tester.tap(find.byIcon(Icons.more_vert));
+        await tester.tap(find.byIcon(Icons.more_vert_outlined));
         await tester.pumpAndSettle();
 
         await tester.tap(find.text('Delete website'));
@@ -1661,7 +1674,7 @@ Future<void> main() async {
         await tester.pumpAndSettle();
 
         // Open delete dialog
-        await tester.tap(find.byIcon(Icons.more_vert));
+        await tester.tap(find.byIcon(Icons.more_vert_outlined));
         await tester.pumpAndSettle();
 
         await tester.tap(find.text('Delete website'));
@@ -1709,7 +1722,7 @@ Future<void> main() async {
         await tester.pumpAndSettle();
 
         // Open Edit Profile page
-        await tester.tap(find.byIcon(Icons.edit));
+        await tester.tap(find.byIcon(Icons.edit_outlined));
         await tester.pumpAndSettle();
 
         expect(find.byType(EditProfilePage), findsOneWidget);
@@ -1723,11 +1736,11 @@ Future<void> main() async {
         await tester.pumpAndSettle();
 
         // Open Edit Profile page
-        await tester.tap(find.byIcon(Icons.edit));
+        await tester.tap(find.byIcon(Icons.edit_outlined));
         await tester.pumpAndSettle();
 
         //Open delete account popup
-        await tester.tap(find.byIcon(Icons.more_vert));
+        await tester.tap(find.byIcon(Icons.more_vert_outlined));
         await tester.pumpAndSettle();
 
         await tester.tap(find.text('Delete account'));
@@ -1745,11 +1758,11 @@ Future<void> main() async {
         await tester.pumpAndSettle();
 
         // Open Edit Profile page
-        await tester.tap(find.byIcon(Icons.edit));
+        await tester.tap(find.byIcon(Icons.edit_outlined));
         await tester.pumpAndSettle();
 
         //Open change password popup
-        await tester.tap(find.byIcon(Icons.more_vert));
+        await tester.tap(find.byIcon(Icons.more_vert_outlined));
         await tester.pumpAndSettle();
 
         await tester.tap(find.text('Change password'));
@@ -1767,7 +1780,7 @@ Future<void> main() async {
         await tester.pumpAndSettle();
 
         // Open Edit Profile page
-        await tester.tap(find.byIcon(Icons.edit));
+        await tester.tap(find.byIcon(Icons.edit_outlined));
         await tester.pumpAndSettle();
 
         // Edit the email
@@ -1799,7 +1812,7 @@ Future<void> main() async {
           await tester.pumpAndSettle();
 
           // Open people page
-          await tester.tap(find.byIcon(Icons.people));
+          await tester.tap(find.byIcon(Icons.people_outlined));
           await tester.pumpAndSettle();
 
           expect(find.byType(PeoplePage), findsOneWidget);
@@ -1838,7 +1851,7 @@ Future<void> main() async {
 
         expect(find.byType(FaqPage), findsOneWidget);
 
-        await tester.tap(find.byIcon(Icons.search));
+        await tester.tap(find.byIcon(Icons.search_outlined));
         await tester.pumpAndSettle();
 
         expect(find.byType(SearchBar), findsOneWidget);

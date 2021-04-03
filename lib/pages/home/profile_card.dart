@@ -41,17 +41,17 @@ class _ProfileCardState extends State<ProfileCard> {
     }
 
     return Padding(
-      padding: const EdgeInsets.all(8),
+      padding: const EdgeInsets.only(top: 10, left: 10, right: 10),
       child: Card(
         child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8),
+          padding: const EdgeInsets.symmetric(vertical: 10),
           child: Column(
             children: [
               Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
                     child: CircleAvatar(
                         radius: 40,
                         backgroundImage:
@@ -63,7 +63,7 @@ class _ProfileCardState extends State<ProfileCard> {
                   ),
                   Expanded(
                     child: Padding(
-                      padding: const EdgeInsets.only(left: 5),
+                      padding: const EdgeInsets.only(top: 5, left: 5),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
@@ -78,7 +78,7 @@ class _ProfileCardState extends State<ProfileCard> {
                           ),
                           if (userGroup != null)
                             Padding(
-                              padding: const EdgeInsets.only(top: 4),
+                              padding: const EdgeInsets.only(top: 5),
                               child: Text(userGroup,
                                   style: Theme.of(context).textTheme.subtitle1),
                             ),
@@ -86,14 +86,17 @@ class _ProfileCardState extends State<ProfileCard> {
                             onTap: () {
                               Utils.signOut(context);
                             },
-                            child: Text(
-                                authProvider.isAnonymous
-                                    ? S.of(context).actionLogIn
-                                    : S.of(context).actionLogOut,
-                                style: Theme.of(context)
-                                    .accentTextTheme
-                                    .subtitle2
-                                    .copyWith(fontWeight: FontWeight.w500)),
+                            child: Padding(
+                              padding: const EdgeInsets.all(5),
+                              child: Text(
+                                  authProvider.isAnonymous
+                                      ? S.of(context).actionLogIn
+                                      : S.of(context).actionLogOut,
+                                  style: Theme.of(context)
+                                      .accentTextTheme
+                                      .subtitle2
+                                      .copyWith(fontWeight: FontWeight.w500)),
+                            ),
                           ),
                         ],
                       ),
@@ -104,7 +107,7 @@ class _ProfileCardState extends State<ProfileCard> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         IconButton(
-                            icon: const Icon(Icons.edit),
+                            icon: const Icon(Icons.edit_outlined),
                             color: Theme.of(context).textTheme.button.color,
                             onPressed: () async {
                               await Navigator.of(context).push(
