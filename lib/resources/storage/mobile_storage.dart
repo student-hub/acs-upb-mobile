@@ -1,8 +1,8 @@
 import 'dart:typed_data';
 
-import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:image_picker/image_picker.dart';
 
 class StorageProvider {
   static Future<String> findImageUrl(BuildContext context, String image) async {
