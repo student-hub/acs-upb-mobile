@@ -11,7 +11,6 @@ import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
-import 'package:package_info_plus/package_info_plus.dart';
 import 'package:preferences/preferences.dart';
 import 'package:provider/provider.dart';
 import 'package:time_machine/time_machine.dart';
