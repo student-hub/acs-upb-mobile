@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/navigation/routes.dart';
+import 'package:acs_upb_mobile/pages/settings/service/request_provider.dart';
 import 'package:acs_upb_mobile/resources/locale_provider.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/widgets/icon_text.dart';
@@ -27,17 +28,25 @@ class _SettingsPageState extends State<SettingsPage> {
   // the async check hasn't completed yet.
   bool isVerified;
 
+  // String describing the level of editing permissions that the user has.
+  String userPermissionString = '';
+
   @override
   void initState() {
     super.initState();
     Provider.of<AuthProvider>(context, listen: false)
         .isVerified
         .then((value) => setState(() => isVerified = value));
+    checkUserPermissionsString()
+        .then((value) => setState(() => userPermissionString = value));
   }
 
   @override
   Widget build(BuildContext context) {
     final AuthProvider authProvider = Provider.of<AuthProvider>(context);
+    if (userPermissionString.isEmpty) {
+      userPermissionString = S.of(context).infoLoading;
+    }
 
     return AppScaffold(
       title: Text(S.of(context).navigationSettings),
@@ -81,6 +90,23 @@ class _SettingsPageState extends State<SettingsPage> {
                     onlySaveOnSubmit: false,
                   ),
                 ),
+                PreferenceTitle(S.of(context).settingsTitleDataControl),
+                ListTile(
+                  key: const ValueKey('ask_permissions'),
+                  onTap: () {
+                    if (authProvider.isAnonymous) {
+                      AppToast.show(S.of(context).messageNotLoggedIn);
+                    } else if (isVerified != true) {
+                      AppToast.show(
+                          S.of(context).messageEmailNotVerifiedToPerformAction);
+                    } else {
+                      Navigator.of(context)
+                          .pushNamed(Routes.requestPermissions);
+                    }
+                  },
+                  title: Text(S.of(context).settingsItemEditingPermissions),
+                  subtitle: Text(userPermissionString),
+                ),
                 const Divider(),
                 Column(
                   mainAxisSize: MainAxisSize.min,
@@ -101,8 +127,8 @@ class _SettingsPageState extends State<SettingsPage> {
                       child: IconText(
                         icon: FeatherIcons.github,
                         text: S
-                                .of(context)
-                                .infoAppIsOpenSource(Utils.packageInfo.appName),
+                            .of(context)
+                            .infoAppIsOpenSource(Utils.packageInfo.appName),
                         actionText: S.of(context).actionContribute,
                         actionArrow: true,
                         align: TextAlign.center,
@@ -116,40 +142,17 @@ class _SettingsPageState extends State<SettingsPage> {
                       ),
                     ),
                     const Divider(),
-                    TextButton(
-                      key: const ValueKey('ask_permissions'),
-                      onPressed: () => {
-                        if (authProvider.isAnonymous)
-                          {AppToast.show(S.of(context).messageNotLoggedIn)}
-                        else if (isVerified != true)
-                          {
-                            AppToast.show(S
-                                .of(context)
-                                .messageEmailNotVerifiedToPerformAction)
-                          }
-                        else
-                          {
-                            Navigator.of(context)
-                                .pushNamed(Routes.requestPermissions),
-                          }
-                      },
-                      child: Text(S.of(context).labelAskPermissions,
-                          textAlign: TextAlign.center,
-                          style:
-                              (authProvider.isAnonymous || isVerified != true)
-                                  ? Theme.of(context).textTheme.bodyText1.apply(
-                                        color: Theme.of(context).disabledColor,
-                                      )
-                                  : Theme.of(context).textTheme.bodyText1),
-                    ),
-                    const Divider(),
-                    Text(
+                    Padding(
+                      padding: const EdgeInsets.all(10),
+                      child: Text(
                         '${S.of(context).labelVersion} ${Utils.packageInfo.version}+${(int.parse(Utils.packageInfo.buildNumber) - 10000).toString()}',
                         textAlign: TextAlign.center,
-                        style: Theme.of(context).textTheme.bodyText1),
-                    const Padding(
-                      padding: EdgeInsets.only(top: 10),
-                    )
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyText1
+                            .apply(color: Theme.of(context).hintColor),
+                      ),
+                    ),
                   ],
                 ),
               ],
@@ -195,5 +198,23 @@ class _SettingsPageState extends State<SettingsPage> {
         stderr.writeln('Invalid preference string: $preference');
         return S.of(context).settingsItemLanguageAuto;
     }
+  }
+
+  Future<String> checkUserPermissionsString() async {
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    final requestProvider =
+        Provider.of<RequestProvider>(context, listen: false);
+
+    if (authProvider.isAuthenticated && !authProvider.isAnonymous) {
+      final user = await authProvider.currentUser;
+      if (user.canEditPublicInfo) {
+        return S.of(context).settingsPermissionsEdit;
+      } else if (user.canAddPublicInfo) {
+        return S.of(context).settingsPermissionsAdd;
+      } else if (await requestProvider.userAlreadyRequested(user.uid)) {
+        return S.of(context).settingsPermissionsRequestSent;
+      }
+    }
+    return S.of(context).settingsPermissionsNone;
   }
 }
