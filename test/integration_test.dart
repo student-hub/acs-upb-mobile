@@ -38,11 +38,11 @@ import 'package:acs_upb_mobile/pages/timetable/service/uni_event_provider.dart';
 import 'package:acs_upb_mobile/pages/timetable/view/events/add_event_view.dart';
 import 'package:acs_upb_mobile/pages/timetable/view/events/event_view.dart';
 import 'package:acs_upb_mobile/pages/timetable/view/timetable_page.dart';
-import 'package:acs_upb_mobile/resources/custom_icons.dart';
 import 'package:acs_upb_mobile/resources/locale_provider.dart';
 import 'package:acs_upb_mobile/widgets/search_bar.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:network_image_mock/network_image_mock.dart';
@@ -1272,7 +1272,7 @@ Future<void> main() async {
           await tester.pumpAndSettle();
 
           // Open classes
-          await tester.tap(find.byIcon(Icons.class__outlined));
+          await tester.tap(find.byIcon(FeatherIcons.bookOpen));
           await tester.pumpAndSettle();
 
           // Open class view
@@ -1305,7 +1305,7 @@ Future<void> main() async {
           await tester.pumpAndSettle();
 
           // Open classes
-          await tester.tap(find.byIcon(Icons.class__outlined));
+          await tester.tap(find.byIcon(FeatherIcons.bookOpen));
           await tester.pumpAndSettle();
 
           // Open add class view
@@ -1347,7 +1347,7 @@ Future<void> main() async {
           await tester.pumpAndSettle();
 
           // Open classes
-          await tester.tap(find.byIcon(Icons.class__outlined));
+          await tester.tap(find.byIcon(FeatherIcons.bookOpen));
           await tester.pumpAndSettle();
 
           // Open class view
@@ -1408,7 +1408,7 @@ Future<void> main() async {
         await tester.pumpAndSettle();
 
         // Open portal
-        await tester.tap(find.byIcon(Icons.public_outlined));
+        await tester.tap(find.byIcon(FeatherIcons.globe));
         await tester.pumpAndSettle();
 
         expect(find.byType(PortalPage), findsOneWidget);
@@ -1425,9 +1425,9 @@ Future<void> main() async {
         await tester.pumpAndSettle();
 
         // Open filter popup menu
-        await tester.tap(find.byIcon(Icons.public_outlined));
+        await tester.tap(find.byIcon(FeatherIcons.globe));
         await tester.pumpAndSettle();
-        await tester.tap(find.byIcon(CustomIcons.filter));
+        await tester.tap(find.byIcon(FeatherIcons.filter));
         await tester.pumpAndSettle();
 
         // Open filter on portal page
@@ -1453,7 +1453,7 @@ Future<void> main() async {
         await tester.pumpAndSettle();
 
         // Open portal page
-        await tester.tap(find.byIcon(Icons.public_outlined));
+        await tester.tap(find.byIcon(FeatherIcons.globe));
         await tester.pumpAndSettle();
 
         // Open add website page
@@ -1486,7 +1486,7 @@ Future<void> main() async {
         await tester.pumpAndSettle();
 
         // Open portal page
-        await tester.tap(find.byIcon(Icons.public_outlined));
+        await tester.tap(find.byIcon(FeatherIcons.globe));
         await tester.pumpAndSettle();
 
         // Enable editing
@@ -1521,7 +1521,7 @@ Future<void> main() async {
         await tester.pumpAndSettle();
 
         // Open portal page
-        await tester.tap(find.byIcon(Icons.public_outlined));
+        await tester.tap(find.byIcon(FeatherIcons.globe));
         await tester.pumpAndSettle();
 
         // Enable editing

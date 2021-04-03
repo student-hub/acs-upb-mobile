@@ -8,6 +8,7 @@ import 'package:acs_upb_mobile/resources/custom_icons.dart';
 import 'package:acs_upb_mobile/widgets/selectable.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:provider/provider.dart';
 
 class RelevanceController {
@@ -244,7 +245,7 @@ class _RelevancePickerState extends State<RelevancePicker> {
       padding: const EdgeInsets.only(top: 12, left: 12),
       child: Row(
         children: <Widget>[
-          Icon(CustomIcons.filter,
+          Icon(FeatherIcons.filter,
               color: CustomIcons.formIconColor(Theme.of(context))),
           const SizedBox(width: 12),
           Expanded(

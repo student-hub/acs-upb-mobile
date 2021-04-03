@@ -17,6 +17,7 @@ import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:acs_upb_mobile/widgets/spoiler.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:provider/provider.dart';
 import 'package:recase/recase.dart';
 
@@ -242,7 +243,7 @@ class _PortalPageState extends State<PortalPage> {
           },
         ),
         AppScaffoldAction(
-          icon: CustomIcons.filter,
+          icon: FeatherIcons.filter,
           tooltip: S.of(context).navigationFilter,
           items: {
             S.of(context).filterMenuRelevance: () {

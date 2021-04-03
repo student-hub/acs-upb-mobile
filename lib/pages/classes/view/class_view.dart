@@ -16,6 +16,7 @@ import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:positioned_tap_detector/positioned_tap_detector.dart';
 import 'package:provider/provider.dart';
 
@@ -151,7 +152,7 @@ class _ClassViewState extends State<ClassView> {
       case ShortcutType.resource:
         return Icons.insert_drive_file_outlined;
       default:
-        return Icons.public_outlined;
+        return FeatherIcons.globe;
     }
   }
 
@@ -247,7 +248,7 @@ class _ClassViewState extends State<ClassView> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   IconText(
-                    icon: Icons.class__outlined,
+                    icon: FeatherIcons.bookOpen,
                     text: widget.classHeader.name ?? '-',
                     style: Theme.of(context).textTheme.bodyText1,
                   ),

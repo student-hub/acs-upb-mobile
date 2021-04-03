@@ -4,6 +4,7 @@ import 'package:acs_upb_mobile/pages/people/view/people_page.dart';
 import 'package:acs_upb_mobile/pages/portal/view/portal_page.dart';
 import 'package:acs_upb_mobile/pages/timetable/view/timetable_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 
 class AppBottomNavigationBar extends StatefulWidget {
   const AppBottomNavigationBar({this.tabIndex = 0});
@@ -77,7 +78,7 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar>
                   iconMargin: EdgeInsets.zero,
                 ),
                 Tab(
-                  icon: const Icon(Icons.public_outlined),
+                  icon: const Icon(FeatherIcons.globe),
                   text: S.of(context).navigationPortal,
                   iconMargin: EdgeInsets.zero,
                 ),

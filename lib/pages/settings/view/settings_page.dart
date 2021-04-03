@@ -1,10 +1,8 @@
 import 'dart:io';
 
-import 'package:package_info_plus/package_info_plus.dart';
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/navigation/routes.dart';
-import 'package:acs_upb_mobile/resources/custom_icons.dart';
 import 'package:acs_upb_mobile/resources/locale_provider.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/widgets/icon_text.dart';
@@ -12,6 +10,8 @@ import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_feather_icons/flutter_feather_icons.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:preferences/preferences.dart';
 import 'package:provider/provider.dart';
 import 'package:time_machine/time_machine.dart';
@@ -119,7 +119,7 @@ class _SettingsPageState extends State<SettingsPage> {
                         Padding(
                           padding: const EdgeInsets.all(8),
                           child: IconText(
-                            icon: CustomIcons.github_brands,
+                            icon: FeatherIcons.github,
                             text: S.of(context).infoAppIsOpenSource,
                             actionText: S.of(context).actionContribute,
                             actionArrow: true,

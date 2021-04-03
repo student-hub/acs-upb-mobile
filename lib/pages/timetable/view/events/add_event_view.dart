@@ -25,6 +25,7 @@ import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:provider/provider.dart';
 import 'package:recase/recase.dart';
 import 'package:rrule/rrule.dart';
@@ -289,7 +290,7 @@ class _AddEventViewState extends State<AddEventView> {
                         child: DropdownButtonFormField<int>(
                           decoration: InputDecoration(
                             labelText: S.of(context).labelSemester,
-                            prefixIcon: const Icon(Icons.calendar_view_day_outlined),
+                            prefixIcon: const Icon(FeatherIcons.columns),
                           ),
                           value: selectedSemester,
                           items: [1, 2]
@@ -347,7 +348,7 @@ class _AddEventViewState extends State<AddEventView> {
                             isExpanded: true,
                             decoration: InputDecoration(
                               labelText: S.of(context).labelClass,
-                              prefixIcon: const Icon(Icons.class__outlined),
+                              prefixIcon: const Icon(FeatherIcons.bookOpen),
                             ),
                             value: selectedClass,
                             items: classHeaders
