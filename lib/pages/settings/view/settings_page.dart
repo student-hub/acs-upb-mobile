@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:package_info_plus/package_info_plus.dart';
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/navigation/routes.dart';
@@ -24,22 +23,6 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-  PackageInfo _packageInfo = PackageInfo(
-    version: 'Unknown',
-    buildNumber: 'Unknown',
-  );
-
-  Future<void> _initPackageInfo() async {
-    // package_info_plus is not compatible with flutter_test
-    // link to the issue: https://github.com/fluttercommunity/plus_plugins/issues/172
-    if (!Platform.environment.containsKey('FLUTTER_TEST')) {
-      final info = await PackageInfo.fromPlatform();
-      setState(() {
-        _packageInfo = info;
-      });
-    }
-  }
-
   // Whether the user verified their email; this can be true, false or null if
   // the async check hasn't completed yet.
   bool isVerified;
@@ -50,7 +33,6 @@ class _SettingsPageState extends State<SettingsPage> {
     Provider.of<AuthProvider>(context, listen: false)
         .isVerified
         .then((value) => setState(() => isVerified = value));
-    _initPackageInfo();
   }
 
   @override
@@ -120,7 +102,9 @@ class _SettingsPageState extends State<SettingsPage> {
                           padding: const EdgeInsets.all(8),
                           child: IconText(
                             icon: CustomIcons.github_brands,
-                            text: S.of(context).infoAppIsOpenSource,
+                            text: S
+                                .of(context)
+                                .infoAppIsOpenSource(Utils.packageInfo.appName),
                             actionText: S.of(context).actionContribute,
                             actionArrow: true,
                             align: TextAlign.center,
@@ -162,7 +146,7 @@ class _SettingsPageState extends State<SettingsPage> {
                         ),
                         const Divider(),
                         Text(
-                            '${S.of(context).labelVersion} ${_packageInfo.version}+${_packageInfo.buildNumber}',
+                            '${S.of(context).labelVersion} ${Utils.packageInfo.version}+${(int.parse(Utils.packageInfo.buildNumber) - 10000).toString()}',
                             textAlign: TextAlign.center,
                             style: Theme.of(context).textTheme.bodyText1),
                         const Padding(
