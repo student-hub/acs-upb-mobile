@@ -325,7 +325,7 @@ class _ClassListState extends State<ClassList> {
               ),
             ),
           Padding(
-            padding: const EdgeInsets.all(8),
+            padding: const EdgeInsets.all(10),
             child: Column(
                 children: widget.sectioned
                     ? (buildSections(

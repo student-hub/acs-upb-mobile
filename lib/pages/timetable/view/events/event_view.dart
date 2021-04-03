@@ -145,7 +145,7 @@ class _EventViewState extends State<EventView> {
               child: Row(
                 children: <Widget>[
                   const Padding(
-                    padding: EdgeInsets.all(8),
+                    padding: EdgeInsets.all(10),
                     child: Icon(Icons.location_on_outlined),
                   ),
                   const SizedBox(width: 16),
@@ -160,7 +160,7 @@ class _EventViewState extends State<EventView> {
               child: Row(
                 children: <Widget>[
                   const Padding(
-                    padding: EdgeInsets.all(8),
+                    padding: EdgeInsets.all(10),
                     child: Icon(Icons.people_outlined),
                   ),
                   const SizedBox(width: 16),
@@ -191,7 +191,7 @@ class _EventViewState extends State<EventView> {
                 child: Row(
                   children: <Widget>[
                     const Padding(
-                      padding: EdgeInsets.all(8),
+                      padding: EdgeInsets.all(10),
                       child: Icon(Icons.person_outlined),
                     ),
                     const SizedBox(width: 16),

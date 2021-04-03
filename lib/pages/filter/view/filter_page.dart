@@ -191,7 +191,7 @@ class FilterPageState extends State<FilterPage> {
                 widgets
                   // Level name
                   ..add(Padding(
-                    padding: const EdgeInsets.only(left: 10, bottom: 8),
+                    padding: const EdgeInsets.only(left: 10, bottom: 10),
                     child: Text(
                         filter.localizedLevelNames[i]
                             [LocaleProvider.localeString],

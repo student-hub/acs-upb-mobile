@@ -57,14 +57,14 @@ class AppDialog extends StatelessWidget {
                     Expanded(
                       child: Column(
                         children: [
-                          Container(height: 8),
+                          Container(height: 10),
                           Text(message),
                         ],
                       ),
                     ),
                   if (info != null)
                     Column(children: [
-                      const SizedBox(height: 8),
+                      const SizedBox(height: 10),
                       IconText(
                           icon: Icons.info_outlined,
                           text: info,

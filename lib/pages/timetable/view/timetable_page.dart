@@ -87,43 +87,46 @@ class _TimetablePageState extends State<TimetablePage> {
           ),
         ),
       ],
-      body: Stack(
-        children: [
-          Timetable<UniEventInstance>(
-            controller: _controller,
-            dateHeaderBuilder: (_, date) => DateHeader(date),
-            eventBuilder: (event) => UniEventWidget(event),
-            allDayEventBuilder: (context, event, info) => UniAllDayEventWidget(
-              event,
-              info: info,
-            ),
-            onEventBackgroundTap: (dateTime, isAllDay) {
-              if (!isAllDay) {
-                final user = Provider.of<AuthProvider>(context, listen: false)
-                    .currentUserFromCache;
-                if (user.canAddPublicInfo) {
-                  Navigator.of(context).push(MaterialPageRoute<AddEventView>(
-                    builder: (_) => ChangeNotifierProxyProvider<AuthProvider,
-                        FilterProvider>(
-                      create: (_) => FilterProvider(),
-                      update: (context, authProvider, filterProvider) {
-                        return filterProvider..updateAuth(authProvider);
-                      },
-                      child: AddEventView(
-                        initialEvent: UniEvent(
-                            start: dateTime,
-                            duration: const Period(hours: 2),
-                            id: null),
+      body: Padding(
+        padding: const EdgeInsets.all(10),
+        child: Stack(
+          children: [
+            Timetable<UniEventInstance>(
+              controller: _controller,
+              dateHeaderBuilder: (_, date) => DateHeader(date),
+              eventBuilder: (event) => UniEventWidget(event),
+              allDayEventBuilder: (context, event, info) => UniAllDayEventWidget(
+                event,
+                info: info,
+              ),
+              onEventBackgroundTap: (dateTime, isAllDay) {
+                if (!isAllDay) {
+                  final user = Provider.of<AuthProvider>(context, listen: false)
+                      .currentUserFromCache;
+                  if (user.canAddPublicInfo) {
+                    Navigator.of(context).push(MaterialPageRoute<AddEventView>(
+                      builder: (_) => ChangeNotifierProxyProvider<AuthProvider,
+                          FilterProvider>(
+                        create: (_) => FilterProvider(),
+                        update: (context, authProvider, filterProvider) {
+                          return filterProvider..updateAuth(authProvider);
+                        },
+                        child: AddEventView(
+                          initialEvent: UniEvent(
+                              start: dateTime,
+                              duration: const Period(hours: 2),
+                              id: null),
+                        ),
                       ),
-                    ),
-                  ));
-                } else {
-                  AppToast.show(S.of(context).errorPermissionDenied);
+                    ));
+                  } else {
+                    AppToast.show(S.of(context).errorPermissionDenied);
+                  }
                 }
-              }
-            },
-          ),
-        ],
+              },
+            ),
+          ],
+        ),
       ),
     );
   }

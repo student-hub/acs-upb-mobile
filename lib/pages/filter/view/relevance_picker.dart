@@ -209,7 +209,7 @@ class _RelevancePickerState extends State<RelevancePicker> {
             }),
             disabled: !(_user?.canAddPublicInfo ?? false),
           ))
-          ..add(const SizedBox(width: 8));
+          ..add(const SizedBox(width: 10));
       }
     }
 
@@ -221,7 +221,7 @@ class _RelevancePickerState extends State<RelevancePicker> {
         _customControllers[node] = controller;
 
         widgets
-          ..add(const SizedBox(width: 8))
+          ..add(const SizedBox(width: 10))
           ..add(Selectable(
             label: node,
             controller: controller,
@@ -269,7 +269,7 @@ class _RelevancePickerState extends State<RelevancePicker> {
                         _customRelevanceButton(),
                       ],
                     ),
-                    const SizedBox(height: 8),
+                    const SizedBox(height: 10),
                     Row(
                       children: <Widget>[
                         Expanded(
@@ -305,7 +305,7 @@ class _RelevancePickerState extends State<RelevancePicker> {
                                         }),
                                         controller: _onlyMeController,
                                       ),
-                                      const SizedBox(width: 8),
+                                      const SizedBox(width: 10),
                                     ],
                                   ),
                                 if (widget.canBeForEveryone)
@@ -342,7 +342,7 @@ class _RelevancePickerState extends State<RelevancePicker> {
                                         disabled:
                                             !(_user?.canAddPublicInfo ?? false),
                                       ),
-                                      const SizedBox(width: 8),
+                                      const SizedBox(width: 10),
                                     ],
                                   ),
                                 _customRelevanceSelectables(),

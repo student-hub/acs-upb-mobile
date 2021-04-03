@@ -522,7 +522,7 @@ class _AddEventViewState extends State<AddEventView> {
     final endTime = startTime.add(duration);
     final textColor = Theme.of(context).textTheme.headline4.color;
     return Padding(
-      padding: const EdgeInsets.only(top: 8),
+      padding: const EdgeInsets.only(top: 10),
       child: Row(
         children: [
           const SizedBox(width: 12),
@@ -609,7 +609,7 @@ class RelevanceFormField extends FormField<List<String>> {
                 ),
                 if (state.hasError)
                   Padding(
-                    padding: const EdgeInsets.only(top: 8),
+                    padding: const EdgeInsets.only(top: 10),
                     child: Text(
                       state.errorText,
                       style: Theme.of(context)
@@ -669,7 +669,7 @@ class SelectableFormField extends FormField<Map<Localizable, bool>> {
                                           color: Theme.of(context).hintColor),
                                 ),
                               ),
-                              const SizedBox(height: 8),
+                              const SizedBox(height: 10),
                               Row(
                                 children: <Widget>[
                                   Expanded(
@@ -692,7 +692,7 @@ class SelectableFormField extends FormField<Map<Localizable, bool>> {
                                                   state.didChange(state.value);
                                                 },
                                               ),
-                                              const SizedBox(width: 8),
+                                              const SizedBox(width: 10),
                                             ],
                                           );
                                         },
@@ -710,7 +710,7 @@ class SelectableFormField extends FormField<Map<Localizable, bool>> {
                 ),
                 if (state.hasError)
                   Padding(
-                    padding: const EdgeInsets.only(top: 8),
+                    padding: const EdgeInsets.only(top: 10),
                     child: Text(
                       state.errorText,
                       style: Theme.of(context)

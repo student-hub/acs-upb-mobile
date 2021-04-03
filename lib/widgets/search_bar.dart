@@ -30,7 +30,7 @@ class _SearchBarState extends State<SearchBar> {
               color: const Color.fromRGBO(142, 142, 147, .15),
             ),
             child: Padding(
-              padding: const EdgeInsets.only(left: 8),
+              padding: const EdgeInsets.only(left: 10),
               child: TextField(
                 autofocus: true,
                 controller: widget.textController,

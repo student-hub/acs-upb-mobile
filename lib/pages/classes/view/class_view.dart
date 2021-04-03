@@ -48,14 +48,14 @@ class _ClassViewState extends State<ClassView> {
               return ListView(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
                     child: Column(
                       children: [
-                        const SizedBox(height: 8),
+                        const SizedBox(height: 10),
                         lecturerCard(context),
-                        const SizedBox(height: 8),
+                        const SizedBox(height: 10),
                         shortcuts(context),
-                        const SizedBox(height: 8),
+                        const SizedBox(height: 10),
                         GradingChart(
                           grading: classInfo.grading,
                           lastUpdated: classInfo.gradingLastUpdated,
@@ -79,7 +79,7 @@ class _ClassViewState extends State<ClassView> {
     final authProvider = Provider.of<AuthProvider>(context);
 
     return Padding(
-      padding: const EdgeInsets.all(8),
+      padding: const EdgeInsets.all(10),
       child: Column(
         children: [
               Row(
@@ -123,7 +123,7 @@ class _ClassViewState extends State<ClassView> {
             (classInfo.shortcuts.isEmpty
                 ? <Widget>[
                     Padding(
-                      padding: const EdgeInsets.all(8),
+                      padding: const EdgeInsets.all(10),
                       child: Center(
                         child: Text(
                           S.of(context).labelUnknown,
@@ -238,11 +238,11 @@ class _ClassViewState extends State<ClassView> {
     return Card(
       key: const Key('LecturerCard'),
       child: Padding(
-        padding: const EdgeInsets.all(8),
+        padding: const EdgeInsets.all(10),
         child: Row(
           children: [
             ClassIcon(classHeader: widget.classHeader),
-            const SizedBox(width: 8),
+            const SizedBox(width: 10),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
