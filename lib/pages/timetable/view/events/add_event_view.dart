@@ -530,7 +530,7 @@ class _AddEventViewState extends State<AddEventView> {
             Icons.access_time_outlined,
             color: CustomIcons.formIconColor(Theme.of(context)),
           ),
-          FlatButton(
+          TextButton(
             onPressed: () async {
               final TimeOfDay start = await showTimePicker(
                 context: context,
@@ -564,7 +564,7 @@ class _AddEventViewState extends State<AddEventView> {
               ],
             ),
           ),
-          FlatButton(
+          TextButton(
             onPressed: () async {
               final TimeOfDay end = await showTimePicker(
                 context: context,

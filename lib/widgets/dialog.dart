@@ -78,7 +78,7 @@ class AppDialog extends StatelessWidget {
           ),
         ),
         actions: <Widget>[
-              FlatButton(
+              TextButton(
                 key: const ValueKey('cancel_button'),
                 child: Text(
                   S.of(context).buttonCancel.toUpperCase(),

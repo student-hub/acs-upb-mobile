@@ -83,8 +83,7 @@ class AppScaffold extends StatelessWidget {
             child: action?.text != null
                 ? ButtonTheme(
                     minWidth: 10,
-                    child: FlatButton(
-                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    child: TextButton(
                       child: Text(
                         action.text,
                         style: const TextStyle().apply(
