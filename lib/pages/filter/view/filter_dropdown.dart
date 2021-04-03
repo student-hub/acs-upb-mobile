@@ -60,7 +60,8 @@ class _FilterDropdownState extends State<FilterDropdown> {
                   .map((node) => DropdownMenuItem(
                         value: node,
                         child: Padding(
-                          padding: EdgeInsets.only(left: widget.leftPadding ?? 0),
+                          padding:
+                              EdgeInsets.only(left: widget.leftPadding ?? 0),
                           child: Text(node.localizedName(context)),
                         ),
                       ))

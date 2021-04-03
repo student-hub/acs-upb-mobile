@@ -62,7 +62,7 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar>
             height: 50,
             child: Column(
               children: [
-                const Divider(indent: 0, endIndent: 0,height: 1),
+                const Divider(indent: 0, endIndent: 0, height: 1),
                 Expanded(
                   child: TabBar(
                     controller: tabController,
@@ -97,7 +97,8 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar>
                     labelColor: Theme.of(context).accentColor,
                     labelPadding: EdgeInsets.zero,
                     indicatorPadding: EdgeInsets.zero,
-                    unselectedLabelColor: Theme.of(context).unselectedWidgetColor,
+                    unselectedLabelColor:
+                        Theme.of(context).unselectedWidgetColor,
                     indicatorColor: Theme.of(context).accentColor,
                   ),
                 ),

@@ -270,7 +270,8 @@ class _AddEventViewState extends State<AddEventView> {
                         child: DropdownButtonFormField<String>(
                           decoration: InputDecoration(
                             labelText: S.of(context).labelUniversityYear,
-                            prefixIcon: const Icon(Icons.calendar_today_outlined),
+                            prefixIcon:
+                                const Icon(Icons.calendar_today_outlined),
                           ),
                           value: selectedCalendar,
                           items: calendars.keys.map((key) {

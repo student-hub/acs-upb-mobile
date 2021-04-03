@@ -95,7 +95,8 @@ class _TimetablePageState extends State<TimetablePage> {
               controller: _controller,
               dateHeaderBuilder: (_, date) => DateHeader(date),
               eventBuilder: (event) => UniEventWidget(event),
-              allDayEventBuilder: (context, event, info) => UniAllDayEventWidget(
+              allDayEventBuilder: (context, event, info) =>
+                  UniAllDayEventWidget(
                 event,
                 info: info,
               ),
@@ -301,7 +302,7 @@ class _TimetablePageState extends State<TimetablePage> {
                 WidgetSpan(
                   alignment: PlaceholderAlignment.top,
                   child: Icon(
-                   FeatherIcons.bookOpen,
+                    FeatherIcons.bookOpen,
                     size: Theme.of(context).textTheme.subtitle1.fontSize + 2,
                   ),
                 ),
