@@ -10,10 +10,12 @@ import 'package:acs_upb_mobile/pages/settings/service/request_provider.dart';
 import 'package:acs_upb_mobile/pages/settings/view/request_permissions.dart';
 import 'package:acs_upb_mobile/pages/settings/view/settings_page.dart';
 import 'package:acs_upb_mobile/resources/locale_provider.dart';
+import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/widgets/dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:preferences/preferences.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -47,6 +49,9 @@ void main() {
 
       LocaleProvider.cultures = testCultures;
       LocaleProvider.rruleL10ns = {'en': await RruleL10nTest.create()};
+
+      Utils.packageInfo = PackageInfo(
+          version: '1.2.7', buildNumber: '6', appName: 'ACS UPB Mobile');
 
       // Pretend an anonymous user is already logged in
       mockAuthProvider = MockAuthProvider();
