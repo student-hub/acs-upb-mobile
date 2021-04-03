@@ -37,8 +37,6 @@ class _SettingsPageState extends State<SettingsPage> {
     Provider.of<AuthProvider>(context, listen: false)
         .isVerified
         .then((value) => setState(() => isVerified = value));
-    checkUserPermissionsString()
-        .then((value) => setState(() => userPermissionString = value));
   }
 
   @override
@@ -46,6 +44,8 @@ class _SettingsPageState extends State<SettingsPage> {
     final AuthProvider authProvider = Provider.of<AuthProvider>(context);
     if (userPermissionString.isEmpty) {
       userPermissionString = S.of(context).infoLoading;
+      checkUserPermissionsString()
+          .then((value) => setState(() => userPermissionString = value));
     }
 
     return AppScaffold(
