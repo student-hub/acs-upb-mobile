@@ -143,7 +143,7 @@ class _SignUpViewState extends State<SignUpView> {
                             .apply(fontWeightDelta: 2),
                         recognizer: TapGestureRecognizer()
                           ..onTap = () => Utils.launchURL(
-                              'https://www.websitepolicies.com/policies/view/IIUFv381',
+                              Utils.privacyPolicyURL,
                               context: context)),
                     const TextSpan(text: '.'),
                   ]),

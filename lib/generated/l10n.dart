@@ -2544,6 +2544,16 @@ class S {
     );
   }
 
+  /// `Read the {appName} policy`
+  String infoReadThePolicy(Object appName) {
+    return Intl.message(
+      'Read the $appName policy',
+      name: 'infoReadThePolicy',
+      desc: '',
+      args: [appName],
+    );
+  }
+
   /// `@stud.acs.upb.ro`
   String get stringEmailDomain {
     return Intl.message(

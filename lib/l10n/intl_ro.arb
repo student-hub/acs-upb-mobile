@@ -267,6 +267,7 @@
   "infoAppIsOpenSource": "{appName} este open source.",
   "infoEmail": "Acesta este același username pe care îl folosești să te loghezi pe {forum}.",
   "infoLoading": "Se încarcă...",
+  "infoReadThePolicy": "Citește politica {appName}",
 
   "stringEmailDomain": "@stud.acs.upb.ro",
   "stringForum": "cs.curs.pub.ro",

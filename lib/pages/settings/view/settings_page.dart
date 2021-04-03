@@ -107,21 +107,18 @@ class _SettingsPageState extends State<SettingsPage> {
                   title: Text(S.of(context).settingsItemEditingPermissions),
                   subtitle: Text(userPermissionString),
                 ),
-                const Divider(),
+                ListTile(
+                  onTap: () =>
+                      Utils.launchURL(Utils.privacyPolicyURL, context: context),
+                  title: Text(S.of(context).labelPrivacyPolicy),
+                  subtitle: Text(
+                    S.of(context).infoReadThePolicy(Utils.packageInfo.appName),
+                  ),
+                ),
                 Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.all(10),
-                      child: IconText(
-                        icon: Icons.lock_outline,
-                        text: S.of(context).labelPrivacyPolicy,
-                        align: TextAlign.center,
-                        onTap: () => Utils.launchURL(
-                            'https://www.websitepolicies.com/policies/view/IIUFv381',
-                            context: context),
-                      ),
-                    ),
+                    const Divider(),
                     Padding(
                       padding: const EdgeInsets.all(10),
                       child: IconText(
@@ -136,12 +133,10 @@ class _SettingsPageState extends State<SettingsPage> {
                             .textTheme
                             .bodyText1
                             .apply(color: Theme.of(context).hintColor),
-                        onTap: () => Utils.launchURL(
-                            'https://github.com/acs-upb-mobile/acs-upb-mobile',
-                            context: context),
+                        onTap: () =>
+                            Utils.launchURL(Utils.repoURL, context: context),
                       ),
                     ),
-                    const Divider(),
                     Padding(
                       padding: const EdgeInsets.all(10),
                       child: Text(
