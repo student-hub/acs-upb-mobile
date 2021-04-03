@@ -34,7 +34,7 @@ class _PeoplePageState extends State<PeoplePage> {
     return AppScaffold(
       actions: [
         AppScaffoldAction(
-          icon: Icons.search,
+          icon: Icons.search_outlined,
           onPressed: () {
             setState(() => searchClosed = !searchClosed);
           },

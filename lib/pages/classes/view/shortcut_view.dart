@@ -59,7 +59,7 @@ class _ShortcutViewState extends State<ShortcutView> {
                 decoration: InputDecoration(
                   labelText: S.of(context).labelName,
                   hintText: S.of(context).hintWebsiteLabel,
-                  prefixIcon: const Icon(Icons.label),
+                  prefixIcon: const Icon(Icons.label_outlined),
                 ),
                 onChanged: (_) => setState(() {}),
               ),
@@ -67,7 +67,7 @@ class _ShortcutViewState extends State<ShortcutView> {
                 isExpanded: true,
                 decoration: InputDecoration(
                   labelText: S.of(context).labelType,
-                  prefixIcon: const Icon(Icons.category),
+                  prefixIcon: const Icon(Icons.category_outlined),
                 ),
                 value: selectedType,
                 items: ShortcutType.values
@@ -86,7 +86,7 @@ class _ShortcutViewState extends State<ShortcutView> {
                 decoration: InputDecoration(
                   labelText: '${S.of(context).labelLink} *',
                   hintText: S.of(context).hintWebsiteLink,
-                  prefixIcon: const Icon(Icons.public),
+                  prefixIcon: const Icon(Icons.public_outlined),
                 ),
                 validator: (value) {
                   if (!isURL(value, requireProtocol: true)) {

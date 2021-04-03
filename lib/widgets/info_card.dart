@@ -49,7 +49,7 @@ class InfoCard<T> extends StatelessWidget {
                                 .copyWith(color: Theme.of(context).accentColor),
                           ),
                           Icon(
-                            Icons.arrow_forward_ios,
+                            Icons.arrow_forward_ios_outlined,
                             color: Theme.of(context).accentColor,
                             size:
                                 Theme.of(context).textTheme.subtitle2.fontSize,

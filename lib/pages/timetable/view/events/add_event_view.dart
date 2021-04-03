@@ -6,6 +6,8 @@ import 'package:acs_upb_mobile/pages/classes/model/class.dart';
 import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
 import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
 import 'package:acs_upb_mobile/pages/filter/view/relevance_picker.dart';
+import 'package:acs_upb_mobile/pages/people/model/person.dart';
+import 'package:acs_upb_mobile/pages/people/service/person_provider.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/academic_calendar.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/events/all_day_event.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/events/class_event.dart';
@@ -24,13 +26,11 @@ import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
+import 'package:recase/recase.dart';
 import 'package:rrule/rrule.dart';
 import 'package:time_machine/time_machine.dart' as time_machine show DayOfWeek;
 import 'package:time_machine/time_machine.dart' hide DayOfWeek;
 import 'package:time_machine/time_machine_text_patterns.dart';
-import 'package:acs_upb_mobile/pages/people/model/person.dart';
-import 'package:acs_upb_mobile/pages/people/service/person_provider.dart';
-import 'package:recase/recase.dart';
 
 class AddEventView extends StatefulWidget {
   /// If the `id` of [initialEvent] is not null, this acts like an "Edit event"
@@ -201,7 +201,7 @@ class _AddEventViewState extends State<AddEventView> {
           controller: textEditingController,
           decoration: InputDecoration(
             labelText: S.of(context).labelLecturer,
-            prefixIcon: const Icon(Icons.person),
+            prefixIcon: const Icon(Icons.person_outlined),
           ),
           focusNode: focusNode,
           onFieldSubmitted: (String value) {
@@ -269,7 +269,7 @@ class _AddEventViewState extends State<AddEventView> {
                         child: DropdownButtonFormField<String>(
                           decoration: InputDecoration(
                             labelText: S.of(context).labelUniversityYear,
-                            prefixIcon: const Icon(Icons.calendar_today),
+                            prefixIcon: const Icon(Icons.calendar_today_outlined),
                           ),
                           value: selectedCalendar,
                           items: calendars.keys.map((key) {
@@ -289,7 +289,7 @@ class _AddEventViewState extends State<AddEventView> {
                         child: DropdownButtonFormField<int>(
                           decoration: InputDecoration(
                             labelText: S.of(context).labelSemester,
-                            prefixIcon: const Icon(Icons.calendar_view_day),
+                            prefixIcon: const Icon(Icons.calendar_view_day_outlined),
                           ),
                           value: selectedSemester,
                           items: [1, 2]
@@ -317,7 +317,7 @@ class _AddEventViewState extends State<AddEventView> {
                   DropdownButtonFormField<UniEventType>(
                     decoration: InputDecoration(
                       labelText: S.of(context).labelType,
-                      prefixIcon: const Icon(Icons.category),
+                      prefixIcon: const Icon(Icons.category_outlined),
                     ),
                     value: selectedEventType,
                     items: UniEventTypeExtension.classTypes
@@ -347,7 +347,7 @@ class _AddEventViewState extends State<AddEventView> {
                             isExpanded: true,
                             decoration: InputDecoration(
                               labelText: S.of(context).labelClass,
-                              prefixIcon: const Icon(Icons.class_),
+                              prefixIcon: const Icon(Icons.class__outlined),
                             ),
                             value: selectedClass,
                             items: classHeaders
@@ -373,7 +373,7 @@ class _AddEventViewState extends State<AddEventView> {
                           controller: locationController,
                           decoration: InputDecoration(
                             labelText: S.of(context).labelLocation,
-                            prefixIcon: const Icon(Icons.location_on),
+                            prefixIcon: const Icon(Icons.location_on_outlined),
                           ),
                           onChanged: (_) => setState(() {}),
                         ),
@@ -382,7 +382,7 @@ class _AddEventViewState extends State<AddEventView> {
                             weekSelected[WeekType.even] != null)
                           SelectableFormField(
                             key: const ValueKey('week_picker'),
-                            icon: Icons.calendar_today,
+                            icon: Icons.calendar_today_outlined,
                             label: S.of(context).labelWeek,
                             initialValues: weekSelected,
                             validator: (selection) {
@@ -398,7 +398,7 @@ class _AddEventViewState extends State<AddEventView> {
                           ),
                         SelectableFormField(
                           key: const ValueKey('day_picker'),
-                          icon: Icons.today,
+                          icon: Icons.today_outlined,
                           label: S.of(context).labelDay,
                           initialValues: weekDaySelected,
                           validator: (selection) {
@@ -425,7 +425,7 @@ class _AddEventViewState extends State<AddEventView> {
   }
 
   AppDialog _deletionConfirmationDialog(BuildContext context) => AppDialog(
-        icon: const Icon(Icons.delete),
+        icon: const Icon(Icons.delete_outlined),
         title: S.of(context).actionDeleteEvent,
         info: S.of(context).messageThisCouldAffectOtherStudents,
         message: S.of(context).messageDeleteEvent,
@@ -508,7 +508,7 @@ class _AddEventViewState extends State<AddEventView> {
       );
 
   AppScaffoldAction _deleteButton() => AppScaffoldAction(
-        icon: Icons.more_vert,
+        icon: Icons.more_vert_outlined,
         items: {
           S.of(context).actionDeleteEvent: () =>
               showDialog(context: context, builder: _deletionConfirmationDialog)
@@ -526,7 +526,7 @@ class _AddEventViewState extends State<AddEventView> {
         children: [
           const SizedBox(width: 12),
           Icon(
-            Icons.access_time,
+            Icons.access_time_outlined,
             color: CustomIcons.formIconColor(Theme.of(context)),
           ),
           FlatButton(

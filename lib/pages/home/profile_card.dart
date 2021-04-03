@@ -100,7 +100,7 @@ class _ProfileCardState extends State<ProfileCard> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         IconButton(
-                            icon: const Icon(Icons.edit),
+                            icon: const Icon(Icons.edit_outlined),
                             color: Theme.of(context).textTheme.button.color,
                             onPressed: () async {
                               await Navigator.of(context).push(

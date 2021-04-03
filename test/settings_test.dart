@@ -109,7 +109,7 @@ void main() {
       expect(app.theme.brightness, equals(Brightness.light));
 
       // Open settings
-      await tester.tap(find.byIcon(Icons.settings));
+      await tester.tap(find.byIcon(Icons.settings_outlined));
       await tester.pumpAndSettle();
 
       // Toggle dark mode
@@ -139,7 +139,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // Open settings
-      await tester.tap(find.byIcon(Icons.settings));
+      await tester.tap(find.byIcon(Icons.settings_outlined));
       await tester.pumpAndSettle();
 
       expect(find.text('Auto'), findsOneWidget);
@@ -196,7 +196,7 @@ void main() {
         await tester.pumpAndSettle();
 
         // Open settings
-        await tester.tap(find.byIcon(Icons.settings));
+        await tester.tap(find.byIcon(Icons.settings_outlined));
         await tester.pumpAndSettle();
 
         // Open Ask Permissions page
@@ -237,7 +237,7 @@ void main() {
         await tester.pumpAndSettle();
 
         // Open settings
-        await tester.tap(find.byIcon(Icons.settings));
+        await tester.tap(find.byIcon(Icons.settings_outlined));
         await tester.pumpAndSettle();
 
         // Open Ask Permissions page
@@ -283,7 +283,7 @@ void main() {
         await tester.pumpAndSettle();
 
         // Open settings
-        await tester.tap(find.byIcon(Icons.settings));
+        await tester.tap(find.byIcon(Icons.settings_outlined));
         await tester.pumpAndSettle();
 
         // Press Ask Permissions page
@@ -315,7 +315,7 @@ void main() {
         await tester.pumpAndSettle();
 
         // Open settings
-        await tester.tap(find.byIcon(Icons.settings));
+        await tester.tap(find.byIcon(Icons.settings_outlined));
         await tester.pumpAndSettle();
 
         // Press Ask Permissions page
@@ -333,7 +333,7 @@ void main() {
         // Go back and open settings again
         await tester.tap(find.byIcon(Icons.arrow_back));
         await tester.pumpAndSettle();
-        await tester.tap(find.byIcon(Icons.settings));
+        await tester.tap(find.byIcon(Icons.settings_outlined));
         await tester.pumpAndSettle();
 
         // Press Ask Permissions page

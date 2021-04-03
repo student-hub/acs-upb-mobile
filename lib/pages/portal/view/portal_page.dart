@@ -217,7 +217,7 @@ class _PortalPageState extends State<PortalPage> {
       title: Text(S.of(context).navigationPortal),
       actions: [
         AppScaffoldAction(
-          icon: editingEnabled ? CustomIcons.edit_slash : Icons.edit,
+          icon: editingEnabled ? CustomIcons.edit_slash : Icons.edit_outlined,
           tooltip: editingEnabled
               ? S.of(context).actionDisableEditing
               : S.of(context).actionEnableEditing,
@@ -371,7 +371,7 @@ class _AddWebsiteButton extends StatelessWidget {
             padding: const EdgeInsets.only(top: 8, left: 8, right: 8),
             child: CircleImage(
               icon: Icon(
-                Icons.add,
+                Icons.add_outlined,
                 color: Theme.of(context).unselectedWidgetColor,
               ),
               label: '',

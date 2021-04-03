@@ -19,11 +19,19 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar>
   List<Widget> tabs;
   TabController tabController;
   final PageStorageBucket bucket = PageStorageBucket();
+  int currentTab = 0;
 
   @override
   void initState() {
     super.initState();
     tabController = TabController(vsync: this, length: 4);
+    tabController.addListener(() {
+      if (!tabController.indexIsChanging) {
+        setState(() {
+          currentTab = tabController.index;
+        });
+      }
+    });
     tabs = [
       HomePage(key: const PageStorageKey('Home'), tabController: tabController),
       const TimetablePage(), // Cannot preserve state with PageStorageKey
@@ -55,22 +63,28 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar>
               controller: tabController,
               tabs: [
                 Tab(
-                  icon: const Icon(Icons.home),
+                  icon: currentTab == 0
+                      ? const Icon(Icons.home)
+                      : const Icon(Icons.home_outlined),
                   text: S.of(context).navigationHome,
                   iconMargin: EdgeInsets.zero,
                 ),
                 Tab(
-                  icon: const Icon(Icons.calendar_today_rounded),
+                  icon: currentTab == 1
+                      ? const Icon(Icons.calendar_today)
+                      : const Icon(Icons.calendar_today_outlined),
                   text: S.of(context).navigationTimetable,
                   iconMargin: EdgeInsets.zero,
                 ),
                 Tab(
-                  icon: const Icon(Icons.public),
+                  icon: const Icon(Icons.public_outlined),
                   text: S.of(context).navigationPortal,
                   iconMargin: EdgeInsets.zero,
                 ),
                 Tab(
-                  icon: const Icon(Icons.people),
+                  icon: currentTab == 3
+                      ? const Icon(Icons.people)
+                      : const Icon(Icons.people_outlined),
                   text: S.of(context).navigationPeople,
                   iconMargin: EdgeInsets.zero,
                 ),

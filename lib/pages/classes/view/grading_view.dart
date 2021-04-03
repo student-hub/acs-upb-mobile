@@ -66,7 +66,7 @@ class _GradingChartState extends State<GradingChart> {
                         : () => AppToast.show(
                             S.of(context).warningNoPermissionToEditClassInfo),
                     child: IconButton(
-                      icon: const Icon(Icons.edit),
+                      icon: const Icon(Icons.edit_outlined),
                       onPressed:
                           authProvider.currentUserFromCache.canEditClassInfo
                               ? () => Navigator.of(context).push(
@@ -227,7 +227,7 @@ class _GradingViewState extends State<GradingView> {
               controller: nameController,
               decoration: InputDecoration(
                 hintText: S.of(context).hintEvaluation,
-                prefixIcon: const Icon(Icons.label),
+                prefixIcon: const Icon(Icons.label_outlined),
               ),
               validator: (value) {
                 if (i == focusNodes.length - 2) {

@@ -151,7 +151,7 @@ class _RelevancePickerState extends State<RelevancePicker> {
                   .copyWith(color: buttonColor),
             ),
             Icon(
-              Icons.arrow_forward_ios,
+              Icons.arrow_forward_ios_outlined,
               color: buttonColor,
               size: Theme.of(context).textTheme.subtitle2.fontSize,
             )

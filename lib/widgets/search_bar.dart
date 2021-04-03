@@ -36,7 +36,7 @@ class _SearchBarState extends State<SearchBar> {
                 controller: widget.textController,
                 onChanged: widget.onSearch,
                 decoration: const InputDecoration(
-                  icon: Icon(Icons.search),
+                  icon: Icon(Icons.search_outlined),
                   border: InputBorder.none,
                 ),
               ),

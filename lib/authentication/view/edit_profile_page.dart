@@ -149,7 +149,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
   AppDialog _deletionConfirmationDialog(BuildContext context) {
     final passwordController = TextEditingController();
     return AppDialog(
-      icon: const Icon(Icons.warning, color: Colors.red),
+      icon: const Icon(Icons.warning_amber_outlined, color: Colors.red),
       title: S.of(context).actionDeleteAccount,
       message:
           '${S.of(context).messageDeleteAccount} ${S.of(context).messageCannotBeUndone}',
@@ -235,7 +235,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
             image: imageWidget ??
                 const AssetImage('assets/illustrations/undraw_profile_pic.png'),
             enableOverlay: true,
-            overlayIcon: const Icon(Icons.edit)),
+            overlayIcon: const Icon(Icons.edit_outlined)),
         onTap: () async {
           final Uint8List uploadedImage =
               await StorageProvider.showImagePicker();
@@ -319,7 +319,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
               }
             }),
         AppScaffoldAction(
-          icon: Icons.more_vert,
+          icon: Icons.more_vert_outlined,
           items: {
             S.of(context).actionChangePassword: () =>
                 showDialog(context: context, builder: _changePasswordDialog),
@@ -344,7 +344,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 children: [
                   TextFormField(
                     decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.person),
+                      prefixIcon: const Icon(Icons.person_outlined),
                       labelText: S.of(context).labelFirstName,
                       hintText: S.of(context).hintFirstName,
                     ),
@@ -358,7 +358,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   ),
                   TextFormField(
                     decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.person),
+                      prefixIcon: const Icon(Icons.person_outlined),
                       labelText: S.of(context).labelLastName,
                       hintText: S.of(context).hintLastName,
                     ),
@@ -373,7 +373,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   if (isVerified == false)
                     TextFormField(
                       decoration: InputDecoration(
-                        prefixIcon: const Icon(Icons.alternate_email),
+                        prefixIcon: const Icon(Icons.alternate_email_outlined),
                         labelText: S.of(context).labelEmail,
                         hintText: S.of(context).hintEmail,
                         suffix: Text(emailDomain),
@@ -431,7 +431,7 @@ class AccountNotVerifiedWarning extends StatelessWidget {
             children: [
               IconText(
                 align: TextAlign.center,
-                icon: Icons.error_outline,
+                icon: Icons.error_outlined,
                 text: S.of(context).messageEmailNotVerified,
                 actionText: S.of(context).actionSendVerificationAgain,
                 style: Theme.of(context)

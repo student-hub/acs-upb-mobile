@@ -94,7 +94,7 @@ class _ClassViewState extends State<ClassView> {
                         : () => AppToast.show(
                             S.of(context).warningNoPermissionToEditClassInfo),
                     child: IconButton(
-                      icon: const Icon(Icons.add),
+                      icon: const Icon(Icons.add_outlined),
                       onPressed:
                           authProvider.currentUserFromCache.canEditClassInfo
                               ? () => Navigator.of(context).push(
@@ -145,20 +145,20 @@ class _ClassViewState extends State<ClassView> {
   IconData shortcutIcon(ShortcutType type) {
     switch (type) {
       case ShortcutType.main:
-        return Icons.home;
+        return Icons.home_outlined;
       case ShortcutType.classbook:
         return CustomIcons.book;
       case ShortcutType.resource:
-        return Icons.insert_drive_file;
+        return Icons.insert_drive_file_outlined;
       default:
-        return Icons.public;
+        return Icons.public_outlined;
     }
   }
 
   AppDialog _deletionConfirmationDialog(
           {BuildContext context, String shortcutName, Function onDelete}) =>
       AppDialog(
-        icon: const Icon(Icons.delete),
+        icon: const Icon(Icons.delete_outlined),
         title: S.of(context).actionDeleteShortcut,
         message: S.of(context).messageDeleteShortcut(shortcutName),
         info: S.of(context).messageThisCouldAffectOtherStudents,
@@ -247,7 +247,7 @@ class _ClassViewState extends State<ClassView> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   IconText(
-                    icon: Icons.class_,
+                    icon: Icons.class__outlined,
                     text: widget.classHeader.name ?? '-',
                     style: Theme.of(context).textTheme.bodyText1,
                   ),
@@ -273,7 +273,7 @@ class _ClassViewState extends State<ClassView> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               IconText(
-                                icon: Icons.person,
+                                icon: Icons.person_outlined,
                                 text: lecturerName ?? '-',
                                 style: Theme.of(context).textTheme.bodyText1,
                               ),

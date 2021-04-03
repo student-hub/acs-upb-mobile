@@ -208,7 +208,7 @@ class FilterPageState extends State<FilterPage> {
                             padding: const EdgeInsets.only(
                                 left: 10, right: 10, top: 10),
                             child: IconText(
-                              icon: Icons.info,
+                              icon: Icons.info_outlined,
                               text: widget.info,
                               style: Theme.of(context).textTheme.bodyText1,
                             ),

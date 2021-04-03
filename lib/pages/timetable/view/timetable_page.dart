@@ -62,13 +62,13 @@ class _TimetablePageState extends State<TimetablePage> {
       ),
       needsToBeAuthenticated: true,
       leading: AppScaffoldAction(
-        icon: Icons.today,
+        icon: Icons.today_outlined,
         onPressed: () => _controller.animateToToday(),
         tooltip: S.of(context).actionJumpToToday,
       ),
       actions: [
         AppScaffoldAction(
-          icon: Icons.class_,
+          icon: Icons.class__outlined,
           tooltip: S.of(context).navigationClasses,
           onPressed: () => Navigator.of(context).push(
             MaterialPageRoute<ChangeNotifierProvider>(
@@ -177,7 +177,7 @@ class _TimetablePageState extends State<TimetablePage> {
                 WidgetSpan(
                   alignment: PlaceholderAlignment.top,
                   child: Icon(
-                    Icons.class_,
+                    Icons.class__outlined,
                     size: Theme.of(context).textTheme.subtitle1.fontSize + 2,
                   ),
                 ),
@@ -298,7 +298,7 @@ class _TimetablePageState extends State<TimetablePage> {
                 WidgetSpan(
                   alignment: PlaceholderAlignment.top,
                   child: Icon(
-                    Icons.class_,
+                    Icons.class__outlined,
                     size: Theme.of(context).textTheme.subtitle1.fontSize + 2,
                   ),
                 ),

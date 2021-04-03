@@ -119,7 +119,7 @@ class _WebsiteViewState extends State<WebsiteView> {
               padding: const EdgeInsets.all(8),
               child: Row(
                 children: <Widget>[
-                  Icon(Icons.remove_red_eye,
+                  Icon(Icons.remove_red_eye_outlined,
                       color: CustomIcons.formIconColor(Theme.of(context))),
                   const SizedBox(width: 12),
                   AutoSizeText(
@@ -160,7 +160,7 @@ class _WebsiteViewState extends State<WebsiteView> {
   }
 
   AppDialog _deletionConfirmationDialog(BuildContext context) => AppDialog(
-        icon: const Icon(Icons.delete),
+        icon: const Icon(Icons.delete_outlined),
         title: S.of(context).actionDeleteWebsite,
         message: S.of(context).messageDeleteWebsite,
         info: widget.website.isPrivate
@@ -225,7 +225,7 @@ class _WebsiteViewState extends State<WebsiteView> {
           (widget.updateExisting
               ? [
                   AppScaffoldAction(
-                    icon: Icons.more_vert,
+                    icon: Icons.more_vert_outlined,
                     items: {
                       S.of(context).actionDeleteWebsite: () => showDialog(
                           context: context,
@@ -251,7 +251,7 @@ class _WebsiteViewState extends State<WebsiteView> {
                       decoration: InputDecoration(
                         labelText: S.of(context).labelName,
                         hintText: S.of(context).hintWebsiteLabel,
-                        prefixIcon: const Icon(Icons.label),
+                        prefixIcon: const Icon(Icons.label_outlined),
                       ),
                       onChanged: (_) => setState(() {}),
                     ),
@@ -259,7 +259,7 @@ class _WebsiteViewState extends State<WebsiteView> {
                       isExpanded: true,
                       decoration: InputDecoration(
                         labelText: S.of(context).labelCategory,
-                        prefixIcon: const Icon(Icons.category),
+                        prefixIcon: const Icon(Icons.category_outlined),
                       ),
                       value: _selectedCategory,
                       items: WebsiteCategory.values
@@ -278,7 +278,7 @@ class _WebsiteViewState extends State<WebsiteView> {
                       decoration: InputDecoration(
                         labelText: '${S.of(context).labelLink} *',
                         hintText: S.of(context).hintWebsiteLink,
-                        prefixIcon: const Icon(Icons.public),
+                        prefixIcon: const Icon(Icons.public_outlined),
                       ),
                       validator: (value) {
                         if (!isURL(value, requireProtocol: true)) {
@@ -299,7 +299,7 @@ class _WebsiteViewState extends State<WebsiteView> {
                           labelText:
                               '${S.of(context).labelDescription} (${S.of(context).settingsItemLanguageRomanian.toLowerCase()})',
                           hintText: 'Cel mai popular motor de căutare.',
-                          prefixIcon: const Icon(Icons.info)),
+                          prefixIcon: const Icon(Icons.info_outlined)),
                       onChanged: (_) => setState(() {}),
                       minLines: 1,
                       maxLines: 5,
@@ -310,7 +310,7 @@ class _WebsiteViewState extends State<WebsiteView> {
                           labelText:
                               '${S.of(context).labelDescription} (${S.of(context).settingsItemLanguageEnglish.toLowerCase()})',
                           hintText: 'The most popular search engine.',
-                          prefixIcon: const Icon(Icons.info)),
+                          prefixIcon: const Icon(Icons.info_outlined)),
                       onChanged: (_) => setState(() {}),
                       minLines: 1,
                       maxLines: 5,

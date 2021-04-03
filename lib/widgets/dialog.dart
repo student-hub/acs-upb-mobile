@@ -66,7 +66,7 @@ class AppDialog extends StatelessWidget {
                     Column(children: [
                       const SizedBox(height: 8),
                       IconText(
-                          icon: Icons.info,
+                          icon: Icons.info_outlined,
                           text: info,
                           style: Theme.of(context)
                               .textTheme
