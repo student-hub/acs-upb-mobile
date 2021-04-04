@@ -3,6 +3,7 @@ import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/settings/model/request.dart';
 import 'package:acs_upb_mobile/pages/settings/service/request_provider.dart';
+import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/widgets/button.dart';
 import 'package:acs_upb_mobile/widgets/dialog.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
@@ -112,7 +113,9 @@ class _RequestPermissionsPageState extends State<RequestPermissionsPage> {
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 20, 20, 8),
               child: Text(
-                S.of(context).messageAskPermissionToEdit,
+                S
+                    .of(context)
+                    .messageAskPermissionToEdit(Utils.packageInfo.appName),
                 style: Theme.of(context).textTheme.headline6,
               ),
             ),

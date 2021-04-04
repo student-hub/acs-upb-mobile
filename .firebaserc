@@ -1,5 +1,6 @@
 {
   "projects": {
-    "default": "acs-upb-mobile"
+    "default": "acs-upb-mobile",
+    "dev": "acs-upb-mobile-dev"
   }
 }

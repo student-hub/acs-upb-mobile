@@ -3,6 +3,7 @@ import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/navigation/routes.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:flutter/material.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:pedantic/pedantic.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -54,4 +55,7 @@ class Utils {
   static String wrapUrlWithCORS(String url) {
     return 'https://cors-anywhere.herokuapp.com/$url';
   }
+
+  static PackageInfo packageInfo = PackageInfo(
+      version: 'Unknown', buildNumber: 'Unknown', appName: 'Unknown');
 }

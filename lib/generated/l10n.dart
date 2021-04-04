@@ -14,22 +14,23 @@ import 'intl/messages_all.dart';
 
 class S {
   S();
-  
+
   static S current;
-  
-  static const AppLocalizationDelegate delegate =
-    AppLocalizationDelegate();
+
+  static const AppLocalizationDelegate delegate = AppLocalizationDelegate();
 
   static Future<S> load(Locale locale) {
-    final name = (locale.countryCode?.isEmpty ?? false) ? locale.languageCode : locale.toString();
-    final localeName = Intl.canonicalizedLocale(name); 
+    final name = (locale.countryCode?.isEmpty ?? false)
+        ? locale.languageCode
+        : locale.toString();
+    final localeName = Intl.canonicalizedLocale(name);
     return initializeMessages(localeName).then((_) {
       Intl.defaultLocale = localeName;
       S.current = S();
-      
+
       return S.current;
     });
-  } 
+  }
 
   static S of(BuildContext context) {
     return Localizations.of<S>(context, S);
@@ -2315,13 +2316,13 @@ class S {
     );
   }
 
-  /// `Why do you want edit permissions for ACS UPB Mobile?`
-  String get messageAskPermissionToEdit {
+  /// `Why do you want edit permissions for {appName}?`
+  String messageAskPermissionToEdit(Object appName) {
     return Intl.message(
-      'Why do you want edit permissions for ACS UPB Mobile?',
+      'Why do you want edit permissions for $appName?',
       name: 'messageAskPermissionToEdit',
       desc: '',
-      args: [],
+      args: [appName],
     );
   }
 
@@ -2535,13 +2536,13 @@ class S {
     );
   }
 
-  /// `ACS UPB Mobile is open source.`
-  String get infoAppIsOpenSource {
+  /// `{appName} is open source.`
+  String infoAppIsOpenSource(Object appName) {
     return Intl.message(
-      'ACS UPB Mobile is open source.',
+      '$appName is open source.',
       name: 'infoAppIsOpenSource',
       desc: '',
-      args: [],
+      args: [appName],
     );
   }
 
@@ -2828,8 +2829,10 @@ class AppLocalizationDelegate extends LocalizationsDelegate<S> {
 
   @override
   bool isSupported(Locale locale) => _isSupported(locale);
+
   @override
   Future<S> load(Locale locale) => S.load(locale);
+
   @override
   bool shouldReload(AppLocalizationDelegate old) => false;
 

@@ -242,7 +242,7 @@
   "messageNoClassesYet": "You have not added any classes yet.",
   "messageGetStartedByPressing": "Get started by pressing the",
   "messageButtonAbove": "button above",
-  "messageAskPermissionToEdit": "Why do you want edit permissions for ACS UPB Mobile?",
+  "messageAskPermissionToEdit": "Why do you want edit permissions for {appName}?",
   "messageRequestHasBeenSent": "The request has been sent succesfully.",
   "messageRequestAlreadyExists": "You have already submitted a request. If you want to add another one, please press 'Send'.",
   "messageIAgreeToThe": "I agree to the ",
@@ -265,7 +265,7 @@
   "infoRelevanceNothingSelected": "If this is relevant for everyone, don't select anything .",
   "infoRelevanceExample": "For instance, if something is only relevant for \"314CB\" and \"315CB\", don't just set \"CB\".",
   "infoPassword": "It must contain lower and uppercase letters, one number and one special character, and have a minimum length of 8.",
-  "infoAppIsOpenSource": "ACS UPB Mobile is open source.",
+  "infoAppIsOpenSource": "{appName} is open source.",
   "infoEmail": "This is the same username you use to log in to {forum}.",
 
   "feedbackGeneralQuestion1": "Is your overall assessment of this discipline positive?",
