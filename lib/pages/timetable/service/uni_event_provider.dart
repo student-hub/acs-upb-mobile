@@ -327,7 +327,7 @@ class UniEventProvider extends EventProvider<UniEventInstance>
 
     start
       //..timeZone = startDateTime.timeZoneName
-      ..timeZone = 'Europe/Bucharest'
+      ..timeZone = 'Europe/Bucharest' // EET
       ..dateTime = startDateTime;
     final Period eventPeriod = eventInstance.duration;
     final Duration duration =
@@ -402,7 +402,6 @@ class UniEventProvider extends EventProvider<UniEventInstance>
       (AuthClient client) async {
         // TODO(bogpie): Remember if a user already gave access to his Google Calendar
         // TODO(bogpie): Automatically close browser
-        // TODO(bogpie): Try / catch errors
 
         final g_cal.CalendarApi calendarApi = g_cal.CalendarApi(client);
 
