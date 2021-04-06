@@ -1084,7 +1084,7 @@ Future<void> main() async {
           await tester.pumpAndSettle();
 
           // Select lecturer - partial name
-          await tester.tap(find.byIcon(Icons.person_outlined));
+          await tester.tap(find.byIcon(FeatherIcons.user));
           await tester.pumpAndSettle();
           await tester.enterText(find.byKey(const Key('Autocomplete')), 'John');
           await tester.pumpAndSettle();
@@ -1092,7 +1092,7 @@ Future<void> main() async {
           await tester.pumpAndSettle();
 
           // Select lecturer - new name
-          await tester.tap(find.byIcon(Icons.person_outlined));
+          await tester.tap(find.byIcon(FeatherIcons.user));
           await tester.pumpAndSettle();
           await tester.enterText(
               find.byKey(const Key('Autocomplete')), 'Isabel Steward');
@@ -1100,7 +1100,7 @@ Future<void> main() async {
           await tester.pumpAndSettle();
 
           // Select lecturer - check autocomplete suggestions
-          await tester.tap(find.byIcon(Icons.person_outlined));
+          await tester.tap(find.byIcon(FeatherIcons.user));
           await tester.pumpAndSettle();
           await tester.enterText(find.byKey(const Key('Autocomplete')), 'Doe');
           await tester.pumpAndSettle();
@@ -1138,7 +1138,7 @@ Future<void> main() async {
           await tester.pumpAndSettle();
 
           expect(find.byType(ClassView), findsOneWidget);
-          expect(find.byIcon(Icons.person_outlined), findsOneWidget);
+          expect(find.byIcon(FeatherIcons.user), findsOneWidget);
           expect(find.byKey(const Key('LecturerCard')), findsOneWidget);
 
           // Press back
@@ -1146,10 +1146,10 @@ Future<void> main() async {
           await tester.pumpAndSettle();
 
           expect(find.byType(EventView), findsOneWidget);
-          expect(find.byIcon(Icons.person_outlined), findsOneWidget);
+          expect(find.byIcon(FeatherIcons.user), findsOneWidget);
           expect(find.text('Jane Doe'), findsOneWidget);
 
-          await tester.tap(find.byIcon(Icons.person_outlined));
+          await tester.tap(find.byIcon(FeatherIcons.user));
           await tester.pumpAndSettle();
 
           expect(find.byType(PersonView), findsOneWidget);
@@ -1203,7 +1203,7 @@ Future<void> main() async {
           await tester.pumpAndSettle();
 
           expect(find.byType(EventView), findsOneWidget);
-          expect(find.byIcon(Icons.person_outlined), findsOneWidget);
+          expect(find.byIcon(FeatherIcons.user), findsOneWidget);
 
           // Press back
           await tester.tap(find.byIcon(Icons.arrow_back));

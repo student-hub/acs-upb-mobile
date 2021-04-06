@@ -171,7 +171,7 @@ class _EventViewState extends State<EventView> {
                 children: <Widget>[
                   const Padding(
                     padding: EdgeInsets.all(10),
-                    child: Icon(Icons.people_outlined),
+                    child: Icon(FeatherIcons.users),
                   ),
                   const SizedBox(width: 16),
                   Text(
@@ -202,7 +202,7 @@ class _EventViewState extends State<EventView> {
                   children: <Widget>[
                     const Padding(
                       padding: EdgeInsets.all(10),
-                      child: Icon(Icons.person_outlined),
+                      child: Icon(FeatherIcons.user),
                     ),
                     const SizedBox(width: 16),
                     Text(
