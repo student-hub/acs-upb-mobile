@@ -39,7 +39,7 @@ class _GradingChartState extends State<GradingChart> {
 
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(10),
+        padding: const EdgeInsets.all(12),
         child: Column(
           children: <Widget>[
             if (widget.withHeader)

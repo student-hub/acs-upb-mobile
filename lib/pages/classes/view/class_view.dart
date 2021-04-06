@@ -31,6 +31,16 @@ class ClassView extends StatefulWidget {
 
 class _ClassViewState extends State<ClassView> {
   Class classInfo;
+  String lecturerName = '';
+
+  @override
+  void initState() {
+    super.initState();
+    final personProvider = Provider.of<PersonProvider>(context, listen: false);
+    personProvider
+        .mostRecentLecturer(widget.classHeader.id)
+        .then((lecturer) => setState(() => this.lecturerName = lecturer));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,14 +58,14 @@ class _ClassViewState extends State<ClassView> {
               return ListView(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
                     child: Column(
                       children: [
-                        const SizedBox(height: 10),
+                        const SizedBox(height: 12),
                         lecturerCard(context),
-                        const SizedBox(height: 10),
+                        const SizedBox(height: 12),
                         shortcuts(context),
-                        const SizedBox(height: 10),
+                        const SizedBox(height: 12),
                         GradingChart(
                           grading: classInfo.grading,
                           lastUpdated: classInfo.gradingLastUpdated,
@@ -79,7 +89,7 @@ class _ClassViewState extends State<ClassView> {
     final authProvider = Provider.of<AuthProvider>(context);
 
     return Padding(
-      padding: const EdgeInsets.all(10),
+      padding: const EdgeInsets.symmetric(horizontal: 12),
       child: Column(
         children: [
               Row(
@@ -123,7 +133,7 @@ class _ClassViewState extends State<ClassView> {
             (classInfo.shortcuts.isEmpty
                 ? <Widget>[
                     Padding(
-                      padding: const EdgeInsets.all(10),
+                      padding: const EdgeInsets.all(12),
                       child: Center(
                         child: Text(
                           S.of(context).labelUnknown,
@@ -238,11 +248,11 @@ class _ClassViewState extends State<ClassView> {
     return Card(
       key: const Key('LecturerCard'),
       child: Padding(
-        padding: const EdgeInsets.all(10),
+        padding: const EdgeInsets.all(12),
         child: Row(
           children: [
             ClassIcon(classHeader: widget.classHeader),
-            const SizedBox(width: 10),
+            const SizedBox(width: 12),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -252,39 +262,29 @@ class _ClassViewState extends State<ClassView> {
                     text: widget.classHeader.name ?? '-',
                     style: Theme.of(context).textTheme.bodyText1,
                   ),
-                  FutureBuilder(
-                    future: personProvider
-                        .mostRecentLecturer(widget.classHeader.id),
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.done) {
-                        final lecturerName = snapshot.data;
-                        return GestureDetector(
-                          onTap: () async {
-                            final lecturer =
-                                await personProvider.fetchPerson(lecturerName);
-                            if (lecturer != null && lecturerName != null) {
-                              await showModalBottomSheet<dynamic>(
-                                  isScrollControlled: true,
-                                  context: context,
-                                  builder: (BuildContext buildContext) =>
-                                      PersonView(person: lecturer));
-                            }
-                          },
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              IconText(
-                                icon: Icons.person_outlined,
-                                text: lecturerName ?? '-',
-                                style: Theme.of(context).textTheme.bodyText1,
-                              ),
-                            ],
-                          ),
-                        );
-                      } else {
-                        return const Center(child: CircularProgressIndicator());
+                  const SizedBox(height: 10),
+                  GestureDetector(
+                    onTap: () async {
+                      final lecturer =
+                          await personProvider.fetchPerson(lecturerName);
+                      if (lecturer != null && lecturerName != null) {
+                        await showModalBottomSheet<dynamic>(
+                            isScrollControlled: true,
+                            context: context,
+                            builder: (BuildContext buildContext) =>
+                                PersonView(person: lecturer));
                       }
                     },
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        IconText(
+                          icon: FeatherIcons.user,
+                          text: lecturerName ?? '-',
+                          style: Theme.of(context).textTheme.bodyText1,
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
