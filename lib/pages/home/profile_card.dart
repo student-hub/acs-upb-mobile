@@ -37,10 +37,10 @@ class _ProfileCardState extends State<ProfileCard> {
     }
 
     return Padding(
-      padding: const EdgeInsets.only(top: 10, left: 10, right: 10),
+      padding: const EdgeInsets.fromLTRB(12, 12, 12, 0),
       child: Card(
         child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 10),
+          padding: const EdgeInsets.symmetric(vertical: 12),
           child: Column(
             children: [
               Row(
@@ -69,7 +69,7 @@ class _ProfileCardState extends State<ProfileCard> {
                               style: Theme.of(context)
                                   .textTheme
                                   .subtitle1
-                                  .apply(fontWeightDelta: 2),
+                                  .apply(fontWeightDelta: 2, fontSizeDelta: 2),
                             ),
                           ),
                           if (userGroup != null)
