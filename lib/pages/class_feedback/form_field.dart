@@ -1,13 +1,14 @@
 import 'package:acs_upb_mobile/widgets/radio_emoji.dart';
+import 'package:acs_upb_mobile/widgets/selectable.dart';
 import 'package:flutter/material.dart';
 
 class FeedbackFormField extends StatelessWidget {
-  const FeedbackFormField(
-      {@required this.id,
-      @required this.question,
-      @required this.groupValue,
-      @required this.radioHandler,
-      this.error});
+  const FeedbackFormField({@required this.id,
+    @required this.question,
+    @required this.groupValue,
+    @required this.radioHandler,
+    this.emojiController,
+    this.error});
 
   /// `id` will be treated as a key and also the row number
   final int id;
@@ -33,6 +34,8 @@ class FeedbackFormField extends StatelessWidget {
   /// 😠 😕 😐 ☺ 😍
   static final List<int> _radioButtons = [1, 2, 3, 4, 5];
 
+  final SelectableController emojiController;
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -51,6 +54,7 @@ class FeedbackFormField extends StatelessWidget {
               value: value,
               groupValue: groupValue,
               onChange: radioHandler,
+              emojiController: emojiController,
             );
           }).toList(),
         ),

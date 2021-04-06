@@ -40,7 +40,7 @@ class _ClassViewState extends State<ClassView> {
       title: Text(S.of(context).navigationClassInfo),
       actions: [
         AppScaffoldAction(
-            icon: Icons.comment,
+            icon: Icons.rate_review_outlined,
             onPressed: () {
               Navigator.of(context).push(
                 MaterialPageRoute<ClassFeedbackView>(

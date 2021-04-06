@@ -232,7 +232,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "messageWelcomeSimple" : MessageLookupByLibrary.simpleMessage("Bine ai venit!"),
     "messageYouCanContribute" : MessageLookupByLibrary.simpleMessage("Poți contribui la datele din aplicație, dar trebuie mai întâi să ceri permisiuni."),
     "navigationAskPermissions" : MessageLookupByLibrary.simpleMessage("Cere permisiuni"),
-    "navigationClassFeedback" : MessageLookupByLibrary.simpleMessage("Formular feedback"),
+    "navigationClassFeedback" : MessageLookupByLibrary.simpleMessage("Recenzie"),
     "navigationClassInfo" : MessageLookupByLibrary.simpleMessage("Informații materie"),
     "navigationClasses" : MessageLookupByLibrary.simpleMessage("Materii"),
     "navigationEventDetails" : MessageLookupByLibrary.simpleMessage("Detalii eveniment"),

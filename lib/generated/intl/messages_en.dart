@@ -232,7 +232,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "messageWelcomeSimple" : MessageLookupByLibrary.simpleMessage("Welcome!"),
     "messageYouCanContribute" : MessageLookupByLibrary.simpleMessage("You can contribute to the app data, but you first need to request permissions."),
     "navigationAskPermissions" : MessageLookupByLibrary.simpleMessage("Ask for permissions"),
-    "navigationClassFeedback" : MessageLookupByLibrary.simpleMessage("Feedback form"),
+    "navigationClassFeedback" : MessageLookupByLibrary.simpleMessage("Review"),
     "navigationClassInfo" : MessageLookupByLibrary.simpleMessage("Class information"),
     "navigationClasses" : MessageLookupByLibrary.simpleMessage("Classes"),
     "navigationEventDetails" : MessageLookupByLibrary.simpleMessage("Event details"),

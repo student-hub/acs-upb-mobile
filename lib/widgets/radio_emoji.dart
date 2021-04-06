@@ -1,10 +1,13 @@
+import 'package:acs_upb_mobile/widgets/selectable.dart';
 import 'package:flutter/material.dart';
 
 class RadioEmoji extends StatefulWidget {
+
   const RadioEmoji({
     @required this.value,
     @required this.groupValue,
     @required this.onChange,
+    this.emojiController
   }) : assert(value >= 1 && value <= 5);
 
   /// Rating value between 1 and 5
@@ -18,6 +21,8 @@ class RadioEmoji extends StatefulWidget {
 
   /// Emojis describing feedback status
   static final List<String> emojiIndex = ['😠', '😕', '😐', '☺', '😍'];
+
+  final SelectableController emojiController;
 
   @override
   _RadioEmojiState createState() => _RadioEmojiState();
@@ -85,10 +90,13 @@ class _RadioEmojiState extends State<RadioEmoji>
           shape: BoxShape.circle,
         ),
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-        child: Text(
-          emoji,
-          style: TextStyle(
-            fontSize: animation.value * 10 + 20.0,
+        child: Container(
+          height: 35,
+          child: Text(
+            emoji,
+            style: TextStyle(
+              fontSize: animation.value * 10 + 20.0,
+            ),
           ),
         ),
       ),
