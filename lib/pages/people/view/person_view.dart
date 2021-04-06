@@ -4,6 +4,7 @@ import 'package:acs_upb_mobile/widgets/icon_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 
 class PersonView extends StatelessWidget {
   const PersonView({Key key, this.person}) : super(key: key);
@@ -60,7 +61,7 @@ class PersonView extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           IconText(
-                            icon: Icons.email_outlined,
+                            icon: FeatherIcons.mail,
                             text: person.email ?? '-',
                             style: Theme.of(context).textTheme.bodyText1,
                             onTap: () => Utils.launchURL(
@@ -69,7 +70,7 @@ class PersonView extends StatelessWidget {
                           ),
                           const SizedBox(height: 16),
                           IconText(
-                            icon: Icons.phone_outlined,
+                            icon: FeatherIcons.phone,
                             text: person.phone ?? '-',
                             style: Theme.of(context).textTheme.bodyText1,
                             onTap: () => Utils.launchURL('tel:${person.phone}',
@@ -77,7 +78,7 @@ class PersonView extends StatelessWidget {
                           ),
                           const SizedBox(height: 16),
                           IconText(
-                              icon: Icons.location_on_outlined,
+                              icon: FeatherIcons.mapPin,
                               text: person.office ?? '-',
                               style: Theme.of(context).textTheme.bodyText1),
                           const SizedBox(height: 16),

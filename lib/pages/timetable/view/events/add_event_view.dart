@@ -202,7 +202,7 @@ class _AddEventViewState extends State<AddEventView> {
           controller: textEditingController,
           decoration: InputDecoration(
             labelText: S.of(context).labelLecturer,
-            prefixIcon: const Icon(Icons.person_outlined),
+            prefixIcon: const Icon(FeatherIcons.user),
           ),
           focusNode: focusNode,
           onFieldSubmitted: (String value) {
@@ -375,7 +375,7 @@ class _AddEventViewState extends State<AddEventView> {
                           controller: locationController,
                           decoration: InputDecoration(
                             labelText: S.of(context).labelLocation,
-                            prefixIcon: const Icon(Icons.location_on_outlined),
+                            prefixIcon: const Icon(FeatherIcons.mapPin),
                           ),
                           onChanged: (_) => setState(() {}),
                         ),
@@ -384,7 +384,7 @@ class _AddEventViewState extends State<AddEventView> {
                             weekSelected[WeekType.even] != null)
                           SelectableFormField(
                             key: const ValueKey('week_picker'),
-                            icon: Icons.calendar_today_outlined,
+                            icon: FeatherIcons.calendar,
                             label: S.of(context).labelWeek,
                             initialValues: weekSelected,
                             validator: (selection) {
@@ -526,12 +526,17 @@ class _AddEventViewState extends State<AddEventView> {
       padding: const EdgeInsets.only(top: 10),
       child: Row(
         children: [
-          const SizedBox(width: 12),
-          Icon(
-            Icons.access_time_outlined,
-            color: CustomIcons.formIconColor(Theme.of(context)),
+          Padding(
+            padding: const EdgeInsets.all(12),
+            child: Icon(
+              FeatherIcons.clock,
+              color: CustomIcons.formIconColor(Theme.of(context)),
+            ),
           ),
           TextButton(
+            style: ButtonStyle(
+              padding: MaterialStateProperty.all<EdgeInsets>(EdgeInsets.zero),
+            ),
             onPressed: () async {
               final TimeOfDay start = await showTimePicker(
                 context: context,
@@ -545,27 +550,33 @@ class _AddEventViewState extends State<AddEventView> {
             ),
           ),
           Expanded(
-            child: Column(
-              children: [
-                Text(
-                  duration.toString().replaceAll(RegExp(r'[PT]'), ''),
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodyText1
-                      .copyWith(color: textColor),
-                ),
-                DottedLine(
-                  lineThickness: 4,
-                  dashRadius: 2,
-                  dashColor: textColor,
-                ),
-                // Text-sized box so that the line is centered
-                SizedBox(
-                    height: Theme.of(context).textTheme.bodyText1.fontSize),
-              ],
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              child: Column(
+                children: [
+                  Text(
+                    duration.toString().replaceAll(RegExp(r'[PT]'), ''),
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyText1
+                        .copyWith(color: textColor),
+                  ),
+                  DottedLine(
+                    lineThickness: 4,
+                    dashRadius: 2,
+                    dashColor: textColor,
+                  ),
+                  // Text-sized box so that the line is centered
+                  SizedBox(
+                      height: Theme.of(context).textTheme.bodyText1.fontSize),
+                ],
+              ),
             ),
           ),
           TextButton(
+            style: ButtonStyle(
+              padding: MaterialStateProperty.all<EdgeInsets>(EdgeInsets.zero),
+            ),
             onPressed: () async {
               final TimeOfDay end = await showTimePicker(
                 context: context,
@@ -579,6 +590,7 @@ class _AddEventViewState extends State<AddEventView> {
               style: Theme.of(context).textTheme.headline4,
             ),
           ),
+          const SizedBox(width: 12),
         ],
       ),
     );

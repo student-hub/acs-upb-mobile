@@ -220,7 +220,7 @@ class _PortalPageState extends State<PortalPage> {
       title: Text(S.of(context).navigationPortal),
       actions: [
         AppScaffoldAction(
-          icon: editingEnabled ? CustomIcons.edit_slash : Icons.edit_outlined,
+          icon: editingEnabled ? CustomIcons.edit_off_outlined : Icons.edit_outlined,
           tooltip: editingEnabled
               ? S.of(context).actionDisableEditing
               : S.of(context).actionEnableEditing,
