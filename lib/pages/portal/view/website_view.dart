@@ -112,12 +112,12 @@ class _WebsiteViewState extends State<WebsiteView> {
     final website = _buildWebsite();
 
     return Padding(
-      padding: const EdgeInsets.only(left: 10, right: 10, top: 10),
+      padding: const EdgeInsets.fromLTRB(12, 12, 12, 0),
       child: Card(
         child: Column(
           children: <Widget>[
             Padding(
-              padding: const EdgeInsets.all(10),
+              padding: const EdgeInsets.all(12),
               child: Row(
                 children: <Widget>[
                   Icon(Icons.remove_red_eye_outlined,
@@ -147,7 +147,7 @@ class _WebsiteViewState extends State<WebsiteView> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
+              padding: const EdgeInsets.fromLTRB(12, 0, 12, 12),
               child: AutoSizeText(
                 S.of(context).messageWebsitePreview,
                 textAlign: TextAlign.center,

@@ -329,7 +329,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
         )
       ],
       body: Container(
-        child: ListView(padding: const EdgeInsets.all(10), children: [
+        child: ListView(padding: const EdgeInsets.all(12), children: [
           AccountNotVerifiedWarning(),
           buildEditableAvatar(context),
           PreferenceTitle(
