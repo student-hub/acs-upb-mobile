@@ -31,62 +31,63 @@ class PersonView extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(10),
+            padding: const EdgeInsets.all(12),
             child: Card(
               child: Padding(
-                padding: const EdgeInsets.all(16),
+                padding: const EdgeInsets.all(12),
                 child: Row(
                   children: [
                     Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 10, right: 16),
-                        child: person.photo != null
-                            ? CircleAvatar(
-                                maxRadius: 50,
-                                backgroundImage:
-                                    CachedNetworkImageProvider(person.photo),
-                              )
-                            : const CircleAvatar(
-                                radius: 50,
-                                child: Icon(
-                                  Icons.person_outlined,
-                                  size: 50,
-                                ),
+                      child: person.photo != null
+                          ? CircleAvatar(
+                              maxRadius: 50,
+                              backgroundImage:
+                                  CachedNetworkImageProvider(person.photo),
+                            )
+                          : const CircleAvatar(
+                              radius: 50,
+                              child: Icon(
+                                Icons.person_outlined,
+                                size: 50,
                               ),
-                      ),
+                            ),
                     ),
                     Expanded(
                       flex: 2,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          IconText(
-                            icon: FeatherIcons.mail,
-                            text: person.email ?? '-',
-                            style: Theme.of(context).textTheme.bodyText1,
-                            onTap: () => Utils.launchURL(
-                                'mailto:${person.email}',
-                                context: context),
-                          ),
-                          const SizedBox(height: 16),
-                          IconText(
-                            icon: FeatherIcons.phone,
-                            text: person.phone ?? '-',
-                            style: Theme.of(context).textTheme.bodyText1,
-                            onTap: () => Utils.launchURL('tel:${person.phone}',
-                                context: context),
-                          ),
-                          const SizedBox(height: 16),
-                          IconText(
-                              icon: FeatherIcons.mapPin,
-                              text: person.office ?? '-',
-                              style: Theme.of(context).textTheme.bodyText1),
-                          const SizedBox(height: 16),
-                          IconText(
-                              icon: Icons.work_outline,
-                              text: person.position ?? '-',
-                              style: Theme.of(context).textTheme.bodyText1),
-                        ],
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 12),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            IconText(
+                              icon: FeatherIcons.mail,
+                              text: person.email ?? '-',
+                              style: Theme.of(context).textTheme.bodyText1,
+                              onTap: () => Utils.launchURL(
+                                  'mailto:${person.email}',
+                                  context: context),
+                            ),
+                            const SizedBox(height: 16),
+                            IconText(
+                              icon: FeatherIcons.phone,
+                              text: person.phone ?? '-',
+                              style: Theme.of(context).textTheme.bodyText1,
+                              onTap: () => Utils.launchURL(
+                                  'tel:${person.phone}',
+                                  context: context),
+                            ),
+                            const SizedBox(height: 16),
+                            IconText(
+                                icon: FeatherIcons.mapPin,
+                                text: person.office ?? '-',
+                                style: Theme.of(context).textTheme.bodyText1),
+                            const SizedBox(height: 16),
+                            IconText(
+                                icon: Icons.work_outline,
+                                text: person.position ?? '-',
+                                style: Theme.of(context).textTheme.bodyText1),
+                          ],
+                        ),
                       ),
                     ),
                   ],
