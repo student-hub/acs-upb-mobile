@@ -2,13 +2,12 @@ import 'package:acs_upb_mobile/widgets/selectable.dart';
 import 'package:flutter/material.dart';
 
 class RadioEmoji extends StatefulWidget {
-
-  const RadioEmoji({
-    @required this.value,
-    @required this.groupValue,
-    @required this.onChange,
-    this.emojiController
-  }) : assert(value >= 1 && value <= 5);
+  const RadioEmoji(
+      {@required this.value,
+      @required this.groupValue,
+      @required this.onChange,
+      this.emojiController})
+      : assert(value >= 1 && value <= 5);
 
   /// Rating value between 1 and 5
   final int value;

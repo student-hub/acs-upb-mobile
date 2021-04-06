@@ -3,12 +3,13 @@ import 'package:acs_upb_mobile/widgets/selectable.dart';
 import 'package:flutter/material.dart';
 
 class FeedbackFormField extends StatelessWidget {
-  const FeedbackFormField({@required this.id,
-    @required this.question,
-    @required this.groupValue,
-    @required this.radioHandler,
-    this.emojiController,
-    this.error});
+  const FeedbackFormField(
+      {@required this.id,
+      @required this.question,
+      @required this.groupValue,
+      @required this.radioHandler,
+      this.emojiController,
+      this.error});
 
   /// `id` will be treated as a key and also the row number
   final int id;
