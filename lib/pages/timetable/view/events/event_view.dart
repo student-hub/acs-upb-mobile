@@ -15,6 +15,7 @@ import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:provider/provider.dart';
 import 'package:time_machine/time_machine.dart';
 import 'package:timetable/timetable.dart';
@@ -116,10 +117,19 @@ class _EventViewState extends State<EventView> {
                       Text(widget.eventInstance.dateString),
                       if (widget.eventInstance.mainEvent is RecurringUniEvent &&
                           LocaleProvider.rruleL10n != null)
-                        Text((widget.eventInstance.mainEvent
-                                as RecurringUniEvent)
-                            .rrule
-                            .toText(l10n: LocaleProvider.rruleL10n)),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 2),
+                          child: Text(
+                            (widget.eventInstance.mainEvent
+                                    as RecurringUniEvent)
+                                .rrule
+                                .toText(l10n: LocaleProvider.rruleL10n),
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyText2
+                                .copyWith(color: Theme.of(context).hintColor),
+                          ),
+                        ),
                     ],
                   ),
                 ),
@@ -146,7 +156,7 @@ class _EventViewState extends State<EventView> {
                 children: <Widget>[
                   const Padding(
                     padding: EdgeInsets.all(10),
-                    child: Icon(Icons.location_on_outlined),
+                    child: Icon(FeatherIcons.mapPin),
                   ),
                   const SizedBox(width: 16),
                   Text(widget.eventInstance.location,
