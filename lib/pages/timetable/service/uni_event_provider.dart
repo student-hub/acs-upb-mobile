@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
@@ -69,7 +70,9 @@ extension UniEventExtension on UniEvent {
         (json['duration'] == null && json['end'] == null)) return null;
 
     final type = UniEventTypeExtension.fromString(json['type']);
-
+    if (json['name'] == 'Tema 1 PC') {
+      print('ok');
+    }
     if (json['end'] != null) {
       return AllDayUniEvent(
         id: id,
