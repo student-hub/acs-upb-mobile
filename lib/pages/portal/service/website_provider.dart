@@ -237,38 +237,45 @@ class WebsiteProvider with ChangeNotifier {
 
       if (!userOnly) {
         List<DocumentSnapshot> documents = [];
-
+        debugPrint(sources.isNotEmpty.toString());
         if (filter == null) {
-          final QuerySnapshot qSnapshot = sources != null
+          final QuerySnapshot qSnapshot = sources.isNotEmpty
               ? await _db
                   .collection('websites')
                   .where('source', whereIn: sources)
                   .get()
-              : await _db.collection('websites').get();
+              : await _db
+                  .collection('websites')
+                  .where('source', isEqualTo: 'official')
+                  .get();
           documents.addAll(qSnapshot.docs);
         } else {
           // Documents without a 'relevance' field are relevant for everyone
-          final query = sources != null
+          final query = sources.isNotEmpty
               ? _db
                   .collection('websites')
                   .where('source', whereIn: sources)
                   .where('relevance', isNull: true)
-              : _db.collection('websites').where('relevance', isNull: true);
+              : _db
+                  .collection('websites')
+                  .where('source', isEqualTo: 'official')
+                  .where('relevance', isNull: true);
           final QuerySnapshot qSnapshot = await query.get();
           documents.addAll(qSnapshot.docs);
 
           for (final string in filter.relevantNodes) {
             // selected nodes
-            final query = sources != null
+            final query = sources.isNotEmpty
                 ? _db
-                    .collection('websites')
-                    .where('degree', isEqualTo: filter.baseNode)
-                    .where('source', whereIn: sources)
-                    .where('relevance', arrayContains: string)
+                .collection('websites')
+                .where('degree', isEqualTo: filter.baseNode)
+                .where('source', whereIn: sources)
+                .where('relevance', arrayContains: string)
                 : _db
-                    .collection('websites')
-                    .where('degree', isEqualTo: filter.baseNode)
-                    .where('relevance', arrayContains: string);
+                .collection('websites')
+                .where('degree', isEqualTo: filter.baseNode)
+                .where('source', isEqualTo: 'official')
+                .where('relevance', arrayContains: string);
             final QuerySnapshot qSnapshot = await query.get();
             documents.addAll(qSnapshot.docs);
           }
@@ -289,10 +296,11 @@ class WebsiteProvider with ChangeNotifier {
         final DocumentReference ref =
             FirebaseFirestore.instance.collection('users').doc(uid);
 
-        final QuerySnapshot qSnapshot = sources != null
+        final QuerySnapshot qSnapshot = sources.isNotEmpty
             ? await ref
                 .collection('websites')
                 .where('source', whereIn: sources)
+                .where('source', isEqualTo: 'official')
                 .get()
             : await ref.collection('websites').get();
 

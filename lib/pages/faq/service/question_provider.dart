@@ -20,12 +20,12 @@ class QuestionProvider with ChangeNotifier {
         qSnapshot = limit == null
             ? await FirebaseFirestore.instance
                 .collection('faq')
-                .where('source', whereIn: user.sources)
+                .where('source', whereIn: user.sources ?? ['official'])
                 .get()
             : await FirebaseFirestore.instance
                 .collection('faq')
                 .limit(limit)
-                .where('source', whereIn: user.sources)
+                .where('source', whereIn: user.sources ?? ['official'])
                 .get();
       } else {
         qSnapshot = limit == null
