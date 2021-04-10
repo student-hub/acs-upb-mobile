@@ -227,41 +227,6 @@ class WebsiteProvider with ChangeNotifier {
     }
   }
 
-  Future<void> migrateWebsites(BuildContext context) async {
-    final QuerySnapshot qSnapshot = await _db.collection('websites').get();
-    final List<DocumentSnapshot> documents = qSnapshot.docs.toList();
-    final List<Website> websites =
-        documents.map(WebsiteExtension.fromSnap).toList();
-    for (final Website web in websites) {
-      debugPrint(web.id);
-      String source;
-      if (web.category == WebsiteCategory.administrative ||
-          web.id == 'ocw' ||
-          web.id == 'moodle') {
-        source = 'official';
-      } else if (web.category == WebsiteCategory.association) {
-        source = 'organizations';
-      } else {
-        source = 'students';
-      }
-
-      updateWebsite(
-          new Website(
-              id: web.id,
-              isPrivate: web.isPrivate,
-              category: web.category,
-              link: web.link,
-              relevance: web.relevance,
-              source: source,
-              degree: web.degree,
-              editedBy: web.editedBy,
-              ownerUid: web.ownerUid,
-              label: web.label,
-              infoByLocale: web.infoByLocale),
-          context: context);
-    }
-  }
-
   Future<List<Website>> fetchWebsites(Filter filter,
       {bool userOnly = false,
       String uid,
@@ -270,8 +235,6 @@ class WebsiteProvider with ChangeNotifier {
     try {
       final websites = <Website>[];
 
-      // if (uid == 'VZpTKGCbzVWyfJEGRx0x8WFz9vf2')
-      //   await migrateWebsites(context).catchError((e) => debugPrint(e));
       if (!userOnly) {
         List<DocumentSnapshot> documents = [];
 
