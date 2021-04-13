@@ -8,6 +8,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'assignment_widget.dart';
+import 'gantt_view.dart';
+
 class PlannerPage extends StatefulWidget {
   const PlannerPage({Key key}) : super(key: key);
 
@@ -64,7 +67,7 @@ class _PlannerPageState extends State<PlannerPage> {
                     ),
                     Expanded(
                         child: AssignmentsList(
-                            assignments: filteredAssignments, filter: filter))
+                            assignments: filteredAssignments, filter: filter)),
                   ],
                 );
               } else {
@@ -109,21 +112,7 @@ class _AssignmentsListState extends State<AssignmentsList> {
         shrinkWrap: true,
         itemCount: widget.assignments.length,
         itemBuilder: (context, index) {
-          return ListTile(
-            key: ValueKey(widget.assignments[index].name),
-            title: filteredWords.isNotEmpty
-                ? DynamicTextHighlighting(
-                    text: widget.assignments[index].name,
-                    style: Theme.of(context).textTheme.subtitle1,
-                    highlights: filteredWords,
-                    color: Theme.of(context).accentColor,
-                    caseSensitive: false,
-                  )
-                : Text(
-                    widget.assignments[index].name,
-                  ),
-            subtitle: Text('Deadline ${widget.assignments[index]?.endDate}'),
-          );
+          return AssignmentWidget(widget.assignments[index], filteredWords);
         },
       ),
     );
