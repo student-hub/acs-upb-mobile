@@ -14,21 +14,23 @@ class GoogleApiHelper {
   static ClientId get credentials {
     String _clientIdString;
 
-    if (kIsWeb) {
-      _clientIdString =
-          '611150208061-ljqdu5mfmjisdi1h3ics3l2sirvtpljk.apps.googleusercontent.com';
-    }
     if (Platform.isAndroid) {
       _clientIdString =
           '611150208061-4ftun8ln4v9hm1mocqs1vqcftaanj8sj.apps.googleusercontent.com';
     } else if (Platform.isIOS) {
       _clientIdString =
           '611150208061-4ftun8ln4v9hm1mocqs1vqcftaanj8sj.apps.googleusercontent.com';
+    } else if (kIsWeb) {
+      _clientIdString =
+          '611150208061-ljqdu5mfmjisdi1h3ics3l2sirvtpljk.apps.googleusercontent.com';
+    } else {
+      _clientIdString =
+          '611150208061-ljqdu5mfmjisdi1h3ics3l2sirvtpljk.apps.googleusercontent.com';
     }
-
     return ClientId(_clientIdString, '');
   }
 }
+
 enum GoogleCalendarColorNames {
   undefined,
   lavender,
@@ -59,14 +61,13 @@ enum GoogleCalendarColorHexVaues {
   HEXd60000
 }
 
-
-extension UniEventTypeGCalColor on UniEventType{
+extension UniEventTypeGCalColor on UniEventType {
   GoogleCalendarColorNames get googleCalendarColor {
     switch (this) {
       case UniEventType.lecture:
         return GoogleCalendarColorNames.flamingo;
       case UniEventType.lab:
-        return GoogleCalendarColorNames.peacock ;
+        return GoogleCalendarColorNames.peacock;
       case UniEventType.seminar:
         return GoogleCalendarColorNames.tangerine;
       case UniEventType.sports:
