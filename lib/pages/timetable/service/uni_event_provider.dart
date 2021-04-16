@@ -206,20 +206,6 @@ extension AcademicCalendarExtension on AcademicCalendar {
   }
 }
 
-enum googleCalendarColors {
-  undefined,
-  lavender,
-  sage,
-  grape,
-  flamingo,
-  banana,
-  tangerine,
-  peacock,
-  graphite,
-  blueberry,
-  basil,
-  tomato
-}
 // TODO(bogpie): "Closest" color (from a list) - GCal works with limited no. of colors
 
 class UniEventProvider extends EventProvider<UniEventInstance>
@@ -319,17 +305,17 @@ class UniEventProvider extends EventProvider<UniEventInstance>
     return stream.map((events) => events.expand((i) => i).toList());
   }
 
-  g_cal.Event convertEvent(UniEvent eventInstance) {
+  g_cal.Event convertEvent(UniEvent uniEvent) {
     final g_cal.Event _gCalEvent = g_cal.Event();
 
     final g_cal.EventDateTime start = g_cal.EventDateTime();
-    final DateTime startDateTime = eventInstance.start.toDateTimeLocal();
+    final DateTime startDateTime = uniEvent.start.toDateTimeLocal();
 
     start
       //..timeZone = startDateTime.timeZoneName
       ..timeZone = 'Europe/Bucharest' // EET
       ..dateTime = startDateTime;
-    final Period eventPeriod = eventInstance.duration;
+    final Period eventPeriod = uniEvent.duration;
     final Duration duration =
         Duration(hours: eventPeriod.hours, minutes: eventPeriod.minutes);
 
@@ -343,15 +329,20 @@ class UniEventProvider extends EventProvider<UniEventInstance>
     // TODO(bogpie): Recreate timezone from existing information
     // TODO(bogpie): Require user to input how many minutes before a notification from GCal (including the "no notification" option)
 
-    final ClassHeader classHeader = eventInstance.classHeader;
+    final ClassHeader classHeader = uniEvent.classHeader;
     _gCalEvent
       ..start = start
       ..end = end
       ..summary = classHeader.acronym
-      ..colorId = eventInstance.type.index.toString()
-      ..location = eventInstance.location;
+      ..colorId = (uniEvent.type.googleCalendarColor.index).toString()
+/*      ..description =  eventInstance.title ??
+          eventInstance.mainEvent.type
+              .toLocalizedString(context)*/
+      // TODO(bogpie): Use a relevant description, like type of class + lecturer
 
-    if (eventInstance is RecurringUniEvent) {
+      ..location = uniEvent.location;
+
+    if (uniEvent is RecurringUniEvent) {
       _gCalEvent.recurrence = <String>[];
 
       String newRruleString =
@@ -395,7 +386,7 @@ class UniEventProvider extends EventProvider<UniEventInstance>
     if (await canLaunch(url)) {
       await launch(url);
     } else {
-      throw 'Could not launch $url';
+      print('Could not launch $url');
     }
   }
 
@@ -403,14 +394,13 @@ class UniEventProvider extends EventProvider<UniEventInstance>
     await clientViaUserConsent(
             GoogleApiHelper.credentials, GoogleApiHelper.scopes, prompt)
         .then(
-      (AuthClient client) async {
+      //(AuthClient client) async {
+      (AutoRefreshingAuthClient client) async {
         // TODO(bogpie): Remember if a user already gave access to his Google Calendar
         // TODO(bogpie): Automatically close browser
 
         final g_cal.CalendarApi calendarApi = g_cal.CalendarApi(client);
-
         final g_cal.Calendar calendar = g_cal.Calendar();
-
         g_cal.CalendarList calendarListNonIterable;
         try {
           calendarListNonIterable = await calendarApi.calendarList.list();
@@ -418,10 +408,8 @@ class UniEventProvider extends EventProvider<UniEventInstance>
           print('Error $e in getting calendars as a list');
           return;
         }
-
         final List<g_cal.CalendarListEntry> calendarList =
             calendarListNonIterable.items;
-
         for (final g_cal.CalendarListEntry calendar in calendarList) {
           if (calendar.summary == 'ACS UPB Mobile') {
             try {
@@ -432,7 +420,6 @@ class UniEventProvider extends EventProvider<UniEventInstance>
             break;
           }
         }
-
         // ignore: cascade_invocations
         calendar
           ..timeZone = 'Europe/Bucharest'
@@ -444,7 +431,6 @@ class UniEventProvider extends EventProvider<UniEventInstance>
 
         if (returnedCalendar is g_cal.Calendar) {
           final String calendarId = returnedCalendar.id;
-
           for (final g_cal.Event event in _gCalEvents) {
             try {
               await calendarApi.events.insert(event, calendarId).then(
@@ -463,6 +449,9 @@ class UniEventProvider extends EventProvider<UniEventInstance>
           }
         }
       },
+      onError: (dynamic e) {
+        print('Error <$e> when asking for user\'s consent');
+       },
     );
   }
 
