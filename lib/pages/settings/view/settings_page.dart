@@ -140,7 +140,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     Padding(
                       padding: const EdgeInsets.all(10),
                       child: Text(
-                        '${S.of(context).labelVersion} ${Utils.packageInfo.version}+${(int.parse(Utils.packageInfo.buildNumber) - 10000).toString()}',
+                        '${S.of(context).labelVersion} ${Utils.packageInfo.version}+${(int.parse(Utils.packageInfo.buildNumber) % 10000).toString()}',
                         textAlign: TextAlign.center,
                         style: Theme.of(context)
                             .textTheme

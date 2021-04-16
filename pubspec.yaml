@@ -88,9 +88,6 @@ dependencies:
   # Displays a custom toast
   oktoast: ^2.3.1+1
 
-  # Allows querying the app version number
-  package_info: ^0.4.0+13
-
   # App information
   package_info_plus: ^0.6.4
 
