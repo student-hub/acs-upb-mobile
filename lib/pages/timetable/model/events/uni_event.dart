@@ -104,8 +104,8 @@ class UniEvent {
     this.relevance,
     this.degree,
     this.addedBy,
-    this.editable = true,
-  });
+    bool editable,
+  }) : editable = editable ?? true;
 
   final String id;
   final Color color;
