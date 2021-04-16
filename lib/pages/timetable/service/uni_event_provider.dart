@@ -3,10 +3,10 @@ import 'dart:async';
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/classes/model/class.dart';
-import 'package:acs_upb_mobile/pages/people/model/person.dart';
 import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
 import 'package:acs_upb_mobile/pages/filter/model/filter.dart';
 import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
+import 'package:acs_upb_mobile/pages/people/model/person.dart';
 import 'package:acs_upb_mobile/pages/people/service/person_provider.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/academic_calendar.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/events/all_day_event.dart';
@@ -88,6 +88,8 @@ extension UniEventExtension on UniEvent {
             ? null
             : List<String>.from(json['relevance']),
         addedBy: json['addedBy'],
+        editable:
+            json['editable'] ?? false, // Holidays are read-only by default
       );
     } else if (json['rrule'] != null && json['teacher'] == null) {
       return RecurringUniEvent(
@@ -108,6 +110,7 @@ extension UniEventExtension on UniEvent {
             ? null
             : List<String>.from(json['relevance']),
         addedBy: json['addedBy'],
+        editable: json['editable'] ?? true,
       );
     } else if (json['rrule'] != null && json['teacher'] != null) {
       return ClassEvent(
@@ -127,6 +130,7 @@ extension UniEventExtension on UniEvent {
             ? null
             : List<String>.from(json['relevance']),
         addedBy: json['addedBy'],
+        editable: json['editable'] ?? true,
       );
     } else {
       return UniEvent(
@@ -146,6 +150,7 @@ extension UniEventExtension on UniEvent {
             ? null
             : List<String>.from(json['relevance']),
         addedBy: json['addedBy'],
+        editable: json['editable'] ?? true,
       );
     }
   }

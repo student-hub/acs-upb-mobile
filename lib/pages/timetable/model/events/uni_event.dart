@@ -104,6 +104,7 @@ class UniEvent {
     this.relevance,
     this.degree,
     this.addedBy,
+    this.editable = true,
   });
 
   final String id;
@@ -118,6 +119,7 @@ class UniEvent {
   final String degree;
   final List<String> relevance;
   final String addedBy;
+  final bool editable;
 
   Iterable<UniEventInstance> generateInstances(
       {DateInterval intersectingInterval}) sync* {
