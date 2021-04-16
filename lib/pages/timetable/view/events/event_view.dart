@@ -73,6 +73,7 @@ class _EventViewState extends State<EventView> {
       actions: [
         AppScaffoldAction(
             icon: Icons.edit,
+            disabled: !widget.eventInstance.mainEvent.editable,
             onPressed: () {
               if (!widget.eventInstance.mainEvent.editable) {
                 AppToast.show(S.of(context).warningEventNotEditable);
