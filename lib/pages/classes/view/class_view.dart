@@ -6,7 +6,6 @@ import 'package:acs_upb_mobile/pages/classes/view/grading_view.dart';
 import 'package:acs_upb_mobile/pages/classes/view/shortcut_view.dart';
 import 'package:acs_upb_mobile/pages/people/service/person_provider.dart';
 import 'package:acs_upb_mobile/pages/people/view/person_view.dart';
-import 'package:acs_upb_mobile/resources/custom_icons.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/widgets/button.dart';
 import 'package:acs_upb_mobile/widgets/class_icon.dart';
@@ -39,7 +38,7 @@ class _ClassViewState extends State<ClassView> {
     final personProvider = Provider.of<PersonProvider>(context, listen: false);
     personProvider
         .mostRecentLecturer(widget.classHeader.id)
-        .then((lecturer) => setState(() => this.lecturerName = lecturer));
+        .then((lecturer) => setState(() => lecturerName = lecturer));
   }
 
   @override
@@ -158,7 +157,7 @@ class _ClassViewState extends State<ClassView> {
       case ShortcutType.main:
         return Icons.home_outlined;
       case ShortcutType.classbook:
-        return CustomIcons.book;
+        return FeatherIcons.book;
       case ShortcutType.resource:
         return Icons.insert_drive_file_outlined;
       default:
