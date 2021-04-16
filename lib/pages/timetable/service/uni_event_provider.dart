@@ -70,7 +70,7 @@ extension UniEventExtension on UniEvent {
         (json['duration'] == null && json['end'] == null)) return null;
 
     final type = UniEventTypeExtension.fromString(json['type']);
-    if (json['name'] == 'Tema 1 PC') {
+    if (json['name'] == 'Tema 4 PC') {
       print('ok');
     }
     if (json['end'] != null) {
@@ -197,11 +197,11 @@ extension AcademicCalendarExtension on AcademicCalendar {
   static AcademicCalendar fromSnap(DocumentSnapshot snap) {
     final data = snap.data();
     return AcademicCalendar(
-      id: snap.id,
-      semesters: _eventsFromMapList(data['semesters'], 'semester'),
-      holidays: _eventsFromMapList(data['holidays'], 'holiday'),
-      exams: _eventsFromMapList(data['exams'], 'examSession'),
-    );
+        id: snap.id,
+        semesters: _eventsFromMapList(data['semesters'], 'semester'),
+        holidays: _eventsFromMapList(data['holidays'], 'holiday'),
+        exams: _eventsFromMapList(data['exams'], 'examSession'),
+        assignments: _eventsFromMapList(data['assignments'], 'assignment'));
   }
 }
 
@@ -308,7 +308,8 @@ class UniEventProvider extends EventProvider<UniEventInstance>
         .expand((i) => i)
         .allDayEvents
         .followedBy(_calendars.values.map((cal) {
-          final List<AllDayUniEvent> events = cal.holidays + cal.exams;
+          final List<AllDayUniEvent> events =
+              cal.holidays + cal.exams + cal.assignments;
           return events
               .where((event) =>
                   event.relevance == null ||

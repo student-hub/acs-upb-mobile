@@ -3,13 +3,11 @@ import 'package:acs_upb_mobile/pages/planner/model/assignment.dart';
 import 'package:acs_upb_mobile/pages/planner/service/assignment_provider.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:acs_upb_mobile/widgets/search_bar.dart';
-import 'package:dynamic_text_highlighting/dynamic_text_highlighting.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'assignment_widget.dart';
-import 'gantt_view.dart';
 
 class PlannerPage extends StatefulWidget {
   const PlannerPage({Key key}) : super(key: key);
@@ -78,14 +76,16 @@ class _PlannerPageState extends State<PlannerPage> {
     );
   }
 
-  List<Assignment> get filteredAssignments => assignemntsData
-      .where((assignment) => filter.split(' ').fold(
-          true,
-          (previousValue, filter) =>
-              assignment.name != null &&
-              previousValue &&
-              assignment.name.toLowerCase().contains(filter.toLowerCase())))
-      .toList();
+  List<Assignment> get filteredAssignments => assignemntsData != null
+      ? assignemntsData
+          .where((assignment) => filter.split(' ').fold(
+              true,
+              (previousValue, filter) =>
+                  assignment.name != null &&
+                  previousValue &&
+                  assignment.name.toLowerCase().contains(filter.toLowerCase())))
+          .toList()
+      : <Assignment>[];
 }
 
 class AssignmentsList extends StatefulWidget {

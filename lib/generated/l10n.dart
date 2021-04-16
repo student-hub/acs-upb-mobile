@@ -1584,6 +1584,16 @@ class S {
     );
   }
 
+  /// `Event details`
+  String get navigationAssignmentDetails {
+    return Intl.message(
+      'Assignment details',
+      name: 'navigationAssignmentDetails',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `News feed`
   String get navigationNewsFeed {
     return Intl.message(
