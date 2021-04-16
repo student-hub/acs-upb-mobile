@@ -9,6 +9,8 @@ import 'intl/messages_all.dart';
 // **************************************************************************
 
 // ignore_for_file: non_constant_identifier_names, lines_longer_than_80_chars
+// ignore_for_file: join_return_with_assignment, prefer_final_in_for_each
+// ignore_for_file: avoid_redundant_argument_values
 
 class S {
   S();
@@ -2264,13 +2266,13 @@ class S {
     );
   }
 
-  /// `Why do you want edit permissions for ACS UPB Mobile?`
-  String get messageAskPermissionToEdit {
+  /// `Why do you want edit permissions for {appName}?`
+  String messageAskPermissionToEdit(Object appName) {
     return Intl.message(
-      'Why do you want edit permissions for ACS UPB Mobile?',
+      'Why do you want edit permissions for $appName?',
       name: 'messageAskPermissionToEdit',
       desc: '',
-      args: [],
+      args: [appName],
     );
   }
 
@@ -2474,13 +2476,13 @@ class S {
     );
   }
 
-  /// `ACS UPB Mobile is open source.`
-  String get infoAppIsOpenSource {
+  /// `{appName} is open source.`
+  String infoAppIsOpenSource(Object appName) {
     return Intl.message(
-      'ACS UPB Mobile is open source.',
+      '$appName is open source.',
       name: 'infoAppIsOpenSource',
       desc: '',
-      args: [],
+      args: [appName],
     );
   }
 
@@ -2557,8 +2559,10 @@ class AppLocalizationDelegate extends LocalizationsDelegate<S> {
 
   @override
   bool isSupported(Locale locale) => _isSupported(locale);
+
   @override
   Future<S> load(Locale locale) => S.load(locale);
+
   @override
   bool shouldReload(AppLocalizationDelegate old) => false;
 

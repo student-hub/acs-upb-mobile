@@ -30,6 +30,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:oktoast/oktoast.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:preferences/preferences.dart';
 import 'package:provider/provider.dart';
 import 'package:rrule/rrule.dart';
@@ -37,6 +38,10 @@ import 'package:time_machine/time_machine.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // package_info_plus is not compatible with flutter_test
+  // link to the issue: https://github.com/fluttercommunity/plus_plugins/issues/172
+  Utils.packageInfo = await PackageInfo.fromPlatform();
 
   await Firebase.initializeApp();
 
@@ -90,7 +95,7 @@ class _MyAppState extends State<MyApp> {
 
   Widget buildApp(BuildContext context, ThemeData theme) {
     return MaterialApp(
-      title: 'ACS UPB Mobile',
+      title: Utils.packageInfo.appName,
       localizationsDelegates: [
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
