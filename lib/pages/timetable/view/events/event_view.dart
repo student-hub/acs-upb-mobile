@@ -73,31 +73,31 @@ class _EventViewState extends State<EventView> {
       actions: [
         AppScaffoldAction(
             icon: Icons.edit,
-            onPressed: !widget.eventInstance.mainEvent.editable
-                ? null // Disable edit button for non-editable events
-                : () {
-                    final user =
-                        Provider.of<AuthProvider>(context, listen: false)
-                            .currentUserFromCache;
-                    if (user.canAddPublicInfo) {
-                      Navigator.of(context)
-                          .push(MaterialPageRoute<AddEventView>(
-                        builder: (_) => ChangeNotifierProvider<FilterProvider>(
-                          create: (_) => FilterProvider(
-                            defaultDegree:
-                                widget.eventInstance.mainEvent.degree,
-                            defaultRelevance:
-                                widget.eventInstance.mainEvent.relevance,
-                          ),
-                          child: AddEventView(
-                            initialEvent: widget.eventInstance.mainEvent,
-                          ),
-                        ),
-                      ));
-                    } else {
-                      AppToast.show(S.of(context).errorPermissionDenied);
-                    }
-                  })
+            onPressed: () {
+              if (!widget.eventInstance.mainEvent.editable) {
+                AppToast.show(S.of(context).warningEventNotEditable);
+                return;
+              }
+
+              final user = Provider.of<AuthProvider>(context, listen: false)
+                  .currentUserFromCache;
+              if (user.canAddPublicInfo) {
+                Navigator.of(context).push(MaterialPageRoute<AddEventView>(
+                  builder: (_) => ChangeNotifierProvider<FilterProvider>(
+                    create: (_) => FilterProvider(
+                      defaultDegree: widget.eventInstance.mainEvent.degree,
+                      defaultRelevance:
+                          widget.eventInstance.mainEvent.relevance,
+                    ),
+                    child: AddEventView(
+                      initialEvent: widget.eventInstance.mainEvent,
+                    ),
+                  ),
+                ));
+              } else {
+                AppToast.show(S.of(context).errorPermissionDenied);
+              }
+            })
       ],
       body: SafeArea(
         child: ListView(children: [

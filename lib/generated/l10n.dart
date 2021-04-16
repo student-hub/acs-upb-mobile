@@ -1463,6 +1463,16 @@ class S {
     );
   }
 
+  /// `This event cannot be edited.`
+  String get warningEventNotEditable {
+    return Intl.message(
+      'This event cannot be edited.',
+      name: 'warningEventNotEditable',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Ask for permissions`
   String get navigationAskPermissions {
     return Intl.message(

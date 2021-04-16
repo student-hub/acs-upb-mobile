@@ -149,6 +149,7 @@
   "warningFavouriteWebsitesInitializationFailed": "Nu se pot citi date despre site-urile favorite.",
   "warningUnableToReachNewsFeed": "Nu am putut încărca fluxul de știri.",
   "warningNoNews": "Nu au fost postate știri încă.",
+  "warningEventNotEditable": "Acest eveniment nu poate fi modificat.",
 
   "navigationAskPermissions": "Cere permisiuni",
   "navigationHome": "Acasă",
