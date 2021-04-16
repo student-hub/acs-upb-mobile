@@ -451,7 +451,7 @@ class UniEventProvider extends EventProvider<UniEventInstance>
       },
       onError: (dynamic e) {
         print('Error <$e> when asking for user\'s consent');
-       },
+      },
     );
   }
 

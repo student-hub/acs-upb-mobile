@@ -63,6 +63,9 @@ dependencies:
   # Color picker widget
   flutter_colorpicker: ^0.3.4
 
+  # Open a tab in a Chrome / Safari custom tab instead of an external browser, for API permissions consent
+  flutter_inappwebview: ^5.3.2
+
   # Package that allows for supporting multiple languages
   flutter_localizations:
     sdk: flutter
@@ -168,9 +171,6 @@ dev_dependencies:
   # Using Provider for state management
   provider: ^4.0.4
 
-
-  # Launching URL in browser in order to ask the user for permission to access GCal
-  url_launcher: 5.5.0
 
 dependency_overrides:
   # Temporary workaround to bypass intl_translation incompatibility
