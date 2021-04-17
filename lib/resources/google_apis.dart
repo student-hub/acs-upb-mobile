@@ -69,13 +69,13 @@ extension UniEventTypeGCalColor on UniEventType {
       case UniEventType.lab:
         return GoogleCalendarColorNames.peacock;
       case UniEventType.seminar:
-        return GoogleCalendarColorNames.tangerine;
+        return GoogleCalendarColorNames.banana;
       case UniEventType.sports:
         return GoogleCalendarColorNames.basil;
       case UniEventType.semester:
         return GoogleCalendarColorNames.undefined;
       case UniEventType.holiday:
-        return GoogleCalendarColorNames.banana;
+        return GoogleCalendarColorNames.grape;
       case UniEventType.examSession:
         return GoogleCalendarColorNames.tomato;
       default:
