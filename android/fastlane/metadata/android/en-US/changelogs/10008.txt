@@ -5,3 +5,4 @@ Improved
 Fixed
   - Pressing an unknown teacher opened the teacher information sheet
   - Version on settings page sometimes not showing correctly
+  - Bug 🐞 where pressing the edit button on a holiday would cause an error
