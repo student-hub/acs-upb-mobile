@@ -36,6 +36,7 @@ class HomePage extends StatelessWidget {
                 onShowMore: () => tabController?.animateTo(2)),
           NewsFeedCard(),
           FaqCard(),
+          const SizedBox(height: 12),
         ],
       ),
     );
