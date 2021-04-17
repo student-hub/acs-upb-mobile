@@ -130,7 +130,7 @@ class _TimetablePageState extends State<TimetablePage> {
         onPressed: () async {
           final eventProvider =
               Provider.of<UniEventProvider>(context, listen: false);
-          await eventProvider.exportToGoogleCalendar();
+          await eventProvider.exportToGoogleCalendar(widget);
         },
       ),
     );

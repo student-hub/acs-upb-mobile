@@ -13,6 +13,7 @@ import 'package:acs_upb_mobile/pages/timetable/model/events/all_day_event.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/events/class_event.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/events/recurring_event.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/events/uni_event.dart';
+import 'package:acs_upb_mobile/pages/timetable/view/timetable_page.dart';
 import 'package:acs_upb_mobile/resources/google_apis.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
@@ -358,7 +359,7 @@ class UniEventProvider extends EventProvider<UniEventInstance>
     return _gCalEvent;
   }
 
-  Future<void> exportToGoogleCalendar() async {
+  Future<void> exportToGoogleCalendar(TimetablePage widget) async {
     final Stream<List<UniEvent>> eventsStream = _events;
     final List<UniEvent> streamElement = await eventsStream.first;
 
