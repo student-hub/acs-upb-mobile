@@ -268,6 +268,7 @@
   "infoPassword": "Aceasta trebuie să conțină majuscule, minuscule și cel puțin un număr sau un simbol, având minimum 8 caractere.",
   "infoAppIsOpenSource": "{appName} este open source.",
   "infoEmail": "Acesta este același username pe care îl folosești să te loghezi pe {forum}.",
+  "infoFormAnonymous": "Acest formular este anonim.",
 
   "feedbackGeneralQuestion1": "Evaluarea dumneavoastră generală cu privire la această disciplină este pozitivă?",
   "feedbackGeneralQuestion2": "Care este nota pe care vă așteptați să o obțineți la această disciplină? (1-10)",

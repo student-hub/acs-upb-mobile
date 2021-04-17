@@ -138,6 +138,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "infoAppIsOpenSource" : m2,
     "infoClasses" : MessageLookupByLibrary.simpleMessage("materiile care vă interesează"),
     "infoEmail" : m3,
+    "infoFormAnonymous" : MessageLookupByLibrary.simpleMessage("Acest formular este anonim."),
     "infoMakeSureGroupIsSelected" : MessageLookupByLibrary.simpleMessage("Asigurați-vă că aveți grupa/semigrupa selectată în"),
     "infoPassword" : MessageLookupByLibrary.simpleMessage("Aceasta trebuie să conțină majuscule, minuscule și cel puțin un număr sau un simbol, având minimum 8 caractere."),
     "infoPasswordResetEmailSent" : MessageLookupByLibrary.simpleMessage("Please check your inbox for the password reset e-mail."),

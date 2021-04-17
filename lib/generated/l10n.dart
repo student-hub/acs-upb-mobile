@@ -2555,6 +2555,16 @@ class S {
     );
   }
 
+  /// `This form is anonymous.`
+  String get infoFormAnonymous {
+    return Intl.message(
+      'This form is anonymous.',
+      name: 'infoFormAnonymous',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Is your overall assessment of this discipline positive?`
   String get feedbackGeneralQuestion1 {
     return Intl.message(

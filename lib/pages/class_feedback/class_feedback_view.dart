@@ -1,5 +1,7 @@
 import 'package:acs_upb_mobile/pages/classes/model/class.dart';
 import 'package:acs_upb_mobile/pages/people/service/person_provider.dart';
+import 'package:acs_upb_mobile/widgets/icon_text.dart';
+import 'package:acs_upb_mobile/widgets/radio_emoji.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -17,7 +19,8 @@ class ClassFeedbackView extends StatefulWidget {
   _ClassFeedbackViewState createState() => _ClassFeedbackViewState();
 }
 
-class _ClassFeedbackViewState extends State<ClassFeedbackView> {
+class _ClassFeedbackViewState extends State<ClassFeedbackView>
+    with TickerProviderStateMixin {
   final formKey = GlobalKey<FormState>();
   TextEditingController classController;
   bool agreedToResponsibilities = false;
@@ -26,6 +29,17 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
   final List<bool> _isFormFieldComplete = [];
   List<String> involvementPercentages = [];
   String selectedInvolvement;
+
+  AnimationController animationController;
+  CurvedAnimation animation;
+
+  Map<int, bool> emojiSelected = {
+    0: false,
+    1: false,
+    2: false,
+    3: false,
+    4: false,
+  };
 
   @override
   void initState() {
@@ -39,13 +53,16 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
       '60% ... 80%',
       '80% ... 100%'
     ];
-  }
 
-  void _handleRadioButton(int group, int value) {
-    setState(() {
-      _feedbackValue[group] = value;
-      _isFormFieldComplete[group] = false;
-    });
+    animationController = AnimationController(
+      duration: const Duration(milliseconds: 800),
+      vsync: this,
+    );
+
+    animation = CurvedAnimation(
+      parent: animationController,
+      curve: Curves.elasticOut,
+    );
   }
 
   @override
@@ -97,12 +114,15 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   Column(children: [
+                    IconText(
+                        icon: Icons.info_outline,
+                        text: S.of(context).infoFormAnonymous),
                     TextFormField(
                       enabled: false,
                       controller: classController,
                       decoration: InputDecoration(
                         labelText: S.of(context).labelClass,
-                        prefixIcon: const Icon(Icons.class_),
+                        prefixIcon: const Icon(Icons.class__outlined),
                       ),
                       onChanged: (_) => setState(() {}),
                     ),
@@ -118,7 +138,7 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
                                 text: lecturerName ?? '-'),
                             decoration: InputDecoration(
                               labelText: S.of(context).labelLecturer,
-                              prefixIcon: const Icon(Icons.person),
+                              prefixIcon: const Icon(Icons.person_outline),
                             ),
                             onChanged: (_) => setState(() {}),
                           );
@@ -131,12 +151,34 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
                     TextFormField(
                       decoration: InputDecoration(
                         labelText: S.of(context).labelAssistant,
-                        prefixIcon: const Icon(Icons.person),
+                        prefixIcon: const Icon(Icons.person_outline),
                       ),
                       onChanged: (_) => setState(() {}),
                     ),
+                    Padding(
+                      padding: const EdgeInsets.all(10),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Checkbox(
+                            value: agreedToResponsibilities,
+                            visualDensity: VisualDensity.compact,
+                            onChanged: (value) => setState(
+                                () => agreedToResponsibilities = value),
+                          ),
+                          Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.only(top: 10.25),
+                              child: Text(
+                                S.of(context).messageAgreeFeedbackPolicy,
+                                style: Theme.of(context).textTheme.subtitle1,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                     const SizedBox(height: 24),
-                    // ignore: inference_failure_on_collection_literal
                     Card(
                       child: Padding(
                         padding: const EdgeInsets.all(15),
@@ -156,25 +198,38 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
                             TextFormField(
                               decoration: InputDecoration(
                                 labelText: S.of(context).labelGrade,
-                                prefixIcon: const Icon(Icons.grade),
+                                prefixIcon: const Icon(Icons.grade_outlined),
                               ),
                               onChanged: (_) => setState(() {}),
                             ),
                             const SizedBox(height: 24),
-                            ...generalQuestions.asMap().entries.map((entry) {
-                              return FeedbackFormField(
-                                id: entry.key + 1,
-                                question: entry.value,
-                                groupValue: _feedbackValue[entry.key],
-                                radioHandler: (int value) =>
-                                    _handleRadioButton(entry.key, value),
-                                error: _isFormFieldComplete[entry.key]
-                                    ? S
-                                        .of(context)
-                                        .warningYouNeedToSelectAtLeastOne
-                                    : null,
-                              );
-                            }),
+                            ...generalQuestions.asMap().entries.map(
+                              (entry) {
+                                return EmojiFormField(
+                                  question: entry.value,
+                                  handleTap: () {
+                                    setState(() {
+                                      animationController.forward();
+                                      emojiSelected[entry.key] = true;
+                                      animationController
+                                          .addListener(() => setState(() {}));
+                                    });
+                                  },
+                                  animation: animation,
+                                  validator: (selection) {
+                                    if (selection.values
+                                        .where((e) => e != false)
+                                        .isEmpty) {
+                                      return S
+                                          .of(context)
+                                          .warningYouNeedToSelectAtLeastOne;
+                                    }
+                                    return null;
+                                  },
+                                  initialValues: emojiSelected,
+                                );
+                              },
+                            ),
                           ],
                         ),
                       ),
@@ -199,7 +254,8 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
                             DropdownButtonFormField<String>(
                               decoration: InputDecoration(
                                 labelText: S.of(context).sectionInvolvement,
-                                prefixIcon: const Icon(Icons.local_activity),
+                                prefixIcon:
+                                    const Icon(Icons.local_activity_outlined),
                               ),
                               value: selectedInvolvement,
                               items: involvementPercentages
@@ -240,11 +296,7 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
                             const SizedBox(height: 24),
                             ...lectureQuestions.asMap().entries.map((entry) {
                               return FeedbackFormField(
-                                id: entry.key + 1,
                                 question: entry.value,
-                                groupValue: _feedbackValue[entry.key],
-                                radioHandler: (int value) =>
-                                    _handleRadioButton(entry.key, value),
                                 error: _isFormFieldComplete[entry.key]
                                     ? S
                                         .of(context)
@@ -272,11 +324,7 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
                                 .entries
                                 .map((entry) {
                               return FeedbackFormField(
-                                id: entry.key + 1,
                                 question: entry.value,
-                                groupValue: _feedbackValue[entry.key],
-                                radioHandler: (int value) =>
-                                    _handleRadioButton(entry.key, value),
                                 error: _isFormFieldComplete[entry.key]
                                     ? S
                                         .of(context)
@@ -308,18 +356,14 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
                             TextFormField(
                               decoration: InputDecoration(
                                 labelText: S.of(context).labelGrade,
-                                prefixIcon: const Icon(Icons.grade),
+                                prefixIcon: const Icon(Icons.grade_outlined),
                               ),
                               onChanged: (_) => setState(() {}),
                             ),
                             const SizedBox(height: 24),
                             ...homeworkQuestions.asMap().entries.map((entry) {
                               return FeedbackFormField(
-                                id: entry.key + 1,
                                 question: entry.value,
-                                groupValue: _feedbackValue[entry.key],
-                                radioHandler: (int value) =>
-                                    _handleRadioButton(entry.key, value),
                                 error: _isFormFieldComplete[entry.key]
                                     ? S
                                         .of(context)
@@ -425,31 +469,9 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
                                 ),
                               ),
                             ),
+                            const SizedBox(height: 24),
                           ],
                         ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(10),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Checkbox(
-                            value: agreedToResponsibilities,
-                            visualDensity: VisualDensity.compact,
-                            onChanged: (value) => setState(
-                                () => agreedToResponsibilities = value),
-                          ),
-                          Expanded(
-                            child: Padding(
-                              padding: const EdgeInsets.only(top: 10.25),
-                              child: Text(
-                                S.of(context).messageAgreeFeedbackPolicy,
-                                style: Theme.of(context).textTheme.subtitle1,
-                              ),
-                            ),
-                          ),
-                        ],
                       ),
                     ),
                   ]),

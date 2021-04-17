@@ -138,6 +138,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "infoAppIsOpenSource" : m2,
     "infoClasses" : MessageLookupByLibrary.simpleMessage("classes you are interested in"),
     "infoEmail" : m3,
+    "infoFormAnonymous" : MessageLookupByLibrary.simpleMessage("This form is anonymous."),
     "infoMakeSureGroupIsSelected" : MessageLookupByLibrary.simpleMessage("Make sure your group/subgroup is selected in the"),
     "infoPassword" : MessageLookupByLibrary.simpleMessage("It must contain lower and uppercase letters, one number and one special character, and have a minimum length of 8."),
     "infoPasswordResetEmailSent" : MessageLookupByLibrary.simpleMessage("Please check your inbox for the password reset e-mail."),
