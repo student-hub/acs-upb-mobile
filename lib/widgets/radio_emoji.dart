@@ -1,79 +1,6 @@
 import 'package:acs_upb_mobile/widgets/selectable.dart';
 import 'package:flutter/material.dart';
 
-/*class RadioEmoji extends StatefulWidget {
-  const RadioEmoji({
-    @required this.value,
-  }) : assert(value >= 1 && value <= 5);
-
-  /// Rating value between 1 and 5
-  final int value;
-
-  /// Emojis describing feedback status
-  static final List<String> emojiIndex = ['😠', '😕', '😐', '☺', '😍'];
-
-  @override
-  _RadioEmojiState createState() => _RadioEmojiState();
-}
-
-class _RadioEmojiState extends State<RadioEmoji>
-    with SingleTickerProviderStateMixin {
-  AnimationController controller;
-  CurvedAnimation animation;
-
-  String emoji;
-
-  @override
-  void initState() {
-    super.initState();
-
-    emoji = RadioEmoji.emojiIndex[widget.value - 1];
-
-    controller = AnimationController(
-      duration: const Duration(milliseconds: 800),
-      vsync: this,
-    );
-
-    animation = CurvedAnimation(
-      parent: controller,
-      curve: Curves.elasticOut,
-    );
-
-    controller.addListener(() => setState(() {}));
-  }
-
-  @override
-  void dispose() {
-    controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      child: Container(
-        decoration: BoxDecoration(
-          border: Border.all(style: BorderStyle.none, width: 1),
-          shape: BoxShape.circle,
-        ),
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-        child: Container(
-          height: 35,
-          child: Text(
-            emoji,
-            style: TextStyle(
-              fontSize: animation.value * 10 + 20.0,
-            ),
-          ),
-        ),
-      ),
-      onTap: () {
-        controller.forward();
-      },
-    );
-  }
-}*/
-
 class EmojiFormField extends FormField<Map<int, bool>> {
   EmojiFormField({
     @required Map<int, bool> initialValues,
@@ -91,26 +18,32 @@ class EmojiFormField extends FormField<Map<int, bool>> {
               const Icon(
                 Icons.sentiment_very_dissatisfied,
                 color: Colors.red,
+                size: 30,
               ),
               const Icon(
                 Icons.sentiment_dissatisfied,
                 color: Colors.redAccent,
+                size: 30,
               ),
               const Icon(
                 Icons.sentiment_neutral,
                 color: Colors.amber,
+                size: 30,
               ),
               const Icon(
                 Icons.sentiment_satisfied,
                 color: Colors.lightGreen,
+                size: 30,
               ),
               const Icon(
                 Icons.sentiment_very_satisfied,
                 color: Colors.green,
+                size: 30,
               )
             ];
             final List<SelectableController> emojiControllers =
                 emojis.map((_) => SelectableController()).toList();
+
             final emojiSelectables = emojiControllers
                 .asMap()
                 .map(
@@ -120,7 +53,6 @@ class EmojiFormField extends FormField<Map<int, bool>> {
                       icon: emojis[i],
                       controller: controller,
                       onSelected: (selected) {
-                        print('Something was pressed $i $selected');
                         if (selected) {
                           for (final c in emojiControllers) {
                             if (c != controller) {
@@ -140,6 +72,7 @@ class EmojiFormField extends FormField<Map<int, bool>> {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
+                const SizedBox(height: 24),
                 Text(
                   '$question',
                   style: const TextStyle(
@@ -172,9 +105,8 @@ class EmojiFormField extends FormField<Map<int, bool>> {
 
 class SelectableIcon extends Selectable {
   const SelectableIcon({
-    Key key,
     bool initiallySelected,
-    Function(bool) onSelected,
+    void Function(bool) onSelected,
     this.icon,
     SelectableController controller,
   }) : super(
@@ -219,9 +151,9 @@ class _SelectableIconState extends SelectableState {
         ),
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
         child: AnimatedContainer(
-          //color: isSelected ? Colors.green : Colors.transparent,
-          duration: const Duration(seconds: 1),
-          width: isSelected ? 100 : 15,
+          height: isSelected ? 40 : 10,
+          width: isSelected ? 70 : 30,
+          duration: const Duration(milliseconds: 500),
           child: icon,
         ),
       ),

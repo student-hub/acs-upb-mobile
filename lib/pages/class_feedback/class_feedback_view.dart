@@ -8,8 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 
-import 'form_field.dart';
-
 class ClassFeedbackView extends StatefulWidget {
   const ClassFeedbackView({Key key, this.classHeader}) : super(key: key);
 
@@ -19,19 +17,13 @@ class ClassFeedbackView extends StatefulWidget {
   _ClassFeedbackViewState createState() => _ClassFeedbackViewState();
 }
 
-class _ClassFeedbackViewState extends State<ClassFeedbackView>
-    with TickerProviderStateMixin {
+class _ClassFeedbackViewState extends State<ClassFeedbackView> {
   final formKey = GlobalKey<FormState>();
   TextEditingController classController;
   bool agreedToResponsibilities = false;
 
-  final List<int> _feedbackValue = [];
-  final List<bool> _isFormFieldComplete = [];
   List<String> involvementPercentages = [];
   String selectedInvolvement;
-
-  AnimationController animationController;
-  CurvedAnimation animation;
 
   Map<int, bool> emojiSelected = {
     0: false,
@@ -53,16 +45,6 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView>
       '60% ... 80%',
       '80% ... 100%'
     ];
-
-    animationController = AnimationController(
-      duration: const Duration(milliseconds: 800),
-      vsync: this,
-    );
-
-    animation = CurvedAnimation(
-      parent: animationController,
-      curve: Curves.elasticOut,
-    );
   }
 
   @override
@@ -96,11 +78,6 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView>
       S.of(context).feedbackHomeworkQuestion3
     ];
 
-    for (int i = 0; i < lectureQuestions.length; ++i) {
-      _feedbackValue.add(-1);
-      _isFormFieldComplete.add(false);
-    }
-
     return AppScaffold(
       title: Text(S.of(context).navigationClassFeedback),
       actions: [_submitButton()],
@@ -115,8 +92,9 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView>
                 children: <Widget>[
                   Column(children: [
                     IconText(
-                        icon: Icons.info_outline,
-                        text: S.of(context).infoFormAnonymous),
+                      icon: Icons.info_outline,
+                      text: S.of(context).infoFormAnonymous,
+                    ),
                     TextFormField(
                       enabled: false,
                       controller: classController,
@@ -284,7 +262,6 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView>
                               S.of(context).uniEventTypeLecture,
                               style: Theme.of(context).textTheme.headline6,
                             ),
-                            const SizedBox(height: 24),
                             ...lectureQuestions.asMap().entries.map((entry) {
                               return EmojiFormField(
                                 question: entry.value,
@@ -315,7 +292,6 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView>
                               S.of(context).sectionApplications,
                               style: Theme.of(context).textTheme.headline6,
                             ),
-                            const SizedBox(height: 24),
                             ...applicationsQuestions
                                 .asMap()
                                 .entries
@@ -363,7 +339,6 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView>
                               ),
                               onChanged: (_) => setState(() {}),
                             ),
-                            const SizedBox(height: 24),
                             ...homeworkQuestions.asMap().entries.map((entry) {
                               return EmojiFormField(
                                 question: entry.value,
