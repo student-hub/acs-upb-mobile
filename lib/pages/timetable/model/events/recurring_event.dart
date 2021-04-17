@@ -21,6 +21,7 @@ class RecurringUniEvent extends UniEvent {
     ClassHeader classHeader,
     AcademicCalendar calendar,
     String addedBy,
+    bool editable,
   })  : assert(rrule != null),
         super(
             name: name,
@@ -34,7 +35,8 @@ class RecurringUniEvent extends UniEvent {
             type: type,
             classHeader: classHeader,
             calendar: calendar,
-            addedBy: addedBy);
+            addedBy: addedBy,
+            editable: editable);
 
   final RecurrenceRule rrule;
 

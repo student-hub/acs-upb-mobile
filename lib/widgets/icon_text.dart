@@ -44,7 +44,7 @@ class IconText extends StatelessWidget {
           children: [
             WidgetSpan(
               child: Padding(
-                padding: const EdgeInsets.only(right: 4),
+                padding: const EdgeInsets.only(right: 8),
                 child: Icon(
                   icon,
                   color: textStyle.color,
@@ -66,7 +66,7 @@ class IconText extends StatelessWidget {
                         ),
                       if (actionArrow)
                         Icon(
-                          Icons.arrow_forward_ios,
+                          Icons.arrow_forward_ios_outlined,
                           color: actionStyle.color,
                           size: actionStyle.fontSize,
                         ),

@@ -1,9 +1,9 @@
 import 'package:acs_upb_mobile/pages/classes/model/class.dart';
 import 'package:acs_upb_mobile/pages/people/model/person.dart';
+import 'package:acs_upb_mobile/pages/timetable/model/academic_calendar.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/events/recurring_event.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/events/uni_event.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:acs_upb_mobile/pages/timetable/model/academic_calendar.dart';
 import 'package:rrule/rrule.dart';
 import 'package:time_machine/time_machine.dart';
 
@@ -23,6 +23,7 @@ class ClassEvent extends RecurringUniEvent {
     ClassHeader classHeader,
     AcademicCalendar calendar,
     String addedBy,
+    bool editable,
   }) : super(
             rrule: rrule,
             name: name,
@@ -36,7 +37,8 @@ class ClassEvent extends RecurringUniEvent {
             type: type,
             classHeader: classHeader,
             calendar: calendar,
-            addedBy: addedBy);
+            addedBy: addedBy,
+            editable: editable);
 
   final Person teacher;
 }
