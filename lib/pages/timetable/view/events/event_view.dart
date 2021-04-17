@@ -69,31 +69,34 @@ class _EventViewState extends State<EventView> {
 
   @override
   Widget build(BuildContext context) {
+    final user = Provider.of<AuthProvider>(context).currentUserFromCache;
     return AppScaffold(
       title: Text(S.of(context).navigationEventDetails),
       actions: [
         AppScaffoldAction(
-            icon: Icons.edit_outlined,
-            onPressed: () {
-              final user = Provider.of<AuthProvider>(context, listen: false)
-                  .currentUserFromCache;
-              if (user.canAddPublicInfo) {
-                Navigator.of(context).push(MaterialPageRoute<AddEventView>(
-                  builder: (_) => ChangeNotifierProvider<FilterProvider>(
-                    create: (_) => FilterProvider(
-                      defaultDegree: widget.eventInstance.mainEvent.degree,
-                      defaultRelevance:
-                          widget.eventInstance.mainEvent.relevance,
-                    ),
-                    child: AddEventView(
-                      initialEvent: widget.eventInstance.mainEvent,
-                    ),
+          icon: Icons.edit_outlined,
+          disabled: !widget.eventInstance.mainEvent.editable ||
+              !user.canAddPublicInfo,
+          onPressed: () {
+            if (!widget.eventInstance.mainEvent.editable) {
+              AppToast.show(S.of(context).warningEventNotEditable);
+            } else if (!user.canAddPublicInfo) {
+              AppToast.show(S.of(context).errorPermissionDenied);
+            } else {
+              Navigator.of(context).push(MaterialPageRoute<AddEventView>(
+                builder: (_) => ChangeNotifierProvider<FilterProvider>(
+                  create: (_) => FilterProvider(
+                    defaultDegree: widget.eventInstance.mainEvent.degree,
+                    defaultRelevance: widget.eventInstance.mainEvent.relevance,
                   ),
-                ));
-              } else {
-                AppToast.show(S.of(context).errorPermissionDenied);
-              }
-            })
+                  child: AddEventView(
+                    initialEvent: widget.eventInstance.mainEvent,
+                  ),
+                ),
+              ));
+            }
+          },
+        )
       ],
       body: SafeArea(
         child: ListView(children: [

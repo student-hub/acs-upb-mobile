@@ -149,6 +149,7 @@
   "warningFavouriteWebsitesInitializationFailed": "Could not read favourite websites.",
   "warningUnableToReachNewsFeed": "Unable to reach the news feed.",
   "warningNoNews": "There are no news yet.",
+  "warningEventNotEditable": "This event cannot be edited.",
 
   "navigationAskPermissions": "Ask for permissions",
   "navigationHome": "Home",
