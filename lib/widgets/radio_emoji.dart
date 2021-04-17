@@ -1,6 +1,7 @@
+import 'package:acs_upb_mobile/widgets/selectable.dart';
 import 'package:flutter/material.dart';
 
-class RadioEmoji extends StatefulWidget {
+/*class RadioEmoji extends StatefulWidget {
   const RadioEmoji({
     @required this.value,
   }) : assert(value >= 1 && value <= 5);
@@ -71,14 +72,12 @@ class _RadioEmojiState extends State<RadioEmoji>
       },
     );
   }
-}
+}*/
 
 class EmojiFormField extends FormField<Map<int, bool>> {
   EmojiFormField({
     @required Map<int, bool> initialValues,
     @required String question,
-    @required void Function() handleTap,
-    @required CurvedAnimation animation,
     String Function(Map<int, bool>) validator,
     Key key,
   }) : super(
@@ -89,32 +88,55 @@ class EmojiFormField extends FormField<Map<int, bool>> {
           builder: (state) {
             final context = state.context;
             final List<Icon> emojis = [
-              Icon(
+              const Icon(
                 Icons.sentiment_very_dissatisfied,
                 color: Colors.red,
-                size: animation.value * 10 + 20.0,
               ),
-              Icon(
+              const Icon(
                 Icons.sentiment_dissatisfied,
                 color: Colors.redAccent,
-                size: animation.value * 10 + 20.0,
               ),
-              Icon(
+              const Icon(
                 Icons.sentiment_neutral,
                 color: Colors.amber,
-                size: animation.value * 10 + 20.0,
               ),
-              Icon(
+              const Icon(
                 Icons.sentiment_satisfied,
                 color: Colors.lightGreen,
-                size: animation.value * 10 + 20.0,
               ),
-              Icon(
+              const Icon(
                 Icons.sentiment_very_satisfied,
                 color: Colors.green,
-                size: animation.value * 10 + 20.0,
               )
             ];
+            final List<SelectableController> emojiControllers =
+                emojis.map((_) => SelectableController()).toList();
+            final emojiSelectables = emojiControllers
+                .asMap()
+                .map(
+                  (i, controller) => MapEntry(
+                    i,
+                    SelectableIcon(
+                      icon: emojis[i],
+                      controller: controller,
+                      onSelected: (selected) {
+                        print('Something was pressed $i $selected');
+                        if (selected) {
+                          for (final c in emojiControllers) {
+                            if (c != controller) {
+                              c.deselect();
+                            }
+                          }
+                          controller.select();
+                        } else {
+                          controller.deselect();
+                        }
+                      },
+                    ),
+                  ),
+                )
+                .values
+                .toList();
             return Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
@@ -124,56 +146,85 @@ class EmojiFormField extends FormField<Map<int, bool>> {
                     fontSize: 18,
                   ),
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Expanded(
-                      child: Container(
-                        alignment: Alignment.center,
-                        height: 45,
-                        child: ListView.builder(
-                          shrinkWrap: true,
-                          itemCount: emojis.length,
-                          scrollDirection: Axis.horizontal,
-                          itemBuilder: (context, index) {
-                            return Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                GestureDetector(
-                                  onTap: handleTap,
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      border: Border.all(
-                                          style: BorderStyle.none, width: 1),
-                                      shape: BoxShape.circle,
-                                    ),
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 12, vertical: 10),
-                                    child: emojis[index],
-                                  ),
-                                ),
-                                const SizedBox(width: 8),
-                              ],
-                            );
-                          },
-                        ),
-                      ),
-                    ),
-                    if (state.hasError)
-                      Padding(
-                        padding: const EdgeInsets.only(top: 8),
-                        child: Text(
-                          state.errorText,
-                          style: Theme.of(context)
-                              .textTheme
-                              .caption
-                              .copyWith(color: Theme.of(context).errorColor),
-                        ),
-                      ),
-                  ],
+                Container(
+                  width: MediaQuery.of(context).size.width - 20,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: emojiSelectables,
+                  ),
                 ),
+                if (state.hasError)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8),
+                    child: Text(
+                      state.errorText,
+                      style: Theme.of(context)
+                          .textTheme
+                          .caption
+                          .copyWith(color: Theme.of(context).errorColor),
+                    ),
+                  ),
               ],
             );
           },
         );
+}
+
+class SelectableIcon extends Selectable {
+  const SelectableIcon({
+    Key key,
+    bool initiallySelected,
+    Function(bool) onSelected,
+    this.icon,
+    SelectableController controller,
+  }) : super(
+            initiallySelected: initiallySelected ?? false,
+            onSelected: onSelected,
+            controller: controller);
+
+  final Icon icon;
+
+  @override
+  _SelectableIconState createState() => _SelectableIconState(icon);
+}
+
+class _SelectableIconState extends SelectableState {
+  _SelectableIconState(this.icon);
+
+  Icon icon;
+
+  @override
+  void initState() {
+    super.initState();
+    isSelected = widget.initiallySelected;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    widget.controller.selectableState = this;
+
+    return GestureDetector(
+      onTap: () {
+        setState(
+          () {
+            isSelected = !isSelected;
+            widget.onSelected(isSelected);
+          },
+        );
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          border: Border.all(style: BorderStyle.none, width: 1),
+          shape: BoxShape.circle,
+        ),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+        child: AnimatedContainer(
+          //color: isSelected ? Colors.green : Colors.transparent,
+          duration: const Duration(seconds: 1),
+          width: isSelected ? 100 : 15,
+          child: icon,
+        ),
+      ),
+    );
+  }
 }

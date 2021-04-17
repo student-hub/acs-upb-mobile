@@ -207,15 +207,6 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView>
                               (entry) {
                                 return EmojiFormField(
                                   question: entry.value,
-                                  handleTap: () {
-                                    setState(() {
-                                      animationController.forward();
-                                      emojiSelected[entry.key] = true;
-                                      animationController
-                                          .addListener(() => setState(() {}));
-                                    });
-                                  },
-                                  animation: animation,
                                   validator: (selection) {
                                     if (selection.values
                                         .where((e) => e != false)
@@ -295,13 +286,19 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView>
                             ),
                             const SizedBox(height: 24),
                             ...lectureQuestions.asMap().entries.map((entry) {
-                              return FeedbackFormField(
+                              return EmojiFormField(
                                 question: entry.value,
-                                error: _isFormFieldComplete[entry.key]
-                                    ? S
+                                validator: (selection) {
+                                  if (selection.values
+                                      .where((e) => e != false)
+                                      .isEmpty) {
+                                    return S
                                         .of(context)
-                                        .warningYouNeedToSelectAtLeastOne
-                                    : null,
+                                        .warningYouNeedToSelectAtLeastOne;
+                                  }
+                                  return null;
+                                },
+                                initialValues: emojiSelected,
                               );
                             }),
                           ],
@@ -323,13 +320,19 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView>
                                 .asMap()
                                 .entries
                                 .map((entry) {
-                              return FeedbackFormField(
+                              return EmojiFormField(
                                 question: entry.value,
-                                error: _isFormFieldComplete[entry.key]
-                                    ? S
+                                validator: (selection) {
+                                  if (selection.values
+                                      .where((e) => e != false)
+                                      .isEmpty) {
+                                    return S
                                         .of(context)
-                                        .warningYouNeedToSelectAtLeastOne
-                                    : null,
+                                        .warningYouNeedToSelectAtLeastOne;
+                                  }
+                                  return null;
+                                },
+                                initialValues: emojiSelected,
                               );
                             }),
                           ],
@@ -362,13 +365,19 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView>
                             ),
                             const SizedBox(height: 24),
                             ...homeworkQuestions.asMap().entries.map((entry) {
-                              return FeedbackFormField(
+                              return EmojiFormField(
                                 question: entry.value,
-                                error: _isFormFieldComplete[entry.key]
-                                    ? S
+                                validator: (selection) {
+                                  if (selection.values
+                                      .where((e) => e != false)
+                                      .isEmpty) {
+                                    return S
                                         .of(context)
-                                        .warningYouNeedToSelectAtLeastOne
-                                    : null,
+                                        .warningYouNeedToSelectAtLeastOne;
+                                  }
+                                  return null;
+                                },
+                                initialValues: emojiSelected,
                               );
                             }),
                           ],
