@@ -23,7 +23,7 @@ class HomePage extends StatelessWidget {
       title: Text(S.of(context).navigationHome),
       actions: [
         AppScaffoldAction(
-          icon: Icons.settings,
+          icon: Icons.settings_outlined,
           tooltip: S.of(context).navigationSettings,
           route: Routes.settings,
         )
@@ -36,6 +36,7 @@ class HomePage extends StatelessWidget {
                 onShowMore: () => tabController?.animateTo(2)),
           NewsFeedCard(),
           FaqCard(),
+          const SizedBox(height: 12),
         ],
       ),
     );

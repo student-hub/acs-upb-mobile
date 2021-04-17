@@ -1704,6 +1704,66 @@ class S {
     );
   }
 
+  /// `Data control`
+  String get settingsTitleDataControl {
+    return Intl.message(
+      'Data control',
+      name: 'settingsTitleDataControl',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your editing permissions`
+  String get settingsItemEditingPermissions {
+    return Intl.message(
+      'Your editing permissions',
+      name: 'settingsItemEditingPermissions',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No special permissions`
+  String get settingsPermissionsNone {
+    return Intl.message(
+      'No special permissions',
+      name: 'settingsPermissionsNone',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Permission to add public info`
+  String get settingsPermissionsAdd {
+    return Intl.message(
+      'Permission to add public info',
+      name: 'settingsPermissionsAdd',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Permission to edit public info`
+  String get settingsPermissionsEdit {
+    return Intl.message(
+      'Permission to edit public info',
+      name: 'settingsPermissionsEdit',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Permissions request already sent`
+  String get settingsPermissionsRequestSent {
+    return Intl.message(
+      'Permissions request already sent',
+      name: 'settingsPermissionsRequestSent',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Language`
   String get settingsItemLanguage {
     return Intl.message(
@@ -2481,6 +2541,26 @@ class S {
       name: 'infoEmail',
       desc: '',
       args: [forum],
+    );
+  }
+
+  /// `Loading...`
+  String get infoLoading {
+    return Intl.message(
+      'Loading...',
+      name: 'infoLoading',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Read the {appName} policy`
+  String infoReadThePolicy(Object appName) {
+    return Intl.message(
+      'Read the $appName policy',
+      name: 'infoReadThePolicy',
+      desc: '',
+      args: [appName],
     );
   }
 
