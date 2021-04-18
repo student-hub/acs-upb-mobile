@@ -5,6 +5,7 @@ import 'package:acs_upb_mobile/widgets/radio_emoji.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:provider/provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 
@@ -100,7 +101,7 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
                       controller: classController,
                       decoration: InputDecoration(
                         labelText: S.of(context).labelClass,
-                        prefixIcon: const Icon(Icons.class__outlined),
+                        prefixIcon: const Icon(FeatherIcons.bookOpen),
                       ),
                       onChanged: (_) => setState(() {}),
                     ),
