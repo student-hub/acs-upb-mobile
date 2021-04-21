@@ -21,23 +21,44 @@ class UpcomingEventsCard extends StatelessWidget {
     final eventProvider = Provider.of<UniEventProvider>(context);
     final WebsiteProvider websiteProvider =
         Provider.of<WebsiteProvider>(context);
-    return InfoCard<List<UniEventInstance>>(
+
+    Padding _colorIcon(event) => Padding(
+          padding: const EdgeInsets.all(10),
+          child: Container(
+            width: 20,
+            height: 20,
+            decoration: const BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(4)),
+              color: Colors.blueGrey,
+            ),
+          ),
+        );
+    return InfoCard<Iterable<UniEventInstance>>(
       title: S.of(context).sectionFrequentlyAccessedWebsites,
       onShowMore: onShowMore,
       future: eventProvider.getUpcomingEvents(LocalDate.today()),
       //future: websiteProvider.fetchFavouriteWebsites(uid: uid, context: context),
       builder: (events) => Column(
-        children: events
-            .map(
-              (event) => ListTile(
-                key: ValueKey(event.mainEvent.id),
+        children: [
+              ListTile(
+                key: ValueKey(events.first.mainEvent.id),
                 title: Text(
-                  event.mainEvent.name,
+                  events.first.mainEvent.classHeader.acronym,
                 ),
-                subtitle: Text(event.mainEvent.id),
-              ),
-            )
-            .toList(),
+                subtitle: Text(events.first.start.toString()),
+              )
+            ] +
+            events
+                .map(
+                  (event) => ListTile(
+                    key: ValueKey(event.mainEvent.id + "212"),
+                    title: Text(
+                      event.mainEvent.classHeader.acronym,
+                    ),
+                    subtitle: Text(event.start.toString()),
+                  ),
+                )
+                .toList(),
       ),
     );
   }
