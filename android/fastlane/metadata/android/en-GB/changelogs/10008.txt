@@ -1,0 +1,8 @@
+Improved
+  - Overall app UI is now nicer⭐
+  - Did some internal ✨magic✨ to improve the app
+
+Fixed
+  - Pressing an unknown teacher opened the teacher information sheet
+  - Version on settings page sometimes not showing correctly
+  - Bug 🐞 where pressing the edit button on a holiday would cause an error

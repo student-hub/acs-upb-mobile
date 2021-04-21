@@ -1,6 +1,7 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+
 import 'intl/messages_all.dart';
 
 // **************************************************************************
@@ -1463,6 +1464,16 @@ class S {
     );
   }
 
+  /// `This event cannot be edited.`
+  String get warningEventNotEditable {
+    return Intl.message(
+      'This event cannot be edited.',
+      name: 'warningEventNotEditable',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Ask for permissions`
   String get navigationAskPermissions {
     return Intl.message(
@@ -1688,6 +1699,66 @@ class S {
     return Intl.message(
       'Localization',
       name: 'settingsTitleLocalization',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Data control`
+  String get settingsTitleDataControl {
+    return Intl.message(
+      'Data control',
+      name: 'settingsTitleDataControl',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your editing permissions`
+  String get settingsItemEditingPermissions {
+    return Intl.message(
+      'Your editing permissions',
+      name: 'settingsItemEditingPermissions',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No special permissions`
+  String get settingsPermissionsNone {
+    return Intl.message(
+      'No special permissions',
+      name: 'settingsPermissionsNone',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Permission to add public info`
+  String get settingsPermissionsAdd {
+    return Intl.message(
+      'Permission to add public info',
+      name: 'settingsPermissionsAdd',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Permission to edit public info`
+  String get settingsPermissionsEdit {
+    return Intl.message(
+      'Permission to edit public info',
+      name: 'settingsPermissionsEdit',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Permissions request already sent`
+  String get settingsPermissionsRequestSent {
+    return Intl.message(
+      'Permissions request already sent',
+      name: 'settingsPermissionsRequestSent',
       desc: '',
       args: [],
     );
@@ -2243,13 +2314,13 @@ class S {
     );
   }
 
-  /// `Why do you want edit permissions for ACS UPB Mobile?`
-  String get messageAskPermissionToEdit {
+  /// `Why do you want edit permissions for {appName}?`
+  String messageAskPermissionToEdit(Object appName) {
     return Intl.message(
-      'Why do you want edit permissions for ACS UPB Mobile?',
+      'Why do you want edit permissions for $appName?',
       name: 'messageAskPermissionToEdit',
       desc: '',
-      args: [],
+      args: [appName],
     );
   }
 
@@ -2453,13 +2524,13 @@ class S {
     );
   }
 
-  /// `ACS UPB Mobile is open source.`
-  String get infoAppIsOpenSource {
+  /// `{appName} is open source.`
+  String infoAppIsOpenSource(Object appName) {
     return Intl.message(
-      'ACS UPB Mobile is open source.',
+      '$appName is open source.',
       name: 'infoAppIsOpenSource',
       desc: '',
-      args: [],
+      args: [appName],
     );
   }
 
@@ -2470,6 +2541,26 @@ class S {
       name: 'infoEmail',
       desc: '',
       args: [forum],
+    );
+  }
+
+  /// `Loading...`
+  String get infoLoading {
+    return Intl.message(
+      'Loading...',
+      name: 'infoLoading',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Read the {appName} policy`
+  String infoReadThePolicy(Object appName) {
+    return Intl.message(
+      'Read the $appName policy',
+      name: 'infoReadThePolicy',
+      desc: '',
+      args: [appName],
     );
   }
 

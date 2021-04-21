@@ -6,7 +6,6 @@ import 'package:acs_upb_mobile/pages/classes/view/grading_view.dart';
 import 'package:acs_upb_mobile/pages/classes/view/shortcut_view.dart';
 import 'package:acs_upb_mobile/pages/people/service/person_provider.dart';
 import 'package:acs_upb_mobile/pages/people/view/person_view.dart';
-import 'package:acs_upb_mobile/resources/custom_icons.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/widgets/button.dart';
 import 'package:acs_upb_mobile/widgets/class_icon.dart';
@@ -16,6 +15,7 @@ import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:positioned_tap_detector/positioned_tap_detector.dart';
 import 'package:provider/provider.dart';
 
@@ -30,6 +30,16 @@ class ClassView extends StatefulWidget {
 
 class _ClassViewState extends State<ClassView> {
   Class classInfo;
+  String lecturerName = '';
+
+  @override
+  void initState() {
+    super.initState();
+    final personProvider = Provider.of<PersonProvider>(context, listen: false);
+    personProvider
+        .mostRecentLecturer(widget.classHeader.id)
+        .then((lecturer) => setState(() => lecturerName = lecturer));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,14 +57,14 @@ class _ClassViewState extends State<ClassView> {
               return ListView(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
                     child: Column(
                       children: [
-                        const SizedBox(height: 8),
+                        const SizedBox(height: 12),
                         lecturerCard(context),
-                        const SizedBox(height: 8),
+                        const SizedBox(height: 12),
                         shortcuts(context),
-                        const SizedBox(height: 8),
+                        const SizedBox(height: 12),
                         GradingChart(
                           grading: classInfo.grading,
                           lastUpdated: classInfo.gradingLastUpdated,
@@ -78,7 +88,7 @@ class _ClassViewState extends State<ClassView> {
     final authProvider = Provider.of<AuthProvider>(context);
 
     return Padding(
-      padding: const EdgeInsets.all(8),
+      padding: const EdgeInsets.symmetric(horizontal: 12),
       child: Column(
         children: [
               Row(
@@ -94,7 +104,7 @@ class _ClassViewState extends State<ClassView> {
                         : () => AppToast.show(
                             S.of(context).warningNoPermissionToEditClassInfo),
                     child: IconButton(
-                      icon: const Icon(Icons.add),
+                      icon: const Icon(Icons.add_outlined),
                       onPressed:
                           authProvider.currentUserFromCache.canEditClassInfo
                               ? () => Navigator.of(context).push(
@@ -122,7 +132,7 @@ class _ClassViewState extends State<ClassView> {
             (classInfo.shortcuts.isEmpty
                 ? <Widget>[
                     Padding(
-                      padding: const EdgeInsets.all(8),
+                      padding: const EdgeInsets.all(12),
                       child: Center(
                         child: Text(
                           S.of(context).labelUnknown,
@@ -145,20 +155,20 @@ class _ClassViewState extends State<ClassView> {
   IconData shortcutIcon(ShortcutType type) {
     switch (type) {
       case ShortcutType.main:
-        return Icons.home;
+        return Icons.home_outlined;
       case ShortcutType.classbook:
-        return CustomIcons.book;
+        return FeatherIcons.book;
       case ShortcutType.resource:
-        return Icons.insert_drive_file;
+        return Icons.insert_drive_file_outlined;
       default:
-        return Icons.public;
+        return FeatherIcons.globe;
     }
   }
 
   AppDialog _deletionConfirmationDialog(
           {BuildContext context, String shortcutName, Function onDelete}) =>
       AppDialog(
-        icon: const Icon(Icons.delete),
+        icon: const Icon(Icons.delete_outlined),
         title: S.of(context).actionDeleteShortcut,
         message: S.of(context).messageDeleteShortcut(shortcutName),
         info: S.of(context).messageThisCouldAffectOtherStudents,
@@ -237,53 +247,43 @@ class _ClassViewState extends State<ClassView> {
     return Card(
       key: const Key('LecturerCard'),
       child: Padding(
-        padding: const EdgeInsets.all(8),
+        padding: const EdgeInsets.all(12),
         child: Row(
           children: [
             ClassIcon(classHeader: widget.classHeader),
-            const SizedBox(width: 8),
+            const SizedBox(width: 12),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   IconText(
-                    icon: Icons.class_,
+                    icon: FeatherIcons.bookOpen,
                     text: widget.classHeader.name ?? '-',
                     style: Theme.of(context).textTheme.bodyText1,
                   ),
-                  FutureBuilder(
-                    future: personProvider
-                        .mostRecentLecturer(widget.classHeader.id),
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.done) {
-                        final lecturerName = snapshot.data;
-                        return GestureDetector(
-                          onTap: () async {
-                            final lecturer =
-                                await personProvider.fetchPerson(lecturerName);
-                            if (lecturer != null) {
-                              await showModalBottomSheet<dynamic>(
-                                  isScrollControlled: true,
-                                  context: context,
-                                  builder: (BuildContext buildContext) =>
-                                      PersonView(person: lecturer));
-                            }
-                          },
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              IconText(
-                                icon: Icons.person,
-                                text: lecturerName ?? '-',
-                                style: Theme.of(context).textTheme.bodyText1,
-                              ),
-                            ],
-                          ),
-                        );
-                      } else {
-                        return const Center(child: CircularProgressIndicator());
+                  const SizedBox(height: 10),
+                  GestureDetector(
+                    onTap: () async {
+                      final lecturer =
+                          await personProvider.fetchPerson(lecturerName);
+                      if (lecturer != null && lecturerName != null) {
+                        await showModalBottomSheet<dynamic>(
+                            isScrollControlled: true,
+                            context: context,
+                            builder: (BuildContext buildContext) =>
+                                PersonView(person: lecturer));
                       }
                     },
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        IconText(
+                          icon: FeatherIcons.user,
+                          text: lecturerName ?? '-',
+                          style: Theme.of(context).textTheme.bodyText1,
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),

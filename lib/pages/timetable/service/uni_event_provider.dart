@@ -93,6 +93,8 @@ extension UniEventExtension on UniEvent {
             ? null
             : List<String>.from(json['relevance']),
         addedBy: json['addedBy'],
+        editable:
+            json['editable'] ?? false, // Holidays are read-only by default
       );
     } else if (json['rrule'] != null && json['teacher'] == null) {
       return RecurringUniEvent(
@@ -113,6 +115,7 @@ extension UniEventExtension on UniEvent {
             ? null
             : List<String>.from(json['relevance']),
         addedBy: json['addedBy'],
+        editable: json['editable'] ?? true,
       );
     } else if (json['rrule'] != null && json['teacher'] != null) {
       return ClassEvent(
@@ -132,6 +135,7 @@ extension UniEventExtension on UniEvent {
             ? null
             : List<String>.from(json['relevance']),
         addedBy: json['addedBy'],
+        editable: json['editable'] ?? true,
       );
     } else {
       return UniEvent(
@@ -151,6 +155,7 @@ extension UniEventExtension on UniEvent {
             ? null
             : List<String>.from(json['relevance']),
         addedBy: json['addedBy'],
+        editable: json['editable'] ?? true,
       );
     }
   }

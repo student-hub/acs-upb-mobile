@@ -15,6 +15,7 @@ import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:provider/provider.dart';
 import 'package:time_machine/time_machine.dart';
 import 'package:timetable/timetable.dart';
@@ -68,31 +69,34 @@ class _EventViewState extends State<EventView> {
 
   @override
   Widget build(BuildContext context) {
+    final user = Provider.of<AuthProvider>(context).currentUserFromCache;
     return AppScaffold(
       title: Text(S.of(context).navigationEventDetails),
       actions: [
         AppScaffoldAction(
-            icon: Icons.edit,
-            onPressed: () {
-              final user = Provider.of<AuthProvider>(context, listen: false)
-                  .currentUserFromCache;
-              if (user.canAddPublicInfo) {
-                Navigator.of(context).push(MaterialPageRoute<AddEventView>(
-                  builder: (_) => ChangeNotifierProvider<FilterProvider>(
-                    create: (_) => FilterProvider(
-                      defaultDegree: widget.eventInstance.mainEvent.degree,
-                      defaultRelevance:
-                          widget.eventInstance.mainEvent.relevance,
-                    ),
-                    child: AddEventView(
-                      initialEvent: widget.eventInstance.mainEvent,
-                    ),
+          icon: Icons.edit_outlined,
+          disabled: !widget.eventInstance.mainEvent.editable ||
+              !user.canAddPublicInfo,
+          onPressed: () {
+            if (!widget.eventInstance.mainEvent.editable) {
+              AppToast.show(S.of(context).warningEventNotEditable);
+            } else if (!user.canAddPublicInfo) {
+              AppToast.show(S.of(context).errorPermissionDenied);
+            } else {
+              Navigator.of(context).push(MaterialPageRoute<AddEventView>(
+                builder: (_) => ChangeNotifierProvider<FilterProvider>(
+                  create: (_) => FilterProvider(
+                    defaultDegree: widget.eventInstance.mainEvent.degree,
+                    defaultRelevance: widget.eventInstance.mainEvent.relevance,
                   ),
-                ));
-              } else {
-                AppToast.show(S.of(context).errorPermissionDenied);
-              }
-            })
+                  child: AddEventView(
+                    initialEvent: widget.eventInstance.mainEvent,
+                  ),
+                ),
+              ));
+            }
+          },
+        )
       ],
       body: SafeArea(
         child: ListView(children: [
@@ -116,10 +120,19 @@ class _EventViewState extends State<EventView> {
                       Text(widget.eventInstance.dateString),
                       if (widget.eventInstance.mainEvent is RecurringUniEvent &&
                           LocaleProvider.rruleL10n != null)
-                        Text((widget.eventInstance.mainEvent
-                                as RecurringUniEvent)
-                            .rrule
-                            .toText(l10n: LocaleProvider.rruleL10n)),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 2),
+                          child: Text(
+                            (widget.eventInstance.mainEvent
+                                    as RecurringUniEvent)
+                                .rrule
+                                .toText(l10n: LocaleProvider.rruleL10n),
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyText2
+                                .copyWith(color: Theme.of(context).hintColor),
+                          ),
+                        ),
                     ],
                   ),
                 ),
@@ -145,8 +158,8 @@ class _EventViewState extends State<EventView> {
               child: Row(
                 children: <Widget>[
                   const Padding(
-                    padding: EdgeInsets.all(8),
-                    child: Icon(Icons.location_on),
+                    padding: EdgeInsets.all(10),
+                    child: Icon(FeatherIcons.mapPin),
                   ),
                   const SizedBox(width: 16),
                   Text(widget.eventInstance.location,
@@ -160,8 +173,8 @@ class _EventViewState extends State<EventView> {
               child: Row(
                 children: <Widget>[
                   const Padding(
-                    padding: EdgeInsets.all(8),
-                    child: Icon(Icons.people),
+                    padding: EdgeInsets.all(10),
+                    child: Icon(FeatherIcons.users),
                   ),
                   const SizedBox(width: 16),
                   Text(
@@ -191,8 +204,8 @@ class _EventViewState extends State<EventView> {
                 child: Row(
                   children: <Widget>[
                     const Padding(
-                      padding: EdgeInsets.all(8),
-                      child: Icon(Icons.person),
+                      padding: EdgeInsets.all(10),
+                      child: Icon(FeatherIcons.user),
                     ),
                     const SizedBox(width: 16),
                     Text(
