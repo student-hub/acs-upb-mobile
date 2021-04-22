@@ -70,40 +70,38 @@ void main() {
       when(mockAuthProvider.hasListeners).thenReturn(false);
       when(mockAuthProvider.currentUser).thenAnswer((_) => Future.value(null));
       when(mockAuthProvider.isAnonymous).thenReturn(true);
-      when(mockAuthProvider.getProfilePictureURL(context: anyNamed('context')))
+      when(mockAuthProvider.getProfilePictureURL())
           .thenAnswer((_) => Future.value(null));
       when(mockAuthProvider.isVerified).thenAnswer((_) => Future.value(true));
 
       mockWebsiteProvider = MockWebsiteProvider();
       // ignore: invalid_use_of_protected_member
       when(mockWebsiteProvider.hasListeners).thenReturn(false);
-      when(mockWebsiteProvider.deleteWebsite(any, context: anyNamed('context')))
+      when(mockWebsiteProvider.deleteWebsite(any))
           .thenAnswer((_) => Future.value(true));
-      when(mockWebsiteProvider.fetchWebsites(any, context: anyNamed('context')))
+      when(mockWebsiteProvider.fetchWebsites(any))
           .thenAnswer((_) => Future.value([]));
-      when(mockWebsiteProvider.fetchFavouriteWebsites(
-              uid: anyNamed('uid'), context: anyNamed('context')))
+      when(mockWebsiteProvider.fetchFavouriteWebsites(anyNamed('uid')))
           .thenAnswer((_) => Future.value(null));
 
       mockQuestionProvider = MockQuestionProvider();
       // ignore: invalid_use_of_protected_member
       when(mockQuestionProvider.hasListeners).thenReturn(false);
-      when(mockQuestionProvider.fetchQuestions(context: anyNamed('context')))
+      when(mockQuestionProvider.fetchQuestions())
           .thenAnswer((_) => Future.value(<Question>[]));
       when(mockQuestionProvider.fetchQuestions(limit: anyNamed('limit')))
           .thenAnswer((_) => Future.value(<Question>[]));
 
       mockRequestProvider = MockRequestProvider();
-      when(mockRequestProvider.makeRequest(any, context: anyNamed('context')))
+      when(mockRequestProvider.makeRequest(any))
           .thenAnswer((_) => Future.value(true));
-      when(mockRequestProvider.userAlreadyRequested(any,
-              context: anyNamed('context')))
+      when(mockRequestProvider.userAlreadyRequested(any))
           .thenAnswer((_) => Future.value(false));
 
       mockNewsProvider = MockNewsProvider();
       // ignore: invalid_use_of_protected_member
       when(mockNewsProvider.hasListeners).thenReturn(false);
-      when(mockNewsProvider.fetchNewsFeedItems(context: anyNamed('context')))
+      when(mockNewsProvider.fetchNewsFeedItems())
           .thenAnswer((_) => Future.value(<NewsFeedItem>[]));
       when(mockNewsProvider.fetchNewsFeedItems(limit: anyNamed('limit')))
           .thenAnswer((_) => Future.value(<NewsFeedItem>[]));
@@ -207,15 +205,14 @@ void main() {
 
         // Verify the request is sent and Settings Page pops back
         verify(
-            mockRequestProvider.makeRequest(any, context: anyNamed('context')));
+            mockRequestProvider.makeRequest(any));
         expect(find.byType(SettingsPage), findsOneWidget);
       });
 
       testWidgets('User has already sent a request scenario',
           (WidgetTester tester) async {
         when(mockAuthProvider.isVerified).thenAnswer((_) => Future.value(true));
-        when(mockRequestProvider.userAlreadyRequested(any,
-                context: anyNamed('context')))
+        when(mockRequestProvider.userAlreadyRequested(any))
             .thenAnswer((_) => Future.value(true));
 
         await tester.pumpWidget(buildApp());
@@ -245,15 +242,14 @@ void main() {
 
         // Verify the request is sent and Settings Page pops back
         verify(
-            mockRequestProvider.makeRequest(any, context: anyNamed('context')));
+            mockRequestProvider.makeRequest(any));
         expect(find.byType(SettingsPage), findsOneWidget);
       });
 
       testWidgets('User is anonymous scenario', (WidgetTester tester) async {
         when(mockAuthProvider.isVerified).thenAnswer((_) => Future.value(true));
         when(mockAuthProvider.isAnonymous).thenReturn(true);
-        when(mockRequestProvider.userAlreadyRequested(any,
-                context: anyNamed('context')))
+        when(mockRequestProvider.userAlreadyRequested(any))
             .thenAnswer((_) => Future.value(false));
 
         await tester.pumpWidget(buildApp());
@@ -276,8 +272,7 @@ void main() {
         when(mockAuthProvider.isVerified)
             .thenAnswer((_) => Future.value(false));
         when(mockAuthProvider.isAnonymous).thenReturn(false);
-        when(mockRequestProvider.userAlreadyRequested(any,
-                context: anyNamed('context')))
+        when(mockRequestProvider.userAlreadyRequested(any))
             .thenAnswer((_) => Future.value(false));
 
         await tester.pumpWidget(buildApp());

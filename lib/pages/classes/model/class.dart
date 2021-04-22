@@ -9,13 +9,13 @@ extension ShortcutTypeExtension on ShortcutType {
   String toLocalizedString(BuildContext context) {
     switch (this) {
       case ShortcutType.main:
-        return S.of(context).shortcutTypeMain;
+        return S.current.shortcutTypeMain;
       case ShortcutType.classbook:
-        return S.of(context).shortcutTypeClassbook;
+        return S.current.shortcutTypeClassbook;
       case ShortcutType.resource:
-        return S.of(context).shortcutTypeResource;
+        return S.current.shortcutTypeResource;
       default:
-        return S.of(context).shortcutTypeOther;
+        return S.current.shortcutTypeOther;
     }
   }
 }

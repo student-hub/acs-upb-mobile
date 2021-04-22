@@ -31,7 +31,7 @@ void main() {
   final WebsiteProvider mockWebsiteProvider = MockWebsiteProvider();
   // ignore: invalid_use_of_protected_member
   when(mockWebsiteProvider.hasListeners).thenReturn(false);
-  when(mockWebsiteProvider.fetchWebsites(any, context: anyNamed('context')))
+  when(mockWebsiteProvider.fetchWebsites(any))
       .thenAnswer((_) => Future.value([
             Website(
               id: '1',
@@ -61,10 +61,8 @@ void main() {
               isPrivate: false,
             ),
           ]));
-  when(mockWebsiteProvider.fetchFavouriteWebsites(
-          uid: anyNamed('uid'), context: anyNamed('context')))
-      .thenAnswer((_) async => (await mockWebsiteProvider.fetchWebsites(any,
-              context: anyNamed('context')))
+  when(mockWebsiteProvider.fetchFavouriteWebsites(anyNamed('uid')))
+      .thenAnswer((_) async => (await mockWebsiteProvider.fetchWebsites(any))
           .take(3));
   when(mockWebsiteProvider.incrementNumberOfVisits(any, uid: anyNamed('uid')))
       .thenAnswer((_) => Future.value(true));
@@ -72,7 +70,7 @@ void main() {
   final FilterProvider mockFilterProvider = MockFilterProvider();
   // ignore: invalid_use_of_protected_member
   when(mockFilterProvider.hasListeners).thenReturn(false);
-  when(mockFilterProvider.fetchFilter(context: anyNamed('context')))
+  when(mockFilterProvider.fetchFilter())
       .thenAnswer((_) => Future.value(Filter(root: FilterNode(name: 'All'))));
   when(mockFilterProvider.filterEnabled).thenReturn(true);
 

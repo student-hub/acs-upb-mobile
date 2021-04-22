@@ -12,7 +12,7 @@ class NewsFeedCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InfoCard<List<NewsFeedItem>>(
-        title: S.of(context).navigationNewsFeed,
+        title: S.current.navigationNewsFeed,
         showMoreButtonKey: const ValueKey('show_more_news_feed'),
         onShowMore: () => Navigator.of(context).pushNamed(Routes.newsFeed),
         future: Provider.of<NewsProvider>(context).fetchNewsFeedItems(limit: 2),
@@ -25,8 +25,7 @@ class NewsFeedCard extends StatelessWidget {
                         trailing: const Icon(Icons.arrow_forward_ios_outlined),
                         contentPadding: EdgeInsets.zero,
                         dense: true,
-                        onTap: () =>
-                            Utils.launchURL(item.link, context: context),
+                        onTap: () => Utils.launchURL(item.link),
                       ))
                   .toList());
         });

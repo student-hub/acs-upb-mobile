@@ -66,7 +66,7 @@ class _PortalPageState extends State<PortalPage> {
 
     final filterProvider = this.filterProvider ??
         Provider.of<FilterProvider>(context, listen: false);
-    filterCache = await filterProvider.fetchFilter(context: context);
+    filterCache = await filterProvider.fetchFilter();
 
     updating = false;
     if (mounted) {
@@ -217,15 +217,15 @@ class _PortalPageState extends State<PortalPage> {
         CircularProgressIndicator();
 
     return AppScaffold(
-      title: Text(S.of(context).navigationPortal),
+      title: Text(S.current.navigationPortal),
       actions: [
         AppScaffoldAction(
           icon: editingEnabled
               ? CustomIcons.edit_off_outlined
               : Icons.edit_outlined,
           tooltip: editingEnabled
-              ? S.of(context).actionDisableEditing
-              : S.of(context).actionEnableEditing,
+              ? S.current.actionDisableEditing
+              : S.current.actionEnableEditing,
           onPressed: () {
             final authProvider =
                 Provider.of<AuthProvider>(context, listen: false);
@@ -235,22 +235,22 @@ class _PortalPageState extends State<PortalPage> {
                 user.hasEditableWebsites.then((canEdit) {
                   if (!canEdit) {
                     AppToast.show(
-                        '${S.of(context).warningNothingToEdit} ${S.of(context).messageAddCustomWebsite}');
+                        '${S.current.warningNothingToEdit} ${S.current.messageAddCustomWebsite}');
                   }
                 });
               }
 
               setState(() => editingEnabled = !editingEnabled);
             } else {
-              AppToast.show(S.of(context).warningAuthenticationNeeded);
+              AppToast.show(S.current.warningAuthenticationNeeded);
             }
           },
         ),
         AppScaffoldAction(
           icon: FeatherIcons.filter,
-          tooltip: S.of(context).navigationFilter,
+          tooltip: S.current.navigationFilter,
           items: {
-            S.of(context).filterMenuRelevance: () {
+            S.current.filterMenuRelevance: () {
               userOnly = false;
               Navigator.push(
                 context,
@@ -261,13 +261,13 @@ class _PortalPageState extends State<PortalPage> {
                 ),
               );
             },
-            S.of(context).filterMenuShowMine: () {
+            S.current.filterMenuShowMine: () {
               if (authProvider.isAuthenticated && !authProvider.isAnonymous) {
                 // Show message if user has no private websites
                 if (!userOnly) {
                   user.hasPrivateWebsites.then((hasPrivate) {
                     if (!hasPrivate) {
-                      AppToast.show(S.of(context).warningNoPrivateWebsite);
+                      AppToast.show(S.current.warningNoPrivateWebsite);
                     }
                   });
 
@@ -275,15 +275,15 @@ class _PortalPageState extends State<PortalPage> {
                   setState(() => userOnly = true);
                   filterProvider.enableFilter();
                 } else {
-                  AppToast.show(S.of(context).warningFilterAlreadyShowingYours);
+                  AppToast.show(S.current.warningFilterAlreadyShowingYours);
                 }
               } else {
-                AppToast.show(S.of(context).warningAuthenticationNeeded);
+                AppToast.show(S.current.warningAuthenticationNeeded);
               }
             },
-            S.of(context).filterMenuShowAll: () {
+            S.current.filterMenuShowAll: () {
               if (!filterProvider.filterEnabled) {
-                AppToast.show(S.of(context).warningFilterAlreadyDisabled);
+                AppToast.show(S.current.warningFilterAlreadyDisabled);
               } else {
                 _updateFilter();
                 userOnly = false;
@@ -300,7 +300,6 @@ class _PortalPageState extends State<PortalPage> {
                 filterProvider.filterEnabled ? filterCache : null,
                 userOnly: userOnly,
                 uid: authProvider.uid,
-                context: context,
               ),
               builder: (context, AsyncSnapshot<List<Website>> websiteSnap) {
                 if (websiteSnap.hasData) {
@@ -341,7 +340,7 @@ class _AddWebsiteButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Tooltip(
-        message: S.of(context).actionAddWebsite,
+        message: S.current.actionAddWebsite,
         child: GestureDetector(
           onTap: () {
             final authProvider =
@@ -369,7 +368,7 @@ class _AddWebsiteButton extends StatelessWidget {
                 ),
               ));
             } else {
-              AppToast.show(S.of(context).warningAuthenticationNeeded);
+              AppToast.show(S.current.warningAuthenticationNeeded);
             }
           },
           child: Padding(

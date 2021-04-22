@@ -10,15 +10,15 @@ extension WebsiteCategoryExtension on WebsiteCategory {
   String toLocalizedString(BuildContext context) {
     switch (this) {
       case WebsiteCategory.learning:
-        return S.of(context).websiteCategoryLearning;
+        return S.current.websiteCategoryLearning;
       case WebsiteCategory.administrative:
-        return S.of(context).websiteCategoryAdministrative;
+        return S.current.websiteCategoryAdministrative;
       case WebsiteCategory.association:
-        return S.of(context).websiteCategoryAssociations;
+        return S.current.websiteCategoryAssociations;
       case WebsiteCategory.resource:
-        return S.of(context).websiteCategoryResources;
+        return S.current.websiteCategoryResources;
       default:
-        return S.of(context).websiteCategoryOthers;
+        return S.current.websiteCategoryOthers;
     }
   }
 }

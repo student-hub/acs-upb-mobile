@@ -104,8 +104,7 @@ class ClassProvider with ChangeNotifier {
   List<ClassHeader> classHeadersCache;
   List<ClassHeader> userClassHeadersCache;
 
-  Future<List<String>> fetchUserClassIds(
-      {String uid, BuildContext context}) async {
+  Future<List<String>> fetchUserClassIds(String uid) async {
     try {
       // TODO(IoanaAlexandru): Get all classes if user is not authenticated
       final DocumentSnapshot snap =
@@ -113,15 +112,12 @@ class ClassProvider with ChangeNotifier {
       return List<String>.from(snap.data()['classes'] ?? []);
     } catch (e) {
       print(e);
-      if (context != null) {
-        AppToast.show(S.of(context).errorSomethingWentWrong);
-      }
+      AppToast.show(S.current.errorSomethingWentWrong);
       return null;
     }
   }
 
-  Future<bool> setUserClassIds(
-      {List<String> classIds, String uid, BuildContext context}) async {
+  Future<bool> setUserClassIds(List<String> classIds, String uid) async {
     try {
       final DocumentReference ref =
           FirebaseFirestore.instance.collection('users').doc(uid);
@@ -130,15 +126,12 @@ class ClassProvider with ChangeNotifier {
       notifyListeners();
       return true;
     } catch (e) {
-      if (context != null) {
-        AppToast.show(S.of(context).errorSomethingWentWrong);
-      }
+      AppToast.show(S.current.errorSomethingWentWrong);
       return false;
     }
   }
 
-  Future<ClassHeader> fetchClassHeader(String classId,
-      {BuildContext context}) async {
+  Future<ClassHeader> fetchClassHeader(String classId) async {
     try {
       // Get class with id [classId]
       final QuerySnapshot query = await FirebaseFirestore.instance
@@ -154,15 +147,13 @@ class ClassProvider with ChangeNotifier {
       return ClassHeaderExtension.fromSnap(query.docs.first);
     } catch (e) {
       print(e);
-      if (context != null) {
-        AppToast.show(S.of(context).errorSomethingWentWrong);
-      }
+      AppToast.show(S.current.errorSomethingWentWrong);
       return null;
     }
   }
 
   Future<List<ClassHeader>> fetchClassHeaders(
-      {String uid, Filter filter, BuildContext context}) async {
+      {String uid, Filter filter}) async {
     try {
       if (uid == null) {
         if (classHeadersCache != null) {
@@ -185,8 +176,7 @@ class ClassProvider with ChangeNotifier {
         final headers = <ClassHeader>[];
 
         // Get only the user's classes
-        final List<String> classIds =
-            await fetchUserClassIds(uid: uid, context: context) ?? [];
+        final List<String> classIds = await fetchUserClassIds(uid) ?? [];
         final List<String> newClassIds = List<String>.from(classIds);
 
         for (final classId in classIds) {
@@ -201,37 +191,31 @@ class ClassProvider with ChangeNotifier {
 
         // Remove non-existent classes from user data
         if (newClassIds.length != classIds.length) {
-          await setUserClassIds(classIds: newClassIds, uid: uid);
+          await setUserClassIds(newClassIds, uid);
         }
 
         return userClassHeadersCache = headers;
       }
     } catch (e) {
       print(e);
-      if (context != null) {
-        AppToast.show(S.of(context).errorSomethingWentWrong);
-      }
+      AppToast.show(S.current.errorSomethingWentWrong);
       return null;
     }
   }
 
-  Future<Class> fetchClassInfo(ClassHeader header,
-      {BuildContext context}) async {
+  Future<Class> fetchClassInfo(ClassHeader header) async {
     try {
       final DocumentSnapshot snap =
           await _db.collection('classes').doc(header.id).get();
       return ClassExtension.fromSnap(header: header, snap: snap);
     } catch (e) {
       print(e);
-      if (context != null) {
-        AppToast.show(S.of(context).errorSomethingWentWrong);
-      }
+      AppToast.show(S.current.errorSomethingWentWrong);
       return null;
     }
   }
 
-  Future<bool> addShortcut(
-      {String classId, Shortcut shortcut, BuildContext context}) async {
+  Future<bool> addShortcut(String classId, Shortcut shortcut) async {
     try {
       final DocumentReference doc = _db.collection('classes').doc(classId);
       final DocumentSnapshot snap = await doc.get();
@@ -254,15 +238,12 @@ class ClassProvider with ChangeNotifier {
       return true;
     } catch (e) {
       print(e);
-      if (context != null) {
-        AppToast.show(S.of(context).errorSomethingWentWrong);
-      }
+      AppToast.show(S.current.errorSomethingWentWrong);
       return false;
     }
   }
 
-  Future<bool> deleteShortcut(
-      {String classId, int shortcutIndex, BuildContext context}) async {
+  Future<bool> deleteShortcut(String classId, int shortcutIndex) async {
     try {
       final DocumentReference doc = _db.collection('classes').doc(classId);
 
@@ -276,17 +257,12 @@ class ClassProvider with ChangeNotifier {
       return true;
     } catch (e) {
       print(e);
-      if (context != null) {
-        AppToast.show(S.of(context).errorSomethingWentWrong);
-      }
+      AppToast.show(S.current.errorSomethingWentWrong);
       return false;
     }
   }
 
-  Future<bool> setGrading(
-      {String classId,
-      Map<String, double> grading,
-      BuildContext context}) async {
+  Future<bool> setGrading(String classId, Map<String, double> grading) async {
     try {
       final DocumentReference doc = _db.collection('classes').doc(classId);
       final DocumentSnapshot snap = await doc.get();
@@ -304,9 +280,7 @@ class ClassProvider with ChangeNotifier {
       return true;
     } catch (e) {
       print(e);
-      if (context != null) {
-        AppToast.show(S.of(context).errorSomethingWentWrong);
-      }
+      AppToast.show(S.current.errorSomethingWentWrong);
       return false;
     }
   }
