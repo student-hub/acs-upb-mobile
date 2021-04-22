@@ -1,4 +1,5 @@
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
+import 'package:acs_upb_mobile/pages/classes/view/classes_page.dart';
 import 'package:acs_upb_mobile/pages/portal/model/website.dart';
 import 'package:acs_upb_mobile/pages/portal/service/website_provider.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/events/uni_event.dart';
@@ -19,46 +20,39 @@ class UpcomingEventsCard extends StatelessWidget {
     final AuthProvider authProvider = Provider.of<AuthProvider>(context);
     final String uid = authProvider.uid;
     final eventProvider = Provider.of<UniEventProvider>(context);
-    final WebsiteProvider websiteProvider =
-        Provider.of<WebsiteProvider>(context);
 
-    Padding _colorIcon(event) => Padding(
-          padding: const EdgeInsets.all(10),
-          child: Container(
-            width: 20,
-            height: 20,
-            decoration: const BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(4)),
-              color: Colors.blueGrey,
-            ),
-          ),
-        );
     return InfoCard<Iterable<UniEventInstance>>(
-      title: S.of(context).sectionFrequentlyAccessedWebsites,
+      title: S.of(context).sectionEventsComingUp,
       onShowMore: onShowMore,
       future: eventProvider.getUpcomingEvents(LocalDate.today()),
       //future: websiteProvider.fetchFavouriteWebsites(uid: uid, context: context),
       builder: (events) => Column(
-        children: [
-              ListTile(
-                key: ValueKey(events.first.mainEvent.id),
-                title: Text(
-                  events.first.mainEvent.classHeader.acronym,
-                ),
-                subtitle: Text(events.first.start.toString()),
-              )
-            ] +
-            events
-                .map(
-                  (event) => ListTile(
-                    key: ValueKey(event.mainEvent.id + "212"),
-                    title: Text(
-                      event.mainEvent.classHeader.acronym,
+        children: events
+            .map(
+              (event) => ListTile(
+                key: ValueKey(event.mainEvent.id),
+                leading: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 10, horizontal: 4),
+                  child: Container(
+                    width: 20,
+                    height: 20,
+                    decoration: BoxDecoration(
+                      borderRadius: const BorderRadius.all(Radius.circular(4)),
+                      color: event.mainEvent.color,
                     ),
-                    subtitle: Text(event.start.toString()),
                   ),
-                )
-                .toList(),
+                ),
+                trailing: event.start.toDateTimeLocal().isBefore(DateTime.now())
+                    ? const Chip(label: Text('Now'))
+                    : null,
+                title: Text(
+                  event.mainEvent.classHeader.acronym,
+                ),
+                subtitle: Text(event.start.toString()),
+              ),
+            )
+            .toList(),
       ),
     );
   }
