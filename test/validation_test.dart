@@ -57,8 +57,8 @@ void main() {
     });
 
     testWidgets('Invalid password - Japanese', (tester) async {
-      await tester.pumpWidget(testLocalized((context) => expect(
-          AppValidator.isStrongPassword('こんにちはこんにちは'), isNotNull)));
+      await tester.pumpWidget(testLocalized((context) =>
+          expect(AppValidator.isStrongPassword('こんにちはこんにちは'), isNotNull)));
       await tester.pumpAndSettle();
     });
 

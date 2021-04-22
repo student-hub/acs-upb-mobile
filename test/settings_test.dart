@@ -81,7 +81,7 @@ void main() {
           .thenAnswer((_) => Future.value(true));
       when(mockWebsiteProvider.fetchWebsites(any))
           .thenAnswer((_) => Future.value([]));
-      when(mockWebsiteProvider.fetchFavouriteWebsites(anyNamed('uid')))
+      when(mockWebsiteProvider.fetchFavouriteWebsites(any))
           .thenAnswer((_) => Future.value(null));
 
       mockQuestionProvider = MockQuestionProvider();
@@ -204,8 +204,7 @@ void main() {
         await tester.pumpAndSettle(const Duration(seconds: 2));
 
         // Verify the request is sent and Settings Page pops back
-        verify(
-            mockRequestProvider.makeRequest(any));
+        verify(mockRequestProvider.makeRequest(any));
         expect(find.byType(SettingsPage), findsOneWidget);
       });
 
@@ -241,8 +240,7 @@ void main() {
         await tester.pumpAndSettle(const Duration(seconds: 2));
 
         // Verify the request is sent and Settings Page pops back
-        verify(
-            mockRequestProvider.makeRequest(any));
+        verify(mockRequestProvider.makeRequest(any));
         expect(find.byType(SettingsPage), findsOneWidget);
       });
 

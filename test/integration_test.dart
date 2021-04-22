@@ -236,9 +236,8 @@ Future<void> main() async {
                 isPrivate: false,
               ),
             ]));
-    when(mockWebsiteProvider.fetchFavouriteWebsites(anyNamed('uid')))
-        .thenAnswer((_) async =>
-            (await mockWebsiteProvider.fetchWebsites(any)).take(3));
+    when(mockWebsiteProvider.fetchFavouriteWebsites(any)).thenAnswer(
+        (_) async => (await mockWebsiteProvider.fetchWebsites(any)).take(3));
 
     mockFilterProvider = MockFilterProvider();
     // ignore: invalid_use_of_protected_member
@@ -338,7 +337,7 @@ Future<void> main() async {
               ),
             ] +
             userClassHeaders));
-    when(mockClassProvider.fetchUserClassIds(anyNamed('uid')))
+    when(mockClassProvider.fetchUserClassIds(any))
         .thenAnswer((_) => Future.value(['3', '4']));
     when(mockClassProvider.fetchClassInfo(any)).thenAnswer((_) => Future.value(
           Class(
@@ -370,33 +369,32 @@ Future<void> main() async {
     mockPersonProvider = MockPersonProvider();
     // ignore: invalid_use_of_protected_member
     when(mockPersonProvider.hasListeners).thenReturn(false);
-    when(mockPersonProvider.fetchPeople())
-        .thenAnswer((_) => Future.value([
-              Person(
-                name: 'John Doe',
-                email: 'john.doe@cs.pub.ro',
-                phone: '0712345678',
-                office: 'AB123',
-                position: 'Associate Professor, Dr., Department Council',
-                photo: 'https://cdn.worldvectorlogo.com/logos/flutter-logo.svg',
-              ),
-              Person(
-                name: 'Jane Doe',
-                email: 'jane.doe@cs.pub.ro',
-                phone: '-',
-                office: 'Narnia',
-                position: 'Professor, Dr.',
-                photo: 'https://cdn.worldvectorlogo.com/logos/flutter-logo.svg',
-              ),
-              Person(
-                name: 'Mary Poppins',
-                email: 'supercalifragilistic.expialidocious@cs.pub.ro',
-                phone: '0712-345-678',
-                office: 'Mary Poppins\' office',
-                position: 'Professor, Dr., Head of Department',
-                photo: 'https://cdn.worldvectorlogo.com/logos/flutter-logo.svg',
-              ),
-            ]));
+    when(mockPersonProvider.fetchPeople()).thenAnswer((_) => Future.value([
+          Person(
+            name: 'John Doe',
+            email: 'john.doe@cs.pub.ro',
+            phone: '0712345678',
+            office: 'AB123',
+            position: 'Associate Professor, Dr., Department Council',
+            photo: 'https://cdn.worldvectorlogo.com/logos/flutter-logo.svg',
+          ),
+          Person(
+            name: 'Jane Doe',
+            email: 'jane.doe@cs.pub.ro',
+            phone: '-',
+            office: 'Narnia',
+            position: 'Professor, Dr.',
+            photo: 'https://cdn.worldvectorlogo.com/logos/flutter-logo.svg',
+          ),
+          Person(
+            name: 'Mary Poppins',
+            email: 'supercalifragilistic.expialidocious@cs.pub.ro',
+            phone: '0712-345-678',
+            office: 'Mary Poppins\' office',
+            position: 'Professor, Dr., Head of Department',
+            photo: 'https://cdn.worldvectorlogo.com/logos/flutter-logo.svg',
+          ),
+        ]));
 
     when(mockPersonProvider.mostRecentLecturer(any))
         .thenAnswer((_) => Future.value('Jane Doe'));
@@ -632,8 +630,7 @@ Future<void> main() async {
         .thenAnswer((_) => Future.value(true));
     when(mockEventProvider.updateEvent(any))
         .thenAnswer((_) => Future.value(true));
-    when(mockEventProvider.addEvent(any))
-        .thenAnswer((_) => Future.value(true));
+    when(mockEventProvider.addEvent(any)).thenAnswer((_) => Future.value(true));
 
     mockRequestProvider = MockRequestProvider();
     when(mockRequestProvider.makeRequest(any))
@@ -1246,8 +1243,7 @@ Future<void> main() async {
           await tester.tap(find.text('DELETE EVENT'));
           await tester.pumpAndSettle(const Duration(seconds: 5));
 
-          verify(
-              mockEventProvider.deleteEvent(any));
+          verify(mockEventProvider.deleteEvent(any));
           expect(find.byType(TimetablePage), findsOneWidget);
         });
       }

@@ -84,8 +84,7 @@ void main() {
     mockPersonProvider = MockPersonProvider();
     // ignore: invalid_use_of_protected_member
     when(mockPersonProvider.hasListeners).thenReturn(false);
-    when(mockPersonProvider.fetchPeople())
-        .thenAnswer((_) => Future.value([]));
+    when(mockPersonProvider.fetchPeople()).thenAnswer((_) => Future.value([]));
 
     mockQuestionProvider = MockQuestionProvider();
     // ignore: invalid_use_of_protected_member
@@ -151,7 +150,7 @@ void main() {
 
         expect(find.text('@stud.acs.upb.ro'), findsOneWidget);
 
-        when(mockAuthProvider.signIn(anyNamed('email'), anyNamed('password')))
+        when(mockAuthProvider.signIn(any, any))
             .thenAnswer((_) => Future.value(true));
 
         // Enter credentials
@@ -164,8 +163,8 @@ void main() {
         await tester.pumpAndSettle();
 
         verify(mockAuthProvider.signIn(
-          argThat(equals('test@stud.acs.upb.ro'), named: 'email'),
-          argThat(equals('password'), named: 'password'),
+          argThat(equals('test@stud.acs.upb.ro')),
+          argThat(equals('password')),
         ));
         expect(find.byType(HomePage), findsOneWidget);
 
@@ -183,7 +182,7 @@ void main() {
 
       expect(find.byType(LoginView), findsOneWidget);
 
-      when(mockAuthProvider.sendPasswordResetEmail(anyNamed('email')))
+      when(mockAuthProvider.sendPasswordResetEmail(any))
           .thenAnswer((_) => Future.value(true));
 
       expect(find.byType(AlertDialog), findsNothing);
@@ -204,7 +203,8 @@ void main() {
 
       expect(find.byType(AlertDialog), findsNothing);
 
-      verify(mockAuthProvider.sendPasswordResetEmail(argThat(equals('test@stud.acs.upb.ro'))));
+      verify(mockAuthProvider
+          .sendPasswordResetEmail(argThat(equals('test@stud.acs.upb.ro'))));
     });
 
     testWidgets('Cancel', (WidgetTester tester) async {
@@ -231,8 +231,7 @@ void main() {
 
       expect(find.byType(AlertDialog), findsNothing);
 
-      verifyNever(
-          mockAuthProvider.sendPasswordResetEmail(any));
+      verifyNever(mockAuthProvider.sendPasswordResetEmail(any));
     });
   });
 
@@ -383,8 +382,7 @@ void main() {
       verify(mockObserver.didPush(any, any));
       expect(find.byType(SignUpView), findsOneWidget);
 
-      when(mockAuthProvider.signUp(any))
-          .thenAnswer((_) => Future.value(true));
+      when(mockAuthProvider.signUp(any)).thenAnswer((_) => Future.value(true));
       when(mockAuthProvider.canSignUpWithEmail(any))
           .thenAnswer((_) => Future.value(true));
 
@@ -529,15 +527,14 @@ void main() {
       verify(mockObserver.didPush(any, any));
       expect(find.byType(SignUpView), findsOneWidget);
 
-      when(mockAuthProvider.signUp(anyNamed('info')))
-          .thenAnswer((_) => Future.value(true));
+      when(mockAuthProvider.signUp(any)).thenAnswer((_) => Future.value(true));
 
       // Scroll cancel button into view and tap
       await tester.ensureVisible(find.byKey(const ValueKey('cancel_button')));
       await tester.tap(find.byKey(const ValueKey('cancel_button')));
       await tester.pumpAndSettle();
 
-      verifyNever(mockAuthProvider.signUp(anyNamed('info')));
+      verifyNever(mockAuthProvider.signUp(any));
       expect(find.byType(LoginView), findsOneWidget);
       expect(find.byType(SignUpView), findsNothing);
       verify(mockObserver.didPop(any, any));
