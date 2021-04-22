@@ -109,6 +109,9 @@ class ClassProvider with ChangeNotifier {
       // TODO(IoanaAlexandru): Get all classes if user is not authenticated
       final DocumentSnapshot snap =
           await FirebaseFirestore.instance.collection('users').doc(uid).get();
+      if (snap.data() == null) {
+        return [];
+      }
       return List<String>.from(snap.data()['classes'] ?? []);
     } catch (e) {
       print(e);
