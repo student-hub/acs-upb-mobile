@@ -1,4 +1,3 @@
-import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/events/uni_event.dart';
 import 'package:acs_upb_mobile/pages/timetable/service/uni_event_provider.dart';
 import 'package:acs_upb_mobile/widgets/info_card.dart';
@@ -44,7 +43,6 @@ class UpcomingEventsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final AuthProvider authProvider = Provider.of<AuthProvider>(context);
     final eventProvider = Provider.of<UniEventProvider>(context);
 
     return InfoCard<Iterable<UniEventInstance>>(
