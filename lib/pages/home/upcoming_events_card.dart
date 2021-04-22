@@ -1,7 +1,4 @@
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
-import 'package:timetable/src/event.dart';
-import 'package:acs_upb_mobile/pages/portal/model/website.dart';
-import 'package:acs_upb_mobile/pages/portal/service/website_provider.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/events/uni_event.dart';
 import 'package:acs_upb_mobile/pages/timetable/service/uni_event_provider.dart';
 import 'package:acs_upb_mobile/widgets/info_card.dart';
@@ -11,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:time_machine/time_machine.dart';
 
-extension EventExtension on Event {
+extension EventExtension on UniEventInstance {
   String dateStringRelativeToToday(BuildContext context) {
     final LocalDateTime end = this.end.clockTime.equals(LocalTime(00, 00, 00))
         ? this.end.subtractDays(1)
