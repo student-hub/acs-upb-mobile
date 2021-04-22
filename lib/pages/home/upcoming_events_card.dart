@@ -1,5 +1,5 @@
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
-import 'package:acs_upb_mobile/pages/classes/view/classes_page.dart';
+import 'package:timetable/src/event.dart';
 import 'package:acs_upb_mobile/pages/portal/model/website.dart';
 import 'package:acs_upb_mobile/pages/portal/service/website_provider.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/events/uni_event.dart';
@@ -10,6 +10,36 @@ import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:time_machine/time_machine.dart';
+
+extension EventExtension on Event {
+  String dateStringRelativeToToday(BuildContext context) {
+    final LocalDateTime end = this.end.clockTime.equals(LocalTime(00, 00, 00))
+        ? this.end.subtractDays(1)
+        : this.end;
+
+    String string = start.calendarDate.equals(LocalDate.today())
+        ? S.of(context).labelToday
+        : start.calendarDate.subtractDays(1).equals(LocalDate.today())
+            ? S.of(context).labelTomorrow
+            : start.calendarDate.toString('dddd, dd MMMM');
+
+    if (!start.clockTime.equals(LocalTime(00, 00, 00))) {
+      string += ' • ${start.clockTime.toString('HH:mm')}';
+    }
+    if (start.calendarDate != end.calendarDate) {
+      string += ' - ${end.calendarDate.toString('dddd, dd MMMM')}';
+    }
+    if (!end.clockTime.equals(LocalTime(00, 00, 00))) {
+      if (start.calendarDate != end.calendarDate) {
+        string += ' • ';
+      } else {
+        string += '-';
+      }
+      string += end.clockTime.toString('HH:mm');
+    }
+    return string;
+  }
+}
 
 class UpcomingEventsCard extends StatelessWidget {
   const UpcomingEventsCard({Key key, this.onShowMore}) : super(key: key);
@@ -25,15 +55,13 @@ class UpcomingEventsCard extends StatelessWidget {
       title: S.of(context).sectionEventsComingUp,
       onShowMore: onShowMore,
       future: eventProvider.getUpcomingEvents(LocalDate.today()),
-      //future: websiteProvider.fetchFavouriteWebsites(uid: uid, context: context),
       builder: (events) => Column(
         children: events
             .map(
               (event) => ListTile(
                 key: ValueKey(event.mainEvent.id),
                 leading: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 10, horizontal: 4),
+                  padding: const EdgeInsets.all(10),
                   child: Container(
                     width: 20,
                     height: 20,
@@ -44,12 +72,12 @@ class UpcomingEventsCard extends StatelessWidget {
                   ),
                 ),
                 trailing: event.start.toDateTimeLocal().isBefore(DateTime.now())
-                    ? const Chip(label: Text('Now'))
+                    ? Chip(label: Text(S.of(context).labelNow))
                     : null,
                 title: Text(
-                  event.mainEvent.classHeader.acronym,
+                  '${'${event.mainEvent.classHeader.acronym} - '}${event.mainEvent.type.toLocalizedString(context)}',
                 ),
-                subtitle: Text(event.start.toString()),
+                subtitle: Text(event.dateStringRelativeToToday(context)),
               ),
             )
             .toList(),
