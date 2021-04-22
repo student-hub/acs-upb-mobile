@@ -333,17 +333,16 @@ class UniEventProvider extends EventProvider<UniEventInstance>
   }
 
   Future<Iterable<UniEventInstance>> getUpcomingEvents(LocalDate date) async {
-    final Stream<Iterable<UniEventInstance>> events = _events.map(
-        (events) =>
-            events
-                .map((event) => event.generateInstances(
-                    intersectingInterval: DateInterval(date, date.addDays(6))))
-                .expand((i) => i)
-                .sortedByStartLength()
-                .where((element) =>
-                    element.end.toDateTimeLocal().isAfter(DateTime.now()))
-                .take(3));
-    return events.first;
+    return _events
+        .map((events) => events
+            .map((event) => event.generateInstances(
+                intersectingInterval: DateInterval(date, date.addDays(6))))
+            .expand((i) => i)
+            .sortedByStartLength()
+            .where((element) =>
+                element.end.toDateTimeLocal().isAfter(DateTime.now()))
+            .take(3))
+        .first;
   }
 
   void updateClasses(ClassProvider classProvider) {
