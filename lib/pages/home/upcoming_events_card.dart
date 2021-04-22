@@ -45,7 +45,6 @@ class UpcomingEventsCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final AuthProvider authProvider = Provider.of<AuthProvider>(context);
-    final String uid = authProvider.uid;
     final eventProvider = Provider.of<UniEventProvider>(context);
 
     return InfoCard<Iterable<UniEventInstance>>(
