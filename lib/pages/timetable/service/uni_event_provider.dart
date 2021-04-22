@@ -337,7 +337,7 @@ class UniEventProvider extends EventProvider<UniEventInstance>
         (events) =>
             events
                 .map((event) => event.generateInstances(
-                    intersectingInterval: DateInterval(date, date.addDays(7))))
+                    intersectingInterval: DateInterval(date, date.addDays(6))))
                 .expand((i) => i)
                 .sortedByStartLength()
                 .where((element) =>

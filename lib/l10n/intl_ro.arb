@@ -45,11 +45,14 @@
   "labelEven": "Pară",
   "labelOdd": "Impară",
   "labelDay": "Zi",
+  "labelToday": "Astăzi",
+  "labelTomorrow": "Mâine",
+  "labelNow": "Acum",
 
   "sectionShortcuts": "Scurtături",
   "sectionEvents": "Evenimente",
   "sectionFrequentlyAccessedWebsites": "Website-uri favorite",
-  "sectionEventsComingUp": "Evenimente următoare",
+  "sectionEventsComingUp": "Evenimente viitoare",
   "sectionFAQ": "Întrebări frecvente",
   "sectionGrading": "Punctaj",
 
