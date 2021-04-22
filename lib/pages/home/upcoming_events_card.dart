@@ -43,7 +43,8 @@ class UpcomingEventsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final eventProvider = Provider.of<UniEventProvider>(context);
+    final UniEventProvider eventProvider =
+        Provider.of<UniEventProvider>(context);
 
     return InfoCard<Iterable<UniEventInstance>>(
       title: S.of(context).sectionEventsComingUp,
@@ -53,7 +54,7 @@ class UpcomingEventsCard extends StatelessWidget {
         children: events
             .map(
               (event) => ListTile(
-                key: ValueKey(event.mainEvent.id),
+                key: ValueKey(event.id),
                 leading: Padding(
                   padding: const EdgeInsets.all(10),
                   child: Container(
