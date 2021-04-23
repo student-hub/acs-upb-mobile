@@ -332,7 +332,8 @@ class UniEventProvider extends EventProvider<UniEventInstance>
         .partDayEvents);
   }
 
-  Future<Iterable<UniEventInstance>> getUpcomingEvents(LocalDate date) async {
+  Future<Iterable<UniEventInstance>> getUpcomingEvents(LocalDate date,
+      {int limit = 3}) async {
     return _events
         .map((events) => events
             .map((event) => event.generateInstances(
@@ -341,7 +342,7 @@ class UniEventProvider extends EventProvider<UniEventInstance>
             .sortedByStartLength()
             .where((element) =>
                 element.end.toDateTimeLocal().isAfter(DateTime.now()))
-            .take(3))
+            .take(limit))
         .first;
   }
 
