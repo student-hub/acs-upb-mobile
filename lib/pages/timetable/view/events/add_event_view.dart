@@ -20,7 +20,6 @@ import 'package:acs_upb_mobile/widgets/autocomplete.dart';
 import 'package:acs_upb_mobile/widgets/button.dart';
 import 'package:acs_upb_mobile/widgets/dialog.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
-import 'package:acs_upb_mobile/widgets/selectable.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
@@ -380,9 +379,11 @@ class _AddEventViewState extends State<AddEventView> {
                           onChanged: (_) => setState(() {}),
                         ),
                         timeIntervalPicker(),
+                        Divider(
+                            thickness: 1, color: Theme.of(context).hintColor),
                         if (weekSelected[WeekType.odd] != null &&
                             weekSelected[WeekType.even] != null)
-                          SelectableFormField(
+                          ChipFormField(
                             key: const ValueKey('week_picker'),
                             icon: FeatherIcons.calendar,
                             label: S.of(context).labelWeek,
@@ -398,7 +399,7 @@ class _AddEventViewState extends State<AddEventView> {
                               return null;
                             },
                           ),
-                        SelectableFormField(
+                        ChipFormField(
                           key: const ValueKey('day_picker'),
                           icon: Icons.today_outlined,
                           label: S.of(context).labelDay,
@@ -414,6 +415,7 @@ class _AddEventViewState extends State<AddEventView> {
                             return null;
                           },
                         ),
+                        const SizedBox(height: 16),
                       ],
                     ),
                   const SizedBox(width: 16),
@@ -639,8 +641,8 @@ class RelevanceFormField extends FormField<List<String>> {
   final RelevanceController controller;
 }
 
-class SelectableFormField extends FormField<Map<Localizable, bool>> {
-  SelectableFormField({
+class ChipFormField extends FormField<Map<Localizable, bool>> {
+  ChipFormField({
     @required Map<Localizable, bool> initialValues,
     @required IconData icon,
     @required String label,
@@ -654,85 +656,77 @@ class SelectableFormField extends FormField<Map<Localizable, bool>> {
           builder: (state) {
             final context = state.context;
             final labels = state.value.keys.toList();
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                IntrinsicHeight(
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 12, left: 12),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
+            return Padding(
+              padding: const EdgeInsets.only(top: 8),
+              child: IntrinsicHeight(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Expanded(
+                      child: Row(
+                        children: [
+                          const SizedBox(width: 12),
+                          Icon(icon,
+                              color:
+                                  CustomIcons.formIconColor(Theme.of(context))),
+                          const SizedBox(width: 12),
+                          Text(
+                            label,
+                            style: Theme.of(context)
+                                .textTheme
+                                .subtitle1
+                                .copyWith(fontWeight: FontWeight.w400),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    Row(
                       children: <Widget>[
-                        Icon(icon,
-                            color:
-                                CustomIcons.formIconColor(Theme.of(context))),
                         const SizedBox(width: 12),
                         Expanded(
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Expanded(
-                                child: Text(
-                                  label,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .caption
-                                      .apply(
-                                          color: Theme.of(context).hintColor),
-                                ),
-                              ),
-                              const SizedBox(height: 10),
-                              Row(
-                                children: <Widget>[
-                                  Expanded(
-                                    child: Container(
-                                      height: 40,
-                                      child: ListView.builder(
-                                        itemCount: labels.length,
-                                        scrollDirection: Axis.horizontal,
-                                        itemBuilder: (context, index) {
-                                          return Row(
-                                            children: [
-                                              Selectable(
-                                                label: labels[index]
-                                                    .toLocalizedString(context),
-                                                initiallySelected:
-                                                    state.value[labels[index]],
-                                                onSelected: (selected) {
-                                                  state.value[labels[index]] =
-                                                      selected;
-                                                  state.didChange(state.value);
-                                                },
-                                              ),
-                                              const SizedBox(width: 10),
-                                            ],
-                                          );
-                                        },
-                                      ),
+                          child: Container(
+                            height: 40,
+                            child: ListView.builder(
+                              itemCount: labels.length,
+                              scrollDirection: Axis.horizontal,
+                              itemBuilder: (context, index) {
+                                return Row(
+                                  children: [
+                                    FilterChip(
+                                      label: Text(labels[index]
+                                          .toLocalizedString(context)),
+                                      selected: state.value[labels[index]],
+                                      onSelected: (selected) {
+                                        state.value[labels[index]] = selected;
+                                        state.didChange(state.value);
+                                      },
                                     ),
-                                  ),
-                                ],
-                              ),
-                            ],
+                                    const SizedBox(width: 10),
+                                  ],
+                                );
+                              },
+                            ),
                           ),
                         ),
                       ],
                     ),
-                  ),
+                    const SizedBox(height: 8),
+                    Divider(
+                        thickness: 1,
+                        color: state.hasError
+                            ? Theme.of(context).errorColor
+                            : Theme.of(context).hintColor),
+                    if (state.hasError)
+                      Text(
+                        state.errorText,
+                        style: Theme.of(context).textTheme.caption.copyWith(
+                            color: Theme.of(context).errorColor.withOpacity(1)),
+                      ),
+                  ],
                 ),
-                if (state.hasError)
-                  Padding(
-                    padding: const EdgeInsets.only(top: 10),
-                    child: Text(
-                      state.errorText,
-                      style: Theme.of(context)
-                          .textTheme
-                          .caption
-                          .copyWith(color: Theme.of(context).errorColor),
-                    ),
-                  ),
-              ],
+              ),
             );
           },
         );
