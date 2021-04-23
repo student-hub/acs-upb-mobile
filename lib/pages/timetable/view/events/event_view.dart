@@ -20,31 +20,6 @@ import 'package:provider/provider.dart';
 import 'package:time_machine/time_machine.dart';
 import 'package:timetable/timetable.dart';
 
-extension EventExtension on Event {
-  String get dateString {
-    final LocalDateTime end = this.end.clockTime.equals(LocalTime(00, 00, 00))
-        ? this.end.subtractDays(1)
-        : this.end;
-
-    String string = start.calendarDate.toString('dddd, dd MMMM');
-    if (!start.clockTime.equals(LocalTime(00, 00, 00))) {
-      string += ' • ${start.clockTime.toString('HH:mm')}';
-    }
-    if (start.calendarDate != end.calendarDate) {
-      string += ' - ${end.calendarDate.toString('dddd, dd MMMM')}';
-    }
-    if (!end.clockTime.equals(LocalTime(00, 00, 00))) {
-      if (start.calendarDate != end.calendarDate) {
-        string += ' • ';
-      } else {
-        string += '-';
-      }
-      string += end.clockTime.toString('HH:mm');
-    }
-    return string;
-  }
-}
-
 class EventView extends StatefulWidget {
   const EventView({Key key, this.eventInstance}) : super(key: key);
 
