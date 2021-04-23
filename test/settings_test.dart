@@ -9,6 +9,8 @@ import 'package:acs_upb_mobile/pages/portal/service/website_provider.dart';
 import 'package:acs_upb_mobile/pages/settings/service/request_provider.dart';
 import 'package:acs_upb_mobile/pages/settings/view/request_permissions.dart';
 import 'package:acs_upb_mobile/pages/settings/view/settings_page.dart';
+import 'package:acs_upb_mobile/pages/timetable/model/events/uni_event.dart';
+import 'package:acs_upb_mobile/pages/timetable/service/uni_event_provider.dart';
 import 'package:acs_upb_mobile/resources/locale_provider.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/widgets/dialog.dart';
@@ -19,6 +21,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:preferences/preferences.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:time_machine/time_machine.dart';
 
 import 'test_utils.dart';
 
@@ -32,15 +35,20 @@ class MockRequestProvider extends Mock implements RequestProvider {}
 
 class MockNewsProvider extends Mock implements NewsProvider {}
 
+class MockUniEventProvider extends Mock implements UniEventProvider {}
+
 void main() {
   AuthProvider mockAuthProvider;
   WebsiteProvider mockWebsiteProvider;
   MockQuestionProvider mockQuestionProvider;
   RequestProvider mockRequestProvider;
   MockNewsProvider mockNewsProvider;
+  UniEventProvider mockEventProvider;
 
   Widget buildApp() => MultiProvider(providers: [
         ChangeNotifierProvider<AuthProvider>(create: (_) => mockAuthProvider),
+        ChangeNotifierProvider<UniEventProvider>(
+            create: (_) => mockEventProvider),
         ChangeNotifierProvider<WebsiteProvider>(
             create: (_) => mockWebsiteProvider),
         ChangeNotifierProvider<QuestionProvider>(
@@ -107,6 +115,15 @@ void main() {
           .thenAnswer((_) => Future.value(<NewsFeedItem>[]));
       when(mockNewsProvider.fetchNewsFeedItems(limit: anyNamed('limit')))
           .thenAnswer((_) => Future.value(<NewsFeedItem>[]));
+
+      mockEventProvider = MockUniEventProvider();
+      // ignore: invalid_use_of_protected_member
+      when(mockEventProvider.hasListeners).thenReturn(false);
+      when(mockEventProvider.getUpcomingEvents(LocalDate.today()))
+          .thenAnswer((_) => Future.value(<UniEventInstance>[]));
+      when(mockEventProvider.getUpcomingEvents(LocalDate.today(),
+              limit: anyNamed('limit')))
+          .thenAnswer((_) => Future.value(<UniEventInstance>[]));
     });
 
     testWidgets('Dark Mode', (WidgetTester tester) async {

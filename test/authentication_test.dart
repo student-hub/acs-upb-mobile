@@ -157,6 +157,8 @@ void main() {
     testWidgets('Credential login', (WidgetTester tester) async {
       await tester.pumpWidget(MultiProvider(providers: [
         ChangeNotifierProvider<AuthProvider>(create: (_) => mockAuthProvider),
+        ChangeNotifierProvider<UniEventProvider>(
+            create: (_) => mockEventProvider),
         ChangeNotifierProvider<WebsiteProvider>(
             create: (_) => mockWebsiteProvider),
         ChangeNotifierProvider<QuestionProvider>(
@@ -595,6 +597,8 @@ void main() {
         ChangeNotifierProvider<AuthProvider>(create: (_) => mockAuthProvider),
         ChangeNotifierProvider<FilterProvider>(
             create: (_) => mockFilterProvider),
+        ChangeNotifierProvider<UniEventProvider>(
+            create: (_) => mockEventProvider),
         ChangeNotifierProvider<WebsiteProvider>(
             create: (_) => mockWebsiteProvider),
         ChangeNotifierProvider<PersonProvider>(
@@ -631,6 +635,8 @@ void main() {
             create: (_) => mockFilterProvider),
         ChangeNotifierProvider<WebsiteProvider>(
             create: (_) => mockWebsiteProvider),
+        ChangeNotifierProvider<UniEventProvider>(
+            create: (_) => mockEventProvider),
         ChangeNotifierProvider<PersonProvider>(
             create: (_) => mockPersonProvider),
         ChangeNotifierProvider<QuestionProvider>(

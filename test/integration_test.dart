@@ -500,6 +500,11 @@ Future<void> main() async {
     );
     when(mockEventProvider.fetchCalendars())
         .thenAnswer((_) => Future.value({'2020': calendar}));
+    when(mockEventProvider.getUpcomingEvents(LocalDate.today()))
+        .thenAnswer((_) => Future.value(<UniEventInstance>[]));
+    when(mockEventProvider.getUpcomingEvents(LocalDate.today(),
+            limit: anyNamed('limit')))
+        .thenAnswer((_) => Future.value(<UniEventInstance>[]));
     final rruleEveryWeekFirstSem = RecurrenceRule(
       frequency: Frequency.weekly,
       interval: 1,

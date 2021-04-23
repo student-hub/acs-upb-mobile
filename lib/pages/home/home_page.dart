@@ -32,7 +32,7 @@ class HomePage extends StatelessWidget {
       body: ListView(
         children: [
           if (authProvider.isAuthenticated) ProfileCard(),
-          if (authProvider.isAuthenticated)
+          if (!authProvider.isAnonymous)
             UpcomingEventsCard(onShowMore: () => tabController?.animateTo(1)),
           if (authProvider.isAuthenticated)
             FavouriteWebsitesCard(
