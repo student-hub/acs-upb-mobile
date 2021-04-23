@@ -230,7 +230,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "relevanceAnyone" : MessageLookupByLibrary.simpleMessage("Oricine"),
     "relevanceOnlyMe" : MessageLookupByLibrary.simpleMessage("Doar eu"),
     "sectionEvents" : MessageLookupByLibrary.simpleMessage("Evenimente"),
-    "sectionEventsComingUp" : MessageLookupByLibrary.simpleMessage("Evenimente viitoare"),
+    "sectionEventsComingUp" : MessageLookupByLibrary.simpleMessage("Evenimente următoare"),
     "sectionFAQ" : MessageLookupByLibrary.simpleMessage("Întrebări frecvente"),
     "sectionFrequentlyAccessedWebsites" : MessageLookupByLibrary.simpleMessage("Website-uri favorite"),
     "sectionGrading" : MessageLookupByLibrary.simpleMessage("Punctaj"),

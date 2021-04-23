@@ -172,9 +172,7 @@ class UniEventInstance extends Event {
   @override
   int get hashCode =>
       hashList([super.hashCode, color, location, mainEvent, title]);
-}
 
-extension UniEventInstanceExtension on UniEventInstance {
   String get dateString => getDateString(useRelativeDayFormat: false);
 
   String get relativeDateString => getDateString(useRelativeDayFormat: true);
