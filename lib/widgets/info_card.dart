@@ -28,12 +28,17 @@ class InfoCard<T> extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   if (title != null && title.isNotEmpty)
-                    Text(
-                      title,
-                      style: Theme.of(context)
-                          .textTheme
-                          .headline6
-                          .copyWith(fontSize: 18),
+                    Expanded(
+                      child: Text(
+                        title,
+                        style: Theme.of(context)
+                            .textTheme
+                            .headline6
+                            .copyWith(fontSize: 18),
+                        overflow: TextOverflow.fade,
+                        maxLines: 1,
+                        softWrap: false,
+                      ),
                     ),
                   if (onShowMore != null)
                     GestureDetector(
@@ -46,13 +51,14 @@ class InfoCard<T> extends StatelessWidget {
                             style: Theme.of(context)
                                 .accentTextTheme
                                 .subtitle2
-                                .copyWith(color: Theme.of(context).accentColor),
+                                .copyWith(
+                                    color: Theme.of(context).accentColor,
+                                    fontSize: 12),
                           ),
                           Icon(
                             Icons.arrow_forward_ios_outlined,
                             color: Theme.of(context).accentColor,
-                            size:
-                                Theme.of(context).textTheme.subtitle2.fontSize,
+                            size: Theme.of(context).textTheme.caption.fontSize,
                           )
                         ],
                       ),

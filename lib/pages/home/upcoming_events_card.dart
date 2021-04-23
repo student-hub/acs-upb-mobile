@@ -26,6 +26,7 @@ class UpcomingEventsCard extends StatelessWidget {
             .map(
               (event) => ListTile(
                 key: ValueKey(event.id),
+                contentPadding: EdgeInsets.zero,
                 leading: Padding(
                   padding: const EdgeInsets.all(10),
                   child: Container(
