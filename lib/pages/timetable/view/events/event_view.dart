@@ -17,8 +17,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:provider/provider.dart';
-import 'package:time_machine/time_machine.dart';
-import 'package:timetable/timetable.dart';
 
 class EventView extends StatefulWidget {
   const EventView({Key key, this.eventInstance}) : super(key: key);
