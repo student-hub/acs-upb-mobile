@@ -13,7 +13,7 @@ description: A mobile application for students at ACS UPB.
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 #
 # ACS UPB Mobile uses semantic versioning. You can read more in the CONTRIBUTING.md file.
-version: 1.2.6+3
+version: 1.2.8+9
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
@@ -63,6 +63,9 @@ dependencies:
   # Color picker widget
   flutter_colorpicker: ^0.3.4
 
+  # Allow using feather icons (nice outlined icons)
+  flutter_feather_icons: ^1.0.2
+
   # Package that allows for supporting multiple languages
   flutter_localizations:
     sdk: flutter
@@ -84,9 +87,6 @@ dependencies:
 
   # Displays a custom toast
   oktoast: ^2.3.1+1
-
-  # Allows querying the app version number
-  package_info: ^0.4.0+13
 
   # App information
   package_info_plus: ^0.6.4

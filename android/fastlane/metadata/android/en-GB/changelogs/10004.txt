@@ -1,0 +1,6 @@
+Fixed
+  - Error message shown when cancelling profile picture selection
+
+Added
+  - Card containing the class name and its associated lecturer on the class info page
+  - Ability to click on a lecturer from an event and display more details about them

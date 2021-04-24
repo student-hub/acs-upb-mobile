@@ -13,8 +13,7 @@ class NewsProvider with ChangeNotifier {
   static const _attributesSelector = 'attributes';
   static const _hrefSelector = 'href';
 
-  Future<List<NewsFeedItem>> fetchNewsFeedItems(
-      {BuildContext context, int limit}) async {
+  Future<List<NewsFeedItem>> fetchNewsFeedItems({int limit}) async {
     try {
       // The internet is a scary place. CORS (cross origin resource sharing)
       // prevents websites from accessing resources outside the server that
@@ -40,9 +39,7 @@ class NewsProvider with ChangeNotifier {
       // Ignore "no internet" error
       if (!e.message.contains('Failed host lookup')) {
         print(e);
-        if (context != null) {
-          AppToast.show(S.of(context).errorSomethingWentWrong);
-        }
+        AppToast.show(S.current.errorSomethingWentWrong);
       }
     }
 

@@ -60,9 +60,9 @@ class UniEventWidget extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(4, 2, 4, 2),
                   child: AutoSizeText(
-                    event.mainEvent.type.toLocalizedString(context),
+                    event.mainEvent.type.toLocalizedString(),
                     wrapWords: false,
-                    minFontSize: 8,
+                    minFontSize: 10,
                     maxFontSize: 10,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,

@@ -62,58 +62,57 @@ class _SignUpViewState extends State<SignUpView> {
     if (formItems != null) {
       return formItems;
     }
-    final emailDomain = S.of(context).stringEmailDomain;
+    final emailDomain = S.current.stringEmailDomain;
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
 
     return formItems = <FormCardField>[
       FormCardField(
-        label: S.of(context).labelEmail,
-        hint: S.of(context).hintEmail,
-        additionalHint: S.of(context).infoEmail(S.of(context).stringForum),
+        label: S.current.labelEmail,
+        hint: S.current.hintEmail,
+        additionalHint: S.current.infoEmail(S.current.stringForum),
         controller: emailController,
         suffix: emailDomain,
         autocorrect: false,
         autofillHints: [AutofillHints.newUsername],
-        check: (email, {context}) => authProvider.canSignUpWithEmail(
-            email: email + emailDomain, context: context),
+        check: (email, {showToast}) => authProvider
+            .canSignUpWithEmail(email + emailDomain, showToast: showToast),
         onChanged: (_) => parseNameFromEmail(
             emailController, firstNameController, lastNameController),
       ),
       FormCardField(
-          label: S.of(context).labelPassword,
-          hint: S.of(context).hintPassword,
-          additionalHint: S.of(context).infoPassword,
+          label: S.current.labelPassword,
+          hint: S.current.hintPassword,
+          additionalHint: S.current.infoPassword,
           controller: passwordController,
           obscureText: true,
           autofillHints: [AutofillHints.newPassword],
-          check: (password, {context}) async {
-            final errorString =
-                AppValidator.isStrongPassword(password, context);
-            if (context != null && errorString != null) {
+          check: (password, {showToast}) async {
+            final errorString = AppValidator.isStrongPassword(password);
+            if (showToast && errorString != null) {
               AppToast.show(errorString);
             }
             return errorString == null;
           }),
       FormCardField(
-        label: S.of(context).labelConfirmPassword,
-        hint: S.of(context).hintPassword,
+        label: S.current.labelConfirmPassword,
+        hint: S.current.hintPassword,
         obscureText: true,
-        check: (password, {context}) async {
+        check: (password, {showToast}) async {
           final bool ok = password == passwordController.text;
-          if (!ok && context != null) {
-            AppToast.show(S.of(context).errorPasswordsDiffer);
+          if (!ok && showToast) {
+            AppToast.show(S.current.errorPasswordsDiffer);
           }
           return ok;
         },
       ),
       FormCardField(
-          label: S.of(context).labelFirstName,
-          hint: S.of(context).hintFirstName,
+          label: S.current.labelFirstName,
+          hint: S.current.hintFirstName,
           controller: firstNameController,
           autofillHints: [AutofillHints.givenName]),
       FormCardField(
-          label: S.of(context).labelLastName,
-          hint: S.of(context).hintLastName,
+          label: S.current.labelLastName,
+          hint: S.current.hintLastName,
           controller: lastNameController,
           autofillHints: [AutofillHints.familyName]),
     ];
@@ -121,7 +120,7 @@ class _SignUpViewState extends State<SignUpView> {
 
   Widget _privacyPolicy() {
     return Padding(
-      padding: const EdgeInsets.only(top: 8),
+      padding: const EdgeInsets.only(top: 10),
       child: Row(
         children: [
           Checkbox(
@@ -134,17 +133,16 @@ class _SignUpViewState extends State<SignUpView> {
               text: TextSpan(
                   style: Theme.of(context).textTheme.subtitle1,
                   children: [
-                    TextSpan(text: S.of(context).messageIAgreeToThe),
+                    TextSpan(text: S.current.messageIAgreeToThe),
                     TextSpan(
-                        text: S.of(context).labelPrivacyPolicy,
+                        text: S.current.labelPrivacyPolicy,
                         style: Theme.of(context)
                             .accentTextTheme
                             .subtitle1
                             .apply(fontWeightDelta: 2),
                         recognizer: TapGestureRecognizer()
-                          ..onTap = () => Utils.launchURL(
-                              'https://www.websitepolicies.com/policies/view/IIUFv381',
-                              context: context)),
+                          ..onTap =
+                              () => Utils.launchURL(Utils.privacyPolicyURL)),
                     const TextSpan(text: '.'),
                   ]),
             ),
@@ -158,7 +156,7 @@ class _SignUpViewState extends State<SignUpView> {
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
 
     return FormCard(
-      title: S.of(context).actionSignUp,
+      title: S.current.actionSignUp,
       fields: _buildFormItems(),
       trailing: <Widget>[
         FilterDropdown(controller: dropdownController),
@@ -168,21 +166,18 @@ class _SignUpViewState extends State<SignUpView> {
       onSubmitted: (fields) async {
         if (!agreedToPolicy) {
           AppToast.show(
-              '${S.of(context).warningAgreeTo}${S.of(context).labelPrivacyPolicy}.');
+              '${S.current.warningAgreeTo}${S.current.labelPrivacyPolicy}.');
           return;
         }
 
-        fields[S.of(context).labelEmail] += S.of(context).stringEmailDomain;
+        fields[S.current.labelEmail] += S.current.stringEmailDomain;
 
         if (dropdownController.path != null &&
             dropdownController.path.length > 1) {
           fields['class'] = dropdownController.path;
         }
 
-        final result = await authProvider.signUp(
-          info: fields,
-          context: context,
-        );
+        final result = await authProvider.signUp(fields);
 
         if (result) {
           // Remove all routes below and push home page
@@ -221,7 +216,7 @@ class _SignUpViewState extends State<SignUpView> {
             ),
             SingleChildScrollView(
               child: Padding(
-                padding: const EdgeInsets.only(left: 28, right: 28, bottom: 8),
+                padding: const EdgeInsets.only(left: 28, right: 28, bottom: 10),
                 child: IntrinsicHeight(
                   child: Column(
                     children: <Widget>[
@@ -243,7 +238,7 @@ class _SignUpViewState extends State<SignUpView> {
                           Expanded(
                             child: AppButton(
                               key: const ValueKey('cancel_button'),
-                              text: S.of(context).buttonCancel,
+                              text: S.current.buttonCancel,
                               onTap: () async {
                                 return Navigator.pop(context);
                               },
@@ -254,7 +249,7 @@ class _SignUpViewState extends State<SignUpView> {
                             child: AppButton(
                               key: const ValueKey('sign_up_button'),
                               color: Theme.of(context).accentColor,
-                              text: S.of(context).actionSignUp,
+                              text: S.current.actionSignUp,
                               onTap: () => signUpForm.submit(),
                             ),
                           ),

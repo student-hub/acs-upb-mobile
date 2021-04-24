@@ -20,21 +20,19 @@ extension PersonExtension on Person {
 }
 
 class PersonProvider with ChangeNotifier {
-  Future<List<Person>> fetchPeople({BuildContext context}) async {
+  Future<List<Person>> fetchPeople() async {
     try {
       final QuerySnapshot qSnapshot =
           await FirebaseFirestore.instance.collection('people').get();
       return qSnapshot.docs.map(PersonExtension.fromSnap).toList();
     } catch (e) {
       print(e);
-      if (context != null) {
-        AppToast.show(S.of(context).errorSomethingWentWrong);
-      }
+      AppToast.show(S.current.errorSomethingWentWrong);
       return null;
     }
   }
 
-  Future<Person> fetchPerson(String personName, {BuildContext context}) async {
+  Future<Person> fetchPerson(String personName) async {
     try {
       // Get person with name [personName]
       final QuerySnapshot query = await FirebaseFirestore.instance
@@ -50,9 +48,28 @@ class PersonProvider with ChangeNotifier {
       return PersonExtension.fromSnap(query.docs.first);
     } catch (e) {
       print(e);
-      if (context != null) {
-        AppToast.show(S.of(context).errorSomethingWentWrong);
+      AppToast.show(S.current.errorSomethingWentWrong);
+      return null;
+    }
+  }
+
+  Future<String> mostRecentLecturer(String classId) async {
+    try {
+      final QuerySnapshot query = await FirebaseFirestore.instance
+          .collection('events')
+          .where('class', isEqualTo: classId)
+          .where('type', isEqualTo: 'lecture')
+          .orderBy('start', descending: true)
+          .limit(1)
+          .get();
+
+      if (query == null || query.docs.isEmpty) {
+        return null;
       }
+      return query.docs.first.get('teacher');
+    } catch (e) {
+      print(e);
+      AppToast.show(S.current.errorSomethingWentWrong);
       return null;
     }
   }

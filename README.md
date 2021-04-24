@@ -11,15 +11,13 @@ Please note that some features may not work perfectly in the web version, as [Fl
 
 If you would like to contribute and don't know where to start, or you have any questions about this project, feel free to [join us on Slack](https://acs-upb-mobile.slack.com/join/shared_invite/zt-j3w0ksxt-ilq9x5Et8lxnG_y5YzfQeQ) and ask anything on the **#questions** channel.
 
-## Screenshots
+## Preview
 
-<img src=screenshots/app/light_login_ro.png height=500><img src=screenshots/app/dark_login_en.png height=500>
+<img src=screenshots/app/login.gif height=500> <img src=screenshots/app/home.gif height=500> <img src=screenshots/app/classes.gif height=500>
 
-<img src=screenshots/app/light_portal_ro.png height=500><img src=screenshots/app/dark_portal_en.png height=500>
+<img src=screenshots/app/portal.gif height=500> <img src=screenshots/app/people.gif height=500> <img src=screenshots/app/classes_edit.gif height=500>
 
-<img src=screenshots/app/light_classes_ro.png height=500><img src=screenshots/app/dark_classes_en.png height=500>
-
-<img src=screenshots/app/light_people_ro.png height=500><img src=screenshots/app/dark_people_en.png height=500>
+<img src=screenshots/app/portal_edit.gif height=500> <img src=screenshots/app/themes.gif height=500> <img src=screenshots/app/languages.gif height=500>
 
 ## Contributors
 * [Ioana Alexandru](https://github.com/IoanaAlexandru)
@@ -33,6 +31,7 @@ If you would like to contribute and don't know where to start, or you have any q
 * [George Diaconu](https://github.com/GeorgeMD)
 * [Maria Stoichițescu](https://github.com/stoichitescumaria)
 * [Anghel Andrei](https://github.com/AnghelAndrei28)
+* [Bogdan Piele](https://github.com/bogpie)
 
 ## Building from source with Android Studio
 
@@ -62,14 +61,15 @@ flutter pub get
 * Install and run an emulator in Android Studio (using AVD Manager), or connect a physical Android device (make sure USB debugging is enabled).
 * Select your device from the dropdown list and hit the play button (*Shift+F10* or *^R*). Note that Android Studio runs the app in debug mode by default.
 
-| :exclamation: | On Android, ACS UPB Mobile uses **a separate (development) environment in debug mode**. That means a completely different Firebase project - separate data, including user info. In order to try the release (production) version, you need to run `flutter run --release`.|
-|---------------|:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| :exclamation: | On Android, ACS UPB Mobile uses **a separate (development) environment in debug mode**. That means a completely different Firebase project - separate data, including user info.|
+|---------------|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+|     :bulb:    | In order to try the release (production) version, the recommended approach is to download an APK from the [Releases](https://github.com/acs-upb-mobile/acs-upb-mobile/releases) page. If you really need to test the release version from AS (make sure you know what you're doing), you need to change the `signingConfig signingConfigs.release` line to `signingConfig signingConfigs.debug` in [android/app/build.gradle](android/app/build.gradle), and then run `flutter run --release`. Do note that the release version *cannot* be ran on an emulator.|
 
 ### Building for iOS (MacOS only)
 
 * Make sure you have Xcode installed and up to date (it is free on the App Store).
 * Connect a physical iOS device or select *Open iOS Simulator* from the device drop-down menu to power on Xcode's simulator.
-* Select your device from the dropdown list and hit the play button (*Shift+F10* or *^R*).
+* Select your device from the dropdown list and hit the play button (*^R*).
 
 ### Building for Web
 

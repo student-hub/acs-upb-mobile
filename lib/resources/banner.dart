@@ -15,7 +15,7 @@ class UniBanner extends StatelessWidget {
                   height: 80,
                 ),
                 Image.asset(
-                  S.of(context).fileAcsBanner,
+                  S.current.fileAcsBanner,
                   color: Theme.of(context).textTheme.headline6.color,
                   height: 50,
                 ),

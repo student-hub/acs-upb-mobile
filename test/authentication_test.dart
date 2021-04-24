@@ -59,25 +59,24 @@ void main() {
     when(mockAuthProvider.isAuthenticated).thenReturn(false);
     when(mockAuthProvider.currentUser).thenAnswer((_) => Future.value(null));
     when(mockAuthProvider.isAnonymous).thenReturn(true);
-    when(mockAuthProvider.getProfilePictureURL(context: anyNamed('context')))
+    when(mockAuthProvider.getProfilePictureURL())
         .thenAnswer((_) => Future.value(null));
 
     mockWebsiteProvider = MockWebsiteProvider();
     // ignore: invalid_use_of_protected_member
     when(mockWebsiteProvider.hasListeners).thenReturn(false);
-    when(mockWebsiteProvider.deleteWebsite(any, context: anyNamed('context')))
+    when(mockWebsiteProvider.deleteWebsite(any))
         .thenAnswer((_) => Future.value(true));
-    when(mockWebsiteProvider.fetchWebsites(any, context: anyNamed('context')))
+    when(mockWebsiteProvider.fetchWebsites(any))
         .thenAnswer((_) => Future.value([]));
-    when(mockWebsiteProvider.fetchFavouriteWebsites(
-            uid: mockAuthProvider.uid, context: anyNamed('context')))
+    when(mockWebsiteProvider.fetchFavouriteWebsites(mockAuthProvider.uid))
         .thenAnswer((_) => Future.value(null));
 
     mockFilterProvider = MockFilterProvider();
     // ignore: invalid_use_of_protected_member
     when(mockFilterProvider.hasListeners).thenReturn(false);
     when(mockFilterProvider.filterEnabled).thenReturn(true);
-    when(mockFilterProvider.fetchFilter(context: anyNamed('context')))
+    when(mockFilterProvider.fetchFilter())
         .thenAnswer((_) => Future.value(Filter(localizedLevelNames: [
               {'en': 'Level', 'ro': 'Nivel'}
             ], root: FilterNode(name: 'root'))));
@@ -85,13 +84,12 @@ void main() {
     mockPersonProvider = MockPersonProvider();
     // ignore: invalid_use_of_protected_member
     when(mockPersonProvider.hasListeners).thenReturn(false);
-    when(mockPersonProvider.fetchPeople(context: anyNamed('context')))
-        .thenAnswer((_) => Future.value([]));
+    when(mockPersonProvider.fetchPeople()).thenAnswer((_) => Future.value([]));
 
     mockQuestionProvider = MockQuestionProvider();
     // ignore: invalid_use_of_protected_member
     when(mockQuestionProvider.hasListeners).thenReturn(false);
-    when(mockQuestionProvider.fetchQuestions(context: anyNamed('context')))
+    when(mockQuestionProvider.fetchQuestions())
         .thenAnswer((_) => Future.value(<Question>[]));
     when(mockQuestionProvider.fetchQuestions(limit: anyNamed('limit')))
         .thenAnswer((_) => Future.value(<Question>[]));
@@ -99,7 +97,7 @@ void main() {
     mockNewsProvider = MockNewsProvider();
     // ignore: invalid_use_of_protected_member
     when(mockNewsProvider.hasListeners).thenReturn(false);
-    when(mockNewsProvider.fetchNewsFeedItems(context: anyNamed('context')))
+    when(mockNewsProvider.fetchNewsFeedItems())
         .thenAnswer((_) => Future.value(<NewsFeedItem>[]));
     when(mockNewsProvider.fetchNewsFeedItems(limit: anyNamed('limit')))
         .thenAnswer((_) => Future.value(<NewsFeedItem>[]));
@@ -120,7 +118,7 @@ void main() {
       await tester.runAsync(() async {
         expect(find.byType(LoginView), findsOneWidget);
 
-        when(mockAuthProvider.signInAnonymously(context: anyNamed('context')))
+        when(mockAuthProvider.signInAnonymously())
             .thenAnswer((_) => Future.value(true));
 
         // Log in anonymously
@@ -128,8 +126,7 @@ void main() {
             .tap(find.byKey(const ValueKey('log_in_anonymously_button')));
         await tester.pumpAndSettle();
 
-        verify(
-            mockAuthProvider.signInAnonymously(context: anyNamed('context')));
+        verify(mockAuthProvider.signInAnonymously());
         expect(find.byType(HomePage), findsOneWidget);
 
         // Easy way to check that the login page can't be navigated back to
@@ -153,10 +150,7 @@ void main() {
 
         expect(find.text('@stud.acs.upb.ro'), findsOneWidget);
 
-        when(mockAuthProvider.signIn(
-                email: anyNamed('email'),
-                password: anyNamed('password'),
-                context: anyNamed('context')))
+        when(mockAuthProvider.signIn(any, any))
             .thenAnswer((_) => Future.value(true));
 
         // Enter credentials
@@ -169,9 +163,9 @@ void main() {
         await tester.pumpAndSettle();
 
         verify(mockAuthProvider.signIn(
-            email: argThat(equals('test@stud.acs.upb.ro'), named: 'email'),
-            password: argThat(equals('password'), named: 'password'),
-            context: anyNamed('context')));
+          argThat(equals('test@stud.acs.upb.ro')),
+          argThat(equals('password')),
+        ));
         expect(find.byType(HomePage), findsOneWidget);
 
         // Easy way to check that the login page can't be navigated back to
@@ -188,8 +182,7 @@ void main() {
 
       expect(find.byType(LoginView), findsOneWidget);
 
-      when(mockAuthProvider.sendPasswordResetEmail(
-              email: anyNamed('email'), context: anyNamed('context')))
+      when(mockAuthProvider.sendPasswordResetEmail(any))
           .thenAnswer((_) => Future.value(true));
 
       expect(find.byType(AlertDialog), findsNothing);
@@ -210,9 +203,8 @@ void main() {
 
       expect(find.byType(AlertDialog), findsNothing);
 
-      verify(mockAuthProvider.sendPasswordResetEmail(
-          email: argThat(equals('test@stud.acs.upb.ro'), named: 'email'),
-          context: anyNamed('context')));
+      verify(mockAuthProvider
+          .sendPasswordResetEmail(argThat(equals('test@stud.acs.upb.ro'))));
     });
 
     testWidgets('Cancel', (WidgetTester tester) async {
@@ -222,8 +214,7 @@ void main() {
 
       expect(find.byType(LoginView), findsOneWidget);
 
-      when(mockAuthProvider.sendPasswordResetEmail(
-              email: anyNamed('email'), context: anyNamed('context')))
+      when(mockAuthProvider.sendPasswordResetEmail(any))
           .thenAnswer((_) => Future.value(true));
 
       expect(find.byType(AlertDialog), findsNothing);
@@ -240,8 +231,7 @@ void main() {
 
       expect(find.byType(AlertDialog), findsNothing);
 
-      verifyNever(
-          mockAuthProvider.sendPasswordResetEmail(email: anyNamed('email')));
+      verifyNever(mockAuthProvider.sendPasswordResetEmail(any));
     });
   });
 
@@ -254,7 +244,7 @@ void main() {
       // ignore: invalid_use_of_protected_member
       when(mockFilterProvider.hasListeners).thenReturn(false);
       when(mockFilterProvider.filterEnabled).thenReturn(true);
-      when(mockFilterProvider.fetchFilter(context: anyNamed('context')))
+      when(mockFilterProvider.fetchFilter())
           .thenAnswer((_) => Future.value(Filter(
                   localizedLevelNames: [
                     {'en': 'Degree', 'ro': 'Nivel de studiu'},
@@ -392,10 +382,8 @@ void main() {
       verify(mockObserver.didPush(any, any));
       expect(find.byType(SignUpView), findsOneWidget);
 
-      when(mockAuthProvider.signUp(
-              info: anyNamed('info'), context: anyNamed('context')))
-          .thenAnswer((_) => Future.value(true));
-      when(mockAuthProvider.canSignUpWithEmail(email: anyNamed('email')))
+      when(mockAuthProvider.signUp(any)).thenAnswer((_) => Future.value(true));
+      when(mockAuthProvider.canSignUpWithEmail(any))
           .thenAnswer((_) => Future.value(true));
 
       // Test parser from email
@@ -509,17 +497,13 @@ void main() {
       await tester.tap(find.byKey(const ValueKey('sign_up_button')));
       await tester.pumpAndSettle();
 
-      verify(mockAuthProvider.signUp(
-          info: argThat(
-              equals({
-                'Email': 'john_alexander.doe1234@stud.acs.upb.ro',
-                'Password': 'password',
-                'Confirm password': 'password',
-                'First name': 'John Alexander',
-                'Last name': 'Doe',
-              }),
-              named: 'info'),
-          context: anyNamed('context')));
+      verify(mockAuthProvider.signUp(argThat(equals({
+        'Email': 'john_alexander.doe1234@stud.acs.upb.ro',
+        'Password': 'password',
+        'Confirm password': 'password',
+        'First name': 'John Alexander',
+        'Last name': 'Doe',
+      }))));
       expect(find.byType(HomePage), findsOneWidget);
       verify(mockObserver.didPush(any, any));
     });
@@ -543,17 +527,14 @@ void main() {
       verify(mockObserver.didPush(any, any));
       expect(find.byType(SignUpView), findsOneWidget);
 
-      when(mockAuthProvider.signUp(
-              info: anyNamed('info'), context: anyNamed('context')))
-          .thenAnswer((_) => Future.value(true));
+      when(mockAuthProvider.signUp(any)).thenAnswer((_) => Future.value(true));
 
       // Scroll cancel button into view and tap
       await tester.ensureVisible(find.byKey(const ValueKey('cancel_button')));
       await tester.tap(find.byKey(const ValueKey('cancel_button')));
       await tester.pumpAndSettle();
 
-      verifyNever(mockAuthProvider.signUp(
-          info: anyNamed('info'), context: anyNamed('context')));
+      verifyNever(mockAuthProvider.signUp(any));
       expect(find.byType(LoginView), findsOneWidget);
       expect(find.byType(SignUpView), findsNothing);
       verify(mockObserver.didPop(any, any));

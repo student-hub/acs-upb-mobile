@@ -22,7 +22,7 @@ class FilterPage extends StatefulWidget {
 
   static const String routeName = '/filter';
 
-  /// By default, this is [S.of(context).navigationFilter]
+  /// By default, this is [S.current.navigationFilter]
   final String title;
 
   /// Helper text that should show at the top of the page
@@ -31,7 +31,7 @@ class FilterPage extends StatefulWidget {
   /// Additional helper text
   final String hint;
 
-  /// Text for the save button (by default, [S.of(context).buttonApply])
+  /// Text for the save button (by default, [S.current.buttonApply])
   final String buttonText;
 
   /// Callback after the user submits the page
@@ -102,7 +102,7 @@ class FilterPageState extends State<FilterPage> {
         onSelected: (selection) {
           if (selection && selectedNodes >= maxSelectedNodes) {
             AppToast.show(
-                S.of(context).warningOnlyNOptionsAtATime(maxSelectedNodes));
+                S.current.warningOnlyNOptionsAtATime(maxSelectedNodes));
             controller.deselect();
             return;
           }
@@ -152,10 +152,10 @@ class FilterPageState extends State<FilterPage> {
     final filterProvider = Provider.of<FilterProvider>(context);
 
     return AppScaffold(
-      title: Text(widget.title ?? S.of(context).navigationFilter),
+      title: Text(widget.title ?? S.current.navigationFilter),
       actions: [
         AppScaffoldAction(
-          text: widget.buttonText ?? S.of(context).buttonApply,
+          text: widget.buttonText ?? S.current.buttonApply,
           onPressed: () {
             if (filter.relevantNodes.length > 1 || widget.canBeForEveryone) {
               filterProvider
@@ -166,14 +166,13 @@ class FilterPageState extends State<FilterPage> {
               }
               Navigator.of(context).pop();
             } else {
-              AppToast.show(S.of(context).warningYouNeedToSelectAtLeastOne);
+              AppToast.show(S.current.warningYouNeedToSelectAtLeastOne);
             }
           },
         )
       ],
       body: FutureBuilder<Filter>(
-          future: Provider.of<FilterProvider>(context)
-              .fetchFilter(context: context),
+          future: Provider.of<FilterProvider>(context).fetchFilter(),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               filter ??= snapshot.data;
@@ -191,7 +190,7 @@ class FilterPageState extends State<FilterPage> {
                 widgets
                   // Level name
                   ..add(Padding(
-                    padding: const EdgeInsets.only(left: 10, bottom: 8),
+                    padding: const EdgeInsets.only(left: 10, bottom: 10),
                     child: Text(
                         filter.localizedLevelNames[i]
                             [LocaleProvider.localeString],
@@ -208,7 +207,7 @@ class FilterPageState extends State<FilterPage> {
                             padding: const EdgeInsets.only(
                                 left: 10, right: 10, top: 10),
                             child: IconText(
-                              icon: Icons.info,
+                              icon: Icons.info_outlined,
                               text: widget.info,
                               style: Theme.of(context).textTheme.bodyText1,
                             ),

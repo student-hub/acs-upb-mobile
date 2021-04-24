@@ -31,7 +31,7 @@ class FormCardField {
   final FocusNode focusNode;
   final void Function(String) onSubmitted;
   final void Function(String) onChanged;
-  final Future<bool> Function(String, {BuildContext context}) check;
+  final Future<bool> Function(String, {bool showToast}) check;
   final bool obscureText;
   final String suffix;
   final bool autocorrect;
@@ -124,7 +124,7 @@ class _FormCardState extends State<FormCard> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
                   Padding(
-                    padding: const EdgeInsets.only(bottom: 8),
+                    padding: const EdgeInsets.only(bottom: 10),
                     child: Text(widget.title,
                         style: Theme.of(context)
                             .textTheme
@@ -192,7 +192,7 @@ class _FormCardTextFieldState extends State<_FormCardTextField> {
                 return GestureDetector(
                   onTap: () {
                     widget.field
-                        .check(widget.field.controller.text, context: context);
+                        .check(widget.field.controller.text, showToast: true);
                   },
                   child: Padding(
                       padding: const EdgeInsets.only(left: 4),
@@ -250,7 +250,7 @@ class _FormCardTextFieldState extends State<_FormCardTextField> {
                         valid = Future<bool>(() => null);
                       } else {
                         if (widget.field.check != null) {
-                          valid = widget.field.check(text);
+                          valid = widget.field.check(text, showToast: false);
                         }
                       }
                     }),

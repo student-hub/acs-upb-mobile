@@ -3,6 +3,7 @@ import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/navigation/routes.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:flutter/material.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:pedantic/pedantic.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -34,15 +35,16 @@ extension EnumUtils on Object {
 class Utils {
   Utils._();
 
+  static String privacyPolicyURL =
+      'https://www.websitepolicies.com/policies/view/IIUFv381';
+  static String repoURL = 'https://github.com/acs-upb-mobile/acs-upb-mobile';
   static const String corsProxyUrl = 'https://cors-anywhere.herokuapp.com';
 
-  static Future<void> launchURL(String url, {BuildContext context}) async {
+  static Future<void> launchURL(String url) async {
     if (await canLaunch(url)) {
       await launch(url);
     } else {
-      if (context != null) {
-        AppToast.show(S.of(context).errorCouldNotLaunchURL(url));
-      }
+      AppToast.show(S.current.errorCouldNotLaunchURL(url));
     }
   }
 
@@ -56,4 +58,7 @@ class Utils {
   static String wrapUrlWithCORS(String url) {
     return '${Utils.corsProxyUrl}/$url';
   }
+
+  static PackageInfo packageInfo = PackageInfo(
+      version: 'Unknown', buildNumber: 'Unknown', appName: 'Unknown');
 }

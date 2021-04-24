@@ -5,7 +5,7 @@ import 'package:rrule/rrule.dart';
 import 'package:time_machine/time_machine.dart';
 
 mixin Localizable {
-  String toLocalizedString(BuildContext context);
+  String toLocalizedString();
 }
 
 class LocaleProvider {

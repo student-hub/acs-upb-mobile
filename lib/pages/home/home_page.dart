@@ -20,22 +20,23 @@ class HomePage extends StatelessWidget {
     final authProvider = Provider.of<AuthProvider>(context);
 
     return AppScaffold(
-      title: Text(S.of(context).navigationHome),
+      title: Text(S.current.navigationHome),
       actions: [
         AppScaffoldAction(
-          icon: Icons.settings,
-          tooltip: S.of(context).navigationSettings,
+          icon: Icons.settings_outlined,
+          tooltip: S.current.navigationSettings,
           route: Routes.settings,
         )
       ],
       body: ListView(
         children: [
           if (authProvider.isAuthenticated) ProfileCard(),
-          if (authProvider.isAuthenticated)
+          if (authProvider.isAuthenticated && !authProvider.isAnonymous)
             FavouriteWebsitesCard(
                 onShowMore: () => tabController?.animateTo(2)),
           NewsFeedCard(),
           FaqCard(),
+          const SizedBox(height: 12),
         ],
       ),
     );

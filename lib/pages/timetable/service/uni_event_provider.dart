@@ -3,10 +3,10 @@ import 'dart:async';
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/classes/model/class.dart';
-import 'package:acs_upb_mobile/pages/people/model/person.dart';
 import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
 import 'package:acs_upb_mobile/pages/filter/model/filter.dart';
 import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
+import 'package:acs_upb_mobile/pages/people/model/person.dart';
 import 'package:acs_upb_mobile/pages/people/service/person_provider.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/academic_calendar.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/events/all_day_event.dart';
@@ -88,6 +88,8 @@ extension UniEventExtension on UniEvent {
             ? null
             : List<String>.from(json['relevance']),
         addedBy: json['addedBy'],
+        editable:
+            json['editable'] ?? false, // Holidays are read-only by default
       );
     } else if (json['rrule'] != null && json['teacher'] == null) {
       return RecurringUniEvent(
@@ -108,6 +110,7 @@ extension UniEventExtension on UniEvent {
             ? null
             : List<String>.from(json['relevance']),
         addedBy: json['addedBy'],
+        editable: json['editable'] ?? true,
       );
     } else if (json['rrule'] != null && json['teacher'] != null) {
       return ClassEvent(
@@ -127,6 +130,7 @@ extension UniEventExtension on UniEvent {
             ? null
             : List<String>.from(json['relevance']),
         addedBy: json['addedBy'],
+        editable: json['editable'] ?? true,
       );
     } else {
       return UniEvent(
@@ -146,6 +150,7 @@ extension UniEventExtension on UniEvent {
             ? null
             : List<String>.from(json['relevance']),
         addedBy: json['addedBy'],
+        editable: json['editable'] ?? true,
       );
     }
   }
@@ -329,7 +334,7 @@ class UniEventProvider extends EventProvider<UniEventInstance>
 
   void updateClasses(ClassProvider classProvider) {
     _classProvider = classProvider;
-    _classProvider.fetchUserClassIds(uid: _authProvider.uid).then((classIds) {
+    _classProvider.fetchUserClassIds(_authProvider.uid).then((classIds) {
       _classIds = classIds;
       notifyListeners();
     });
@@ -343,18 +348,18 @@ class UniEventProvider extends EventProvider<UniEventInstance>
     });
   }
 
-  Future<bool> addEvent(UniEvent event, {BuildContext context}) async {
+  Future<bool> addEvent(UniEvent event) async {
     try {
       await FirebaseFirestore.instance.collection('events').add(event.toData());
       notifyListeners();
       return true;
     } catch (e) {
-      _errorHandler(e, context);
+      _errorHandler(e);
       return false;
     }
   }
 
-  Future<bool> updateEvent(UniEvent event, {BuildContext context}) async {
+  Future<bool> updateEvent(UniEvent event) async {
     try {
       final ref = FirebaseFirestore.instance.collection('events').doc(event.id);
 
@@ -367,12 +372,12 @@ class UniEventProvider extends EventProvider<UniEventInstance>
       notifyListeners();
       return true;
     } catch (e) {
-      _errorHandler(e, context);
+      _errorHandler(e);
       return false;
     }
   }
 
-  Future<bool> deleteEvent(UniEvent event, {BuildContext context}) async {
+  Future<bool> deleteEvent(UniEvent event) async {
     try {
       DocumentReference ref;
       ref = FirebaseFirestore.instance.collection('events').doc(event.id);
@@ -380,7 +385,7 @@ class UniEventProvider extends EventProvider<UniEventInstance>
       notifyListeners();
       return true;
     } catch (e) {
-      _errorHandler(e, context);
+      _errorHandler(e);
       return false;
     }
   }
@@ -391,13 +396,13 @@ class UniEventProvider extends EventProvider<UniEventInstance>
     // TODO(IoanaAlexandru): Find a better way to prevent Timetable from calling dispose on this provider
   }
 
-  void _errorHandler(dynamic e, BuildContext context) {
+  void _errorHandler(dynamic e, {bool showToast = true}) {
     print(e.message);
-    if (context != null) {
+    if (showToast) {
       if (e.message.contains('PERMISSION_DENIED')) {
-        AppToast.show(S.of(context).errorPermissionDenied);
+        AppToast.show(S.current.errorPermissionDenied);
       } else {
-        AppToast.show(S.of(context).errorSomethingWentWrong);
+        AppToast.show(S.current.errorSomethingWentWrong);
       }
     }
   }

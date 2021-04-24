@@ -48,7 +48,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
     super.initState();
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
     authProvider.isVerified.then((value) => setState(() => isVerified = value));
-    authProvider.getProfilePictureURL(context: context).then((value) =>
+    authProvider.getProfilePictureURL().then((value) =>
         setState(() => {if (value != null) imageWidget = NetworkImage(value)}));
   }
 
@@ -59,7 +59,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
     return AppDialog(
-      title: S.of(context).actionChangePassword,
+      title: S.current.actionChangePassword,
       content: [
         Form(
           key: changePasswordKey,
@@ -68,14 +68,14 @@ class _EditProfilePageState extends State<EditProfilePage> {
               TextFormField(
                 obscureText: true,
                 decoration: InputDecoration(
-                  labelText: S.of(context).labelOldPassword,
-                  hintText: S.of(context).hintPassword,
+                  labelText: S.current.labelOldPassword,
+                  hintText: S.current.hintPassword,
                   errorMaxLines: 2,
                 ),
                 controller: oldPasswordController,
                 validator: (value) {
                   if (value?.isEmpty ?? true) {
-                    return S.of(context).errorNoPassword;
+                    return S.current.errorNoPassword;
                   }
                   return null;
                 },
@@ -83,19 +83,19 @@ class _EditProfilePageState extends State<EditProfilePage> {
               TextFormField(
                 obscureText: true,
                 decoration: InputDecoration(
-                  labelText: S.of(context).labelNewPassword,
-                  hintText: S.of(context).hintPassword,
+                  labelText: S.current.labelNewPassword,
+                  hintText: S.current.hintPassword,
                   errorMaxLines: 2,
                 ),
                 controller: newPasswordController,
                 validator: (value) {
                   if (value?.isEmpty ?? true) {
-                    return S.of(context).errorNoPassword;
+                    return S.current.errorNoPassword;
                   }
                   if (value == oldPasswordController.text) {
-                    return S.of(context).warningSamePassword;
+                    return S.current.warningSamePassword;
                   }
-                  final result = AppValidator.isStrongPassword(value, context);
+                  final result = AppValidator.isStrongPassword(value);
                   if (result != null) {
                     return result;
                   }
@@ -105,16 +105,16 @@ class _EditProfilePageState extends State<EditProfilePage> {
               TextFormField(
                 obscureText: true,
                 decoration: InputDecoration(
-                  labelText: S.of(context).labelConfirmNewPassword,
-                  hintText: S.of(context).hintPassword,
+                  labelText: S.current.labelConfirmNewPassword,
+                  hintText: S.current.hintPassword,
                   errorMaxLines: 2,
                 ),
                 validator: (value) {
                   if (value?.isEmpty ?? true) {
-                    return S.of(context).errorNoPassword;
+                    return S.current.errorNoPassword;
                   }
                   if (value == newPasswordController.text) {
-                    return S.of(context).errorPasswordsDiffer;
+                    return S.current.errorPasswordsDiffer;
                   }
                   return null;
                 },
@@ -126,16 +126,16 @@ class _EditProfilePageState extends State<EditProfilePage> {
       actions: [
         AppButton(
           key: const ValueKey('change_password_button'),
-          text: S.of(context).actionChangePassword.toUpperCase(),
+          text: S.current.actionChangePassword.toUpperCase(),
           color: Theme.of(context).accentColor,
           width: 130,
           onTap: () async {
             if (changePasswordKey.currentState.validate()) {
-              if (await authProvider.verifyPassword(
-                  password: oldPasswordController.text, context: context)) {
-                if (await authProvider.changePassword(
-                    password: newPasswordController.text, context: context)) {
-                  AppToast.show(S.of(context).messageChangePasswordSuccess);
+              if (await authProvider
+                  .verifyPassword(oldPasswordController.text)) {
+                if (await authProvider
+                    .changePassword(newPasswordController.text)) {
+                  AppToast.show(S.current.messageChangePasswordSuccess);
                   Navigator.pop(context);
                 }
               }
@@ -149,15 +149,15 @@ class _EditProfilePageState extends State<EditProfilePage> {
   AppDialog _deletionConfirmationDialog(BuildContext context) {
     final passwordController = TextEditingController();
     return AppDialog(
-      icon: const Icon(Icons.warning, color: Colors.red),
-      title: S.of(context).actionDeleteAccount,
+      icon: const Icon(Icons.warning_amber_outlined, color: Colors.red),
+      title: S.current.actionDeleteAccount,
       message:
-          '${S.of(context).messageDeleteAccount} ${S.of(context).messageCannotBeUndone}',
+          '${S.current.messageDeleteAccount} ${S.current.messageCannotBeUndone}',
       content: [
         TextFormField(
           decoration: InputDecoration(
-            labelText: S.of(context).labelConfirmPassword,
-            hintText: S.of(context).hintPassword,
+            labelText: S.current.labelConfirmPassword,
+            hintText: S.current.hintPassword,
           ),
           obscureText: true,
           controller: passwordController,
@@ -166,15 +166,14 @@ class _EditProfilePageState extends State<EditProfilePage> {
       actions: [
         AppButton(
           key: const ValueKey('delete_account_button'),
-          text: S.of(context).actionDeleteAccount.toUpperCase(),
+          text: S.current.actionDeleteAccount.toUpperCase(),
           color: Colors.red,
           width: 130,
           onTap: () async {
             final authProvider =
                 Provider.of<AuthProvider>(context, listen: false);
-            if (await authProvider.verifyPassword(
-                password: passwordController.text, context: context)) {
-              if (await authProvider.delete(context: context)) {
+            if (await authProvider.verifyPassword(passwordController.text)) {
+              if (await authProvider.delete()) {
                 await Utils.signOut(context);
               }
             }
@@ -187,14 +186,14 @@ class _EditProfilePageState extends State<EditProfilePage> {
   AppDialog _changeEmailConfirmationDialog(BuildContext context) {
     final passwordController = TextEditingController();
     return AppDialog(
-      title: S.of(context).actionChangeEmail,
-      message: S.of(context).messageChangeEmail(
-          emailController.text + S.of(context).stringEmailDomain),
+      title: S.current.actionChangeEmail,
+      message: S.current.messageChangeEmail(
+          emailController.text + S.current.stringEmailDomain),
       content: [
         TextFormField(
           decoration: InputDecoration(
-            labelText: S.of(context).labelConfirmPassword,
-            hintText: S.of(context).hintPassword,
+            labelText: S.current.labelConfirmPassword,
+            hintText: S.current.hintPassword,
           ),
           obscureText: true,
           controller: passwordController,
@@ -203,18 +202,16 @@ class _EditProfilePageState extends State<EditProfilePage> {
       actions: [
         AppButton(
           key: const ValueKey('change_email_button'),
-          text: S.of(context).actionChangeEmail,
+          text: S.current.actionChangeEmail,
           color: Theme.of(context).accentColor,
           width: 130,
           onTap: () async {
             final authProvider =
                 Provider.of<AuthProvider>(context, listen: false);
-            if (await authProvider.verifyPassword(
-                password: passwordController.text, context: context)) {
+            if (await authProvider.verifyPassword(passwordController.text)) {
               if (await authProvider.changeEmail(
-                  email: emailController.text + S.of(context).stringEmailDomain,
-                  context: context)) {
-                AppToast.show(S.of(context).messageChangeEmailSuccess);
+                  emailController.text + S.current.stringEmailDomain)) {
+                AppToast.show(S.current.messageChangeEmailSuccess);
                 Navigator.pop(context, true);
               } else {
                 Navigator.pop(context, false);
@@ -228,14 +225,14 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   Widget buildEditableAvatar(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(8),
+      padding: const EdgeInsets.all(10),
       child: GestureDetector(
         child: CircleImage(
             circleSize: 150,
             image: imageWidget ??
                 const AssetImage('assets/illustrations/undraw_profile_pic.png'),
             enableOverlay: true,
-            overlayIcon: const Icon(Icons.edit)),
+            overlayIcon: const Icon(Icons.edit_outlined)),
         onTap: () async {
           final Uint8List uploadedImage =
               await StorageProvider.showImagePicker();
@@ -259,7 +256,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
   @override
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
-    final emailDomain = S.of(context).stringEmailDomain;
+    final emailDomain = S.current.stringEmailDomain;
     final User user = authProvider.currentUserFromCache;
 
     if (user == null) {
@@ -276,15 +273,15 @@ class _EditProfilePageState extends State<EditProfilePage> {
     final path = user.classes;
 
     return AppScaffold(
-      title: Text(S.of(context).actionEditProfile),
+      title: Text(S.current.actionEditProfile),
       needsToBeAuthenticated: true,
       actions: [
         AppScaffoldAction(
-            text: S.of(context).buttonSave,
+            text: S.current.buttonSave,
             onPressed: () async {
               final Map<String, dynamic> info = {
-                S.of(context).labelFirstName: firstNameController.text,
-                S.of(context).labelLastName: lastNameController.text,
+                S.current.labelFirstName: firstNameController.text,
+                S.current.labelLastName: lastNameController.text,
               };
               if (dropdownController.path != null) {
                 info['class'] = dropdownController.path;
@@ -301,109 +298,104 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 }
                 if (uploadedImage != null) {
                   imageAsPNG = await convertToPNG(uploadedImage);
-                  result = await authProvider.uploadProfilePicture(
-                      imageAsPNG, context);
+                  result = await authProvider.uploadProfilePicture(imageAsPNG);
                   if (result) {
-                    AppToast.show(S.of(context).messagePictureUpdatedSuccess);
+                    AppToast.show(S.current.messagePictureUpdatedSuccess);
                   }
                 }
                 if (result) {
-                  if (await authProvider.updateProfile(
-                    info: info,
-                    context: context,
-                  )) {
-                    AppToast.show(S.of(context).messageEditProfileSuccess);
+                  if (await authProvider.updateProfile(info)) {
+                    AppToast.show(S.current.messageEditProfileSuccess);
                     Navigator.pop(context);
                   }
                 }
               }
             }),
         AppScaffoldAction(
-          icon: Icons.more_vert,
+          icon: Icons.more_vert_outlined,
           items: {
-            S.of(context).actionChangePassword: () =>
+            S.current.actionChangePassword: () =>
                 showDialog(context: context, builder: _changePasswordDialog),
-            S.of(context).actionDeleteAccount: () => showDialog(
+            S.current.actionDeleteAccount: () => showDialog(
                 context: context, builder: _deletionConfirmationDialog)
           },
         )
       ],
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10),
-        child: Container(
-          child: ListView(children: [
-            AccountNotVerifiedWarning(),
-            buildEditableAvatar(context),
-            PreferenceTitle(
-              S.of(context).labelPersonalInformation,
-              leftPadding: 0,
-            ),
-            Form(
-              key: formKey,
-              child: Column(
-                children: [
+      body: Container(
+        child: ListView(padding: const EdgeInsets.all(12), children: [
+          AccountNotVerifiedWarning(),
+          buildEditableAvatar(context),
+          PreferenceTitle(
+            S.current.labelPersonalInformation,
+            leftPadding: 0,
+          ),
+          const SizedBox(height: 10),
+          Form(
+            key: formKey,
+            child: Column(
+              children: [
+                TextFormField(
+                  decoration: InputDecoration(
+                    prefixIcon: const Icon(Icons.person_outlined),
+                    labelText: S.current.labelFirstName,
+                    hintText: S.current.hintFirstName,
+                  ),
+                  controller: firstNameController,
+                  validator: (value) {
+                    if (value?.isEmpty ?? true) {
+                      return S.current.errorMissingFirstName;
+                    }
+                    return null;
+                  },
+                ),
+                TextFormField(
+                  decoration: InputDecoration(
+                    prefixIcon: const Icon(Icons.person_outlined),
+                    labelText: S.current.labelLastName,
+                    hintText: S.current.hintLastName,
+                  ),
+                  controller: lastNameController,
+                  validator: (value) {
+                    if (value?.isEmpty ?? true) {
+                      return S.current.errorMissingLastName;
+                    }
+                    return null;
+                  },
+                ),
+                if (isVerified == false)
                   TextFormField(
                     decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.person),
-                      labelText: S.of(context).labelFirstName,
-                      hintText: S.of(context).hintFirstName,
+                      prefixIcon: const Icon(Icons.alternate_email_outlined),
+                      labelText: S.current.labelEmail,
+                      hintText: S.current.hintEmail,
+                      suffix: Text(emailDomain),
                     ),
-                    controller: firstNameController,
+                    controller: emailController,
                     validator: (value) {
                       if (value?.isEmpty ?? true) {
-                        return S.of(context).errorMissingFirstName;
+                        return S.current.errorMissingLastName;
                       }
                       return null;
                     },
-                  ),
-                  TextFormField(
-                    decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.person),
-                      labelText: S.of(context).labelLastName,
-                      hintText: S.of(context).hintLastName,
-                    ),
-                    controller: lastNameController,
-                    validator: (value) {
-                      if (value?.isEmpty ?? true) {
-                        return S.of(context).errorMissingLastName;
-                      }
-                      return null;
-                    },
-                  ),
-                  if (isVerified == false)
-                    TextFormField(
-                      decoration: InputDecoration(
-                        prefixIcon: const Icon(Icons.alternate_email),
-                        labelText: S.of(context).labelEmail,
-                        hintText: S.of(context).hintEmail,
-                        suffix: Text(emailDomain),
-                      ),
-                      controller: emailController,
-                      validator: (value) {
-                        if (value?.isEmpty ?? true) {
-                          return S.of(context).errorMissingLastName;
-                        }
-                        return null;
-                      },
-                    )
-                ],
-              ),
+                  )
+              ],
             ),
-            PreferenceTitle(
-              S.of(context).labelClass,
-              leftPadding: 0,
-            ),
-            FilterDropdown(
-              initialPath: path,
-              controller: dropdownController,
-              leftPadding: 10,
-              textStyle: Theme.of(context)
-                  .textTheme
-                  .caption
-                  .apply(color: Theme.of(context).hintColor),
-            ),
-          ]),
-        ),
+          ),
+          const SizedBox(height: 10),
+          PreferenceTitle(
+            S.current.labelClass,
+            leftPadding: 0,
+          ),
+          FilterDropdown(
+            initialPath: path,
+            controller: dropdownController,
+            leftPadding: 10,
+            textStyle: Theme.of(context)
+                .textTheme
+                .caption
+                .apply(color: Theme.of(context).hintColor),
+          ),
+        ]),
       ),
     );
   }
@@ -425,21 +417,20 @@ class AccountNotVerifiedWarning extends StatelessWidget {
           return Container();
         }
         return Padding(
-          padding: const EdgeInsets.only(top: 8),
+          padding: const EdgeInsets.only(top: 10),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               IconText(
                 align: TextAlign.center,
-                icon: Icons.error_outline,
-                text: S.of(context).messageEmailNotVerified,
-                actionText: S.of(context).actionSendVerificationAgain,
+                icon: Icons.error_outlined,
+                text: S.current.messageEmailNotVerified,
+                actionText: S.current.actionSendVerificationAgain,
                 style: Theme.of(context)
                     .textTheme
                     .caption
                     .copyWith(color: Theme.of(context).hintColor),
-                onTap: () =>
-                    authProvider.sendEmailVerification(context: context),
+                onTap: authProvider.sendEmailVerification,
               ),
             ],
           ),

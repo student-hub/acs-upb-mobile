@@ -21,9 +21,9 @@ class _NewsFeedPageState extends State<NewsFeedPage> {
     final newsFeedProvider = Provider.of<NewsProvider>(context);
 
     return AppScaffold(
-      title: Text(S.of(context).navigationNewsFeed),
+      title: Text(S.current.navigationNewsFeed),
       body: FutureBuilder(
-        future: newsFeedProvider.fetchNewsFeedItems(context: context),
+        future: newsFeedProvider.fetchNewsFeedItems(),
         builder: (_, snapshot) {
           if (snapshot.connectionState != ConnectionState.done) {
             return const Center(child: CircularProgressIndicator());
@@ -32,15 +32,15 @@ class _NewsFeedPageState extends State<NewsFeedPage> {
           final List<NewsFeedItem> newsFeedItems = snapshot.data;
           if (newsFeedItems == null) {
             return ErrorPage(
-              errorMessage: S.of(context).warningUnableToReachNewsFeed,
-              info: [TextSpan(text: S.of(context).warningInternetConnection)],
-              actionText: S.of(context).actionRefresh,
+              errorMessage: S.current.warningUnableToReachNewsFeed,
+              info: [TextSpan(text: S.current.warningInternetConnection)],
+              actionText: S.current.actionRefresh,
               actionOnTap: () => setState(() {}),
             );
           } else if (newsFeedItems.isEmpty) {
             return ErrorPage(
               imgPath: 'assets/illustrations/undraw_empty.png',
-              errorMessage: S.of(context).warningNoNews,
+              errorMessage: S.current.warningNoNews,
             );
           }
 
@@ -51,8 +51,8 @@ class _NewsFeedPageState extends State<NewsFeedPage> {
                 .map((item) => ListTile(
                       title: Text(item.title),
                       subtitle: Text(item.date),
-                      trailing: const Icon(Icons.arrow_forward_ios),
-                      onTap: () => Utils.launchURL(item.link, context: context),
+                      trailing: const Icon(Icons.arrow_forward_ios_outlined),
+                      onTap: () => Utils.launchURL(item.link),
                       dense: true,
                     ))
                 .toList(),

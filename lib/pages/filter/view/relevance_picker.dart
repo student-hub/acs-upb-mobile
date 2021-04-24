@@ -8,6 +8,7 @@ import 'package:acs_upb_mobile/resources/custom_icons.dart';
 import 'package:acs_upb_mobile/widgets/selectable.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:provider/provider.dart';
 
 class RelevanceController {
@@ -86,7 +87,7 @@ class _RelevancePickerState extends State<RelevancePicker> {
   }
 
   Future<void> _fetchFilter() async {
-    _filter = await widget.filterProvider.fetchFilter(context: context);
+    _filter = await widget.filterProvider.fetchFilter();
     if (mounted) {
       setState(() {});
     }
@@ -113,12 +114,12 @@ class _RelevancePickerState extends State<RelevancePicker> {
               builder: (_) => ChangeNotifierProvider.value(
                 value: widget.filterProvider,
                 child: FilterPage(
-                  title: S.of(context).labelRelevance,
-                  buttonText: S.of(context).buttonSet,
+                  title: S.current.labelRelevance,
+                  buttonText: S.current.buttonSet,
                   canBeForEveryone: widget.canBeForEveryone,
                   info:
-                      '${S.of(context).infoRelevanceNothingSelected} ${S.of(context).infoRelevance}',
-                  hint: S.of(context).infoRelevanceExample,
+                      '${S.current.infoRelevanceNothingSelected} ${S.current.infoRelevance}',
+                  hint: S.current.infoRelevanceExample,
                   onSubmit: () async {
                     // Deselect all options
                     _onlyMeController.deselect();
@@ -138,20 +139,20 @@ class _RelevancePickerState extends State<RelevancePicker> {
               ),
             ));
           } else {
-            AppToast.show(S.of(context).warningNoPermissionToAddPublicWebsite);
+            AppToast.show(S.current.warningNoPermissionToAddPublicWebsite);
           }
         },
         child: Row(
           children: <Widget>[
             Text(
-              S.of(context).labelCustom,
+              S.current.labelCustom,
               style: Theme.of(context)
                   .accentTextTheme
                   .subtitle2
                   .copyWith(color: buttonColor),
             ),
             Icon(
-              Icons.arrow_forward_ios,
+              Icons.arrow_forward_ios_outlined,
               color: buttonColor,
               size: Theme.of(context).textTheme.subtitle2.fontSize,
             )
@@ -169,7 +170,7 @@ class _RelevancePickerState extends State<RelevancePicker> {
             widget.controller?.onChanged();
           }
         } else {
-          AppToast.show(S.of(context).warningNoPermissionToAddPublicWebsite);
+          AppToast.show(S.current.warningNoPermissionToAddPublicWebsite);
         }
       });
 
@@ -202,13 +203,12 @@ class _RelevancePickerState extends State<RelevancePicker> {
                   widget.controller.onChanged();
                 }
               } else {
-                AppToast.show(
-                    S.of(context).warningNoPermissionToAddPublicWebsite);
+                AppToast.show(S.current.warningNoPermissionToAddPublicWebsite);
               }
             }),
             disabled: !(_user?.canAddPublicInfo ?? false),
           ))
-          ..add(const SizedBox(width: 8));
+          ..add(const SizedBox(width: 10));
       }
     }
 
@@ -220,7 +220,7 @@ class _RelevancePickerState extends State<RelevancePicker> {
         _customControllers[node] = controller;
 
         widgets
-          ..add(const SizedBox(width: 8))
+          ..add(const SizedBox(width: 10))
           ..add(Selectable(
             label: node,
             controller: controller,
@@ -244,7 +244,7 @@ class _RelevancePickerState extends State<RelevancePicker> {
       padding: const EdgeInsets.only(top: 12, left: 12),
       child: Row(
         children: <Widget>[
-          Icon(CustomIcons.filter,
+          Icon(FeatherIcons.filter,
               color: CustomIcons.formIconColor(Theme.of(context))),
           const SizedBox(width: 12),
           Expanded(
@@ -258,7 +258,7 @@ class _RelevancePickerState extends State<RelevancePicker> {
                       children: <Widget>[
                         Expanded(
                           child: Text(
-                            S.of(context).labelRelevance,
+                            S.current.labelRelevance,
                             style: Theme.of(context)
                                 .textTheme
                                 .caption
@@ -268,7 +268,7 @@ class _RelevancePickerState extends State<RelevancePicker> {
                         _customRelevanceButton(),
                       ],
                     ),
-                    const SizedBox(height: 8),
+                    const SizedBox(height: 10),
                     Row(
                       children: <Widget>[
                         Expanded(
@@ -281,7 +281,7 @@ class _RelevancePickerState extends State<RelevancePicker> {
                                   Row(
                                     children: [
                                       Selectable(
-                                        label: S.of(context).relevanceOnlyMe,
+                                        label: S.current.relevanceOnlyMe,
                                         initiallySelected:
                                             widget.defaultPrivate ?? true,
                                         onSelected: (selected) => setState(() {
@@ -304,14 +304,14 @@ class _RelevancePickerState extends State<RelevancePicker> {
                                         }),
                                         controller: _onlyMeController,
                                       ),
-                                      const SizedBox(width: 8),
+                                      const SizedBox(width: 10),
                                     ],
                                   ),
                                 if (widget.canBeForEveryone)
                                   Row(
                                     children: [
                                       Selectable(
-                                        label: S.of(context).relevanceAnyone,
+                                        label: S.current.relevanceAnyone,
                                         initiallySelected:
                                             !widget.defaultPrivate &&
                                                 widget.filterProvider
@@ -341,7 +341,7 @@ class _RelevancePickerState extends State<RelevancePicker> {
                                         disabled:
                                             !(_user?.canAddPublicInfo ?? false),
                                       ),
-                                      const SizedBox(width: 8),
+                                      const SizedBox(width: 10),
                                     ],
                                   ),
                                 _customRelevanceSelectables(),

@@ -17,6 +17,7 @@ import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:provider/provider.dart';
 import 'package:recase/recase.dart';
 import 'package:validators/validators.dart';
@@ -111,19 +112,19 @@ class _WebsiteViewState extends State<WebsiteView> {
     final website = _buildWebsite();
 
     return Padding(
-      padding: const EdgeInsets.only(left: 8, right: 8, top: 8),
+      padding: const EdgeInsets.fromLTRB(12, 12, 12, 0),
       child: Card(
         child: Column(
           children: <Widget>[
             Padding(
-              padding: const EdgeInsets.all(8),
+              padding: const EdgeInsets.all(12),
               child: Row(
                 children: <Widget>[
-                  Icon(Icons.remove_red_eye,
+                  Icon(Icons.remove_red_eye_outlined,
                       color: CustomIcons.formIconColor(Theme.of(context))),
                   const SizedBox(width: 12),
                   AutoSizeText(
-                    '${S.of(context).labelPreview}:',
+                    '${S.current.labelPreview}:',
                     style: Theme.of(context).textTheme.subtitle1,
                   ),
                   const SizedBox(width: 12),
@@ -136,7 +137,7 @@ class _WebsiteViewState extends State<WebsiteView> {
                             child: WebsiteIcon(
                           website: website,
                           onTap: () {
-                            Utils.launchURL(website.link, context: context);
+                            Utils.launchURL(website.link);
                           },
                         )),
                       ],
@@ -146,9 +147,9 @@ class _WebsiteViewState extends State<WebsiteView> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(left: 8, right: 8, bottom: 8),
+              padding: const EdgeInsets.fromLTRB(12, 0, 12, 12),
               child: AutoSizeText(
-                S.of(context).messageWebsitePreview,
+                S.current.messageWebsitePreview,
                 textAlign: TextAlign.center,
                 style: TextStyle(color: Theme.of(context).hintColor),
               ),
@@ -160,26 +161,25 @@ class _WebsiteViewState extends State<WebsiteView> {
   }
 
   AppDialog _deletionConfirmationDialog(BuildContext context) => AppDialog(
-        icon: const Icon(Icons.delete),
-        title: S.of(context).actionDeleteWebsite,
-        message: S.of(context).messageDeleteWebsite,
+        icon: const Icon(Icons.delete_outlined),
+        title: S.current.actionDeleteWebsite,
+        message: S.current.messageDeleteWebsite,
         info: widget.website.isPrivate
             ? null
-            : S.of(context).messageThisCouldAffectOtherStudents,
+            : S.current.messageThisCouldAffectOtherStudents,
         actions: [
           AppButton(
-            text: S.of(context).actionDeleteWebsite,
+            text: S.current.actionDeleteWebsite,
             width: 130,
             onTap: () async {
               Navigator.pop(context); // Pop dialog window
 
               final websiteProvider =
                   Provider.of<WebsiteProvider>(context, listen: false);
-              final res = await websiteProvider.deleteWebsite(widget.website,
-                  context: context);
+              final res = await websiteProvider.deleteWebsite(widget.website);
               if (res) {
                 Navigator.pop(context); // Pop editing page
-                AppToast.show(S.of(context).messageWebsiteDeleted);
+                AppToast.show(S.current.messageWebsiteDeleted);
               }
             },
           )
@@ -190,11 +190,11 @@ class _WebsiteViewState extends State<WebsiteView> {
   Widget build(BuildContext context) {
     return AppScaffold(
       title: Text(widget.updateExisting
-          ? S.of(context).actionEditWebsite
-          : S.of(context).actionAddWebsite),
+          ? S.current.actionEditWebsite
+          : S.current.actionAddWebsite),
       actions: [
             AppScaffoldAction(
-              text: S.of(context).buttonSave,
+              text: S.current.buttonSave,
               onPressed: () async {
                 if (_formKey.currentState.validate()) {
                   final websiteProvider =
@@ -202,20 +202,14 @@ class _WebsiteViewState extends State<WebsiteView> {
 
                   bool res = false;
                   if (widget.updateExisting) {
-                    res = await websiteProvider.updateWebsite(
-                      _buildWebsite(),
-                      context: context,
-                    );
+                    res = await websiteProvider.updateWebsite(_buildWebsite());
                   } else {
-                    res = await websiteProvider.addWebsite(
-                      _buildWebsite(),
-                      context: context,
-                    );
+                    res = await websiteProvider.addWebsite(_buildWebsite());
                   }
                   if (res) {
                     AppToast.show(widget.updateExisting
-                        ? S.of(context).messageWebsiteEdited
-                        : S.of(context).messageWebsiteAdded);
+                        ? S.current.messageWebsiteEdited
+                        : S.current.messageWebsiteAdded);
                     Navigator.of(context).pop();
                   }
                 }
@@ -225,9 +219,9 @@ class _WebsiteViewState extends State<WebsiteView> {
           (widget.updateExisting
               ? [
                   AppScaffoldAction(
-                    icon: Icons.more_vert,
+                    icon: Icons.more_vert_outlined,
                     items: {
-                      S.of(context).actionDeleteWebsite: () => showDialog(
+                      S.current.actionDeleteWebsite: () => showDialog(
                           context: context,
                           builder: _deletionConfirmationDialog)
                     },
@@ -249,24 +243,24 @@ class _WebsiteViewState extends State<WebsiteView> {
                     TextFormField(
                       controller: _labelController,
                       decoration: InputDecoration(
-                        labelText: S.of(context).labelName,
-                        hintText: S.of(context).hintWebsiteLabel,
-                        prefixIcon: const Icon(Icons.label),
+                        labelText: S.current.labelName,
+                        hintText: S.current.hintWebsiteLabel,
+                        prefixIcon: const Icon(Icons.label_outlined),
                       ),
                       onChanged: (_) => setState(() {}),
                     ),
                     DropdownButtonFormField<WebsiteCategory>(
                       isExpanded: true,
                       decoration: InputDecoration(
-                        labelText: S.of(context).labelCategory,
-                        prefixIcon: const Icon(Icons.category),
+                        labelText: S.current.labelCategory,
+                        prefixIcon: const Icon(Icons.category_outlined),
                       ),
                       value: _selectedCategory,
                       items: WebsiteCategory.values
                           .map(
                             (category) => DropdownMenuItem<WebsiteCategory>(
                               value: category,
-                              child: Text(category.toLocalizedString(context)),
+                              child: Text(category.toLocalizedString()),
                             ),
                           )
                           .toList(),
@@ -276,13 +270,13 @@ class _WebsiteViewState extends State<WebsiteView> {
                     TextFormField(
                       controller: _linkController,
                       decoration: InputDecoration(
-                        labelText: '${S.of(context).labelLink} *',
-                        hintText: S.of(context).hintWebsiteLink,
-                        prefixIcon: const Icon(Icons.public),
+                        labelText: '${S.current.labelLink} *',
+                        hintText: S.current.hintWebsiteLink,
+                        prefixIcon: const Icon(FeatherIcons.globe),
                       ),
                       validator: (value) {
                         if (!isURL(value, requireProtocol: true)) {
-                          return S.of(context).warningInvalidURL;
+                          return S.current.warningInvalidURL;
                         }
                         return null;
                       },
@@ -297,9 +291,9 @@ class _WebsiteViewState extends State<WebsiteView> {
                       controller: _descriptionRoController,
                       decoration: InputDecoration(
                           labelText:
-                              '${S.of(context).labelDescription} (${S.of(context).settingsItemLanguageRomanian.toLowerCase()})',
+                              '${S.current.labelDescription} (${S.current.settingsItemLanguageRomanian.toLowerCase()})',
                           hintText: 'Cel mai popular motor de căutare.',
-                          prefixIcon: const Icon(Icons.info)),
+                          prefixIcon: const Icon(Icons.info_outlined)),
                       onChanged: (_) => setState(() {}),
                       minLines: 1,
                       maxLines: 5,
@@ -308,9 +302,9 @@ class _WebsiteViewState extends State<WebsiteView> {
                       controller: _descriptionEnController,
                       decoration: InputDecoration(
                           labelText:
-                              '${S.of(context).labelDescription} (${S.of(context).settingsItemLanguageEnglish.toLowerCase()})',
+                              '${S.current.labelDescription} (${S.current.settingsItemLanguageEnglish.toLowerCase()})',
                           hintText: 'The most popular search engine.',
-                          prefixIcon: const Icon(Icons.info)),
+                          prefixIcon: const Icon(Icons.info_outlined)),
                       onChanged: (_) => setState(() {}),
                       minLines: 1,
                       maxLines: 5,
@@ -337,8 +331,8 @@ class WebsiteIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: StorageProvider.findImageUrl(
-          context, 'websites/${website.id}/icon.png'), //Firebase Storage path
+      future: StorageProvider.findImageUrl('websites/${website.id}/icon.png'),
+      //Firebase Storage path
       builder: (context, snapshot) {
         ImageProvider image;
         image = const AssetImage('assets/icons/globe.png');

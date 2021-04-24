@@ -12,12 +12,12 @@ import 'package:acs_upb_mobile/pages/timetable/view/date_header.dart';
 import 'package:acs_upb_mobile/pages/timetable/view/events/add_event_view.dart';
 import 'package:acs_upb_mobile/pages/timetable/view/events/all_day_event_widget.dart';
 import 'package:acs_upb_mobile/pages/timetable/view/events/event_widget.dart';
-import 'package:acs_upb_mobile/resources/custom_icons.dart';
 import 'package:acs_upb_mobile/widgets/button.dart';
 import 'package:acs_upb_mobile/widgets/dialog.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:provider/provider.dart';
 import 'package:recase/recase.dart';
 import 'package:time_machine/time_machine.dart';
@@ -41,6 +41,7 @@ class _TimetablePageState extends State<TimetablePage> {
 
   @override
   Widget build(BuildContext context) {
+    final authProvider = Provider.of<AuthProvider>(context);
     final eventProvider = Provider.of<UniEventProvider>(context);
     if (_controller == null) {
       _controller = TimetableController(
@@ -49,27 +50,29 @@ class _TimetablePageState extends State<TimetablePage> {
               startTime: LocalTime(7, 55, 0), endTime: LocalTime(20, 5, 0)),
           eventProvider: eventProvider);
 
-      scheduleDialog(context);
+      if (authProvider.isAuthenticated && !authProvider.isAnonymous) {
+        scheduleDialog(context);
+      }
     }
 
     return AppScaffold(
       title: AnimatedBuilder(
         animation: _controller.dateListenable,
         builder: (context, child) => Text(
-            Provider.of<AuthProvider>(context).currentUserFromCache == null
-                ? S.of(context).navigationTimetable
+            authProvider.isAuthenticated && !authProvider.isAnonymous
+                ? S.current.navigationTimetable
                 : _controller.currentMonth.titleCase),
       ),
       needsToBeAuthenticated: true,
       leading: AppScaffoldAction(
-        icon: Icons.today,
+        icon: Icons.today_outlined,
         onPressed: () => _controller.animateToToday(),
-        tooltip: S.of(context).actionJumpToToday,
+        tooltip: S.current.actionJumpToToday,
       ),
       actions: [
         AppScaffoldAction(
-          icon: Icons.class_,
-          tooltip: S.of(context).navigationClasses,
+          icon: FeatherIcons.bookOpen,
+          tooltip: S.current.navigationClasses,
           onPressed: () => Navigator.of(context).push(
             MaterialPageRoute<ChangeNotifierProvider>(
               builder: (_) => ChangeNotifierProvider.value(
@@ -79,51 +82,55 @@ class _TimetablePageState extends State<TimetablePage> {
           ),
         ),
         AppScaffoldAction(
-          icon: CustomIcons.filter,
-          tooltip: S.of(context).navigationFilter,
+          icon: FeatherIcons.filter,
+          tooltip: S.current.navigationFilter,
           onPressed: () => Navigator.push(
             context,
             MaterialPageRoute<FilterPage>(builder: (_) => const FilterPage()),
           ),
         ),
       ],
-      body: Stack(
-        children: [
-          Timetable<UniEventInstance>(
-            controller: _controller,
-            dateHeaderBuilder: (_, date) => DateHeader(date),
-            eventBuilder: (event) => UniEventWidget(event),
-            allDayEventBuilder: (context, event, info) => UniAllDayEventWidget(
-              event,
-              info: info,
-            ),
-            onEventBackgroundTap: (dateTime, isAllDay) {
-              if (!isAllDay) {
-                final user = Provider.of<AuthProvider>(context, listen: false)
-                    .currentUserFromCache;
-                if (user.canAddPublicInfo) {
-                  Navigator.of(context).push(MaterialPageRoute<AddEventView>(
-                    builder: (_) => ChangeNotifierProxyProvider<AuthProvider,
-                        FilterProvider>(
-                      create: (_) => FilterProvider(),
-                      update: (context, authProvider, filterProvider) {
-                        return filterProvider..updateAuth(authProvider);
-                      },
-                      child: AddEventView(
-                        initialEvent: UniEvent(
-                            start: dateTime,
-                            duration: const Period(hours: 2),
-                            id: null),
+      body: Padding(
+        padding: const EdgeInsets.all(10),
+        child: Stack(
+          children: [
+            Timetable<UniEventInstance>(
+              controller: _controller,
+              dateHeaderBuilder: (_, date) => DateHeader(date),
+              eventBuilder: (event) => UniEventWidget(event),
+              allDayEventBuilder: (context, event, info) =>
+                  UniAllDayEventWidget(
+                event,
+                info: info,
+              ),
+              onEventBackgroundTap: (dateTime, isAllDay) {
+                if (!isAllDay) {
+                  final user = Provider.of<AuthProvider>(context, listen: false)
+                      .currentUserFromCache;
+                  if (user.canAddPublicInfo) {
+                    Navigator.of(context).push(MaterialPageRoute<AddEventView>(
+                      builder: (_) => ChangeNotifierProxyProvider<AuthProvider,
+                          FilterProvider>(
+                        create: (_) => FilterProvider(),
+                        update: (context, authProvider, filterProvider) {
+                          return filterProvider..updateAuth(authProvider);
+                        },
+                        child: AddEventView(
+                          initialEvent: UniEvent(
+                              start: dateTime,
+                              duration: const Period(hours: 2),
+                              id: null),
+                        ),
                       ),
-                    ),
-                  ));
-                } else {
-                  AppToast.show(S.of(context).errorPermissionDenied);
+                    ));
+                  } else {
+                    AppToast.show(S.current.errorPermissionDenied);
+                  }
                 }
-              }
-            },
-          ),
-        ],
+              },
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -167,28 +174,28 @@ class _TimetablePageState extends State<TimetablePage> {
 
     if (classProvider.userClassHeadersCache?.isEmpty ?? true) {
       return AppDialog(
-        title: S.of(context).warningNoEvents,
+        title: S.current.warningNoEvents,
         content: [
           RichText(
             text: TextSpan(
               style: Theme.of(context).textTheme.subtitle1,
               children: [
-                TextSpan(text: '${S.of(context).infoYouNeedToSelect} '),
+                TextSpan(text: '${S.current.infoYouNeedToSelect} '),
                 WidgetSpan(
                   alignment: PlaceholderAlignment.top,
                   child: Icon(
-                    Icons.class_,
+                    FeatherIcons.bookOpen,
                     size: Theme.of(context).textTheme.subtitle1.fontSize + 2,
                   ),
                 ),
-                TextSpan(text: ' ${S.of(context).infoClasses}.'),
+                TextSpan(text: ' ${S.current.infoClasses}.'),
               ],
             ),
           ),
         ],
         actions: [
           AppButton(
-            text: S.of(context).actionChooseClasses,
+            text: S.current.actionChooseClasses,
             width: 130,
             onTap: () async {
               // Pop the dialog
@@ -199,15 +206,14 @@ class _TimetablePageState extends State<TimetablePage> {
                 builder: (_) => ChangeNotifierProvider.value(
                     value: classProvider,
                     child: FutureBuilder(
-                      future: classProvider.fetchUserClassIds(
-                          uid: user.uid, context: context),
+                      future: classProvider.fetchUserClassIds(user.uid),
                       builder: (context, snap) {
                         if (snap.hasData) {
                           return AddClassesPage(
                               initialClassIds: snap.data,
                               onSave: (classIds) async {
                                 await classProvider.setUserClassIds(
-                                    classIds: classIds, uid: authProvider.uid);
+                                    classIds, authProvider.uid);
                                 Navigator.pop(context);
                               });
                         } else {
@@ -223,29 +229,28 @@ class _TimetablePageState extends State<TimetablePage> {
       );
     } else if ((filterProvider.cachedFilter?.relevantNodes?.length ?? 0) < 6) {
       return AppDialog(
-        title: S.of(context).warningNoEvents,
+        title: S.current.warningNoEvents,
         content: [
           RichText(
             text: TextSpan(
               style: Theme.of(context).textTheme.subtitle1,
               children: [
-                TextSpan(text: '${S.of(context).infoMakeSureGroupIsSelected} '),
+                TextSpan(text: '${S.current.infoMakeSureGroupIsSelected} '),
                 WidgetSpan(
                   alignment: PlaceholderAlignment.top,
                   child: Icon(
-                    CustomIcons.filter,
+                    FeatherIcons.filter,
                     size: Theme.of(context).textTheme.subtitle1.fontSize + 2,
                   ),
                 ),
-                TextSpan(
-                    text: ' ${S.of(context).navigationFilter.toLowerCase()}.'),
+                TextSpan(text: ' ${S.current.navigationFilter.toLowerCase()}.'),
               ],
             ),
           ),
         ],
         actions: [
           AppButton(
-            text: S.of(context).actionOpenFilter,
+            text: S.current.actionOpenFilter,
             width: 130,
             onTap: () async {
               // Pop the dialog
@@ -259,11 +264,11 @@ class _TimetablePageState extends State<TimetablePage> {
     } else if (user.permissionLevel < 3) {
       // TODO(IoanaAlexandru): Check if user already requested and show a different message
       return AppDialog(
-        title: S.of(context).warningNoEvents,
-        content: [Text(S.of(context).messageYouCanContribute)],
+        title: S.current.warningNoEvents,
+        content: [Text(S.current.messageYouCanContribute)],
         actions: [
           AppButton(
-            text: S.of(context).actionRequestPermissions,
+            text: S.current.actionRequestPermissions,
             width: 130,
             onTap: () async {
               // Check if user is verified
@@ -272,10 +277,9 @@ class _TimetablePageState extends State<TimetablePage> {
               Navigator.of(context).pop();
               // Push the Permissions page
               if (authProvider.isAnonymous) {
-                AppToast.show(S.of(context).messageNotLoggedIn);
+                AppToast.show(S.current.messageNotLoggedIn);
               } else if (!isVerified) {
-                AppToast.show(
-                    S.of(context).messageEmailNotVerifiedToPerformAction);
+                AppToast.show(S.current.messageEmailNotVerifiedToPerformAction);
               } else {
                 await Navigator.of(context)
                     .pushNamed(Routes.requestPermissions);
@@ -286,34 +290,32 @@ class _TimetablePageState extends State<TimetablePage> {
       );
     } else {
       return AppDialog(
-        title: S.of(context).warningNoEvents,
+        title: S.current.warningNoEvents,
         content: [
           RichText(
             key: const ValueKey('no_events_message'),
             text: TextSpan(
               style: Theme.of(context).textTheme.subtitle1,
               children: [
-                TextSpan(
-                    text: S.of(context).messageThereAreNoEventsForSelected),
+                TextSpan(text: S.current.messageThereAreNoEventsForSelected),
                 WidgetSpan(
                   alignment: PlaceholderAlignment.top,
                   child: Icon(
-                    Icons.class_,
+                    FeatherIcons.bookOpen,
                     size: Theme.of(context).textTheme.subtitle1.fontSize + 2,
                   ),
                 ),
                 TextSpan(
                     text:
-                        '${S.of(context).navigationClasses.toLowerCase()} ${S.of(context).stringAnd} '),
+                        '${S.current.navigationClasses.toLowerCase()} ${S.current.stringAnd} '),
                 WidgetSpan(
                   alignment: PlaceholderAlignment.top,
                   child: Icon(
-                    CustomIcons.filter,
+                    FeatherIcons.filter,
                     size: Theme.of(context).textTheme.subtitle1.fontSize + 2,
                   ),
                 ),
-                TextSpan(
-                    text: ' ${S.of(context).navigationFilter.toLowerCase()}.'),
+                TextSpan(text: ' ${S.current.navigationFilter.toLowerCase()}.'),
               ],
             ),
           ),

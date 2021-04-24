@@ -54,13 +54,15 @@ Similarly, please create one PR per development item, instead of bundling multip
 * By default, **Flutter apps run in debug mode**. That means a DEBUG banner is shown on the upper right corner of the app, and errors and overflows are marked quite visibly in the UI.
   - If you'd like to temporarily hide the debug mode banner (to take a screenshot, for instance), open the *Flutter Inspector* tab from the right hand edge of Android Studio, click *More actions* and select *Hide debug mode banner*.
   - Note that Flutter's debug mode is different from the Android Studio debugging (bug button), which is meant to allow you to use breakpoints and other debugging tools.
-  - If you need to test the release version, run `flutter run --release` from the Terminal.
+  - If you really need to test the release version (usually not necessary), run `flutter run --release` from the Terminal.
+    * The release version cannot be ran in an emulator.
+    * You may also need to temporarily change the release signing config. In the [android/app/build.gradle](android/app/build.gradle) file, replace `signingConfig signingConfigs.release` with `signingConfig signingConfigs.debug`.
     * For simplicity, you could call the default "main.dart" configuration in Android Studio "Debug", duplicate it and call the second one "Release", with `--release` as an argument. For example:
     <img src=screenshots/other/release_configuration.png>
 * [Flutter Inspector](https://flutter.dev/docs/development/tools/devtools/inspector) is a powerful tool which allows you to visualize and explore Flutter widget trees. You can use it to find out where a specific part of the UI is defined in the code (by turning on *Select widget mode* and selecting the widget you'd like to find), it can help you debug layouts (by enabling *Debug Paint*, you can visualize padding, alignments and widget borders) and much more.
 
-| :exclamation: | On Android, ACS UPB Mobile uses **a separate (development) environment in debug mode**. That means a completely different Firebase project - separate data, including user info. In order to try the release (production) version, you need to run `flutter run --release`.|
-|---------------|:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| :exclamation: | On Android, ACS UPB Mobile uses **a separate (development) environment in debug mode**. That means a completely different Firebase project - separate data, including user info.|
+|---------------|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 
 ## Style guide
 
@@ -665,7 +667,7 @@ The project currently has two functions set up to perform daily backups of the d
 ## Internationalization
 
 ### On-device
-All strings that are visible to the user should be internationalised and set in the corresponding `.arb` files within the [`l10n`](lib/l10n) folder. The [Flutter Intl](https://plugins.jetbrains.com/plugin/13666-flutter-intl) Android Studio plugin does all the hard work for you by generating the code when you save an `.arb` file. Strings can then be accessed using `S.of(context).stringID`.
+All strings that are visible to the user should be internationalised and set in the corresponding `.arb` files within the [`l10n`](lib/l10n) folder. The [Flutter Intl](https://plugins.jetbrains.com/plugin/13666-flutter-intl) Android Studio plugin does all the hard work for you by generating the code when you save an `.arb` file. Strings can then be accessed using `S.current.stringID`.
 
 ### Remote
 In the database, internationalized strings are saved as a dictionary where the locale is the key:
