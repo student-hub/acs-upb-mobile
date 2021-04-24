@@ -213,8 +213,6 @@ extension AcademicCalendarExtension on AcademicCalendar {
   }
 }
 
-// TODO(bogpie): "Closest" color (from a list) - GCal works with limited no. of colors
-
 class UniEventProvider extends EventProvider<UniEventInstance>
     with ChangeNotifier {
   UniEventProvider({AuthProvider authProvider, PersonProvider personProvider})

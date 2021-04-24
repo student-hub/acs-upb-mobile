@@ -26,11 +26,9 @@ extension GoogleCalendarServices on UniEventProvider {
     final g_cal.EventDateTime end = g_cal.EventDateTime();
     final DateTime endDateTime = startDateTime.add(duration);
     end
-      //..timeZone = endDateTime.timeZoneName
-      ..timeZone = 'Europe/Bucharest'
+      ..timeZone = 'Europe/Bucharest' // google calendar has different timezone formats
       ..dateTime = endDateTime;
 
-    // TODO(bogpie): Recreate timezone from existing information
     // TODO(bogpie): Require user to input how many minutes before a notification from GCal (including the "no notification" option)
 
     final ClassHeader classHeader = uniEvent.classHeader;
@@ -43,6 +41,7 @@ extension GoogleCalendarServices on UniEventProvider {
           eventInstance.mainEvent.type
               .toLocalizedString(context)*/
       // TODO(bogpie): Use a relevant description, like type of class + lecturer
+      // TODO(bogpie): "Closest" color (from a list) - GCal works with limited no. of colors
 
       ..location = uniEvent.location;
 
