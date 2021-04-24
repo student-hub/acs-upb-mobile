@@ -18,7 +18,7 @@ class UpcomingEventsCard extends StatelessWidget {
         Provider.of<UniEventProvider>(context);
 
     return InfoCard<Iterable<UniEventInstance>>(
-      title: S.of(context).sectionEventsComingUp,
+      title: S.current.sectionEventsComingUp,
       onShowMore: onShowMore,
       future: eventProvider.getUpcomingEvents(LocalDate.today()),
       builder: (events) => Column(
@@ -39,7 +39,7 @@ class UpcomingEventsCard extends StatelessWidget {
                   ),
                 ),
                 trailing: event.start.toDateTimeLocal().isBefore(DateTime.now())
-                    ? Chip(label: Text(S.of(context).labelNow))
+                    ? Chip(label: Text(S.current.labelNow))
                     : null,
                 title: Text(
                   '${'${event.mainEvent.classHeader.acronym} - '}${event.mainEvent.type.toLocalizedString(context)}',
