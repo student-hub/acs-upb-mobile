@@ -44,7 +44,7 @@ class _EventViewState extends State<EventView> {
   Widget build(BuildContext context) {
     final user = Provider.of<AuthProvider>(context).currentUserFromCache;
     return AppScaffold(
-      title: Text(S.of(context).navigationEventDetails),
+      title: Text(S.current.navigationEventDetails),
       actions: [
         AppScaffoldAction(
           icon: Icons.edit_outlined,
@@ -52,9 +52,9 @@ class _EventViewState extends State<EventView> {
               !user.canAddPublicInfo,
           onPressed: () {
             if (!widget.eventInstance.mainEvent.editable) {
-              AppToast.show(S.of(context).warningEventNotEditable);
+              AppToast.show(S.current.warningEventNotEditable);
             } else if (!user.canAddPublicInfo) {
-              AppToast.show(S.of(context).errorPermissionDenied);
+              AppToast.show(S.current.errorPermissionDenied);
             } else {
               Navigator.of(context).push(MaterialPageRoute<AddEventView>(
                 builder: (_) => ChangeNotifierProvider<FilterProvider>(
@@ -87,7 +87,7 @@ class _EventViewState extends State<EventView> {
                       Text(
                           widget.eventInstance.title ??
                               widget.eventInstance.mainEvent.type
-                                  .toLocalizedString(context),
+                                  .toLocalizedString(),
                           style: Theme.of(context).textTheme.headline6),
                       const SizedBox(height: 4),
                       Text(widget.eventInstance.dateString),
@@ -115,7 +115,7 @@ class _EventViewState extends State<EventView> {
           if (widget.eventInstance.mainEvent?.classHeader != null)
             ClassListItem(
               classHeader: widget.eventInstance.mainEvent.classHeader,
-              hint: S.of(context).messageTapForMoreInfo,
+              hint: S.current.messageTapForMoreInfo,
               onTap: () => Navigator.of(context)
                   .push(MaterialPageRoute<ChangeNotifierProvider>(
                 builder: (context) => ChangeNotifierProvider.value(
@@ -152,7 +152,7 @@ class _EventViewState extends State<EventView> {
                   const SizedBox(width: 16),
                   Text(
                       widget.eventInstance.mainEvent.relevance == null
-                          ? S.of(context).relevanceAnyone
+                          ? S.current.relevanceAnyone
                           : '${FilterNode.localizeName(widget.eventInstance.mainEvent.degree, context)}: ${widget.eventInstance.mainEvent.relevance.join(', ')}',
                       style: Theme.of(context).textTheme.subtitle1),
                 ],
@@ -185,7 +185,7 @@ class _EventViewState extends State<EventView> {
                         (widget.eventInstance.mainEvent as ClassEvent)
                                 .teacher
                                 .name ??
-                            S.of(context).labelUnknown,
+                            S.current.labelUnknown,
                         style: Theme.of(context).textTheme.subtitle1),
                   ],
                 ),

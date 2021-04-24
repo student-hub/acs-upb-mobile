@@ -56,29 +56,26 @@ class _ClassesPageState extends State<ClassesPage> {
     final authProvider = Provider.of<AuthProvider>(context);
 
     return AppScaffold(
-      title: Text(S.of(context).navigationClasses),
+      title: Text(S.current.navigationClasses),
       // TODO(IoanaAlexandru): Simply show all classes if user is not authenticated
       needsToBeAuthenticated: true,
       actions: [
         AppScaffoldAction(
           icon: Icons.edit_outlined,
-          tooltip: S.of(context).actionChooseClasses,
+          tooltip: S.current.actionChooseClasses,
           onPressed: () => Navigator.of(context).push(
             MaterialPageRoute<ChangeNotifierProvider>(
               builder: (_) => ChangeNotifierProvider.value(
                   value: classProvider,
                   child: FutureBuilder(
-                    future: classProvider.fetchUserClassIds(
-                      uid: authProvider.uid,
-                      context: context,
-                    ),
+                    future: classProvider.fetchUserClassIds(authProvider.uid),
                     builder: (context, snap) {
                       if (snap.hasData) {
                         return AddClassesPage(
                             initialClassIds: snap.data,
                             onSave: (classIds) async {
                               await classProvider.setUserClassIds(
-                                  classIds: classIds, uid: authProvider.uid);
+                                  classIds, authProvider.uid);
                               unawaited(updateClasses());
                               Navigator.pop(context);
                             });
@@ -107,12 +104,11 @@ class _ClassesPageState extends State<ClassesPage> {
                     )),
                   )
                 : ErrorPage(
-                    errorMessage: S.of(context).messageNoClassesYet,
+                    errorMessage: S.current.messageNoClassesYet,
                     imgPath: 'assets/illustrations/undraw_empty.png',
                     info: [
                         TextSpan(
-                            text:
-                                '${S.of(context).messageGetStartedByPressing} '),
+                            text: '${S.current.messageGetStartedByPressing} '),
                         WidgetSpan(
                           alignment: PlaceholderAlignment.middle,
                           child: Icon(
@@ -122,7 +118,7 @@ class _ClassesPageState extends State<ClassesPage> {
                                     2,
                           ),
                         ),
-                        TextSpan(text: ' ${S.of(context).messageButtonAbove}.'),
+                        TextSpan(text: ' ${S.current.messageButtonAbove}.'),
                       ]),
           if (updating == null)
             const Center(child: CircularProgressIndicator()),
@@ -172,10 +168,10 @@ class _AddClassesPageState extends State<AddClassesPage> {
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
-      title: Text(S.of(context).actionChooseClasses),
+      title: Text(S.current.actionChooseClasses),
       actions: [
         AppScaffoldAction(
-          text: S.of(context).buttonSave,
+          text: S.current.buttonSave,
           onPressed: () => widget.onSave(classIds.toList()),
         )
       ],
@@ -228,7 +224,7 @@ class _ClassListState extends State<ClassList> {
   }
 
   String sectionName(BuildContext context, String year, String semester) =>
-      '${S.of(context).labelYear} $year, ${S.of(context).labelSemester} $semester';
+      '${S.current.labelYear} $year, ${S.current.labelSemester} $semester';
 
   Map<String, dynamic> classesBySection(
       Set<ClassHeader> classes, BuildContext context) {
@@ -319,8 +315,7 @@ class _ClassListState extends State<ClassList> {
               padding: const EdgeInsets.only(left: 10, right: 10, top: 10),
               child: IconText(
                 icon: Icons.info_outlined,
-                text:
-                    '${S.of(context).infoSelect} ${S.of(context).infoClasses}.',
+                text: '${S.current.infoSelect} ${S.current.infoClasses}.',
                 style: Theme.of(context).textTheme.bodyText1,
               ),
             ),

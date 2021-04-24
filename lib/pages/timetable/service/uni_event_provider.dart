@@ -348,7 +348,7 @@ class UniEventProvider extends EventProvider<UniEventInstance>
 
   void updateClasses(ClassProvider classProvider) {
     _classProvider = classProvider;
-    _classProvider.fetchUserClassIds(uid: _authProvider.uid).then((classIds) {
+    _classProvider.fetchUserClassIds(_authProvider.uid).then((classIds) {
       _classIds = classIds;
       notifyListeners();
     });
@@ -362,18 +362,18 @@ class UniEventProvider extends EventProvider<UniEventInstance>
     });
   }
 
-  Future<bool> addEvent(UniEvent event, {BuildContext context}) async {
+  Future<bool> addEvent(UniEvent event) async {
     try {
       await FirebaseFirestore.instance.collection('events').add(event.toData());
       notifyListeners();
       return true;
     } catch (e) {
-      _errorHandler(e, context);
+      _errorHandler(e);
       return false;
     }
   }
 
-  Future<bool> updateEvent(UniEvent event, {BuildContext context}) async {
+  Future<bool> updateEvent(UniEvent event) async {
     try {
       final ref = FirebaseFirestore.instance.collection('events').doc(event.id);
 
@@ -386,12 +386,12 @@ class UniEventProvider extends EventProvider<UniEventInstance>
       notifyListeners();
       return true;
     } catch (e) {
-      _errorHandler(e, context);
+      _errorHandler(e);
       return false;
     }
   }
 
-  Future<bool> deleteEvent(UniEvent event, {BuildContext context}) async {
+  Future<bool> deleteEvent(UniEvent event) async {
     try {
       DocumentReference ref;
       ref = FirebaseFirestore.instance.collection('events').doc(event.id);
@@ -399,7 +399,7 @@ class UniEventProvider extends EventProvider<UniEventInstance>
       notifyListeners();
       return true;
     } catch (e) {
-      _errorHandler(e, context);
+      _errorHandler(e);
       return false;
     }
   }
@@ -410,13 +410,13 @@ class UniEventProvider extends EventProvider<UniEventInstance>
     // TODO(IoanaAlexandru): Find a better way to prevent Timetable from calling dispose on this provider
   }
 
-  void _errorHandler(dynamic e, BuildContext context) {
+  void _errorHandler(dynamic e, {bool showToast = true}) {
     print(e.message);
-    if (context != null) {
+    if (showToast) {
       if (e.message.contains('PERMISSION_DENIED')) {
-        AppToast.show(S.of(context).errorPermissionDenied);
+        AppToast.show(S.current.errorPermissionDenied);
       } else {
-        AppToast.show(S.of(context).errorSomethingWentWrong);
+        AppToast.show(S.current.errorSomethingWentWrong);
       }
     }
   }

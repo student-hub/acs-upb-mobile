@@ -157,11 +157,11 @@ Future<void> main() async {
     mockWebsiteProvider = MockWebsiteProvider();
     // ignore: invalid_use_of_protected_member
     when(mockWebsiteProvider.hasListeners).thenReturn(false);
-    when(mockWebsiteProvider.deleteWebsite(any, context: anyNamed('context')))
+    when(mockWebsiteProvider.deleteWebsite(any))
         .thenAnswer((_) => Future.value(true));
-    when(mockAuthProvider.getProfilePictureURL(context: anyNamed('context')))
+    when(mockAuthProvider.getProfilePictureURL())
         .thenAnswer((_) => Future.value(null));
-    when(mockWebsiteProvider.fetchWebsites(any, context: anyNamed('context')))
+    when(mockWebsiteProvider.fetchWebsites(any))
         .thenAnswer((_) => Future.value([
               Website(
                 id: '1',
@@ -236,11 +236,8 @@ Future<void> main() async {
                 isPrivate: false,
               ),
             ]));
-    when(mockWebsiteProvider.fetchFavouriteWebsites(
-            uid: anyNamed('uid'), context: anyNamed('context')))
-        .thenAnswer((_) async => (await mockWebsiteProvider.fetchWebsites(any,
-                context: anyNamed('context')))
-            .take(3));
+    when(mockWebsiteProvider.fetchFavouriteWebsites(any)).thenAnswer(
+        (_) async => (await mockWebsiteProvider.fetchWebsites(any)).take(3));
 
     mockFilterProvider = MockFilterProvider();
     // ignore: invalid_use_of_protected_member
@@ -303,7 +300,7 @@ Future<void> main() async {
           ])
         ]));
     when(mockFilterProvider.cachedFilter).thenReturn(filter);
-    when(mockFilterProvider.fetchFilter(context: anyNamed('context')))
+    when(mockFilterProvider.fetchFilter())
         .thenAnswer((_) => Future.value(filter));
 
     mockClassProvider = MockClassProvider();
@@ -340,76 +337,72 @@ Future<void> main() async {
               ),
             ] +
             userClassHeaders));
-    when(mockClassProvider.fetchUserClassIds(
-            uid: anyNamed('uid'), context: anyNamed('context')))
+    when(mockClassProvider.fetchUserClassIds(any))
         .thenAnswer((_) => Future.value(['3', '4']));
-    when(mockClassProvider.fetchClassInfo(any, context: anyNamed('context')))
-        .thenAnswer((_) => Future.value(
-              Class(
-                header: ClassHeader(
-                  id: '3',
-                  name: 'Programming',
-                  acronym: 'PC',
-                  category: 'A',
-                ),
-                shortcuts: [
-                  Shortcut(
-                      type: ShortcutType.main,
-                      name: 'OCW',
-                      link: 'https://ocw.cs.pub.ro/courses/programare'),
-                  Shortcut(
-                      type: ShortcutType.other,
-                      name: 'Google',
-                      link: 'https://google.com'),
-                ],
-                grading: {
-                  'Exam': 4,
-                  'Lab': 1.5,
-                  'Homework': 4,
-                  'Extra homework': 0.5,
-                },
-              ),
-            ));
+    when(mockClassProvider.fetchClassInfo(any)).thenAnswer((_) => Future.value(
+          Class(
+            header: ClassHeader(
+              id: '3',
+              name: 'Programming',
+              acronym: 'PC',
+              category: 'A',
+            ),
+            shortcuts: [
+              Shortcut(
+                  type: ShortcutType.main,
+                  name: 'OCW',
+                  link: 'https://ocw.cs.pub.ro/courses/programare'),
+              Shortcut(
+                  type: ShortcutType.other,
+                  name: 'Google',
+                  link: 'https://google.com'),
+            ],
+            grading: {
+              'Exam': 4,
+              'Lab': 1.5,
+              'Homework': 4,
+              'Extra homework': 0.5,
+            },
+          ),
+        ));
 
     mockPersonProvider = MockPersonProvider();
     // ignore: invalid_use_of_protected_member
     when(mockPersonProvider.hasListeners).thenReturn(false);
-    when(mockPersonProvider.fetchPeople(context: anyNamed('context')))
-        .thenAnswer((_) => Future.value([
-              Person(
-                name: 'John Doe',
-                email: 'john.doe@cs.pub.ro',
-                phone: '0712345678',
-                office: 'AB123',
-                position: 'Associate Professor, Dr., Department Council',
-                photo: 'https://cdn.worldvectorlogo.com/logos/flutter-logo.svg',
-              ),
-              Person(
-                name: 'Jane Doe',
-                email: 'jane.doe@cs.pub.ro',
-                phone: '-',
-                office: 'Narnia',
-                position: 'Professor, Dr.',
-                photo: 'https://cdn.worldvectorlogo.com/logos/flutter-logo.svg',
-              ),
-              Person(
-                name: 'Mary Poppins',
-                email: 'supercalifragilistic.expialidocious@cs.pub.ro',
-                phone: '0712-345-678',
-                office: 'Mary Poppins\' office',
-                position: 'Professor, Dr., Head of Department',
-                photo: 'https://cdn.worldvectorlogo.com/logos/flutter-logo.svg',
-              ),
-            ]));
+    when(mockPersonProvider.fetchPeople()).thenAnswer((_) => Future.value([
+          Person(
+            name: 'John Doe',
+            email: 'john.doe@cs.pub.ro',
+            phone: '0712345678',
+            office: 'AB123',
+            position: 'Associate Professor, Dr., Department Council',
+            photo: 'https://cdn.worldvectorlogo.com/logos/flutter-logo.svg',
+          ),
+          Person(
+            name: 'Jane Doe',
+            email: 'jane.doe@cs.pub.ro',
+            phone: '-',
+            office: 'Narnia',
+            position: 'Professor, Dr.',
+            photo: 'https://cdn.worldvectorlogo.com/logos/flutter-logo.svg',
+          ),
+          Person(
+            name: 'Mary Poppins',
+            email: 'supercalifragilistic.expialidocious@cs.pub.ro',
+            phone: '0712-345-678',
+            office: 'Mary Poppins\' office',
+            position: 'Professor, Dr., Head of Department',
+            photo: 'https://cdn.worldvectorlogo.com/logos/flutter-logo.svg',
+          ),
+        ]));
 
-    when(mockPersonProvider.mostRecentLecturer(any,
-            context: anyNamed('context')))
+    when(mockPersonProvider.mostRecentLecturer(any))
         .thenAnswer((_) => Future.value('Jane Doe'));
 
     mockQuestionProvider = MockQuestionProvider();
     // ignore: invalid_use_of_protected_member
     when(mockQuestionProvider.hasListeners).thenReturn(false);
-    when(mockQuestionProvider.fetchQuestions(context: anyNamed('context')))
+    when(mockQuestionProvider.fetchQuestions())
         .thenAnswer((_) => Future.value(<Question>[
               Question(
                   question: 'Care este programul la secretariat?',
@@ -439,7 +432,7 @@ Future<void> main() async {
     mockNewsProvider = MockNewsProvider();
     // ignore: invalid_use_of_protected_member
     when(mockNewsProvider.hasListeners).thenReturn(false);
-    when(mockNewsProvider.fetchNewsFeedItems(context: anyNamed('context')))
+    when(mockNewsProvider.fetchNewsFeedItems())
         .thenAnswer((_) => Future.value(<NewsFeedItem>[
               NewsFeedItem(
                   '03.10.2020',
@@ -638,18 +631,16 @@ Future<void> main() async {
           .expand((e) => e));
     });
     when(mockEventProvider.empty).thenReturn(false);
-    when(mockEventProvider.deleteEvent(any, context: anyNamed('context')))
+    when(mockEventProvider.deleteEvent(any))
         .thenAnswer((_) => Future.value(true));
-    when(mockEventProvider.updateEvent(any, context: anyNamed('context')))
+    when(mockEventProvider.updateEvent(any))
         .thenAnswer((_) => Future.value(true));
-    when(mockEventProvider.addEvent(any, context: anyNamed('context')))
-        .thenAnswer((_) => Future.value(true));
+    when(mockEventProvider.addEvent(any)).thenAnswer((_) => Future.value(true));
 
     mockRequestProvider = MockRequestProvider();
-    when(mockRequestProvider.makeRequest(any, context: anyNamed('context')))
+    when(mockRequestProvider.makeRequest(any))
         .thenAnswer((_) => Future.value(true));
-    when(mockRequestProvider.userAlreadyRequested(any,
-            context: anyNamed('context')))
+    when(mockRequestProvider.userAlreadyRequested(any))
         .thenAnswer((_) => Future.value(false));
   });
 
@@ -1257,8 +1248,7 @@ Future<void> main() async {
           await tester.tap(find.text('DELETE EVENT'));
           await tester.pumpAndSettle(const Duration(seconds: 5));
 
-          verify(
-              mockEventProvider.deleteEvent(any, context: anyNamed('context')));
+          verify(mockEventProvider.deleteEvent(any));
           expect(find.byType(TimetablePage), findsOneWidget);
         });
       }
@@ -1579,8 +1569,7 @@ Future<void> main() async {
         await tester.tap(find.text('DELETE WEBSITE'));
         await tester.pumpAndSettle(const Duration(seconds: 5));
 
-        verify(mockWebsiteProvider.deleteWebsite(any,
-            context: anyNamed('context')));
+        verify(mockWebsiteProvider.deleteWebsite(any));
         expect(find.byType(PortalPage), findsOneWidget);
       });
     }
@@ -1595,7 +1584,7 @@ Future<void> main() async {
       when(mockAuthProvider.currentUserFromCache).thenReturn(User(
           uid: '1', firstName: 'John', lastName: 'Doe', permissionLevel: 3));
       when(mockAuthProvider.email).thenReturn('john.doe@stud.acs.upb.ro');
-      when(mockAuthProvider.getProfilePictureURL(context: anyNamed('context')))
+      when(mockAuthProvider.getProfilePictureURL())
           .thenAnswer((_) => Future.value(null));
     });
 

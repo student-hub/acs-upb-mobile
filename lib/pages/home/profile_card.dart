@@ -18,11 +18,9 @@ class _ProfileCardState extends State<ProfileCard> {
   void initState() {
     super.initState();
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
-    authProvider
-        .getProfilePictureURL(context: context)
-        .then((value) => setState(() {
-              profilePictureURL = value;
-            }));
+    authProvider.getProfilePictureURL().then((value) => setState(() {
+          profilePictureURL = value;
+        }));
   }
 
   @override
@@ -65,7 +63,7 @@ class _ProfileCardState extends State<ProfileCard> {
                         children: <Widget>[
                           FittedBox(
                             child: Text(
-                              userName ?? S.of(context).stringAnonymous,
+                              userName ?? S.current.stringAnonymous,
                               style: Theme.of(context)
                                   .textTheme
                                   .subtitle1
@@ -86,8 +84,8 @@ class _ProfileCardState extends State<ProfileCard> {
                               padding: const EdgeInsets.all(5),
                               child: Text(
                                   authProvider.isAnonymous
-                                      ? S.of(context).actionLogIn
-                                      : S.of(context).actionLogOut,
+                                      ? S.current.actionLogIn
+                                      : S.current.actionLogOut,
                                   style: Theme.of(context)
                                       .accentTextTheme
                                       .subtitle2
@@ -114,8 +112,8 @@ class _ProfileCardState extends State<ProfileCard> {
                               final authProvider = Provider.of<AuthProvider>(
                                   context,
                                   listen: false);
-                              final value = await authProvider
-                                  .getProfilePictureURL(context: context);
+                              final value =
+                                  await authProvider.getProfilePictureURL();
                               setState(() {
                                 profilePictureURL = value;
                               });
