@@ -20,12 +20,12 @@ import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:async/async.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_web_browser/flutter_web_browser.dart';
 import 'package:googleapis/calendar/v3.dart' as g_cal;
 import 'package:googleapis_auth/auth_io.dart';
 import 'package:rrule/rrule.dart';
 import 'package:time_machine/time_machine.dart';
 import 'package:timetable/timetable.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 extension PeriodExtension on Period {
   static Period fromJSON(Map<String, dynamic> json) {
@@ -389,11 +389,7 @@ class UniEventProvider extends EventProvider<UniEventInstance>
     print('  => $url');
     print('');
 
-    if (await canLaunch(url)) {
-      await launch(url);
-    } else {
-      print('Could not launch $url');
-    }
+    await FlutterWebBrowser.openWebPage(url: url);
   }
 
   Future<void> insertGoogleEvents(List<g_cal.Event> _gCalEvents) async {
@@ -441,11 +437,13 @@ class UniEventProvider extends EventProvider<UniEventInstance>
             try {
               await calendarApi.events.insert(event, calendarId).then(
                 (value) {
-                  print('ADDED EVENT ${value.status}');
+                  print('Added event status: ${value.status}');
                   if (value.status == 'confirmed') {
-                    print('Event added in google calendarApi'); //log
+                    print(
+                        'Event named ${event.myToString()} added in Google Calendar'); //log
                   } else {
-                    print('Unable to add event in google calendarApi');
+                    print(
+                        'Unable to add event named ${event.myToString()} in Google Calendar');
                   }
                 },
               );
@@ -568,5 +566,11 @@ class UniEventProvider extends EventProvider<UniEventInstance>
         AppToast.show(S.of(context).errorSomethingWentWrong);
       }
     }
+  }
+}
+
+extension GoogleCalendarEventExtension on g_cal.Event {
+  String myToString() {
+    return summary;
   }
 }
