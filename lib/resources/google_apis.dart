@@ -7,7 +7,7 @@ import 'package:googleapis/calendar/v3.dart';
 class GoogleApiHelper {
   GoogleApiHelper();
 
-  static const List<String> _scopes = [CalendarApi.CalendarScope];
+  static const List<String> _scopes = [CalendarApi.calendarScope];
 
   static List<String> get scopes => _scopes;
 
