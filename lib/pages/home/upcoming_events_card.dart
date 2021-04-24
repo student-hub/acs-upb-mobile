@@ -42,7 +42,7 @@ class UpcomingEventsCard extends StatelessWidget {
                     ? Chip(label: Text(S.current.labelNow))
                     : null,
                 title: Text(
-                  '${'${event.mainEvent.classHeader.acronym} - '}${event.mainEvent.type.toLocalizedString(context)}',
+                  '${'${event.mainEvent.classHeader.acronym} - '}${event.mainEvent.type.toLocalizedString()}',
                 ),
                 subtitle: Text(event.relativeDateString),
                 onTap: () =>
