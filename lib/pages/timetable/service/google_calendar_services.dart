@@ -5,6 +5,7 @@ import 'package:acs_upb_mobile/pages/timetable/service/uni_event_provider.dart';
 import 'package:acs_upb_mobile/resources/google_apis.dart';
 import 'package:flutter_web_browser/flutter_web_browser.dart';
 import 'package:googleapis/calendar/v3.dart' as g_cal;
+import 'package:googleapis/calendar/v3.dart';
 import 'package:googleapis_auth/auth_io.dart';
 import 'package:time_machine/time_machine.dart';
 
@@ -16,8 +17,8 @@ extension GoogleCalendarServices on UniEventProvider {
     final DateTime startDateTime = uniEvent.start.toDateTimeLocal();
 
     start
-      //..timeZone = startDateTime.timeZoneName
-      ..timeZone = 'Europe/Bucharest' // EET
+      ..timeZone =
+          'Europe/Bucharest' // google calendar has different timezone formats
       ..dateTime = startDateTime;
     final Period eventPeriod = uniEvent.duration;
     final Duration duration =
@@ -26,24 +27,31 @@ extension GoogleCalendarServices on UniEventProvider {
     final g_cal.EventDateTime end = g_cal.EventDateTime();
     final DateTime endDateTime = startDateTime.add(duration);
     end
-      ..timeZone = 'Europe/Bucharest' // google calendar has different timezone formats
+      ..timeZone = 'Europe/Bucharest'
       ..dateTime = endDateTime;
 
     // TODO(bogpie): Require user to input how many minutes before a notification from GCal (including the "no notification" option)
 
     final ClassHeader classHeader = uniEvent.classHeader;
+    final EventReminders eventReminders = EventReminders();
+    final EventReminder eventReminder = EventReminder()
+      ..minutes = 30
+      ..method = 'popup';
+    eventReminders
+      ..overrides = <EventReminder>[eventReminder]
+      ..useDefault = false;
+
     _gCalEvent
       ..start = start
       ..end = end
       ..summary = classHeader.acronym
       ..colorId = (uniEvent.type.googleCalendarColor.index).toString()
-/*      ..description =  eventInstance.title ??
-          eventInstance.mainEvent.type
+/*    ..description =  eventInstance.title ?? eventInstance.mainEvent.type
               .toLocalizedString(context)*/
       // TODO(bogpie): Use a relevant description, like type of class + lecturer
       // TODO(bogpie): "Closest" color (from a list) - GCal works with limited no. of colors
-
-      ..location = uniEvent.location;
+      ..location = uniEvent.location
+      ..reminders = eventReminders;
 
     if (uniEvent is RecurringUniEvent) {
       _gCalEvent.recurrence = <String>[];
@@ -77,7 +85,11 @@ extension GoogleCalendarServices on UniEventProvider {
         // TODO(bogpie): Automatically close browser
 
         final g_cal.CalendarApi calendarApi = g_cal.CalendarApi(client);
-        final g_cal.Calendar calendar = g_cal.Calendar();
+        final g_cal.Calendar calendar = g_cal.Calendar()
+          ..timeZone = 'Europe/Bucharest'
+          ..summary = 'ACS UPB Mobile'
+          ..description = 'Timetable imported from ACS UPB Mobile';
+
         g_cal.CalendarList calendarListNonIterable;
         try {
           calendarListNonIterable = await calendarApi.calendarList.list();
@@ -97,11 +109,6 @@ extension GoogleCalendarServices on UniEventProvider {
             break;
           }
         }
-        // ignore: cascade_invocations
-        calendar
-          ..timeZone = 'Europe/Bucharest'
-          ..summary = 'ACS UPB Mobile'
-          ..description = 'Timetable imported from ACS UPB Mobile';
 
         final g_cal.Calendar returnedCalendar =
             await calendarApi.calendars.insert(calendar);
@@ -115,7 +122,7 @@ extension GoogleCalendarServices on UniEventProvider {
                   print('Added event status: ${value.status}');
                   if (value.status == 'confirmed') {
                     print(
-                        'Event named ${event.myToString()} added in Google Calendar'); //log
+                        'Event named ${event.myToString()} added in Google Calendar');
                   } else {
                     print(
                         'Unable to add event named ${event.myToString()} in Google Calendar');
