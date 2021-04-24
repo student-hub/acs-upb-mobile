@@ -18,7 +18,7 @@ class FaqCard extends StatelessWidget {
         captionStyle.fontSize / Theme.of(context).textTheme.bodyText1.fontSize;
     final captionColor = captionStyle.color;
     return InfoCard<List<Question>>(
-      title: S.of(context).sectionFAQ,
+      title: S.current.sectionFAQ,
       showMoreButtonKey: const ValueKey('show_more_faq'),
       onShowMore: () => Navigator.of(context).pushNamed(Routes.faq),
       future: Provider.of<QuestionProvider>(context).fetchQuestions(limit: 2),

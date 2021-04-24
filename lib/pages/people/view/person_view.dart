@@ -63,18 +63,16 @@ class PersonView extends StatelessWidget {
                               icon: FeatherIcons.mail,
                               text: person.email ?? '-',
                               style: Theme.of(context).textTheme.bodyText1,
-                              onTap: () => Utils.launchURL(
-                                  'mailto:${person.email}',
-                                  context: context),
+                              onTap: () =>
+                                  Utils.launchURL('mailto:${person.email}'),
                             ),
                             const SizedBox(height: 16),
                             IconText(
                               icon: FeatherIcons.phone,
                               text: person.phone ?? '-',
                               style: Theme.of(context).textTheme.bodyText1,
-                              onTap: () => Utils.launchURL(
-                                  'tel:${person.phone}',
-                                  context: context),
+                              onTap: () =>
+                                  Utils.launchURL('tel:${person.phone}'),
                             ),
                             const SizedBox(height: 16),
                             IconText(

@@ -20,10 +20,9 @@ class FavouriteWebsitesCard extends StatelessWidget {
     final WebsiteProvider websiteProvider =
         Provider.of<WebsiteProvider>(context);
     return InfoCard<List<Website>>(
-      title: S.of(context).sectionFrequentlyAccessedWebsites,
+      title: S.current.sectionFrequentlyAccessedWebsites,
       onShowMore: onShowMore,
-      future:
-          websiteProvider.fetchFavouriteWebsites(uid: uid, context: context),
+      future: websiteProvider.fetchFavouriteWebsites(uid),
       builder: (websites) => Padding(
         padding: const EdgeInsets.only(top: 10),
         child: Row(
@@ -36,7 +35,7 @@ class FavouriteWebsitesCard extends StatelessWidget {
                       onTap: () {
                         websiteProvider.incrementNumberOfVisits(website,
                             uid: uid);
-                        Utils.launchURL(website.link, context: context);
+                        Utils.launchURL(website.link);
                       },
                     ),
                   ))

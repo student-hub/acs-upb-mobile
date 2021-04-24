@@ -39,13 +39,11 @@ class Utils {
       'https://www.websitepolicies.com/policies/view/IIUFv381';
   static String repoURL = 'https://github.com/acs-upb-mobile/acs-upb-mobile';
 
-  static Future<void> launchURL(String url, {BuildContext context}) async {
+  static Future<void> launchURL(String url) async {
     if (await canLaunch(url)) {
       await launch(url);
     } else {
-      if (context != null) {
-        AppToast.show(S.of(context).errorCouldNotLaunchURL(url));
-      }
+      AppToast.show(S.current.errorCouldNotLaunchURL(url));
     }
   }
 
