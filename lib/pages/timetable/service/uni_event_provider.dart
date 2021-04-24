@@ -351,13 +351,11 @@ class UniEventProvider extends EventProvider<UniEventInstance>
     if (uniEvent is RecurringUniEvent) {
       _gCalEvent.recurrence = <String>[];
 
-      String newRruleString =
-          uniEvent.newRrule.toString().replaceAll(RegExp(r'T000000'), '');
-
+      String newRruleString = uniEvent.newRrule.toString();
+      newRruleString =
+          newRruleString.replaceAll(RegExp(r'T000000'), 'T000000Z');
       newRruleString = newRruleString.replaceAll(RegExp(r'DAILY'), 'YEARLY');
-
-      // RRULE:FREQ=DAILY;UNTIL=20210605;INTERVAL=1;BYDAY=WE;BYWEEKNO=3,9,11,13,15,17,19,21,41,43,45,47,49,51
-
+      print(newRruleString);
       _gCalEvent.recurrence.add(newRruleString);
     }
 
