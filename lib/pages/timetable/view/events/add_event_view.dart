@@ -326,7 +326,7 @@ class _AddEventViewState extends State<AddEventView> {
                         .map(
                           (type) => DropdownMenuItem<UniEventType>(
                             value: type,
-                            child: Text(type.toLocalizedString(context)),
+                            child: Text(type.toLocalizedString()),
                           ),
                         )
                         .toList(),
@@ -696,7 +696,7 @@ class SelectableFormField extends FormField<Map<Localizable, bool>> {
                                             children: [
                                               Selectable(
                                                 label: labels[index]
-                                                    .toLocalizedString(context),
+                                                    .toLocalizedString(),
                                                 initiallySelected:
                                                     state.value[labels[index]],
                                                 onSelected: (selected) {
@@ -744,7 +744,7 @@ class _DayOfWeek extends time_machine.DayOfWeek with Localizable {
   _DayOfWeek.from(time_machine.DayOfWeek dayOfWeek) : super(dayOfWeek.value);
 
   @override
-  String toLocalizedString(BuildContext context) {
+  String toLocalizedString() {
     final helperDate = LocalDate.today().next(this);
     return LocalDatePattern.createWithCurrentCulture('ddd')
         .format(helperDate)
@@ -779,7 +779,7 @@ class WeekType with Localizable {
       other is int && other == _value;
 
   @override
-  String toLocalizedString(BuildContext context) {
+  String toLocalizedString() {
     switch (_value) {
       case 0:
         return S.current.labelOdd;

@@ -75,7 +75,7 @@ class _ShortcutViewState extends State<ShortcutView> {
                     .map(
                       (type) => DropdownMenuItem<ShortcutType>(
                         value: type,
-                        child: Text(type.toLocalizedString(context)),
+                        child: Text(type.toLocalizedString()),
                       ),
                     )
                     .toList(),

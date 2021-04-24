@@ -7,7 +7,7 @@ import 'package:validators/sanitizers.dart';
 enum WebsiteCategory { learning, administrative, association, resource, other }
 
 extension WebsiteCategoryExtension on WebsiteCategory {
-  String toLocalizedString(BuildContext context) {
+  String toLocalizedString() {
     switch (this) {
       case WebsiteCategory.learning:
         return S.current.websiteCategoryLearning;

@@ -19,7 +19,7 @@ enum UniEventType {
 }
 
 extension UniEventTypeExtension on UniEventType {
-  String toLocalizedString(BuildContext context) {
+  String toLocalizedString() {
     switch (this) {
       case UniEventType.lecture:
         return S.current.uniEventTypeLecture;

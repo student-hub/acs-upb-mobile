@@ -227,7 +227,7 @@ class _ClassViewState extends State<ClassView> {
           foregroundColor: Theme.of(context).iconTheme.color,
         ),
         title: Text((shortcut.name?.isEmpty ?? true)
-            ? shortcut.type.toLocalizedString(context)
+            ? shortcut.type.toLocalizedString()
             : shortcut.name),
         contentPadding: EdgeInsets.zero,
         dense: true,

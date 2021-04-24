@@ -260,7 +260,7 @@ class _WebsiteViewState extends State<WebsiteView> {
                           .map(
                             (category) => DropdownMenuItem<WebsiteCategory>(
                               value: category,
-                              child: Text(category.toLocalizedString(context)),
+                              child: Text(category.toLocalizedString()),
                             ),
                           )
                           .toList(),

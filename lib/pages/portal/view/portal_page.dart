@@ -142,7 +142,7 @@ class _PortalPageState extends State<PortalPage> {
               40.0, // text
           child: _AddWebsiteButton(
               key: ValueKey(
-                  'add_website_${ReCase(category.toLocalizedString(context)).snakeCase}'),
+                  'add_website_${ReCase(category.toLocalizedString()).snakeCase}'),
               category: category),
         ),
       );
@@ -165,7 +165,7 @@ class _PortalPageState extends State<PortalPage> {
             width: circleSize + 16,
             child: _AddWebsiteButton(
               key: ValueKey(
-                  'add_website_${ReCase(category.toLocalizedString(context)).snakeCase}'),
+                  'add_website_${ReCase(category.toLocalizedString()).snakeCase}'),
               category: category,
               size: circleSize * 0.6,
             ),
@@ -181,7 +181,7 @@ class _PortalPageState extends State<PortalPage> {
     return Padding(
       padding: const EdgeInsets.only(left: 10, right: 10),
       child: AppSpoiler(
-        title: category.toLocalizedString(context),
+        title: category.toLocalizedString(),
         initiallyExpanded: hasContent,
         content: content,
       ),

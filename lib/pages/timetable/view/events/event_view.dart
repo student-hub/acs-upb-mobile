@@ -114,7 +114,7 @@ class _EventViewState extends State<EventView> {
                       Text(
                           widget.eventInstance.title ??
                               widget.eventInstance.mainEvent.type
-                                  .toLocalizedString(context),
+                                  .toLocalizedString(),
                           style: Theme.of(context).textTheme.headline6),
                       const SizedBox(height: 4),
                       Text(widget.eventInstance.dateString),

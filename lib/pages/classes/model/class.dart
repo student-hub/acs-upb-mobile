@@ -6,7 +6,7 @@ import 'package:time_machine/time_machine.dart';
 enum ShortcutType { main, classbook, resource, other }
 
 extension ShortcutTypeExtension on ShortcutType {
-  String toLocalizedString(BuildContext context) {
+  String toLocalizedString() {
     switch (this) {
       case ShortcutType.main:
         return S.current.shortcutTypeMain;
