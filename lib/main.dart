@@ -45,11 +45,7 @@ class MyHttpOverrides extends HttpOverrides {
   HttpClient createHttpClient(SecurityContext context) {
     return super.createHttpClient(context)
       ..badCertificateCallback = (X509Certificate cert, String host, int port) {
-        if (host == 'acs.pub.ro') {
-          return true;
-        }
-
-        return false;
+        return host == 'acs.pub.ro';
       };
   }
 }
