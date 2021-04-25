@@ -86,6 +86,7 @@ class EmojiFormField extends FormField<Map<int, bool>> {
                     children: emojiSelectables,
                   ),
                 ),
+                const SizedBox(height: 12),
                 if (state.hasError)
                   Padding(
                     padding: const EdgeInsets.only(top: 8),

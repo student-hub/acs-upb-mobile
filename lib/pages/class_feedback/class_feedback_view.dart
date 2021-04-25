@@ -1,5 +1,8 @@
+import 'package:acs_upb_mobile/pages/class_feedback/feedback_provider.dart';
 import 'package:acs_upb_mobile/pages/classes/model/class.dart';
+import 'package:acs_upb_mobile/pages/people/model/person.dart';
 import 'package:acs_upb_mobile/pages/people/service/person_provider.dart';
+import 'package:acs_upb_mobile/widgets/autocomplete.dart';
 import 'package:acs_upb_mobile/widgets/icon_text.dart';
 import 'package:acs_upb_mobile/widgets/radio_emoji.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
@@ -8,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:provider/provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
+import 'package:recase/recase.dart';
 
 class ClassFeedbackView extends StatefulWidget {
   const ClassFeedbackView({Key key, this.classHeader}) : super(key: key);
@@ -25,6 +29,9 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
 
   List<String> involvementPercentages = [];
   String selectedInvolvement;
+  Person selectedAssistant;
+  List<Person> classTeachers = [];
+  List<dynamic> feedbackQuestions = [];
 
   Map<int, bool> emojiSelected = {
     0: false,
@@ -46,38 +53,89 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
       '60% ... 80%',
       '80% ... 100%'
     ];
+    Provider.of<PersonProvider>(context, listen: false)
+        .fetchPeople(context: context)
+        .then((teachers) => setState(() => classTeachers = teachers));
+    Provider.of<FeedbackProvider>(context, listen: false)
+        .fetchQuestions(context: context)
+        .then((questions) => setState(() => feedbackQuestions = questions));
+  }
+
+  Widget autocompleteAssistant(BuildContext context) {
+    return Autocomplete<Person>(
+      key: const Key('AutocompleteAssistant'),
+      fieldViewBuilder: (BuildContext context,
+          TextEditingController textEditingController,
+          FocusNode focusNode,
+          VoidCallback onFieldSubmitted) {
+        textEditingController.text = selectedAssistant?.name;
+        return TextFormField(
+          controller: textEditingController,
+          decoration: InputDecoration(
+            labelText: S.of(context).labelAssistant,
+            prefixIcon: const Icon(FeatherIcons.user),
+          ),
+          focusNode: focusNode,
+          onFieldSubmitted: (String value) {
+            onFieldSubmitted();
+          },
+        );
+      },
+      displayStringForOption: (Person person) => person.name,
+      optionsBuilder: (TextEditingValue textEditingValue) {
+        if (textEditingValue.text == '' || textEditingValue.text.isEmpty) {
+          return const Iterable<Person>.empty();
+        }
+        if (classTeachers.where((Person person) {
+          return person.name
+              .toLowerCase()
+              .contains(textEditingValue.text.toLowerCase());
+        }).isEmpty) {
+          final List<Person> inputTeachers = [];
+          final Person inputTeacher =
+              Person(name: textEditingValue.text.titleCase);
+          inputTeachers.add(inputTeacher);
+          return inputTeachers;
+        }
+
+        return classTeachers.where((Person person) {
+          return person.name
+              .toLowerCase()
+              .contains(textEditingValue.text.toLowerCase());
+        });
+      },
+      onSelected: (Person selection) {
+        formKey.currentState.validate();
+        setState(() {
+          selectedAssistant = selection;
+        });
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     final personProvider = Provider.of<PersonProvider>(context);
+    final feedbackProvider = Provider.of<FeedbackProvider>(context);
+    print(feedbackQuestions.length);
+    final List<String> generalQuestions =
+        feedbackProvider.getQuestionsByCategory(feedbackQuestions, 'general');
+    //final List<String> involvementQuestions = feedbackProvider
+    //    .getQuestionsByCategory(feedbackQuestions, 'involvement');
+    //final String involvementQuestion = involvementQuestions?.single;
+    //print(involvementQuestion);
 
-    final generalQuestions = [
-      S.of(context).feedbackGeneralQuestion1,
-      S.of(context).feedbackGeneralQuestion3,
-      S.of(context).feedbackGeneralQuestion4
-    ];
+    final List<String> lectureQuestions =
+        feedbackProvider.getQuestionsByCategory(feedbackQuestions, 'lecture');
 
-    final lectureQuestions = [
-      S.of(context).feedbackLectureQuestion1,
-      S.of(context).feedbackLectureApplicationsQuestion2,
-      S.of(context).feedbackLectureQuestion3,
-      S.of(context).feedbackLectureQuestion4,
-      S.of(context).feedbackLectureQuestion5
-    ];
+    final List<String> applicationsQuestions = feedbackProvider
+        .getQuestionsByCategory(feedbackQuestions, 'applications');
 
-    final applicationsQuestions = [
-      S.of(context).feedbackApplicationsQuestion1,
-      S.of(context).feedbackLectureApplicationsQuestion2,
-      S.of(context).feedbackApplicationsQuestion2,
-      S.of(context).feedbackApplicationsQuestion3,
-      S.of(context).feedbackApplicationsQuestion4,
-    ];
+    final List<String> homeworkQuestions =
+        feedbackProvider.getQuestionsByCategory(feedbackQuestions, 'homework');
 
-    final homeworkQuestions = [
-      S.of(context).feedbackHomeworkQuestion2,
-      S.of(context).feedbackHomeworkQuestion3
-    ];
+    final List<String> personalQuestions =
+        feedbackProvider.getQuestionsByCategory(feedbackQuestions, 'personal');
 
     return AppScaffold(
       title: Text(S.of(context).navigationClassFeedback),
@@ -127,13 +185,7 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
                         }
                       },
                     ),
-                    TextFormField(
-                      decoration: InputDecoration(
-                        labelText: S.of(context).labelAssistant,
-                        prefixIcon: const Icon(Icons.person_outline),
-                      ),
-                      onChanged: (_) => setState(() {}),
-                    ),
+                    autocompleteAssistant(context),
                     Padding(
                       padding: const EdgeInsets.all(10),
                       child: Row(
@@ -371,90 +423,34 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
                               style: Theme.of(context).textTheme.headline6,
                             ),
                             const SizedBox(height: 24),
-                            Text(
-                              S.of(context).feedbackPersonalQuestion1,
-                              style: const TextStyle(
-                                fontSize: 18,
-                              ),
-                            ),
-                            const SizedBox(height: 24),
-                            Card(
-                              child: Padding(
-                                padding: const EdgeInsets.all(2),
-                                child: Column(
-                                  children: [
-                                    TextFormField(
-                                      keyboardType: TextInputType.multiline,
-                                      maxLines: null,
+                            ...personalQuestions.asMap().entries.map((entry) {
+                              return Column(
+                                children: [
+                                  Text(
+                                    entry.value,
+                                    style: const TextStyle(
+                                      fontSize: 18,
                                     ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            const SizedBox(height: 24),
-                            Text(
-                              S.of(context).feedbackPersonalQuestion2,
-                              style: const TextStyle(
-                                fontSize: 18,
-                              ),
-                            ),
-                            const SizedBox(height: 24),
-                            Card(
-                              child: Padding(
-                                padding: const EdgeInsets.all(2),
-                                child: Column(
-                                  children: [
-                                    TextFormField(
-                                      keyboardType: TextInputType.multiline,
-                                      maxLines: null,
+                                  ),
+                                  const SizedBox(height: 24),
+                                  Card(
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(2),
+                                      child: Column(
+                                        children: [
+                                          TextFormField(
+                                            keyboardType:
+                                                TextInputType.multiline,
+                                            maxLines: null,
+                                          ),
+                                        ],
+                                      ),
                                     ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            const SizedBox(height: 24),
-                            Text(
-                              S.of(context).feedbackPersonalQuestion3,
-                              style: const TextStyle(
-                                fontSize: 18,
-                              ),
-                            ),
-                            const SizedBox(height: 24),
-                            Card(
-                              child: Padding(
-                                padding: const EdgeInsets.all(2),
-                                child: Column(
-                                  children: [
-                                    TextFormField(
-                                      keyboardType: TextInputType.multiline,
-                                      maxLines: null,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            const SizedBox(height: 24),
-                            Text(
-                              S.of(context).feedbackPersonalQuestion4,
-                              style: const TextStyle(
-                                fontSize: 18,
-                              ),
-                            ),
-                            const SizedBox(height: 24),
-                            Card(
-                              child: Padding(
-                                padding: const EdgeInsets.all(2),
-                                child: Column(
-                                  children: [
-                                    TextFormField(
-                                      keyboardType: TextInputType.multiline,
-                                      maxLines: null,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            const SizedBox(height: 24),
+                                  ),
+                                  const SizedBox(height: 24),
+                                ],
+                              );
+                            }),
                           ],
                         ),
                       ),
