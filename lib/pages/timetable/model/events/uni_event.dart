@@ -19,24 +19,24 @@ enum UniEventType {
 }
 
 extension UniEventTypeExtension on UniEventType {
-  String toLocalizedString(BuildContext context) {
+  String toLocalizedString() {
     switch (this) {
       case UniEventType.lecture:
-        return S.of(context).uniEventTypeLecture;
+        return S.current.uniEventTypeLecture;
       case UniEventType.lab:
-        return S.of(context).uniEventTypeLab;
+        return S.current.uniEventTypeLab;
       case UniEventType.seminar:
-        return S.of(context).uniEventTypeSeminar;
+        return S.current.uniEventTypeSeminar;
       case UniEventType.sports:
-        return S.of(context).uniEventTypeSports;
+        return S.current.uniEventTypeSports;
       case UniEventType.semester:
-        return S.of(context).uniEventTypeSemester;
+        return S.current.uniEventTypeSemester;
       case UniEventType.holiday:
-        return S.of(context).uniEventTypeHoliday;
+        return S.current.uniEventTypeHoliday;
       case UniEventType.examSession:
-        return S.of(context).uniEventTypeExamSession;
+        return S.current.uniEventTypeExamSession;
       default:
-        return S.of(context).uniEventTypeOther;
+        return S.current.uniEventTypeOther;
     }
   }
 

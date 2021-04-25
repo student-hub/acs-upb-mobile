@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/authentication/view/login_view.dart';
 import 'package:acs_upb_mobile/authentication/view/sign_up_view.dart';
@@ -36,7 +38,22 @@ import 'package:provider/provider.dart';
 import 'package:rrule/rrule.dart';
 import 'package:time_machine/time_machine.dart';
 
+// FIXME: acs.pub.ro has some bad certificate configuration right now.
+// We get around this by accepting any certificate if the host is acs.pub.ro.
+// Remove this in the future.
+class MyHttpOverrides extends HttpOverrides {
+  @override
+  HttpClient createHttpClient(SecurityContext context) {
+    return super.createHttpClient(context)
+      ..badCertificateCallback = (X509Certificate cert, String host, int port) {
+        return host == 'acs.pub.ro';
+      };
+  }
+}
+
 Future<void> main() async {
+  HttpOverrides.global = MyHttpOverrides();
+
   WidgetsFlutterBinding.ensureInitialized();
 
   // package_info_plus is not compatible with flutter_test

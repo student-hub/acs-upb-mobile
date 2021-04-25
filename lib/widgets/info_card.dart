@@ -42,7 +42,7 @@ class InfoCard<T> extends StatelessWidget {
                       child: Row(
                         children: <Widget>[
                           Text(
-                            S.of(context).actionShowMore,
+                            S.current.actionShowMore,
                             style: Theme.of(context)
                                 .accentTextTheme
                                 .subtitle2
@@ -92,7 +92,7 @@ class InfoCard<T> extends StatelessWidget {
         height: 100,
         child: Center(
           child: Text(
-            S.of(context).warningNoneYet,
+            S.current.warningNoneYet,
             style: TextStyle(color: Theme.of(context).disabledColor),
           ),
         ),

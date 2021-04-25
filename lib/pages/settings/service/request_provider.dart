@@ -5,7 +5,6 @@ import 'package:acs_upb_mobile/pages/settings/model/request.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
 
 extension RequestExtension on Request {
   Map<String, dynamic> toData() {
@@ -25,7 +24,7 @@ class RequestProvider {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
   bool userAlreadyRequestedCache;
 
-  Future<bool> makeRequest(Request request, {BuildContext context}) async {
+  Future<bool> makeRequest(Request request) async {
     assert(request.requestBody != null);
 
     try {
@@ -38,15 +37,12 @@ class RequestProvider {
       return userAlreadyRequestedCache = true;
     } catch (e) {
       print(e);
-      if (context != null) {
-        AppToast.show(S.of(context).errorSomethingWentWrong);
-      }
+      AppToast.show(S.current.errorSomethingWentWrong);
       return userAlreadyRequestedCache = false;
     }
   }
 
-  Future<bool> userAlreadyRequested(final String userId,
-      {BuildContext context}) async {
+  Future<bool> userAlreadyRequested(final String userId) async {
     if (userAlreadyRequestedCache != null) return userAlreadyRequestedCache;
 
     try {
@@ -58,9 +54,7 @@ class RequestProvider {
       return userAlreadyRequestedCache = false;
     } catch (e) {
       print(e);
-      if (context != null) {
-        AppToast.show(S.of(context).errorSomethingWentWrong);
-      }
+      AppToast.show(S.current.errorSomethingWentWrong);
       return userAlreadyRequestedCache = false;
     }
   }

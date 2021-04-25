@@ -31,48 +31,44 @@ void main() {
   final WebsiteProvider mockWebsiteProvider = MockWebsiteProvider();
   // ignore: invalid_use_of_protected_member
   when(mockWebsiteProvider.hasListeners).thenReturn(false);
-  when(mockWebsiteProvider.fetchWebsites(any, context: anyNamed('context')))
-      .thenAnswer((_) => Future.value([
-            Website(
-              id: '1',
-              relevance: null,
-              category: WebsiteCategory.learning,
-              infoByLocale: {'en': 'info-en', 'ro': 'info-ro'},
-              label: 'Moodle',
-              link: 'http://acs.curs.pub.ro/',
-              isPrivate: false,
-            ),
-            Website(
-              id: '2',
-              relevance: null,
-              category: WebsiteCategory.learning,
-              infoByLocale: {},
-              label: 'OCW',
-              link: 'https://ocw.cs.pub.ro/',
-              isPrivate: false,
-            ),
-            Website(
-              id: '3',
-              relevance: null,
-              category: WebsiteCategory.association,
-              infoByLocale: {},
-              label: 'LSAC',
-              link: 'https://lsacbucuresti.ro/',
-              isPrivate: false,
-            ),
-          ]));
-  when(mockWebsiteProvider.fetchFavouriteWebsites(
-          uid: anyNamed('uid'), context: anyNamed('context')))
-      .thenAnswer((_) async => (await mockWebsiteProvider.fetchWebsites(any,
-              context: anyNamed('context')))
-          .take(3));
+  when(mockWebsiteProvider.fetchWebsites(any)).thenAnswer((_) => Future.value([
+        Website(
+          id: '1',
+          relevance: null,
+          category: WebsiteCategory.learning,
+          infoByLocale: {'en': 'info-en', 'ro': 'info-ro'},
+          label: 'Moodle',
+          link: 'http://acs.curs.pub.ro/',
+          isPrivate: false,
+        ),
+        Website(
+          id: '2',
+          relevance: null,
+          category: WebsiteCategory.learning,
+          infoByLocale: {},
+          label: 'OCW',
+          link: 'https://ocw.cs.pub.ro/',
+          isPrivate: false,
+        ),
+        Website(
+          id: '3',
+          relevance: null,
+          category: WebsiteCategory.association,
+          infoByLocale: {},
+          label: 'LSAC',
+          link: 'https://lsacbucuresti.ro/',
+          isPrivate: false,
+        ),
+      ]));
+  when(mockWebsiteProvider.fetchFavouriteWebsites(any)).thenAnswer(
+      (_) async => (await mockWebsiteProvider.fetchWebsites(any)).take(3));
   when(mockWebsiteProvider.incrementNumberOfVisits(any, uid: anyNamed('uid')))
       .thenAnswer((_) => Future.value(true));
 
   final FilterProvider mockFilterProvider = MockFilterProvider();
   // ignore: invalid_use_of_protected_member
   when(mockFilterProvider.hasListeners).thenReturn(false);
-  when(mockFilterProvider.fetchFilter(context: anyNamed('context')))
+  when(mockFilterProvider.fetchFilter())
       .thenAnswer((_) => Future.value(Filter(root: FilterNode(name: 'All'))));
   when(mockFilterProvider.filterEnabled).thenReturn(true);
 

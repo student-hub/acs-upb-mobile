@@ -25,10 +25,10 @@ class _ShortcutViewState extends State<ShortcutView> {
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
-      title: Text(S.of(context).actionAddShortcut),
+      title: Text(S.current.actionAddShortcut),
       actions: [
         AppScaffoldAction(
-            text: S.of(context).buttonSave,
+            text: S.current.buttonSave,
             onPressed: () {
               if (formKey.currentState.validate()) {
                 widget.onSave(Shortcut(
@@ -58,8 +58,8 @@ class _ShortcutViewState extends State<ShortcutView> {
               TextFormField(
                 controller: labelController,
                 decoration: InputDecoration(
-                  labelText: S.of(context).labelName,
-                  hintText: S.of(context).hintWebsiteLabel,
+                  labelText: S.current.labelName,
+                  hintText: S.current.hintWebsiteLabel,
                   prefixIcon: const Icon(Icons.label_outlined),
                 ),
                 onChanged: (_) => setState(() {}),
@@ -67,7 +67,7 @@ class _ShortcutViewState extends State<ShortcutView> {
               DropdownButtonFormField<ShortcutType>(
                 isExpanded: true,
                 decoration: InputDecoration(
-                  labelText: S.of(context).labelType,
+                  labelText: S.current.labelType,
                   prefixIcon: const Icon(Icons.category_outlined),
                 ),
                 value: selectedType,
@@ -75,7 +75,7 @@ class _ShortcutViewState extends State<ShortcutView> {
                     .map(
                       (type) => DropdownMenuItem<ShortcutType>(
                         value: type,
-                        child: Text(type.toLocalizedString(context)),
+                        child: Text(type.toLocalizedString()),
                       ),
                     )
                     .toList(),
@@ -85,13 +85,13 @@ class _ShortcutViewState extends State<ShortcutView> {
               TextFormField(
                 controller: linkController,
                 decoration: InputDecoration(
-                  labelText: '${S.of(context).labelLink} *',
-                  hintText: S.of(context).hintWebsiteLink,
+                  labelText: '${S.current.labelLink} *',
+                  hintText: S.current.hintWebsiteLink,
                   prefixIcon: const Icon(FeatherIcons.globe),
                 ),
                 validator: (value) {
                   if (!isURL(value, requireProtocol: true)) {
-                    return S.of(context).warningInvalidURL;
+                    return S.current.warningInvalidURL;
                   }
                   return null;
                 },

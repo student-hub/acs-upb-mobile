@@ -5,8 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 
 class QuestionProvider with ChangeNotifier {
-  Future<List<Question>> fetchQuestions(
-      {BuildContext context, int limit}) async {
+  Future<List<Question>> fetchQuestions({int limit}) async {
     try {
       final QuerySnapshot qSnapshot = limit == null
           ? await FirebaseFirestore.instance.collection('faq').get()
@@ -17,9 +16,7 @@ class QuestionProvider with ChangeNotifier {
       return qSnapshot.docs.map(DatabaseQuestion.fromSnap).toList();
     } catch (e) {
       print(e);
-      if (context != null) {
-        AppToast.show(S.of(context).errorSomethingWentWrong);
-      }
+      AppToast.show(S.current.errorSomethingWentWrong);
       return null;
     }
   }

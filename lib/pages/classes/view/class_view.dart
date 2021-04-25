@@ -47,7 +47,7 @@ class _ClassViewState extends State<ClassView> {
     final classProvider = Provider.of<ClassProvider>(context);
 
     return AppScaffold(
-      title: Text(S.of(context).navigationClassInfo),
+      title: Text(S.current.navigationClassInfo),
       actions: [
         AppScaffoldAction(
             icon: Icons.rate_review_outlined,
@@ -61,8 +61,7 @@ class _ClassViewState extends State<ClassView> {
             }),
       ],
       body: FutureBuilder(
-          future: classProvider.fetchClassInfo(widget.classHeader,
-              context: context),
+          future: classProvider.fetchClassInfo(widget.classHeader),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
               classInfo = snapshot.data;
@@ -82,7 +81,7 @@ class _ClassViewState extends State<ClassView> {
                           grading: classInfo.grading,
                           lastUpdated: classInfo.gradingLastUpdated,
                           onSave: (grading) => classProvider.setGrading(
-                              classId: widget.classHeader.id, grading: grading),
+                              widget.classHeader.id, grading),
                         ),
                       ],
                     ),
@@ -108,14 +107,14 @@ class _ClassViewState extends State<ClassView> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    S.of(context).sectionShortcuts,
+                    S.current.sectionShortcuts,
                     style: Theme.of(context).textTheme.headline6,
                   ),
                   GestureDetector(
                     onTap: authProvider.currentUserFromCache.canEditClassInfo
                         ? () {}
                         : () => AppToast.show(
-                            S.of(context).warningNoPermissionToEditClassInfo),
+                            S.current.warningNoPermissionToEditClassInfo),
                     child: IconButton(
                       icon: const Icon(Icons.add_outlined),
                       onPressed:
@@ -129,9 +128,7 @@ class _ClassViewState extends State<ClassView> {
                                         setState(() =>
                                             classInfo.shortcuts.add(shortcut));
                                         classProvider.addShortcut(
-                                            classId: widget.classHeader.id,
-                                            shortcut: shortcut,
-                                            context: context);
+                                            widget.classHeader.id, shortcut);
                                       }),
                                     ),
                                   ))
@@ -148,7 +145,7 @@ class _ClassViewState extends State<ClassView> {
                       padding: const EdgeInsets.all(12),
                       child: Center(
                         child: Text(
-                          S.of(context).labelUnknown,
+                          S.current.labelUnknown,
                           style:
                               TextStyle(color: Theme.of(context).disabledColor),
                         ),
@@ -182,12 +179,12 @@ class _ClassViewState extends State<ClassView> {
           {BuildContext context, String shortcutName, Function onDelete}) =>
       AppDialog(
         icon: const Icon(Icons.delete_outlined),
-        title: S.of(context).actionDeleteShortcut,
-        message: S.of(context).messageDeleteShortcut(shortcutName),
-        info: S.of(context).messageThisCouldAffectOtherStudents,
+        title: S.current.actionDeleteShortcut,
+        message: S.current.messageDeleteShortcut(shortcutName),
+        info: S.current.messageThisCouldAffectOtherStudents,
         actions: [
           AppButton(
-            text: S.of(context).actionDeleteShortcut,
+            text: S.current.actionDeleteShortcut,
             width: 130,
             onTap: onDelete,
           )
@@ -199,7 +196,7 @@ class _ClassViewState extends State<ClassView> {
     final classViewContext = context;
 
     return PositionedTapDetector(
-      onTap: (_) => Utils.launchURL(shortcut.link, context: context),
+      onTap: (_) => Utils.launchURL(shortcut.link),
       onLongPress: (position) async {
         final RenderBox overlay =
             Overlay.of(context).context.findRenderObject();
@@ -210,11 +207,11 @@ class _ClassViewState extends State<ClassView> {
                 Offset.zero & overlay.size),
             items: [
               PopupMenuItem(
-                value: S.of(context).actionDeleteShortcut,
-                child: Text(S.of(context).actionDeleteShortcut),
+                value: S.current.actionDeleteShortcut,
+                child: Text(S.current.actionDeleteShortcut),
               )
             ]);
-        if (option == S.of(context).actionDeleteShortcut) {
+        if (option == S.current.actionDeleteShortcut) {
           await showDialog(
             context: context,
             builder: (context) => _deletionConfirmationDialog(
@@ -224,9 +221,7 @@ class _ClassViewState extends State<ClassView> {
                 Navigator.pop(context); // Pop dialog window
 
                 final success = await classProvider.deleteShortcut(
-                    classId: widget.classHeader.id,
-                    shortcutIndex: index,
-                    context: context);
+                    widget.classHeader.id, index);
                 if (success) {
                   setState(() {
                     classInfo.shortcuts.removeAt(index);
@@ -245,7 +240,7 @@ class _ClassViewState extends State<ClassView> {
           foregroundColor: Theme.of(context).iconTheme.color,
         ),
         title: Text((shortcut.name?.isEmpty ?? true)
-            ? shortcut.type.toLocalizedString(context)
+            ? shortcut.type.toLocalizedString()
             : shortcut.name),
         contentPadding: EdgeInsets.zero,
         dense: true,

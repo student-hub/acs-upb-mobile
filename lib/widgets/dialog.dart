@@ -81,7 +81,7 @@ class AppDialog extends StatelessWidget {
               TextButton(
                 key: const ValueKey('cancel_button'),
                 child: Text(
-                  S.of(context).buttonCancel.toUpperCase(),
+                  S.current.buttonCancel.toUpperCase(),
                   style: Theme.of(context).textTheme.button,
                 ),
                 onPressed: () => Navigator.pop(context),
