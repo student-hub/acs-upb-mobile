@@ -54,10 +54,10 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
       '80% ... 100%'
     ];
     Provider.of<PersonProvider>(context, listen: false)
-        .fetchPeople(context: context)
+        .fetchPeople()
         .then((teachers) => setState(() => classTeachers = teachers));
     Provider.of<FeedbackProvider>(context, listen: false)
-        .fetchQuestions(context: context)
+        .fetchQuestions()
         .then((questions) => setState(() => feedbackQuestions = questions));
   }
 

@@ -5,7 +5,7 @@ import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 
 class FeedbackProvider with ChangeNotifier {
-  Future<List<dynamic>> fetchQuestions({BuildContext context}) async {
+  Future<List<dynamic>> fetchQuestions() async {
     try {
       final DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
           .collection('forms')
@@ -16,9 +16,7 @@ class FeedbackProvider with ChangeNotifier {
       return values;
     } catch (e) {
       print(e);
-      if (context != null) {
-        AppToast.show(S.of(context).errorSomethingWentWrong);
-      }
+        AppToast.show(S.current.errorSomethingWentWrong);
       return null;
     }
   }
