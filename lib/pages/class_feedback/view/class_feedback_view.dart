@@ -1,4 +1,5 @@
-import 'package:acs_upb_mobile/pages/class_feedback/feedback_provider.dart';
+import 'package:acs_upb_mobile/pages/class_feedback/model/class_feedback_answer.dart';
+import 'package:acs_upb_mobile/pages/class_feedback/service/feedback_provider.dart';
 import 'package:acs_upb_mobile/pages/classes/model/class.dart';
 import 'package:acs_upb_mobile/pages/people/model/person.dart';
 import 'package:acs_upb_mobile/pages/people/service/person_provider.dart';
@@ -6,6 +7,7 @@ import 'package:acs_upb_mobile/widgets/autocomplete.dart';
 import 'package:acs_upb_mobile/widgets/icon_text.dart';
 import 'package:acs_upb_mobile/widgets/radio_emoji.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
+import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
@@ -117,25 +119,32 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
   Widget build(BuildContext context) {
     final personProvider = Provider.of<PersonProvider>(context);
     final feedbackProvider = Provider.of<FeedbackProvider>(context);
-    print(feedbackQuestions.length);
-    final List<String> generalQuestions =
-        feedbackProvider.getQuestionsByCategory(feedbackQuestions, 'general');
-    //final List<String> involvementQuestions = feedbackProvider
-    //    .getQuestionsByCategory(feedbackQuestions, 'involvement');
-    //final String involvementQuestion = involvementQuestions?.single;
-    //print(involvementQuestion);
 
-    final List<String> lectureQuestions =
-        feedbackProvider.getQuestionsByCategory(feedbackQuestions, 'lecture');
+    final List<String> generalQuestionsRating = feedbackProvider
+        .getQuestionsByCategoryAndType(feedbackQuestions, 'general', 'rating');
 
-    final List<String> applicationsQuestions = feedbackProvider
-        .getQuestionsByCategory(feedbackQuestions, 'applications');
+    final List<String> generalQuestionsInput = feedbackProvider
+        .getQuestionsByCategoryAndType(feedbackQuestions, 'general', 'input');
 
-    final List<String> homeworkQuestions =
-        feedbackProvider.getQuestionsByCategory(feedbackQuestions, 'homework');
+    final List<String> involvementQuestions =
+        feedbackProvider.getQuestionsByCategoryAndType(
+            feedbackQuestions, 'involvement', 'input');
 
-    final List<String> personalQuestions =
-        feedbackProvider.getQuestionsByCategory(feedbackQuestions, 'personal');
+    final List<String> lectureQuestions = feedbackProvider
+        .getQuestionsByCategoryAndType(feedbackQuestions, 'lecture', 'rating');
+
+    final List<String> applicationsQuestions =
+        feedbackProvider.getQuestionsByCategoryAndType(
+            feedbackQuestions, 'applications', 'rating');
+
+    final List<String> homeworkQuestionsRating = feedbackProvider
+        .getQuestionsByCategoryAndType(feedbackQuestions, 'homework', 'rating');
+
+    final List<String> homeworkQuestionsInput = feedbackProvider
+        .getQuestionsByCategoryAndType(feedbackQuestions, 'homework', 'input');
+
+    final List<String> personalQuestions = feedbackProvider
+        .getQuestionsByCategoryAndType(feedbackQuestions, 'personal', 'input');
 
     return AppScaffold(
       title: Text(S.of(context).navigationClassFeedback),
@@ -221,7 +230,7 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
                             ),
                             const SizedBox(height: 24),
                             Text(
-                              S.of(context).feedbackGeneralQuestion2,
+                              generalQuestionsInput.single,
                               style: const TextStyle(
                                 fontSize: 18,
                               ),
@@ -234,7 +243,7 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
                               onChanged: (_) => setState(() {}),
                             ),
                             const SizedBox(height: 24),
-                            ...generalQuestions.asMap().entries.map(
+                            ...generalQuestionsRating.asMap().entries.map(
                               (entry) {
                                 return EmojiFormField(
                                   question: entry.value,
@@ -268,7 +277,7 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
                             ),
                             const SizedBox(height: 24),
                             Text(
-                              S.of(context).feedbackActivitiesQuestion,
+                              involvementQuestions.single,
                               style: const TextStyle(
                                 fontSize: 18,
                               ),
@@ -380,7 +389,7 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
                             ),
                             const SizedBox(height: 24),
                             Text(
-                              S.of(context).feedbackHomeworkQuestion1,
+                              homeworkQuestionsInput.single,
                               style: const TextStyle(
                                 fontSize: 18,
                               ),
@@ -392,7 +401,10 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
                               ),
                               onChanged: (_) => setState(() {}),
                             ),
-                            ...homeworkQuestions.asMap().entries.map((entry) {
+                            ...homeworkQuestionsRating
+                                .asMap()
+                                .entries
+                                .map((entry) {
                               return EmojiFormField(
                                 question: entry.value,
                                 validator: (selection) {
@@ -469,6 +481,18 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
         text: 'Submit',
         onPressed: () async {
           if (!formKey.currentState.validate()) return;
+
+          final response = ClassFeedbackQuestionAnswer(
+
+          );
+
+          final res =
+              await Provider.of<FeedbackProvider>(context, listen: false)
+                  .addResponse(response);
+          if (res) {
+            Navigator.of(context).pop();
+            AppToast.show(S.current.messageEventAdded);
+          }
         },
       );
 }
