@@ -38,6 +38,7 @@ class Utils {
   static String privacyPolicyURL =
       'https://www.websitepolicies.com/policies/view/IIUFv381';
   static String repoURL = 'https://github.com/acs-upb-mobile/acs-upb-mobile';
+  static const String corsProxyUrl = 'https://cors-anywhere.herokuapp.com';
 
   static Future<void> launchURL(String url) async {
     if (await canLaunch(url)) {
@@ -55,7 +56,7 @@ class Utils {
   }
 
   static String wrapUrlWithCORS(String url) {
-    return 'https://cors-anywhere.herokuapp.com/$url';
+    return '${Utils.corsProxyUrl}/$url';
   }
 
   static PackageInfo packageInfo = PackageInfo(
