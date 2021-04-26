@@ -12,12 +12,15 @@ import 'package:acs_upb_mobile/pages/news_feed/model/news_feed_item.dart';
 import 'package:acs_upb_mobile/pages/news_feed/service/news_provider.dart';
 import 'package:acs_upb_mobile/pages/people/service/person_provider.dart';
 import 'package:acs_upb_mobile/pages/portal/service/website_provider.dart';
+import 'package:acs_upb_mobile/pages/timetable/model/events/uni_event.dart';
+import 'package:acs_upb_mobile/pages/timetable/service/uni_event_provider.dart';
 import 'package:acs_upb_mobile/resources/locale_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:preferences/preferences.dart';
 import 'package:provider/provider.dart';
+import 'package:time_machine/time_machine.dart';
 
 import 'test_utils.dart';
 
@@ -31,6 +34,8 @@ class MockWebsiteProvider extends Mock implements WebsiteProvider {}
 
 class MockPersonProvider extends Mock implements PersonProvider {}
 
+class MockUniEventProvider extends Mock implements UniEventProvider {}
+
 class MockQuestionProvider extends Mock implements QuestionProvider {}
 
 class MockNewsProvider extends Mock implements NewsProvider {}
@@ -41,6 +46,7 @@ void main() {
   FilterProvider mockFilterProvider;
   PersonProvider mockPersonProvider;
   MockQuestionProvider mockQuestionProvider;
+  UniEventProvider mockEventProvider;
   MockNewsProvider mockNewsProvider;
 
   setUp(() async {
@@ -101,12 +107,23 @@ void main() {
         .thenAnswer((_) => Future.value(<NewsFeedItem>[]));
     when(mockNewsProvider.fetchNewsFeedItems(limit: anyNamed('limit')))
         .thenAnswer((_) => Future.value(<NewsFeedItem>[]));
+
+    mockEventProvider = MockUniEventProvider();
+    // ignore: invalid_use_of_protected_member
+    when(mockEventProvider.hasListeners).thenReturn(false);
+    when(mockEventProvider.getUpcomingEvents(LocalDate.today()))
+        .thenAnswer((_) => Future.value(<UniEventInstance>[]));
+    when(mockEventProvider.getUpcomingEvents(LocalDate.today(),
+            limit: anyNamed('limit')))
+        .thenAnswer((_) => Future.value(<UniEventInstance>[]));
   });
 
   group('Login', () {
     testWidgets('Anonymous login', (WidgetTester tester) async {
       await tester.pumpWidget(MultiProvider(providers: [
         ChangeNotifierProvider<AuthProvider>(create: (_) => mockAuthProvider),
+        ChangeNotifierProvider<UniEventProvider>(
+            create: (_) => mockEventProvider),
         ChangeNotifierProvider<WebsiteProvider>(
             create: (_) => mockWebsiteProvider),
         ChangeNotifierProvider<QuestionProvider>(
@@ -137,6 +154,8 @@ void main() {
     testWidgets('Credential login', (WidgetTester tester) async {
       await tester.pumpWidget(MultiProvider(providers: [
         ChangeNotifierProvider<AuthProvider>(create: (_) => mockAuthProvider),
+        ChangeNotifierProvider<UniEventProvider>(
+            create: (_) => mockEventProvider),
         ChangeNotifierProvider<WebsiteProvider>(
             create: (_) => mockWebsiteProvider),
         ChangeNotifierProvider<QuestionProvider>(
@@ -559,6 +578,8 @@ void main() {
         ChangeNotifierProvider<AuthProvider>(create: (_) => mockAuthProvider),
         ChangeNotifierProvider<FilterProvider>(
             create: (_) => mockFilterProvider),
+        ChangeNotifierProvider<UniEventProvider>(
+            create: (_) => mockEventProvider),
         ChangeNotifierProvider<WebsiteProvider>(
             create: (_) => mockWebsiteProvider),
         ChangeNotifierProvider<PersonProvider>(
@@ -595,6 +616,8 @@ void main() {
             create: (_) => mockFilterProvider),
         ChangeNotifierProvider<WebsiteProvider>(
             create: (_) => mockWebsiteProvider),
+        ChangeNotifierProvider<UniEventProvider>(
+            create: (_) => mockEventProvider),
         ChangeNotifierProvider<PersonProvider>(
             create: (_) => mockPersonProvider),
         ChangeNotifierProvider<QuestionProvider>(

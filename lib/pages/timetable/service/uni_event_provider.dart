@@ -332,6 +332,20 @@ class UniEventProvider extends EventProvider<UniEventInstance>
         .partDayEvents);
   }
 
+  Future<Iterable<UniEventInstance>> getUpcomingEvents(LocalDate date,
+      {int limit = 3}) async {
+    return _events
+        .map((events) => events
+            .map((event) => event.generateInstances(
+                intersectingInterval: DateInterval(date, date.addDays(6))))
+            .expand((i) => i)
+            .sortedByStartLength()
+            .where((element) =>
+                element.end.toDateTimeLocal().isAfter(DateTime.now()))
+            .take(limit))
+        .first;
+  }
+
   void updateClasses(ClassProvider classProvider) {
     _classProvider = classProvider;
     _classProvider.fetchUserClassIds(_authProvider.uid).then((classIds) {

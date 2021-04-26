@@ -45,6 +45,9 @@
   "labelEven": "Even",
   "labelOdd": "Odd",
   "labelDay": "Day",
+  "labelToday": "Today",
+  "labelTomorrow": "Tomorrow",
+  "labelNow": "Now",
 
   "sectionShortcuts": "Shortcuts",
   "sectionEvents": "Events",
