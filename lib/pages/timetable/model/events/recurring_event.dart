@@ -40,7 +40,7 @@ class RecurringUniEvent extends UniEvent {
 
   final RecurrenceRule rrule;
 
-  RecurrenceRule get newRrule {
+  RecurrenceRule get rruleBasedOncalendar {
     final RecurrenceRule rrule = this.rrule;
     if (calendar != null && rrule.frequency == Frequency.weekly) {
       var weeks = calendar.nonHolidayWeeks;
