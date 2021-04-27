@@ -56,7 +56,7 @@ extension GoogleCalendarServices on UniEventProvider {
       final String rruleBasedOnCalendarString = uniEvent.rruleBasedOnCalendar
           .toString()
           .replaceAll(RegExp(r'T000000'), 'T000000Z');
-      // TODO(bogpie): What if another rrule doesn't start at midnight. Will keep this implementation until my related 'rrule' package issue will be resolved.
+      // TODO(bogpie): What if another rrule doesn't start at midnight? Will keep this implementation until my related 'rrule' package issue will be resolved.
       print(rruleBasedOnCalendarString);
       googleCalendarEvent.recurrence = [rruleBasedOnCalendarString];
     }
