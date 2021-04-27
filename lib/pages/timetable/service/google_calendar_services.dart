@@ -60,8 +60,6 @@ extension GoogleCalendarServices on UniEventProvider {
           uniEvent.rruleBasedOncalendar.toString();
       rruleBasedOncalendarString =
           rruleBasedOncalendarString.replaceAll(RegExp(r'T000000'), 'T000000Z');
-      rruleBasedOncalendarString =
-          rruleBasedOncalendarString.replaceAll(RegExp(r'DAILY'), 'YEARLY');
       print(rruleBasedOncalendarString);
       googleCalendarEvent.recurrence.add(rruleBasedOncalendarString);
     }
