@@ -53,14 +53,13 @@ extension GoogleCalendarServices on UniEventProvider {
       ..location = uniEvent.location;
 
     if (uniEvent is RecurringUniEvent) {
-      googleCalendarEvent.recurrence = <String>[];
       String rruleBasedOnCalendarString =
           uniEvent.rruleBasedOnCalendar.toString();
       rruleBasedOnCalendarString =
           rruleBasedOnCalendarString.replaceAll(RegExp(r'T000000'), 'T000000Z');
       // TODO(bogpie): What if another rrule doesn't start at midnight. Will keep this implementation until my related 'rrule' package issue will be resolved.
       print(rruleBasedOnCalendarString);
-      googleCalendarEvent.recurrence.add(rruleBasedOnCalendarString);
+      googleCalendarEvent.recurrence = [rruleBasedOnCalendarString];
     }
 
     return googleCalendarEvent;
