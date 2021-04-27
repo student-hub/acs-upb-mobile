@@ -40,7 +40,6 @@ extension GoogleCalendarServices on UniEventProvider {
       ..useDefault = false;
     */
     // TODO(bogpie): Require user to input how many minutes before a notification from GCal (including the "no notification" option)
-
     googleCalendarEvent
       //..reminders = eventReminders
       ..start = start
