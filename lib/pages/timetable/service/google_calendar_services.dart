@@ -33,6 +33,8 @@ extension GoogleCalendarServices on UniEventProvider {
     // TODO(bogpie): Require user to input how many minutes before a notification from GCal (including the "no notification" option)
 
     final ClassHeader classHeader = uniEvent.classHeader;
+
+    /*
     final EventReminders eventReminders = EventReminders();
     final EventReminder eventReminder = EventReminder()
       ..minutes = 30
@@ -40,8 +42,11 @@ extension GoogleCalendarServices on UniEventProvider {
     eventReminders
       ..overrides = <EventReminder>[eventReminder]
       ..useDefault = false;
+    */
+    // TODO(bogpie): Require user to input how many minutes before a notification from GCal (including the "no notification" option)
 
     googleCalendarEvent
+      //..reminders = eventReminders
       ..start = start
       ..end = end
       ..summary = classHeader.acronym
@@ -50,8 +55,8 @@ extension GoogleCalendarServices on UniEventProvider {
               .toLocalizedString(context)*/
       // TODO(bogpie): Use a relevant description, like type of class + lecturer
       // TODO(bogpie): "Closest" color (from a list) - GCal works with limited no. of colors
-      ..location = uniEvent.location
-      ..reminders = eventReminders;
+      ..location = uniEvent.location;
+
 
     if (uniEvent is RecurringUniEvent) {
       googleCalendarEvent.recurrence = <String>[];
