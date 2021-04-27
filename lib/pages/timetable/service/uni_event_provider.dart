@@ -307,20 +307,11 @@ class UniEventProvider extends EventProvider<UniEventInstance>
   Future<void> exportToGoogleCalendar() async {
     final Stream<List<UniEvent>> eventsStream = _events;
     final List<UniEvent> streamElement = await eventsStream.first;
-
     final List<g_cal.Event> googleCalendarEvents = [];
-
     for (final UniEvent eventInstance in streamElement) {
-      //print('found event : ${eventInstance.classHeader.acronym}');
-      //print('which is a ${eventInstance.type}');
       final g_cal.Event googleCalendarEvent = convertEvent(eventInstance);
       googleCalendarEvents.add(googleCalendarEvent);
     }
-
-    ///RRULE:FREQ=WEEKLY;UNTIL=20210605 works
-    ///RRULE:FREQ=WEEKLY;UNTIL=20210605T000000 doesn't work
-    ///RRULE:FREQ=WEEKLY;UNTIL=20210605T000000;INTERVAL=1;BYDAY=WE doesn't work
-
     await insertGoogleEvents(googleCalendarEvents);
   }
 
