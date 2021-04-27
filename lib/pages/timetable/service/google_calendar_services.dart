@@ -61,12 +61,12 @@ extension GoogleCalendarServices on UniEventProvider {
     if (uniEvent is RecurringUniEvent) {
       googleCalendarEvent.recurrence = <String>[];
 
-      String rruleBasedOncalendarString =
-          uniEvent.rruleBasedOncalendar.toString();
-      rruleBasedOncalendarString =
-          rruleBasedOncalendarString.replaceAll(RegExp(r'T000000'), 'T000000Z');
-      print(rruleBasedOncalendarString);
-      googleCalendarEvent.recurrence.add(rruleBasedOncalendarString);
+      String rruleBasedOnCalendarString =
+          uniEvent.rruleBasedOnCalendar.toString();
+      rruleBasedOnCalendarString =
+          rruleBasedOnCalendarString.replaceAll(RegExp(r'T000000'), 'T000000Z');
+      print(rruleBasedOnCalendarString);
+      googleCalendarEvent.recurrence.add(rruleBasedOnCalendarString);
     }
 
     return googleCalendarEvent;
@@ -80,7 +80,8 @@ extension GoogleCalendarServices on UniEventProvider {
     await FlutterWebBrowser.openWebPage(url: url);
   }
 
-  Future<void> insertGoogleEvents(List<g_cal.Event> googleCalendarEvents) async {
+  Future<void> insertGoogleEvents(
+      List<g_cal.Event> googleCalendarEvents) async {
     await clientViaUserConsent(
             GoogleApiHelper.credentials, GoogleApiHelper.scopes, prompt)
         .then(

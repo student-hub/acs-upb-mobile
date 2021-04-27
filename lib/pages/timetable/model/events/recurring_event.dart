@@ -40,7 +40,7 @@ class RecurringUniEvent extends UniEvent {
 
   final RecurrenceRule rrule;
 
-  RecurrenceRule get rruleBasedOncalendar {
+  RecurrenceRule get rruleBasedOnCalendar {
     final RecurrenceRule rrule = this.rrule;
     if (calendar != null && rrule.frequency == Frequency.weekly) {
       var weeks = calendar.nonHolidayWeeks;
@@ -79,7 +79,7 @@ class RecurringUniEvent extends UniEvent {
   @override
   Iterable<UniEventInstance> generateInstances(
       {DateInterval intersectingInterval}) sync* {
-    RecurrenceRule rrule = rruleBasedOncalendar;
+    RecurrenceRule rrule = rruleBasedOnCalendar;
 
     // Calculate recurrences
     int i = 0;
