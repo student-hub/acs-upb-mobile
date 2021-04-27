@@ -79,38 +79,7 @@ class RecurringUniEvent extends UniEvent {
   @override
   Iterable<UniEventInstance> generateInstances(
       {DateInterval intersectingInterval}) sync* {
-    RecurrenceRule rrule = this.rrule;
-    if (calendar != null && rrule.frequency == Frequency.weekly) {
-      var weeks = calendar.nonHolidayWeeks;
-
-      // Get the correct sequence of weeks for this event.
-      //
-      // For example, if the first academic calendar week is 40 and the event
-      // starts on week 41 and repeats every two weeks - get every odd-index
-      // week in the non holiday weeks.
-      // This is necessary because if an "even" week is followed by a one-week
-      // holiday, the week that comes after the holiday should be considered
-      // an "odd" week, even though its number in the calendar would have the
-      // same parity as the week before the holiday.
-      if (rrule.interval != 1) {
-        // Check whether the first calendar week is odd
-        final bool startOdd = weeks.first % 2 == 1;
-        weeks = weeks
-            .whereIndex((index) =>
-                (startOdd ? index : index + 1) % rrule.interval !=
-                weeks.lookup(WeekYearRules.iso
-                        .getWeekOfWeekYear(start.calendarDate)) %
-                    rrule.interval)
-            .toSet();
-      }
-      rrule = rrule.copyWith(
-          frequency: Frequency.daily,
-          interval: 1,
-          byWeekDays: rrule.byWeekDays.isNotEmpty
-              ? rrule.byWeekDays
-              : {ByWeekDayEntry(start.dayOfWeek)},
-          byWeeks: weeks);
-    }
+    RecurrenceRule rrule = rruleBasedOncalendar;
 
     // Calculate recurrences
     int i = 0;
