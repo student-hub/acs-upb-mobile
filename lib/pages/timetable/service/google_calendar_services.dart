@@ -11,7 +11,7 @@ import 'package:time_machine/time_machine.dart';
 
 extension GoogleCalendarServices on UniEventProvider {
   g_cal.Event convertEvent(UniEvent uniEvent) {
-    final g_cal.Event _gCalEvent = g_cal.Event();
+    final g_cal.Event googleCalendarEvent = g_cal.Event();
 
     final g_cal.EventDateTime start = g_cal.EventDateTime();
     final DateTime startDateTime = uniEvent.start.toDateTimeLocal();
@@ -41,7 +41,7 @@ extension GoogleCalendarServices on UniEventProvider {
       ..overrides = <EventReminder>[eventReminder]
       ..useDefault = false;
 
-    _gCalEvent
+    googleCalendarEvent
       ..start = start
       ..end = end
       ..summary = classHeader.acronym
@@ -54,7 +54,7 @@ extension GoogleCalendarServices on UniEventProvider {
       ..reminders = eventReminders;
 
     if (uniEvent is RecurringUniEvent) {
-      _gCalEvent.recurrence = <String>[];
+      googleCalendarEvent.recurrence = <String>[];
 
       String rruleBasedOncalendarString =
           uniEvent.rruleBasedOncalendar.toString();
@@ -63,10 +63,10 @@ extension GoogleCalendarServices on UniEventProvider {
       rruleBasedOncalendarString =
           rruleBasedOncalendarString.replaceAll(RegExp(r'DAILY'), 'YEARLY');
       print(rruleBasedOncalendarString);
-      _gCalEvent.recurrence.add(rruleBasedOncalendarString);
+      googleCalendarEvent.recurrence.add(rruleBasedOncalendarString);
     }
 
-    return _gCalEvent;
+    return googleCalendarEvent;
   }
 
   void prompt(String url) async {
@@ -77,7 +77,7 @@ extension GoogleCalendarServices on UniEventProvider {
     await FlutterWebBrowser.openWebPage(url: url);
   }
 
-  Future<void> insertGoogleEvents(List<g_cal.Event> _gCalEvents) async {
+  Future<void> insertGoogleEvents(List<g_cal.Event> googleCalendarEvents) async {
     await clientViaUserConsent(
             GoogleApiHelper.credentials, GoogleApiHelper.scopes, prompt)
         .then(
@@ -117,7 +117,7 @@ extension GoogleCalendarServices on UniEventProvider {
 
         if (returnedCalendar is g_cal.Calendar) {
           final String calendarId = returnedCalendar.id;
-          for (final g_cal.Event event in _gCalEvents) {
+          for (final g_cal.Event event in googleCalendarEvents) {
             try {
               await calendarApi.events.insert(event, calendarId).then(
                 (value) {
