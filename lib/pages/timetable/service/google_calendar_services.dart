@@ -16,8 +16,8 @@ extension GoogleCalendarServices on UniEventProvider {
     final DateTime startDateTime = uniEvent.start.toDateTimeLocal();
 
     start
-      ..timeZone =
-          'Europe/Bucharest' // google calendar has different timezone formats
+      ..timeZone = 'Europe/Bucharest'
+      // google calendar has different timezone formats
       ..dateTime = startDateTime;
 
     final Duration duration = uniEvent.duration.toDuration();
@@ -49,8 +49,8 @@ extension GoogleCalendarServices on UniEventProvider {
       ..colorId = (uniEvent.type.googleCalendarColor.index).toString()
 /*    ..description =  eventInstance.title ?? eventInstance.mainEvent.type
               .toLocalizedString(context)*/
-      // TODO(bogpie): Use a relevant description, like type of class + lecturer
-      // TODO(bogpie): "Closest" color (from a list) - GCal works with limited no. of colors
+      // TODO(bogpie): Use a relevant description, like type of class + lecturer - future PR
+      // TODO(bogpie): "Closest" color (from a list) - GCal works with limited no. of colors - future PR
       ..location = uniEvent.location;
 
     if (uniEvent is RecurringUniEvent) {
@@ -82,8 +82,8 @@ extension GoogleCalendarServices on UniEventProvider {
         .then(
       //(AuthClient client) async {
       (AutoRefreshingAuthClient client) async {
-        // TODO(bogpie): Remember if a user already gave access to his Google Calendar
-        // TODO(bogpie): Automatically close browser
+        // TODO(bogpie): Remember if a user already gave access to his Google Calendar - future PR (Sync)
+        // TODO(bogpie): Automatically close browser (not that important now, it can be done manually from the X button on the in-app browser)
 
         final g_cal.CalendarApi calendarApi = g_cal.CalendarApi(client);
         final g_cal.Calendar calendar = g_cal.Calendar()
