@@ -55,7 +55,6 @@ extension GoogleCalendarServices on UniEventProvider {
 
     if (uniEvent is RecurringUniEvent) {
       googleCalendarEvent.recurrence = <String>[];
-
       String rruleBasedOnCalendarString =
           uniEvent.rruleBasedOnCalendar.toString();
       rruleBasedOnCalendarString =
@@ -78,6 +77,7 @@ extension GoogleCalendarServices on UniEventProvider {
 
   Future<void> insertGoogleEvents(
       List<g_cal.Event> googleCalendarEvents) async {
+    //This is the function for getting the user's consent to export events to Google Calendar. See comments in original method and in GoogleApiHelper
     await clientViaUserConsent(
             GoogleApiHelper.credentials, GoogleApiHelper.scopes, prompt)
         .then(

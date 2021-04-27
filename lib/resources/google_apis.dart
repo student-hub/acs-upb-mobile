@@ -8,12 +8,12 @@ class GoogleApiHelper {
   GoogleApiHelper();
 
   static const List<String> _scopes = [CalendarApi.calendarScope];
-
   static List<String> get scopes => _scopes;
+  // allows us to see, edit, share, and permanently delete all the calendars you can access using Google Calendar.
 
   static ClientId get credentials {
     String _clientIdString;
-
+  // Used to identify a single app to Google's OAuth servers, so it is dependent on the app, not on the user). The following are copied from Google Cloud Console.
     if (Platform.isAndroid) {
       _clientIdString =
           '611150208061-4ftun8ln4v9hm1mocqs1vqcftaanj8sj.apps.googleusercontent.com';
