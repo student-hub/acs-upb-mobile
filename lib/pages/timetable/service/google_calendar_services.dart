@@ -5,9 +5,8 @@ import 'package:acs_upb_mobile/pages/timetable/service/uni_event_provider.dart';
 import 'package:acs_upb_mobile/resources/google_apis.dart';
 import 'package:flutter_web_browser/flutter_web_browser.dart';
 import 'package:googleapis/calendar/v3.dart' as g_cal;
-import 'package:googleapis/calendar/v3.dart';
 import 'package:googleapis_auth/auth_io.dart';
-import 'package:time_machine/time_machine.dart';
+import 'package:acs_upb_mobile/resources/utils.dart';
 
 extension GoogleCalendarServices on UniEventProvider {
   g_cal.Event convertEvent(UniEvent uniEvent) {
@@ -20,17 +19,14 @@ extension GoogleCalendarServices on UniEventProvider {
       ..timeZone =
           'Europe/Bucharest' // google calendar has different timezone formats
       ..dateTime = startDateTime;
-    final Period eventPeriod = uniEvent.duration;
-    final Duration duration =
-        Duration(hours: eventPeriod.hours, minutes: eventPeriod.minutes);
+
+    final Duration duration = uniEvent.duration.toDuration();
 
     final g_cal.EventDateTime end = g_cal.EventDateTime();
     final DateTime endDateTime = startDateTime.add(duration);
     end
       ..timeZone = 'Europe/Bucharest'
       ..dateTime = endDateTime;
-
-    // TODO(bogpie): Require user to input how many minutes before a notification from GCal (including the "no notification" option)
 
     final ClassHeader classHeader = uniEvent.classHeader;
 
@@ -56,7 +52,6 @@ extension GoogleCalendarServices on UniEventProvider {
       // TODO(bogpie): Use a relevant description, like type of class + lecturer
       // TODO(bogpie): "Closest" color (from a list) - GCal works with limited no. of colors
       ..location = uniEvent.location;
-
 
     if (uniEvent is RecurringUniEvent) {
       googleCalendarEvent.recurrence = <String>[];

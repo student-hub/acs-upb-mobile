@@ -1,11 +1,13 @@
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/navigation/routes.dart';
+import 'package:acs_upb_mobile/pages/timetable/model/events/uni_event.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:pedantic/pedantic.dart';
 import 'package:provider/provider.dart';
+import 'package:time_machine/time_machine.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 export 'package:acs_upb_mobile/resources/platform.dart'
@@ -62,4 +64,10 @@ class Utils {
 
   static PackageInfo packageInfo = PackageInfo(
       version: 'Unknown', buildNumber: 'Unknown', appName: 'Unknown');
+}
+
+extension PeriodExtension on Period {
+  Duration toDuration() {
+    return Duration(hours: hours, minutes: minutes);
+  }
 }
