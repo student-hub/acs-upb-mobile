@@ -129,24 +129,6 @@ class _TimetablePageState extends State<TimetablePage> {
           ],
         ),
       ),
-      floatingActionButton: Builder(
-        builder: (BuildContext context) {
-          final user = Provider.of<AuthProvider>(context, listen: false)
-              .currentUserFromCache;
-          if (user != null) {
-            return FloatingActionButton(
-              child: const Icon(Icons.sync),
-              onPressed: () async {
-                final eventProvider =
-                    Provider.of<UniEventProvider>(context, listen: false);
-                await eventProvider.exportToGoogleCalendar();
-              },
-            );
-          } else {
-            return const FloatingActionButton(onPressed: null);
-          }
-        },
-      ),
     );
   }
 

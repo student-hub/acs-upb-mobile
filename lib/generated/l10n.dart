@@ -1,7 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-
 import 'intl/messages_all.dart';
 
 // **************************************************************************
@@ -10,6 +9,8 @@ import 'intl/messages_all.dart';
 // **************************************************************************
 
 // ignore_for_file: non_constant_identifier_names, lines_longer_than_80_chars
+// ignore_for_file: join_return_with_assignment, prefer_final_in_for_each
+// ignore_for_file: avoid_redundant_argument_values
 
 class S {
   S();
@@ -1814,6 +1815,16 @@ class S {
     );
   }
 
+  /// `Export your events to Google Calendar`
+  String get settingsExportToGoogleCalendar {
+    return Intl.message(
+      'Export your events to Google Calendar',
+      name: 'settingsExportToGoogleCalendar',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Learning`
   String get websiteCategoryLearning {
     return Intl.message(
@@ -2561,6 +2572,16 @@ class S {
       name: 'infoReadThePolicy',
       desc: '',
       args: [appName],
+    );
+  }
+
+  /// `Export filtered events from Timetable`
+  String get infoExportToGoogleCalendar {
+    return Intl.message(
+      'Export filtered events from Timetable',
+      name: 'infoExportToGoogleCalendar',
+      desc: '',
+      args: [],
     );
   }
 

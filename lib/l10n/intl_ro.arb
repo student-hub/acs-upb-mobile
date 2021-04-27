@@ -189,6 +189,7 @@
   "settingsItemLanguageRomanian": "Română",
   "settingsItemLanguageAuto": "Auto",
   "settingsRelevanceFilter": "Filtru de relevanță",
+  "settingsExportToGoogleCalendar": "Exportează-ți evenimentele în Google Calendar",
 
   "websiteCategoryLearning": "Cursuri",
   "websiteCategoryAdministrative": "Administrativ",
@@ -269,6 +270,7 @@
   "infoEmail": "Acesta este același username pe care îl folosești să te loghezi pe {forum}.",
   "infoLoading": "Se încarcă...",
   "infoReadThePolicy": "Citește politica {appName}",
+  "infoExportToGoogleCalendar": "Exportează evenimentele filtrate din Orar",
 
   "stringEmailDomain": "@stud.acs.upb.ro",
   "stringForum": "cs.curs.pub.ro",

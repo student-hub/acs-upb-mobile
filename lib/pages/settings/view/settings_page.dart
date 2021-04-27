@@ -4,6 +4,7 @@ import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/navigation/routes.dart';
 import 'package:acs_upb_mobile/pages/settings/service/request_provider.dart';
+import 'package:acs_upb_mobile/pages/timetable/service/uni_event_provider.dart';
 import 'package:acs_upb_mobile/resources/locale_provider.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/widgets/icon_text.dart';
@@ -89,6 +90,21 @@ class _SettingsPageState extends State<SettingsPage> {
                     ],
                     onlySaveOnSubmit: false,
                   ),
+                ),
+                PreferenceTitle('Google Calendar'),
+                // this needs no translation IMO
+                ListTile(
+                  key: const ValueKey('google_calendar'),
+                  onTap: () async {
+                    final eventProvider =
+                        Provider.of<UniEventProvider>(context, listen: false);
+                    await eventProvider.exportToGoogleCalendar();
+                  },
+                  enabled: Provider.of<AuthProvider>(context, listen: false)
+                          .currentUserFromCache !=
+                      null,
+                  title: Text(S.of(context).settingsExportToGoogleCalendar),
+                  subtitle: Text(S.of(context).infoExportToGoogleCalendar),
                 ),
                 PreferenceTitle(S.of(context).settingsTitleDataControl),
                 ListTile(
