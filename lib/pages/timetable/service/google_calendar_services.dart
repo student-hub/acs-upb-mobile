@@ -64,11 +64,7 @@ extension GoogleCalendarServices on UniEventProvider {
     return googleCalendarEvent;
   }
 
-  void prompt(String url) async {
-    print('Please go to the following URL and grant access:');
-    print('  => $url');
-    print('');
-
+  Future<void> prompt(String url) async {
     await FlutterWebBrowser.openWebPage(url: url);
   }
 
