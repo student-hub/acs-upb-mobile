@@ -14,7 +14,7 @@ class GoogleApiHelper {
 
   static ClientId get credentials {
     String _clientIdString;
-    // Used to identify a single app to Google's OAuth servers, so it is dependent on the app, not on the user). The following are copied from Google Cloud Console.
+    // Our project IDs, used to identify an app to Google's OAuth servers.
     if (Platform.isAndroid) {
       _clientIdString =
           '611150208061-4ftun8ln4v9hm1mocqs1vqcftaanj8sj.apps.googleusercontent.com';
