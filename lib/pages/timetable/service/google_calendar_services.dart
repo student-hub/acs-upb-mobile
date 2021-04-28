@@ -30,33 +30,17 @@ extension GoogleCalendarServices on UniEventProvider {
 
     final ClassHeader classHeader = uniEvent.classHeader;
 
-    /*
-    final EventReminders eventReminders = EventReminders();
-    final EventReminder eventReminder = EventReminder()
-      ..minutes = 30
-      ..method = 'popup';
-    eventReminders
-      ..overrides = <EventReminder>[eventReminder]
-      ..useDefault = false;
-    */
-    // TODO(bogpie): Require user to input how many minutes before a notification from GCal (including the "no notification" option)
     googleCalendarEvent
-      //..reminders = eventReminders
       ..start = start
       ..end = end
       ..summary = classHeader.acronym
       ..colorId = (uniEvent.type.googleCalendarColor.index).toString()
-/*    ..description =  eventInstance.title ?? eventInstance.mainEvent.type
-              .toLocalizedString(context)*/
-      // TODO(bogpie): Use a relevant description, like type of class + lecturer - future PR
-      // TODO(bogpie): "Closest" color (from a list) - GCal works with limited no. of colors - future PR
       ..location = uniEvent.location;
 
     if (uniEvent is RecurringUniEvent) {
       final String rruleBasedOnCalendarString = uniEvent.rruleBasedOnCalendar
           .toString()
           .replaceAll(RegExp(r'T000000'), 'T000000Z');
-      // TODO(bogpie): What if another rrule doesn't start at midnight? Will keep this implementation until my related 'rrule' package issue will be resolved.
       print(rruleBasedOnCalendarString);
       googleCalendarEvent.recurrence = [rruleBasedOnCalendarString];
     }
@@ -74,7 +58,6 @@ extension GoogleCalendarServices on UniEventProvider {
     await clientViaUserConsent(
             GoogleApiHelper.credentials, GoogleApiHelper.scopes, prompt)
         .then(
-      //(AuthClient client) async {
       (AutoRefreshingAuthClient client) async {
         final g_cal.CalendarApi calendarApi = g_cal.CalendarApi(client);
         final g_cal.Calendar calendar = g_cal.Calendar()
