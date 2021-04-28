@@ -76,7 +76,6 @@ extension GoogleCalendarServices on UniEventProvider {
         .then(
       //(AuthClient client) async {
       (AutoRefreshingAuthClient client) async {
-        // TODO(bogpie): Remember if a user already gave access to his Google Calendar - future PR (Sync)
         // TODO(bogpie): Automatically close browser (not that important now, it can be done manually from the X button on the in-app browser)
 
         final g_cal.CalendarApi calendarApi = g_cal.CalendarApi(client);
