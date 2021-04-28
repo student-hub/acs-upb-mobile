@@ -86,8 +86,7 @@ class _FilterDropdownState extends State<FilterDropdown> {
     widget.controller?._dropdownTreeState = this;
 
     return FutureBuilder(
-      future:
-          Provider.of<FilterProvider>(context).fetchFilter(context: context),
+      future: Provider.of<FilterProvider>(context).fetchFilter(),
       builder: (context, snap) {
         if (snap.hasData) {
           filter = snap.data;

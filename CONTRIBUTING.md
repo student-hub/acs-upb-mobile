@@ -667,7 +667,7 @@ The project currently has two functions set up to perform daily backups of the d
 ## Internationalization
 
 ### On-device
-All strings that are visible to the user should be internationalised and set in the corresponding `.arb` files within the [`l10n`](lib/l10n) folder. The [Flutter Intl](https://plugins.jetbrains.com/plugin/13666-flutter-intl) Android Studio plugin does all the hard work for you by generating the code when you save an `.arb` file. Strings can then be accessed using `S.of(context).stringID`.
+All strings that are visible to the user should be internationalised and set in the corresponding `.arb` files within the [`l10n`](lib/l10n) folder. The [Flutter Intl](https://plugins.jetbrains.com/plugin/13666-flutter-intl) Android Studio plugin does all the hard work for you by generating the code when you save an `.arb` file. Strings can then be accessed using `S.current.stringID`.
 
 ### Remote
 In the database, internationalized strings are saved as a dictionary where the locale is the key:

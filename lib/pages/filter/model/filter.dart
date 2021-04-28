@@ -201,8 +201,8 @@ class FilterNode {
   String localizedName(BuildContext context) => localizeName(name, context);
 
   static String localizeName(String name, BuildContext context) {
-    if (name == 'BSc') return S.of(context).filterNodeNameBSc;
-    if (name == 'MSc') return S.of(context).filterNodeNameMSc;
+    if (name == 'BSc') return S.current.filterNodeNameBSc;
+    if (name == 'MSc') return S.current.filterNodeNameMSc;
 
     return name;
   }

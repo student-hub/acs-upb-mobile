@@ -1,0 +1,8 @@
+Added
+  - Now you can see events coming up directly on your Homepage 🎉
+
+Improved
+  - Did some internal ✨magic✨ to improve the app
+
+Fixed
+  - News feed not working due to an invalid certificate of acs.pub.ro

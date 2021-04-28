@@ -45,6 +45,9 @@
   "labelEven": "Pară",
   "labelOdd": "Impară",
   "labelDay": "Zi",
+  "labelToday": "Astăzi",
+  "labelTomorrow": "Mâine",
+  "labelNow": "Acum",
 
   "sectionShortcuts": "Scurtături",
   "sectionEvents": "Evenimente",
@@ -93,7 +96,7 @@
   "actionChooseClasses": "Alege materii",
   "actionAddShortcut": "Adaugă scurtătură",
   "actionDeleteShortcut": "Șterge scurtătură",
-  "actionShowMore": "Arată mai multe",
+  "actionShowMore": "Mai multe",
   "actionEditGrading": "Modifică punctaj",
   "actionContribute": "Contribuie",
   "actionOpenFilter": "Deschide filtru",

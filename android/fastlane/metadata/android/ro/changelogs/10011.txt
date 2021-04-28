@@ -1,0 +1,8 @@
+Adăugat
+  - Acum se pot vedea eventimentele următoare direct din pagina Acasă 🎉
+
+Îmbunătățit
+  - Puțină ✨magie✨ internă ca să îmbunătățim aplicația
+
+Rezolvat
+  - Știrile nu funcționau din cauza unui certificat invalid al acs.pub.ro
