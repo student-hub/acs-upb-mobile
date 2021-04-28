@@ -102,10 +102,10 @@ class _SettingsPageState extends State<SettingsPage> {
                   enabled: Provider.of<AuthProvider>(context, listen: false)
                           .currentUserFromCache !=
                       null,
-                  title: Text(S.of(context).settingsExportToGoogleCalendar),
-                  subtitle: Text(S.of(context).infoExportToGoogleCalendar),
+                  title: Text(S.current.settingsExportToGoogleCalendar),
+                  subtitle: Text(S.current.infoExportToGoogleCalendar),
                 ),
-                PreferenceTitle(S.of(context).settingsTitleDataControl),
+                PreferenceTitle(S.current.settingsTitleDataControl),
                 ListTile(
                   key: const ValueKey('ask_permissions'),
                   onTap: () {
