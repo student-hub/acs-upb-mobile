@@ -47,21 +47,6 @@ enum GoogleCalendarColorNames {
   tomato
 }
 
-enum GoogleCalendarColorHexVaues {
-  undefined,
-  hexID7986cb,
-  hexID33b679,
-  hexID8e24aa,
-  hexIDe67c73,
-  hexIDf6c026,
-  hexIDf5511d,
-  hexID039be5,
-  hexID616161,
-  hexID3f51b5,
-  hexID0b8043,
-  hexIDd60000
-}
-
 extension UniEventTypeGCalColor on UniEventType {
   GoogleCalendarColorNames get googleCalendarColor {
     switch (this) {
