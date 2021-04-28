@@ -91,7 +91,6 @@ class _SettingsPageState extends State<SettingsPage> {
                     onlySaveOnSubmit: false,
                   ),
                 ),
-                PreferenceTitle(S.current.settingsTitleDataControl),
                 PreferenceTitle('Google Calendar'),
                 // this needs no translation IMO
                 ListTile(
