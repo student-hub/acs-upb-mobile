@@ -251,6 +251,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "settingsTitleDataControl" : MessageLookupByLibrary.simpleMessage("Control date"),
     "settingsTitleLocalization" : MessageLookupByLibrary.simpleMessage("Localizare"),
     "settingsTitlePersonalization" : MessageLookupByLibrary.simpleMessage("Personalizare"),
+    "settingsTitleTimetable" : MessageLookupByLibrary.simpleMessage("Orar"),
     "shortcutTypeClassbook" : MessageLookupByLibrary.simpleMessage("Catalog"),
     "shortcutTypeMain" : MessageLookupByLibrary.simpleMessage("Pagina principală"),
     "shortcutTypeOther" : MessageLookupByLibrary.simpleMessage("Alta"),

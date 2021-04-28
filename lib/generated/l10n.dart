@@ -1845,11 +1845,21 @@ class S {
     );
   }
 
-  /// `Export your events to Google Calendar`
+  /// `Export events to Google Calendar`
   String get settingsExportToGoogleCalendar {
     return Intl.message(
-      'Export your events to Google Calendar',
+      'Export events to Google Calendar',
       name: 'settingsExportToGoogleCalendar',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Timetable`
+  String get settingsTitleTimetable {
+    return Intl.message(
+      'Timetable',
+      name: 'settingsTitleTimetable',
       desc: '',
       args: [],
     );

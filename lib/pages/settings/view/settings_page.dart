@@ -91,8 +91,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     onlySaveOnSubmit: false,
                   ),
                 ),
-                PreferenceTitle('Google Calendar'),
-                // this needs no translation IMO
+                PreferenceTitle(S.current.settingsTitleTimetable),
                 ListTile(
                   key: const ValueKey('google_calendar'),
                   onTap: () async {
