@@ -75,7 +75,7 @@ dependencies:
   flutter_markdown: ^0.4.4
 
   # Use an in-app browser to ask user for Google Calendar permission
-  flutter_web_browser: any
+  flutter_web_browser: ^0.13.1
 
   # Used for Google Calendar API
   googleapis: any
