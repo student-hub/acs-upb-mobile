@@ -115,6 +115,18 @@ class _MyAppState extends State<MyApp> {
     );
   }
 
+  ChipThemeData defaultChipThemeData(Brightness brightness) => ChipThemeData.fromDefaults(
+    brightness: brightness,
+    secondaryColor: _accentColor,
+    labelStyle: ThemeData()
+        .accentTextTheme
+        .apply(
+        fontFamily: 'Montserrat',
+        bodyColor: _accentColor,
+        displayColor: _accentColor)
+        .bodyText2,
+  );
+
   @override
   Widget build(BuildContext context) {
     return DynamicTheme(
@@ -132,6 +144,17 @@ class _MyAppState extends State<MyApp> {
         toggleableActiveColor: _accentColor,
         fontFamily: 'Montserrat',
         primaryColor: const Color(0xFF4DB5E4),
+        chipTheme: ChipThemeData(
+          brightness: brightness,
+          selectedColor: _accentColor.withOpacity(0.3),
+          secondarySelectedColor: const Color(0xFF292562),
+          backgroundColor: defaultChipThemeData(brightness).backgroundColor.withOpacity(0.1),
+          disabledColor: defaultChipThemeData(brightness).disabledColor,
+          padding: defaultChipThemeData(brightness).padding,
+          labelStyle: defaultChipThemeData(brightness).labelStyle,
+          secondaryLabelStyle: defaultChipThemeData(brightness).secondaryLabelStyle.apply(color: _accentColor),
+          checkmarkColor: _accentColor,
+        ),
       ),
       themedWidgetBuilder: (context, theme) {
         return OKToast(

@@ -695,8 +695,21 @@ class ChipFormField extends FormField<Map<Localizable, bool>> {
                                 return Row(
                                   children: [
                                     FilterChip(
-                                      label: Text(labels[index]
-                                          .toLocalizedString(context)),
+                                      label: Text(
+                                        labels[index]
+                                            .toLocalizedString(context),
+                                        style: TextStyle(
+                                          color: state.value[labels[index]]
+                                              ? Theme.of(context).accentColor
+                                              : Theme.of(context)
+                                                  .textTheme
+                                                  .bodyText2
+                                                  .color,
+                                          // fontWeight: state.value[labels[index]]
+                                          //     ? FontWeight.bold
+                                          //     : FontWeight.normal,
+                                        ),
+                                      ),
                                       selected: state.value[labels[index]],
                                       onSelected: (selected) {
                                         state.value[labels[index]] = selected;
