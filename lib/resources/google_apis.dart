@@ -7,14 +7,14 @@ import 'package:googleapis/calendar/v3.dart';
 class GoogleApiHelper {
   GoogleApiHelper();
 
+  // allows us to see, edit, share, and permanently delete all the calendars you can access using GCal
   static const List<String> _scopes = [CalendarApi.calendarScope];
 
-  static List<String> get scopes =>
-      _scopes; // allows us to see, edit, share, and permanently delete all the calendars you can access using Google Calendar.
+  static List<String> get scopes => _scopes;
 
+  // Our project IDs, used to identify an app to Google's OAuth servers.
   static ClientId get credentials {
     String _clientIdString;
-    // Our project IDs, used to identify an app to Google's OAuth servers.
     if (Platform.isAndroid) {
       _clientIdString =
           '611150208061-4ftun8ln4v9hm1mocqs1vqcftaanj8sj.apps.googleusercontent.com';

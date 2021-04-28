@@ -97,10 +97,10 @@ extension GoogleCalendarServices on UniEventProvider {
                   print('Added event status: ${value.status}');
                   if (value.status == 'confirmed') {
                     print(
-                        'Event named ${event.myToString()} added in Google Calendar');
+                        'Event named ${event.summary} added in Google Calendar');
                   } else {
                     print(
-                        'Unable to add event named ${event.myToString()} in Google Calendar');
+                        'Unable to add event named ${event.summary} in Google Calendar');
                   }
                 },
               );

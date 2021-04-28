@@ -434,9 +434,3 @@ class UniEventProvider extends EventProvider<UniEventInstance>
     }
   }
 }
-
-extension GoogleCalendarEventExtension on g_cal.Event {
-  String myToString() {
-    return summary;
-  }
-}
