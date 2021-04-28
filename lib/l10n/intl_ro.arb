@@ -273,7 +273,7 @@
   "infoEmail": "Acesta este același username pe care îl folosești să te loghezi pe {forum}.",
   "infoLoading": "Se încarcă...",
   "infoReadThePolicy": "Citește politica {appName}",
-  "infoExportToGoogleCalendar": "Exportează evenimentele filtrate din Orar",
+  "infoExportToGoogleCalendar": "Exportă evenimentele filtrate din Orar",
 
   "stringEmailDomain": "@stud.acs.upb.ro",
   "stringForum": "cs.curs.pub.ro",

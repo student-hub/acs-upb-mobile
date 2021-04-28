@@ -119,7 +119,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "infoAppIsOpenSource" : m2,
     "infoClasses" : MessageLookupByLibrary.simpleMessage("materiile care vă interesează"),
     "infoEmail" : m3,
-    "infoExportToGoogleCalendar" : MessageLookupByLibrary.simpleMessage("Exportează evenimentele filtrate din Orar"),
+    "infoExportToGoogleCalendar" : MessageLookupByLibrary.simpleMessage("Exportă evenimentele filtrate din Orar"),
     "infoLoading" : MessageLookupByLibrary.simpleMessage("Se încarcă..."),
     "infoMakeSureGroupIsSelected" : MessageLookupByLibrary.simpleMessage("Asigurați-vă că aveți grupa/semigrupa selectată în"),
     "infoPassword" : MessageLookupByLibrary.simpleMessage("Aceasta trebuie să conțină majuscule, minuscule și cel puțin un număr sau un simbol, având minimum 8 caractere."),
