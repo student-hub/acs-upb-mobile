@@ -17,7 +17,7 @@ extension GoogleCalendarServices on UniEventProvider {
 
     start
       ..timeZone = 'Europe/Bucharest'
-      // google calendar has different timezone formats
+      // Google Calendar uses the IANA timezone format, but the native Dart `DateTime` uses an abbreviation provided by the operating system.
       ..dateTime = startDateTime;
 
     final Duration duration = uniEvent.duration.toDuration();
