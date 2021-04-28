@@ -1,14 +1,45 @@
+import 'dart:io' as dart_io;
+
 import 'package:acs_upb_mobile/pages/classes/model/class.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/events/recurring_event.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/events/uni_event.dart';
 import 'package:acs_upb_mobile/pages/timetable/service/uni_event_provider.dart';
-import 'package:acs_upb_mobile/resources/google_apis.dart';
+import 'package:acs_upb_mobile/resources/utils.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter_web_browser/flutter_web_browser.dart';
 import 'package:googleapis/calendar/v3.dart' as g_cal;
+import 'package:googleapis/calendar/v3.dart';
 import 'package:googleapis_auth/auth_io.dart';
-import 'package:acs_upb_mobile/resources/utils.dart';
 
-extension GoogleCalendarServices on UniEventProvider {
+class GoogleCalendarServices {
+  GoogleCalendarServices();
+
+  // allows us to see, edit, share, and permanently delete all the calendars you can access using GCal
+  static const List<String> _scopes = [CalendarApi.calendarScope];
+
+  static List<String> get scopes => _scopes;
+
+  // Our project IDs, used to identify an app to Google's OAuth servers.
+  static ClientId get credentials {
+    String _clientIdString;
+    if (dart_io.Platform.isAndroid) {
+      _clientIdString =
+          '611150208061-4ftun8ln4v9hm1mocqs1vqcftaanj8sj.apps.googleusercontent.com';
+    } else if (dart_io.Platform.isIOS) {
+      _clientIdString =
+          '611150208061-4ftun8ln4v9hm1mocqs1vqcftaanj8sj.apps.googleusercontent.com';
+    } else if (kIsWeb) {
+      _clientIdString =
+          '611150208061-ljqdu5mfmjisdi1h3ics3l2sirvtpljk.apps.googleusercontent.com';
+    } else {
+      _clientIdString =
+          '611150208061-ljqdu5mfmjisdi1h3ics3l2sirvtpljk.apps.googleusercontent.com';
+    }
+    return ClientId(_clientIdString, '');
+  }
+}
+
+extension UniEventProviderGoogleCalendar on UniEventProvider {
   g_cal.Event convertEvent(UniEvent uniEvent) {
     final g_cal.Event googleCalendarEvent = g_cal.Event();
 
@@ -41,7 +72,6 @@ extension GoogleCalendarServices on UniEventProvider {
       final String rruleBasedOnCalendarString = uniEvent.rruleBasedOnCalendar
           .toString()
           .replaceAll(RegExp(r'T000000'), 'T000000Z');
-      print(rruleBasedOnCalendarString);
       googleCalendarEvent.recurrence = [rruleBasedOnCalendarString];
     }
 
@@ -52,11 +82,11 @@ extension GoogleCalendarServices on UniEventProvider {
     await FlutterWebBrowser.openWebPage(url: url);
   }
 
+  // This opens a browser window asking the user to authenticate and allow access to edit their calendar
   Future<void> insertGoogleEvents(
       List<g_cal.Event> googleCalendarEvents) async {
-    // This is the function for getting the user's consent to export events to Google Calendar. See comments in original method and in GoogleApiHelper
-    await clientViaUserConsent(
-            GoogleApiHelper.credentials, GoogleApiHelper.scopes, prompt)
+    await clientViaUserConsent(GoogleCalendarServices.credentials,
+            GoogleCalendarServices.scopes, prompt)
         .then(
       (AutoRefreshingAuthClient client) async {
         final g_cal.CalendarApi calendarApi = g_cal.CalendarApi(client);
@@ -114,5 +144,43 @@ extension GoogleCalendarServices on UniEventProvider {
         print('Error <$e> when asking for user\'s consent');
       },
     );
+  }
+}
+
+enum GoogleCalendarColorNames {
+  undefined,
+  lavender,
+  sage,
+  grape,
+  flamingo,
+  banana,
+  tangerine,
+  peacock,
+  graphite,
+  blueberry,
+  basil,
+  tomato
+}
+
+extension UniEventTypeGCalColor on UniEventType {
+  GoogleCalendarColorNames get googleCalendarColor {
+    switch (this) {
+      case UniEventType.lecture:
+        return GoogleCalendarColorNames.flamingo;
+      case UniEventType.lab:
+        return GoogleCalendarColorNames.peacock;
+      case UniEventType.seminar:
+        return GoogleCalendarColorNames.banana;
+      case UniEventType.sports:
+        return GoogleCalendarColorNames.basil;
+      case UniEventType.semester:
+        return GoogleCalendarColorNames.undefined;
+      case UniEventType.holiday:
+        return GoogleCalendarColorNames.grape;
+      case UniEventType.examSession:
+        return GoogleCalendarColorNames.tomato;
+      default:
+        return GoogleCalendarColorNames.undefined;
+    }
   }
 }
