@@ -81,65 +81,62 @@ extension UniEventProviderGoogleCalendar on UniEventProvider {
   // This opens a browser window asking the user to authenticate and allow access to edit their calendar
   Future<void> insertGoogleEvents(
       List<g_cal.Event> googleCalendarEvents) async {
-    await clientViaUserConsent(GoogleCalendarServices.credentials,
-            GoogleCalendarServices.scopes, Utils.launchURL)
-        .then(
-      (AutoRefreshingAuthClient client) async {
-        final g_cal.CalendarApi calendarApi = g_cal.CalendarApi(client);
-        final g_cal.Calendar calendar = g_cal.Calendar()
-          ..timeZone = 'Europe/Bucharest'
-          ..summary = 'ACS UPB Mobile'
-          ..description = 'Timetable imported from ACS UPB Mobile';
+    AutoRefreshingAuthClient client;
+    try {
+      client = await clientViaUserConsent(GoogleCalendarServices.credentials,
+          GoogleCalendarServices.scopes, Utils.launchURL);
+    } catch (e) {
+      print('Error $e in opening client.');
+    }
+    final g_cal.CalendarApi calendarApi = g_cal.CalendarApi(client);
+    final g_cal.Calendar calendar = g_cal.Calendar()
+      ..timeZone = 'Europe/Bucharest'
+      ..summary = 'ACS UPB Mobile'
+      ..description = 'Timetable imported from ACS UPB Mobile';
 
-        g_cal.CalendarList calendarListNonIterable;
+    g_cal.CalendarList calendarListNonIterable;
+    try {
+      calendarListNonIterable = await calendarApi.calendarList.list();
+    } catch (e) {
+      print('Error $e in getting calendars as a list');
+      return;
+    }
+    final List<g_cal.CalendarListEntry> calendarList =
+        calendarListNonIterable.items;
+    for (final g_cal.CalendarListEntry calendar in calendarList) {
+      if (calendar.summary == 'ACS UPB Mobile') {
         try {
-          calendarListNonIterable = await calendarApi.calendarList.list();
+          await calendarApi.calendars.delete(calendar.id);
         } catch (e) {
-          print('Error $e in getting calendars as a list');
-          return;
+          print('Error $e in deleting calendar');
         }
-        final List<g_cal.CalendarListEntry> calendarList =
-            calendarListNonIterable.items;
-        for (final g_cal.CalendarListEntry calendar in calendarList) {
-          if (calendar.summary == 'ACS UPB Mobile') {
-            try {
-              await calendarApi.calendars.delete(calendar.id);
-            } catch (e) {
-              print('Error $e in deleting calendar');
-            }
-            break;
-          }
-        }
+        break;
+      }
+    }
 
-        final g_cal.Calendar returnedCalendar =
-            await calendarApi.calendars.insert(calendar);
+    final g_cal.Calendar returnedCalendar =
+        await calendarApi.calendars.insert(calendar);
 
-        if (returnedCalendar is g_cal.Calendar) {
-          final String calendarId = returnedCalendar.id;
-          for (final g_cal.Event event in googleCalendarEvents) {
-            try {
-              await calendarApi.events.insert(event, calendarId).then(
-                (value) {
-                  print('Added event status: ${value.status}');
-                  if (value.status == 'confirmed') {
-                    print(
-                        'Event named ${event.summary} added in Google Calendar');
-                  } else {
-                    print(
-                        'Unable to add event named ${event.summary} in Google Calendar');
-                  }
-                },
-              );
-            } catch (e) {
-              print('Error creating event $e');
-            }
-          }
+    if (returnedCalendar is g_cal.Calendar) {
+      final String calendarId = returnedCalendar.id;
+      for (final g_cal.Event event in googleCalendarEvents) {
+        try {
+          await calendarApi.events.insert(event, calendarId).then(
+            (value) {
+              print('Added event status: ${value.status}');
+              if (value.status == 'confirmed') {
+                print('Event named ${event.summary} added in Google Calendar');
+              } else {
+                print(
+                    'Unable to add event named ${event.summary} in Google Calendar');
+              }
+            },
+          );
+        } catch (e) {
+          print('Error creating event $e');
         }
-      },
-      onError: (dynamic e) {
-        print('Error <$e> when asking for user\'s consent');
-      },
-    );
+      }
+    }
   }
 }
 
