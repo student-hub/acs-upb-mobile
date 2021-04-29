@@ -123,9 +123,17 @@ class _SettingsPageState extends State<SettingsPage> {
                   child: ListTile(
                     key: const ValueKey('google_calendar'),
                     onTap: () async {
-                      final eventProvider =
-                          Provider.of<UniEventProvider>(context, listen: false);
-                      await eventProvider.exportToGoogleCalendar();
+                      if (authProvider.isAnonymous) {
+                        AppToast.show(S.current.messageNotLoggedIn);
+                      } else if (isVerified != true) {
+                        AppToast.show(
+                            S.current.messageEmailNotVerifiedToPerformAction);
+                      } else {
+                        final eventProvider = Provider.of<UniEventProvider>(
+                            context,
+                            listen: false);
+                        await eventProvider.exportToGoogleCalendar();
+                      }
                     },
                     enabled: Provider.of<AuthProvider>(context, listen: false)
                             .currentUserFromCache !=
