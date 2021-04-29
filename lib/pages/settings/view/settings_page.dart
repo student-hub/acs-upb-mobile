@@ -91,20 +91,6 @@ class _SettingsPageState extends State<SettingsPage> {
                     onlySaveOnSubmit: false,
                   ),
                 ),
-                PreferenceTitle(S.current.settingsTitleTimetable),
-                ListTile(
-                  key: const ValueKey('google_calendar'),
-                  onTap: () async {
-                    final eventProvider =
-                        Provider.of<UniEventProvider>(context, listen: false);
-                    await eventProvider.exportToGoogleCalendar();
-                  },
-                  enabled: Provider.of<AuthProvider>(context, listen: false)
-                          .currentUserFromCache !=
-                      null,
-                  title: Text(S.current.settingsExportToGoogleCalendar),
-                  subtitle: Text(S.current.infoExportToGoogleCalendar),
-                ),
                 PreferenceTitle(S.current.settingsTitleDataControl),
                 ListTile(
                   key: const ValueKey('ask_permissions'),
@@ -128,6 +114,20 @@ class _SettingsPageState extends State<SettingsPage> {
                   subtitle: Text(
                     S.current.infoReadThePolicy(Utils.packageInfo.appName),
                   ),
+                ),
+                PreferenceTitle(S.current.settingsTitleTimetable),
+                ListTile(
+                  key: const ValueKey('google_calendar'),
+                  onTap: () async {
+                    final eventProvider =
+                        Provider.of<UniEventProvider>(context, listen: false);
+                    await eventProvider.exportToGoogleCalendar();
+                  },
+                  enabled: Provider.of<AuthProvider>(context, listen: false)
+                          .currentUserFromCache !=
+                      null,
+                  title: Text(S.current.settingsExportToGoogleCalendar),
+                  subtitle: Text(S.current.infoExportToGoogleCalendar),
                 ),
                 Column(
                   mainAxisSize: MainAxisSize.min,
