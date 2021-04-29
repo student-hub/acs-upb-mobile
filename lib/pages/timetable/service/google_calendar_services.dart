@@ -86,7 +86,7 @@ extension UniEventProviderGoogleCalendar on UniEventProvider {
   Future<void> insertGoogleEvents(
       List<g_cal.Event> googleCalendarEvents) async {
     await clientViaUserConsent(GoogleCalendarServices.credentials,
-            GoogleCalendarServices.scopes, prompt)
+            GoogleCalendarServices.scopes, Utils.launchURL)
         .then(
       (AutoRefreshingAuthClient client) async {
         final g_cal.CalendarApi calendarApi = g_cal.CalendarApi(client);
