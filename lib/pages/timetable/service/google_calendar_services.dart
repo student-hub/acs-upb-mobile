@@ -1,12 +1,9 @@
-import 'dart:io' as dart_io;
 
 import 'package:acs_upb_mobile/pages/classes/model/class.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/events/recurring_event.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/events/uni_event.dart';
 import 'package:acs_upb_mobile/pages/timetable/service/uni_event_provider.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
-import 'package:flutter_web_browser/flutter_web_browser.dart';
 import 'package:googleapis/calendar/v3.dart' as g_cal;
 import 'package:googleapis/calendar/v3.dart';
 import 'package:googleapis_auth/auth_io.dart';
@@ -22,15 +19,12 @@ class GoogleCalendarServices {
   // Our project IDs, used to identify an app to Google's OAuth servers.
   static ClientId get credentials {
     String _clientIdString;
-    if (dart_io.Platform.isAndroid) {
+    if (Platform.isAndroid) {
       _clientIdString =
           '611150208061-4ftun8ln4v9hm1mocqs1vqcftaanj8sj.apps.googleusercontent.com';
-    } else if (dart_io.Platform.isIOS) {
+    } else if (Platform.isIOS) {
       _clientIdString =
           '611150208061-4ftun8ln4v9hm1mocqs1vqcftaanj8sj.apps.googleusercontent.com';
-    } else if (kIsWeb) {
-      _clientIdString =
-          '611150208061-ljqdu5mfmjisdi1h3ics3l2sirvtpljk.apps.googleusercontent.com';
     } else {
       _clientIdString =
           '611150208061-ljqdu5mfmjisdi1h3ics3l2sirvtpljk.apps.googleusercontent.com';
