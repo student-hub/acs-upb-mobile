@@ -78,10 +78,6 @@ extension UniEventProviderGoogleCalendar on UniEventProvider {
     return googleCalendarEvent;
   }
 
-  Future<void> prompt(String url) async {
-    await FlutterWebBrowser.openWebPage(url: url);
-  }
-
   // This opens a browser window asking the user to authenticate and allow access to edit their calendar
   Future<void> insertGoogleEvents(
       List<g_cal.Event> googleCalendarEvents) async {
