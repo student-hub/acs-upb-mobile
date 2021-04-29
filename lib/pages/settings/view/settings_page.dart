@@ -115,19 +115,25 @@ class _SettingsPageState extends State<SettingsPage> {
                     S.current.infoReadThePolicy(Utils.packageInfo.appName),
                   ),
                 ),
-                PreferenceTitle(S.current.settingsTitleTimetable),
-                ListTile(
-                  key: const ValueKey('google_calendar'),
-                  onTap: () async {
-                    final eventProvider =
-                        Provider.of<UniEventProvider>(context, listen: false);
-                    await eventProvider.exportToGoogleCalendar();
-                  },
-                  enabled: Provider.of<AuthProvider>(context, listen: false)
-                          .currentUserFromCache !=
-                      null,
-                  title: Text(S.current.settingsExportToGoogleCalendar),
-                  subtitle: Text(S.current.infoExportToGoogleCalendar),
+                Visibility(
+                  child: PreferenceTitle(S.current.settingsTitleTimetable),
+                  visible: Platform.isAndroid || Platform.isIOS,
+                ),
+                Visibility(
+                  child: ListTile(
+                    key: const ValueKey('google_calendar'),
+                    onTap: () async {
+                      final eventProvider =
+                          Provider.of<UniEventProvider>(context, listen: false);
+                      await eventProvider.exportToGoogleCalendar();
+                    },
+                    enabled: Provider.of<AuthProvider>(context, listen: false)
+                            .currentUserFromCache !=
+                        null,
+                    title: Text(S.current.settingsExportToGoogleCalendar),
+                    subtitle: Text(S.current.infoExportToGoogleCalendar),
+                  ),
+                  visible: Platform.isAndroid || Platform.isIOS,
                 ),
                 Column(
                   mainAxisSize: MainAxisSize.min,
