@@ -1,4 +1,3 @@
-
 import 'package:acs_upb_mobile/pages/classes/model/class.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/events/recurring_event.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/events/uni_event.dart';
