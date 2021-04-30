@@ -116,10 +116,11 @@ class _SettingsPageState extends State<SettingsPage> {
                   ),
                 ),
                 Visibility(
-                  child: PreferenceTitle(S.current.settingsTitleTimetable),
                   visible: Platform.isAndroid || Platform.isIOS,
+                  child: PreferenceTitle(S.current.settingsTitleTimetable),
                 ),
                 Visibility(
+                  visible: Platform.isAndroid || Platform.isIOS,
                   child: ListTile(
                     key: const ValueKey('google_calendar'),
                     onTap: () async {
@@ -136,12 +137,11 @@ class _SettingsPageState extends State<SettingsPage> {
                       }
                     },
                     enabled: Provider.of<AuthProvider>(context, listen: false)
-                            .currentUserFromCache !=
+                        .currentUserFromCache !=
                         null,
                     title: Text(S.current.settingsExportToGoogleCalendar),
                     subtitle: Text(S.current.infoExportToGoogleCalendar),
                   ),
-                  visible: Platform.isAndroid || Platform.isIOS,
                 ),
                 Column(
                   mainAxisSize: MainAxisSize.min,
