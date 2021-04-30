@@ -3,9 +3,11 @@ import 'package:acs_upb_mobile/pages/timetable/model/events/recurring_event.dart
 import 'package:acs_upb_mobile/pages/timetable/model/events/uni_event.dart';
 import 'package:acs_upb_mobile/pages/timetable/service/uni_event_provider.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
+import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:googleapis/calendar/v3.dart' as g_cal;
 import 'package:googleapis/calendar/v3.dart';
 import 'package:googleapis_auth/auth_io.dart';
+import 'package:acs_upb_mobile/generated/l10n.dart';
 
 class GoogleCalendarServices {
   GoogleCalendarServices();
@@ -78,42 +80,30 @@ extension UniEventProviderGoogleCalendar on UniEventProvider {
     try {
       client = await clientViaUserConsent(GoogleCalendarServices.credentials,
           GoogleCalendarServices.scopes, Utils.launchURL);
-    } catch (e) {
-      print('Error $e in opening client.');
-    }
-    final g_cal.CalendarApi calendarApi = g_cal.CalendarApi(client);
-    final g_cal.Calendar calendar = g_cal.Calendar()
-      ..timeZone = 'Europe/Bucharest'
-      ..summary = 'ACS UPB Mobile'
-      ..description = 'Timetable imported from ACS UPB Mobile';
+      final g_cal.CalendarApi calendarApi = g_cal.CalendarApi(client);
+      final g_cal.Calendar calendar = g_cal.Calendar()
+        ..timeZone = 'Europe/Bucharest'
+        ..summary = 'ACS UPB Mobile'
+        ..description = 'Timetable imported from ACS UPB Mobile';
 
-    g_cal.CalendarList calendarListNonIterable;
-    try {
+      g_cal.CalendarList calendarListNonIterable;
       calendarListNonIterable = await calendarApi.calendarList.list();
-    } catch (e) {
-      print('Error $e in getting calendars as a list');
-      return;
-    }
-    final List<g_cal.CalendarListEntry> calendarList =
-        calendarListNonIterable.items;
-    for (final g_cal.CalendarListEntry calendar in calendarList) {
-      if (calendar.summary == 'ACS UPB Mobile') {
-        try {
+
+      final List<g_cal.CalendarListEntry> calendarList =
+          calendarListNonIterable.items;
+      for (final g_cal.CalendarListEntry calendar in calendarList) {
+        if (calendar.summary == 'ACS UPB Mobile') {
           await calendarApi.calendars.delete(calendar.id);
-        } catch (e) {
-          print('Error $e in deleting calendar');
+          break;
         }
-        break;
       }
-    }
 
-    final g_cal.Calendar returnedCalendar =
-        await calendarApi.calendars.insert(calendar);
+      final g_cal.Calendar returnedCalendar =
+          await calendarApi.calendars.insert(calendar);
 
-    if (returnedCalendar is g_cal.Calendar) {
-      final String calendarId = returnedCalendar.id;
-      for (final g_cal.Event event in googleCalendarEvents) {
-        try {
+      if (returnedCalendar is g_cal.Calendar) {
+        final String calendarId = returnedCalendar.id;
+        for (final g_cal.Event event in googleCalendarEvents) {
           await calendarApi.events.insert(event, calendarId).then(
             (value) {
               print('Added event status: ${value.status}');
@@ -125,10 +115,12 @@ extension UniEventProviderGoogleCalendar on UniEventProvider {
               }
             },
           );
-        } catch (e) {
-          print('Error creating event $e');
         }
       }
+    } catch (e) {
+      AppToast.show(S.current.errorInsertGoogleEvents);
+      print('Error $e when inserting GCal events.');
+      return;
     }
   }
 }
