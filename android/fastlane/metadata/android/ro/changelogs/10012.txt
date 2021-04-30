@@ -1,0 +1,2 @@
+Added
+  - Acum poți exporta evenimentele din orar în Google Calendar 📆
