@@ -92,6 +92,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "errorEventTypeCannotBeEmpty" : MessageLookupByLibrary.simpleMessage("Tipul de eveniment trebuie precizat."),
     "errorImage" : MessageLookupByLibrary.simpleMessage("Imaginea nu putut fi încărcată."),
     "errorIncorrectPassword" : MessageLookupByLibrary.simpleMessage("Parola introdusă nu este corectă."),
+    "errorInsertGoogleEvents" : MessageLookupByLibrary.simpleMessage("Evenimentele nu au putut fi inserate în Google Calendar."),
     "errorInvalidEmail" : MessageLookupByLibrary.simpleMessage("Trebuie să introduceți un e-mail valid."),
     "errorMissingFirstName" : MessageLookupByLibrary.simpleMessage("Introduceți prenumele."),
     "errorMissingLastName" : MessageLookupByLibrary.simpleMessage("Introduceți numele de familie."),

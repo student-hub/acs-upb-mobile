@@ -120,6 +120,7 @@
   "errorClassCannotBeEmpty": "Class cannot be empty.",
   "errorPictureSizeToBig": "Please select a picture that is less than 5MB.",
   "errorImage": "The image could not be loaded.",
+  "errorInsertGoogleEvents": "Unable to insert events in Google Calendar",
 
   "warningRequestExists": "Request already exists",
   "warningInternetConnection": "Please make sure you have an internet connection.",

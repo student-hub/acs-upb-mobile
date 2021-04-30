@@ -120,6 +120,7 @@
   "errorClassCannotBeEmpty": "Materia trebuie precizată.",
   "errorPictureSizeToBig": "Selectați o fotografie care are mai puțin de 5MB.",
   "errorImage": "Imaginea nu putut fi încărcată.",
+  "errorInsertGoogleEvents": "Evenimentele nu au putut fi inserate în Google Calendar.",
 
   "warningRequestExists": "O cerere deja există",
   "warningInternetConnection": "Asigurați-vă că sunteți conectat la internet.",

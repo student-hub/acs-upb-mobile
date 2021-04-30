@@ -1185,6 +1185,16 @@ class S {
     );
   }
 
+  /// `Unable to insert events in Google Calendar`
+  String get errorInsertGoogleEvents {
+    return Intl.message(
+      'Unable to insert events in Google Calendar',
+      name: 'errorInsertGoogleEvents',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Request already exists`
   String get warningRequestExists {
     return Intl.message(
