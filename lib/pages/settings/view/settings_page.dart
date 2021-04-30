@@ -137,7 +137,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       }
                     },
                     enabled: Provider.of<AuthProvider>(context, listen: false)
-                        .currentUserFromCache !=
+                            .currentUserFromCache !=
                         null,
                     title: Text(S.current.settingsExportToGoogleCalendar),
                     subtitle: Text(S.current.infoExportToGoogleCalendar),
