@@ -35,8 +35,7 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   void initState() {
     super.initState();
-    Provider
-        .of<AuthProvider>(context, listen: false)
+    Provider.of<AuthProvider>(context, listen: false)
         .isVerified
         .then((value) => setState(() => isVerified = value));
   }
@@ -61,10 +60,7 @@ class _SettingsPageState extends State<SettingsPage> {
               children: [
                 Center(
                   child: Container(
-                      height: MediaQuery
-                          .of(context)
-                          .size
-                          .height / 3,
+                      height: MediaQuery.of(context).size.height / 3,
                       child: Image.asset(
                           'assets/illustrations/undraw_settings.png')),
                 ),
@@ -78,16 +74,14 @@ class _SettingsPageState extends State<SettingsPage> {
                   onDisable: () {
                     DynamicTheme.of(context).setBrightness(Brightness.light);
                   },
-                  defaultVal: MediaQuery
-                      .of(context)
-                      .platformBrightness ==
+                  defaultVal: MediaQuery.of(context).platformBrightness ==
                       Brightness.dark,
                 ),
                 PreferenceTitle(S.current.settingsTitleLocalization),
                 PreferenceDialogLink(
                   S.current.settingsItemLanguage,
                   desc:
-                  languagePrefString(context, PrefService.get('language')),
+                      languagePrefString(context, PrefService.get('language')),
                   dialog: PreferenceDialog(
                     [
                       languageRadioPreference(context, 'ro'),
@@ -159,30 +153,22 @@ class _SettingsPageState extends State<SettingsPage> {
                         actionText: S.current.actionContribute,
                         actionArrow: true,
                         align: TextAlign.center,
-                        style: Theme
-                            .of(context)
+                        style: Theme.of(context)
                             .textTheme
                             .bodyText1
-                            .apply(color: Theme
-                            .of(context)
-                            .hintColor),
+                            .apply(color: Theme.of(context).hintColor),
                         onTap: () => Utils.launchURL(Utils.repoURL),
                       ),
                     ),
                     Padding(
                       padding: const EdgeInsets.all(10),
                       child: Text(
-                        '${S.current.labelVersion} ${Utils.packageInfo
-                            .version}+${(int.parse(Utils.packageInfo
-                            .buildNumber) % 10000).toString()}',
+                        '${S.current.labelVersion} ${Utils.packageInfo.version}+${(int.parse(Utils.packageInfo.buildNumber) % 10000).toString()}',
                         textAlign: TextAlign.center,
-                        style: Theme
-                            .of(context)
+                        style: Theme.of(context)
                             .textTheme
                             .bodyText1
-                            .apply(color: Theme
-                            .of(context)
-                            .hintColor),
+                            .apply(color: Theme.of(context).hintColor),
                       ),
                     ),
                   ],
@@ -195,8 +181,8 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 
-  RadioPreference<String> languageRadioPreference(BuildContext context,
-      String preference) {
+  RadioPreference<String> languageRadioPreference(
+      BuildContext context, String preference) {
     return RadioPreference(
       languagePrefString(context, preference),
       preference,
@@ -212,9 +198,7 @@ class _SettingsPageState extends State<SettingsPage> {
           // localizations delegate doesn't do that. Pretend to change the theme
           // so that listeners have to reload.
           DynamicTheme.of(context)
-              .setBrightness(DynamicTheme
-              .of(context)
-              .brightness);
+              .setBrightness(DynamicTheme.of(context).brightness);
         });
       },
     );
@@ -237,7 +221,7 @@ class _SettingsPageState extends State<SettingsPage> {
   Future<String> checkUserPermissionsString() async {
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
     final requestProvider =
-    Provider.of<RequestProvider>(context, listen: false);
+        Provider.of<RequestProvider>(context, listen: false);
 
     if (authProvider.isAuthenticated && !authProvider.isAnonymous) {
       final user = await authProvider.currentUser;
