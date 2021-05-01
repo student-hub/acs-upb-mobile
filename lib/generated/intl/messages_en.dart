@@ -92,7 +92,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "errorEventTypeCannotBeEmpty" : MessageLookupByLibrary.simpleMessage("Event type cannot be empty."),
     "errorImage" : MessageLookupByLibrary.simpleMessage("The image could not be loaded."),
     "errorIncorrectPassword" : MessageLookupByLibrary.simpleMessage("The password you entered is incorrect."),
-    "errorInsertGoogleEvents" : MessageLookupByLibrary.simpleMessage("Unable to insert events in Google Calendar"),
+    "errorInsertGoogleEvents" : MessageLookupByLibrary.simpleMessage("Unable to insert events in Google Calendar."),
     "errorInvalidEmail" : MessageLookupByLibrary.simpleMessage("You need to provide a valid e-mail address."),
     "errorMissingFirstName" : MessageLookupByLibrary.simpleMessage("Please provide your first name(s)."),
     "errorMissingLastName" : MessageLookupByLibrary.simpleMessage("Please provide your last name(s)."),
