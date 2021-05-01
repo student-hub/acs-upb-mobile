@@ -107,8 +107,6 @@ class _SettingsPageState extends State<SettingsPage> {
                   },
                   title: Text(S.current.settingsItemEditingPermissions),
                   subtitle: Text(userPermissionString),
-                  enabled:
-                      authProvider.isAnonymous == false && isVerified == true,
                 ),
                 ListTile(
                   onTap: () => Utils.launchURL(Utils.privacyPolicyURL),
@@ -135,7 +133,6 @@ class _SettingsPageState extends State<SettingsPage> {
                         await eventProvider.exportToGoogleCalendar();
                       }
                     },
-                    enabled: authProvider.isAnonymous == false,
                     title: Text(S.current.settingsExportToGoogleCalendar),
                     subtitle: Text(S.current.infoExportToGoogleCalendar),
                   ),
