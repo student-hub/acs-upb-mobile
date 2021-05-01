@@ -1,0 +1,2 @@
+Added
+  - You can now export timetable events in Google Calendar 📆
