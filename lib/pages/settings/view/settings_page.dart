@@ -136,9 +136,7 @@ class _SettingsPageState extends State<SettingsPage> {
                         await eventProvider.exportToGoogleCalendar();
                       }
                     },
-                    enabled: Provider.of<AuthProvider>(context, listen: false)
-                            .currentUserFromCache !=
-                        null,
+                    enabled: authProvider.isAnonymous == false,
                     title: Text(S.current.settingsExportToGoogleCalendar),
                     subtitle: Text(S.current.infoExportToGoogleCalendar),
                   ),
