@@ -107,7 +107,8 @@ class _SettingsPageState extends State<SettingsPage> {
                   },
                   title: Text(S.current.settingsItemEditingPermissions),
                   subtitle: Text(userPermissionString),
-                  enabled: authProvider.isAnonymous || isVerified != true,
+                  enabled:
+                      authProvider.isAnonymous == false && isVerified == true,
                 ),
                 ListTile(
                   onTap: () => Utils.launchURL(Utils.privacyPolicyURL),
