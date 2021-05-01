@@ -1753,6 +1753,7 @@ class S {
       desc: '',
       args: [],
     );
+  }
 
   /// `Your editing permissions`
   String get settingsItemEditingPermissions {
