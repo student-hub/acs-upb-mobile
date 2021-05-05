@@ -18,9 +18,11 @@ import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:async/async.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:googleapis/calendar/v3.dart' as g_cal;
 import 'package:rrule/rrule.dart';
 import 'package:time_machine/time_machine.dart';
 import 'package:timetable/timetable.dart';
+import 'google_calendar_services.dart';
 
 extension PeriodExtension on Period {
   static Period fromJSON(Map<String, dynamic> json) {
@@ -302,6 +304,17 @@ class UniEventProvider extends EventProvider<UniEventInstance>
     return stream.map((events) => events.expand((i) => i).toList());
   }
 
+  Future<void> exportToGoogleCalendar() async {
+    final Stream<List<UniEvent>> eventsStream = _events;
+    final List<UniEvent> streamElement = await eventsStream.first;
+    final List<g_cal.Event> googleCalendarEvents = [];
+    for (final UniEvent eventInstance in streamElement) {
+      final g_cal.Event googleCalendarEvent = convertEvent(eventInstance);
+      googleCalendarEvents.add(googleCalendarEvent);
+    }
+    await insertGoogleEvents(googleCalendarEvents);
+  }
+
   @override
   Stream<Iterable<UniEventInstance>> getAllDayEventsIntersecting(
       DateInterval interval) {
@@ -330,6 +343,20 @@ class UniEventProvider extends EventProvider<UniEventInstance>
             intersectingInterval: DateInterval(date, date)))
         .expand((i) => i)
         .partDayEvents);
+  }
+
+  Future<Iterable<UniEventInstance>> getUpcomingEvents(LocalDate date,
+      {int limit = 3}) async {
+    return _events
+        .map((events) => events
+            .map((event) => event.generateInstances(
+                intersectingInterval: DateInterval(date, date.addDays(6))))
+            .expand((i) => i)
+            .sortedByStartLength()
+            .where((element) =>
+                element.end.toDateTimeLocal().isAfter(DateTime.now()))
+            .take(limit))
+        .first;
   }
 
   void updateClasses(ClassProvider classProvider) {

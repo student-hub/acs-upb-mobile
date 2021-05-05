@@ -4,6 +4,7 @@ import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/navigation/routes.dart';
 import 'package:acs_upb_mobile/pages/settings/service/request_provider.dart';
+import 'package:acs_upb_mobile/pages/timetable/service/uni_event_provider.dart';
 import 'package:acs_upb_mobile/resources/locale_provider.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/widgets/icon_text.dart';
@@ -112,6 +113,28 @@ class _SettingsPageState extends State<SettingsPage> {
                   title: Text(S.current.labelPrivacyPolicy),
                   subtitle: Text(
                     S.current.infoReadThePolicy(Utils.packageInfo.appName),
+                  ),
+                ),
+                Visibility(
+                  visible: Platform.isAndroid || Platform.isIOS,
+                  child: PreferenceTitle(S.current.settingsTitleTimetable),
+                ),
+                Visibility(
+                  visible: Platform.isAndroid || Platform.isIOS,
+                  child: ListTile(
+                    key: const ValueKey('google_calendar'),
+                    onTap: () async {
+                      if (authProvider.isAnonymous) {
+                        AppToast.show(S.current.messageNotLoggedIn);
+                      } else {
+                        final eventProvider = Provider.of<UniEventProvider>(
+                            context,
+                            listen: false);
+                        await eventProvider.exportToGoogleCalendar();
+                      }
+                    },
+                    title: Text(S.current.settingsExportToGoogleCalendar),
+                    subtitle: Text(S.current.infoExportToGoogleCalendar),
                   ),
                 ),
                 Column(

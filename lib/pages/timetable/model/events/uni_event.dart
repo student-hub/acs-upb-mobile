@@ -172,4 +172,38 @@ class UniEventInstance extends Event {
   @override
   int get hashCode =>
       hashList([super.hashCode, color, location, mainEvent, title]);
+
+  String get dateString => getDateString(useRelativeDayFormat: false);
+
+  String get relativeDateString => getDateString(useRelativeDayFormat: true);
+
+  String getDateString({bool useRelativeDayFormat}) {
+    final LocalDateTime end = this.end.clockTime.equals(LocalTime(00, 00, 00))
+        ? this.end.subtractDays(1)
+        : this.end;
+
+    String string =
+        useRelativeDayFormat && start.calendarDate.equals(LocalDate.today())
+            ? S.current.labelToday
+            : useRelativeDayFormat &&
+                    start.calendarDate.subtractDays(1).equals(LocalDate.today())
+                ? S.current.labelTomorrow
+                : start.calendarDate.toString('dddd, dd MMMM');
+
+    if (!start.clockTime.equals(LocalTime(00, 00, 00))) {
+      string += ' • ${start.clockTime.toString('HH:mm')}';
+    }
+    if (start.calendarDate != end.calendarDate) {
+      string += ' - ${end.calendarDate.toString('dddd, dd MMMM')}';
+    }
+    if (!end.clockTime.equals(LocalTime(00, 00, 00))) {
+      if (start.calendarDate != end.calendarDate) {
+        string += ' • ';
+      } else {
+        string += '-';
+      }
+      string += end.clockTime.toString('HH:mm');
+    }
+    return string;
+  }
 }
