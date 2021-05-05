@@ -12,8 +12,9 @@ extension ClassFeedbackQuestionAnswerExtension on ClassFeedbackQuestionAnswer {
     if (questionTextAnswer != null) data['answer'] = questionTextAnswer;
     if (questionNumericAnswer != null) data['rating'] = questionNumericAnswer;
     data['dateSubmitted'] = Timestamp.now();
-    data['teacher'] = teacher;
-    data['assistant'] = assistant;
+    data['class'] = className;
+    data['teacher'] = teacherName;
+    data['assistant'] = assistant.name;
 
     return data;
   }
@@ -27,7 +28,7 @@ class FeedbackProvider with ChangeNotifier {
           .doc('class_feedback_answers')
           .collection(response.questionNumber)
           .add(response.toData());
-      notifyListeners();
+      //notifyListeners();
       return true;
     } catch (e) {
       print(e);

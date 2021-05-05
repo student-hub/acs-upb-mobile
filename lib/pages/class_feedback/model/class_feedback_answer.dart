@@ -4,14 +4,16 @@ class ClassFeedbackQuestionAnswer {
   ClassFeedbackQuestionAnswer({
     this.questionTextAnswer,
     this.questionNumericAnswer,
-    this.teacher,
+    this.className,
+    this.teacherName,
     this.assistant,
     this.questionNumber,
   });
 
   final String questionTextAnswer;
-  final int questionNumericAnswer;
-  final Person teacher;
+  final String questionNumericAnswer;
+  final String className;
+  final String teacherName;
   final Person assistant;
   final String questionNumber;
 }

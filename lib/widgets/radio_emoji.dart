@@ -5,11 +5,15 @@ class EmojiFormField extends FormField<Map<int, bool>> {
   EmojiFormField({
     @required Map<int, bool> initialValues,
     @required String question,
+    FormFieldSetter<Map<int, bool>> onSaved,
     String Function(Map<int, bool>) validator,
+    int questionIndex,
+    Map<int, Map<int, bool>> responses,
     Key key,
   }) : super(
           key: key,
           validator: validator,
+          onSaved: onSaved,
           autovalidateMode: AutovalidateMode.onUserInteraction,
           initialValue: initialValues,
           builder: (state) {
@@ -57,11 +61,27 @@ class EmojiFormField extends FormField<Map<int, bool>> {
                           for (final c in emojiControllers) {
                             if (c != controller) {
                               c.deselect();
+                              //TODO
+                              state.value[i] = selected;
+                              state.value[emojiControllers.indexOf(c)] =
+                                  !selected;
                             }
                           }
                           controller.select();
+                          state.value[i] = selected;
+                          state.didChange(state.value);
+                          responses.addAll({questionIndex: null});
+                          responses.update(
+                              questionIndex, (value) => state.value);
+                          //print('2. ${state.value}');
                         } else {
                           controller.deselect();
+                          state.value[i] = selected;
+                          state.didChange(state.value);
+                          responses.addAll({questionIndex: null});
+                          responses.update(
+                              questionIndex, (value) => state.value);
+                          //print('3. ${state.value}');
                         }
                       },
                     ),

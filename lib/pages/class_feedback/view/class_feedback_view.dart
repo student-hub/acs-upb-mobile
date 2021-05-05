@@ -31,9 +31,12 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
 
   List<String> involvementPercentages = [];
   String selectedInvolvement;
+  String selectedTeacherName;
   Person selectedAssistant;
   List<Person> classTeachers = [];
   List<dynamic> feedbackQuestions = [];
+  Map<int, Map<int, bool>> responses = {};
+  TextEditingController gradeController;
 
   Map<int, bool> emojiSelected = {
     0: false,
@@ -48,6 +51,7 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
     super.initState();
 
     classController = TextEditingController(text: widget.classHeader?.id ?? '');
+    gradeController = TextEditingController();
     involvementPercentages = [
       '0% ... 20%',
       '20% ... 40%',
@@ -80,6 +84,12 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
           focusNode: focusNode,
           onFieldSubmitted: (String value) {
             onFieldSubmitted();
+          },
+          validator: (_) {
+            if (textEditingController.text.isEmpty ?? true) {
+              return S.current.warningYouNeedToSelectAtLeastOne;
+            }
+            return null;
           },
         );
       },
@@ -178,6 +188,7 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
                       builder: (context, snapshot) {
                         if (snapshot.connectionState == ConnectionState.done) {
                           final lecturerName = snapshot.data;
+                          selectedTeacherName = lecturerName;
                           return TextFormField(
                             enabled: false,
                             controller: TextEditingController(
@@ -230,23 +241,39 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
                             ),
                             const SizedBox(height: 24),
                             Text(
-                              generalQuestionsInput.single,
+                              //generalQuestionsInput.single,
+                              S.current.feedbackGeneralQuestion2,
                               style: const TextStyle(
                                 fontSize: 18,
                               ),
                             ),
                             TextFormField(
+                              controller: gradeController,
                               decoration: InputDecoration(
                                 labelText: S.of(context).labelGrade,
                                 prefixIcon: const Icon(Icons.grade_outlined),
                               ),
+                              validator: (value) {
+                                if (value?.isEmpty ?? true) {
+                                  return S
+                                      .current.warningYouNeedToSelectAtLeastOne;
+                                }
+                                return null;
+                              },
                               onChanged: (_) => setState(() {}),
                             ),
                             const SizedBox(height: 24),
                             ...generalQuestionsRating.asMap().entries.map(
                               (entry) {
+                                final length = generalQuestionsRating.length;
                                 return EmojiFormField(
                                   question: entry.value,
+                                  questionIndex: entry.key,
+                                  responses: responses,
+                                  onSaved: (value) {
+                                    //responses = responses;
+                                    //print(responses);
+                                  },
                                   validator: (selection) {
                                     if (selection.values
                                         .where((e) => e != false)
@@ -277,7 +304,8 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
                             ),
                             const SizedBox(height: 24),
                             Text(
-                              involvementQuestions.single,
+                              //involvementQuestions.single,
+                              S.current.feedbackActivitiesQuestion,
                               style: const TextStyle(
                                 fontSize: 18,
                               ),
@@ -389,7 +417,8 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
                             ),
                             const SizedBox(height: 24),
                             Text(
-                              homeworkQuestionsInput.single,
+                              //homeworkQuestionsInput.single,
+                              S.current.feedbackHomeworkQuestion1,
                               style: const TextStyle(
                                 fontSize: 18,
                               ),
@@ -482,10 +511,20 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
         onPressed: () async {
           if (!formKey.currentState.validate()) return;
 
+          if (!agreedToResponsibilities) {
+            AppToast.show(
+                '${S.current.warningAgreeTo}${S.current.labelPermissionsConsent}.');
+            return;
+          }
+
           final response = ClassFeedbackQuestionAnswer(
-
+            assistant: selectedAssistant,
+            teacherName: selectedTeacherName,
+            className: classController.text,
+            questionNumber: '0',
+            questionNumericAnswer: gradeController.text.toString(),
           );
-
+          //print(responses);
           final res =
               await Provider.of<FeedbackProvider>(context, listen: false)
                   .addResponse(response);
@@ -493,6 +532,10 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
             Navigator.of(context).pop();
             AppToast.show(S.current.messageEventAdded);
           }
+          setState(() {
+            //print(responses);
+            formKey.currentState.save();
+          });
         },
       );
 }
