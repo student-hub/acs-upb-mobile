@@ -1,7 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-
 import 'intl/messages_all.dart';
 
 // **************************************************************************
@@ -10,26 +9,27 @@ import 'intl/messages_all.dart';
 // **************************************************************************
 
 // ignore_for_file: non_constant_identifier_names, lines_longer_than_80_chars
+// ignore_for_file: join_return_with_assignment, prefer_final_in_for_each
+// ignore_for_file: avoid_redundant_argument_values
 
 class S {
   S();
-
+  
   static S current;
-
-  static const AppLocalizationDelegate delegate = AppLocalizationDelegate();
+  
+  static const AppLocalizationDelegate delegate =
+    AppLocalizationDelegate();
 
   static Future<S> load(Locale locale) {
-    final name = (locale.countryCode?.isEmpty ?? false)
-        ? locale.languageCode
-        : locale.toString();
-    final localeName = Intl.canonicalizedLocale(name);
+    final name = (locale.countryCode?.isEmpty ?? false) ? locale.languageCode : locale.toString();
+    final localeName = Intl.canonicalizedLocale(name); 
     return initializeMessages(localeName).then((_) {
       Intl.defaultLocale = localeName;
       S.current = S();
-
+      
       return S.current;
     });
-  }
+  } 
 
   static S of(BuildContext context) {
     return Localizations.of<S>(context, S);
@@ -1185,6 +1185,16 @@ class S {
     );
   }
 
+  /// `Unable to insert events in Google Calendar.`
+  String get errorInsertGoogleEvents {
+    return Intl.message(
+      'Unable to insert events in Google Calendar.',
+      name: 'errorInsertGoogleEvents',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Request already exists`
   String get warningRequestExists {
     return Intl.message(
@@ -1840,6 +1850,26 @@ class S {
     return Intl.message(
       'Relevance filter',
       name: 'settingsRelevanceFilter',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Export events to Google Calendar`
+  String get settingsExportToGoogleCalendar {
+    return Intl.message(
+      'Export events to Google Calendar',
+      name: 'settingsExportToGoogleCalendar',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Timetable`
+  String get settingsTitleTimetable {
+    return Intl.message(
+      'Timetable',
+      name: 'settingsTitleTimetable',
       desc: '',
       args: [],
     );
@@ -2592,6 +2622,16 @@ class S {
       name: 'infoReadThePolicy',
       desc: '',
       args: [appName],
+    );
+  }
+
+  /// `Export filtered events from Timetable`
+  String get infoExportToGoogleCalendar {
+    return Intl.message(
+      'Export filtered events from Timetable',
+      name: 'infoExportToGoogleCalendar',
+      desc: '',
+      args: [],
     );
   }
 
