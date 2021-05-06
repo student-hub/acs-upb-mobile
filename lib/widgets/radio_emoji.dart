@@ -7,8 +7,6 @@ class EmojiFormField extends FormField<Map<int, bool>> {
     @required String question,
     FormFieldSetter<Map<int, bool>> onSaved,
     String Function(Map<int, bool>) validator,
-    int questionIndex,
-    Map<int, Map<int, bool>> responses,
     Key key,
   }) : super(
           key: key,
@@ -70,17 +68,11 @@ class EmojiFormField extends FormField<Map<int, bool>> {
                           controller.select();
                           state.value[i] = selected;
                           state.didChange(state.value);
-                          responses.addAll({questionIndex: null});
-                          responses.update(
-                              questionIndex, (value) => state.value);
                           //print('2. ${state.value}');
                         } else {
                           controller.deselect();
                           state.value[i] = selected;
                           state.didChange(state.value);
-                          responses.addAll({questionIndex: null});
-                          responses.update(
-                              questionIndex, (value) => state.value);
                           //print('3. ${state.value}');
                         }
                       },

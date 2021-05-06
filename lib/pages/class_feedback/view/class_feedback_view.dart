@@ -35,8 +35,9 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
   Person selectedAssistant;
   List<Person> classTeachers = [];
   List<dynamic> feedbackQuestions = [];
-  Map<int, Map<int, bool>> responses = {};
+  List<String> responses = [];
   TextEditingController gradeController;
+  List<Map<int, bool>> initialValues = [];
 
   Map<int, bool> emojiSelected = {
     0: false,
@@ -65,6 +66,17 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
     Provider.of<FeedbackProvider>(context, listen: false)
         .fetchQuestions()
         .then((questions) => setState(() => feedbackQuestions = questions));
+
+    for (var i = 0; i < 22; i++) {
+      responses.insert(i, '-1');
+      initialValues.insert(i, {
+        0: false,
+        1: false,
+        2: false,
+        3: false,
+        4: false,
+      });
+    }
   }
 
   Widget autocompleteAssistant(BuildContext context) {
@@ -241,14 +253,17 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
                             ),
                             const SizedBox(height: 24),
                             Text(
-                              //generalQuestionsInput.single,
-                              S.current.feedbackGeneralQuestion2,
+                              generalQuestionsInput.isNotEmpty
+                                  ? generalQuestionsInput.single
+                                  : '-',
                               style: const TextStyle(
                                 fontSize: 18,
                               ),
                             ),
                             TextFormField(
                               controller: gradeController,
+                              autovalidateMode:
+                                  AutovalidateMode.onUserInteraction,
                               decoration: InputDecoration(
                                 labelText: S.of(context).labelGrade,
                                 prefixIcon: const Icon(Icons.grade_outlined),
@@ -265,14 +280,13 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
                             const SizedBox(height: 24),
                             ...generalQuestionsRating.asMap().entries.map(
                               (entry) {
-                                final length = generalQuestionsRating.length;
                                 return EmojiFormField(
                                   question: entry.value,
-                                  questionIndex: entry.key,
-                                  responses: responses,
                                   onSaved: (value) {
-                                    //responses = responses;
-                                    //print(responses);
+                                    responses[entry.key] = value.keys
+                                        .firstWhere(
+                                            (element) => value[element] == true)
+                                        .toString();
                                   },
                                   validator: (selection) {
                                     if (selection.values
@@ -284,7 +298,7 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
                                     }
                                     return null;
                                   },
-                                  initialValues: emojiSelected,
+                                  initialValues: initialValues[entry.key],
                                 );
                               },
                             ),
@@ -304,8 +318,9 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
                             ),
                             const SizedBox(height: 24),
                             Text(
-                              //involvementQuestions.single,
-                              S.current.feedbackActivitiesQuestion,
+                              involvementQuestions.isNotEmpty
+                                  ? involvementQuestions.single
+                                  : '-',
                               style: const TextStyle(
                                 fontSize: 18,
                               ),
@@ -355,6 +370,16 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
                             ...lectureQuestions.asMap().entries.map((entry) {
                               return EmojiFormField(
                                 question: entry.value,
+                                onSaved: (value) {
+                                  responses[
+                                      generalQuestionsInput.length +
+                                          generalQuestionsRating.length +
+                                          involvementQuestions.length +
+                                          entry.key] = value.keys
+                                      .firstWhere(
+                                          (element) => value[element] == true)
+                                      .toString();
+                                },
                                 validator: (selection) {
                                   if (selection.values
                                       .where((e) => e != false)
@@ -365,7 +390,11 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
                                   }
                                   return null;
                                 },
-                                initialValues: emojiSelected,
+                                initialValues: initialValues[
+                                    generalQuestionsInput.length +
+                                        generalQuestionsRating.length +
+                                        involvementQuestions.length +
+                                        entry.key],
                               );
                             }),
                           ],
@@ -382,25 +411,40 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
                               S.of(context).sectionApplications,
                               style: Theme.of(context).textTheme.headline6,
                             ),
-                            ...applicationsQuestions
-                                .asMap()
-                                .entries
-                                .map((entry) {
-                              return EmojiFormField(
-                                question: entry.value,
-                                validator: (selection) {
-                                  if (selection.values
-                                      .where((e) => e != false)
-                                      .isEmpty) {
-                                    return S
-                                        .of(context)
-                                        .warningYouNeedToSelectAtLeastOne;
-                                  }
-                                  return null;
-                                },
-                                initialValues: emojiSelected,
-                              );
-                            }),
+                            ...applicationsQuestions.asMap().entries.map(
+                              (entry) {
+                                return EmojiFormField(
+                                  question: entry.value,
+                                  onSaved: (value) {
+                                    responses[
+                                        generalQuestionsInput.length +
+                                            generalQuestionsRating.length +
+                                            involvementQuestions.length +
+                                            lectureQuestions.length +
+                                            entry.key] = value.keys
+                                        .firstWhere(
+                                            (element) => value[element] == true)
+                                        .toString();
+                                  },
+                                  validator: (selection) {
+                                    if (selection.values
+                                        .where((e) => e != false)
+                                        .isEmpty) {
+                                      return S
+                                          .of(context)
+                                          .warningYouNeedToSelectAtLeastOne;
+                                    }
+                                    return null;
+                                  },
+                                  initialValues: initialValues[
+                                      generalQuestionsInput.length +
+                                          generalQuestionsRating.length +
+                                          involvementQuestions.length +
+                                          lectureQuestions.length +
+                                          entry.key],
+                                );
+                              },
+                            ),
                           ],
                         ),
                       ),
@@ -417,8 +461,9 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
                             ),
                             const SizedBox(height: 24),
                             Text(
-                              //homeworkQuestionsInput.single,
-                              S.current.feedbackHomeworkQuestion1,
+                              homeworkQuestionsInput.isNotEmpty
+                                  ? homeworkQuestionsInput.single
+                                  : '-',
                               style: const TextStyle(
                                 fontSize: 18,
                               ),
@@ -436,16 +481,6 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
                                 .map((entry) {
                               return EmojiFormField(
                                 question: entry.value,
-                                validator: (selection) {
-                                  if (selection.values
-                                      .where((e) => e != false)
-                                      .isEmpty) {
-                                    return S
-                                        .of(context)
-                                        .warningYouNeedToSelectAtLeastOne;
-                                  }
-                                  return null;
-                                },
                                 initialValues: emojiSelected,
                               );
                             }),
@@ -517,25 +552,49 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
             return;
           }
 
-          final response = ClassFeedbackQuestionAnswer(
-            assistant: selectedAssistant,
-            teacherName: selectedTeacherName,
-            className: classController.text,
-            questionNumber: '0',
-            questionNumericAnswer: gradeController.text.toString(),
-          );
-          //print(responses);
-          final res =
-              await Provider.of<FeedbackProvider>(context, listen: false)
+          setState(() {
+            formKey.currentState.save();
+            print(responses);
+          });
+
+          bool res = false;
+
+          for (var i = 0; i <= 14; i++) {
+            if (i == 1 || i == 4) {
+              final answer = i == 1
+                  ? gradeController.text.toString()
+                  : selectedInvolvement;
+
+              final response = ClassFeedbackQuestionAnswer(
+                  assistant: selectedAssistant,
+                  teacherName: selectedTeacherName,
+                  className: classController.text,
+                  questionNumber: i.toString(),
+                  questionTextAnswer: answer);
+
+              res = await Provider.of<FeedbackProvider>(context, listen: false)
                   .addResponse(response);
+              continue;
+            }
+            final response = ClassFeedbackQuestionAnswer(
+              assistant: selectedAssistant,
+              teacherName: selectedTeacherName,
+              className: classController.text,
+              questionNumber: i.toString(),
+              questionNumericAnswer: i == 0 || i >= 5
+                  ? responses.elementAt(i)
+                  : responses.elementAt(i - 1),
+            );
+
+            res = await Provider.of<FeedbackProvider>(context, listen: false)
+                .addResponse(response);
+
+            //if (!res) break;
+          }
           if (res) {
             Navigator.of(context).pop();
             AppToast.show(S.current.messageEventAdded);
           }
-          setState(() {
-            //print(responses);
-            formKey.currentState.save();
-          });
         },
       );
 }
