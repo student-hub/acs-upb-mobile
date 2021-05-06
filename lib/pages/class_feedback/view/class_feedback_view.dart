@@ -37,15 +37,8 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
   List<dynamic> feedbackQuestions = [];
   List<String> responses = [];
   TextEditingController gradeController;
+  TextEditingController hoursController;
   List<Map<int, bool>> initialValues = [];
-
-  Map<int, bool> emojiSelected = {
-    0: false,
-    1: false,
-    2: false,
-    3: false,
-    4: false,
-  };
 
   @override
   void initState() {
@@ -53,6 +46,7 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
 
     classController = TextEditingController(text: widget.classHeader?.id ?? '');
     gradeController = TextEditingController();
+    hoursController = TextEditingController();
     involvementPercentages = [
       '0% ... 20%',
       '20% ... 40%',
@@ -180,358 +174,421 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-                  Column(children: [
-                    IconText(
-                      icon: Icons.info_outline,
-                      text: S.of(context).infoFormAnonymous,
-                    ),
-                    TextFormField(
-                      enabled: false,
-                      controller: classController,
-                      decoration: InputDecoration(
-                        labelText: S.of(context).labelClass,
-                        prefixIcon: const Icon(FeatherIcons.bookOpen),
+                  Column(
+                    children: [
+                      IconText(
+                        icon: Icons.info_outline,
+                        text: S.of(context).infoFormAnonymous,
                       ),
-                      onChanged: (_) => setState(() {}),
-                    ),
-                    FutureBuilder(
-                      future: personProvider
-                          .mostRecentLecturer(widget.classHeader.id),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState == ConnectionState.done) {
-                          final lecturerName = snapshot.data;
-                          selectedTeacherName = lecturerName;
-                          return TextFormField(
-                            enabled: false,
-                            controller: TextEditingController(
-                                text: lecturerName ?? '-'),
-                            decoration: InputDecoration(
-                              labelText: S.of(context).labelLecturer,
-                              prefixIcon: const Icon(Icons.person_outline),
-                            ),
-                            onChanged: (_) => setState(() {}),
-                          );
-                        } else {
-                          return const Center(
-                              child: CircularProgressIndicator());
-                        }
-                      },
-                    ),
-                    autocompleteAssistant(context),
-                    Padding(
-                      padding: const EdgeInsets.all(10),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Checkbox(
-                            value: agreedToResponsibilities,
-                            visualDensity: VisualDensity.compact,
-                            onChanged: (value) => setState(
-                                () => agreedToResponsibilities = value),
-                          ),
-                          Expanded(
-                            child: Padding(
-                              padding: const EdgeInsets.only(top: 10.25),
-                              child: Text(
-                                S.of(context).messageAgreeFeedbackPolicy,
-                                style: Theme.of(context).textTheme.subtitle1,
-                              ),
-                            ),
-                          ),
-                        ],
+                      TextFormField(
+                        enabled: false,
+                        controller: classController,
+                        decoration: InputDecoration(
+                          labelText: S.of(context).labelClass,
+                          prefixIcon: const Icon(FeatherIcons.bookOpen),
+                        ),
+                        onChanged: (_) => setState(() {}),
                       ),
-                    ),
-                    const SizedBox(height: 24),
-                    Card(
-                      child: Padding(
-                        padding: const EdgeInsets.all(15),
-                        child: Column(
-                          children: [
-                            Text(
-                              S.of(context).sectionGeneralQuestions,
-                              style: Theme.of(context).textTheme.headline6,
-                            ),
-                            const SizedBox(height: 24),
-                            Text(
-                              generalQuestionsInput.isNotEmpty
-                                  ? generalQuestionsInput.single
-                                  : '-',
-                              style: const TextStyle(
-                                fontSize: 18,
-                              ),
-                            ),
-                            TextFormField(
-                              controller: gradeController,
-                              autovalidateMode:
-                                  AutovalidateMode.onUserInteraction,
+                      FutureBuilder(
+                        future: personProvider
+                            .mostRecentLecturer(widget.classHeader.id),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.done) {
+                            final lecturerName = snapshot.data;
+                            selectedTeacherName = lecturerName;
+                            return TextFormField(
+                              enabled: false,
+                              controller: TextEditingController(
+                                  text: lecturerName ?? '-'),
                               decoration: InputDecoration(
-                                labelText: S.of(context).labelGrade,
-                                prefixIcon: const Icon(Icons.grade_outlined),
+                                labelText: S.of(context).labelLecturer,
+                                prefixIcon: const Icon(Icons.person_outline),
                               ),
-                              validator: (value) {
-                                if (value?.isEmpty ?? true) {
-                                  return S
-                                      .current.warningYouNeedToSelectAtLeastOne;
-                                }
-                                return null;
-                              },
                               onChanged: (_) => setState(() {}),
+                            );
+                          } else {
+                            return const Center(
+                                child: CircularProgressIndicator());
+                          }
+                        },
+                      ),
+                      autocompleteAssistant(context),
+                      Padding(
+                        padding: const EdgeInsets.all(10),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Checkbox(
+                              value: agreedToResponsibilities,
+                              visualDensity: VisualDensity.compact,
+                              onChanged: (value) => setState(
+                                  () => agreedToResponsibilities = value),
                             ),
-                            const SizedBox(height: 24),
-                            ...generalQuestionsRating.asMap().entries.map(
-                              (entry) {
-                                return EmojiFormField(
-                                  question: entry.value,
-                                  onSaved: (value) {
-                                    responses[entry.key] = value.keys
-                                        .firstWhere(
-                                            (element) => value[element] == true)
-                                        .toString();
-                                  },
-                                  validator: (selection) {
-                                    if (selection.values
-                                        .where((e) => e != false)
-                                        .isEmpty) {
-                                      return S
-                                          .of(context)
-                                          .warningYouNeedToSelectAtLeastOne;
-                                    }
-                                    return null;
-                                  },
-                                  initialValues: initialValues[entry.key],
-                                );
-                              },
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.only(top: 10.25),
+                                child: Text(
+                                  S.of(context).messageAgreeFeedbackPolicy,
+                                  style: Theme.of(context).textTheme.subtitle1,
+                                ),
+                              ),
                             ),
                           ],
                         ),
                       ),
-                    ),
-                    const SizedBox(height: 10),
-                    Card(
-                      child: Padding(
-                        padding: const EdgeInsets.all(15),
-                        child: Column(
-                          children: [
-                            Text(
-                              S.of(context).sectionInvolvement,
-                              style: Theme.of(context).textTheme.headline6,
-                            ),
-                            const SizedBox(height: 24),
-                            Text(
-                              involvementQuestions.isNotEmpty
-                                  ? involvementQuestions.single
-                                  : '-',
-                              style: const TextStyle(
-                                fontSize: 18,
+                      const SizedBox(height: 24),
+                      Card(
+                        child: Padding(
+                          padding: const EdgeInsets.all(15),
+                          child: Column(
+                            children: [
+                              Text(
+                                S.of(context).sectionGeneralQuestions,
+                                style: Theme.of(context).textTheme.headline6,
                               ),
-                            ),
-                            DropdownButtonFormField<String>(
-                              decoration: InputDecoration(
-                                labelText: S.of(context).sectionInvolvement,
-                                prefixIcon:
-                                    const Icon(Icons.local_activity_outlined),
+                              const SizedBox(height: 24),
+                              Text(
+                                generalQuestionsInput.isNotEmpty
+                                    ? generalQuestionsInput.single
+                                    : '-',
+                                style: const TextStyle(
+                                  fontSize: 18,
+                                ),
                               ),
-                              value: selectedInvolvement,
-                              items: involvementPercentages
-                                  .map(
-                                    (type) => DropdownMenuItem<String>(
-                                      value: type,
-                                      child: Text(type.toString()),
-                                    ),
-                                  )
-                                  .toList(),
-                              onChanged: (selection) {
-                                formKey.currentState.validate();
-                                setState(() => selectedInvolvement = selection);
-                              },
-                              validator: (selection) {
-                                if (selection == null) {
-                                  return S
-                                      .of(context)
-                                      .errorEventTypeCannotBeEmpty;
-                                }
-                                return null;
-                              },
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    Card(
-                      child: Padding(
-                        padding: const EdgeInsets.all(15),
-                        child: Column(
-                          children: [
-                            Text(
-                              S.of(context).uniEventTypeLecture,
-                              style: Theme.of(context).textTheme.headline6,
-                            ),
-                            ...lectureQuestions.asMap().entries.map((entry) {
-                              return EmojiFormField(
-                                question: entry.value,
-                                onSaved: (value) {
-                                  responses[
-                                      generalQuestionsInput.length +
-                                          generalQuestionsRating.length +
-                                          involvementQuestions.length +
-                                          entry.key] = value.keys
-                                      .firstWhere(
-                                          (element) => value[element] == true)
-                                      .toString();
-                                },
-                                validator: (selection) {
-                                  if (selection.values
-                                      .where((e) => e != false)
-                                      .isEmpty) {
-                                    return S
-                                        .of(context)
+                              TextFormField(
+                                controller: gradeController,
+                                autovalidateMode:
+                                    AutovalidateMode.onUserInteraction,
+                                decoration: InputDecoration(
+                                  labelText: S.of(context).labelGrade,
+                                  prefixIcon: const Icon(Icons.grade_outlined),
+                                ),
+                                validator: (value) {
+                                  if (value?.isEmpty ?? true) {
+                                    return S.current
                                         .warningYouNeedToSelectAtLeastOne;
                                   }
                                   return null;
                                 },
-                                initialValues: initialValues[
-                                    generalQuestionsInput.length +
-                                        generalQuestionsRating.length +
-                                        involvementQuestions.length +
-                                        entry.key],
-                              );
-                            }),
-                          ],
+                                onChanged: (_) => setState(() {}),
+                              ),
+                              const SizedBox(height: 24),
+                              ...generalQuestionsRating.asMap().entries.map(
+                                (entry) {
+                                  return EmojiFormField(
+                                    question: entry.value,
+                                    onSaved: (value) {
+                                      responses[entry.key] = value.keys
+                                          .firstWhere((element) =>
+                                              value[element] == true)
+                                          .toString();
+                                    },
+                                    validator: (selection) {
+                                      if (selection.values
+                                          .where((e) => e != false)
+                                          .isEmpty) {
+                                        return S
+                                            .of(context)
+                                            .warningYouNeedToSelectAtLeastOne;
+                                      }
+                                      return null;
+                                    },
+                                    initialValues: initialValues[entry.key],
+                                  );
+                                },
+                              ),
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                    const SizedBox(height: 10),
-                    Card(
-                      child: Padding(
-                        padding: const EdgeInsets.all(15),
-                        child: Column(
-                          children: [
-                            Text(
-                              S.of(context).sectionApplications,
-                              style: Theme.of(context).textTheme.headline6,
-                            ),
-                            ...applicationsQuestions.asMap().entries.map(
-                              (entry) {
-                                return EmojiFormField(
-                                  question: entry.value,
-                                  onSaved: (value) {
-                                    responses[
+                      const SizedBox(height: 10),
+                      Card(
+                        child: Padding(
+                          padding: const EdgeInsets.all(15),
+                          child: Column(
+                            children: [
+                              Text(
+                                S.of(context).sectionInvolvement,
+                                style: Theme.of(context).textTheme.headline6,
+                              ),
+                              const SizedBox(height: 24),
+                              Text(
+                                involvementQuestions.isNotEmpty
+                                    ? involvementQuestions.single
+                                    : '-',
+                                style: const TextStyle(
+                                  fontSize: 18,
+                                ),
+                              ),
+                              DropdownButtonFormField<String>(
+                                decoration: InputDecoration(
+                                  labelText: S.of(context).sectionInvolvement,
+                                  prefixIcon:
+                                      const Icon(Icons.local_activity_outlined),
+                                ),
+                                value: selectedInvolvement,
+                                items: involvementPercentages
+                                    .map(
+                                      (type) => DropdownMenuItem<String>(
+                                        value: type,
+                                        child: Text(type.toString()),
+                                      ),
+                                    )
+                                    .toList(),
+                                onChanged: (selection) {
+                                  formKey.currentState.validate();
+                                  setState(
+                                      () => selectedInvolvement = selection);
+                                },
+                                validator: (selection) {
+                                  if (selection == null) {
+                                    return S
+                                        .of(context)
+                                        .errorEventTypeCannotBeEmpty;
+                                  }
+                                  return null;
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      Card(
+                        child: Padding(
+                          padding: const EdgeInsets.all(15),
+                          child: Column(
+                            children: [
+                              Text(
+                                S.of(context).uniEventTypeLecture,
+                                style: Theme.of(context).textTheme.headline6,
+                              ),
+                              ...lectureQuestions.asMap().entries.map(
+                                (entry) {
+                                  return EmojiFormField(
+                                    question: entry.value,
+                                    onSaved: (value) {
+                                      responses[generalQuestionsInput.length +
+                                              generalQuestionsRating.length +
+                                              involvementQuestions.length +
+                                              entry.key] =
+                                          value.keys
+                                              .firstWhere((element) =>
+                                                  value[element] == true)
+                                              .toString();
+                                    },
+                                    validator: (selection) {
+                                      if (selection.values
+                                          .where((e) => e != false)
+                                          .isEmpty) {
+                                        return S
+                                            .of(context)
+                                            .warningYouNeedToSelectAtLeastOne;
+                                      }
+                                      return null;
+                                    },
+                                    initialValues: initialValues[
+                                        generalQuestionsInput.length +
+                                            generalQuestionsRating.length +
+                                            involvementQuestions.length +
+                                            entry.key],
+                                  );
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      Card(
+                        child: Padding(
+                          padding: const EdgeInsets.all(15),
+                          child: Column(
+                            children: [
+                              Text(
+                                S.of(context).sectionApplications,
+                                style: Theme.of(context).textTheme.headline6,
+                              ),
+                              ...applicationsQuestions.asMap().entries.map(
+                                (entry) {
+                                  return EmojiFormField(
+                                    question: entry.value,
+                                    onSaved: (value) {
+                                      responses[generalQuestionsInput.length +
+                                              generalQuestionsRating.length +
+                                              involvementQuestions.length +
+                                              lectureQuestions.length +
+                                              entry.key] =
+                                          value.keys
+                                              .firstWhere((element) =>
+                                                  value[element] == true)
+                                              .toString();
+                                    },
+                                    validator: (selection) {
+                                      if (selection.values
+                                          .where((e) => e != false)
+                                          .isEmpty) {
+                                        return S
+                                            .of(context)
+                                            .warningYouNeedToSelectAtLeastOne;
+                                      }
+                                      return null;
+                                    },
+                                    initialValues: initialValues[
                                         generalQuestionsInput.length +
                                             generalQuestionsRating.length +
                                             involvementQuestions.length +
                                             lectureQuestions.length +
-                                            entry.key] = value.keys
-                                        .firstWhere(
-                                            (element) => value[element] == true)
-                                        .toString();
-                                  },
-                                  validator: (selection) {
-                                    if (selection.values
-                                        .where((e) => e != false)
-                                        .isEmpty) {
-                                      return S
-                                          .of(context)
-                                          .warningYouNeedToSelectAtLeastOne;
-                                    }
-                                    return null;
-                                  },
-                                  initialValues: initialValues[
-                                      generalQuestionsInput.length +
-                                          generalQuestionsRating.length +
-                                          involvementQuestions.length +
-                                          lectureQuestions.length +
-                                          entry.key],
-                                );
-                              },
-                            ),
-                          ],
+                                            entry.key],
+                                  );
+                                },
+                              ),
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                    const SizedBox(height: 10),
-                    Card(
-                      child: Padding(
-                        padding: const EdgeInsets.all(15),
-                        child: Column(
-                          children: [
-                            Text(
-                              S.of(context).uniEventTypeHomework,
-                              style: Theme.of(context).textTheme.headline6,
-                            ),
-                            const SizedBox(height: 24),
-                            Text(
-                              homeworkQuestionsInput.isNotEmpty
-                                  ? homeworkQuestionsInput.single
-                                  : '-',
-                              style: const TextStyle(
-                                fontSize: 18,
+                      const SizedBox(height: 10),
+                      Card(
+                        child: Padding(
+                          padding: const EdgeInsets.all(15),
+                          child: Column(
+                            children: [
+                              Text(
+                                S.of(context).uniEventTypeHomework,
+                                style: Theme.of(context).textTheme.headline6,
                               ),
-                            ),
-                            TextFormField(
-                              decoration: InputDecoration(
-                                labelText: S.of(context).labelGrade,
-                                prefixIcon: const Icon(Icons.grade_outlined),
+                              const SizedBox(height: 24),
+                              Text(
+                                homeworkQuestionsInput.isNotEmpty
+                                    ? homeworkQuestionsInput.single
+                                    : '-',
+                                style: const TextStyle(
+                                  fontSize: 18,
+                                ),
                               ),
-                              onChanged: (_) => setState(() {}),
-                            ),
-                            ...homeworkQuestionsRating
-                                .asMap()
-                                .entries
-                                .map((entry) {
-                              return EmojiFormField(
-                                question: entry.value,
-                                initialValues: emojiSelected,
-                              );
-                            }),
-                          ],
+                              TextFormField(
+                                controller: hoursController,
+                                autovalidateMode:
+                                    AutovalidateMode.onUserInteraction,
+                                decoration: InputDecoration(
+                                  labelText: S.current.labelGrade,
+                                  prefixIcon: const Icon(Icons.grade_outlined),
+                                ),
+                                validator: (value) {
+                                  if (value?.isEmpty ?? true) {
+                                    return S.current
+                                        .warningYouNeedToSelectAtLeastOne;
+                                  }
+                                  return null;
+                                },
+                                onChanged: (_) => setState(() {}),
+                              ),
+                              ...homeworkQuestionsRating.asMap().entries.map(
+                                (entry) {
+                                  return EmojiFormField(
+                                    question: entry.value,
+                                    onSaved: (value) {
+                                      responses[generalQuestionsInput.length +
+                                              generalQuestionsRating.length +
+                                              involvementQuestions.length +
+                                              lectureQuestions.length +
+                                              applicationsQuestions.length +
+                                              homeworkQuestionsInput.length +
+                                              entry.key] =
+                                          value.keys
+                                              .firstWhere((element) =>
+                                                  value[element] == true)
+                                              .toString();
+                                    },
+                                    validator: (selection) {
+                                      if (selection.values
+                                          .where((e) => e != false)
+                                          .isEmpty) {
+                                        return S
+                                            .of(context)
+                                            .warningYouNeedToSelectAtLeastOne;
+                                      }
+                                      return null;
+                                    },
+                                    initialValues: initialValues[
+                                        generalQuestionsInput.length +
+                                            generalQuestionsRating.length +
+                                            involvementQuestions.length +
+                                            lectureQuestions.length +
+                                            applicationsQuestions.length +
+                                            homeworkQuestionsInput.length +
+                                            entry.key],
+                                  );
+                                },
+                              ),
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                    const SizedBox(height: 10),
-                    Card(
-                      child: Padding(
-                        padding: const EdgeInsets.all(15),
-                        child: Column(
-                          children: [
-                            Text(
-                              S.of(context).sectionPersonalComments,
-                              style: Theme.of(context).textTheme.headline6,
-                            ),
-                            const SizedBox(height: 24),
-                            ...personalQuestions.asMap().entries.map((entry) {
-                              return Column(
-                                children: [
-                                  Text(
-                                    entry.value,
-                                    style: const TextStyle(
-                                      fontSize: 18,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 24),
-                                  Card(
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(2),
-                                      child: Column(
-                                        children: [
-                                          TextFormField(
-                                            keyboardType:
-                                                TextInputType.multiline,
-                                            maxLines: null,
-                                          ),
-                                        ],
+                      const SizedBox(height: 10),
+                      Card(
+                        child: Padding(
+                          padding: const EdgeInsets.all(15),
+                          child: Column(
+                            children: [
+                              Text(
+                                S.of(context).sectionPersonalComments,
+                                style: Theme.of(context).textTheme.headline6,
+                              ),
+                              const SizedBox(height: 24),
+                              ...personalQuestions.asMap().entries.map(
+                                (entry) {
+                                  return Column(
+                                    children: [
+                                      Text(
+                                        entry.value,
+                                        style: const TextStyle(
+                                          fontSize: 18,
+                                        ),
                                       ),
-                                    ),
-                                  ),
-                                  const SizedBox(height: 24),
-                                ],
-                              );
-                            }),
-                          ],
+                                      const SizedBox(height: 24),
+                                      Card(
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(2),
+                                          child: Column(
+                                            children: [
+                                              TextFormField(
+                                                onSaved: (value) {
+                                                  responses[generalQuestionsInput
+                                                          .length +
+                                                      generalQuestionsRating
+                                                          .length +
+                                                      involvementQuestions
+                                                          .length +
+                                                      lectureQuestions.length +
+                                                      applicationsQuestions
+                                                          .length +
+                                                      homeworkQuestionsInput
+                                                          .length +
+                                                      homeworkQuestionsRating
+                                                          .length +
+                                                      entry.key] = value;
+                                                },
+                                                keyboardType:
+                                                    TextInputType.multiline,
+                                                maxLines: null,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(height: 24),
+                                    ],
+                                  );
+                                },
+                              ),
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                  ]),
+                    ],
+                  ),
                 ],
               ),
             ),
@@ -559,11 +616,13 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
 
           bool res = false;
 
-          for (var i = 0; i <= 14; i++) {
-            if (i == 1 || i == 4) {
+          for (var i = 0; i <= 21; i++) {
+            if (i == 1 || i == 4 || i == 15) {
               final answer = i == 1
                   ? gradeController.text.toString()
-                  : selectedInvolvement;
+                  : i == 4
+                      ? selectedInvolvement
+                      : hoursController.text.toString();
 
               final response = ClassFeedbackQuestionAnswer(
                   assistant: selectedAssistant,
@@ -577,14 +636,16 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
               continue;
             }
             final response = ClassFeedbackQuestionAnswer(
-              assistant: selectedAssistant,
-              teacherName: selectedTeacherName,
-              className: classController.text,
-              questionNumber: i.toString(),
-              questionNumericAnswer: i == 0 || i >= 5
-                  ? responses.elementAt(i)
-                  : responses.elementAt(i - 1),
-            );
+                assistant: selectedAssistant,
+                teacherName: selectedTeacherName,
+                className: classController.text,
+                questionNumber: i.toString(),
+                questionNumericAnswer: i >= 18
+                    ? null
+                    : i == 0 || i >= 5 || (i >= 16 && i <= 17)
+                        ? responses.elementAt(i)
+                        : responses.elementAt(i - 1),
+                questionTextAnswer: i >= 18 ? responses.elementAt(i) : null);
 
             res = await Provider.of<FeedbackProvider>(context, listen: false)
                 .addResponse(response);

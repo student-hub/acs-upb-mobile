@@ -59,7 +59,6 @@ class EmojiFormField extends FormField<Map<int, bool>> {
                           for (final c in emojiControllers) {
                             if (c != controller) {
                               c.deselect();
-                              //TODO
                               state.value[i] = selected;
                               state.value[emojiControllers.indexOf(c)] =
                                   !selected;
@@ -68,12 +67,10 @@ class EmojiFormField extends FormField<Map<int, bool>> {
                           controller.select();
                           state.value[i] = selected;
                           state.didChange(state.value);
-                          //print('2. ${state.value}');
                         } else {
                           controller.deselect();
                           state.value[i] = selected;
                           state.didChange(state.value);
-                          //print('3. ${state.value}');
                         }
                       },
                     ),
