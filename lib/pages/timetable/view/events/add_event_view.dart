@@ -380,7 +380,9 @@ class _AddEventViewState extends State<AddEventView> {
                         ),
                         timeIntervalPicker(),
                         Divider(
-                            thickness: 1, color: Theme.of(context).hintColor),
+                          thickness: 0.7,
+                          color: Theme.of(context).hintColor,
+                        ),
                         if (weekSelected[WeekType.odd] != null &&
                             weekSelected[WeekType.even] != null)
                           ChipFormField(
@@ -705,9 +707,9 @@ class ChipFormField extends FormField<Map<Localizable, bool>> {
                                                   .textTheme
                                                   .bodyText2
                                                   .color,
-                                          // fontWeight: state.value[labels[index]]
-                                          //     ? FontWeight.bold
-                                          //     : FontWeight.normal,
+                                          fontWeight: state.value[labels[index]]
+                                              ? FontWeight.bold
+                                              : FontWeight.normal,
                                         ),
                                       ),
                                       selected: state.value[labels[index]],
@@ -727,7 +729,7 @@ class ChipFormField extends FormField<Map<Localizable, bool>> {
                     ),
                     const SizedBox(height: 8),
                     Divider(
-                        thickness: 1,
+                        thickness: 0.7,
                         color: state.hasError
                             ? Theme.of(context).errorColor
                             : Theme.of(context).hintColor),
