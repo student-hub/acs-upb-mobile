@@ -16,6 +16,7 @@ import 'package:acs_upb_mobile/pages/timetable/model/events/uni_event.dart';
 import 'package:acs_upb_mobile/pages/timetable/service/uni_event_provider.dart';
 import 'package:acs_upb_mobile/resources/custom_icons.dart';
 import 'package:acs_upb_mobile/resources/locale_provider.dart';
+import 'package:acs_upb_mobile/resources/theme.dart';
 import 'package:acs_upb_mobile/widgets/autocomplete.dart';
 import 'package:acs_upb_mobile/widgets/button.dart';
 import 'package:acs_upb_mobile/widgets/dialog.dart';
@@ -698,19 +699,11 @@ class ChipFormField extends FormField<Map<Localizable, bool>> {
                                   children: [
                                     FilterChip(
                                       label: Text(
-                                        labels[index]
-                                            .toLocalizedString(),
-                                        style: TextStyle(
-                                          color: state.value[labels[index]]
-                                              ? Theme.of(context).accentColor
-                                              : Theme.of(context)
-                                                  .textTheme
-                                                  .bodyText2
-                                                  .color,
-                                          fontWeight: state.value[labels[index]]
-                                              ? FontWeight.bold
-                                              : FontWeight.normal,
-                                        ),
+                                        labels[index].toLocalizedString(),
+                                        style: Theme.of(context)
+                                            .filterChipTextStyle(
+                                                selected:
+                                                    state.value[labels[index]]),
                                       ),
                                       selected: state.value[labels[index]],
                                       onSelected: (selected) {

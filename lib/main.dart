@@ -132,17 +132,18 @@ class _MyAppState extends State<MyApp> {
     );
   }
 
-  ChipThemeData defaultChipThemeData(Brightness brightness) => ChipThemeData.fromDefaults(
-    brightness: brightness,
-    secondaryColor: _accentColor,
-    labelStyle: ThemeData()
-        .accentTextTheme
-        .apply(
-        fontFamily: 'Montserrat',
-        bodyColor: _accentColor,
-        displayColor: _accentColor)
-        .bodyText2,
-  );
+  ChipThemeData defaultChipThemeData(Brightness brightness) =>
+      ChipThemeData.fromDefaults(
+        brightness: brightness,
+        secondaryColor: _accentColor,
+        labelStyle: ThemeData()
+            .accentTextTheme
+            .apply(
+                fontFamily: 'Montserrat',
+                bodyColor: _accentColor,
+                displayColor: _accentColor)
+            .bodyText2,
+      );
 
   @override
   Widget build(BuildContext context) {
@@ -163,14 +164,20 @@ class _MyAppState extends State<MyApp> {
         primaryColor: const Color(0xFF4DB5E4),
         chipTheme: ChipThemeData(
           brightness: brightness,
-          selectedColor: _accentColor.withOpacity(0.3),
+          selectedColor: brightness == Brightness.light
+              ? _accentColor.withOpacity(0.3)
+              : _accentColor,
           secondarySelectedColor: const Color(0xFF292562),
-          backgroundColor: defaultChipThemeData(brightness).backgroundColor.withOpacity(0.1),
+          backgroundColor:
+              defaultChipThemeData(brightness).backgroundColor.withOpacity(0.1),
           disabledColor: defaultChipThemeData(brightness).disabledColor,
           padding: defaultChipThemeData(brightness).padding,
           labelStyle: defaultChipThemeData(brightness).labelStyle,
-          secondaryLabelStyle: defaultChipThemeData(brightness).secondaryLabelStyle.apply(color: _accentColor),
-          checkmarkColor: _accentColor,
+          secondaryLabelStyle: defaultChipThemeData(brightness)
+              .secondaryLabelStyle
+              .apply(color: _accentColor),
+          checkmarkColor:
+              brightness == Brightness.light ? _accentColor : Colors.white,
         ),
       ),
       themedWidgetBuilder: (context, theme) {
