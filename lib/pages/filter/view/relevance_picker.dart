@@ -5,6 +5,7 @@ import 'package:acs_upb_mobile/pages/filter/model/filter.dart';
 import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
 import 'package:acs_upb_mobile/pages/filter/view/filter_page.dart';
 import 'package:acs_upb_mobile/resources/custom_icons.dart';
+import 'package:acs_upb_mobile/resources/theme.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
@@ -199,7 +200,11 @@ class _RelevancePickerState extends State<RelevancePicker> {
               }
             },
             child: FilterChip(
-              label: Text(node),
+              label: Text(
+                node,
+                style: Theme.of(context)
+                    .chipTextStyle(selected: _customSelected[node]),
+              ),
               selected: _customSelected[node],
               onSelected: !_canAddPublicInfo
                   ? null
@@ -237,7 +242,11 @@ class _RelevancePickerState extends State<RelevancePicker> {
                 }
               },
               child: FilterChip(
-                label: Text(node),
+                label: Text(
+                  node,
+                  style: Theme.of(context)
+                      .chipTextStyle(selected: _customSelected[node]),
+                ),
                 selected: _customSelected[node],
                 onSelected: !_canAddPublicInfo
                     ? null
@@ -309,7 +318,12 @@ class _RelevancePickerState extends State<RelevancePicker> {
                                   Row(
                                     children: [
                                       ChoiceChip(
-                                        label: Text(S.current.relevanceOnlyMe),
+                                        label: Text(
+                                          S.current.relevanceOnlyMe,
+                                          style: Theme.of(context)
+                                              .chipTextStyle(
+                                                  selected: _onlyMeSelected),
+                                        ),
                                         selected: _onlyMeSelected,
                                         onSelected: (selected) => setState(() {
                                           if (_user?.canAddPublicInfo ??
@@ -349,8 +363,14 @@ class _RelevancePickerState extends State<RelevancePicker> {
                                           }
                                         },
                                         child: ChoiceChip(
-                                          label:
-                                              Text(S.current.relevanceAnyone),
+                                          label: Text(
+                                            S.current.relevanceAnyone,
+                                            style: Theme.of(context)
+                                                .chipTextStyle(
+                                                    selected:
+                                                        !_somethingSelected ||
+                                                            _anyoneSelected),
+                                          ),
                                           selected: !_somethingSelected ||
                                               _anyoneSelected,
                                           onSelected: !_canAddPublicInfo

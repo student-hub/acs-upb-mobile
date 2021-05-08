@@ -700,10 +700,9 @@ class ChipFormField extends FormField<Map<Localizable, bool>> {
                                     FilterChip(
                                       label: Text(
                                         labels[index].toLocalizedString(),
-                                        style: Theme.of(context)
-                                            .filterChipTextStyle(
-                                                selected:
-                                                    state.value[labels[index]]),
+                                        style: Theme.of(context).chipTextStyle(
+                                            selected:
+                                                state.value[labels[index]]),
                                       ),
                                       selected: state.value[labels[index]],
                                       onSelected: (selected) {
