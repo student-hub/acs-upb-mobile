@@ -385,32 +385,12 @@ class _AddEventViewState extends State<AddEventView> {
                             icon: FeatherIcons.calendar,
                             label: S.current.labelWeek,
                             initialValues: weekSelected,
-                            validator: (selection) {
-                              if (selection.values
-                                  .where((e) => e != false)
-                                  .isEmpty) {
-                                return S
-                                    .of(context)
-                                    .warningYouNeedToSelectAtLeastOne;
-                              }
-                              return null;
-                            },
                           ),
                         FilterChipFormField(
                           key: const ValueKey('day_picker'),
                           icon: Icons.today_outlined,
                           label: S.current.labelDay,
                           initialValues: weekDaySelected,
-                          validator: (selection) {
-                            if (selection.values
-                                .where((e) => e != false)
-                                .isEmpty) {
-                              return S
-                                  .of(context)
-                                  .warningYouNeedToSelectAtLeastOne;
-                            }
-                            return null;
-                          },
                         ),
                         const SizedBox(height: 16),
                       ],

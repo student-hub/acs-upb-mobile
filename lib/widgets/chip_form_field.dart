@@ -1,3 +1,4 @@
+import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/resources/locale_provider.dart';
 import 'package:acs_upb_mobile/resources/theme.dart';
 import 'package:flutter/material.dart';
@@ -7,14 +8,18 @@ class FilterChipFormField extends ChipFormField<Map<Localizable, bool>> {
     @required Map<Localizable, bool> initialValues,
     @required IconData icon,
     @required String label,
-    String Function(Map<Localizable, bool>) validator,
     Key key,
   }) : super(
           key: key,
           icon: icon,
           label: label,
           initialValues: initialValues,
-          validator: validator,
+          validator: (selection) {
+            if (selection.values.where((e) => e != false).isEmpty) {
+              return S.current.warningYouNeedToSelectAtLeastOne;
+            }
+            return null;
+          },
           contentBuilder: (state) {
             final labels = state.value.keys.toList();
             return ListView.builder(
