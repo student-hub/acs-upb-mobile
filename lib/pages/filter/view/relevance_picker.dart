@@ -100,6 +100,21 @@ class _RelevancePickerState extends State<RelevancePicker> {
     _customSelected = {};
   }
 
+  bool get _canAddPublicInfo => _user?.canAddPublicInfo ?? false;
+
+  bool get _somethingSelected {
+    if (_onlyMeSelected || _anyoneSelected) {
+      return true;
+    }
+
+    for (final node in _customSelected.keys) {
+      if (_customSelected[node]) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   Widget _customRelevanceButton() {
     final buttonColor = _user?.canAddPublicInfo ?? false
         ? Theme.of(context).accentColor
@@ -177,25 +192,29 @@ class _RelevancePickerState extends State<RelevancePicker> {
         }
 
         widgets
-          ..add(FilterChip(
-            label: Text(node),
-            selected: _customSelected[node],
-            onSelected: (selected) => setState(() {
-              if (_user?.canAddPublicInfo ?? false) {
-                _customSelected[node] = selected;
-                if (selected) {
-                  _onlyMeSelected = false;
-                  _anyoneSelected = false;
-                }
-
-                if (widget.controller?.onChanged != null) {
-                  widget.controller.onChanged();
-                }
-              } else {
+          ..add(GestureDetector(
+            onTap: () {
+              if (!_canAddPublicInfo) {
                 AppToast.show(S.current.warningNoPermissionToAddPublicWebsite);
               }
-            }),
-            // disabled: !(_user?.canAddPublicInfo ?? false),
+            },
+            child: FilterChip(
+              label: Text(node),
+              selected: _customSelected[node],
+              onSelected: !_canAddPublicInfo
+                  ? null
+                  : (selected) => setState(() {
+                        _customSelected[node] = selected;
+                        if (selected) {
+                          _onlyMeSelected = false;
+                          _anyoneSelected = false;
+                        }
+
+                        if (widget.controller?.onChanged != null) {
+                          widget.controller.onChanged();
+                        }
+                      }),
+            ),
           ))
           ..add(const SizedBox(width: 10));
       }
@@ -209,44 +228,38 @@ class _RelevancePickerState extends State<RelevancePicker> {
 
         widgets
           ..add(const SizedBox(width: 10))
-          ..add(FilterChip(
-            label: Text(node),
-            selected: _customSelected[node],
-            onSelected: (bool selected) => setState(() {
-              if (_user?.canAddPublicInfo ?? false) {
-                _customSelected[node] = selected;
-                if (selected) {
-                  _onlyMeSelected = false;
-                  _anyoneSelected = false;
-                  widget.controller?.onChanged();
+          ..add(
+            GestureDetector(
+              onTap: () {
+                if (!_canAddPublicInfo) {
+                  AppToast.show(
+                      S.current.warningNoPermissionToAddPublicWebsite);
                 }
+              },
+              child: FilterChip(
+                label: Text(node),
+                selected: _customSelected[node],
+                onSelected: !_canAddPublicInfo
+                    ? null
+                    : (bool selected) => setState(() {
+                          _customSelected[node] = selected;
+                          if (selected) {
+                            _onlyMeSelected = false;
+                            _anyoneSelected = false;
+                            widget.controller?.onChanged();
+                          }
 
-                if (widget.controller?.onChanged != null) {
-                  widget.controller.onChanged();
-                }
-              } else {
-                AppToast.show(S.current.warningNoPermissionToAddPublicWebsite);
-              }
-            }),
-            // disabled: !(_user?.canAddPublicInfo ?? false),
-          ));
+                          if (widget.controller?.onChanged != null) {
+                            widget.controller.onChanged();
+                          }
+                        }),
+              ),
+            ),
+          );
       }
     }
 
     return Row(children: widgets);
-  }
-
-  bool get _somethingSelected {
-    if (_onlyMeSelected || _anyoneSelected) {
-      return true;
-    }
-
-    for (final node in _customSelected.keys) {
-      if (_customSelected[node]) {
-        return true;
-      }
-    }
-    return false;
   }
 
   @override
@@ -327,37 +340,44 @@ class _RelevancePickerState extends State<RelevancePicker> {
                                 if (widget.canBeForEveryone)
                                   Row(
                                     children: [
-                                      ChoiceChip(
-                                        label: Text(S.current.relevanceAnyone),
-                                        selected: !_somethingSelected ||
-                                            _anyoneSelected,
-                                        onSelected: (selected) => setState(() {
-                                          if (_user?.canAddPublicInfo ??
-                                              false) {
-                                            _anyoneSelected = selected;
-                                            if (selected) {
-                                              // Deselect all other options
-                                              _onlyMeSelected = false;
-                                              for (final node
-                                                  in _customSelected.keys) {
-                                                _customSelected[node] = false;
-                                              }
-                                            } else {
-                                              _onlyMeSelected = true;
-                                            }
-
-                                            if (widget.controller?.onChanged !=
-                                                null) {
-                                              widget.controller.onChanged();
-                                            }
-                                          } else {
+                                      GestureDetector(
+                                        onTap: () {
+                                          if (!_canAddPublicInfo) {
                                             AppToast.show(S
                                                 .of(context)
                                                 .warningNoPermissionToAddPublicWebsite);
                                           }
-                                        }),
-                                        // disabled:
-                                        //     !(_user?.canAddPublicInfo ?? false),
+                                        },
+                                        child: ChoiceChip(
+                                          label:
+                                              Text(S.current.relevanceAnyone),
+                                          selected: !_somethingSelected ||
+                                              _anyoneSelected,
+                                          onSelected: !_canAddPublicInfo
+                                              ? null
+                                              : (selected) => setState(() {
+                                                    _anyoneSelected = selected;
+                                                    if (selected) {
+                                                      // Deselect all other options
+                                                      _onlyMeSelected = false;
+                                                      for (final node
+                                                          in _customSelected
+                                                              .keys) {
+                                                        _customSelected[node] =
+                                                            false;
+                                                      }
+                                                    } else {
+                                                      _onlyMeSelected = true;
+                                                    }
+
+                                                    if (widget.controller
+                                                            ?.onChanged !=
+                                                        null) {
+                                                      widget.controller
+                                                          .onChanged();
+                                                    }
+                                                  }),
+                                        ),
                                       ),
                                       const SizedBox(width: 10),
                                     ],
