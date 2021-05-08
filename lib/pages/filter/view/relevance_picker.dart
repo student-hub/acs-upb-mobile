@@ -68,9 +68,6 @@ class RelevancePicker extends StatefulWidget {
 
 class _RelevancePickerState extends State<RelevancePicker> {
   // The three relevance options ("Only me", "Anyone" or an arbitrary list of nodes) are mutually exclusive
-  // final _onlyMeController = SelectableController();
-  // final _anyoneController = SelectableController();
-  // Map<String, SelectableController> _customControllers = {};
   bool _onlyMeSelected, _anyoneSelected;
   Map<String, bool> _customSelected;
 
@@ -234,6 +231,19 @@ class _RelevancePickerState extends State<RelevancePicker> {
     return Row(children: widgets);
   }
 
+  bool get _somethingSelected {
+    if (_onlyMeSelected || _anyoneSelected) {
+      return true;
+    }
+
+    for (final node in _customSelected.keys) {
+      if (_customSelected[node]) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   @override
   Widget build(BuildContext context) {
     if (widget.controller != null) {
@@ -310,7 +320,8 @@ class _RelevancePickerState extends State<RelevancePicker> {
                                     children: [
                                       ChoiceChip(
                                         label: Text(S.current.relevanceAnyone),
-                                        selected: _anyoneSelected,
+                                        selected: !_somethingSelected ||
+                                            _anyoneSelected,
                                         onSelected: (selected) => setState(() {
                                           if (_user?.canAddPublicInfo ??
                                               false) {
