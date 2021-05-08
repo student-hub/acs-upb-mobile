@@ -11,6 +11,55 @@ import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:provider/provider.dart';
 
+class RelevanceFormField extends FormField<List<String>> {
+  RelevanceFormField({
+    @required this.controller,
+    this.canBePrivate = true,
+    this.canBeForEveryone = true,
+    this.defaultPrivate = false,
+    String Function(List<String>) validator,
+    Key key,
+  }) : super(
+          key: key,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
+          validator: validator,
+          builder: (FormFieldState<List<String>> state) {
+            controller.onChanged = () {
+              state.didChange(controller.customRelevance);
+            };
+            final context = state.context;
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _RelevancePicker(
+                  defaultPrivate: defaultPrivate,
+                  canBePrivate: canBePrivate,
+                  canBeForEveryone: canBeForEveryone,
+                  filterProvider: Provider.of<FilterProvider>(context),
+                  controller: controller,
+                ),
+                if (state.hasError)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10),
+                    child: Text(
+                      state.errorText,
+                      style: Theme.of(context)
+                          .textTheme
+                          .caption
+                          .copyWith(color: Theme.of(context).errorColor),
+                    ),
+                  ),
+              ],
+            );
+          },
+        );
+
+  final RelevanceController controller;
+  final bool canBePrivate;
+  final bool canBeForEveryone;
+  final bool defaultPrivate;
+}
+
 class RelevanceController {
   RelevanceController({this.onChanged});
 
@@ -41,12 +90,12 @@ class RelevanceController {
   }
 }
 
-class RelevancePicker extends StatefulWidget {
-  const RelevancePicker({
+class _RelevancePicker extends StatefulWidget {
+  const _RelevancePicker({
     @required this.filterProvider,
     this.canBePrivate = true,
     this.canBeForEveryone = true,
-    bool defaultPrivate,
+    bool defaultPrivate = false,
     this.controller,
   }) : defaultPrivate = (defaultPrivate ?? true) && canBePrivate;
 
@@ -67,7 +116,7 @@ class RelevancePicker extends StatefulWidget {
   _RelevancePickerState createState() => _RelevancePickerState();
 }
 
-class _RelevancePickerState extends State<RelevancePicker> {
+class _RelevancePickerState extends State<_RelevancePicker> {
   // The three relevance options ("Only me", "Anyone" or an arbitrary list of nodes) are mutually exclusive
   bool _onlyMeSelected, _anyoneSelected;
   Map<String, bool> _customSelected;

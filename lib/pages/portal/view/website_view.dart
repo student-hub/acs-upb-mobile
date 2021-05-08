@@ -1,7 +1,6 @@
 import 'package:acs_upb_mobile/authentication/model/user.dart';
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
-import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
 import 'package:acs_upb_mobile/pages/filter/view/relevance_picker.dart';
 import 'package:acs_upb_mobile/pages/portal/model/website.dart';
 import 'package:acs_upb_mobile/pages/portal/service/website_provider.dart';
@@ -282,8 +281,9 @@ class _WebsiteViewState extends State<WebsiteView> {
                       },
                       onChanged: (_) => setState(() {}),
                     ),
-                    RelevancePicker(
-                      filterProvider: Provider.of<FilterProvider>(context),
+                    RelevanceFormField(
+                      canBePrivate: true,
+                      canBeForEveryone: true,
                       defaultPrivate: widget.website?.isPrivate ?? true,
                       controller: _relevanceController,
                     ),

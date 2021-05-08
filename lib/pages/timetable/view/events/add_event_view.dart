@@ -4,7 +4,6 @@ import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/navigation/routes.dart';
 import 'package:acs_upb_mobile/pages/classes/model/class.dart';
 import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
-import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
 import 'package:acs_upb_mobile/pages/filter/view/relevance_picker.dart';
 import 'package:acs_upb_mobile/pages/people/model/person.dart';
 import 'package:acs_upb_mobile/pages/people/service/person_provider.dart';
@@ -307,6 +306,8 @@ class _AddEventViewState extends State<AddEventView> {
                     ],
                   ),
                   RelevanceFormField(
+                    canBePrivate: false,
+                    canBeForEveryone: false,
                     controller: relevanceController,
                     validator: (_) {
                       if (relevanceController.customRelevance?.isEmpty ??
@@ -600,48 +601,6 @@ class _AddEventViewState extends State<AddEventView> {
       ),
     );
   }
-}
-
-class RelevanceFormField extends FormField<List<String>> {
-  RelevanceFormField({
-    @required this.controller,
-    String Function(List<String>) validator,
-    Key key,
-  }) : super(
-          key: key,
-          autovalidateMode: AutovalidateMode.onUserInteraction,
-          validator: validator,
-          builder: (FormFieldState<List<String>> state) {
-            controller.onChanged = () {
-              state.didChange(controller.customRelevance);
-            };
-            final context = state.context;
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                RelevancePicker(
-                  canBePrivate: false,
-                  canBeForEveryone: false,
-                  filterProvider: Provider.of<FilterProvider>(context),
-                  controller: controller,
-                ),
-                if (state.hasError)
-                  Padding(
-                    padding: const EdgeInsets.only(top: 10),
-                    child: Text(
-                      state.errorText,
-                      style: Theme.of(context)
-                          .textTheme
-                          .caption
-                          .copyWith(color: Theme.of(context).errorColor),
-                    ),
-                  ),
-              ],
-            );
-          },
-        );
-
-  final RelevanceController controller;
 }
 
 class ChipFormField extends FormField<Map<Localizable, bool>> {
