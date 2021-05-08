@@ -371,7 +371,7 @@ class _RelevancePickerState extends State<_RelevancePicker> {
                 onTap: () {
                   if (!_canAddPublicInfo) {
                     AppToast.show(
-                        S.of(context).warningNoPermissionToAddPublicWebsite);
+                        S.current.warningNoPermissionToAddPublicWebsite);
                   }
                 },
                 child: ChoiceChip(
