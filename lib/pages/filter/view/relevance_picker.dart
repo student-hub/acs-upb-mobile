@@ -187,6 +187,7 @@ class _RelevancePickerState extends State<RelevancePicker> {
                   _onlyMeSelected = false;
                   _anyoneSelected = false;
                 }
+
                 if (widget.controller?.onChanged != null) {
                   widget.controller.onChanged();
                 }
@@ -218,6 +219,10 @@ class _RelevancePickerState extends State<RelevancePicker> {
                   _onlyMeSelected = false;
                   _anyoneSelected = false;
                   widget.controller?.onChanged();
+                }
+
+                if (widget.controller?.onChanged != null) {
+                  widget.controller.onChanged();
                 }
               } else {
                 AppToast.show(S.current.warningNoPermissionToAddPublicWebsite);
@@ -309,7 +314,11 @@ class _RelevancePickerState extends State<RelevancePicker> {
                                           } else {
                                             _onlyMeSelected = true;
                                           }
-                                          // widget.controller?.onChanged();
+
+                                          if (widget.controller?.onChanged !=
+                                              null) {
+                                            widget.controller.onChanged();
+                                          }
                                         }),
                                       ),
                                       const SizedBox(width: 10),
@@ -335,6 +344,11 @@ class _RelevancePickerState extends State<RelevancePicker> {
                                               }
                                             } else {
                                               _onlyMeSelected = true;
+                                            }
+
+                                            if (widget.controller?.onChanged !=
+                                                null) {
+                                              widget.controller.onChanged();
                                             }
                                           } else {
                                             AppToast.show(S
