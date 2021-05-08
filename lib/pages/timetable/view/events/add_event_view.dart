@@ -15,9 +15,9 @@ import 'package:acs_upb_mobile/pages/timetable/model/events/uni_event.dart';
 import 'package:acs_upb_mobile/pages/timetable/service/uni_event_provider.dart';
 import 'package:acs_upb_mobile/resources/custom_icons.dart';
 import 'package:acs_upb_mobile/resources/locale_provider.dart';
-import 'package:acs_upb_mobile/resources/theme.dart';
 import 'package:acs_upb_mobile/widgets/autocomplete.dart';
 import 'package:acs_upb_mobile/widgets/button.dart';
+import 'package:acs_upb_mobile/widgets/chip_form_field.dart';
 import 'package:acs_upb_mobile/widgets/dialog.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
@@ -309,13 +309,6 @@ class _AddEventViewState extends State<AddEventView> {
                     canBePrivate: false,
                     canBeForEveryone: false,
                     controller: relevanceController,
-                    validator: (_) {
-                      if (relevanceController.customRelevance?.isEmpty ??
-                          true) {
-                        return S.current.warningYouNeedToSelectAtLeastOne;
-                      }
-                      return null;
-                    },
                   ),
                   DropdownButtonFormField<UniEventType>(
                     decoration: InputDecoration(
@@ -387,7 +380,7 @@ class _AddEventViewState extends State<AddEventView> {
                         ),
                         if (weekSelected[WeekType.odd] != null &&
                             weekSelected[WeekType.even] != null)
-                          ChipFormField(
+                          FilterChipFormField(
                             key: const ValueKey('week_picker'),
                             icon: FeatherIcons.calendar,
                             label: S.current.labelWeek,
@@ -403,7 +396,7 @@ class _AddEventViewState extends State<AddEventView> {
                               return null;
                             },
                           ),
-                        ChipFormField(
+                        FilterChipFormField(
                           key: const ValueKey('day_picker'),
                           icon: Icons.today_outlined,
                           label: S.current.labelDay,
@@ -601,101 +594,6 @@ class _AddEventViewState extends State<AddEventView> {
       ),
     );
   }
-}
-
-class ChipFormField extends FormField<Map<Localizable, bool>> {
-  ChipFormField({
-    @required Map<Localizable, bool> initialValues,
-    @required IconData icon,
-    @required String label,
-    String Function(Map<Localizable, bool>) validator,
-    Key key,
-  }) : super(
-          autovalidateMode: AutovalidateMode.onUserInteraction,
-          initialValue: initialValues,
-          key: key,
-          validator: validator,
-          builder: (state) {
-            final context = state.context;
-            final labels = state.value.keys.toList();
-            return Padding(
-              padding: const EdgeInsets.only(top: 8),
-              child: IntrinsicHeight(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Expanded(
-                      child: Row(
-                        children: [
-                          const SizedBox(width: 12),
-                          Icon(icon,
-                              color:
-                                  CustomIcons.formIconColor(Theme.of(context))),
-                          const SizedBox(width: 12),
-                          Text(
-                            label,
-                            style: Theme.of(context)
-                                .textTheme
-                                .subtitle1
-                                .copyWith(fontWeight: FontWeight.w400),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    Row(
-                      children: <Widget>[
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: Container(
-                            height: 40,
-                            child: ListView.builder(
-                              itemCount: labels.length,
-                              scrollDirection: Axis.horizontal,
-                              itemBuilder: (context, index) {
-                                return Row(
-                                  children: [
-                                    FilterChip(
-                                      label: Text(
-                                        labels[index].toLocalizedString(),
-                                        style: Theme.of(context).chipTextStyle(
-                                            selected:
-                                                state.value[labels[index]]),
-                                      ),
-                                      selected: state.value[labels[index]],
-                                      onSelected: (selected) {
-                                        state.value[labels[index]] = selected;
-                                        state.didChange(state.value);
-                                      },
-                                    ),
-                                    const SizedBox(width: 10),
-                                  ],
-                                );
-                              },
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 8),
-                    Divider(
-                        thickness: 0.7,
-                        color: state.hasError
-                            ? Theme.of(context).errorColor
-                            : Theme.of(context).hintColor),
-                    if (state.hasError)
-                      Text(
-                        state.errorText,
-                        style: Theme.of(context).textTheme.caption.copyWith(
-                            color: Theme.of(context).errorColor.withOpacity(1)),
-                      ),
-                  ],
-                ),
-              ),
-            );
-          },
-        );
 }
 
 class _DayOfWeek extends time_machine.DayOfWeek with Localizable {
