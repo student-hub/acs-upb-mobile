@@ -13,7 +13,7 @@ description: A mobile application for students at ACS UPB.
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 #
 # ACS UPB Mobile uses semantic versioning. You can read more in the CONTRIBUTING.md file.
-version: 1.2.8+8
+version: 1.2.10+12
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
@@ -72,6 +72,15 @@ dependencies:
 
   # Display markdown-formatted text
   flutter_markdown: ^0.4.4
+
+  # Use an in-app browser to ask user for Google Calendar permission
+  flutter_web_browser: ^0.13.1
+
+  # Used for Google Calendar API
+  googleapis: 1.0.0
+
+  # Used for getting the permission of the user to access their Google Calendar
+  googleapis_auth: 0.2.12+1
 
   # Image decoder
   image: ^2.1.18

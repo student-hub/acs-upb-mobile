@@ -17,33 +17,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:provider/provider.dart';
-import 'package:time_machine/time_machine.dart';
-import 'package:timetable/timetable.dart';
-
-extension EventExtension on Event {
-  String get dateString {
-    final LocalDateTime end = this.end.clockTime.equals(LocalTime(00, 00, 00))
-        ? this.end.subtractDays(1)
-        : this.end;
-
-    String string = start.calendarDate.toString('dddd, dd MMMM');
-    if (!start.clockTime.equals(LocalTime(00, 00, 00))) {
-      string += ' • ${start.clockTime.toString('HH:mm')}';
-    }
-    if (start.calendarDate != end.calendarDate) {
-      string += ' - ${end.calendarDate.toString('dddd, dd MMMM')}';
-    }
-    if (!end.clockTime.equals(LocalTime(00, 00, 00))) {
-      if (start.calendarDate != end.calendarDate) {
-        string += ' • ';
-      } else {
-        string += '-';
-      }
-      string += end.clockTime.toString('HH:mm');
-    }
-    return string;
-  }
-}
 
 class EventView extends StatefulWidget {
   const EventView({Key key, this.eventInstance}) : super(key: key);
@@ -71,7 +44,7 @@ class _EventViewState extends State<EventView> {
   Widget build(BuildContext context) {
     final user = Provider.of<AuthProvider>(context).currentUserFromCache;
     return AppScaffold(
-      title: Text(S.of(context).navigationEventDetails),
+      title: Text(S.current.navigationEventDetails),
       actions: [
         AppScaffoldAction(
           icon: Icons.edit_outlined,
@@ -79,9 +52,9 @@ class _EventViewState extends State<EventView> {
               !user.canAddPublicInfo,
           onPressed: () {
             if (!widget.eventInstance.mainEvent.editable) {
-              AppToast.show(S.of(context).warningEventNotEditable);
+              AppToast.show(S.current.warningEventNotEditable);
             } else if (!user.canAddPublicInfo) {
-              AppToast.show(S.of(context).errorPermissionDenied);
+              AppToast.show(S.current.errorPermissionDenied);
             } else {
               Navigator.of(context).push(MaterialPageRoute<AddEventView>(
                 builder: (_) => ChangeNotifierProvider<FilterProvider>(
@@ -114,7 +87,7 @@ class _EventViewState extends State<EventView> {
                       Text(
                           widget.eventInstance.title ??
                               widget.eventInstance.mainEvent.type
-                                  .toLocalizedString(context),
+                                  .toLocalizedString(),
                           style: Theme.of(context).textTheme.headline6),
                       const SizedBox(height: 4),
                       Text(widget.eventInstance.dateString),
@@ -142,7 +115,7 @@ class _EventViewState extends State<EventView> {
           if (widget.eventInstance.mainEvent?.classHeader != null)
             ClassListItem(
               classHeader: widget.eventInstance.mainEvent.classHeader,
-              hint: S.of(context).messageTapForMoreInfo,
+              hint: S.current.messageTapForMoreInfo,
               onTap: () => Navigator.of(context)
                   .push(MaterialPageRoute<ChangeNotifierProvider>(
                 builder: (context) => ChangeNotifierProvider.value(
@@ -179,7 +152,7 @@ class _EventViewState extends State<EventView> {
                   const SizedBox(width: 16),
                   Text(
                       widget.eventInstance.mainEvent.relevance == null
-                          ? S.of(context).relevanceAnyone
+                          ? S.current.relevanceAnyone
                           : '${FilterNode.localizeName(widget.eventInstance.mainEvent.degree, context)}: ${widget.eventInstance.mainEvent.relevance.join(', ')}',
                       style: Theme.of(context).textTheme.subtitle1),
                 ],
@@ -212,7 +185,7 @@ class _EventViewState extends State<EventView> {
                         (widget.eventInstance.mainEvent as ClassEvent)
                                 .teacher
                                 .name ??
-                            S.of(context).labelUnknown,
+                            S.current.labelUnknown,
                         style: Theme.of(context).textTheme.subtitle1),
                   ],
                 ),

@@ -45,6 +45,9 @@
   "labelEven": "Even",
   "labelOdd": "Odd",
   "labelDay": "Day",
+  "labelToday": "Today",
+  "labelTomorrow": "Tomorrow",
+  "labelNow": "Now",
 
   "sectionShortcuts": "Shortcuts",
   "sectionEvents": "Events",
@@ -117,6 +120,7 @@
   "errorClassCannotBeEmpty": "Class cannot be empty.",
   "errorPictureSizeToBig": "Please select a picture that is less than 5MB.",
   "errorImage": "The image could not be loaded.",
+  "errorInsertGoogleEvents": "Unable to insert events in Google Calendar.",
 
   "warningRequestExists": "Request already exists",
   "warningInternetConnection": "Please make sure you have an internet connection.",
@@ -189,6 +193,8 @@
   "settingsItemLanguageRomanian": "Romanian",
   "settingsItemLanguageAuto": "Auto",
   "settingsRelevanceFilter": "Relevance filter",
+  "settingsExportToGoogleCalendar": "Export events to Google Calendar",
+  "settingsTitleTimetable": "Timetable",
 
   "websiteCategoryLearning": "Learning",
   "websiteCategoryAdministrative": "Administrative",
@@ -268,6 +274,7 @@
   "infoEmail": "This is the same username you use to log in to {forum}.",
   "infoLoading": "Loading...",
   "infoReadThePolicy": "Read the {appName} policy",
+  "infoExportToGoogleCalendar": "Export filtered events from Timetable",
 
   "stringEmailDomain": "@stud.acs.upb.ro",
   "stringForum": "cs.curs.pub.ro",

@@ -26,7 +26,7 @@ class _PeoplePageState extends State<PeoplePage> {
   void initState() {
     super.initState();
     final personProvider = Provider.of<PersonProvider>(context, listen: false);
-    people = personProvider.fetchPeople(context: context);
+    people = personProvider.fetchPeople();
   }
 
   @override
@@ -40,7 +40,7 @@ class _PeoplePageState extends State<PeoplePage> {
           },
         )
       ],
-      title: Text(S.of(context).navigationPeople),
+      title: Text(S.current.navigationPeople),
       body: FutureBuilder(
           future: people,
           builder: (_, snapshot) {

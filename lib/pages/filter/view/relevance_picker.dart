@@ -87,7 +87,7 @@ class _RelevancePickerState extends State<RelevancePicker> {
   }
 
   Future<void> _fetchFilter() async {
-    _filter = await widget.filterProvider.fetchFilter(context: context);
+    _filter = await widget.filterProvider.fetchFilter();
     if (mounted) {
       setState(() {});
     }
@@ -114,12 +114,12 @@ class _RelevancePickerState extends State<RelevancePicker> {
               builder: (_) => ChangeNotifierProvider.value(
                 value: widget.filterProvider,
                 child: FilterPage(
-                  title: S.of(context).labelRelevance,
-                  buttonText: S.of(context).buttonSet,
+                  title: S.current.labelRelevance,
+                  buttonText: S.current.buttonSet,
                   canBeForEveryone: widget.canBeForEveryone,
                   info:
-                      '${S.of(context).infoRelevanceNothingSelected} ${S.of(context).infoRelevance}',
-                  hint: S.of(context).infoRelevanceExample,
+                      '${S.current.infoRelevanceNothingSelected} ${S.current.infoRelevance}',
+                  hint: S.current.infoRelevanceExample,
                   onSubmit: () async {
                     // Deselect all options
                     _onlyMeController.deselect();
@@ -139,13 +139,13 @@ class _RelevancePickerState extends State<RelevancePicker> {
               ),
             ));
           } else {
-            AppToast.show(S.of(context).warningNoPermissionToAddPublicWebsite);
+            AppToast.show(S.current.warningNoPermissionToAddPublicWebsite);
           }
         },
         child: Row(
           children: <Widget>[
             Text(
-              S.of(context).labelCustom,
+              S.current.labelCustom,
               style: Theme.of(context)
                   .accentTextTheme
                   .subtitle2
@@ -170,7 +170,7 @@ class _RelevancePickerState extends State<RelevancePicker> {
             widget.controller?.onChanged();
           }
         } else {
-          AppToast.show(S.of(context).warningNoPermissionToAddPublicWebsite);
+          AppToast.show(S.current.warningNoPermissionToAddPublicWebsite);
         }
       });
 
@@ -203,8 +203,7 @@ class _RelevancePickerState extends State<RelevancePicker> {
                   widget.controller.onChanged();
                 }
               } else {
-                AppToast.show(
-                    S.of(context).warningNoPermissionToAddPublicWebsite);
+                AppToast.show(S.current.warningNoPermissionToAddPublicWebsite);
               }
             }),
             disabled: !(_user?.canAddPublicInfo ?? false),
@@ -259,7 +258,7 @@ class _RelevancePickerState extends State<RelevancePicker> {
                       children: <Widget>[
                         Expanded(
                           child: Text(
-                            S.of(context).labelRelevance,
+                            S.current.labelRelevance,
                             style: Theme.of(context)
                                 .textTheme
                                 .caption
@@ -282,7 +281,7 @@ class _RelevancePickerState extends State<RelevancePicker> {
                                   Row(
                                     children: [
                                       Selectable(
-                                        label: S.of(context).relevanceOnlyMe,
+                                        label: S.current.relevanceOnlyMe,
                                         initiallySelected:
                                             widget.defaultPrivate ?? true,
                                         onSelected: (selected) => setState(() {
@@ -312,7 +311,7 @@ class _RelevancePickerState extends State<RelevancePicker> {
                                   Row(
                                     children: [
                                       Selectable(
-                                        label: S.of(context).relevanceAnyone,
+                                        label: S.current.relevanceAnyone,
                                         initiallySelected:
                                             !widget.defaultPrivate &&
                                                 widget.filterProvider

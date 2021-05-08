@@ -108,7 +108,7 @@ class FilterProvider with ChangeNotifier {
 
   Filter get cachedFilter => _relevanceFilter?.clone();
 
-  Future<Filter> fetchFilter({BuildContext context}) async {
+  Future<Filter> fetchFilter() async {
     if (_relevanceFilter != null) {
       return cachedFilter;
     }
@@ -156,9 +156,7 @@ class FilterProvider with ChangeNotifier {
       return cachedFilter;
     } catch (e, _) {
       print(e);
-      if (context != null) {
-        AppToast.show(S.of(context).errorSomethingWentWrong);
-      }
+      AppToast.show(S.current.errorSomethingWentWrong);
       return null;
     }
   }

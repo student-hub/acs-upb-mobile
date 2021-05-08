@@ -129,14 +129,12 @@ class AppScaffold extends StatelessWidget {
             ? body ??
                 ErrorPage(
                   imgPath: 'assets/illustrations/undraw_under_construction.png',
-                  errorMessage: S.of(context).messageUnderConstruction,
+                  errorMessage: S.current.messageUnderConstruction,
                 )
             : ErrorPage(
                 imgPath: 'assets/illustrations/undraw_sign_in.png',
-                info: [
-                  TextSpan(text: S.of(context).warningAuthenticationNeeded)
-                ],
-                actionText: S.of(context).actionLogIn,
+                info: [TextSpan(text: S.current.warningAuthenticationNeeded)],
+                actionText: S.current.actionLogIn,
                 actionOnTap: () => Utils.signOut(context),
               ),
         appBar: PreferredSize(

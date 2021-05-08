@@ -90,7 +90,7 @@ class _AddEventViewState extends State<AddEventView> {
         .fetchClassHeaders(uid: user.uid)
         .then((headers) => setState(() => classHeaders = headers));
     Provider.of<PersonProvider>(context, listen: false)
-        .fetchPeople(context: context)
+        .fetchPeople()
         .then((teachers) => setState(() => classTeachers = teachers));
     Provider.of<UniEventProvider>(context, listen: false)
         .fetchCalendars()
@@ -200,7 +200,7 @@ class _AddEventViewState extends State<AddEventView> {
         return TextFormField(
           controller: textEditingController,
           decoration: InputDecoration(
-            labelText: S.of(context).labelLecturer,
+            labelText: S.current.labelLecturer,
             prefixIcon: const Icon(FeatherIcons.user),
           ),
           focusNode: focusNode,
@@ -245,8 +245,8 @@ class _AddEventViewState extends State<AddEventView> {
   Widget build(BuildContext context) {
     return AppScaffold(
       title: Text(widget.initialEvent?.id == null
-          ? S.of(context).actionAddEvent
-          : S.of(context).actionEditEvent),
+          ? S.current.actionAddEvent
+          : S.current.actionEditEvent),
       actions: widget.initialEvent?.id == null
           ? [_saveButton()]
           : [
@@ -268,7 +268,7 @@ class _AddEventViewState extends State<AddEventView> {
                       Expanded(
                         child: DropdownButtonFormField<String>(
                           decoration: InputDecoration(
-                            labelText: S.of(context).labelUniversityYear,
+                            labelText: S.current.labelUniversityYear,
                             prefixIcon:
                                 const Icon(Icons.calendar_today_outlined),
                           ),
@@ -289,7 +289,7 @@ class _AddEventViewState extends State<AddEventView> {
                       Expanded(
                         child: DropdownButtonFormField<int>(
                           decoration: InputDecoration(
-                            labelText: S.of(context).labelSemester,
+                            labelText: S.current.labelSemester,
                             prefixIcon: const Icon(FeatherIcons.columns),
                           ),
                           value: selectedSemester,
@@ -310,14 +310,14 @@ class _AddEventViewState extends State<AddEventView> {
                     validator: (_) {
                       if (relevanceController.customRelevance?.isEmpty ??
                           true) {
-                        return S.of(context).warningYouNeedToSelectAtLeastOne;
+                        return S.current.warningYouNeedToSelectAtLeastOne;
                       }
                       return null;
                     },
                   ),
                   DropdownButtonFormField<UniEventType>(
                     decoration: InputDecoration(
-                      labelText: S.of(context).labelType,
+                      labelText: S.current.labelType,
                       prefixIcon: const Icon(Icons.category_outlined),
                     ),
                     value: selectedEventType,
@@ -325,7 +325,7 @@ class _AddEventViewState extends State<AddEventView> {
                         .map(
                           (type) => DropdownMenuItem<UniEventType>(
                             value: type,
-                            child: Text(type.toLocalizedString(context)),
+                            child: Text(type.toLocalizedString()),
                           ),
                         )
                         .toList(),
@@ -335,7 +335,7 @@ class _AddEventViewState extends State<AddEventView> {
                     },
                     validator: (selection) {
                       if (selection == null) {
-                        return S.of(context).errorEventTypeCannotBeEmpty;
+                        return S.current.errorEventTypeCannotBeEmpty;
                       }
                       return null;
                     },
@@ -347,7 +347,7 @@ class _AddEventViewState extends State<AddEventView> {
                           DropdownButtonFormField<ClassHeader>(
                             isExpanded: true,
                             decoration: InputDecoration(
-                              labelText: S.of(context).labelClass,
+                              labelText: S.current.labelClass,
                               prefixIcon: const Icon(FeatherIcons.bookOpen),
                             ),
                             value: selectedClass,
@@ -363,7 +363,7 @@ class _AddEventViewState extends State<AddEventView> {
                             },
                             validator: (selection) {
                               if (selection == null) {
-                                return S.of(context).errorClassCannotBeEmpty;
+                                return S.current.errorClassCannotBeEmpty;
                               }
                               return null;
                             },
@@ -373,7 +373,7 @@ class _AddEventViewState extends State<AddEventView> {
                         TextFormField(
                           controller: locationController,
                           decoration: InputDecoration(
-                            labelText: S.of(context).labelLocation,
+                            labelText: S.current.labelLocation,
                             prefixIcon: const Icon(FeatherIcons.mapPin),
                           ),
                           onChanged: (_) => setState(() {}),
@@ -388,7 +388,7 @@ class _AddEventViewState extends State<AddEventView> {
                           ChipFormField(
                             key: const ValueKey('week_picker'),
                             icon: FeatherIcons.calendar,
-                            label: S.of(context).labelWeek,
+                            label: S.current.labelWeek,
                             initialValues: weekSelected,
                             validator: (selection) {
                               if (selection.values
@@ -404,7 +404,7 @@ class _AddEventViewState extends State<AddEventView> {
                         ChipFormField(
                           key: const ValueKey('day_picker'),
                           icon: Icons.today_outlined,
-                          label: S.of(context).labelDay,
+                          label: S.current.labelDay,
                           initialValues: weekDaySelected,
                           validator: (selection) {
                             if (selection.values
@@ -432,21 +432,21 @@ class _AddEventViewState extends State<AddEventView> {
 
   AppDialog _deletionConfirmationDialog(BuildContext context) => AppDialog(
         icon: const Icon(Icons.delete_outlined),
-        title: S.of(context).actionDeleteEvent,
-        info: S.of(context).messageThisCouldAffectOtherStudents,
-        message: S.of(context).messageDeleteEvent,
+        title: S.current.actionDeleteEvent,
+        info: S.current.messageThisCouldAffectOtherStudents,
+        message: S.current.messageDeleteEvent,
         actions: [
           AppButton(
-            text: S.of(context).actionDeleteEvent,
+            text: S.current.actionDeleteEvent,
             width: 130,
             onTap: () async {
               final res =
                   await Provider.of<UniEventProvider>(context, listen: false)
-                      .deleteEvent(widget.initialEvent, context: context);
+                      .deleteEvent(widget.initialEvent);
               if (res) {
                 Navigator.of(context)
                     .popUntil(ModalRoute.withName(Routes.home));
-                AppToast.show(S.of(context).messageEventDeleted);
+                AppToast.show(S.current.messageEventDeleted);
               }
             },
           )
@@ -454,7 +454,7 @@ class _AddEventViewState extends State<AddEventView> {
       );
 
   AppScaffoldAction _saveButton() => AppScaffoldAction(
-        text: S.of(context).buttonSave,
+        text: S.current.buttonSave,
         onPressed: () async {
           if (!formKey.currentState.validate()) return;
 
@@ -496,18 +496,18 @@ class _AddEventViewState extends State<AddEventView> {
           if (widget.initialEvent?.id == null) {
             final res =
                 await Provider.of<UniEventProvider>(context, listen: false)
-                    .addEvent(event, context: context);
+                    .addEvent(event);
             if (res) {
               Navigator.of(context).pop();
-              AppToast.show(S.of(context).messageEventAdded);
+              AppToast.show(S.current.messageEventAdded);
             }
           } else {
             final res =
                 await Provider.of<UniEventProvider>(context, listen: false)
-                    .updateEvent(event, context: context);
+                    .updateEvent(event);
             if (res) {
               Navigator.of(context).popUntil(ModalRoute.withName(Routes.home));
-              AppToast.show(S.of(context).messageEventEdited);
+              AppToast.show(S.current.messageEventEdited);
             }
           }
         },
@@ -516,7 +516,7 @@ class _AddEventViewState extends State<AddEventView> {
   AppScaffoldAction _deleteButton() => AppScaffoldAction(
         icon: Icons.more_vert_outlined,
         items: {
-          S.of(context).actionDeleteEvent: () =>
+          S.current.actionDeleteEvent: () =>
               showDialog(context: context, builder: _deletionConfirmationDialog)
         },
         onPressed: () =>
@@ -699,7 +699,7 @@ class ChipFormField extends FormField<Map<Localizable, bool>> {
                                     FilterChip(
                                       label: Text(
                                         labels[index]
-                                            .toLocalizedString(context),
+                                            .toLocalizedString(),
                                         style: TextStyle(
                                           color: state.value[labels[index]]
                                               ? Theme.of(context).accentColor
@@ -753,7 +753,7 @@ class _DayOfWeek extends time_machine.DayOfWeek with Localizable {
   _DayOfWeek.from(time_machine.DayOfWeek dayOfWeek) : super(dayOfWeek.value);
 
   @override
-  String toLocalizedString(BuildContext context) {
+  String toLocalizedString() {
     final helperDate = LocalDate.today().next(this);
     return LocalDatePattern.createWithCurrentCulture('ddd')
         .format(helperDate)
@@ -788,12 +788,12 @@ class WeekType with Localizable {
       other is int && other == _value;
 
   @override
-  String toLocalizedString(BuildContext context) {
+  String toLocalizedString() {
     switch (_value) {
       case 0:
-        return S.of(context).labelOdd;
+        return S.current.labelOdd;
       case 1:
-        return S.of(context).labelEven;
+        return S.current.labelEven;
       default:
         return '';
     }

@@ -1,39 +1,36 @@
 import 'package:acs_upb_mobile/generated/l10n.dart';
-import 'package:flutter/cupertino.dart';
 
 class AppValidator {
   AppValidator._();
 
-  static String isStrongPassword(String password, BuildContext context) {
+  static String isStrongPassword(String password) {
     assert(password != null);
 
     if (password.length < 8) {
-      return context != null ? S.of(context).warningPasswordLength : '';
+      return S.current.warningPasswordLength;
     }
     String pattern = r'(?=.*?[A-ZĂÂÎȘȚ]).{8,}$';
     RegExp regExp = RegExp(pattern);
     if (!regExp.hasMatch(password)) {
-      return context != null ? S.of(context).warningPasswordUppercase : '';
+      return S.current.warningPasswordUppercase;
     }
 
     pattern = r'^(?=.*?[a-zăâîșț]).{8,}$';
     regExp = RegExp(pattern);
     if (!regExp.hasMatch(password)) {
-      return context != null ? S.of(context).warningPasswordLowercase : '';
+      return S.current.warningPasswordLowercase;
     }
 
     pattern = r'^(?=.*?[0-9]).{8,}$';
     regExp = RegExp(pattern);
     if (!regExp.hasMatch(password)) {
-      return context != null ? S.of(context).warningPasswordNumber : '';
+      return S.current.warningPasswordNumber;
     }
 
     pattern = r'^(?=.*?[!@#$&*~`%^_+=(){};:"<>/.,\[\]\|\\]).{8,}$';
     regExp = RegExp(pattern);
     if (!regExp.hasMatch(password)) {
-      return context != null
-          ? S.of(context).warningPasswordSpecialCharacters
-          : '';
+      return S.current.warningPasswordSpecialCharacters;
     }
     return null;
   }
