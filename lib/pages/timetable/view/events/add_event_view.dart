@@ -13,8 +13,8 @@ import 'package:acs_upb_mobile/pages/timetable/model/events/class_event.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/events/recurring_event.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/events/uni_event.dart';
 import 'package:acs_upb_mobile/pages/timetable/service/uni_event_provider.dart';
-import 'package:acs_upb_mobile/resources/custom_icons.dart';
 import 'package:acs_upb_mobile/resources/locale_provider.dart';
+import 'package:acs_upb_mobile/resources/theme.dart';
 import 'package:acs_upb_mobile/widgets/autocomplete.dart';
 import 'package:acs_upb_mobile/widgets/button.dart';
 import 'package:acs_upb_mobile/widgets/chip_form_field.dart';
@@ -529,7 +529,7 @@ class _AddEventViewState extends State<AddEventView> {
             padding: const EdgeInsets.all(12),
             child: Icon(
               FeatherIcons.clock,
-              color: CustomIcons.formIconColor(Theme.of(context)),
+              color: Theme.of(context).formIconColor,
             ),
           ),
           TextButton(

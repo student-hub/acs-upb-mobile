@@ -4,9 +4,9 @@ import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/filter/view/relevance_picker.dart';
 import 'package:acs_upb_mobile/pages/portal/model/website.dart';
 import 'package:acs_upb_mobile/pages/portal/service/website_provider.dart';
-import 'package:acs_upb_mobile/resources/custom_icons.dart';
 import 'package:acs_upb_mobile/resources/locale_provider.dart';
 import 'package:acs_upb_mobile/resources/storage/storage_provider.dart';
+import 'package:acs_upb_mobile/resources/theme.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/widgets/button.dart';
 import 'package:acs_upb_mobile/widgets/circle_image.dart';
@@ -119,8 +119,10 @@ class _WebsiteViewState extends State<WebsiteView> {
               padding: const EdgeInsets.all(12),
               child: Row(
                 children: <Widget>[
-                  Icon(Icons.remove_red_eye_outlined,
-                      color: CustomIcons.formIconColor(Theme.of(context))),
+                  Icon(
+                    Icons.remove_red_eye_outlined,
+                    color: Theme.of(context).formIconColor,
+                  ),
                   const SizedBox(width: 12),
                   AutoSizeText(
                     '${S.current.labelPreview}:',

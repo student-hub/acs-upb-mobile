@@ -1,4 +1,3 @@
-import 'package:acs_upb_mobile/resources/custom_icons.dart';
 import 'package:acs_upb_mobile/resources/locale_provider.dart';
 import 'package:acs_upb_mobile/resources/theme.dart';
 import 'package:flutter/material.dart';
@@ -72,9 +71,7 @@ class ChipFormField<T> extends FormField<T> {
                       child: Row(
                         children: [
                           const SizedBox(width: 12),
-                          Icon(icon,
-                              color:
-                                  CustomIcons.formIconColor(Theme.of(context))),
+                          Icon(icon, color: Theme.of(context).formIconColor),
                           const SizedBox(width: 12),
                           Text(
                             label,
