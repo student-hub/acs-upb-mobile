@@ -28,7 +28,6 @@ class FeedbackProvider with ChangeNotifier {
           .doc('class_feedback_answers')
           .collection(response.questionNumber)
           .add(response.toData());
-      //notifyListeners();
       return true;
     } catch (e) {
       print(e);
@@ -37,15 +36,14 @@ class FeedbackProvider with ChangeNotifier {
     }
   }
 
-  Future<List<dynamic>> fetchQuestions() async {
+  Future<Map<String, dynamic>> fetchQuestions() async {
     try {
       final DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
           .collection('forms')
           .doc('class_feedback_questions')
           .get();
       final Map<String, dynamic> data = documentSnapshot['questions'];
-      final List<dynamic> values = data.values.toList();
-      return values;
+      return data;
     } catch (e) {
       print(e);
       AppToast.show(S.current.errorSomethingWentWrong);

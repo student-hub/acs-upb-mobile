@@ -30,14 +30,11 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
   bool agreedToResponsibilities;
 
   List<String> involvementPercentages = [];
-  String selectedInvolvement;
   String selectedTeacherName;
   Person selectedAssistant;
   List<Person> classTeachers = [];
-  List<dynamic> feedbackQuestions = [];
+  Map<String, dynamic> feedbackQuestions = {};
   List<String> responses = [];
-  TextEditingController gradeController;
-  TextEditingController hoursController;
   List<Map<int, bool>> initialValues = [];
 
   @override
@@ -46,8 +43,6 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
 
     agreedToResponsibilities = false;
     classController = TextEditingController(text: widget.classHeader?.id ?? '');
-    gradeController = TextEditingController();
-    hoursController = TextEditingController();
     involvementPercentages = [
       '0% ... 20%',
       '20% ... 40%',
@@ -59,11 +54,15 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
         .fetchPeople()
         .then((teachers) => setState(() => classTeachers = teachers));
 
-    Provider.of<FeedbackProvider>(context, listen: false)
+    awaitFeedbackQuestions();
+  }
+
+  Future<Map<String, dynamic>> awaitFeedbackQuestions() async {
+    await Provider.of<FeedbackProvider>(context, listen: false)
         .fetchQuestions()
         .then((questions) => setState(() => feedbackQuestions = questions));
 
-    for (int i = 0; i < 22; i++) {
+    for (int i = 0; i <= feedbackQuestions.length; i++) {
       responses.insert(i, '-1');
       initialValues.insert(i, {
         0: false,
@@ -73,6 +72,8 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
         4: false,
       });
     }
+
+    return feedbackQuestions;
   }
 
   Widget autocompleteAssistant(BuildContext context) {
@@ -138,31 +139,43 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
     final personProvider = Provider.of<PersonProvider>(context);
     final feedbackProvider = Provider.of<FeedbackProvider>(context);
 
-    final List<String> generalQuestionsRating = feedbackProvider
-        .getQuestionsByCategoryAndType(feedbackQuestions, 'general', 'rating');
+    final List<String> generalQuestionsRating =
+        feedbackProvider.getQuestionsByCategoryAndType(
+            feedbackQuestions.values.toList(), 'general', 'rating');
 
-    final List<String> generalQuestionsInput = feedbackProvider
-        .getQuestionsByCategoryAndType(feedbackQuestions, 'general', 'input');
+    final List<String> generalQuestionsRatingIndexes = feedbackQuestions.keys
+        .where((element) =>
+            feedbackQuestions[element]['type'] == 'rating' &&
+            feedbackQuestions[element]['category'] == 'general')
+        .toList();
+
+    final List<String> generalQuestionsInput =
+        feedbackProvider.getQuestionsByCategoryAndType(
+            feedbackQuestions.values.toList(), 'general', 'input');
 
     final List<String> involvementQuestions =
         feedbackProvider.getQuestionsByCategoryAndType(
-            feedbackQuestions, 'involvement', 'input');
+            feedbackQuestions.values.toList(), 'involvement', 'input');
 
-    final List<String> lectureQuestions = feedbackProvider
-        .getQuestionsByCategoryAndType(feedbackQuestions, 'lecture', 'rating');
+    final List<String> lectureQuestions =
+        feedbackProvider.getQuestionsByCategoryAndType(
+            feedbackQuestions.values.toList(), 'lecture', 'rating');
 
     final List<String> applicationsQuestions =
         feedbackProvider.getQuestionsByCategoryAndType(
-            feedbackQuestions, 'applications', 'rating');
+            feedbackQuestions.values.toList(), 'applications', 'rating');
 
-    final List<String> homeworkQuestionsRating = feedbackProvider
-        .getQuestionsByCategoryAndType(feedbackQuestions, 'homework', 'rating');
+    final List<String> homeworkQuestionsRating =
+        feedbackProvider.getQuestionsByCategoryAndType(
+            feedbackQuestions.values.toList(), 'homework', 'rating');
 
-    final List<String> homeworkQuestionsInput = feedbackProvider
-        .getQuestionsByCategoryAndType(feedbackQuestions, 'homework', 'input');
+    final List<String> homeworkQuestionsInput =
+        feedbackProvider.getQuestionsByCategoryAndType(
+            feedbackQuestions.values.toList(), 'homework', 'input');
 
-    final List<String> personalQuestions = feedbackProvider
-        .getQuestionsByCategoryAndType(feedbackQuestions, 'personal', 'input');
+    final List<String> personalQuestions =
+        feedbackProvider.getQuestionsByCategoryAndType(
+            feedbackQuestions.values.toList(), 'personal', 'input');
 
     return AppScaffold(
       title: Text(S.of(context).navigationClassFeedback),
@@ -259,7 +272,19 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
                                 ),
                               ),
                               TextFormField(
-                                controller: gradeController,
+                                onSaved: (value) {
+                                  responses[int.parse(
+                                      feedbackQuestions.keys.isNotEmpty
+                                          ? feedbackQuestions.keys.firstWhere(
+                                              (element) =>
+                                                  feedbackQuestions[element]
+                                                          ['type'] ==
+                                                      'input' &&
+                                                  feedbackQuestions[element]
+                                                          ['category'] ==
+                                                      'general')
+                                          : '-1')] = value;
+                                },
                                 autovalidateMode:
                                     AutovalidateMode.onUserInteraction,
                                 decoration: InputDecoration(
@@ -281,7 +306,9 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
                                   return EmojiFormField(
                                     question: entry.value,
                                     onSaved: (value) {
-                                      responses[entry.key] = value.keys
+                                      responses[int.parse(
+                                          generalQuestionsRatingIndexes[
+                                              entry.key])] = value.keys
                                           .firstWhere((element) =>
                                               value[element] == true)
                                           .toString();
@@ -329,7 +356,10 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
                                   prefixIcon:
                                       const Icon(Icons.local_activity_outlined),
                                 ),
-                                value: selectedInvolvement,
+                                onSaved: (value) {
+                                  responses[generalQuestionsInput.length +
+                                      generalQuestionsRating.length] = value;
+                                },
                                 items: involvementPercentages
                                     .map(
                                       (type) => DropdownMenuItem<String>(
@@ -340,8 +370,7 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
                                     .toList(),
                                 onChanged: (selection) {
                                   formKey.currentState.validate();
-                                  setState(
-                                      () => selectedInvolvement = selection);
+                                  setState(() => {});
                                 },
                                 validator: (selection) {
                                   if (selection == null) {
@@ -470,7 +499,13 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
                                 ),
                               ),
                               TextFormField(
-                                controller: hoursController,
+                                onSaved: (value) {
+                                  responses[generalQuestionsInput.length +
+                                      generalQuestionsRating.length +
+                                      involvementQuestions.length +
+                                      lectureQuestions.length +
+                                      applicationsQuestions.length] = value;
+                                },
                                 autovalidateMode:
                                     AutovalidateMode.onUserInteraction,
                                 decoration: InputDecoration(
@@ -615,43 +650,35 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
             formKey.currentState.save();
           });
 
-          bool res = false;
+          bool res;
 
           for (var i = 0; i < feedbackQuestions.length; i++) {
-            if (i == 1 || i == 4 || i == 15) {
-              final answer = i == 1
-                  ? gradeController.text.toString()
-                  : i == 4
-                      ? selectedInvolvement
-                      : hoursController.text.toString();
-
+            res = false;
+            if (feedbackQuestions[i.toString()]['type'] == 'input') {
               final response = ClassFeedbackQuestionAnswer(
-                  assistant: selectedAssistant,
-                  teacherName: selectedTeacherName,
-                  className: classController.text,
-                  questionNumber: i.toString(),
-                  questionTextAnswer: answer);
-
-              res = await Provider.of<FeedbackProvider>(context, listen: false)
-                  .addResponse(response);
-              continue;
-            }
-            final response = ClassFeedbackQuestionAnswer(
                 assistant: selectedAssistant,
                 teacherName: selectedTeacherName,
                 className: classController.text,
                 questionNumber: i.toString(),
-                questionNumericAnswer: i >= 18
-                    ? null
-                    : i == 0 || i >= 5 || (i >= 16 && i <= 17)
-                        ? responses.elementAt(i)
-                        : responses.elementAt(i - 1),
-                questionTextAnswer: i >= 18 ? responses.elementAt(i) : null);
+                questionTextAnswer: responses[i],
+              );
 
-            res = await Provider.of<FeedbackProvider>(context, listen: false)
-                .addResponse(response);
+              res = await Provider.of<FeedbackProvider>(context, listen: false)
+                  .addResponse(response);
+              if (!res) break;
+            } else {
+              final response = ClassFeedbackQuestionAnswer(
+                assistant: selectedAssistant,
+                teacherName: selectedTeacherName,
+                className: classController.text,
+                questionNumber: i.toString(),
+                questionNumericAnswer: responses[i],
+              );
 
-            //if (!res) break;
+              res = await Provider.of<FeedbackProvider>(context, listen: false)
+                  .addResponse(response);
+              if (!res) break;
+            }
           }
           if (res) {
             Navigator.of(context).pop();
