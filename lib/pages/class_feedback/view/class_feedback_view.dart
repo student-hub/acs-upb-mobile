@@ -34,7 +34,7 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
   Person selectedAssistant;
   List<Person> classTeachers = [];
   Map<String, dynamic> feedbackQuestions = {};
-  List<String> responses = [];
+  Map<int, String> responses = {};
   List<Map<int, bool>> initialValues = [];
 
   @override
@@ -63,7 +63,6 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
         .then((questions) => setState(() => feedbackQuestions = questions));
 
     for (int i = 0; i <= feedbackQuestions.length; i++) {
-      responses.insert(i, '-1');
       initialValues.insert(i, {
         0: false,
         1: false,
@@ -96,7 +95,7 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
           },
           validator: (_) {
             if (textEditingController.text.isEmpty ?? true) {
-              return S.current.warningYouNeedToSelectAtLeastOne;
+              return S.current.warningYouNeedToSelectAssistant;
             }
             return null;
           },
@@ -655,7 +654,7 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
           for (var i = 0; i < feedbackQuestions.length; i++) {
             res = false;
             if (feedbackQuestions[i.toString()]['type'] == 'input') {
-              final response = ClassFeedbackQuestionAnswer(
+              final response = ClassFeedbackAnswer(
                 assistant: selectedAssistant,
                 teacherName: selectedTeacherName,
                 className: classController.text,
@@ -667,7 +666,7 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
                   .addResponse(response);
               if (!res) break;
             } else {
-              final response = ClassFeedbackQuestionAnswer(
+              final response = ClassFeedbackAnswer(
                 assistant: selectedAssistant,
                 teacherName: selectedTeacherName,
                 className: classController.text,

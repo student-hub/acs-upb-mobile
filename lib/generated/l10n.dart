@@ -1545,6 +1545,16 @@ class S {
     );
   }
 
+  /// `You need to select your assistant for this class.`
+  String get warningYouNeedToSelectAssistant {
+    return Intl.message(
+      'You need to select your assistant for this class.',
+      name: 'warningYouNeedToSelectAssistant',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Could not read favourite websites.`
   String get warningFavouriteWebsitesInitializationFailed {
     return Intl.message(

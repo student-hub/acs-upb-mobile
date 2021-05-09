@@ -5,7 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 
-extension ClassFeedbackQuestionAnswerExtension on ClassFeedbackQuestionAnswer {
+extension ClassFeedbackAnswerExtension on ClassFeedbackAnswer {
   Map<String, dynamic> toData() {
     final Map<String, dynamic> data = {};
 
@@ -21,7 +21,7 @@ extension ClassFeedbackQuestionAnswerExtension on ClassFeedbackQuestionAnswer {
 }
 
 class FeedbackProvider with ChangeNotifier {
-  Future<bool> addResponse(ClassFeedbackQuestionAnswer response) async {
+  Future<bool> addResponse(ClassFeedbackAnswer response) async {
     try {
       await FirebaseFirestore.instance
           .collection('forms')

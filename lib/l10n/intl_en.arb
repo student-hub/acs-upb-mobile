@@ -157,6 +157,7 @@
   "warningOnlyNOptionsAtATime": "Only {n} options can be selected at a time.",
   "warningNoEvents": "No events to show",
   "warningYouNeedToSelectAtLeastOne": "You need to select at least one option.",
+  "warningYouNeedToSelectAssistant": "You need to select your assistant for this class.",
   "warningFavouriteWebsitesInitializationFailed": "Could not read favourite websites.",
   "warningUnableToReachNewsFeed": "Unable to reach the news feed.",
   "warningNoNews": "There are no news yet.",

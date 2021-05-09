@@ -317,6 +317,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "warningUnableToReachNewsFeed" : MessageLookupByLibrary.simpleMessage("Unable to reach the news feed."),
     "warningUseProvider" : m12,
     "warningWebsiteNameExists" : MessageLookupByLibrary.simpleMessage("A website with the same name already exists."),
+    "warningYouNeedToSelectAssistant" : MessageLookupByLibrary.simpleMessage("You need to select your assistant for this class."),
     "warningYouNeedToSelectAtLeastOne" : MessageLookupByLibrary.simpleMessage("You need to select at least one option."),
     "websiteCategoryAdministrative" : MessageLookupByLibrary.simpleMessage("Administrative"),
     "websiteCategoryAssociations" : MessageLookupByLibrary.simpleMessage("Associations"),

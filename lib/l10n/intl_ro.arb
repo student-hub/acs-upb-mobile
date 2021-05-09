@@ -157,6 +157,7 @@
   "warningOnlyNOptionsAtATime": "Doar {n} opțiuni pot fi selectate la un moment dat.",
   "warningNoEvents": "Nu există evenimente de afișat",
   "warningYouNeedToSelectAtLeastOne": "Trebuie să selectați cel puțin o opțiune.",
+  "warningYouNeedToSelectAssistant": "Trebuie să selectați asistentul de la această materie.",
   "warningFavouriteWebsitesInitializationFailed": "Nu se pot citi date despre site-urile favorite.",
   "warningUnableToReachNewsFeed": "Nu am putut încărca fluxul de știri.",
   "warningNoNews": "Nu au fost postate știri încă.",
@@ -175,7 +176,7 @@
   "navigationEventDetails": "Detalii eveniment",
   "navigationNewsFeed": "Știri",
   "navigationClassInfo": "Informații materie",
-  "navigationClassFeedback": "Recenzie",
+  "navigationClassFeedback": "Feedback",
 
   "filterMenuShowAll": "Arată tot",
   "filterMenuShowMine": "Arată doar pe ale mele",
