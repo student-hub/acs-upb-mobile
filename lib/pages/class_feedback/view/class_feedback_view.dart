@@ -27,7 +27,7 @@ class ClassFeedbackView extends StatefulWidget {
 class _ClassFeedbackViewState extends State<ClassFeedbackView> {
   final formKey = GlobalKey<FormState>();
   TextEditingController classController;
-  bool agreedToResponsibilities = false;
+  bool agreedToResponsibilities;
 
   List<String> involvementPercentages = [];
   String selectedInvolvement;
@@ -44,6 +44,7 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
   void initState() {
     super.initState();
 
+    agreedToResponsibilities = false;
     classController = TextEditingController(text: widget.classHeader?.id ?? '');
     gradeController = TextEditingController();
     hoursController = TextEditingController();
@@ -57,11 +58,12 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
     Provider.of<PersonProvider>(context, listen: false)
         .fetchPeople()
         .then((teachers) => setState(() => classTeachers = teachers));
+
     Provider.of<FeedbackProvider>(context, listen: false)
         .fetchQuestions()
         .then((questions) => setState(() => feedbackQuestions = questions));
 
-    for (var i = 0; i < 22; i++) {
+    for (int i = 0; i < 22; i++) {
       responses.insert(i, '-1');
       initialValues.insert(i, {
         0: false,
@@ -599,24 +601,23 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
   }
 
   AppScaffoldAction _submitButton() => AppScaffoldAction(
-        text: 'Submit',
+        text: S.current.buttonSend,
         onPressed: () async {
           if (!formKey.currentState.validate()) return;
 
           if (!agreedToResponsibilities) {
             AppToast.show(
-                '${S.current.warningAgreeTo}${S.current.labelPermissionsConsent}.');
+                '${S.current.warningAgreeTo}${S.current.labelFeedbackPolicy}.');
             return;
           }
 
           setState(() {
             formKey.currentState.save();
-            print(responses);
           });
 
           bool res = false;
 
-          for (var i = 0; i <= 21; i++) {
+          for (var i = 0; i < feedbackQuestions.length; i++) {
             if (i == 1 || i == 4 || i == 15) {
               final answer = i == 1
                   ? gradeController.text.toString()
@@ -654,7 +655,7 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
           }
           if (res) {
             Navigator.of(context).pop();
-            AppToast.show(S.current.messageEventAdded);
+            AppToast.show(S.current.messageFeedbackHasBeenSent);
           }
         },
       );

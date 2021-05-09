@@ -445,6 +445,16 @@ class S {
     );
   }
 
+  /// `feedback policy`
+  String get labelFeedbackPolicy {
+    return Intl.message(
+      'feedback policy',
+      name: 'labelFeedbackPolicy',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Last updated`
   String get labelLastUpdated {
     return Intl.message(
@@ -2455,11 +2465,21 @@ class S {
     );
   }
 
-  /// `The request has been sent succesfully.`
+  /// `The request has been sent successfully.`
   String get messageRequestHasBeenSent {
     return Intl.message(
-      'The request has been sent succesfully.',
+      'The request has been sent successfully.',
       name: 'messageRequestHasBeenSent',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `The review has been sent successfully.`
+  String get messageFeedbackHasBeenSent {
+    return Intl.message(
+      'The review has been sent successfully.',
+      name: 'messageFeedbackHasBeenSent',
       desc: '',
       args: [],
     );
