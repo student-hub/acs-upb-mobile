@@ -15,6 +15,7 @@ import 'package:acs_upb_mobile/widgets/icon_text.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:positioned_tap_detector/positioned_tap_detector.dart';
@@ -49,16 +50,17 @@ class _ClassViewState extends State<ClassView> {
     return AppScaffold(
       title: Text(S.current.navigationClassInfo),
       actions: [
-        AppScaffoldAction(
-            icon: Icons.rate_review_outlined,
-            onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute<ClassFeedbackView>(
-                  builder: (_) =>
-                      ClassFeedbackView(classHeader: widget.classHeader),
-                ),
-              );
-            }),
+        if (kReleaseMode == false)
+          AppScaffoldAction(
+              icon: Icons.rate_review_outlined,
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute<ClassFeedbackView>(
+                    builder: (_) =>
+                        ClassFeedbackView(classHeader: widget.classHeader),
+                  ),
+                );
+              }),
       ],
       body: FutureBuilder(
           future: classProvider.fetchClassInfo(widget.classHeader),
