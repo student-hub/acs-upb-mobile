@@ -1645,6 +1645,16 @@ class S {
     );
   }
 
+  /// `Search`
+  String get navigationSearch {
+    return Intl.message(
+      'Search',
+      name: 'navigationSearch',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Show all`
   String get filterMenuShowAll {
     return Intl.message(
