@@ -3,7 +3,7 @@ import 'package:acs_upb_mobile/pages/class_feedback/service/feedback_provider.da
 import 'package:acs_upb_mobile/pages/classes/model/class.dart';
 import 'package:acs_upb_mobile/pages/people/model/person.dart';
 import 'package:acs_upb_mobile/pages/people/service/person_provider.dart';
-import 'package:acs_upb_mobile/widgets/autocomplete.dart';
+import 'package:acs_upb_mobile/pages/people/view/people_page.dart';
 import 'package:acs_upb_mobile/widgets/icon_text.dart';
 import 'package:acs_upb_mobile/widgets/radio_emoji.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
@@ -13,7 +13,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:provider/provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
-import 'package:recase/recase.dart';
 
 class ClassFeedbackView extends StatefulWidget {
   const ClassFeedbackView({Key key, this.classHeader}) : super(key: key);
@@ -73,64 +72,6 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
     }
 
     return feedbackQuestions;
-  }
-
-  Widget autocompleteAssistant(BuildContext context) {
-    return Autocomplete<Person>(
-      key: const Key('AutocompleteAssistant'),
-      fieldViewBuilder: (BuildContext context,
-          TextEditingController textEditingController,
-          FocusNode focusNode,
-          VoidCallback onFieldSubmitted) {
-        textEditingController.text = selectedAssistant?.name;
-        return TextFormField(
-          controller: textEditingController,
-          decoration: InputDecoration(
-            labelText: S.of(context).labelAssistant,
-            prefixIcon: const Icon(FeatherIcons.user),
-          ),
-          focusNode: focusNode,
-          onFieldSubmitted: (String value) {
-            onFieldSubmitted();
-          },
-          validator: (_) {
-            if (textEditingController.text.isEmpty ?? true) {
-              return S.current.warningYouNeedToSelectAssistant;
-            }
-            return null;
-          },
-        );
-      },
-      displayStringForOption: (Person person) => person.name,
-      optionsBuilder: (TextEditingValue textEditingValue) {
-        if (textEditingValue.text == '' || textEditingValue.text.isEmpty) {
-          return const Iterable<Person>.empty();
-        }
-        if (classTeachers.where((Person person) {
-          return person.name
-              .toLowerCase()
-              .contains(textEditingValue.text.toLowerCase());
-        }).isEmpty) {
-          final List<Person> inputTeachers = [];
-          final Person inputTeacher =
-              Person(name: textEditingValue.text.titleCase);
-          inputTeachers.add(inputTeacher);
-          return inputTeachers;
-        }
-
-        return classTeachers.where((Person person) {
-          return person.name
-              .toLowerCase()
-              .contains(textEditingValue.text.toLowerCase());
-        });
-      },
-      onSelected: (Person selection) {
-        formKey.currentState.validate();
-        setState(() {
-          selectedAssistant = selection;
-        });
-      },
-    );
   }
 
   @override
@@ -227,7 +168,14 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
                           }
                         },
                       ),
-                      autocompleteAssistant(context),
+                      AutocompletePerson(
+                        key: const Key('AutocompleteAssistant'),
+                        labelText: S.current.labelAssistant,
+                        warning: S.current.warningYouNeedToSelectAssistant,
+                        formKey: formKey,
+                        onSaved: (value) => selectedAssistant = value,
+                        classTeachers: classTeachers,
+                      ),
                       Padding(
                         padding: const EdgeInsets.all(10),
                         child: Row(

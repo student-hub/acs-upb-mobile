@@ -1082,7 +1082,8 @@ Future<void> main() async {
           // Select lecturer - partial name
           await tester.tap(find.byIcon(FeatherIcons.user));
           await tester.pumpAndSettle();
-          await tester.enterText(find.byKey(const Key('Autocomplete')), 'John');
+          await tester.enterText(
+              find.byKey(const Key('AutocompleteLecturer')), 'John');
           await tester.pumpAndSettle();
           await tester.tap(find.text('John Doe'));
           await tester.pumpAndSettle();
@@ -1091,14 +1092,15 @@ Future<void> main() async {
           await tester.tap(find.byIcon(FeatherIcons.user));
           await tester.pumpAndSettle();
           await tester.enterText(
-              find.byKey(const Key('Autocomplete')), 'Isabel Steward');
+              find.byKey(const Key('AutocompleteLecturer')), 'Isabel Steward');
           await tester.tap(find.text('Isabel Steward'));
           await tester.pumpAndSettle();
 
           // Select lecturer - check autocomplete suggestions
           await tester.tap(find.byIcon(FeatherIcons.user));
           await tester.pumpAndSettle();
-          await tester.enterText(find.byKey(const Key('Autocomplete')), 'Doe');
+          await tester.enterText(
+              find.byKey(const Key('AutocompleteLecturer')), 'Doe');
           await tester.pumpAndSettle();
 
           expect(find.text('Jane Doe'), findsOneWidget);
@@ -1167,14 +1169,15 @@ Future<void> main() async {
           // Select lecturer
           await tester.tap(find.text('Lecturer'));
           await tester.pumpAndSettle();
-          await tester.enterText(find.byKey(const Key('Autocomplete')), 'Doe');
+          await tester.enterText(
+              find.byKey(const Key('AutocompleteLecturer')), 'Doe');
           await tester.pumpAndSettle();
 
           expect(find.text('Jane Doe'), findsOneWidget);
           expect(find.text('John Doe'), findsOneWidget);
 
           await tester.enterText(
-              find.byKey(const Key('Autocomplete')), 'John Doe');
+              find.byKey(const Key('AutocompleteLecturer')), 'John Doe');
           await tester.pumpAndSettle();
 
           FocusManager.instance.primaryFocus.unfocus();
