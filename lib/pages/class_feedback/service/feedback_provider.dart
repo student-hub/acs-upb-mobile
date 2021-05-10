@@ -20,6 +20,20 @@ extension ClassFeedbackAnswerExtension on ClassFeedbackAnswer {
   }
 }
 
+// extension FeedbackQuestionExtension on FeedbackQuestion {
+//   static FeedbackQuestion fromJSON(Map<String, dynamic> json) {
+//     if (json['category'] == null ||
+//         json['question'] == null ||
+//         json['type'] == null) {
+//       return null;
+//     }
+//
+//     if (json['type'] == 'input') {
+//       return
+//     } else if (json['type'] == 'rating') {}
+//   }
+// }
+
 class FeedbackProvider with ChangeNotifier {
   Future<bool> addResponse(ClassFeedbackAnswer response) async {
     try {
@@ -43,6 +57,21 @@ class FeedbackProvider with ChangeNotifier {
           .doc('class_feedback_questions')
           .get();
       final Map<String, dynamic> data = documentSnapshot['questions'];
+      return data;
+    } catch (e) {
+      print(e);
+      AppToast.show(S.current.errorSomethingWentWrong);
+      return null;
+    }
+  }
+
+  Future<Map<String, dynamic>> fetchCategories() async {
+    try {
+      final DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
+          .collection('forms')
+          .doc('class_feedback_questions')
+          .get();
+      final Map<String, dynamic> data = documentSnapshot['categories'];
       return data;
     } catch (e) {
       print(e);

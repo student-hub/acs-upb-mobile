@@ -33,6 +33,7 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
   Person selectedAssistant;
   List<Person> classTeachers = [];
   Map<String, dynamic> feedbackQuestions = {};
+  Map<String, dynamic> feedbackCategories = {};
   Map<int, String> responses = {};
   List<Map<int, bool>> initialValues = [];
 
@@ -53,10 +54,14 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
         .fetchPeople()
         .then((teachers) => setState(() => classTeachers = teachers));
 
-    awaitFeedbackQuestions();
+    Provider.of<FeedbackProvider>(context, listen: false)
+        .fetchCategories()
+        .then((categories) => setState(() => feedbackCategories = categories));
+
+    fetchFeedbackQuestions();
   }
 
-  Future<Map<String, dynamic>> awaitFeedbackQuestions() async {
+  Future<Map<String, dynamic>> fetchFeedbackQuestions() async {
     await Provider.of<FeedbackProvider>(context, listen: false)
         .fetchQuestions()
         .then((questions) => setState(() => feedbackQuestions = questions));
@@ -74,9 +79,82 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
     return feedbackQuestions;
   }
 
+  Widget classWidget() {
+    return TextFormField(
+      enabled: false,
+      controller: classController,
+      decoration: InputDecoration(
+        labelText: S.of(context).labelClass,
+        prefixIcon: const Icon(FeatherIcons.bookOpen),
+      ),
+      onChanged: (_) => setState(() {}),
+    );
+  }
+
+  Widget lecturerWidget(BuildContext context) {
+    final personProvider = Provider.of<PersonProvider>(context);
+
+    return FutureBuilder(
+      future: personProvider.mostRecentLecturer(widget.classHeader.id),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          final lecturerName = snapshot.data;
+          selectedTeacherName = lecturerName;
+          return TextFormField(
+            enabled: false,
+            controller: TextEditingController(text: lecturerName ?? '-'),
+            decoration: InputDecoration(
+              labelText: S.of(context).labelLecturer,
+              prefixIcon: const Icon(Icons.person_outline),
+            ),
+            onChanged: (_) => setState(() {}),
+          );
+        } else {
+          return const Center(child: CircularProgressIndicator());
+        }
+      },
+    );
+  }
+
+  Widget assistantWidget() {
+    return AutocompletePerson(
+      key: const Key('AutocompleteAssistant'),
+      labelText: S.current.labelAssistant,
+      warning: S.current.warningYouNeedToSelectAssistant,
+      formKey: formKey,
+      onSaved: (value) => selectedAssistant = value,
+      classTeachers: classTeachers,
+    );
+  }
+
+  Widget acknowledgementWidget() {
+    return Padding(
+      padding: const EdgeInsets.all(10),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Checkbox(
+            value: agreedToResponsibilities,
+            visualDensity: VisualDensity.compact,
+            onChanged: (value) =>
+                setState(() => agreedToResponsibilities = value),
+          ),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.only(top: 10.25),
+              child: Text(
+                S.of(context).messageAgreeFeedbackPolicy,
+                style: Theme.of(context).textTheme.subtitle1,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    final personProvider = Provider.of<PersonProvider>(context);
     final feedbackProvider = Provider.of<FeedbackProvider>(context);
 
     final List<String> generalQuestionsRating =
@@ -135,70 +213,10 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
                         icon: Icons.info_outline,
                         text: S.of(context).infoFormAnonymous,
                       ),
-                      TextFormField(
-                        enabled: false,
-                        controller: classController,
-                        decoration: InputDecoration(
-                          labelText: S.of(context).labelClass,
-                          prefixIcon: const Icon(FeatherIcons.bookOpen),
-                        ),
-                        onChanged: (_) => setState(() {}),
-                      ),
-                      FutureBuilder(
-                        future: personProvider
-                            .mostRecentLecturer(widget.classHeader.id),
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.done) {
-                            final lecturerName = snapshot.data;
-                            selectedTeacherName = lecturerName;
-                            return TextFormField(
-                              enabled: false,
-                              controller: TextEditingController(
-                                  text: lecturerName ?? '-'),
-                              decoration: InputDecoration(
-                                labelText: S.of(context).labelLecturer,
-                                prefixIcon: const Icon(Icons.person_outline),
-                              ),
-                              onChanged: (_) => setState(() {}),
-                            );
-                          } else {
-                            return const Center(
-                                child: CircularProgressIndicator());
-                          }
-                        },
-                      ),
-                      AutocompletePerson(
-                        key: const Key('AutocompleteAssistant'),
-                        labelText: S.current.labelAssistant,
-                        warning: S.current.warningYouNeedToSelectAssistant,
-                        formKey: formKey,
-                        onSaved: (value) => selectedAssistant = value,
-                        classTeachers: classTeachers,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(10),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Checkbox(
-                              value: agreedToResponsibilities,
-                              visualDensity: VisualDensity.compact,
-                              onChanged: (value) => setState(
-                                  () => agreedToResponsibilities = value),
-                            ),
-                            Expanded(
-                              child: Padding(
-                                padding: const EdgeInsets.only(top: 10.25),
-                                child: Text(
-                                  S.of(context).messageAgreeFeedbackPolicy,
-                                  style: Theme.of(context).textTheme.subtitle1,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+                      classWidget(),
+                      lecturerWidget(context),
+                      assistantWidget(),
+                      acknowledgementWidget(),
                       const SizedBox(height: 24),
                       Card(
                         child: Padding(
