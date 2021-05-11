@@ -16,6 +16,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:provider/provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
+import 'package:validators/validators.dart';
 
 class ClassFeedbackView extends StatefulWidget {
   const ClassFeedbackView({Key key, this.classHeader}) : super(key: key);
@@ -172,6 +173,10 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
             ),
           ),
           TextFormField(
+            decoration: InputDecoration(
+              labelText: S.current.labelAnswer,
+              prefixIcon: const Icon(Icons.question_answer_outlined),
+            ),
             onSaved: (value) {
               responses[int.parse(question.id)] = value;
             },
@@ -179,6 +184,11 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
             validator: (value) {
               if (value?.isEmpty ?? true) {
                 return S.current.errorAnswerCannotBeEmpty;
+              }
+              if (!isNumeric(value) ||
+                  int.parse(value) < 0 ||
+                  int.parse(value) > 10) {
+                return S.current.errorAnswerIncorrect;
               }
               return null;
             },
@@ -218,6 +228,10 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
             ),
           ),
           DropdownButtonFormField<String>(
+            decoration: InputDecoration(
+              labelText: S.current.labelAnswer,
+              prefixIcon: const Icon(Icons.list_outlined),
+            ),
             onSaved: (value) {
               responses[int.parse(question.id)] = value;
             },

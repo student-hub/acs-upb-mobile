@@ -165,6 +165,16 @@ class S {
     );
   }
 
+  /// `Answer`
+  String get labelAnswer {
+    return Intl.message(
+      'Answer',
+      name: 'labelAnswer',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Version`
   String get labelVersion {
     return Intl.message(
@@ -1200,6 +1210,16 @@ class S {
     return Intl.message(
       'Answer cannot be empty.',
       name: 'errorAnswerCannotBeEmpty',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `The answer you entered is incorrect.`
+  String get errorAnswerIncorrect {
+    return Intl.message(
+      'The answer you entered is incorrect.',
+      name: 'errorAnswerIncorrect',
       desc: '',
       args: [],
     );
