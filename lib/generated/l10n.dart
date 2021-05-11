@@ -605,46 +605,6 @@ class S {
     );
   }
 
-  /// `General questions`
-  String get sectionGeneralQuestions {
-    return Intl.message(
-      'General questions',
-      name: 'sectionGeneralQuestions',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Personal comments`
-  String get sectionPersonalComments {
-    return Intl.message(
-      'Personal comments',
-      name: 'sectionPersonalComments',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Applications`
-  String get sectionApplications {
-    return Intl.message(
-      'Applications',
-      name: 'sectionApplications',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Involvement`
-  String get sectionInvolvement {
-    return Intl.message(
-      'Involvement',
-      name: 'sectionInvolvement',
-      desc: '',
-      args: [],
-    );
-  }
-
   /// `Main page`
   String get shortcutTypeMain {
     return Intl.message(

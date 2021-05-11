@@ -1,4 +1,6 @@
 import 'package:acs_upb_mobile/pages/class_feedback/model/class_feedback_answer.dart';
+import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question.dart';
+import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question_dropdown.dart';
 import 'package:acs_upb_mobile/resources/locale_provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
@@ -20,19 +22,29 @@ extension ClassFeedbackAnswerExtension on ClassFeedbackAnswer {
   }
 }
 
-// extension FeedbackQuestionExtension on FeedbackQuestion {
-//   static FeedbackQuestion fromJSON(Map<String, dynamic> json) {
-//     if (json['category'] == null ||
-//         json['question'] == null ||
-//         json['type'] == null) {
-//       return null;
-//     }
-//
-//     if (json['type'] == 'input') {
-//       return
-//     } else if (json['type'] == 'rating') {}
-//   }
-// }
+extension FeedbackQuestionExtension on FeedbackQuestion {
+  static FeedbackQuestion fromJSON(dynamic json, String id) {
+    if (json['type'] == 'dropdown' && json['options'] != null) {
+      final List<dynamic> options = json['options'];
+      final List<String> optionsString =
+          options.map((e) => e as String).toList();
+      return FeedbackQuestionDropdown(
+        category: json['category'],
+        question: json['question'][LocaleProvider.localeString],
+        type: json['type'],
+        id: id,
+        answerOptions: optionsString,
+      );
+    } else {
+      return FeedbackQuestion(
+        category: json['category'],
+        question: json['question'][LocaleProvider.localeString],
+        type: json['type'],
+        id: id,
+      );
+    }
+  }
+}
 
 class FeedbackProvider with ChangeNotifier {
   Future<bool> addResponse(ClassFeedbackAnswer response) async {
@@ -50,14 +62,19 @@ class FeedbackProvider with ChangeNotifier {
     }
   }
 
-  Future<Map<String, dynamic>> fetchQuestions() async {
+  Future<Map<String, FeedbackQuestion>> fetchQuestions() async {
     try {
       final DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
           .collection('forms')
           .doc('class_feedback_questions')
           .get();
       final Map<String, dynamic> data = documentSnapshot['questions'];
-      return data;
+      final Map<String, FeedbackQuestion> questions = {};
+      for (final value in data.values) {
+        final key = data.keys.firstWhere((element) => data[element] == value);
+        questions[key] = FeedbackQuestionExtension.fromJSON(value, key);
+      }
+      return questions;
     } catch (e) {
       print(e);
       AppToast.show(S.current.errorSomethingWentWrong);

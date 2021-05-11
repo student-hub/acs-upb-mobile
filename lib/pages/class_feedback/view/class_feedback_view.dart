@@ -1,9 +1,12 @@
 import 'package:acs_upb_mobile/pages/class_feedback/model/class_feedback_answer.dart';
+import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question.dart';
+import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question_dropdown.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/service/feedback_provider.dart';
 import 'package:acs_upb_mobile/pages/classes/model/class.dart';
 import 'package:acs_upb_mobile/pages/people/model/person.dart';
 import 'package:acs_upb_mobile/pages/people/service/person_provider.dart';
 import 'package:acs_upb_mobile/pages/people/view/people_page.dart';
+import 'package:acs_upb_mobile/resources/locale_provider.dart';
 import 'package:acs_upb_mobile/widgets/icon_text.dart';
 import 'package:acs_upb_mobile/widgets/radio_emoji.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
@@ -28,14 +31,13 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
   TextEditingController classController;
   bool agreedToResponsibilities;
 
-  List<String> involvementPercentages = [];
   String selectedTeacherName;
   Person selectedAssistant;
   List<Person> classTeachers = [];
-  Map<String, dynamic> feedbackQuestions = {};
   Map<String, dynamic> feedbackCategories = {};
   Map<int, String> responses = {};
   List<Map<int, bool>> initialValues = [];
+  Map<String, FeedbackQuestion> feedbackQuestions = {};
 
   @override
   void initState() {
@@ -43,13 +45,7 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
 
     agreedToResponsibilities = false;
     classController = TextEditingController(text: widget.classHeader?.id ?? '');
-    involvementPercentages = [
-      '0% ... 20%',
-      '20% ... 40%',
-      '40% ... 60%',
-      '60% ... 80%',
-      '80% ... 100%'
-    ];
+
     Provider.of<PersonProvider>(context, listen: false)
         .fetchPeople()
         .then((teachers) => setState(() => classTeachers = teachers));
@@ -153,47 +149,174 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
     );
   }
 
+  Widget categoryHeader(String category) {
+    return Column(
+      children: [
+        Text(
+          category,
+          style: Theme.of(context).textTheme.headline6,
+        ),
+        const SizedBox(height: 24),
+      ],
+    );
+  }
+
+  Widget questionWidget(FeedbackQuestion question) {
+    if (question.type == 'input') {
+      return Column(
+        children: [
+          Text(
+            question.question,
+            style: const TextStyle(
+              fontSize: 18,
+            ),
+          ),
+          TextFormField(
+            onSaved: (value) {
+              responses[int.parse(question.id)] = value;
+            },
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+            validator: (value) {
+              if (value?.isEmpty ?? true) {
+                return S.current.warningYouNeedToSelectAtLeastOne;
+              }
+              return null;
+            },
+            onChanged: (_) => setState(() {}),
+          ),
+          const SizedBox(height: 10),
+        ],
+      );
+    } else if (question.type == 'rating') {
+      return Column(
+        children: [
+          EmojiFormField(
+            question: question.question,
+            onSaved: (value) {
+              responses[int.parse(question.id)] = value.keys
+                  .firstWhere((element) => value[element] == true)
+                  .toString();
+            },
+            validator: (selection) {
+              if (selection.values.where((e) => e != false).isEmpty) {
+                return S.of(context).warningYouNeedToSelectAtLeastOne;
+              }
+              return null;
+            },
+            initialValues: initialValues[int.parse(question.id)],
+          ),
+          const SizedBox(height: 10),
+        ],
+      );
+    } else if (question.type == 'dropdown') {
+      return Column(
+        children: [
+          Text(
+            question.question,
+            style: const TextStyle(
+              fontSize: 18,
+            ),
+          ),
+          DropdownButtonFormField<String>(
+            onSaved: (value) {
+              responses[int.parse(question.id)] = value;
+            },
+            items: (question as FeedbackQuestionDropdown)
+                .options
+                .map(
+                  (type) => DropdownMenuItem<String>(
+                    value: type,
+                    child: Text(type.toString()),
+                  ),
+                )
+                .toList(),
+            onChanged: (selection) {
+              formKey.currentState.validate();
+              setState(() => {});
+            },
+            validator: (selection) {
+              if (selection == null) {
+                return S.of(context).errorEventTypeCannotBeEmpty;
+              }
+              return null;
+            },
+          ),
+          const SizedBox(height: 10),
+        ],
+      );
+    } else if (question.type == 'text') {
+      return Column(
+        children: [
+          Text(
+            question.question,
+            style: const TextStyle(
+              fontSize: 18,
+            ),
+          ),
+          const SizedBox(height: 24),
+          Card(
+            child: Padding(
+              padding: const EdgeInsets.all(2),
+              child: Column(
+                children: [
+                  TextFormField(
+                    onSaved: (value) {
+                      responses[int.parse(question.id)] = value;
+                    },
+                    keyboardType: TextInputType.multiline,
+                    maxLines: null,
+                  ),
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(height: 24),
+        ],
+      );
+    } else {
+      return null;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    final feedbackProvider = Provider.of<FeedbackProvider>(context);
+    final List<Widget> children = [
+      IconText(
+        icon: Icons.info_outline,
+        text: S.of(context).infoFormAnonymous,
+      ),
+      classWidget(),
+      lecturerWidget(context),
+      assistantWidget(),
+      acknowledgementWidget(),
+      const SizedBox(height: 24),
+    ];
 
-    final List<String> generalQuestionsRating =
-        feedbackProvider.getQuestionsByCategoryAndType(
-            feedbackQuestions.values.toList(), 'general', 'rating');
-
-    final List<String> generalQuestionsRatingIndexes = feedbackQuestions.keys
-        .where((element) =>
-            feedbackQuestions[element]['type'] == 'rating' &&
-            feedbackQuestions[element]['category'] == 'general')
-        .toList();
-
-    final List<String> generalQuestionsInput =
-        feedbackProvider.getQuestionsByCategoryAndType(
-            feedbackQuestions.values.toList(), 'general', 'input');
-
-    final List<String> involvementQuestions =
-        feedbackProvider.getQuestionsByCategoryAndType(
-            feedbackQuestions.values.toList(), 'involvement', 'input');
-
-    final List<String> lectureQuestions =
-        feedbackProvider.getQuestionsByCategoryAndType(
-            feedbackQuestions.values.toList(), 'lecture', 'rating');
-
-    final List<String> applicationsQuestions =
-        feedbackProvider.getQuestionsByCategoryAndType(
-            feedbackQuestions.values.toList(), 'applications', 'rating');
-
-    final List<String> homeworkQuestionsRating =
-        feedbackProvider.getQuestionsByCategoryAndType(
-            feedbackQuestions.values.toList(), 'homework', 'rating');
-
-    final List<String> homeworkQuestionsInput =
-        feedbackProvider.getQuestionsByCategoryAndType(
-            feedbackQuestions.values.toList(), 'homework', 'input');
-
-    final List<String> personalQuestions =
-        feedbackProvider.getQuestionsByCategoryAndType(
-            feedbackQuestions.values.toList(), 'personal', 'input');
+    for (final category in feedbackCategories.keys) {
+      final List<Widget> categoryChildren = [
+        categoryHeader(
+            feedbackCategories[category][LocaleProvider.localeString])
+      ];
+      for (final question
+          in feedbackQuestions.values.where((q) => q.category == category)) {
+        categoryChildren.add(questionWidget(question));
+      }
+      children.add(
+        Column(
+          children: [
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(15),
+                child: Column(
+                  children: categoryChildren,
+                ),
+              ),
+            ),
+            const SizedBox(height: 24),
+          ],
+        ),
+      );
+    }
 
     return AppScaffold(
       title: Text(S.of(context).navigationClassFeedback),
@@ -204,395 +327,7 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
             padding: const EdgeInsets.all(10),
             child: Form(
               key: formKey,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  Column(
-                    children: [
-                      IconText(
-                        icon: Icons.info_outline,
-                        text: S.of(context).infoFormAnonymous,
-                      ),
-                      classWidget(),
-                      lecturerWidget(context),
-                      assistantWidget(),
-                      acknowledgementWidget(),
-                      const SizedBox(height: 24),
-                      Card(
-                        child: Padding(
-                          padding: const EdgeInsets.all(15),
-                          child: Column(
-                            children: [
-                              Text(
-                                S.of(context).sectionGeneralQuestions,
-                                style: Theme.of(context).textTheme.headline6,
-                              ),
-                              const SizedBox(height: 24),
-                              Text(
-                                generalQuestionsInput.isNotEmpty
-                                    ? generalQuestionsInput.single
-                                    : '-',
-                                style: const TextStyle(
-                                  fontSize: 18,
-                                ),
-                              ),
-                              TextFormField(
-                                onSaved: (value) {
-                                  responses[int.parse(
-                                      feedbackQuestions.keys.isNotEmpty
-                                          ? feedbackQuestions.keys.firstWhere(
-                                              (element) =>
-                                                  feedbackQuestions[element]
-                                                          ['type'] ==
-                                                      'input' &&
-                                                  feedbackQuestions[element]
-                                                          ['category'] ==
-                                                      'general')
-                                          : '-1')] = value;
-                                },
-                                autovalidateMode:
-                                    AutovalidateMode.onUserInteraction,
-                                decoration: InputDecoration(
-                                  labelText: S.of(context).labelGrade,
-                                  prefixIcon: const Icon(Icons.grade_outlined),
-                                ),
-                                validator: (value) {
-                                  if (value?.isEmpty ?? true) {
-                                    return S.current
-                                        .warningYouNeedToSelectAtLeastOne;
-                                  }
-                                  return null;
-                                },
-                                onChanged: (_) => setState(() {}),
-                              ),
-                              const SizedBox(height: 24),
-                              ...generalQuestionsRating.asMap().entries.map(
-                                (entry) {
-                                  return EmojiFormField(
-                                    question: entry.value,
-                                    onSaved: (value) {
-                                      responses[int.parse(
-                                          generalQuestionsRatingIndexes[
-                                              entry.key])] = value.keys
-                                          .firstWhere((element) =>
-                                              value[element] == true)
-                                          .toString();
-                                    },
-                                    validator: (selection) {
-                                      if (selection.values
-                                          .where((e) => e != false)
-                                          .isEmpty) {
-                                        return S
-                                            .of(context)
-                                            .warningYouNeedToSelectAtLeastOne;
-                                      }
-                                      return null;
-                                    },
-                                    initialValues: initialValues[entry.key],
-                                  );
-                                },
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      Card(
-                        child: Padding(
-                          padding: const EdgeInsets.all(15),
-                          child: Column(
-                            children: [
-                              Text(
-                                S.of(context).sectionInvolvement,
-                                style: Theme.of(context).textTheme.headline6,
-                              ),
-                              const SizedBox(height: 24),
-                              Text(
-                                involvementQuestions.isNotEmpty
-                                    ? involvementQuestions.single
-                                    : '-',
-                                style: const TextStyle(
-                                  fontSize: 18,
-                                ),
-                              ),
-                              DropdownButtonFormField<String>(
-                                decoration: InputDecoration(
-                                  labelText: S.of(context).sectionInvolvement,
-                                  prefixIcon:
-                                      const Icon(Icons.local_activity_outlined),
-                                ),
-                                onSaved: (value) {
-                                  responses[generalQuestionsInput.length +
-                                      generalQuestionsRating.length] = value;
-                                },
-                                items: involvementPercentages
-                                    .map(
-                                      (type) => DropdownMenuItem<String>(
-                                        value: type,
-                                        child: Text(type.toString()),
-                                      ),
-                                    )
-                                    .toList(),
-                                onChanged: (selection) {
-                                  formKey.currentState.validate();
-                                  setState(() => {});
-                                },
-                                validator: (selection) {
-                                  if (selection == null) {
-                                    return S
-                                        .of(context)
-                                        .errorEventTypeCannotBeEmpty;
-                                  }
-                                  return null;
-                                },
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      Card(
-                        child: Padding(
-                          padding: const EdgeInsets.all(15),
-                          child: Column(
-                            children: [
-                              Text(
-                                S.of(context).uniEventTypeLecture,
-                                style: Theme.of(context).textTheme.headline6,
-                              ),
-                              ...lectureQuestions.asMap().entries.map(
-                                (entry) {
-                                  return EmojiFormField(
-                                    question: entry.value,
-                                    onSaved: (value) {
-                                      responses[generalQuestionsInput.length +
-                                              generalQuestionsRating.length +
-                                              involvementQuestions.length +
-                                              entry.key] =
-                                          value.keys
-                                              .firstWhere((element) =>
-                                                  value[element] == true)
-                                              .toString();
-                                    },
-                                    validator: (selection) {
-                                      if (selection.values
-                                          .where((e) => e != false)
-                                          .isEmpty) {
-                                        return S
-                                            .of(context)
-                                            .warningYouNeedToSelectAtLeastOne;
-                                      }
-                                      return null;
-                                    },
-                                    initialValues: initialValues[
-                                        generalQuestionsInput.length +
-                                            generalQuestionsRating.length +
-                                            involvementQuestions.length +
-                                            entry.key],
-                                  );
-                                },
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      Card(
-                        child: Padding(
-                          padding: const EdgeInsets.all(15),
-                          child: Column(
-                            children: [
-                              Text(
-                                S.of(context).sectionApplications,
-                                style: Theme.of(context).textTheme.headline6,
-                              ),
-                              ...applicationsQuestions.asMap().entries.map(
-                                (entry) {
-                                  return EmojiFormField(
-                                    question: entry.value,
-                                    onSaved: (value) {
-                                      responses[generalQuestionsInput.length +
-                                              generalQuestionsRating.length +
-                                              involvementQuestions.length +
-                                              lectureQuestions.length +
-                                              entry.key] =
-                                          value.keys
-                                              .firstWhere((element) =>
-                                                  value[element] == true)
-                                              .toString();
-                                    },
-                                    validator: (selection) {
-                                      if (selection.values
-                                          .where((e) => e != false)
-                                          .isEmpty) {
-                                        return S
-                                            .of(context)
-                                            .warningYouNeedToSelectAtLeastOne;
-                                      }
-                                      return null;
-                                    },
-                                    initialValues: initialValues[
-                                        generalQuestionsInput.length +
-                                            generalQuestionsRating.length +
-                                            involvementQuestions.length +
-                                            lectureQuestions.length +
-                                            entry.key],
-                                  );
-                                },
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      Card(
-                        child: Padding(
-                          padding: const EdgeInsets.all(15),
-                          child: Column(
-                            children: [
-                              Text(
-                                S.of(context).uniEventTypeHomework,
-                                style: Theme.of(context).textTheme.headline6,
-                              ),
-                              const SizedBox(height: 24),
-                              Text(
-                                homeworkQuestionsInput.isNotEmpty
-                                    ? homeworkQuestionsInput.single
-                                    : '-',
-                                style: const TextStyle(
-                                  fontSize: 18,
-                                ),
-                              ),
-                              TextFormField(
-                                onSaved: (value) {
-                                  responses[generalQuestionsInput.length +
-                                      generalQuestionsRating.length +
-                                      involvementQuestions.length +
-                                      lectureQuestions.length +
-                                      applicationsQuestions.length] = value;
-                                },
-                                autovalidateMode:
-                                    AutovalidateMode.onUserInteraction,
-                                decoration: InputDecoration(
-                                  labelText: S.current.labelGrade,
-                                  prefixIcon: const Icon(Icons.grade_outlined),
-                                ),
-                                validator: (value) {
-                                  if (value?.isEmpty ?? true) {
-                                    return S.current
-                                        .warningYouNeedToSelectAtLeastOne;
-                                  }
-                                  return null;
-                                },
-                                onChanged: (_) => setState(() {}),
-                              ),
-                              ...homeworkQuestionsRating.asMap().entries.map(
-                                (entry) {
-                                  return EmojiFormField(
-                                    question: entry.value,
-                                    onSaved: (value) {
-                                      responses[generalQuestionsInput.length +
-                                              generalQuestionsRating.length +
-                                              involvementQuestions.length +
-                                              lectureQuestions.length +
-                                              applicationsQuestions.length +
-                                              homeworkQuestionsInput.length +
-                                              entry.key] =
-                                          value.keys
-                                              .firstWhere((element) =>
-                                                  value[element] == true)
-                                              .toString();
-                                    },
-                                    validator: (selection) {
-                                      if (selection.values
-                                          .where((e) => e != false)
-                                          .isEmpty) {
-                                        return S
-                                            .of(context)
-                                            .warningYouNeedToSelectAtLeastOne;
-                                      }
-                                      return null;
-                                    },
-                                    initialValues: initialValues[
-                                        generalQuestionsInput.length +
-                                            generalQuestionsRating.length +
-                                            involvementQuestions.length +
-                                            lectureQuestions.length +
-                                            applicationsQuestions.length +
-                                            homeworkQuestionsInput.length +
-                                            entry.key],
-                                  );
-                                },
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      Card(
-                        child: Padding(
-                          padding: const EdgeInsets.all(15),
-                          child: Column(
-                            children: [
-                              Text(
-                                S.of(context).sectionPersonalComments,
-                                style: Theme.of(context).textTheme.headline6,
-                              ),
-                              const SizedBox(height: 24),
-                              ...personalQuestions.asMap().entries.map(
-                                (entry) {
-                                  return Column(
-                                    children: [
-                                      Text(
-                                        entry.value,
-                                        style: const TextStyle(
-                                          fontSize: 18,
-                                        ),
-                                      ),
-                                      const SizedBox(height: 24),
-                                      Card(
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(2),
-                                          child: Column(
-                                            children: [
-                                              TextFormField(
-                                                onSaved: (value) {
-                                                  responses[generalQuestionsInput
-                                                          .length +
-                                                      generalQuestionsRating
-                                                          .length +
-                                                      involvementQuestions
-                                                          .length +
-                                                      lectureQuestions.length +
-                                                      applicationsQuestions
-                                                          .length +
-                                                      homeworkQuestionsInput
-                                                          .length +
-                                                      homeworkQuestionsRating
-                                                          .length +
-                                                      entry.key] = value;
-                                                },
-                                                keyboardType:
-                                                    TextInputType.multiline,
-                                                maxLines: null,
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                      const SizedBox(height: 24),
-                                    ],
-                                  );
-                                },
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
+              child: Column(mainAxisSize: MainAxisSize.min, children: children),
             ),
           ),
         ],
@@ -604,7 +339,6 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
         text: S.current.buttonSend,
         onPressed: () async {
           if (!formKey.currentState.validate()) return;
-
           if (!agreedToResponsibilities) {
             AppToast.show(
                 '${S.current.warningAgreeTo}${S.current.labelFeedbackPolicy}.');
@@ -619,7 +353,9 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
 
           for (var i = 0; i < feedbackQuestions.length; i++) {
             res = false;
-            if (feedbackQuestions[i.toString()]['type'] == 'input') {
+            if (feedbackQuestions[i.toString()].type == 'input' ||
+                feedbackQuestions[i.toString()].type == 'text' ||
+                feedbackQuestions[i.toString()].type == 'dropdown') {
               final response = ClassFeedbackAnswer(
                 assistant: selectedAssistant,
                 teacherName: selectedTeacherName,
