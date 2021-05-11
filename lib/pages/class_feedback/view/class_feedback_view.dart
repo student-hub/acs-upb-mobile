@@ -80,7 +80,7 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
       enabled: false,
       controller: classController,
       decoration: InputDecoration(
-        labelText: S.of(context).labelClass,
+        labelText: S.current.labelClass,
         prefixIcon: const Icon(FeatherIcons.bookOpen),
       ),
       onChanged: (_) => setState(() {}),
@@ -100,7 +100,7 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
             enabled: false,
             controller: TextEditingController(text: lecturerName ?? '-'),
             decoration: InputDecoration(
-              labelText: S.of(context).labelLecturer,
+              labelText: S.current.labelLecturer,
               prefixIcon: const Icon(Icons.person_outline),
             ),
             onChanged: (_) => setState(() {}),
@@ -139,7 +139,7 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
             child: Padding(
               padding: const EdgeInsets.only(top: 10.25),
               child: Text(
-                S.of(context).messageAgreeFeedbackPolicy,
+                S.current.messageAgreeFeedbackPolicy,
                 style: Theme.of(context).textTheme.subtitle1,
               ),
             ),
@@ -178,7 +178,7 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
             autovalidateMode: AutovalidateMode.onUserInteraction,
             validator: (value) {
               if (value?.isEmpty ?? true) {
-                return S.current.warningYouNeedToSelectAtLeastOne;
+                return S.current.errorAnswerCannotBeEmpty;
               }
               return null;
             },
@@ -199,7 +199,7 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
             },
             validator: (selection) {
               if (selection.values.where((e) => e != false).isEmpty) {
-                return S.of(context).warningYouNeedToSelectAtLeastOne;
+                return S.current.warningYouNeedToSelectAtLeastOne;
               }
               return null;
             },
@@ -236,7 +236,7 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
             },
             validator: (selection) {
               if (selection == null) {
-                return S.of(context).errorEventTypeCannotBeEmpty;
+                return S.current.errorAnswerCannotBeEmpty;
               }
               return null;
             },
@@ -283,7 +283,7 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
     final List<Widget> children = [
       IconText(
         icon: Icons.info_outline,
-        text: S.of(context).infoFormAnonymous,
+        text: S.current.infoFormAnonymous,
       ),
       classWidget(),
       lecturerWidget(context),
@@ -319,7 +319,7 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
     }
 
     return AppScaffold(
-      title: Text(S.of(context).navigationClassFeedback),
+      title: Text(S.current.navigationClassFeedback),
       actions: [_submitButton()],
       body: ListView(
         children: <Widget>[

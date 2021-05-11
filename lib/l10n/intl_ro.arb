@@ -121,6 +121,7 @@
   "errorPermissionDenied": "Nu aveți suficiente permisiuni.",
   "errorEventTypeCannotBeEmpty": "Tipul de eveniment trebuie precizat.",
   "errorClassCannotBeEmpty": "Materia trebuie precizată.",
+  "errorAnswerCannotBeEmpty": "Răspunsul trebuie precizat.",
   "errorPictureSizeToBig": "Selectați o fotografie care are mai puțin de 5MB.",
   "errorImage": "Imaginea nu putut fi încărcată.",
   "errorInsertGoogleEvents": "Evenimentele nu au putut fi inserate în Google Calendar.",

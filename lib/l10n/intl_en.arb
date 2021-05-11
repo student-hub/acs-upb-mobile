@@ -121,6 +121,7 @@
   "errorPermissionDenied": "You do not have permission to do that.",
   "errorEventTypeCannotBeEmpty": "Event type cannot be empty.",
   "errorClassCannotBeEmpty": "Class cannot be empty.",
+  "errorAnswerCannotBeEmpty": "Answer cannot be empty.",
   "errorPictureSizeToBig": "Please select a picture that is less than 5MB.",
   "errorImage": "The image could not be loaded.",
   "errorInsertGoogleEvents": "Unable to insert events in Google Calendar.",

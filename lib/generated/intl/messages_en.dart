@@ -85,6 +85,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "buttonSend" : MessageLookupByLibrary.simpleMessage("Send"),
     "buttonSet" : MessageLookupByLibrary.simpleMessage("Set"),
     "errorAccountDisabled" : MessageLookupByLibrary.simpleMessage("The account has been disabled."),
+    "errorAnswerCannotBeEmpty" : MessageLookupByLibrary.simpleMessage("Answer cannot be empty."),
     "errorClassCannotBeEmpty" : MessageLookupByLibrary.simpleMessage("Class cannot be empty."),
     "errorCouldNotLaunchURL" : m1,
     "errorEmailInUse" : MessageLookupByLibrary.simpleMessage("There is already an account associated with this e-mail address"),

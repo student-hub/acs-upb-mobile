@@ -1195,6 +1195,16 @@ class S {
     );
   }
 
+  /// `Answer cannot be empty.`
+  String get errorAnswerCannotBeEmpty {
+    return Intl.message(
+      'Answer cannot be empty.',
+      name: 'errorAnswerCannotBeEmpty',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Please select a picture that is less than 5MB.`
   String get errorPictureSizeToBig {
     return Intl.message(
