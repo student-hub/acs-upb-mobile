@@ -1,15 +1,15 @@
 class FeedbackQuestion {
-  const FeedbackQuestion({
+  FeedbackQuestion({
     this.question,
     this.category,
-    this.type,
     this.id,
+    this.answer,
   });
 
   final String question;
   final String category;
-  final String type;
   final String id;
+  String answer;
 
   @override
   int get hashCode => question.hashCode;

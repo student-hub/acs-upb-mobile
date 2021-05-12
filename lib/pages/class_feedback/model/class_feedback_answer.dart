@@ -1,19 +1,28 @@
 import 'package:acs_upb_mobile/pages/people/model/person.dart';
 
-class ClassFeedbackAnswer {
-  ClassFeedbackAnswer({
-    this.questionTextAnswer,
-    this.questionNumericAnswer,
+class FeedbackQuestionAnswer {
+  FeedbackQuestionAnswer({
+    this.questionAnswer,
     this.className,
     this.teacherName,
     this.assistant,
     this.questionNumber,
   });
 
-  final String questionTextAnswer;
-  final String questionNumericAnswer;
+  String questionAnswer;
   final String className;
   final String teacherName;
   final Person assistant;
   final String questionNumber;
+
+  @override
+  int get hashCode => questionAnswer.hashCode;
+
+  @override
+  bool operator ==(Object other) {
+    if (other is FeedbackQuestionAnswer) {
+      return other.questionAnswer == questionAnswer;
+    }
+    return false;
+  }
 }

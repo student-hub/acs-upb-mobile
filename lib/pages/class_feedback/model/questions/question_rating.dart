@@ -1,19 +1,15 @@
 import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question.dart';
 
-class FeedbackQuestionDropdown extends FeedbackQuestion {
-  FeedbackQuestionDropdown({
+class FeedbackQuestionRating extends FeedbackQuestion {
+  FeedbackQuestionRating({
     String question,
     String category,
     String id,
-    List<String> answerOptions,
     String answer,
-  })  : options = answerOptions,
-        super(
+  }) : super(
           question: question,
           category: category,
           id: id,
           answer: answer,
         );
-
-  List<String> options;
 }

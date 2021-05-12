@@ -1,6 +1,9 @@
 import 'package:acs_upb_mobile/pages/class_feedback/model/class_feedback_answer.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question_dropdown.dart';
+import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question_input.dart';
+import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question_rating.dart';
+import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question_text.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/service/feedback_provider.dart';
 import 'package:acs_upb_mobile/pages/classes/model/class.dart';
 import 'package:acs_upb_mobile/pages/people/model/person.dart';
@@ -36,7 +39,6 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
   Person selectedAssistant;
   List<Person> classTeachers = [];
   Map<String, dynamic> feedbackCategories = {};
-  Map<int, String> responses = {};
   List<Map<int, bool>> answerValues = [];
   Map<String, FeedbackQuestion> feedbackQuestions = {};
 
@@ -163,7 +165,7 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
   }
 
   Widget questionFormField(FeedbackQuestion question) {
-    if (question.type == 'input') {
+    if (question is FeedbackQuestionInput) {
       return Column(
         children: [
           Text(
@@ -178,7 +180,7 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
               prefixIcon: const Icon(Icons.question_answer_outlined),
             ),
             onSaved: (value) {
-              responses[int.parse(question.id)] = value;
+              question.answer = value;
             },
             autovalidateMode: AutovalidateMode.onUserInteraction,
             validator: (value) {
@@ -197,13 +199,13 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
           const SizedBox(height: 10),
         ],
       );
-    } else if (question.type == 'rating') {
+    } else if (question is FeedbackQuestionRating) {
       return Column(
         children: [
           EmojiFormField(
             question: question.question,
             onSaved: (value) {
-              responses[int.parse(question.id)] = value.keys
+              question.answer = value.keys
                   .firstWhere((element) => value[element] == true)
                   .toString();
             },
@@ -218,7 +220,7 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
           const SizedBox(height: 10),
         ],
       );
-    } else if (question.type == 'dropdown') {
+    } else if (question is FeedbackQuestionDropdown) {
       return Column(
         children: [
           Text(
@@ -233,10 +235,9 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
               prefixIcon: const Icon(Icons.list_outlined),
             ),
             onSaved: (value) {
-              responses[int.parse(question.id)] = value;
+              question.answer = value;
             },
-            items: (question as FeedbackQuestionDropdown)
-                .options
+            items: question.options
                 .map(
                   (type) => DropdownMenuItem<String>(
                     value: type,
@@ -258,7 +259,7 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
           const SizedBox(height: 10),
         ],
       );
-    } else if (question.type == 'text') {
+    } else if (question is FeedbackQuestionText) {
       return Column(
         children: [
           Text(
@@ -275,7 +276,7 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
                 children: [
                   TextFormField(
                     onSaved: (value) {
-                      responses[int.parse(question.id)] = value;
+                      question.answer = value;
                     },
                     keyboardType: TextInputType.multiline,
                     maxLines: null,
@@ -353,6 +354,7 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
         text: S.current.buttonSend,
         onPressed: () async {
           if (!formKey.currentState.validate()) return;
+
           if (!agreedToResponsibilities) {
             AppToast.show(
                 '${S.current.warningAgreeTo}${S.current.labelFeedbackPolicy}.');
@@ -364,36 +366,20 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
           });
 
           bool res;
-
           for (var i = 0; i < feedbackQuestions.length; i++) {
             res = false;
-            if (feedbackQuestions[i.toString()].type == 'input' ||
-                feedbackQuestions[i.toString()].type == 'text' ||
-                feedbackQuestions[i.toString()].type == 'dropdown') {
-              final response = ClassFeedbackAnswer(
-                assistant: selectedAssistant,
-                teacherName: selectedTeacherName,
-                className: classController.text,
-                questionNumber: i.toString(),
-                questionTextAnswer: responses[i],
-              );
 
-              res = await Provider.of<FeedbackProvider>(context, listen: false)
-                  .addResponse(response);
-              if (!res) break;
-            } else {
-              final response = ClassFeedbackAnswer(
-                assistant: selectedAssistant,
-                teacherName: selectedTeacherName,
-                className: classController.text,
-                questionNumber: i.toString(),
-                questionNumericAnswer: responses[i],
-              );
+            final response = FeedbackQuestionAnswer(
+              assistant: selectedAssistant,
+              teacherName: selectedTeacherName,
+              className: classController.text,
+              questionNumber: i.toString(),
+              questionAnswer: feedbackQuestions[i.toString()].answer,
+            );
 
-              res = await Provider.of<FeedbackProvider>(context, listen: false)
-                  .addResponse(response);
-              if (!res) break;
-            }
+            res = await Provider.of<FeedbackProvider>(context, listen: false)
+                .addResponse(response);
+            if (!res) break;
           }
           if (res) {
             Navigator.of(context).pop();
