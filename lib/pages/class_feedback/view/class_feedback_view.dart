@@ -37,7 +37,7 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
   List<Person> classTeachers = [];
   Map<String, dynamic> feedbackCategories = {};
   Map<int, String> responses = {};
-  List<Map<int, bool>> initialValues = [];
+  List<Map<int, bool>> answerValues = [];
   Map<String, FeedbackQuestion> feedbackQuestions = {};
 
   @override
@@ -64,7 +64,7 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
         .then((questions) => setState(() => feedbackQuestions = questions));
 
     for (int i = 0; i <= feedbackQuestions.length; i++) {
-      initialValues.insert(i, {
+      answerValues.insert(i, {
         0: false,
         1: false,
         2: false,
@@ -76,7 +76,7 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
     return feedbackQuestions;
   }
 
-  Widget classWidget() {
+  Widget classFormField() {
     return TextFormField(
       enabled: false,
       controller: classController,
@@ -88,7 +88,7 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
     );
   }
 
-  Widget lecturerWidget(BuildContext context) {
+  Widget lecturerFormField(BuildContext context) {
     final personProvider = Provider.of<PersonProvider>(context);
 
     return FutureBuilder(
@@ -113,7 +113,7 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
     );
   }
 
-  Widget assistantWidget() {
+  Widget assistantFormField() {
     return AutocompletePerson(
       key: const Key('AutocompleteAssistant'),
       labelText: S.current.labelAssistant,
@@ -124,7 +124,7 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
     );
   }
 
-  Widget acknowledgementWidget() {
+  Widget acknowledgementFormField() {
     return Padding(
       padding: const EdgeInsets.all(10),
       child: Row(
@@ -162,7 +162,7 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
     );
   }
 
-  Widget questionWidget(FeedbackQuestion question) {
+  Widget questionFormField(FeedbackQuestion question) {
     if (question.type == 'input') {
       return Column(
         children: [
@@ -213,7 +213,7 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
               }
               return null;
             },
-            initialValues: initialValues[int.parse(question.id)],
+            answerValues: answerValues[int.parse(question.id)],
           ),
           const SizedBox(height: 10),
         ],
@@ -299,10 +299,10 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
         icon: Icons.info_outline,
         text: S.current.infoFormAnonymous,
       ),
-      classWidget(),
-      lecturerWidget(context),
-      assistantWidget(),
-      acknowledgementWidget(),
+      classFormField(),
+      lecturerFormField(context),
+      assistantFormField(),
+      acknowledgementFormField(),
       const SizedBox(height: 24),
     ];
 
@@ -313,7 +313,7 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
       ];
       for (final question
           in feedbackQuestions.values.where((q) => q.category == category)) {
-        categoryChildren.add(questionWidget(question));
+        categoryChildren.add(questionFormField(question));
       }
       children.add(
         Column(

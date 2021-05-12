@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 class EmojiFormField extends FormField<Map<int, bool>> {
   EmojiFormField({
-    @required Map<int, bool> initialValues,
+    @required Map<int, bool> answerValues,
     @required String question,
     FormFieldSetter<Map<int, bool>> onSaved,
     String Function(Map<int, bool>) validator,
@@ -13,7 +13,7 @@ class EmojiFormField extends FormField<Map<int, bool>> {
           validator: validator,
           onSaved: onSaved,
           autovalidateMode: AutovalidateMode.onUserInteraction,
-          initialValue: initialValues,
+          initialValue: answerValues,
           builder: (state) {
             final context = state.context;
             final List<Icon> emojis = [
