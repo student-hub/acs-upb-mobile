@@ -3,29 +3,25 @@ import 'package:acs_upb_mobile/pages/people/model/person.dart';
 import 'package:acs_upb_mobile/pages/people/service/person_provider.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:acs_upb_mobile/widgets/search_bar.dart';
-import 'package:dynamic_text_highlighting/dynamic_text_highlighting.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class SearchPage extends StatefulWidget{
+class SearchPage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => _SearchPageState();
 }
 
-class _SearchPageState extends State<SearchPage>{
+class _SearchPageState extends State<SearchPage> {
   String filter = '';
   List<Class> classesSearched;
   bool searchClosed = true;
-  Future<List<Person>> people;
-  List<Person> peopleData;
+  List<Person> peopleSearched;
 
   @override
   void initState() {
     super.initState();
-    final personProvider = Provider.of<PersonProvider>(context, listen: false);
-    people = personProvider.fetchPeople();
   }
 
   @override
@@ -33,69 +29,79 @@ class _SearchPageState extends State<SearchPage>{
     return AppScaffold(
       title: Text(S.current.navigationSearch),
       body: ListView(
-          children: [
-            SearchWidget(
-            onSearch: (searchText) => {
-              setState(() => filter = searchText)
-            },
-            cancelCallback: () =>{
-              setState(() => filter = '')
-            },
+        children: [
+          SearchWidget(
+            onSearch: (searchText) => {setState(() => filter = searchText)},
+            cancelCallback: () => {setState(() => filter = '')},
             searchClosed: false,
           ),
-            FutureBuilder(
-              future: people,
-              builder: (_, snapshot){
-                if (snapshot.connectionState == ConnectionState.done) {
-                  peopleData = snapshot.data;
-                }
-                return PeopleCircleList(
-                  people: searchedPeople,
-                  filter: filter,
-                );
-              },
-            )
-          ],
-        ),
+          if(filter.isNotEmpty) 
+            Padding(
+              padding: const EdgeInsets.fromLTRB(10, 10, 0, 10),
+              child: Text(
+                S.current.labelPeople,
+                style: const TextStyle(fontSize: 15),
+              ),
+          ),
+          FutureBuilder(
+            future: Provider.of<PersonProvider>(context, listen: false)
+                .search(filter),
+            builder: (_, snapshot) {
+              if (snapshot.connectionState == ConnectionState.done) {
+                peopleSearched = snapshot.data;
+              }
+              return PeopleCircleList(
+                people: peopleSearched,
+                filter: filter,
+              );
+            },
+          ),
+          const Divider(
+            color: Colors.white,
+          )
+        ],
+      ),
     );
   }
-  List<Person> get searchedPeople => peopleData
-      .where((person) => filter
-      .split(' ')
-      .where((element) => element != '')
-      .fold(
-      true,
-          (previousValue, filter) =>
-      previousValue &&
-          person.name.toLowerCase().contains(filter.toLowerCase())))
-      .toList();
 }
-class PeopleCircleList extends StatefulWidget{
 
+class PeopleCircleList extends StatelessWidget {
   const PeopleCircleList({this.people, this.filter});
 
   final List<Person> people;
   final String filter;
 
   @override
-  _PeopleCircleListState createState() => _PeopleCircleListState();
-}
-
-class _PeopleCircleListState extends State<PeopleCircleList> {
-  @override
   Widget build(BuildContext context) {
-    final List<String> filteredWords = widget.filter
-        .toLowerCase()
-        .split(' ')
-        .where((element) => element != '')
-        .toList();
-    return ListView.builder(
-      itemCount: widget.people.length,
-      itemBuilder: (BuildContext context, int index){
-        return const ListTile(
-          title: Text('abc '),
-        );
-      }
+    if (people.isEmpty) {
+      return Container(
+        height: 200,
+        child: const Text('Nothing found'),//for debugging
+      );
+    }
+    return Container(
+      height: 120,
+      padding: const EdgeInsets.all(10),
+      child: ListView.builder(
+        itemCount: people.length,
+        scrollDirection: Axis.horizontal,
+        itemBuilder: (BuildContext context, int index) {
+          final List<String> name = people[index].name.split(' ');
+          return Container(
+              padding: const EdgeInsets.fromLTRB(0, 0, 30, 0),
+              child: Column(
+                  children: <Widget>[
+                    const CircleAvatar(
+                    backgroundImage: NetworkImage(
+                      'https://identix.state.gov/qotw/images/no-photo.gif'),
+                    ),
+                    for(String n in name)
+                      Text(n),
+                ]
+              )
+          );
+        },
+      ),
     );
   }
 }

@@ -221,17 +221,6 @@ class _PortalPageState extends State<PortalPage> {
       title: Text(S.current.navigationPortal),
       actions: [
         AppScaffoldAction(
-          icon: Icons.search,
-          tooltip: S.current.navigationSearch,
-          onPressed: () => {
-            Navigator.of(context).push(
-              MaterialPageRoute<SearchPage>(
-                  builder: (_) => SearchPage(),
-              )
-            )
-          },
-        ),
-        AppScaffoldAction(
           icon: editingEnabled
               ? CustomIcons.edit_off_outlined
               : Icons.edit_outlined,

@@ -515,6 +515,16 @@ class S {
     );
   }
 
+  /// `People`
+  String get labelPeople {
+    return Intl.message(
+      'People',
+      name: 'labelPeople',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Shortcuts`
   String get sectionShortcuts {
     return Intl.message(

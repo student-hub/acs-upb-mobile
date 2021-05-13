@@ -48,6 +48,7 @@
   "labelToday": "Astăzi",
   "labelTomorrow": "Mâine",
   "labelNow": "Acum",
+  "labelPeople": "Persoane",
 
   "sectionShortcuts": "Scurtături",
   "sectionEvents": "Evenimente",
@@ -168,7 +169,7 @@
   "navigationEventDetails": "Detalii eveniment",
   "navigationNewsFeed": "Știri",
   "navigationClassInfo": "Informații materie",
-  "navigationSearch": "Caută",
+  "navigationSearch": "Căutare",
 
   "filterMenuShowAll": "Arată tot",
   "filterMenuShowMine": "Arată doar pe ale mele",
