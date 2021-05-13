@@ -162,10 +162,6 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
   @override
   Widget build(BuildContext context) {
     final List<Widget> children = [
-      IconText(
-        icon: Icons.info_outline,
-        text: S.current.infoFormAnonymous,
-      ),
       classFormField(),
       lecturerFormField(context),
       assistantFormField(),
@@ -205,6 +201,14 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
       actions: [_submitButton()],
       body: ListView(
         children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.only(left: 25, top: 10),
+            child: IconText(
+              icon: Icons.info_outline,
+              text: S.current.infoFormAnonymous,
+              style: Theme.of(context).textTheme.bodyText1,
+            ),
+          ),
           Padding(
             padding: const EdgeInsets.all(10),
             child: Form(
