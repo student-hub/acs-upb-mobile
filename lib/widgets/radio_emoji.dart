@@ -20,27 +20,27 @@ class EmojiFormField extends FormField<Map<int, bool>> {
               const Icon(
                 Icons.sentiment_very_dissatisfied,
                 color: Colors.red,
-                size: 30,
+                size: 29,
               ),
               const Icon(
                 Icons.sentiment_dissatisfied,
                 color: Colors.redAccent,
-                size: 30,
+                size: 29,
               ),
               const Icon(
                 Icons.sentiment_neutral,
                 color: Colors.amber,
-                size: 30,
+                size: 29,
               ),
               const Icon(
                 Icons.sentiment_satisfied,
                 color: Colors.lightGreen,
-                size: 30,
+                size: 29,
               ),
               const Icon(
                 Icons.sentiment_very_satisfied,
                 color: Colors.green,
-                size: 30,
+                size: 29,
               )
             ];
             final List<SelectableController> emojiControllers =
@@ -81,7 +81,7 @@ class EmojiFormField extends FormField<Map<int, bool>> {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                const SizedBox(height: 24),
+                const SizedBox(height: 12),
                 Text(
                   '$question',
                   style: const TextStyle(
@@ -95,7 +95,6 @@ class EmojiFormField extends FormField<Map<int, bool>> {
                     children: emojiSelectables,
                   ),
                 ),
-                const SizedBox(height: 12),
                 if (state.hasError)
                   Padding(
                     padding: const EdgeInsets.only(top: 8),
@@ -130,20 +129,39 @@ class SelectableIcon extends Selectable {
   _SelectableIconState createState() => _SelectableIconState(icon);
 }
 
-class _SelectableIconState extends SelectableState {
+class _SelectableIconState extends SelectableState
+    with SingleTickerProviderStateMixin {
   _SelectableIconState(this.icon);
 
   Icon icon;
+  AnimationController animationController;
+  CurvedAnimation animation;
 
   @override
   void initState() {
     super.initState();
     isSelected = widget.initiallySelected;
+    animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 3),
+    );
+    animation = CurvedAnimation(
+      parent: animationController,
+      curve: Curves.elasticOut,
+    );
+  }
+
+  @override
+  void dispose() {
+    animationController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     widget.controller.selectableState = this;
+
+    if (!isSelected) animationController.value = 0;
 
     return GestureDetector(
       onTap: () {
@@ -151,6 +169,7 @@ class _SelectableIconState extends SelectableState {
           () {
             isSelected = !isSelected;
             widget.onSelected(isSelected);
+            animationController.forward();
           },
         );
       },
@@ -160,11 +179,15 @@ class _SelectableIconState extends SelectableState {
           shape: BoxShape.circle,
         ),
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-        child: AnimatedContainer(
-          height: isSelected ? 40 : 10,
-          width: isSelected ? 70 : 30,
-          duration: const Duration(milliseconds: 500),
+        child: AnimatedBuilder(
+          animation: animation,
           child: icon,
+          builder: (BuildContext context, Widget child) {
+            return Transform.scale(
+              scale: isSelected ? animation.value * 0.6 + 1 : 1,
+              child: child,
+            );
+          },
         ),
       ),
     );
