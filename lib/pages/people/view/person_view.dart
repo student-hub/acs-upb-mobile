@@ -39,10 +39,11 @@ class PersonView extends StatelessWidget {
                   children: [
                     Expanded(
                       child: person.photo != null
-                          ? CircleAvatar(
+                          ? const CircleAvatar(
                               maxRadius: 50,
                               backgroundImage:
-                                  CachedNetworkImageProvider(person.photo),
+                                  //CachedNetworkImageProvider(person.photo),
+                                  CachedNetworkImageProvider('https://identix.state.gov/qotw/images/no-photo.gif')
                             )
                           : const CircleAvatar(
                               radius: 50,

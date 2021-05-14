@@ -24,7 +24,7 @@ class PersonProvider with ChangeNotifier {
   Future<List<Person>> fetchPeople() async {
     try {
       final QuerySnapshot qSnapshot =
-          await FirebaseFirestore.instance.collection('people').get();
+      await FirebaseFirestore.instance.collection('people').get();
       return qSnapshot.docs.map(PersonExtension.fromSnap).toList();
     } catch (e) {
       print(e);
@@ -75,35 +75,41 @@ class PersonProvider with ChangeNotifier {
     }
   }
 
-  Future<List<Person>> search(String query) async{
-    if(query.isEmpty){
+  Future<List<Person>> search(String query) async {
+    if (query.isEmpty) {
       return <Person>[];
     }
-  // ignore: flutter_style_todos
-  // TODO make search better
 //    final QuerySnapshot peopleData = await FirebaseFirestore.instance.collection('people')
 //        .where('name', isEqualTo: query)
 //        .limit(10)
 //        .get();
     final List<Person> people = await fetchPeople();
-    List<Person> peopleSearched = <Person>[];
-//    final List<String> searchedWords = query
-//        .toLowerCase()
-//        .split(' ')
-//        .where((element) => element != '')
-//        .toList();
-    for(int i = 0; i < people.length; i++){
-//      for(int j = 0; j < searchedWords.length; j++){
-//        if(people[i].name.toLowerCase().contains(searchedWords[j])){
+//    List<Person> peopleSearched = <Person>[];
+    final List<String> searchedWords = query
+        .toLowerCase()
+        .split(' ')
+        .where((element) => element != '')
+        .toList();
+//    for(int i = 0; i < people.length; i++){
+////      for(int j = 0; j < searchedWords.length; j++){
+////        if(people[i].name.toLowerCase().contains(searchedWords[j])){
+////          peopleSearched.add(people[i]);
+////        }
+////      }
+//        if(people[i].name.toLowerCase().contains(query.toLowerCase())){
 //          peopleSearched.add(people[i]);
 //        }
-//      }
-        if(people[i].name.toLowerCase().contains(query.toLowerCase())){
-          peopleSearched.add(people[i]);
-        }
-    }
-//    peopleSearched = people.where((element) => element.name.toLowerCase().contains(query.toLowerCase()));
-    return peopleSearched;
+//    }
+    //return people.where((element) => element.name.toLowerCase().contains(query.toLowerCase())).toList() ?? <Person>[];
+    return people.where(
+            (person) =>
+            searchedWords
+                .fold(
+                true,
+                    (previousValue, filter) =>
+                previousValue &&
+                    person.name.toLowerCase().contains(filter.toLowerCase())))
+        .toList() ?? <Person>[];
   }
 
 }
