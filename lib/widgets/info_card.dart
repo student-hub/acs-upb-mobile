@@ -7,18 +7,20 @@ class InfoCard<T> extends StatelessWidget {
       @required this.builder,
       this.onShowMore,
       this.title,
-      this.showMoreButtonKey});
+      this.showMoreButtonKey,
+      this.edgeInsets});
 
   final Function onShowMore;
   final Future<T> future;
   final Widget Function(T) builder;
   final String title;
   final ValueKey<String> showMoreButtonKey;
+  final EdgeInsets edgeInsets;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(12, 12, 12, 0),
+      padding: edgeInsets ?? const EdgeInsets.fromLTRB(12, 12, 12, 0),
       child: Card(
         child: Padding(
           padding: const EdgeInsets.all(12),
