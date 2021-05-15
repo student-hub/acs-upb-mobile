@@ -31,7 +31,7 @@ class _FaqPageState extends State<FaqPage> {
   void initState() {
     final QuestionProvider questionProvider =
         Provider.of<QuestionProvider>(context, listen: false);
-    futureQuestions = questionProvider.fetchQuestions(context: context);
+    futureQuestions = questionProvider.fetchQuestions();
     super.initState();
   }
 
@@ -65,7 +65,7 @@ class _FaqPageState extends State<FaqPage> {
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
-      title: Text(S.of(context).sectionFAQ),
+      title: Text(S.current.sectionFAQ),
       actions: [
         AppScaffoldAction(
           icon: Icons.search_outlined,

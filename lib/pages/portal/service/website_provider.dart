@@ -11,7 +11,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:preferences/preference_service.dart';
-import 'package:provider/provider.dart';
 
 extension UserExtension on User {
   /// Check if there is at least one website that the [User] has permission to edit
@@ -99,13 +98,13 @@ extension WebsiteExtension on Website {
 class WebsiteProvider with ChangeNotifier {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
 
-  void _errorHandler(dynamic e, BuildContext context) {
+  void _errorHandler(dynamic e, {bool showToast = true}) {
     print(e.message);
-    if (context != null) {
+    if (showToast) {
       if (e.message.contains('PERMISSION_DENIED')) {
-        AppToast.show(S.of(context).errorPermissionDenied);
+        AppToast.show(S.current.errorPermissionDenied);
       } else {
-        AppToast.show(S.of(context).errorSomethingWentWrong);
+        AppToast.show(S.current.errorSomethingWentWrong);
       }
     }
   }
@@ -228,10 +227,7 @@ class WebsiteProvider with ChangeNotifier {
   }
 
   Future<List<Website>> fetchWebsites(Filter filter,
-      {bool userOnly = false,
-      String uid,
-      BuildContext context,
-      List<String> sources}) async {
+      {bool userOnly = false, String uid}) async {
     try {
       final websites = <Website>[];
 
@@ -308,39 +304,34 @@ class WebsiteProvider with ChangeNotifier {
             .map((doc) => WebsiteExtension.fromSnap(doc, ownerUid: uid)));
       }
 
-      final bool initializeReturnSuccess = await _initializeNumberOfVisits(
-          websites,
-          Provider.of<AuthProvider>(context, listen: false).isAnonymous
-              ? null
-              : uid);
+      final bool initializeReturnSuccess =
+          await _initializeNumberOfVisits(websites, uid);
       if (!initializeReturnSuccess) {
-        AppToast.show(
-            S.of(context).warningFavouriteWebsitesInitializationFailed);
+        AppToast.show(S.current.warningFavouriteWebsitesInitializationFailed);
       }
       websites.sort((website1, website2) =>
           website2.numberOfVisits.compareTo(website1.numberOfVisits));
 
       return websites;
     } catch (e) {
-      _errorHandler(e, null);
+      _errorHandler(e, showToast: false);
       return null;
     }
   }
 
-  Future<List<Website>> fetchFavouriteWebsites(
-      {int limit = 3, String uid, BuildContext context}) async {
-    final favouriteWebsites =
-        (await fetchWebsites(null, uid: uid, context: context))
-            .where((website) => website.numberOfVisits > 0)
-            .take(limit)
-            .toList();
+  Future<List<Website>> fetchFavouriteWebsites(String uid,
+      {int limit = 3}) async {
+    final favouriteWebsites = (await fetchWebsites(null, uid: uid))
+        .where((website) => website.numberOfVisits > 0)
+        .take(limit)
+        .toList();
     if (favouriteWebsites.isEmpty) {
       return null;
     }
     return favouriteWebsites;
   }
 
-  Future<bool> addWebsite(Website website, {BuildContext context}) async {
+  Future<bool> addWebsite(Website website) async {
     assert(website.label != null);
 
     try {
@@ -358,9 +349,7 @@ class WebsiteProvider with ChangeNotifier {
       if ((await ref.get()).data() != null) {
         // TODO(IoanaAlexandru): Properly check if a website with a similar name/link already exists
         print('A website with id ${website.id} already exists');
-        if (context != null) {
-          AppToast.show(S.of(context).warningWebsiteNameExists);
-        }
+        AppToast.show(S.current.warningWebsiteNameExists);
         return false;
       }
 
@@ -370,12 +359,12 @@ class WebsiteProvider with ChangeNotifier {
       notifyListeners();
       return true;
     } catch (e) {
-      _errorHandler(e, context);
+      _errorHandler(e);
       return false;
     }
   }
 
-  Future<bool> updateWebsite(Website website, {BuildContext context}) async {
+  Future<bool> updateWebsite(Website website) async {
     assert(website.label != null);
 
     try {
@@ -412,12 +401,12 @@ class WebsiteProvider with ChangeNotifier {
       notifyListeners();
       return true;
     } catch (e) {
-      _errorHandler(e, context);
+      _errorHandler(e);
       return false;
     }
   }
 
-  Future<bool> deleteWebsite(Website website, {BuildContext context}) async {
+  Future<bool> deleteWebsite(Website website) async {
     try {
       DocumentReference ref;
       if (!website.isPrivate) {
@@ -431,11 +420,10 @@ class WebsiteProvider with ChangeNotifier {
       }
 
       await ref.delete();
-
       notifyListeners();
       return true;
     } catch (e) {
-      _errorHandler(e, context);
+      _errorHandler(e);
       return false;
     }
   }

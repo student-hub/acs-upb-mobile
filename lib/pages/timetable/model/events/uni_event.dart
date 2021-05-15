@@ -19,24 +19,24 @@ enum UniEventType {
 }
 
 extension UniEventTypeExtension on UniEventType {
-  String toLocalizedString(BuildContext context) {
+  String toLocalizedString() {
     switch (this) {
       case UniEventType.lecture:
-        return S.of(context).uniEventTypeLecture;
+        return S.current.uniEventTypeLecture;
       case UniEventType.lab:
-        return S.of(context).uniEventTypeLab;
+        return S.current.uniEventTypeLab;
       case UniEventType.seminar:
-        return S.of(context).uniEventTypeSeminar;
+        return S.current.uniEventTypeSeminar;
       case UniEventType.sports:
-        return S.of(context).uniEventTypeSports;
+        return S.current.uniEventTypeSports;
       case UniEventType.semester:
-        return S.of(context).uniEventTypeSemester;
+        return S.current.uniEventTypeSemester;
       case UniEventType.holiday:
-        return S.of(context).uniEventTypeHoliday;
+        return S.current.uniEventTypeHoliday;
       case UniEventType.examSession:
-        return S.of(context).uniEventTypeExamSession;
+        return S.current.uniEventTypeExamSession;
       default:
-        return S.of(context).uniEventTypeOther;
+        return S.current.uniEventTypeOther;
     }
   }
 
@@ -104,7 +104,8 @@ class UniEvent {
     this.relevance,
     this.degree,
     this.addedBy,
-  });
+    bool editable,
+  }) : editable = editable ?? true;
 
   final String id;
   final Color color;
@@ -118,6 +119,7 @@ class UniEvent {
   final String degree;
   final List<String> relevance;
   final String addedBy;
+  final bool editable;
 
   Iterable<UniEventInstance> generateInstances(
       {DateInterval intersectingInterval}) sync* {
@@ -170,4 +172,38 @@ class UniEventInstance extends Event {
   @override
   int get hashCode =>
       hashList([super.hashCode, color, location, mainEvent, title]);
+
+  String get dateString => getDateString(useRelativeDayFormat: false);
+
+  String get relativeDateString => getDateString(useRelativeDayFormat: true);
+
+  String getDateString({bool useRelativeDayFormat}) {
+    final LocalDateTime end = this.end.clockTime.equals(LocalTime(00, 00, 00))
+        ? this.end.subtractDays(1)
+        : this.end;
+
+    String string =
+        useRelativeDayFormat && start.calendarDate.equals(LocalDate.today())
+            ? S.current.labelToday
+            : useRelativeDayFormat &&
+                    start.calendarDate.subtractDays(1).equals(LocalDate.today())
+                ? S.current.labelTomorrow
+                : start.calendarDate.toString('dddd, dd MMMM');
+
+    if (!start.clockTime.equals(LocalTime(00, 00, 00))) {
+      string += ' • ${start.clockTime.toString('HH:mm')}';
+    }
+    if (start.calendarDate != end.calendarDate) {
+      string += ' - ${end.calendarDate.toString('dddd, dd MMMM')}';
+    }
+    if (!end.clockTime.equals(LocalTime(00, 00, 00))) {
+      if (start.calendarDate != end.calendarDate) {
+        string += ' • ';
+      } else {
+        string += '-';
+      }
+      string += end.clockTime.toString('HH:mm');
+    }
+    return string;
+  }
 }

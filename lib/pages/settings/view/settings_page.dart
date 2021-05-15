@@ -5,6 +5,8 @@ import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/navigation/routes.dart';
 import 'package:acs_upb_mobile/pages/settings/service/request_provider.dart';
+import 'package:acs_upb_mobile/pages/timetable/service/uni_event_provider.dart';
+import 'package:acs_upb_mobile/pages/settings/service/request_provider.dart';
 import 'package:acs_upb_mobile/pages/settings/view/source_page.dart';
 import 'package:acs_upb_mobile/resources/locale_provider.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
@@ -45,13 +47,13 @@ class _SettingsPageState extends State<SettingsPage> {
   Widget build(BuildContext context) {
     final AuthProvider authProvider = Provider.of<AuthProvider>(context);
     if (userPermissionString.isEmpty) {
-      userPermissionString = S.of(context).infoLoading;
+      userPermissionString = S.current.infoLoading;
       checkUserPermissionsString()
           .then((value) => setState(() => userPermissionString = value));
     }
 
     return AppScaffold(
-      title: Text(S.of(context).navigationSettings),
+      title: Text(S.current.navigationSettings),
       body: PreferencePage(
         [
           Padding(
@@ -65,9 +67,9 @@ class _SettingsPageState extends State<SettingsPage> {
                       child: Image.asset(
                           'assets/illustrations/undraw_settings.png')),
                 ),
-                PreferenceTitle(S.of(context).settingsTitlePersonalization),
+                PreferenceTitle(S.current.settingsTitlePersonalization),
                 SwitchPreference(
-                  S.of(context).settingsItemDarkMode,
+                  S.current.settingsItemDarkMode,
                   'dark_mode',
                   onEnable: () {
                     DynamicTheme.of(context).setBrightness(Brightness.dark);
@@ -78,10 +80,11 @@ class _SettingsPageState extends State<SettingsPage> {
                   defaultVal: MediaQuery.of(context).platformBrightness ==
                       Brightness.dark,
                 ),
-                PreferenceTitle(S.of(context).settingsTitleLocalization),
+                PreferenceTitle(S.current.settingsTitleLocalization),
                 PreferenceDialogLink(
-                  S.of(context).settingsItemLanguage,
-                  desc: languagePrefString(PrefService.get('language')),
+                  S.current.settingsItemLanguage,
+                  desc:
+                      languagePrefString(context, PrefService.get('language')),
                   dialog: PreferenceDialog(
                     [
                       languageRadioPreference(context, 'ro'),
@@ -91,52 +94,50 @@ class _SettingsPageState extends State<SettingsPage> {
                     onlySaveOnSubmit: false,
                   ),
                 ),
-                PreferenceTitle(S.of(context).settingsTitleDataControl),
-                PreferenceTitle(S.of(context).settingsTitleData),
-                ListTile(
-                  onTap: () => Navigator.of(context).push(
-                      MaterialPageRoute<SourcePage>(
-                          builder: (context) => SourcePage())),
-                  title: Text(S.of(context).sectionInformationSources),
-                  subtitle: FutureBuilder<User>(
-                      future: authProvider.currentUser,
-                      builder: (context, snap) {
-                        if (snap.hasData) {
-                          final sources = snap.data.sources;
-                          return Text(((sources?.isEmpty ?? true) ||
-                                  sources.length == 3)
-                              ? S.of(context).labelAll
-                              : sources
-                                  .map(localizedSourceString)
-                                  .toList()
-                                  .join(', '));
-                        } else {
-                          return Container();
-                        }
-                      }),
-                ),
+                PreferenceTitle(S.current.settingsTitleDataControl),
                 ListTile(
                   key: const ValueKey('ask_permissions'),
                   onTap: () {
                     if (authProvider.isAnonymous) {
-                      AppToast.show(S.of(context).messageNotLoggedIn);
+                      AppToast.show(S.current.messageNotLoggedIn);
                     } else if (isVerified != true) {
                       AppToast.show(
-                          S.of(context).messageEmailNotVerifiedToPerformAction);
+                          S.current.messageEmailNotVerifiedToPerformAction);
                     } else {
                       Navigator.of(context)
                           .pushNamed(Routes.requestPermissions);
                     }
                   },
-                  title: Text(S.of(context).settingsItemEditingPermissions),
+                  title: Text(S.current.settingsItemEditingPermissions),
                   subtitle: Text(userPermissionString),
                 ),
                 ListTile(
-                  onTap: () =>
-                      Utils.launchURL(Utils.privacyPolicyURL, context: context),
-                  title: Text(S.of(context).labelPrivacyPolicy),
+                  onTap: () => Utils.launchURL(Utils.privacyPolicyURL),
+                  title: Text(S.current.labelPrivacyPolicy),
                   subtitle: Text(
-                    S.of(context).infoReadThePolicy(Utils.packageInfo.appName),
+                    S.current.infoReadThePolicy(Utils.packageInfo.appName),
+                  ),
+                ),
+                Visibility(
+                  visible: Platform.isAndroid || Platform.isIOS,
+                  child: PreferenceTitle(S.current.settingsTitleTimetable),
+                ),
+                Visibility(
+                  visible: Platform.isAndroid || Platform.isIOS,
+                  child: ListTile(
+                    key: const ValueKey('google_calendar'),
+                    onTap: () async {
+                      if (authProvider.isAnonymous) {
+                        AppToast.show(S.current.messageNotLoggedIn);
+                      } else {
+                        final eventProvider = Provider.of<UniEventProvider>(
+                            context,
+                            listen: false);
+                        await eventProvider.exportToGoogleCalendar();
+                      }
+                    },
+                    title: Text(S.current.settingsExportToGoogleCalendar),
+                    subtitle: Text(S.current.infoExportToGoogleCalendar),
                   ),
                 ),
                 Column(
@@ -150,21 +151,20 @@ class _SettingsPageState extends State<SettingsPage> {
                         text: S
                             .of(context)
                             .infoAppIsOpenSource(Utils.packageInfo.appName),
-                        actionText: S.of(context).actionContribute,
+                        actionText: S.current.actionContribute,
                         actionArrow: true,
                         align: TextAlign.center,
                         style: Theme.of(context)
                             .textTheme
                             .bodyText1
                             .apply(color: Theme.of(context).hintColor),
-                        onTap: () =>
-                            Utils.launchURL(Utils.repoURL, context: context),
+                        onTap: () => Utils.launchURL(Utils.repoURL),
                       ),
                     ),
                     Padding(
                       padding: const EdgeInsets.all(10),
                       child: Text(
-                        '${S.of(context).labelVersion} ${Utils.packageInfo.version}+${(int.parse(Utils.packageInfo.buildNumber) % 10000).toString()}',
+                        '${S.current.labelVersion} ${Utils.packageInfo.version}+${(int.parse(Utils.packageInfo.buildNumber) % 10000).toString()}',
                         textAlign: TextAlign.center,
                         style: Theme.of(context)
                             .textTheme
@@ -208,27 +208,14 @@ class _SettingsPageState extends State<SettingsPage> {
   String languagePrefString(String preference) {
     switch (preference) {
       case 'en':
-        return S.of(context).settingsItemLanguageEnglish;
+        return S.current.settingsItemLanguageEnglish;
       case 'ro':
-        return S.of(context).settingsItemLanguageRomanian;
+        return S.current.settingsItemLanguageRomanian;
       case 'auto':
-        return S.of(context).settingsItemLanguageAuto;
+        return S.current.settingsItemLanguageAuto;
       default:
         stderr.writeln('Invalid preference string: $preference');
-        return S.of(context).settingsItemLanguageAuto;
-    }
-  }
-
-  String localizedSourceString(String source) {
-    switch (source) {
-      case 'official':
-        return S.of(context).sourceOfficial;
-      case 'organizations':
-        return S.of(context).sourceOrganization;
-      case 'students':
-        return S.of(context).sourceStudentRepresentative;
-      default:
-        return source;
+        return S.current.settingsItemLanguageAuto;
     }
   }
 
@@ -240,13 +227,26 @@ class _SettingsPageState extends State<SettingsPage> {
     if (authProvider.isAuthenticated && !authProvider.isAnonymous) {
       final user = await authProvider.currentUser;
       if (user.canEditPublicInfo) {
-        return S.of(context).settingsPermissionsEdit;
+        return S.current.settingsPermissionsEdit;
       } else if (user.canAddPublicInfo) {
-        return S.of(context).settingsPermissionsAdd;
+        return S.current.settingsPermissionsAdd;
       } else if (await requestProvider.userAlreadyRequested(user.uid)) {
-        return S.of(context).settingsPermissionsRequestSent;
+        return S.current.settingsPermissionsRequestSent;
       }
     }
-    return S.of(context).settingsPermissionsNone;
+    return S.current.settingsPermissionsNone;
+  }
+
+  String localizedSourceString(String source) {
+    switch (source) {
+      case 'official':
+        return  S.current.sourceOfficial;
+      case 'organizations':
+        return  S.current.sourceOrganization;
+      case 'students':
+        return  S.current.sourceStudentRepresentative;
+      default:
+        return source;
+    }
   }
 }

@@ -20,11 +20,9 @@ class _ProfileCardState extends State<ProfileCard> {
     super.initState();
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
     user = authProvider.currentUserFromCache;
-    authProvider
-        .getProfilePictureURL(context: context)
-        .then((value) => setState(() {
-              profilePictureURL = value;
-            }));
+    authProvider.getProfilePictureURL().then((value) => setState(() {
+          profilePictureURL = value;
+        }));
     authProvider.currentUser.then((value) => setState(() {
           user = value;
         }));
@@ -41,10 +39,10 @@ class _ProfileCardState extends State<ProfileCard> {
     }
 
     return Padding(
-      padding: const EdgeInsets.only(top: 10, left: 10, right: 10),
+      padding: const EdgeInsets.fromLTRB(12, 12, 12, 0),
       child: Card(
         child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 10),
+          padding: const EdgeInsets.symmetric(vertical: 12),
           child: Column(
             children: [
               Row(
@@ -69,11 +67,11 @@ class _ProfileCardState extends State<ProfileCard> {
                         children: <Widget>[
                           FittedBox(
                             child: Text(
-                              userName ?? S.of(context).stringAnonymous,
+                              userName ?? S.current.stringAnonymous,
                               style: Theme.of(context)
                                   .textTheme
                                   .subtitle1
-                                  .apply(fontWeightDelta: 2),
+                                  .apply(fontWeightDelta: 2, fontSizeDelta: 2),
                             ),
                           ),
                           if (userGroup != null)
@@ -90,8 +88,8 @@ class _ProfileCardState extends State<ProfileCard> {
                               padding: const EdgeInsets.all(5),
                               child: Text(
                                   authProvider.isAnonymous
-                                      ? S.of(context).actionLogIn
-                                      : S.of(context).actionLogOut,
+                                      ? S.current.actionLogIn
+                                      : S.current.actionLogOut,
                                   style: Theme.of(context)
                                       .accentTextTheme
                                       .subtitle2
@@ -118,8 +116,8 @@ class _ProfileCardState extends State<ProfileCard> {
                               final authProvider = Provider.of<AuthProvider>(
                                   context,
                                   listen: false);
-                              final value = await authProvider
-                                  .getProfilePictureURL(context: context);
+                              final value =
+                                  await authProvider.getProfilePictureURL();
                               setState(() {
                                 profilePictureURL = value;
                               });

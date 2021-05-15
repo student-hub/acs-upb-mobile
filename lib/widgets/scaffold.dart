@@ -7,13 +7,15 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class AppScaffoldAction {
-  AppScaffoldAction(
-      {this.icon,
-      this.route,
-      this.onPressed,
-      this.tooltip,
-      this.text,
-      this.items});
+  AppScaffoldAction({
+    this.icon,
+    this.route,
+    this.onPressed,
+    this.tooltip,
+    this.text,
+    this.items,
+    bool disabled,
+  }) : disabled = disabled ?? false;
 
   // Icon for the action button
   final IconData icon;
@@ -33,6 +35,9 @@ class AppScaffoldAction {
   // Option-action map that should be specified if a popup menu is needed. It
   // overrides [route].
   final Map<String, void Function()> items;
+
+  // Whether the icon color should be disabled.
+  final bool disabled;
 }
 
 class AppScaffold extends StatelessWidget {
@@ -64,9 +69,14 @@ class AppScaffold extends StatelessWidget {
             : action?.onPressed ??
                 () => Navigator.pushNamed(context, action?.route);
 
+    final icon = action.disabled
+        ? Icon(action.icon ?? Icons.menu_outlined,
+            color: Theme.of(context).disabledColor)
+        : Icon(action.icon);
+
     return action?.items != null
         ? PopupMenuButton<String>(
-            icon: Icon(action.icon),
+            icon: icon,
             tooltip: action.tooltip ?? action.text,
             onSelected: (selected) => action.items[selected](),
             itemBuilder: (BuildContext context) {
@@ -93,7 +103,7 @@ class AppScaffold extends StatelessWidget {
                     ),
                   )
                 : IconButton(
-                    icon: Icon(action?.icon),
+                    icon: icon,
                     onPressed: onPressed,
                   ),
           );
@@ -119,14 +129,12 @@ class AppScaffold extends StatelessWidget {
             ? body ??
                 ErrorPage(
                   imgPath: 'assets/illustrations/undraw_under_construction.png',
-                  errorMessage: S.of(context).messageUnderConstruction,
+                  errorMessage: S.current.messageUnderConstruction,
                 )
             : ErrorPage(
                 imgPath: 'assets/illustrations/undraw_sign_in.png',
-                info: [
-                  TextSpan(text: S.of(context).warningAuthenticationNeeded)
-                ],
-                actionText: S.of(context).actionLogIn,
+                info: [TextSpan(text: S.current.warningAuthenticationNeeded)],
+                actionText: S.current.actionLogIn,
                 actionOnTap: () => Utils.signOut(context),
               ),
         appBar: PreferredSize(

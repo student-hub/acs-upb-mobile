@@ -7,6 +7,7 @@ import 'package:acs_upb_mobile/pages/settings/view/source_page.dart';
 import 'package:acs_upb_mobile/pages/timetable/view/timetable_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
+import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:provider/provider.dart';
 
 class AppBottomNavigationBar extends StatefulWidget {
@@ -85,26 +86,26 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar>
                         icon: currentTab == 0
                             ? const Icon(Icons.home)
                             : const Icon(Icons.home_outlined),
-                        text: S.of(context).navigationHome,
+                        text: S.current.navigationHome,
                         iconMargin: const EdgeInsets.only(top: 5),
                       ),
                       Tab(
                         icon: currentTab == 1
                             ? const Icon(Icons.calendar_today)
                             : const Icon(Icons.calendar_today_outlined),
-                        text: S.of(context).navigationTimetable,
+                        text: S.current.navigationTimetable,
                         iconMargin: const EdgeInsets.only(top: 5),
                       ),
                       Tab(
                         icon: const Icon(FeatherIcons.globe),
-                        text: S.of(context).navigationPortal,
+                        text: S.current.navigationPortal,
                         iconMargin: const EdgeInsets.only(top: 5),
                       ),
                       Tab(
                         icon: currentTab == 3
                             ? const Icon(Icons.people)
                             : const Icon(Icons.people_outlined),
-                        text: S.of(context).navigationPeople,
+                        text: S.current.navigationPeople,
                         iconMargin: const EdgeInsets.only(top: 5),
                       ),
                     ],

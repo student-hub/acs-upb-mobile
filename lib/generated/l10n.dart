@@ -485,11 +485,31 @@ class S {
     );
   }
 
-  /// `All`
-  String get labelAll {
+  /// `Today`
+  String get labelToday {
     return Intl.message(
-      'All',
-      name: 'labelAll',
+      'Today',
+      name: 'labelToday',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tomorrow`
+  String get labelTomorrow {
+    return Intl.message(
+      'Tomorrow',
+      name: 'labelTomorrow',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Now`
+  String get labelNow {
+    return Intl.message(
+      'Now',
+      name: 'labelNow',
       desc: '',
       args: [],
     );
@@ -550,16 +570,6 @@ class S {
     return Intl.message(
       'Grading',
       name: 'sectionGrading',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Information sources`
-  String get sectionInformationSources {
-    return Intl.message(
-      'Information sources',
-      name: 'sectionInformationSources',
       desc: '',
       args: [],
     );
@@ -690,16 +700,6 @@ class S {
     return Intl.message(
       '4.0',
       name: 'hintPoints',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Please select the sources that you want to see information from:`
-  String get hintSelectSources {
-    return Intl.message(
-      'Please select the sources that you want to see information from:',
-      name: 'hintSelectSources',
       desc: '',
       args: [],
     );
@@ -1185,6 +1185,16 @@ class S {
     );
   }
 
+  /// `Unable to insert events in Google Calendar.`
+  String get errorInsertGoogleEvents {
+    return Intl.message(
+      'Unable to insert events in Google Calendar.',
+      name: 'errorInsertGoogleEvents',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Request already exists`
   String get warningRequestExists {
     return Intl.message(
@@ -1495,6 +1505,16 @@ class S {
     );
   }
 
+  /// `This event cannot be edited.`
+  String get warningEventNotEditable {
+    return Intl.message(
+      'This event cannot be edited.',
+      name: 'warningEventNotEditable',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Ask for permissions`
   String get navigationAskPermissions {
     return Intl.message(
@@ -1650,66 +1670,6 @@ class S {
     return Intl.message(
       'Filter by relevance',
       name: 'filterMenuRelevance',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Official web pages`
-  String get sourceOfficial {
-    return Intl.message(
-      'Official web pages',
-      name: 'sourceOfficial',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `acs.pub.ro, upb.ro, curs.upb.ro, studenti.pub.ro`
-  String get sourceOfficialWebPages {
-    return Intl.message(
-      'acs.pub.ro, upb.ro, curs.upb.ro, studenti.pub.ro',
-      name: 'sourceOfficialWebPages',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Student organizations`
-  String get sourceOrganization {
-    return Intl.message(
-      'Student organizations',
-      name: 'sourceOrganization',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `LSAC, BEST, MLSA`
-  String get sourceStudentOrganizations {
-    return Intl.message(
-      'LSAC, BEST, MLSA',
-      name: 'sourceStudentOrganizations',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Representative students`
-  String get sourceStudentRepresentative {
-    return Intl.message(
-      'Representative students',
-      name: 'sourceStudentRepresentative',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `group/series representatives, student council members`
-  String get sourceStudentExamples {
-    return Intl.message(
-      'group/series representatives, student council members',
-      name: 'sourceStudentExamples',
       desc: '',
       args: [],
     );
@@ -1885,21 +1845,31 @@ class S {
     );
   }
 
-  /// `Data`
-  String get settingsTitleData {
-    return Intl.message(
-      'Data',
-      name: 'settingsTitleData',
-      desc: '',
-      args: [],
-    );
-  }
-
   /// `Relevance filter`
   String get settingsRelevanceFilter {
     return Intl.message(
       'Relevance filter',
       name: 'settingsRelevanceFilter',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Export events to Google Calendar`
+  String get settingsExportToGoogleCalendar {
+    return Intl.message(
+      'Export events to Google Calendar',
+      name: 'settingsExportToGoogleCalendar',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Timetable`
+  String get settingsTitleTimetable {
+    return Intl.message(
+      'Timetable',
+      name: 'settingsTitleTimetable',
       desc: '',
       args: [],
     );
@@ -2525,16 +2495,6 @@ class S {
     );
   }
 
-  /// `ACS UPB Mobile aims to be an information hub for students, therefore it aggregates data from various sources (official or unofficial).`
-  String get messageSelectSource {
-    return Intl.message(
-      'ACS UPB Mobile aims to be an information hub for students, therefore it aggregates data from various sources (official or unofficial).',
-      name: 'messageSelectSource',
-      desc: '',
-      args: [],
-    );
-  }
-
   /// `Please check your inbox for the password reset e-mail.`
   String get infoPasswordResetEmailSent {
     return Intl.message(
@@ -2665,11 +2625,11 @@ class S {
     );
   }
 
-  /// `The Faculty of Automatic Control and Computers is not responsible for information originating from unofficial sources.`
-  String get infoAdditionInformationSources {
+  /// `Export filtered events from Timetable`
+  String get infoExportToGoogleCalendar {
     return Intl.message(
-      'The Faculty of Automatic Control and Computers is not responsible for information originating from unofficial sources.',
-      name: 'infoAdditionInformationSources',
+      'Export filtered events from Timetable',
+      name: 'infoExportToGoogleCalendar',
       desc: '',
       args: [],
     );

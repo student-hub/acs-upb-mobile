@@ -34,14 +34,14 @@ class _RequestPermissionsPageState extends State<RequestPermissionsPage> {
 
   AppDialog _requestAlreadyExistsDialog(BuildContext context) {
     return AppDialog(
-      title: S.of(context).warningRequestExists,
+      title: S.current.warningRequestExists,
       content: [
-        Text(S.of(context).messageRequestAlreadyExists),
+        Text(S.current.messageRequestAlreadyExists),
       ],
       actions: [
         AppButton(
             key: const ValueKey('agree_overwrite_request'),
-            text: S.of(context).buttonSend,
+            text: S.current.buttonSend,
             color: Theme.of(context).accentColor,
             width: 130,
             onTap: () async {
@@ -62,19 +62,19 @@ class _RequestPermissionsPageState extends State<RequestPermissionsPage> {
     final requestProvider = Provider.of<RequestProvider>(context);
 
     return AppScaffold(
-        title: Text(S.of(context).navigationAskPermissions),
+        title: Text(S.current.navigationAskPermissions),
         actions: [
           AppScaffoldAction(
-              text: S.of(context).buttonSave,
+              text: S.current.buttonSave,
               onPressed: () async {
                 if (!agreedToResponsibilities) {
                   AppToast.show(
-                      '${S.of(context).warningAgreeTo}${S.of(context).labelPermissionsConsent}.');
+                      '${S.current.warningAgreeTo}${S.current.labelPermissionsConsent}.');
                   return;
                 }
 
                 if (requestController.text == '') {
-                  AppToast.show(S.of(context).warningRequestEmpty);
+                  AppToast.show(S.current.warningRequestEmpty);
                   return;
                 }
 
@@ -82,8 +82,8 @@ class _RequestPermissionsPageState extends State<RequestPermissionsPage> {
                  * Check if there is already a request registered for the current
                  * user.
                  */
-                bool queryResult = await requestProvider
-                    .userAlreadyRequested(user.uid, context: context);
+                bool queryResult =
+                    await requestProvider.userAlreadyRequested(user.uid);
 
                 if (queryResult) {
                   await showDialog(
@@ -91,13 +91,13 @@ class _RequestPermissionsPageState extends State<RequestPermissionsPage> {
                 }
 
                 queryResult = await requestProvider.makeRequest(
-                    Request(
-                      userId: user.uid,
-                      requestBody: requestController.text,
-                    ),
-                    context: context);
+                  Request(
+                    userId: user.uid,
+                    requestBody: requestController.text,
+                  ),
+                );
                 if (queryResult) {
-                  AppToast.show(S.of(context).messageRequestHasBeenSent);
+                  AppToast.show(S.current.messageRequestHasBeenSent);
                   Navigator.of(context).pop();
                 }
               })
@@ -120,7 +120,7 @@ class _RequestPermissionsPageState extends State<RequestPermissionsPage> {
             ),
             Padding(
               padding: const EdgeInsets.only(left: 20),
-              child: Text(S.of(context).messageAnnouncedOnMail,
+              child: Text(S.current.messageAnnouncedOnMail,
                   style: Theme.of(context).textTheme.caption.apply(
                       color: Theme.of(context).textTheme.headline5.color)),
             ),
@@ -148,7 +148,7 @@ class _RequestPermissionsPageState extends State<RequestPermissionsPage> {
                     child: Padding(
                       padding: const EdgeInsets.only(top: 10.25),
                       child: Text(
-                        S.of(context).messageAgreePermissions,
+                        S.current.messageAgreePermissions,
                         style: Theme.of(context).textTheme.subtitle1,
                       ),
                     ),

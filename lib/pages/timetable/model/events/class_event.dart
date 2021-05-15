@@ -23,6 +23,7 @@ class ClassEvent extends RecurringUniEvent {
     ClassHeader classHeader,
     AcademicCalendar calendar,
     String addedBy,
+    bool editable,
   }) : super(
             rrule: rrule,
             name: name,
@@ -36,7 +37,8 @@ class ClassEvent extends RecurringUniEvent {
             type: type,
             classHeader: classHeader,
             calendar: calendar,
-            addedBy: addedBy);
+            addedBy: addedBy,
+            editable: editable);
 
   final Person teacher;
 }

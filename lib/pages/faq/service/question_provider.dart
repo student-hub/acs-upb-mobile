@@ -9,11 +9,9 @@ import 'package:provider/provider.dart';
 import 'package:flutter/cupertino.dart';
 
 class QuestionProvider with ChangeNotifier {
-  Future<List<Question>> fetchQuestions(
-      {BuildContext context, int limit}) async {
+  Future<List<Question>> fetchQuestions({int limit}) async {
     final User user =
         Provider.of<AuthProvider>(context, listen: false).currentUserFromCache;
-
     try {
       QuerySnapshot qSnapshot;
       if (user != null) {
@@ -38,9 +36,7 @@ class QuestionProvider with ChangeNotifier {
       return qSnapshot.docs.map(DatabaseQuestion.fromSnap).toList();
     } catch (e) {
       print(e);
-      if (context != null) {
-        AppToast.show(S.of(context).errorSomethingWentWrong);
-      }
+      AppToast.show(S.current.errorSomethingWentWrong);
       return null;
     }
   }

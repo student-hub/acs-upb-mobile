@@ -6,7 +6,6 @@ import 'package:acs_upb_mobile/pages/classes/view/grading_view.dart';
 import 'package:acs_upb_mobile/pages/classes/view/shortcut_view.dart';
 import 'package:acs_upb_mobile/pages/people/service/person_provider.dart';
 import 'package:acs_upb_mobile/pages/people/view/person_view.dart';
-import 'package:acs_upb_mobile/resources/custom_icons.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/widgets/button.dart';
 import 'package:acs_upb_mobile/widgets/class_icon.dart';
@@ -31,16 +30,25 @@ class ClassView extends StatefulWidget {
 
 class _ClassViewState extends State<ClassView> {
   Class classInfo;
+  String lecturerName = '';
+
+  @override
+  void initState() {
+    super.initState();
+    final personProvider = Provider.of<PersonProvider>(context, listen: false);
+    personProvider
+        .mostRecentLecturer(widget.classHeader.id)
+        .then((lecturer) => setState(() => lecturerName = lecturer));
+  }
 
   @override
   Widget build(BuildContext context) {
     final classProvider = Provider.of<ClassProvider>(context);
 
     return AppScaffold(
-      title: Text(S.of(context).navigationClassInfo),
+      title: Text(S.current.navigationClassInfo),
       body: FutureBuilder(
-          future: classProvider.fetchClassInfo(widget.classHeader,
-              context: context),
+          future: classProvider.fetchClassInfo(widget.classHeader),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
               classInfo = snapshot.data;
@@ -48,19 +56,19 @@ class _ClassViewState extends State<ClassView> {
               return ListView(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
                     child: Column(
                       children: [
-                        const SizedBox(height: 10),
+                        const SizedBox(height: 12),
                         lecturerCard(context),
-                        const SizedBox(height: 10),
+                        const SizedBox(height: 12),
                         shortcuts(context),
-                        const SizedBox(height: 10),
+                        const SizedBox(height: 12),
                         GradingChart(
                           grading: classInfo.grading,
                           lastUpdated: classInfo.gradingLastUpdated,
                           onSave: (grading) => classProvider.setGrading(
-                              classId: widget.classHeader.id, grading: grading),
+                              widget.classHeader.id, grading),
                         ),
                       ],
                     ),
@@ -79,21 +87,21 @@ class _ClassViewState extends State<ClassView> {
     final authProvider = Provider.of<AuthProvider>(context);
 
     return Padding(
-      padding: const EdgeInsets.all(10),
+      padding: const EdgeInsets.symmetric(horizontal: 12),
       child: Column(
         children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    S.of(context).sectionShortcuts,
+                    S.current.sectionShortcuts,
                     style: Theme.of(context).textTheme.headline6,
                   ),
                   GestureDetector(
                     onTap: authProvider.currentUserFromCache.canEditClassInfo
                         ? () {}
                         : () => AppToast.show(
-                            S.of(context).warningNoPermissionToEditClassInfo),
+                            S.current.warningNoPermissionToEditClassInfo),
                     child: IconButton(
                       icon: const Icon(Icons.add_outlined),
                       onPressed:
@@ -107,9 +115,7 @@ class _ClassViewState extends State<ClassView> {
                                         setState(() =>
                                             classInfo.shortcuts.add(shortcut));
                                         classProvider.addShortcut(
-                                            classId: widget.classHeader.id,
-                                            shortcut: shortcut,
-                                            context: context);
+                                            widget.classHeader.id, shortcut);
                                       }),
                                     ),
                                   ))
@@ -123,10 +129,10 @@ class _ClassViewState extends State<ClassView> {
             (classInfo.shortcuts.isEmpty
                 ? <Widget>[
                     Padding(
-                      padding: const EdgeInsets.all(10),
+                      padding: const EdgeInsets.all(12),
                       child: Center(
                         child: Text(
-                          S.of(context).labelUnknown,
+                          S.current.labelUnknown,
                           style:
                               TextStyle(color: Theme.of(context).disabledColor),
                         ),
@@ -148,7 +154,7 @@ class _ClassViewState extends State<ClassView> {
       case ShortcutType.main:
         return Icons.home_outlined;
       case ShortcutType.classbook:
-        return CustomIcons.book;
+        return FeatherIcons.book;
       case ShortcutType.resource:
         return Icons.insert_drive_file_outlined;
       default:
@@ -160,12 +166,12 @@ class _ClassViewState extends State<ClassView> {
           {BuildContext context, String shortcutName, Function onDelete}) =>
       AppDialog(
         icon: const Icon(Icons.delete_outlined),
-        title: S.of(context).actionDeleteShortcut,
-        message: S.of(context).messageDeleteShortcut(shortcutName),
-        info: S.of(context).messageThisCouldAffectOtherStudents,
+        title: S.current.actionDeleteShortcut,
+        message: S.current.messageDeleteShortcut(shortcutName),
+        info: S.current.messageThisCouldAffectOtherStudents,
         actions: [
           AppButton(
-            text: S.of(context).actionDeleteShortcut,
+            text: S.current.actionDeleteShortcut,
             width: 130,
             onTap: onDelete,
           )
@@ -177,7 +183,7 @@ class _ClassViewState extends State<ClassView> {
     final classViewContext = context;
 
     return PositionedTapDetector(
-      onTap: (_) => Utils.launchURL(shortcut.link, context: context),
+      onTap: (_) => Utils.launchURL(shortcut.link),
       onLongPress: (position) async {
         final RenderBox overlay =
             Overlay.of(context).context.findRenderObject();
@@ -188,11 +194,11 @@ class _ClassViewState extends State<ClassView> {
                 Offset.zero & overlay.size),
             items: [
               PopupMenuItem(
-                value: S.of(context).actionDeleteShortcut,
-                child: Text(S.of(context).actionDeleteShortcut),
+                value: S.current.actionDeleteShortcut,
+                child: Text(S.current.actionDeleteShortcut),
               )
             ]);
-        if (option == S.of(context).actionDeleteShortcut) {
+        if (option == S.current.actionDeleteShortcut) {
           await showDialog(
             context: context,
             builder: (context) => _deletionConfirmationDialog(
@@ -202,9 +208,7 @@ class _ClassViewState extends State<ClassView> {
                 Navigator.pop(context); // Pop dialog window
 
                 final success = await classProvider.deleteShortcut(
-                    classId: widget.classHeader.id,
-                    shortcutIndex: index,
-                    context: context);
+                    widget.classHeader.id, index);
                 if (success) {
                   setState(() {
                     classInfo.shortcuts.removeAt(index);
@@ -223,7 +227,7 @@ class _ClassViewState extends State<ClassView> {
           foregroundColor: Theme.of(context).iconTheme.color,
         ),
         title: Text((shortcut.name?.isEmpty ?? true)
-            ? shortcut.type.toLocalizedString(context)
+            ? shortcut.type.toLocalizedString()
             : shortcut.name),
         contentPadding: EdgeInsets.zero,
         dense: true,
@@ -238,11 +242,11 @@ class _ClassViewState extends State<ClassView> {
     return Card(
       key: const Key('LecturerCard'),
       child: Padding(
-        padding: const EdgeInsets.all(10),
+        padding: const EdgeInsets.all(12),
         child: Row(
           children: [
             ClassIcon(classHeader: widget.classHeader),
-            const SizedBox(width: 10),
+            const SizedBox(width: 12),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -252,39 +256,29 @@ class _ClassViewState extends State<ClassView> {
                     text: widget.classHeader.name ?? '-',
                     style: Theme.of(context).textTheme.bodyText1,
                   ),
-                  FutureBuilder(
-                    future: personProvider
-                        .mostRecentLecturer(widget.classHeader.id),
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.done) {
-                        final lecturerName = snapshot.data;
-                        return GestureDetector(
-                          onTap: () async {
-                            final lecturer =
-                                await personProvider.fetchPerson(lecturerName);
-                            if (lecturer != null && lecturerName != null) {
-                              await showModalBottomSheet<dynamic>(
-                                  isScrollControlled: true,
-                                  context: context,
-                                  builder: (BuildContext buildContext) =>
-                                      PersonView(person: lecturer));
-                            }
-                          },
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              IconText(
-                                icon: Icons.person_outlined,
-                                text: lecturerName ?? '-',
-                                style: Theme.of(context).textTheme.bodyText1,
-                              ),
-                            ],
-                          ),
-                        );
-                      } else {
-                        return const Center(child: CircularProgressIndicator());
+                  const SizedBox(height: 10),
+                  GestureDetector(
+                    onTap: () async {
+                      final lecturer =
+                          await personProvider.fetchPerson(lecturerName);
+                      if (lecturer != null && lecturerName != null) {
+                        await showModalBottomSheet<dynamic>(
+                            isScrollControlled: true,
+                            context: context,
+                            builder: (BuildContext buildContext) =>
+                                PersonView(person: lecturer));
                       }
                     },
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        IconText(
+                          icon: FeatherIcons.user,
+                          text: lecturerName ?? '-',
+                          style: Theme.of(context).textTheme.bodyText1,
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),

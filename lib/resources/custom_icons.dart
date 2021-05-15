@@ -12,11 +12,14 @@ class CustomIcons {
       IconData(0xe800, fontFamily: _kFontFam, fontPackage: _kFontPkg);
 
   // ignore: constant_identifier_names
-  static const IconData github_brands =
+  static const IconData edit_off_outlined =
+      IconData(0xe801, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+
+  static const IconData github =
       IconData(0xe803, fontFamily: _kFontFam, fontPackage: _kFontPkg);
 
   // ignore: constant_identifier_names
-  static const IconData edit_slash =
+  static const IconData edit_off =
       IconData(0xe804, fontFamily: _kFontFam, fontPackage: _kFontPkg);
 
   static const IconData filter =

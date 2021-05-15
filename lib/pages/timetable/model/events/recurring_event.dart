@@ -21,6 +21,7 @@ class RecurringUniEvent extends UniEvent {
     ClassHeader classHeader,
     AcademicCalendar calendar,
     String addedBy,
+    bool editable,
   })  : assert(rrule != null),
         super(
             name: name,
@@ -34,14 +35,13 @@ class RecurringUniEvent extends UniEvent {
             type: type,
             classHeader: classHeader,
             calendar: calendar,
-            addedBy: addedBy);
+            addedBy: addedBy,
+            editable: editable);
 
   final RecurrenceRule rrule;
 
-  @override
-  Iterable<UniEventInstance> generateInstances(
-      {DateInterval intersectingInterval}) sync* {
-    RecurrenceRule rrule = this.rrule;
+  RecurrenceRule get rruleBasedOnCalendar {
+    final RecurrenceRule rrule = this.rrule;
     if (calendar != null && rrule.frequency == Frequency.weekly) {
       var weeks = calendar.nonHolidayWeeks;
 
@@ -65,14 +65,21 @@ class RecurringUniEvent extends UniEvent {
                     rrule.interval)
             .toSet();
       }
-      rrule = rrule.copyWith(
-          frequency: Frequency.daily,
+      return rrule.copyWith(
+          frequency: Frequency.yearly,
           interval: 1,
           byWeekDays: rrule.byWeekDays.isNotEmpty
               ? rrule.byWeekDays
               : {ByWeekDayEntry(start.dayOfWeek)},
           byWeeks: weeks);
     }
+    return rrule;
+  }
+
+  @override
+  Iterable<UniEventInstance> generateInstances(
+      {DateInterval intersectingInterval}) sync* {
+    final RecurrenceRule rrule = rruleBasedOnCalendar;
 
     // Calculate recurrences
     int i = 0;

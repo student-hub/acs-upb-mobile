@@ -51,7 +51,7 @@ class _SearchBarState extends State<SearchBar> {
             child: Container(
               color: Colors.transparent,
               child: Center(
-                child: Text(S.of(context).buttonCancel),
+                child: Text(S.current.buttonCancel),
               ),
             ),
           ),

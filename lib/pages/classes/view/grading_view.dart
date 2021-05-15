@@ -39,7 +39,7 @@ class _GradingChartState extends State<GradingChart> {
 
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(10),
+        padding: const EdgeInsets.all(12),
         child: Column(
           children: <Widget>[
             if (widget.withHeader)
@@ -50,12 +50,12 @@ class _GradingChartState extends State<GradingChart> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        S.of(context).sectionGrading,
+                        S.current.sectionGrading,
                         style: Theme.of(context).textTheme.headline6,
                       ),
                       if (widget.grading != null)
                         Text(
-                          '${S.of(context).labelLastUpdated}: ${widget.lastUpdated?.toString('dd/MM/yyyy') ?? '?'}',
+                          '${S.current.labelLastUpdated}: ${widget.lastUpdated?.toString('dd/MM/yyyy') ?? '?'}',
                           textAlign: TextAlign.left,
                         ),
                     ],
@@ -64,7 +64,7 @@ class _GradingChartState extends State<GradingChart> {
                     onTap: authProvider.currentUserFromCache.canEditClassInfo
                         ? () {}
                         : () => AppToast.show(
-                            S.of(context).warningNoPermissionToEditClassInfo),
+                            S.current.warningNoPermissionToEditClassInfo),
                     child: IconButton(
                       icon: const Icon(Icons.edit_outlined),
                       onPressed:
@@ -102,7 +102,7 @@ class _GradingChartState extends State<GradingChart> {
                 padding: const EdgeInsets.all(10),
                 child: Center(
                   child: Text(
-                    S.of(context).labelUnknown,
+                    S.current.labelUnknown,
                     style: TextStyle(color: Theme.of(context).disabledColor),
                   ),
                 ),
@@ -226,7 +226,7 @@ class _GradingViewState extends State<GradingView> {
               focusNode: focusNodes[i],
               controller: nameController,
               decoration: InputDecoration(
-                hintText: S.of(context).hintEvaluation,
+                hintText: S.current.hintEvaluation,
                 prefixIcon: const Icon(Icons.label_outlined),
               ),
               validator: (value) {
@@ -235,7 +235,7 @@ class _GradingViewState extends State<GradingView> {
                   return null;
                 }
                 if (value == '' || value == null) {
-                  return S.of(context).warningFieldCannotBeEmpty;
+                  return S.current.warningFieldCannotBeEmpty;
                 }
                 return null;
               },
@@ -255,7 +255,7 @@ class _GradingViewState extends State<GradingView> {
               keyboardType:
                   const TextInputType.numberWithOptions(decimal: true),
               decoration: InputDecoration(
-                hintText: S.of(context).hintPoints,
+                hintText: S.current.hintPoints,
               ),
               validator: (value) {
                 if (i == focusNodes.length - 2) {
@@ -263,10 +263,10 @@ class _GradingViewState extends State<GradingView> {
                   return null;
                 }
                 if (value == '' || value == null) {
-                  return S.of(context).warningFieldCannotBeEmpty;
+                  return S.current.warningFieldCannotBeEmpty;
                 }
                 if (double.parse(value) == 0) {
-                  return S.of(context).warningFieldCannotBeZero;
+                  return S.current.warningFieldCannotBeZero;
                 }
                 return null;
               },
@@ -296,10 +296,10 @@ class _GradingViewState extends State<GradingView> {
         }
       },
       child: AppScaffold(
-        title: Text(S.of(context).actionEditGrading),
+        title: Text(S.current.actionEditGrading),
         actions: [
           AppScaffoldAction(
-              text: S.of(context).buttonSave,
+              text: S.current.buttonSave,
               onPressed: () {
                 if (formKey.currentState.validate()) {
                   widget.onSave(grading);
@@ -329,7 +329,7 @@ class _GradingViewState extends State<GradingView> {
                               Expanded(
                                 flex: 3,
                                 child: Text(
-                                  S.of(context).labelEvaluation,
+                                  S.current.labelEvaluation,
                                   style: Theme.of(context)
                                       .textTheme
                                       .subtitle1
@@ -338,7 +338,7 @@ class _GradingViewState extends State<GradingView> {
                               ),
                               Expanded(
                                 child: Text(
-                                  S.of(context).labelPoints,
+                                  S.current.labelPoints,
                                   style: Theme.of(context)
                                       .textTheme
                                       .subtitle1
