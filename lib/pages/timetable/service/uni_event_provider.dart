@@ -346,6 +346,16 @@ class UniEventProvider extends EventProvider<UniEventInstance>
         .first;
   }
 
+  Future<Iterable<UniEvent>> getClassesEvents(String classId) async {
+    final Future<Iterable<UniEvent>> list = _events
+        .map((events) =>
+            events.where((event) => event.classHeader.id == classId))
+        .first;
+    // final Future<Iterable<UniEvent>> list = _events
+    print(list);
+    return list;
+  }
+
   void updateClasses(ClassProvider classProvider) {
     _classProvider = classProvider;
     _classProvider.fetchUserClassIds(_authProvider.uid).then((classIds) {

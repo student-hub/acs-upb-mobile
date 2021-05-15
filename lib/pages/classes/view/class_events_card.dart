@@ -9,19 +9,26 @@ import 'package:provider/provider.dart';
 import 'package:time_machine/time_machine.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 
-class ClassEventsCard extends StatelessWidget {
+import 'event_instances_list.dart';
+
+class ClassEventsCard extends StatefulWidget {
   const ClassEventsCard({Key key, this.currentClass}) : super(key: key);
   final String currentClass;
 
+  @override
+  _ClassEventsCardState createState() => _ClassEventsCardState();
+}
+
+class _ClassEventsCardState extends State<ClassEventsCard> {
   @override
   Widget build(BuildContext context) {
     final UniEventProvider eventProvider =
         Provider.of<UniEventProvider>(context);
 
-    return InfoCard<Iterable<UniEventInstance>>(
+    return InfoCard<Iterable<UniEvent>>(
       title: S.current.sectionEventsComingUp,
       edgeInsets: EdgeInsets.zero,
-      future: eventProvider.getUpcomingEvents(LocalDate.today()),
+      future: eventProvider.getClassesEvents(widget.currentClass),
       builder: (events) => Column(
         children: events
             .map(
@@ -35,20 +42,21 @@ class ClassEventsCard extends StatelessWidget {
                     height: 20,
                     decoration: BoxDecoration(
                       borderRadius: const BorderRadius.all(Radius.circular(4)),
-                      color: event.mainEvent.color,
+                      color: event.color,
                     ),
                   ),
                 ),
-                trailing: event.start.toDateTimeLocal().isBefore(DateTime.now())
-                    ? Chip(label: Text(S.current.labelNow))
-                    : null,
+                // trailing: event.start.toDateTimeLocal().isBefore(DateTime.now())
+                //     ? Chip(label: Text(S.current.labelNow))
+                //     : null,
                 title: Text(
-                  '${'${event.mainEvent.classHeader.acronym} - '}${event.mainEvent.type.toLocalizedString()}',
+                  '${'${event.classHeader.acronym} - '}${event.type.toLocalizedString()}',
                 ),
-                subtitle: Text(event.relativeDateString),
-                onTap: () =>
-                    Navigator.of(context).push(MaterialPageRoute<EventView>(
-                  builder: (_) => EventView(eventInstance: event),
+                //subtitle: Text(event.relativeDateString),
+                onTap: () => Navigator.of(context)
+                    .push(MaterialPageRoute<EventInstancesList>(
+                  builder: (_) => EventInstancesList(
+                      mainEvent: event, classId: widget.currentClass),
                 )),
               ),
             )
