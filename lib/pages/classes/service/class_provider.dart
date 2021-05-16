@@ -291,8 +291,21 @@ class ClassProvider with ChangeNotifier {
     }
   }
 
-  Future<List<Class>> search(String query) async {
-    List<Class> classes;
-    return [];
+  Future<List<ClassHeader>> search(String query) async {
+    final List<ClassHeader> classes = await fetchClassHeaders();
+    final List<String> searchedWords = query
+        .toLowerCase()
+        .split(' ')
+        .where((element) => element != '')
+        .toList();
+    return classes.where(
+            (element) =>
+            searchedWords
+                .fold(
+                true,
+                    (previousValue, filter) =>
+                previousValue &&
+                    element.name.toLowerCase().contains(filter.toLowerCase()) || element.acronym.toLowerCase().contains(filter.toLowerCase())))
+        .toList()?? <ClassHeader>[];
   }
 }

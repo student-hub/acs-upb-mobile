@@ -1,4 +1,5 @@
 import 'package:acs_upb_mobile/pages/classes/model/class.dart';
+import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
 import 'package:acs_upb_mobile/pages/people/model/person.dart';
 import 'package:acs_upb_mobile/pages/people/service/person_provider.dart';
 import 'package:acs_upb_mobile/pages/people/view/person_view.dart';
@@ -16,7 +17,7 @@ class SearchPage extends StatefulWidget {
 
 class _SearchPageState extends State<SearchPage> {
   String query = '';
-  List<Class> classesSearched;
+  List<ClassHeader> classesSearched;
   bool searchClosed = true;
   List<Person> peopleSearched;
 
@@ -63,62 +64,39 @@ class _SearchPageState extends State<SearchPage> {
                   } else {
                     return Container();
                   }
-                }),
+                }
+                ),
           const Divider(
             color: Colors.white,
           ),
-          Container(
-            height: 120,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
-                  child: Text('Materii',
-                      style: const TextStyle(fontSize: 15)
-                  ),
-                ),
-                Column(
+          if (query.isNotEmpty)
+            FutureBuilder(
+            future:  Provider.of<ClassProvider>(context, listen: false)
+              .search(query),
+            builder: (_, snapshot) {
+              if (snapshot.connectionState == ConnectionState.done) {
+                classesSearched = snapshot.data;
+                return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
-                      child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const CircleAvatar(
-                              backgroundImage: NetworkImage(
-                                  'https://image.shutterstock.com/shutterstock/photos/488719804/display_1500/stock-photo-the-training-icon-teacher-and-learner-classroom-presentation-conference-lesson-seminar-488719804.jpg'),
-                            ),
-                            const Padding(
-                                padding: EdgeInsets.fromLTRB(10, 10, 0, 10),
-                                child: Text(
-                                    'Managementul Proiectelor Software')),
-                          ]
-                      ),
-                    ),
-                    Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const CircleAvatar(
-                            backgroundImage: NetworkImage(
-                                'https://image.shutterstock.com/shutterstock/photos/488719804/display_1500/stock-photo-the-training-icon-teacher-and-learner-classroom-presentation-conference-lesson-seminar-488719804.jpg'),
+                    if(classesSearched.isNotEmpty)
+                      const Padding(
+                        padding: EdgeInsets.fromLTRB(10, 0, 0, 10),
+                        child: Text('Materii',
+                          style: TextStyle(fontSize: 15)
                           ),
-                          const Padding(
-                              padding: EdgeInsets.fromLTRB(10, 10, 0, 10),
-                              child: Text(
-                                  'Programare Orientata pe Obiecte')),
-                        ]
-                    )
+                        ),
+                      ClassesCircleList(
+                        classesHeader:classesSearched,
+                        query: query)
                   ],
-                )
-              ],
+                );
+              }
+              else {
+                return Container();
+              }
+            }
             ),
-          ),
-          const Divider(
-            color: Colors.white,
-          ),
-
         ],
       ),
     );
@@ -133,12 +111,6 @@ class PeopleCircleList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (people.isEmpty) {
-      return Container(
-        height: 50,
-        child: const Text('Nothing found'), //for debugging
-      );
-    }
     return Container(
       height: 130,
       padding: const EdgeInsets.all(10),
@@ -175,8 +147,51 @@ class PeopleCircleList extends StatelessWidget {
 }
 
 class ClassesCircleList extends StatelessWidget {
+  const ClassesCircleList({this.classesHeader, this.query});
+
+  final List<ClassHeader> classesHeader;
+  final String query;
   @override
   Widget build(BuildContext context) {
-    return Container();
+    if (classesHeader.isEmpty) {
+      return Container(
+        height: 50,
+        child: const Text('Nothing found'), //for debugging
+      );
+    }
+    return Container(
+      height: 1000,
+      padding: const EdgeInsets.all(10),
+      child: ListView.builder(
+        shrinkWrap: true,
+        itemCount: classesHeader.length > 5 ? 5 : classesHeader.length,
+        scrollDirection: Axis.vertical,
+        itemBuilder: (BuildContext context, int index) {
+          return Container(
+            padding: const EdgeInsets.fromLTRB(0, 0, 30, 0),
+            child: GestureDetector(
+              child: Row(children: <Widget>[
+                const Padding(
+                  padding: EdgeInsets.fromLTRB(0, 0, 10, 10),
+                  child: CircleAvatar(
+                    backgroundImage: NetworkImage(
+                        'https://identix.state.gov/qotw/images/no-photo.gif'),
+                  ),
+                ),
+                //TODO Solve pixel overflow
+                Text(classesHeader[index].name)
+              ]),
+//              onTap: (classHeader) => Navigator.of(context)
+//                  .push(MaterialPageRoute<ChangeNotifierProvider>(
+//                builder: (context) => ChangeNotifierProvider.value(
+//                  value: classProvider,
+//                  child: ClassView(classHeader: classHeader),
+//                ),
+//              )),
+            )
+          );
+        }
+      ),
+    );
   }
 }
