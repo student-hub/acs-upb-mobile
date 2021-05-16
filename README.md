@@ -32,6 +32,7 @@ If you would like to contribute and don't know where to start, or you have any q
 * [Maria Stoichițescu](https://github.com/stoichitescumaria)
 * [Anghel Andrei](https://github.com/AnghelAndrei28)
 * [Bogdan Piele](https://github.com/bogpie)
+* [Bogdan Iuga](https://github.com/iugabogdan98)
 
 ## Building from source with Android Studio
 
