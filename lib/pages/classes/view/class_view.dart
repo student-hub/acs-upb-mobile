@@ -65,7 +65,7 @@ class _ClassViewState extends State<ClassView> {
                         const SizedBox(height: 12),
                         shortcuts(context),
                         const SizedBox(height: 12),
-                        ClassEventsCard(currentClass: classInfo.header.id),
+                        ClassEventsCard(currentClassId: widget.classHeader.id),
                         const SizedBox(height: 12),
                         GradingChart(
                           grading: classInfo.grading,

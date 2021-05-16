@@ -3,15 +3,13 @@ import 'package:acs_upb_mobile/pages/timetable/service/uni_event_provider.dart';
 import 'package:acs_upb_mobile/pages/timetable/view/events/event_view.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:time_machine/time_machine.dart';
 
 class EventInstancesList extends StatefulWidget {
-  const EventInstancesList({Key key, this.mainEvent}) : super(key: key);
+  const EventInstancesList({Key key, this.eventInstance}) : super(key: key);
 
-  final UniEvent mainEvent;
+  final UniEvent eventInstance;
 
   @override
   _EventInstancesListState createState() => _EventInstancesListState();
@@ -24,10 +22,11 @@ class _EventInstancesListState extends State<EventInstancesList> {
     final UniEventProvider eventProvider =
         Provider.of<UniEventProvider>(context);
     return AppScaffold(
-        title: Text(widget.mainEvent.classHeader.acronym),
+        title: Text(
+            '${'${widget.eventInstance.classHeader.acronym} - '}${widget.eventInstance.type.toLocalizedString()}'),
         body: FutureBuilder(
             future:
-                eventProvider.getAllClassEventsInstances(widget.mainEvent.id),
+                eventProvider.getAllInstancesOfEvent(widget.eventInstance.id),
             builder: (_, snapshot) {
               if (snapshot.connectionState == ConnectionState.done) {
                 events = snapshot.data;
@@ -37,7 +36,7 @@ class _EventInstancesListState extends State<EventInstancesList> {
                         (event) => ListTile(
                           key: ValueKey(event.id),
                           leading: Padding(
-                            padding: const EdgeInsets.all(10),
+                            padding: const EdgeInsets.all(12),
                             child: Container(
                               width: 20,
                               height: 20,
