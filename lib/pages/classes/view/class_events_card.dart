@@ -26,7 +26,7 @@ class _ClassEventsCardState extends State<ClassEventsCard> {
         Provider.of<UniEventProvider>(context);
 
     return InfoCard<Iterable<UniEvent>>(
-      title: S.current.sectionEventsComingUp,
+      title: "Class Events",
       edgeInsets: EdgeInsets.zero,
       future: eventProvider.getClassesEvents(widget.currentClass),
       builder: (events) => Column(
@@ -55,8 +55,7 @@ class _ClassEventsCardState extends State<ClassEventsCard> {
                 //subtitle: Text(event.relativeDateString),
                 onTap: () => Navigator.of(context)
                     .push(MaterialPageRoute<EventInstancesList>(
-                  builder: (_) => EventInstancesList(
-                      mainEvent: event, classId: widget.currentClass),
+                  builder: (_) => EventInstancesList(mainEvent: event),
                 )),
               ),
             )

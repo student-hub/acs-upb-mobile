@@ -9,11 +9,9 @@ import 'package:provider/provider.dart';
 import 'package:time_machine/time_machine.dart';
 
 class EventInstancesList extends StatefulWidget {
-  const EventInstancesList({Key key, this.mainEvent, this.classId})
-      : super(key: key);
+  const EventInstancesList({Key key, this.mainEvent}) : super(key: key);
 
   final UniEvent mainEvent;
-  final String classId;
 
   @override
   _EventInstancesListState createState() => _EventInstancesListState();
@@ -26,19 +24,18 @@ class _EventInstancesListState extends State<EventInstancesList> {
     final UniEventProvider eventProvider =
         Provider.of<UniEventProvider>(context);
     return AppScaffold(
-        title: Text(S.current.navigationPeople),
+        title: Text(widget.mainEvent.classHeader.acronym),
         body: FutureBuilder(
             future:
-                eventProvider.getUpcomingEvents(LocalDate.today(), limit: 10),
+                eventProvider.getAllClassEventsInstances(widget.mainEvent.id),
             builder: (_, snapshot) {
               if (snapshot.connectionState == ConnectionState.done) {
                 events = snapshot.data;
-                return Column(
+                return ListView(
                   children: events
                       .map(
                         (event) => ListTile(
                           key: ValueKey(event.id),
-                          contentPadding: EdgeInsets.zero,
                           leading: Padding(
                             padding: const EdgeInsets.all(10),
                             child: Container(
@@ -47,15 +44,14 @@ class _EventInstancesListState extends State<EventInstancesList> {
                               decoration: BoxDecoration(
                                 borderRadius:
                                     const BorderRadius.all(Radius.circular(4)),
-                                color: event.mainEvent.color,
+                                color: event.end
+                                        .toDateTimeLocal()
+                                        .isBefore(DateTime.now())
+                                    ? event.color.withOpacity(0.25)
+                                    : event.color,
                               ),
                             ),
                           ),
-                          trailing: event.start
-                                  .toDateTimeLocal()
-                                  .isBefore(DateTime.now())
-                              ? Chip(label: Text(S.current.labelNow))
-                              : null,
                           title: Text(
                             '${'${event.mainEvent.classHeader.acronym} - '}${event.mainEvent.type.toLocalizedString()}',
                           ),

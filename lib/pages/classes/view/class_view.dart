@@ -2,6 +2,7 @@ import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/classes/model/class.dart';
 import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
+import 'package:acs_upb_mobile/pages/classes/view/class_events_card.dart';
 import 'package:acs_upb_mobile/pages/classes/view/grading_view.dart';
 import 'package:acs_upb_mobile/pages/classes/view/shortcut_view.dart';
 import 'package:acs_upb_mobile/pages/people/service/person_provider.dart';
@@ -63,6 +64,8 @@ class _ClassViewState extends State<ClassView> {
                         lecturerCard(context),
                         const SizedBox(height: 12),
                         shortcuts(context),
+                        const SizedBox(height: 12),
+                        ClassEventsCard(currentClass: classInfo.header.id),
                         const SizedBox(height: 12),
                         GradingChart(
                           grading: classInfo.grading,
