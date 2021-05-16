@@ -120,6 +120,7 @@
   "errorClassCannotBeEmpty": "Materia trebuie precizată.",
   "errorPictureSizeToBig": "Selectați o fotografie care are mai puțin de 5MB.",
   "errorImage": "Imaginea nu putut fi încărcată.",
+  "errorInsertGoogleEvents": "Evenimentele nu au putut fi inserate în Google Calendar.",
 
   "warningRequestExists": "O cerere deja există",
   "warningInternetConnection": "Asigurați-vă că sunteți conectat la internet.",
@@ -192,6 +193,8 @@
   "settingsItemLanguageRomanian": "Română",
   "settingsItemLanguageAuto": "Auto",
   "settingsRelevanceFilter": "Filtru de relevanță",
+  "settingsExportToGoogleCalendar": "Exportă evenimentele în Google Calendar",
+  "settingsTitleTimetable": "Orar",
 
   "websiteCategoryLearning": "Cursuri",
   "websiteCategoryAdministrative": "Administrativ",
@@ -272,6 +275,7 @@
   "infoEmail": "Acesta este același username pe care îl folosești să te loghezi pe {forum}.",
   "infoLoading": "Se încarcă...",
   "infoReadThePolicy": "Citește politica {appName}",
+  "infoExportToGoogleCalendar": "Exportă evenimentele filtrate din Orar",
 
   "stringEmailDomain": "@stud.acs.upb.ro",
   "stringForum": "cs.curs.pub.ro",
