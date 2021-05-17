@@ -134,6 +134,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "labelAskPermissions" : MessageLookupByLibrary.simpleMessage("Cere permisiuni de editare"),
     "labelCategory" : MessageLookupByLibrary.simpleMessage("Categorie"),
     "labelClass" : MessageLookupByLibrary.simpleMessage("Materie"),
+    "labelClasses" : MessageLookupByLibrary.simpleMessage("Materii"),
     "labelColor" : MessageLookupByLibrary.simpleMessage("Culoare"),
     "labelConfirmNewPassword" : MessageLookupByLibrary.simpleMessage("Confirmare parolă nouă"),
     "labelConfirmPassword" : MessageLookupByLibrary.simpleMessage("Confirmare parolă"),

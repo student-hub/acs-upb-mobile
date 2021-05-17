@@ -134,6 +134,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "labelAskPermissions" : MessageLookupByLibrary.simpleMessage("Request editing permissions"),
     "labelCategory" : MessageLookupByLibrary.simpleMessage("Category"),
     "labelClass" : MessageLookupByLibrary.simpleMessage("Class"),
+    "labelClasses" : MessageLookupByLibrary.simpleMessage("Classes"),
     "labelColor" : MessageLookupByLibrary.simpleMessage("Color"),
     "labelConfirmNewPassword" : MessageLookupByLibrary.simpleMessage("Confirm new password"),
     "labelConfirmPassword" : MessageLookupByLibrary.simpleMessage("Confirm password"),

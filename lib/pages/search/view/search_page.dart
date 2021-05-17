@@ -1,10 +1,12 @@
 import 'package:acs_upb_mobile/pages/classes/model/class.dart';
 import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
+import 'package:acs_upb_mobile/pages/classes/view/class_view.dart';
 import 'package:acs_upb_mobile/pages/people/model/person.dart';
 import 'package:acs_upb_mobile/pages/people/service/person_provider.dart';
 import 'package:acs_upb_mobile/pages/people/view/person_view.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:acs_upb_mobile/widgets/search_bar.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:flutter/material.dart';
@@ -20,6 +22,7 @@ class _SearchPageState extends State<SearchPage> {
   List<ClassHeader> classesSearched;
   bool searchClosed = true;
   List<Person> peopleSearched;
+  bool showMore = false;
 
   @override
   void initState() {
@@ -80,11 +83,24 @@ class _SearchPageState extends State<SearchPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     if(classesSearched.isNotEmpty)
-                      const Padding(
-                        padding: EdgeInsets.fromLTRB(10, 0, 0, 10),
-                        child: Text('Materii',
-                          style: TextStyle(fontSize: 15)
-                          ),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
+                        child: Row(
+                          children: [
+                            Text(S.current.labelClasses,
+                                style: const TextStyle(fontSize: 15)
+                            ),
+                            Expanded(
+                              child: GestureDetector(
+                              onTap: () => showMore = !showMore,
+                              child: Text(S.current.actionShowMore,
+                                textAlign: TextAlign.right,
+                                style: const TextStyle(fontSize: 15,color: Colors.blue),
+                              ),
+                            )
+                            )
+                          ],
+                        )
                         ),
                       ClassesCircleList(
                         classesHeader:classesSearched,
@@ -151,6 +167,7 @@ class ClassesCircleList extends StatelessWidget {
 
   final List<ClassHeader> classesHeader;
   final String query;
+
   @override
   Widget build(BuildContext context) {
     if (classesHeader.isEmpty) {
@@ -171,23 +188,38 @@ class ClassesCircleList extends StatelessWidget {
             padding: const EdgeInsets.fromLTRB(0, 0, 30, 0),
             child: GestureDetector(
               child: Row(children: <Widget>[
-                const Padding(
-                  padding: EdgeInsets.fromLTRB(0, 0, 10, 10),
+                 Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 0, 10, 10),
                   child: CircleAvatar(
-                    backgroundImage: NetworkImage(
-                        'https://identix.state.gov/qotw/images/no-photo.gif'),
-                  ),
+                    backgroundColor: Colors.grey,
+                    child: Container(
+                      width: 30,
+                      child: Align(
+                        alignment: Alignment.center,
+                        child: AutoSizeText(
+                          classesHeader[index].acronym,
+                          minFontSize: 0,
+                          maxLines: 1,
+                        ),
+                      ),
+                    ),
+                  )
                 ),
                 //TODO Solve pixel overflow
-                Text(classesHeader[index].name)
+                if(classesHeader[index].name.length < 35)
+                  Text(classesHeader[index].name)
+                else
+                  Text('${classesHeader[index].name.substring(0, 35)}...')
               ]),
-//              onTap: (classHeader) => Navigator.of(context)
-//                  .push(MaterialPageRoute<ChangeNotifierProvider>(
-//                builder: (context) => ChangeNotifierProvider.value(
-//                  value: classProvider,
-//                  child: ClassView(classHeader: classHeader),
-//                ),
-//              )),
+              onTap: () => {
+                Navigator.of(context).push(
+                    MaterialPageRoute<ClassView>(
+                      builder: (_) => ClassView(
+                        classHeader: classesHeader[index]
+                      ),
+                    )
+                )
+              }
             )
           );
         }

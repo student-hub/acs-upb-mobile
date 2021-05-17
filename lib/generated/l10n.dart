@@ -525,6 +525,16 @@ class S {
     );
   }
 
+  /// `Classes`
+  String get labelClasses {
+    return Intl.message(
+      'Classes',
+      name: 'labelClasses',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Shortcuts`
   String get sectionShortcuts {
     return Intl.message(
