@@ -1,6 +1,7 @@
 import 'package:acs_upb_mobile/pages/timetable/model/events/recurring_event.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/events/uni_event.dart';
 import 'package:acs_upb_mobile/pages/timetable/service/uni_event_provider.dart';
+import 'package:acs_upb_mobile/pages/timetable/view/events/event_view.dart';
 import 'package:acs_upb_mobile/resources/locale_provider.dart';
 import 'package:acs_upb_mobile/widgets/info_card.dart';
 import 'package:flutter/cupertino.dart';
@@ -8,10 +9,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 
-import 'event_instances_list.dart';
-
 class ClassEventsCard extends StatefulWidget {
-  const ClassEventsCard({Key key, this.currentClassId}) : super(key: key);
+  const ClassEventsCard(this.currentClassId, {Key key}) : super(key: key);
   final String currentClassId;
 
   @override
@@ -27,14 +26,13 @@ class _ClassEventsCardState extends State<ClassEventsCard> {
     return InfoCard<Iterable<UniEvent>>(
       title: S.of(context).sectionEvents,
       edgeInsets: EdgeInsets.zero,
-      future: eventProvider.getAllClassesEvents(widget.currentClassId),
+      future: eventProvider.getAllEventsOfClass(widget.currentClassId),
       builder: (events) => Column(
         children: events
             .map(
               (event) => ListTile(
                 key: ValueKey(event.id),
-                contentPadding:
-                    const EdgeInsets.symmetric(vertical: 8, horizontal: 0),
+                contentPadding: const EdgeInsets.symmetric(vertical: 8),
                 leading: Padding(
                   padding: const EdgeInsets.all(10),
                   child: Container(
@@ -58,10 +56,16 @@ class _ClassEventsCardState extends State<ClassEventsCard> {
                             .bodyText2
                             .copyWith(color: Theme.of(context).hintColor),
                       )
-                    : null,
-                onTap: () => Navigator.of(context)
-                    .push(MaterialPageRoute<EventInstancesList>(
-                  builder: (_) => EventInstancesList(eventInstance: event),
+                    : Text(
+                        event.start.toString(),
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyText2
+                            .copyWith(color: Theme.of(context).hintColor),
+                      ),
+                onTap: () =>
+                    Navigator.of(context).push(MaterialPageRoute<EventView>(
+                  builder: (_) => EventView(uniEvent: event),
                 )),
               ),
             )

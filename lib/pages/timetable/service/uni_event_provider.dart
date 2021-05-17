@@ -359,21 +359,10 @@ class UniEventProvider extends EventProvider<UniEventInstance>
         .first;
   }
 
-  Future<Iterable<UniEvent>> getAllClassesEvents(String classId) async {
+  Future<Iterable<UniEvent>> getAllEventsOfClass(String classId) async {
     return _events
         .map((events) =>
             events.where((event) => event.classHeader.id == classId))
-        .first;
-  }
-
-  Future<Iterable<UniEventInstance>> getAllInstancesOfEvent(
-      String eventId) async {
-    return _events
-        .map((events) => events
-            .where((event) => event.id == eventId)
-            .map((event) => event.generateInstances())
-            .expand((i) => i)
-            .sortedByStartLength())
         .first;
   }
 

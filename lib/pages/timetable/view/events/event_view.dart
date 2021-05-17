@@ -19,9 +19,12 @@ import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:provider/provider.dart';
 
 class EventView extends StatefulWidget {
-  const EventView({Key key, this.eventInstance}) : super(key: key);
-
+  const EventView({Key key, this.eventInstance, this.uniEvent})
+      : assert((eventInstance != null && uniEvent == null) ||
+            (eventInstance == null && uniEvent != null)),
+        super(key: key);
   final UniEventInstance eventInstance;
+  final UniEvent uniEvent;
 
   @override
   _EventViewState createState() => _EventViewState();
@@ -34,24 +37,24 @@ class _EventViewState extends State<EventView> {
           width: 20,
           height: 20,
           decoration: BoxDecoration(
-            borderRadius: const BorderRadius.all(Radius.circular(4)),
-            color: widget.eventInstance.color,
-          ),
+              borderRadius: const BorderRadius.all(Radius.circular(4)),
+              color: widget.uniEvent?.color ?? widget.eventInstance.color),
         ),
       );
 
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<AuthProvider>(context).currentUserFromCache;
+    final UniEvent mainEvent =
+        widget.eventInstance?.mainEvent ?? widget.uniEvent;
     return AppScaffold(
       title: Text(S.current.navigationEventDetails),
       actions: [
         AppScaffoldAction(
           icon: Icons.edit_outlined,
-          disabled: !widget.eventInstance.mainEvent.editable ||
-              !user.canAddPublicInfo,
+          disabled: !mainEvent.editable || !user.canAddPublicInfo,
           onPressed: () {
-            if (!widget.eventInstance.mainEvent.editable) {
+            if (!mainEvent.editable) {
               AppToast.show(S.current.warningEventNotEditable);
             } else if (!user.canAddPublicInfo) {
               AppToast.show(S.current.errorPermissionDenied);
@@ -59,11 +62,11 @@ class _EventViewState extends State<EventView> {
               Navigator.of(context).push(MaterialPageRoute<AddEventView>(
                 builder: (_) => ChangeNotifierProvider<FilterProvider>(
                   create: (_) => FilterProvider(
-                    defaultDegree: widget.eventInstance.mainEvent.degree,
-                    defaultRelevance: widget.eventInstance.mainEvent.relevance,
+                    defaultDegree: mainEvent.degree,
+                    defaultRelevance: mainEvent.relevance,
                   ),
                   child: AddEventView(
-                    initialEvent: widget.eventInstance.mainEvent,
+                    initialEvent: mainEvent,
                   ),
                 ),
               ));
@@ -85,20 +88,18 @@ class _EventViewState extends State<EventView> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text(
-                          widget.eventInstance.title ??
-                              widget.eventInstance.mainEvent.type
-                                  .toLocalizedString(),
+                          widget.eventInstance?.title ??
+                              mainEvent.type.toLocalizedString(),
                           style: Theme.of(context).textTheme.headline6),
                       const SizedBox(height: 4),
-                      Text(widget.eventInstance.dateString),
-                      if (widget.eventInstance.mainEvent is RecurringUniEvent &&
+                      if (widget.eventInstance != null)
+                        Text(widget.eventInstance.dateString),
+                      if (mainEvent is RecurringUniEvent &&
                           LocaleProvider.rruleL10n != null)
                         Padding(
                           padding: const EdgeInsets.only(top: 2),
                           child: Text(
-                            (widget.eventInstance.mainEvent
-                                    as RecurringUniEvent)
-                                .rrule
+                            mainEvent.rrule
                                 .toText(l10n: LocaleProvider.rruleL10n),
                             style: Theme.of(context)
                                 .textTheme
@@ -112,20 +113,19 @@ class _EventViewState extends State<EventView> {
               ],
             ),
           ),
-          if (widget.eventInstance.mainEvent?.classHeader != null)
+          if (mainEvent?.classHeader != null)
             ClassListItem(
-              classHeader: widget.eventInstance.mainEvent.classHeader,
+              classHeader: mainEvent.classHeader,
               hint: S.current.messageTapForMoreInfo,
               onTap: () => Navigator.of(context)
                   .push(MaterialPageRoute<ChangeNotifierProvider>(
                 builder: (context) => ChangeNotifierProvider.value(
                   value: Provider.of<ClassProvider>(context),
-                  child: ClassView(
-                      classHeader: widget.eventInstance.mainEvent.classHeader),
+                  child: ClassView(classHeader: mainEvent.classHeader),
                 ),
               )),
             ),
-          if (widget.eventInstance.location?.isNotEmpty ?? false)
+          if (widget.eventInstance?.location?.isNotEmpty ?? false)
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
               child: Row(
@@ -135,12 +135,12 @@ class _EventViewState extends State<EventView> {
                     child: Icon(FeatherIcons.mapPin),
                   ),
                   const SizedBox(width: 16),
-                  Text(widget.eventInstance.location,
+                  Text(widget.eventInstance?.location,
                       style: Theme.of(context).textTheme.subtitle1),
                 ],
               ),
             ),
-          if (widget.eventInstance.mainEvent != null)
+          if (mainEvent != null)
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
               child: Row(
@@ -151,27 +151,24 @@ class _EventViewState extends State<EventView> {
                   ),
                   const SizedBox(width: 16),
                   Text(
-                      widget.eventInstance.mainEvent.relevance == null
+                      mainEvent.relevance == null
                           ? S.current.relevanceAnyone
-                          : '${FilterNode.localizeName(widget.eventInstance.mainEvent.degree, context)}: ${widget.eventInstance.mainEvent.relevance.join(', ')}',
+                          : '${FilterNode.localizeName(mainEvent.degree, context)}: ${mainEvent.relevance.join(', ')}',
                       style: Theme.of(context).textTheme.subtitle1),
                 ],
               ),
             ),
-          if (widget.eventInstance.mainEvent is ClassEvent)
+          if (mainEvent is ClassEvent)
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
               child: GestureDetector(
                 onTap: () {
-                  if ((widget.eventInstance.mainEvent as ClassEvent).teacher !=
-                      null) {
+                  if (mainEvent.teacher != null) {
                     showModalBottomSheet<dynamic>(
                         isScrollControlled: true,
                         context: context,
-                        builder: (BuildContext buildContext) => PersonView(
-                            person:
-                                (widget.eventInstance.mainEvent as ClassEvent)
-                                    .teacher));
+                        builder: (BuildContext buildContext) =>
+                            PersonView(person: mainEvent.teacher));
                   }
                 },
                 child: Row(
@@ -181,11 +178,7 @@ class _EventViewState extends State<EventView> {
                       child: Icon(FeatherIcons.user),
                     ),
                     const SizedBox(width: 16),
-                    Text(
-                        (widget.eventInstance.mainEvent as ClassEvent)
-                                .teacher
-                                .name ??
-                            S.current.labelUnknown,
+                    Text(mainEvent.teacher.name ?? S.current.labelUnknown,
                         style: Theme.of(context).textTheme.subtitle1),
                   ],
                 ),
