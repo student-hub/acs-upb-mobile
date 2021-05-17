@@ -25,14 +25,13 @@ class _ClassEventsCardState extends State<ClassEventsCard> {
 
     return InfoCard<Iterable<UniEvent>>(
       title: S.of(context).sectionEvents,
-      edgeInsets: EdgeInsets.zero,
+      padding: EdgeInsets.zero,
       future: eventProvider.getAllEventsOfClass(widget.currentClassId),
       builder: (events) => Column(
         children: events
             .map(
               (event) => ListTile(
                 key: ValueKey(event.id),
-                contentPadding: const EdgeInsets.symmetric(vertical: 8),
                 leading: Padding(
                   padding: const EdgeInsets.all(10),
                   child: Container(
@@ -44,9 +43,7 @@ class _ClassEventsCardState extends State<ClassEventsCard> {
                     ),
                   ),
                 ),
-                title: Text(
-                  '${'${event.classHeader.acronym} - '}${event.type.toLocalizedString()}',
-                ),
+                title: Text(event.type.toLocalizedString()),
                 subtitle: (event is RecurringUniEvent &&
                         LocaleProvider.rruleL10n != null)
                     ? Text(

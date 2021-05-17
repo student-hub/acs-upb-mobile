@@ -20,8 +20,10 @@ import 'package:provider/provider.dart';
 
 class EventView extends StatefulWidget {
   const EventView({Key key, this.eventInstance, this.uniEvent})
-      : assert((eventInstance != null && uniEvent == null) ||
-            (eventInstance == null && uniEvent != null)),
+      : assert(
+            (eventInstance != null && uniEvent == null) ||
+                (eventInstance == null && uniEvent != null),
+            'Only one of the parameters must be provided'),
         super(key: key);
   final UniEventInstance eventInstance;
   final UniEvent uniEvent;
@@ -140,24 +142,23 @@ class _EventViewState extends State<EventView> {
                 ],
               ),
             ),
-          if (mainEvent != null)
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
-              child: Row(
-                children: <Widget>[
-                  const Padding(
-                    padding: EdgeInsets.all(10),
-                    child: Icon(FeatherIcons.users),
-                  ),
-                  const SizedBox(width: 16),
-                  Text(
-                      mainEvent.relevance == null
-                          ? S.current.relevanceAnyone
-                          : '${FilterNode.localizeName(mainEvent.degree, context)}: ${mainEvent.relevance.join(', ')}',
-                      style: Theme.of(context).textTheme.subtitle1),
-                ],
-              ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+            child: Row(
+              children: <Widget>[
+                const Padding(
+                  padding: EdgeInsets.all(10),
+                  child: Icon(FeatherIcons.users),
+                ),
+                const SizedBox(width: 16),
+                Text(
+                    mainEvent.relevance == null
+                        ? S.current.relevanceAnyone
+                        : '${FilterNode.localizeName(mainEvent.degree, context)}: ${mainEvent.relevance.join(', ')}',
+                    style: Theme.of(context).textTheme.subtitle1),
+              ],
             ),
+          ),
           if (mainEvent is ClassEvent)
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
