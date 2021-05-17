@@ -1,4 +1,3 @@
-import 'package:acs_upb_mobile/widgets/selectable.dart';
 import 'package:flutter/material.dart';
 
 class EmojiFormField extends FormField<Map<int, bool>> {
@@ -24,7 +23,7 @@ class EmojiFormField extends FormField<Map<int, bool>> {
               ),
               const Icon(
                 Icons.sentiment_dissatisfied,
-                color: Colors.redAccent,
+                color: Colors.orange,
                 size: 29,
               ),
               const Icon(
@@ -43,8 +42,8 @@ class EmojiFormField extends FormField<Map<int, bool>> {
                 size: 29,
               )
             ];
-            final List<SelectableController> emojiControllers =
-                emojis.map((_) => SelectableController()).toList();
+            final List<SelectableIconController> emojiControllers =
+                emojis.map((_) => SelectableIconController()).toList();
 
             final emojiSelectables = emojiControllers
                 .asMap()
@@ -112,43 +111,61 @@ class EmojiFormField extends FormField<Map<int, bool>> {
         );
 }
 
-class SelectableIcon extends Selectable {
-  const SelectableIcon({
-    bool initiallySelected,
-    void Function(bool) onSelected,
-    this.icon,
-    SelectableController controller,
-  }) : super(
-            initiallySelected: initiallySelected ?? false,
-            onSelected: onSelected,
-            controller: controller);
+class SelectableIconController {
+  _SelectableIconState _state;
 
-  final Icon icon;
+  bool get isSelected => _state?.isSelected;
 
-  @override
-  _SelectableIconState createState() => _SelectableIconState(icon);
+  void select() {
+    if (_state == null) return;
+    if (!isSelected) {
+      _state.isSelected = true;
+      _state.animationController.forward();
+    }
+  }
+
+  void deselect() {
+    if (_state == null) return;
+    if (isSelected) {
+      _state.isSelected = false;
+      _state.animationController.reverse();
+    }
+  }
 }
 
-class _SelectableIconState extends SelectableState
+class SelectableIcon extends StatefulWidget {
+  SelectableIcon({
+    this.onSelected,
+    this.icon,
+    SelectableIconController controller,
+  }) : controller = controller ?? SelectableIconController();
+
+  final void Function(bool) onSelected;
+  final Icon icon;
+  final SelectableIconController controller;
+
+  @override
+  State<SelectableIcon> createState() => _SelectableIconState(icon);
+}
+
+class _SelectableIconState extends State<SelectableIcon>
     with SingleTickerProviderStateMixin {
   _SelectableIconState(this.icon);
 
   Icon icon;
   AnimationController animationController;
-  CurvedAnimation animation;
+  Animation<double> animation;
+  bool isSelected;
 
   @override
   void initState() {
     super.initState();
-    isSelected = widget.initiallySelected;
+    isSelected = false;
     animationController = AnimationController(
       vsync: this,
-      duration: const Duration(seconds: 3),
+      duration: const Duration(milliseconds: 300),
     );
-    animation = CurvedAnimation(
-      parent: animationController,
-      curve: Curves.elasticOut,
-    );
+    animation = Tween<double>(begin: 1, end: 1.5).animate(animationController);
   }
 
   @override
@@ -159,17 +176,18 @@ class _SelectableIconState extends SelectableState
 
   @override
   Widget build(BuildContext context) {
-    widget.controller.selectableState = this;
-
-    if (!isSelected) animationController.value = 0;
+    widget.controller._state = this;
 
     return GestureDetector(
       onTap: () {
         setState(
           () {
-            isSelected = !isSelected;
+            if (isSelected) {
+              widget.controller.deselect();
+            } else {
+              widget.controller.select();
+            }
             widget.onSelected(isSelected);
-            animationController.forward();
           },
         );
       },
@@ -184,7 +202,7 @@ class _SelectableIconState extends SelectableState
           child: icon,
           builder: (BuildContext context, Widget child) {
             return Transform.scale(
-              scale: isSelected ? animation.value * 0.6 + 1 : 1,
+              scale: animation.value,
               child: child,
             );
           },
