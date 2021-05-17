@@ -1,3 +1,4 @@
+import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/model/class_feedback_answer.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/service/feedback_provider.dart';
@@ -14,7 +15,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:provider/provider.dart';
-import 'package:acs_upb_mobile/generated/l10n.dart';
 
 class ClassFeedbackView extends StatefulWidget {
   const ClassFeedbackView({Key key, this.classHeader}) : super(key: key);
@@ -201,12 +201,14 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
       actions: [_submitButton()],
       body: ListView(
         children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.only(left: 25, top: 10),
-            child: IconText(
-              icon: Icons.info_outline,
-              text: S.current.infoFormAnonymous,
-              style: Theme.of(context).textTheme.bodyText1,
+          Center(
+            child: Padding(
+              padding: const EdgeInsets.only(left: 25, top: 10),
+              child: IconText(
+                icon: Icons.info_outline,
+                text: S.current.infoFormAnonymous,
+                style: Theme.of(context).textTheme.bodyText1,
+              ),
             ),
           ),
           Padding(
