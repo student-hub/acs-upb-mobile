@@ -15,7 +15,7 @@ class InfoCard<T> extends StatelessWidget {
   final Widget Function(T) builder;
   final String title;
   final ValueKey<String> showMoreButtonKey;
-  final EdgeInsetsGeometry  padding;
+  final EdgeInsetsGeometry padding;
 
   @override
   Widget build(BuildContext context) {
