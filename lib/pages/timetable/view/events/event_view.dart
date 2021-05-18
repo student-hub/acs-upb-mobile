@@ -101,8 +101,7 @@ class _EventViewState extends State<EventView> {
                         Padding(
                           padding: const EdgeInsets.only(top: 2),
                           child: Text(
-                            mainEvent.rrule
-                                .toText(l10n: LocaleProvider.rruleL10n),
+                            mainEvent.info,
                             style: Theme.of(context)
                                 .textTheme
                                 .bodyText2

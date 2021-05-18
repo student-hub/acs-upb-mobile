@@ -1,6 +1,7 @@
 import 'package:acs_upb_mobile/pages/classes/model/class.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/academic_calendar.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/events/uni_event.dart';
+import 'package:acs_upb_mobile/resources/locale_provider.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:rrule/rrule.dart';
@@ -39,6 +40,14 @@ class RecurringUniEvent extends UniEvent {
             editable: editable);
 
   final RecurrenceRule rrule;
+
+  @override
+  String get info {
+    if (LocaleProvider.rruleL10n != null) {
+      return rrule.toText(l10n: LocaleProvider.rruleL10n);
+    }
+    return '';
+  }
 
   RecurrenceRule get rruleBasedOnCalendar {
     final RecurrenceRule rrule = this.rrule;
