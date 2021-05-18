@@ -1,5 +1,6 @@
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
+import 'package:acs_upb_mobile/pages/class_feedback/service/feedback_provider.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/view/class_feedback_view.dart';
 import 'package:acs_upb_mobile/pages/classes/model/class.dart';
 import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
@@ -33,6 +34,7 @@ class ClassView extends StatefulWidget {
 class _ClassViewState extends State<ClassView> {
   Class classInfo;
   String lecturerName = '';
+  bool alreadyCompletedFeedback;
 
   @override
   void initState() {
@@ -46,6 +48,10 @@ class _ClassViewState extends State<ClassView> {
   @override
   Widget build(BuildContext context) {
     final classProvider = Provider.of<ClassProvider>(context);
+    Provider.of<FeedbackProvider>(context, listen: false)
+        .checkProvidedClassFeedback(widget.classHeader.id,
+            Provider.of<AuthProvider>(context, listen: false).uid)
+        .then((value) => alreadyCompletedFeedback = value);
 
     return AppScaffold(
       title: Text(S.current.navigationClassInfo),
@@ -54,12 +60,18 @@ class _ClassViewState extends State<ClassView> {
           AppScaffoldAction(
               icon: Icons.rate_review_outlined,
               onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute<ClassFeedbackView>(
-                    builder: (_) =>
-                        ClassFeedbackView(classHeader: widget.classHeader),
-                  ),
-                );
+                if (!alreadyCompletedFeedback) {
+                  Navigator.of(context)
+                      .push(
+                        MaterialPageRoute<ClassFeedbackView>(
+                          builder: (_) => ClassFeedbackView(
+                              classHeader: widget.classHeader),
+                        ),
+                      )
+                      .then((value) => setState(() {}));
+                } else {
+                  AppToast.show(S.current.warningFeedbackAlreadySent);
+                }
               }),
       ],
       body: FutureBuilder(

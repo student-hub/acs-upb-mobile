@@ -140,6 +140,7 @@
   "warningUseProvider": "Please log in with {provider} to continue.",
   "warningTryAgainLater": "Please try again later.",
   "warningFilterAlreadyDisabled": "Already showing all content.",
+  "warningFeedbackAlreadySent": "You have already submitted feedback for this class!",
   "warningFilterAlreadyShowingYours": "Already showing only custom websites.",
   "warningInvalidURL": "You need to provide a valid URL.",
   "warningWebsiteNameExists": "A website with the same name already exists.",

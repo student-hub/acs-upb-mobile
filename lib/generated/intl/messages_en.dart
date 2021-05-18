@@ -290,6 +290,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "warningEmailInUse" : m10,
     "warningEventNotEditable" : MessageLookupByLibrary.simpleMessage("This event cannot be edited."),
     "warningFavouriteWebsitesInitializationFailed" : MessageLookupByLibrary.simpleMessage("Could not read favourite websites."),
+    "warningFeedbackAlreadySent" : MessageLookupByLibrary.simpleMessage("You have already submitted feedback for this class!"),
     "warningFieldCannotBeEmpty" : MessageLookupByLibrary.simpleMessage("Field cannot be empty."),
     "warningFieldCannotBeZero" : MessageLookupByLibrary.simpleMessage("Field cannot be zero."),
     "warningFilterAlreadyDisabled" : MessageLookupByLibrary.simpleMessage("Already showing all content."),

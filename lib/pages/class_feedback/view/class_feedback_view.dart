@@ -1,3 +1,4 @@
+import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/model/class_feedback_answer.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question.dart';
@@ -238,9 +239,12 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
             formKey.currentState.save();
           });
 
-          bool res;
+          bool res1, res2;
+          final authProvider =
+              Provider.of<AuthProvider>(context, listen: false);
+          final String uid = authProvider.uid;
           for (var i = 0; i < feedbackQuestions.length; i++) {
-            res = false;
+            res1 = false;
 
             final response = FeedbackQuestionAnswer(
               assistant: selectedAssistant,
@@ -250,11 +254,15 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
               questionAnswer: feedbackQuestions[i.toString()].answer,
             );
 
-            res = await Provider.of<FeedbackProvider>(context, listen: false)
+            res1 = await Provider.of<FeedbackProvider>(context, listen: false)
                 .addResponse(response);
-            if (!res) break;
+            if (!res1) break;
           }
-          if (res) {
+
+          res2 = await Provider.of<FeedbackProvider>(context, listen: false)
+              .setUserClassFeedback(classController.text, uid);
+
+          if (res1 && res2) {
             Navigator.of(context).pop();
             AppToast.show(S.current.messageFeedbackHasBeenSent);
           }

@@ -1375,6 +1375,16 @@ class S {
     );
   }
 
+  /// `You have already submitted feedback for this class!`
+  String get warningFeedbackAlreadySent {
+    return Intl.message(
+      'You have already submitted feedback for this class!',
+      name: 'warningFeedbackAlreadySent',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Already showing only custom websites.`
   String get warningFilterAlreadyShowingYours {
     return Intl.message(

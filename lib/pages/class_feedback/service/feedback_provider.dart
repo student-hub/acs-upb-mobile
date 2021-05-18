@@ -115,21 +115,33 @@ class FeedbackProvider with ChangeNotifier {
     }
   }
 
-  List<String> getQuestionsByCategoryAndType(
-      List<dynamic> questions, String category, String type) {
-    final List<String> filteredQuestions = [];
-    final List<dynamic> filterQuestions = questions
-        .where((element) =>
-            element is Map<dynamic, dynamic> &&
-            element['category'] == category &&
-            element['type'] == type)
-        .toList();
-    for (final Map<String, dynamic> element in filterQuestions) {
-      final List<dynamic> qs = element.values.toList();
-      filteredQuestions.add(
-          qs[qs.indexWhere((element) => element is Map<dynamic, dynamic>)]
-              [LocaleProvider.localeString]);
+  Future<bool> setUserClassFeedback(String className, String uid) async {
+    try {
+      final DocumentReference ref =
+          FirebaseFirestore.instance.collection('users').doc(uid);
+      await ref.set({
+        'classesFeedback': {className: true}
+      }, SetOptions(merge: true));
+      notifyListeners();
+      return true;
+    } catch (e) {
+      AppToast.show(S.current.errorSomethingWentWrong);
+      return false;
     }
-    return filteredQuestions;
+  }
+
+  Future<bool> checkProvidedClassFeedback(String className, String uid) async {
+    try {
+      final DocumentSnapshot snap =
+          await FirebaseFirestore.instance.collection('users').doc(uid).get();
+      if (snap.data()['classesFeedback'] != null &&
+          snap.data()['classesFeedback'][className] == true) {
+        return true;
+      }
+      return false;
+    } catch (e) {
+      AppToast.show(S.current.errorSomethingWentWrong);
+      return false;
+    }
   }
 }
