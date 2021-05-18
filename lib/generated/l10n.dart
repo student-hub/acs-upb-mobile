@@ -2525,6 +2525,26 @@ class S {
     );
   }
 
+  /// `Do you have another question?`
+  String get messageAnotherQuestion {
+    return Intl.message(
+      'Do you have another question?',
+      name: 'messageAnotherQuestion',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Talk to Polly!`
+  String get messageTalkToChatbot {
+    return Intl.message(
+      'Talk to Polly!',
+      name: 'messageTalkToChatbot',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Please check your inbox for the password reset e-mail.`
   String get infoPasswordResetEmailSent {
     return Intl.message(

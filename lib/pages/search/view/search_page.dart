@@ -1,6 +1,7 @@
 import 'package:acs_upb_mobile/pages/classes/model/class.dart';
 import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
 import 'package:acs_upb_mobile/pages/classes/view/class_view.dart';
+import 'package:acs_upb_mobile/pages/classes/view/classes_page.dart';
 import 'package:acs_upb_mobile/pages/people/model/person.dart';
 import 'package:acs_upb_mobile/pages/people/service/person_provider.dart';
 import 'package:acs_upb_mobile/pages/people/view/person_view.dart';
@@ -47,10 +48,10 @@ class _SearchPageState extends State<SearchPage> {
                 builder: (_, snapshot) {
                   if (snapshot.connectionState == ConnectionState.done) {
                     peopleSearched = snapshot.data;
-                    return Column(
+                    if (peopleSearched.isNotEmpty) {
+                      return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        if (peopleSearched.isNotEmpty)
                           Padding(
                             padding: const EdgeInsets.fromLTRB(10, 10, 0, 10),
                             child: Text(
@@ -64,6 +65,8 @@ class _SearchPageState extends State<SearchPage> {
                         )
                       ],
                     );
+                    }
+                    return Container();
                   } else {
                     return Container();
                   }
@@ -92,7 +95,13 @@ class _SearchPageState extends State<SearchPage> {
                             ),
                             Expanded(
                               child: GestureDetector(
-                              onTap: () => showMore = !showMore,
+                              onTap: () => Navigator.of(context).push(
+                                MaterialPageRoute<ChangeNotifierProvider>(
+                                  builder: (_) => ChangeNotifierProvider.value(
+                                      value: Provider.of<ClassProvider>(context),
+                                      child: const ClassesPage()),
+                                )
+                              ),
                               child: Text(S.current.actionShowMore,
                                 textAlign: TextAlign.right,
                                 style: const TextStyle(fontSize: 15,color: Colors.blue),
@@ -113,6 +122,37 @@ class _SearchPageState extends State<SearchPage> {
               }
             }
             ),
+          if(query.isNotEmpty)
+          Container(
+            child:  Column(
+              children: [
+                const Image(
+                  image: AssetImage(
+                      'assets/illustrations/undraw_chat_image.png'
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(right: 10),
+                        child: Text(S.current.messageAnotherQuestion)
+                      ),
+                      Text(S.current.messageTalkToChatbot,
+                      style: TextStyle(
+                        color: Theme.of(context).accentColor,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 15
+                      ),
+                      )
+                    ],
+                  ),
+                )
+              ],
+            )
+          )
         ],
       ),
     );
@@ -128,7 +168,9 @@ class PeopleCircleList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 130,
+      constraints: BoxConstraints.expand(
+        height: Theme.of(context).textTheme.headline4.fontSize * 1.1 + 100.0,
+      ),
       padding: const EdgeInsets.all(10),
       child: ListView.builder(
         shrinkWrap: true,
@@ -170,14 +212,11 @@ class ClassesCircleList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (classesHeader.isEmpty) {
+    if(classesHeader.isNotEmpty) {
       return Container(
-        height: 50,
-        child: const Text('Nothing found'), //for debugging
-      );
-    }
-    return Container(
-      height: 1000,
+      constraints: BoxConstraints.expand(
+        height: Theme.of(context).textTheme.headline4.fontSize * 1.1 + 120.0,
+      ),
       padding: const EdgeInsets.all(10),
       child: ListView.builder(
         shrinkWrap: true,
@@ -206,10 +245,9 @@ class ClassesCircleList extends StatelessWidget {
                   )
                 ),
                 //TODO Solve pixel overflow
-                if(classesHeader[index].name.length < 35)
-                  Text(classesHeader[index].name)
-                else
-                  Text('${classesHeader[index].name.substring(0, 35)}...')
+                Expanded(
+                  child: Text(classesHeader[index].name),
+                )
               ]),
               onTap: () => {
                 Navigator.of(context).push(
@@ -225,5 +263,8 @@ class ClassesCircleList extends StatelessWidget {
         }
       ),
     );
+    } else{
+      return Container();
+    }
   }
 }
