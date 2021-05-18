@@ -232,6 +232,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "navigationPortal" : MessageLookupByLibrary.simpleMessage("Portal"),
     "navigationProfile" : MessageLookupByLibrary.simpleMessage("Profil"),
     "navigationSearch" : MessageLookupByLibrary.simpleMessage("Căutare"),
+    "navigationSearchResults" : MessageLookupByLibrary.simpleMessage("Materii găsite"),
     "navigationSettings" : MessageLookupByLibrary.simpleMessage("Setări"),
     "navigationTimetable" : MessageLookupByLibrary.simpleMessage("Orar"),
     "relevanceAnyone" : MessageLookupByLibrary.simpleMessage("Oricine"),
