@@ -183,7 +183,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "messageAccountCreated" : MessageLookupByLibrary.simpleMessage("Account created successfully."),
     "messageAccountDeleted" : MessageLookupByLibrary.simpleMessage("Account deleted successfully."),
     "messageAddCustomWebsite" : MessageLookupByLibrary.simpleMessage("Try adding a custom website."),
-    "messageAgreeFeedbackPolicy" : MessageLookupByLibrary.simpleMessage("I understand this survey is extremely important for the continuous development of the educational process and I will not address insults or use any obscene words."),
+    "messageAgreeFeedbackPolicy" : MessageLookupByLibrary.simpleMessage("I understand this survey is extremely important for the continuous development of the educational process and I will only provide valuable and constructive feedback for this class."),
     "messageAgreePermissions" : MessageLookupByLibrary.simpleMessage("I will only upload information that is correct and accurate, to the best of my knowledge. I understand that submitting erroneous or offensive information on purpose will lead to my editing permissions being permanently revoked."),
     "messageAnnouncedOnMail" : MessageLookupByLibrary.simpleMessage("You will receive a mail confirmation if your request is approved."),
     "messageAskPermissionToEdit" : m6,

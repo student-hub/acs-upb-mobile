@@ -2555,10 +2555,10 @@ class S {
     );
   }
 
-  /// `I understand this survey is extremely important for the continuous development of the educational process and I will not address insults or use any obscene words.`
+  /// `I understand this survey is extremely important for the continuous development of the educational process and I will only provide valuable and constructive feedback for this class.`
   String get messageAgreeFeedbackPolicy {
     return Intl.message(
-      'I understand this survey is extremely important for the continuous development of the educational process and I will not address insults or use any obscene words.',
+      'I understand this survey is extremely important for the continuous development of the educational process and I will only provide valuable and constructive feedback for this class.',
       name: 'messageAgreeFeedbackPolicy',
       desc: '',
       args: [],

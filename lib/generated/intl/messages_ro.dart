@@ -183,7 +183,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "messageAccountCreated" : MessageLookupByLibrary.simpleMessage("Contul a fost creat cu succes."),
     "messageAccountDeleted" : MessageLookupByLibrary.simpleMessage("Contul a fost șters cu succes."),
     "messageAddCustomWebsite" : MessageLookupByLibrary.simpleMessage("Încercați să adăugați un website."),
-    "messageAgreeFeedbackPolicy" : MessageLookupByLibrary.simpleMessage("Înțeleg că acest sondaj este extrem de important pentru dezvoltarea continuă a procesului educațional și nu voi adresa insulte sau folosi cuvinte obscene."),
+    "messageAgreeFeedbackPolicy" : MessageLookupByLibrary.simpleMessage("Înțeleg că acest sondaj este extrem de important pentru dezvoltarea continuă a procesului educațional și voi oferi doar feedback valoros și constructiv pentru această materie."),
     "messageAgreePermissions" : MessageLookupByLibrary.simpleMessage("Voi încărca doar informații corecte si precise. Înțeleg că încărcarea informațiilor eronate sau ofensatoare în mod intenționat va conduce la blocarea permisiunilor mele permanent."),
     "messageAnnouncedOnMail" : MessageLookupByLibrary.simpleMessage("Veți primi o confirmare pe mail dacă vi se acceptă cererea."),
     "messageAskPermissionToEdit" : m6,

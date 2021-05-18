@@ -266,7 +266,7 @@
   "messageChangePasswordSuccess": "Parola a fost schimbată cu succes.",
   "messageChangeEmailSuccess": "Email-ul a fost schimbat cu succes",
   "messageAgreePermissions": "Voi încărca doar informații corecte si precise. Înțeleg că încărcarea informațiilor eronate sau ofensatoare în mod intenționat va conduce la blocarea permisiunilor mele permanent.",
-  "messageAgreeFeedbackPolicy": "Înțeleg că acest sondaj este extrem de important pentru dezvoltarea continuă a procesului educațional și nu voi adresa insulte sau folosi cuvinte obscene.",
+  "messageAgreeFeedbackPolicy": "Înțeleg că acest sondaj este extrem de important pentru dezvoltarea continuă a procesului educațional și voi oferi doar feedback valoros și constructiv pentru această materie.",
   "messageYouCanContribute": "Poți contribui la datele din aplicație, dar trebuie mai întâi să ceri permisiuni.",
   "messageThereAreNoEventsForSelected": "Nu există evenimente pentru selecția de ",
   "messagePictureUpdatedSuccess": "Poza a fost actualizată cu succes.",
