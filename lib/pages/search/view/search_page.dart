@@ -50,8 +50,8 @@ class _SearchPageState extends State<SearchPage> {
                     peopleSearched = snapshot.data;
                     if (peopleSearched.isNotEmpty) {
                       return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
                           Padding(
                             padding: const EdgeInsets.fromLTRB(10, 10, 0, 10),
                             child: Text(
@@ -59,81 +59,75 @@ class _SearchPageState extends State<SearchPage> {
                               style: const TextStyle(fontSize: 15),
                             ),
                           ),
-                        PeopleCircleList(
-                          people: peopleSearched,
-                          query: query,
-                        )
-                      ],
-                    );
+                          PeopleCircleList(
+                            people: peopleSearched,
+                            query: query,
+                          )
+                        ],
+                      );
                     }
                     return Container();
                   } else {
                     return Container();
                   }
-                }
-                ),
+                }),
           const Divider(
             color: Colors.white,
           ),
           if (query.isNotEmpty)
             FutureBuilder(
-            future:  Provider.of<ClassProvider>(context, listen: false)
-              .search(query),
-            builder: (_, snapshot) {
-              if (snapshot.connectionState == ConnectionState.done) {
-                classesSearched = snapshot.data;
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    if(classesSearched.isNotEmpty)
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
-                        child: Row(
-                          children: [
-                            Text(S.current.labelClasses,
-                                style: const TextStyle(fontSize: 15)
-                            ),
-                            Expanded(
-                              child: GestureDetector(
-                              onTap: () {
-                                Navigator.of(context).push(
-                                    MaterialPageRoute<SearchedClassesView>(
-                                      builder: (_) => SearchedClassesView(
-                                        classesHeader: classesSearched,
-                                        query: query,
-                                      )
-                                    )
-                                );
-                              },
-                              child: Text(S.current.actionShowMore,
-                                textAlign: TextAlign.right,
-                                style: const TextStyle(fontSize: 15,color: Colors.blue),
-                              ),
-                            )
-                            )
-                          ],
-                        )
-                        ),
-                      ClassesCircleList(
-                        classesHeader:classesSearched,
-                        query: query)
-
-                  ],
-                );
-              }
-              else {
-                return Container();
-              }
-            }
-            ),
-          if(query.isNotEmpty)
-          Container(
-            child:  Column(
+                future: Provider.of<ClassProvider>(context, listen: false)
+                    .search(query),
+                builder: (_, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.done) {
+                    classesSearched = snapshot.data;
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        if (classesSearched.isNotEmpty)
+                          Padding(
+                              padding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
+                              child: Row(
+                                children: [
+                                  Text(S.current.labelClasses,
+                                      style: const TextStyle(fontSize: 15)),
+                                  Expanded(
+                                      child: GestureDetector(
+                                    onTap: () {
+                                      Navigator.of(context).push(
+                                          MaterialPageRoute<
+                                                  SearchedClassesView>(
+                                              builder: (_) =>
+                                                  SearchedClassesView(
+                                                    classesHeader:
+                                                        classesSearched,
+                                                    query: query,
+                                                  )));
+                                    },
+                                    child: Text(
+                                      S.current.actionShowMore,
+                                      textAlign: TextAlign.right,
+                                      style: const TextStyle(
+                                          fontSize: 15, color: Colors.blue),
+                                    ),
+                                  ))
+                                ],
+                              )),
+                        ClassesCircleList(
+                            classesHeader: classesSearched, query: query)
+                      ],
+                    );
+                  } else {
+                    return Container();
+                  }
+                }),
+          if (query.isNotEmpty)
+            Container(
+                child: Column(
               children: [
                 const Image(
-                  image: AssetImage(
-                      'assets/illustrations/undraw_chat_image.png'
-                  ),
+                  image:
+                      AssetImage('assets/illustrations/undraw_chat_image.png'),
                 ),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
@@ -141,22 +135,20 @@ class _SearchPageState extends State<SearchPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Padding(
-                        padding: const EdgeInsets.only(right: 10),
-                        child: Text(S.current.messageAnotherQuestion)
-                      ),
-                      Text(S.current.messageTalkToChatbot,
-                      style: TextStyle(
-                        color: Theme.of(context).accentColor,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 15
-                      ),
+                          padding: const EdgeInsets.only(right: 10),
+                          child: Text(S.current.messageAnotherQuestion)),
+                      Text(
+                        S.current.messageTalkToChatbot,
+                        style: TextStyle(
+                            color: Theme.of(context).accentColor,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 15),
                       )
                     ],
                   ),
                 )
               ],
-            )
-          )
+            ))
         ],
       ),
     );
@@ -189,8 +181,7 @@ class PeopleCircleList extends StatelessWidget {
                   showModalBottomSheet<dynamic>(
                       isScrollControlled: true,
                       context: context,
-                      builder: (BuildContext buildContext) =>
-                          PersonView(
+                      builder: (BuildContext buildContext) => PersonView(
                             person: people[index],
                           ));
                 },
@@ -216,51 +207,46 @@ class ClassesCircleList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if(classesHeader.isNotEmpty) {
+    if (classesHeader.isNotEmpty) {
       final int nr = classesHeader.length > 3 ? 3 : classesHeader.length;
       return Container(
-      padding: const EdgeInsets.all(10),
-      child: Column(
-        children: [
-          for(int i = 0; i < nr; i++)
-        Container(
-            padding: const EdgeInsets.fromLTRB(0, 0, 30, 0),
-            child: GestureDetector(
-              child: Row(children: <Widget>[
-                 Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 0, 10, 10),
-                  child: CircleAvatar(
-                    backgroundColor: Colors.grey,
-                    child: Container(
-                      width: 30,
-                      child: Align(
-                        alignment: Alignment.center,
-                        child: AutoSizeText(
-                          classesHeader[i].acronym,
-                          minFontSize: 0,
-                          maxLines: 1,
-                        ),
-                      ),
-                    ),
-                  )
-                ),
-                Expanded(
-                  child: Text(classesHeader[i].name),
-                )
-              ]),
-              onTap: () => {
-                Navigator.of(context).push(
-                    MaterialPageRoute<ClassView>(
-                      builder: (_) => ClassView(
-                        classHeader: classesHeader[i]
-                      ),
-                    )
-                )
-              }
-            )
+          padding: const EdgeInsets.all(10),
+          child: Column(
+            children: [
+              for (int i = 0; i < nr; i++)
+                Container(
+                    padding: const EdgeInsets.fromLTRB(0, 0, 30, 0),
+                    child: GestureDetector(
+                        child: Row(children: <Widget>[
+                          Padding(
+                              padding: const EdgeInsets.fromLTRB(0, 0, 10, 10),
+                              child: CircleAvatar(
+                                backgroundColor: Colors.grey,
+                                child: Container(
+                                  width: 30,
+                                  child: Align(
+                                    alignment: Alignment.center,
+                                    child: AutoSizeText(
+                                      classesHeader[i].acronym,
+                                      minFontSize: 0,
+                                      maxLines: 1,
+                                    ),
+                                  ),
+                                ),
+                              )),
+                          Expanded(
+                            child: Text(classesHeader[i].name),
+                          )
+                        ]),
+                        onTap: () => {
+                              Navigator.of(context)
+                                  .push(MaterialPageRoute<ClassView>(
+                                builder: (_) =>
+                                    ClassView(classHeader: classesHeader[i]),
+                              ))
+                            }))
+            ],
           )
-        ],
-      )
 //      child: ListView.builder(
 //        shrinkWrap: true,
 //        itemCount: classesHeader.length > 5 ? 5 : classesHeader.length,
@@ -305,8 +291,8 @@ class ClassesCircleList extends StatelessWidget {
 //          );
 //        }
 //      ),
-    );
-    } else{
+          );
+    } else {
       return Container();
     }
   }

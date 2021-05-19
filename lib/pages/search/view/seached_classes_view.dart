@@ -14,56 +14,48 @@ class SearchedClassesView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-      return AppScaffold(
-        title: Text(S.current.navigationSearchResults),
-        body: Container(
-          padding: const EdgeInsets.all(10),
-          child: ListView.builder(
-              shrinkWrap: true,
-              itemCount: classesHeader.length,
-              scrollDirection: Axis.vertical,
-              itemBuilder: (BuildContext context, int index) {
-                return Container(
-                    padding: const EdgeInsets.fromLTRB(0, 0, 30, 0),
-                    child: GestureDetector(
-                        child: Row(children: <Widget>[
-                          Padding(
-                              padding: const EdgeInsets.fromLTRB(0, 0, 10, 10),
-                              child: CircleAvatar(
-                                backgroundColor: Colors.grey,
-                                child: Container(
-                                  width: 30,
-                                  child: Align(
-                                    alignment: Alignment.center,
-                                    child: AutoSizeText(
-                                      classesHeader[index].acronym,
-                                      minFontSize: 0,
-                                      maxLines: 1,
-                                    ),
+    return AppScaffold(
+      title: Text(S.current.navigationSearchResults),
+      body: Container(
+        padding: const EdgeInsets.all(10),
+        child: ListView.builder(
+            shrinkWrap: true,
+            itemCount: classesHeader.length,
+            scrollDirection: Axis.vertical,
+            itemBuilder: (BuildContext context, int index) {
+              return Container(
+                  padding: const EdgeInsets.fromLTRB(0, 0, 30, 0),
+                  child: GestureDetector(
+                      child: Row(children: <Widget>[
+                        Padding(
+                            padding: const EdgeInsets.fromLTRB(0, 0, 10, 10),
+                            child: CircleAvatar(
+                              backgroundColor: Colors.grey,
+                              child: Container(
+                                width: 30,
+                                child: Align(
+                                  alignment: Alignment.center,
+                                  child: AutoSizeText(
+                                    classesHeader[index].acronym,
+                                    minFontSize: 0,
+                                    maxLines: 1,
                                   ),
                                 ),
-                              )
-                          ),
-                          Expanded(
-                            child: Text(classesHeader[index].name),
-                          )
-                        ]),
-                        onTap: () =>
-                        {
-                          Navigator.of(context).push(
-                              MaterialPageRoute<ClassView>(
-                                builder: (_) =>
-                                    ClassView(
-                                        classHeader: classesHeader[index]
-                                    ),
-                              )
-                          )
-                        }
-                    )
-                );
-              }
-          ),
-        ),
-      );
-    }
+                              ),
+                            )),
+                        Expanded(
+                          child: Text(classesHeader[index].name),
+                        )
+                      ]),
+                      onTap: () => {
+                            Navigator.of(context)
+                                .push(MaterialPageRoute<ClassView>(
+                              builder: (_) =>
+                                  ClassView(classHeader: classesHeader[index]),
+                            ))
+                          }));
+            }),
+      ),
+    );
   }
+}

@@ -29,11 +29,9 @@ class HomePage extends StatelessWidget {
           icon: Icons.search,
           tooltip: S.current.navigationSearch,
           onPressed: () => {
-            Navigator.of(context).push(
-                MaterialPageRoute<ClassesPage>(
-                  builder: (_) => SearchPage(),
-                )
-            )
+            Navigator.of(context).push(MaterialPageRoute<ClassesPage>(
+              builder: (_) => SearchPage(),
+            ))
           },
         ),
         AppScaffoldAction(

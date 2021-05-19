@@ -24,7 +24,7 @@ class PersonProvider with ChangeNotifier {
   Future<List<Person>> fetchPeople() async {
     try {
       final QuerySnapshot qSnapshot =
-      await FirebaseFirestore.instance.collection('people').get();
+          await FirebaseFirestore.instance.collection('people').get();
       return qSnapshot.docs.map(PersonExtension.fromSnap).toList();
     } catch (e) {
       print(e);
@@ -101,15 +101,13 @@ class PersonProvider with ChangeNotifier {
 //        }
 //    }
     //return people.where((element) => element.name.toLowerCase().contains(query.toLowerCase())).toList() ?? <Person>[];
-    return people.where(
-            (person) =>
-            searchedWords
-                .fold(
+    return people
+            .where((person) => searchedWords.fold(
                 true,
-                    (previousValue, filter) =>
-                previousValue &&
+                (previousValue, filter) =>
+                    previousValue &&
                     person.name.toLowerCase().contains(filter.toLowerCase())))
-        .toList() ?? <Person>[];
+            .toList() ??
+        <Person>[];
   }
-
 }

@@ -56,12 +56,10 @@ extension ClassHeaderExtension on ClassHeader {
 }
 
 extension TimestampExtension on Timestamp {
-  LocalDateTime toLocalDateTime() =>
-      LocalDateTime
-          .dateTime(toDate())
-          .inZoneStrictly(DateTimeZone.utc)
-          .withZone(DateTimeZone.local)
-          .localDateTime;
+  LocalDateTime toLocalDateTime() => LocalDateTime.dateTime(toDate())
+      .inZoneStrictly(DateTimeZone.utc)
+      .withZone(DateTimeZone.local)
+      .localDateTime;
 }
 
 extension ClassExtension on Class {
@@ -85,8 +83,7 @@ extension ClassExtension on Class {
     Map<String, double> grading;
     if (data['grading'] != null) {
       grading = Map<String, double>.from(data['grading'].map(
-              (String name, dynamic value) =>
-              MapEntry(name, value.toDouble())));
+          (String name, dynamic value) => MapEntry(name, value.toDouble())));
     }
 
     final gradingLastUpdated = data['gradingLastUpdated'] == null
@@ -111,7 +108,7 @@ class ClassProvider with ChangeNotifier {
     try {
       // TODO(IoanaAlexandru): Get all classes if user is not authenticated
       final DocumentSnapshot snap =
-      await FirebaseFirestore.instance.collection('users').doc(uid).get();
+          await FirebaseFirestore.instance.collection('users').doc(uid).get();
       if (snap.data() == null) {
         return [];
       }
@@ -126,7 +123,7 @@ class ClassProvider with ChangeNotifier {
   Future<bool> setUserClassIds(List<String> classIds, String uid) async {
     try {
       final DocumentReference ref =
-      FirebaseFirestore.instance.collection('users').doc(uid);
+          FirebaseFirestore.instance.collection('users').doc(uid);
       await ref.update({'classes': classIds});
       userClassHeadersCache = null;
       notifyListeners();
@@ -168,7 +165,7 @@ class ClassProvider with ChangeNotifier {
 
         // Get all classes
         final QuerySnapshot qSnapshot =
-        await _db.collection('import_moodle').get();
+            await _db.collection('import_moodle').get();
         final List<DocumentSnapshot> docs = qSnapshot.docs;
 
         return docs
@@ -212,7 +209,7 @@ class ClassProvider with ChangeNotifier {
   Future<Class> fetchClassInfo(ClassHeader header) async {
     try {
       final DocumentSnapshot snap =
-      await _db.collection('classes').doc(header.id).get();
+          await _db.collection('classes').doc(header.id).get();
       return ClassExtension.fromSnap(header: header, snap: snap);
     } catch (e) {
       print(e);
@@ -234,8 +231,8 @@ class ClassProvider with ChangeNotifier {
       } else {
         // Document exists
         final shortcuts =
-        List<Map<String, dynamic>>.from(snap.data()['shortcuts'] ?? [])
-          ..add(shortcut.toData());
+            List<Map<String, dynamic>>.from(snap.data()['shortcuts'] ?? [])
+              ..add(shortcut.toData());
 
         await doc.update({'shortcuts': shortcuts});
       }
@@ -298,14 +295,18 @@ class ClassProvider with ChangeNotifier {
         .split(' ')
         .where((element) => element != '')
         .toList();
-    return classes.where(
-            (element) =>
-            searchedWords
-                .fold(
+    return classes
+            .where((element) => searchedWords.fold(
                 true,
-                    (previousValue, filter) =>
-                previousValue &&
-                    element.name.toLowerCase().contains(filter.toLowerCase()) || element.acronym.toLowerCase().contains(filter.toLowerCase())))
-        .toList()?? <ClassHeader>[];
+                (previousValue, filter) =>
+                    previousValue &&
+                        element.name
+                            .toLowerCase()
+                            .contains(filter.toLowerCase()) ||
+                    element.acronym
+                        .toLowerCase()
+                        .contains(filter.toLowerCase())))
+            .toList() ??
+        <ClassHeader>[];
   }
 }
