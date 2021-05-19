@@ -24,6 +24,7 @@ class FeedbackQuestionForm extends StatelessWidget {
   Widget build(BuildContext context) {
     if (question is FeedbackQuestionInput) {
       return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             question.question,
@@ -58,6 +59,7 @@ class FeedbackQuestionForm extends StatelessWidget {
       );
     } else if (question is FeedbackQuestionRating) {
       return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           EmojiFormField(
             question: question.question,
@@ -79,6 +81,7 @@ class FeedbackQuestionForm extends StatelessWidget {
       );
     } else if (question is FeedbackQuestionDropdown) {
       return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             question.question,
@@ -119,6 +122,7 @@ class FeedbackQuestionForm extends StatelessWidget {
       );
     } else if (question is FeedbackQuestionText) {
       return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             question.question,
