@@ -82,7 +82,6 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
         labelText: S.current.labelClass,
         prefixIcon: const Icon(FeatherIcons.bookOpen),
       ),
-      onChanged: (_) => setState(() {}),
     );
   }
 
@@ -102,7 +101,6 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
               labelText: S.current.labelLecturer,
               prefixIcon: const Icon(Icons.person_outline),
             ),
-            onChanged: (_) => setState(() {}),
           );
         } else {
           return const Center(child: CircularProgressIndicator());
