@@ -10,15 +10,4 @@ class FeedbackQuestion {
   final String category;
   final String id;
   String answer;
-
-  @override
-  int get hashCode => question.hashCode;
-
-  @override
-  bool operator ==(Object other) {
-    if (other is FeedbackQuestion) {
-      return other.question == question;
-    }
-    return false;
-  }
 }

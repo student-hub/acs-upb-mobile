@@ -14,15 +14,4 @@ class FeedbackQuestionAnswer {
   final String teacherName;
   final Person assistant;
   final String questionNumber;
-
-  @override
-  int get hashCode => questionAnswer.hashCode;
-
-  @override
-  bool operator ==(Object other) {
-    if (other is FeedbackQuestionAnswer) {
-      return other.questionAnswer == questionAnswer;
-    }
-    return false;
-  }
 }
