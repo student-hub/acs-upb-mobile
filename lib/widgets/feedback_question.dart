@@ -32,6 +32,7 @@ class FeedbackQuestionForm extends StatelessWidget {
             ),
           ),
           TextFormField(
+            key: const Key('FeedbackInput'),
             decoration: InputDecoration(
               labelText: S.current.labelAnswer,
               prefixIcon: const Icon(Icons.question_answer_outlined),
@@ -86,6 +87,7 @@ class FeedbackQuestionForm extends StatelessWidget {
             ),
           ),
           DropdownButtonFormField<String>(
+            key: const Key('FeedbackDropdown'),
             decoration: InputDecoration(
               labelText: S.current.labelAnswer,
               prefixIcon: const Icon(Icons.list_outlined),
@@ -131,6 +133,7 @@ class FeedbackQuestionForm extends StatelessWidget {
               child: Column(
                 children: [
                   TextFormField(
+                    key: const Key('FeedbackText'),
                     onSaved: (value) {
                       question.answer = value;
                     },
@@ -145,7 +148,7 @@ class FeedbackQuestionForm extends StatelessWidget {
         ],
       );
     } else {
-      return null;
+      return Container();
     }
   }
 }

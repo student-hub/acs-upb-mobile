@@ -2,6 +2,12 @@ import 'package:acs_upb_mobile/authentication/model/user.dart';
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/authentication/view/edit_profile_page.dart';
 import 'package:acs_upb_mobile/main.dart';
+import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question_dropdown.dart';
+import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question_input.dart';
+import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question_rating.dart';
+import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question_text.dart';
+import 'package:acs_upb_mobile/pages/class_feedback/service/feedback_provider.dart';
+import 'package:acs_upb_mobile/pages/class_feedback/view/class_feedback_view.dart';
 import 'package:acs_upb_mobile/pages/classes/model/class.dart';
 import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
 import 'package:acs_upb_mobile/pages/classes/view/class_view.dart';
@@ -40,6 +46,7 @@ import 'package:acs_upb_mobile/pages/timetable/view/events/event_view.dart';
 import 'package:acs_upb_mobile/pages/timetable/view/timetable_page.dart';
 import 'package:acs_upb_mobile/resources/locale_provider.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
+import 'package:acs_upb_mobile/widgets/feedback_question.dart';
 import 'package:acs_upb_mobile/widgets/search_bar.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -80,6 +87,8 @@ class MockRequestProvider extends Mock implements RequestProvider {}
 
 class MockNavigatorObserver extends Mock implements NavigatorObserver {}
 
+class MockFeedbackProvider extends Mock implements FeedbackProvider {}
+
 Future<void> main() async {
   AuthProvider mockAuthProvider;
   WebsiteProvider mockWebsiteProvider;
@@ -90,6 +99,7 @@ Future<void> main() async {
   MockNewsProvider mockNewsProvider;
   UniEventProvider mockEventProvider;
   RequestProvider mockRequestProvider;
+  FeedbackProvider mockFeedbackProvider;
 
   setupFirebaseAuthMocks();
   await Firebase.initializeApp();
@@ -127,6 +137,8 @@ Future<void> main() async {
           ChangeNotifierProvider<UniEventProvider>(
               create: (_) => mockEventProvider),
           Provider<RequestProvider>(create: (_) => mockRequestProvider),
+          ChangeNotifierProvider<FeedbackProvider>(
+              create: (_) => mockFeedbackProvider),
         ],
         child: const MyApp(),
       );
@@ -398,6 +410,51 @@ Future<void> main() async {
 
     when(mockPersonProvider.mostRecentLecturer(any))
         .thenAnswer((_) => Future.value('Jane Doe'));
+
+    mockFeedbackProvider = MockFeedbackProvider();
+    // ignore: invalid_use_of_protected_member
+    when(mockFeedbackProvider.hasListeners).thenReturn(true);
+    when(mockFeedbackProvider.fetchQuestions()).thenAnswer((_) => Future.value({
+          '0': FeedbackQuestionDropdown(
+            category: 'involvement',
+            question:
+                'Approximate number of activities that you attended (lectures + applications):',
+            id: '0',
+            answerOptions: ['option 1', 'option 2', 'option 3', 'option 4'],
+          ),
+          '1': FeedbackQuestionRating(
+            category: 'applications',
+            question: 'Was the exposure method appropriate?',
+            id: '1',
+          ),
+          '2': FeedbackQuestionText(
+            category: 'personal',
+            question: 'What are the positive aspects of this class?',
+            id: '2',
+          ),
+          '3': FeedbackQuestionInput(
+            category: 'homework',
+            question:
+                'Estimate the average number of hours per week devoted to solving homework.',
+            id: '3',
+          ),
+        }));
+    when(mockFeedbackProvider.fetchCategories())
+        .thenAnswer((_) => Future.value({
+              'applications': {'en': 'Applications', 'ro': 'Aplicații'},
+              'homework': {'en': 'Homework', 'ro': 'Temă'},
+              'involvement': {'en': 'Involvement', 'ro': 'Implicare'},
+              'personal': {
+                'en': 'Personal comments',
+                'ro': 'Comentarii personale'
+              },
+            }));
+    when(mockFeedbackProvider.addResponse(any))
+        .thenAnswer((_) => Future.value(true));
+    when(mockFeedbackProvider.setUserClassFeedback(any, any))
+        .thenAnswer((_) => Future.value(true));
+    when(mockFeedbackProvider.checkProvidedClassFeedback(any, any))
+        .thenAnswer((_) => Future.value(false));
 
     mockQuestionProvider = MockQuestionProvider();
     // ignore: invalid_use_of_protected_member
@@ -1391,6 +1448,103 @@ Future<void> main() async {
         });
       }
     });
+  });
+
+  group('Feedback view', () {
+    setUp(() {
+      when(mockAuthProvider.currentUser).thenAnswer((_) => Future.value(User(
+          uid: '0', firstName: 'John', lastName: 'Doe', permissionLevel: 3)));
+      when(mockAuthProvider.currentUserFromCache).thenReturn(User(
+          uid: '0', firstName: 'John', lastName: 'Doe', permissionLevel: 3));
+      when(mockAuthProvider.isAuthenticated).thenReturn(true);
+      when(mockAuthProvider.isAnonymous).thenReturn(false);
+      when(mockAuthProvider.uid).thenReturn('0');
+    });
+
+    for (final size in screenSizes) {
+      testWidgets('${size.width}x${size.height}', (WidgetTester tester) async {
+        await binding.setSurfaceSize(size);
+
+        await tester.pumpWidget(buildApp());
+        await tester.pumpAndSettle();
+
+        // Open timetable
+        await tester.tap(find.byIcon(Icons.calendar_today_outlined));
+        await tester.pumpAndSettle();
+
+        // Open classes
+        await tester.tap(find.byIcon(FeatherIcons.bookOpen));
+        await tester.pumpAndSettle();
+
+        // Open class view
+        await tester.tap(find.text('PC'));
+        await tester.pumpAndSettle();
+
+        expect(find.byType(ClassView), findsOneWidget);
+
+        // Open feedback page
+        await tester.tap(find.byIcon(Icons.rate_review_outlined));
+        await tester.pumpAndSettle();
+
+        expect(find.byType(ClassFeedbackView), findsOneWidget);
+
+        await tester.tap(find.byType(Checkbox));
+        await tester.pumpAndSettle();
+
+        await tester.enterText(
+            find.byKey(const Key('AutocompleteAssistant')), 'John');
+        await tester.pumpAndSettle();
+        await tester.tap(find.text('John Doe'));
+        await tester.pumpAndSettle();
+
+        expect(find.byType(Card), findsNWidgets(5));
+        expect(find.byType(FeedbackQuestionForm), findsNWidgets(4));
+        expect(
+            find.text(
+                'Estimate the average number of hours per week devoted to solving homework.'),
+            findsOneWidget);
+        expect(
+            find.text(
+                'Approximate number of activities that you attended (lectures + applications):'),
+            findsOneWidget);
+        expect(
+            find.text('Was the exposure method appropriate?'), findsOneWidget);
+        expect(find.text('What are the positive aspects of this class?'),
+            findsOneWidget);
+
+        await tester.enterText(find.byKey(const Key('FeedbackInput')), '2');
+        await tester.pumpAndSettle();
+
+        expect(find.text('2'), findsOneWidget);
+
+        await tester.tap(find.text('Send'));
+        await tester.pumpAndSettle(const Duration(seconds: 5));
+        expect(find.text('Answer cannot be empty.'), findsOneWidget);
+
+        await tester.tap(find.byIcon(Icons.sentiment_very_satisfied));
+        await tester.pumpAndSettle();
+
+        await tester.enterText(
+            find.byKey(const Key('FeedbackText')), 'Best class ever!');
+        await tester.pumpAndSettle();
+
+        await tester.tap(find.byKey(const Key('FeedbackDropdown')));
+        await tester.pumpAndSettle();
+        await tester.tap(find.text('option 3').last);
+        await tester.pumpAndSettle();
+
+        await tester.tap(find.text('Send'));
+        await tester.pumpAndSettle(const Duration(seconds: 5));
+
+        expect(find.text('You need to select your assistant for this class.'),
+            findsNothing);
+        expect(
+            find.text('You need to select at least one option.'), findsNothing);
+        expect(find.text('Answer cannot be empty.'), findsNothing);
+
+        expect(find.byType(ClassView), findsOneWidget);
+      });
+    }
   });
 
   group('Settings', () {

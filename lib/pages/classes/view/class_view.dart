@@ -48,9 +48,11 @@ class _ClassViewState extends State<ClassView> {
   @override
   Widget build(BuildContext context) {
     final classProvider = Provider.of<ClassProvider>(context);
-    Provider.of<FeedbackProvider>(context, listen: false)
-        .checkProvidedClassFeedback(widget.classHeader.id,
-            Provider.of<AuthProvider>(context, listen: false).uid)
+    final feedbackProvider =
+        Provider.of<FeedbackProvider>(context, listen: false);
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    feedbackProvider
+        .checkProvidedClassFeedback(widget.classHeader.id, authProvider.uid)
         .then((value) => alreadyCompletedFeedback = value);
 
     return AppScaffold(
