@@ -165,7 +165,7 @@ class PeopleCircleList extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       constraints: BoxConstraints.expand(
-        height: Theme.of(context).textTheme.headline4.fontSize * 1.1 + 100.0,
+        height: Theme.of(context).textTheme.headline4.fontSize * 1.1 + 80.0,
       ),
       padding: const EdgeInsets.all(10),
       child: ListView.builder(
