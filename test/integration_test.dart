@@ -3,7 +3,7 @@ import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/authentication/view/edit_profile_page.dart';
 import 'package:acs_upb_mobile/main.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question_dropdown.dart';
-import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question_input.dart';
+import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question_slider.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question_rating.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question_text.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/service/feedback_provider.dart';
@@ -432,7 +432,7 @@ Future<void> main() async {
             question: 'What are the positive aspects of this class?',
             id: '2',
           ),
-          '3': FeedbackQuestionInput(
+          '3': FeedbackQuestionSlider(
             category: 'homework',
             question:
                 'Estimate the average number of hours per week devoted to solving homework.',

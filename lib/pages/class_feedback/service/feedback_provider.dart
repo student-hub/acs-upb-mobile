@@ -1,7 +1,7 @@
 import 'package:acs_upb_mobile/pages/class_feedback/model/class_feedback_answer.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question_dropdown.dart';
-import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question_input.dart';
+import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question_slider.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question_rating.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question_text.dart';
 import 'package:acs_upb_mobile/resources/locale_provider.dart';
@@ -49,7 +49,7 @@ extension FeedbackQuestionExtension on FeedbackQuestion {
         id: id,
       );
     } else if (json['type'] == 'input') {
-      return FeedbackQuestionInput(
+      return FeedbackQuestionSlider(
         category: json['category'],
         question: json['question'][LocaleProvider.localeString],
         id: id,
