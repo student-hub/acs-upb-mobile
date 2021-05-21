@@ -124,22 +124,20 @@ class FeedbackQuestionForm extends StatelessWidget {
               fontSize: 18,
             ),
           ),
-          const SizedBox(height: 24),
-          Card(
-            child: Padding(
-              padding: const EdgeInsets.all(2),
-              child: Column(
-                children: [
-                  TextFormField(
-                    key: const Key('FeedbackText'),
-                    onSaved: (value) {
-                      question.answer = value;
-                    },
-                    keyboardType: TextInputType.multiline,
-                    maxLines: null,
-                  ),
-                ],
-              ),
+          const SizedBox(height: 12),
+          Padding(
+            padding: const EdgeInsets.all(2),
+            child: Column(
+              children: [
+                TextFormField(
+                  key: const Key('FeedbackText'),
+                  onSaved: (value) {
+                    question.answer = value;
+                  },
+                  keyboardType: TextInputType.multiline,
+                  maxLines: null,
+                ),
+              ],
             ),
           ),
           const SizedBox(height: 24),
