@@ -1735,6 +1735,16 @@ class S {
     );
   }
 
+  /// `Review checklist`
+  String get navigationClassesFeedbackChecklist {
+    return Intl.message(
+      'Review checklist',
+      name: 'navigationClassesFeedbackChecklist',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Show all`
   String get filterMenuShowAll {
     return Intl.message(

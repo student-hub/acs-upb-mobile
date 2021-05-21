@@ -229,6 +229,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "navigationClassFeedback" : MessageLookupByLibrary.simpleMessage("Feedback"),
     "navigationClassInfo" : MessageLookupByLibrary.simpleMessage("Informații materie"),
     "navigationClasses" : MessageLookupByLibrary.simpleMessage("Materii"),
+    "navigationClassesFeedbackChecklist" : MessageLookupByLibrary.simpleMessage("Listă feedback"),
     "navigationEventDetails" : MessageLookupByLibrary.simpleMessage("Detalii eveniment"),
     "navigationFilter" : MessageLookupByLibrary.simpleMessage("Filtru"),
     "navigationHome" : MessageLookupByLibrary.simpleMessage("Acasă"),

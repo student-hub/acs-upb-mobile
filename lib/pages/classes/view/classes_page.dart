@@ -1,5 +1,6 @@
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
+import 'package:acs_upb_mobile/pages/class_feedback/view/classes_feedback_checklist.dart';
 import 'package:acs_upb_mobile/pages/classes/model/class.dart';
 import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
 import 'package:acs_upb_mobile/pages/classes/view/class_view.dart';
@@ -60,6 +61,15 @@ class _ClassesPageState extends State<ClassesPage> {
       // TODO(IoanaAlexandru): Simply show all classes if user is not authenticated
       needsToBeAuthenticated: true,
       actions: [
+        AppScaffoldAction(
+          icon: Icons.format_list_numbered_outlined,
+          tooltip: S.current.navigationClassesFeedbackChecklist,
+          onPressed: () => Navigator.of(context).push(
+            MaterialPageRoute<ClassesFeedbackChecklist>(
+              builder: (_) => ClassesFeedbackChecklist(classes: headers),
+            ),
+          ),
+        ),
         AppScaffoldAction(
           icon: Icons.edit_outlined,
           tooltip: S.current.actionChooseClasses,

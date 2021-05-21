@@ -229,6 +229,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "navigationClassFeedback" : MessageLookupByLibrary.simpleMessage("Review"),
     "navigationClassInfo" : MessageLookupByLibrary.simpleMessage("Class information"),
     "navigationClasses" : MessageLookupByLibrary.simpleMessage("Classes"),
+    "navigationClassesFeedbackChecklist" : MessageLookupByLibrary.simpleMessage("Review checklist"),
     "navigationEventDetails" : MessageLookupByLibrary.simpleMessage("Event details"),
     "navigationFilter" : MessageLookupByLibrary.simpleMessage("Filter"),
     "navigationHome" : MessageLookupByLibrary.simpleMessage("Home"),
