@@ -68,12 +68,6 @@ class FeedbackQuestionForm extends StatelessWidget {
                   .firstWhere((element) => value[element] == true)
                   .toString();
             },
-            validator: (selection) {
-              if (selection.values.where((e) => e != false).isEmpty) {
-                return S.current.warningYouNeedToSelectAtLeastOne;
-              }
-              return null;
-            },
             answerValues: answerValues[int.parse(question.id)],
           ),
           const SizedBox(height: 10),
