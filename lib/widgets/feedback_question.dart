@@ -37,6 +37,7 @@ class _FeedbackQuestionFormState extends State<FeedbackQuestionForm> {
             ),
           ),
           Slider.adaptive(
+            key: const Key('FeedbackSlider'),
             value: widget.question.answer != null
                 ? double.parse(widget.question.answer)
                 : 0,

@@ -1497,7 +1497,7 @@ Future<void> main() async {
         await tester.tap(find.text('John Doe'));
         await tester.pumpAndSettle();
 
-        expect(find.byType(Card), findsNWidgets(5));
+        expect(find.byType(Card), findsNWidgets(4));
         expect(find.byType(FeedbackQuestionForm), findsNWidgets(4));
         expect(
             find.text(
@@ -1512,14 +1512,9 @@ Future<void> main() async {
         expect(find.text('What are the positive aspects of this class?'),
             findsOneWidget);
 
-        await tester.enterText(find.byKey(const Key('FeedbackInput')), '2');
+        await tester.drag(
+            find.byKey(const Key('FeedbackSlider')), const Offset(2, 0));
         await tester.pumpAndSettle();
-
-        expect(find.text('2'), findsOneWidget);
-
-        await tester.tap(find.text('Send'));
-        await tester.pumpAndSettle(const Duration(seconds: 5));
-        expect(find.text('Answer cannot be empty.'), findsOneWidget);
 
         await tester.tap(find.byIcon(Icons.sentiment_very_satisfied));
         await tester.pumpAndSettle();
@@ -1538,8 +1533,6 @@ Future<void> main() async {
 
         expect(find.text('You need to select your assistant for this class.'),
             findsNothing);
-        expect(
-            find.text('You need to select at least one option.'), findsNothing);
         expect(find.text('Answer cannot be empty.'), findsNothing);
 
         expect(find.byType(ClassView), findsOneWidget);
