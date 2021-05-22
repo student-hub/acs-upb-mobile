@@ -140,6 +140,10 @@ class UniEvent {
   final String addedBy;
   final bool editable;
 
+  String get info {
+    return generateInstances().first.dateString;
+  }
+
   Iterable<UniEventInstance> generateInstances(
       {DateInterval intersectingInterval}) sync* {
     final LocalDateTime end = start.add(duration);
