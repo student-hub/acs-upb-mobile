@@ -15,7 +15,9 @@ class RemoteConfigService {
     );
   }
 
-  bool get feedbackEnabled => _remoteConfig.getBool(_feedbackEnabled);
+  bool get feedbackEnabled =>
+      // ignore: avoid_bool_literals_in_conditional_expressions
+      _remoteConfig == null ? true : _remoteConfig.getBool(_feedbackEnabled);
 
   Future<dynamic> initialise() async {
     try {
