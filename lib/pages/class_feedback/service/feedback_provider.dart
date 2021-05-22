@@ -144,4 +144,10 @@ class FeedbackProvider with ChangeNotifier {
       return false;
     }
   }
+
+  Future<Map<String, dynamic>> getProvidedFeedbackClasses(String uid) async {
+    final DocumentSnapshot snap =
+        await FirebaseFirestore.instance.collection('users').doc(uid).get();
+    return snap.data()['classesFeedback'];
+  }
 }

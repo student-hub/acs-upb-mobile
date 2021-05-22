@@ -615,6 +615,26 @@ class S {
     );
   }
 
+  /// `To-Do`
+  String get sectionTODO {
+    return Intl.message(
+      'To-Do',
+      name: 'sectionTODO',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Completed`
+  String get sectionCompleted {
+    return Intl.message(
+      'Completed',
+      name: 'sectionCompleted',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Main page`
   String get shortcutTypeMain {
     return Intl.message(
