@@ -45,7 +45,7 @@ class _ClassesFeedbackChecklistState extends State<ClassesFeedbackChecklist> {
       children: [
         const SizedBox(height: 12),
         Text(
-          S.current.sectionTODO,
+          S.current.sectionFeedbackTODO,
           style: Theme.of(context).textTheme.headline6,
         ),
         const SizedBox(height: 6),
@@ -58,7 +58,7 @@ class _ClassesFeedbackChecklistState extends State<ClassesFeedbackChecklist> {
         const Divider(thickness: 4),
         const SizedBox(height: 12),
         Text(
-          S.current.sectionCompleted,
+          S.current.sectionFeedbackCompleted,
           style: Theme.of(context).textTheme.headline6,
         ),
         const SizedBox(height: 6),

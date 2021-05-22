@@ -59,8 +59,8 @@
   "sectionEventsComingUp": "Evenimente următoare",
   "sectionFAQ": "Întrebări frecvente",
   "sectionGrading": "Punctaj",
-  "sectionTODO": "De realizat",
-  "sectionCompleted": "Completate",
+  "sectionFeedbackTODO": "Feedback de adăugat",
+  "sectionFeedbackCompleted": "Feedback completat",
 
   "shortcutTypeMain": "Pagina principală",
   "shortcutTypeClassbook": "Catalog",

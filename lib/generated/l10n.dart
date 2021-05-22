@@ -615,21 +615,21 @@ class S {
     );
   }
 
-  /// `To-Do`
-  String get sectionTODO {
+  /// `Feedback To-Do`
+  String get sectionFeedbackTODO {
     return Intl.message(
-      'To-Do',
-      name: 'sectionTODO',
+      'Feedback To-Do',
+      name: 'sectionFeedbackTODO',
       desc: '',
       args: [],
     );
   }
 
-  /// `Completed`
-  String get sectionCompleted {
+  /// `Feedback completed`
+  String get sectionFeedbackCompleted {
     return Intl.message(
-      'Completed',
-      name: 'sectionCompleted',
+      'Feedback completed',
+      name: 'sectionFeedbackCompleted',
       desc: '',
       args: [],
     );

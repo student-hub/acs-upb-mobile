@@ -59,8 +59,8 @@
   "sectionEventsComingUp": "Events coming up",
   "sectionFAQ": "FAQ",
   "sectionGrading": "Grading",
-  "sectionTODO": "To-Do",
-  "sectionCompleted": "Completed",
+  "sectionFeedbackTODO": "Feedback To-Do",
+  "sectionFeedbackCompleted": "Feedback completed",
 
   "shortcutTypeMain": "Main page",
   "shortcutTypeClassbook": "Classbook",
