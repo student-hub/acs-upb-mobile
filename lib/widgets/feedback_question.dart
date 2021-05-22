@@ -40,14 +40,15 @@ class _FeedbackQuestionFormState extends State<FeedbackQuestionForm> {
             key: const Key('FeedbackSlider'),
             value: widget.question.answer != null
                 ? double.parse(widget.question.answer)
-                : 0,
+                : 5,
             onChanged: (newRating) {
               setState(() {
                 widget.question.answer = newRating.toString();
               });
             },
+            min: 1,
             max: 10,
-            divisions: 10,
+            divisions: 9,
             label: widget.question.answer,
             activeColor: Theme.of(context).accentColor,
           ),
