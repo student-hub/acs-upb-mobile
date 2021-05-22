@@ -135,14 +135,27 @@ class FeedbackClassListItem extends StatelessWidget {
   final ClassHeader classHeader;
   final bool done;
 
+  void onPress(BuildContext context) {
+    if (!done) {
+      Navigator.of(context).push(
+        MaterialPageRoute<ChangeNotifierProvider>(
+          builder: (context) => ChangeNotifierProvider.value(
+            value: Provider.of<ClassProvider>(context),
+            child: ClassFeedbackView(classHeader: classHeader),
+          ),
+        ),
+      );
+    } else {
+      AppToast.show(S.current.warningFeedbackAlreadySent);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    final classProvider = Provider.of<ClassProvider>(context);
-
     return ListTile(
       leading: Checkbox(
         value: done,
-        onChanged: (bool value) {},
+        onChanged: (_) => onPress(context),
         activeColor: Colors.white24,
       ),
       title: Text(
@@ -153,20 +166,7 @@ class FeedbackClassListItem extends StatelessWidget {
                 color: Theme.of(context).disabledColor)
             : Theme.of(context).textTheme.subtitle1,
       ),
-      onTap: () {
-        if (done == false) {
-          Navigator.of(context).push(
-            MaterialPageRoute<ChangeNotifierProvider>(
-              builder: (context) => ChangeNotifierProvider.value(
-                value: classProvider,
-                child: ClassFeedbackView(classHeader: classHeader),
-              ),
-            ),
-          );
-        } else {
-          AppToast.show(S.current.warningFeedbackAlreadySent);
-        }
-      },
+      onTap: () => onPress(context),
     );
   }
 }
