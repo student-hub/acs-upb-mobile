@@ -26,12 +26,17 @@ class _ClassesFeedbackChecklistState extends State<ClassesFeedbackChecklist> {
   @override
   void initState() {
     super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
     fetchFeedbackProvided();
   }
 
   Future<Map<String, dynamic>> fetchFeedbackProvided() async {
     final feedbackProvider =
-        Provider.of<FeedbackProvider>(context, listen: false);
+        Provider.of<FeedbackProvider>(context, listen: true);
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
     await feedbackProvider
         .getProvidedFeedbackClasses(authProvider.uid)
