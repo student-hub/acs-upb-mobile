@@ -298,5 +298,4 @@ class ClassProvider with ChangeNotifier {
       return null;
     }
   }
-
 }
