@@ -3,7 +3,6 @@ import 'package:acs_upb_mobile/pages/class_feedback/service/feedback_provider.da
 import 'package:acs_upb_mobile/pages/class_feedback/view/class_feedback_view.dart';
 import 'package:acs_upb_mobile/pages/classes/model/class.dart';
 import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
-import 'package:acs_upb_mobile/widgets/class_icon.dart';
 import 'package:acs_upb_mobile/widgets/error_page.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
@@ -144,6 +143,7 @@ class FeedbackClassListItem extends StatelessWidget {
       leading: Checkbox(
         value: done,
         onChanged: (bool value) {},
+        activeColor: Colors.white24,
       ),
       title: Text(
         classHeader.name,
