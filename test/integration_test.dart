@@ -1461,6 +1461,8 @@ Future<void> main() async {
       when(mockAuthProvider.isAuthenticated).thenReturn(true);
       when(mockAuthProvider.isAnonymous).thenReturn(false);
       when(mockAuthProvider.uid).thenReturn('0');
+      when(mockPersonProvider.fetchPerson(any))
+          .thenAnswer((_) => Future.value(Person(name: 'John Doe')));
     });
 
     for (final size in screenSizes) {
@@ -1496,7 +1498,7 @@ Future<void> main() async {
         await tester.enterText(
             find.byKey(const Key('AutocompleteAssistant')), 'John');
         await tester.pumpAndSettle();
-        await tester.tap(find.text('John Doe'));
+        await tester.tap(find.text('John Doe').last);
         await tester.pumpAndSettle();
 
         expect(find.byType(Card), findsNWidgets(4));
