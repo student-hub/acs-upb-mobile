@@ -119,7 +119,20 @@ class _EventViewState extends State<EventView> {
                   .push(MaterialPageRoute<ChangeNotifierProvider>(
                 builder: (context) => ChangeNotifierProvider.value(
                   value: Provider.of<ClassProvider>(context),
-                  child: ClassView(classHeader: mainEvent.classHeader),
+                  child: FutureBuilder(
+                    future:
+                        Provider.of<ClassProvider>(context).getRemoteConfig(),
+                    builder: (context, snap) {
+                      if (snap.hasData) {
+                        return ClassView(
+                          classHeader: mainEvent.classHeader,
+                          remoteConfigService: snap.data,
+                        );
+                      } else {
+                        return const Center(child: CircularProgressIndicator());
+                      }
+                    },
+                  ),
                 ),
               )),
             ),

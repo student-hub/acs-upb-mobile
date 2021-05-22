@@ -1,6 +1,7 @@
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/service/feedback_provider.dart';
+import 'package:acs_upb_mobile/pages/class_feedback/service/remote_config.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/view/class_feedback_view.dart';
 import 'package:acs_upb_mobile/pages/classes/model/class.dart';
 import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
@@ -24,9 +25,11 @@ import 'package:positioned_tap_detector/positioned_tap_detector.dart';
 import 'package:provider/provider.dart';
 
 class ClassView extends StatefulWidget {
-  const ClassView({Key key, this.classHeader}) : super(key: key);
+  const ClassView({Key key, this.classHeader, this.remoteConfigService})
+      : super(key: key);
 
   final ClassHeader classHeader;
+  final RemoteConfigService remoteConfigService;
 
   @override
   _ClassViewState createState() => _ClassViewState();
@@ -59,7 +62,7 @@ class _ClassViewState extends State<ClassView> {
     return AppScaffold(
       title: Text(S.current.navigationClassInfo),
       actions: [
-        if (kReleaseMode == false)
+        if (widget.remoteConfigService.feedbackEnabled)
           AppScaffoldAction(
               icon: Icons.rate_review_outlined,
               onPressed: () {
