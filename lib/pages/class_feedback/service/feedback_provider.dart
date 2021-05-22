@@ -17,7 +17,7 @@ extension ClassFeedbackAnswerExtension on FeedbackQuestionAnswer {
     if (questionAnswer != null) data['answer'] = questionAnswer;
     data['dateSubmitted'] = Timestamp.now();
     data['class'] = className;
-    data['teacher'] = teacherName;
+    data['teacher'] = teacher.name;
     data['assistant'] = assistant.name;
 
     return data;

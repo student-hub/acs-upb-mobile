@@ -31,6 +31,7 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
   TextEditingController classController;
   bool agreedToResponsibilities;
 
+  Person selectedTeacher;
   String selectedTeacherName;
   Person selectedAssistant;
   List<Person> classTeachers = [];
@@ -52,6 +53,10 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
     Provider.of<FeedbackProvider>(context, listen: false)
         .fetchCategories()
         .then((categories) => setState(() => feedbackCategories = categories));
+
+    Provider.of<PersonProvider>(context, listen: false)
+        .mostRecentLecturer(widget.classHeader.id)
+        .then((value) => selectedTeacherName = value);
 
     fetchFeedbackQuestions();
   }
@@ -89,18 +94,20 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
     final personProvider = Provider.of<PersonProvider>(context);
 
     return FutureBuilder(
-      future: personProvider.mostRecentLecturer(widget.classHeader.id),
+      future: personProvider.fetchPerson(selectedTeacherName),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
-          final lecturerName = snapshot.data;
-          selectedTeacherName = lecturerName;
-          return TextFormField(
-            enabled: false,
-            controller: TextEditingController(text: lecturerName ?? '-'),
-            decoration: InputDecoration(
-              labelText: S.current.labelLecturer,
-              prefixIcon: const Icon(Icons.person_outline),
-            ),
+          final lecturer = snapshot.data;
+          selectedTeacher = lecturer;
+          return AutocompletePerson(
+            key: const Key('AutocompleteLecturer'),
+            labelText: S.current.labelLecturer,
+            formKey: formKey,
+            onSaved: (value) => selectedTeacher = value,
+            classTeachers: classTeachers,
+            personDisplayed: selectedTeacherName == null
+                ? Person(name: '-')
+                : selectedTeacher,
           );
         } else {
           return const Center(child: CircularProgressIndicator());
@@ -246,7 +253,7 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
 
             final response = FeedbackQuestionAnswer(
               assistant: selectedAssistant,
-              teacherName: selectedTeacherName,
+              teacher: selectedTeacher,
               className: classController.text,
               questionNumber: i.toString(),
               questionAnswer: feedbackQuestions[i.toString()].answer,
