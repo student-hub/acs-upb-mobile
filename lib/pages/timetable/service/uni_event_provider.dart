@@ -349,6 +349,7 @@ class UniEventProvider extends EventProvider<UniEventInstance>
       {int limit = 3}) async {
     return _events
         .map((events) => events
+            .where((event) => !(event is AllDayUniEvent))
             .map((event) => event.generateInstances(
                 intersectingInterval: DateInterval(date, date.addDays(6))))
             .expand((i) => i)

@@ -96,8 +96,7 @@ class _EventViewState extends State<EventView> {
                       const SizedBox(height: 4),
                       if (widget.eventInstance != null)
                         Text(widget.eventInstance.dateString),
-                      if (mainEvent is RecurringUniEvent &&
-                          LocaleProvider.rruleL10n != null)
+                      if (mainEvent.info != widget.eventInstance?.dateString)
                         Padding(
                           padding: const EdgeInsets.only(top: 2),
                           child: Text(
