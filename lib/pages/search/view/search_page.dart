@@ -1,3 +1,4 @@
+import 'package:acs_upb_mobile/pages/chatbot/view/chat_page.dart';
 import 'package:acs_upb_mobile/pages/classes/model/class.dart';
 import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
 import 'package:acs_upb_mobile/pages/classes/view/class_view.dart';
@@ -137,12 +138,18 @@ class _SearchPageState extends State<SearchPage> {
                       Padding(
                           padding: const EdgeInsets.only(right: 10),
                           child: Text(S.current.messageAnotherQuestion)),
-                      Text(
-                        S.current.messageTalkToChatbot,
-                        style: TextStyle(
-                            color: Theme.of(context).accentColor,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 15),
+
+                      GestureDetector(
+                        child:  Text(
+                          S.current.messageTalkToChatbot,
+                          style: TextStyle(
+                              color: Theme.of(context).accentColor,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 15),
+                        ),
+                        onTap: ()  => Navigator.of(context).push(MaterialPageRoute<ChatPage>(
+                          builder: (_) => ChatPage(),
+                        )),
                       )
                     ],
                   ),
