@@ -37,15 +37,17 @@ import 'package:provider/provider.dart';
 import 'package:rrule/rrule.dart';
 import 'package:time_machine/time_machine.dart';
 
-// FIXME: acs.pub.ro has some bad certificate configuration right now.
-// We get around this by accepting any certificate if the host is acs.pub.ro.
+// FIXME: acs.pub.ro has some bad certificate configuration right now, and the
+// cs.pub.ro certificate is expired.
+// We get around this by accepting any certificate if the host is either
+// acs.pub.ro or cs.pub.ro.
 // Remove this in the future.
 class MyHttpOverrides extends HttpOverrides {
   @override
   HttpClient createHttpClient(SecurityContext context) {
     return super.createHttpClient(context)
       ..badCertificateCallback = (X509Certificate cert, String host, int port) {
-        return host == 'acs.pub.ro';
+        return host == 'acs.pub.ro' || host == 'cs.pub.ro';
       };
   }
 }
