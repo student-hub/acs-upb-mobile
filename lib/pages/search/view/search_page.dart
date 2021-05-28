@@ -186,9 +186,8 @@ class PeopleCircleList extends StatelessWidget {
                           ));
                 },
                 child: Column(children: <Widget>[
-                  const CircleAvatar(
-                    backgroundImage: NetworkImage(
-                        'https://identix.state.gov/qotw/images/no-photo.gif'),
+                  CircleAvatar(
+                    backgroundImage: NetworkImage(people[index].photo),
                   ),
                   for (String n in name) Text(n),
                 ]),
