@@ -2,10 +2,9 @@ import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class ChatPage extends StatefulWidget{
+class ChatPage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => _ChatPageState();
-
 }
 
 class _ChatPageState extends State<ChatPage> {
@@ -15,6 +14,7 @@ class _ChatPageState extends State<ChatPage> {
   ]; //for testing
   final _textController = TextEditingController();
   final FocusNode _focusNode = FocusNode();
+
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
@@ -28,47 +28,46 @@ class _ChatPageState extends State<ChatPage> {
               shrinkWrap: true,
               itemCount: _messages.length,
               itemBuilder: (_, int index) => Container(
-                padding: const EdgeInsets.all(10),
-                child: _messages[index]
-              ),
+                  padding: const EdgeInsets.all(10), child: _messages[index]),
             ),
           ),
           const Divider(height: 1),
           Container(
-            decoration: BoxDecoration(
-                color: Theme.of(context).cardColor),
+            decoration: BoxDecoration(color: Theme.of(context).cardColor),
             child: _buildTextComposer(),
           ),
         ],
       ),
     );
   }
+
   Widget _buildTextComposer() {
-    return  Container(
+    return Container(
       margin: const EdgeInsets.symmetric(horizontal: 8),
-      child:  Row(
+      child: Row(
         children: [
           Flexible(
-            child:  TextField(
+            child: TextField(
               controller: _textController,
               onSubmitted: _handleSubmitted,
-              decoration:  const InputDecoration.collapsed(
-                  hintText: 'Send a message'),
+              decoration:
+                  const InputDecoration.collapsed(hintText: 'Send a message'),
               focusNode: _focusNode,
             ),
           ),
           Container(
             margin: const EdgeInsets.symmetric(horizontal: 4),
             child: IconButton(
-                icon: const Icon(Icons.send),
-                onPressed: () => _handleSubmitted(_textController.text),
-                color: Theme.of(context).primaryColor,
+              icon: const Icon(Icons.send),
+              onPressed: () => _handleSubmitted(_textController.text),
+              color: Theme.of(context).primaryColor,
             ),
           )
         ],
       ),
     );
   }
+
   void _handleSubmitted(String messageContent) {
     _textController.clear();
     final ChatMessage message = ChatMessage(
@@ -84,22 +83,28 @@ class _ChatPageState extends State<ChatPage> {
 
 class ChatMessage extends StatelessWidget {
   const ChatMessage({this.messageContent, this.messageType});
+
   final String messageContent;
   final String messageType;
 
   @override
   Widget build(BuildContext context) {
     return Align(
-      alignment: messageType == 'receiver'? Alignment.topLeft : Alignment.topRight,
+      alignment:
+          messageType == 'receiver' ? Alignment.topLeft : Alignment.topRight,
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
-          color: messageType  == 'receiver'? Theme.of(context).cardColor : Theme.of(context).primaryColor,
+          color: messageType == 'receiver'
+              ? Theme.of(context).cardColor
+              : Theme.of(context).primaryColor,
         ),
         padding: const EdgeInsets.all(16),
-        child: Text(messageContent, style: const TextStyle(fontSize: 15),),
+        child: Text(
+          messageContent,
+          style: const TextStyle(fontSize: 15),
+        ),
       ),
     );
   }
 }
-
