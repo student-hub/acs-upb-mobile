@@ -12,7 +12,7 @@ class _ChatPageState extends State<ChatPage> {
   List<ChatMessage> _messages = [
     ChatMessage(messageContent: "What are you doing?", messageType: "receiver"),
     ChatMessage(messageContent: "Hello, Will!", messageType: "receiver"),
-  ];
+  ]; //for testing
   final _textController = TextEditingController();
   final FocusNode _focusNode = FocusNode();
   @override
@@ -21,14 +21,14 @@ class _ChatPageState extends State<ChatPage> {
       title: const Text('Chatbot'),
       body: Column(
         children: [
-          Flexible(
+          Expanded(
             child: ListView.builder(
-              padding: const EdgeInsets.all(8),
+              padding: const EdgeInsets.all(4),
               reverse: true,
               shrinkWrap: true,
               itemCount: _messages.length,
               itemBuilder: (_, int index) => Container(
-                padding: const EdgeInsets.only(left: 14,right: 14,top: 10,bottom: 10),
+                padding: const EdgeInsets.all(10),
                 child: _messages[index]
               ),
             ),
@@ -62,7 +62,7 @@ class _ChatPageState extends State<ChatPage> {
             child: IconButton(
                 icon: const Icon(Icons.send),
                 onPressed: () => _handleSubmitted(_textController.text),
-                color: Theme.of(context).accentColor,
+                color: Theme.of(context).primaryColor,
             ),
           )
         ],
@@ -90,11 +90,11 @@ class ChatMessage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Align(
-      alignment: messageType == 'receiver'?Alignment.topLeft:Alignment.topRight,
+      alignment: messageType == 'receiver'? Alignment.topLeft : Alignment.topRight,
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
-          color: messageType  == 'receiver'?Colors.grey.shade800:Colors.blue[200],
+          color: messageType  == 'receiver'? Theme.of(context).cardColor : Theme.of(context).primaryColor,
         ),
         padding: const EdgeInsets.all(16),
         child: Text(messageContent, style: const TextStyle(fontSize: 15),),
