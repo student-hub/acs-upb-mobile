@@ -8,9 +8,11 @@ class ChatPage extends StatefulWidget {
 }
 
 class _ChatPageState extends State<ChatPage> {
+  // ignore: prefer_final_fields
   List<ChatMessage> _messages = [
-    ChatMessage(messageContent: "What are you doing?", messageType: "receiver"),
-    ChatMessage(messageContent: "Hello, Will!", messageType: "receiver"),
+    const ChatMessage(
+        messageContent: 'What are you doing?', messageType: 'receiver'),
+    const ChatMessage(messageContent: 'Hello, Will!', messageType: 'receiver'),
   ]; //for testing
   final _textController = TextEditingController();
   final FocusNode _focusNode = FocusNode();

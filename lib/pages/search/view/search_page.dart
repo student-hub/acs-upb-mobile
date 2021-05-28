@@ -138,16 +138,16 @@ class _SearchPageState extends State<SearchPage> {
                       Padding(
                           padding: const EdgeInsets.only(right: 10),
                           child: Text(S.current.messageAnotherQuestion)),
-
                       GestureDetector(
-                        child:  Text(
+                        child: Text(
                           S.current.messageTalkToChatbot,
                           style: TextStyle(
                               color: Theme.of(context).accentColor,
                               fontWeight: FontWeight.bold,
                               fontSize: 15),
                         ),
-                        onTap: ()  => Navigator.of(context).push(MaterialPageRoute<ChatPage>(
+                        onTap: () => Navigator.of(context)
+                            .push(MaterialPageRoute<ChatPage>(
                           builder: (_) => ChatPage(),
                         )),
                       )
