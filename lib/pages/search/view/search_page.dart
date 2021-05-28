@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:acs_upb_mobile/pages/classes/model/class.dart';
 import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
 import 'package:acs_upb_mobile/pages/classes/view/class_view.dart';
@@ -11,6 +13,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
 import 'package:provider/provider.dart';
 
 class SearchPage extends StatefulWidget {
@@ -66,14 +69,10 @@ class _SearchPageState extends State<SearchPage> {
                         ],
                       );
                     }
-                    return Container();
-                  } else {
-                    return Container();
                   }
+                  return Container();
                 }),
-          const Divider(
-            color: Colors.white,
-          ),
+          const Divider(),
           if (query.isNotEmpty)
             FutureBuilder(
                 future: Provider.of<ClassProvider>(context, listen: false)
@@ -99,7 +98,7 @@ class _SearchPageState extends State<SearchPage> {
                                                   SearchedClassesView>(
                                               builder: (_) =>
                                                   SearchedClassesView(
-                                                    classesHeader:
+                                                    classHeaders:
                                                         classesSearched,
                                                     query: query,
                                                   )));
@@ -114,12 +113,11 @@ class _SearchPageState extends State<SearchPage> {
                                 ],
                               )),
                         ClassesCircleList(
-                            classesHeader: classesSearched, query: query)
+                            classHeaders: classesSearched, query: query)
                       ],
                     );
-                  } else {
-                    return Container();
                   }
+                  return Container();
                 }),
           if (query.isNotEmpty)
             Container(
@@ -163,9 +161,10 @@ class PeopleCircleList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    TextEditingController _labelController;
     return Container(
       constraints: BoxConstraints.expand(
-        height: Theme.of(context).textTheme.headline4.fontSize * 1.1 + 80.0,
+        height: Theme.of(context).textTheme.headline4.fontSize * 1.1 + 60.0,
       ),
       padding: const EdgeInsets.all(10),
       child: ListView.builder(
@@ -174,24 +173,35 @@ class PeopleCircleList extends StatelessWidget {
         scrollDirection: Axis.horizontal,
         itemBuilder: (BuildContext context, int index) {
           final List<String> name = people[index].name.split(' ');
+          _labelController =
+              TextEditingController(text: people[index].name ?? '');
           return Container(
-              padding: const EdgeInsets.fromLTRB(0, 0, 30, 0),
+              padding: const EdgeInsets.fromLTRB(0, 0, 25, 0),
               child: GestureDetector(
-                onTap: () {
-                  showModalBottomSheet<dynamic>(
-                      isScrollControlled: true,
-                      context: context,
-                      builder: (BuildContext buildContext) => PersonView(
-                            person: people[index],
-                          ));
-                },
-                child: Column(children: <Widget>[
-                  CircleAvatar(
-                    backgroundImage: NetworkImage(people[index].photo),
-                  ),
-                  for (String n in name) Text(n),
-                ]),
-              ));
+                  onTap: () {
+                    showModalBottomSheet<dynamic>(
+                        isScrollControlled: true,
+                        context: context,
+                        builder: (BuildContext buildContext) => PersonView(
+                              person: people[index],
+                            ));
+                  },
+                  child: Container(
+                    width: 60,
+                    height: 60,
+                    child: Column(children: <Widget>[
+                      CircleAvatar(
+                        backgroundImage: NetworkImage(people[index].photo),
+                      ),
+                      AutoSizeText(
+                        people[index].name,
+                        maxLines: 2,
+                        minFontSize: 10,
+                        maxFontSize: 12,
+                        textAlign: TextAlign.center,
+                      )
+                    ]),
+                  )));
         },
       ),
     );
@@ -199,56 +209,56 @@ class PeopleCircleList extends StatelessWidget {
 }
 
 class ClassesCircleList extends StatelessWidget {
-  const ClassesCircleList({this.classesHeader, this.query});
+  const ClassesCircleList({this.classHeaders, this.query});
 
-  final List<ClassHeader> classesHeader;
+  final List<ClassHeader> classHeaders;
   final String query;
 
   @override
   Widget build(BuildContext context) {
-    if (classesHeader.isNotEmpty) {
-      final int nr = classesHeader.length > 3 ? 3 : classesHeader.length;
+    if (classHeaders.isNotEmpty) {
+      final int nr = min(classHeaders.length, 3);
       return Container(
           padding: const EdgeInsets.all(10),
           child: Column(
-            children: [
-              for (int i = 0; i < nr; i++)
-                Container(
-                    padding: const EdgeInsets.fromLTRB(0, 0, 30, 0),
-                    child: GestureDetector(
-                        child: Row(children: <Widget>[
-                          Padding(
-                              padding: const EdgeInsets.fromLTRB(0, 0, 10, 10),
-                              child: CircleAvatar(
-                                backgroundColor: Colors.grey,
-                                child: Container(
-                                  width: 30,
-                                  child: Align(
-                                    alignment: Alignment.center,
-                                    child: AutoSizeText(
-                                      classesHeader[i].acronym,
-                                      minFontSize: 0,
-                                      maxLines: 1,
+              children: classHeaders
+                  .take(3)
+                  .map((classHeader) => Container(
+                      padding: const EdgeInsets.fromLTRB(0, 0, 30, 0),
+                      child: GestureDetector(
+                          child: Row(children: <Widget>[
+                            Padding(
+                                padding:
+                                    const EdgeInsets.fromLTRB(0, 0, 10, 10),
+                                child: CircleAvatar(
+                                  backgroundColor: Colors.grey,
+                                  child: Container(
+                                    width: 30,
+                                    child: Align(
+                                      alignment: Alignment.center,
+                                      child: AutoSizeText(
+                                        classHeader.acronym,
+                                        minFontSize: 0,
+                                        maxLines: 1,
+                                      ),
                                     ),
                                   ),
-                                ),
-                              )),
-                          Expanded(
-                            child: Text(classesHeader[i].name),
-                          )
-                        ]),
-                        onTap: () => {
-                              Navigator.of(context)
-                                  .push(MaterialPageRoute<ClassView>(
-                                builder: (_) =>
-                                    ClassView(classHeader: classesHeader[i]),
-                              ))
-                            }))
-            ],
-          )
+                                )),
+                            Expanded(
+                              child: Text(classHeader.name),
+                            )
+                          ]),
+                          onTap: () => {
+                                Navigator.of(context)
+                                    .push(MaterialPageRoute<ClassView>(
+                                  builder: (_) =>
+                                      ClassView(classHeader: classHeader),
+                                ))
+                              })))
+                  .toList())
 //      child: ListView.builder(
 //        shrinkWrap: true,
-//        itemCount: classesHeader.length > 5 ? 5 : classesHeader.length,
+//        itemCount: classHeaders.length > 5 ? 5 : classHeaders.length,
 //        scrollDirection: Axis.vertical,
 //        itemBuilder: (BuildContext context, int index) {
 //          return Container(
@@ -264,7 +274,7 @@ class ClassesCircleList extends StatelessWidget {
 //                      child: Align(
 //                        alignment: Alignment.center,
 //                        child: AutoSizeText(
-//                          classesHeader[index].acronym,
+//                          classHeaders[index].acronym,
 //                          minFontSize: 0,
 //                          maxLines: 1,
 //                        ),
@@ -274,14 +284,14 @@ class ClassesCircleList extends StatelessWidget {
 //                ),
 //                //TODO Solve pixel overflow
 //                Expanded(
-//                  child: Text(classesHeader[index].name),
+//                  child: Text(classHeaders[index].name),
 //                )
 //              ]),
 //              onTap: () => {
 //                Navigator.of(context).push(
 //                    MaterialPageRoute<ClassView>(
 //                      builder: (_) => ClassView(
-//                        classHeader: classesHeader[index]
+//                        classHeader: classHeaders[index]
 //                      ),
 //                    )
 //                )

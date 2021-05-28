@@ -7,9 +7,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class SearchedClassesView extends StatelessWidget {
-  const SearchedClassesView({this.classesHeader, this.query});
+  const SearchedClassesView({this.classHeaders, this.query});
 
-  final List<ClassHeader> classesHeader;
+  final List<ClassHeader> classHeaders;
   final String query;
 
   @override
@@ -20,7 +20,7 @@ class SearchedClassesView extends StatelessWidget {
         padding: const EdgeInsets.all(10),
         child: ListView.builder(
             shrinkWrap: true,
-            itemCount: classesHeader.length,
+            itemCount: classHeaders.length,
             scrollDirection: Axis.vertical,
             itemBuilder: (BuildContext context, int index) {
               return Container(
@@ -36,7 +36,7 @@ class SearchedClassesView extends StatelessWidget {
                                 child: Align(
                                   alignment: Alignment.center,
                                   child: AutoSizeText(
-                                    classesHeader[index].acronym,
+                                    classHeaders[index].acronym,
                                     minFontSize: 0,
                                     maxLines: 1,
                                   ),
@@ -44,14 +44,14 @@ class SearchedClassesView extends StatelessWidget {
                               ),
                             )),
                         Expanded(
-                          child: Text(classesHeader[index].name),
+                          child: Text(classHeaders[index].name),
                         )
                       ]),
                       onTap: () => {
                             Navigator.of(context)
                                 .push(MaterialPageRoute<ClassView>(
                               builder: (_) =>
-                                  ClassView(classHeader: classesHeader[index]),
+                                  ClassView(classHeader: classHeaders[index]),
                             ))
                           }));
             }),
