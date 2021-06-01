@@ -48,7 +48,7 @@ extension FeedbackQuestionExtension on FeedbackQuestion {
         question: json['question'][LocaleProvider.localeString],
         id: id,
       );
-    } else if (json['type'] == 'input') {
+    } else if (json['type'] == 'slider') {
       return FeedbackQuestionSlider(
         category: json['category'],
         question: json['question'][LocaleProvider.localeString],
