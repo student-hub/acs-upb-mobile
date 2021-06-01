@@ -46,7 +46,7 @@ class AllDayUniEvent extends UniEvent {
       {DateInterval intersectingInterval}) sync* {
     yield UniEventInstance(
       id: id,
-      title: '$name ${classHeader?.acronym ?? ''}',
+      title: name + (classHeader != null ? ' ${classHeader.acronym}' : ''),
       mainEvent: this,
       start: startDate.atMidnight(),
       end: endDate.addDays(1).atMidnight(),
