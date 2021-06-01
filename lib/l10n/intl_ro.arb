@@ -61,6 +61,7 @@
   "shortcutTypeResource": "Resursă",
   "shortcutTypeOther": "Alta",
 
+  "hintAssignmentName": "Tema 1",
   "hintEmail": "john.doe",
   "hintPassword": "····················",
   "hintFirstName": "John",
@@ -102,6 +103,7 @@
   "actionOpenFilter": "Deschide filtru",
   "actionRequestPermissions": "Cere permisiuni",
   "actionRefresh": "Reîncarcă",
+  "actionChooseDates": "Alege datele",
 
   "errorSomethingWentWrong": "A apărut o problemă.",
   "errorPasswordsDiffer": "Cele două parole diferă.",

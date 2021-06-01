@@ -90,6 +90,7 @@ extension UniEventExtension on UniEvent {
             ? null
             : List<String>.from(json['relevance']),
         addedBy: json['addedBy'],
+        grade: json['grade'],
         editable:
             json['editable'] ?? false, // Holidays are read-only by default
       );
@@ -179,6 +180,8 @@ extension UniEventExtension on UniEvent {
 
     if (this is AllDayUniEvent) {
       json['end'] = (this as AllDayUniEvent).endDate.atMidnight().toTimestamp();
+      json['grade'] = grade;
+      json['editable'] = editable;
     }
 
     if (this is ClassEvent) {

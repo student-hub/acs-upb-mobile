@@ -18,6 +18,7 @@ class AllDayUniEvent extends UniEvent {
     List<String> relevance,
     String degree,
     String addedBy,
+    double grade,
     bool editable,
   })  : startDate = start,
         endDate = end,
@@ -34,6 +35,7 @@ class AllDayUniEvent extends UniEvent {
             relevance: relevance,
             degree: degree,
             addedBy: addedBy,
+            grade: grade,
             editable: editable);
 
   LocalDate startDate;
@@ -49,6 +51,7 @@ class AllDayUniEvent extends UniEvent {
       start: startDate.atMidnight(),
       end: endDate.addDays(1).atMidnight(),
       color: color,
+      grade: grade,
     );
   }
 }

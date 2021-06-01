@@ -123,8 +123,10 @@ class UniEvent {
     this.relevance,
     this.degree,
     this.addedBy,
+    double grade,
     bool editable,
-  }) : editable = editable ?? true;
+  })  : editable = editable ?? true,
+        grade = grade ?? 0;
 
   final String id;
   final Color color;
@@ -138,6 +140,7 @@ class UniEvent {
   final String degree;
   final List<String> relevance;
   final String addedBy;
+  final double grade;
   final bool editable;
 
   String get info {
@@ -174,6 +177,7 @@ class UniEventInstance extends Event {
     Color color,
     this.location,
     this.info,
+    this.grade,
   })  : color = color ?? mainEvent?.color,
         super(id: id, start: start, end: end);
 
@@ -183,6 +187,7 @@ class UniEventInstance extends Event {
   final Color color;
   final String location;
   final String info;
+  final double grade;
 
   @override
   bool operator ==(dynamic other) =>

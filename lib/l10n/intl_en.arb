@@ -61,6 +61,7 @@
   "shortcutTypeResource": "Resource",
   "shortcutTypeOther": "Other",
 
+  "hintAssignmentName": "Assignment 1",
   "hintEmail": "john.doe",
   "hintPassword": "····················",
   "hintFirstName": "John",
@@ -102,6 +103,7 @@
   "actionOpenFilter": "Open filter",
   "actionRequestPermissions": "Request permissions",
   "actionRefresh": "Refresh",
+  "actionChooseDates": "Choose dates",
 
   "errorSomethingWentWrong": "Something went wrong.",
   "errorPasswordsDiffer": "The two passwords differ.",

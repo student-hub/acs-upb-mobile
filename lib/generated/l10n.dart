@@ -615,6 +615,16 @@ class S {
     );
   }
 
+  /// `Assignment 1`
+  String get hintAssignmentName {
+    return Intl.message(
+      'Assignment 1',
+      name: 'hintAssignmentName',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `john.doe`
   String get hintEmail {
     return Intl.message(
@@ -930,6 +940,16 @@ class S {
     return Intl.message(
       'Choose classes',
       name: 'actionChooseClasses',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Choose Dates`
+  String get actionChooseDates {
+    return Intl.message(
+      'Choose dates',
+      name: 'actionChooseDates',
       desc: '',
       args: [],
     );

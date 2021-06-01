@@ -25,6 +25,7 @@ import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:provider/provider.dart';
 import 'package:recase/recase.dart';
@@ -49,6 +50,8 @@ class _AddEventViewState extends State<AddEventView> {
   final formKey = GlobalKey<FormState>();
 
   TextEditingController locationController;
+  TextEditingController nameController;
+  TextEditingController gradeController;
   RelevanceController relevanceController = RelevanceController();
 
   UniEventType selectedEventType;
@@ -56,6 +59,8 @@ class _AddEventViewState extends State<AddEventView> {
   Person selectedTeacher;
   String selectedCalendar;
   LocalTime startTime;
+  LocalDate startDate;
+  LocalDate endDate;
   Period duration;
   Map<WeekType, bool> weekSelected = {
     WeekType.odd: null,
@@ -164,10 +169,21 @@ class _AddEventViewState extends State<AddEventView> {
         : null;
     locationController =
         TextEditingController(text: widget.initialEvent?.location ?? '');
+    nameController =
+        TextEditingController(text: widget.initialEvent?.name ?? '');
+    gradeController = TextEditingController(
+        text: (widget.initialEvent is AllDayUniEvent)
+            ? (widget.initialEvent as AllDayUniEvent)?.grade?.toString()
+            : '0');
 
     final startHour = widget.initialEvent?.start?.hourOfDay ?? 8;
     duration = widget.initialEvent?.duration ?? const Period(hours: 2);
     startTime = LocalTime(startHour, 0, 0);
+
+    startDate = widget.initialEvent?.start?.calendarDate ?? LocalDate.today();
+    endDate = (widget.initialEvent is AllDayUniEvent)
+        ? (widget.initialEvent as AllDayUniEvent).endDate
+        : LocalDate.today().addDays(7);
 
     var initialWeekDays = [
       _DayOfWeek.from(widget.initialEvent?.start?.dayOfWeek) ??
@@ -322,7 +338,8 @@ class _AddEventViewState extends State<AddEventView> {
                       prefixIcon: const Icon(Icons.category_outlined),
                     ),
                     value: selectedEventType,
-                    items: UniEventTypeExtension.classTypes
+                    items: (UniEventTypeExtension.classTypes +
+                            UniEventTypeExtension.assignmentsTypes)
                         .map(
                           (type) => DropdownMenuItem<UniEventType>(
                             value: type,
@@ -341,7 +358,8 @@ class _AddEventViewState extends State<AddEventView> {
                       return null;
                     },
                   ),
-                  if (selectedEventType != null)
+                  if (UniEventTypeExtension.classTypes
+                      .contains(selectedEventType))
                     Column(
                       children: [
                         if (classHeaders.isNotEmpty)
@@ -415,6 +433,61 @@ class _AddEventViewState extends State<AddEventView> {
                           },
                         ),
                       ],
+                    )
+                  else if (UniEventTypeExtension.assignmentsTypes
+                      .contains(selectedEventType))
+                    Column(
+                      children: [
+                        if (classHeaders.isNotEmpty)
+                          DropdownButtonFormField<ClassHeader>(
+                            isExpanded: true,
+                            decoration: InputDecoration(
+                              labelText: S.current.labelClass,
+                              prefixIcon: const Icon(FeatherIcons.bookOpen),
+                            ),
+                            value: selectedClass,
+                            items: classHeaders
+                                .map(
+                                  (header) => DropdownMenuItem(
+                                      value: header, child: Text(header.name)),
+                                )
+                                .toList(),
+                            onChanged: (selection) {
+                              formKey.currentState.validate();
+                              setState(() => selectedClass = selection);
+                            },
+                            validator: (selection) {
+                              if (selection == null) {
+                                return S.current.errorClassCannotBeEmpty;
+                              }
+                              return null;
+                            },
+                          ),
+                        TextFormField(
+                          controller: nameController,
+                          decoration: InputDecoration(
+                            labelText: S.current.labelName,
+                            hintText: S.current.hintAssignmentName,
+                            prefixIcon: const Icon(FeatherIcons.terminal),
+                          ),
+                          onChanged: (_) => setState(() {}),
+                        ),
+                        TextFormField(
+                          controller: gradeController,
+                          keyboardType: TextInputType.number,
+                          inputFormatters: <TextInputFormatter>[
+                            FilteringTextInputFormatter.allow(
+                                RegExp(r'(^\d*\.?\d*)$')),
+                          ],
+                          decoration: InputDecoration(
+                            labelText: S.current.sectionGrading,
+                            hintText: '1.5',
+                            prefixIcon: const Icon(FeatherIcons.pieChart),
+                          ),
+                          onChanged: (_) => setState(() {}),
+                        ),
+                        dayIntervalPicker(),
+                      ],
                     ),
                   const SizedBox(width: 16),
                 ],
@@ -454,40 +527,62 @@ class _AddEventViewState extends State<AddEventView> {
         onPressed: () async {
           if (!formKey.currentState.validate()) return;
 
-          LocalDateTime start = semester.startDate.at(startTime);
-          if (weekSelected[WeekType.even] && !weekSelected[WeekType.odd]) {
-            // Event is every even week, add a week to start date
-            start = start.add(const Period(weeks: 1));
+          UniEvent event;
+          if (UniEventTypeExtension.classTypes.contains(selectedEventType)) {
+            LocalDateTime start = semester.startDate.at(startTime);
+            if (weekSelected[WeekType.even] && !weekSelected[WeekType.odd]) {
+              // Event is every even week, add a week to start date
+              start = start.add(const Period(weeks: 1));
+            }
+
+            final rrule = RecurrenceRule(
+                frequency: Frequency.weekly,
+                byWeekDays: (Map<_DayOfWeek, bool>.from(weekDaySelected)
+                      ..removeWhere((key, value) => !value))
+                    .keys
+                    .map((weekDay) => ByWeekDayEntry(weekDay))
+                    .toSet(),
+                interval:
+                    weekSelected[WeekType.odd] != weekSelected[WeekType.even]
+                        ? 2
+                        : 1,
+                until:
+                    semester.endDate.add(const Period(days: 1)).atMidnight());
+
+            event = ClassEvent(
+                teacher: selectedTeacher,
+                rrule: rrule,
+                start: start,
+                duration: duration,
+                id: widget.initialEvent?.id,
+                relevance: relevanceController.customRelevance,
+                degree: relevanceController.degree,
+                location: locationController.text,
+                type: selectedEventType,
+                classHeader: selectedClass,
+                calendar: calendars[selectedCalendar],
+                addedBy: Provider.of<AuthProvider>(context, listen: false)
+                    .currentUserFromCache
+                    .uid);
+          } else if (UniEventTypeExtension.assignmentsTypes
+              .contains(selectedEventType)) {
+            event = AllDayUniEvent(
+                start: startDate,
+                end: endDate,
+                id: widget.initialEvent?.id,
+                relevance: relevanceController.customRelevance,
+                degree: relevanceController.degree,
+                name: nameController.text,
+                type: selectedEventType,
+                classHeader: selectedClass,
+                grade: double.parse(gradeController.text),
+                editable: true,
+                calendar: calendars[selectedCalendar],
+                addedBy: Provider.of<AuthProvider>(context, listen: false)
+                    .currentUserFromCache
+                    .uid);
           }
-
-          final rrule = RecurrenceRule(
-              frequency: Frequency.weekly,
-              byWeekDays: (Map<_DayOfWeek, bool>.from(weekDaySelected)
-                    ..removeWhere((key, value) => !value))
-                  .keys
-                  .map((weekDay) => ByWeekDayEntry(weekDay))
-                  .toSet(),
-              interval:
-                  weekSelected[WeekType.odd] != weekSelected[WeekType.even]
-                      ? 2
-                      : 1,
-              until: semester.endDate.add(const Period(days: 1)).atMidnight());
-
-          final event = ClassEvent(
-              teacher: selectedTeacher,
-              rrule: rrule,
-              start: start,
-              duration: duration,
-              id: widget.initialEvent?.id,
-              relevance: relevanceController.customRelevance,
-              degree: relevanceController.degree,
-              location: locationController.text,
-              type: selectedEventType,
-              classHeader: selectedClass,
-              calendar: calendars[selectedCalendar],
-              addedBy: Provider.of<AuthProvider>(context, listen: false)
-                  .currentUserFromCache
-                  .uid);
+          if (event == null) return;
 
           if (widget.initialEvent?.id == null) {
             final res =
@@ -589,6 +684,113 @@ class _AddEventViewState extends State<AddEventView> {
               endTime.toString('HH:mm'),
               style: Theme.of(context).textTheme.headline4,
             ),
+          ),
+          const SizedBox(width: 12),
+        ],
+      ),
+    );
+  }
+
+  Widget dayIntervalPicker() {
+    final textColor = Theme.of(context).textTheme.headline4.color;
+    return Padding(
+      padding: const EdgeInsets.only(top: 10),
+      child: Column(
+        children: [
+          Row(children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 12),
+              child: Icon(
+                FeatherIcons.calendar,
+                color: CustomIcons.formIconColor(Theme.of(context)),
+              ),
+            ),
+            Text(
+              S.current.actionChooseDates,
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyText1
+                  .copyWith(color: textColor),
+            )
+          ]),
+          Row(children: [
+            Padding(
+              padding: const EdgeInsets.all(12),
+              child: Icon(
+                FeatherIcons.logOut,
+                color: CustomIcons.formIconColor(Theme.of(context)),
+              ),
+            ),
+            TextButton(
+              style: ButtonStyle(
+                padding: MaterialStateProperty.all<EdgeInsets>(EdgeInsets.zero),
+              ),
+              onPressed: () async {
+                final DateTime startDay = await showDatePicker(
+                  context: context,
+                  firstDate: semester.startDate.toDateTimeUnspecified(),
+                  initialDate: startDate.toDateTimeUnspecified(),
+                  lastDate: semester.endDate.toDateTimeUnspecified(),
+                );
+
+                setState(() =>
+                    startDate = LocalDate.dateTime(startDay) ?? startDate);
+              },
+              child: Text(
+                startDate.toString('MMM d yyyy'),
+                style: Theme.of(context).textTheme.headline5,
+              ),
+            )
+          ]),
+          Column(
+            children: [
+              Padding(
+                  padding: const EdgeInsets.all(12),
+                  child: Column(children: [
+                    DottedLine(
+                      lineThickness: 4,
+                      dashRadius: 2,
+                      dashColor: textColor,
+                    )
+                  ]))
+            ],
+          ),
+          Row(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(12),
+                child: Icon(
+                  FeatherIcons.logIn,
+                  color: CustomIcons.formIconColor(Theme.of(context)),
+                ),
+              ),
+              TextButton(
+                style: ButtonStyle(
+                  padding:
+                      MaterialStateProperty.all<EdgeInsets>(EdgeInsets.zero),
+                ),
+                onPressed: () async {
+                  final DateTime endDay = await showDatePicker(
+                    context: context,
+                    firstDate: startDate.toDateTimeUnspecified(),
+                    initialDate: endDate
+                                .toDateTimeUnspecified()
+                                .isAfter(startDate.toDateTimeUnspecified()) &&
+                            endDate.toDateTimeUnspecified().isBefore(
+                                semester.endDate.toDateTimeUnspecified())
+                        ? endDate.toDateTimeUnspecified()
+                        : startDate.toDateTimeUnspecified(),
+                    lastDate: semester.endDate.toDateTimeUnspecified(),
+                  );
+                  setState(
+                      () => {endDate = LocalDate.dateTime(endDay) ?? endDate});
+                },
+                child: Text(
+                  endDate.toString('MMM d yyyy'),
+                  style: Theme.of(context).textTheme.headline5,
+                ),
+              )
+            ],
           ),
           const SizedBox(width: 12),
         ],
