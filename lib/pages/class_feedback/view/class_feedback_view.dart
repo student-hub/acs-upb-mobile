@@ -1,3 +1,5 @@
+import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
+import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/model/class_feedback_answer.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/service/feedback_provider.dart';
@@ -14,7 +16,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:provider/provider.dart';
-import 'package:acs_upb_mobile/generated/l10n.dart';
 
 class ClassFeedbackView extends StatefulWidget {
   const ClassFeedbackView({Key key, this.classHeader}) : super(key: key);
@@ -30,6 +31,7 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
   TextEditingController classController;
   bool agreedToResponsibilities;
 
+  Person selectedTeacher;
   String selectedTeacherName;
   Person selectedAssistant;
   List<Person> classTeachers = [];
@@ -51,6 +53,10 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
     Provider.of<FeedbackProvider>(context, listen: false)
         .fetchCategories()
         .then((categories) => setState(() => feedbackCategories = categories));
+
+    Provider.of<PersonProvider>(context, listen: false)
+        .mostRecentLecturer(widget.classHeader.id)
+        .then((value) => selectedTeacherName = value);
 
     fetchFeedbackQuestions();
   }
@@ -81,7 +87,6 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
         labelText: S.current.labelClass,
         prefixIcon: const Icon(FeatherIcons.bookOpen),
       ),
-      onChanged: (_) => setState(() {}),
     );
   }
 
@@ -89,19 +94,20 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
     final personProvider = Provider.of<PersonProvider>(context);
 
     return FutureBuilder(
-      future: personProvider.mostRecentLecturer(widget.classHeader.id),
+      future: personProvider.fetchPerson(selectedTeacherName),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
-          final lecturerName = snapshot.data;
-          selectedTeacherName = lecturerName;
-          return TextFormField(
-            enabled: false,
-            controller: TextEditingController(text: lecturerName ?? '-'),
-            decoration: InputDecoration(
-              labelText: S.current.labelLecturer,
-              prefixIcon: const Icon(Icons.person_outline),
-            ),
-            onChanged: (_) => setState(() {}),
+          final lecturer = snapshot.data;
+          selectedTeacher = lecturer;
+          return AutocompletePerson(
+            key: const Key('AutocompleteLecturer'),
+            labelText: S.current.labelLecturer,
+            formKey: formKey,
+            onSaved: (value) => selectedTeacher = value,
+            classTeachers: classTeachers,
+            personDisplayed: selectedTeacherName == null
+                ? Person(name: '-')
+                : selectedTeacher,
           );
         } else {
           return const Center(child: CircularProgressIndicator());
@@ -201,12 +207,14 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
       actions: [_submitButton()],
       body: ListView(
         children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.only(left: 25, top: 10),
-            child: IconText(
-              icon: Icons.info_outline,
-              text: S.current.infoFormAnonymous,
-              style: Theme.of(context).textTheme.bodyText1,
+          Center(
+            child: Padding(
+              padding: const EdgeInsets.only(left: 25, top: 10),
+              child: IconText(
+                icon: Icons.info_outline,
+                text: S.current.infoFormAnonymous,
+                style: Theme.of(context).textTheme.bodyText1,
+              ),
             ),
           ),
           Padding(
@@ -236,23 +244,30 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
             formKey.currentState.save();
           });
 
-          bool res;
+          bool res1, res2;
+          final authProvider =
+              Provider.of<AuthProvider>(context, listen: false);
+          final String uid = authProvider.uid;
           for (var i = 0; i < feedbackQuestions.length; i++) {
-            res = false;
+            res1 = false;
 
             final response = FeedbackQuestionAnswer(
               assistant: selectedAssistant,
-              teacherName: selectedTeacherName,
+              teacher: selectedTeacher,
               className: classController.text,
               questionNumber: i.toString(),
               questionAnswer: feedbackQuestions[i.toString()].answer,
             );
 
-            res = await Provider.of<FeedbackProvider>(context, listen: false)
+            res1 = await Provider.of<FeedbackProvider>(context, listen: false)
                 .addResponse(response);
-            if (!res) break;
+            if (!res1) break;
           }
-          if (res) {
+
+          res2 = await Provider.of<FeedbackProvider>(context, listen: false)
+              .setUserClassFeedback(classController.text, uid);
+
+          if (res1 && res2) {
             Navigator.of(context).pop();
             AppToast.show(S.current.messageFeedbackHasBeenSent);
           }

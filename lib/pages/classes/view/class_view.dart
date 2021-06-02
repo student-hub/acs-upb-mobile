@@ -1,9 +1,12 @@
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
+import 'package:acs_upb_mobile/pages/class_feedback/service/feedback_provider.dart';
+import 'package:acs_upb_mobile/pages/class_feedback/service/remote_config.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/view/class_feedback_statistics.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/view/class_feedback_view.dart';
 import 'package:acs_upb_mobile/pages/classes/model/class.dart';
 import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
+import 'package:acs_upb_mobile/pages/classes/view/class_events_card.dart';
 import 'package:acs_upb_mobile/pages/classes/view/grading_view.dart';
 import 'package:acs_upb_mobile/pages/classes/view/shortcut_view.dart';
 import 'package:acs_upb_mobile/pages/people/service/person_provider.dart';
@@ -23,9 +26,11 @@ import 'package:positioned_tap_detector/positioned_tap_detector.dart';
 import 'package:provider/provider.dart';
 
 class ClassView extends StatefulWidget {
-  const ClassView({Key key, this.classHeader}) : super(key: key);
+  const ClassView({Key key, this.classHeader, this.remoteConfigService})
+      : super(key: key);
 
   final ClassHeader classHeader;
+  final RemoteConfigService remoteConfigService;
 
   @override
   _ClassViewState createState() => _ClassViewState();
@@ -34,6 +39,7 @@ class ClassView extends StatefulWidget {
 class _ClassViewState extends State<ClassView> {
   Class classInfo;
   String lecturerName = '';
+  bool alreadyCompletedFeedback;
 
   @override
   void initState() {
@@ -47,20 +53,31 @@ class _ClassViewState extends State<ClassView> {
   @override
   Widget build(BuildContext context) {
     final classProvider = Provider.of<ClassProvider>(context);
+    final feedbackProvider =
+        Provider.of<FeedbackProvider>(context, listen: false);
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    feedbackProvider
+        .checkProvidedClassFeedback(widget.classHeader.id, authProvider.uid)
+        .then((value) => alreadyCompletedFeedback = value);
 
     return AppScaffold(
       title: Text(S.current.navigationClassInfo),
       actions: [
-        if (kReleaseMode == false)
+        if (widget.remoteConfigService.feedbackEnabled)
           AppScaffoldAction(
               icon: Icons.rate_review_outlined,
               onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute<ClassFeedbackView>(
-                    builder: (_) =>
-                        ClassFeedbackStatistics(),
-                  ),
-                );
+                if (!alreadyCompletedFeedback) {
+                  Navigator.of(context)
+                      .push(
+                        MaterialPageRoute<ClassFeedbackView>(
+                          builder: (_) => ClassFeedbackStatistics(),
+                        ),
+                      )
+                      .then((value) => setState(() {}));
+                } else {
+                  AppToast.show(S.current.warningFeedbackAlreadySent);
+                }
               }),
       ],
       body: FutureBuilder(
@@ -79,6 +96,8 @@ class _ClassViewState extends State<ClassView> {
                         lecturerCard(context),
                         const SizedBox(height: 12),
                         shortcuts(context),
+                        const SizedBox(height: 12),
+                        ClassEventsCard(widget.classHeader.id),
                         const SizedBox(height: 12),
                         GradingChart(
                           grading: classInfo.grading,

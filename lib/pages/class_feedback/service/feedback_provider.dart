@@ -1,7 +1,7 @@
 import 'package:acs_upb_mobile/pages/class_feedback/model/class_feedback_answer.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question_dropdown.dart';
-import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question_input.dart';
+import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question_slider.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question_rating.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question_text.dart';
 import 'package:acs_upb_mobile/resources/locale_provider.dart';
@@ -17,7 +17,7 @@ extension ClassFeedbackAnswerExtension on FeedbackQuestionAnswer {
     if (questionAnswer != null) data['answer'] = questionAnswer;
     data['dateSubmitted'] = Timestamp.now();
     data['class'] = className;
-    data['teacher'] = teacherName;
+    data['teacher'] = teacher.name;
     data['assistant'] = assistant.name;
 
     return data;
@@ -48,8 +48,8 @@ extension FeedbackQuestionExtension on FeedbackQuestion {
         question: json['question'][LocaleProvider.localeString],
         id: id,
       );
-    } else if (json['type'] == 'input') {
-      return FeedbackQuestionInput(
+    } else if (json['type'] == 'slider') {
+      return FeedbackQuestionSlider(
         category: json['category'],
         question: json['question'][LocaleProvider.localeString],
         id: id,
@@ -115,21 +115,33 @@ class FeedbackProvider with ChangeNotifier {
     }
   }
 
-  List<String> getQuestionsByCategoryAndType(
-      List<dynamic> questions, String category, String type) {
-    final List<String> filteredQuestions = [];
-    final List<dynamic> filterQuestions = questions
-        .where((element) =>
-            element is Map<dynamic, dynamic> &&
-            element['category'] == category &&
-            element['type'] == type)
-        .toList();
-    for (final Map<String, dynamic> element in filterQuestions) {
-      final List<dynamic> qs = element.values.toList();
-      filteredQuestions.add(
-          qs[qs.indexWhere((element) => element is Map<dynamic, dynamic>)]
-              [LocaleProvider.localeString]);
+  Future<bool> setUserClassFeedback(String className, String uid) async {
+    try {
+      final DocumentReference ref =
+          FirebaseFirestore.instance.collection('users').doc(uid);
+      await ref.set({
+        'classesFeedback': {className: true}
+      }, SetOptions(merge: true));
+      notifyListeners();
+      return true;
+    } catch (e) {
+      AppToast.show(S.current.errorSomethingWentWrong);
+      return false;
     }
-    return filteredQuestions;
+  }
+
+  Future<bool> checkProvidedClassFeedback(String className, String uid) async {
+    try {
+      final DocumentSnapshot snap =
+          await FirebaseFirestore.instance.collection('users').doc(uid).get();
+      if (snap.data()['classesFeedback'] != null &&
+          snap.data()['classesFeedback'][className] == true) {
+        return true;
+      }
+      return false;
+    } catch (e) {
+      AppToast.show(S.current.errorSomethingWentWrong);
+      return false;
+    }
   }
 }

@@ -1375,6 +1375,16 @@ class S {
     );
   }
 
+  /// `You have already submitted feedback for this class!`
+  String get warningFeedbackAlreadySent {
+    return Intl.message(
+      'You have already submitted feedback for this class!',
+      name: 'warningFeedbackAlreadySent',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Already showing only custom websites.`
   String get warningFilterAlreadyShowingYours {
     return Intl.message(
@@ -2555,10 +2565,10 @@ class S {
     );
   }
 
-  /// `I understand this survey is extremely important for the continuous development of the educational process and I will not address insults or use any obscene words.`
+  /// `I understand this survey is extremely important for the continuous development of the educational process and I will only provide valuable and constructive feedback for this class.`
   String get messageAgreeFeedbackPolicy {
     return Intl.message(
-      'I understand this survey is extremely important for the continuous development of the educational process and I will not address insults or use any obscene words.',
+      'I understand this survey is extremely important for the continuous development of the educational process and I will only provide valuable and constructive feedback for this class.',
       name: 'messageAgreeFeedbackPolicy',
       desc: '',
       args: [],

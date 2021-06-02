@@ -1,15 +1,14 @@
 import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question_dropdown.dart';
-import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question_input.dart';
+import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question_slider.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question_rating.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question_text.dart';
 import 'package:acs_upb_mobile/widgets/radio_emoji.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:validators/validators.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 
-class FeedbackQuestionForm extends StatelessWidget {
+class FeedbackQuestionForm extends StatefulWidget {
   const FeedbackQuestionForm({
     this.question,
     this.answerValues,
@@ -21,79 +20,78 @@ class FeedbackQuestionForm extends StatelessWidget {
   final GlobalKey<FormState> formKey;
 
   @override
+  _FeedbackQuestionFormState createState() => _FeedbackQuestionFormState();
+}
+
+class _FeedbackQuestionFormState extends State<FeedbackQuestionForm> {
+  @override
   Widget build(BuildContext context) {
-    if (question is FeedbackQuestionInput) {
+    if (widget.question is FeedbackQuestionSlider) {
       return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            question.question,
+            widget.question.question,
             style: const TextStyle(
               fontSize: 18,
             ),
           ),
-          TextFormField(
-            decoration: InputDecoration(
-              labelText: S.current.labelAnswer,
-              prefixIcon: const Icon(Icons.question_answer_outlined),
-            ),
-            onSaved: (value) {
-              question.answer = value;
+          Slider.adaptive(
+            key: const Key('FeedbackSlider'),
+            value: widget.question.answer != null
+                ? double.parse(widget.question.answer)
+                : 5,
+            onChanged: (newRating) {
+              setState(() {
+                widget.question.answer = newRating.toString();
+              });
             },
-            autovalidateMode: AutovalidateMode.onUserInteraction,
-            validator: (value) {
-              if (value?.isEmpty ?? true) {
-                return S.current.errorAnswerCannotBeEmpty;
-              }
-              if (!isNumeric(value) ||
-                  int.parse(value) < 0 ||
-                  int.parse(value) > 10) {
-                return S.current.errorAnswerIncorrect;
-              }
-              return null;
-            },
+            min: 1,
+            max: 10,
+            divisions: 9,
+            label: widget.question.answer,
+            activeColor: Theme.of(context).accentColor,
           ),
           const SizedBox(height: 10),
         ],
       );
-    } else if (question is FeedbackQuestionRating) {
+    } else if (widget.question is FeedbackQuestionRating) {
       return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           EmojiFormField(
-            question: question.question,
+            question: widget.question.question,
             onSaved: (value) {
-              question.answer = value.keys
-                  .firstWhere((element) => value[element] == true)
+              widget.question.answer = value.keys
+                  .firstWhere((element) => value[element] == true,
+                      orElse: () => -1)
                   .toString();
             },
-            validator: (selection) {
-              if (selection.values.where((e) => e != false).isEmpty) {
-                return S.current.warningYouNeedToSelectAtLeastOne;
-              }
-              return null;
-            },
-            answerValues: answerValues[int.parse(question.id)],
+            answerValues: widget.answerValues[int.parse(widget.question.id)],
           ),
           const SizedBox(height: 10),
         ],
       );
-    } else if (question is FeedbackQuestionDropdown) {
+    } else if (widget.question is FeedbackQuestionDropdown) {
       return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            question.question,
+            widget.question.question,
             style: const TextStyle(
               fontSize: 18,
             ),
           ),
           DropdownButtonFormField<String>(
+            key: const Key('FeedbackDropdown'),
             decoration: InputDecoration(
               labelText: S.current.labelAnswer,
               prefixIcon: const Icon(Icons.list_outlined),
             ),
             onSaved: (value) {
-              question.answer = value;
+              widget.question.answer = value;
             },
-            items: (question as FeedbackQuestionDropdown)
+            items: (widget.question as FeedbackQuestionDropdown)
                 .options
                 .map(
                   (type) => DropdownMenuItem<String>(
@@ -103,7 +101,7 @@ class FeedbackQuestionForm extends StatelessWidget {
                 )
                 .toList(),
             onChanged: (selection) {
-              formKey.currentState.validate();
+              widget.formKey.currentState.validate();
             },
             validator: (selection) {
               if (selection == null) {
@@ -115,37 +113,37 @@ class FeedbackQuestionForm extends StatelessWidget {
           const SizedBox(height: 10),
         ],
       );
-    } else if (question is FeedbackQuestionText) {
+    } else if (widget.question is FeedbackQuestionText) {
       return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            question.question,
+            widget.question.question,
             style: const TextStyle(
               fontSize: 18,
             ),
           ),
-          const SizedBox(height: 24),
-          Card(
-            child: Padding(
-              padding: const EdgeInsets.all(2),
-              child: Column(
-                children: [
-                  TextFormField(
-                    onSaved: (value) {
-                      question.answer = value;
-                    },
-                    keyboardType: TextInputType.multiline,
-                    maxLines: null,
-                  ),
-                ],
-              ),
+          const SizedBox(height: 12),
+          Padding(
+            padding: const EdgeInsets.all(2),
+            child: Column(
+              children: [
+                TextFormField(
+                  key: const Key('FeedbackText'),
+                  onSaved: (value) {
+                    widget.question.answer = value;
+                  },
+                  keyboardType: TextInputType.multiline,
+                  maxLines: null,
+                ),
+              ],
             ),
           ),
           const SizedBox(height: 24),
         ],
       );
     } else {
-      return null;
+      return Container();
     }
   }
 }
