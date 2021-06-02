@@ -76,6 +76,8 @@ dependencies:
   # Use an in-app browser to ask user for Google Calendar permission
   flutter_web_browser: ^0.13.1
 
+  fl_chart: ^0.10.0
+
   # Used for Google Calendar API
   googleapis: 1.0.0
 

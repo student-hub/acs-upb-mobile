@@ -1,5 +1,6 @@
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
+import 'package:acs_upb_mobile/pages/class_feedback/view/class_feedback_statistics.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/view/class_feedback_view.dart';
 import 'package:acs_upb_mobile/pages/classes/model/class.dart';
 import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
@@ -57,7 +58,7 @@ class _ClassViewState extends State<ClassView> {
                 Navigator.of(context).push(
                   MaterialPageRoute<ClassFeedbackView>(
                     builder: (_) =>
-                        ClassFeedbackView(classHeader: widget.classHeader),
+                        ClassFeedbackStatistics(),
                   ),
                 );
               }),
