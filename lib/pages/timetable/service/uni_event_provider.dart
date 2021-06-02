@@ -180,7 +180,7 @@ extension UniEventExtension on UniEvent {
 
     if (this is AllDayUniEvent) {
       json['end'] = (this as AllDayUniEvent).endDate.atMidnight().toTimestamp();
-      json['grade'] = grade;
+      json['grade'] = (this as AllDayUniEvent).grade;
       json['editable'] = editable;
     }
 

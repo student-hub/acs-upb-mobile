@@ -22,6 +22,7 @@ class AllDayUniEvent extends UniEvent {
     bool editable,
   })  : startDate = start,
         endDate = end,
+        grade = grade ?? 0,
         super(
             name: name,
             location: location,
@@ -35,11 +36,11 @@ class AllDayUniEvent extends UniEvent {
             relevance: relevance,
             degree: degree,
             addedBy: addedBy,
-            grade: grade,
             editable: editable);
 
   LocalDate startDate;
   LocalDate endDate;
+  double grade;
 
   @override
   Iterable<UniEventInstance> generateInstances(

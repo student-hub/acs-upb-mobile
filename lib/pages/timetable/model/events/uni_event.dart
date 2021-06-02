@@ -123,10 +123,8 @@ class UniEvent {
     this.relevance,
     this.degree,
     this.addedBy,
-    double grade,
     bool editable,
-  })  : editable = editable ?? true,
-        grade = grade ?? 0;
+  }) : editable = editable ?? true;
 
   final String id;
   final Color color;
@@ -140,7 +138,6 @@ class UniEvent {
   final String degree;
   final List<String> relevance;
   final String addedBy;
-  final double grade;
   final bool editable;
 
   String get info {
