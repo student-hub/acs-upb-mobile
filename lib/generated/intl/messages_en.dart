@@ -230,6 +230,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "navigationClassInfo" : MessageLookupByLibrary.simpleMessage("Class information"),
     "navigationClasses" : MessageLookupByLibrary.simpleMessage("Classes"),
     "navigationEventDetails" : MessageLookupByLibrary.simpleMessage("Event details"),
+    "navigationFeedbackMotivation" : MessageLookupByLibrary.simpleMessage("Motivation"),
     "navigationFilter" : MessageLookupByLibrary.simpleMessage("Filter"),
     "navigationHome" : MessageLookupByLibrary.simpleMessage("Home"),
     "navigationMap" : MessageLookupByLibrary.simpleMessage("Map"),
