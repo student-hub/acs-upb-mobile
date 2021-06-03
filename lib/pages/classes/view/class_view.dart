@@ -63,22 +63,23 @@ class _ClassViewState extends State<ClassView> {
     return AppScaffold(
       title: Text(S.current.navigationClassInfo),
       actions: [
-        if (widget.remoteConfigService.feedbackEnabled)
-          AppScaffoldAction(
-              icon: Icons.rate_review_outlined,
-              onPressed: () {
-                if (!alreadyCompletedFeedback) {
-                  Navigator.of(context)
-                      .push(
-                        MaterialPageRoute<ClassFeedbackView>(
-                          builder: (_) => ClassFeedbackStatistics(),
-                        ),
-                      )
-                      .then((value) => setState(() {}));
-                } else {
-                  AppToast.show(S.current.warningFeedbackAlreadySent);
-                }
-              }),
+        //if (widget.remoteConfigService.feedbackEnabled)
+        AppScaffoldAction(
+            icon: Icons.rate_review_outlined,
+            onPressed: () {
+              if (!alreadyCompletedFeedback) {
+                Navigator.of(context)
+                    .push(
+                      MaterialPageRoute<ClassFeedbackView>(
+                        builder: (_) =>
+                            ClassFeedbackView(classHeader: widget.classHeader),
+                      ),
+                    )
+                    .then((value) => setState(() {}));
+              } else {
+                AppToast.show(S.current.warningFeedbackAlreadySent);
+              }
+            }),
       ],
       body: FutureBuilder(
           future: classProvider.fetchClassInfo(widget.classHeader),
@@ -105,6 +106,24 @@ class _ClassViewState extends State<ClassView> {
                           onSave: (grading) => classProvider.setGrading(
                               widget.classHeader.id, grading),
                         ),
+                        const SizedBox(height: 12),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute<ClassFeedbackStatistics>(
+                                builder: (_) => ClassFeedbackStatistics(),
+                              ),
+                            );
+                          },
+                          child: const Text(
+                            'What do others think?',
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                              fontSize: 16,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 12),
                       ],
                     ),
                   ),

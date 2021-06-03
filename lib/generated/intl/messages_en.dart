@@ -238,6 +238,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "navigationPortal" : MessageLookupByLibrary.simpleMessage("Portal"),
     "navigationProfile" : MessageLookupByLibrary.simpleMessage("Profile"),
     "navigationSettings" : MessageLookupByLibrary.simpleMessage("Settings"),
+    "navigationStatistics" : MessageLookupByLibrary.simpleMessage("Statistics"),
     "navigationTimetable" : MessageLookupByLibrary.simpleMessage("Timetable"),
     "relevanceAnyone" : MessageLookupByLibrary.simpleMessage("Anyone"),
     "relevanceOnlyMe" : MessageLookupByLibrary.simpleMessage("Only me"),

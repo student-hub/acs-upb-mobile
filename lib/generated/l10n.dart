@@ -1735,6 +1735,16 @@ class S {
     );
   }
 
+  /// `Statistics`
+  String get navigationStatistics {
+    return Intl.message(
+      'Statistics',
+      name: 'navigationStatistics',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Show all`
   String get filterMenuShowAll {
     return Intl.message(

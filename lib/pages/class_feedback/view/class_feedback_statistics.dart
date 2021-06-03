@@ -1,3 +1,4 @@
+import 'package:acs_upb_mobile/pages/class_feedback/view/statistics_details.dart';
 import 'package:acs_upb_mobile/pages/timetable/service/uni_event_provider.dart';
 import 'package:acs_upb_mobile/widgets/info_card.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
@@ -26,9 +27,7 @@ class _ClassFeedbackStatisticsState extends State<ClassFeedbackStatistics> {
   final Duration animDuration = const Duration(milliseconds: 250);
 
   int touchedIndex = -1;
-  List<int> selectedSpots = [];
-  Color greyColor = Colors.grey;
-  static const double barWidth = 22;
+  static const double barWidth = 30;
 
   Widget firstGraph() {
     return Card(
@@ -63,202 +62,177 @@ class _ClassFeedbackStatisticsState extends State<ClassFeedbackStatistics> {
 
   Widget barChart() {
     final UniEventProvider eventProvider =
-    Provider.of<UniEventProvider>(context);
+        Provider.of<UniEventProvider>(context);
 
     return InfoCard(
       future: eventProvider.getUpcomingEvents(LocalDate.today()),
-      onShowMore: () => Navigator.of(context).pop(),
-      title: S.current.sectionEventsComingUp,
-      builder: (_) =>
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(height: 24),
-            BarChart(
-              BarChartData(
-                alignment: BarChartAlignment.center,
-                maxY: 20,
-                groupsSpace: 12,
-                barTouchData: BarTouchData(
-                  enabled: false,
-                ),
-                titlesData: FlTitlesData(
-                  show: true,
-                  topTitles: SideTitles(
-                    showTitles: true,
-                    margin: 10,
-                    rotateAngle: 0,
-                    getTitles: (double value) {
-                      switch (value.toInt()) {
-                        case 0:
-                          return 'Mon';
-                        case 1:
-                          return 'Tue';
-                        case 2:
-                          return 'Wed';
-                        case 3:
-                          return 'Thu';
-                        case 4:
-                          return 'Fri';
-                        case 5:
-                          return 'Sat';
-                        case 6:
-                          return 'Sun';
-                        default:
-                          return '';
-                      }
-                    },
-                  ),
-                  bottomTitles: SideTitles(
-                    showTitles: true,
-                    margin: 10,
-                    rotateAngle: 0,
-                    getTitles: (double value) {
-                      switch (value.toInt()) {
-                        case 0:
-                          return 'Mon';
-                        case 1:
-                          return 'Tue';
-                        case 2:
-                          return 'Wed';
-                        case 3:
-                          return 'Thu';
-                        case 4:
-                          return 'Fri';
-                        case 5:
-                          return 'Sat';
-                        case 6:
-                          return 'Sun';
-                        default:
-                          return '';
-                      }
-                    },
-                  ),
-                  leftTitles: SideTitles(
-                    showTitles: true,
-                    rotateAngle: 45,
-                    getTitles: (double value) {
-                      if (value == 0) {
-                        return '0';
-                      }
-                      return '${value.toInt()}0k';
-                    },
-                    interval: 5,
-                    margin: 8,
-                    reservedSize: 30,
-                  ),
-                  rightTitles: SideTitles(
-                    showTitles: true,
-                    rotateAngle: 90,
-                    getTitles: (double value) {
-                      if (value == 0) {
-                        return '0';
-                      }
-                      return '${value.toInt()}0k';
-                    },
-                    interval: 5,
-                    margin: 8,
-                    reservedSize: 30,
-                  ),
-                ),
-                gridData: FlGridData(
-                  show: true,
-                  checkToShowHorizontalLine: (value) => value % 5 == 0,
-                  getDrawingHorizontalLine: (value) {
-                    if (value == 0) {
-                      return FlLine(
-                          color: const Color(0xff363753), strokeWidth: 3);
-                    }
-                    return FlLine(
-                      color: const Color(0xff2a2747),
-                      strokeWidth: 0.8,
-                    );
-                  },
-                ),
-                borderData: FlBorderData(
-                  show: false,
-                ),
-                barGroups: [
-                  BarChartGroupData(
-                    x: 0,
-                    barRods: [
-                      BarChartRodData(
-                        y: 15.1,
-                        width: barWidth,
-                        borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(6),
-                            topRight: Radius.circular(6)),
-                        rodStackItem: [
-                          BarChartRodStackItem(0, 2, const Color(0xff2bdb90)),
-                          BarChartRodStackItem(2, 5, const Color(0xffffdd80)),
-                          BarChartRodStackItem(5, 7.5, const Color(0xffff4d94)),
-                          BarChartRodStackItem(
-                              7.5, 15.5, const Color(0xff19bfff)),
-                        ],
-                      ),
-                    ],
-                  ),
-                  BarChartGroupData(
-                    x: 2,
-                    barRods: [
-                      BarChartRodData(
-                        y: 13,
-                        width: barWidth,
-                        borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(6),
-                            topRight: Radius.circular(6)),
-                        rodStackItem: [
-                          BarChartRodStackItem(0, 1.5, const Color(0xff2bdb90)),
-                          BarChartRodStackItem(
-                              1.5, 3.5, const Color(0xffffdd80)),
-                          BarChartRodStackItem(3.5, 7, const Color(0xffff4d94)),
-                          BarChartRodStackItem(7, 13, const Color(0xff19bfff)),
-                        ],
-                      ),
-                    ],
-                  ),
-                  BarChartGroupData(
-                    x: 3,
-                    barRods: [
-                      BarChartRodData(
-                        y: 13.5,
-                        width: barWidth,
-                        borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(6),
-                            topRight: Radius.circular(6)),
-                        rodStackItem: [
-                          BarChartRodStackItem(0, 1.5, const Color(0xff2bdb90)),
-                          BarChartRodStackItem(1.5, 3, const Color(0xffffdd80)),
-                          BarChartRodStackItem(3, 7, const Color(0xffff4d94)),
-                          BarChartRodStackItem(
-                              7, 13.5, const Color(0xff19bfff)),
-                        ],
-                      ),
-                    ],
-                  ),
-                  BarChartGroupData(
-                    x: 6,
-                    barRods: [
-                      BarChartRodData(
-                        y: 16,
-                        width: barWidth,
-                        borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(6),
-                            topRight: Radius.circular(6)),
-                        rodStackItem: [
-                          BarChartRodStackItem(0, 1.2, const Color(0xff2bdb90)),
-                          BarChartRodStackItem(1.2, 6, const Color(0xffffdd80)),
-                          BarChartRodStackItem(6, 11, const Color(0xffff4d94)),
-                          BarChartRodStackItem(11, 17, const Color(0xff19bfff)),
-                        ],
-                      ),
-                    ],
-                  ),
-                ],
+      onShowMore: () => Navigator.of(context).push(
+          MaterialPageRoute<FeedbackStatisticsDetails>(
+              builder: (_) => FeedbackStatisticsDetails())),
+      title: 'Lecture',
+      builder: (_) => Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const SizedBox(height: 24),
+          BarChart(
+            BarChartData(
+              alignment: BarChartAlignment.center,
+              maxY: 50,
+              groupsSpace: 18,
+              barTouchData: BarTouchData(
+                enabled: false,
               ),
-            )
-          ],
-        ),
+              titlesData: FlTitlesData(
+                show: true,
+                bottomTitles: SideTitles(
+                  showTitles: true,
+                  margin: 10,
+                  getTitles: (double value) {
+                    switch (value.toInt()) {
+                      case 0:
+                        return '0';
+                      case 1:
+                        return '1';
+                      case 2:
+                        return '2';
+                      case 3:
+                        return '3';
+                      case 4:
+                        return '4';
+                      default:
+                        return '';
+                    }
+                  },
+                  getTextStyles: (_) => const TextStyle(
+                    fontSize: 12,
+                  ),
+                ),
+                leftTitles: SideTitles(
+                  showTitles: true,
+                  getTitles: (double value) {
+                    return '${value.toInt()}';
+                  },
+                  interval: 15,
+                  margin: 8,
+                  reservedSize: 15,
+                  getTextStyles: (_) => const TextStyle(
+                    fontSize: 12,
+                  ),
+                ),
+              ),
+              gridData: FlGridData(
+                show: true,
+                checkToShowHorizontalLine: (value) => value % 5 == 0,
+                getDrawingHorizontalLine: (value) {
+                  if (value == 0) {
+                    return FlLine(
+                        color: const Color(0xff363753), strokeWidth: 3);
+                  }
+                  return FlLine(
+                    color: const Color(0xff2a2747),
+                    strokeWidth: 0.8,
+                  );
+                },
+              ),
+              borderData: FlBorderData(
+                show: true,
+              ),
+              axisTitleData: FlAxisTitleData(
+                bottomTitle: AxisTitle(
+                  titleText: 'Rating',
+                  reservedSize: 15,
+                  margin: 10,
+                  showTitle: true,
+                  textStyle: const TextStyle(
+                    fontSize: 16,
+                  ),
+                ),
+                leftTitle: AxisTitle(
+                  titleText: 'Answers',
+                  reservedSize: 2,
+                  margin: 10,
+                  showTitle: true,
+                  textStyle: const TextStyle(
+                    fontSize: 16,
+                  ),
+                ),
+              ),
+              barGroups: [
+                BarChartGroupData(
+                  x: 0,
+                  barRods: [
+                    BarChartRodData(
+                      y: 15,
+                      colors: [Colors.red],
+                      width: barWidth,
+                      borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(6),
+                        topRight: Radius.circular(6),
+                      ),
+                    ),
+                  ],
+                ),
+                BarChartGroupData(
+                  x: 1,
+                  barRods: [
+                    BarChartRodData(
+                      y: 16,
+                      colors: [Colors.orange],
+                      width: barWidth,
+                      borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(6),
+                        topRight: Radius.circular(6),
+                      ),
+                    ),
+                  ],
+                ),
+                BarChartGroupData(
+                  x: 2,
+                  barRods: [
+                    BarChartRodData(
+                      y: 25,
+                      colors: [Colors.amber],
+                      width: barWidth,
+                      borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(6),
+                        topRight: Radius.circular(6),
+                      ),
+                    ),
+                  ],
+                ),
+                BarChartGroupData(
+                  x: 3,
+                  barRods: [
+                    BarChartRodData(
+                      y: 30,
+                      colors: [Colors.lightGreen],
+                      width: barWidth,
+                      borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(6),
+                        topRight: Radius.circular(6),
+                      ),
+                    ),
+                  ],
+                ),
+                BarChartGroupData(
+                  x: 4,
+                  barRods: [
+                    BarChartRodData(
+                      y: 46,
+                      colors: [Colors.green],
+                      width: barWidth,
+                      borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(6),
+                        topRight: Radius.circular(6),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          )
+        ],
+      ),
     );
   }
 
@@ -270,92 +244,112 @@ class _ClassFeedbackStatisticsState extends State<ClassFeedbackStatistics> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              S.current.sectionGrading,
-              style: Theme.of(context).textTheme.headline6,
+              'Grade vs. hours worked correlation',
+              style:
+                  Theme.of(context).textTheme.headline6.copyWith(fontSize: 18),
             ),
             const SizedBox(height: 24),
-            ScatterChart(
-              ScatterChartData(
-                scatterSpots: [
-                  ScatterSpot(
-                    4,
-                    4,
-                    color: selectedSpots.contains(0) ? Colors.green : greyColor,
+            Center(
+              child: ScatterChart(
+                ScatterChartData(
+                  scatterSpots: [
+                    ScatterSpot(
+                      4,
+                      4,
+                    ),
+                    ScatterSpot(
+                      2,
+                      5,
+                    ),
+                    ScatterSpot(
+                      4,
+                      5,
+                    ),
+                    ScatterSpot(
+                      8,
+                      6,
+                    ),
+                    ScatterSpot(
+                      5,
+                      7,
+                    ),
+                    ScatterSpot(
+                      7,
+                      2,
+                    ),
+                    ScatterSpot(
+                      3,
+                      2,
+                    ),
+                    ScatterSpot(
+                      2,
+                      8,
+                    ),
+                  ],
+                  minX: 1,
+                  maxX: 10,
+                  minY: 0,
+                  maxY: 10,
+                  borderData: FlBorderData(
+                    show: true,
                   ),
-                  ScatterSpot(
-                    2,
-                    5,
-                    color:
-                        selectedSpots.contains(1) ? Colors.yellow : greyColor,
-                    radius: 12,
+                  gridData: FlGridData(
+                    show: true,
+                    drawHorizontalLine: true,
+                    checkToShowHorizontalLine: (value) => true,
+                    getDrawingHorizontalLine: (value) =>
+                        FlLine(color: Colors.white.withOpacity(0.1)),
+                    drawVerticalLine: true,
+                    checkToShowVerticalLine: (value) => true,
+                    getDrawingVerticalLine: (value) =>
+                        FlLine(color: Colors.white.withOpacity(0.1)),
                   ),
-                  ScatterSpot(
-                    4,
-                    5,
-                    color: selectedSpots.contains(2)
-                        ? Colors.purpleAccent
-                        : greyColor,
-                    radius: 8,
+                  titlesData: FlTitlesData(
+                    show: true,
+                    leftTitles: SideTitles(
+                      showTitles: true,
+                      reservedSize: 3,
+                      margin: 10,
+                      interval: 2,
+                      getTextStyles: (_) => const TextStyle(
+                        fontSize: 12,
+                      ),
+                    ),
+                    bottomTitles: SideTitles(
+                      showTitles: true,
+                      reservedSize: 3,
+                      margin: 10,
+                      interval: 3,
+                      getTextStyles: (_) => const TextStyle(
+                        fontSize: 12,
+                      ),
+                    ),
                   ),
-                  ScatterSpot(
-                    8,
-                    6,
-                    color:
-                        selectedSpots.contains(3) ? Colors.orange : greyColor,
-                    radius: 20,
+                  axisTitleData: FlAxisTitleData(
+                    bottomTitle: AxisTitle(
+                      titleText: 'Grade',
+                      reservedSize: 15,
+                      margin: 10,
+                      showTitle: true,
+                      textStyle: const TextStyle(
+                        fontSize: 16,
+                      ),
+                    ),
+                    leftTitle: AxisTitle(
+                      titleText: 'Hours worked',
+                      reservedSize: 2,
+                      margin: 10,
+                      showTitle: true,
+                      textStyle: const TextStyle(
+                        fontSize: 16,
+                      ),
+                    ),
                   ),
-                  ScatterSpot(
-                    5,
-                    7,
-                    color: selectedSpots.contains(4) ? Colors.brown : greyColor,
-                    radius: 14,
+                  scatterTouchData: ScatterTouchData(
+                    enabled: false,
                   ),
-                  ScatterSpot(
-                    7,
-                    2,
-                    color: selectedSpots.contains(5)
-                        ? Colors.lightGreenAccent
-                        : greyColor,
-                    radius: 18,
-                  ),
-                  ScatterSpot(
-                    3,
-                    2,
-                    color: selectedSpots.contains(6) ? Colors.red : greyColor,
-                    radius: 36,
-                  ),
-                  ScatterSpot(
-                    2,
-                    8,
-                    color: selectedSpots.contains(7)
-                        ? Colors.tealAccent
-                        : greyColor,
-                    radius: 22,
-                  ),
-                ],
-                minX: 0,
-                maxX: 10,
-                minY: 0,
-                maxY: 10,
-                borderData: FlBorderData(
-                  show: false,
-                ),
-                gridData: FlGridData(
-                  show: true,
-                  drawHorizontalLine: true,
-                  checkToShowHorizontalLine: (value) => true,
-                  getDrawingHorizontalLine: (value) =>
-                      FlLine(color: Colors.white.withOpacity(0.1)),
-                  drawVerticalLine: true,
-                  checkToShowVerticalLine: (value) => true,
-                  getDrawingVerticalLine: (value) =>
-                      FlLine(color: Colors.white.withOpacity(0.1)),
-                ),
-                titlesData: FlTitlesData(
-                  show: false,
                 ),
               ),
-              swapAnimationDuration: Duration(milliseconds: 150),
             ),
           ],
         ),
@@ -366,7 +360,7 @@ class _ClassFeedbackStatisticsState extends State<ClassFeedbackStatistics> {
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
-      title: Text(S.current.navigationClassFeedback),
+      title: Text(S.current.navigationStatistics),
       body: ListView(
         children: [
           Padding(
@@ -445,12 +439,12 @@ class _ClassFeedbackStatisticsState extends State<ClassFeedbackStatistics> {
       barRods: [
         BarChartRodData(
           y: isTouched ? y + 1 : y,
-          color: isTouched ? [Colors.yellow] : barColor,
+          colors: isTouched ? [Colors.yellow] : barColor,
           width: width,
           backDrawRodData: BackgroundBarChartRodData(
             show: true,
             y: 20,
-            color: barBackgroundColor,
+            colors: [barBackgroundColor],
           ),
         ),
       ],
