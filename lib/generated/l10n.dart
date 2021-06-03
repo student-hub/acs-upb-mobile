@@ -955,6 +955,54 @@ class S {
     );
   }
 
+  /// `Choose start date`
+  String get actionChooseStartDate {
+    return Intl.message(
+      'Choose start date',
+      name: 'actionChooseStartDate',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Choose Hard Deadline date`
+  String get actionChooseHardDeadlineDate {
+    return Intl.message(
+      'Choose Hard Deadline date',
+      name: 'actionChooseHardDeadlineDate',
+      desc: '',
+      args: [],
+    );
+  }
+  /// `Has Soft Deadline?`
+  String get actionChooseHasSoftDeadline {
+    return Intl.message(
+      'Has Soft Deadline?',
+      name: 'actionChooseHasSoftDeadline',
+      desc: '',
+      args: [],
+    );
+  }
+  /// `Choose Hard Deadline date`
+  String get actionChooseSoftDeadlineDate {
+    return Intl.message(
+      'Choose Soft Deadline date',
+      name: 'actionChooseSoftDeadlineDate',
+      desc: '',
+      args: [],
+    );
+  }
+  /// `Daily penalties after Soft Deadline`
+  String get messagePenalties {
+    return Intl.message(
+      'Daily penalties after Soft Deadline',
+      name: 'messagePenalties',
+      desc: '',
+      args: [],
+    );
+  }
+
+
   /// `Add shortcut`
   String get actionAddShortcut {
     return Intl.message(
@@ -1104,6 +1152,18 @@ class S {
       args: [],
     );
   }
+
+  /// `Please provide the name`
+  String get errorMissingTaskName {
+    return Intl.message(
+      'Please provide the name',
+      name: 'errorMissingTaskName',
+      desc: '',
+      args: [],
+    );
+  }
+
+
 
   /// `There is already an account associated with this e-mail address`
   String get errorEmailInUse {

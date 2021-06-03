@@ -175,6 +175,7 @@ class UniEventInstance extends Event {
     this.location,
     this.info,
     this.grade,
+    this.penalties,
   })  : color = color ?? mainEvent?.color,
         super(id: id, start: start, end: end);
 
@@ -185,6 +186,7 @@ class UniEventInstance extends Event {
   final String location;
   final String info;
   final double grade;
+  final double penalties;
 
   @override
   bool operator ==(dynamic other) =>

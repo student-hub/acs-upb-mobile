@@ -12,6 +12,7 @@ import 'package:acs_upb_mobile/pages/timetable/model/academic_calendar.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/events/all_day_event.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/events/class_event.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/events/recurring_event.dart';
+import 'package:acs_upb_mobile/pages/timetable/model/events/task_event.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/events/uni_event.dart';
 import 'package:acs_upb_mobile/pages/timetable/service/uni_event_provider.dart';
 import 'package:acs_upb_mobile/resources/custom_icons.dart';
@@ -52,6 +53,11 @@ class _AddEventViewState extends State<AddEventView> {
   TextEditingController locationController;
   TextEditingController nameController;
   TextEditingController gradeController;
+  TextEditingController startDateController;
+  TextEditingController hardDeadlineDateController;
+  TextEditingController softDeadlineDateController;
+  TextEditingController linkController;
+  TextEditingController penaltiesController;
   RelevanceController relevanceController = RelevanceController();
 
   UniEventType selectedEventType;
@@ -60,8 +66,10 @@ class _AddEventViewState extends State<AddEventView> {
   String selectedCalendar;
   LocalTime startTime;
   LocalDate startDate;
-  LocalDate endDate;
+  LocalDate hardDeadlineDate;
+  LocalDate softDeadlineDate;
   Period duration;
+  bool hasSoftDeadline = false;
   Map<WeekType, bool> weekSelected = {
     WeekType.odd: null,
     WeekType.even: null,
@@ -172,18 +180,45 @@ class _AddEventViewState extends State<AddEventView> {
     nameController =
         TextEditingController(text: widget.initialEvent?.name ?? '');
     gradeController = TextEditingController(
-        text: (widget.initialEvent is AllDayUniEvent)
-            ? (widget.initialEvent as AllDayUniEvent)?.grade?.toString()
+        text: (widget.initialEvent is TaskEvent)
+            ? (widget.initialEvent as TaskEvent)?.grade?.toString()
             : '0');
-
-    final startHour = widget.initialEvent?.start?.hourOfDay ?? 8;
-    duration = widget.initialEvent?.duration ?? const Period(hours: 2);
-    startTime = LocalTime(startHour, 0, 0);
+    penaltiesController = TextEditingController(
+        text: (widget.initialEvent is TaskEvent)
+            ? (widget.initialEvent as TaskEvent)?.penalties?.toString()
+            : '0');
+    linkController = TextEditingController(
+        text: (widget.initialEvent is TaskEvent)
+            ? (widget.initialEvent as TaskEvent)?.location
+            : '');
 
     startDate = widget.initialEvent?.start?.calendarDate ?? LocalDate.today();
-    endDate = (widget.initialEvent is AllDayUniEvent)
-        ? (widget.initialEvent as AllDayUniEvent).endDate
+    startDateController =
+        TextEditingController(text: startDate.toString('MMM d yyyy'));
+    hardDeadlineDate = (widget.initialEvent is TaskEvent)
+        ? (widget.initialEvent as TaskEvent).hardDeadline
+        : LocalDate.today().addDays(14);
+    hardDeadlineDateController =
+        TextEditingController(text: hardDeadlineDate.toString('MMM d yyyy'));
+    softDeadlineDate = (widget.initialEvent is TaskEvent)
+        ? (widget.initialEvent as TaskEvent).softDeadline
         : LocalDate.today().addDays(7);
+    softDeadlineDateController =
+        TextEditingController(text: softDeadlineDate.toString('MMM d yyyy'));
+
+    if ((widget.initialEvent is TaskEvent) &&
+        (widget.initialEvent as TaskEvent).softDeadline != null &&
+        (widget.initialEvent as TaskEvent).softDeadline !=
+            (widget.initialEvent as TaskEvent).hardDeadline) {
+      setState(() {
+        hasSoftDeadline = true;
+      });
+    }
+    final startHour = widget.initialEvent?.start?.hourOfDay ?? 8;
+    duration = widget.initialEvent?.duration?.hours == 0
+        ? const Period(hours: 2)
+        : widget.initialEvent?.duration;
+    startTime = LocalTime(startHour, 0, 0);
 
     var initialWeekDays = [
       _DayOfWeek.from(widget.initialEvent?.start?.dayOfWeek) ??
@@ -468,7 +503,21 @@ class _AddEventViewState extends State<AddEventView> {
                           decoration: InputDecoration(
                             labelText: S.current.labelName,
                             hintText: S.current.hintAssignmentName,
-                            prefixIcon: const Icon(FeatherIcons.terminal),
+                            prefixIcon: const Icon(Icons.title_outlined),
+                          ),
+                          validator: (value) {
+                            return (value == '')
+                                ? S.current.errorMissingTaskName
+                                : null;
+                          },
+                          onChanged: (_) => setState(() {formKey.currentState.validate();}),
+                        ),
+                        TextFormField(
+                          controller: linkController,
+                          decoration: InputDecoration(
+                            labelText: S.current.labelLink,
+                            hintText: S.current.hintWebsiteLink,
+                            prefixIcon: const Icon(Icons.link_outlined),
                           ),
                           onChanged: (_) => setState(() {}),
                         ),
@@ -486,7 +535,141 @@ class _AddEventViewState extends State<AddEventView> {
                           ),
                           onChanged: (_) => setState(() {}),
                         ),
-                        dayIntervalPicker(),
+                        TextFormField(
+                          controller: startDateController,
+                          readOnly: true,
+                          decoration: InputDecoration(
+                            labelText: S.current.actionChooseStartDate,
+                            prefixIcon: const Icon(Icons.today_outlined),
+                          ),
+                          onTap: () async {
+                            FocusScope.of(context).requestFocus(FocusNode());
+                            // Show Date Picker Here
+                            final DateTime startDay = await showDatePicker(
+                              context: context,
+                              firstDate:
+                                  semester.startDate.toDateTimeUnspecified(),
+                              initialDate: startDate.toDateTimeUnspecified(),
+                              lastDate:
+                                  semester.endDate.toDateTimeUnspecified(),
+                            );
+
+                            setState(() => {
+                                  startDate =
+                                      LocalDate.dateTime(startDay) ?? startDate,
+                                  startDateController.text =
+                                      startDate.toString('MMM d yyyy')
+                                });
+                          },
+                          onChanged: (_) => setState(() {}),
+                        ),
+                        TextFormField(
+                          controller: hardDeadlineDateController,
+                          readOnly: true,
+                          decoration: InputDecoration(
+                            labelText: S.current.actionChooseHardDeadlineDate,
+                            prefixIcon:
+                                const Icon(Icons.insert_invitation_outlined),
+                          ),
+                          onTap: () async {
+                            final DateTime endDay = await showDatePicker(
+                              context: context,
+                              firstDate: startDate.toDateTimeUnspecified(),
+                              initialDate: hardDeadlineDate
+                                          .toDateTimeUnspecified()
+                                          .isAfter(startDate
+                                              .toDateTimeUnspecified()) &&
+                                      hardDeadlineDate
+                                          .toDateTimeUnspecified()
+                                          .isBefore(semester.endDate
+                                              .toDateTimeUnspecified())
+                                  ? hardDeadlineDate.toDateTimeUnspecified()
+                                  : startDate.toDateTimeUnspecified(),
+                              lastDate:
+                                  semester.endDate.toDateTimeUnspecified(),
+                            );
+                            setState(() => {
+                                  hardDeadlineDate =
+                                      LocalDate.dateTime(endDay) ??
+                                          hardDeadlineDate,
+                                  hardDeadlineDateController.text =
+                                      hardDeadlineDate.toString('MMM d yyyy')
+                                });
+                          },
+                          onChanged: (_) => setState(() {}),
+                        ),
+                        CheckboxListTile(
+                          contentPadding:
+                              const EdgeInsets.only(top: 4, left: 4),
+                          title: Text(
+                            S.current.actionChooseHasSoftDeadline,
+                            style: Theme.of(context).textTheme.headline6,
+                          ),
+                          controlAffinity: ListTileControlAffinity.leading,
+                          value: hasSoftDeadline,
+                          onChanged: (bool hasSoftDeadlineValue) {
+                            setState(() {
+                              hasSoftDeadline = hasSoftDeadlineValue;
+                            });
+                          },
+                        ),
+                        Visibility(
+                          visible: hasSoftDeadline,
+                          child: TextFormField(
+                            controller: softDeadlineDateController,
+                            readOnly: true,
+                            decoration: InputDecoration(
+                              labelText: S.current.actionChooseSoftDeadlineDate,
+                              hintText: S.current.actionChooseDates,
+                              prefixIcon:
+                                  const Icon(Icons.insert_invitation_outlined),
+                            ),
+                            onTap: () async {
+                              final DateTime endDay = await showDatePicker(
+                                context: context,
+                                firstDate: startDate.toDateTimeUnspecified(),
+                                initialDate: softDeadlineDate
+                                            .toDateTimeUnspecified()
+                                            .isAfter(startDate
+                                                .toDateTimeUnspecified()) &&
+                                        softDeadlineDate
+                                            .toDateTimeUnspecified()
+                                            .isBefore(hardDeadlineDate
+                                                .toDateTimeUnspecified())
+                                    ? softDeadlineDate.toDateTimeUnspecified()
+                                    : startDate.toDateTimeUnspecified(),
+                                lastDate:
+                                    hardDeadlineDate.toDateTimeUnspecified(),
+                              );
+                              setState(() => {
+                                    softDeadlineDate =
+                                        LocalDate.dateTime(endDay) ??
+                                            softDeadlineDate,
+                                    softDeadlineDateController.text =
+                                        softDeadlineDate.toString('MMM d yyyy')
+                                  });
+                            },
+                            onChanged: (_) => setState(() {}),
+                          ),
+                        ),
+                        Visibility(
+                            visible: hasSoftDeadline,
+                            child: TextFormField(
+                              controller: penaltiesController,
+                              keyboardType: TextInputType.number,
+                              inputFormatters: <TextInputFormatter>[
+                                FilteringTextInputFormatter.allow(
+                                    RegExp(r'(^\d*\.?\d*)$')),
+                              ],
+                              decoration: InputDecoration(
+                                labelText: S.current.messagePenalties,
+                                hintText: '0.1',
+                                prefixIcon:
+                                    const Icon(Icons.assignment_late_outlined),
+                              ),
+                              onChanged: (_) => setState(() {}),
+                            )),
+                        //dayIntervalPicker(),
                       ],
                     ),
                   const SizedBox(width: 16),
@@ -566,9 +749,12 @@ class _AddEventViewState extends State<AddEventView> {
                     .uid);
           } else if (UniEventTypeExtension.assignmentsTypes
               .contains(selectedEventType)) {
-            event = AllDayUniEvent(
+            event = TaskEvent(
                 start: startDate,
-                end: endDate,
+                hardDeadline: hardDeadlineDate,
+                softDeadline: hasSoftDeadline == true
+                    ? softDeadlineDate
+                    : hardDeadlineDate,
                 id: widget.initialEvent?.id,
                 relevance: relevanceController.customRelevance,
                 degree: relevanceController.degree,
@@ -576,7 +762,10 @@ class _AddEventViewState extends State<AddEventView> {
                 type: selectedEventType,
                 classHeader: selectedClass,
                 grade: double.parse(gradeController.text),
-                editable: true,
+                location: linkController.text,
+                penalties: hasSoftDeadline == true
+                    ? double.parse(penaltiesController.text)
+                    : 0,
                 calendar: calendars[selectedCalendar],
                 addedBy: Provider.of<AuthProvider>(context, listen: false)
                     .currentUserFromCache
@@ -691,112 +880,6 @@ class _AddEventViewState extends State<AddEventView> {
     );
   }
 
-  Widget dayIntervalPicker() {
-    final textColor = Theme.of(context).textTheme.headline4.color;
-    return Padding(
-      padding: const EdgeInsets.only(top: 10),
-      child: Column(
-        children: [
-          Row(children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 12),
-              child: Icon(
-                FeatherIcons.calendar,
-                color: CustomIcons.formIconColor(Theme.of(context)),
-              ),
-            ),
-            Text(
-              S.current.actionChooseDates,
-              style: Theme.of(context)
-                  .textTheme
-                  .bodyText1
-                  .copyWith(color: textColor),
-            )
-          ]),
-          Row(children: [
-            Padding(
-              padding: const EdgeInsets.all(12),
-              child: Icon(
-                FeatherIcons.logOut,
-                color: CustomIcons.formIconColor(Theme.of(context)),
-              ),
-            ),
-            TextButton(
-              style: ButtonStyle(
-                padding: MaterialStateProperty.all<EdgeInsets>(EdgeInsets.zero),
-              ),
-              onPressed: () async {
-                final DateTime startDay = await showDatePicker(
-                  context: context,
-                  firstDate: semester.startDate.toDateTimeUnspecified(),
-                  initialDate: startDate.toDateTimeUnspecified(),
-                  lastDate: semester.endDate.toDateTimeUnspecified(),
-                );
-
-                setState(() =>
-                    startDate = LocalDate.dateTime(startDay) ?? startDate);
-              },
-              child: Text(
-                startDate.toString('MMM d yyyy'),
-                style: Theme.of(context).textTheme.headline5,
-              ),
-            )
-          ]),
-          Column(
-            children: [
-              Padding(
-                  padding: const EdgeInsets.all(12),
-                  child: Column(children: [
-                    DottedLine(
-                      lineThickness: 4,
-                      dashRadius: 2,
-                      dashColor: textColor,
-                    )
-                  ]))
-            ],
-          ),
-          Row(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(12),
-                child: Icon(
-                  FeatherIcons.logIn,
-                  color: CustomIcons.formIconColor(Theme.of(context)),
-                ),
-              ),
-              TextButton(
-                style: ButtonStyle(
-                  padding:
-                      MaterialStateProperty.all<EdgeInsets>(EdgeInsets.zero),
-                ),
-                onPressed: () async {
-                  final DateTime endDay = await showDatePicker(
-                    context: context,
-                    firstDate: startDate.toDateTimeUnspecified(),
-                    initialDate: endDate
-                                .toDateTimeUnspecified()
-                                .isAfter(startDate.toDateTimeUnspecified()) &&
-                            endDate.toDateTimeUnspecified().isBefore(
-                                semester.endDate.toDateTimeUnspecified())
-                        ? endDate.toDateTimeUnspecified()
-                        : startDate.toDateTimeUnspecified(),
-                    lastDate: semester.endDate.toDateTimeUnspecified(),
-                  );
-                  setState(
-                      () => {endDate = LocalDate.dateTime(endDay) ?? endDate});
-                },
-                child: Text(
-                  endDate.toString('MMM d yyyy'),
-                  style: Theme.of(context).textTheme.headline5,
-                ),
-              )
-            ],
-          ),
-          const SizedBox(width: 12),
-        ],
-      ),
-    );
-  }
 }
 
 class RelevanceFormField extends FormField<List<String>> {
