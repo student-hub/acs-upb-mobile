@@ -510,7 +510,9 @@ class _AddEventViewState extends State<AddEventView> {
                                 ? S.current.errorMissingTaskName
                                 : null;
                           },
-                          onChanged: (_) => setState(() {formKey.currentState.validate();}),
+                          onChanged: (_) => setState(() {
+                            formKey.currentState.validate();
+                          }),
                         ),
                         TextFormField(
                           controller: linkController,
@@ -879,7 +881,6 @@ class _AddEventViewState extends State<AddEventView> {
       ),
     );
   }
-
 }
 
 class RelevanceFormField extends FormField<List<String>> {
