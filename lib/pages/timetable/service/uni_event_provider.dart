@@ -394,6 +394,20 @@ class UniEventProvider extends EventProvider<UniEventInstance>
         .first;
   }
 
+  Future<Iterable<UniEventInstance>> getAssignments(LocalDate date,
+      {int limit = 3}) async {
+    return _events
+        .map((events) => events
+            .where((event) => (event is AllDayUniEvent) == true)
+            .map((event) => event.generateInstances())
+            .expand((i) => i)
+            .sortedByStartLength()
+            .where((element) =>
+                element.end.toDateTimeLocal().isAfter(DateTime.now()))
+            .take(limit))
+        .first;
+  }
+
   Future<Iterable<UniEvent>> getAllEventsOfClass(String classId) async {
     return _events
         .map((events) =>

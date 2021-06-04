@@ -605,8 +605,9 @@ class _AddEventViewState extends State<AddEventView> {
                               const EdgeInsets.only(top: 4, left: 4),
                           title: Text(
                             S.current.actionChooseHasSoftDeadline,
-                            style: Theme.of(context).textTheme.headline6,
+                            //style: Theme.of(context).textTheme.bodyText1.fontSize(14),
                           ),
+                          selected: hasSoftDeadline,
                           controlAffinity: ListTileControlAffinity.leading,
                           value: hasSoftDeadline,
                           onChanged: (bool hasSoftDeadlineValue) {

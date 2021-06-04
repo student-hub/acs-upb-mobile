@@ -955,47 +955,47 @@ class S {
     );
   }
 
-  /// `Choose start date`
+  /// `Start date`
   String get actionChooseStartDate {
     return Intl.message(
-      'Choose start date',
+      'Start date',
       name: 'actionChooseStartDate',
       desc: '',
       args: [],
     );
   }
 
-  /// `Choose Hard Deadline date`
+  /// `Hard Deadline`
   String get actionChooseHardDeadlineDate {
     return Intl.message(
-      'Choose Hard Deadline date',
+      'Hard deadline',
       name: 'actionChooseHardDeadlineDate',
       desc: '',
       args: [],
     );
   }
-  /// `Has Soft Deadline?`
+  /// `Has soft deadline?`
   String get actionChooseHasSoftDeadline {
     return Intl.message(
-      'Has Soft Deadline?',
+      'Has soft deadline?',
       name: 'actionChooseHasSoftDeadline',
       desc: '',
       args: [],
     );
   }
-  /// `Choose Hard Deadline date`
+  /// `Soft deadline`
   String get actionChooseSoftDeadlineDate {
     return Intl.message(
-      'Choose Soft Deadline date',
+      'Soft deadline',
       name: 'actionChooseSoftDeadlineDate',
       desc: '',
       args: [],
     );
   }
-  /// `Daily penalties after Soft Deadline`
+  /// `Daily penalties after Soft deadline`
   String get messagePenalties {
     return Intl.message(
-      'Daily penalties after Soft Deadline',
+      'Daily penalties after Soft deadline',
       name: 'messagePenalties',
       desc: '',
       args: [],

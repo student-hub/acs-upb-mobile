@@ -216,12 +216,19 @@ class UniEventInstance extends Event {
                     start.calendarDate.subtractDays(1).equals(LocalDate.today())
                 ? S.current.labelTomorrow
                 : start.calendarDate.toString('dddd, dd MMMM');
+    final String endString =
+        useRelativeDayFormat && end.calendarDate.equals(LocalDate.today())
+            ? S.current.labelToday
+            : useRelativeDayFormat &&
+                    end.calendarDate.subtractDays(1).equals(LocalDate.today())
+                ? S.current.labelTomorrow
+                : end.calendarDate.toString('dddd, dd MMMM');
 
     if (!start.clockTime.equals(LocalTime(00, 00, 00))) {
       string += ' • ${start.clockTime.toString('HH:mm')}';
     }
     if (start.calendarDate != end.calendarDate) {
-      string += ' - ${end.calendarDate.toString('dddd, dd MMMM')}';
+      string += ' - $endString';
     }
     if (!end.clockTime.equals(LocalTime(00, 00, 00))) {
       if (start.calendarDate != end.calendarDate) {
