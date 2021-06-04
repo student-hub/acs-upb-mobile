@@ -89,6 +89,7 @@ class _EventViewState extends State<EventView> {
                     children: <Widget>[
                       Text(
                           widget.eventInstance?.title ??
+                              mainEvent.name ??
                               mainEvent.type.toLocalizedString(),
                           style: Theme.of(context).textTheme.headline6),
                       const SizedBox(height: 4),

@@ -12,6 +12,7 @@ import 'package:acs_upb_mobile/pages/timetable/model/academic_calendar.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/events/all_day_event.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/events/class_event.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/events/recurring_event.dart';
+import 'package:acs_upb_mobile/pages/timetable/model/events/task_event.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/events/uni_event.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
@@ -72,7 +73,32 @@ extension UniEventExtension on UniEvent {
 
     final type = UniEventTypeExtension.fromString(json['type']);
 
-    if (json['end'] != null) {
+    if (json['hardDeadline'] != null) {
+      return TaskEvent(
+        id: id,
+        type: type,
+        name: json['name'],
+        // Convert time to UTC and then to local time
+        start: (json['start'] as Timestamp).toLocalDateTime().calendarDate,
+        hardDeadline:
+            (json['hardDeadline'] as Timestamp).toLocalDateTime().calendarDate,
+        softDeadline: json['softDeadline'] != null
+            ? (json['softDeadline'] as Timestamp).toLocalDateTime().calendarDate
+            : null,
+        location: json['location'],
+        // TODO(IoanaAlexandru): Allow users to set event colours in settings
+        color: type.color,
+        classHeader: classHeader,
+        calendar: calendars[json['calendar']],
+        degree: json['degree'],
+        relevance: json['relevance'] == null
+            ? null
+            : List<String>.from(json['relevance']),
+        addedBy: json['addedBy'],
+        grade: json['grade'],
+        penalties: json['penalties'],
+      );
+    } else if (json['end'] != null) {
       return AllDayUniEvent(
         id: id,
         type: type,
@@ -177,8 +203,16 @@ extension UniEventExtension on UniEvent {
       json['rrule'] = (this as RecurringUniEvent).rrule.toString();
     }
 
-    if (this is AllDayUniEvent) {
+    if (this is TaskEvent) {
+      json['hardDeadline'] =
+          (this as TaskEvent).hardDeadline.atMidnight().toTimestamp();
+      json['softDeadline'] =
+          (this as TaskEvent).softDeadline.atMidnight().toTimestamp();
+      json['grade'] = (this as TaskEvent).grade;
+      json['penalties'] = (this as TaskEvent).penalties;
+    } else if (this is AllDayUniEvent) {
       json['end'] = (this as AllDayUniEvent).endDate.atMidnight().toTimestamp();
+      json['editable'] = editable;
     }
 
     if (this is ClassEvent) {

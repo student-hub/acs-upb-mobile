@@ -15,6 +15,8 @@ enum UniEventType {
   semester,
   holiday,
   examSession,
+  homework,
+  project,
   other
 }
 
@@ -35,6 +37,10 @@ extension UniEventTypeExtension on UniEventType {
         return S.current.uniEventTypeHoliday;
       case UniEventType.examSession:
         return S.current.uniEventTypeExamSession;
+      case UniEventType.homework:
+        return S.current.uniEventTypeHomework;
+      case UniEventType.project:
+        return S.current.uniEventTypeProject;
       default:
         return S.current.uniEventTypeOther;
     }
@@ -45,6 +51,11 @@ extension UniEventTypeExtension on UniEventType {
         UniEventType.lab,
         UniEventType.seminar,
         UniEventType.sports
+      ];
+
+  static List<UniEventType> get assignmentsTypes => [
+        UniEventType.homework,
+        UniEventType.project,
       ];
 
   static UniEventType fromString(String string) {
@@ -63,6 +74,10 @@ extension UniEventTypeExtension on UniEventType {
         return UniEventType.holiday;
       case 'examSession':
         return UniEventType.examSession;
+      case 'homework':
+        return UniEventType.homework;
+      case 'project':
+        return UniEventType.project;
       default:
         return UniEventType.other;
     }
@@ -84,6 +99,10 @@ extension UniEventTypeExtension on UniEventType {
         return Colors.yellow;
       case UniEventType.examSession:
         return Colors.red;
+      case UniEventType.homework:
+        return Colors.cyan;
+      case UniEventType.project:
+        return Colors.teal;
       default:
         return Colors.white;
     }
@@ -155,6 +174,8 @@ class UniEventInstance extends Event {
     Color color,
     this.location,
     this.info,
+    this.grade,
+    this.penalties,
   })  : color = color ?? mainEvent?.color,
         super(id: id, start: start, end: end);
 
@@ -164,6 +185,8 @@ class UniEventInstance extends Event {
   final Color color;
   final String location;
   final String info;
+  final double grade;
+  final double penalties;
 
   @override
   bool operator ==(dynamic other) =>
