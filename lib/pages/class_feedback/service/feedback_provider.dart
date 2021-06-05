@@ -1,7 +1,7 @@
 import 'package:acs_upb_mobile/pages/class_feedback/model/class_feedback_answer.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question_dropdown.dart';
-import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question_input.dart';
+import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question_slider.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question_rating.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question_text.dart';
 import 'package:acs_upb_mobile/resources/locale_provider.dart';
@@ -17,7 +17,7 @@ extension ClassFeedbackAnswerExtension on FeedbackQuestionAnswer {
     if (questionAnswer != null) data['answer'] = questionAnswer;
     data['dateSubmitted'] = Timestamp.now();
     data['class'] = className;
-    data['teacher'] = teacherName;
+    data['teacher'] = teacher.name;
     data['assistant'] = assistant.name;
 
     return data;
@@ -29,7 +29,7 @@ extension FeedbackQuestionExtension on FeedbackQuestion {
     if (json['type'] == 'dropdown' && json['options'] != null) {
       final List<dynamic> options = json['options'];
       final List<String> optionsString =
-          options.map((e) => e as String).toList();
+          options.map((e) => e[LocaleProvider.localeString] as String).toList();
       return FeedbackQuestionDropdown(
         category: json['category'],
         question: json['question'][LocaleProvider.localeString],
@@ -48,8 +48,8 @@ extension FeedbackQuestionExtension on FeedbackQuestion {
         question: json['question'][LocaleProvider.localeString],
         id: id,
       );
-    } else if (json['type'] == 'input') {
-      return FeedbackQuestionInput(
+    } else if (json['type'] == 'slider') {
+      return FeedbackQuestionSlider(
         category: json['category'],
         question: json['question'][LocaleProvider.localeString],
         id: id,

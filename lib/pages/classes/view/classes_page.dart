@@ -109,7 +109,20 @@ class _ClassesPageState extends State<ClassesPage> {
                         .push(MaterialPageRoute<ChangeNotifierProvider>(
                       builder: (context) => ChangeNotifierProvider.value(
                         value: classProvider,
-                        child: ClassView(classHeader: classHeader),
+                        child: FutureBuilder(
+                          future: classProvider.getRemoteConfig(),
+                          builder: (context, snap) {
+                            if (snap.hasData) {
+                              return ClassView(
+                                classHeader: classHeader,
+                                remoteConfigService: snap.data,
+                              );
+                            } else {
+                              return const Center(
+                                  child: CircularProgressIndicator());
+                            }
+                          },
+                        ),
                       ),
                     )),
                   )

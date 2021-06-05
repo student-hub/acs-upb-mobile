@@ -3,10 +3,11 @@ import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/authentication/view/edit_profile_page.dart';
 import 'package:acs_upb_mobile/main.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question_dropdown.dart';
-import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question_input.dart';
+import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question_slider.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question_rating.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question_text.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/service/feedback_provider.dart';
+import 'package:acs_upb_mobile/pages/class_feedback/service/remote_config.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/view/class_feedback_view.dart';
 import 'package:acs_upb_mobile/pages/classes/model/class.dart';
 import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
@@ -378,6 +379,8 @@ Future<void> main() async {
           ),
         ));
 
+    when(mockClassProvider.getRemoteConfig())
+        .thenAnswer((_) => Future.value(RemoteConfigService()));
     mockPersonProvider = MockPersonProvider();
     // ignore: invalid_use_of_protected_member
     when(mockPersonProvider.hasListeners).thenReturn(false);
@@ -432,7 +435,7 @@ Future<void> main() async {
             question: 'What are the positive aspects of this class?',
             id: '2',
           ),
-          '3': FeedbackQuestionInput(
+          '3': FeedbackQuestionSlider(
             category: 'homework',
             question:
                 'Estimate the average number of hours per week devoted to solving homework.',
@@ -555,6 +558,8 @@ Future<void> main() async {
     when(mockEventProvider.getUpcomingEvents(LocalDate.today(),
             limit: anyNamed('limit')))
         .thenAnswer((_) => Future.value(<UniEventInstance>[]));
+    when(mockEventProvider.getAllEventsOfClass(any))
+        .thenAnswer((_) => Future.value(<UniEvent>[]));
     final rruleEveryWeekFirstSem = RecurrenceRule(
       frequency: Frequency.weekly,
       interval: 1,
@@ -1459,6 +1464,8 @@ Future<void> main() async {
       when(mockAuthProvider.isAuthenticated).thenReturn(true);
       when(mockAuthProvider.isAnonymous).thenReturn(false);
       when(mockAuthProvider.uid).thenReturn('0');
+      when(mockPersonProvider.fetchPerson(any))
+          .thenAnswer((_) => Future.value(Person(name: 'John Doe')));
     });
 
     for (final size in screenSizes) {
@@ -1494,10 +1501,10 @@ Future<void> main() async {
         await tester.enterText(
             find.byKey(const Key('AutocompleteAssistant')), 'John');
         await tester.pumpAndSettle();
-        await tester.tap(find.text('John Doe'));
+        await tester.tap(find.text('John Doe').last);
         await tester.pumpAndSettle();
 
-        expect(find.byType(Card), findsNWidgets(5));
+        expect(find.byType(Card), findsNWidgets(4));
         expect(find.byType(FeedbackQuestionForm), findsNWidgets(4));
         expect(
             find.text(
@@ -1512,14 +1519,9 @@ Future<void> main() async {
         expect(find.text('What are the positive aspects of this class?'),
             findsOneWidget);
 
-        await tester.enterText(find.byKey(const Key('FeedbackInput')), '2');
+        await tester.drag(
+            find.byKey(const Key('FeedbackSlider')), const Offset(2, 0));
         await tester.pumpAndSettle();
-
-        expect(find.text('2'), findsOneWidget);
-
-        await tester.tap(find.text('Send'));
-        await tester.pumpAndSettle(const Duration(seconds: 5));
-        expect(find.text('Answer cannot be empty.'), findsOneWidget);
 
         await tester.tap(find.byIcon(Icons.sentiment_very_satisfied));
         await tester.pumpAndSettle();
@@ -1538,8 +1540,6 @@ Future<void> main() async {
 
         expect(find.text('You need to select your assistant for this class.'),
             findsNothing);
-        expect(
-            find.text('You need to select at least one option.'), findsNothing);
         expect(find.text('Answer cannot be empty.'), findsNothing);
 
         expect(find.byType(ClassView), findsOneWidget);

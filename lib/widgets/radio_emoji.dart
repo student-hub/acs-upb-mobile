@@ -5,11 +5,9 @@ class EmojiFormField extends FormField<Map<int, bool>> {
     @required Map<int, bool> answerValues,
     @required String question,
     FormFieldSetter<Map<int, bool>> onSaved,
-    String Function(Map<int, bool>) validator,
     Key key,
   }) : super(
           key: key,
-          validator: validator,
           onSaved: onSaved,
           autovalidateMode: AutovalidateMode.onUserInteraction,
           initialValue: answerValues,
