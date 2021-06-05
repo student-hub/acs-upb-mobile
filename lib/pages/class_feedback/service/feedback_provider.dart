@@ -29,7 +29,7 @@ extension FeedbackQuestionExtension on FeedbackQuestion {
     if (json['type'] == 'dropdown' && json['options'] != null) {
       final List<dynamic> options = json['options'];
       final List<String> optionsString =
-          options.map((e) => e as String).toList();
+          options.map((e) => e[LocaleProvider.localeString] as String).toList();
       return FeedbackQuestionDropdown(
         category: json['category'],
         question: json['question'][LocaleProvider.localeString],
