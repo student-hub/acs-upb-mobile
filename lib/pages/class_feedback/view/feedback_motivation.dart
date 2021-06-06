@@ -17,7 +17,7 @@ class FeedbackMotivation extends StatelessWidget {
               children: [
                 Center(
                   child: Container(
-                    height: MediaQuery.of(context).size.height / 3,
+                    height: MediaQuery.of(context).size.height / 3.3,
                     child: Image.asset('assets/illustrations/undraw_review.png'),
                   ),
                 ),
