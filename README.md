@@ -5,19 +5,17 @@
 [![codecov](https://codecov.io/gh/acs-upb-mobile/acs-upb-mobile/branch/master/graph/badge.svg)](https://codecov.io/gh/acs-upb-mobile/acs-upb-mobile)
 [![extra_pedantic on pub.dev](https://img.shields.io/badge/style-extra__pedantic-blue)](https://pub.dev/packages/extra_pedantic)
 
-A mobile application for students at [ACS UPB](https://acs.pub.ro/). For now, you can try it out by accessing [https://acs-upb-mobile.web.app/](https://acs-upb-mobile.web.app/). Android users can also download the apk from the latest [release](https://github.com/acs-upb-mobile/acs-upb-mobile/releases).
+<a href="https://play.google.com/store/apps/details?id=ro.pub.acs.acs_upb_mobile"><img src=https://raw.githubusercontent.com/steverichey/google-play-badge-svg/266d2b2df26f10d3c00b8129a0bd9f6da6b19f00/img/en_get.svg width=200></a>
+
+A mobile application for students at [ACS UPB](https://acs.pub.ro/). For now, you can try it out by accessing [https://acs-upb-mobile.web.app/](https://acs-upb-mobile.web.app/) or download it from Google Play by pressing the button above. Android users can also download the apk from the latest [release](https://github.com/acs-upb-mobile/acs-upb-mobile/releases).
 
 Please note that some features may not work perfectly in the web version, as [Flutter web support](https://flutter.dev/web) is currently still in beta. However, please feel free to [create an issue](https://github.com/acs-upb-mobile/acs-upb-mobile/issues/new?&template=bug_report.md) if you encounter any problem.
 
 If you would like to contribute and don't know where to start, or you have any questions about this project, feel free to [join us on Slack](https://acs-upb-mobile.slack.com/join/shared_invite/zt-j3w0ksxt-ilq9x5Et8lxnG_y5YzfQeQ) and ask anything on the **#questions** channel.
 
-## Preview
+## Demo
 
-<img src=screenshots/app/login.gif height=500> <img src=screenshots/app/home.gif height=500> <img src=screenshots/app/classes.gif height=500>
-
-<img src=screenshots/app/portal.gif height=500> <img src=screenshots/app/people.gif height=500> <img src=screenshots/app/classes_edit.gif height=500>
-
-<img src=screenshots/app/portal_edit.gif height=500> <img src=screenshots/app/themes.gif height=500> <img src=screenshots/app/languages.gif height=500>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/-IRL35WIeGc" title="Demo" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 ## Contributors
 * [Ioana Alexandru](https://github.com/IoanaAlexandru)
