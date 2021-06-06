@@ -9,9 +9,9 @@
 
 A mobile application for students at [ACS UPB](https://acs.pub.ro/). For now, you can try it out by accessing [https://acs-upb-mobile.web.app/](https://acs-upb-mobile.web.app/) or download it from Google Play by pressing the button above. Android users can also download the apk from the latest [release](https://github.com/acs-upb-mobile/acs-upb-mobile/releases).
 
-Please note that some features may not work perfectly in the web version, as [Flutter web support](https://flutter.dev/web) is currently still in beta. However, please feel free to [create an issue](https://github.com/acs-upb-mobile/acs-upb-mobile/issues/new?&template=bug_report.md) if you encounter any problem.
+Please note that some features may not work perfectly in the web version, as the app is designed to work better natively. However, please feel free to [create an issue](https://github.com/acs-upb-mobile/acs-upb-mobile/issues/new?&template=bug_report.md) if you encounter any problem.
 
-If you would like to contribute and don't know where to start, or you have any questions about this project, feel free to [join us on Slack](https://acs-upb-mobile.slack.com/join/shared_invite/zt-j3w0ksxt-ilq9x5Et8lxnG_y5YzfQeQ) and ask anything on the **#questions** channel.
+If you would like to contribute and don't know where to start, or you have any questions about this project, feel free to send an e-mail at acs.upb.mobile@gmail.com.
 
 ## Demo
 
@@ -46,13 +46,12 @@ https://user-images.githubusercontent.com/25504811/120929790-1bc24080-c6f3-11eb-
 Control*) to clone the repository from https://github.com/acs-upb-mobile/acs-upb-mobile.
 * If the plugins are installed, Android Studio should automatically recognise it as being a Flutter project, so you should be able to just click *Next* on everything and create a new project.
 * When prompted, set up the Flutter SDK (the location is the `flutter/` folder you downloaded when you installed it) and Dart SDK (it comes bundled with Flutter at `flutter/bin/cache/dart-sdk/`).
-* Open the project terminal and switch to the Beta Flutter channel in order to enable web support:
+* Open a terminal in the Flutter SDK directory and switch to the version we are currently using for the project:
 ```
-flutter channel beta
-flutter upgrade
-flutter config --enable-web
+git pull
+git checkout 1.24.0-10.2.pre
 ```
-* Install all of the required packages:
+* Open the project terminal in Android Studio and install all of the required packages by running:
 ```
 flutter pub get
 ```
@@ -60,7 +59,7 @@ flutter pub get
 
 ### Building for Android
 
-* Install and run an emulator in Android Studio (using AVD Manager), or connect a physical Android device (make sure USB debugging is enabled).
+* Install and run an emulator in Android Studio (using AVD Manager), or connect a physical Android device (make sure USB debugging is enabled, and your cable supports data transfer).
 * Select your device from the dropdown list and hit the play button (*Shift+F10* or *^R*). Note that Android Studio runs the app in debug mode by default.
 
 | :exclamation: | On Android, ACS UPB Mobile uses **a separate (development) environment in debug mode**. That means a completely different Firebase project - separate data, including user info.|
@@ -81,7 +80,7 @@ flutter pub get
 ### Not working?
 
 Possible fixes could be:
-* Run `flutter doctor` and fix any issues that may come up.
+* Run `flutter doctor` and fix any issues that may come up (make sure you're using the right Flutter version for the project, see [Prerequisites](#prerequisites)).
 * Run `flutter clean` to delete the `build` directory and then build again.
 * Restart Android Studio using *File > Invalidate Caches / Restart*.
 
