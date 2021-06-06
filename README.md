@@ -5,7 +5,7 @@
 [![codecov](https://codecov.io/gh/acs-upb-mobile/acs-upb-mobile/branch/master/graph/badge.svg)](https://codecov.io/gh/acs-upb-mobile/acs-upb-mobile)
 [![extra_pedantic on pub.dev](https://img.shields.io/badge/style-extra__pedantic-blue)](https://pub.dev/packages/extra_pedantic)
 
-<a href="https://play.google.com/store/apps/details?id=ro.pub.acs.acs_upb_mobile"><img src=https://raw.githubusercontent.com/steverichey/google-play-badge-svg/266d2b2df26f10d3c00b8129a0bd9f6da6b19f00/img/en_get.svg width=200></a>
+<a href="https://play.google.com/store/apps/details?id=ro.pub.acs.acs_upb_mobile"><img width=200 src=https://raw.githubusercontent.com/steverichey/google-play-badge-svg/266d2b2df26f10d3c00b8129a0bd9f6da6b19f00/img/en_get.svg></a>
 
 A mobile application for students at [ACS UPB](https://acs.pub.ro/). For now, you can try it out by accessing [https://acs-upb-mobile.web.app/](https://acs-upb-mobile.web.app/) or download it from Google Play by pressing the button above. Android users can also download the apk from the latest [release](https://github.com/acs-upb-mobile/acs-upb-mobile/releases).
 
@@ -15,7 +15,10 @@ If you would like to contribute and don't know where to start, or you have any q
 
 ## Demo
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/-IRL35WIeGc" title="Demo" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+https://user-images.githubusercontent.com/25504811/120929790-1bc24080-c6f3-11eb-9360-9994110da946.mp4
+
+<a href="https://www.youtube.com/watch?v=-IRL35WIeGc"><img width=200 src="https://user-images.githubusercontent.com/25504811/120929979-fa158900-c6f3-11eb-8ef3-237591001b44.png"></a>
+
 
 ## Contributors
 * [Ioana Alexandru](https://github.com/IoanaAlexandru)
