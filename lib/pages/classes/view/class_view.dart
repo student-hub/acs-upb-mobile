@@ -65,6 +65,7 @@ class _ClassViewState extends State<ClassView> {
         if (widget.remoteConfigService.feedbackEnabled)
           AppScaffoldAction(
               icon: Icons.rate_review_outlined,
+              tooltip: S.current.navigationClassFeedback,
               onPressed: () {
                 if (!alreadyCompletedFeedback) {
                   Navigator.of(context)
