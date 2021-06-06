@@ -1,5 +1,6 @@
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
+import 'package:acs_upb_mobile/pages/class_feedback/service/remote_config.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/view/classes_feedback_checklist.dart';
 import 'package:acs_upb_mobile/pages/classes/model/class.dart';
 import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
@@ -14,7 +15,8 @@ import 'package:pedantic/pedantic.dart';
 import 'package:provider/provider.dart';
 
 class ClassesPage extends StatefulWidget {
-  const ClassesPage({Key key}) : super(key: key);
+  const ClassesPage({Key key, this.remoteConfigService}) : super(key: key);
+  final RemoteConfigService remoteConfigService;
 
   @override
   _ClassesPageState createState() => _ClassesPageState();
@@ -23,7 +25,6 @@ class ClassesPage extends StatefulWidget {
 class _ClassesPageState extends State<ClassesPage> {
   Set<ClassHeader> headers;
   bool updating;
-  bool feedback = false;
 
   Future<void> updateClasses() async {
     // If updating is null, classes haven't been initialized yet so they're not
@@ -39,10 +40,6 @@ class _ClassesPageState extends State<ClassesPage> {
     headers =
         (await classProvider.fetchClassHeaders(uid: authProvider.uid)).toSet();
 
-    await classProvider
-        .getRemoteConfig()
-        .then((value) => feedback = value.feedbackEnabled);
-
     updating = false;
     if (mounted) {
       setState(() {});
@@ -52,7 +49,7 @@ class _ClassesPageState extends State<ClassesPage> {
   @override
   void initState() {
     super.initState();
-
+    
     updateClasses();
   }
 
@@ -66,7 +63,7 @@ class _ClassesPageState extends State<ClassesPage> {
       // TODO(IoanaAlexandru): Simply show all classes if user is not authenticated
       needsToBeAuthenticated: true,
       actions: [
-        if (feedback)
+        if (widget.remoteConfigService.feedbackEnabled)
           AppScaffoldAction(
             icon: Icons.format_list_numbered_outlined,
             tooltip: S.current.navigationClassesFeedbackChecklist,
