@@ -6,9 +6,9 @@ It is recommended that you go through [our workshop](https://github.com/acs-upb-
 ### Guidelines
 1. Check out [this](https://opensource.com/article/19/7/create-pull-request-github) tutorial if you don't know how to make a PR.
 2. Increase the version number in the [`pubspec.yaml`](pubspec.yaml) file with the following guidelines in mind:
-    - **Build number** (0.2.1+**4**) is for very small changes and bug fixes (usually not visible to the end user).
-    - **Patch version** (0.2.**1**+4) is for minor improvements that may be visible to an attentive end user.
-    - **Minor version** (0.**2**.1+4) is for added functionality (i.e. merging a branch that introduces a new feature).
+    - **Build number** (0.2.1+**4**) is for very small changes and bug fixes (usually not visible to the end user). It should *always be incremented*, never reset, as it is what Google Play uses to tell updates apart.
+    - **Patch version** (0.2.**1**+4) is for minor improvements that may be visible to an attentive end user. It should reset to 0 when the minor/major version increments.
+    - **Minor version** (0.**2**.1+4) is for added functionality (i.e. merging a branch that introduces a new feature). It should reset to 0 when the major version increments.
     - **Major version** (**0**.2.1+4) marks important project milestones.
 3. Document any non-obvious parts of the code and make sure the commit description is clear on why the change is necessary.
 4. If it's a new feature, write at least one test for it.
@@ -51,6 +51,11 @@ Similarly, please create one PR per development item, instead of bundling multip
 * Make sure you have the *Project* view open in the **Project** tab on the left in Android Studio (not *Android*).
 * Flutter comes with **Hot Reload** (the lightning icon, or *Ctrl+\\* or *⌘\\*), which allows you to load changes in the code quickly into an already running app, without you needing to reinstall it. It's a very handy feature, but it doesn't work all the time - if you change the code, use Hot Reload but don't see the expected changes, or see some weird behaviour, you may need to close and restart the app (or even reinstall).
 * If **running on web** doesn't give the expected results after changing some code, you may need to clear the cache (in *Chrome*: *Ctrl+Shift+C* or *⌘+Shift+C* to open the Inspect menu, then right-click the *Refresh* button, and select *Empty cache and Hard reload*.)
+* [Flutter Inspector](https://flutter.dev/docs/development/tools/devtools/inspector) is a powerful tool which allows you to visualize and explore Flutter widget trees. You can use it to find out where a specific part of the UI is defined in the code (by turning on *Select widget mode* and selecting the widget you'd like to find), it can help you debug layouts (by enabling *Debug Paint*, you can visualize padding, alignments and widget borders) and much more.
+* Get used to **reading code and searching through the codebase**. The project is fairly large and for most things, you should be able to find a usage/implementation example within our codebase. Do try to reuse code as much as possible - prefer creating a customizable widget with the parameters you need for different use cases, over copy-pasting widget code. Some tips for exploring the codebase:
+  - *Ctrl+Shift+F* or *⌘+Shift+F* upon clicking a directory in the Project view lets you search a keyword through the entire directory. This is particularly useful for searching for something in the entire codebase.
+  - *Ctrl+click* or *⌘+click* through a class/method name takes you to its definition. You can also right-click on it and use "Find usages" or the various "Go To" options to explore how it is used/defined.
+    * Oftentimes, a class definition will be in a file that is outside our project - either from a package or the Flutter framework itself. These files are marked with a yellow background in the Android Studio tab bar. You cannot edit them, but it's often useful to read through them to understand how they work.
 * By default, **Flutter apps run in debug mode**. That means a DEBUG banner is shown on the upper right corner of the app, and errors and overflows are marked quite visibly in the UI.
   - If you'd like to temporarily hide the debug mode banner (to take a screenshot, for instance), open the *Flutter Inspector* tab from the right hand edge of Android Studio, click *More actions* and select *Hide debug mode banner*.
   - Note that Flutter's debug mode is different from the Android Studio debugging (bug button), which is meant to allow you to use breakpoints and other debugging tools.
@@ -59,7 +64,6 @@ Similarly, please create one PR per development item, instead of bundling multip
     * You may also need to temporarily change the release signing config. In the [android/app/build.gradle](android/app/build.gradle) file, replace `signingConfig signingConfigs.release` with `signingConfig signingConfigs.debug`.
     * For simplicity, you could call the default "main.dart" configuration in Android Studio "Debug", duplicate it and call the second one "Release", with `--release` as an argument. For example:
     <img src=screenshots/other/release_configuration.png>
-* [Flutter Inspector](https://flutter.dev/docs/development/tools/devtools/inspector) is a powerful tool which allows you to visualize and explore Flutter widget trees. You can use it to find out where a specific part of the UI is defined in the code (by turning on *Select widget mode* and selecting the widget you'd like to find), it can help you debug layouts (by enabling *Debug Paint*, you can visualize padding, alignments and widget borders) and much more.
 
 | :exclamation: | On Android, ACS UPB Mobile uses **a separate (development) environment in debug mode**. That means a completely different Firebase project - separate data, including user info.|
 |---------------|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -70,7 +74,7 @@ This project uses [the official Dart style guide](https://dart.dev/guides/langua
 
 * Android Studio (IntelliJ) with the `dartfmt` tool is used to automatically format the code (*Ctrl+Alt+L* or *⌥+⌘+L*), including the order of imports (*Ctrl+Alt+O* or *⌥+⌘+O*).
 * The [extra_pedantic](https://pub.dev/packages/extra_pedantic) package is used for static analysis: it automatically highlights warnings related to the [recommended dart style](https://dart.dev/guides/language/effective-dart/style). Most of them can be fixed automatically by invoking Context Actions (place the cursor on the warning and press *Alt+Enter*) and selecting the correct action. **Do not suppress a warning** unless you know what you're doing - if you don't know how to fix it and Android Studio doesn't help, hover over the warning and you'll see a link to the documentation that can help you understand.
-* Where necessary, comments should use Markdown formatting (e.g. backticks - `\` - for code snippets and `[brackets]` for code references).
+* Where necessary, comments should use Markdown formatting (e.g. ``` `backticks` ``` for code snippets and `[brackets]` for code references).
 
 ## GitHub Actions
 
@@ -689,7 +693,7 @@ The [`LocaleProvider`](lib/resources/locale_provider.dart) class offers utility 
 ## Custom icons
 
 If you need to use icons other than the ones provided by the
-[Material library](https://material.io/resources/icons/), the process is as follows:
+[Material library](https://material.io/resources/icons/) or [Feather Icons](https://feathericons.com/) (accessible directly in the code through the `Icons` and `FeatherIcons` classes respectively), the process is as follows:
 
 ### Generating the font file
 * Convert the `.ttf` [custom font](assets/fonts/CustomIcons/CustomIcons.ttf) in the project to an `.svg` font (using a tool such as [this one](https://convertio.co/ttf-svg/)).
@@ -702,4 +706,4 @@ If you need to use icons other than the ones provided by the
 * Copy the IconData definitions from the `.dart` file in the archive and replace the corresponding definitions in the [`CustomIcons`](lib/resources/custom_icons.dart) class;
 * Check that everything still works correctly :)
 
-**Note**: [FontAwesome](https://fontawesome.com/icons?d=gallery) icons are recommended, where possible, because they are consistent with the overall style. For additional action icons check out [FontAwesomeActions](https://github.com/nyon/fontawesome-actions) - the repo provides an [`.svg` font](https://github.com/nyon/fontawesome-actions/blob/master/dist/fonts/fontawesome-webfont.svg) you can upload directly into [FlutterIcon](https://www.fluttericon.com/).
+**Note**: [FontAwesome](https://fontawesome.com/icons?d=gallery) outline icons are recommended, where possible, because they are consistent with the overall style. For additional action icons check out [FontAwesomeActions](https://github.com/nyon/fontawesome-actions) - the repo provides an [`.svg` font](https://github.com/nyon/fontawesome-actions/blob/master/dist/fonts/fontawesome-webfont.svg) you can upload directly into [FlutterIcon](https://www.fluttericon.com/).
