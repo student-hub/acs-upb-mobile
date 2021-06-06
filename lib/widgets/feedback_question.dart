@@ -110,7 +110,7 @@ class _FeedbackQuestionFormState extends State<FeedbackQuestionForm> {
               return null;
             },
           ),
-          const SizedBox(height: 10),
+          const SizedBox(height: 16),
         ],
       );
     } else if (widget.question is FeedbackQuestionText) {

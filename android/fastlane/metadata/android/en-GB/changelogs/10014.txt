@@ -1,0 +1,5 @@
+Added
+  - You can now see events associated with a class directly on the class page. Just tap an event in your timetable, tap the class name and see the change!
+
+Fixed
+  - People photos not showing due to an expired certificate of cs.pub.ro
