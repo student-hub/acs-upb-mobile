@@ -65,6 +65,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "actionEditWebsite" : MessageLookupByLibrary.simpleMessage("Edit website"),
     "actionEnableEditing" : MessageLookupByLibrary.simpleMessage("Enable editing"),
     "actionJumpToToday" : MessageLookupByLibrary.simpleMessage("Jump to today"),
+    "actionLearnMore" : MessageLookupByLibrary.simpleMessage("Learn more"),
     "actionLogIn" : MessageLookupByLibrary.simpleMessage("Log in"),
     "actionLogInAnonymously" : MessageLookupByLibrary.simpleMessage("Log in anonymously"),
     "actionLogOut" : MessageLookupByLibrary.simpleMessage("Log out"),

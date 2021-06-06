@@ -214,7 +214,7 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
               child: IconText(
                 icon: Icons.info_outline,
                 text: S.current.infoFormAnonymous,
-                actionText: S.current.actionShowMore,
+                actionText: S.current.actionLearnMore,
                 actionArrow: true,
                 style: Theme.of(context).textTheme.bodyText1,
                 onTap: () => Navigator.of(context).push(

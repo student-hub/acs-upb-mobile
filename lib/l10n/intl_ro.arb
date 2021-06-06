@@ -106,6 +106,7 @@
   "actionOpenFilter": "Deschide filtru",
   "actionRequestPermissions": "Cere permisiuni",
   "actionRefresh": "Reîncarcă",
+  "actionLearnMore": "Află mai multe",
 
   "errorSomethingWentWrong": "A apărut o problemă.",
   "errorPasswordsDiffer": "Cele două parole diferă.",

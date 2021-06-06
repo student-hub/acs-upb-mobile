@@ -1055,6 +1055,16 @@ class S {
     );
   }
 
+  /// `Learn more`
+  String get actionLearnMore {
+    return Intl.message(
+      'Learn more',
+      name: 'actionLearnMore',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Something went wrong.`
   String get errorSomethingWentWrong {
     return Intl.message(

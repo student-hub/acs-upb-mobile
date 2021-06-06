@@ -62,7 +62,7 @@ class _ClassViewState extends State<ClassView> {
     return AppScaffold(
       title: Text(S.current.navigationClassInfo),
       actions: [
-        //if (widget.remoteConfigService.feedbackEnabled)
+        if (widget.remoteConfigService.feedbackEnabled)
           AppScaffoldAction(
               icon: Icons.rate_review_outlined,
               tooltip: S.current.navigationClassFeedback,
