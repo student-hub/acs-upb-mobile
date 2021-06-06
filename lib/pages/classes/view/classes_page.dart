@@ -23,7 +23,7 @@ class ClassesPage extends StatefulWidget {
 class _ClassesPageState extends State<ClassesPage> {
   Set<ClassHeader> headers;
   bool updating;
-  bool feedback;
+  bool feedback = false;
 
   Future<void> updateClasses() async {
     // If updating is null, classes haven't been initialized yet so they're not
