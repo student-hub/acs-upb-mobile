@@ -37,13 +37,15 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static m8(shortcutName) => "Are you sure you want to delete \"${shortcutName}\"?";
 
-  static m9(name) => "Welcome, ${name}!";
+  static m9(number) => "You need to complete ${number} more feedback forms!";
 
-  static m10(email) => "There is already an account associated with ${email}.";
+  static m10(name) => "Welcome, ${name}!";
 
-  static m11(n) => "Only ${n} options can be selected at a time.";
+  static m11(email) => "There is already an account associated with ${email}.";
 
-  static m12(provider) => "Please log in with ${provider} to continue.";
+  static m12(n) => "Only ${n} options can be selected at a time.";
+
+  static m13(provider) => "Please log in with ${provider} to continue.";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
@@ -213,6 +215,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "messageRequestAlreadyExists" : MessageLookupByLibrary.simpleMessage("You have already submitted a request. If you want to add another one, please press \'Send\'."),
     "messageRequestHasBeenSent" : MessageLookupByLibrary.simpleMessage("The request has been sent successfully."),
     "messageResetPassword" : MessageLookupByLibrary.simpleMessage("Enter your e-mai in order to receive instructions on how to reset your password."),
+    "messageReviewsLeft" : m9,
     "messageShortcutDeleted" : MessageLookupByLibrary.simpleMessage("Shortcut deleted successfully."),
     "messageTapForMoreInfo" : MessageLookupByLibrary.simpleMessage("Tap for more info"),
     "messageThereAreNoEventsForSelected" : MessageLookupByLibrary.simpleMessage("There are no events for the selected "),
@@ -222,7 +225,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "messageWebsiteDeleted" : MessageLookupByLibrary.simpleMessage("Website deleted successfully."),
     "messageWebsiteEdited" : MessageLookupByLibrary.simpleMessage("Website modified successfully."),
     "messageWebsitePreview" : MessageLookupByLibrary.simpleMessage("Try tapping/long-pressing/hovering the preview to test the new website."),
-    "messageWelcomeName" : m9,
+    "messageWelcomeName" : m10,
     "messageWelcomeSimple" : MessageLookupByLibrary.simpleMessage("Welcome!"),
     "messageYouCanContribute" : MessageLookupByLibrary.simpleMessage("You can contribute to the app data, but you first need to request permissions."),
     "navigationAskPermissions" : MessageLookupByLibrary.simpleMessage("Ask for permissions"),
@@ -290,7 +293,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "uniEventTypeTest" : MessageLookupByLibrary.simpleMessage("Test"),
     "warningAgreeTo" : MessageLookupByLibrary.simpleMessage("You need to agree to the "),
     "warningAuthenticationNeeded" : MessageLookupByLibrary.simpleMessage("Please authenticate in order to access this feature."),
-    "warningEmailInUse" : m10,
+    "warningEmailInUse" : m11,
     "warningEventNotEditable" : MessageLookupByLibrary.simpleMessage("This event cannot be edited."),
     "warningFavouriteWebsitesInitializationFailed" : MessageLookupByLibrary.simpleMessage("Could not read favourite websites."),
     "warningFeedbackAlreadySent" : MessageLookupByLibrary.simpleMessage("You have already submitted feedback for this class!"),
@@ -307,7 +310,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "warningNoPrivateWebsite" : MessageLookupByLibrary.simpleMessage("You have not created any private websites yet."),
     "warningNoneYet" : MessageLookupByLibrary.simpleMessage("None yet"),
     "warningNothingToEdit" : MessageLookupByLibrary.simpleMessage("There is nothing you have permission to edit."),
-    "warningOnlyNOptionsAtATime" : m11,
+    "warningOnlyNOptionsAtATime" : m12,
     "warningPasswordLength" : MessageLookupByLibrary.simpleMessage("The password must be 8 characters long or more."),
     "warningPasswordLowercase" : MessageLookupByLibrary.simpleMessage("The password must include at least one lowercase letter."),
     "warningPasswordNumber" : MessageLookupByLibrary.simpleMessage("The password must include at least one number."),
@@ -318,7 +321,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "warningSamePassword" : MessageLookupByLibrary.simpleMessage("The password must be different from the old one."),
     "warningTryAgainLater" : MessageLookupByLibrary.simpleMessage("Please try again later."),
     "warningUnableToReachNewsFeed" : MessageLookupByLibrary.simpleMessage("Unable to reach the news feed."),
-    "warningUseProvider" : m12,
+    "warningUseProvider" : m13,
     "warningWebsiteNameExists" : MessageLookupByLibrary.simpleMessage("A website with the same name already exists."),
     "warningYouNeedToSelectAssistant" : MessageLookupByLibrary.simpleMessage("You need to select your assistant for this class."),
     "warningYouNeedToSelectAtLeastOne" : MessageLookupByLibrary.simpleMessage("You need to select at least one option."),

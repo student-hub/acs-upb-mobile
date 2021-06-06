@@ -37,13 +37,15 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static m8(shortcutName) => "Sunteți sigur că doriți să ștergeți \"${shortcutName}\"?";
 
-  static m9(name) => "Bine ai venit, ${name}!";
+  static m9(number) => "Trebuie să completezi încă ${number} formulare de feedback!";
 
-  static m10(email) => "Există deja un cont asociat cu adresa ${email}.";
+  static m10(name) => "Bine ai venit, ${name}!";
 
-  static m11(n) => "Doar ${n} opțiuni pot fi selectate la un moment dat.";
+  static m11(email) => "Există deja un cont asociat cu adresa ${email}.";
 
-  static m12(provider) => "Folosiți ${provider} pentru a vă conecta.";
+  static m12(n) => "Doar ${n} opțiuni pot fi selectate la un moment dat.";
+
+  static m13(provider) => "Folosiți ${provider} pentru a vă conecta.";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
@@ -213,6 +215,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "messageRequestAlreadyExists" : MessageLookupByLibrary.simpleMessage("Ați trimis deja o cerere. Daca doriți să adăugați una nouă, vă rugăm sa apasați \'Salvare\'."),
     "messageRequestHasBeenSent" : MessageLookupByLibrary.simpleMessage("Cererea a fost transmisă cu succes"),
     "messageResetPassword" : MessageLookupByLibrary.simpleMessage("Introduceți mail-ul pentru a primi instrucțiuni de resetare a parolei."),
+    "messageReviewsLeft" : m9,
     "messageShortcutDeleted" : MessageLookupByLibrary.simpleMessage("Scurtătura a fost ștearsă cu succes."),
     "messageTapForMoreInfo" : MessageLookupByLibrary.simpleMessage("Apasă pentru mai multe informații"),
     "messageThereAreNoEventsForSelected" : MessageLookupByLibrary.simpleMessage("Nu există evenimente pentru selecția de "),
@@ -222,7 +225,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "messageWebsiteDeleted" : MessageLookupByLibrary.simpleMessage("Website-ul a fost șters cu succes."),
     "messageWebsiteEdited" : MessageLookupByLibrary.simpleMessage("Website modificat cu succes."),
     "messageWebsitePreview" : MessageLookupByLibrary.simpleMessage("Încercați să apăsați, să faceți hover sau să țineți apăsat ca să testați noul website."),
-    "messageWelcomeName" : m9,
+    "messageWelcomeName" : m10,
     "messageWelcomeSimple" : MessageLookupByLibrary.simpleMessage("Bine ai venit!"),
     "messageYouCanContribute" : MessageLookupByLibrary.simpleMessage("Poți contribui la datele din aplicație, dar trebuie mai întâi să ceri permisiuni."),
     "navigationAskPermissions" : MessageLookupByLibrary.simpleMessage("Cere permisiuni"),
@@ -246,7 +249,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "sectionEventsComingUp" : MessageLookupByLibrary.simpleMessage("Evenimente următoare"),
     "sectionFAQ" : MessageLookupByLibrary.simpleMessage("Întrebări frecvente"),
     "sectionFeedbackCompleted" : MessageLookupByLibrary.simpleMessage("Feedback completat"),
-    "sectionFeedbackTODO" : MessageLookupByLibrary.simpleMessage("Feedback de adăugat"),
+    "sectionFeedbackTODO" : MessageLookupByLibrary.simpleMessage("Feedback To-Do"),
     "sectionFrequentlyAccessedWebsites" : MessageLookupByLibrary.simpleMessage("Website-uri favorite"),
     "sectionGrading" : MessageLookupByLibrary.simpleMessage("Punctaj"),
     "sectionShortcuts" : MessageLookupByLibrary.simpleMessage("Scurtături"),
@@ -290,7 +293,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "uniEventTypeTest" : MessageLookupByLibrary.simpleMessage("Test"),
     "warningAgreeTo" : MessageLookupByLibrary.simpleMessage("Trebuie să fiți de acord cu "),
     "warningAuthenticationNeeded" : MessageLookupByLibrary.simpleMessage("Autentificați-vă pentru a accesa această funcționalitate."),
-    "warningEmailInUse" : m10,
+    "warningEmailInUse" : m11,
     "warningEventNotEditable" : MessageLookupByLibrary.simpleMessage("Acest eveniment nu poate fi modificat."),
     "warningFavouriteWebsitesInitializationFailed" : MessageLookupByLibrary.simpleMessage("Nu se pot citi date despre site-urile favorite."),
     "warningFeedbackAlreadySent" : MessageLookupByLibrary.simpleMessage("Ați trimis deja feedback pentru această materie!"),
@@ -307,7 +310,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "warningNoPrivateWebsite" : MessageLookupByLibrary.simpleMessage("Nu ați creat nici un website privat încă."),
     "warningNoneYet" : MessageLookupByLibrary.simpleMessage("Nu există încă"),
     "warningNothingToEdit" : MessageLookupByLibrary.simpleMessage("Nu există nimic pentru care să aveți permisiuni de editare."),
-    "warningOnlyNOptionsAtATime" : m11,
+    "warningOnlyNOptionsAtATime" : m12,
     "warningPasswordLength" : MessageLookupByLibrary.simpleMessage("Parola trebuie să aibă cel puțin 8 caractere."),
     "warningPasswordLowercase" : MessageLookupByLibrary.simpleMessage("Parola trebuie să conțină cel putin o minusculă."),
     "warningPasswordNumber" : MessageLookupByLibrary.simpleMessage("Parola trebuie să conțină cel puțin un număr."),
@@ -318,7 +321,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "warningSamePassword" : MessageLookupByLibrary.simpleMessage("Parola trebuie sa fie diferită de cea veche."),
     "warningTryAgainLater" : MessageLookupByLibrary.simpleMessage("Încercați mai târziu."),
     "warningUnableToReachNewsFeed" : MessageLookupByLibrary.simpleMessage("Nu am putut încărca fluxul de știri."),
-    "warningUseProvider" : m12,
+    "warningUseProvider" : m13,
     "warningWebsiteNameExists" : MessageLookupByLibrary.simpleMessage("Există deja un site cu același nume."),
     "warningYouNeedToSelectAssistant" : MessageLookupByLibrary.simpleMessage("Trebuie să selectați asistentul de la această materie."),
     "warningYouNeedToSelectAtLeastOne" : MessageLookupByLibrary.simpleMessage("Trebuie să selectați cel puțin o opțiune."),

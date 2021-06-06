@@ -23,6 +23,7 @@ class ClassesPage extends StatefulWidget {
 class _ClassesPageState extends State<ClassesPage> {
   Set<ClassHeader> headers;
   bool updating;
+  bool feedback;
 
   Future<void> updateClasses() async {
     // If updating is null, classes haven't been initialized yet so they're not
@@ -37,6 +38,10 @@ class _ClassesPageState extends State<ClassesPage> {
         Provider.of<AuthProvider>(context, listen: false);
     headers =
         (await classProvider.fetchClassHeaders(uid: authProvider.uid)).toSet();
+
+    await classProvider
+        .getRemoteConfig()
+        .then((value) => feedback = value.feedbackEnabled);
 
     updating = false;
     if (mounted) {
@@ -61,15 +66,16 @@ class _ClassesPageState extends State<ClassesPage> {
       // TODO(IoanaAlexandru): Simply show all classes if user is not authenticated
       needsToBeAuthenticated: true,
       actions: [
-        AppScaffoldAction(
-          icon: Icons.format_list_numbered_outlined,
-          tooltip: S.current.navigationClassesFeedbackChecklist,
-          onPressed: () => Navigator.of(context).push(
-            MaterialPageRoute<ClassesFeedbackChecklist>(
-              builder: (_) => ClassesFeedbackChecklist(classes: headers),
+        if (feedback)
+          AppScaffoldAction(
+            icon: Icons.format_list_numbered_outlined,
+            tooltip: S.current.navigationClassesFeedbackChecklist,
+            onPressed: () => Navigator.of(context).push(
+              MaterialPageRoute<ClassesFeedbackChecklist>(
+                builder: (_) => ClassesFeedbackChecklist(classes: headers),
+              ),
             ),
           ),
-        ),
         AppScaffoldAction(
           icon: Icons.edit_outlined,
           tooltip: S.current.actionChooseClasses,

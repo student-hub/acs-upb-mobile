@@ -146,11 +146,13 @@ class FeedbackProvider with ChangeNotifier {
   }
 
   Future<Map<String, dynamic>> getProvidedFeedbackClasses(String uid) async {
-    final DocumentSnapshot snap =
-        await FirebaseFirestore.instance.collection('users').doc(uid).get();
-    return snap.data()['classesFeedback'];
+    try {
+      final DocumentSnapshot snap =
+          await FirebaseFirestore.instance.collection('users').doc(uid).get();
+      return snap.data()['classesFeedback'];
+    } catch (e) {
+      AppToast.show(S.current.errorSomethingWentWrong);
+      return null;
+    }
   }
-
-
-
 }

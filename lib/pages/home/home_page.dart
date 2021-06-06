@@ -34,7 +34,7 @@ class HomePage extends StatelessWidget {
         children: [
           if (authProvider.isAuthenticated) ProfileCard(),
           if (authProvider.isAuthenticated && !authProvider.isAnonymous)
-            FeedbackCard()
+            FeedbackCard(),
           if (authProvider.isAuthenticated && !authProvider.isAnonymous)
             UpcomingEventsCard(onShowMore: () => tabController?.animateTo(1)),
           if (authProvider.isAuthenticated && !authProvider.isAnonymous)

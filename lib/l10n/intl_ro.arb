@@ -59,7 +59,7 @@
   "sectionEventsComingUp": "Evenimente următoare",
   "sectionFAQ": "Întrebări frecvente",
   "sectionGrading": "Punctaj",
-  "sectionFeedbackTODO": "Feedback de adăugat",
+  "sectionFeedbackTODO": "Feedback To-Do",
   "sectionFeedbackCompleted": "Feedback completat",
 
   "shortcutTypeMain": "Pagina principală",
@@ -274,6 +274,7 @@
   "messageYouCanContribute": "Poți contribui la datele din aplicație, dar trebuie mai întâi să ceri permisiuni.",
   "messageThereAreNoEventsForSelected": "Nu există evenimente pentru selecția de ",
   "messagePictureUpdatedSuccess": "Poza a fost actualizată cu succes.",
+  "messageReviewsLeft": "Trebuie să completezi încă {number} formulare de feedback!",
 
   "infoPasswordResetEmailSent": "Please check your inbox for the password reset e-mail.",
   "infoRelevance": "Încercați să selectați cea mai restrictivă categorie.",

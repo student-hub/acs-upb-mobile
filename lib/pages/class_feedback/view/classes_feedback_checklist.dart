@@ -90,21 +90,21 @@ class _ClassesFeedbackChecklistState extends State<ClassesFeedbackChecklist> {
                 checklistPage()
               else
                 ErrorPage(
-                    errorMessage: S.current.messageNoClassesYet,
-                    imgPath: 'assets/illustrations/undraw_empty.png',
-                    info: [
-                      TextSpan(
-                          text: '${S.current.messageGetStartedByPressing} '),
-                      WidgetSpan(
-                        alignment: PlaceholderAlignment.middle,
-                        child: Icon(
-                          Icons.edit_outlined,
-                          size: Theme.of(context).textTheme.subtitle1.fontSize +
-                              2,
-                        ),
+                  errorMessage: S.current.messageNoClassesYet,
+                  imgPath: 'assets/illustrations/undraw_empty.png',
+                  info: [
+                    TextSpan(text: '${S.current.messageGetStartedByPressing} '),
+                    WidgetSpan(
+                      alignment: PlaceholderAlignment.middle,
+                      child: Icon(
+                        Icons.edit_outlined,
+                        size:
+                            Theme.of(context).textTheme.subtitle1.fontSize + 2,
                       ),
-                      TextSpan(text: ' ${S.current.messageButtonAbove}.'),
-                    ])
+                    ),
+                    TextSpan(text: ' ${S.current.messageButtonAbove}.'),
+                  ],
+                ),
             ],
           ),
         ),

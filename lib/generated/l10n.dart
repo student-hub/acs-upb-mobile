@@ -2635,6 +2635,16 @@ class S {
     );
   }
 
+  /// `You need to complete {number} more feedback forms!`
+  String messageReviewsLeft(Object number) {
+    return Intl.message(
+      'You need to complete $number more feedback forms!',
+      name: 'messageReviewsLeft',
+      desc: '',
+      args: [number],
+    );
+  }
+
   /// `Please check your inbox for the password reset e-mail.`
   String get infoPasswordResetEmailSent {
     return Intl.message(
