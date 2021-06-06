@@ -83,6 +83,8 @@ Similarly, please create one PR per development item, instead of bundling multip
   - *Ctrl+Shift+F* or *⌘+Shift+F* upon clicking a directory in the Project view lets you search a keyword through the entire directory. This is particularly useful for searching for something in the entire codebase.
   - *Ctrl+click* or *⌘+click* through a class/method name takes you to its definition. You can also right-click on it and use "Find usages" or the various "Go To" options to explore how it is used/defined.
     * Oftentimes, a class definition will be in a file that is outside our project - either from a package or the Flutter framework itself. These files are marked with a yellow background in the Android Studio tab bar. You cannot edit them, but it's often useful to read through them to understand how they work.
+
+![reading-code](https://user-images.githubusercontent.com/25504811/120932178-7365a980-c6fd-11eb-8f3c-db59034f8bcc.png)
 * By default, **Flutter apps run in debug mode**. That means a DEBUG banner is shown on the upper right corner of the app, and errors and overflows are marked quite visibly in the UI.
   - If you'd like to temporarily hide the debug mode banner (to take a screenshot, for instance), open the *Flutter Inspector* tab from the right hand edge of Android Studio, click *More actions* and select *Hide debug mode banner*.
   - Note that Flutter's debug mode is different from the Android Studio debugging (bug button), which is meant to allow you to use breakpoints and other debugging tools.
