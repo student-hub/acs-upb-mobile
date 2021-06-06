@@ -49,7 +49,7 @@ class _ClassesPageState extends State<ClassesPage> {
   @override
   void initState() {
     super.initState();
-    
+
     updateClasses();
   }
 

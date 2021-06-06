@@ -84,8 +84,7 @@ class _TimetablePageState extends State<TimetablePage> {
                     if (snap.hasData) {
                       return ClassesPage(remoteConfigService: snap.data);
                     } else {
-                      return const Center(
-                          child: CircularProgressIndicator());
+                      return const Center(child: CircularProgressIndicator());
                     }
                   },
                 ),
