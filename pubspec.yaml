@@ -73,6 +73,9 @@ dependencies:
   # Display markdown-formatted text
   flutter_markdown: ^0.4.4
 
+  # Allow integration with Unity
+  flutter_unity_widget: ^4.1.0
+
   # Use an in-app browser to ask user for Google Calendar permission
   flutter_web_browser: ^0.13.1
 
