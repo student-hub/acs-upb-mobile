@@ -63,7 +63,8 @@ class _SettingsPageState extends State<SettingsPage> {
                       child: Image.asset(
                           'assets/illustrations/undraw_settings.png')),
                 ),
-                PrefTitle(title: Text(S.current.settingsTitlePersonalization)),
+                const SizedBox(height: 10),
+                categoryTitle(S.current.settingsTitlePersonalization),
                 // TODO(IoanaAlexandru): Make this an option out of 3 (light, dark, auto)
                 PrefSwitch(
                   title: Text(S.current.settingsItemDarkMode),
@@ -76,7 +77,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     }
                   },
                 ),
-                PrefTitle(title: Text(S.current.settingsTitleLocalization)),
+                categoryTitle(S.current.settingsTitleLocalization),
                 PrefDialogButton(
                   title: Text(S.current.settingsItemLanguage),
                   subtitle: Text(
@@ -90,7 +91,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     onlySaveOnSubmit: false,
                   ),
                 ),
-                PrefTitle(title: Text(S.current.settingsTitleDataControl)),
+                categoryTitle(S.current.settingsTitleDataControl),
                 ListTile(
                   key: const ValueKey('ask_permissions'),
                   onTap: () {
@@ -116,7 +117,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
                 Visibility(
                   visible: Platform.isAndroid || Platform.isIOS,
-                  child: PrefTitle(title: Text(S.current.settingsTitleTimetable)),
+                  child: categoryTitle(S.current.settingsTitleTimetable),
                 ),
                 Visibility(
                   visible: Platform.isAndroid || Platform.isIOS,
@@ -177,6 +178,17 @@ class _SettingsPageState extends State<SettingsPage> {
       ),
     );
   }
+
+  Widget categoryTitle(String title) => Padding(
+        padding: const EdgeInsets.only(left: 10, top: 10),
+        child: Text(
+          title,
+          style: Theme.of(context)
+              .accentTextTheme
+              .subtitle2
+              .apply(fontWeightDelta: 2),
+        ),
+      );
 
   PrefRadio<String> languageRadioPreference(
       BuildContext context, String preference) {
