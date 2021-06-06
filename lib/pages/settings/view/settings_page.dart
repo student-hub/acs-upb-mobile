@@ -10,12 +10,11 @@ import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/widgets/icon_text.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
-import 'package:dynamic_theme/dynamic_theme.dart';
+import 'package:easy_dynamic_theme/easy_dynamic_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
-import 'package:preferences/preferences.dart';
+import 'package:pref/pref.dart';
 import 'package:provider/provider.dart';
-import 'package:time_machine/time_machine.dart';
 
 class SettingsPage extends StatefulWidget {
   static const String routeName = '/settings';
@@ -51,8 +50,8 @@ class _SettingsPageState extends State<SettingsPage> {
 
     return AppScaffold(
       title: Text(S.current.navigationSettings),
-      body: PreferencePage(
-        [
+      body: PrefPage(
+        children: [
           Padding(
             padding: const EdgeInsets.all(10),
             child: Column(
@@ -64,26 +63,26 @@ class _SettingsPageState extends State<SettingsPage> {
                       child: Image.asset(
                           'assets/illustrations/undraw_settings.png')),
                 ),
-                PreferenceTitle(S.current.settingsTitlePersonalization),
-                SwitchPreference(
-                  S.current.settingsItemDarkMode,
-                  'dark_mode',
-                  onEnable: () {
-                    DynamicTheme.of(context).setBrightness(Brightness.dark);
+                PrefTitle(title: Text(S.current.settingsTitlePersonalization)),
+                // TODO(IoanaAlexandru): Make this an option out of 3 (light, dark, auto)
+                PrefSwitch(
+                  title: Text(S.current.settingsItemDarkMode),
+                  pref: 'dark_mode',
+                  onChange: (selected) {
+                    if (selected) {
+                      EasyDynamicTheme.of(context).changeTheme(dark: true);
+                    } else {
+                      EasyDynamicTheme.of(context).changeTheme(dark: false);
+                    }
                   },
-                  onDisable: () {
-                    DynamicTheme.of(context).setBrightness(Brightness.light);
-                  },
-                  defaultVal: MediaQuery.of(context).platformBrightness ==
-                      Brightness.dark,
                 ),
-                PreferenceTitle(S.current.settingsTitleLocalization),
-                PreferenceDialogLink(
-                  S.current.settingsItemLanguage,
-                  desc:
-                      languagePrefString(context, PrefService.get('language')),
-                  dialog: PreferenceDialog(
-                    [
+                PrefTitle(title: Text(S.current.settingsTitleLocalization)),
+                PrefDialogButton(
+                  title: Text(S.current.settingsItemLanguage),
+                  subtitle: Text(
+                      languagePrefString(context, prefService.get('language'))),
+                  dialog: PrefDialog(
+                    children: [
                       languageRadioPreference(context, 'ro'),
                       languageRadioPreference(context, 'en'),
                       languageRadioPreference(context, 'auto'),
@@ -91,7 +90,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     onlySaveOnSubmit: false,
                   ),
                 ),
-                PreferenceTitle(S.current.settingsTitleDataControl),
+                PrefTitle(title: Text(S.current.settingsTitleDataControl)),
                 ListTile(
                   key: const ValueKey('ask_permissions'),
                   onTap: () {
@@ -117,7 +116,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
                 Visibility(
                   visible: Platform.isAndroid || Platform.isIOS,
-                  child: PreferenceTitle(S.current.settingsTitleTimetable),
+                  child: PrefTitle(title: Text(S.current.settingsTitleTimetable)),
                 ),
                 Visibility(
                   visible: Platform.isAndroid || Platform.isIOS,
@@ -130,7 +129,7 @@ class _SettingsPageState extends State<SettingsPage> {
                         final eventProvider = Provider.of<UniEventProvider>(
                             context,
                             listen: false);
-                        await eventProvider.exportToGoogleCalendar();
+//                        await eventProvider.exportToGoogleCalendar();
                       }
                     },
                     title: Text(S.current.settingsExportToGoogleCalendar),
@@ -179,24 +178,17 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 
-  RadioPreference<String> languageRadioPreference(
+  PrefRadio<String> languageRadioPreference(
       BuildContext context, String preference) {
-    return RadioPreference(
-      languagePrefString(context, preference),
-      preference,
-      'language',
+    return PrefRadio(
+      title: Text(languagePrefString(context, preference)),
+      value: preference,
+      pref: 'language',
       onSelect: () {
         // Reload settings page
         setState(() {
-          Culture.current = LocaleProvider.cultures[preference];
           S.load(LocaleProvider.localeFromString(preference));
           Navigator.of(context).pop();
-
-          // Hack to notify all widgets that something changed, since the
-          // localizations delegate doesn't do that. Pretend to change the theme
-          // so that listeners have to reload.
-          DynamicTheme.of(context)
-              .setBrightness(DynamicTheme.of(context).brightness);
         });
       },
     );

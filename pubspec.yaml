@@ -128,11 +128,11 @@ dependencies:
   # DateTime utilities
 #  time_machine: ^0.9.16
 
-  # Timetable widget
-  timetable: ^1.0.0-alpha.0
-
   # Time interval picker
   time_range_picker: ^2.0.1
+
+  # Timetable widget
+  timetable: ^1.0.0-alpha.0
 
   # URL opener
   url_launcher: ^6.0.6
@@ -177,7 +177,7 @@ dev_dependencies:
 
 dependency_overrides:
   # Temporary workaround to bypass intl_translation incompatibility
-  intl: ^0.17.0-nullsafety.2
+#  intl: ^0.17.0-nullsafety.2
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
