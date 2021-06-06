@@ -2,6 +2,33 @@
 
 It is recommended that you go through [our workshop](https://github.com/acs-upb-mobile/flutter-workshop) first, to familiarize yourself with the technologies and the contribution process.
 
+## Table of Contents
+* [Pull Request (contribution) process](#pull-request--contribution--process)
+  + [Guidelines](#guidelines)
+  + [Branches](#branches)
+  + [Merging](#merging)
+* [Development tips](#development-tips)
+* [Style guide](#style-guide)
+* [GitHub Actions](#github-actions)
+* [Working with Firebase](#working-with-firebase)
+  + [Setup](#setup)
+  + [Authentication](#authentication)
+  + [Firestore](#firestore)
+    - [Data model](#data-model)
+    - [Project database](#project-database)
+  + [Storage](#storage)
+    - [Structure](#structure)
+    - [Security](#security)
+  + [Functions](#functions)
+* [Internationalization](#internationalization)
+  + [On-device](#on-device)
+  + [Remote](#remote)
+  + [Changing the locale](#changing-the-locale)
+  + [Fetching the locale](#fetching-the-locale)
+* [Custom icons](#custom-icons)
+  + [Generating the font file](#generating-the-font-file)
+  + [Updating the project](#updating-the-project)
+
 ## Pull Request (contribution) process
 ### Guidelines
 1. Check out [this](https://opensource.com/article/19/7/create-pull-request-github) tutorial if you don't know how to make a PR.
