@@ -1,6 +1,10 @@
 import 'package:acs_upb_mobile/authentication/model/user.dart';
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/main.dart';
+import 'package:acs_upb_mobile/pages/class_feedback/service/feedback_provider.dart';
+import 'package:acs_upb_mobile/pages/class_feedback/service/remote_config.dart';
+import 'package:acs_upb_mobile/pages/classes/model/class.dart';
+import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
 import 'package:acs_upb_mobile/pages/faq/model/question.dart';
 import 'package:acs_upb_mobile/pages/faq/service/question_provider.dart';
 import 'package:acs_upb_mobile/pages/news_feed/model/news_feed_item.dart';
@@ -37,6 +41,10 @@ class MockNewsProvider extends Mock implements NewsProvider {}
 
 class MockUniEventProvider extends Mock implements UniEventProvider {}
 
+class MockFeedbackProvider extends Mock implements FeedbackProvider {}
+
+class MockClassProvider extends Mock implements ClassProvider {}
+
 void main() {
   AuthProvider mockAuthProvider;
   WebsiteProvider mockWebsiteProvider;
@@ -44,6 +52,8 @@ void main() {
   RequestProvider mockRequestProvider;
   MockNewsProvider mockNewsProvider;
   UniEventProvider mockEventProvider;
+  FeedbackProvider mockFeedbackProvider;
+  ClassProvider mockClassProvider;
 
   Widget buildApp() => MultiProvider(providers: [
         ChangeNotifierProvider<AuthProvider>(create: (_) => mockAuthProvider),
@@ -55,6 +65,9 @@ void main() {
             create: (_) => mockQuestionProvider),
         Provider<RequestProvider>(create: (_) => mockRequestProvider),
         ChangeNotifierProvider<NewsProvider>(create: (_) => mockNewsProvider),
+        ChangeNotifierProvider<FeedbackProvider>(
+            create: (_) => mockFeedbackProvider),
+        ChangeNotifierProvider<ClassProvider>(create: (_) => mockClassProvider),
       ], child: const MyApp());
 
   group('Settings', () {
@@ -122,6 +135,58 @@ void main() {
       when(mockEventProvider.getUpcomingEvents(LocalDate.today(),
               limit: anyNamed('limit')))
           .thenAnswer((_) => Future.value(<UniEventInstance>[]));
+
+      mockFeedbackProvider = MockFeedbackProvider();
+      // ignore: invalid_use_of_protected_member
+      when(mockFeedbackProvider.hasListeners).thenReturn(true);
+      when(mockFeedbackProvider.addResponse(any))
+          .thenAnswer((_) => Future.value(true));
+      when(mockFeedbackProvider.setUserClassFeedback(any, any))
+          .thenAnswer((_) => Future.value(true));
+      when(mockFeedbackProvider.checkProvidedClassFeedback(any, any))
+          .thenAnswer((_) => Future.value(false));
+      when(mockFeedbackProvider.getProvidedFeedbackClasses(any))
+          .thenAnswer((_) => Future.value({'M1': true, 'M2': true}));
+
+      mockClassProvider = MockClassProvider();
+      // ignore: invalid_use_of_protected_member
+      when(mockClassProvider.hasListeners).thenReturn(false);
+      final userClassHeaders = [
+        ClassHeader(
+          id: '3',
+          name: 'Programming',
+          acronym: 'PC',
+          category: 'A',
+        ),
+        ClassHeader(
+          id: '4',
+          name: 'Physics',
+          acronym: 'PH',
+          category: 'D',
+        )
+      ];
+      when(mockClassProvider.userClassHeadersCache)
+          .thenReturn(userClassHeaders);
+      when(mockClassProvider.fetchClassHeaders(uid: anyNamed('uid')))
+          .thenAnswer((_) => Future.value([
+                ClassHeader(
+                  id: '1',
+                  name: 'Maths 1',
+                  acronym: 'M1',
+                  category: 'A/B',
+                ),
+                ClassHeader(
+                  id: '2',
+                  name: 'Maths 2',
+                  acronym: 'M2',
+                  category: 'A/C',
+                ),
+              ] +
+              userClassHeaders));
+      when(mockClassProvider.fetchUserClassIds(any))
+          .thenAnswer((_) => Future.value(['3', '4']));
+      when(mockClassProvider.getRemoteConfig())
+          .thenAnswer((_) => Future.value(RemoteConfigService()));
     });
 
     testWidgets('Dark Mode', (WidgetTester tester) async {
