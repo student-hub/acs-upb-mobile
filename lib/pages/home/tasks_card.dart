@@ -19,7 +19,7 @@ class TasksCard extends StatelessWidget {
     return InfoCard<Iterable<UniEventInstance>>(
       title: S.current.sectionPlanner,
       onShowMore: onShowMore,
-      future: eventProvider.getAssignments(LocalDate.today()),
+      future: eventProvider.getAssignments(),
       builder: (events) => Column(
         children: events
             .map(

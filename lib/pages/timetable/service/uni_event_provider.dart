@@ -394,7 +394,7 @@ class UniEventProvider extends EventProvider<UniEventInstance>
         .first;
   }
 
-  Future<Iterable<UniEventInstance>> getAssignments(LocalDate date,
+  Future<Iterable<UniEventInstance>> getAssignments(
       {int limit = 3, bool retrievePast = false}) async {
     return _events
         .map((events) => events
