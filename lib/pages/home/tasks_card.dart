@@ -6,7 +6,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
-import 'package:time_machine/time_machine.dart';
 
 class TasksCard extends StatelessWidget {
   const TasksCard({Key key, this.onShowMore}) : super(key: key);
