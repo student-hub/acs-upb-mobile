@@ -48,11 +48,13 @@
   "labelToday": "Astăzi",
   "labelTomorrow": "Mâine",
   "labelNow": "Acum",
+  "labelOngoing": "În Decurs",
 
   "sectionShortcuts": "Scurtături",
   "sectionEvents": "Evenimente",
   "sectionFrequentlyAccessedWebsites": "Website-uri favorite",
   "sectionEventsComingUp": "Evenimente următoare",
+  "sectionPlanner": "Planificator",
   "sectionFAQ": "Întrebări frecvente",
   "sectionGrading": "Punctaj",
 

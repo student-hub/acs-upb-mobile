@@ -48,11 +48,13 @@
   "labelToday": "Today",
   "labelTomorrow": "Tomorrow",
   "labelNow": "Now",
+  "labelOngoing": "Ongoing",
 
   "sectionShortcuts": "Shortcuts",
   "sectionEvents": "Events",
   "sectionFrequentlyAccessedWebsites": "Favourite websites",
   "sectionEventsComingUp": "Events coming up",
+  "sectionPlanner": "Planner",
   "sectionFAQ": "FAQ",
   "sectionGrading": "Grading",
 
