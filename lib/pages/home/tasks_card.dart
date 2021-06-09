@@ -17,7 +17,7 @@ class TasksCard extends StatelessWidget {
     final UniEventProvider eventProvider =
         Provider.of<UniEventProvider>(context);
     return InfoCard<Iterable<UniEventInstance>>(
-      title: 'Planner',
+      title: S.current.sectionPlanner,
       onShowMore: onShowMore,
       future: eventProvider.getAssignments(LocalDate.today()),
       builder: (events) => Column(
@@ -38,7 +38,7 @@ class TasksCard extends StatelessWidget {
                   ),
                 ),
                 trailing: event.start.toDateTimeLocal().isBefore(DateTime.now())
-                    ? const Chip(label: Text('Ongoing'))
+                    ? Chip(label: Text(S.current.labelOngoing))
                     : null,
                 title: Text(
                   '${'${event.mainEvent.classHeader.acronym} - '}${event.mainEvent.type.toLocalizedString()}',
