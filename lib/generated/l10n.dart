@@ -14,22 +14,22 @@ import 'intl/messages_all.dart';
 
 class S {
   S();
-
+  
   static S current;
-
+  
   static const AppLocalizationDelegate delegate =
-  AppLocalizationDelegate();
+    AppLocalizationDelegate();
 
   static Future<S> load(Locale locale) {
     final name = (locale.countryCode?.isEmpty ?? false) ? locale.languageCode : locale.toString();
-    final localeName = Intl.canonicalizedLocale(name);
+    final localeName = Intl.canonicalizedLocale(name); 
     return initializeMessages(localeName).then((_) {
       Intl.defaultLocale = localeName;
       S.current = S();
-
+      
       return S.current;
     });
-  }
+  } 
 
   static S of(BuildContext context) {
     return Localizations.of<S>(context, S);
@@ -515,6 +515,16 @@ class S {
     );
   }
 
+  /// `Ongoing`
+  String get labelOngoing {
+    return Intl.message(
+      'Ongoing',
+      name: 'labelOngoing',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Shortcuts`
   String get sectionShortcuts {
     return Intl.message(
@@ -550,6 +560,16 @@ class S {
     return Intl.message(
       'Events coming up',
       name: 'sectionEventsComingUp',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Planner`
+  String get sectionPlanner {
+    return Intl.message(
+      'Planner',
+      name: 'sectionPlanner',
       desc: '',
       args: [],
     );
@@ -945,64 +965,6 @@ class S {
     );
   }
 
-  /// `Choose Dates`
-  String get actionChooseDates {
-    return Intl.message(
-      'Choose dates',
-      name: 'actionChooseDates',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Choose start date`
-  String get actionChooseStartDate {
-    return Intl.message(
-      'Choose start date',
-      name: 'actionChooseStartDate',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Choose Hard Deadline date`
-  String get actionChooseHardDeadlineDate {
-    return Intl.message(
-      'Choose Hard Deadline date',
-      name: 'actionChooseHardDeadlineDate',
-      desc: '',
-      args: [],
-    );
-  }
-  /// `Has Soft Deadline?`
-  String get actionChooseHasSoftDeadline {
-    return Intl.message(
-      'Has Soft Deadline?',
-      name: 'actionChooseHasSoftDeadline',
-      desc: '',
-      args: [],
-    );
-  }
-  /// `Choose Hard Deadline date`
-  String get actionChooseSoftDeadlineDate {
-    return Intl.message(
-      'Choose Soft Deadline date',
-      name: 'actionChooseSoftDeadlineDate',
-      desc: '',
-      args: [],
-    );
-  }
-  /// `Daily penalties after Soft Deadline`
-  String get messagePenalties {
-    return Intl.message(
-      'Daily penalties after Soft Deadline',
-      name: 'messagePenalties',
-      desc: '',
-      args: [],
-    );
-  }
-
-
   /// `Add shortcut`
   String get actionAddShortcut {
     return Intl.message(
@@ -1078,6 +1040,66 @@ class S {
     return Intl.message(
       'Refresh',
       name: 'actionRefresh',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Choose dates`
+  String get actionChooseDates {
+    return Intl.message(
+      'Choose dates',
+      name: 'actionChooseDates',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Start date`
+  String get actionChooseStartDate {
+    return Intl.message(
+      'Start date',
+      name: 'actionChooseStartDate',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Hard deadline`
+  String get actionChooseHardDeadlineDate {
+    return Intl.message(
+      'Hard deadline',
+      name: 'actionChooseHardDeadlineDate',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Has soft deadline?`
+  String get actionChooseHasSoftDeadline {
+    return Intl.message(
+      'Has soft deadline?',
+      name: 'actionChooseHasSoftDeadline',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Soft deadline`
+  String get actionChooseSoftDeadlineDate {
+    return Intl.message(
+      'Soft deadline',
+      name: 'actionChooseSoftDeadlineDate',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Daily penalties after Soft deadline`
+  String get messagePenalties {
+    return Intl.message(
+      'Daily penalties after Soft deadline',
+      name: 'messagePenalties',
       desc: '',
       args: [],
     );
@@ -1162,8 +1184,6 @@ class S {
       args: [],
     );
   }
-
-
 
   /// `There is already an account associated with this e-mail address`
   String get errorEmailInUse {

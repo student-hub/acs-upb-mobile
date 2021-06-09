@@ -498,6 +498,9 @@ Future<void> main() async {
     when(mockEventProvider.getUpcomingEvents(LocalDate.today(),
             limit: anyNamed('limit')))
         .thenAnswer((_) => Future.value(<UniEventInstance>[]));
+    when(mockEventProvider.getAssignments(
+            limit: anyNamed('limit'), retrievePast: anyNamed('retrievePast')))
+        .thenAnswer((_) => Future.value(<UniEventInstance>[]));
     when(mockEventProvider.getAllEventsOfClass(any))
         .thenAnswer((_) => Future.value(<UniEvent>[]));
     final rruleEveryWeekFirstSem = RecurrenceRule(
