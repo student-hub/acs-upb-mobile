@@ -1,3 +1,4 @@
+import 'package:acs_upb_mobile/pages/chatbot/view/chat_page.dart';
 import 'package:acs_upb_mobile/pages/search/view/classes_search_results.dart';
 import 'package:acs_upb_mobile/pages/search/view/people_search_results.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
@@ -48,8 +49,11 @@ class ChatBotIntro extends StatelessWidget {
     return Container(
         child: Column(
       children: [
-        const Image(
-          image: AssetImage('assets/illustrations/undraw_chat_image.png'),
+        const Padding(
+          padding: EdgeInsets.only(left: 20),
+          child: Image(
+            image: AssetImage('assets/illustrations/undraw_chat_image.png'),
+          ),
         ),
         Padding(
           padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
@@ -59,12 +63,18 @@ class ChatBotIntro extends StatelessWidget {
               Padding(
                   padding: const EdgeInsets.only(right: 10),
                   child: Text(S.current.messageAnotherQuestion)),
-              Text(
-                S.current.messageTalkToChatbot,
-                style: TextStyle(
-                    color: Theme.of(context).accentColor,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 15),
+              GestureDetector(
+                child: Text(
+                  S.current.messageTalkToChatbot,
+                  style: TextStyle(
+                      color: Theme.of(context).accentColor,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 15),
+                ),
+                onTap: () =>
+                    Navigator.of(context).push(MaterialPageRoute<ChatPage>(
+                  builder: (_) => ChatPage(),
+                )),
               )
             ],
           ),

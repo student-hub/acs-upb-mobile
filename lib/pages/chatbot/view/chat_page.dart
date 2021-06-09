@@ -11,8 +11,8 @@ class _ChatPageState extends State<ChatPage> {
   // ignore: prefer_final_fields
   List<ChatMessage> _messages = [
     const ChatMessage(
-        messageContent: 'What are you doing?', messageType: 'receiver'),
-    const ChatMessage(messageContent: 'Hello, Will!', messageType: 'receiver'),
+        content: 'What are you doing?', type: 'receiver'),
+    const ChatMessage(content: 'Hello, Will!', type: 'receiver'),
   ]; //for testing
   final _textController = TextEditingController();
   final FocusNode _focusNode = FocusNode();
@@ -73,8 +73,8 @@ class _ChatPageState extends State<ChatPage> {
   void _handleSubmitted(String messageContent) {
     _textController.clear();
     final ChatMessage message = ChatMessage(
-      messageContent: messageContent,
-      messageType: 'sender',
+      content: messageContent,
+      type: 'sender',
     );
     setState(() {
       _messages.insert(0, message);
@@ -84,26 +84,26 @@ class _ChatPageState extends State<ChatPage> {
 }
 
 class ChatMessage extends StatelessWidget {
-  const ChatMessage({this.messageContent, this.messageType});
+  const ChatMessage({this.content, this.type});
 
-  final String messageContent;
-  final String messageType;
+  final String content;
+  final String type;
 
   @override
   Widget build(BuildContext context) {
     return Align(
       alignment:
-          messageType == 'receiver' ? Alignment.topLeft : Alignment.topRight,
+          type == 'receiver' ? Alignment.topLeft : Alignment.topRight,
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
-          color: messageType == 'receiver'
+          color: type == 'receiver'
               ? Theme.of(context).cardColor
               : Theme.of(context).primaryColor,
         ),
         padding: const EdgeInsets.all(16),
         child: Text(
-          messageContent,
+          content,
           style: const TextStyle(fontSize: 15),
         ),
       ),
