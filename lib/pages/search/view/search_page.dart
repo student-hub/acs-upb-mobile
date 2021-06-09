@@ -36,7 +36,7 @@ class _SearchPageState extends State<SearchPage> {
           ),
           PeopleSearchResults(query: query),
           ClassesSearchResults(query: query),
-          ChatBotIntro()
+          if (query.isNotEmpty) ChatBotIntro()
         ],
       ),
     );
