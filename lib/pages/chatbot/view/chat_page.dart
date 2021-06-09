@@ -8,8 +8,8 @@ class ChatPage extends StatefulWidget {
 }
 
 class _ChatPageState extends State<ChatPage> {
-  // ignore: prefer_final_fields
-  List<ChatMessage> _messages = [
+
+  final List<ChatMessage> _messages = [
     const ChatMessage(
         content: 'What are you doing?', type: 'receiver'),
     const ChatMessage(content: 'Hello, Will!', type: 'receiver'),
