@@ -8,10 +8,8 @@ class ChatPage extends StatefulWidget {
 }
 
 class _ChatPageState extends State<ChatPage> {
-
   final List<ChatMessage> _messages = [
-    const ChatMessage(
-        content: 'What are you doing?', type: 'receiver'),
+    const ChatMessage(content: 'What are you doing?', type: 'receiver'),
     const ChatMessage(content: 'Hello, Will!', type: 'receiver'),
   ]; //for testing
   final _textController = TextEditingController();
@@ -92,8 +90,7 @@ class ChatMessage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Align(
-      alignment:
-          type == 'receiver' ? Alignment.topLeft : Alignment.topRight,
+      alignment: type == 'receiver' ? Alignment.topLeft : Alignment.topRight,
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
