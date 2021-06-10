@@ -203,6 +203,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "messageEventAdded" : MessageLookupByLibrary.simpleMessage("Event added successfully."),
     "messageEventDeleted" : MessageLookupByLibrary.simpleMessage("Event deleted successfully."),
     "messageEventEdited" : MessageLookupByLibrary.simpleMessage("Event modified successfully."),
+    "messageEventHiddenSuccessfully" : MessageLookupByLibrary.simpleMessage("Event is now hidden."),
+    "messageEventShowSuccessfully" : MessageLookupByLibrary.simpleMessage("Event is now visible."),
     "messageGetStartedByPressing" : MessageLookupByLibrary.simpleMessage("Get started by pressing the"),
     "messageIAgreeToThe" : MessageLookupByLibrary.simpleMessage("I agree to the "),
     "messageNewUser" : MessageLookupByLibrary.simpleMessage("New user?"),

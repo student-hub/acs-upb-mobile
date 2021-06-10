@@ -41,7 +41,7 @@ class AllDayUniEvent extends UniEvent {
 
   @override
   Iterable<UniEventInstance> generateInstances(
-      {DateInterval intersectingInterval}) sync* {
+      {DateInterval intersectingInterval, bool hidden = false}) sync* {
     yield UniEventInstance(
       id: id,
       title: name,

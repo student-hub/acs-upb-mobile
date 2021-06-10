@@ -145,7 +145,7 @@ class UniEvent {
   }
 
   Iterable<UniEventInstance> generateInstances(
-      {DateInterval intersectingInterval}) sync* {
+      {DateInterval intersectingInterval, bool hidden = false}) sync* {
     final LocalDateTime end = start.add(duration);
     if (intersectingInterval != null) {
       if (end.calendarDate < intersectingInterval.start ||
@@ -160,6 +160,7 @@ class UniEvent {
       start: start,
       end: start.add(duration),
       location: location,
+      hidden: hidden,
     );
   }
 }
@@ -176,6 +177,7 @@ class UniEventInstance extends Event {
     this.info,
     this.grade,
     this.penalties,
+    this.hidden,
   })  : color = color ?? mainEvent?.color,
         super(id: id, start: start, end: end);
 
@@ -187,6 +189,7 @@ class UniEventInstance extends Event {
   final String info;
   final double grade;
   final double penalties;
+  final bool hidden;
 
   @override
   bool operator ==(dynamic other) =>

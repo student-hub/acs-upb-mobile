@@ -8,6 +8,7 @@ import 'package:acs_upb_mobile/pages/filter/model/filter.dart';
 import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
 import 'package:acs_upb_mobile/pages/people/model/person.dart';
 import 'package:acs_upb_mobile/pages/people/service/person_provider.dart';
+import 'package:acs_upb_mobile/pages/planner/service/planner_provider.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/academic_calendar.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/events/all_day_event.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/events/class_event.dart';
@@ -245,9 +246,13 @@ extension AcademicCalendarExtension on AcademicCalendar {
 
 class UniEventProvider extends EventProvider<UniEventInstance>
     with ChangeNotifier {
-  UniEventProvider({AuthProvider authProvider, PersonProvider personProvider})
+  UniEventProvider(
+      {AuthProvider authProvider,
+      PersonProvider personProvider,
+      PlannerProvider plannerProvider})
       : _authProvider = authProvider ?? AuthProvider(),
-        _personProvider = personProvider ?? PersonProvider() {
+        _personProvider = personProvider ?? PersonProvider(),
+        _plannerProvider = plannerProvider ?? PlannerProvider() {
     fetchCalendars();
   }
 
@@ -256,7 +261,9 @@ class UniEventProvider extends EventProvider<UniEventInstance>
   FilterProvider _filterProvider;
   final AuthProvider _authProvider;
   final PersonProvider _personProvider;
+  PlannerProvider _plannerProvider;
   List<String> _classIds = [];
+  List<String> _hiddenEvents = [];
   Filter _filter;
   bool empty;
 
@@ -353,8 +360,11 @@ class UniEventProvider extends EventProvider<UniEventInstance>
   Stream<Iterable<UniEventInstance>> getAllDayEventsIntersecting(
       DateInterval interval) {
     return _events.map((events) => events
-        .map((event) => event.generateInstances(intersectingInterval: interval))
+        .map((event) => event.generateInstances(
+            intersectingInterval: interval,
+            hidden: _hiddenEvents.contains(event.id)))
         .expand((i) => i)
+        .where((event) => event.hidden == false)
         .allDayEvents
         .followedBy(_calendars.values.map((cal) {
           final List<AllDayUniEvent> events = cal.holidays + cal.exams;
@@ -399,11 +409,13 @@ class UniEventProvider extends EventProvider<UniEventInstance>
     return _events
         .map((events) => events
             .where((event) => (event is AllDayUniEvent) == true)
-            .map((event) => event.generateInstances())
+            .map((event) => (event as TaskEvent)
+                .generateInstances(hidden: _hiddenEvents.contains(event.id)))
             .expand((i) => i)
             .sortedByStartLength()
             .where((element) => retrievePast == false
-                ? element.end.toDateTimeLocal().isAfter(DateTime.now())
+                ? element.end.toDateTimeLocal().isAfter(DateTime.now()) &&
+                    element.hidden == false
                 : element != null)
             .take(limit))
         .first;
@@ -428,6 +440,16 @@ class UniEventProvider extends EventProvider<UniEventInstance>
     _filterProvider = filterProvider;
     _filterProvider.fetchFilter().then((filter) {
       _filter = filter;
+      notifyListeners();
+    });
+  }
+
+  void updateHiddenEvents(PlannerProvider plannerProvider) {
+    _plannerProvider = plannerProvider;
+    _plannerProvider
+        .fetchUserHiddenEvents(_authProvider.uid)
+        .then((hiddenEvents) {
+      _hiddenEvents = hiddenEvents;
       notifyListeners();
     });
   }
