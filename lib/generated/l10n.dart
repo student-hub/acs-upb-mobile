@@ -2595,6 +2595,26 @@ class S {
     );
   }
 
+  /// `Event is now hidden.`
+  String get messageEventHiddenSuccessfully {
+    return Intl.message(
+      'Event is now hidden.',
+      name: 'messageEventHiddenSuccessfully',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Event is now visible.`
+  String get messageEventShowSuccessfully {
+    return Intl.message(
+      'Event is now visible.',
+      name: 'messageEventShowSuccessfully',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Please check your inbox for the password reset e-mail.`
   String get infoPasswordResetEmailSent {
     return Intl.message(

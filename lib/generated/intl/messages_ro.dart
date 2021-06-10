@@ -203,6 +203,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "messageEventAdded" : MessageLookupByLibrary.simpleMessage("Eveniment adăugat cu succes."),
     "messageEventDeleted" : MessageLookupByLibrary.simpleMessage("Eveniment șters cu succes."),
     "messageEventEdited" : MessageLookupByLibrary.simpleMessage("Eveniment modificat cu succes."),
+    "messageEventHiddenSuccessfully" : MessageLookupByLibrary.simpleMessage("Evenimentul este de acum ascuns."),
+    "messageEventShowSuccessfully" : MessageLookupByLibrary.simpleMessage("Evenimentul este de acum vizibil."),
     "messageGetStartedByPressing" : MessageLookupByLibrary.simpleMessage("Începeți prin a apăsa butonul"),
     "messageIAgreeToThe" : MessageLookupByLibrary.simpleMessage("Sunt de acord cu "),
     "messageNewUser" : MessageLookupByLibrary.simpleMessage("Utilizator nou?"),

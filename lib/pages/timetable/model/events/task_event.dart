@@ -48,7 +48,7 @@ class TaskEvent extends AllDayUniEvent {
 
   @override
   Iterable<UniEventInstance> generateInstances(
-      {DateInterval intersectingInterval}) sync* {
+      {DateInterval intersectingInterval, bool hidden = false}) sync* {
     yield UniEventInstance(
       id: id,
       title: name + (classHeader != null ? ' ${classHeader.acronym}' : ''),
@@ -58,6 +58,7 @@ class TaskEvent extends AllDayUniEvent {
       color: color,
       grade: grade,
       penalties: penalties,
+      hidden: hidden,
     );
   }
 }
