@@ -37,7 +37,7 @@ class _EventViewState extends State<EventView> {
   bool updating;
 
   Future<void> updateHiddenEvents() async {
-    // If updating is null, classes haven't been initialized yet so they're not
+    // If updating is null, hiddenEvents haven't been initialized yet so they're not
     // technically "updating"
     if (updating != null) {
       updating = true;
@@ -59,7 +59,6 @@ class _EventViewState extends State<EventView> {
   @override
   void initState() {
     super.initState();
-
     updateHiddenEvents();
   }
 
