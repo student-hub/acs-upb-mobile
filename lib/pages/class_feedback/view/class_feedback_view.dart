@@ -251,7 +251,7 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
           for (var i = 0; i < feedbackQuestions.length; i++) {
             res1 = false;
 
-            final response = FeedbackQuestionAnswer(
+            final response = FeedbackAnswer(
               assistant: selectedAssistant,
               teacher: selectedTeacher,
               className: classController.text,
