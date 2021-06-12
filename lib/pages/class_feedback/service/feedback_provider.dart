@@ -4,13 +4,14 @@ import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question_dro
 import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question_slider.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question_rating.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question_text.dart';
+import 'package:acs_upb_mobile/pages/people/model/person.dart';
 import 'package:acs_upb_mobile/resources/locale_provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 
-extension ClassFeedbackAnswerExtension on FeedbackQuestionAnswer {
+extension ClassFeedbackAnswerExtension on FeedbackAnswer {
   Map<String, dynamic> toData() {
     final Map<String, dynamic> data = {};
 
@@ -65,7 +66,7 @@ extension FeedbackQuestionExtension on FeedbackQuestion {
 }
 
 class FeedbackProvider with ChangeNotifier {
-  Future<bool> addResponse(FeedbackQuestionAnswer response) async {
+  Future<bool> addResponse(FeedbackAnswer response) async {
     try {
       await FirebaseFirestore.instance
           .collection('forms')
@@ -100,14 +101,20 @@ class FeedbackProvider with ChangeNotifier {
     }
   }
 
-  Future<Map<String, dynamic>> fetchCategories() async {
+  // Fetch all feedback categories in the format
+  // Map<categoryKey, Map<categoryNameEN, categoryNameRO>>
+  Future<Map<String, Map<String, String>>> fetchCategories() async {
     try {
       final DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
           .collection('forms')
           .doc('class_feedback_questions')
           .get();
       final Map<String, dynamic> data = documentSnapshot['categories'];
-      return data;
+      for (final key in data.keys) {
+        data[key] = (data[key] as Map<dynamic, dynamic>)
+            .map((key, value) => MapEntry(key?.toString(), value?.toString()));
+      }
+      return Map<String, Map<String, String>>.from(data);
     } catch (e) {
       print(e);
       AppToast.show(S.current.errorSomethingWentWrong);
@@ -115,7 +122,8 @@ class FeedbackProvider with ChangeNotifier {
     }
   }
 
-  Future<bool> setUserClassFeedback(String className, String uid) async {
+  Future<bool> setUserSubmittedFeedbackForClass(
+      String uid, String className) async {
     try {
       final DocumentReference ref =
           FirebaseFirestore.instance.collection('users').doc(uid);
@@ -130,7 +138,43 @@ class FeedbackProvider with ChangeNotifier {
     }
   }
 
-  Future<bool> checkProvidedClassFeedback(String className, String uid) async {
+  Future<bool> submitFeedback(
+      String uid,
+      Map<String, FeedbackQuestion> feedbackQuestions,
+      Person assistant,
+      Person teacher,
+      String className) async {
+    try {
+      bool responseAddedSuccessfully, userSubmittedFeedbackSuccessfully;
+      for (var i = 0; i < feedbackQuestions.length; i++) {
+        responseAddedSuccessfully = false;
+
+        final response = FeedbackAnswer(
+          assistant: assistant,
+          teacher: teacher,
+          className: className,
+          questionNumber: i.toString(),
+          questionAnswer: feedbackQuestions[i.toString()].answer,
+        );
+
+        responseAddedSuccessfully = await addResponse(response);
+        if (!responseAddedSuccessfully) break;
+      }
+
+      userSubmittedFeedbackSuccessfully =
+          await setUserSubmittedFeedbackForClass(uid, className);
+      if (responseAddedSuccessfully && userSubmittedFeedbackSuccessfully) {
+        return true;
+      }
+      return false;
+    } catch (e) {
+      AppToast.show(S.current.errorSomethingWentWrong);
+      return false;
+    }
+  }
+
+  Future<bool> userSubmittedFeedbackForClass(
+      String uid, String className) async {
     try {
       final DocumentSnapshot snap =
           await FirebaseFirestore.instance.collection('users').doc(uid).get();

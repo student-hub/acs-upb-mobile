@@ -7,7 +7,6 @@ import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question_sli
 import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question_rating.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question_text.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/service/feedback_provider.dart';
-import 'package:acs_upb_mobile/pages/class_feedback/service/remote_config.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/view/class_feedback_view.dart';
 import 'package:acs_upb_mobile/pages/classes/model/class.dart';
 import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
@@ -379,8 +378,8 @@ Future<void> main() async {
           ),
         ));
 
-    when(mockClassProvider.getRemoteConfig())
-        .thenAnswer((_) => Future.value(RemoteConfigService()));
+    Utils.feedbackEnabled = true;
+
     mockPersonProvider = MockPersonProvider();
     // ignore: invalid_use_of_protected_member
     when(mockPersonProvider.hasListeners).thenReturn(false);
@@ -454,10 +453,12 @@ Future<void> main() async {
             }));
     when(mockFeedbackProvider.addResponse(any))
         .thenAnswer((_) => Future.value(true));
-    when(mockFeedbackProvider.setUserClassFeedback(any, any))
+    when(mockFeedbackProvider.setUserSubmittedFeedbackForClass(any, any))
         .thenAnswer((_) => Future.value(true));
-    when(mockFeedbackProvider.checkProvidedClassFeedback(any, any))
+    when(mockFeedbackProvider.userSubmittedFeedbackForClass(any, any))
         .thenAnswer((_) => Future.value(false));
+    when(mockFeedbackProvider.submitFeedback(any, any, any, any, any))
+        .thenAnswer((_) => Future.value(true));
     when(mockFeedbackProvider.getProvidedFeedbackClasses(any))
         .thenAnswer((_) => Future.value({'M1': true, 'M2': true}));
 
@@ -1507,7 +1508,7 @@ Future<void> main() async {
         await tester.pumpAndSettle();
 
         expect(find.byType(Card), findsNWidgets(4));
-        expect(find.byType(FeedbackQuestionForm), findsNWidgets(4));
+        expect(find.byType(FeedbackQuestionFormField), findsNWidgets(4));
         expect(
             find.text(
                 'Estimate the average number of hours per week devoted to solving homework.'),

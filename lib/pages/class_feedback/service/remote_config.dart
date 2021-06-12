@@ -16,23 +16,18 @@ class RemoteConfigService {
   }
 
   bool get feedbackEnabled =>
-      // ignore: avoid_bool_literals_in_conditional_expressions
-      _remoteConfig == null ? true : _remoteConfig.getBool(_feedbackEnabled);
+      _remoteConfig?.getBool(_feedbackEnabled) ?? defaults[_feedbackEnabled];
 
   Future<dynamic> initialise() async {
     try {
       await _remoteConfig.setDefaults(defaults);
-      await _fetchAndActivate();
+      await _remoteConfig.fetch();
+      await _remoteConfig.activateFetched();
     } on FetchThrottledException catch (e) {
       print('Remote config fetch throttled: $e');
     } catch (e) {
       print(
           'Unable to fetch remote config. Cached or default values will be used.');
     }
-  }
-
-  Future<dynamic> _fetchAndActivate() async {
-    await _remoteConfig.fetch();
-    await _remoteConfig.activateFetched();
   }
 }

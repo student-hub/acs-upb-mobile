@@ -7,7 +7,6 @@ import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/navigation/bottom_navigation_bar.dart';
 import 'package:acs_upb_mobile/navigation/routes.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/service/feedback_provider.dart';
-import 'package:acs_upb_mobile/pages/class_feedback/service/remote_config.dart';
 import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
 import 'package:acs_upb_mobile/pages/faq/service/question_provider.dart';
 import 'package:acs_upb_mobile/pages/faq/view/faq_page.dart';
@@ -64,8 +63,6 @@ Future<void> main() async {
   Utils.packageInfo = await PackageInfo.fromPlatform();
 
   await Firebase.initializeApp();
-  final remoteConfigService = await RemoteConfigService.getInstance();
-  await remoteConfigService.initialise();
 
   final authProvider = AuthProvider();
   final classProvider = ClassProvider();
@@ -183,6 +180,7 @@ class AppLoadingScreen extends StatelessWidget {
   Future<String> _setUpAndChooseStartScreen(BuildContext context) async {
     // Make initializations if this is not a test
     if (!Platform.environment.containsKey('FLUTTER_TEST')) {
+      final remoteConfigService = await Utils.getRemoteConfig();
       await TimeMachine.initialize({'rootBundle': rootBundle});
       await PrefService.init(prefix: 'pref_');
       PrefService.setDefaultValues(
@@ -203,6 +201,9 @@ class AppLoadingScreen extends StatelessWidget {
       LocaleProvider.rruleL10ns ??= {'en': await RruleL10nEn.create()};
 
       Culture.current = LocaleProvider.cultures[LocaleProvider.localeString];
+
+      await remoteConfigService.initialise();
+      Utils.feedbackEnabled = remoteConfigService.feedbackEnabled;
     }
 
     // Load locale from settings

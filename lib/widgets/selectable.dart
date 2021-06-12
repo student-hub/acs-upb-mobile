@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 
 class SelectableController {
-  SelectableState selectableState;
+  _SelectableState _selectableState;
 
-  bool get isSelected => selectableState?.isSelected;
+  bool get isSelected => _selectableState?._isSelected;
 
   void select() {
-    if (selectableState == null) return;
-    if (!isSelected) selectableState.isSelected = true;
+    if (_selectableState == null) return;
+    if (!isSelected) _selectableState.isSelected = true;
   }
 
   void deselect() {
-    if (selectableState == null) return;
-    if (isSelected) selectableState.isSelected = false;
+    if (_selectableState == null) return;
+    if (isSelected) _selectableState.isSelected = false;
   }
 }
 
@@ -31,10 +31,10 @@ class Selectable extends StatefulWidget {
   final bool disabled;
 
   @override
-  SelectableState createState() => SelectableState();
+  _SelectableState createState() => _SelectableState();
 }
 
-class SelectableState extends State<Selectable> {
+class _SelectableState extends State<Selectable> {
   bool _isSelected;
 
   set isSelected(bool newValue) {
@@ -52,7 +52,7 @@ class SelectableState extends State<Selectable> {
 
   @override
   Widget build(BuildContext context) {
-    widget.controller?.selectableState = this;
+    widget.controller?._selectableState = this;
 
     return Container(
       decoration: BoxDecoration(

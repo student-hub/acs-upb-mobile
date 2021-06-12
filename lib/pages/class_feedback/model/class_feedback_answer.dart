@@ -1,7 +1,7 @@
 import 'package:acs_upb_mobile/pages/people/model/person.dart';
 
-class FeedbackQuestionAnswer {
-  FeedbackQuestionAnswer({
+class FeedbackAnswer {
+  FeedbackAnswer({
     this.questionAnswer,
     this.className,
     this.teacher,
