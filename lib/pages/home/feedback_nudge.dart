@@ -16,8 +16,8 @@ class FeedbackNudge extends StatefulWidget {
 }
 
 class _FeedbackNudgeState extends State<FeedbackNudge> {
-  Set<ClassHeader> classes;
-  Map<String, dynamic> classesFeedback;
+  Set<ClassHeader> userClasses;
+  Map<String, dynamic> userClassesFeedbackProvided;
 
   Future<void> getUserClasses() async {
     final ClassProvider classProvider =
@@ -28,10 +28,10 @@ class _FeedbackNudgeState extends State<FeedbackNudge> {
 
     await classProvider
         .fetchClassHeaders(uid: authProvider.uid)
-        .then((value) => setState(() => classes = value.toSet()));
+        .then((value) => setState(() => userClasses = value.toSet()));
     await feedbackProvider
         .getProvidedFeedbackClasses(authProvider.uid)
-        .then((value) => setState(() => classesFeedback = value));
+        .then((value) => setState(() => userClassesFeedbackProvided = value));
   }
 
   @override
@@ -49,26 +49,26 @@ class _FeedbackNudgeState extends State<FeedbackNudge> {
     return Visibility(
       visible: Utils.feedbackEnabled != null &&
               Utils.feedbackEnabled &&
-              !(classes != null &&
-                  classesFeedback != null &&
-                  classes.length <= classesFeedback?.length) ??
+              !(userClasses != null &&
+                  userClassesFeedbackProvided != null &&
+                  userClasses.length <= userClassesFeedbackProvided?.length) ??
           false,
       child: InfoCard<Map<String, dynamic>>(
         important: true,
         future: feedbackProvider.getProvidedFeedbackClasses(authProvider.uid),
         builder: (classesFeedback) {
-          if (classes != null) {
-            final String length = classes
+          if (userClasses != null) {
+            final String length = userClasses
                 .where((element) => !classesFeedback.containsKey(element.id))
                 .toSet()
                 .length
                 .toString();
             return GestureDetector(
               onTap: () {
-                if (classes != null) {
+                if (userClasses != null) {
                   Navigator.of(context).push(
                     MaterialPageRoute<ClassFeedbackChecklist>(
-                      builder: (_) => ClassFeedbackChecklist(classes: classes),
+                      builder: (_) => ClassFeedbackChecklist(classes: userClasses),
                     ),
                   );
                 }
