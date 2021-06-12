@@ -1503,7 +1503,7 @@ Future<void> main() async {
         await tester.pumpAndSettle();
 
         expect(find.byType(Card), findsNWidgets(4));
-        expect(find.byType(FeedbackQuestionForm), findsNWidgets(4));
+        expect(find.byType(FeedbackQuestionFormField), findsNWidgets(4));
         expect(
             find.text(
                 'Estimate the average number of hours per week devoted to solving homework.'),

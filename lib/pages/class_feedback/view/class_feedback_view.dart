@@ -182,7 +182,7 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
       ];
       for (final question
           in feedbackQuestions.values.where((q) => q.category == category)) {
-        categoryChildren.add(FeedbackQuestionForm(
+        categoryChildren.add(FeedbackQuestionFormField(
             question: question, answerValues: answerValues, formKey: formKey));
       }
       children.add(
