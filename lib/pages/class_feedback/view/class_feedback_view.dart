@@ -265,7 +265,7 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
           }
 
           res2 = await Provider.of<FeedbackProvider>(context, listen: false)
-              .setUserClassFeedback(classController.text, uid);
+              .setUserClassFeedback(uid, classController.text);
 
           if (res1 && res2) {
             Navigator.of(context).pop();
