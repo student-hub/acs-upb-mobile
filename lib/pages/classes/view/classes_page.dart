@@ -1,10 +1,10 @@
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
-import 'package:acs_upb_mobile/pages/class_feedback/service/remote_config.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/view/classes_feedback_checklist.dart';
 import 'package:acs_upb_mobile/pages/classes/model/class.dart';
 import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
 import 'package:acs_upb_mobile/pages/classes/view/class_view.dart';
+import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/widgets/class_icon.dart';
 import 'package:acs_upb_mobile/widgets/error_page.dart';
 import 'package:acs_upb_mobile/widgets/icon_text.dart';
@@ -15,8 +15,7 @@ import 'package:pedantic/pedantic.dart';
 import 'package:provider/provider.dart';
 
 class ClassesPage extends StatefulWidget {
-  const ClassesPage({Key key, this.remoteConfigService}) : super(key: key);
-  final RemoteConfigService remoteConfigService;
+  const ClassesPage({Key key}) : super(key: key);
 
   @override
   _ClassesPageState createState() => _ClassesPageState();
@@ -63,7 +62,7 @@ class _ClassesPageState extends State<ClassesPage> {
       // TODO(IoanaAlexandru): Simply show all classes if user is not authenticated
       needsToBeAuthenticated: true,
       actions: [
-        if (widget.remoteConfigService.feedbackEnabled)
+        if (Utils.feedbackEnabled)
           AppScaffoldAction(
             icon: Icons.format_list_numbered_outlined,
             tooltip: S.current.navigationClassesFeedbackChecklist,

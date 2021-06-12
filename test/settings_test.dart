@@ -2,7 +2,6 @@ import 'package:acs_upb_mobile/authentication/model/user.dart';
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/main.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/service/feedback_provider.dart';
-import 'package:acs_upb_mobile/pages/class_feedback/service/remote_config.dart';
 import 'package:acs_upb_mobile/pages/classes/model/class.dart';
 import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
 import 'package:acs_upb_mobile/pages/faq/model/question.dart';
@@ -141,9 +140,9 @@ void main() {
       when(mockFeedbackProvider.hasListeners).thenReturn(true);
       when(mockFeedbackProvider.addResponse(any))
           .thenAnswer((_) => Future.value(true));
-      when(mockFeedbackProvider.setUserClassFeedback(any, any))
+      when(mockFeedbackProvider.setUserSubmittedFeedbackForClass(any, any))
           .thenAnswer((_) => Future.value(true));
-      when(mockFeedbackProvider.checkProvidedClassFeedback(any, any))
+      when(mockFeedbackProvider.userSubmittedFeedbackForClass(any, any))
           .thenAnswer((_) => Future.value(false));
       when(mockFeedbackProvider.getProvidedFeedbackClasses(any))
           .thenAnswer((_) => Future.value({'M1': true, 'M2': true}));
@@ -185,8 +184,6 @@ void main() {
               userClassHeaders));
       when(mockClassProvider.fetchUserClassIds(any))
           .thenAnswer((_) => Future.value(['3', '4']));
-      when(mockClassProvider.getRemoteConfig())
-          .thenAnswer((_) => Future.value(RemoteConfigService()));
     });
 
     testWidgets('Dark Mode', (WidgetTester tester) async {

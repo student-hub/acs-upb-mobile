@@ -43,7 +43,6 @@ class _TimetablePageState extends State<TimetablePage> {
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
     final eventProvider = Provider.of<UniEventProvider>(context);
-    final classProvider = Provider.of<ClassProvider>(context);
     if (_controller == null) {
       _controller = TimetableController(
           // TODO(IoanaAlexandru): Make initialTimeRange customizable in settings
@@ -78,16 +77,7 @@ class _TimetablePageState extends State<TimetablePage> {
             MaterialPageRoute<ChangeNotifierProvider>(
               builder: (_) => ChangeNotifierProvider.value(
                 value: Provider.of<ClassProvider>(context),
-                child: FutureBuilder(
-                  future: classProvider.getRemoteConfig(),
-                  builder: (context, snap) {
-                    if (snap.hasData) {
-                      return ClassesPage(remoteConfigService: snap.data);
-                    } else {
-                      return const Center(child: CircularProgressIndicator());
-                    }
-                  },
-                ),
+                child: ClassesPage(),
               ),
             ),
           ),

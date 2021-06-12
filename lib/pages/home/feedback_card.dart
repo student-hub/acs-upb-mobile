@@ -3,6 +3,7 @@ import 'package:acs_upb_mobile/pages/class_feedback/service/feedback_provider.da
 import 'package:acs_upb_mobile/pages/class_feedback/view/classes_feedback_checklist.dart';
 import 'package:acs_upb_mobile/pages/classes/model/class.dart';
 import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
+import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/widgets/info_card.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
@@ -17,7 +18,6 @@ class FeedbackCard extends StatefulWidget {
 class _FeedbackCardState extends State<FeedbackCard> {
   Set<ClassHeader> classes;
   Map<String, dynamic> classesFeedback;
-  bool feedback;
 
   Future<void> getUserClasses() async {
     final ClassProvider classProvider =
@@ -32,10 +32,6 @@ class _FeedbackCardState extends State<FeedbackCard> {
     await feedbackProvider
         .getProvidedFeedbackClasses(authProvider.uid)
         .then((value) => setState(() => classesFeedback = value));
-
-    await classProvider
-        .getRemoteConfig()
-        .then((value) => feedback = value.feedbackEnabled);
   }
 
   @override
@@ -51,8 +47,8 @@ class _FeedbackCardState extends State<FeedbackCard> {
     final authProvider = Provider.of<AuthProvider>(context);
 
     return Visibility(
-      visible: feedback != null &&
-              feedback &&
+      visible: Utils.feedbackEnabled != null &&
+              Utils.feedbackEnabled &&
               !(classes != null &&
                   classesFeedback != null &&
                   classes.length <= classesFeedback?.length) ??
