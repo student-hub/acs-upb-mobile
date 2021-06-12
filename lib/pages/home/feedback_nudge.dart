@@ -10,12 +10,12 @@ import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class FeedbackCard extends StatefulWidget {
+class FeedbackNudge extends StatefulWidget {
   @override
-  _FeedbackCardState createState() => _FeedbackCardState();
+  _FeedbackNudgeState createState() => _FeedbackNudgeState();
 }
 
-class _FeedbackCardState extends State<FeedbackCard> {
+class _FeedbackNudgeState extends State<FeedbackNudge> {
   Set<ClassHeader> classes;
   Map<String, dynamic> classesFeedback;
 
@@ -68,8 +68,7 @@ class _FeedbackCardState extends State<FeedbackCard> {
                 if (classes != null) {
                   Navigator.of(context).push(
                     MaterialPageRoute<ClassFeedbackChecklist>(
-                      builder: (_) =>
-                          ClassFeedbackChecklist(classes: classes),
+                      builder: (_) => ClassFeedbackChecklist(classes: classes),
                     ),
                   );
                 }
