@@ -379,6 +379,7 @@ Future<void> main() async {
         ));
 
     Utils.feedbackEnabled = true;
+
     mockPersonProvider = MockPersonProvider();
     // ignore: invalid_use_of_protected_member
     when(mockPersonProvider.hasListeners).thenReturn(false);

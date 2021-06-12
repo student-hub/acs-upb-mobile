@@ -178,9 +178,9 @@ class _MyAppState extends State<MyApp> {
 
 class AppLoadingScreen extends StatelessWidget {
   Future<String> _setUpAndChooseStartScreen(BuildContext context) async {
-    final remoteConfigService = await Utils.getRemoteConfig();
     // Make initializations if this is not a test
     if (!Platform.environment.containsKey('FLUTTER_TEST')) {
+      final remoteConfigService = await Utils.getRemoteConfig();
       await TimeMachine.initialize({'rootBundle': rootBundle});
       await PrefService.init(prefix: 'pref_');
       PrefService.setDefaultValues(
@@ -201,13 +201,13 @@ class AppLoadingScreen extends StatelessWidget {
       LocaleProvider.rruleL10ns ??= {'en': await RruleL10nEn.create()};
 
       Culture.current = LocaleProvider.cultures[LocaleProvider.localeString];
+
+      await remoteConfigService.initialise();
+      Utils.feedbackEnabled = remoteConfigService.feedbackEnabled;
     }
 
     // Load locale from settings
     await S.load(LocaleProvider.locale);
-
-    await remoteConfigService.initialise();
-    Utils.feedbackEnabled = remoteConfigService.feedbackEnabled;
 
     // Choose start screen
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
