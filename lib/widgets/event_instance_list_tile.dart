@@ -22,21 +22,28 @@ class EventInstanceListTile extends StatelessWidget {
           width: 20,
           height: 20,
           decoration: BoxDecoration(
-            borderRadius: const BorderRadius.all(Radius.circular(4)),
-            color: eventInstance.mainEvent.color,
-          ),
+              borderRadius: const BorderRadius.all(Radius.circular(4)),
+              color: eventInstance.hidden == false
+                  ? eventInstance.end.toDateTimeLocal().isAfter(DateTime.now())
+                      ? eventInstance.mainEvent.color
+                      : Colors.grey.shade600
+                  : eventInstance.mainEvent.color.withAlpha(20)),
         ),
       ),
-      trailing: eventInstance.start.toDateTimeLocal().isBefore(DateTime.now())
-          ? Chip(label: Text(S.current.labelOngoing))
-          : null,
+      trailing:
+          eventInstance.start.toDateTimeLocal().isBefore(DateTime.now()) &&
+                  eventInstance.end.toDateTimeLocal().isAfter(DateTime.now())
+              ? Chip(label: Text(S.current.labelOngoing))
+              : null,
       title: Text(
         '${'${eventInstance.title} - '}${eventInstance.mainEvent.type.toLocalizedString()}',
       ),
       subtitle: Text(eventInstance.relativeDateString),
-      onTap: () => Navigator.of(context).push(MaterialPageRoute<EventView>(
-        builder: (_) => EventView(eventInstance: eventInstance),
-      )),
+      onTap: () => Navigator.of(context).push(
+        MaterialPageRoute<EventView>(
+          builder: (_) => EventView(eventInstance: eventInstance),
+        ),
+      ),
     );
   }
 }

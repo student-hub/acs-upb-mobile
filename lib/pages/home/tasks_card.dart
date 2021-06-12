@@ -1,7 +1,6 @@
 import 'package:acs_upb_mobile/pages/planner/view/planner_view.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/events/uni_event.dart';
 import 'package:acs_upb_mobile/pages/timetable/service/uni_event_provider.dart';
-import 'package:acs_upb_mobile/pages/timetable/view/events/event_view.dart';
 import 'package:acs_upb_mobile/widgets/event_instance_list_tile.dart';
 import 'package:acs_upb_mobile/widgets/info_card.dart';
 import 'package:flutter/cupertino.dart';

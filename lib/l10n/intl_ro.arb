@@ -49,6 +49,9 @@
   "labelTomorrow": "Mâine",
   "labelNow": "Acum",
   "labelOngoing": "În Decurs",
+  "labelComingUp": "Urmează",
+  "labelHidden": "Ascunse",
+  "labelPast": "Trecute",
 
   "sectionShortcuts": "Scurtături",
   "sectionEvents": "Evenimente",

@@ -2,8 +2,6 @@ import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/pages/planner/service/planner_provider.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/events/uni_event.dart';
 import 'package:acs_upb_mobile/pages/timetable/service/uni_event_provider.dart';
-import 'package:acs_upb_mobile/pages/timetable/view/events/event_view.dart';
-import 'package:acs_upb_mobile/widgets/info_card.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:acs_upb_mobile/widgets/tasks_list.dart';
 import 'package:flutter/cupertino.dart';
@@ -51,10 +49,20 @@ class _PlannerViewState extends State<PlannerView> {
 
   @override
   Widget build(BuildContext context) {
-    final PlannerProvider plannerProvider =
-        Provider.of<PlannerProvider>(context);
     final UniEventProvider eventProvider =
         Provider.of<UniEventProvider>(context);
+
+    Iterable<UniEventInstance> _currentEvents() => assignments.where((event) =>
+        event.hidden == false &&
+        event.end.toDateTimeLocal().isAfter(DateTime.now()));
+
+    Iterable<UniEventInstance> _hiddenEvents() => assignments.where((event) =>
+        event.hidden == true &&
+        event.end.toDateTimeLocal().isAfter(DateTime.now()));
+
+    Iterable<UniEventInstance> _pastEvents() => assignments
+        .where((event) => event.end.toDateTimeLocal().isBefore(DateTime.now()));
+
     return AppScaffold(
       title: Text(S.current.sectionPlanner),
       body: FutureBuilder(
@@ -62,17 +70,30 @@ class _PlannerViewState extends State<PlannerView> {
           builder: (_, snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
               assignments = snapshot.data;
-              return Column(
-                children: [
-                  TasksList(
-                    events: assignments.toList(),
-                    title: 'All',
-                  ),
-                  TasksList(
-                    events: assignments.toList(),
-                    title: 'Some',
-                  ),
-                ],
+              return SingleChildScrollView(
+                physics: const ScrollPhysics(),
+                padding: const EdgeInsets.only(bottom: 15),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    TasksList(
+                      events: _currentEvents().toList(),
+                      title: S.current.labelComingUp,
+                      isExpanded: true,
+                    ),
+                    const SizedBox(width: 16),
+                    TasksList(
+                      events: _hiddenEvents().toList(),
+                      title: S.current.labelHidden,
+                    ),
+                    const SizedBox(width: 16),
+                    TasksList(
+                      events: _pastEvents().toList(),
+                      title: S.current.labelPast,
+                    ),
+                  ],
+                ),
               );
             } else {
               return const Center(child: CircularProgressIndicator());
