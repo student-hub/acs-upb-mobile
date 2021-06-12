@@ -29,16 +29,21 @@ class _TasksListState extends State<TasksList> {
       itemBuilder: (context, index) {
         if (index == 0) {
           return ListTile(
-              key: ValueKey(widget.title),
-              onTap: () => {
-                    setState(() {
-                      isExpanded = !isExpanded;
-                    })
-                  },
-              leading: const CircleAvatar(
-                backgroundColor: Colors.blue,
-              ),
-              title: Text(widget.title));
+            key: ValueKey(widget.title),
+            contentPadding: const EdgeInsets.fromLTRB(10, 10, 10, 8),
+            onTap: () => {
+              setState(() {
+                isExpanded = !isExpanded;
+              })
+            },
+            trailing: const Icon(
+              Icons.arrow_drop_down_outlined,
+            ),
+            title: Text(
+              widget.title,
+              style: Theme.of(context).textTheme.headline4,
+            ),
+          );
         } else {
           return Visibility(
               visible: isExpanded,
