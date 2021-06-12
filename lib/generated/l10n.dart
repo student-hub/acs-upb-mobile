@@ -615,11 +615,11 @@ class S {
     );
   }
 
-  /// `Feedback To-Do`
-  String get sectionFeedbackTODO {
+  /// `Feedback to complete`
+  String get sectionFeedbackToComplete {
     return Intl.message(
-      'Feedback To-Do',
-      name: 'sectionFeedbackTODO',
+      'Feedback to complete',
+      name: 'sectionFeedbackToComplete',
       desc: '',
       args: [],
     );
@@ -1745,20 +1745,20 @@ class S {
     );
   }
 
-  /// `Review`
+  /// `Feedback`
   String get navigationClassFeedback {
     return Intl.message(
-      'Review',
+      'Feedback',
       name: 'navigationClassFeedback',
       desc: '',
       args: [],
     );
   }
 
-  /// `Review checklist`
+  /// `Feedback checklist`
   String get navigationClassesFeedbackChecklist {
     return Intl.message(
-      'Review checklist',
+      'Feedback checklist',
       name: 'navigationClassesFeedbackChecklist',
       desc: '',
       args: [],

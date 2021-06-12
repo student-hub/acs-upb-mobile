@@ -50,7 +50,7 @@ class _ClassesFeedbackChecklistState extends State<ClassesFeedbackChecklist> {
       children: [
         const SizedBox(height: 12),
         Text(
-          S.current.sectionFeedbackTODO,
+          S.current.sectionFeedbackToComplete,
           style: Theme.of(context).textTheme.headline6,
         ),
         const SizedBox(height: 6),

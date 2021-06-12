@@ -59,7 +59,7 @@
   "sectionEventsComingUp": "Events coming up",
   "sectionFAQ": "FAQ",
   "sectionGrading": "Grading",
-  "sectionFeedbackTODO": "Feedback To-Do",
+  "sectionFeedbackToComplete": "Feedback to complete",
   "sectionFeedbackCompleted": "Feedback completed",
 
   "shortcutTypeMain": "Main page",
@@ -178,8 +178,8 @@
   "navigationEventDetails": "Event details",
   "navigationNewsFeed": "News feed",
   "navigationClassInfo": "Class information",
-  "navigationClassFeedback": "Review",
-  "navigationClassesFeedbackChecklist": "Review checklist",
+  "navigationClassFeedback": "Feedback",
+  "navigationClassesFeedbackChecklist": "Feedback checklist",
 
   "filterMenuShowAll": "Show all",
   "filterMenuShowMine": "Show only mine",

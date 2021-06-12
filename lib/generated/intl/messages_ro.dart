@@ -249,7 +249,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "sectionEventsComingUp" : MessageLookupByLibrary.simpleMessage("Evenimente următoare"),
     "sectionFAQ" : MessageLookupByLibrary.simpleMessage("Întrebări frecvente"),
     "sectionFeedbackCompleted" : MessageLookupByLibrary.simpleMessage("Feedback completat"),
-    "sectionFeedbackTODO" : MessageLookupByLibrary.simpleMessage("Feedback To-Do"),
+    "sectionFeedbackToComplete" : MessageLookupByLibrary.simpleMessage("Feedback de completat"),
     "sectionFrequentlyAccessedWebsites" : MessageLookupByLibrary.simpleMessage("Website-uri favorite"),
     "sectionGrading" : MessageLookupByLibrary.simpleMessage("Punctaj"),
     "sectionShortcuts" : MessageLookupByLibrary.simpleMessage("Scurtături"),
