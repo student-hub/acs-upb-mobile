@@ -4,6 +4,7 @@ import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question_dro
 import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question_slider.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question_rating.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question_text.dart';
+import 'package:acs_upb_mobile/pages/people/model/person.dart';
 import 'package:acs_upb_mobile/resources/locale_provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
@@ -115,7 +116,8 @@ class FeedbackProvider with ChangeNotifier {
     }
   }
 
-  Future<bool> setUserClassFeedback(String uid, String className) async {
+  Future<bool> setUserSubmittedFeedbackForClass(
+      String uid, String className) async {
     try {
       final DocumentReference ref =
           FirebaseFirestore.instance.collection('users').doc(uid);
@@ -124,6 +126,41 @@ class FeedbackProvider with ChangeNotifier {
       }, SetOptions(merge: true));
       notifyListeners();
       return true;
+    } catch (e) {
+      AppToast.show(S.current.errorSomethingWentWrong);
+      return false;
+    }
+  }
+
+  Future<bool> submitFeedback(
+      String uid,
+      Map<String, FeedbackQuestion> feedbackQuestions,
+      Person assistant,
+      Person teacher,
+      String className) async {
+    try {
+      bool responseAddedSuccessfully, userSubmittedFeedbackSuccessfully;
+      for (var i = 0; i < feedbackQuestions.length; i++) {
+        responseAddedSuccessfully = false;
+
+        final response = FeedbackAnswer(
+          assistant: assistant,
+          teacher: teacher,
+          className: className,
+          questionNumber: i.toString(),
+          questionAnswer: feedbackQuestions[i.toString()].answer,
+        );
+
+        responseAddedSuccessfully = await addResponse(response);
+        if (!responseAddedSuccessfully) break;
+      }
+
+      userSubmittedFeedbackSuccessfully =
+          await setUserSubmittedFeedbackForClass(uid, className);
+      if (responseAddedSuccessfully && userSubmittedFeedbackSuccessfully) {
+        return true;
+      }
+      return false;
     } catch (e) {
       AppToast.show(S.current.errorSomethingWentWrong);
       return false;

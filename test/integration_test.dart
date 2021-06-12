@@ -452,10 +452,12 @@ Future<void> main() async {
             }));
     when(mockFeedbackProvider.addResponse(any))
         .thenAnswer((_) => Future.value(true));
-    when(mockFeedbackProvider.setUserClassFeedback(any, any))
+    when(mockFeedbackProvider.setUserSubmittedFeedbackForClass(any, any))
         .thenAnswer((_) => Future.value(true));
     when(mockFeedbackProvider.userSubmittedFeedbackForClass(any, any))
         .thenAnswer((_) => Future.value(false));
+    when(mockFeedbackProvider.submitFeedback(any, any, any, any, any))
+        .thenAnswer((_) => Future.value(true));
 
     mockQuestionProvider = MockQuestionProvider();
     // ignore: invalid_use_of_protected_member
