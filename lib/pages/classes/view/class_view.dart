@@ -24,8 +24,7 @@ import 'package:positioned_tap_detector/positioned_tap_detector.dart';
 import 'package:provider/provider.dart';
 
 class ClassView extends StatefulWidget {
-  const ClassView({Key key, this.classHeader})
-      : super(key: key);
+  const ClassView({Key key, this.classHeader}) : super(key: key);
 
   final ClassHeader classHeader;
 
