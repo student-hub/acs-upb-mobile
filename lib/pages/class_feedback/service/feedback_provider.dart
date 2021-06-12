@@ -115,7 +115,7 @@ class FeedbackProvider with ChangeNotifier {
     }
   }
 
-  Future<bool> setUserClassFeedback(String className, String uid) async {
+  Future<bool> setUserClassFeedback(String uid, String className) async {
     try {
       final DocumentReference ref =
           FirebaseFirestore.instance.collection('users').doc(uid);
@@ -130,7 +130,8 @@ class FeedbackProvider with ChangeNotifier {
     }
   }
 
-  Future<bool> checkProvidedClassFeedback(String className, String uid) async {
+  Future<bool> userSubmittedFeedbackForClass(
+      String uid, String className) async {
     try {
       final DocumentSnapshot snap =
           await FirebaseFirestore.instance.collection('users').doc(uid).get();

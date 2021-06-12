@@ -56,7 +56,7 @@ class _ClassViewState extends State<ClassView> {
         Provider.of<FeedbackProvider>(context, listen: false);
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
     feedbackProvider
-        .checkProvidedClassFeedback(widget.classHeader.id, authProvider.uid)
+        .userSubmittedFeedbackForClass(widget.classHeader.id, authProvider.uid)
         .then((value) => alreadyCompletedFeedback = value);
 
     return AppScaffold(

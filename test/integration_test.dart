@@ -456,7 +456,7 @@ Future<void> main() async {
         .thenAnswer((_) => Future.value(true));
     when(mockFeedbackProvider.setUserClassFeedback(any, any))
         .thenAnswer((_) => Future.value(true));
-    when(mockFeedbackProvider.checkProvidedClassFeedback(any, any))
+    when(mockFeedbackProvider.userSubmittedFeedbackForClass(any, any))
         .thenAnswer((_) => Future.value(false));
 
     mockQuestionProvider = MockQuestionProvider();
