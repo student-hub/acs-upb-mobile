@@ -164,6 +164,7 @@ class FeedbackProvider with ChangeNotifier {
       userSubmittedFeedbackSuccessfully =
           await setUserSubmittedFeedbackForClass(uid, className);
       if (responseAddedSuccessfully && userSubmittedFeedbackSuccessfully) {
+        notifyListeners();
         return true;
       }
       return false;

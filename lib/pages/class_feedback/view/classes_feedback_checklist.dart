@@ -16,8 +16,7 @@ class ClassFeedbackChecklist extends StatefulWidget {
   final Set<ClassHeader> classes;
 
   @override
-  _ClassFeedbackChecklistState createState() =>
-      _ClassFeedbackChecklistState();
+  _ClassFeedbackChecklistState createState() => _ClassFeedbackChecklistState();
 }
 
 class _ClassFeedbackChecklistState extends State<ClassFeedbackChecklist> {
@@ -28,20 +27,12 @@ class _ClassFeedbackChecklistState extends State<ClassFeedbackChecklist> {
     super.initState();
   }
 
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    fetchFeedbackProvided();
-  }
-
-  Future<Map<String, dynamic>> fetchFeedbackProvided() async {
-    final feedbackProvider =
-        Provider.of<FeedbackProvider>(context, listen: true);
+  Future<void> fetchFeedbackProvided() async {
+    final feedbackProvider = Provider.of<FeedbackProvider>(context);
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
     await feedbackProvider
         .getProvidedFeedbackClasses(authProvider.uid)
         .then((value) => setState(() => classesFeedback = value));
-    return classesFeedback;
   }
 
   Widget checklistPage() {
@@ -79,6 +70,7 @@ class _ClassFeedbackChecklistState extends State<ClassFeedbackChecklist> {
 
   @override
   Widget build(BuildContext context) {
+    fetchFeedbackProvided();
     return AppScaffold(
       title: Text(S.current.navigationClassesFeedbackChecklist),
       body: SingleChildScrollView(
