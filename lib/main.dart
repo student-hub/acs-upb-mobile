@@ -64,8 +64,10 @@ Future<void> main() async {
   Utils.packageInfo = await PackageInfo.fromPlatform();
 
   await Firebase.initializeApp();
+
   final remoteConfigService = await RemoteConfigService.getInstance();
   await remoteConfigService.initialise();
+  Utils.feedbackEnabled = remoteConfigService.feedbackEnabled;
 
   final authProvider = AuthProvider();
   final classProvider = ClassProvider();
