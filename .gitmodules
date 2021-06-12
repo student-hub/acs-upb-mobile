@@ -1,0 +1,3 @@
+[submodule "unity/3d-campus-map"]
+	path = unity/3d-campus-map
+	url = https://github.com/student-hub/3d-campus-map
