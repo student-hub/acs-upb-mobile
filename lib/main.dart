@@ -7,7 +7,6 @@ import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/navigation/bottom_navigation_bar.dart';
 import 'package:acs_upb_mobile/navigation/routes.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/service/feedback_provider.dart';
-import 'package:acs_upb_mobile/pages/class_feedback/service/remote_config.dart';
 import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
 import 'package:acs_upb_mobile/pages/faq/service/question_provider.dart';
 import 'package:acs_upb_mobile/pages/faq/view/faq_page.dart';
@@ -64,10 +63,6 @@ Future<void> main() async {
   Utils.packageInfo = await PackageInfo.fromPlatform();
 
   await Firebase.initializeApp();
-
-  final remoteConfigService = await RemoteConfigService.getInstance();
-  await remoteConfigService.initialise();
-  Utils.feedbackEnabled = remoteConfigService.feedbackEnabled;
 
   final authProvider = AuthProvider();
   final classProvider = ClassProvider();
@@ -183,6 +178,7 @@ class _MyAppState extends State<MyApp> {
 
 class AppLoadingScreen extends StatelessWidget {
   Future<String> _setUpAndChooseStartScreen(BuildContext context) async {
+    final remoteConfigService = await Utils.getRemoteConfig();
     // Make initializations if this is not a test
     if (!Platform.environment.containsKey('FLUTTER_TEST')) {
       await TimeMachine.initialize({'rootBundle': rootBundle});
@@ -209,6 +205,9 @@ class AppLoadingScreen extends StatelessWidget {
 
     // Load locale from settings
     await S.load(LocaleProvider.locale);
+
+    await remoteConfigService.initialise();
+    Utils.feedbackEnabled = remoteConfigService.feedbackEnabled;
 
     // Choose start screen
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
