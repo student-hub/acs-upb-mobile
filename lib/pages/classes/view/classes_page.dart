@@ -68,8 +68,8 @@ class _ClassesPageState extends State<ClassesPage> {
             icon: Icons.format_list_numbered_outlined,
             tooltip: S.current.navigationClassesFeedbackChecklist,
             onPressed: () => Navigator.of(context).push(
-              MaterialPageRoute<ClassesFeedbackChecklist>(
-                builder: (_) => ClassesFeedbackChecklist(classes: headers),
+              MaterialPageRoute<ClassFeedbackChecklist>(
+                builder: (_) => ClassFeedbackChecklist(classes: headers),
               ),
             ),
           ),

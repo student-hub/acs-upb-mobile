@@ -11,16 +11,16 @@ import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class ClassesFeedbackChecklist extends StatefulWidget {
-  const ClassesFeedbackChecklist({Key key, this.classes}) : super(key: key);
+class ClassFeedbackChecklist extends StatefulWidget {
+  const ClassFeedbackChecklist({Key key, this.classes}) : super(key: key);
   final Set<ClassHeader> classes;
 
   @override
-  _ClassesFeedbackChecklistState createState() =>
-      _ClassesFeedbackChecklistState();
+  _ClassFeedbackChecklistState createState() =>
+      _ClassFeedbackChecklistState();
 }
 
-class _ClassesFeedbackChecklistState extends State<ClassesFeedbackChecklist> {
+class _ClassFeedbackChecklistState extends State<ClassFeedbackChecklist> {
   Map<String, dynamic> classesFeedback = {};
 
   @override

@@ -71,9 +71,9 @@ class _FeedbackCardState extends State<FeedbackCard> {
               onTap: () {
                 if (classes != null) {
                   Navigator.of(context).push(
-                    MaterialPageRoute<ClassesFeedbackChecklist>(
+                    MaterialPageRoute<ClassFeedbackChecklist>(
                       builder: (_) =>
-                          ClassesFeedbackChecklist(classes: classes),
+                          ClassFeedbackChecklist(classes: classes),
                     ),
                   );
                 }
