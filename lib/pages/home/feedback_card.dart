@@ -58,17 +58,7 @@ class _FeedbackCardState extends State<FeedbackCard> {
                   classes.length <= classesFeedback?.length) ??
           false,
       child: InfoCard<Map<String, dynamic>>(
-        title: S.current.navigationClassFeedback,
         important: true,
-        onShowMore: () {
-          if (classes != null) {
-            Navigator.of(context).push(
-              MaterialPageRoute<ClassesFeedbackChecklist>(
-                builder: (_) => ClassesFeedbackChecklist(classes: classes),
-              ),
-            );
-          }
-        },
         future: feedbackProvider.getProvidedFeedbackClasses(authProvider.uid),
         builder: (classesFeedback) {
           if (classes != null) {
@@ -77,7 +67,36 @@ class _FeedbackCardState extends State<FeedbackCard> {
                 .toSet()
                 .length
                 .toString();
-            return Text(S.current.messageReviewsLeft(length));
+            return GestureDetector(
+              onTap: () {
+                if (classes != null) {
+                  Navigator.of(context).push(
+                    MaterialPageRoute<ClassesFeedbackChecklist>(
+                      builder: (_) =>
+                          ClassesFeedbackChecklist(classes: classes),
+                    ),
+                  );
+                }
+              },
+              child: Container(
+                child: Center(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        S.current.messageReviewsLeft(length),
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      Icon(
+                        Icons.arrow_forward_ios_outlined,
+                        size: Theme.of(context).textTheme.subtitle2.fontSize,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            );
           }
           return const Center(child: CircularProgressIndicator());
         },

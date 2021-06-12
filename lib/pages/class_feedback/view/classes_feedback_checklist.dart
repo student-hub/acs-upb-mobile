@@ -161,7 +161,7 @@ class FeedbackClassListItem extends StatelessWidget {
       leading: Checkbox(
         value: done,
         onChanged: (_) => onPress(context),
-        activeColor: Colors.white24,
+        activeColor: Colors.grey,
       ),
       title: Text(
         classHeader.name,
