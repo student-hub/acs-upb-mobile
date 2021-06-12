@@ -12,3 +12,6 @@ key.jks
 key.properties
 service_account_key.json
 android_keys.zip
+
+# Ignore generated Unity files for now
+unityLibrary

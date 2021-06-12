@@ -1,5 +1,6 @@
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/home/home_page.dart';
+import 'package:acs_upb_mobile/pages/map/map.dart';
 import 'package:acs_upb_mobile/pages/people/view/people_page.dart';
 import 'package:acs_upb_mobile/pages/portal/view/portal_page.dart';
 import 'package:acs_upb_mobile/pages/timetable/view/timetable_page.dart';
@@ -25,7 +26,7 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar>
   @override
   void initState() {
     super.initState();
-    tabController = TabController(vsync: this, length: 4);
+    tabController = TabController(vsync: this, length: 5);
     tabController.addListener(() {
       if (!tabController.indexIsChanging) {
         setState(() {
@@ -38,6 +39,7 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar>
       const TimetablePage(), // Cannot preserve state with PageStorageKey
       const PortalPage(key: PageStorageKey('Portal')),
       const PeoplePage(key: PageStorageKey('People')),
+      const CampusMap3D(),
     ];
   }
 
@@ -91,6 +93,13 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar>
                             ? const Icon(Icons.people)
                             : const Icon(Icons.people_outlined),
                         text: S.current.navigationPeople,
+                        iconMargin: const EdgeInsets.only(top: 5),
+                      ),
+                      Tab(
+                        icon: currentTab == 4
+                            ? const Icon(Icons.map)
+                            : const Icon(Icons.map_outlined),
+                        text: 'Map',
                         iconMargin: const EdgeInsets.only(top: 5),
                       ),
                     ],

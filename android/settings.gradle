@@ -13,3 +13,7 @@ plugins.each { name, path ->
     include ":$name"
     project(":$name").projectDir = pluginDirectory
 }
+
+
+include ":unityLibrary"
+project(":unityLibrary").projectDir = file("./unityLibrary")

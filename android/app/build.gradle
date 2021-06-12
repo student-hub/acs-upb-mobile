@@ -45,7 +45,7 @@ android {
 
     defaultConfig {
         applicationId "ro.pub.acs.acs_upb_mobile"
-        minSdkVersion 16
+        minSdkVersion 19
         targetSdkVersion 29
         versionCode flutterVersionCode.toInteger() + 10000
         versionName flutterVersionName
@@ -79,7 +79,10 @@ flutter {
     source '../..'
 }
 
+
 dependencies {
+    implementation project(':unityLibrary')
+
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.1.1'
