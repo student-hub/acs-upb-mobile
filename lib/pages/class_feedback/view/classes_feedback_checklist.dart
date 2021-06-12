@@ -32,7 +32,9 @@ class _ClassFeedbackChecklistState extends State<ClassFeedbackChecklist> {
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
     await feedbackProvider
         .getProvidedFeedbackClasses(authProvider.uid)
-        .then((value) => setState(() => classesFeedback = value));
+        .then((value) => {
+              if (mounted) setState(() => classesFeedback = value),
+            });
   }
 
   Widget checklistPage() {
@@ -110,18 +112,18 @@ class FeedbackClassList extends StatelessWidget {
   final Set<ClassHeader> classes;
   final bool done;
 
-  Widget buildFeedbackClassList(ClassHeader header) => Column(
-        children: [
-          FeedbackClassListItem(
-            classHeader: header,
-            done: done,
-          ),
-        ],
-      );
-
   @override
   Widget build(BuildContext context) {
-    return Column(children: classes.map(buildFeedbackClassList).toList());
+    return Column(
+        children: classes
+            .map(
+              (classHeader) => Column(
+                children: [
+                  FeedbackClassListItem(classHeader: classHeader, done: done),
+                ],
+              ),
+            )
+            .toList());
   }
 }
 
