@@ -525,6 +525,36 @@ class S {
     );
   }
 
+  /// `Coming up`
+  String get labelComingUp {
+    return Intl.message(
+      'Coming up',
+      name: 'labelComingUp',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Hidden`
+  String get labelHidden {
+    return Intl.message(
+      'Hidden',
+      name: 'labelHidden',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Past`
+  String get labelPast {
+    return Intl.message(
+      'Past',
+      name: 'labelPast',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Shortcuts`
   String get sectionShortcuts {
     return Intl.message(

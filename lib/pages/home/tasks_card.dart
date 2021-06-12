@@ -1,6 +1,7 @@
+import 'package:acs_upb_mobile/pages/planner/view/planner_view.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/events/uni_event.dart';
 import 'package:acs_upb_mobile/pages/timetable/service/uni_event_provider.dart';
-import 'package:acs_upb_mobile/pages/timetable/view/events/event_view.dart';
+import 'package:acs_upb_mobile/widgets/event_instance_list_tile.dart';
 import 'package:acs_upb_mobile/widgets/info_card.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -17,37 +18,15 @@ class TasksCard extends StatelessWidget {
         Provider.of<UniEventProvider>(context);
     return InfoCard<Iterable<UniEventInstance>>(
       title: S.current.sectionPlanner,
-      onShowMore: onShowMore,
+      onShowMore: () =>
+          Navigator.of(context).push(MaterialPageRoute<PlannerView>(
+        builder: (_) => const PlannerView(),
+      )),
       future: eventProvider.getAssignments(),
       builder: (events) => Column(
         children: events
             .map(
-              (event) => ListTile(
-                key: ValueKey(event.id),
-                contentPadding: EdgeInsets.zero,
-                leading: Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: Container(
-                    width: 20,
-                    height: 20,
-                    decoration: BoxDecoration(
-                      borderRadius: const BorderRadius.all(Radius.circular(4)),
-                      color: event.mainEvent.color,
-                    ),
-                  ),
-                ),
-                trailing: event.start.toDateTimeLocal().isBefore(DateTime.now())
-                    ? Chip(label: Text(S.current.labelOngoing))
-                    : null,
-                title: Text(
-                  '${'${event.mainEvent.classHeader.acronym} - '}${event.mainEvent.type.toLocalizedString()}',
-                ),
-                subtitle: Text(event.relativeDateString),
-                onTap: () =>
-                    Navigator.of(context).push(MaterialPageRoute<EventView>(
-                  builder: (_) => EventView(eventInstance: event),
-                )),
-              ),
+              (event) => EventInstanceListTile(eventInstance: event),
             )
             .toList(),
       ),

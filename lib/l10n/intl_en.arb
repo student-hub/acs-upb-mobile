@@ -49,6 +49,9 @@
   "labelTomorrow": "Tomorrow",
   "labelNow": "Now",
   "labelOngoing": "Ongoing",
+  "labelComingUp": "Coming up",
+  "labelHidden": "Hidden",
+  "labelPast": "Past",
 
   "sectionShortcuts": "Shortcuts",
   "sectionEvents": "Events",
