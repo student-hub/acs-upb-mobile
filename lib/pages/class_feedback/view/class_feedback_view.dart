@@ -34,7 +34,7 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
   String selectedTeacherName;
   Person selectedAssistant;
   List<Person> classTeachers = [];
-  Map<String, dynamic> feedbackCategories = {};
+  Map<String, Map<String, String>> feedbackCategories = {};
   List<Map<int, bool>> answerValues = [];
   Map<String, FeedbackQuestion> feedbackQuestions = {};
 

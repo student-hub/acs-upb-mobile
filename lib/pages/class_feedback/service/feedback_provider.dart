@@ -101,14 +101,20 @@ class FeedbackProvider with ChangeNotifier {
     }
   }
 
-  Future<Map<String, dynamic>> fetchCategories() async {
+  // Fetch all feedback categories in the format
+  // Map<categoryKey, Map<categoryNameEN, categoryNameRO>>
+  Future<Map<String, Map<String, String>>> fetchCategories() async {
     try {
       final DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
           .collection('forms')
           .doc('class_feedback_questions')
           .get();
       final Map<String, dynamic> data = documentSnapshot['categories'];
-      return data;
+      for (final key in data.keys) {
+        data[key] = (data[key] as Map<dynamic, dynamic>)
+            .map((key, value) => MapEntry(key?.toString(), value?.toString()));
+      }
+      return Map<String, Map<String, String>>.from(data);
     } catch (e) {
       print(e);
       AppToast.show(S.current.errorSomethingWentWrong);
