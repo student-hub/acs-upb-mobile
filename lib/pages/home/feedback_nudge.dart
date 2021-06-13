@@ -4,7 +4,6 @@ import 'package:acs_upb_mobile/pages/class_feedback/view/classes_feedback_checkl
 import 'package:acs_upb_mobile/pages/classes/model/class.dart';
 import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
-import 'package:acs_upb_mobile/widgets/info_card.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:flutter/material.dart';
@@ -52,43 +51,46 @@ class _FeedbackNudgeState extends State<FeedbackNudge> {
                   userClassesFeedbackProvided != null &&
                   userClasses.length <= userClassesFeedbackProvided?.length) ??
           false,
-      child: InfoCard<Map<String, dynamic>>(
-        future: feedbackProvider.getProvidedFeedbackClasses(authProvider.uid),
-        builder: (classesFeedback) {
+      child: FutureBuilder<String>(
+        future: feedbackProvider.countClassesWithoutFeedback(
+            authProvider.uid, userClasses),
+        builder: (BuildContext context, AsyncSnapshot<String> snap) {
           if (userClasses != null) {
-            final String length = userClasses
-                .where((element) => !classesFeedback.containsKey(element.id))
-                .toSet()
-                .length
-                .toString();
-            return GestureDetector(
-              onTap: () {
-                if (userClasses != null) {
+            return Padding(
+              padding: const EdgeInsets.fromLTRB(12, 12, 12, 0),
+              child: ActionChip(
+                padding: const EdgeInsets.all(12),
+                tooltip: S.current.navigationClassesFeedbackChecklist,
+                backgroundColor: Theme.of(context).accentColor,
+                onPressed: () {
                   Navigator.of(context).push(
                     MaterialPageRoute<ClassFeedbackChecklist>(
                       builder: (_) =>
                           ClassFeedbackChecklist(classes: userClasses),
                     ),
                   );
-                }
-              },
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      S.current.messageReviewsLeft(length),
-                      style: const TextStyle(fontWeight: FontWeight.bold),
+                },
+                label: Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        S.current.messageReviewsLeft(snap.data),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
                     ),
-                  ),
-                  Icon(
-                    Icons.arrow_forward_ios_outlined,
-                    size: Theme.of(context).textTheme.subtitle2.fontSize,
-                  ),
-                ],
+                    Icon(
+                      Icons.arrow_forward_ios_outlined,
+                      size: Theme.of(context).textTheme.subtitle2.fontSize,
+                    ),
+                  ],
+                ),
               ),
             );
+          } else {
+            return const Center(child: CircularProgressIndicator());
           }
-          return const Center(child: CircularProgressIndicator());
         },
       ),
     );

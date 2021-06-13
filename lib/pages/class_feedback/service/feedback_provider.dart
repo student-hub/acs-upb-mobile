@@ -10,6 +10,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
+import 'package:acs_upb_mobile/pages/classes/model/class.dart';
 
 extension ClassFeedbackAnswerExtension on FeedbackAnswer {
   Map<String, dynamic> toData() {
@@ -201,8 +202,26 @@ class FeedbackProvider with ChangeNotifier {
     }
   }
 
-  Future<int> countClassesWithoutFeedback() {
+  Future<String> countClassesWithoutFeedback(
+      String uid, Set<ClassHeader> userClasses) async {
+    try {
+      final Map<String, bool> classesFeedbackCompleted =
+          await getProvidedFeedbackClasses(uid);
+      String feedbackFormsLeft;
 
+      if (userClasses != null) {
+        feedbackFormsLeft = userClasses
+            .where(
+                (element) => !classesFeedbackCompleted.containsKey(element.id))
+            .toSet()
+            .length
+            .toString();
+      }
+
+      return feedbackFormsLeft;
+    } catch (e) {
+      AppToast.show(S.current.errorSomethingWentWrong);
+      return null;
+    }
   }
-
 }
