@@ -60,6 +60,7 @@ import 'package:provider/provider.dart';
 import 'package:rrule/rrule.dart';
 import 'package:time_machine/time_machine.dart' hide Offset;
 import 'package:timetable/src/header/week_indicator.dart';
+import 'package:acs_upb_mobile/resources/remote_config.dart';
 
 import 'firebase_mock.dart';
 import 'test_utils.dart';
@@ -378,7 +379,7 @@ Future<void> main() async {
           ),
         ));
 
-    Utils.feedbackEnabled = true;
+    RemoteConfigService.overrides = {'feedback_enabled': true};
 
     mockPersonProvider = MockPersonProvider();
     // ignore: invalid_use_of_protected_member
@@ -451,10 +452,7 @@ Future<void> main() async {
                 'ro': 'Comentarii personale'
               },
             }));
-    when(mockFeedbackProvider.addResponse(any))
-        .thenAnswer((_) => Future.value(true));
-    when(mockFeedbackProvider.setUserSubmittedFeedbackForClass(any, any))
-        .thenAnswer((_) => Future.value(true));
+
     when(mockFeedbackProvider.userSubmittedFeedbackForClass(any, any))
         .thenAnswer((_) => Future.value(false));
     when(mockFeedbackProvider.submitFeedback(any, any, any, any, any))

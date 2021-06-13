@@ -22,6 +22,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:positioned_tap_detector/positioned_tap_detector.dart';
 import 'package:provider/provider.dart';
+import 'package:acs_upb_mobile/resources/remote_config.dart';
 
 class ClassView extends StatefulWidget {
   const ClassView({Key key, this.classHeader}) : super(key: key);
@@ -59,24 +60,26 @@ class _ClassViewState extends State<ClassView> {
     return AppScaffold(
       title: Text(S.current.navigationClassInfo),
       actions: [
-        if (Utils.feedbackEnabled)
+        if (RemoteConfigService.feedbackEnabled)
           AppScaffoldAction(
               icon: Icons.rate_review_outlined,
               tooltip: S.current.navigationClassFeedback,
-              onPressed: () {
-                if (!alreadyCompletedFeedback) {
-                  Navigator.of(context)
-                      .push(
-                        MaterialPageRoute<ClassFeedbackView>(
-                          builder: (_) => ClassFeedbackView(
-                              classHeader: widget.classHeader),
-                        ),
-                      )
-                      .then((value) => setState(() {}));
-                } else {
-                  AppToast.show(S.current.warningFeedbackAlreadySent);
-                }
-              }),
+              onPressed: alreadyCompletedFeedback == null
+                  ? null
+                  : () {
+                      if (!alreadyCompletedFeedback) {
+                        Navigator.of(context)
+                            .push(
+                              MaterialPageRoute<ClassFeedbackView>(
+                                builder: (_) => ClassFeedbackView(
+                                    classHeader: widget.classHeader),
+                              ),
+                            )
+                            .then((value) => setState(() {}));
+                      } else {
+                        AppToast.show(S.current.warningFeedbackAlreadySent);
+                      }
+                    }),
       ],
       body: FutureBuilder(
           future: classProvider.fetchClassInfo(widget.classHeader),

@@ -37,6 +37,7 @@ import 'package:preferences/preferences.dart';
 import 'package:provider/provider.dart';
 import 'package:rrule/rrule.dart';
 import 'package:time_machine/time_machine.dart';
+import 'package:acs_upb_mobile/resources/remote_config.dart';
 
 // FIXME: acs.pub.ro has some bad certificate configuration right now, and the
 // cs.pub.ro certificate is expired.
@@ -180,7 +181,8 @@ class AppLoadingScreen extends StatelessWidget {
   Future<String> _setUpAndChooseStartScreen(BuildContext context) async {
     // Make initializations if this is not a test
     if (!Platform.environment.containsKey('FLUTTER_TEST')) {
-      final remoteConfigService = await Utils.getRemoteConfig();
+      final remoteConfigService = RemoteConfigService();
+      await remoteConfigService?.initialise();
       await TimeMachine.initialize({'rootBundle': rootBundle});
       await PrefService.init(prefix: 'pref_');
       PrefService.setDefaultValues(
@@ -201,9 +203,6 @@ class AppLoadingScreen extends StatelessWidget {
       LocaleProvider.rruleL10ns ??= {'en': await RruleL10nEn.create()};
 
       Culture.current = LocaleProvider.cultures[LocaleProvider.localeString];
-
-      await remoteConfigService.initialise();
-      Utils.feedbackEnabled = remoteConfigService.feedbackEnabled;
     }
 
     // Load locale from settings
