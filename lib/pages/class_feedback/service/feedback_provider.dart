@@ -147,6 +147,11 @@ class FeedbackProvider with ChangeNotifier {
     try {
       bool responseAddedSuccessfully, userSubmittedFeedbackSuccessfully;
       for (var i = 0; i < feedbackQuestions.length; i++) {
+        if (feedbackQuestions[i.toString()] == null) {
+          print('Question does not exist, skipping...');
+          continue;
+        }
+
         responseAddedSuccessfully = false;
 
         final response = FeedbackAnswer(
