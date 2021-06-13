@@ -555,6 +555,16 @@ class S {
     );
   }
 
+  /// `Daily penalties`
+  String get labelDailyPenalties {
+    return Intl.message(
+      'Daily penalties',
+      name: 'labelDailyPenalties',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Shortcuts`
   String get sectionShortcuts {
     return Intl.message(
