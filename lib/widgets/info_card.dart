@@ -1,5 +1,4 @@
 import 'package:acs_upb_mobile/generated/l10n.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class InfoCard<T> extends StatelessWidget {
@@ -9,8 +8,7 @@ class InfoCard<T> extends StatelessWidget {
       this.onShowMore,
       this.title,
       this.showMoreButtonKey,
-      this.padding,
-      this.important});
+      this.padding});
 
   final Function onShowMore;
   final Future<T> future;
@@ -18,28 +16,15 @@ class InfoCard<T> extends StatelessWidget {
   final String title;
   final ValueKey<String> showMoreButtonKey;
   final EdgeInsetsGeometry padding;
-  final bool important;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: padding ?? const EdgeInsets.fromLTRB(12, 12, 12, 0),
       child: Card(
-        color: important == true ? Theme.of(context).accentColor : null,
-        shape: important == true
-            ? RoundedRectangleBorder(
-                side: BorderSide(
-                  color: Theme.of(context).accentColor,
-                  width: 3,
-                ),
-                borderRadius: BorderRadius.circular(25),
-              )
-            : null,
         child: Padding(
           padding: const EdgeInsets.all(12),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,

@@ -47,14 +47,12 @@ class _FeedbackNudgeState extends State<FeedbackNudge> {
     final authProvider = Provider.of<AuthProvider>(context);
 
     return Visibility(
-      visible: Utils.feedbackEnabled != null &&
-              Utils.feedbackEnabled &&
+      visible: Utils.feedbackEnabled &&
               !(userClasses != null &&
                   userClassesFeedbackProvided != null &&
                   userClasses.length <= userClassesFeedbackProvided?.length) ??
           false,
       child: InfoCard<Map<String, dynamic>>(
-        important: true,
         future: feedbackProvider.getProvidedFeedbackClasses(authProvider.uid),
         builder: (classesFeedback) {
           if (userClasses != null) {
@@ -68,28 +66,25 @@ class _FeedbackNudgeState extends State<FeedbackNudge> {
                 if (userClasses != null) {
                   Navigator.of(context).push(
                     MaterialPageRoute<ClassFeedbackChecklist>(
-                      builder: (_) => ClassFeedbackChecklist(classes: userClasses),
+                      builder: (_) =>
+                          ClassFeedbackChecklist(classes: userClasses),
                     ),
                   );
                 }
               },
-              child: Container(
-                child: Center(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        S.current.messageReviewsLeft(length),
-                        style: const TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      Icon(
-                        Icons.arrow_forward_ios_outlined,
-                        size: Theme.of(context).textTheme.subtitle2.fontSize,
-                      ),
-                    ],
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      S.current.messageReviewsLeft(length),
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
                   ),
-                ),
+                  Icon(
+                    Icons.arrow_forward_ios_outlined,
+                    size: Theme.of(context).textTheme.subtitle2.fontSize,
+                  ),
+                ],
               ),
             );
           }
