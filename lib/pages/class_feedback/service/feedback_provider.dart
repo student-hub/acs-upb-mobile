@@ -102,7 +102,7 @@ class FeedbackProvider with ChangeNotifier {
   }
 
   // Fetch all feedback categories in the format
-  // Map<categoryKey, Map<categoryNameEN, categoryNameRO>>
+  // Map<categoryKey, Map<language, localizedCategoryName>>
   Future<Map<String, Map<String, String>>> fetchCategories() async {
     try {
       final DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
