@@ -8,7 +8,6 @@ import 'package:pedantic/pedantic.dart';
 import 'package:provider/provider.dart';
 import 'package:time_machine/time_machine.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'remote_config.dart';
 
 export 'package:acs_upb_mobile/resources/platform.dart'
     if (dart.library.io) 'dart:io';
@@ -65,16 +64,6 @@ class Utils {
       version: 'Unknown', buildNumber: 'Unknown', appName: 'Unknown');
 
   static bool feedbackEnabled = false;
-
-  static Future<RemoteConfigService> getRemoteConfig() async {
-    try {
-      final remoteConfig = await RemoteConfigService.getInstance();
-      return remoteConfig;
-    } catch (e) {
-      AppToast.show(S.current.errorSomethingWentWrong);
-      return null;
-    }
-  }
 }
 
 extension PeriodExtension on Period {
