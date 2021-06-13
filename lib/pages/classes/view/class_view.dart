@@ -63,20 +63,22 @@ class _ClassViewState extends State<ClassView> {
           AppScaffoldAction(
               icon: Icons.rate_review_outlined,
               tooltip: S.current.navigationClassFeedback,
-              onPressed: () {
-                if (!alreadyCompletedFeedback) {
-                  Navigator.of(context)
-                      .push(
-                        MaterialPageRoute<ClassFeedbackView>(
-                          builder: (_) => ClassFeedbackView(
-                              classHeader: widget.classHeader),
-                        ),
-                      )
-                      .then((value) => setState(() {}));
-                } else {
-                  AppToast.show(S.current.warningFeedbackAlreadySent);
-                }
-              }),
+              onPressed: alreadyCompletedFeedback == null
+                  ? null
+                  : () {
+                      if (!alreadyCompletedFeedback) {
+                        Navigator.of(context)
+                            .push(
+                              MaterialPageRoute<ClassFeedbackView>(
+                                builder: (_) => ClassFeedbackView(
+                                    classHeader: widget.classHeader),
+                              ),
+                            )
+                            .then((value) => setState(() {}));
+                      } else {
+                        AppToast.show(S.current.warningFeedbackAlreadySent);
+                      }
+                    }),
       ],
       body: FutureBuilder(
           future: classProvider.fetchClassInfo(widget.classHeader),
