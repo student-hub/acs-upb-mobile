@@ -17,6 +17,7 @@ import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:provider/provider.dart';
 
@@ -35,9 +36,13 @@ class EventView extends StatefulWidget {
 }
 
 class _EventViewState extends State<EventView> {
+  final _formKey = GlobalKey<FormState>();
+
   List<String> hiddenEvents;
   Goal goal;
   bool updating;
+
+  TextEditingController targetGradeController;
 
   Future<void> updateHiddenEvents() async {
     final PlannerProvider plannerProvider =
@@ -56,7 +61,6 @@ class _EventViewState extends State<EventView> {
     if (updating != null) {
       updating = true;
     }
-
     final PlannerProvider plannerProvider =
         Provider.of<PlannerProvider>(context, listen: false);
     final AuthProvider authProvider =
@@ -69,7 +73,8 @@ class _EventViewState extends State<EventView> {
     //await plannerProvider.setUserGoal(authProvider.uid,
     //    Goal(taskId: widget.eventInstance?.id, targetGrade: 0.1));
     //}
-
+    targetGradeController =
+        TextEditingController(text: goal?.targetGrade?.toString() ?? '0');
     updating = false;
     if (mounted) {
       setState(() {});
@@ -262,7 +267,8 @@ class _EventViewState extends State<EventView> {
                               style: Theme.of(context).textTheme.subtitle1),
                         ],
                       ))),
-            if (mainEvent is TaskEvent && mainEvent.location != null)
+            if (mainEvent is TaskEvent &&
+                (mainEvent.location?.isNotEmpty ?? false))
               Padding(
                 padding: const EdgeInsets.all(10),
                 child: ListTile(
@@ -304,20 +310,87 @@ class _EventViewState extends State<EventView> {
                 ]),
               ),
             if (mainEvent is TaskEvent)
-              Row(children: [
-                Flexible(
-                  child: updating == false && goal != null
-                      ? GoalView(
-                          goal: goal,
-                          event: mainEvent,
-                        )
-                      : Container(
-                          height: 100,
-                          child:
-                              const Center(child: CircularProgressIndicator()),
-                        ),
-                )
-              ])
+              Padding(
+                padding: const EdgeInsets.all(10),
+                child: Card(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: ListTile(
+                    leading: const Icon(
+                      Icons.link_outlined,
+                    ),
+                    title: Text("Start Tacking your progress",
+                        style: Theme.of(context).textTheme.subtitle1),
+                    onTap: () => showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            content: Stack(
+                              children: <Widget>[
+                                // Positioned(
+                                //   right: -20,
+                                //   top: -40,
+                                //   child: InkResponse(
+                                //     onTap: () {
+                                //       Navigator.of(context).pop();
+                                //     },
+                                //     child: const CircleAvatar(
+                                //       child: Icon(Icons.close),
+                                //       backgroundColor: Colors.red,
+                                //     ),
+                                //   ),
+                                // ),
+                                Form(
+                                  key: _formKey,
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: <Widget>[
+                                      TextFormField(
+                                        controller: targetGradeController,
+                                        keyboardType: TextInputType.number,
+                                        inputFormatters: <TextInputFormatter>[
+                                          FilteringTextInputFormatter.allow(
+                                              RegExp(r'(^\d*\.?\d*)$')),
+                                        ],
+                                        decoration: InputDecoration(
+                                          labelText: S.current.sectionGrading,
+                                          hintText: '1.5',
+                                          prefixIcon:
+                                              const Icon(FeatherIcons.pieChart),
+                                        ),
+                                        onChanged: (_) => setState(() {}),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        }),
+                  ),
+                ),
+              ),
+            if (mainEvent is TaskEvent)
+              Row(
+                children: [
+                  Flexible(
+                    child: updating == false && goal != null
+                        ? GoalView(
+                            goal: goal,
+                            event: mainEvent,
+                          )
+                        : Container(
+                            height: 100,
+                            child: const Center(
+                                child: CircularProgressIndicator()),
+                          ),
+                  ),
+                ],
+              )
           ],
         ),
       ),

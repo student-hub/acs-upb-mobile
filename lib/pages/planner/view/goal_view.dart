@@ -17,29 +17,33 @@ class GoalView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
-      child: Row(
-        children: [
-          if (goal == null)
-            const Card(
+      child: goal == null
+          ? const Card(
               child: Padding(
                 padding: EdgeInsets.all(12),
               ),
             )
-          else
-            Flexible(
-              flex: 1,
-              child: Card(
-                child: Text(goal.taskId),
-              ),
+          : Row(
+              children: [
+                Flexible(
+                  flex: 4,
+                  child: Container(
+                    //height: 200,
+                    color: Colors.teal,
+                    child: Text(goal.taskId),
+                  ),
+                ),
+                const Spacer(flex: 2),
+                Flexible(
+                  flex: 6,
+                  child: Container(
+                    // height: 200,
+                    color: Colors.teal,
+                    child: Text(goal.taskId),
+                  ),
+                )
+              ],
             ),
-          Flexible(
-            flex: 2,
-            child: Card(
-              child: Text(goal.taskId),
-            ),
-          )
-        ],
-      ),
     );
   }
 }
