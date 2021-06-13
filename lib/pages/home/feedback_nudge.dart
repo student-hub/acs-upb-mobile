@@ -18,6 +18,7 @@ class _FeedbackNudgeState extends State<FeedbackNudge> {
   Set<ClassHeader> userClasses;
   Map<String, dynamic> userClassesFeedbackProvided;
 
+  // TODO(AndreiMirciu): Find a better approach on how to calculate the number of feedback forms that need to be completed
   Future<void> getUserClasses() async {
     final ClassProvider classProvider =
         Provider.of<ClassProvider>(context, listen: false);
@@ -47,8 +48,8 @@ class _FeedbackNudgeState extends State<FeedbackNudge> {
 
     return Visibility(
       visible: Utils.feedbackEnabled &&
-              !(userClasses != null &&
-                  userClassesFeedbackProvided != null &&
+              !((userClasses?.isEmpty ?? false) &&
+                  (userClassesFeedbackProvided?.isEmpty ?? false) &&
                   userClasses.length <= userClassesFeedbackProvided?.length) ??
           false,
       child: FutureBuilder<String>(

@@ -77,7 +77,7 @@ class _TimetablePageState extends State<TimetablePage> {
             MaterialPageRoute<ChangeNotifierProvider>(
               builder: (_) => ChangeNotifierProvider.value(
                 value: Provider.of<ClassProvider>(context),
-                child: ClassesPage(),
+                child: const ClassesPage(),
               ),
             ),
           ),
