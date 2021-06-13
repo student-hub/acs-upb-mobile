@@ -451,10 +451,7 @@ Future<void> main() async {
                 'ro': 'Comentarii personale'
               },
             }));
-    when(mockFeedbackProvider.addResponse(any))
-        .thenAnswer((_) => Future.value(true));
-    when(mockFeedbackProvider.setUserSubmittedFeedbackForClass(any, any))
-        .thenAnswer((_) => Future.value(true));
+
     when(mockFeedbackProvider.userSubmittedFeedbackForClass(any, any))
         .thenAnswer((_) => Future.value(false));
     when(mockFeedbackProvider.submitFeedback(any, any, any, any, any))

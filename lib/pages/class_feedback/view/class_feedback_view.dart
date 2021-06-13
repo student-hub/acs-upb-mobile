@@ -140,7 +140,7 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
           ),
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.only(top: 10.25),
+              padding: const EdgeInsets.only(top: 10),
               child: Text(
                 S.current.messageAgreeFeedbackPolicy,
                 style: Theme.of(context).textTheme.subtitle1,

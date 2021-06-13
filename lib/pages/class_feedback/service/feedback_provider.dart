@@ -66,7 +66,7 @@ extension FeedbackQuestionExtension on FeedbackQuestion {
 }
 
 class FeedbackProvider with ChangeNotifier {
-  Future<bool> addResponse(FeedbackAnswer response) async {
+  Future<bool> _addResponse(FeedbackAnswer response) async {
     try {
       await FirebaseFirestore.instance
           .collection('forms')
@@ -122,7 +122,7 @@ class FeedbackProvider with ChangeNotifier {
     }
   }
 
-  Future<bool> setUserSubmittedFeedbackForClass(
+  Future<bool> _setUserSubmittedFeedbackForClass(
       String uid, String className) async {
     try {
       final DocumentReference ref =
@@ -162,12 +162,12 @@ class FeedbackProvider with ChangeNotifier {
           questionAnswer: feedbackQuestions[i.toString()].answer,
         );
 
-        responseAddedSuccessfully = await addResponse(response);
+        responseAddedSuccessfully = await _addResponse(response);
         if (!responseAddedSuccessfully) break;
       }
 
       userSubmittedFeedbackSuccessfully =
-          await setUserSubmittedFeedbackForClass(uid, className);
+          await _setUserSubmittedFeedbackForClass(uid, className);
       if (responseAddedSuccessfully && userSubmittedFeedbackSuccessfully) {
         return true;
       }
@@ -184,7 +184,7 @@ class FeedbackProvider with ChangeNotifier {
       final DocumentSnapshot snap =
           await FirebaseFirestore.instance.collection('users').doc(uid).get();
       if (snap.data()['classesFeedback'] != null &&
-          snap.data()['classesFeedback'][className] == true) {
+          snap.data()['classesFeedback'][className]) {
         return true;
       }
       return false;
