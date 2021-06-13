@@ -1,7 +1,6 @@
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/navigation/routes.dart';
-import 'package:acs_upb_mobile/pages/class_feedback/service/remote_config.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -9,6 +8,7 @@ import 'package:pedantic/pedantic.dart';
 import 'package:provider/provider.dart';
 import 'package:time_machine/time_machine.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'remote_config.dart';
 
 export 'package:acs_upb_mobile/resources/platform.dart'
     if (dart.library.io) 'dart:io';
