@@ -3,23 +3,19 @@ import 'package:firebase_remote_config/firebase_remote_config.dart';
 const String _feedbackEnabled = 'feedback_enabled';
 
 class RemoteConfigService {
-  RemoteConfigService({RemoteConfig remoteConfig})
-      : _remoteConfig = remoteConfig;
-  final RemoteConfig _remoteConfig;
-  final defaults = <String, dynamic>{_feedbackEnabled: false};
+  static RemoteConfig _remoteConfig;
+  static final defaults = <String, dynamic>{_feedbackEnabled: false};
   static RemoteConfigService _instance;
+  static Map<String, dynamic> overrides;
 
-  static Future<RemoteConfigService> getInstance() async {
-    return _instance ??= RemoteConfigService(
-      remoteConfig: await RemoteConfig.instance,
-    );
-  }
-
-  bool get feedbackEnabled =>
-      _remoteConfig?.getBool(_feedbackEnabled) ?? defaults[_feedbackEnabled];
+  static bool get feedbackEnabled => overrides != null
+      ? true
+      : _remoteConfig?.getBool(_feedbackEnabled) ?? defaults[_feedbackEnabled];
 
   Future<dynamic> initialise() async {
     try {
+      _instance ??= RemoteConfigService();
+      _remoteConfig = await RemoteConfig.instance;
       await _remoteConfig.setDefaults(defaults);
       await _remoteConfig.fetch();
       await _remoteConfig.activateFetched();

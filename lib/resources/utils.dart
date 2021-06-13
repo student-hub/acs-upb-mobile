@@ -62,8 +62,6 @@ class Utils {
 
   static PackageInfo packageInfo = PackageInfo(
       version: 'Unknown', buildNumber: 'Unknown', appName: 'Unknown');
-
-  static bool feedbackEnabled = false;
 }
 
 extension PeriodExtension on Period {
