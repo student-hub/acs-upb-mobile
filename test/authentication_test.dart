@@ -129,10 +129,6 @@ void main() {
     mockFeedbackProvider = MockFeedbackProvider();
     // ignore: invalid_use_of_protected_member
     when(mockFeedbackProvider.hasListeners).thenReturn(true);
-    when(mockFeedbackProvider.addResponse(any))
-        .thenAnswer((_) => Future.value(true));
-    when(mockFeedbackProvider.setUserSubmittedFeedbackForClass(any, any))
-        .thenAnswer((_) => Future.value(true));
     when(mockFeedbackProvider.userSubmittedFeedbackForClass(any, any))
         .thenAnswer((_) => Future.value(false));
     when(mockFeedbackProvider.getProvidedFeedbackClasses(any))

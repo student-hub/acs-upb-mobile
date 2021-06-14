@@ -4,7 +4,6 @@ import 'package:acs_upb_mobile/pages/class_feedback/view/classes_feedback_checkl
 import 'package:acs_upb_mobile/pages/classes/model/class.dart';
 import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
 import 'package:acs_upb_mobile/pages/classes/view/class_view.dart';
-import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/widgets/class_icon.dart';
 import 'package:acs_upb_mobile/widgets/error_page.dart';
 import 'package:acs_upb_mobile/widgets/icon_text.dart';
@@ -13,6 +12,7 @@ import 'package:acs_upb_mobile/widgets/spoiler.dart';
 import 'package:flutter/material.dart';
 import 'package:pedantic/pedantic.dart';
 import 'package:provider/provider.dart';
+import 'package:acs_upb_mobile/resources/remote_config.dart';
 
 class ClassesPage extends StatefulWidget {
   const ClassesPage({Key key}) : super(key: key);
@@ -62,7 +62,7 @@ class _ClassesPageState extends State<ClassesPage> {
       // TODO(IoanaAlexandru): Simply show all classes if user is not authenticated
       needsToBeAuthenticated: true,
       actions: [
-        if (Utils.feedbackEnabled)
+        if (RemoteConfigService.feedbackEnabled)
           AppScaffoldAction(
             icon: Icons.format_list_numbered_outlined,
             tooltip: S.current.navigationClassesFeedbackChecklist,
