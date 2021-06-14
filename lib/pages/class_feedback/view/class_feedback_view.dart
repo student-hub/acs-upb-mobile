@@ -1,6 +1,5 @@
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
-import 'package:acs_upb_mobile/pages/class_feedback/model/class_feedback_answer.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/service/feedback_provider.dart';
 import 'package:acs_upb_mobile/pages/classes/model/class.dart';
@@ -35,7 +34,7 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
   String selectedTeacherName;
   Person selectedAssistant;
   List<Person> classTeachers = [];
-  Map<String, dynamic> feedbackCategories = {};
+  Map<String, Map<String, String>> feedbackCategories = {};
   List<Map<int, bool>> answerValues = [];
   Map<String, FeedbackQuestion> feedbackQuestions = {};
 
@@ -141,7 +140,7 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
           ),
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.only(top: 10.25),
+              padding: const EdgeInsets.only(top: 10),
               child: Text(
                 S.current.messageAgreeFeedbackPolicy,
                 style: Theme.of(context).textTheme.subtitle1,
@@ -182,7 +181,7 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
       ];
       for (final question
           in feedbackQuestions.values.where((q) => q.category == category)) {
-        categoryChildren.add(FeedbackQuestionForm(
+        categoryChildren.add(FeedbackQuestionFormField(
             question: question, answerValues: answerValues, formKey: formKey));
       }
       children.add(
@@ -244,30 +243,15 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
             formKey.currentState.save();
           });
 
-          bool res1, res2;
           final authProvider =
               Provider.of<AuthProvider>(context, listen: false);
           final String uid = authProvider.uid;
-          for (var i = 0; i < feedbackQuestions.length; i++) {
-            res1 = false;
+          final bool feedbackSentSuccessfully =
+              await Provider.of<FeedbackProvider>(context, listen: false)
+                  .submitFeedback(uid, feedbackQuestions, selectedAssistant,
+                      selectedTeacher, classController.text);
 
-            final response = FeedbackQuestionAnswer(
-              assistant: selectedAssistant,
-              teacher: selectedTeacher,
-              className: classController.text,
-              questionNumber: i.toString(),
-              questionAnswer: feedbackQuestions[i.toString()].answer,
-            );
-
-            res1 = await Provider.of<FeedbackProvider>(context, listen: false)
-                .addResponse(response);
-            if (!res1) break;
-          }
-
-          res2 = await Provider.of<FeedbackProvider>(context, listen: false)
-              .setUserClassFeedback(classController.text, uid);
-
-          if (res1 && res2) {
+          if (feedbackSentSuccessfully) {
             Navigator.of(context).pop();
             AppToast.show(S.current.messageFeedbackHasBeenSent);
           }

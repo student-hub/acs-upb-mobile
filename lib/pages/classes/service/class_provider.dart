@@ -1,6 +1,5 @@
 import 'package:acs_upb_mobile/authentication/model/user.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
-import 'package:acs_upb_mobile/pages/class_feedback/service/remote_config.dart';
 import 'package:acs_upb_mobile/pages/classes/model/class.dart';
 import 'package:acs_upb_mobile/pages/filter/model/filter.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
@@ -286,16 +285,6 @@ class ClassProvider with ChangeNotifier {
       print(e);
       AppToast.show(S.current.errorSomethingWentWrong);
       return false;
-    }
-  }
-
-  Future<RemoteConfigService> getRemoteConfig() async {
-    try {
-      final remoteConfig = await RemoteConfigService.getInstance();
-      return remoteConfig;
-    } catch (e) {
-      AppToast.show(S.current.errorSomethingWentWrong);
-      return null;
     }
   }
 }

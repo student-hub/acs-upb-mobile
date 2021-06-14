@@ -95,26 +95,16 @@ class _ClassesPageState extends State<ClassesPage> {
                 ? ClassList(
                     classes: headers,
                     sectioned: false,
-                    onTap: (classHeader) => Navigator.of(context)
-                        .push(MaterialPageRoute<ChangeNotifierProvider>(
-                      builder: (context) => ChangeNotifierProvider.value(
-                        value: classProvider,
-                        child: FutureBuilder(
-                          future: classProvider.getRemoteConfig(),
-                          builder: (context, snap) {
-                            if (snap.hasData) {
-                              return ClassView(
-                                classHeader: classHeader,
-                                remoteConfigService: snap.data,
-                              );
-                            } else {
-                              return const Center(
-                                  child: CircularProgressIndicator());
-                            }
-                          },
+                    onTap: (classHeader) => Navigator.of(context).push(
+                      MaterialPageRoute<ChangeNotifierProvider>(
+                        builder: (context) => ChangeNotifierProvider.value(
+                          value: classProvider,
+                          child: ClassView(
+                            classHeader: classHeader,
+                          ),
                         ),
                       ),
-                    )),
+                    ),
                   )
                 : ErrorPage(
                     errorMessage: S.current.messageNoClassesYet,
