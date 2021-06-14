@@ -1,12 +1,12 @@
+import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question_dropdown.dart';
-import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question_slider.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question_rating.dart';
+import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question_slider.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question_text.dart';
 import 'package:acs_upb_mobile/widgets/radio_emoji.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:acs_upb_mobile/generated/l10n.dart';
 
 class FeedbackQuestionFormField extends StatefulWidget {
   const FeedbackQuestionFormField({
@@ -25,7 +25,10 @@ class FeedbackQuestionFormField extends StatefulWidget {
 }
 
 class _FeedbackQuestionFormFieldState extends State<FeedbackQuestionFormField> {
+  bool _enabled = false;
+
   Widget feedbackQuestionSlider() {
+    const double defaultVal = 5;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -35,21 +38,77 @@ class _FeedbackQuestionFormFieldState extends State<FeedbackQuestionFormField> {
             fontSize: 18,
           ),
         ),
-        Slider.adaptive(
-          key: const Key('FeedbackSlider'),
-          value: widget.question.answer != null
-              ? double.parse(widget.question.answer)
-              : 5,
-          onChanged: (newRating) {
-            setState(() {
-              widget.question.answer = newRating.toString();
-            });
-          },
-          min: 1,
-          max: 10,
-          divisions: 9,
-          label: widget.question.answer,
-          activeColor: Theme.of(context).accentColor,
+        Row(
+          children: [
+            Transform.translate(
+              // Offset to bypass slider padding
+              offset: const Offset(10, 0),
+              child: GestureDetector(
+                onTap: () => showDialog(
+                  context: context,
+                  builder: (context) => Dialog(
+                      child: Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: TextFormField(
+                      keyboardType: TextInputType.number,
+                      initialValue:
+                          widget.question.answer ?? defaultVal.toString(),
+                      onChanged: (value) => setState(
+                          () => widget.question.answer = value ?? defaultVal),
+                    ),
+                  )),
+                ),
+                child: Text(
+                  (double.tryParse(widget.question.answer ?? '') ?? defaultVal)
+                      .toString(),
+                  style: Theme.of(context).textTheme.bodyText2.apply(
+                      color: _enabled
+                          ? Theme.of(context).textTheme.bodyText2.color
+                          : Theme.of(context).disabledColor),
+                ),
+              ),
+            ),
+            Expanded(
+              child: GestureDetector(
+                onTapDown: (_) => setState(() => _enabled = true),
+                child: Slider.adaptive(
+                  key: const Key('FeedbackSlider'),
+                  value: double.tryParse(widget.question.answer ?? '') ??
+                      defaultVal,
+                  onChanged: !_enabled
+                      ? null
+                      : (newRating) {
+                          setState(() {
+                            widget.question.answer = newRating.toString();
+                          });
+                        },
+                  min: 1,
+                  max: 10,
+                  divisions: 9,
+                  label: widget.question.answer,
+                  activeColor: Theme.of(context).accentColor,
+                ),
+              ),
+            ),
+            Transform.translate(
+              // Offset to bypass slider & checkbox padding
+              offset: const Offset(-20, 0),
+              child: Checkbox(
+                value: !_enabled,
+                onChanged: (bool value) => setState(() {
+                  _enabled = !value;
+                  if (value) {
+                    widget.question.answer = null;
+                  }
+                }),
+                visualDensity: const VisualDensity(),
+              ),
+            ),
+            Transform.translate(
+              offset: const Offset(-25, 0),
+              child: const Text('N/A'),
+            ),
+          ],
         ),
         const SizedBox(height: 10),
       ],
