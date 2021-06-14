@@ -150,8 +150,8 @@ class _FeedbackQuestionFormFieldState extends State<FeedbackQuestionFormField> {
             labelText: S.current.labelAnswer,
             prefixIcon: const Icon(Icons.list_outlined),
           ),
-          onSaved: (value) {
-            widget.question.answer = value;
+          onSaved: (selection) {
+            widget.question.answer = selection;
           },
           items: (widget.question as FeedbackQuestionDropdown)
               .options
@@ -163,13 +163,7 @@ class _FeedbackQuestionFormFieldState extends State<FeedbackQuestionFormField> {
               )
               .toList(),
           onChanged: (selection) {
-            widget.formKey.currentState.validate();
-          },
-          validator: (selection) {
-            if (selection == null) {
-              return S.current.errorAnswerCannotBeEmpty;
-            }
-            return null;
+            widget.question.answer = selection;
           },
         ),
         const SizedBox(height: 16),
