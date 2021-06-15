@@ -1,5 +1,6 @@
+import 'package:acs_upb_mobile/pages/class_feedback/service/feedback_provider.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/view/statistics_details.dart';
-import 'package:acs_upb_mobile/pages/timetable/service/uni_event_provider.dart';
+import 'package:acs_upb_mobile/pages/classes/model/class.dart';
 import 'package:acs_upb_mobile/widgets/info_card.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:flutter/cupertino.dart';
@@ -8,10 +9,12 @@ import 'package:flutter/material.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
-import 'package:time_machine/time_machine.dart';
 import 'package:provider/provider.dart';
 
 class ClassFeedbackStatistics extends StatefulWidget {
+  const ClassFeedbackStatistics({Key key, this.classHeader}) : super(key: key);
+  final ClassHeader classHeader;
+
   @override
   _ClassFeedbackStatisticsState createState() =>
       _ClassFeedbackStatisticsState();
@@ -61,11 +64,10 @@ class _ClassFeedbackStatisticsState extends State<ClassFeedbackStatistics> {
   }
 
   Widget barChart() {
-    final UniEventProvider eventProvider =
-        Provider.of<UniEventProvider>(context);
+    final FeedbackProvider feedbackProvider = Provider.of<FeedbackProvider>(context);
 
     return InfoCard(
-      future: eventProvider.getUpcomingEvents(LocalDate.today()),
+      future: feedbackProvider.getNumberOfResponses(widget.classHeader?.id),
       onShowMore: () => Navigator.of(context).push(
           MaterialPageRoute<FeedbackStatisticsDetails>(
               builder: (_) => FeedbackStatisticsDetails())),

@@ -1,7 +1,6 @@
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/service/feedback_provider.dart';
-import 'package:acs_upb_mobile/pages/class_feedback/service/remote_config.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/view/class_feedback_statistics.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/view/class_feedback_view.dart';
 import 'package:acs_upb_mobile/pages/classes/model/class.dart';
@@ -11,6 +10,7 @@ import 'package:acs_upb_mobile/pages/classes/view/grading_view.dart';
 import 'package:acs_upb_mobile/pages/classes/view/shortcut_view.dart';
 import 'package:acs_upb_mobile/pages/people/service/person_provider.dart';
 import 'package:acs_upb_mobile/pages/people/view/person_view.dart';
+import 'package:acs_upb_mobile/resources/remote_config.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/widgets/button.dart';
 import 'package:acs_upb_mobile/widgets/class_icon.dart';
@@ -24,7 +24,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:positioned_tap_detector/positioned_tap_detector.dart';
 import 'package:provider/provider.dart';
-import 'package:acs_upb_mobile/resources/remote_config.dart';
 
 class ClassView extends StatefulWidget {
   const ClassView({Key key, this.classHeader}) : super(key: key);
@@ -62,25 +61,26 @@ class _ClassViewState extends State<ClassView> {
     return AppScaffold(
       title: Text(S.current.navigationClassInfo),
       actions: [
-        //if (RemoteConfigService.feedbackEnabled)
-        AppScaffoldAction(
-            icon: Icons.rate_review_outlined,tooltip: S.current.navigationClassFeedback,
-            onPressed: alreadyCompletedFeedback == null
+        if (RemoteConfigService.feedbackEnabled)
+          AppScaffoldAction(
+              icon: Icons.rate_review_outlined,
+              tooltip: S.current.navigationClassFeedback,
+              onPressed: alreadyCompletedFeedback == null
                   ? null
-                  :() {
-              if (!alreadyCompletedFeedback) {
-                Navigator.of(context)
-                    .push(
-                      MaterialPageRoute<ClassFeedbackView>(
-                        builder: (_) =>
-                            ClassFeedbackView(classHeader: widget.classHeader),
-                      ),
-                    )
-                    .then((value) => setState(() {}));
-              } else {
-                AppToast.show(S.current.warningFeedbackAlreadySent);
-              }
-            }),
+                  : () {
+                      if (!alreadyCompletedFeedback) {
+                        Navigator.of(context)
+                            .push(
+                              MaterialPageRoute<ClassFeedbackView>(
+                                builder: (_) => ClassFeedbackView(
+                                    classHeader: widget.classHeader),
+                              ),
+                            )
+                            .then((value) => setState(() {}));
+                      } else {
+                        AppToast.show(S.current.warningFeedbackAlreadySent);
+                      }
+                    }),
       ],
       body: FutureBuilder(
           future: classProvider.fetchClassInfo(widget.classHeader),
@@ -112,7 +112,8 @@ class _ClassViewState extends State<ClassView> {
                           onTap: () {
                             Navigator.of(context).push(
                               MaterialPageRoute<ClassFeedbackStatistics>(
-                                builder: (_) => ClassFeedbackStatistics(),
+                                builder: (_) => ClassFeedbackStatistics(
+                                    classHeader: widget.classHeader),
                               ),
                             );
                           },

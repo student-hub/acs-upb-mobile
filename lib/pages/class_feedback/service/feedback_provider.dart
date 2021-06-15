@@ -193,4 +193,36 @@ class FeedbackProvider with ChangeNotifier {
       return false;
     }
   }
+
+  Future<int> getNumberOfResponses(String className) async {
+    try {
+      final QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+          .collection('forms')
+          .doc('class_feedback_answers')
+          .collection('0')
+          .where('class', isEqualTo: className)
+          .get();
+      final numberOfResponses = querySnapshot.docs.length;
+      return numberOfResponses;
+    } catch (e) {
+      AppToast.show(S.current.errorSomethingWentWrong);
+      return null;
+    }
+  }
+
+  Future<Map<String, String>> getGradeAndHoursCorrelation(
+      String className) async {
+    try {
+      final QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+          .collection('forms')
+          .doc('class_feedback_answers')
+          .collection('1')
+          .where('class', isEqualTo: className)
+          .get();
+      final grades = querySnapshot.docs.where((element) => element['answer']).;
+    } catch (e) {
+      AppToast.show(S.current.errorSomethingWentWrong);
+      return null;
+    }
+  }
 }
