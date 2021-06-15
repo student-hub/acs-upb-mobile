@@ -133,6 +133,7 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Checkbox(
+            key: const Key('AcknowledgementCheckbox'),
             value: agreedToResponsibilities,
             visualDensity: VisualDensity.compact,
             onChanged: (value) =>

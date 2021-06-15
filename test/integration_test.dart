@@ -1494,7 +1494,7 @@ Future<void> main() async {
 
         expect(find.byType(ClassFeedbackView), findsOneWidget);
 
-        await tester.tap(find.byType(Checkbox));
+        await tester.tap(find.byKey(const Key('AcknowledgementCheckbox')));
         await tester.pumpAndSettle();
 
         await tester.enterText(
