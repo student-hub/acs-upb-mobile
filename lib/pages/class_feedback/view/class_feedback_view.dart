@@ -175,7 +175,7 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
       const SizedBox(height: 24),
     ];
 
-    for (final category in feedbackCategories.keys) {
+    for (final category in feedbackCategories.keys.toList()..sort()) {
       final List<Widget> categoryChildren = [
         categoryHeader(
             feedbackCategories[category][LocaleProvider.localeString])
