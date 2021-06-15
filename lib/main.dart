@@ -181,8 +181,7 @@ class AppLoadingScreen extends StatelessWidget {
   Future<String> _setUpAndChooseStartScreen(BuildContext context) async {
     // Make initializations if this is not a test
     if (!Platform.environment.containsKey('FLUTTER_TEST')) {
-      final remoteConfigService = RemoteConfigService();
-      await remoteConfigService?.initialise();
+      await RemoteConfigService.initialize();
       await TimeMachine.initialize({'rootBundle': rootBundle});
       await PrefService.init(prefix: 'pref_');
       PrefService.setDefaultValues(
