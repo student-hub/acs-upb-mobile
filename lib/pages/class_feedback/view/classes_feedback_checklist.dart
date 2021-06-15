@@ -48,9 +48,14 @@ class _ClassFeedbackChecklistState extends State<ClassFeedbackChecklist> {
         ),
         const SizedBox(height: 6),
         FeedbackClassList(
-          classes: widget.classes
-              .where((element) => !classesFeedback.containsKey(element.id))
-              .toSet(),
+          classes: widget.classes.where(
+            (element) {
+              if (classesFeedback != null) {
+                return !classesFeedback.containsKey(element.id);
+              }
+              return true;
+            },
+          )?.toSet(),
           done: false,
         ),
         const Divider(thickness: 4),
@@ -60,12 +65,13 @@ class _ClassFeedbackChecklistState extends State<ClassFeedbackChecklist> {
           style: Theme.of(context).textTheme.headline6,
         ),
         const SizedBox(height: 6),
-        FeedbackClassList(
-          classes: widget.classes
-              .where((element) => classesFeedback.containsKey(element.id))
-              .toSet(),
-          done: true,
-        ),
+        if (classesFeedback != null)
+          FeedbackClassList(
+            classes: widget.classes
+                .where((element) => classesFeedback.containsKey(element.id))
+                ?.toSet(),
+            done: true,
+          ),
       ],
     );
   }

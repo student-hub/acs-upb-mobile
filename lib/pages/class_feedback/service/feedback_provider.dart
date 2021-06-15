@@ -205,7 +205,10 @@ class FeedbackProvider with ChangeNotifier {
     try {
       final DocumentSnapshot snap =
           await FirebaseFirestore.instance.collection('users').doc(uid).get();
-      return Map<String, bool>.from(snap.data()['classesFeedback']);
+      if (snap.data()['classesFeedback'] != null) {
+        return Map<String, bool>.from(snap.data()['classesFeedback']);
+      }
+      return null;
     } catch (e) {
       AppToast.show(S.current.errorSomethingWentWrong);
       return null;
@@ -219,13 +222,15 @@ class FeedbackProvider with ChangeNotifier {
           await getProvidedFeedbackClasses(uid);
       String feedbackFormsLeft;
 
-      if (userClasses != null) {
+      if (userClasses != null && classesFeedbackCompleted != null) {
         feedbackFormsLeft = userClasses
             .where(
                 (element) => !classesFeedbackCompleted.containsKey(element.id))
             .toSet()
             .length
             .toString();
+      } else if (userClasses != null && classesFeedbackCompleted == null) {
+        feedbackFormsLeft = userClasses.length.toString();
       }
 
       return feedbackFormsLeft;
