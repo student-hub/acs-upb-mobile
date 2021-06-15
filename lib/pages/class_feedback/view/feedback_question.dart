@@ -47,16 +47,21 @@ class _FeedbackQuestionFormFieldState extends State<FeedbackQuestionFormField> {
                 onTap: () => showDialog(
                   context: context,
                   builder: (context) => Dialog(
-                      child: Padding(
-                    padding: const EdgeInsets.all(10),
-                    child: TextFormField(
-                      keyboardType: TextInputType.number,
-                      initialValue:
-                          widget.question.answer ?? defaultVal.toString(),
-                      onChanged: (value) => setState(
-                          () => widget.question.answer = value ?? defaultVal),
+                    child: Padding(
+                      padding: const EdgeInsets.all(10),
+                      child: TextFormField(
+                        keyboardType: TextInputType.number,
+                        initialValue:
+                            widget.question.answer ?? defaultVal.toString(),
+                        onChanged: (value) {
+                          if (int.parse(value) >= 1 && int.parse(value) <= 10) {
+                            setState(() =>
+                                widget.question.answer = value ?? defaultVal);
+                          }
+                        },
+                      ),
                     ),
-                  )),
+                  ),
                 ),
                 child: Text(
                   (double.tryParse(widget.question.answer ?? '') ?? defaultVal)
