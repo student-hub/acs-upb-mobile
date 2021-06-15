@@ -148,10 +148,12 @@ class FeedbackProvider with ChangeNotifier {
       bool responseAddedSuccessfully, userSubmittedFeedbackSuccessfully;
       for (var i = 0; i < feedbackQuestions.length; i++) {
         if (feedbackQuestions[i.toString()] == null) {
-          print('Question does not exist, skipping...');
+          print('Question ${i.toString()} does not exist, skipping...');
           continue;
         }
-
+        if ([null, '-1', ''].contains(feedbackQuestions[i.toString()].answer)) {
+          continue;
+        }
         responseAddedSuccessfully = false;
 
         final response = FeedbackAnswer(
@@ -168,7 +170,10 @@ class FeedbackProvider with ChangeNotifier {
 
       userSubmittedFeedbackSuccessfully =
           await _setUserSubmittedFeedbackForClass(uid, className);
-      if (responseAddedSuccessfully && userSubmittedFeedbackSuccessfully) {
+      if ((responseAddedSuccessfully ??
+              true && userSubmittedFeedbackSuccessfully ??
+              true) ||
+          (responseAddedSuccessfully && userSubmittedFeedbackSuccessfully)) {
         return true;
       }
       return false;
