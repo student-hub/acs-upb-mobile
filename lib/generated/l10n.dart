@@ -14,22 +14,22 @@ import 'intl/messages_all.dart';
 
 class S {
   S();
-
+  
   static S current;
-
+  
   static const AppLocalizationDelegate delegate =
     AppLocalizationDelegate();
 
   static Future<S> load(Locale locale) {
     final name = (locale.countryCode?.isEmpty ?? false) ? locale.languageCode : locale.toString();
-    final localeName = Intl.canonicalizedLocale(name);
+    final localeName = Intl.canonicalizedLocale(name); 
     return initializeMessages(localeName).then((_) {
       Intl.defaultLocale = localeName;
       S.current = S();
-
+      
       return S.current;
     });
-  }
+  } 
 
   static S of(BuildContext context) {
     return Localizations.of<S>(context, S);
@@ -355,16 +355,6 @@ class S {
     );
   }
 
-  /// `Assistant`
-  String get labelAssistant {
-    return Intl.message(
-      'Assistant',
-      name: 'labelAssistant',
-      desc: '',
-      args: [],
-    );
-  }
-
   /// `Year`
   String get labelYear {
     return Intl.message(
@@ -460,16 +450,6 @@ class S {
     return Intl.message(
       'consent for editing rights',
       name: 'labelPermissionsConsent',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `feedback policy`
-  String get labelFeedbackPolicy {
-    return Intl.message(
-      'feedback policy',
-      name: 'labelFeedbackPolicy',
       desc: '',
       args: [],
     );
@@ -1265,26 +1245,6 @@ class S {
     );
   }
 
-  /// `Answer cannot be empty.`
-  String get errorAnswerCannotBeEmpty {
-    return Intl.message(
-      'Answer cannot be empty.',
-      name: 'errorAnswerCannotBeEmpty',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `The answer you entered is incorrect.`
-  String get errorAnswerIncorrect {
-    return Intl.message(
-      'The answer you entered is incorrect.',
-      name: 'errorAnswerIncorrect',
-      desc: '',
-      args: [],
-    );
-  }
-
   /// `Please select a picture that is less than 5MB.`
   String get errorPictureSizeToBig {
     return Intl.message(
@@ -1615,16 +1575,6 @@ class S {
     );
   }
 
-  /// `You need to select your assistant for this class.`
-  String get warningYouNeedToSelectAssistant {
-    return Intl.message(
-      'You need to select your assistant for this class.',
-      name: 'warningYouNeedToSelectAssistant',
-      desc: '',
-      args: [],
-    );
-  }
-
   /// `Could not read favourite websites.`
   String get warningFavouriteWebsitesInitializationFailed {
     return Intl.message(
@@ -1790,16 +1740,6 @@ class S {
     return Intl.message(
       'Class information',
       name: 'navigationClassInfo',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Review`
-  String get navigationClassFeedback {
-    return Intl.message(
-      'Review',
-      name: 'navigationClassFeedback',
       desc: '',
       args: [],
     );
