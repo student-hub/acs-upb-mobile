@@ -462,6 +462,50 @@ Future<void> main() async {
     when(mockFeedbackProvider.countClassesWithoutFeedback(any, any))
         .thenAnswer((_) => Future.value('2'));
 
+    mockFeedbackProvider = MockFeedbackProvider();
+    // ignore: invalid_use_of_protected_member
+    when(mockFeedbackProvider.hasListeners).thenReturn(true);
+    when(mockFeedbackProvider.fetchQuestions()).thenAnswer((_) => Future.value({
+          '0': FeedbackQuestionDropdown(
+            category: 'involvement',
+            question:
+                'Approximate number of activities that you attended (lectures + applications):',
+            id: '0',
+            answerOptions: ['option 1', 'option 2', 'option 3', 'option 4'],
+          ),
+          '1': FeedbackQuestionRating(
+            category: 'applications',
+            question: 'Was the exposure method appropriate?',
+            id: '1',
+          ),
+          '2': FeedbackQuestionText(
+            category: 'personal',
+            question: 'What are the positive aspects of this class?',
+            id: '2',
+          ),
+          '3': FeedbackQuestionSlider(
+            category: 'homework',
+            question:
+                'Estimate the average number of hours per week devoted to solving homework.',
+            id: '3',
+          ),
+        }));
+    when(mockFeedbackProvider.fetchCategories())
+        .thenAnswer((_) => Future.value({
+              'applications': {'en': 'Applications', 'ro': 'Aplicații'},
+              'homework': {'en': 'Homework', 'ro': 'Temă'},
+              'involvement': {'en': 'Involvement', 'ro': 'Implicare'},
+              'personal': {
+                'en': 'Personal comments',
+                'ro': 'Comentarii personale'
+              },
+            }));
+
+    when(mockFeedbackProvider.userSubmittedFeedbackForClass(any, any))
+        .thenAnswer((_) => Future.value(false));
+    when(mockFeedbackProvider.submitFeedback(any, any, any, any, any))
+        .thenAnswer((_) => Future.value(true));
+
     mockQuestionProvider = MockQuestionProvider();
     // ignore: invalid_use_of_protected_member
     when(mockQuestionProvider.hasListeners).thenReturn(false);
