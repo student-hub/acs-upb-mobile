@@ -64,7 +64,7 @@ class _ClassesPageState extends State<ClassesPage> {
       actions: [
         if (RemoteConfigService.feedbackEnabled)
           AppScaffoldAction(
-            icon: Icons.format_list_numbered_outlined,
+            icon: Icons.rate_review_outlined,
             tooltip: S.current.navigationClassesFeedbackChecklist,
             onPressed: () => Navigator.of(context).push(
               MaterialPageRoute<ClassFeedbackChecklist>(
