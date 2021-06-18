@@ -128,7 +128,7 @@ class FeedbackClassListItem extends StatelessWidget {
   final ClassHeader classHeader;
   final bool done;
 
-  void onPress(BuildContext context) {
+  void onTap(BuildContext context) {
     if (!done) {
       Navigator.of(context).push(
         MaterialPageRoute<ChangeNotifierProvider>(
@@ -148,7 +148,7 @@ class FeedbackClassListItem extends StatelessWidget {
     return ListTile(
       leading: Checkbox(
         value: done,
-        onChanged: (_) => onPress(context),
+        onChanged: (_) => onTap(context),
         activeColor: Colors.grey,
       ),
       title: Text(
@@ -159,7 +159,7 @@ class FeedbackClassListItem extends StatelessWidget {
                 color: Theme.of(context).disabledColor)
             : Theme.of(context).textTheme.subtitle1,
       ),
-      onTap: () => onPress(context),
+      onTap: () => onTap(context),
     );
   }
 }
