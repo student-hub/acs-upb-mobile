@@ -31,7 +31,7 @@ class _ClassFeedbackChecklistState extends State<ClassFeedbackChecklist> {
     final feedbackProvider = Provider.of<FeedbackProvider>(context);
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
     await feedbackProvider
-        .getProvidedFeedbackClasses(authProvider.uid)
+        .getClassesWithCompletedFeedback(authProvider.uid)
         .then((value) => {
               if (mounted) setState(() => classesFeedback = value),
             });

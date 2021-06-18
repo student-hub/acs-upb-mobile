@@ -201,7 +201,7 @@ class FeedbackProvider with ChangeNotifier {
     }
   }
 
-  Future<Map<String, bool>> getProvidedFeedbackClasses(String uid) async {
+  Future<Map<String, bool>> getClassesWithCompletedFeedback(String uid) async {
     try {
       final DocumentSnapshot snap =
           await FirebaseFirestore.instance.collection('users').doc(uid).get();
@@ -219,7 +219,7 @@ class FeedbackProvider with ChangeNotifier {
       String uid, Set<ClassHeader> userClasses) async {
     try {
       final Map<String, bool> classesFeedbackCompleted =
-          await getProvidedFeedbackClasses(uid);
+          await getClassesWithCompletedFeedback(uid);
       String feedbackFormsLeft;
 
       if (userClasses != null && classesFeedbackCompleted != null) {

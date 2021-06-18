@@ -19,7 +19,7 @@ class _FeedbackNudgeState extends State<FeedbackNudge> {
   String feedbackFormsLeft;
 
   // TODO(AndreiMirciu): Find a better approach on how to calculate the number of feedback forms that need to be completed
-  Future<void> getUserClasses() async {
+  Future<void> fetchInfo() async {
     final ClassProvider classProvider =
         Provider.of<ClassProvider>(context, listen: false);
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
@@ -30,7 +30,7 @@ class _FeedbackNudgeState extends State<FeedbackNudge> {
       if (mounted) setState(() => userClasses = value.toSet());
     });
     await feedbackProvider
-        .getProvidedFeedbackClasses(authProvider.uid)
+        .getClassesWithCompletedFeedback(authProvider.uid)
         .then((value) {
       if (mounted) setState(() => userClassesFeedbackProvided = value);
     });
@@ -45,7 +45,7 @@ class _FeedbackNudgeState extends State<FeedbackNudge> {
   @override
   void initState() {
     super.initState();
-    getUserClasses();
+    fetchInfo();
   }
 
   @override

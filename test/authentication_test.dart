@@ -131,7 +131,7 @@ void main() {
     when(mockFeedbackProvider.hasListeners).thenReturn(true);
     when(mockFeedbackProvider.userSubmittedFeedbackForClass(any, any))
         .thenAnswer((_) => Future.value(false));
-    when(mockFeedbackProvider.getProvidedFeedbackClasses(any))
+    when(mockFeedbackProvider.getClassesWithCompletedFeedback(any))
         .thenAnswer((_) => Future.value({'M1': true, 'M2': true}));
 
     mockClassProvider = MockClassProvider();
