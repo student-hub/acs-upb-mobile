@@ -249,7 +249,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "sectionEventsComingUp" : MessageLookupByLibrary.simpleMessage("Events coming up"),
     "sectionFAQ" : MessageLookupByLibrary.simpleMessage("FAQ"),
     "sectionFeedbackCompleted" : MessageLookupByLibrary.simpleMessage("Feedback completed"),
-    "sectionFeedbackToComplete" : MessageLookupByLibrary.simpleMessage("Feedback to complete"),
+    "sectionFeedbackNeeded" : MessageLookupByLibrary.simpleMessage("Feedback needed"),
     "sectionFrequentlyAccessedWebsites" : MessageLookupByLibrary.simpleMessage("Favourite websites"),
     "sectionGrading" : MessageLookupByLibrary.simpleMessage("Grading"),
     "sectionShortcuts" : MessageLookupByLibrary.simpleMessage("Shortcuts"),

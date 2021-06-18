@@ -615,11 +615,11 @@ class S {
     );
   }
 
-  /// `Feedback to complete`
-  String get sectionFeedbackToComplete {
+  /// `Feedback needed`
+  String get sectionFeedbackNeeded {
     return Intl.message(
-      'Feedback to complete',
-      name: 'sectionFeedbackToComplete',
+      'Feedback needed',
+      name: 'sectionFeedbackNeeded',
       desc: '',
       args: [],
     );
