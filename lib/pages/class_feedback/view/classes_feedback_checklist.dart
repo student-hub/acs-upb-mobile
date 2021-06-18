@@ -22,11 +22,6 @@ class ClassFeedbackChecklist extends StatefulWidget {
 class _ClassFeedbackChecklistState extends State<ClassFeedbackChecklist> {
   Map<String, dynamic> classesFeedback = {};
 
-  @override
-  void initState() {
-    super.initState();
-  }
-
   Future<void> fetchFeedbackProvided() async {
     final feedbackProvider = Provider.of<FeedbackProvider>(context);
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
