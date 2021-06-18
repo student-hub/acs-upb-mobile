@@ -114,11 +114,8 @@ class FeedbackClassList extends StatelessWidget {
     return Column(
         children: classes
             .map(
-              (classHeader) => Column(
-                children: [
+              (classHeader) =>
                   FeedbackClassListItem(classHeader: classHeader, done: done),
-                ],
-              ),
             )
             .toList());
   }
