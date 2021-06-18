@@ -25,11 +25,9 @@ class _ClassFeedbackChecklistState extends State<ClassFeedbackChecklist> {
   Future<void> fetchCompletedFeedback() async {
     final feedbackProvider = Provider.of<FeedbackProvider>(context);
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
-    await feedbackProvider
-        .getClassesWithCompletedFeedback(authProvider.uid)
-        .then((value) => {
-              if (mounted) setState(() => classesFeedback = value),
-            });
+    classesFeedback = await feedbackProvider
+        .getClassesWithCompletedFeedback(authProvider.uid);
+    if (mounted) setState(() {});
   }
 
   Widget checklistPage() {

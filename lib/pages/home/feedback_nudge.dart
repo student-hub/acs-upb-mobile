@@ -26,20 +26,14 @@ class _FeedbackNudgeState extends State<FeedbackNudge> {
     final feedbackProvider =
         Provider.of<FeedbackProvider>(context, listen: false);
 
-    await classProvider.fetchClassHeaders(uid: authProvider.uid).then((value) {
-      if (mounted) setState(() => userClasses = value.toSet());
-    });
-    await feedbackProvider
-        .getClassesWithCompletedFeedback(authProvider.uid)
-        .then((value) {
-      if (mounted) setState(() => userClassesFeedbackProvided = value);
-    });
+    userClasses =
+        (await classProvider.fetchClassHeaders(uid: authProvider.uid)).toSet();
+    userClassesFeedbackProvided = await feedbackProvider
+        .getClassesWithCompletedFeedback(authProvider.uid);
+    feedbackFormsLeft = await feedbackProvider.countClassesWithoutFeedback(
+        authProvider.uid, userClasses);
 
-    await feedbackProvider
-        .countClassesWithoutFeedback(authProvider.uid, userClasses)
-        .then((value) {
-      if (mounted) setState(() => feedbackFormsLeft = value);
-    });
+    if (mounted) setState(() {});
   }
 
   @override
