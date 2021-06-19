@@ -39,7 +39,7 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar>
       const TimetablePage(), // Cannot preserve state with PageStorageKey
       const PortalPage(key: PageStorageKey('Portal')),
       const PeoplePage(key: PageStorageKey('People')),
-      const CampusMap3D(),
+      const CampusMap3D(key: PageStorageKey('Map')),
     ];
   }
 
@@ -56,7 +56,13 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar>
       initialIndex: widget.tabIndex,
       child: Scaffold(
         body: PageStorage(
-          child: TabBarView(controller: tabController, children: tabs),
+          child: TabBarView(
+            physics: tabController.index == 4
+                ? const NeverScrollableScrollPhysics()
+                : const ClampingScrollPhysics(),
+            controller: tabController,
+            children: tabs,
+          ),
           bucket: bucket,
         ),
         bottomNavigationBar: SafeArea(
