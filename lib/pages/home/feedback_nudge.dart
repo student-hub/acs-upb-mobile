@@ -66,12 +66,14 @@ class _FeedbackNudgeState extends State<FeedbackNudge> {
                   S.current.messageFeedbackLeft(feedbackFormsLeft),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(fontWeight: FontWeight.bold),
+                  style: const TextStyle(
+                      color: Colors.white, fontWeight: FontWeight.bold),
                 ),
               ),
               Icon(
                 Icons.arrow_forward_ios_outlined,
                 size: Theme.of(context).textTheme.subtitle2.fontSize,
+                color: Colors.white,
               ),
             ],
           ),
