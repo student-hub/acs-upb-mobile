@@ -62,6 +62,7 @@ class _FeedbackNudgeState extends State<FeedbackNudge> {
           label: Row(
             children: [
               Expanded(
+                // TODO(AndreiMirciu): Fix text wrapping property for both languages
                 child: Text(
                   S.current.messageFeedbackLeft(feedbackFormsLeft),
                   maxLines: 2,
