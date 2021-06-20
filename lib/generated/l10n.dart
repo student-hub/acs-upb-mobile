@@ -2636,10 +2636,10 @@ class S {
   }
 
   /// `You need to complete {number} more feedback forms!`
-  String messageReviewsLeft(Object number) {
+  String messageFeedbackLeft(Object number) {
     return Intl.message(
       'You need to complete $number more feedback forms!',
-      name: 'messageReviewsLeft',
+      name: 'messageFeedbackLeft',
       desc: '',
       args: [number],
     );

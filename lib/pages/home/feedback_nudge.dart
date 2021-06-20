@@ -63,7 +63,7 @@ class _FeedbackNudgeState extends State<FeedbackNudge> {
             children: [
               Expanded(
                 child: Text(
-                  S.current.messageReviewsLeft(feedbackFormsLeft),
+                  S.current.messageFeedbackLeft(feedbackFormsLeft),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(fontWeight: FontWeight.bold),
