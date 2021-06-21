@@ -2,9 +2,9 @@
   "name": "acs-upb-mobile",
   "version": "1.0.0",
   "bugs": {
-    "url": "https://github.com/acs-upb-mobile/acs-upb-mobile/issues"
+    "url": "https://github.com/student-hub/acs-upb-mobile/issues"
   },
-  "homepage": "https://github.com/acs-upb-mobile/acs-upb-mobile#readme",
+  "homepage": "https://github.com/student-hub/acs-upb-mobile#readme",
   "dependencies": {
     "@textlint-rule/textlint-rule-no-unmatched-pair": "^1.0.7",
     "@textlint-rule/textlint-rule-proselint": "^1.0.1",
