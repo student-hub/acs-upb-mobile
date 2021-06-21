@@ -201,14 +201,6 @@ class FeedbackProvider with ChangeNotifier {
     }
   }
 
-  Future<Map<String, bool>> getClassesWithCompletedFeedback(String uid) async {
-    try {
-      final DocumentSnapshot snap =
-          await FirebaseFirestore.instance.collection('users').doc(uid).get();
-      if (snap.data()['classesFeedback'] != null) {
-        return Map<String, bool>.from(snap.data()['classesFeedback']);
-      }
-      return null;
   Future<int> getNumberOfResponses(String className) async {
     try {
       final QuerySnapshot querySnapshot = await FirebaseFirestore.instance
@@ -219,6 +211,20 @@ class FeedbackProvider with ChangeNotifier {
           .get();
       final numberOfResponses = querySnapshot.docs.length;
       return numberOfResponses;
+    } catch (e) {
+      AppToast.show(S.current.errorSomethingWentWrong);
+      return null;
+    }
+  }
+
+  Future<Map<String, bool>> getClassesWithCompletedFeedback(String uid) async {
+    try {
+      final DocumentSnapshot snap =
+          await FirebaseFirestore.instance.collection('users').doc(uid).get();
+      if (snap.data()['classesFeedback'] != null) {
+        return Map<String, bool>.from(snap.data()['classesFeedback']);
+      }
+      return null;
     } catch (e) {
       AppToast.show(S.current.errorSomethingWentWrong);
       return null;
@@ -244,7 +250,13 @@ class FeedbackProvider with ChangeNotifier {
       }
 
       return feedbackFormsLeft;
-  Future<Map<String, String>> getGradeAndHoursCorrelation(
+    } catch (e) {
+      AppToast.show(S.current.errorSomethingWentWrong);
+      return null;
+    }
+  }
+
+/*Future<Map<String, String>> getGradeAndHoursCorrelation(
       String className) async {
     try {
       final QuerySnapshot querySnapshot = await FirebaseFirestore.instance
@@ -253,10 +265,11 @@ class FeedbackProvider with ChangeNotifier {
           .collection('1')
           .where('class', isEqualTo: className)
           .get();
-      final grades = querySnapshot.docs.where((element) => element['answer']).;
+      final grades = querySnapshot.docs.where((element) => element['answer'])
+    .;
     } catch (e) {
-      AppToast.show(S.current.errorSomethingWentWrong);
-      return null;
+    AppToast.show(S.current.errorSomethingWentWrong);
+    return null;
     }
-  }
+  }*/
 }

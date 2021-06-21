@@ -1745,10 +1745,10 @@ class S {
     );
   }
 
-  /// `Review`
+  /// `Feedback`
   String get navigationClassFeedback {
     return Intl.message(
-      'Review',
+      'Feedback',
       name: 'navigationClassFeedback',
       desc: '',
       args: [],
@@ -2525,16 +2525,6 @@ class S {
     );
   }
 
-  /// `The review has been sent successfully.`
-  String get messageFeedbackHasBeenSent {
-    return Intl.message(
-      'The review has been sent successfully.',
-      name: 'messageFeedbackHasBeenSent',
-      desc: '',
-      args: [],
-    );
-  }
-
   /// `You have already submitted a request. If you want to add another one, please press 'Send'.`
   String get messageRequestAlreadyExists {
     return Intl.message(
@@ -2652,6 +2642,16 @@ class S {
       name: 'messageFeedbackLeft',
       desc: '',
       args: [number],
+    );
+  }
+
+  /// `Feedback has been sent successfully.`
+  String get messageFeedbackHasBeenSent {
+    return Intl.message(
+      'Feedback has been sent successfully.',
+      name: 'messageFeedbackHasBeenSent',
+      desc: '',
+      args: [],
     );
   }
 

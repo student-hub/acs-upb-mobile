@@ -180,7 +180,6 @@
   "navigationClassInfo": "Class information",
   "navigationClassFeedback": "Feedback",
   "navigationClassesFeedbackChecklist": "Feedback checklist",
-  "navigationClassFeedback": "Review",
   "navigationStatistics": "Statistics",
 
   "filterMenuShowAll": "Show all",
@@ -264,7 +263,6 @@
   "messageButtonAbove": "button above",
   "messageAskPermissionToEdit": "Why do you want edit permissions for {appName}?",
   "messageRequestHasBeenSent": "The request has been sent successfully.",
-  "messageFeedbackHasBeenSent": "The review has been sent successfully.",
   "messageRequestAlreadyExists": "You have already submitted a request. If you want to add another one, please press 'Send'.",
   "messageIAgreeToThe": "I agree to the ",
   "messageEditProfileSuccess": "Profile updated successfully.",
@@ -277,6 +275,7 @@
   "messageThereAreNoEventsForSelected": "There are no events for the selected ",
   "messagePictureUpdatedSuccess": "Profile picture updated successfully.",
   "messageFeedbackLeft": "You need to complete {number} more feedback forms!",
+  "messageFeedbackHasBeenSent": "Feedback has been sent successfully.",
 
   "infoPasswordResetEmailSent": "Please check your inbox for the password reset e-mail.",
   "infoRelevance": "Try to choose the most restrictive category.",

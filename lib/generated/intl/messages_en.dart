@@ -205,7 +205,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "messageEventAdded" : MessageLookupByLibrary.simpleMessage("Event added successfully."),
     "messageEventDeleted" : MessageLookupByLibrary.simpleMessage("Event deleted successfully."),
     "messageEventEdited" : MessageLookupByLibrary.simpleMessage("Event modified successfully."),
-    "messageFeedbackHasBeenSent" : MessageLookupByLibrary.simpleMessage("The review has been sent successfully."),
+    "messageFeedbackHasBeenSent" : MessageLookupByLibrary.simpleMessage("Feedback has been sent successfully."),
     "messageFeedbackLeft" : m9,
     "messageGetStartedByPressing" : MessageLookupByLibrary.simpleMessage("Get started by pressing the"),
     "messageIAgreeToThe" : MessageLookupByLibrary.simpleMessage("I agree to the "),
