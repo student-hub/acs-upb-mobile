@@ -10,6 +10,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
+import 'package:acs_upb_mobile/pages/classes/model/class.dart';
 
 extension ClassFeedbackAnswerExtension on FeedbackAnswer {
   Map<String, dynamic> toData() {
@@ -148,10 +149,12 @@ class FeedbackProvider with ChangeNotifier {
       bool responseAddedSuccessfully, userSubmittedFeedbackSuccessfully;
       for (var i = 0; i < feedbackQuestions.length; i++) {
         if (feedbackQuestions[i.toString()] == null) {
-          print('Question does not exist, skipping...');
+          print('Question ${i.toString()} does not exist, skipping...');
           continue;
         }
-
+        if ([null, '-1', ''].contains(feedbackQuestions[i.toString()].answer)) {
+          continue;
+        }
         responseAddedSuccessfully = false;
 
         final response = FeedbackAnswer(
@@ -168,7 +171,11 @@ class FeedbackProvider with ChangeNotifier {
 
       userSubmittedFeedbackSuccessfully =
           await _setUserSubmittedFeedbackForClass(uid, className);
-      if (responseAddedSuccessfully && userSubmittedFeedbackSuccessfully) {
+      if ((responseAddedSuccessfully ??
+              true && userSubmittedFeedbackSuccessfully ??
+              true) ||
+          (responseAddedSuccessfully && userSubmittedFeedbackSuccessfully)) {
+        notifyListeners();
         return true;
       }
       return false;
@@ -194,6 +201,14 @@ class FeedbackProvider with ChangeNotifier {
     }
   }
 
+  Future<Map<String, bool>> getClassesWithCompletedFeedback(String uid) async {
+    try {
+      final DocumentSnapshot snap =
+          await FirebaseFirestore.instance.collection('users').doc(uid).get();
+      if (snap.data()['classesFeedback'] != null) {
+        return Map<String, bool>.from(snap.data()['classesFeedback']);
+      }
+      return null;
   Future<int> getNumberOfResponses(String className) async {
     try {
       final QuerySnapshot querySnapshot = await FirebaseFirestore.instance
@@ -210,6 +225,25 @@ class FeedbackProvider with ChangeNotifier {
     }
   }
 
+  Future<String> countClassesWithoutFeedback(
+      String uid, Set<ClassHeader> userClasses) async {
+    try {
+      final Map<String, bool> classesFeedbackCompleted =
+          await getClassesWithCompletedFeedback(uid);
+      String feedbackFormsLeft;
+
+      if (userClasses != null && classesFeedbackCompleted != null) {
+        feedbackFormsLeft = userClasses
+            .where(
+                (element) => !classesFeedbackCompleted.containsKey(element.id))
+            .toSet()
+            .length
+            .toString();
+      } else if (userClasses != null && classesFeedbackCompleted == null) {
+        feedbackFormsLeft = userClasses.length.toString();
+      }
+
+      return feedbackFormsLeft;
   Future<Map<String, String>> getGradeAndHoursCorrelation(
       String className) async {
     try {

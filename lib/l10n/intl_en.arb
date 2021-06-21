@@ -59,6 +59,8 @@
   "sectionEventsComingUp": "Events coming up",
   "sectionFAQ": "FAQ",
   "sectionGrading": "Grading",
+  "sectionFeedbackNeeded": "Feedback needed",
+  "sectionFeedbackCompleted": "Feedback completed",
 
   "shortcutTypeMain": "Main page",
   "shortcutTypeClassbook": "Classbook",
@@ -176,6 +178,8 @@
   "navigationEventDetails": "Event details",
   "navigationNewsFeed": "News feed",
   "navigationClassInfo": "Class information",
+  "navigationClassFeedback": "Feedback",
+  "navigationClassesFeedbackChecklist": "Feedback checklist",
   "navigationClassFeedback": "Review",
   "navigationStatistics": "Statistics",
 
@@ -272,6 +276,7 @@
   "messageYouCanContribute": "You can contribute to the app data, but you first need to request permissions.",
   "messageThereAreNoEventsForSelected": "There are no events for the selected ",
   "messagePictureUpdatedSuccess": "Profile picture updated successfully.",
+  "messageFeedbackLeft": "You need to complete {number} more feedback forms!",
 
   "infoPasswordResetEmailSent": "Please check your inbox for the password reset e-mail.",
   "infoRelevance": "Try to choose the most restrictive category.",

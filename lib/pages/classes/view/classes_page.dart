@@ -1,5 +1,6 @@
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
+import 'package:acs_upb_mobile/pages/class_feedback/view/class_feedback_checklist.dart';
 import 'package:acs_upb_mobile/pages/classes/model/class.dart';
 import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
 import 'package:acs_upb_mobile/pages/classes/view/class_view.dart';
@@ -11,6 +12,7 @@ import 'package:acs_upb_mobile/widgets/spoiler.dart';
 import 'package:flutter/material.dart';
 import 'package:pedantic/pedantic.dart';
 import 'package:provider/provider.dart';
+import 'package:acs_upb_mobile/resources/remote_config.dart';
 
 class ClassesPage extends StatefulWidget {
   const ClassesPage({Key key}) : super(key: key);
@@ -60,6 +62,16 @@ class _ClassesPageState extends State<ClassesPage> {
       // TODO(IoanaAlexandru): Simply show all classes if user is not authenticated
       needsToBeAuthenticated: true,
       actions: [
+        if (RemoteConfigService.feedbackEnabled)
+          AppScaffoldAction(
+            icon: Icons.rate_review_outlined,
+            tooltip: S.current.navigationClassesFeedbackChecklist,
+            onPressed: () => Navigator.of(context).push(
+              MaterialPageRoute<ClassFeedbackChecklist>(
+                builder: (_) => ClassFeedbackChecklist(classes: headers),
+              ),
+            ),
+          ),
         AppScaffoldAction(
           icon: Icons.edit_outlined,
           tooltip: S.current.actionChooseClasses,

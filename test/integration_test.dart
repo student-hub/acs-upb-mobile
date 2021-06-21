@@ -46,7 +46,7 @@ import 'package:acs_upb_mobile/pages/timetable/view/events/event_view.dart';
 import 'package:acs_upb_mobile/pages/timetable/view/timetable_page.dart';
 import 'package:acs_upb_mobile/resources/locale_provider.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
-import 'package:acs_upb_mobile/widgets/feedback_question.dart';
+import 'package:acs_upb_mobile/pages/class_feedback/view/feedback_question.dart';
 import 'package:acs_upb_mobile/widgets/search_bar.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -457,6 +457,10 @@ Future<void> main() async {
         .thenAnswer((_) => Future.value(false));
     when(mockFeedbackProvider.submitFeedback(any, any, any, any, any))
         .thenAnswer((_) => Future.value(true));
+    when(mockFeedbackProvider.getClassesWithCompletedFeedback(any))
+        .thenAnswer((_) => Future.value({'M1': true, 'M2': true}));
+    when(mockFeedbackProvider.countClassesWithoutFeedback(any, any))
+        .thenAnswer((_) => Future.value('2'));
 
     mockQuestionProvider = MockQuestionProvider();
     // ignore: invalid_use_of_protected_member
@@ -1494,7 +1498,7 @@ Future<void> main() async {
 
         expect(find.byType(ClassFeedbackView), findsOneWidget);
 
-        await tester.tap(find.byType(Checkbox));
+        await tester.tap(find.byKey(const Key('AcknowledgementCheckbox')));
         await tester.pumpAndSettle();
 
         await tester.enterText(

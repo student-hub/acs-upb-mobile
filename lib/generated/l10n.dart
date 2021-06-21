@@ -615,6 +615,26 @@ class S {
     );
   }
 
+  /// `Feedback needed`
+  String get sectionFeedbackNeeded {
+    return Intl.message(
+      'Feedback needed',
+      name: 'sectionFeedbackNeeded',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Feedback completed`
+  String get sectionFeedbackCompleted {
+    return Intl.message(
+      'Feedback completed',
+      name: 'sectionFeedbackCompleted',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Main page`
   String get shortcutTypeMain {
     return Intl.message(
@@ -1735,6 +1755,16 @@ class S {
     );
   }
 
+  /// `Feedback checklist`
+  String get navigationClassesFeedbackChecklist {
+    return Intl.message(
+      'Feedback checklist',
+      name: 'navigationClassesFeedbackChecklist',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Statistics`
   String get navigationStatistics {
     return Intl.message(
@@ -2612,6 +2642,16 @@ class S {
       name: 'messagePictureUpdatedSuccess',
       desc: '',
       args: [],
+    );
+  }
+
+  /// `You need to complete {number} more feedback forms!`
+  String messageFeedbackLeft(Object number) {
+    return Intl.message(
+      'You need to complete $number more feedback forms!',
+      name: 'messageFeedbackLeft',
+      desc: '',
+      args: [number],
     );
   }
 

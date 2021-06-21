@@ -2,12 +2,12 @@ import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/service/feedback_provider.dart';
+import 'package:acs_upb_mobile/pages/class_feedback/view/feedback_question.dart';
 import 'package:acs_upb_mobile/pages/classes/model/class.dart';
 import 'package:acs_upb_mobile/pages/people/model/person.dart';
 import 'package:acs_upb_mobile/pages/people/service/person_provider.dart';
 import 'package:acs_upb_mobile/pages/people/view/people_page.dart';
 import 'package:acs_upb_mobile/resources/locale_provider.dart';
-import 'package:acs_upb_mobile/widgets/feedback_question.dart';
 import 'package:acs_upb_mobile/widgets/icon_text.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
@@ -133,6 +133,7 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Checkbox(
+            key: const Key('AcknowledgementCheckbox'),
             value: agreedToResponsibilities,
             visualDensity: VisualDensity.compact,
             onChanged: (value) =>
@@ -174,7 +175,7 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
       const SizedBox(height: 24),
     ];
 
-    for (final category in feedbackCategories.keys) {
+    for (final category in feedbackCategories.keys.toList()..sort()) {
       final List<Widget> categoryChildren = [
         categoryHeader(
             feedbackCategories[category][LocaleProvider.localeString])
