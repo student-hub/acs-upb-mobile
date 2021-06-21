@@ -256,20 +256,56 @@ class FeedbackProvider with ChangeNotifier {
     }
   }
 
-/*Future<Map<String, String>> getGradeAndHoursCorrelation(
+  Future<Map<int, List<int>>> getGradeAndHoursCorrelation(
       String className) async {
     try {
+      // extract grade from question 1
       final QuerySnapshot querySnapshot = await FirebaseFirestore.instance
           .collection('forms')
           .doc('class_feedback_answers')
           .collection('1')
           .where('class', isEqualTo: className)
           .get();
-      final grades = querySnapshot.docs.where((element) => element['answer'])
-    .;
+
+      // extract hours from question 15
+      final QuerySnapshot querySnapshot2 = await FirebaseFirestore.instance
+          .collection('forms')
+          .doc('class_feedback_answers')
+          .collection('15')
+          .where('class', isEqualTo: className)
+          .get();
+
+      final gradesDocs = querySnapshot.docs
+          .where((element) => element['answer'] != null)
+          .toList();
+      // list of grades (as int) achieved for a class
+      final grades = gradesDocs
+          .map((e) => double.parse(e.data()['answer']).toInt())
+          .toList();
+
+      final hoursDocs = querySnapshot2.docs
+          .where((element) => element['answer'] != null)
+          .toList();
+      // list of hours (as int) spent for a class
+      final hours = hoursDocs
+          .map((e) => double.parse(e.data()['answer']).toInt())
+          .toList();
+
+      //print('Grades: $grades');
+      //print('Hours: $hours');
+
+      Map<int, List<int>> correlation = {};
+      int idx = 0;
+      for (final elem in grades) {
+        if (correlation[elem] == null) correlation[elem] = [];
+        correlation[elem].add(hours[idx]);
+        idx += 1;
+      }
+      print(correlation);
+      return correlation;
     } catch (e) {
-    AppToast.show(S.current.errorSomethingWentWrong);
-    return null;
+      AppToast.show(S.current.errorSomethingWentWrong);
+      return null;
     }
-  }*/
+  }
 }

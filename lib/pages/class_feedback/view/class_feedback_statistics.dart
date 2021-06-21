@@ -3,6 +3,7 @@ import 'package:acs_upb_mobile/pages/class_feedback/view/statistics_details.dart
 import 'package:acs_upb_mobile/pages/classes/model/class.dart';
 import 'package:acs_upb_mobile/widgets/info_card.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
+import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -32,7 +33,7 @@ class _ClassFeedbackStatisticsState extends State<ClassFeedbackStatistics> {
   int touchedIndex = -1;
   static const double barWidth = 30;
 
-  Widget firstGraph() {
+  /*Widget firstGraph() {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(12),
@@ -61,13 +62,16 @@ class _ClassFeedbackStatisticsState extends State<ClassFeedbackStatistics> {
         ),
       ),
     );
-  }
+  }*/
 
   Widget barChart() {
-    final FeedbackProvider feedbackProvider = Provider.of<FeedbackProvider>(context);
+    final FeedbackProvider feedbackProvider =
+        Provider.of<FeedbackProvider>(context);
 
     return InfoCard(
-      future: feedbackProvider.getNumberOfResponses(widget.classHeader?.id),
+      padding: const EdgeInsets.all(0),
+      future:
+          feedbackProvider.getGradeAndHoursCorrelation(widget.classHeader?.id),
       onShowMore: () => Navigator.of(context).push(
           MaterialPageRoute<FeedbackStatisticsDetails>(
               builder: (_) => FeedbackStatisticsDetails())),
@@ -105,8 +109,12 @@ class _ClassFeedbackStatisticsState extends State<ClassFeedbackStatistics> {
                         return '';
                     }
                   },
-                  getTextStyles: (_) => const TextStyle(
+                  getTextStyles: (_) => TextStyle(
                     fontSize: 12,
+                    color:
+                        DynamicTheme.of(context).brightness == Brightness.dark
+                            ? Colors.white
+                            : Colors.black,
                   ),
                 ),
                 leftTitles: SideTitles(
@@ -117,8 +125,12 @@ class _ClassFeedbackStatisticsState extends State<ClassFeedbackStatistics> {
                   interval: 15,
                   margin: 8,
                   reservedSize: 15,
-                  getTextStyles: (_) => const TextStyle(
+                  getTextStyles: (_) => TextStyle(
                     fontSize: 12,
+                    color:
+                        DynamicTheme.of(context).brightness == Brightness.dark
+                            ? Colors.white
+                            : Colors.black,
                   ),
                 ),
               ),
@@ -145,8 +157,13 @@ class _ClassFeedbackStatisticsState extends State<ClassFeedbackStatistics> {
                   reservedSize: 15,
                   margin: 10,
                   showTitle: true,
-                  textStyle: const TextStyle(
+                  textStyle: TextStyle(
                     fontSize: 16,
+                    fontFamily: 'Montserrat',
+                    color:
+                        DynamicTheme.of(context).brightness == Brightness.dark
+                            ? Colors.white
+                            : Colors.black,
                   ),
                 ),
                 leftTitle: AxisTitle(
@@ -154,8 +171,13 @@ class _ClassFeedbackStatisticsState extends State<ClassFeedbackStatistics> {
                   reservedSize: 2,
                   margin: 10,
                   showTitle: true,
-                  textStyle: const TextStyle(
+                  textStyle: TextStyle(
                     fontSize: 16,
+                    fontFamily: 'Montserrat',
+                    color:
+                        DynamicTheme.of(context).brightness == Brightness.dark
+                            ? Colors.white
+                            : Colors.black,
                   ),
                 ),
               ),
@@ -239,128 +261,146 @@ class _ClassFeedbackStatisticsState extends State<ClassFeedbackStatistics> {
   }
 
   Widget scatterChart() {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(12),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Grade vs. hours worked correlation',
-              style:
-                  Theme.of(context).textTheme.headline6.copyWith(fontSize: 18),
-            ),
-            const SizedBox(height: 24),
-            Center(
-              child: ScatterChart(
-                ScatterChartData(
-                  scatterSpots: [
-                    ScatterSpot(
-                      4,
-                      4,
-                    ),
-                    ScatterSpot(
-                      2,
-                      5,
-                    ),
-                    ScatterSpot(
-                      4,
-                      5,
-                    ),
-                    ScatterSpot(
-                      8,
-                      6,
-                    ),
-                    ScatterSpot(
-                      5,
-                      7,
-                    ),
-                    ScatterSpot(
-                      7,
-                      2,
-                    ),
-                    ScatterSpot(
-                      3,
-                      2,
-                    ),
-                    ScatterSpot(
-                      2,
-                      8,
-                    ),
-                  ],
-                  minX: 1,
-                  maxX: 10,
-                  minY: 0,
-                  maxY: 10,
-                  borderData: FlBorderData(
-                    show: true,
+    final FeedbackProvider feedbackProvider =
+        Provider.of<FeedbackProvider>(context);
+
+    return FutureBuilder(
+      future:
+          feedbackProvider.getGradeAndHoursCorrelation(widget.classHeader?.id),
+      builder:
+          (BuildContext context, AsyncSnapshot<Map<int, List<int>>> snapshot) {
+        if (snapshot.hasData) {
+          final List<ScatterSpot> scatterSpots = [];
+          for (final key in snapshot.data.keys) {
+            for (final value in snapshot.data[key]) {
+              scatterSpots.add(ScatterSpot(key.toDouble(), value.toDouble(),
+                  color: Theme.of(context).accentColor));
+            }
+          }
+
+          return Card(
+            child: Padding(
+              padding: const EdgeInsets.all(12),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Grade vs. hours worked correlation',
+                    style: Theme.of(context)
+                        .textTheme
+                        .headline6
+                        .copyWith(fontSize: 18),
                   ),
-                  gridData: FlGridData(
-                    show: true,
-                    drawHorizontalLine: true,
-                    checkToShowHorizontalLine: (value) => true,
-                    getDrawingHorizontalLine: (value) =>
-                        FlLine(color: Colors.white.withOpacity(0.1)),
-                    drawVerticalLine: true,
-                    checkToShowVerticalLine: (value) => true,
-                    getDrawingVerticalLine: (value) =>
-                        FlLine(color: Colors.white.withOpacity(0.1)),
-                  ),
-                  titlesData: FlTitlesData(
-                    show: true,
-                    leftTitles: SideTitles(
-                      showTitles: true,
-                      reservedSize: 3,
-                      margin: 10,
-                      interval: 2,
-                      getTextStyles: (_) => const TextStyle(
-                        fontSize: 12,
+                  const SizedBox(height: 24),
+                  Center(
+                    child: ScatterChart(
+                      ScatterChartData(
+                        scatterSpots: scatterSpots,
+                        minX: 1,
+                        maxX: 10,
+                        minY: 0,
+                        maxY: 10,
+                        borderData: FlBorderData(
+                          show: true,
+                        ),
+                        gridData: FlGridData(
+                          show: true,
+                          drawHorizontalLine: true,
+                          checkToShowHorizontalLine: (value) => true,
+                          getDrawingHorizontalLine: (value) => FlLine(
+                              color: DynamicTheme.of(context).brightness ==
+                                      Brightness.dark
+                                  ? Colors.white.withOpacity(0.1)
+                                  : Colors.black.withOpacity(0.1)),
+                          drawVerticalLine: true,
+                          checkToShowVerticalLine: (value) => true,
+                          getDrawingVerticalLine: (value) => FlLine(
+                              color: DynamicTheme.of(context).brightness ==
+                                      Brightness.dark
+                                  ? Colors.white.withOpacity(0.1)
+                                  : Colors.black.withOpacity(0.1)),
+                        ),
+                        titlesData: FlTitlesData(
+                          show: true,
+                          leftTitles: SideTitles(
+                            showTitles: true,
+                            reservedSize: 3,
+                            margin: 10,
+                            interval: 2,
+                            getTextStyles: (_) => TextStyle(
+                              fontSize: 12,
+                              color: DynamicTheme.of(context).brightness ==
+                                      Brightness.dark
+                                  ? Colors.white
+                                  : Colors.black,
+                            ),
+                          ),
+                          bottomTitles: SideTitles(
+                            showTitles: true,
+                            reservedSize: 3,
+                            margin: 10,
+                            interval: 3,
+                            getTextStyles: (_) => TextStyle(
+                              fontSize: 12,
+                              color: DynamicTheme.of(context).brightness ==
+                                      Brightness.dark
+                                  ? Colors.white
+                                  : Colors.black,
+                            ),
+                          ),
+                        ),
+                        axisTitleData: FlAxisTitleData(
+                          bottomTitle: AxisTitle(
+                            titleText: 'Grade',
+                            reservedSize: 15,
+                            margin: 10,
+                            showTitle: true,
+                            textStyle: TextStyle(
+                              fontSize: 16,
+                              fontFamily: 'Montserrat',
+                              color: DynamicTheme.of(context).brightness ==
+                                      Brightness.dark
+                                  ? Colors.white
+                                  : Colors.black,
+                            ),
+                          ),
+                          leftTitle: AxisTitle(
+                            titleText: 'Hours worked',
+                            reservedSize: 2,
+                            margin: 10,
+                            showTitle: true,
+                            textStyle: TextStyle(
+                              fontSize: 16,
+                              fontFamily: 'Montserrat',
+                              color: DynamicTheme.of(context).brightness ==
+                                      Brightness.dark
+                                  ? Colors.white
+                                  : Colors.black,
+                            ),
+                          ),
+                        ),
+                        scatterTouchData: ScatterTouchData(
+                          enabled: false,
+                        ),
                       ),
                     ),
-                    bottomTitles: SideTitles(
-                      showTitles: true,
-                      reservedSize: 3,
-                      margin: 10,
-                      interval: 3,
-                      getTextStyles: (_) => const TextStyle(
-                        fontSize: 12,
-                      ),
-                    ),
                   ),
-                  axisTitleData: FlAxisTitleData(
-                    bottomTitle: AxisTitle(
-                      titleText: 'Grade',
-                      reservedSize: 15,
-                      margin: 10,
-                      showTitle: true,
-                      textStyle: const TextStyle(
-                        fontSize: 16,
-                      ),
-                    ),
-                    leftTitle: AxisTitle(
-                      titleText: 'Hours worked',
-                      reservedSize: 2,
-                      margin: 10,
-                      showTitle: true,
-                      textStyle: const TextStyle(
-                        fontSize: 16,
-                      ),
-                    ),
-                  ),
-                  scatterTouchData: ScatterTouchData(
-                    enabled: false,
-                  ),
-                ),
+                ],
               ),
             ),
-          ],
-        ),
-      ),
+          );
+        } else {
+          return const Center(child: CircularProgressIndicator());
+        }
+      },
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    final FeedbackProvider feedbackProvider =
+        Provider.of<FeedbackProvider>(context);
+
     return AppScaffold(
       title: Text(S.current.navigationStatistics),
       body: ListView(
@@ -384,12 +424,23 @@ class _ClassFeedbackStatisticsState extends State<ClassFeedbackStatistics> {
                           child: Column(
                             children: [
                               const SizedBox(height: 10),
-                              Icon(Icons.person_outline),
+                              const Icon(Icons.person_outline),
                               const SizedBox(height: 10),
-                              Text('Responses'),
+                              const Text('Responses'),
                               const SizedBox(height: 10),
-                              Text('93'),
-                              const SizedBox(height: 10),
+                              FutureBuilder(
+                                future: feedbackProvider.getNumberOfResponses(
+                                    widget.classHeader?.id),
+                                builder: (BuildContext context,
+                                    AsyncSnapshot<int> snapshot) {
+                                  if (snapshot.hasData) {
+                                    return Text(snapshot.data.toString());
+                                  } else {
+                                    return const Center(
+                                        child: CircularProgressIndicator());
+                                  }
+                                },
+                              )
                             ],
                           ),
                         ),
@@ -402,11 +453,11 @@ class _ClassFeedbackStatisticsState extends State<ClassFeedbackStatistics> {
                           child: Column(
                             children: [
                               const SizedBox(height: 10),
-                              Icon(FeatherIcons.bookOpen),
+                              const Icon(FeatherIcons.bookOpen),
                               const SizedBox(height: 10),
-                              Text('Score'),
+                              const Text('Score'),
                               const SizedBox(height: 10),
-                              Text('4.8/5'),
+                              const Text('4.8/5'),
                               const SizedBox(height: 10),
                             ],
                           ),
