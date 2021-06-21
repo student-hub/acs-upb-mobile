@@ -14,6 +14,7 @@
   "labelConfirmNewPassword": "Confirmare parolă nouă",
   "labelAskPermissions": "Cere permisiuni de editare",
   "labelAnswer": "Răspuns",
+  "labelAnswers": "Răspunsuri",
   "labelVersion": "Versiunea",
   "labelFirstName": "Prenume",
   "labelLastName": "Nume",
@@ -52,6 +53,10 @@
   "labelToday": "Astăzi",
   "labelTomorrow": "Mâine",
   "labelNow": "Acum",
+  "labelRating": "Evaluare",
+  "labelHoursWorked": "Ore lucrate",
+  "labelResponses": "Răspunsuri",
+  "labelScore": "Scor",
 
   "sectionShortcuts": "Scurtături",
   "sectionEvents": "Evenimente",
@@ -61,6 +66,7 @@
   "sectionGrading": "Punctaj",
   "sectionFeedbackNeeded": "Feedback necesar",
   "sectionFeedbackCompleted": "Feedback completat",
+  "sectionGradeVsHours": "Corelație între notă vs. numărul de ore lucrate",
 
   "shortcutTypeMain": "Pagina principală",
   "shortcutTypeClassbook": "Catalog",

@@ -75,7 +75,7 @@ class _ClassFeedbackStatisticsState extends State<ClassFeedbackStatistics> {
       onShowMore: () => Navigator.of(context).push(
           MaterialPageRoute<FeedbackStatisticsDetails>(
               builder: (_) => FeedbackStatisticsDetails())),
-      title: 'Lecture',
+      title: S.current.uniEventTypeLecture,
       builder: (_) => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -153,7 +153,7 @@ class _ClassFeedbackStatisticsState extends State<ClassFeedbackStatistics> {
               ),
               axisTitleData: FlAxisTitleData(
                 bottomTitle: AxisTitle(
-                  titleText: 'Rating',
+                  titleText: S.current.labelRating,
                   reservedSize: 15,
                   margin: 10,
                   showTitle: true,
@@ -167,7 +167,7 @@ class _ClassFeedbackStatisticsState extends State<ClassFeedbackStatistics> {
                   ),
                 ),
                 leftTitle: AxisTitle(
-                  titleText: 'Answers',
+                  titleText: S.current.labelAnswers,
                   reservedSize: 2,
                   margin: 10,
                   showTitle: true,
@@ -285,7 +285,7 @@ class _ClassFeedbackStatisticsState extends State<ClassFeedbackStatistics> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Grade vs. hours worked correlation',
+                    S.current.sectionGradeVsHours,
                     style: Theme.of(context)
                         .textTheme
                         .headline6
@@ -351,7 +351,7 @@ class _ClassFeedbackStatisticsState extends State<ClassFeedbackStatistics> {
                         ),
                         axisTitleData: FlAxisTitleData(
                           bottomTitle: AxisTitle(
-                            titleText: 'Grade',
+                            titleText: S.current.labelGrade,
                             reservedSize: 15,
                             margin: 10,
                             showTitle: true,
@@ -365,7 +365,7 @@ class _ClassFeedbackStatisticsState extends State<ClassFeedbackStatistics> {
                             ),
                           ),
                           leftTitle: AxisTitle(
-                            titleText: 'Hours worked',
+                            titleText: S.current.labelHoursWorked,
                             reservedSize: 2,
                             margin: 10,
                             showTitle: true,
@@ -426,7 +426,7 @@ class _ClassFeedbackStatisticsState extends State<ClassFeedbackStatistics> {
                               const SizedBox(height: 10),
                               const Icon(Icons.person_outline),
                               const SizedBox(height: 10),
-                              const Text('Responses'),
+                              Text(S.current.labelResponses),
                               const SizedBox(height: 10),
                               FutureBuilder(
                                 future: feedbackProvider.getNumberOfResponses(
@@ -455,7 +455,7 @@ class _ClassFeedbackStatisticsState extends State<ClassFeedbackStatistics> {
                               const SizedBox(height: 10),
                               const Icon(FeatherIcons.bookOpen),
                               const SizedBox(height: 10),
-                              const Text('Score'),
+                              Text(S.current.labelScore),
                               const SizedBox(height: 10),
                               const Text('4.8/5'),
                               const SizedBox(height: 10),

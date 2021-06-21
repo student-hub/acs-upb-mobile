@@ -175,6 +175,16 @@ class S {
     );
   }
 
+  /// `Answers`
+  String get labelAnswers {
+    return Intl.message(
+      'Answers',
+      name: 'labelAnswers',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Version`
   String get labelVersion {
     return Intl.message(
@@ -555,6 +565,46 @@ class S {
     );
   }
 
+  /// `Rating`
+  String get labelRating {
+    return Intl.message(
+      'Rating',
+      name: 'labelRating',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Hours worked`
+  String get labelHoursWorked {
+    return Intl.message(
+      'Hours worked',
+      name: 'labelHoursWorked',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Responses`
+  String get labelResponses {
+    return Intl.message(
+      'Responses',
+      name: 'labelResponses',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Score`
+  String get labelScore {
+    return Intl.message(
+      'Score',
+      name: 'labelScore',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Shortcuts`
   String get sectionShortcuts {
     return Intl.message(
@@ -630,6 +680,16 @@ class S {
     return Intl.message(
       'Feedback completed',
       name: 'sectionFeedbackCompleted',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Grade vs. hours worked correlation`
+  String get sectionGradeVsHours {
+    return Intl.message(
+      'Grade vs. hours worked correlation',
+      name: 'sectionGradeVsHours',
       desc: '',
       args: [],
     );

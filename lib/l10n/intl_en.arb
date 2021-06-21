@@ -14,6 +14,7 @@
   "labelConfirmNewPassword": "Confirm new password",
   "labelAskPermissions": "Request editing permissions",
   "labelAnswer": "Answer",
+  "labelAnswers": "Answers",
   "labelVersion": "Version",
   "labelFirstName": "First name",
   "labelLastName": "Last name",
@@ -52,6 +53,10 @@
   "labelToday": "Today",
   "labelTomorrow": "Tomorrow",
   "labelNow": "Now",
+  "labelRating": "Rating",
+  "labelHoursWorked": "Hours worked",
+  "labelResponses": "Responses",
+  "labelScore": "Score",
 
   "sectionShortcuts": "Shortcuts",
   "sectionEvents": "Events",
@@ -61,6 +66,7 @@
   "sectionGrading": "Grading",
   "sectionFeedbackNeeded": "Feedback needed",
   "sectionFeedbackCompleted": "Feedback completed",
+  "sectionGradeVsHours": "Grade vs. hours worked correlation",
 
   "shortcutTypeMain": "Main page",
   "shortcutTypeClassbook": "Classbook",
