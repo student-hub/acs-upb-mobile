@@ -97,6 +97,25 @@ class _ClassViewState extends State<ClassView> {
                         const SizedBox(height: 12),
                         lecturerCard(context),
                         const SizedBox(height: 12),
+                        IconText(
+                          icon: Icons.analytics_outlined,
+                          text: 'What do others think?',
+                          actionText: 'Learn more',
+                          actionArrow: true,
+                          align: TextAlign.left,
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyText1,
+                          onTap: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute<ClassFeedbackStatistics>(
+                                builder: (_) => ClassFeedbackStatistics(
+                                    classHeader: widget.classHeader),
+                              ),
+                            );
+                          },
+                        ),
+                        const SizedBox(height: 12),
                         shortcuts(context),
                         const SizedBox(height: 12),
                         ClassEventsCard(widget.classHeader.id),
@@ -106,24 +125,6 @@ class _ClassViewState extends State<ClassView> {
                           lastUpdated: classInfo.gradingLastUpdated,
                           onSave: (grading) => classProvider.setGrading(
                               widget.classHeader.id, grading),
-                        ),
-                        const SizedBox(height: 12),
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute<ClassFeedbackStatistics>(
-                                builder: (_) => ClassFeedbackStatistics(
-                                    classHeader: widget.classHeader),
-                              ),
-                            );
-                          },
-                          child: const Text(
-                            'What do others think?',
-                            textAlign: TextAlign.left,
-                            style: TextStyle(
-                              fontSize: 16,
-                            ),
-                          ),
                         ),
                         const SizedBox(height: 12),
                       ],
