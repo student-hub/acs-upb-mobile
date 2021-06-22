@@ -7,12 +7,12 @@ import 'package:acs_upb_mobile/widgets/info_card.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
-import 'package:fl_chart/fl_chart.dart';
+import 'package:fl_chart/fl_chart.dart' hide PieChart;
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:provider/provider.dart';
+import 'package:pie_chart/src/pie_chart.dart';
 
 class ClassFeedbackStatistics extends StatefulWidget {
   const ClassFeedbackStatistics({Key key, this.classHeader}) : super(key: key);
@@ -35,48 +35,22 @@ class _ClassFeedbackStatisticsState extends State<ClassFeedbackStatistics> {
   int touchedIndex = -1;
   static const double barWidth = 30;
 
-  /*Widget firstGraph() {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(12),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              S.current.sectionGrading,
-              style: Theme.of(context).textTheme.headline6,
-            ),
-            const SizedBox(height: 24),
-            AspectRatio(
-              aspectRatio: 1.7,
-              child: Container(
-                decoration: const BoxDecoration(
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(18),
-                  ),
-                ),
-                child: LineChart(
-                  mainData(),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }*/
-
-  Widget barChart() {
+  Widget barChart(String category, int index) {
     final FeedbackProvider feedbackProvider =
         Provider.of<FeedbackProvider>(context);
 
     return InfoCard(
       padding: const EdgeInsets.all(0),
-      future: feedbackProvider.getLectureRatingOverview(widget.classHeader?.id),
-      onShowMore: () => Navigator.of(context).push(
-          MaterialPageRoute<FeedbackStatisticsDetails>(
-              builder: (_) => FeedbackStatisticsDetails())),
-      title: S.current.uniEventTypeLecture,
+      future: index == 3
+          ? feedbackProvider.getLectureRatingOverview(widget.classHeader?.id)
+          : feedbackProvider
+              .getApplicationsRatingOverview(widget.classHeader?.id),
+      onShowMore: () => Navigator.of(context)
+          .push(MaterialPageRoute<FeedbackStatisticsDetails>(
+              builder: (_) => FeedbackStatisticsDetails(
+                    classHeader: widget.classHeader, index: index,
+                  ))),
+      title: category,
       builder: (occurrences) => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -401,6 +375,28 @@ class _ClassFeedbackStatisticsState extends State<ClassFeedbackStatistics> {
     );
   }
 
+  Widget pieChart() {
+    final FeedbackProvider feedbackProvider =
+        Provider.of<FeedbackProvider>(context);
+
+    return InfoCard(
+      future: feedbackProvider.getTimeRequiredForExam(widget.classHeader?.id),
+      title: 'Time required for exam',
+      padding: const EdgeInsets.all(0),
+      builder: (dataMap) => PieChart(
+        dataMap: dataMap,
+        legendPosition: LegendPosition.left,
+        legendStyle: Theme.of(context).textTheme.subtitle2,
+        chartRadius: 250,
+        chartValueStyle: Theme.of(context)
+            .textTheme
+            .subtitle2
+            .copyWith(fontWeight: FontWeight.bold, fontSize: 12),
+        decimalPlaces: 1,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final FeedbackProvider feedbackProvider =
@@ -503,267 +499,17 @@ class _ClassFeedbackStatisticsState extends State<ClassFeedbackStatistics> {
                 const SizedBox(height: 35),
                 scatterChart(),
                 const SizedBox(height: 35),
-                barChart(),
+                barChart(S.current.uniEventTypeLecture, 3),
+                const SizedBox(height: 35),
+                barChart('Applications', 4),
+                const SizedBox(height: 35),
+                pieChart(),
                 const SizedBox(height: 35),
               ],
             ),
           ),
         ],
       ),
-    );
-  }
-
-  BarChartGroupData makeGroupData(
-    int x,
-    double y, {
-    bool isTouched = false,
-    Color barColor = Colors.blue,
-    double width = 22,
-    List<int> showTooltips = const [],
-  }) {
-    return BarChartGroupData(
-      x: x,
-      barRods: [
-        BarChartRodData(
-          y: isTouched ? y + 1 : y,
-          colors: isTouched ? [Colors.yellow] : barColor,
-          width: width,
-          backDrawRodData: BackgroundBarChartRodData(
-            show: true,
-            y: 20,
-            colors: [barBackgroundColor],
-          ),
-        ),
-      ],
-      showingTooltipIndicators: showTooltips,
-    );
-  }
-
-  List<BarChartGroupData> showingGroups() => List.generate(7, (i) {
-        switch (i) {
-          case 0:
-            return makeGroupData(0, 5, isTouched: i == touchedIndex);
-          case 1:
-            return makeGroupData(1, 6.5, isTouched: i == touchedIndex);
-          case 2:
-            return makeGroupData(2, 5, isTouched: i == touchedIndex);
-          case 3:
-            return makeGroupData(3, 7.5, isTouched: i == touchedIndex);
-          case 4:
-            return makeGroupData(4, 9, isTouched: i == touchedIndex);
-          case 5:
-            return makeGroupData(5, 11.5, isTouched: i == touchedIndex);
-          case 6:
-            return makeGroupData(6, 6.5, isTouched: i == touchedIndex);
-          default:
-            return throw Error();
-        }
-      });
-
-  BarChartData mainBarData() {
-    return BarChartData(
-      barTouchData: BarTouchData(
-        touchTooltipData: BarTouchTooltipData(
-            tooltipBgColor: Colors.blueGrey,
-            getTooltipItem: (group, groupIndex, rod, rodIndex) {
-              String weekDay;
-              switch (group.x.toInt()) {
-                case 0:
-                  weekDay = 'Monday';
-                  break;
-                case 1:
-                  weekDay = 'Tuesday';
-                  break;
-                case 2:
-                  weekDay = 'Wednesday';
-                  break;
-                case 3:
-                  weekDay = 'Thursday';
-                  break;
-                case 4:
-                  weekDay = 'Friday';
-                  break;
-                case 5:
-                  weekDay = 'Saturday';
-                  break;
-                case 6:
-                  weekDay = 'Sunday';
-                  break;
-                default:
-                  throw Error();
-              }
-              return BarTooltipItem(
-                '$weekDay\n',
-                const TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18,
-                ),
-              );
-            }),
-        touchCallback: (barTouchResponse) {
-          setState(() {
-            if (barTouchResponse.spot != null &&
-                barTouchResponse.touchInput is PointerUpEvent &&
-                barTouchResponse.touchInput is PointerExitEvent) {
-              touchedIndex = barTouchResponse.spot.touchedBarGroupIndex;
-            } else {
-              touchedIndex = -1;
-            }
-          });
-        },
-      ),
-      titlesData: FlTitlesData(
-        show: true,
-        bottomTitles: SideTitles(
-          showTitles: true,
-          margin: 16,
-          getTitles: (double value) {
-            switch (value.toInt()) {
-              case 0:
-                return 'M';
-              case 1:
-                return 'T';
-              case 2:
-                return 'W';
-              case 3:
-                return 'T';
-              case 4:
-                return 'F';
-              case 5:
-                return 'S';
-              case 6:
-                return 'S';
-              default:
-                return '';
-            }
-          },
-        ),
-        leftTitles: SideTitles(
-          showTitles: false,
-        ),
-      ),
-      borderData: FlBorderData(
-        show: false,
-      ),
-      barGroups: showingGroups(),
-    );
-  }
-
-  LineChartData mainData() {
-    return LineChartData(
-      gridData: FlGridData(
-        show: false,
-        drawVerticalLine: true,
-        getDrawingHorizontalLine: (value) {
-          return FlLine(
-            color: const Color(0xff37434d),
-            strokeWidth: 1,
-          );
-        },
-        getDrawingVerticalLine: (value) {
-          return FlLine(
-            color: const Color(0xff37434d),
-            strokeWidth: 1,
-          );
-        },
-      ),
-      titlesData: FlTitlesData(
-        show: true,
-        bottomTitles: SideTitles(
-          showTitles: true,
-          reservedSize: 22,
-          getTitles: (value) {
-            switch (value.toInt()) {
-              case 1:
-                return '1';
-              case 2:
-                return '2';
-              case 3:
-                return '3';
-              case 4:
-                return '4';
-              case 5:
-                return '5';
-              case 6:
-                return '6';
-              case 7:
-                return '7';
-              case 8:
-                return '8';
-              case 9:
-                return '9';
-              case 10:
-                return '10';
-            }
-            return '';
-          },
-          margin: 8,
-        ),
-        leftTitles: SideTitles(
-          showTitles: true,
-          getTitles: (value) {
-            switch (value.toInt()) {
-              case 1:
-                return '1';
-              case 2:
-                return '2';
-              case 3:
-                return '3';
-              case 4:
-                return '4';
-              case 5:
-                return '5';
-              case 6:
-                return '6';
-              case 7:
-                return '7';
-              case 8:
-                return '8';
-              case 9:
-                return '9';
-              case 10:
-                return '10';
-            }
-            return '';
-          },
-          reservedSize: 28,
-          margin: 12,
-        ),
-      ),
-      borderData: FlBorderData(
-          show: false,
-          border: Border.all(color: const Color(0xff37434d), width: 1)),
-      minX: 1,
-      maxX: 10,
-      minY: 1,
-      maxY: 10,
-      lineBarsData: [
-        LineChartBarData(
-          spots: [
-            FlSpot(2, 5),
-            FlSpot(3, 6),
-            FlSpot(4, 5),
-            FlSpot(5, 9),
-            FlSpot(5, 3),
-            FlSpot(8, 8),
-            FlSpot(9, 7),
-            FlSpot(10, 10),
-          ],
-          isCurved: true,
-          colors: gradientColors,
-          barWidth: 5,
-          isStrokeCapRound: true,
-          dotData: FlDotData(
-            show: false,
-          ),
-          belowBarData: BarAreaData(
-            show: true,
-            colors:
-                gradientColors.map((color) => color.withOpacity(0.3)).toList(),
-          ),
-        ),
-      ],
     );
   }
 }

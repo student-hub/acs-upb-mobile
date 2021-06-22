@@ -291,17 +291,17 @@ class FeedbackProvider with ChangeNotifier {
           .map((e) => double.parse(e.data()['answer']).toInt())
           .toList();
 
-      print('Grades: $grades');
-      print('Hours: $hours');
+      //print('Grades: $grades');
+      //print('Hours: $hours');
 
-      Map<int, List<int>> correlation = {};
+      final Map<int, List<int>> correlation = {};
       int idx = 0;
       for (final elem in grades) {
         if (correlation[elem] == null) correlation[elem] = [];
         correlation[elem].add(hours[idx]);
         idx += 1;
       }
-      print(correlation);
+      //print(correlation);
       return correlation;
     } catch (e) {
       AppToast.show(S.current.errorSomethingWentWrong);
@@ -345,19 +345,168 @@ class FeedbackProvider with ChangeNotifier {
           .map((e) => double.parse(e.data()['answer']).toInt())
           .toList();
 
-      print(rating7);
-      print(rating8);
+      //print(rating7);
+      //print(rating8);
 
-      Map<int, int> occurences = {};
+      final Map<int, int> occurrences = {};
 
-      rating7.forEach((element) => occurences[element] =
-          !occurences.containsKey(element) ? (1) : (occurences[element] + 1));
+      rating7.forEach((element) => occurrences[element] =
+          !occurrences.containsKey(element) ? (1) : (occurrences[element] + 1));
 
-      rating8.forEach((element) => occurences[element] =
-      !occurences.containsKey(element) ? (1) : (occurences[element] + 1));
+      rating8.forEach((element) => occurrences[element] =
+          !occurrences.containsKey(element) ? (1) : (occurrences[element] + 1));
 
-      print(occurences);
-      return occurences;
+      //print(occurrences);
+      return occurrences;
+    } catch (e) {
+      AppToast.show(S.current.errorSomethingWentWrong);
+      return null;
+    }
+  }
+
+  Future<Map<int, int>> getQuestionRating(
+      String className, String questionId) async {
+    try {
+      final QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+          .collection('forms')
+          .doc('class_feedback_answers')
+          .collection(questionId)
+          .where('class', isEqualTo: className)
+          .get();
+
+      final ratingDocs = querySnapshot.docs
+          .where((element) =>
+              element['answer'] != null && element['answer'] != '-1')
+          .toList();
+
+      final rating = ratingDocs
+          .map((e) => double.parse(e.data()['answer']).toInt())
+          .toList();
+
+      final Map<int, int> occurrences = {};
+
+      rating.forEach((element) => occurrences[element] =
+          !occurrences.containsKey(element) ? (1) : (occurrences[element] + 1));
+      return occurrences;
+    } catch (e) {
+      AppToast.show(S.current.errorSomethingWentWrong);
+      return null;
+    }
+  }
+
+  Future<Map<int, int>> getApplicationsRatingOverview(String className) async {
+    try {
+      // extract rating from question 12
+      final QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+          .collection('forms')
+          .doc('class_feedback_answers')
+          .collection('12')
+          .where('class', isEqualTo: className)
+          .get();
+
+      // extract rating from question 13
+      final QuerySnapshot querySnapshot2 = await FirebaseFirestore.instance
+          .collection('forms')
+          .doc('class_feedback_answers')
+          .collection('13')
+          .where('class', isEqualTo: className)
+          .get();
+
+      // extract rating from question 14
+      final QuerySnapshot querySnapshot3 = await FirebaseFirestore.instance
+          .collection('forms')
+          .doc('class_feedback_answers')
+          .collection('14')
+          .where('class', isEqualTo: className)
+          .get();
+
+      final rating12Docs = querySnapshot.docs
+          .where((element) =>
+      element['answer'] != null && element['answer'] != '-1')
+          .toList();
+
+      final rating12 = rating12Docs
+          .map((e) => double.parse(e.data()['answer']).toInt())
+          .toList();
+
+      final rating13Docs = querySnapshot2.docs
+          .where((element) =>
+      element['answer'] != null && element['answer'] != '-1')
+          .toList();
+
+      final rating13 = rating13Docs
+          .map((e) => double.parse(e.data()['answer']).toInt())
+          .toList();
+
+      final rating14Docs = querySnapshot3.docs
+          .where((element) =>
+      element['answer'] != null && element['answer'] != '-1')
+          .toList();
+
+      final rating14 = rating14Docs
+          .map((e) => double.parse(e.data()['answer']).toInt())
+          .toList();
+
+      final Map<int, int> occurrences = {};
+
+      rating12.forEach((element) => occurrences[element] =
+      !occurrences.containsKey(element) ? (1) : (occurrences[element] + 1));
+
+      rating13.forEach((element) => occurrences[element] =
+      !occurrences.containsKey(element) ? (1) : (occurrences[element] + 1));
+
+      rating14.forEach((element) => occurrences[element] =
+      !occurrences.containsKey(element) ? (1) : (occurrences[element] + 1));
+
+      return occurrences;
+    } catch (e) {
+      AppToast.show(S.current.errorSomethingWentWrong);
+      return null;
+    }
+  }
+
+  List<String> getQuestionsByCategoryAndType(
+      List<dynamic> questions, String category, String type) {
+    final List<String> filteredQuestions = [];
+    final List<dynamic> filterQuestions = questions
+        .where((element) =>
+            element is Map<dynamic, dynamic> &&
+            element['category'] == category &&
+            element['type'] == type)
+        .toList();
+    for (final Map<String, dynamic> element in filterQuestions) {
+      final List<dynamic> qs = element.values.toList();
+      filteredQuestions.add(
+          qs[qs.indexWhere((element) => element is Map<dynamic, dynamic>)]
+              [LocaleProvider.localeString]);
+    }
+    return filteredQuestions;
+  }
+
+  Future<Map<String, double>> getTimeRequiredForExam(String className) async {
+    try {
+      final QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+          .collection('forms')
+          .doc('class_feedback_answers')
+          .collection('9')
+          .where('class', isEqualTo: className)
+          .get();
+
+      final timeDocs = querySnapshot.docs
+          .where((element) =>
+      element['answer'] != null && element['answer'] != '-1')
+          .toList();
+
+      final time = timeDocs
+          .map((e) => e.data()['answer'])
+          .toList();
+
+      final Map<String, double> occurrences = {};
+
+      time.forEach((element) => occurrences[element] =
+      !occurrences.containsKey(element) ? (1) : (occurrences[element] + 1));
+      //print(occurrences);
+      return occurrences;
     } catch (e) {
       AppToast.show(S.current.errorSomethingWentWrong);
       return null;
