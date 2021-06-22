@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:acs_upb_mobile/pages/class_feedback/service/feedback_provider.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/view/statistics_details.dart';
 import 'package:acs_upb_mobile/pages/classes/model/class.dart';
@@ -70,20 +72,21 @@ class _ClassFeedbackStatisticsState extends State<ClassFeedbackStatistics> {
 
     return InfoCard(
       padding: const EdgeInsets.all(0),
-      future:
-          feedbackProvider.getGradeAndHoursCorrelation(widget.classHeader?.id),
+      future: feedbackProvider.getLectureRatingOverview(widget.classHeader?.id),
       onShowMore: () => Navigator.of(context).push(
           MaterialPageRoute<FeedbackStatisticsDetails>(
               builder: (_) => FeedbackStatisticsDetails())),
       title: S.current.uniEventTypeLecture,
-      builder: (_) => Column(
+      builder: (occurences) => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const SizedBox(height: 24),
           BarChart(
             BarChartData(
               alignment: BarChartAlignment.center,
-              maxY: 50,
+              maxY:
+                  Map<int, int>.from(occurences).values.reduce(max).toDouble() +
+                      5,
               groupsSpace: 18,
               barTouchData: BarTouchData(
                 enabled: false,
@@ -122,7 +125,7 @@ class _ClassFeedbackStatisticsState extends State<ClassFeedbackStatistics> {
                   getTitles: (double value) {
                     return '${value.toInt()}';
                   },
-                  interval: 15,
+                  interval: 5,
                   margin: 8,
                   reservedSize: 15,
                   getTextStyles: (_) => TextStyle(
@@ -186,7 +189,7 @@ class _ClassFeedbackStatisticsState extends State<ClassFeedbackStatistics> {
                   x: 0,
                   barRods: [
                     BarChartRodData(
-                      y: 15,
+                      y: double.parse(occurences[0]?.toString() ?? '0'),
                       colors: [Colors.red],
                       width: barWidth,
                       borderRadius: const BorderRadius.only(
@@ -200,7 +203,7 @@ class _ClassFeedbackStatisticsState extends State<ClassFeedbackStatistics> {
                   x: 1,
                   barRods: [
                     BarChartRodData(
-                      y: 16,
+                      y: double.parse(occurences[1]?.toString() ?? '0'),
                       colors: [Colors.orange],
                       width: barWidth,
                       borderRadius: const BorderRadius.only(
@@ -214,7 +217,7 @@ class _ClassFeedbackStatisticsState extends State<ClassFeedbackStatistics> {
                   x: 2,
                   barRods: [
                     BarChartRodData(
-                      y: 25,
+                      y: double.parse(occurences[2]?.toString() ?? '0'),
                       colors: [Colors.amber],
                       width: barWidth,
                       borderRadius: const BorderRadius.only(
@@ -228,7 +231,7 @@ class _ClassFeedbackStatisticsState extends State<ClassFeedbackStatistics> {
                   x: 3,
                   barRods: [
                     BarChartRodData(
-                      y: 30,
+                      y: double.parse(occurences[3]?.toString() ?? '0'),
                       colors: [Colors.lightGreen],
                       width: barWidth,
                       borderRadius: const BorderRadius.only(
@@ -242,7 +245,7 @@ class _ClassFeedbackStatisticsState extends State<ClassFeedbackStatistics> {
                   x: 4,
                   barRods: [
                     BarChartRodData(
-                      y: 46,
+                      y: double.parse(occurences[4]?.toString() ?? '0'),
                       colors: [Colors.green],
                       width: barWidth,
                       borderRadius: const BorderRadius.only(

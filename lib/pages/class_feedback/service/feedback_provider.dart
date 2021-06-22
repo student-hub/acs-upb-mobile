@@ -291,8 +291,8 @@ class FeedbackProvider with ChangeNotifier {
           .map((e) => double.parse(e.data()['answer']).toInt())
           .toList();
 
-      //print('Grades: $grades');
-      //print('Hours: $hours');
+      print('Grades: $grades');
+      print('Hours: $hours');
 
       Map<int, List<int>> correlation = {};
       int idx = 0;
@@ -303,6 +303,61 @@ class FeedbackProvider with ChangeNotifier {
       }
       print(correlation);
       return correlation;
+    } catch (e) {
+      AppToast.show(S.current.errorSomethingWentWrong);
+      return null;
+    }
+  }
+
+  Future<Map<int, int>> getLectureRatingOverview(String className) async {
+    try {
+      // extract rating from question 7
+      final QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+          .collection('forms')
+          .doc('class_feedback_answers')
+          .collection('7')
+          .where('class', isEqualTo: className)
+          .get();
+
+      // extract rating from question 8
+      final QuerySnapshot querySnapshot2 = await FirebaseFirestore.instance
+          .collection('forms')
+          .doc('class_feedback_answers')
+          .collection('8')
+          .where('class', isEqualTo: className)
+          .get();
+
+      final rating7Docs = querySnapshot.docs
+          .where((element) =>
+              element['answer'] != null && element['answer'] != '-1')
+          .toList();
+
+      final rating7 = rating7Docs
+          .map((e) => double.parse(e.data()['answer']).toInt())
+          .toList();
+
+      final rating8Docs = querySnapshot2.docs
+          .where((element) =>
+              element['answer'] != null && element['answer'] != '-1')
+          .toList();
+
+      final rating8 = rating8Docs
+          .map((e) => double.parse(e.data()['answer']).toInt())
+          .toList();
+
+      print(rating7);
+      print(rating8);
+
+      Map<int, int> occurences = {};
+
+      rating7.forEach((element) => occurences[element] =
+          !occurences.containsKey(element) ? (1) : (occurences[element] + 1));
+
+      rating8.forEach((element) => occurences[element] =
+      !occurences.containsKey(element) ? (1) : (occurences[element] + 1));
+
+      print(occurences);
+      return occurences;
     } catch (e) {
       AppToast.show(S.current.errorSomethingWentWrong);
       return null;
