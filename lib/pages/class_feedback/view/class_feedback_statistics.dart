@@ -77,16 +77,18 @@ class _ClassFeedbackStatisticsState extends State<ClassFeedbackStatistics> {
           MaterialPageRoute<FeedbackStatisticsDetails>(
               builder: (_) => FeedbackStatisticsDetails())),
       title: S.current.uniEventTypeLecture,
-      builder: (occurences) => Column(
+      builder: (occurrences) => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const SizedBox(height: 24),
           BarChart(
             BarChartData(
               alignment: BarChartAlignment.center,
-              maxY:
-                  Map<int, int>.from(occurences).values.reduce(max).toDouble() +
-                      5,
+              maxY: Map<int, int>.from(occurrences)
+                      .values
+                      .reduce(max)
+                      .toDouble() +
+                  5,
               groupsSpace: 18,
               barTouchData: BarTouchData(
                 enabled: false,
@@ -189,7 +191,7 @@ class _ClassFeedbackStatisticsState extends State<ClassFeedbackStatistics> {
                   x: 0,
                   barRods: [
                     BarChartRodData(
-                      y: double.parse(occurences[0]?.toString() ?? '0'),
+                      y: double.parse(occurrences[0]?.toString() ?? '0'),
                       colors: [Colors.red],
                       width: barWidth,
                       borderRadius: const BorderRadius.only(
@@ -203,7 +205,7 @@ class _ClassFeedbackStatisticsState extends State<ClassFeedbackStatistics> {
                   x: 1,
                   barRods: [
                     BarChartRodData(
-                      y: double.parse(occurences[1]?.toString() ?? '0'),
+                      y: double.parse(occurrences[1]?.toString() ?? '0'),
                       colors: [Colors.orange],
                       width: barWidth,
                       borderRadius: const BorderRadius.only(
@@ -217,7 +219,7 @@ class _ClassFeedbackStatisticsState extends State<ClassFeedbackStatistics> {
                   x: 2,
                   barRods: [
                     BarChartRodData(
-                      y: double.parse(occurences[2]?.toString() ?? '0'),
+                      y: double.parse(occurrences[2]?.toString() ?? '0'),
                       colors: [Colors.amber],
                       width: barWidth,
                       borderRadius: const BorderRadius.only(
@@ -231,7 +233,7 @@ class _ClassFeedbackStatisticsState extends State<ClassFeedbackStatistics> {
                   x: 3,
                   barRods: [
                     BarChartRodData(
-                      y: double.parse(occurences[3]?.toString() ?? '0'),
+                      y: double.parse(occurrences[3]?.toString() ?? '0'),
                       colors: [Colors.lightGreen],
                       width: barWidth,
                       borderRadius: const BorderRadius.only(
@@ -245,7 +247,7 @@ class _ClassFeedbackStatisticsState extends State<ClassFeedbackStatistics> {
                   x: 4,
                   barRods: [
                     BarChartRodData(
-                      y: double.parse(occurences[4]?.toString() ?? '0'),
+                      y: double.parse(occurrences[4]?.toString() ?? '0'),
                       colors: [Colors.green],
                       width: barWidth,
                       borderRadius: const BorderRadius.only(
@@ -414,7 +416,7 @@ class _ClassFeedbackStatisticsState extends State<ClassFeedbackStatistics> {
               children: [
                 Padding(
                   padding: EdgeInsets.only(
-                    top: 20,
+                    top: 30,
                     left: MediaQuery.of(context).size.width / 20,
                     right: MediaQuery.of(context).size.width / 20,
                   ),
@@ -425,42 +427,71 @@ class _ClassFeedbackStatisticsState extends State<ClassFeedbackStatistics> {
                         height: 120,
                         child: Card(
                           child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              const SizedBox(height: 10),
-                              const Icon(Icons.person_outline),
-                              const SizedBox(height: 10),
-                              Text(S.current.labelResponses),
-                              const SizedBox(height: 10),
                               FutureBuilder(
                                 future: feedbackProvider.getNumberOfResponses(
                                     widget.classHeader?.id),
                                 builder: (BuildContext context,
                                     AsyncSnapshot<int> snapshot) {
                                   if (snapshot.hasData) {
-                                    return Text(snapshot.data.toString());
+                                    return Text(
+                                      snapshot.data.toString(),
+                                      style: const TextStyle(fontSize: 28),
+                                    );
                                   } else {
                                     return const Center(
                                         child: CircularProgressIndicator());
                                   }
                                 },
-                              )
+                              ),
+                              const SizedBox(height: 10),
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  const Icon(Icons.person_outline),
+                                  const SizedBox(width: 5),
+                                  Text(
+                                    S.current.labelResponses,
+                                    style: const TextStyle(fontSize: 15),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 10),
                             ],
                           ),
                         ),
                       ),
-                      SizedBox(width: MediaQuery.of(context).size.width / 6),
+                      SizedBox(
+                          width:
+                              7 * MediaQuery.of(context).size.width / 30 - 25),
                       Container(
                         width: MediaQuery.of(context).size.width / 3,
                         height: 120,
                         child: Card(
                           child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              const SizedBox(height: 10),
-                              const Icon(FeatherIcons.bookOpen),
-                              const SizedBox(height: 10),
-                              Text(S.current.labelScore),
-                              const SizedBox(height: 10),
-                              const Text('4.8/5'),
+                              const Text(
+                                '4.8/5',
+                                style: TextStyle(fontSize: 22),
+                              ),
+                              const SizedBox(height: 17),
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  const Icon(FeatherIcons.bookOpen),
+                                  const SizedBox(width: 10),
+                                  Text(
+                                    S.current.labelScore,
+                                    style: const TextStyle(fontSize: 15),
+                                  ),
+                                ],
+                              ),
                               const SizedBox(height: 10),
                             ],
                           ),
@@ -469,11 +500,11 @@ class _ClassFeedbackStatisticsState extends State<ClassFeedbackStatistics> {
                     ],
                   ),
                 ),
-                const SizedBox(height: 24),
+                const SizedBox(height: 35),
                 scatterChart(),
-                const SizedBox(height: 24),
+                const SizedBox(height: 35),
                 barChart(),
-                const SizedBox(height: 24),
+                const SizedBox(height: 35),
               ],
             ),
           ),
