@@ -19,6 +19,7 @@ import 'package:acs_upb_mobile/pages/portal/service/website_provider.dart';
 import 'package:acs_upb_mobile/pages/settings/service/request_provider.dart';
 import 'package:acs_upb_mobile/pages/settings/view/request_permissions.dart';
 import 'package:acs_upb_mobile/pages/settings/view/settings_page.dart';
+import 'package:acs_upb_mobile/pages/settings/view/feedback_form.dart';
 import 'package:acs_upb_mobile/pages/timetable/service/uni_event_provider.dart';
 import 'package:acs_upb_mobile/resources/locale_provider.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
@@ -133,6 +134,7 @@ class _MyAppState extends State<MyApp> {
         Routes.filter: (_) => const FilterPage(),
         Routes.newsFeed: (_) => NewsFeedPage(),
         Routes.requestPermissions: (_) => RequestPermissionsPage(),
+        Routes.feedbackForm: (_) => FeedbackFormPage(),
       },
       navigatorObservers: widget.navigationObservers ?? [],
     );

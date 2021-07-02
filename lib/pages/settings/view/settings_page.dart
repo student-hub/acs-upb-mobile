@@ -139,6 +139,9 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
                 PreferenceTitle('Feedback'),
                 ListTile(
+                  onTap: (){
+                    Navigator.of(context).pushNamed(Routes.feedbackForm);
+                  },
                   title: Text('Feedback for the app'),
                   subtitle: Text('here u can give feedback for app'),
                   ),
