@@ -137,6 +137,11 @@ class _SettingsPageState extends State<SettingsPage> {
                     subtitle: Text(S.current.infoExportToGoogleCalendar),
                   ),
                 ),
+                PreferenceTitle('Feedback'),
+                ListTile(
+                  title: Text('Feedback for the app'),
+                  subtitle: Text('here u can give feedback for app'),
+                  ),
                 Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
