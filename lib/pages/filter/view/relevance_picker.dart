@@ -206,7 +206,8 @@ class _RelevancePickerState extends State<_RelevancePicker> {
     _fetchFilter();
     _onlyMeSelected = widget.defaultPrivate ?? true;
     _anyoneSelected = !widget.defaultPrivate &&
-        Provider.of<FilterProvider>(context).defaultRelevance == null;
+        Provider.of<FilterProvider>(context, listen: false).defaultRelevance ==
+            null;
     _customSelected = {};
   }
 
