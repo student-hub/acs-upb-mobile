@@ -7,7 +7,7 @@ import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:acs_upb_mobile/widgets/search_bar.dart';
 import 'package:dynamic_text_highlighting/dynamic_text_highlighting.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart'hide Autocomplete;
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:provider/provider.dart';
 import 'package:recase/recase.dart';
@@ -209,7 +209,7 @@ class _AutocompletePersonState extends State<AutocompletePerson> {
         }).isEmpty) {
           final List<Person> inputTeachers = [];
           final Person inputTeacher =
-              Person(name: textEditingValue.text.titleCase);
+          Person(name: textEditingValue.text.titleCase);
           inputTeachers.add(inputTeacher);
           return inputTeachers;
         }
