@@ -41,12 +41,10 @@ class RelevanceFormField extends ChipFormField<List<String>> {
             controller.onChanged = () {
               state.didChange(controller.customRelevance);
             };
-            final context = state.context;
             return _RelevancePicker(
               defaultPrivate: defaultPrivate,
               canBePrivate: canBePrivate,
               canBeForEveryone: canBeForEveryone,
-              filterProvider: Provider.of<FilterProvider>(context),
               controller: controller,
             );
           },
@@ -138,7 +136,7 @@ class RelevanceController {
   bool get anyone =>
       _state?._anyoneSelected ??
       _state?.widget != null &&
-          _state.widget.filterProvider.defaultRelevance == null;
+          Provider.of<FilterProvider>(_state.context).defaultRelevance == null;
 
   List<String> get customRelevance {
     final relevance = <String>[];
@@ -156,14 +154,11 @@ class RelevanceController {
 
 class _RelevancePicker extends StatefulWidget {
   const _RelevancePicker({
-    @required this.filterProvider,
     this.canBePrivate = true,
     this.canBeForEveryone = true,
     bool defaultPrivate = false,
     this.controller,
   }) : defaultPrivate = (defaultPrivate ?? true) && canBePrivate;
-
-  final FilterProvider filterProvider;
 
   /// Whether 'Only me' is an option (this overrides [defaultPrivate])
   final bool canBePrivate;
@@ -197,7 +192,8 @@ class _RelevancePickerState extends State<_RelevancePicker> {
   }
 
   Future<void> _fetchFilter() async {
-    _filter = await widget.filterProvider.fetchFilter();
+    _filter =
+        await Provider.of<FilterProvider>(context, listen: false).fetchFilter();
     if (mounted) {
       setState(() {});
     }
@@ -210,7 +206,7 @@ class _RelevancePickerState extends State<_RelevancePicker> {
     _fetchFilter();
     _onlyMeSelected = widget.defaultPrivate ?? true;
     _anyoneSelected = !widget.defaultPrivate &&
-        widget.filterProvider.defaultRelevance == null;
+        Provider.of<FilterProvider>(context).defaultRelevance == null;
     _customSelected = {};
   }
 
@@ -278,7 +274,8 @@ class _RelevancePickerState extends State<_RelevancePicker> {
 
     // Add the provided website relevance strings, if applicable
     // These are selected by default
-    for (final node in widget.filterProvider.defaultRelevance ?? []) {
+    final filterProvider = Provider.of<FilterProvider>(context);
+    for (final node in filterProvider.defaultRelevance ?? []) {
       if (!_customSelected.containsKey(node)) {
         _customSelected[node] = true;
 
