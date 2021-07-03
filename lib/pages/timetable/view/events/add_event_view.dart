@@ -7,6 +7,7 @@ import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
 import 'package:acs_upb_mobile/pages/filter/view/relevance_picker.dart';
 import 'package:acs_upb_mobile/pages/people/model/person.dart';
 import 'package:acs_upb_mobile/pages/people/service/person_provider.dart';
+import 'package:acs_upb_mobile/pages/people/view/people_page.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/academic_calendar.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/events/all_day_event.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/events/class_event.dart';
@@ -15,7 +16,6 @@ import 'package:acs_upb_mobile/pages/timetable/model/events/uni_event.dart';
 import 'package:acs_upb_mobile/pages/timetable/service/uni_event_provider.dart';
 import 'package:acs_upb_mobile/resources/locale_provider.dart';
 import 'package:acs_upb_mobile/resources/theme.dart';
-import 'package:acs_upb_mobile/widgets/autocomplete.dart';
 import 'package:acs_upb_mobile/widgets/button.dart';
 import 'package:acs_upb_mobile/widgets/chip_form_field.dart';
 import 'package:acs_upb_mobile/widgets/dialog.dart';
@@ -26,7 +26,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:provider/provider.dart';
-import 'package:recase/recase.dart';
 import 'package:rrule/rrule.dart';
 import 'package:time_machine/time_machine.dart' as time_machine show DayOfWeek;
 import 'package:time_machine/time_machine.dart' hide DayOfWeek;
@@ -189,58 +188,6 @@ class _AddEventViewState extends State<AddEventView> {
     }
   }
 
-  Widget autocompleteLecturer(BuildContext context) {
-    return Autocomplete<Person>(
-      key: const Key('Autocomplete'),
-      fieldViewBuilder: (BuildContext context,
-          TextEditingController textEditingController,
-          FocusNode focusNode,
-          VoidCallback onFieldSubmitted) {
-        textEditingController.text = selectedTeacher?.name;
-        return TextFormField(
-          controller: textEditingController,
-          decoration: InputDecoration(
-            labelText: S.current.labelLecturer,
-            prefixIcon: const Icon(FeatherIcons.user),
-          ),
-          focusNode: focusNode,
-          onFieldSubmitted: (String value) {
-            onFieldSubmitted();
-          },
-        );
-      },
-      displayStringForOption: (Person person) => person.name,
-      optionsBuilder: (TextEditingValue textEditingValue) {
-        if (textEditingValue.text == '' || textEditingValue.text.isEmpty) {
-          return const Iterable<Person>.empty();
-        }
-        if (classTeachers.where((Person person) {
-          return person.name
-              .toLowerCase()
-              .contains(textEditingValue.text.toLowerCase());
-        }).isEmpty) {
-          final List<Person> inputTeachers = [];
-          final Person inputTeacher =
-              Person(name: textEditingValue.text.titleCase);
-          inputTeachers.add(inputTeacher);
-          return inputTeachers;
-        }
-
-        return classTeachers.where((Person person) {
-          return person.name
-              .toLowerCase()
-              .contains(textEditingValue.text.toLowerCase());
-        });
-      },
-      onSelected: (Person selection) {
-        formKey.currentState.validate();
-        setState(() {
-          selectedTeacher = selection;
-        });
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
@@ -364,7 +311,14 @@ class _AddEventViewState extends State<AddEventView> {
                             },
                           ),
                         if ([UniEventType.lecture].contains(selectedEventType))
-                          autocompleteLecturer(context),
+                          AutocompletePerson(
+                            key: const Key('AutocompleteLecturer'),
+                            labelText: S.current.labelLecturer,
+                            formKey: formKey,
+                            onSaved: (value) => selectedTeacher = value,
+                            classTeachers: classTeachers,
+                            personDisplayed: selectedTeacher,
+                          ),
                         TextFormField(
                           controller: locationController,
                           decoration: InputDecoration(

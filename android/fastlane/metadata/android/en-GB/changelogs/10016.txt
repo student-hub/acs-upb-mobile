@@ -1,0 +1,4 @@
+Added
+  - You can now submit feedback for all of your classes by pressing the icon in the top right corner of a class page. This option is only available for a limited time, so don't miss the opportunity!
+  - You can now view a list with all your classes where you completed the feedback form or not.
+  - You are now notified on the Homepage about how many feedback forms are still waiting to be completed.

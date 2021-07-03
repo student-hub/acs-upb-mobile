@@ -349,6 +349,7 @@ class UniEventProvider extends EventProvider<UniEventInstance>
       {int limit = 3}) async {
     return _events
         .map((events) => events
+            .where((event) => !(event is AllDayUniEvent))
             .map((event) => event.generateInstances(
                 intersectingInterval: DateInterval(date, date.addDays(6))))
             .expand((i) => i)
@@ -356,6 +357,13 @@ class UniEventProvider extends EventProvider<UniEventInstance>
             .where((element) =>
                 element.end.toDateTimeLocal().isAfter(DateTime.now()))
             .take(limit))
+        .first;
+  }
+
+  Future<Iterable<UniEvent>> getAllEventsOfClass(String classId) async {
+    return _events
+        .map((events) =>
+            events.where((event) => event.classHeader.id == classId))
         .first;
   }
 

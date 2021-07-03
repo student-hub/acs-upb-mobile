@@ -13,7 +13,7 @@ description: A mobile application for students at ACS UPB.
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 #
 # ACS UPB Mobile uses semantic versioning. You can read more in the CONTRIBUTING.md file.
-version: 1.2.10+12
+version: 1.2.12+16
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
@@ -54,6 +54,7 @@ dependencies:
   firebase_analytics: ^5.0.2
   firebase_auth: ^0.18.3+1
   firebase_core: ^0.5.2+1
+  firebase_remote_config: ^0.4.3
   firebase_storage: ^5.1.0
 
   # Flutter SDK
