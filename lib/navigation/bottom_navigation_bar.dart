@@ -269,7 +269,8 @@ class _SearchBarDemoHomeState extends State<SearchBarDemoHome> {
                 radius: 20,
                 backgroundImage: AssetImage(
                   'assets/illustrations/undraw_profile_pic.png',
-                ), //TODO(RazvanRotaru): move profile here
+                ), //TODO(RazvanRotaru) move profile here
+              ),
             ),
             width: 100,
           )
