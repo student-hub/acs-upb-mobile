@@ -1,5 +1,6 @@
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/home/home_page.dart';
+import 'package:acs_upb_mobile/pages/home/profile_card.dart';
 import 'package:acs_upb_mobile/pages/people/view/people_page.dart';
 import 'package:acs_upb_mobile/pages/portal/view/portal_page.dart';
 import 'package:acs_upb_mobile/pages/timetable/view/timetable_page.dart';
@@ -245,7 +246,6 @@ class _WebNavigationBarState extends State<WebNavigationBar> {
   }
 }
 
-
 class DummySearchBar extends StatefulWidget {
   const DummySearchBar({Key key, this.leading}) : super(key: key);
 
@@ -268,27 +268,48 @@ class _DummySearchBarState extends State<DummySearchBar> {
           SizedBox(
             child: Padding(
               padding: const EdgeInsets.only(left: 25),
+              // TODO(RazvanRotaru): Wrap in Button and goto /home
               child: UniBanner(),
             ),
             width: 500,
           ),
           const Expanded(
             child: Align(
-                alignment: Alignment.centerRight,
-                child: Card(child: Padding(
-                  padding: EdgeInsets.only(left: 200, top: 15, bottom: 15, right: 15),
-                  child: Text('THIS IS A SEARCHBAR, OK?'),
-                ))),
+              alignment: Alignment.centerRight,
+              child: Card(
+                child: Padding(
+                  padding: EdgeInsets.only(
+                    left: 200,
+                    top: 15,
+                    bottom: 15,
+                    right: 15,
+                  ),
+                  child: Text('THIS IS A SEARCHBAR'),
+                ),
+              ),
+            ),
             flex: 3,
           ),
-          const SizedBox(
+          SizedBox(
             child: Padding(
-              padding: EdgeInsets.all(25),
-              child: CircleAvatar(
-                radius: 20,
-                backgroundImage: AssetImage(
-                  'assets/illustrations/undraw_profile_pic.png',
-                ), //TODO(RazvanRotaru): move profile here
+              padding: const EdgeInsets.all(25),
+              child: PopupMenuButton(
+                offset: const Offset(-5, 45),
+                tooltip: 'Profile Menu',
+                child: const CircleAvatar(
+                  radius: 20,
+                  backgroundImage: AssetImage(
+                    'assets/illustrations/undraw_profile_pic.png',
+                  ),
+                ),
+                itemBuilder: (context) {
+                  return <PopupMenuItem<dynamic>>[
+                    PopupMenuItem(
+                      // TODO(RazvanRotaru): create a new View of ProfileCard()
+                      child: ProfileCard(),
+                    ),
+                  ];
+                },
               ),
             ),
             width: 100,
