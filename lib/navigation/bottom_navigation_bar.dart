@@ -52,12 +52,12 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar>
   @override
   Widget build(BuildContext context) {
     return kIsWeb
-        ? WebLayout(
+        ? WebNavigationBar(
             tabs: tabs,
             bucket: bucket,
             tabIndex: widget.tabIndex,
           )
-        : MobileLayout(
+        : MobileNavigationBar(
             tabs: tabs,
             tabController: tabController,
             bucket: bucket,
@@ -66,8 +66,8 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar>
   }
 }
 
-class MobileLayout extends StatefulWidget {
-  const MobileLayout(
+class MobileNavigationBar extends StatefulWidget {
+  const MobileNavigationBar(
       {Key key, this.tabs, this.tabController, this.bucket, this.tabIndex})
       : super(key: key);
 
@@ -77,10 +77,10 @@ class MobileLayout extends StatefulWidget {
   final int tabIndex;
 
   @override
-  _MobileLayoutState createState() => _MobileLayoutState();
+  _MobileNavigationBarState createState() => _MobileNavigationBarState();
 }
 
-class _MobileLayoutState extends State<MobileLayout> {
+class _MobileNavigationBarState extends State<MobileNavigationBar> {
   int currentTab = 0;
 
   @override
@@ -148,8 +148,8 @@ class _MobileLayoutState extends State<MobileLayout> {
   }
 }
 
-class WebLayout extends StatefulWidget {
-  const WebLayout({Key key, this.tabs, this.bucket, this.tabIndex})
+class WebNavigationBar extends StatefulWidget {
+  const WebNavigationBar({Key key, this.tabs, this.bucket, this.tabIndex})
       : super(key: key);
 
   final List<Widget> tabs;
@@ -157,11 +157,12 @@ class WebLayout extends StatefulWidget {
   final int tabIndex;
 
   @override
-  _WebLayoutState createState() => _WebLayoutState();
+  _WebNavigationBarState createState() => _WebNavigationBarState();
 }
 
-class _WebLayoutState extends State<WebLayout> {
+class _WebNavigationBarState extends State<WebNavigationBar> {
   int currentTab = 0;
+  bool _extended = false;
 
   @override
   Widget build(BuildContext context) {
@@ -170,49 +171,62 @@ class _WebLayoutState extends State<WebLayout> {
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size(screenSize.width, 100),
-        child: SearchBarDemoHome(),
+        child: DummySearchBar(
+          leading: Align(
+            alignment: AlignmentDirectional.centerStart,
+            child: Padding(
+              padding: const EdgeInsets.only(left: 15),
+              child: IconButton(
+                onPressed: () {
+                  setState(() {
+                    _extended = !_extended;
+                  });
+                },
+                icon: const Icon(Icons.menu),
+              ),
+            ),
+          ),
+        ),
       ),
       body: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          SizedBox(
-            width: 100,
-            child: NavigationRail(
-              selectedIndex: currentTab,
-              onDestinationSelected: (int index) {
-                setState(() {
-                  currentTab = index;
-                });
-              },
-              labelType: NavigationRailLabelType.all,
-              destinations: [
-                NavigationRailDestination(
-                  icon: const Icon(Icons.home),
-                  selectedIcon: const Icon(Icons.home_outlined),
-                  padding: const EdgeInsets.only(right: 5),
-                  label: Text(S.current.navigationHome),
-                ),
-                NavigationRailDestination(
-                  icon: const Icon(Icons.calendar_today),
-                  selectedIcon: const Icon(Icons.calendar_today_outlined),
-                  padding: const EdgeInsets.only(right: 5),
-                  label: Text(S.current.navigationTimetable),
-                ),
-                NavigationRailDestination(
-                  icon: const Icon(FeatherIcons.globe),
-                  selectedIcon: const Icon(FeatherIcons.globe),
-                  padding: const EdgeInsets.only(right: 5),
-                  label: Text(S.current.navigationPortal),
-                ),
-                NavigationRailDestination(
-                  icon: const Icon(Icons.people),
-                  selectedIcon: const Icon(Icons.people_outlined),
-                  padding: const EdgeInsets.only(right: 5),
-                  label: Text(S.current.navigationPeople),
-                ),
-              ],
-            ),
+          NavigationRail(
+            selectedIndex: currentTab,
+            onDestinationSelected: (int index) {
+              setState(() {
+                currentTab = index;
+              });
+            },
+            extended: _extended,
+            labelType: NavigationRailLabelType.none,
+            destinations: [
+              NavigationRailDestination(
+                icon: const Icon(Icons.home),
+                selectedIcon: const Icon(Icons.home_outlined),
+                padding: const EdgeInsets.only(right: 5),
+                label: Text(S.current.navigationHome),
+              ),
+              NavigationRailDestination(
+                icon: const Icon(Icons.calendar_today),
+                selectedIcon: const Icon(Icons.calendar_today_outlined),
+                padding: const EdgeInsets.only(right: 5),
+                label: Text(S.current.navigationTimetable),
+              ),
+              NavigationRailDestination(
+                icon: const Icon(FeatherIcons.globe),
+                selectedIcon: const Icon(FeatherIcons.globe),
+                padding: const EdgeInsets.only(right: 5),
+                label: Text(S.current.navigationPortal),
+              ),
+              NavigationRailDestination(
+                icon: const Icon(Icons.people),
+                selectedIcon: const Icon(Icons.people_outlined),
+                padding: const EdgeInsets.only(right: 5),
+                label: Text(S.current.navigationPeople),
+              ),
+            ],
           ),
           const VerticalDivider(
             thickness: 1,
@@ -232,12 +246,16 @@ class _WebLayoutState extends State<WebLayout> {
 }
 
 
-class SearchBarDemoHome extends StatefulWidget {
+class DummySearchBar extends StatefulWidget {
+  const DummySearchBar({Key key, this.leading}) : super(key: key);
+
+  final Widget leading;
+
   @override
-  _SearchBarDemoHomeState createState() => _SearchBarDemoHomeState();
+  _DummySearchBarState createState() => _DummySearchBarState();
 }
 
-class _SearchBarDemoHomeState extends State<SearchBarDemoHome> {
+class _DummySearchBarState extends State<DummySearchBar> {
   TextEditingController textController = TextEditingController();
 
   @override
@@ -246,6 +264,7 @@ class _SearchBarDemoHomeState extends State<SearchBarDemoHome> {
       color: Theme.of(context).accentColor.withAlpha(60),
       child: Row(
         children: [
+          widget.leading ?? const SizedBox.shrink(),
           SizedBox(
             child: Padding(
               padding: const EdgeInsets.only(left: 25),
