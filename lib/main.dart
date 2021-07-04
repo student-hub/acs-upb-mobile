@@ -15,6 +15,7 @@ import 'package:acs_upb_mobile/pages/filter/view/filter_page.dart';
 import 'package:acs_upb_mobile/pages/news_feed/service/news_provider.dart';
 import 'package:acs_upb_mobile/pages/news_feed/view/news_feed_page.dart';
 import 'package:acs_upb_mobile/pages/people/service/person_provider.dart';
+import 'package:acs_upb_mobile/pages/people/view/person_view.dart';
 import 'package:acs_upb_mobile/pages/portal/service/website_provider.dart';
 import 'package:acs_upb_mobile/pages/settings/service/request_provider.dart';
 import 'package:acs_upb_mobile/pages/settings/view/request_permissions.dart';
@@ -123,6 +124,21 @@ class _MyAppState extends State<MyApp> {
       supportedLocales: S.delegate.supportedLocales,
       theme: theme,
       initialRoute: Routes.root,
+
+      // TODO(RazvanRotaru): clean this
+      onGenerateRoute: (RouteSettings settings) {
+        if (settings.name.startsWith('/people')) {
+          final String name = settings.name.split('profile=').last;
+          return MaterialPageRoute<void>(
+            builder: (BuildContext context) =>
+                PersonView.fromName(context, name),
+            settings: settings,
+          );
+        }
+
+        return MaterialPageRoute<void>(
+            builder: (BuildContext context) => const Scaffold());
+      },
       routes: {
         Routes.root: (_) => AppLoadingScreen(),
         Routes.home: (_) => const AppBottomNavigationBar(),
