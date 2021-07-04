@@ -16,6 +16,8 @@ import 'package:recase/recase.dart';
 class PeoplePage extends StatefulWidget {
   const PeoplePage({Key key}) : super(key: key);
 
+  static const String routeName = '/people';
+
   @override
   _PeoplePageState createState() => _PeoplePageState();
 }

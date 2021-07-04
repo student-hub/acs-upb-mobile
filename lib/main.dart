@@ -143,7 +143,10 @@ class _MyAppState extends State<MyApp> {
       },
       routes: {
         Routes.root: (_) => AppLoadingScreen(),
-        Routes.home: (_) => const AppBottomNavigationBar(),
+        Routes.home: (_) => const AppBottomNavigationBar(tabIndex: 0,),
+        Routes.timetable: (_) => const AppBottomNavigationBar(tabIndex: 1,),
+        Routes.portal: (_) => const AppBottomNavigationBar(tabIndex: 2,),
+        Routes.people: (_) => const AppBottomNavigationBar(tabIndex: 3,),
         Routes.settings: (_) => SettingsPage(),
         Routes.login: (_) => LoginView(),
         Routes.signUp: (_) => SignUpView(),

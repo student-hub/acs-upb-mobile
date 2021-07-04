@@ -1,4 +1,7 @@
+import 'dart:html' as html;
+
 import 'package:acs_upb_mobile/generated/l10n.dart';
+import 'package:acs_upb_mobile/navigation/routes.dart';
 import 'package:acs_upb_mobile/pages/home/home_page.dart';
 import 'package:acs_upb_mobile/pages/home/profile_card.dart';
 import 'package:acs_upb_mobile/pages/people/view/people_page.dart';
@@ -8,6 +11,8 @@ import 'package:acs_upb_mobile/resources/banner.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
+
+import 'navigation_route.dart';
 
 class AppBottomNavigationBar extends StatefulWidget {
   const AppBottomNavigationBar({this.tabIndex = 0});
@@ -20,7 +25,7 @@ class AppBottomNavigationBar extends StatefulWidget {
 
 class _AppBottomNavigationBarState extends State<AppBottomNavigationBar>
     with TickerProviderStateMixin {
-  List<Widget> tabs;
+  List<NavigationRoute> tabs;
   TabController tabController;
   final PageStorageBucket bucket = PageStorageBucket();
   int currentTab = 0;
@@ -36,11 +41,17 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar>
         });
       }
     });
+
     tabs = [
-      HomePage(key: const PageStorageKey('Home'), tabController: tabController),
-      const TimetablePage(), // Cannot preserve state with PageStorageKey
-      const PortalPage(key: PageStorageKey('Portal')),
-      const PeoplePage(key: PageStorageKey('People')),
+      NavigationRoute(
+          HomePage(
+              key: const PageStorageKey('Home'), tabController: tabController),
+          Routes.home),
+      NavigationRoute(const TimetablePage(), Routes.timetable),
+      NavigationRoute(
+          const PortalPage(key: PageStorageKey('Portal')), Routes.portal),
+      NavigationRoute(
+          const PeoplePage(key: PageStorageKey('People')), Routes.people),
     ];
   }
 
@@ -72,7 +83,7 @@ class MobileNavigationBar extends StatefulWidget {
       {Key key, this.tabs, this.tabController, this.bucket, this.tabIndex})
       : super(key: key);
 
-  final List<Widget> tabs;
+  final List<NavigationRoute> tabs;
   final TabController tabController;
   final PageStorageBucket bucket;
   final int tabIndex;
@@ -92,7 +103,8 @@ class _MobileNavigationBarState extends State<MobileNavigationBar> {
       child: Scaffold(
         body: PageStorage(
           child: TabBarView(
-              controller: widget.tabController, children: widget.tabs),
+              controller: widget.tabController,
+              children: widget.tabs.map((e) => e.page)),
           bucket: widget.bucket,
         ),
         bottomNavigationBar: SafeArea(
@@ -153,7 +165,7 @@ class WebNavigationBar extends StatefulWidget {
   const WebNavigationBar({Key key, this.tabs, this.bucket, this.tabIndex})
       : super(key: key);
 
-  final List<Widget> tabs;
+  final List<NavigationRoute> tabs;
   final PageStorageBucket bucket;
   final int tabIndex;
 
@@ -198,6 +210,9 @@ class _WebNavigationBarState extends State<WebNavigationBar> {
             onDestinationSelected: (int index) {
               setState(() {
                 currentTab = index;
+
+                html.window.history.pushState(
+                    null, null, '/#${widget.tabs[currentTab].page}');
               });
             },
             extended: _extended,
@@ -237,7 +252,7 @@ class _WebNavigationBarState extends State<WebNavigationBar> {
           Expanded(
             flex: 5,
             child: PageStorage(
-              child: widget.tabs[currentTab],
+              child: widget.tabs[currentTab].page,
               bucket: widget.bucket,
             ),
           ),

@@ -24,6 +24,8 @@ import 'package:time_machine/time_machine.dart';
 import 'package:timetable/timetable.dart';
 
 class TimetablePage extends StatefulWidget {
+  static const String routeName = '/timetable';
+
   const TimetablePage({Key key}) : super(key: key);
 
   @override
