@@ -5,6 +5,8 @@ import 'package:acs_upb_mobile/pages/people/view/people_page.dart';
 import 'package:acs_upb_mobile/pages/portal/view/portal_page.dart';
 import 'package:acs_upb_mobile/pages/timetable/view/timetable_page.dart';
 import 'package:acs_upb_mobile/resources/banner.dart';
+import 'package:acs_upb_mobile/resources/utils.dart';
+import 'package:acs_upb_mobile/widgets/icon_text.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
@@ -295,20 +297,43 @@ class _DummySearchBarState extends State<DummySearchBar> {
             child: Padding(
               padding: const EdgeInsets.all(25),
               child: PopupMenuButton(
+                color: Theme.of(context).backgroundColor,
                 offset: const Offset(-5, 45),
                 tooltip: 'Profile Menu',
                 child: const CircleAvatar(
-                  radius: 20,
+                  radius: 25,
                   backgroundImage: AssetImage(
                     'assets/illustrations/undraw_profile_pic.png',
                   ),
                 ),
                 itemBuilder: (context) {
-                  return <PopupMenuItem<dynamic>>[
-                    PopupMenuItem(
-                      // TODO(RazvanRotaru): create a new View of ProfileCard()
-                      child: ProfileCard(),
+                  return <PopupMenuEntry<void>>[
+                    const PopupMenuItem(
+                      enabled: false,
+                      child: ProfileCard(
+                        isMenu: true,
+                      ),
                     ),
+                    const PopupMenuDivider(),
+                    PopupMenuItem(
+                      child: IconText(
+                        icon: Icons.settings,
+                        text: 'Settings',
+                        onTap: () {
+                          // TODO(RazvanRotaru): add SettingsPage view
+                          print('Goto Settings');
+                        },
+                      ),
+                    ),
+                    PopupMenuItem(
+                      child: IconText(
+                        icon: Icons.logout,
+                        text: 'Log Out',
+                        onTap: () {
+                          Utils.signOut(context);
+                        },
+                      ),
+                    )
                   ];
                 },
               ),
