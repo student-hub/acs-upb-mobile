@@ -125,14 +125,16 @@ class _MyAppState extends State<MyApp> {
       theme: theme,
       initialRoute: Routes.root,
 
-      // TODO(RazvanRotaru): clean this
+      // TODO(RazvanRotaru): Clean this v
       onGenerateRoute: (RouteSettings settings) {
         if (settings.name.startsWith('/people')) {
-          final String name = settings.name.split('profile=').last;
+          final String name =
+              settings.name.split('profile=').last.replaceAll('%20', ' ');
           return MaterialPageRoute<void>(
             builder: (BuildContext context) =>
                 PersonView.fromName(context, name),
-            settings: settings,
+            settings: RouteSettings(
+                name: '/people?profile=$name', arguments: settings.arguments),
           );
         }
 

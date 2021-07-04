@@ -206,25 +206,26 @@ class _WebNavigationBarState extends State<WebNavigationBar> {
               NavigationRailDestination(
                 icon: const Icon(Icons.home),
                 selectedIcon: const Icon(Icons.home_outlined),
-                padding: const EdgeInsets.only(right: 5),
+                // TODO(RazvanRotaru): re-enable padding after Flutter2 migration (also works on 1.27+)
+                // padding: const EdgeInsets.only(right: 5),
                 label: Text(S.current.navigationHome),
               ),
               NavigationRailDestination(
                 icon: const Icon(Icons.calendar_today),
                 selectedIcon: const Icon(Icons.calendar_today_outlined),
-                padding: const EdgeInsets.only(right: 5),
+                // padding: const EdgeInsets.only(right: 5),
                 label: Text(S.current.navigationTimetable),
               ),
               NavigationRailDestination(
                 icon: const Icon(FeatherIcons.globe),
                 selectedIcon: const Icon(FeatherIcons.globe),
-                padding: const EdgeInsets.only(right: 5),
+                // padding: const EdgeInsets.only(right: 5),
                 label: Text(S.current.navigationPortal),
               ),
               NavigationRailDestination(
                 icon: const Icon(Icons.people),
                 selectedIcon: const Icon(Icons.people_outlined),
-                padding: const EdgeInsets.only(right: 5),
+                // padding: const EdgeInsets.only(right: 5),
                 label: Text(S.current.navigationPeople),
               ),
             ],
