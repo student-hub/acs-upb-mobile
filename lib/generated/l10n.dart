@@ -2625,6 +2625,26 @@ class S {
     );
   }
 
+  /// `Share your experience so future generations of students will receive statistics about this class!`
+  String get messageFeedbackMotivationOverview {
+    return Intl.message(
+      'Share your experience so future generations of students will receive statistics about this class!',
+      name: 'messageFeedbackMotivationOverview',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Key aspects we take into account:`
+  String get messageFeedbackAspects {
+    return Intl.message(
+      'Key aspects we take into account:',
+      name: 'messageFeedbackAspects',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Your data and privacy are respected. We do not report individual responses, but these are aggregated, thus an opinion cannot be associated with a particular profile.`
   String get messageFeedbackMotivation1 {
     return Intl.message(

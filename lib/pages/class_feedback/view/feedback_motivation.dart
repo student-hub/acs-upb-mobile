@@ -24,18 +24,25 @@ class FeedbackMotivation extends StatelessWidget {
                 ),
                 const SizedBox(height: 15),
                 Text(
-                  'Share your experience so future generations of students will receive statistics about this class!',
+                  S.current.messageFeedbackMotivationOverview,
                   style: Theme.of(context).textTheme.headline6,
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 24),
-                const Text(
-                  'Key aspects we take into account:',
-                  style: TextStyle(
+                Text(
+                  S.current.messageFeedbackAspects,
+                  style: const TextStyle(
                     fontSize: 18,
                   ),
                 ),
                 const SizedBox(height: 15),
+                const Center(
+                  child: Icon(
+                    Icons.data_usage_outlined,
+                    size: 40,
+                  ),
+                ),
+                const SizedBox(height: 10),
                 RichText(
                   text: TextSpan(
                     style: const TextStyle(
@@ -43,17 +50,18 @@ class FeedbackMotivation extends StatelessWidget {
                       fontFamily: 'Montserrat',
                     ),
                     children: [
-                      const TextSpan(
-                        text: '1. ',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
                       TextSpan(text: S.current.messageFeedbackMotivation1),
                     ],
                   ),
                 ),
-                const SizedBox(height: 40),
+                const SizedBox(height: 30),
+                const Center(
+                  child: Icon(
+                    Icons.timeline_outlined,
+                    size: 40,
+                  ),
+                ),
+                const SizedBox(height: 10),
                 RichText(
                   text: TextSpan(
                     style: const TextStyle(
@@ -61,19 +69,20 @@ class FeedbackMotivation extends StatelessWidget {
                       fontFamily: 'Montserrat',
                     ),
                     children: [
-                      const TextSpan(
-                        text: '2. ',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
                       TextSpan(
                         text: S.current.messageFeedbackMotivation2,
                       ),
                     ],
                   ),
                 ),
-                const SizedBox(height: 40),
+                const SizedBox(height: 30),
+                const Center(
+                  child: Icon(
+                    Icons.bar_chart_outlined,
+                    size: 40,
+                  ),
+                ),
+                const SizedBox(height: 10),
                 RichText(
                   text: TextSpan(
                     style: const TextStyle(
@@ -81,19 +90,20 @@ class FeedbackMotivation extends StatelessWidget {
                       fontFamily: 'Montserrat',
                     ),
                     children: [
-                      const TextSpan(
-                        text: '3. ',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
                       TextSpan(
                         text: S.current.messageFeedbackMotivation3,
                       ),
                     ],
                   ),
                 ),
-                const SizedBox(height: 40),
+                const SizedBox(height: 30),
+                const Center(
+                  child: Icon(
+                    Icons.accessibility_new_outlined,
+                    size: 40,
+                  ),
+                ),
+                const SizedBox(height: 10),
                 RichText(
                   text: TextSpan(
                     style: const TextStyle(
@@ -101,19 +111,20 @@ class FeedbackMotivation extends StatelessWidget {
                       fontFamily: 'Montserrat',
                     ),
                     children: [
-                      const TextSpan(
-                        text: '4. ',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
                       TextSpan(
                         text: S.current.messageFeedbackMotivation4,
                       ),
                     ],
                   ),
                 ),
-                const SizedBox(height: 40),
+                const SizedBox(height: 30),
+                const Center(
+                  child: Icon(
+                    Icons.emoji_objects_outlined,
+                    size: 40,
+                  ),
+                ),
+                const SizedBox(height: 10),
                 RichText(
                   text: TextSpan(
                     style: const TextStyle(
@@ -121,12 +132,6 @@ class FeedbackMotivation extends StatelessWidget {
                       fontFamily: 'Montserrat',
                     ),
                     children: [
-                      const TextSpan(
-                        text: '5. ',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
                       TextSpan(
                         text: S.current.messageFeedbackMotivation5,
                       ),

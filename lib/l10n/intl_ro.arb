@@ -273,6 +273,8 @@
   "messageYouCanContribute": "Poți contribui la datele din aplicație, dar trebuie mai întâi să ceri permisiuni.",
   "messageThereAreNoEventsForSelected": "Nu există evenimente pentru selecția de ",
   "messagePictureUpdatedSuccess": "Poza a fost actualizată cu succes.",
+  "messageFeedbackMotivationOverview": "Împărtășiți-vă experiența, astfel încât generațiile viitoare de studenți să primească statistici despre această materie!",
+  "messageFeedbackAspects": "Aspecte cheie pe care le luăm în considerare:",
   "messageFeedbackMotivation1": "Datele și confidențialitatea ta sunt respectate. Nu colectăm răspunsuri individuale, ci acestea sunt agregate, astfel încât o opinie să nu poată fi asociată cu un profil anume.",
   "messageFeedbackMotivation2": "Informațiile partajate vor fi păstrate în baza noastră de date timp de cel puțin 4 ani (durata studiului ciclului de licență), astfel încât să se poată observa evoluția în timp.",
   "messageFeedbackMotivation3": "Accesul la statistici este permis oricărui student care dorește să afle impresii despre o disciplină în timpul semestrului. Cu toate acestea, în timp ce oportunitatea de a împărtăși feedback este activă, numai studenții care și-au exprimat deja opinia pot analiza ideile altora.",
