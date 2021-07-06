@@ -2,6 +2,7 @@ import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/pages/planner/service/planner_provider.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/events/uni_event.dart';
 import 'package:acs_upb_mobile/pages/timetable/service/uni_event_provider.dart';
+import 'package:acs_upb_mobile/widgets/effort_graph.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:acs_upb_mobile/widgets/tasks_list.dart';
 import 'package:flutter/cupertino.dart';
@@ -77,6 +78,12 @@ class _PlannerViewState extends State<PlannerView> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
+                    EffortGraph(
+                      events: assignments.toList(),
+                      title: 'Effort Graph',
+                      isExpanded: true,
+                    ),
+                    const SizedBox(width: 16),
                     TasksList(
                       events: _currentEvents().toList(),
                       title: S.current.labelComingUp,

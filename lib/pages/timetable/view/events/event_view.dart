@@ -1,5 +1,6 @@
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
+import 'package:acs_upb_mobile/navigation/routes.dart';
 import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
 import 'package:acs_upb_mobile/pages/classes/view/class_view.dart';
 import 'package:acs_upb_mobile/pages/classes/view/classes_page.dart';
@@ -42,6 +43,9 @@ class _EventViewState extends State<EventView> {
   Goal goal;
   bool updating;
 
+  List<String> strategies = ['Constant', 'Early', 'Late'];
+  String selectedStrategy;
+
   TextEditingController targetGradeController;
 
   Future<void> updateHiddenEvents() async {
@@ -68,13 +72,9 @@ class _EventViewState extends State<EventView> {
     goal = await plannerProvider.fetchGoal(
         authProvider.uid, widget.eventInstance?.id);
 
-    //Update logic to always implement an event
-    //if (goal == null) {
-    //await plannerProvider.setUserGoal(authProvider.uid,
-    //    Goal(taskId: widget.eventInstance?.id, targetGrade: 0.1));
-    //}
     targetGradeController =
         TextEditingController(text: goal?.targetGrade?.toString() ?? '0');
+    selectedStrategy = goal?.strategy ?? strategies[0];
     updating = false;
     if (mounted) {
       setState(() {});
@@ -103,6 +103,8 @@ class _EventViewState extends State<EventView> {
 
   @override
   Widget build(BuildContext context) {
+    final PlannerProvider plannerProvider =
+        Provider.of<PlannerProvider>(context, listen: false);
     final user = Provider.of<AuthProvider>(context).currentUserFromCache;
     final UniEvent mainEvent =
         widget.eventInstance?.mainEvent ?? widget.uniEvent;
@@ -312,66 +314,156 @@ class _EventViewState extends State<EventView> {
             if (mainEvent is TaskEvent)
               Padding(
                 padding: const EdgeInsets.all(10),
-                child: Card(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: ListTile(
-                    leading: const Icon(
-                      Icons.link_outlined,
+                child: Row(
+                  children: [
+                    Flexible(
+                      flex: 2,
+                      child: ListTile(
+                        leading: const Icon(
+                          Icons.pie_chart_outlined,
+                        ),
+                        title: Text(
+                          '${mainEvent.grade} points',
+                        ),
+                      ),
                     ),
-                    title: Text("Start Tacking your progress",
-                        style: Theme.of(context).textTheme.subtitle1),
-                    onTap: () => showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
+                    if (widget.eventInstance != null)
+                      Flexible(
+                        flex: 3,
+                        child: Card(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: ListTile(
+                            leading: const Icon(
+                              Icons.library_add_check,
                             ),
-                            content: Stack(
-                              children: <Widget>[
-                                // Positioned(
-                                //   right: -20,
-                                //   top: -40,
-                                //   child: InkResponse(
-                                //     onTap: () {
-                                //       Navigator.of(context).pop();
-                                //     },
-                                //     child: const CircleAvatar(
-                                //       child: Icon(Icons.close),
-                                //       backgroundColor: Colors.red,
-                                //     ),
-                                //   ),
-                                // ),
-                                Form(
-                                  key: _formKey,
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: <Widget>[
-                                      TextFormField(
-                                        controller: targetGradeController,
-                                        keyboardType: TextInputType.number,
-                                        inputFormatters: <TextInputFormatter>[
-                                          FilteringTextInputFormatter.allow(
-                                              RegExp(r'(^\d*\.?\d*)$')),
-                                        ],
-                                        decoration: InputDecoration(
-                                          labelText: S.current.sectionGrading,
-                                          hintText: '1.5',
-                                          prefixIcon:
-                                              const Icon(FeatherIcons.pieChart),
+                            title: Text('Edit goal',
+                                style: Theme.of(context).textTheme.headline6),
+                            onTap: () async => showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    content: Stack(
+                                      children: <Widget>[
+                                        // Positioned(
+                                        //   right: -20,
+                                        //   top: -40,
+                                        //   child: InkResponse(
+                                        //     onTap: () {
+                                        //       Navigator.of(context).pop();
+                                        //     },
+                                        //     child: const CircleAvatar(
+                                        //       child: Icon(Icons.close),
+                                        //       backgroundColor: Colors.red,
+                                        //     ),
+                                        //   ),
+                                        // ),
+                                        Form(
+                                          key: _formKey,
+                                          child: Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: <Widget>[
+                                              TextFormField(
+                                                controller:
+                                                    targetGradeController,
+                                                keyboardType:
+                                                    TextInputType.number,
+                                                inputFormatters: <
+                                                    TextInputFormatter>[
+                                                  FilteringTextInputFormatter
+                                                      .allow(RegExp(
+                                                          r'(^\d*\.?\d*)$')),
+                                                ],
+                                                decoration: InputDecoration(
+                                                  labelText: 'Target Grade',
+                                                  hintText:
+                                                      'Max ${widget.eventInstance.grade}',
+                                                  prefixIcon: const Icon(
+                                                      FeatherIcons.pieChart),
+                                                ),
+                                                onChanged: (_) =>
+                                                    setState(() {}),
+                                              ),
+                                              DropdownButtonFormField<String>(
+                                                isExpanded: true,
+                                                decoration:
+                                                    const InputDecoration(
+                                                  labelText: 'Strategy',
+                                                  prefixIcon:
+                                                      Icon(Icons.timer_rounded),
+                                                ),
+                                                value: selectedStrategy,
+                                                items: strategies
+                                                    .map(
+                                                      (header) =>
+                                                          DropdownMenuItem(
+                                                              value: header,
+                                                              child:
+                                                                  Text(header)),
+                                                    )
+                                                    .toList(),
+                                                onChanged: (selection) {
+                                                  _formKey.currentState
+                                                      .validate();
+                                                  setState(() =>
+                                                      selectedStrategy =
+                                                          selection);
+                                                },
+                                                validator: (selection) {
+                                                  if (selection == null) {
+                                                    return S.current
+                                                        .errorClassCannotBeEmpty;
+                                                  }
+                                                  return null;
+                                                },
+                                              ),
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.fromLTRB(
+                                                        0, 18, 0, 0),
+                                                child: RaisedButton(
+                                                  child: Text("Submit"),
+                                                  onPressed: () async {
+                                                    if (_formKey.currentState
+                                                        .validate()) {
+                                                      final Goal goal = Goal(
+                                                          taskId: mainEvent.id,
+                                                          targetGrade: double.parse(
+                                                              targetGradeController
+                                                                  .text),
+                                                          strategy:
+                                                              selectedStrategy);
+                                                      final res =
+                                                          await plannerProvider
+                                                              .setUserGoal(
+                                                                  user.uid,
+                                                                  goal);
+                                                      if (res) {
+                                                        Navigator.of(context)
+                                                            .pop();
+                                                        AppToast.show(S.current
+                                                            .messageEventEdited);
+                                                        await updateGoal();
+                                                      }
+                                                    }
+                                                  },
+                                                ),
+                                              ),
+                                            ],
+                                          ),
                                         ),
-                                        onChanged: (_) => setState(() {}),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          );
-                        }),
-                  ),
+                                      ],
+                                    ),
+                                  );
+                                }),
+                          ),
+                        ),
+                      ),
+                  ],
                 ),
               ),
             if (mainEvent is TaskEvent)
@@ -385,8 +477,6 @@ class _EventViewState extends State<EventView> {
                           )
                         : Container(
                             height: 100,
-                            child: const Center(
-                                child: CircularProgressIndicator()),
                           ),
                   ),
                 ],

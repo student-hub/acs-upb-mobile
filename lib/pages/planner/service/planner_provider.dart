@@ -12,7 +12,9 @@ extension GoalExtension on Goal {
 
     for (final goalData in data['taskGoals']) {
       goalList.add(Goal(
-          taskId: goalData['taskId'], targetGrade: goalData['targetGrade']));
+          taskId: goalData['taskId'],
+          targetGrade: double.parse(goalData['targetGrade'].toString()),
+          strategy: goalData['strategy']));
     }
     return goalList;
   }
@@ -24,7 +26,11 @@ extension GoalExtension on Goal {
   }
 
   Map<String, dynamic> toData() {
-    final json = {'targetGrade': targetGrade, 'taskId': taskId};
+    final json = {
+      'targetGrade': targetGrade,
+      'taskId': taskId,
+      'strategy': strategy
+    };
     return json;
   }
 }

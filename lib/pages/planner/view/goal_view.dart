@@ -23,25 +23,150 @@ class GoalView extends StatelessWidget {
                 padding: EdgeInsets.all(12),
               ),
             )
-          : Row(
+          : Column(
               children: [
-                Flexible(
-                  flex: 4,
-                  child: Container(
-                    //height: 200,
-                    color: Colors.teal,
-                    child: Text(goal.taskId),
-                  ),
+                Row(
+                  children: [
+                    Flexible(
+                      flex: 2,
+                      child: Card(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(12),
+                          child: Column(
+                            children: <Widget>[
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Expanded(
+                                    child: Text(
+                                      'Target Grade',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headline6
+                                          .copyWith(fontSize: 16),
+                                      overflow: TextOverflow.fade,
+                                      maxLines: 2,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 10),
+                              ListTile(
+                                key: ValueKey('Target goal'),
+                                title: Text(
+                                  goal.targetGrade.toString(),
+                                  style: Theme.of(context).textTheme.headline4,
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    //const Spacer(flex: 1),
+                    Flexible(
+                      flex: 3,
+                      child: Card(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(12),
+                          child: Column(
+                            children: <Widget>[
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Expanded(
+                                    child: Text(
+                                      'Strategy',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headline6
+                                          .copyWith(fontSize: 18),
+                                      overflow: TextOverflow.fade,
+                                      maxLines: 2,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 10),
+                              ListTile(
+                                key: const ValueKey('Strategy'),
+                                title: Text(
+                                  goal.strategy ?? 'No strategy selected yet',
+                                  style: Theme.of(context).textTheme.headline6,
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                    )
+                  ],
                 ),
-                const Spacer(flex: 2),
-                Flexible(
-                  flex: 6,
-                  child: Container(
-                    // height: 200,
-                    color: Colors.teal,
-                    child: Text(goal.taskId),
-                  ),
-                )
+                const SizedBox(height: 10),
+                Row(
+                  children: [
+                    Flexible(
+                      flex: 1,
+                      child: Card(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(12),
+                          child: Column(
+                            children: <Widget>[
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Expanded(
+                                    child: Text(
+                                      'Indications',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headline6
+                                          .copyWith(fontSize: 18),
+                                      overflow: TextOverflow.fade,
+                                      maxLines: 2,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 10),
+                              ListTile(
+                                key: const ValueKey('Indications'),
+                                title: Text(
+                                  '-> 50% points by Mar 20',
+                                  style: Theme.of(context).textTheme.headline6,
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    //const Spacer(flex: 1),
+                    // Flexible(
+                    //   flex: 6,
+                    //   child: Card(
+                    //     // height: 200,
+                    //
+                    //     child: Text(
+                    //       goal.taskId,
+                    //       textScaleFactor: 2,
+                    //     ),
+                    //   ),
+                    // )
+                  ],
+                ),
               ],
             ),
     );
