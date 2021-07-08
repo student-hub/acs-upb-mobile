@@ -1,7 +1,12 @@
+import 'dart:math';
+
 import 'package:acs_upb_mobile/pages/timetable/model/events/uni_event.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:quiver/time.dart';
+import 'package:time_machine/time_machine.dart';
+import 'package:acs_upb_mobile/generated/l10n.dart';
 
 class EffortGraph extends StatefulWidget {
   const EffortGraph({
@@ -165,14 +170,26 @@ class _EffortGraphState extends State<EffortGraph>
               fontSize: 16),
           getTitles: (value) {
             switch (value.toInt()) {
-              case 1:
-                return 'MAR';
+              case 0:
+                return LocalDateTime.now()
+                    .add(Period(months: 2))
+                    .subtract(Period(months: 4))
+                    .toString('MMM');
               case 4:
-                return 'APR';
-              case 7:
-                return 'MAY';
-              case 10:
-                return 'JUN';
+                return LocalDateTime.now()
+                    .add(Period(months: 2))
+                    .subtract(Period(months: 3))
+                    .toString('MMM');
+              case 8:
+                return LocalDateTime.now()
+                    .add(Period(months: 2))
+                    .subtract(Period(months: 2))
+                    .toString('MMM');
+              case 12:
+                return LocalDateTime.now()
+                    .add(Period(months: 2))
+                    .subtract(Period(months: 1))
+                    .toString('MMM');
             }
             return '';
           },
@@ -189,8 +206,12 @@ class _EffortGraphState extends State<EffortGraph>
             switch (value.toInt()) {
               case 1:
                 return '1';
+              case 2:
+                return '2';
               case 3:
                 return '3';
+              case 4:
+                return '4';
               case 5:
                 return '5';
               case 8:
@@ -206,34 +227,98 @@ class _EffortGraphState extends State<EffortGraph>
           show: true,
           border: Border.all(color: const Color(0xff37434d), width: 1)),
       minX: 0,
-      maxX: 11,
+      maxX: 13,
       minY: 0,
-      maxY: 6,
+      maxY: max(maxTasks() + 1, 3),
       lineBarsData: [
-        LineChartBarData(
-          spots: [
-            FlSpot(0, 0),
-            FlSpot(2.6, 2),
-            FlSpot(4.9, 5),
-            FlSpot(6.8, 3),
-            FlSpot(8, 4),
-            FlSpot(9.5, 3),
-            FlSpot(11, 0),
-          ],
-          isCurved: true,
-          colors: gradientColors,
-          barWidth: 5,
-          isStrokeCapRound: true,
-          dotData: FlDotData(
-            show: false,
-          ),
-          belowBarData: BarAreaData(
-            show: true,
-            colors:
-                gradientColors.map((color) => color.withOpacity(0.3)).toList(),
-          ),
-        ),
+        generateGraph(),
       ],
+    );
+  }
+
+  double dateToNumber(LocalDateTime date) {
+    return double.parse(
+        ((date.dayOfMonth / daysInMonth(date.year, date.monthOfYear)) * 4 +
+                4 * (date.monthOfYear - 3))
+            .toStringAsFixed(2));
+  }
+
+  double maxTasks() {
+    int effort = 0;
+    int maxEffort = 0;
+    List<double> start = [];
+    List<double> end = [];
+    int i = 0;
+    int j = 0;
+    for (final UniEventInstance event in widget.events) {
+      start.add(dateToNumber(event.mainEvent.start));
+      end.add(dateToNumber(event.end));
+    }
+    end.sort();
+    while (i < widget.events.length || j < widget.events.length) {
+      if (i < widget.events.length && start[i] <= end[j]) {
+        effort++;
+        if (effort > maxEffort) {
+          maxEffort = effort;
+        }
+        i++;
+      } else if (i == widget.events.length ||
+          (j < widget.events.length && end[j] <= start[i])) {
+        effort--;
+        j++;
+      } else {
+        i++;
+        j++;
+      }
+    }
+    return maxEffort * 1.0;
+  }
+
+  LineChartBarData generateGraph() {
+    int effort = 0;
+    List<double> start = [];
+    List<double> end = [];
+    List<FlSpot> points = [FlSpot(0, 0)];
+    int i = 0;
+    int j = 0;
+    for (final UniEventInstance event in widget.events) {
+      start.add(dateToNumber(event.mainEvent.start));
+      end.add(dateToNumber(event.end));
+    }
+    end.sort();
+    if (widget.events.length > 0) points.add(FlSpot(0, 0));
+    while (i < widget.events.length || j < widget.events.length) {
+      if (i < widget.events.length && start[i] <= end[j]) {
+        effort++;
+        points.add(FlSpot(start[i] - 0.05, (effort - 1) * 1.0));
+        points.add(FlSpot(start[i], effort * 1.0));
+        i++;
+      } else if (i == widget.events.length ||
+          (j < widget.events.length && end[j] <= start[i])) {
+        effort--;
+        points.add(FlSpot(end[j] - 0.05, (effort + 1) * 1.0));
+        points.add(FlSpot(end[j], effort * 1.0));
+        j++;
+      } else {
+        i++;
+        j++;
+      }
+    }
+    points.add(FlSpot(13, 0));
+
+    return LineChartBarData(
+      spots: points,
+      isCurved: false,
+      colors: gradientColors,
+      barWidth: 5,
+      isStrokeCapRound: true,
+      dotData: FlDotData(
+        show: false,
+      ),
+      belowBarData: BarAreaData(
+        show: true,
+        colors: gradientColors.map((color) => color.withOpacity(0.3)).toList(),
+      ),
     );
   }
 }

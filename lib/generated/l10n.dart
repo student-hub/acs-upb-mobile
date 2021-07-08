@@ -635,6 +635,16 @@ class S {
     );
   }
 
+  /// `Effort Graph`
+  String get sectionEffortGraph {
+    return Intl.message(
+      'Effort Graph',
+      name: 'sectionEffortGraph',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Main page`
   String get shortcutTypeMain {
     return Intl.message(

@@ -246,6 +246,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "navigationTimetable" : MessageLookupByLibrary.simpleMessage("Orar"),
     "relevanceAnyone" : MessageLookupByLibrary.simpleMessage("Oricine"),
     "relevanceOnlyMe" : MessageLookupByLibrary.simpleMessage("Doar eu"),
+    "sectionEffortGraph" : MessageLookupByLibrary.simpleMessage("Grafic efort"),
     "sectionEvents" : MessageLookupByLibrary.simpleMessage("Evenimente"),
     "sectionEventsComingUp" : MessageLookupByLibrary.simpleMessage("Evenimente următoare"),
     "sectionFAQ" : MessageLookupByLibrary.simpleMessage("Întrebări frecvente"),

@@ -57,12 +57,15 @@ class _PlannerViewState extends State<PlannerView> {
         event.hidden == false &&
         event.end.toDateTimeLocal().isAfter(DateTime.now()));
 
-    Iterable<UniEventInstance> _hiddenEvents() => assignments.where((event) =>
-        event.hidden == true &&
-        event.end.toDateTimeLocal().isAfter(DateTime.now()));
+    Iterable<UniEventInstance> _hiddenEvents() =>
+        assignments.where((event) => event.hidden == true);
 
-    Iterable<UniEventInstance> _pastEvents() => assignments
-        .where((event) => event.end.toDateTimeLocal().isBefore(DateTime.now()));
+    Iterable<UniEventInstance> _pastEvents() => assignments.where((event) =>
+        event.hidden == false &&
+        event.end.toDateTimeLocal().isBefore(DateTime.now()));
+
+    Iterable<UniEventInstance> _visibleEvents() =>
+        assignments.where((event) => event.hidden == false);
 
     return AppScaffold(
       title: Text(S.current.sectionPlanner),
@@ -79,8 +82,8 @@ class _PlannerViewState extends State<PlannerView> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     EffortGraph(
-                      events: assignments.toList(),
-                      title: 'Effort Graph',
+                      events: _visibleEvents().toList(),
+                      title: S.current.sectionEffortGraph,
                       isExpanded: true,
                     ),
                     const SizedBox(width: 16),

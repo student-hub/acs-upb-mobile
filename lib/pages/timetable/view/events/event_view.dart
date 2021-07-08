@@ -14,12 +14,14 @@ import 'package:acs_upb_mobile/pages/timetable/model/events/class_event.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/events/task_event.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/events/uni_event.dart';
 import 'package:acs_upb_mobile/pages/timetable/view/events/add_event_view.dart';
+import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
+import 'package:positioned_tap_detector/positioned_tap_detector.dart';
 import 'package:provider/provider.dart';
 
 class EventView extends StatefulWidget {
@@ -273,12 +275,19 @@ class _EventViewState extends State<EventView> {
                 (mainEvent.location?.isNotEmpty ?? false))
               Padding(
                 padding: const EdgeInsets.all(10),
-                child: ListTile(
-                  leading: const Icon(
-                    Icons.link_outlined,
+                child: PositionedTapDetector(
+                  onTap: (_) => Utils.launchURL(mainEvent.location),
+                  onLongPress: (_) => Utils.launchURL(mainEvent.location),
+                  child: ListTile(
+                    leading: const Icon(
+                      Icons.link_outlined,
+                    ),
+                    title: Text(mainEvent.location,
+                        style: Theme.of(context)
+                            .accentTextTheme
+                            .subtitle2
+                            .copyWith(color: Theme.of(context).accentColor)),
                   ),
-                  title: Text(mainEvent.location,
-                      style: Theme.of(context).textTheme.subtitle1),
                 ),
               ),
             if (mainEvent is TaskEvent &&
@@ -330,136 +339,135 @@ class _EventViewState extends State<EventView> {
                     if (widget.eventInstance != null)
                       Flexible(
                         flex: 3,
-                        child: Card(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: ListTile(
-                            leading: const Icon(
-                              Icons.library_add_check,
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(0, 0, 8, 0),
+                          child: Card(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
                             ),
-                            title: Text('Edit goal',
-                                style: Theme.of(context).textTheme.headline6),
-                            onTap: () async => showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return AlertDialog(
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    content: Stack(
-                                      children: <Widget>[
-                                        // Positioned(
-                                        //   right: -20,
-                                        //   top: -40,
-                                        //   child: InkResponse(
-                                        //     onTap: () {
-                                        //       Navigator.of(context).pop();
-                                        //     },
-                                        //     child: const CircleAvatar(
-                                        //       child: Icon(Icons.close),
-                                        //       backgroundColor: Colors.red,
-                                        //     ),
-                                        //   ),
-                                        // ),
-                                        Form(
-                                          key: _formKey,
-                                          child: Column(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: <Widget>[
-                                              TextFormField(
-                                                controller:
-                                                    targetGradeController,
-                                                keyboardType:
-                                                    TextInputType.number,
-                                                inputFormatters: <
-                                                    TextInputFormatter>[
-                                                  FilteringTextInputFormatter
-                                                      .allow(RegExp(
-                                                          r'(^\d*\.?\d*)$')),
-                                                ],
-                                                decoration: InputDecoration(
-                                                  labelText: 'Target Grade',
-                                                  hintText:
-                                                      'Max ${widget.eventInstance.grade}',
-                                                  prefixIcon: const Icon(
-                                                      FeatherIcons.pieChart),
+                            child: ListTile(
+                              leading: const Icon(
+                                Icons.library_add_check,
+                              ),
+                              title: goal != null
+                                  ? Text('Edit goal',
+                                      style:
+                                          Theme.of(context).textTheme.headline6)
+                                  : Text('Add goal',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headline6),
+                              onTap: () async => showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      content: Stack(
+                                        children: <Widget>[
+                                          Form(
+                                            key: _formKey,
+                                            child: Column(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: <Widget>[
+                                                TextFormField(
+                                                  controller:
+                                                      targetGradeController,
+                                                  keyboardType:
+                                                      TextInputType.number,
+                                                  inputFormatters: <
+                                                      TextInputFormatter>[
+                                                    FilteringTextInputFormatter
+                                                        .allow(RegExp(
+                                                            r'(^\d*\.?\d*)$')),
+                                                  ],
+                                                  decoration: InputDecoration(
+                                                    labelText: 'Target Grade',
+                                                    hintText:
+                                                        'Max ${widget.eventInstance.grade}',
+                                                    prefixIcon: const Icon(
+                                                        FeatherIcons.pieChart),
+                                                  ),
+                                                  onChanged: (_) =>
+                                                      setState(() {}),
                                                 ),
-                                                onChanged: (_) =>
-                                                    setState(() {}),
-                                              ),
-                                              DropdownButtonFormField<String>(
-                                                isExpanded: true,
-                                                decoration:
-                                                    const InputDecoration(
-                                                  labelText: 'Strategy',
-                                                  prefixIcon:
-                                                      Icon(Icons.timer_rounded),
-                                                ),
-                                                value: selectedStrategy,
-                                                items: strategies
-                                                    .map(
-                                                      (header) =>
-                                                          DropdownMenuItem(
-                                                              value: header,
-                                                              child:
-                                                                  Text(header)),
-                                                    )
-                                                    .toList(),
-                                                onChanged: (selection) {
-                                                  _formKey.currentState
-                                                      .validate();
-                                                  setState(() =>
-                                                      selectedStrategy =
-                                                          selection);
-                                                },
-                                                validator: (selection) {
-                                                  if (selection == null) {
-                                                    return S.current
-                                                        .errorClassCannotBeEmpty;
-                                                  }
-                                                  return null;
-                                                },
-                                              ),
-                                              Padding(
-                                                padding:
-                                                    const EdgeInsets.fromLTRB(
-                                                        0, 18, 0, 0),
-                                                child: RaisedButton(
-                                                  child: Text("Submit"),
-                                                  onPressed: () async {
-                                                    if (_formKey.currentState
-                                                        .validate()) {
-                                                      final Goal goal = Goal(
-                                                          taskId: mainEvent.id,
-                                                          targetGrade: double.parse(
-                                                              targetGradeController
-                                                                  .text),
-                                                          strategy:
-                                                              selectedStrategy);
-                                                      final res =
-                                                          await plannerProvider
-                                                              .setUserGoal(
-                                                                  user.uid,
-                                                                  goal);
-                                                      if (res) {
-                                                        Navigator.of(context)
-                                                            .pop();
-                                                        AppToast.show(S.current
-                                                            .messageEventEdited);
-                                                        await updateGoal();
-                                                      }
+                                                DropdownButtonFormField<String>(
+                                                  isExpanded: true,
+                                                  decoration:
+                                                      const InputDecoration(
+                                                    labelText: 'Strategy',
+                                                    prefixIcon: Icon(
+                                                        Icons.timer_rounded),
+                                                  ),
+                                                  value: selectedStrategy,
+                                                  items: strategies
+                                                      .map(
+                                                        (header) =>
+                                                            DropdownMenuItem(
+                                                                value: header,
+                                                                child: Text(
+                                                                    header)),
+                                                      )
+                                                      .toList(),
+                                                  onChanged: (selection) {
+                                                    _formKey.currentState
+                                                        .validate();
+                                                    setState(() =>
+                                                        selectedStrategy =
+                                                            selection);
+                                                  },
+                                                  validator: (selection) {
+                                                    if (selection == null) {
+                                                      return S.current
+                                                          .errorClassCannotBeEmpty;
                                                     }
+                                                    return null;
                                                   },
                                                 ),
-                                              ),
-                                            ],
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.fromLTRB(
+                                                          0, 18, 0, 0),
+                                                  child: RaisedButton(
+                                                    child: Text("Submit"),
+                                                    onPressed: () async {
+                                                      if (_formKey.currentState
+                                                          .validate()) {
+                                                        final Goal goal = Goal(
+                                                            taskId:
+                                                                mainEvent.id,
+                                                            targetGrade:
+                                                                double.parse(
+                                                                    targetGradeController
+                                                                        .text),
+                                                            strategy:
+                                                                selectedStrategy);
+                                                        final res =
+                                                            await plannerProvider
+                                                                .setUserGoal(
+                                                                    user.uid,
+                                                                    goal);
+                                                        if (res) {
+                                                          Navigator.of(context)
+                                                              .pop();
+                                                          AppToast.show(S
+                                                              .current
+                                                              .messageEventEdited);
+                                                          await updateGoal();
+                                                        }
+                                                      }
+                                                    },
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
                                           ),
-                                        ),
-                                      ],
-                                    ),
-                                  );
-                                }),
+                                        ],
+                                      ),
+                                    );
+                                  }),
+                            ),
                           ),
                         ),
                       ),
