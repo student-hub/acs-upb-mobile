@@ -108,7 +108,7 @@ class PeoplePath extends RoutePath {
 }
 
 class ProfilePath extends RoutePath {
-  ProfilePath(this.name) : super(PersonView.routeName) {
+  ProfilePath(this.name) : super('${PersonView.routeName}?name=$name') {
     print('ProfilePath-Constructor: $name');
   }
 
