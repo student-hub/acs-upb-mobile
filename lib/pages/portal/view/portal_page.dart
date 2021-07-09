@@ -24,6 +24,8 @@ import 'package:recase/recase.dart';
 class PortalPage extends StatefulWidget {
   const PortalPage({Key key}) : super(key: key);
 
+  static const String routeName = '/portal';
+
   @override
   _PortalPageState createState() => _PortalPageState();
 }

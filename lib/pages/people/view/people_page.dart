@@ -1,4 +1,5 @@
 import 'package:acs_upb_mobile/generated/l10n.dart';
+import 'package:acs_upb_mobile/navigation/model/app_state.dart';
 import 'package:acs_upb_mobile/pages/people/model/person.dart';
 import 'package:acs_upb_mobile/pages/people/service/person_provider.dart';
 import 'package:acs_upb_mobile/pages/people/view/person_view.dart';
@@ -15,6 +16,8 @@ import 'package:recase/recase.dart';
 
 class PeoplePage extends StatefulWidget {
   const PeoplePage({Key key}) : super(key: key);
+
+  static const String routeName = '/people';
 
   @override
   _PeoplePageState createState() => _PeoplePageState();
@@ -144,8 +147,9 @@ class _PeopleListState extends State<PeopleList> {
     );
   }
 
-  void showPersonPage(String name) {
-    Navigator.pushNamed(context, '/people?profile=$name');
+  // TODO(RazvanRotaru): ditch Navigator and use!!! PersonProvider
+  Future<void> showPersonPage(String name) async {
+    Provider.of<AppStateProvider>(context, listen: false).profileName = name;
   }
 }
 

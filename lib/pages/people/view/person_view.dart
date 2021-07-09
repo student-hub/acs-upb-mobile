@@ -11,6 +11,8 @@ import 'package:provider/provider.dart';
 class PersonView extends StatelessWidget {
   const PersonView({Key key, this.person}) : super(key: key);
 
+  static const String routeName = '/profile';
+
   final Person person;
 
   @override

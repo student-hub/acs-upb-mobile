@@ -1,6 +1,6 @@
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
-import 'package:acs_upb_mobile/navigation/routes.dart';
+import 'package:acs_upb_mobile/navigation/model/routes.dart';
 import 'package:acs_upb_mobile/pages/home/faq_card.dart';
 import 'package:acs_upb_mobile/pages/home/favourite_websites_card.dart';
 import 'package:acs_upb_mobile/pages/home/feedback_nudge.dart';
@@ -15,6 +15,8 @@ import 'package:provider/provider.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({this.tabController, Key key}) : super(key: key);
+
+  static const String routeName = '/home';
 
   final TabController tabController;
 
