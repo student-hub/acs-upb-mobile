@@ -25,4 +25,9 @@ class AppStateProvider extends ChangeNotifier {
     _isLogged = logged;
     notifyListeners();
   }
+
+  @override
+  String toString() {
+    return 'AppStateProvider{_selectedTab: $_selectedTab, _profileName: $_profileName, _isLogged: $_isLogged}';
+  }
 }

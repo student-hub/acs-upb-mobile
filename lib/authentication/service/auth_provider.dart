@@ -76,7 +76,8 @@ class AuthProvider with ChangeNotifier {
             break;
           case 'ERROR_TOO_MANY_REQUESTS':
             AppToast.show(
-                '${S.current.errorTooManyRequests} ${S.current.warningTryAgainLater}');
+                '${S.current.errorTooManyRequests} ${S.current
+                    .warningTryAgainLater}');
             break;
           case 'ERROR_EMAIL_ALREADY_IN_USE':
             AppToast.show(S.current.errorEmailInUse);
@@ -170,7 +171,10 @@ class AuthProvider with ChangeNotifier {
 
   Future<User> get currentUser => _fetchUser();
 
-  User get currentUserFromCache => _currentUser;
+  User get currentUserFromCache {
+    print(_currentUser);
+    return _currentUser;
+  }
 
   Future<bool> signInAnonymously() async {
     return FirebaseAuth.instance.signInAnonymously().catchError((dynamic e) {
@@ -254,7 +258,7 @@ class AuthProvider with ChangeNotifier {
 
     try {
       final DocumentReference ref =
-          FirebaseFirestore.instance.collection('users').doc(_firebaseUser.uid);
+      FirebaseFirestore.instance.collection('users').doc(_firebaseUser.uid);
       await ref.delete();
 
       await _firebaseUser.delete();
@@ -361,7 +365,7 @@ class AuthProvider with ChangeNotifier {
       );
 
       final DocumentReference ref =
-          FirebaseFirestore.instance.collection('users').doc(_currentUser.uid);
+      FirebaseFirestore.instance.collection('users').doc(_currentUser.uid);
       await ref.set(_currentUser.toData());
 
       // Try to set the default from the user data
@@ -372,7 +376,8 @@ class AuthProvider with ChangeNotifier {
       await _firebaseUser.sendEmailVerification();
 
       AppToast.show(
-          '${S.current.messageAccountCreated} ${S.current.messageCheckEmailVerification}');
+          '${S.current.messageAccountCreated} ${S.current
+              .messageCheckEmailVerification}');
 
       notifyListeners();
       return true;
