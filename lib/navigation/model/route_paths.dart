@@ -108,7 +108,8 @@ class PeoplePath extends RoutePath {
 }
 
 class ProfilePath extends RoutePath {
-  ProfilePath(this.name) : super('${PersonView.routeName}?name=$name') {
+  ProfilePath(this.name)
+      : super('${PersonView.routeName}?name=${name.replaceAll(' ', '%20')}') {
     print('ProfilePath-Constructor: $name');
   }
 
@@ -131,7 +132,7 @@ class PathFactory {
       return RootPath();
     }
 
-    final String path = uri.pathSegments.first;
+    final String path = '/${uri.pathSegments.first}';
     switch (path) {
       case HomePage.routeName:
         return HomePath();
@@ -156,7 +157,7 @@ class PathFactory {
       case PeoplePage.routeName:
         return PeoplePath();
       case PersonView.routeName:
-        final name = path.split('name=').last;
+        final name = uri.queryParameters['name'];
         print('Factory-Person: $name');
         return ProfilePath(name);
       default:

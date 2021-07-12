@@ -12,10 +12,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-abstract class AppRouterDelegate extends RouterDelegate<RoutePath> with ChangeNotifier, PopNavigatorRouterDelegateMixin<RoutePath> {
+abstract class AppRouterDelegate extends RouterDelegate<RoutePath>
+    with ChangeNotifier, PopNavigatorRouterDelegateMixin<RoutePath> {
   T _initializeProvider<T extends Listenable>(BuildContext context) {
-    final T provider = Provider.of<T>(context);
-    provider.addListener(notifyListeners);
+    final T provider = Provider.of<T>(context)..addListener(notifyListeners);
     return provider;
   }
 }
@@ -58,6 +58,7 @@ class MainRouterDelegate extends AppRouterDelegate {
         if (!route.didPop(result)) {
           return false;
         }
+        print('onPopPage called');
         _appState.profileName = null;
         return true;
       },
@@ -67,31 +68,31 @@ class MainRouterDelegate extends AppRouterDelegate {
   @override
 // TODO(RazvanRotaru): Complete this
   RoutePath get currentConfiguration {
-    print('GET CONFIGURATION CALLED');
+    print('\n---------------\n'
+        'getConfiguration: $_appState'
+        '\n-------------');
+
+    if (!_authProvider.isAuthenticated) {
+      return LoginPath();
+    }
 
     if (_appState.profileName != null) {
       return ProfilePath(_appState.profileName);
     }
 
-    print(
-        '!!!!!!!!!!!!!! AuthProvider isAuthenticated = ${_authProvider.isAuthenticated}');
-    if (!_authProvider.isAuthenticated) {
-      print('am returning LoginPath');
-      return LoginPath();
-    }
-
-    if (_appState.selectedTab == 0) {
-      print('am returning HomePath');
-      return HomePath();
-    }
-    if (_appState.selectedTab == 1) {
-      return TimetablePath();
-    }
-    if (_appState.selectedTab == 2) {
-      return PortalPath();
-    }
-    if (_appState.selectedTab == 3) {
-      return PeoplePath();
+    if (_appState.selectedTab != null) {
+      switch (_appState.selectedTab) {
+        case 0:
+          return HomePath();
+        case 1:
+          return TimetablePath();
+        case 2:
+          return PortalPath();
+        case 3:
+          return PeoplePath();
+        default:
+          return HomePath();
+      }
     }
 
     return UnknownPath();
@@ -100,12 +101,14 @@ class MainRouterDelegate extends AppRouterDelegate {
   @override
 // TODO(RazvanRotaru): Complete this
   Future<void> setNewRoutePath(RoutePath configuration) async {
-    if (!(configuration is ProfilePath)) {
+    print('\n---------------\n'
+        'setNewRoute: $configuration'
+        '\n$_appState'
+        '\n-------------');
+    if (configuration is ProfilePath) {
+      _appState.profileName = configuration.name;
+    } else {
       _appState.profileName = null;
-    }
-
-    if (!(configuration is LoginPath)) {
-      _appState.isLogged = true;
     }
 
     if (configuration is HomePath) {
@@ -117,8 +120,6 @@ class MainRouterDelegate extends AppRouterDelegate {
     } else if (configuration is PeoplePath) {
       _appState.selectedTab = 3;
     }
-
-    print(_appState);
   }
 }
 
