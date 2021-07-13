@@ -24,6 +24,8 @@ import 'package:provider/provider.dart';
 class EditProfilePage extends StatefulWidget {
   const EditProfilePage({Key key}) : super(key: key);
 
+  static const String routeName = '/edit';
+
   @override
   _EditProfilePageState createState() => _EditProfilePageState();
 }

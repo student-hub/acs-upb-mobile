@@ -15,6 +15,8 @@ class ClassFeedbackChecklist extends StatefulWidget {
   const ClassFeedbackChecklist({Key key, this.classes}) : super(key: key);
   final Set<ClassHeader> classes;
 
+  static const String routeName = '/classes';
+
   @override
   _ClassFeedbackChecklistState createState() => _ClassFeedbackChecklistState();
 }

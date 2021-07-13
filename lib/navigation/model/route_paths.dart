@@ -1,6 +1,8 @@
+import 'package:acs_upb_mobile/authentication/view/edit_profile_page.dart';
 import 'package:acs_upb_mobile/authentication/view/login_view.dart';
 import 'package:acs_upb_mobile/authentication/view/sign_up_view.dart';
 import 'package:acs_upb_mobile/main.dart';
+import 'package:acs_upb_mobile/pages/class_feedback/view/class_feedback_checklist.dart';
 import 'package:acs_upb_mobile/pages/faq/view/faq_page.dart';
 import 'package:acs_upb_mobile/pages/filter/view/filter_page.dart';
 import 'package:acs_upb_mobile/pages/home/home_page.dart';
@@ -86,6 +88,13 @@ class FaqPath extends RoutePath {
   Widget get page => FaqPage();
 }
 
+class EditProfilePath extends RoutePath {
+  EditProfilePath() : super(EditProfilePage.routeName);
+
+  @override
+  Widget get page => const EditProfilePage();
+}
+
 class NewsFeedPath extends RoutePath {
   NewsFeedPath() : super(NewsFeedPage.routeName);
 
@@ -119,6 +128,13 @@ class ProfilePath extends RoutePath {
   Widget get page => const PersonView();
 }
 
+class ClassFeedbackPath extends RoutePath {
+  ClassFeedbackPath() : super(ClassFeedbackChecklist.routeName);
+
+  @override
+  Widget get page => const ClassFeedbackChecklist();
+}
+
 class UnknownPath extends RoutePath {
   UnknownPath() : super('');
 
@@ -150,6 +166,8 @@ class PathFactory {
         return SignUpPath();
       case FaqPage.routeName:
         return FaqPath();
+      case EditProfilePage.routeName:
+        return EditProfilePath();
       case NewsFeedPage.routeName:
         return NewsFeedPath();
       case RequestPermissionsPage.routeName:
@@ -160,6 +178,8 @@ class PathFactory {
         final name = uri.queryParameters['name'];
         print('Factory-Person: $name');
         return ProfilePath(name);
+      case ClassFeedbackChecklist.routeName:
+        return ClassFeedbackPath();
       default:
         return UnknownPath();
     }

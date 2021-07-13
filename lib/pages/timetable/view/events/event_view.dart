@@ -26,6 +26,8 @@ class EventView extends StatefulWidget {
   final UniEventInstance eventInstance;
   final UniEvent uniEvent;
 
+
+
   @override
   _EventViewState createState() => _EventViewState();
 }

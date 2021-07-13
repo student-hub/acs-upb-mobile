@@ -46,6 +46,7 @@ class UpcomingEventsCard extends StatelessWidget {
                 ),
                 subtitle: Text(event.relativeDateString),
                 onTap: () =>
+                    // TODO(RazvanRotaru): rewrite navigation for EventView and inside EventView
                     Navigator.of(context).push(MaterialPageRoute<EventView>(
                   builder: (_) => EventView(eventInstance: event),
                 )),

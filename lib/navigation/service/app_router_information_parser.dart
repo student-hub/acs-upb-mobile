@@ -7,18 +7,18 @@ class AppRouteInformationParser extends RouteInformationParser<RoutePath> {
       RouteInformation routeInformation) async {
 
     final Uri uri = Uri.parse(routeInformation.location);
-    print('\n++++++++++++\n'
-        'parseRouteInformation: ${routeInformation.location}'
-        '\nuri: $uri'
-        '\n++++++++++++');
+    // print('\n++++++++++++\n'
+    //     'parseRouteInformation: ${routeInformation.location}'
+    //     '\nuri: $uri'
+    //     '\n++++++++++++');
     return PathFactory.from(uri);
   }
 
   @override
   RouteInformation restoreRouteInformation(RoutePath configuration) {
-    print('\n++++++++++++\n'
-        'restoreRouteInformation: $configuration'
-        '\n++++++++++++');
+    // print('\n++++++++++++\n'
+    //     'restoreRouteInformation: $configuration'
+    //     '\n++++++++++++');
 
     return configuration.routeInformation;
   }

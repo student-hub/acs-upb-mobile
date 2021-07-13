@@ -147,7 +147,6 @@ class _PeopleListState extends State<PeopleList> {
     );
   }
 
-  // TODO(RazvanRotaru): ditch Navigator and use!!! PersonProvider
   Future<void> showPersonPage(String name) async {
     Provider.of<AppStateProvider>(context, listen: false).profileName = name;
   }

@@ -1,9 +1,10 @@
+import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/navigation/model/app_state.dart';
 import 'package:acs_upb_mobile/navigation/service/app_router_delegates.dart';
 import 'package:acs_upb_mobile/navigation/view/bottom_navigation_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
+import 'package:provider/provider.dart';
 
 class WebShell extends StatefulWidget {
   WebShell({Key key, this.appState}) : super(key: key);
@@ -16,7 +17,6 @@ class WebShell extends StatefulWidget {
 }
 
 class _WebShellState extends State<WebShell> {
-  bool _extended = false;
   InnerRouterDelegate _innerRouterDelegate;
   ChildBackButtonDispatcher _backButtonDispatcher;
 
@@ -44,6 +44,7 @@ class _WebShellState extends State<WebShell> {
   Widget build(BuildContext context) {
     final Size screenSize = MediaQuery.of(context).size;
     _backButtonDispatcher.takePriority();
+    final _appState = Provider.of<AppStateProvider>(context, listen: true);
 
     return Scaffold(
       appBar: PreferredSize(
@@ -56,7 +57,7 @@ class _WebShellState extends State<WebShell> {
               child: IconButton(
                 onPressed: () {
                   setState(() {
-                    _extended = !_extended;
+                    _appState.isDrawerExtended = !_appState.isDrawerExtended;
                   });
                 },
                 icon: const Icon(Icons.menu),
@@ -76,7 +77,7 @@ class _WebShellState extends State<WebShell> {
                 widget.appState.selectedTab = index;
               });
             },
-            extended: _extended,
+            extended: _appState.isDrawerExtended,
             labelType: NavigationRailLabelType.none,
             destinations: [
               NavigationRailDestination(
