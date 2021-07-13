@@ -1,10 +1,10 @@
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
+import 'package:acs_upb_mobile/navigation/model/app_state.dart';
 import 'package:acs_upb_mobile/navigation/model/routes.dart';
 import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
 import 'package:acs_upb_mobile/pages/classes/view/classes_page.dart';
 import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
-import 'package:acs_upb_mobile/pages/filter/view/filter_page.dart';
 import 'package:acs_upb_mobile/pages/settings/service/request_provider.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/events/uni_event.dart';
 import 'package:acs_upb_mobile/pages/timetable/service/uni_event_provider.dart';
@@ -32,6 +32,7 @@ class TimetablePage extends StatefulWidget {
   _TimetablePageState createState() => _TimetablePageState();
 }
 
+// TODO(RazvanRotaru): check permissions to add event
 class _TimetablePageState extends State<TimetablePage> {
   TimetableController<UniEventInstance> _controller;
 
@@ -75,21 +76,14 @@ class _TimetablePageState extends State<TimetablePage> {
         AppScaffoldAction(
           icon: FeatherIcons.bookOpen,
           tooltip: S.current.navigationClasses,
-          onPressed: () => Navigator.of(context).push(
-            MaterialPageRoute<ChangeNotifierProvider>(
-              builder: (_) => ChangeNotifierProvider.value(
-                  value: Provider.of<ClassProvider>(context),
-                  child: const ClassesPage()),
-            ),
-          ),
+          onPressed: () => Provider.of<AppStateProvider>(context, listen: false)
+              .showClasses = true,
         ),
         AppScaffoldAction(
           icon: FeatherIcons.filter,
           tooltip: S.current.navigationFilter,
-          onPressed: () => Navigator.push(
-            context,
-            MaterialPageRoute<FilterPage>(builder: (_) => const FilterPage()),
-          ),
+          onPressed: () => Provider.of<AppStateProvider>(context, listen: false)
+              .filter = true,
         ),
       ],
       body: Padding(

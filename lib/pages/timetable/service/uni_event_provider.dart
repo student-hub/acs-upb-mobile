@@ -360,6 +360,35 @@ class UniEventProvider extends EventProvider<UniEventInstance>
         .first;
   }
 
+  Future<UniEventInstance> getUpcomingEventsById(LocalDate date, String id,
+      {int limit = 3}) async {
+    return _events
+        .map((events) => events
+            .where((event) => !(event is AllDayUniEvent))
+            .map((event) => event.generateInstances(
+                intersectingInterval: DateInterval(date, date.addDays(6))))
+            .expand((i) => i)
+            .sortedByStartLength()
+            .where((element) =>
+                element.end.toDateTimeLocal().isAfter(DateTime.now()))
+            .firstWhere((event) => event.id == id))
+        .first;
+  }
+
+  Future<UniEventInstance> getEventById(String id,
+      {int limit = 3}) async {
+    return _events
+        .map((events) => events
+            .where((event) => !(event is AllDayUniEvent))
+            .map((event) => event.generateInstances())
+            .expand((i) => i)
+            .sortedByStartLength()
+            .where((element) =>
+                element.end.toDateTimeLocal().isAfter(DateTime.now()))
+            .firstWhere((event) => event.id == id))
+        .first;
+  }
+
   Future<Iterable<UniEvent>> getAllEventsOfClass(String classId) async {
     return _events
         .map((events) =>

@@ -7,6 +7,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+// TODO(RazvanRotaru): modify class to show an action menu on the right side on web
 class AppScaffoldAction {
   AppScaffoldAction({
     this.icon,

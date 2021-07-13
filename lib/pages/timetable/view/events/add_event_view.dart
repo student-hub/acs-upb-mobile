@@ -40,6 +40,8 @@ class AddEventView extends StatefulWidget {
 
   final UniEvent initialEvent;
 
+  static const String routeName = '/add_event';
+
   @override
   _AddEventViewState createState() => _AddEventViewState();
 }

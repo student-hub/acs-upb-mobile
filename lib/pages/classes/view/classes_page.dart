@@ -17,6 +17,8 @@ import 'package:acs_upb_mobile/resources/remote_config.dart';
 class ClassesPage extends StatefulWidget {
   const ClassesPage({Key key}) : super(key: key);
 
+  static const String routeName = '/classes';
+
   @override
   _ClassesPageState createState() => _ClassesPageState();
 }

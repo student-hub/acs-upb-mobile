@@ -1,5 +1,6 @@
 import 'package:acs_upb_mobile/pages/classes/model/class.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:time_machine/time_machine.dart';
 
 class AppStateProvider extends ChangeNotifier {
   int _selectedTab = 0;
@@ -9,8 +10,14 @@ class AppStateProvider extends ChangeNotifier {
   bool _showFaq = false;
   bool _showNewsFeed = false;
   bool _editProfile = false;
+  bool _showClasses = false;
+  bool _filter = false;
 
   Set<ClassHeader> _userClasses;
+  String _highlightedEventId;
+
+  String _addEventId;
+  LocalDateTime _addEventTime;
 
   String get profileName => _profileName;
 
@@ -70,12 +77,51 @@ class AppStateProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  LocalDateTime get eventTime => _addEventTime;
+
+  set eventTime(LocalDateTime time) {
+    _addEventTime = time;
+    notifyListeners();
+  }
+
+  String get addEventId => _addEventId;
+
+  set addEventId(String id) {
+    _addEventId = id;
+    notifyListeners();
+  }
+
+  String get highlightedEventId => _highlightedEventId;
+
+  set highlightedEventId(String id) {
+    _highlightedEventId = id;
+    notifyListeners();
+  }
+
+  bool get showClasses => _showClasses;
+
+  set showClasses(bool value) {
+    _showClasses = value;
+    notifyListeners();
+  }
+
+  bool get filter => _filter;
+
+  set filter(bool value) {
+    _filter = value;
+    notifyListeners();
+  }
+
   void resetParams() {
     _profileName = null;
     _showFaq = false;
     _showNewsFeed = false;
     _editProfile = false;
     _userClasses = null;
+    _addEventTime = null;
+    _addEventId = null;
+    _showClasses = false;
+    _filter = false;
   }
 
   @override
