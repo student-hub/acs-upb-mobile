@@ -81,7 +81,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 PreferenceDialogLink(
                   S.current.settingsItemLanguage,
                   desc:
-                      languagePrefString(context, PrefService.get('language')),
+                      languagePrefString(PrefService.get('language')),
                   dialog: PreferenceDialog(
                     [
                       languageRadioPreference(context, 'ro'),
