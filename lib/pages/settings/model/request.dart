@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 
 class Request {
@@ -6,6 +7,7 @@ class Request {
     @required this.requestBody,
     this.processed = false,
     this.type = RequestType.permissions,
+    this.dateSubmitted,
   });
 
   /// The user who created this request
@@ -19,6 +21,9 @@ class Request {
 
   /// Type of the request
   final RequestType type;
+  
+  /// Date and time the request was made
+  final Timestamp dateSubmitted;
 }
 
 enum RequestType { permissions }

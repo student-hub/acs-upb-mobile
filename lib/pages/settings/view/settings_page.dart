@@ -116,6 +116,17 @@ class _SettingsPageState extends State<SettingsPage> {
                   ),
                 ),
                 Visibility(
+                  visible: userPermissionString == S.current.settingsPermissionsPermissions, //if permissionLevel>=4
+                  child: ListTile(
+                    onTap: () => Navigator.of(context)
+                        .pushNamed(Routes.adminPanel),
+                    title: Text(S.current.settingsAdmin),
+                    subtitle: Text(
+                      S.current.infoAdmin,
+                    ),
+                  ),
+                ),
+                Visibility(
                   visible: Platform.isAndroid || Platform.isIOS,
                   child: PreferenceTitle(S.current.settingsTitleTimetable),
                 ),
@@ -223,7 +234,9 @@ class _SettingsPageState extends State<SettingsPage> {
 
     if (authProvider.isAuthenticated && !authProvider.isAnonymous) {
       final user = await authProvider.currentUser;
-      if (user.canEditPublicInfo) {
+      if (user.canChangePermissionLevel) {
+        return S.current.settingsPermissionsPermissions;
+      } else if (user.canEditPublicInfo) {
         return S.current.settingsPermissionsEdit;
       } else if (user.canAddPublicInfo) {
         return S.current.settingsPermissionsAdd;

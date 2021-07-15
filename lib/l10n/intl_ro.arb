@@ -180,6 +180,7 @@
   "navigationClassInfo": "Informații materie",
   "navigationClassFeedback": "Feedback",
   "navigationClassesFeedbackChecklist": "Listă feedback",
+  "navigationAdmin": "Cereri permisiuni",
 
   "filterMenuShowAll": "Arată tot",
   "filterMenuShowMine": "Arată doar pe ale mele",
@@ -199,6 +200,7 @@
   "settingsPermissionsNone": "Fără permisiuni speciale",
   "settingsPermissionsAdd": "Permisiune pentru adăugare de date publice",
   "settingsPermissionsEdit": "Permisiune pentru editare de date publice",
+  "settingsPermissionsPermissions": "Permisiune pentru a schimba nivelul de permisiuni al altor utilizatori",
   "settingsPermissionsRequestSent": "Cerere pentru permisiuni trimisă",
   "settingsItemLanguage": "Limbă",
   "settingsItemLanguageEnglish": "Engleză",
@@ -298,5 +300,12 @@
   "stringAnonymous": "Anonim",
   "stringAnd": "și",
 
-  "fileAcsBanner": "assets/images/acs_banner_ro.png"
+  "fileAcsBanner": "assets/images/acs_banner_ro.png",
+
+  "settingsAdmin": "Panoul Administratorului",
+  "infoAdmin": "Trateaza cererile de permisiuni",
+  "stringAt": "la",
+  "stringDeny": "Refuză",
+  "stringAccept": "Acceptă",
+  "stringRevert": "Anulează"
 }

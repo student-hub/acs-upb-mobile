@@ -1765,6 +1765,16 @@ class S {
     );
   }
 
+  /// `Permission requests`
+  String get navigationAdmin {
+    return Intl.message(
+      'Permission requests',
+      name: 'navigationAdmin',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Show all`
   String get filterMenuShowAll {
     return Intl.message(
@@ -1910,6 +1920,16 @@ class S {
     return Intl.message(
       'Permission to edit public info',
       name: 'settingsPermissionsEdit',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Permission to change other users' permission level`
+  String get settingsPermissionsPermissions {
+    return Intl.message(
+      'Permission to change other users\' permission level',
+      name: 'settingsPermissionsPermissions',
       desc: '',
       args: [],
     );
@@ -2840,6 +2860,66 @@ class S {
     return Intl.message(
       'assets/images/acs_banner_en.png',
       name: 'fileAcsBanner',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Admin Panel`
+  String get settingsAdmin {
+    return Intl.message(
+      'Admin Panel',
+      name: 'settingsAdmin',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Handle permision requests`
+  String get infoAdmin {
+    return Intl.message(
+      'Handle permision requests',
+      name: 'infoAdmin',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `at`
+  String get stringAt {
+    return Intl.message(
+      'at',
+      name: 'stringAt',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Deny`
+  String get stringDeny {
+    return Intl.message(
+      'Deny',
+      name: 'stringDeny',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Accept`
+  String get stringAccept {
+    return Intl.message(
+      'Accept',
+      name: 'stringAccept',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Revert`
+  String get stringRevert {
+    return Intl.message(
+      'Revert',
+      name: 'stringRevert',
       desc: '',
       args: [],
     );
