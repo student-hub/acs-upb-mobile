@@ -38,6 +38,7 @@ https://user-images.githubusercontent.com/25504811/120929790-1bc24080-c6f3-11eb-
 * [Bogdan Piele](https://github.com/bogpie)
 * [Bogdan Iuga](https://github.com/iugabogdan98)
 * [Andreea-Giorgiana Adăscăliței](https://github.com/AndreeaAdascalitei)
+* [Stefan-Alin Pahontu](https://github.com/stafy2912)
 
 ## Building from source with Android Studio
 
