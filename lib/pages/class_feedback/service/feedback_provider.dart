@@ -1,10 +1,10 @@
-import 'package:acs_upb_mobile/pages/classes/model/class.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 
 import '../../../generated/l10n.dart';
 import '../../../resources/locale_provider.dart';
 import '../../../widgets/toast.dart';
+import '../../classes/model/class.dart';
 import '../../people/model/person.dart';
 import '../model/class_feedback_answer.dart';
 import '../model/questions/question.dart';

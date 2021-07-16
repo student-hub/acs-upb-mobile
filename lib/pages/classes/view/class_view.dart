@@ -193,6 +193,8 @@ class _ClassViewState extends State<ClassView> {
         return FeatherIcons.book;
       case ShortcutType.resource:
         return Icons.insert_drive_file_outlined;
+      case ShortcutType.other:
+        return FeatherIcons.globe;
     }
     return FeatherIcons.globe;
   }

@@ -1,12 +1,13 @@
-import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
-import 'package:acs_upb_mobile/pages/class_feedback/service/feedback_provider.dart';
-import 'package:acs_upb_mobile/pages/class_feedback/view/class_feedback_checklist.dart';
-import 'package:acs_upb_mobile/pages/classes/model/class.dart';
-import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import '../../authentication/service/auth_provider.dart';
+import '../../generated/l10n.dart';
+import '../class_feedback/service/feedback_provider.dart';
+import '../class_feedback/view/class_feedback_checklist.dart';
+import '../classes/model/class.dart';
+import '../classes/service/class_provider.dart';
 
 class FeedbackNudge extends StatefulWidget {
   @override

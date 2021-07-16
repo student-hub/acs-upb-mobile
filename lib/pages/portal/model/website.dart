@@ -18,6 +18,8 @@ extension WebsiteCategoryExtension on WebsiteCategory {
         return S.current.websiteCategoryAssociations;
       case WebsiteCategory.resource:
         return S.current.websiteCategoryResources;
+      case WebsiteCategory.other:
+        return S.current.websiteCategoryOthers;
     }
     return S.current.websiteCategoryOthers;
   }

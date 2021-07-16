@@ -174,10 +174,13 @@ class AuthProvider with ChangeNotifier {
   User get currentUserFromCache => _currentUser;
 
   Future<bool> signInAnonymously() async {
-    return FirebaseAuth.instance.signInAnonymously().catchError((dynamic e) {
+    try {
+      await FirebaseAuth.instance.signInAnonymously();
+      return true;
+    } catch (e) {
       _errorHandler(e);
       return false;
-    }).then((_) => true);
+    }
   }
 
   Future<bool> changePassword(String password) async {

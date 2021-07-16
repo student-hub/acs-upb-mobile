@@ -14,6 +14,8 @@ extension ShortcutTypeExtension on ShortcutType {
         return S.current.shortcutTypeClassbook;
       case ShortcutType.resource:
         return S.current.shortcutTypeResource;
+      case ShortcutType.other:
+        return S.current.shortcutTypeOther;
     }
     return S.current.shortcutTypeOther;
   }
