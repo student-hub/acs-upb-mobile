@@ -1,9 +1,9 @@
+import 'package:acs_upb_mobile/pages/home/feedback_nudge.dart';
+import 'package:acs_upb_mobile/resources/remote_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'package:acs_upb_mobile/pages/home/feedback_nudge.dart';
-import 'package:acs_upb_mobile/resources/remote_config.dart';
 import '../../authentication/service/auth_provider.dart';
 import '../../generated/l10n.dart';
 import '../../navigation/routes.dart';

@@ -1,3 +1,4 @@
+import 'package:acs_upb_mobile/pages/classes/model/class.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -11,7 +12,6 @@ import '../model/questions/question_dropdown.dart';
 import '../model/questions/question_rating.dart';
 import '../model/questions/question_slider.dart';
 import '../model/questions/question_text.dart';
-import 'package:acs_upb_mobile/pages/classes/model/class.dart';
 
 extension ClassFeedbackAnswerExtension on FeedbackAnswer {
   Map<String, dynamic> toData() {
@@ -204,7 +204,7 @@ class FeedbackProvider with ChangeNotifier {
 
   Future<Map<String, bool>> getClassesWithCompletedFeedback(String uid) async {
     try {
-      final DocumentSnapshot snap =
+      final DocumentSnapshot<Map<String, dynamic>> snap =
           await FirebaseFirestore.instance.collection('users').doc(uid).get();
       if (snap.data()['classesFeedback'] != null) {
         return Map<String, bool>.from(snap.data()['classesFeedback']);
