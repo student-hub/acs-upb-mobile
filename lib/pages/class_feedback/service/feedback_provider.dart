@@ -1,15 +1,15 @@
+import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/model/class_feedback_answer.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question_dropdown.dart';
-import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question_slider.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question_rating.dart';
+import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question_slider.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question_text.dart';
 import 'package:acs_upb_mobile/pages/people/model/person.dart';
 import 'package:acs_upb_mobile/resources/locale_provider.dart';
+import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:acs_upb_mobile/widgets/toast.dart';
-import 'package:acs_upb_mobile/generated/l10n.dart';
 
 extension ClassFeedbackAnswerExtension on FeedbackAnswer {
   Map<String, dynamic> toData() {
@@ -186,7 +186,7 @@ class FeedbackProvider with ChangeNotifier {
   Future<bool> userSubmittedFeedbackForClass(
       String uid, String className) async {
     try {
-      final DocumentSnapshot snap =
+      final DocumentSnapshot<Map<String, dynamic>> snap =
           await FirebaseFirestore.instance.collection('users').doc(uid).get();
       if (snap.data()['classesFeedback'] != null &&
           snap.data()['classesFeedback'][className]) {

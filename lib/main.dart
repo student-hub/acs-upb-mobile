@@ -21,6 +21,7 @@ import 'package:acs_upb_mobile/pages/settings/view/request_permissions.dart';
 import 'package:acs_upb_mobile/pages/settings/view/settings_page.dart';
 import 'package:acs_upb_mobile/pages/timetable/service/uni_event_provider.dart';
 import 'package:acs_upb_mobile/resources/locale_provider.dart';
+import 'package:acs_upb_mobile/resources/remote_config.dart';
 import 'package:acs_upb_mobile/resources/themes.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/widgets/loading_screen.dart';
@@ -35,7 +36,6 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:pref/pref.dart';
 import 'package:provider/provider.dart';
 import 'package:rrule/rrule.dart';
-import 'package:acs_upb_mobile/resources/remote_config.dart';
 
 // FIXME: acs.pub.ro has some bad certificate configuration right now, and the
 // cs.pub.ro certificate is expired.
@@ -81,7 +81,8 @@ Future<void> main() async {
               create: (_) => WebsiteProvider()),
           Provider<RequestProvider>(create: (_) => RequestProvider()),
           ChangeNotifierProvider<ClassProvider>(create: (_) => classProvider),
-          ChangeNotifierProvider<FeedbackProvider>(create: (_) => feedbackProvider),
+          ChangeNotifierProvider<FeedbackProvider>(
+              create: (_) => feedbackProvider),
           ChangeNotifierProvider<PersonProvider>(create: (_) => personProvider),
           ChangeNotifierProvider<QuestionProvider>(
               create: (_) => QuestionProvider()),
@@ -110,8 +111,7 @@ Future<void> main() async {
           child: const MyApp(),
         ),
       ),
-  )
-  ,
+    ),
   );
 }
 
@@ -141,9 +141,7 @@ class _MyAppState extends State<MyApp> {
         },
         child: MaterialApp(
           title: Utils.packageInfo.appName,
-          themeMode: EasyDynamicTheme
-              .of(context)
-              .themeMode,
+          themeMode: EasyDynamicTheme.of(context).themeMode,
           theme: lightThemeData,
           darkTheme: darkThemeData,
           localizationsDelegates: [
@@ -204,9 +202,7 @@ class AppLoadingScreen extends StatelessWidget {
     return LoadingScreen(
       navigateAfterFuture: _setUpAndChooseStartScreen(context),
       image: Image.asset('assets/icons/acs_logo.png'),
-      loaderColor: Theme
-          .of(context)
-          .accentColor,
+      loaderColor: Theme.of(context).accentColor,
     );
   }
 }

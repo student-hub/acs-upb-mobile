@@ -15,12 +15,9 @@ class RemoteConfigService {
 
   static Future<dynamic> initialize() async {
     try {
-      _remoteConfig = await RemoteConfig.instance;
+      _remoteConfig = RemoteConfig.instance;
       await _remoteConfig.setDefaults(defaults);
-      await _remoteConfig.fetch();
-      await _remoteConfig.activateFetched();
-    } on FetchThrottledException catch (e) {
-      print('Remote config fetch throttled: $e');
+      await _remoteConfig.fetchAndActivate();
     } catch (e) {
       print(
           'Unable to fetch remote config. Cached or default values will be used.');
