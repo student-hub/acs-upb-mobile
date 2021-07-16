@@ -140,7 +140,6 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    print(S.of(context).actionAddEvent);
     return DynamicTheme(
       defaultBrightness: SchedulerBinding.instance.window.platformBrightness,
       data: (brightness) => ThemeData(
