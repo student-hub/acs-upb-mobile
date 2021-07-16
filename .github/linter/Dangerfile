@@ -25,7 +25,7 @@ end
 
 has_app_changes = !git.modified_files.grep(/lib/).empty?
 has_test_changes = !git.modified_files.grep(/test/).empty?
-has_pubspec_changes = !git.modified_files.grep(pubspec.yaml).empty?
+has_pubspec_changes = !git.modified_files.grep(/pubspec.yaml/).empty?
 
 # Check that the tests were updated if there are app updates
 if !declared_trivial && has_app_changes && !has_test_changes
@@ -41,11 +41,12 @@ end
 if !declared_trivial && has_app_changes && has_pubspec_changes
     diff = git.diff_for_file('pubspec.yaml')
     if !(diff.insertions =~ 'version:')
-        warn "No pubspec.yaml changes detected. Did you forget to update the version?"
-
+        warn "The pubspec.yaml file was updated, but not the version."
+        markdown "For more info on versioning, check out our [PR guidelines](https://github.com/student-hub/acs-upb-mobile/blob/master/CONTRIBUTING.md#guidelines)."
+    end
     file = File.read('pubspec.yaml')
     lines = file.lines
     version_line = lines.grep('version:')
     version = version_line[/version: .*\+\K([0-9]+)/]
-    warn "Detected version:" version
+    warn "Detected version: #{version}"
 end
