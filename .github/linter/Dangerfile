@@ -32,19 +32,39 @@ if !declared_trivial && has_app_changes && !has_test_changes
     warn "No test changes detected. You should usually add at least one test for any new functionality."
 end
 
+# Whether we should reference the versioning documentation in the Danger report
+show_versioning_info = false
+
 # Check that the pubspec version was updated
 if !declared_trivial && has_app_changes && !has_pubspec_changes
     warn "No pubspec.yaml changes detected. Did you forget to update the version?"
-    markdown "For more info on versioning, check out our [PR guidelines](https://github.com/student-hub/acs-upb-mobile/blob/master/CONTRIBUTING.md#guidelines)."
+    show_versioning_info = true
 end
 
 if !declared_trivial && has_app_changes && has_pubspec_changes
     diff = git.diff_for_file('pubspec.yaml')
-    if diff.patch !~ /\+ version:/
+    if diff.patch !~ /\+version:/
         warn "The pubspec.yaml file was updated, but not the version."
-        markdown "For more info on versioning, check out our [PR guidelines](https://github.com/student-hub/acs-upb-mobile/blob/master/CONTRIBUTING.md#guidelines)."
+        show_versioning_info = true
     else
-        version = diff.patch[/\+ version: .*\+\K([0-9]+)/]
-        warn "Detected version: #{version}"
+        old_version = diff.patch[/\-version: .*\+\K([0-9]+)/].to_i
+        new_version = diff.patch[/\+version: .*\+\K([0-9]+)/].to_i
+
+        if new_version - old_version != 1
+            warn "The build number in pubspec.yaml should be incremented by 1"
+            show_versioning_info = true
+        else
+            ['en-GB', 'en-US', 'ro'].each do |language|
+                changelog_rxp = /android\/fastlane\/metadata\/android\/#{language}\/changelogs\/#{new_version + 10000}\.txt/
+                if git.modified_files.grep(changelog_rxp).empty?
+                    changelog = '/android/fastlane/metadata/android/#{language}/changelogs/#{new_version + 10000}.txt'
+                    warn "Missing #{language} changelog entry at #{changelog}"
+                end
+            end
+        end
     end
+end
+
+if show_versioning_info
+    markdown "For more info on versioning, check out our [PR guidelines](https://github.com/student-hub/acs-upb-mobile/blob/master/CONTRIBUTING.md#guidelines)."
 end
