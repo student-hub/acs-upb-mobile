@@ -154,7 +154,7 @@ class _MyAppState extends State<MyApp> {
             displayColor: _accentColor),
         toggleableActiveColor: _accentColor,
         fontFamily: 'Montserrat',
-        primaryColor: const Color(0xFF4DB5E3),
+        primaryColor: const Color(0xFF4DB5E4),
       ),
       themedWidgetBuilder: (context, theme) {
         return OKToast(
