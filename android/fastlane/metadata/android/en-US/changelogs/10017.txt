@@ -1,0 +1,7 @@
+Improved
+  - Filtering UI and bottom navigation bar are now nicer⭐
+  - Did some internal ✨magic✨ to improve the app
+
+Fixed
+  - Bug where some filter options would show as selected even though they were not
+  - Default filter options when adding a new event were sometimes empty
