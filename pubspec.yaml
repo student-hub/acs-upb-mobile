@@ -15,6 +15,7 @@ description: A mobile application for students at ACS UPB.
 # ACS UPB Mobile uses semantic versioning. You can read more in the CONTRIBUTING.md file.
 version: 1.2.12+16
 
+
 environment:
   sdk: ">=2.7.0 <3.0.0"
 
