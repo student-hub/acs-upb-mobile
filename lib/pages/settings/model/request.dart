@@ -8,6 +8,7 @@ class Request {
     this.processed = false,
     this.type = RequestType.permissions,
     this.dateSubmitted,
+    this.formId
   });
 
   /// The user who created this request
@@ -24,6 +25,9 @@ class Request {
   
   /// Date and time the request was made
   final Timestamp dateSubmitted;
+
+  /// Unique ID of the request
+  final String formId;
 }
 
 enum RequestType { permissions }

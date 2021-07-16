@@ -78,8 +78,8 @@ class RequestsList extends StatefulWidget {
 class _RequestsListState extends State<RequestsList> {
   @override
   Widget build(BuildContext context) {
+    final adminProvider = Provider.of<AdminProvider>(context, listen: false);
     return ListView.builder(
-      shrinkWrap: true,
       itemCount: widget.requests.length,
       itemBuilder: (context, index) {
         return FutureBuilder(
@@ -92,7 +92,7 @@ class _RequestsListState extends State<RequestsList> {
                       title: '${user?.firstName} ${user?.lastName}',
                       future: Future.delayed(
                         const Duration(microseconds: 1),
-                        () => 'Large Latte',
+                        () => '',
                       ),
                       builder: (b) {
                         return Column(
@@ -109,12 +109,22 @@ class _RequestsListState extends State<RequestsList> {
                                   text: S.current.stringDeny,
                                   color: Theme.of(context).accentColor,
                                   width: 100,
+                                  onTap: () async {
+                                    await adminProvider.denyRequest(
+                                        widget.requests[index].formId,
+                                        widget.requests[index].userId);
+                                  },
                                 ),
                                 const SizedBox(width: 10),
                                 AppButton(
                                   text: S.current.stringAccept,
                                   color: Theme.of(context).accentColor,
                                   width: 100,
+                                  onTap: () async {
+                                    await adminProvider.acceptRequest(
+                                        widget.requests[index].formId,
+                                        widget.requests[index].userId);
+                                  },
                                 )
                               ],
                             )
@@ -126,7 +136,7 @@ class _RequestsListState extends State<RequestsList> {
                       title: '${user?.firstName} ${user?.lastName}',
                       future: Future.delayed(
                         const Duration(microseconds: 1),
-                        () => 'Large Latte',
+                        () => '',
                       ),
                       builder: (b) {
                         return Column(
@@ -150,7 +160,8 @@ class _RequestsListState extends State<RequestsList> {
                         );
                       });
                 } else {
-                  return const SizedBox.shrink(); //if the field 'done' is missing
+                  return const SizedBox
+                      .shrink(); //if the field 'done' is missing
                 }
               } else {
                 return const Center(child: CircularProgressIndicator());

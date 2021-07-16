@@ -14,20 +14,43 @@ extension RequestExtension on Request {
       processed: data['done'],
       type: RequestType.permissions,
       dateSubmitted: data['dateSubmitted'],
+      formId: snap.id,
     );
   }
 }
 
 class AdminProvider with ChangeNotifier {
+  final FirebaseFirestore _db = FirebaseFirestore.instance;
+
   Future<List<Request>> fetchRequests() async {
     try {
-      final QuerySnapshot qSnapshot =
-          await FirebaseFirestore.instance.collection('forms').get();
+      final QuerySnapshot qSnapshot = await _db.collection('forms').get();
       return qSnapshot.docs.map(RequestExtension.fromSnap).toList();
     } catch (e) {
-      print('$e <- provider err');
+      print(e);
       AppToast.show(S.current.errorSomethingWentWrong);
       return null;
+    }
+  }
+
+  Future<void> acceptRequest(String formId, String userId) async {
+    try {
+      await _db.collection('users').doc(userId).update({'permissionLevel': 3});
+      await _db.collection('forms').doc(formId).update({'done': true});
+      notifyListeners();
+    } catch (e) {
+      print(e);
+      AppToast.show(S.current.errorSomethingWentWrong);
+    }
+  }
+
+  Future<void> denyRequest(String formId, String userId) async {
+    try {
+      await _db.collection('forms').doc(formId).update({'done': null});
+      notifyListeners();
+    } catch (e) {
+      print(e);
+      AppToast.show(S.current.errorSomethingWentWrong);
     }
   }
 }
