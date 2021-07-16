@@ -457,6 +457,10 @@ Future<void> main() async {
         .thenAnswer((_) => Future.value(false));
     when(mockFeedbackProvider.submitFeedback(any, any, any, any, any))
         .thenAnswer((_) => Future.value(true));
+    when(mockFeedbackProvider.getClassesWithCompletedFeedback(any))
+        .thenAnswer((_) => Future.value({'M1': true, 'M2': true}));
+    when(mockFeedbackProvider.countClassesWithoutFeedback(any, any))
+        .thenAnswer((_) => Future.value('2'));
 
     mockQuestionProvider = MockQuestionProvider();
     // ignore: invalid_use_of_protected_member

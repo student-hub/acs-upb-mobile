@@ -37,13 +37,15 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static m8(shortcutName) => "Are you sure you want to delete \"${shortcutName}\"?";
 
-  static m9(name) => "Welcome, ${name}!";
+  static m9(number) => "You need to complete ${number} more feedback forms!";
 
-  static m10(email) => "There is already an account associated with ${email}.";
+  static m10(name) => "Welcome, ${name}!";
 
-  static m11(n) => "Only ${n} options can be selected at a time.";
+  static m11(email) => "There is already an account associated with ${email}.";
 
-  static m12(provider) => "Please log in with ${provider} to continue.";
+  static m12(n) => "Only ${n} options can be selected at a time.";
+
+  static m13(provider) => "Please log in with ${provider} to continue.";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
@@ -204,6 +206,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "messageEventDeleted" : MessageLookupByLibrary.simpleMessage("Event deleted successfully."),
     "messageEventEdited" : MessageLookupByLibrary.simpleMessage("Event modified successfully."),
     "messageFeedbackHasBeenSent" : MessageLookupByLibrary.simpleMessage("The review has been sent successfully."),
+    "messageFeedbackLeft" : m9,
     "messageGetStartedByPressing" : MessageLookupByLibrary.simpleMessage("Get started by pressing the"),
     "messageIAgreeToThe" : MessageLookupByLibrary.simpleMessage("I agree to the "),
     "messageNewUser" : MessageLookupByLibrary.simpleMessage("New user?"),
@@ -222,13 +225,14 @@ class MessageLookup extends MessageLookupByLibrary {
     "messageWebsiteDeleted" : MessageLookupByLibrary.simpleMessage("Website deleted successfully."),
     "messageWebsiteEdited" : MessageLookupByLibrary.simpleMessage("Website modified successfully."),
     "messageWebsitePreview" : MessageLookupByLibrary.simpleMessage("Try tapping/long-pressing/hovering the preview to test the new website."),
-    "messageWelcomeName" : m9,
+    "messageWelcomeName" : m10,
     "messageWelcomeSimple" : MessageLookupByLibrary.simpleMessage("Welcome!"),
     "messageYouCanContribute" : MessageLookupByLibrary.simpleMessage("You can contribute to the app data, but you first need to request permissions."),
     "navigationAskPermissions" : MessageLookupByLibrary.simpleMessage("Ask for permissions"),
-    "navigationClassFeedback" : MessageLookupByLibrary.simpleMessage("Review"),
+    "navigationClassFeedback" : MessageLookupByLibrary.simpleMessage("Feedback"),
     "navigationClassInfo" : MessageLookupByLibrary.simpleMessage("Class information"),
     "navigationClasses" : MessageLookupByLibrary.simpleMessage("Classes"),
+    "navigationClassesFeedbackChecklist" : MessageLookupByLibrary.simpleMessage("Feedback checklist"),
     "navigationEventDetails" : MessageLookupByLibrary.simpleMessage("Event details"),
     "navigationFilter" : MessageLookupByLibrary.simpleMessage("Filter"),
     "navigationHome" : MessageLookupByLibrary.simpleMessage("Home"),
@@ -244,6 +248,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "sectionEvents" : MessageLookupByLibrary.simpleMessage("Events"),
     "sectionEventsComingUp" : MessageLookupByLibrary.simpleMessage("Events coming up"),
     "sectionFAQ" : MessageLookupByLibrary.simpleMessage("FAQ"),
+    "sectionFeedbackCompleted" : MessageLookupByLibrary.simpleMessage("Feedback completed"),
+    "sectionFeedbackNeeded" : MessageLookupByLibrary.simpleMessage("Feedback needed"),
     "sectionFrequentlyAccessedWebsites" : MessageLookupByLibrary.simpleMessage("Favourite websites"),
     "sectionGrading" : MessageLookupByLibrary.simpleMessage("Grading"),
     "sectionShortcuts" : MessageLookupByLibrary.simpleMessage("Shortcuts"),
@@ -287,7 +293,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "uniEventTypeTest" : MessageLookupByLibrary.simpleMessage("Test"),
     "warningAgreeTo" : MessageLookupByLibrary.simpleMessage("You need to agree to the "),
     "warningAuthenticationNeeded" : MessageLookupByLibrary.simpleMessage("Please authenticate in order to access this feature."),
-    "warningEmailInUse" : m10,
+    "warningEmailInUse" : m11,
     "warningEventNotEditable" : MessageLookupByLibrary.simpleMessage("This event cannot be edited."),
     "warningFavouriteWebsitesInitializationFailed" : MessageLookupByLibrary.simpleMessage("Could not read favourite websites."),
     "warningFeedbackAlreadySent" : MessageLookupByLibrary.simpleMessage("You have already submitted feedback for this class!"),
@@ -304,7 +310,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "warningNoPrivateWebsite" : MessageLookupByLibrary.simpleMessage("You have not created any private websites yet."),
     "warningNoneYet" : MessageLookupByLibrary.simpleMessage("None yet"),
     "warningNothingToEdit" : MessageLookupByLibrary.simpleMessage("There is nothing you have permission to edit."),
-    "warningOnlyNOptionsAtATime" : m11,
+    "warningOnlyNOptionsAtATime" : m12,
     "warningPasswordLength" : MessageLookupByLibrary.simpleMessage("The password must be 8 characters long or more."),
     "warningPasswordLowercase" : MessageLookupByLibrary.simpleMessage("The password must include at least one lowercase letter."),
     "warningPasswordNumber" : MessageLookupByLibrary.simpleMessage("The password must include at least one number."),
@@ -315,7 +321,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "warningSamePassword" : MessageLookupByLibrary.simpleMessage("The password must be different from the old one."),
     "warningTryAgainLater" : MessageLookupByLibrary.simpleMessage("Please try again later."),
     "warningUnableToReachNewsFeed" : MessageLookupByLibrary.simpleMessage("Unable to reach the news feed."),
-    "warningUseProvider" : m12,
+    "warningUseProvider" : m13,
     "warningWebsiteNameExists" : MessageLookupByLibrary.simpleMessage("A website with the same name already exists."),
     "warningYouNeedToSelectAssistant" : MessageLookupByLibrary.simpleMessage("You need to select your assistant for this class."),
     "warningYouNeedToSelectAtLeastOne" : MessageLookupByLibrary.simpleMessage("You need to select at least one option."),
