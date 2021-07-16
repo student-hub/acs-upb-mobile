@@ -10,7 +10,7 @@ jobs:
   web:
     name: Deploy website
     runs-on: ubuntu-latest
-    if: github.repository == 'acs-upb-mobile/acs-upb-mobile'
+    if: github.repository == 'student-hub/acs-upb-mobile'
 
     steps:
       - uses: actions/checkout@v1
@@ -50,7 +50,7 @@ jobs:
   github:
     name: Create GitHub release
     runs-on: ubuntu-latest
-    if: github.repository == 'acs-upb-mobile/acs-upb-mobile'
+    if: github.repository == 'student-hub/acs-upb-mobile'
 
     steps:
     - uses: actions/checkout@v1
@@ -85,7 +85,7 @@ jobs:
   android:
     name: Deploy to Google Play
     runs-on: ubuntu-latest
-    if: github.repository == 'acs-upb-mobile/acs-upb-mobile'
+    if: github.repository == 'student-hub/acs-upb-mobile'
 
     steps:
     - uses: actions/checkout@v1

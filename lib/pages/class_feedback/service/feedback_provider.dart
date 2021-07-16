@@ -10,6 +10,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
+import 'package:acs_upb_mobile/pages/classes/model/class.dart';
 
 extension ClassFeedbackAnswerExtension on FeedbackAnswer {
   Map<String, dynamic> toData() {
@@ -174,6 +175,7 @@ class FeedbackProvider with ChangeNotifier {
               true && userSubmittedFeedbackSuccessfully ??
               true) ||
           (responseAddedSuccessfully && userSubmittedFeedbackSuccessfully)) {
+        notifyListeners();
         return true;
       }
       return false;
@@ -196,6 +198,45 @@ class FeedbackProvider with ChangeNotifier {
     } catch (e) {
       AppToast.show(S.current.errorSomethingWentWrong);
       return false;
+    }
+  }
+
+  Future<Map<String, bool>> getClassesWithCompletedFeedback(String uid) async {
+    try {
+      final DocumentSnapshot snap =
+          await FirebaseFirestore.instance.collection('users').doc(uid).get();
+      if (snap.data()['classesFeedback'] != null) {
+        return Map<String, bool>.from(snap.data()['classesFeedback']);
+      }
+      return null;
+    } catch (e) {
+      AppToast.show(S.current.errorSomethingWentWrong);
+      return null;
+    }
+  }
+
+  Future<String> countClassesWithoutFeedback(
+      String uid, Set<ClassHeader> userClasses) async {
+    try {
+      final Map<String, bool> classesFeedbackCompleted =
+          await getClassesWithCompletedFeedback(uid);
+      String feedbackFormsLeft;
+
+      if (userClasses != null && classesFeedbackCompleted != null) {
+        feedbackFormsLeft = userClasses
+            .where(
+                (element) => !classesFeedbackCompleted.containsKey(element.id))
+            .toSet()
+            .length
+            .toString();
+      } else if (userClasses != null && classesFeedbackCompleted == null) {
+        feedbackFormsLeft = userClasses.length.toString();
+      }
+
+      return feedbackFormsLeft;
+    } catch (e) {
+      AppToast.show(S.current.errorSomethingWentWrong);
+      return null;
     }
   }
 }
