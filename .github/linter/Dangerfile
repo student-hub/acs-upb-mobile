@@ -9,9 +9,9 @@ warn("PR is classed as Work in Progress") if github.pr_title.include? "[WIP]"
 warn("Big PR") if git.lines_of_code > 500
 
 # Flutter analyze warnings
-flutter_lint.only_modified_files = true
-flutter_lint.report_path = "flutter_analyze_report.txt"
-flutter_lint.lint(inline_mode: true)
+#flutter_lint.only_modified_files = true
+#flutter_lint.report_path = "flutter_analyze_report.txt"
+#flutter_lint.lint(inline_mode: true)
 
 # Analyze documentation
 textlint.config_file = '.github/linter/.textlintrc'
@@ -40,13 +40,11 @@ end
 
 if !declared_trivial && has_app_changes && has_pubspec_changes
     diff = git.diff_for_file('pubspec.yaml')
-    if !(diff.insertions =~ 'version:')
+    if diff.patch !~ /\+ version:/
         warn "The pubspec.yaml file was updated, but not the version."
         markdown "For more info on versioning, check out our [PR guidelines](https://github.com/student-hub/acs-upb-mobile/blob/master/CONTRIBUTING.md#guidelines)."
+    else
+        version = diff.patch[/\+ version: .*\+\K([0-9]+)/]
+        warn "Detected version: #{version}"
     end
-    file = File.read('pubspec.yaml')
-    lines = file.lines
-    version_line = lines.grep('version:')
-    version = version_line[/version: .*\+\K([0-9]+)/]
-    warn "Detected version: #{version}"
 end
