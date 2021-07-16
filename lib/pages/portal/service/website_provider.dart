@@ -1,13 +1,14 @@
 import 'dart:async';
 
-import 'package:acs_upb_mobile/authentication/model/user.dart';
-import 'package:acs_upb_mobile/generated/l10n.dart';
-import 'package:acs_upb_mobile/pages/filter/model/filter.dart';
-import 'package:acs_upb_mobile/pages/portal/model/website.dart';
-import 'package:acs_upb_mobile/resources/utils.dart';
-import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+
+import '../../../authentication/model/user.dart';
+import '../../../generated/l10n.dart';
+import '../../../resources/utils.dart';
+import '../../../widgets/toast.dart';
+import '../../filter/model/filter.dart';
+import '../model/website.dart';
 
 extension UserExtension on User {
   /// Check if there is at least one website that the [User] has permission to edit
@@ -46,7 +47,8 @@ extension WebsiteCategoryExtension on WebsiteCategory {
 
 extension WebsiteExtension on Website {
   // [ownerUid] should be provided if the website is user-private
-  static Website fromSnap(DocumentSnapshot<Map<String, dynamic>> snap, {String ownerUid}) {
+  static Website fromSnap(DocumentSnapshot<Map<String, dynamic>> snap,
+      {String ownerUid}) {
     final data = snap.data();
     return Website(
       ownerUid: ownerUid ?? data['addedBy'],
@@ -112,7 +114,8 @@ class WebsiteProvider with ChangeNotifier {
       return _initializeNumberOfVisitsLocally(websites);
     }
     try {
-      final DocumentReference<Map<String, dynamic>> userDoc = _db.collection('users').doc(uid);
+      final DocumentReference<Map<String, dynamic>> userDoc =
+          _db.collection('users').doc(uid);
       final userData = (await userDoc.get()).data();
 
       if (userData != null) {
@@ -167,7 +170,8 @@ class WebsiteProvider with ChangeNotifier {
         return await incrementNumberOfVisitsLocally(website);
       }
 
-      final DocumentReference<Map<String, dynamic>> userDoc = _db.collection('users').doc(uid);
+      final DocumentReference<Map<String, dynamic>> userDoc =
+          _db.collection('users').doc(uid);
       final userData = (await userDoc.get()).data();
 
       if (userData != null) {
@@ -227,7 +231,7 @@ class WebsiteProvider with ChangeNotifier {
       final websites = <Website>[];
 
       if (!userOnly) {
-        List<DocumentSnapshot> documents = [];
+        List<DocumentSnapshot<Map<String, dynamic>>> documents = [];
 
         if (filter == null) {
           final QuerySnapshot<Map<String, dynamic>> qSnapshot =
@@ -237,7 +241,8 @@ class WebsiteProvider with ChangeNotifier {
           // Documents without a 'relevance' field are relevant for everyone
           final query =
               _db.collection('websites').where('relevance', isNull: true);
-          final QuerySnapshot<Map<String, dynamic>> qSnapshot = await query.get();
+          final QuerySnapshot<Map<String, dynamic>> qSnapshot =
+              await query.get();
           documents.addAll(qSnapshot.docs);
 
           for (final string in filter.relevantNodes) {
@@ -246,7 +251,8 @@ class WebsiteProvider with ChangeNotifier {
                 .collection('websites')
                 .where('degree', isEqualTo: filter.baseNode)
                 .where('relevance', arrayContains: string);
-            final QuerySnapshot<Map<String, dynamic>> qSnapshot = await query.get();
+            final QuerySnapshot<Map<String, dynamic>> qSnapshot =
+                await query.get();
             documents.addAll(qSnapshot.docs);
           }
         }
@@ -258,14 +264,15 @@ class WebsiteProvider with ChangeNotifier {
         documents =
             documents.where((doc) => seenDocumentIds.add(doc.id)).toList();
 
-        websites.addAll(documents.map((doc) => WebsiteExtension.fromSnap(doc)));
+        websites.addAll(documents.map(WebsiteExtension.fromSnap));
       }
 
       // Get user-added websites
       if (uid != null) {
         final DocumentReference ref =
             FirebaseFirestore.instance.collection('users').doc(uid);
-        final QuerySnapshot<Map<String, dynamic>> qSnapshot = await ref.collection('websites').get();
+        final QuerySnapshot<Map<String, dynamic>> qSnapshot =
+            await ref.collection('websites').get();
 
         websites.addAll(qSnapshot.docs
             .map((doc) => WebsiteExtension.fromSnap(doc, ownerUid: uid)));
@@ -299,7 +306,7 @@ class WebsiteProvider with ChangeNotifier {
   }
 
   Future<bool> addWebsite(Website website) async {
-    assert(website.label != null);
+    assert(website.label != null, 'website label cannot be null');
 
     try {
       DocumentReference ref;
@@ -332,7 +339,7 @@ class WebsiteProvider with ChangeNotifier {
   }
 
   Future<bool> updateWebsite(Website website) async {
-    assert(website.label != null);
+    assert(website.label != null, 'website label cannot be null');
 
     try {
       final DocumentReference publicRef =

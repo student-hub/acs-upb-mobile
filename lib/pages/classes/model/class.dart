@@ -1,6 +1,7 @@
-import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:meta/meta.dart';
+
+import '../../../generated/l10n.dart';
 
 enum ShortcutType { main, classbook, resource, other }
 
@@ -13,9 +14,8 @@ extension ShortcutTypeExtension on ShortcutType {
         return S.current.shortcutTypeClassbook;
       case ShortcutType.resource:
         return S.current.shortcutTypeResource;
-      default:
-        return S.current.shortcutTypeOther;
     }
+    return S.current.shortcutTypeOther;
   }
 }
 

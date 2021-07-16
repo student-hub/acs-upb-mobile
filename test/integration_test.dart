@@ -3,11 +3,12 @@ import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/authentication/view/edit_profile_page.dart';
 import 'package:acs_upb_mobile/main.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question_dropdown.dart';
-import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question_slider.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question_rating.dart';
+import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question_slider.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question_text.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/service/feedback_provider.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/view/class_feedback_view.dart';
+import 'package:acs_upb_mobile/pages/class_feedback/view/feedback_question.dart';
 import 'package:acs_upb_mobile/pages/classes/model/class.dart';
 import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
 import 'package:acs_upb_mobile/pages/classes/view/class_view.dart';
@@ -45,8 +46,8 @@ import 'package:acs_upb_mobile/pages/timetable/view/events/add_event_view.dart';
 import 'package:acs_upb_mobile/pages/timetable/view/events/event_view.dart';
 import 'package:acs_upb_mobile/pages/timetable/view/timetable_page.dart';
 import 'package:acs_upb_mobile/resources/locale_provider.dart';
+import 'package:acs_upb_mobile/resources/remote_config.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
-import 'package:acs_upb_mobile/pages/class_feedback/view/feedback_question.dart';
 import 'package:acs_upb_mobile/widgets/search_bar.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -60,7 +61,6 @@ import 'package:provider/provider.dart';
 import 'package:rrule/rrule.dart';
 import 'package:time_machine/time_machine.dart' hide Offset;
 import 'package:timetable/src/header/week_indicator.dart';
-import 'package:acs_upb_mobile/resources/remote_config.dart';
 
 import 'firebase_mock.dart';
 import 'test_utils.dart';
@@ -156,7 +156,11 @@ Future<void> main() async {
     LocaleProvider.rruleL10ns = {'en': await RruleL10nTest.create()};
 
     Utils.packageInfo = PackageInfo(
-        version: '1.2.7', buildNumber: '6', appName: 'ACS UPB Mobile');
+      version: '1.2.7',
+      buildNumber: '6',
+      appName: 'ACS UPB Mobile',
+      packageName: 'ro.upb.acs_upb_mobile',
+    );
 
     // Pretend an anonymous user is already logged in
     mockAuthProvider = MockAuthProvider();

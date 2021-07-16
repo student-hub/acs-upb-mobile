@@ -146,13 +146,10 @@ dependencies:
 
 dev_dependencies:
   # Code analysis
-  extra_pedantic: ^1.5.0
+  extra_pedantic: ^1.3.0
 
   # Simplifies updating the launcher icon
   flutter_launcher_icons: ^0.9.0
-
-  # Simplifies updating the launcher name
-#  flutter_launcher_name: ^0.0.1
 
   # Generates native code for adding splash screens on iOS & Android
   flutter_native_splash: ^1.1.8+4
@@ -175,12 +172,6 @@ dev_dependencies:
 
   # Using Provider for state management
   provider: ^5.0.0
-
-dependency_overrides:
-  # Temporary workaround to bypass intl_translation incompatibility
-#  intl: ^0.17.0-nullsafety.2
-# For information on the generic Dart part of this file, see the
-# following page: https://dart.dev/tools/pub/pubspec
 
 # The following section is specific to Flutter.
 flutter:

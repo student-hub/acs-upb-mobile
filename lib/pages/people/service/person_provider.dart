@@ -1,9 +1,10 @@
-import 'package:acs_upb_mobile/generated/l10n.dart';
-import 'package:acs_upb_mobile/pages/people/model/person.dart';
-import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
+import '../../../generated/l10n.dart';
+import '../../../widgets/toast.dart';
+import '../model/person.dart';
 
 extension PersonExtension on Person {
   static Person fromSnap(DocumentSnapshot<Map<String, dynamic>> snap) {
@@ -35,7 +36,8 @@ class PersonProvider with ChangeNotifier {
   Future<Person> fetchPerson(String personName) async {
     try {
       // Get person with name [personName]
-      final QuerySnapshot<Map<String, dynamic>> query = await FirebaseFirestore.instance
+      final QuerySnapshot<Map<String, dynamic>> query = await FirebaseFirestore
+          .instance
           .collection('people')
           .where('name', isEqualTo: personName)
           .limit(1)
@@ -55,7 +57,8 @@ class PersonProvider with ChangeNotifier {
 
   Future<String> mostRecentLecturer(String classId) async {
     try {
-      final QuerySnapshot<Map<String, dynamic>> query = await FirebaseFirestore.instance
+      final QuerySnapshot<Map<String, dynamic>> query = await FirebaseFirestore
+          .instance
           .collection('events')
           .where('class', isEqualTo: classId)
           .where('type', isEqualTo: 'lecture')

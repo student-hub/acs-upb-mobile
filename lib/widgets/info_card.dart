@@ -1,5 +1,6 @@
-import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:flutter/material.dart';
+
+import '../generated/l10n.dart';
 
 class InfoCard<T> extends StatelessWidget {
   const InfoCard(
@@ -82,9 +83,9 @@ class InfoCard<T> extends StatelessWidget {
                         return noneYet(context);
                       }
                     }
-                    return Container(
+                    return const SizedBox(
                       height: 100,
-                      child: const Center(child: CircularProgressIndicator()),
+                      child: Center(child: CircularProgressIndicator()),
                     );
                   }),
             ],
@@ -94,7 +95,7 @@ class InfoCard<T> extends StatelessWidget {
     );
   }
 
-  Widget noneYet(BuildContext context) => Container(
+  Widget noneYet(BuildContext context) => SizedBox(
         height: 100,
         child: Center(
           child: Text(

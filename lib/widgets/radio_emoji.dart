@@ -85,7 +85,7 @@ class EmojiFormField extends FormField<Map<int, bool>> {
                     fontSize: 18,
                   ),
                 ),
-                Container(
+                SizedBox(
                   width: MediaQuery.of(context).size.width - 20,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -143,14 +143,11 @@ class SelectableIcon extends StatefulWidget {
   final SelectableIconController controller;
 
   @override
-  State<SelectableIcon> createState() => _SelectableIconState(icon);
+  State<SelectableIcon> createState() => _SelectableIconState();
 }
 
 class _SelectableIconState extends State<SelectableIcon>
     with SingleTickerProviderStateMixin {
-  _SelectableIconState(this.icon);
-
-  Icon icon;
   AnimationController animationController;
   Animation<double> animation;
   bool isSelected;
@@ -197,7 +194,7 @@ class _SelectableIconState extends State<SelectableIcon>
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
         child: AnimatedBuilder(
           animation: animation,
-          child: icon,
+          child: widget.icon,
           builder: (BuildContext context, Widget child) {
             return Transform.scale(
               scale: animation.value,

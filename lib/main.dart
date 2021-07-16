@@ -1,30 +1,5 @@
 import 'dart:io';
 
-import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
-import 'package:acs_upb_mobile/authentication/view/login_view.dart';
-import 'package:acs_upb_mobile/authentication/view/sign_up_view.dart';
-import 'package:acs_upb_mobile/generated/l10n.dart';
-import 'package:acs_upb_mobile/navigation/bottom_navigation_bar.dart';
-import 'package:acs_upb_mobile/navigation/routes.dart';
-import 'package:acs_upb_mobile/pages/class_feedback/service/feedback_provider.dart';
-import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
-import 'package:acs_upb_mobile/pages/faq/service/question_provider.dart';
-import 'package:acs_upb_mobile/pages/faq/view/faq_page.dart';
-import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
-import 'package:acs_upb_mobile/pages/filter/view/filter_page.dart';
-import 'package:acs_upb_mobile/pages/news_feed/service/news_provider.dart';
-import 'package:acs_upb_mobile/pages/news_feed/view/news_feed_page.dart';
-import 'package:acs_upb_mobile/pages/people/service/person_provider.dart';
-import 'package:acs_upb_mobile/pages/portal/service/website_provider.dart';
-import 'package:acs_upb_mobile/pages/settings/service/request_provider.dart';
-import 'package:acs_upb_mobile/pages/settings/view/request_permissions.dart';
-import 'package:acs_upb_mobile/pages/settings/view/settings_page.dart';
-import 'package:acs_upb_mobile/pages/timetable/service/uni_event_provider.dart';
-import 'package:acs_upb_mobile/resources/locale_provider.dart';
-import 'package:acs_upb_mobile/resources/remote_config.dart';
-import 'package:acs_upb_mobile/resources/themes.dart';
-import 'package:acs_upb_mobile/resources/utils.dart';
-import 'package:acs_upb_mobile/widgets/loading_screen.dart';
 import 'package:easy_dynamic_theme/easy_dynamic_theme.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -36,6 +11,32 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:pref/pref.dart';
 import 'package:provider/provider.dart';
 import 'package:rrule/rrule.dart';
+
+import 'authentication/service/auth_provider.dart';
+import 'authentication/view/login_view.dart';
+import 'authentication/view/sign_up_view.dart';
+import 'generated/l10n.dart';
+import 'navigation/bottom_navigation_bar.dart';
+import 'navigation/routes.dart';
+import 'pages/class_feedback/service/feedback_provider.dart';
+import 'pages/classes/service/class_provider.dart';
+import 'pages/faq/service/question_provider.dart';
+import 'pages/faq/view/faq_page.dart';
+import 'pages/filter/service/filter_provider.dart';
+import 'pages/filter/view/filter_page.dart';
+import 'pages/news_feed/service/news_provider.dart';
+import 'pages/news_feed/view/news_feed_page.dart';
+import 'pages/people/service/person_provider.dart';
+import 'pages/portal/service/website_provider.dart';
+import 'pages/settings/service/request_provider.dart';
+import 'pages/settings/view/request_permissions.dart';
+import 'pages/settings/view/settings_page.dart';
+import 'pages/timetable/service/uni_event_provider.dart';
+import 'resources/locale_provider.dart';
+import 'resources/remote_config.dart';
+import 'resources/themes.dart';
+import 'resources/utils.dart';
+import 'widgets/loading_screen.dart';
 
 // FIXME: acs.pub.ro has some bad certificate configuration right now, and the
 // cs.pub.ro certificate is expired.
@@ -176,6 +177,7 @@ class AppLoadingScreen extends StatelessWidget {
       await RemoteConfigService.initialize();
       await prefService.setDefaultValues({
         'dark_mode':
+            // ignore: use_build_context_synchronously
             MediaQuery.of(context).platformBrightness == Brightness.dark
       });
 
@@ -193,6 +195,7 @@ class AppLoadingScreen extends StatelessWidget {
     await S.load(LocaleProvider.locale);
 
     // Choose start screen
+    // ignore: use_build_context_synchronously
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
     return authProvider.isAuthenticated ? Routes.home : Routes.login;
   }

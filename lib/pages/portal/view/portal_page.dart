@@ -1,25 +1,26 @@
 import 'dart:core';
 import 'dart:math';
 
-import 'package:acs_upb_mobile/authentication/model/user.dart';
-import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
-import 'package:acs_upb_mobile/generated/l10n.dart';
-import 'package:acs_upb_mobile/pages/filter/model/filter.dart';
-import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
-import 'package:acs_upb_mobile/pages/filter/view/filter_page.dart';
-import 'package:acs_upb_mobile/pages/portal/model/website.dart';
-import 'package:acs_upb_mobile/pages/portal/service/website_provider.dart';
-import 'package:acs_upb_mobile/pages/portal/view/website_view.dart';
-import 'package:acs_upb_mobile/resources/custom_icons.dart';
-import 'package:acs_upb_mobile/resources/utils.dart';
-import 'package:acs_upb_mobile/widgets/circle_image.dart';
-import 'package:acs_upb_mobile/widgets/scaffold.dart';
-import 'package:acs_upb_mobile/widgets/spoiler.dart';
-import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:provider/provider.dart';
 import 'package:recase/recase.dart';
+
+import '../../../authentication/model/user.dart';
+import '../../../authentication/service/auth_provider.dart';
+import '../../../generated/l10n.dart';
+import '../../../resources/custom_icons.dart';
+import '../../../resources/utils.dart';
+import '../../../widgets/circle_image.dart';
+import '../../../widgets/scaffold.dart';
+import '../../../widgets/spoiler.dart';
+import '../../../widgets/toast.dart';
+import '../../filter/model/filter.dart';
+import '../../filter/service/filter_provider.dart';
+import '../../filter/view/filter_page.dart';
+import '../model/website.dart';
+import '../service/website_provider.dart';
+import 'website_view.dart';
 
 class PortalPage extends StatefulWidget {
   const PortalPage({Key key}) : super(key: key);
@@ -135,7 +136,7 @@ class _PortalPageState extends State<PortalPage> {
       // content)
       content = Align(
         alignment: Alignment.centerLeft,
-        child: Container(
+        child: SizedBox(
           width: circleSize + 16.0,
           height: circleSize +
               16.0 + // padding
@@ -161,7 +162,7 @@ class _PortalPageState extends State<PortalPage> {
             rows.add(Row(children: children));
             children = [];
           }
-          children.add(Container(
+          children.add(SizedBox(
             width: circleSize + 16,
             child: _AddWebsiteButton(
               key: ValueKey(
@@ -189,7 +190,7 @@ class _PortalPageState extends State<PortalPage> {
   }
 
   List<Widget> listWebsitesByCategory(List<Website> websites) {
-    assert(websites != null);
+    assert(websites != null, 'list of websites cannot be null');
 
     final map = <WebsiteCategory, List<Website>>{};
     for (final website in websites) {

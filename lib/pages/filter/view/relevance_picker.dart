@@ -1,15 +1,16 @@
-import 'package:acs_upb_mobile/authentication/model/user.dart';
-import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
-import 'package:acs_upb_mobile/generated/l10n.dart';
-import 'package:acs_upb_mobile/pages/filter/model/filter.dart';
-import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
-import 'package:acs_upb_mobile/pages/filter/view/filter_page.dart';
-import 'package:acs_upb_mobile/resources/custom_icons.dart';
-import 'package:acs_upb_mobile/widgets/selectable.dart';
-import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:provider/provider.dart';
+
+import '../../../authentication/model/user.dart';
+import '../../../authentication/service/auth_provider.dart';
+import '../../../generated/l10n.dart';
+import '../../../resources/custom_icons.dart';
+import '../../../widgets/selectable.dart';
+import '../../../widgets/toast.dart';
+import '../model/filter.dart';
+import '../service/filter_provider.dart';
+import 'filter_page.dart';
 
 class RelevanceController {
   RelevanceController({this.onChanged});
@@ -272,7 +273,7 @@ class _RelevancePickerState extends State<RelevancePicker> {
                     Row(
                       children: <Widget>[
                         Expanded(
-                          child: Container(
+                          child: SizedBox(
                             height: 40,
                             child: ListView(
                               scrollDirection: Axis.horizontal,

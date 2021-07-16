@@ -1,12 +1,13 @@
 import 'dart:math';
 
-import 'package:acs_upb_mobile/generated/l10n.dart';
-import 'package:acs_upb_mobile/pages/news_feed/model/news_feed_item.dart';
-import 'package:acs_upb_mobile/resources/utils.dart';
-import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:web_scraper/web_scraper.dart';
+
+import '../../../generated/l10n.dart';
+import '../../../resources/utils.dart';
+import '../../../widgets/toast.dart';
+import '../model/news_feed_item.dart';
 
 class NewsProvider with ChangeNotifier {
   static const _textSelector = 'title';

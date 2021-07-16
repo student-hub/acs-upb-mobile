@@ -1,16 +1,17 @@
-import 'package:acs_upb_mobile/authentication/model/user.dart';
-import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
-import 'package:acs_upb_mobile/generated/l10n.dart';
-import 'package:acs_upb_mobile/pages/settings/model/request.dart';
-import 'package:acs_upb_mobile/pages/settings/service/request_provider.dart';
-import 'package:acs_upb_mobile/resources/utils.dart';
-import 'package:acs_upb_mobile/widgets/button.dart';
-import 'package:acs_upb_mobile/widgets/dialog.dart';
-import 'package:acs_upb_mobile/widgets/scaffold.dart';
-import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import '../../../authentication/model/user.dart';
+import '../../../authentication/service/auth_provider.dart';
+import '../../../generated/l10n.dart';
+import '../../../resources/utils.dart';
+import '../../../widgets/button.dart';
+import '../../../widgets/dialog.dart';
+import '../../../widgets/scaffold.dart';
+import '../../../widgets/toast.dart';
+import '../model/request.dart';
+import '../service/request_provider.dart';
 
 class RequestPermissionsPage extends StatefulWidget {
   static const String routeName = '/requestPermissions';
@@ -86,6 +87,9 @@ class _RequestPermissionsPageState extends State<RequestPermissionsPage> {
                     await requestProvider.userAlreadyRequested(user.uid);
 
                 if (queryResult) {
+                  if (!mounted) {
+                    return;
+                  }
                   await showDialog(
                       context: context, builder: _requestAlreadyExistsDialog);
                 }
@@ -98,6 +102,9 @@ class _RequestPermissionsPageState extends State<RequestPermissionsPage> {
                 );
                 if (queryResult) {
                   AppToast.show(S.current.messageRequestHasBeenSent);
+                  if (!mounted) {
+                    return;
+                  }
                   Navigator.of(context).pop();
                 }
               })
@@ -106,9 +113,10 @@ class _RequestPermissionsPageState extends State<RequestPermissionsPage> {
           children: [
             Padding(
               padding: const EdgeInsets.only(top: 10),
-              child: Container(
-                  height: MediaQuery.of(context).size.height / 4,
-                  child: Image.asset('assets/illustrations/undraw_hiring.png')),
+              child: SizedBox(
+                height: MediaQuery.of(context).size.height / 4,
+                child: Image.asset('assets/illustrations/undraw_hiring.png'),
+              ),
             ),
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 20, 20, 8),

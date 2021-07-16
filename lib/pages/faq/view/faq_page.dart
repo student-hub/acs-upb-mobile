@@ -1,15 +1,16 @@
-import 'package:acs_upb_mobile/generated/l10n.dart';
-import 'package:acs_upb_mobile/pages/faq/model/question.dart';
-import 'package:acs_upb_mobile/pages/faq/service/question_provider.dart';
-import 'package:acs_upb_mobile/resources/utils.dart';
-import 'package:acs_upb_mobile/widgets/scaffold.dart';
-import 'package:acs_upb_mobile/widgets/search_bar.dart';
-import 'package:acs_upb_mobile/widgets/selectable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:markdown/markdown.dart' as md;
 import 'package:provider/provider.dart';
+
+import '../../../generated/l10n.dart';
+import '../../../resources/utils.dart';
+import '../../../widgets/scaffold.dart';
+import '../../../widgets/search_bar.dart';
+import '../../../widgets/selectable.dart';
+import '../model/question.dart';
+import '../service/question_provider.dart';
 
 class FaqPage extends StatefulWidget {
   static const String routeName = '/faq';

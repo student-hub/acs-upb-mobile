@@ -1,7 +1,8 @@
-import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:rrule/rrule.dart';
+
+import 'utils.dart';
 
 mixin Localizable {
   String toLocalizedString();

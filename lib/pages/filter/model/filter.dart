@@ -1,5 +1,6 @@
-import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:flutter/cupertino.dart';
+
+import '../../../generated/l10n.dart';
 
 /// Filter represented in the form of a tree with named levels
 ///
@@ -113,7 +114,8 @@ class Filter {
     if (root.children != null) {
       final selected =
           root.children.where((child) => child.value == true).toList();
-      assert(selected.length <= 1);
+      assert(selected.length <= 1,
+          'first level nodes should be mutually exclusive');
       if (selected.length == 1) {
         return selected[0].name;
       }

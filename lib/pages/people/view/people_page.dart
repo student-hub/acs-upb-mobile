@@ -1,14 +1,15 @@
-import 'package:acs_upb_mobile/generated/l10n.dart';
-import 'package:acs_upb_mobile/pages/people/model/person.dart';
-import 'package:acs_upb_mobile/pages/people/service/person_provider.dart';
-import 'package:acs_upb_mobile/pages/people/view/person_view.dart';
-import 'package:acs_upb_mobile/widgets/scaffold.dart';
-import 'package:acs_upb_mobile/widgets/search_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:provider/provider.dart';
 import 'package:recase/recase.dart';
+
+import '../../../generated/l10n.dart';
+import '../../../widgets/scaffold.dart';
+import '../../../widgets/search_bar.dart';
+import '../model/person.dart';
+import '../service/person_provider.dart';
+import 'person_view.dart';
 
 class PeoplePage extends StatefulWidget {
   const PeoplePage({Key key}) : super(key: key);

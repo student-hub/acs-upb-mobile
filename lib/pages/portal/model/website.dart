@@ -1,8 +1,9 @@
-import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 import 'package:validators/sanitizers.dart';
+
+import '../../../generated/l10n.dart';
 
 enum WebsiteCategory { learning, administrative, association, resource, other }
 
@@ -17,9 +18,8 @@ extension WebsiteCategoryExtension on WebsiteCategory {
         return S.current.websiteCategoryAssociations;
       case WebsiteCategory.resource:
         return S.current.websiteCategoryResources;
-      default:
-        return S.current.websiteCategoryOthers;
     }
+    return S.current.websiteCategoryOthers;
   }
 }
 

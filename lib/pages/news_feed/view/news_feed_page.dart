@@ -1,12 +1,13 @@
-import 'package:acs_upb_mobile/generated/l10n.dart';
-import 'package:acs_upb_mobile/pages/news_feed/model/news_feed_item.dart';
-import 'package:acs_upb_mobile/pages/news_feed/service/news_provider.dart';
-import 'package:acs_upb_mobile/resources/utils.dart';
-import 'package:acs_upb_mobile/widgets/error_page.dart';
-import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import '../../../generated/l10n.dart';
+import '../../../resources/utils.dart';
+import '../../../widgets/error_page.dart';
+import '../../../widgets/scaffold.dart';
+import '../model/news_feed_item.dart';
+import '../service/news_provider.dart';
 
 class NewsFeedPage extends StatefulWidget {
   static const String routeName = '/news_feed';

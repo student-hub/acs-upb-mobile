@@ -39,8 +39,7 @@ class CustomIcons {
         return Colors.white70;
       case Brightness.light:
         return Colors.black45;
-      default:
-        return themeData.iconTheme.color;
     }
+    return themeData.iconTheme.color;
   }
 }

@@ -1,20 +1,21 @@
-import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
-import 'package:acs_upb_mobile/generated/l10n.dart';
-import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question.dart';
-import 'package:acs_upb_mobile/pages/class_feedback/service/feedback_provider.dart';
-import 'package:acs_upb_mobile/pages/class_feedback/view/feedback_question.dart';
-import 'package:acs_upb_mobile/pages/classes/model/class.dart';
-import 'package:acs_upb_mobile/pages/people/model/person.dart';
-import 'package:acs_upb_mobile/pages/people/service/person_provider.dart';
-import 'package:acs_upb_mobile/pages/people/view/people_page.dart';
-import 'package:acs_upb_mobile/resources/locale_provider.dart';
-import 'package:acs_upb_mobile/widgets/icon_text.dart';
-import 'package:acs_upb_mobile/widgets/scaffold.dart';
-import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:provider/provider.dart';
+
+import '../../../authentication/service/auth_provider.dart';
+import '../../../generated/l10n.dart';
+import '../../../resources/locale_provider.dart';
+import '../../../widgets/icon_text.dart';
+import '../../../widgets/scaffold.dart';
+import '../../../widgets/toast.dart';
+import '../../classes/model/class.dart';
+import '../../people/model/person.dart';
+import '../../people/service/person_provider.dart';
+import '../../people/view/people_page.dart';
+import '../model/questions/question.dart';
+import '../service/feedback_provider.dart';
+import 'feedback_question.dart';
 
 class ClassFeedbackView extends StatefulWidget {
   const ClassFeedbackView({Key key, this.classHeader}) : super(key: key);
@@ -253,6 +254,9 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
                       selectedTeacher, classController.text);
 
           if (feedbackSentSuccessfully) {
+            if (!mounted) {
+              return;
+            }
             Navigator.of(context).pop();
             AppToast.show(S.current.messageFeedbackHasBeenSent);
           }

@@ -1,13 +1,14 @@
-import 'package:acs_upb_mobile/generated/l10n.dart';
-import 'package:acs_upb_mobile/pages/filter/model/filter.dart';
-import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
-import 'package:acs_upb_mobile/resources/locale_provider.dart';
-import 'package:acs_upb_mobile/widgets/icon_text.dart';
-import 'package:acs_upb_mobile/widgets/scaffold.dart';
-import 'package:acs_upb_mobile/widgets/selectable.dart';
-import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import '../../../generated/l10n.dart';
+import '../../../resources/locale_provider.dart';
+import '../../../widgets/icon_text.dart';
+import '../../../widgets/scaffold.dart';
+import '../../../widgets/selectable.dart';
+import '../../../widgets/toast.dart';
+import '../model/filter.dart';
+import '../service/filter_provider.dart';
 
 class FilterPage extends StatefulWidget {
   const FilterPage(
@@ -128,7 +129,7 @@ class FilterPageState extends State<FilterPage> {
     optionsByLevel[level].add(
       Padding(
         padding: const EdgeInsets.only(bottom: 10),
-        child: Container(
+        child: SizedBox(
           height: 40,
           child: ListView(
             scrollDirection: Axis.horizontal,

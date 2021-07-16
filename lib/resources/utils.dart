@@ -1,13 +1,14 @@
-import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
-import 'package:acs_upb_mobile/generated/l10n.dart';
-import 'package:acs_upb_mobile/navigation/routes.dart';
-import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:pedantic/pedantic.dart';
 import 'package:pref/pref.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+import '../authentication/service/auth_provider.dart';
+import '../generated/l10n.dart';
+import '../navigation/routes.dart';
+import '../widgets/toast.dart';
 
 export 'package:acs_upb_mobile/resources/platform.dart'
     if (dart.library.io) 'dart:io';
@@ -63,5 +64,9 @@ class Utils {
   }
 
   static PackageInfo packageInfo = PackageInfo(
-      version: 'Unknown', buildNumber: 'Unknown', appName: 'Unknown');
+    version: '\$version',
+    buildNumber: '\$buildNumber',
+    appName: '\$appName',
+    packageName: '\$packageName',
+  );
 }

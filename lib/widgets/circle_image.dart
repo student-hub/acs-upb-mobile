@@ -19,7 +19,7 @@ class CustomBoxShadow extends BoxShadow {
     assert(() {
       if (debugDisableShadows) result.maskFilter = null;
       return true;
-    }());
+    }(), '');
     return result;
   }
 }
@@ -68,7 +68,7 @@ class CircleImage extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          Container(
+          SizedBox(
             width: circleSize,
             child: Stack(
               children: <Widget>[
@@ -105,7 +105,7 @@ class CircleImage extends StatelessWidget {
                   child: icon,
                 ),
                 if (enableOverlay)
-                  Container(
+                  SizedBox(
                     width: circleSize,
                     height: circleSize,
                     child: Center(
@@ -120,7 +120,7 @@ class CircleImage extends StatelessWidget {
             ),
           ),
           if (label != null)
-            Container(
+            SizedBox(
               height: 40,
               width: circleSize,
               child: Center(

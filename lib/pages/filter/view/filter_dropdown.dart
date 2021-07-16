@@ -1,9 +1,10 @@
-import 'package:acs_upb_mobile/pages/filter/model/filter.dart';
-import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
-import 'package:acs_upb_mobile/resources/locale_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import '../../../resources/locale_provider.dart';
+import '../model/filter.dart';
+import '../service/filter_provider.dart';
 
 class FilterDropdownController {
   _FilterDropdownState _dropdownTreeState;

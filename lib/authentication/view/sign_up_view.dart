@@ -1,17 +1,18 @@
-import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
-import 'package:acs_upb_mobile/generated/l10n.dart';
-import 'package:acs_upb_mobile/navigation/routes.dart';
-import 'package:acs_upb_mobile/pages/filter/view/filter_dropdown.dart';
-import 'package:acs_upb_mobile/resources/banner.dart';
-import 'package:acs_upb_mobile/resources/utils.dart';
-import 'package:acs_upb_mobile/resources/validator.dart';
-import 'package:acs_upb_mobile/widgets/button.dart';
-import 'package:acs_upb_mobile/widgets/form_card.dart';
-import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:recase/recase.dart';
+
+import '../../generated/l10n.dart';
+import '../../navigation/routes.dart';
+import '../../pages/filter/view/filter_dropdown.dart';
+import '../../resources/banner.dart';
+import '../../resources/utils.dart';
+import '../../resources/validator.dart';
+import '../../widgets/button.dart';
+import '../../widgets/form_card.dart';
+import '../../widgets/toast.dart';
+import '../service/auth_provider.dart';
 
 class SignUpView extends StatefulWidget {
   static const String routeName = '/signup';
@@ -180,6 +181,9 @@ class _SignUpViewState extends State<SignUpView> {
         final result = await authProvider.signUp(fields);
 
         if (result) {
+          if (!mounted) {
+            return;
+          }
           // Remove all routes below and push home page
           await Navigator.pushNamedAndRemoveUntil(
               context, Routes.home, (route) => false);
@@ -208,7 +212,7 @@ class _SignUpViewState extends State<SignUpView> {
               alignment: FractionalOffset.topRight,
               child: Padding(
                 padding: const EdgeInsets.all(10),
-                child: Container(
+                child: SizedBox(
                     height: MediaQuery.of(context).size.height / 3 - 20,
                     child: Image.asset(
                         'assets/illustrations/undraw_personal_information.png')),

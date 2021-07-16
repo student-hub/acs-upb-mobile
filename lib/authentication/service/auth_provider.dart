@@ -1,15 +1,16 @@
 import 'dart:async';
 import 'dart:typed_data';
 
-import 'package:acs_upb_mobile/authentication/model/user.dart';
-import 'package:acs_upb_mobile/generated/l10n.dart';
-import 'package:acs_upb_mobile/resources/storage/storage_provider.dart';
-import 'package:acs_upb_mobile/resources/validator.dart';
-import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' hide User;
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth show User;
 import 'package:flutter/material.dart';
+
+import '../../generated/l10n.dart';
+import '../../resources/storage/storage_provider.dart';
+import '../../resources/validator.dart';
+import '../../widgets/toast.dart';
+import '../model/user.dart';
 
 extension DatabaseUser on User {
   static User fromSnap(DocumentSnapshot<Map<String, dynamic>> snap) {
@@ -109,7 +110,7 @@ class AuthProvider with ChangeNotifier {
 
   /// Check if the user verified their e-mail
   Future<bool> get isVerified async {
-    assert(_firebaseUser != null);
+    assert(_firebaseUser != null, 'firebase user should not be null');
     await _firebaseUser.reload();
     return !isAnonymous && _firebaseUser.emailVerified;
   }
@@ -250,7 +251,7 @@ class AuthProvider with ChangeNotifier {
   }
 
   Future<bool> delete({bool showToast = true}) async {
-    assert(_firebaseUser != null);
+    assert(_firebaseUser != null, 'firebase user to be deleted cannot be null');
 
     try {
       final DocumentReference ref =

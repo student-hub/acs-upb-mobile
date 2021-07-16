@@ -90,7 +90,7 @@ class _AppSpoilerState extends State<AppSpoiler>
             turns: _iconTurns,
             child: const Icon(Icons.expand_more_outlined),
           ),
-          trailing: Container(width: 0, height: 0),
+          trailing: const SizedBox(width: 0, height: 0),
           tilePadding: EdgeInsets.zero,
           onExpansionChanged: (expansion) {
             _isExpanded = expansion;

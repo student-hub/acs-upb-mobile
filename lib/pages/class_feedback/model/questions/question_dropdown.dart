@@ -1,4 +1,4 @@
-import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question.dart';
+import 'question.dart';
 
 class FeedbackQuestionDropdown extends FeedbackQuestion {
   FeedbackQuestionDropdown({

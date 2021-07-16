@@ -1,10 +1,10 @@
-
-import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
-import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
-import 'package:acs_upb_mobile/pages/filter/model/filter.dart';
-import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
-import 'package:acs_upb_mobile/pages/people/service/person_provider.dart';
 import 'package:flutter/material.dart';
+
+import '../../../authentication/service/auth_provider.dart';
+import '../../classes/service/class_provider.dart';
+import '../../filter/model/filter.dart';
+import '../../filter/service/filter_provider.dart';
+import '../../people/service/person_provider.dart';
 
 //extension PeriodExtension on Period {
 //  static Period fromJSON(Map<String, dynamic> json) {
@@ -191,9 +191,9 @@ import 'package:flutter/material.dart';
 //  }
 //}
 
-class UniEventProvider
-//    extends EventProvider<UniEventInstance>
-    with ChangeNotifier {
+class UniEventProvider //    extends EventProvider<UniEventInstance>
+    with
+        ChangeNotifier {
   UniEventProvider({AuthProvider authProvider, PersonProvider personProvider})
       : _authProvider = authProvider ?? AuthProvider(),
         _personProvider = personProvider ?? PersonProvider() {
@@ -357,6 +357,7 @@ class UniEventProvider
 //      notifyListeners();
 //    });
   }
+
 //
   void updateFilter(FilterProvider filterProvider) {
 //    _filterProvider = filterProvider;

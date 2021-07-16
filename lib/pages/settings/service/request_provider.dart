@@ -1,10 +1,11 @@
 import 'dart:async';
 
-import 'package:acs_upb_mobile/generated/l10n.dart';
-import 'package:acs_upb_mobile/pages/settings/model/request.dart';
-import 'package:acs_upb_mobile/resources/utils.dart';
-import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+
+import '../../../generated/l10n.dart';
+import '../../../resources/utils.dart';
+import '../../../widgets/toast.dart';
+import '../model/request.dart';
 
 extension RequestExtension on Request {
   Map<String, dynamic> toData() {
@@ -25,7 +26,7 @@ class RequestProvider {
   bool userAlreadyRequestedCache;
 
   Future<bool> makeRequest(Request request) async {
-    assert(request.requestBody != null);
+    assert(request.requestBody != null, 'request body cannot be null');
 
     try {
       CollectionReference ref;

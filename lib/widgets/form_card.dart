@@ -1,7 +1,8 @@
-import 'package:acs_upb_mobile/resources/custom_icons.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:recase/recase.dart';
+
+import '../resources/custom_icons.dart';
 
 class FormCardField {
   FormCardField({

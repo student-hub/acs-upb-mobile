@@ -1,10 +1,11 @@
-import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
-import 'package:acs_upb_mobile/generated/l10n.dart';
-import 'package:acs_upb_mobile/resources/utils.dart';
-import 'package:acs_upb_mobile/widgets/error_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import '../authentication/service/auth_provider.dart';
+import '../generated/l10n.dart';
+import '../resources/utils.dart';
+import 'error_page.dart';
 
 class AppScaffoldAction {
   AppScaffoldAction({

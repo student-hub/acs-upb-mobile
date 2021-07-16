@@ -1,10 +1,10 @@
-import 'package:acs_upb_mobile/generated/l10n.dart';
+import '../generated/l10n.dart';
 
 class AppValidator {
   AppValidator._();
 
   static String isStrongPassword(String password) {
-    assert(password != null);
+    assert(password != null, 'password cannot be null');
 
     if (password.length < 8) {
       return S.current.warningPasswordLength;

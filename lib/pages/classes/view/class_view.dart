@@ -1,27 +1,28 @@
-import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
-import 'package:acs_upb_mobile/generated/l10n.dart';
-import 'package:acs_upb_mobile/pages/class_feedback/service/feedback_provider.dart';
-import 'package:acs_upb_mobile/pages/class_feedback/view/class_feedback_view.dart';
-import 'package:acs_upb_mobile/pages/classes/model/class.dart';
-import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
-import 'package:acs_upb_mobile/pages/classes/view/grading_view.dart';
-import 'package:acs_upb_mobile/pages/classes/view/shortcut_view.dart';
-import 'package:acs_upb_mobile/pages/people/service/person_provider.dart';
-import 'package:acs_upb_mobile/pages/people/view/person_view.dart';
-import 'package:acs_upb_mobile/resources/utils.dart';
-import 'package:acs_upb_mobile/widgets/button.dart';
-import 'package:acs_upb_mobile/widgets/class_icon.dart';
-import 'package:acs_upb_mobile/widgets/dialog.dart';
-import 'package:acs_upb_mobile/widgets/icon_text.dart';
-import 'package:acs_upb_mobile/widgets/scaffold.dart';
-import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:positioned_tap_detector_2/positioned_tap_detector_2.dart';
 import 'package:provider/provider.dart';
-import 'package:acs_upb_mobile/resources/remote_config.dart';
+
+import '../../../authentication/service/auth_provider.dart';
+import '../../../generated/l10n.dart';
+import '../../../resources/remote_config.dart';
+import '../../../resources/utils.dart';
+import '../../../widgets/button.dart';
+import '../../../widgets/class_icon.dart';
+import '../../../widgets/dialog.dart';
+import '../../../widgets/icon_text.dart';
+import '../../../widgets/scaffold.dart';
+import '../../../widgets/toast.dart';
+import '../../class_feedback/service/feedback_provider.dart';
+import '../../class_feedback/view/class_feedback_view.dart';
+import '../../people/service/person_provider.dart';
+import '../../people/view/person_view.dart';
+import '../model/class.dart';
+import '../service/class_provider.dart';
+import 'grading_view.dart';
+import 'shortcut_view.dart';
 
 class ClassView extends StatefulWidget {
   const ClassView({Key key, this.classHeader}) : super(key: key);
@@ -192,9 +193,8 @@ class _ClassViewState extends State<ClassView> {
         return FeatherIcons.book;
       case ShortcutType.resource:
         return Icons.insert_drive_file_outlined;
-      default:
-        return FeatherIcons.globe;
     }
+    return FeatherIcons.globe;
   }
 
   AppDialog _deletionConfirmationDialog(
@@ -215,7 +215,6 @@ class _ClassViewState extends State<ClassView> {
 
   Widget shortcut({int index, Shortcut shortcut, BuildContext context}) {
     final classProvider = Provider.of<ClassProvider>(context);
-    final classViewContext = context;
 
     return PositionedTapDetector2(
       onTap: (_) => Utils.launchURL(shortcut.link),
@@ -234,6 +233,9 @@ class _ClassViewState extends State<ClassView> {
               )
             ]);
         if (option == S.current.actionDeleteShortcut) {
+          if (!mounted) {
+            return;
+          }
           await showDialog(
             context: context,
             builder: (context) => _deletionConfirmationDialog(
@@ -248,7 +250,7 @@ class _ClassViewState extends State<ClassView> {
                   setState(() {
                     classInfo.shortcuts.removeAt(index);
                   });
-                  AppToast.show(S.of(classViewContext).messageShortcutDeleted);
+                  AppToast.show(S.current.messageShortcutDeleted);
                 }
               },
             ),
@@ -297,6 +299,9 @@ class _ClassViewState extends State<ClassView> {
                       final lecturer =
                           await personProvider.fetchPerson(lecturerName);
                       if (lecturer != null && lecturerName != null) {
+                        if (!mounted) {
+                          return;
+                        }
                         await showModalBottomSheet<dynamic>(
                             isScrollControlled: true,
                             context: context,

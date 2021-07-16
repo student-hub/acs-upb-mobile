@@ -1,12 +1,13 @@
-import 'package:acs_upb_mobile/generated/l10n.dart';
-import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question.dart';
-import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question_dropdown.dart';
-import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question_rating.dart';
-import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question_slider.dart';
-import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question_text.dart';
-import 'package:acs_upb_mobile/widgets/radio_emoji.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
+import '../../../generated/l10n.dart';
+import '../../../widgets/radio_emoji.dart';
+import '../model/questions/question.dart';
+import '../model/questions/question_dropdown.dart';
+import '../model/questions/question_rating.dart';
+import '../model/questions/question_slider.dart';
+import '../model/questions/question_text.dart';
 
 class FeedbackQuestionFormField extends StatefulWidget {
   const FeedbackQuestionFormField({

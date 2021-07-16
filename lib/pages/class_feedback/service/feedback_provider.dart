@@ -1,15 +1,16 @@
-import 'package:acs_upb_mobile/generated/l10n.dart';
-import 'package:acs_upb_mobile/pages/class_feedback/model/class_feedback_answer.dart';
-import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question.dart';
-import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question_dropdown.dart';
-import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question_rating.dart';
-import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question_slider.dart';
-import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question_text.dart';
-import 'package:acs_upb_mobile/pages/people/model/person.dart';
-import 'package:acs_upb_mobile/resources/locale_provider.dart';
-import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
+
+import '../../../generated/l10n.dart';
+import '../../../resources/locale_provider.dart';
+import '../../../widgets/toast.dart';
+import '../../people/model/person.dart';
+import '../model/class_feedback_answer.dart';
+import '../model/questions/question.dart';
+import '../model/questions/question_dropdown.dart';
+import '../model/questions/question_rating.dart';
+import '../model/questions/question_slider.dart';
+import '../model/questions/question_text.dart';
 
 extension ClassFeedbackAnswerExtension on FeedbackAnswer {
   Map<String, dynamic> toData() {

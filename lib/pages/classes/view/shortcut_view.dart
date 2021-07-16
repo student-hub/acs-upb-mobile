@@ -1,11 +1,12 @@
-import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
-import 'package:acs_upb_mobile/generated/l10n.dart';
-import 'package:acs_upb_mobile/pages/classes/model/class.dart';
-import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:provider/provider.dart';
 import 'package:validators/validators.dart';
+
+import '../../../authentication/service/auth_provider.dart';
+import '../../../generated/l10n.dart';
+import '../../../widgets/scaffold.dart';
+import '../model/class.dart';
 
 class ShortcutView extends StatefulWidget {
   const ShortcutView({Key key, this.onSave}) : super(key: key);
@@ -50,7 +51,7 @@ class _ShortcutViewState extends State<ShortcutView> {
             children: <Widget>[
               Padding(
                 padding: const EdgeInsets.only(top: 10),
-                child: Container(
+                child: SizedBox(
                     height: MediaQuery.of(context).size.height / 3,
                     child: Image.asset(
                         'assets/illustrations/undraw_share_link.png')),

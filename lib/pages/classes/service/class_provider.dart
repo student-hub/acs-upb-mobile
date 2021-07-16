@@ -1,11 +1,12 @@
-import 'package:acs_upb_mobile/authentication/model/user.dart';
-import 'package:acs_upb_mobile/generated/l10n.dart';
-import 'package:acs_upb_mobile/pages/classes/model/class.dart';
-import 'package:acs_upb_mobile/pages/filter/model/filter.dart';
-import 'package:acs_upb_mobile/resources/utils.dart';
-import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+
+import '../../../authentication/model/user.dart';
+import '../../../generated/l10n.dart';
+import '../../../resources/utils.dart';
+import '../../../widgets/toast.dart';
+import '../../filter/model/filter.dart';
+import '../model/class.dart';
 
 extension UserExtension on User {
   bool get canEditClassInfo => permissionLevel >= 3;
@@ -160,10 +161,11 @@ class ClassProvider with ChangeNotifier {
         // Get all classes
         final QuerySnapshot<Map<String, dynamic>> qSnapshot =
             await _db.collection('import_moodle').get();
-        final List<DocumentSnapshot> docs = qSnapshot.docs;
+        final List<DocumentSnapshot<Map<String, dynamic>>> docs =
+            qSnapshot.docs;
 
         return docs
-            .map((doc) => ClassHeaderExtension.fromSnap(doc))
+            .map(ClassHeaderExtension.fromSnap)
             .where((e) => e != null)
             .toList();
       } else {

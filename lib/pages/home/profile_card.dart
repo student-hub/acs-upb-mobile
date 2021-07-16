@@ -1,10 +1,11 @@
-import 'package:acs_upb_mobile/authentication/model/user.dart';
-import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
-import 'package:acs_upb_mobile/authentication/view/edit_profile_page.dart';
-import 'package:acs_upb_mobile/generated/l10n.dart';
-import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import '../../authentication/model/user.dart';
+import '../../authentication/service/auth_provider.dart';
+import '../../authentication/view/edit_profile_page.dart';
+import '../../generated/l10n.dart';
+import '../../resources/utils.dart';
 
 class ProfileCard extends StatefulWidget {
   @override
@@ -109,6 +110,9 @@ class _ProfileCardState extends State<ProfileCard> {
                                   builder: (context) => const EditProfilePage(),
                                 ),
                               );
+                              if (!mounted) {
+                                return;
+                              }
                               final authProvider = Provider.of<AuthProvider>(
                                   context,
                                   listen: false);

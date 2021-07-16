@@ -1,12 +1,13 @@
-import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
-import 'package:acs_upb_mobile/generated/l10n.dart';
-import 'package:acs_upb_mobile/pages/portal/model/website.dart';
-import 'package:acs_upb_mobile/pages/portal/service/website_provider.dart';
-import 'package:acs_upb_mobile/pages/portal/view/website_view.dart';
-import 'package:acs_upb_mobile/resources/utils.dart';
-import 'package:acs_upb_mobile/widgets/info_card.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import '../../authentication/service/auth_provider.dart';
+import '../../generated/l10n.dart';
+import '../../resources/utils.dart';
+import '../../widgets/info_card.dart';
+import '../portal/model/website.dart';
+import '../portal/service/website_provider.dart';
+import '../portal/view/website_view.dart';
 
 class FavouriteWebsitesCard extends StatelessWidget {
   const FavouriteWebsitesCard({Key key, this.onShowMore}) : super(key: key);
