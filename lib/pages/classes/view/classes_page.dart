@@ -1,3 +1,5 @@
+import 'package:acs_upb_mobile/pages/class_feedback/view/class_feedback_checklist.dart';
+import 'package:acs_upb_mobile/resources/remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:pedantic/pedantic.dart';
 import 'package:provider/provider.dart';
@@ -61,6 +63,16 @@ class _ClassesPageState extends State<ClassesPage> {
       // TODO(IoanaAlexandru): Simply show all classes if user is not authenticated
       needsToBeAuthenticated: true,
       actions: [
+        if (RemoteConfigService.feedbackEnabled)
+          AppScaffoldAction(
+            icon: Icons.rate_review_outlined,
+            tooltip: S.current.navigationClassesFeedbackChecklist,
+            onPressed: () => Navigator.of(context).push(
+              MaterialPageRoute<ClassFeedbackChecklist>(
+                builder: (_) => ClassFeedbackChecklist(classes: headers),
+              ),
+            ),
+          ),
         AppScaffoldAction(
           icon: Icons.edit_outlined,
           tooltip: S.current.actionChooseClasses,
