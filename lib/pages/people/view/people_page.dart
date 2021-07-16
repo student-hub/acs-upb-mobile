@@ -2,11 +2,14 @@ import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/people/model/person.dart';
 import 'package:acs_upb_mobile/pages/people/service/person_provider.dart';
 import 'package:acs_upb_mobile/pages/people/view/person_view.dart';
+import 'package:acs_upb_mobile/widgets/autocomplete.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:acs_upb_mobile/widgets/search_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:provider/provider.dart';
+import 'package:recase/recase.dart';
 
 class PeoplePage extends StatefulWidget {
   const PeoplePage({Key key}) : super(key: key);
@@ -131,6 +134,95 @@ class _PeopleListState extends State<PeopleList> {
       isScrollControlled: true,
       context: context,
       builder: (BuildContext buildContext) => PersonView(person: person),
+    );
+  }
+}
+
+class AutocompletePerson extends StatefulWidget {
+  const AutocompletePerson(
+      {@required this.labelText,
+      @required this.classTeachers,
+      Key key,
+      this.warning,
+      this.formKey,
+      this.onSaved,
+      this.personDisplayed})
+      : super(key: key);
+
+  final String labelText;
+  final String warning;
+  final GlobalKey<FormState> formKey;
+  final List<Person> classTeachers;
+  final Person Function(Person) onSaved;
+  final Person personDisplayed;
+
+  @override
+  _AutocompletePersonState createState() => _AutocompletePersonState();
+}
+
+class _AutocompletePersonState extends State<AutocompletePerson> {
+  Person selectedPerson;
+
+  @override
+  Widget build(BuildContext context) {
+    return Autocomplete<Person>(
+      key: widget.key,
+      fieldViewBuilder: (BuildContext context,
+          TextEditingController textEditingController,
+          FocusNode focusNode,
+          VoidCallback onFieldSubmitted) {
+        textEditingController.text = selectedPerson?.name;
+        if (selectedPerson == null) {
+          textEditingController.text = widget.personDisplayed?.name;
+        }
+        return TextFormField(
+          controller: textEditingController,
+          decoration: InputDecoration(
+            labelText: widget.labelText,
+            prefixIcon: const Icon(FeatherIcons.user),
+          ),
+          focusNode: focusNode,
+          onFieldSubmitted: (String value) {
+            onFieldSubmitted();
+          },
+          validator: (_) {
+            if (textEditingController.text.isEmpty ?? true) {
+              return widget.warning;
+            }
+            return null;
+          },
+        );
+      },
+      displayStringForOption: (Person person) => person.name,
+      optionsBuilder: (TextEditingValue textEditingValue) {
+        if (textEditingValue.text == '' || textEditingValue.text.isEmpty) {
+          return const Iterable<Person>.empty();
+        }
+        if (widget.classTeachers.where((Person person) {
+          return person.name
+              .toLowerCase()
+              .contains(textEditingValue.text.toLowerCase());
+        }).isEmpty) {
+          final List<Person> inputTeachers = [];
+          final Person inputTeacher =
+              Person(name: textEditingValue.text.titleCase);
+          inputTeachers.add(inputTeacher);
+          return inputTeachers;
+        }
+
+        return widget.classTeachers.where((Person person) {
+          return person.name
+              .toLowerCase()
+              .contains(textEditingValue.text.toLowerCase());
+        });
+      },
+      onSelected: (Person selection) {
+        widget.formKey.currentState.validate();
+        setState(() {
+          selectedPerson = selection;
+          widget.onSaved(selectedPerson);
+        });
+      },
     );
   }
 }

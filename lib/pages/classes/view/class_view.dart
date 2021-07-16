@@ -1,5 +1,7 @@
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
+import 'package:acs_upb_mobile/pages/class_feedback/service/feedback_provider.dart';
+import 'package:acs_upb_mobile/pages/class_feedback/view/class_feedback_view.dart';
 import 'package:acs_upb_mobile/pages/classes/model/class.dart';
 import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
 import 'package:acs_upb_mobile/pages/classes/view/grading_view.dart';
@@ -14,10 +16,12 @@ import 'package:acs_upb_mobile/widgets/icon_text.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:positioned_tap_detector_2/positioned_tap_detector_2.dart';
 import 'package:provider/provider.dart';
+import 'package:acs_upb_mobile/resources/remote_config.dart';
 
 class ClassView extends StatefulWidget {
   const ClassView({Key key, this.classHeader}) : super(key: key);
@@ -31,6 +35,7 @@ class ClassView extends StatefulWidget {
 class _ClassViewState extends State<ClassView> {
   Class classInfo;
   String lecturerName = '';
+  bool alreadyCompletedFeedback;
 
   @override
   void initState() {
@@ -44,9 +49,37 @@ class _ClassViewState extends State<ClassView> {
   @override
   Widget build(BuildContext context) {
     final classProvider = Provider.of<ClassProvider>(context);
+    final feedbackProvider =
+        Provider.of<FeedbackProvider>(context, listen: false);
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    feedbackProvider
+        .userSubmittedFeedbackForClass(authProvider.uid, widget.classHeader.id)
+        .then((value) => alreadyCompletedFeedback = value);
 
     return AppScaffold(
       title: Text(S.current.navigationClassInfo),
+      actions: [
+        if (RemoteConfigService.feedbackEnabled)
+          AppScaffoldAction(
+              icon: Icons.rate_review_outlined,
+              tooltip: S.current.navigationClassFeedback,
+              onPressed: alreadyCompletedFeedback == null
+                  ? null
+                  : () {
+                      if (!alreadyCompletedFeedback) {
+                        Navigator.of(context)
+                            .push(
+                              MaterialPageRoute<ClassFeedbackView>(
+                                builder: (_) => ClassFeedbackView(
+                                    classHeader: widget.classHeader),
+                              ),
+                            )
+                            .then((value) => setState(() {}));
+                      } else {
+                        AppToast.show(S.current.warningFeedbackAlreadySent);
+                      }
+                    }),
+      ],
       body: FutureBuilder(
           future: classProvider.fetchClassInfo(widget.classHeader),
           builder: (context, snapshot) {
