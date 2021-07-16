@@ -19,7 +19,7 @@ jobs:
           java-version: '12.x'
       - uses: subosito/flutter-action@v1
         with:
-          flutter-version: '1.24.x'
+          flutter-version: '1.24.0-10.2.pre'
           channel: 'beta'
 
       - name: Get packages
@@ -59,7 +59,7 @@ jobs:
         java-version: '12.x'
     - uses: subosito/flutter-action@v1
       with:
-        flutter-version: '1.24.x'
+        flutter-version: '1.24.0-10.2.pre'
         channel: 'beta'
 
     - name: Get packages
@@ -94,7 +94,7 @@ jobs:
         java-version: '12.x'
     - uses: subosito/flutter-action@v1
       with:
-        flutter-version: '1.24.x'
+        flutter-version: '1.24.0-10.2.pre'
         channel: 'beta'
 
     - name: Get packages
