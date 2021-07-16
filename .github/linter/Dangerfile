@@ -17,3 +17,62 @@ flutter_lint.lint(inline_mode: true)
 textlint.config_file = '.github/linter/.textlintrc'
 textlint.max_severity = "warn"
 textlint.lint
+
+# Warn summary on pull request
+if github.pr_body.length < 5
+  warn "Please provide a summary in the Pull Request description"
+end
+
+# Whether we should reference the versioning documentation in the Danger report
+show_versioning_info = false
+# Whether to show a hint about marking the PR as #trivial
+show_trivial_hint = false
+
+has_app_changes = !git.modified_files.grep(/lib/).empty?
+has_test_changes = !git.modified_files.grep(/test/).empty?
+has_pubspec_changes = !git.modified_files.grep(/pubspec.yaml/).empty?
+
+# Check that the tests were updated if there are app updates
+if !declared_trivial && has_app_changes && !has_test_changes
+    warn "No test changes detected. You should usually add at least one test for any new functionality."
+    show_trivial_hint = true
+end
+
+# Check that the pubspec version was updated
+if has_app_changes && !has_pubspec_changes
+    warn "No pubspec.yaml changes detected. Did you forget to update the version?"
+    show_versioning_info = true
+end
+
+if has_app_changes && has_pubspec_changes
+    diff = git.diff_for_file('pubspec.yaml')
+    if diff.patch !~ /\+version:/
+        warn "The pubspec.yaml file was updated, but not the version."
+        show_versioning_info = true
+    else
+        old_version = diff.patch[/\-version: .*\+\K([0-9]+)/].to_i
+        new_version = diff.patch[/\+version: .*\+\K([0-9]+)/].to_i
+
+        if new_version - old_version != 1
+            warn "The build number in pubspec.yaml should be incremented by 1"
+            show_versioning_info = true
+        elsif !declared_trivial
+            ['en-GB', 'en-US', 'ro'].each do |language|
+                changelog_rxp = /android\/fastlane\/metadata\/android\/#{language}\/changelogs\/#{new_version + 10000}\.txt/
+                if git.added_files.grep(changelog_rxp).empty?
+                    changelog = "android/fastlane/metadata/android/#{language}/changelogs/#{new_version + 10000}.txt"
+                    warn "Missing #{language} changelog entry at #{changelog}"
+                    show_trivial_hint = true
+                end
+            end
+        end
+    end
+end
+
+if show_versioning_info
+    markdown "For more info on versioning, check out our [PR guidelines](https://github.com/student-hub/acs-upb-mobile/blob/master/CONTRIBUTING.md#guidelines)."
+end
+
+if show_trivial_hint
+    markdown "If this is a trivial change that doesn't warrant a test or changelog entry, you can mark it as #trivial in the PR title."
+end
