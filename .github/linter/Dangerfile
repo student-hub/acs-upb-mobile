@@ -17,3 +17,35 @@ flutter_lint.lint(inline_mode: true)
 textlint.config_file = '.github/linter/.textlintrc'
 textlint.max_severity = "warn"
 textlint.lint
+
+# Warn summary on pull request
+if github.pr_body.length < 5
+  warn "Please provide a summary in the Pull Request description"
+end
+
+has_app_changes = !git.modified_files.grep(/lib/).empty?
+has_test_changes = !git.modified_files.grep(/test/).empty?
+has_pubspec_changes = !git.modified_files.grep(pubspec.yaml).empty?
+
+# Check that the tests were updated if there are app updates
+if !declared_trivial && has_app_changes && !has_test_changes
+    warn "No test changes detected. You should usually add at least one test for any new functionality."
+end
+
+# Check that the pubspec version was updated
+if !declared_trivial && has_app_changes && !has_pubspec_changes
+    warn "No pubspec.yaml changes detected. Did you forget to update the version?"
+    markdown "For more info on versioning, check out our [PR guidelines](https://github.com/student-hub/acs-upb-mobile/blob/master/CONTRIBUTING.md#guidelines)."
+end
+
+if !declared_trivial && has_app_changes && has_pubspec_changes
+    diff = git.diff_for_file('pubspec.yaml')
+    if !(diff.insertions =~ 'version:')
+        warn "No pubspec.yaml changes detected. Did you forget to update the version?"
+
+    file = File.read('pubspec.yaml')
+    lines = file.lines
+    version_line = lines.grep('version:')
+    version = version_line[/version: .*\+\K([0-9]+)/]
+    warn "Detected version:" version
+end
