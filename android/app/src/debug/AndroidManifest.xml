@@ -4,8 +4,4 @@
          to allow setting breakpoints, to provide hot reload, etc.
     -->
     <uses-permission android:name="android.permission.INTERNET" />
-    <!-- This is necessary because professor pictures from aii.pub.ro are under
-         http, not https
-    -->
-    <application android:usesCleartextTraffic="true" />
 </manifest>
