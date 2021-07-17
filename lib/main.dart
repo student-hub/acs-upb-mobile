@@ -21,6 +21,7 @@ import 'package:acs_upb_mobile/pages/settings/view/request_permissions.dart';
 import 'package:acs_upb_mobile/pages/settings/view/settings_page.dart';
 import 'package:acs_upb_mobile/pages/timetable/service/uni_event_provider.dart';
 import 'package:acs_upb_mobile/resources/locale_provider.dart';
+import 'package:acs_upb_mobile/resources/remote_config.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/widgets/loading_screen.dart';
 import 'package:dynamic_theme/dynamic_theme.dart';
@@ -37,19 +38,18 @@ import 'package:preferences/preferences.dart';
 import 'package:provider/provider.dart';
 import 'package:rrule/rrule.dart';
 import 'package:time_machine/time_machine.dart';
-import 'package:acs_upb_mobile/resources/remote_config.dart';
 
-// FIXME: acs.pub.ro has some bad certificate configuration right now, and the
-// cs.pub.ro certificate is expired.
-// We get around this by accepting any certificate if the host is either
-// acs.pub.ro or cs.pub.ro.
+// FIXME: Our university website certificates have some issues, so we say we
+// trust them regardless.
 // Remove this in the future.
 class MyHttpOverrides extends HttpOverrides {
   @override
   HttpClient createHttpClient(SecurityContext context) {
     return super.createHttpClient(context)
       ..badCertificateCallback = (X509Certificate cert, String host, int port) {
-        return host == 'acs.pub.ro' || host == 'cs.pub.ro';
+        return host == 'acs.pub.ro' ||
+            host == 'cs.pub.ro' ||
+            host == 'aii.pub.ro';
       };
   }
 }
