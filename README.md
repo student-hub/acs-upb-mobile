@@ -5,19 +5,23 @@
 [![codecov](https://codecov.io/gh/acs-upb-mobile/acs-upb-mobile/branch/master/graph/badge.svg)](https://codecov.io/gh/acs-upb-mobile/acs-upb-mobile)
 [![extra_pedantic on pub.dev](https://img.shields.io/badge/style-extra__pedantic-blue)](https://pub.dev/packages/extra_pedantic)
 
-A mobile application for students at [ACS UPB](https://acs.pub.ro/). For now, you can try it out by accessing [https://acs-upb-mobile.web.app/](https://acs-upb-mobile.web.app/). Android users can also download the apk from the latest [release](https://github.com/acs-upb-mobile/acs-upb-mobile/releases).
+[![Facebook](https://img.shields.io/badge/Facebook-1877F2?style=for-the-badge&logo=facebook&logoColor=white)](https://www.facebook.com/acsupbmobile)
+[![Instagram](https://img.shields.io/badge/Instagram-E4405F?style=for-the-badge&logo=instagram&logoColor=white)](https://www.instagram.com/acs_upb_mobile/)
 
-Please note that some features may not work perfectly in the web version, as [Flutter web support](https://flutter.dev/web) is currently still in beta. However, please feel free to [create an issue](https://github.com/acs-upb-mobile/acs-upb-mobile/issues/new?&template=bug_report.md) if you encounter any problem.
+A mobile application for students at [ACS UPB](https://acs.pub.ro/). For now, you can try it out by accessing [https://acs-upb-mobile.web.app/](https://acs-upb-mobile.web.app/) or download it from Google Play by pressing the button below. Android users can also download the apk from the latest [release](https://github.com/acs-upb-mobile/acs-upb-mobile/releases).
 
-If you would like to contribute and don't know where to start, or you have any questions about this project, feel free to [join us on Slack](https://acs-upb-mobile.slack.com/join/shared_invite/zt-j3w0ksxt-ilq9x5Et8lxnG_y5YzfQeQ) and ask anything on the **#questions** channel.
+<a href="https://play.google.com/store/apps/details?id=ro.pub.acs.acs_upb_mobile"><img width=200 src=https://raw.githubusercontent.com/steverichey/google-play-badge-svg/266d2b2df26f10d3c00b8129a0bd9f6da6b19f00/img/en_get.svg></a>
 
-## Preview
+Please note that some features may not work perfectly in the web version, as the app is designed to work better natively. However, please feel free to [create an issue](https://github.com/acs-upb-mobile/acs-upb-mobile/issues/new?&template=bug_report.md) if you encounter any problem.
 
-<img src=screenshots/app/login.gif height=500> <img src=screenshots/app/home.gif height=500> <img src=screenshots/app/classes.gif height=500>
+If you would like to contribute and don't know where to start, or you have any questions about this project, feel free to send an e-mail at acs.upb.mobile@gmail.com.
 
-<img src=screenshots/app/portal.gif height=500> <img src=screenshots/app/people.gif height=500> <img src=screenshots/app/classes_edit.gif height=500>
+## Demo
 
-<img src=screenshots/app/portal_edit.gif height=500> <img src=screenshots/app/themes.gif height=500> <img src=screenshots/app/languages.gif height=500>
+https://user-images.githubusercontent.com/25504811/120929790-1bc24080-c6f3-11eb-9360-9994110da946.mp4
+
+<a href="https://www.youtube.com/watch?v=-IRL35WIeGc"><img width=200 src="https://user-images.githubusercontent.com/25504811/120929979-fa158900-c6f3-11eb-8ef3-237591001b44.png"></a>
+
 
 ## Contributors
 * [Ioana Alexandru](https://github.com/IoanaAlexandru)
@@ -32,6 +36,9 @@ If you would like to contribute and don't know where to start, or you have any q
 * [Maria Stoichițescu](https://github.com/stoichitescumaria)
 * [Anghel Andrei](https://github.com/AnghelAndrei28)
 * [Bogdan Piele](https://github.com/bogpie)
+* [Bogdan Iuga](https://github.com/iugabogdan98)
+* [Andreea-Giorgiana Adăscăliței](https://github.com/AndreeaAdascalitei)
+* [Alexandra Pavel](https://github.com/AlexandraPavel)
 
 ## Building from source with Android Studio
 
@@ -44,13 +51,12 @@ If you would like to contribute and don't know where to start, or you have any q
 Control*) to clone the repository from https://github.com/acs-upb-mobile/acs-upb-mobile.
 * If the plugins are installed, Android Studio should automatically recognise it as being a Flutter project, so you should be able to just click *Next* on everything and create a new project.
 * When prompted, set up the Flutter SDK (the location is the `flutter/` folder you downloaded when you installed it) and Dart SDK (it comes bundled with Flutter at `flutter/bin/cache/dart-sdk/`).
-* Open the project terminal and switch to the Beta Flutter channel in order to enable web support:
+* Open a terminal in the Flutter SDK directory and switch to the version we are currently using for the project:
 ```
-flutter channel beta
-flutter upgrade
-flutter config --enable-web
+git pull
+git checkout 1.24.0-10.2.pre
 ```
-* Install all of the required packages:
+* Open the project terminal in Android Studio and install all of the required packages by running:
 ```
 flutter pub get
 ```
@@ -58,7 +64,7 @@ flutter pub get
 
 ### Building for Android
 
-* Install and run an emulator in Android Studio (using AVD Manager), or connect a physical Android device (make sure USB debugging is enabled).
+* Install and run an emulator in Android Studio (using AVD Manager), or connect a physical Android device (make sure USB debugging is enabled, and your cable supports data transfer).
 * Select your device from the dropdown list and hit the play button (*Shift+F10* or *^R*). Note that Android Studio runs the app in debug mode by default.
 
 | :exclamation: | On Android, ACS UPB Mobile uses **a separate (development) environment in debug mode**. That means a completely different Firebase project - separate data, including user info.|
@@ -79,7 +85,7 @@ flutter pub get
 ### Not working?
 
 Possible fixes could be:
-* Run `flutter doctor` and fix any issues that may come up.
+* Run `flutter doctor` and fix any issues that may come up (make sure you're using the right Flutter version for the project, see [Prerequisites](#prerequisites)).
 * Run `flutter clean` to delete the `build` directory and then build again.
 * Restart Android Studio using *File > Invalidate Caches / Restart*.
 

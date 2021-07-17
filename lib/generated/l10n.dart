@@ -165,6 +165,16 @@ class S {
     );
   }
 
+  /// `Answer`
+  String get labelAnswer {
+    return Intl.message(
+      'Answer',
+      name: 'labelAnswer',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Version`
   String get labelVersion {
     return Intl.message(
@@ -335,6 +345,16 @@ class S {
     );
   }
 
+  /// `Assistant`
+  String get labelAssistant {
+    return Intl.message(
+      'Assistant',
+      name: 'labelAssistant',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Year`
   String get labelYear {
     return Intl.message(
@@ -395,6 +415,16 @@ class S {
     );
   }
 
+  /// `Grade`
+  String get labelGrade {
+    return Intl.message(
+      'Grade',
+      name: 'labelGrade',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Privacy Policy`
   String get labelPrivacyPolicy {
     return Intl.message(
@@ -420,6 +450,16 @@ class S {
     return Intl.message(
       'consent for editing rights',
       name: 'labelPermissionsConsent',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `feedback policy`
+  String get labelFeedbackPolicy {
+    return Intl.message(
+      'feedback policy',
+      name: 'labelFeedbackPolicy',
       desc: '',
       args: [],
     );
@@ -570,6 +610,26 @@ class S {
     return Intl.message(
       'Grading',
       name: 'sectionGrading',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Feedback needed`
+  String get sectionFeedbackNeeded {
+    return Intl.message(
+      'Feedback needed',
+      name: 'sectionFeedbackNeeded',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Feedback completed`
+  String get sectionFeedbackCompleted {
+    return Intl.message(
+      'Feedback completed',
+      name: 'sectionFeedbackCompleted',
       desc: '',
       args: [],
     );
@@ -1165,6 +1225,26 @@ class S {
     );
   }
 
+  /// `Answer cannot be empty.`
+  String get errorAnswerCannotBeEmpty {
+    return Intl.message(
+      'Answer cannot be empty.',
+      name: 'errorAnswerCannotBeEmpty',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `The answer you entered is incorrect.`
+  String get errorAnswerIncorrect {
+    return Intl.message(
+      'The answer you entered is incorrect.',
+      name: 'errorAnswerIncorrect',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Please select a picture that is less than 5MB.`
   String get errorPictureSizeToBig {
     return Intl.message(
@@ -1310,6 +1390,16 @@ class S {
     return Intl.message(
       'Already showing all content.',
       name: 'warningFilterAlreadyDisabled',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You have already submitted feedback for this class!`
+  String get warningFeedbackAlreadySent {
+    return Intl.message(
+      'You have already submitted feedback for this class!',
+      name: 'warningFeedbackAlreadySent',
       desc: '',
       args: [],
     );
@@ -1470,6 +1560,16 @@ class S {
     return Intl.message(
       'You need to select at least one option.',
       name: 'warningYouNeedToSelectAtLeastOne',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You need to select your assistant for this class.`
+  String get warningYouNeedToSelectAssistant {
+    return Intl.message(
+      'You need to select your assistant for this class.',
+      name: 'warningYouNeedToSelectAssistant',
       desc: '',
       args: [],
     );
@@ -1640,6 +1740,26 @@ class S {
     return Intl.message(
       'Class information',
       name: 'navigationClassInfo',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Feedback`
+  String get navigationClassFeedback {
+    return Intl.message(
+      'Feedback',
+      name: 'navigationClassFeedback',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Feedback checklist`
+  String get navigationClassesFeedbackChecklist {
+    return Intl.message(
+      'Feedback checklist',
+      name: 'navigationClassesFeedbackChecklist',
       desc: '',
       args: [],
     );
@@ -2385,11 +2505,21 @@ class S {
     );
   }
 
-  /// `The request has been sent succesfully.`
+  /// `The request has been sent successfully.`
   String get messageRequestHasBeenSent {
     return Intl.message(
-      'The request has been sent succesfully.',
+      'The request has been sent successfully.',
       name: 'messageRequestHasBeenSent',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `The review has been sent successfully.`
+  String get messageFeedbackHasBeenSent {
+    return Intl.message(
+      'The review has been sent successfully.',
+      name: 'messageFeedbackHasBeenSent',
       desc: '',
       args: [],
     );
@@ -2465,6 +2595,16 @@ class S {
     );
   }
 
+  /// `I understand this survey is extremely important for the continuous development of the educational process and I will only provide valuable and constructive feedback for this class.`
+  String get messageAgreeFeedbackPolicy {
+    return Intl.message(
+      'I understand this survey is extremely important for the continuous development of the educational process and I will only provide valuable and constructive feedback for this class.',
+      name: 'messageAgreeFeedbackPolicy',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `You can contribute to the app data, but you first need to request permissions.`
   String get messageYouCanContribute {
     return Intl.message(
@@ -2492,6 +2632,16 @@ class S {
       name: 'messagePictureUpdatedSuccess',
       desc: '',
       args: [],
+    );
+  }
+
+  /// `You need to complete {number} more feedback forms!`
+  String messageFeedbackLeft(Object number) {
+    return Intl.message(
+      'You need to complete $number more feedback forms!',
+      name: 'messageFeedbackLeft',
+      desc: '',
+      args: [number],
     );
   }
 
@@ -2630,6 +2780,16 @@ class S {
     return Intl.message(
       'Export filtered events from Timetable',
       name: 'infoExportToGoogleCalendar',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `This form is anonymous.`
+  String get infoFormAnonymous {
+    return Intl.message(
+      'This form is anonymous.',
+      name: 'infoFormAnonymous',
       desc: '',
       args: [],
     );

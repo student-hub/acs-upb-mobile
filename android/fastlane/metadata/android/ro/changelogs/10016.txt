@@ -1,0 +1,4 @@
+Adăugat
+  - Acum poți oferi feedback pentru toate materiile tale, apăsând pe iconița din colțul din dreapta sus de pe pagina unei materii. Această opțiune este disponibilă pentru un timp limitat, așa că nu rata ocazia!
+  - Acum poți vedea o listă cu toate materiile la care ai completat sau nu formularul de feedback.
+  - Acum ești notificat pe pagina Acasă referitor la câte formulare de feedback mai așteaptă să fie completate.

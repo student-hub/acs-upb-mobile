@@ -6,6 +6,7 @@ import 'package:acs_upb_mobile/authentication/view/sign_up_view.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/navigation/bottom_navigation_bar.dart';
 import 'package:acs_upb_mobile/navigation/routes.dart';
+import 'package:acs_upb_mobile/pages/class_feedback/service/feedback_provider.dart';
 import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
 import 'package:acs_upb_mobile/pages/faq/service/question_provider.dart';
 import 'package:acs_upb_mobile/pages/faq/view/faq_page.dart';
@@ -36,16 +37,19 @@ import 'package:preferences/preferences.dart';
 import 'package:provider/provider.dart';
 import 'package:rrule/rrule.dart';
 import 'package:time_machine/time_machine.dart';
+import 'package:acs_upb_mobile/resources/remote_config.dart';
 
-// FIXME: acs.pub.ro has some bad certificate configuration right now.
-// We get around this by accepting any certificate if the host is acs.pub.ro.
+// FIXME: acs.pub.ro has some bad certificate configuration right now, and the
+// cs.pub.ro certificate is expired.
+// We get around this by accepting any certificate if the host is either
+// acs.pub.ro or cs.pub.ro.
 // Remove this in the future.
 class MyHttpOverrides extends HttpOverrides {
   @override
   HttpClient createHttpClient(SecurityContext context) {
     return super.createHttpClient(context)
       ..badCertificateCallback = (X509Certificate cert, String host, int port) {
-        return host == 'acs.pub.ro';
+        return host == 'acs.pub.ro' || host == 'cs.pub.ro';
       };
   }
 }
@@ -64,12 +68,14 @@ Future<void> main() async {
   final authProvider = AuthProvider();
   final classProvider = ClassProvider();
   final personProvider = PersonProvider();
+  final feedbackProvider = FeedbackProvider();
 
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider<AuthProvider>(create: (_) => authProvider),
     ChangeNotifierProvider<WebsiteProvider>(create: (_) => WebsiteProvider()),
     Provider<RequestProvider>(create: (_) => RequestProvider()),
     ChangeNotifierProvider<ClassProvider>(create: (_) => classProvider),
+    ChangeNotifierProvider<FeedbackProvider>(create: (_) => feedbackProvider),
     ChangeNotifierProvider<PersonProvider>(create: (_) => personProvider),
     ChangeNotifierProvider<QuestionProvider>(create: (_) => QuestionProvider()),
     ChangeNotifierProvider<NewsProvider>(create: (_) => NewsProvider()),
@@ -175,6 +181,7 @@ class AppLoadingScreen extends StatelessWidget {
   Future<String> _setUpAndChooseStartScreen(BuildContext context) async {
     // Make initializations if this is not a test
     if (!Platform.environment.containsKey('FLUTTER_TEST')) {
+      await RemoteConfigService.initialize();
       await TimeMachine.initialize({'rootBundle': rootBundle});
       await PrefService.init(prefix: 'pref_');
       PrefService.setDefaultValues(

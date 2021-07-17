@@ -38,7 +38,7 @@ class Utils {
 
   static String privacyPolicyURL =
       'https://www.websitepolicies.com/policies/view/IIUFv381';
-  static String repoURL = 'https://github.com/acs-upb-mobile/acs-upb-mobile';
+  static String repoURL = 'https://github.com/student-hub/acs-upb-mobile';
   static const String corsProxyUrl = 'https://cors-anywhere.herokuapp.com';
 
   static Future<void> launchURL(String url) async {
