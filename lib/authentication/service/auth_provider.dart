@@ -411,7 +411,7 @@ class AuthProvider with ChangeNotifier {
       notifyListeners();
       return true;
     } catch (e) {
-      _errorHandler(e, context);
+      _errorHandler(e);
       return false;
     }
   }

@@ -69,16 +69,6 @@ void main() {
         ChangeNotifierProvider<ClassProvider>(create: (_) => mockClassProvider),
       ], child: const MyApp());
 
-  Widget buildApp() => MultiProvider(providers: [
-        ChangeNotifierProvider<AuthProvider>(create: (_) => mockAuthProvider),
-        ChangeNotifierProvider<WebsiteProvider>(
-            create: (_) => mockWebsiteProvider),
-        ChangeNotifierProvider<QuestionProvider>(
-            create: (_) => mockQuestionProvider),
-        Provider<RequestProvider>(create: (_) => mockRequestProvider),
-        ChangeNotifierProvider<NewsProvider>(create: (_) => mockNewsProvider),
-      ], child: const MyApp());
-
   group('Settings', () {
     setUpAll(() async {
       WidgetsFlutterBinding.ensureInitialized();

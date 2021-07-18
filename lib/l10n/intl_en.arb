@@ -302,6 +302,7 @@
   "infoReadThePolicy": "Read the {appName} policy",
   "infoExportToGoogleCalendar": "Export filtered events from Timetable",
   "infoFormAnonymous": "This form is anonymous.",
+  "infoAdditionInformationSources": "Facultatea de Automatică și Calculatoare nu își asumă răspunderea pentru informațiile provenite din surse neoficiale.",
 
   "stringEmailDomain": "@stud.acs.upb.ro",
   "stringForum": "cs.curs.pub.ro",

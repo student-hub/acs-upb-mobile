@@ -43,14 +43,14 @@ class _SourcePageState extends State<SourcePage> {
             })
       ],
       title: Text(
-        S.of(context).sectionInformationSources,
+        S.current.sectionInformationSources,
         style: const TextStyle(fontSize: 19.5),
       ),
       body: Column(
         children: [
           Padding(
             padding: const EdgeInsets.all(10),
-            child: Text('${S.of(context).messageSelectSource}*'),
+            child: Text('${S.current.messageSelectSource}*'),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -63,8 +63,8 @@ class _SourcePageState extends State<SourcePage> {
           CheckboxListTile(
             value: true,
             onChanged: null,
-            title: Text(S.of(context).sourceOfficial),
-            subtitle: Text(S.of(context).sourceOfficialWebPages),
+            title: Text(S.current.sourceOfficial),
+            subtitle: Text(S.current.sourceOfficialWebPages),
             controlAffinity: ListTileControlAffinity.leading,
           ),
           CheckboxListTile(
@@ -74,8 +74,8 @@ class _SourcePageState extends State<SourcePage> {
                 wantsOrganizationInfo = value;
               });
             },
-            title: Text('${S.of(context).sourceOrganization}*'),
-            subtitle: Text(S.of(context).sourceStudentOrganizations),
+            title: Text('${S.current.sourceOrganization}*'),
+            subtitle: Text(S.current.sourceStudentOrganizations),
             controlAffinity: ListTileControlAffinity.leading,
           ),
           CheckboxListTile(
@@ -85,14 +85,14 @@ class _SourcePageState extends State<SourcePage> {
                 wantsStudentsInfo = value;
               });
             },
-            title: Text('${S.of(context).sourceStudentRepresentative}*'),
-            subtitle: Text(S.of(context).sourceStudentExamples),
+            title: Text('${S.current.sourceStudentRepresentative}*'),
+            subtitle: Text(S.current.sourceStudentExamples),
             controlAffinity: ListTileControlAffinity.leading,
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10),
             child: Text(
-              '* ${S.of(context).infoAdditionInformationSources}',
+              '* ${S.current.infoAdditionInformationSources}',
               style: TextStyle(color: Theme.of(context).hintColor),
             ),
           ),

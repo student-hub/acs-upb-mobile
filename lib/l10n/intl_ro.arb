@@ -303,6 +303,7 @@
   "infoReadThePolicy": "Citește politica {appName}",
   "infoExportToGoogleCalendar": "Exportă evenimentele filtrate din Orar",
   "infoFormAnonymous": "Acest formular este anonim.",
+  "infoAdditionInformationSources": "The Faculty of Automatic Control and Computers is not responsible for information originating from unofficial sources.",
 
   "stringEmailDomain": "@stud.acs.upb.ro",
   "stringForum": "cs.curs.pub.ro",
