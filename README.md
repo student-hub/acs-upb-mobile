@@ -40,7 +40,6 @@ https://user-images.githubusercontent.com/25504811/120929790-1bc24080-c6f3-11eb-
 * [Andrei Mirică](https://github.com/AndreiMirica19)
 * [Andreea-Giorgiana Adăscăliței](https://github.com/AndreeaAdascalitei)
 
-
 ## Building from source with Android Studio
 
 ### Prerequisites
