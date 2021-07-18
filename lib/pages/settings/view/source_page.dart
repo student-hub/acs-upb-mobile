@@ -55,7 +55,7 @@ class _SourcePageState extends State<SourcePage> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10),
             child: Text(
-              S.of(context).hintSelectSources,
+              S.current.hintSelectSources,
               style: const TextStyle(fontWeight: FontWeight.bold),
             ),
           ),

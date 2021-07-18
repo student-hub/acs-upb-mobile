@@ -2,8 +2,6 @@ import 'dart:typed_data';
 
 import 'package:firebase/firebase.dart';
 import 'package:image_picker_web/image_picker_web.dart';
-import 'package:flutter/material.dart';
-import 'package:image_picker_web/image_picker_web.dart';
 
 class StorageProvider {
   static Future<String> findImageUrl(String image) async {
