@@ -20,8 +20,6 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
-
-//import 'package:googleapis/appengine/v1.dart';
 import 'package:provider/provider.dart';
 import 'package:recase/recase.dart';
 import 'package:validators/validators.dart';
@@ -85,7 +83,6 @@ class _WebsiteViewState extends State<WebsiteView> {
     }
     _descriptionRoController = TextEditingController(text: description['ro']);
     _descriptionEnController = TextEditingController(text: description['en']);
-    //StorageProvider.showImagePicker().
     WebsiteProvider().getWebPictureURL(widget.website).then((value) =>
         setState(() => {if (value != null) imageWidget = NetworkImage(value)}));
   }
