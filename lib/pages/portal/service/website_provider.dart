@@ -412,7 +412,6 @@ class WebsiteProvider with ChangeNotifier {
   }
 
   Future<String> getWebPictureURL(Website website) {
-    return StorageProvider.findImageUrl(
-        'websites/${website.id}/icon.png');
+    return StorageProvider.findImageUrl('websites/${website.id}/icon.png');
   }
 }

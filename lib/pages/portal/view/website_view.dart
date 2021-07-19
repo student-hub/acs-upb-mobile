@@ -20,6 +20,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
+
 //import 'package:googleapis/appengine/v1.dart';
 import 'package:provider/provider.dart';
 import 'package:recase/recase.dart';
@@ -209,7 +210,7 @@ class _WebsiteViewState extends State<WebsiteView> {
         ),
         onTap: () async {
           final Uint8List uploadedImage =
-          await StorageProvider.showImagePicker();
+              await StorageProvider.showImagePicker();
           if (uploadedImage != null) {
             setState(() {
               this.uploadedImage = uploadedImage;
@@ -245,7 +246,8 @@ class _WebsiteViewState extends State<WebsiteView> {
                   }
                   if (uploadedImage != null) {
                     imageAsPNG = await Utils.convertToPNG(uploadedImage);
-                    res = await websiteProvider.uploadWebPicture(_buildWebsite(), imageAsPNG);
+                    res = await websiteProvider.uploadWebPicture(
+                        _buildWebsite(), imageAsPNG);
                   }
                   if (res) {
                     AppToast.show(widget.updateExisting
@@ -363,7 +365,8 @@ class _WebsiteViewState extends State<WebsiteView> {
 }
 
 class WebsiteIcon extends StatelessWidget {
-  const WebsiteIcon({this.website, this.canEdit, this.size, this.onTap, this.image});
+  const WebsiteIcon(
+      {this.website, this.canEdit, this.size, this.onTap, this.image});
 
   final Website website;
   final bool canEdit;
