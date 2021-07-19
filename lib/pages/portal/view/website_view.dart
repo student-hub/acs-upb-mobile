@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:acs_upb_mobile/authentication/model/user.dart';
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
@@ -18,6 +20,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
+//import 'package:googleapis/appengine/v1.dart';
 import 'package:provider/provider.dart';
 import 'package:recase/recase.dart';
 import 'package:validators/validators.dart';
@@ -52,6 +55,9 @@ class _WebsiteViewState extends State<WebsiteView> {
 
   User _user;
 
+  Uint8List uploadedImage;
+  ImageProvider imageWidget;
+
   Future<void> _fetchUser() async {
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
     _user = await authProvider.currentUser;
@@ -78,6 +84,9 @@ class _WebsiteViewState extends State<WebsiteView> {
     }
     _descriptionRoController = TextEditingController(text: description['ro']);
     _descriptionEnController = TextEditingController(text: description['en']);
+    //StorageProvider.showImagePicker().
+    WebsiteProvider().getWebPictureURL(widget.website).then((value) =>
+        setState(() => {if (value != null) imageWidget = NetworkImage(value)}));
   }
 
   String _buildId() {
@@ -136,6 +145,7 @@ class _WebsiteViewState extends State<WebsiteView> {
                         Expanded(
                             child: WebsiteIcon(
                           website: website,
+                          image: imageWidget,
                           onTap: () {
                             Utils.launchURL(website.link);
                           },
@@ -186,8 +196,35 @@ class _WebsiteViewState extends State<WebsiteView> {
         ],
       );
 
+  Widget _uploadButton(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(10),
+      child: GestureDetector(
+        child: const Align(
+          alignment: Alignment.bottomRight,
+          child: CircleImage(
+            circleSize: 50,
+            icon: Icon(Icons.add_photo_alternate),
+          ),
+        ),
+        onTap: () async {
+          final Uint8List uploadedImage =
+          await StorageProvider.showImagePicker();
+          if (uploadedImage != null) {
+            setState(() {
+              this.uploadedImage = uploadedImage;
+              imageWidget = MemoryImage(uploadedImage);
+            });
+          }
+        },
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    Uint8List imageAsPNG;
+
     return AppScaffold(
       title: Text(widget.updateExisting
           ? S.current.actionEditWebsite
@@ -205,6 +242,10 @@ class _WebsiteViewState extends State<WebsiteView> {
                     res = await websiteProvider.updateWebsite(_buildWebsite());
                   } else {
                     res = await websiteProvider.addWebsite(_buildWebsite());
+                  }
+                  if (uploadedImage != null) {
+                    imageAsPNG = await Utils.convertToPNG(uploadedImage);
+                    res = await websiteProvider.uploadWebPicture(_buildWebsite(), imageAsPNG);
                   }
                   if (res) {
                     AppToast.show(widget.updateExisting
@@ -309,6 +350,7 @@ class _WebsiteViewState extends State<WebsiteView> {
                       minLines: 1,
                       maxLines: 5,
                     ),
+                    _uploadButton(context),
                   ],
                 ),
               ),
@@ -321,12 +363,13 @@ class _WebsiteViewState extends State<WebsiteView> {
 }
 
 class WebsiteIcon extends StatelessWidget {
-  const WebsiteIcon({this.website, this.canEdit, this.size, this.onTap});
+  const WebsiteIcon({this.website, this.canEdit, this.size, this.onTap, this.image});
 
   final Website website;
   final bool canEdit;
   final double size;
   final Function onTap;
+  final ImageProvider image;
 
   @override
   Widget build(BuildContext context) {
@@ -334,16 +377,16 @@ class WebsiteIcon extends StatelessWidget {
       future: StorageProvider.findImageUrl('websites/${website.id}/icon.png'),
       //Firebase Storage path
       builder: (context, snapshot) {
-        ImageProvider image;
-        image = const AssetImage('assets/icons/globe.png');
+        ImageProvider img;
+        img = const AssetImage('assets/icons/globe.png');
         if (snapshot.hasData) {
-          image = NetworkImage(snapshot.data);
+          img = NetworkImage(snapshot.data);
         }
 
         return CircleImage(
             label: website.label,
             tooltip: website.infoByLocale[LocaleProvider.localeString],
-            image: image,
+            image: image ?? img,
             enableOverlay: canEdit,
             circleSize: size,
             onTap: onTap);

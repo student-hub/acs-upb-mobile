@@ -1,9 +1,11 @@
 import 'dart:async';
+import 'dart:typed_data';
 
 import 'package:acs_upb_mobile/authentication/model/user.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/filter/model/filter.dart';
 import 'package:acs_upb_mobile/pages/portal/model/website.dart';
+import 'package:acs_upb_mobile/resources/storage/mobile_storage.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -394,5 +396,23 @@ class WebsiteProvider with ChangeNotifier {
       _errorHandler(e);
       return false;
     }
+  }
+
+  Future<bool> uploadWebPicture(Website website, Uint8List file) async {
+    final result = await StorageProvider.uploadImage(
+        file, 'websites/${website.id}/icon.png');
+    if (!result) {
+      if (file.length > 5 * 1024 * 1024) {
+        AppToast.show(S.current.errorPictureSizeToBig);
+      } else {
+        AppToast.show(S.current.errorSomethingWentWrong);
+      }
+    }
+    return result;
+  }
+
+  Future<String> getWebPictureURL(Website website) {
+    return StorageProvider.findImageUrl(
+        'websites/${website.id}/icon.png');
   }
 }
