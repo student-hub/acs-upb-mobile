@@ -1,3 +1,5 @@
+import 'package:acs_upb_mobile/authentication/model/user.dart';
+import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/settings/model/request.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
@@ -17,20 +19,46 @@ extension RequestExtension on Request {
       formId: snap.id,
     );
   }
+
+  static String getFormId(DocumentSnapshot snap) {
+    return snap.id;
+  }
 }
 
 class AdminProvider with ChangeNotifier {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
 
-  Future<List<Request>> fetchRequests() async {
+  Future<List<String>> fetchRequests() async {
     try {
       final QuerySnapshot qSnapshot = await _db.collection('forms').get();
-      return qSnapshot.docs.map(RequestExtension.fromSnap).toList();
+      return qSnapshot.docs.map(RequestExtension.getFormId).toList();
     } catch (e) {
       print(e);
       AppToast.show(S.current.errorSomethingWentWrong);
       return null;
     }
+  }
+
+  Future<Request> fetchRequestData(String requestId) async {
+    try {
+      final DocumentSnapshot docSnapshot =
+          await _db.collection('forms').doc(requestId).get();
+      return RequestExtension.fromSnap(docSnapshot);
+    } catch (e) {
+      print(e);
+      AppToast.show(S.current.errorSomethingWentWrong);
+      return null;
+    }
+  }
+
+  Future<User> fetchUserById(final String userId) async {
+    final snapshot =
+        await FirebaseFirestore.instance.collection('users').doc(userId).get();
+    if (snapshot.data() == null) {
+      return null;
+    }
+    final currentUser = DatabaseUser.fromSnap(snapshot);
+    return currentUser;
   }
 
   Future<void> acceptRequest(String formId, String userId) async {
@@ -47,6 +75,27 @@ class AdminProvider with ChangeNotifier {
   Future<void> denyRequest(String formId, String userId) async {
     try {
       await _db.collection('forms').doc(formId).update({'done': null});
+      notifyListeners();
+    } catch (e) {
+      print(e);
+      AppToast.show(S.current.errorSomethingWentWrong);
+    }
+  }
+
+  Future<void> revertAcceptedRequest(String formId, String userId) async {
+    try {
+      await _db.collection('users').doc(userId).update({'permissionLevel': 0});
+      await _db.collection('forms').doc(formId).update({'done': false});
+      notifyListeners();
+    } catch (e) {
+      print(e);
+      AppToast.show(S.current.errorSomethingWentWrong);
+    }
+  }
+
+  Future<void> revertDeniedRequest(String formId, String userId) async {
+    try {
+      await _db.collection('forms').doc(formId).update({'done': false});
       notifyListeners();
     } catch (e) {
       print(e);
