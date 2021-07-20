@@ -14,6 +14,8 @@ class Person {
   final String position;
   final String photo;
 
+  String get lastName => name.trim().split(' ').last;
+
   @override
   int get hashCode => name.hashCode;
 

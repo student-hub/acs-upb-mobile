@@ -37,6 +37,7 @@ https://user-images.githubusercontent.com/25504811/120929790-1bc24080-c6f3-11eb-
 * [Anghel Andrei](https://github.com/AnghelAndrei28)
 * [Bogdan Piele](https://github.com/bogpie)
 * [Bogdan Iuga](https://github.com/iugabogdan98)
+* [Andrei Mirică](https://github.com/AndreiMirica19)
 * [Andreea-Giorgiana Adăscăliței](https://github.com/AndreeaAdascalitei)
 * [Ștefan-Alin Pahonțu](https://github.com/stafy2912)
 * [Alexandra Pavel](https://github.com/AlexandraPavel)
