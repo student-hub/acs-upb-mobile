@@ -42,6 +42,7 @@ https://user-images.githubusercontent.com/25504811/120929790-1bc24080-c6f3-11eb-
 * [Ștefan-Alin Pahonțu](https://github.com/stafy2912)
 * [Alexandra Pavel](https://github.com/AlexandraPavel)
 * [Ștefan-Dragoș Badea](https://github.com/GhiaraD)
+* [Ștefan-Andrei Popa](https://github.com/AndreiPopa21)
 
 ## Building from source with Android Studio
 
