@@ -196,40 +196,38 @@ class _WebsiteViewState extends State<WebsiteView> {
 
   Widget _uploadButton(BuildContext context) {
     return GestureDetector(
-      child: Center(
-        child: Container(
-          decoration: BoxDecoration(
-              color: const Color(0xFF43ACCD),
-              borderRadius: BorderRadius.circular(20)),
-          child: Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: <Widget>[
-                Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      const SizedBox(height: 10),
-                      Row(
-                        children: <Widget>[
-                          const Padding(
-                            padding: EdgeInsets.only(left: 12, right: 12),
-                            child: Icon(
-                              Icons.add_photo_alternate_outlined,
-                              color: Colors.white,
-                            ),
+      child: Container(
+        decoration: BoxDecoration(
+            color: const Color(0xFF43ACCD),
+            borderRadius: BorderRadius.circular(20)),
+        child: Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: <Widget>[
+              Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    const SizedBox(height: 10),
+                    Row(
+                      children: <Widget>[
+                        const Padding(
+                          padding: EdgeInsets.only(left: 12, right: 12),
+                          child: Icon(
+                            Icons.add_photo_alternate_outlined,
+                            color: Colors.white,
                           ),
-                          const Text(
-                            'Upload website icon',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w600,
-                            ),
+                        ),
+                        const Text(
+                          'Upload website icon',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w600,
                           ),
-                        ],
-                      ),
-                      const SizedBox(height: 10),
-                    ]),
-              ]),
-        ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                  ]),
+            ]),
       ),
       onTap: () async {
         final Uint8List uploadedImage = await StorageProvider.showImagePicker();
