@@ -12,6 +12,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:preferences/preference_service.dart';
 
+extension IconURLExtension on Website {
+  Future<String> getIconURL() =>  StorageProvider.findImageUrl('websites/${id}/icon.png');
+}
+
 extension UserExtension on User {
   /// Check if there is at least one website that the [User] has permission to edit
   Future<bool> get hasEditableWebsites async {
@@ -398,7 +402,7 @@ class WebsiteProvider with ChangeNotifier {
     }
   }
 
-  Future<bool> uploadWebPicture(Website website, Uint8List file) async {
+  Future<bool> uploadWebsiteIcon(Website website, Uint8List file) async {
     final result = await StorageProvider.uploadImage(
         file, 'websites/${website.id}/icon.png');
     if (!result) {
@@ -411,7 +415,7 @@ class WebsiteProvider with ChangeNotifier {
     return result;
   }
 
-  Future<String> getWebPictureURL(Website website) {
+  Future<String> getWebsiteIconURL(Website website) {
     return StorageProvider.findImageUrl('websites/${website.id}/icon.png');
   }
 }

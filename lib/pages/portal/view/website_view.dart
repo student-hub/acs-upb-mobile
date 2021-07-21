@@ -83,7 +83,7 @@ class _WebsiteViewState extends State<WebsiteView> {
     }
     _descriptionRoController = TextEditingController(text: description['ro']);
     _descriptionEnController = TextEditingController(text: description['en']);
-    WebsiteProvider().getWebPictureURL(widget.website).then((value) =>
+    widget.website.getIconURL().then((value) =>
         setState(() => {if (value != null) imageWidget = NetworkImage(value)}));
   }
 
@@ -195,27 +195,51 @@ class _WebsiteViewState extends State<WebsiteView> {
       );
 
   Widget _uploadButton(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(10),
-      child: GestureDetector(
-        child: const Align(
-          alignment: Alignment.bottomRight,
-          child: CircleImage(
-            circleSize: 50,
-            icon: Icon(Icons.add_photo_alternate),
-          ),
+    return GestureDetector(
+      child: Center(
+        child: Container(
+          decoration: BoxDecoration(
+              color: const Color(0xFF43ACCD),
+              borderRadius: BorderRadius.circular(20)),
+          child: Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: <Widget>[
+                Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      const SizedBox(height: 10),
+                      Row(
+                        children: <Widget>[
+                          const Padding(
+                            padding: EdgeInsets.only(left: 12, right: 12),
+                            child: Icon(
+                              Icons.add_photo_alternate_outlined,
+                              color: Colors.white,
+                            ),
+                          ),
+                          const Text(
+                            'Upload website icon',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 10),
+                    ]),
+              ]),
         ),
-        onTap: () async {
-          final Uint8List uploadedImage =
-              await StorageProvider.showImagePicker();
-          if (uploadedImage != null) {
-            setState(() {
-              this.uploadedImage = uploadedImage;
-              imageWidget = MemoryImage(uploadedImage);
-            });
-          }
-        },
       ),
+      onTap: () async {
+        final Uint8List uploadedImage = await StorageProvider.showImagePicker();
+        if (uploadedImage != null) {
+          setState(() {
+            this.uploadedImage = uploadedImage;
+            imageWidget = MemoryImage(uploadedImage);
+          });
+        }
+      },
     );
   }
 
@@ -243,7 +267,7 @@ class _WebsiteViewState extends State<WebsiteView> {
                   }
                   if (uploadedImage != null) {
                     imageAsPNG = await Utils.convertToPNG(uploadedImage);
-                    res = await websiteProvider.uploadWebPicture(
+                    res = await websiteProvider.uploadWebsiteIcon(
                         _buildWebsite(), imageAsPNG);
                   }
                   if (res) {
@@ -280,6 +304,8 @@ class _WebsiteViewState extends State<WebsiteView> {
                 key: _formKey,
                 child: Column(
                   children: <Widget>[
+                    const SizedBox(height: 10),
+                    _uploadButton(context),
                     TextFormField(
                       controller: _labelController,
                       decoration: InputDecoration(
@@ -349,7 +375,6 @@ class _WebsiteViewState extends State<WebsiteView> {
                       minLines: 1,
                       maxLines: 5,
                     ),
-                    _uploadButton(context),
                   ],
                 ),
               ),
