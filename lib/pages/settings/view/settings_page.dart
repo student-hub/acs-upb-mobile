@@ -66,13 +66,18 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
                 PreferenceTitle(S.current.settingsTitlePersonalization),
                 SwitchPreference(
+
                   S.current.settingsItemDarkMode,
                   'dark_mode',
                   onEnable: () {
                     DynamicTheme.of(context).setBrightness(Brightness.dark);
+                    DynamicTheme.of(context).setThemeData(ThemeData.dark());
+
                   },
                   onDisable: () {
                     DynamicTheme.of(context).setBrightness(Brightness.light);
+
+                    DynamicTheme.of(context).setThemeData(ThemeData.light());
                   },
                   defaultVal: MediaQuery.of(context).platformBrightness ==
                       Brightness.dark,

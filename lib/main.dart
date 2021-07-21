@@ -23,6 +23,7 @@ import 'package:acs_upb_mobile/pages/timetable/service/uni_event_provider.dart';
 import 'package:acs_upb_mobile/resources/locale_provider.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/widgets/loading_screen.dart';
+import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -113,6 +114,8 @@ class _MyAppState extends State<MyApp> {
   final Color _accentColor = const Color(0xFF43ACCD);
 
   Widget buildApp(BuildContext context, ThemeData theme) {
+
+
     return MaterialApp(
       title: Utils.packageInfo.appName,
       localizationsDelegates: [
