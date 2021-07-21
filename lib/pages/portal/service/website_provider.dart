@@ -14,7 +14,7 @@ import 'package:preferences/preference_service.dart';
 
 extension IconURLExtension on Website {
   Future<String> getIconURL() =>
-      StorageProvider.findImageUrl('websites/${id}/icon.png');
+      StorageProvider.findImageUrl('websites/$id/icon.png');
 }
 
 extension UserExtension on User {
