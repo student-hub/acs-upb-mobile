@@ -47,9 +47,9 @@
 	<false/>
 	<!-- We need to allow HTTP because teacher photos on aii.pub.ro cannot be accessed through HTTPS. -->
 	<key>NSAppTransportSecurity</key>
-  <dict>
-    <key>NSAllowsArbitraryLoads</key>
-    <true/>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
   </dict>
 </dict>
 </plist>
