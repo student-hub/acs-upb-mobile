@@ -5,6 +5,7 @@ import 'package:acs_upb_mobile/pages/people/view/person_view.dart';
 import 'package:acs_upb_mobile/widgets/autocomplete.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:acs_upb_mobile/widgets/search_bar.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dynamic_text_highlighting/dynamic_text_highlighting.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -115,7 +116,9 @@ class PeopleList extends StatelessWidget {
         return ListTile(
           key: ValueKey(people[index].name),
           leading: CircleAvatar(
-            backgroundImage: NetworkImage(people[index].photo),
+            backgroundImage: CachedNetworkImageProvider(
+              people[index].photo,
+            ),
           ),
           title: filteredWords.isNotEmpty
               ? DynamicTextHighlighting(
