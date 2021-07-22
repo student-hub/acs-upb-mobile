@@ -66,37 +66,38 @@ class RelevanceFormField extends ChipFormField<List<String>> {
       child: GestureDetector(
         onTap: () {
           if (user?.canAddPublicInfo ?? false) {
-            Navigator.of(context)
-                .push(MaterialPageRoute<ChangeNotifierProvider>(
-              builder: (_) => ChangeNotifierProvider.value(
-                value: Provider.of<FilterProvider>(context),
-                child: FilterPage(
-                  title: S.current.labelRelevance,
-                  buttonText: S.current.buttonSet,
-                  canBeForEveryone: canBeForEveryone,
-                  info:
-                      '${S.current.infoRelevanceNothingSelected} ${S.current.infoRelevance}',
-                  hint: S.current.infoRelevanceExample,
-                  onSubmit: () async {
-                    // Deselect all other options
-                    controller._state._onlyMeSelected = false;
-                    controller._state._anyoneSelected = false;
+            Navigator.of(context).push(
+              MaterialPageRoute<ChangeNotifierProvider>(
+                builder: (_) => ChangeNotifierProvider.value(
+                  value: Provider.of<FilterProvider>(context),
+                  child: FilterPage(
+                    title: S.current.labelRelevance,
+                    buttonText: S.current.buttonSet,
+                    canBeForEveryone: canBeForEveryone,
+                    info:
+                        '${S.current.infoRelevanceNothingSelected} ${S.current.infoRelevance}',
+                    hint: S.current.infoRelevanceExample,
+                    onSubmit: () async {
+                      // Deselect all other options
+                      controller._state._onlyMeSelected = false;
+                      controller._state._anyoneSelected = false;
 
-                    // Select the new options
-                    await controller._state._fetchFilter();
-                    if (controller._state._filter.relevantLeaves
-                        .contains('All')) {
-                      controller._state._anyoneSelected = true;
-                    } else {
-                      for (final node
-                          in controller._state._customSelected.keys) {
-                        controller._state._customSelected[node] = true;
+                      // Select the new options
+                      await controller._state._fetchFilter();
+                      if (controller._state._filter.relevantLeaves
+                          .contains('All')) {
+                        controller._state._anyoneSelected = true;
+                      } else {
+                        for (final node
+                            in controller._state._customSelected.keys) {
+                          controller._state._customSelected[node] = true;
+                        }
                       }
-                    }
-                  },
+                    },
+                  ),
                 ),
               ),
-            ));
+            );
           } else {
             AppToast.show(S.current.warningNoPermissionToAddPublicWebsite);
           }
