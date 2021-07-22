@@ -5,7 +5,7 @@ import 'package:acs_upb_mobile/authentication/model/user.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/filter/model/filter.dart';
 import 'package:acs_upb_mobile/pages/portal/model/website.dart';
-import 'package:acs_upb_mobile/resources/storage/mobile_storage.dart';
+import 'package:acs_upb_mobile/resources/storage/storage_provider.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';

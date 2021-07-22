@@ -143,7 +143,8 @@ class _WebsiteViewState extends State<WebsiteView> {
                         Expanded(
                             child: WebsiteIcon(
                           website: website,
-                          image: imageWidget,
+                          image: imageWidget ??
+                              const AssetImage('assets/icons/globe.png'),
                           onTap: () {
                             Utils.launchURL(website.link);
                           },
@@ -221,10 +222,8 @@ class _WebsiteViewState extends State<WebsiteView> {
                         Padding(
                           padding: const EdgeInsets.only(left: 12),
                           child: AutoSizeText(
-                            'Upload website icon',
+                            S.current.labelUploadWebsiteIcon,
                             style: Theme.of(context).textTheme.subtitle1,
-                            //style: Theme.of(context).textTheme.bodyText1,
-                            //fontWeight: FontWeight.w600,
                           ),
                         ),
                       ],

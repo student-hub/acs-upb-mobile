@@ -206,6 +206,16 @@ class S {
   }
 
   /// `Name`
+  String get labelUploadWebsiteIcon {
+    return Intl.message(
+      'Upload Website Icon',
+      name: 'labelUploadWebsiteIcon',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Name`
   String get labelName {
     return Intl.message(
       'Name',
