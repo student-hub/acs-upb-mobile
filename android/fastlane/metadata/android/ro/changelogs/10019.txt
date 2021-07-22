@@ -1,5 +1,6 @@
 Îmbunătățit
   - Paginile de filtrare și bara de navigare arată mai frumos⭐
+  - Profesorii de pe pagina Persoane sunt acum sortați după numele de familie
   - Puțină ✨magie✨ internă ca să îmbunătățim aplicația
 
 Rezolvat

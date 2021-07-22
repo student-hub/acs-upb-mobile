@@ -1,5 +1,6 @@
 Improved
   - Filtering UI and bottom navigation bar are now nicer⭐
+  - Teachers on the People page are now sorted by last name
   - Did some internal ✨magic✨ to improve the app
 
 Fixed
