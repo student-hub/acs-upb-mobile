@@ -2,6 +2,7 @@ import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/settings/service/admin_provider.dart';
 import 'package:acs_upb_mobile/pages/settings/view/request_card.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
+import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:provider/provider.dart';
@@ -18,22 +19,42 @@ class _AdminPanelPageState extends State<AdminPanelPage> {
   //String filter = '';
   Future<List<String>> requests;
   List<String> requestsIds;
+  bool all = true;
 
   @override
   void initState() {
     super.initState();
     final adminProvider = Provider.of<AdminProvider>(context, listen: false);
-    requests = adminProvider.fetchRequests();
+    requests = adminProvider.fetchAllRequests();
   }
 
   @override
   Widget build(BuildContext context) {
+    final adminProvider = Provider.of<AdminProvider>(context, listen: false);
     return AppScaffold(
       actions: [
         AppScaffoldAction(
-          icon: FeatherIcons.filter,
-          onPressed: () {},
-        )
+            icon: FeatherIcons.filter,
+            tooltip: S.current.navigationFilter,
+            items: {
+              S.current.filterMenuShowUnprocessed: () {
+                  // Show message if user has no private websites
+                  if (all) {
+                    requests = adminProvider.fetchUnprocessedRequests();
+                    setState(() => all = false);
+                  } else {
+                    AppToast.show(S.current.warningFilterAlreadyDisabled);
+                  }
+              },
+              S.current.filterMenuShowAll: () {
+                if (all) {
+                  AppToast.show(S.current.warningFilterAlreadyDisabled);
+                } else {
+                  requests = adminProvider.fetchAllRequests();
+                  setState(() => all = true);
+                }
+              },
+            })
       ],
       title: Text(S.current.navigationAdmin),
       body: FutureBuilder(

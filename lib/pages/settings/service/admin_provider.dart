@@ -28,9 +28,20 @@ extension RequestExtension on Request {
 class AdminProvider with ChangeNotifier {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
 
-  Future<List<String>> fetchRequests() async {
+  Future<List<String>> fetchAllRequests() async {
     try {
       final QuerySnapshot qSnapshot = await _db.collection('forms').get();
+      return qSnapshot.docs.map(RequestExtension.getFormId).toList();
+    } catch (e) {
+      print(e);
+      AppToast.show(S.current.errorSomethingWentWrong);
+      return null;
+    }
+  }
+
+  Future<List<String>> fetchUnprocessedRequests() async {
+    try {
+      final QuerySnapshot qSnapshot = await _db.collection('forms').where('done', isEqualTo: false).get();
       return qSnapshot.docs.map(RequestExtension.getFormId).toList();
     } catch (e) {
       print(e);

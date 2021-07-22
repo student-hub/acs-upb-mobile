@@ -185,6 +185,7 @@
   "filterMenuShowAll": "Arată tot",
   "filterMenuShowMine": "Arată doar pe ale mele",
   "filterMenuRelevance": "Filtrează după relevanță",
+  "filterMenuShowUnprocessed": "Arată fără răspuns",
 
   "filterNodeNameBSc": "Licență",
   "filterNodeNameMSc": "Master",

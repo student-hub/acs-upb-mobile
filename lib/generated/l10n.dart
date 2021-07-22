@@ -1805,6 +1805,16 @@ class S {
     );
   }
 
+  /// `Show unprocessed`
+  String get filterMenuShowUnprocessed {
+    return Intl.message(
+      'Show unprocessed',
+      name: 'filterMenuShowUnprocessed',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Bachelor's`
   String get filterNodeNameBSc {
     return Intl.message(

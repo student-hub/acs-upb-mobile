@@ -185,6 +185,7 @@
   "filterMenuShowAll": "Show all",
   "filterMenuShowMine": "Show only mine",
   "filterMenuRelevance": "Filter by relevance",
+  "filterMenuShowUnprocessed": "Show unprocessed",
 
   "filterNodeNameBSc": "Bachelor's",
   "filterNodeNameMSc": "Master's",
