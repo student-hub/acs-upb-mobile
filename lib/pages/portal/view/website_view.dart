@@ -217,8 +217,7 @@ class _WebsiteViewState extends State<WebsiteView> {
                         Padding(
                           padding: const EdgeInsets.only(left: 12),
                           child: Icon(Icons.add_photo_alternate_outlined,
-                              color:
-                                  CustomIcons.formIconColor(Theme.of(context))),
+                              color: Theme.of(context).formIconColor),
                         ),
                         Padding(
                           padding: const EdgeInsets.only(left: 12),
