@@ -73,7 +73,12 @@ jobs:
       env:
         ANDROID_KEYS_SECRET_PASSPHRASE: ${{ secrets.ANDROID_KEYS_SECRET_PASSPHRASE }}
 
-    - name: Build APK
+    # Apparently there's a known issue where there are some missing files if you don't build the debug version first
+    # https://techshits.com/flutter-error-transforms-input-file-does-not-exist/
+    - name: Build debug APK
+      run: flutter build apk --debug
+
+    - name: Build release APK
       run: flutter build apk --release
 
     - name: Create a Release APK
