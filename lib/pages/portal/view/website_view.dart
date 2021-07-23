@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:acs_upb_mobile/authentication/model/user.dart';
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
@@ -52,6 +54,9 @@ class _WebsiteViewState extends State<WebsiteView> {
 
   User _user;
 
+  Uint8List uploadedImage;
+  ImageProvider imageWidget;
+
   Future<void> _fetchUser() async {
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
     _user = await authProvider.currentUser;
@@ -78,6 +83,8 @@ class _WebsiteViewState extends State<WebsiteView> {
     }
     _descriptionRoController = TextEditingController(text: description['ro']);
     _descriptionEnController = TextEditingController(text: description['en']);
+    widget.website.getIconURL().then((value) =>
+        setState(() => {if (value != null) imageWidget = NetworkImage(value)}));
   }
 
   String _buildId() {
@@ -136,6 +143,8 @@ class _WebsiteViewState extends State<WebsiteView> {
                         Expanded(
                             child: WebsiteIcon(
                           website: website,
+                          image: imageWidget ??
+                              const AssetImage('assets/icons/globe.png'),
                           onTap: () {
                             Utils.launchURL(website.link);
                           },
@@ -186,8 +195,59 @@ class _WebsiteViewState extends State<WebsiteView> {
         ],
       );
 
+  Widget _uploadButton(BuildContext context) {
+    return GestureDetector(
+      child: Container(
+        decoration: BoxDecoration(
+            color: Colors.transparent,
+            border: Border(
+              bottom:
+                  BorderSide(color: Theme.of(context).hintColor, width: 0.7),
+            )),
+        child: Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: <Widget>[
+              Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    const SizedBox(height: 10),
+                    Row(
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.only(left: 12),
+                          child: Icon(Icons.add_photo_alternate_outlined,
+                              color:
+                                  CustomIcons.formIconColor(Theme.of(context))),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 12),
+                          child: AutoSizeText(
+                            S.current.labelUploadWebsiteIcon,
+                            style: Theme.of(context).textTheme.subtitle1,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                  ]),
+            ]),
+      ),
+      onTap: () async {
+        final Uint8List uploadedImage = await StorageProvider.showImagePicker();
+        if (uploadedImage != null) {
+          setState(() {
+            this.uploadedImage = uploadedImage;
+            imageWidget = MemoryImage(uploadedImage);
+          });
+        }
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    Uint8List imageAsPNG;
+
     return AppScaffold(
       title: Text(widget.updateExisting
           ? S.current.actionEditWebsite
@@ -205,6 +265,11 @@ class _WebsiteViewState extends State<WebsiteView> {
                     res = await websiteProvider.updateWebsite(_buildWebsite());
                   } else {
                     res = await websiteProvider.addWebsite(_buildWebsite());
+                  }
+                  if (uploadedImage != null) {
+                    imageAsPNG = await Utils.convertToPNG(uploadedImage);
+                    res = await websiteProvider.uploadWebsiteIcon(
+                        _buildWebsite(), imageAsPNG);
                   }
                   if (res) {
                     AppToast.show(widget.updateExisting
@@ -240,6 +305,8 @@ class _WebsiteViewState extends State<WebsiteView> {
                 key: _formKey,
                 child: Column(
                   children: <Widget>[
+                    const SizedBox(height: 10),
+                    _uploadButton(context),
                     TextFormField(
                       controller: _labelController,
                       decoration: InputDecoration(
@@ -321,11 +388,13 @@ class _WebsiteViewState extends State<WebsiteView> {
 }
 
 class WebsiteIcon extends StatelessWidget {
-  const WebsiteIcon({this.website, this.canEdit, this.size, this.onTap});
+  const WebsiteIcon(
+      {this.website, this.canEdit, this.size, this.image, this.onTap});
 
   final Website website;
   final bool canEdit;
   final double size;
+  final ImageProvider image;
   final Function onTap;
 
   @override
@@ -334,16 +403,16 @@ class WebsiteIcon extends StatelessWidget {
       future: StorageProvider.findImageUrl('websites/${website.id}/icon.png'),
       //Firebase Storage path
       builder: (context, snapshot) {
-        ImageProvider image;
-        image = const AssetImage('assets/icons/globe.png');
+        ImageProvider imgOld;
+        imgOld = const AssetImage('assets/icons/globe.png');
         if (snapshot.hasData) {
-          image = NetworkImage(snapshot.data);
+          imgOld = NetworkImage(snapshot.data);
         }
 
         return CircleImage(
             label: website.label,
             tooltip: website.infoByLocale[LocaleProvider.localeString],
-            image: image,
+            image: image ?? imgOld,
             enableOverlay: canEdit,
             circleSize: size,
             onTap: onTap);

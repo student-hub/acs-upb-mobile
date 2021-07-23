@@ -17,9 +17,10 @@ import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:image/image.dart' as im;
 import 'package:preferences/preference_title.dart';
 import 'package:provider/provider.dart';
+
+import '../../resources/utils.dart';
 
 class EditProfilePage extends StatefulWidget {
   const EditProfilePage({Key key}) : super(key: key);
@@ -247,12 +248,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
     );
   }
 
-  Future<Uint8List> convertToPNG(Uint8List image) async {
-    final decodedImage = im.decodeImage(image);
-    return im.encodePng(im.copyResize(decodedImage, width: 500, height: 500),
-        level: 9);
-  }
-
   @override
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
@@ -297,7 +292,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       .then((value) => result = value ?? false);
                 }
                 if (uploadedImage != null) {
-                  imageAsPNG = await convertToPNG(uploadedImage);
+                  imageAsPNG = await Utils.convertToPNG(uploadedImage);
                   result = await authProvider.uploadProfilePicture(imageAsPNG);
                   if (result) {
                     AppToast.show(S.current.messagePictureUpdatedSuccess);
