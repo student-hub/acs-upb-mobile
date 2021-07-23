@@ -111,14 +111,16 @@ This project uses [GitHub Actions](https://github.com/features/actions) for CI/C
 
 The following actions are currently set up:
 * [Linter](https://github.com/acs-upb-mobile/acs-upb-mobile/actions?query=workflow%3ALinter): Checks for warnings and coding style issues. Runs on every push and pull request.
-  - If your PR is made from a branch inside the repository (rather than a fork), [acs-upb-mobile-bot](https://github.com/acs-upb-mobile-bot) should automatically *add code review comments pointing out any warnings*.
+  - If your PR is made from a branch inside the repository (rather than a fork), which is the preferred way to make contributions, [acs-upb-mobile-bot](https://github.com/acs-upb-mobile-bot) should automatically *add code review comments pointing out any warnings*.
     * Sometimes, the automatic check for dead links in documentation fails with "429 too many requests" (see [this issue](https://github.com/textlint-rule/textlint-rule-no-dead-link/issues/135)). You can ignore those if you know the links in question are good.
   - If you have formatting issues, the "Check formatting" step will *point out the files that need to be formatted* and the workflow will fail.
 * [Tests](https://github.com/acs-upb-mobile/acs-upb-mobile/actions?query=workflow%3ATests): Runs all tests in the [test/](test) directory and submits a coverage report to [codecov](https://codecov.io/gh/acs-upb-mobile/acs-upb-mobile). This action is triggered on every push and pull request.
   - If at least one test fails, this workflow will fail.
   - The *coverage* is the percentage of lines of code that are executed at least once in tests. This project aims to keep coverage above 70% at all times.
 * [Deployment](https://github.com/acs-upb-mobile/acs-upb-mobile/actions?query=workflow%3ADeployment):
-  Deploys the web version of the app to the website ([acs-upb-mobile.web.app](https://acs-upb-mobile.web.app/)) and creates a corresponding [GitHub Release](https://github.com/acs-upb-mobile/acs-upb-mobile/releases) including the APK. This action is triggered when a new version tag is pushed. **Do not push version tags** unless you know what you are doing.
+  Deploys the app to [Google Play](https://play.google.com/store/apps/details?id=ro.pub.acs.acs_upb_mobile), as well as the the website ([acs-upb-mobile.web.app](https://acs-upb-mobile.web.app/)), and creates a corresponding [GitHub Release](https://github.com/acs-upb-mobile/acs-upb-mobile/releases) including the APK. This action is triggered when a new version tag (e.g. `v1.2.10`) is pushed.
+  -  **Do not push version tags** unless you know what you are doing.
+  - For the Google Play release, we are using [fastlane](https://fastlane.tools/). It requires creating changelog files in each supported language under [android/fastlane/metadata/android](android/fastlane/metadata/android), with the name ``$(pubspec_build_number + 10000).txt`. For example, if the version in [pubspec.yaml](pubspec.yaml) is `1.2.10+12`, the files should be named `100012.txt`. The content of the changelog file is what the users will se under the "What's new" section in Google Play, and should use a friendly language and generally be organised by sections like `Added`, `Fixed`, `Improved` etc. Look at the existing changelogs for examples.
 
 ## Working with Firebase
 ACS UPB Mobile uses [Firebase](https://firebase.google.com/) - an app development platform built on Google infrastructure and using [Google Cloud Platform](https://cloud.google.com/) - to manage remote storage and authentication, as well as other cloud resources.
