@@ -42,14 +42,45 @@ class _RequestCardState extends State<RequestCard>
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
-                              Text(
-                                '${user?.firstName ?? 'Unknown User'} ${user?.lastName ?? ''} ${user?.classes != null ? user?.classes[user.classes.length - 1] : ''}',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .headline6
-                                    .copyWith(fontSize: 18),
-                                overflow: TextOverflow.fade,
-                                maxLines: 2,
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    '${user?.firstName ?? 'Unknown User'} ${user?.lastName ?? ''} ${user?.classes != null ? user?.classes[user.classes.length - 1] : ''}',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .headline6
+                                        .copyWith(fontSize: 18),
+                                    overflow: TextOverflow.fade,
+                                    maxLines: 2,
+                                  ),
+                                  //const SizedBox(width: 6),
+                                  if (request.processed == true)
+                                    Container(
+                                      padding: const EdgeInsets.all(5),
+                                      decoration: myBoxDecoration(),
+                                      child: Text(
+                                        'Accepted',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline6
+                                            .copyWith(fontSize: 10),
+                                      ),
+                                    )
+                                  else if (request.processed == null)
+                                    Container(
+                                      padding: const EdgeInsets.all(5),
+                                      decoration: myBoxDecoration2(),
+                                      child: Text(
+                                        'Denied',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline6
+                                            .copyWith(fontSize: 10),
+                                      ),
+                                    ),
+                                ],
                               ),
                               Text(
                                 '${DateFormat("dd-MM-yyyy '${S.current.stringAt}' HH:mm").format(request.dateSubmitted?.toDate() ?? DateTime.now())}',
@@ -75,12 +106,11 @@ class _RequestCardState extends State<RequestCard>
                                   children: [
                                     AppButton(
                                       text: S.current.stringDeny,
-                                      color: Theme.of(context).accentColor,
+                                      color: Theme.of(context).disabledColor,
                                       width: 100,
                                       onTap: () async {
                                         await adminProvider.denyRequest(
                                             request.formId, request.userId);
-                                        //setState(() {});
                                       },
                                     ),
                                     const SizedBox(width: 10),
@@ -91,7 +121,6 @@ class _RequestCardState extends State<RequestCard>
                                       onTap: () async {
                                         await adminProvider.acceptRequest(
                                             request.formId, request.userId);
-                                        //setState(() {});
                                       },
                                     )
                                   ],
@@ -101,8 +130,7 @@ class _RequestCardState extends State<RequestCard>
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
                                     AppButton(
-                                      text:
-                                          S.current.stringRevert + ' accepted',
+                                      text: S.current.stringRevert,
                                       color: Theme.of(context).accentColor,
                                       width: 100,
                                       onTap: () async {
@@ -118,7 +146,7 @@ class _RequestCardState extends State<RequestCard>
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
                                     AppButton(
-                                      text: S.current.stringRevert + ' denied',
+                                      text: S.current.stringRevert,
                                       color: Theme.of(context).accentColor,
                                       width: 100,
                                       onTap: () async {
@@ -141,6 +169,24 @@ class _RequestCardState extends State<RequestCard>
             return const SizedBox.shrink();
           }
         });
+  }
+
+  BoxDecoration myBoxDecoration() {
+    return BoxDecoration(
+      border: Border.all(color: Colors.green, width: 2),
+      borderRadius: const BorderRadius.all(
+          Radius.circular(10) //                 <--- border radius here
+          ),
+    );
+  }
+
+  BoxDecoration myBoxDecoration2() {
+    return BoxDecoration(
+      border: Border.all(color: Colors.red, width: 2),
+      borderRadius: const BorderRadius.all(
+          Radius.circular(10) //                 <--- border radius here
+          ),
+    );
   }
 
   @override

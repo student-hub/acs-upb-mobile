@@ -19,13 +19,13 @@ class _AdminPanelPageState extends State<AdminPanelPage> {
   //String filter = '';
   Future<List<String>> requests;
   List<String> requestsIds;
-  bool all = true;
+  bool all = false;
 
   @override
   void initState() {
     super.initState();
     final adminProvider = Provider.of<AdminProvider>(context, listen: false);
-    requests = adminProvider.fetchAllRequests();
+    requests = adminProvider.fetchUnprocessedRequests();
   }
 
   @override
