@@ -16,21 +16,23 @@ class AdminPanelPage extends StatefulWidget {
 }
 
 class _AdminPanelPageState extends State<AdminPanelPage> {
-  //String filter = '';
   Future<List<String>> requests;
-  List<String> requestsIds;
+  List<String> requestIds;
   bool all = false;
 
   @override
   void initState() {
     super.initState();
-    final adminProvider = Provider.of<AdminProvider>(context, listen: false);
-    requests = adminProvider.fetchUnprocessedRequests();
   }
 
   @override
   Widget build(BuildContext context) {
-    final adminProvider = Provider.of<AdminProvider>(context, listen: false);
+    final adminProvider = Provider.of<AdminProvider>(context);
+    if (!all) {
+      requests = adminProvider.fetchUnprocessedRequests();
+    } else {
+      requests = adminProvider.fetchAllRequests();
+    }
     return AppScaffold(
       actions: [
         AppScaffoldAction(
@@ -38,13 +40,12 @@ class _AdminPanelPageState extends State<AdminPanelPage> {
             tooltip: S.current.navigationFilter,
             items: {
               S.current.filterMenuShowUnprocessed: () {
-                  // Show message if user has no private websites
-                  if (all) {
-                    requests = adminProvider.fetchUnprocessedRequests();
-                    setState(() => all = false);
-                  } else {
-                    AppToast.show(S.current.warningFilterAlreadyDisabled);
-                  }
+                if (all) {
+                  requests = adminProvider.fetchUnprocessedRequests();
+                  setState(() => all = false);
+                } else {
+                  AppToast.show(S.current.warningFilterAlreadyDisabled);
+                }
               },
               S.current.filterMenuShowAll: () {
                 if (all) {
@@ -61,11 +62,11 @@ class _AdminPanelPageState extends State<AdminPanelPage> {
           future: requests,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
-              requestsIds = snapshot.data;
+              requestIds = snapshot.data;
               return Column(
                 children: [
                   Expanded(
-                    child: RequestsList(requests: requestsIds),
+                    child: RequestsList(requests: requestIds),
                   )
                 ],
               );
@@ -90,7 +91,7 @@ class _RequestsListState extends State<RequestsList> {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-      itemCount: widget.requests.length,
+      itemCount: widget.requests?.length != null ? widget.requests.length : 0,
       itemBuilder: (context, index) {
         return RequestCard(
           requestId: widget.requests[index],

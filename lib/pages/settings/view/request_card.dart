@@ -47,7 +47,7 @@ class _RequestCardState extends State<RequestCard>
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
-                                    '${user?.firstName ?? 'Unknown User'} ${user?.lastName ?? ''} ${user?.classes != null ? user?.classes[user.classes.length - 1] : ''}',
+                                    '${user?.firstName ?? 'Unknown User'} ${user?.lastName ?? ''}',
                                     style: Theme.of(context)
                                         .textTheme
                                         .headline6
@@ -59,7 +59,7 @@ class _RequestCardState extends State<RequestCard>
                                   if (request.processed == true)
                                     Container(
                                       padding: const EdgeInsets.all(5),
-                                      decoration: myBoxDecoration(),
+                                      decoration: boxDecorationGreen(),
                                       child: Text(
                                         'Accepted',
                                         style: Theme.of(context)
@@ -71,7 +71,7 @@ class _RequestCardState extends State<RequestCard>
                                   else if (request.processed == null)
                                     Container(
                                       padding: const EdgeInsets.all(5),
-                                      decoration: myBoxDecoration2(),
+                                      decoration: boxDecorationRed(),
                                       child: Text(
                                         'Denied',
                                         style: Theme.of(context)
@@ -82,6 +82,16 @@ class _RequestCardState extends State<RequestCard>
                                     ),
                                 ],
                               ),
+                              Text(
+                                '${user?.classes != null ? user?.classes[user.classes.length - 1] : ''}',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .headline6
+                                    .copyWith(fontSize: 14),
+                                overflow: TextOverflow.fade,
+                                maxLines: 2,
+                              ),
+                              const SizedBox(height: 2),
                               Text(
                                 '${DateFormat("dd-MM-yyyy '${S.current.stringAt}' HH:mm").format(request.dateSubmitted?.toDate() ?? DateTime.now())}',
                                 style: Theme.of(context)
@@ -171,20 +181,20 @@ class _RequestCardState extends State<RequestCard>
         });
   }
 
-  BoxDecoration myBoxDecoration() {
+  BoxDecoration boxDecorationGreen() {
     return BoxDecoration(
       border: Border.all(color: Colors.green, width: 2),
       borderRadius: const BorderRadius.all(
-          Radius.circular(10) //                 <--- border radius here
+          Radius.circular(6) //                 <--- border radius here
           ),
     );
   }
 
-  BoxDecoration myBoxDecoration2() {
+  BoxDecoration boxDecorationRed() {
     return BoxDecoration(
       border: Border.all(color: Colors.red, width: 2),
       borderRadius: const BorderRadius.all(
-          Radius.circular(10) //                 <--- border radius here
+          Radius.circular(6) //                 <--- border radius here
           ),
     );
   }

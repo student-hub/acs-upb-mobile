@@ -30,7 +30,10 @@ class AdminProvider with ChangeNotifier {
 
   Future<List<String>> fetchAllRequests() async {
     try {
-      final QuerySnapshot qSnapshot = await _db.collection('forms').get();
+      final QuerySnapshot qSnapshot = await _db
+          .collection('forms')
+          .orderBy('dateSubmitted', descending: false)
+          .get();
       return qSnapshot.docs.map(RequestExtension.getFormId).toList();
     } catch (e) {
       print(e);
@@ -41,7 +44,11 @@ class AdminProvider with ChangeNotifier {
 
   Future<List<String>> fetchUnprocessedRequests() async {
     try {
-      final QuerySnapshot qSnapshot = await _db.collection('forms').where('done', isEqualTo: false).get();
+      final QuerySnapshot qSnapshot = await _db
+          .collection('forms')
+          .where('done', isEqualTo: false)
+          .orderBy('dateSubmitted', descending: false)
+          .get();
       return qSnapshot.docs.map(RequestExtension.getFormId).toList();
     } catch (e) {
       print(e);
