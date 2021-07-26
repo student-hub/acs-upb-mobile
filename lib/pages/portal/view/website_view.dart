@@ -82,8 +82,12 @@ class _WebsiteViewState extends State<WebsiteView> {
     }
     _descriptionRoController = TextEditingController(text: description['ro']);
     _descriptionEnController = TextEditingController(text: description['en']);
-    widget.website.getIconURL().then((value) =>
-        setState(() => {if (value != null) imageWidget = NetworkImage(value)}));
+    widget.website.getIconURL().then((value) => setState(() => {
+          if (value != null)
+            imageWidget = NetworkImage(value)
+          else
+            imageWidget = const AssetImage('assets/icons/globe.png')
+        }));
   }
 
   String _buildId() {
@@ -144,8 +148,7 @@ class _WebsiteViewState extends State<WebsiteView> {
                         Expanded(
                             child: WebsiteIcon(
                           website: website,
-                          image: imageWidget ??
-                              const AssetImage('assets/icons/globe.png'),
+                          image: imageWidget,
                           onTap: () {
                             Utils.launchURL(website.link);
                           },
@@ -401,23 +404,22 @@ class WebsiteIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: StorageProvider.findImageUrl('websites/${website.id}/icon.png'),
-      //Firebase Storage path
-      builder: (context, snapshot) {
-        ImageProvider imgOld;
-        imgOld = const AssetImage('assets/icons/globe.png');
-        if (snapshot.hasData) {
-          imgOld = NetworkImage(snapshot.data);
-        }
+        future: StorageProvider.findImageUrl('websites/${website.id}/icon.png'),
+        //Firebase Storage path
+        builder: (context, snapshot) {
+          ImageProvider imgOld;
+          imgOld = const AssetImage('assets/icons/globe.png');
+          if (snapshot.hasData) {
+            imgOld = NetworkImage(snapshot.data);
+          }
 
-        return CircleImage(
-            label: website.label,
-            tooltip: website.infoByLocale[LocaleProvider.localeString],
-            image: image ?? imgOld,
-            enableOverlay: canEdit,
-            circleSize: size,
-            onTap: onTap);
-      },
-    );
+          return CircleImage(
+              label: website.label,
+              tooltip: website.infoByLocale[LocaleProvider.localeString],
+              image: image ?? imgOld,
+              enableOverlay: canEdit,
+              circleSize: size,
+              onTap: onTap);
+        });
   }
 }
