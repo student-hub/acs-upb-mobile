@@ -403,23 +403,34 @@ class WebsiteIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-        future: StorageProvider.findImageUrl('websites/${website.id}/icon.png'),
-        //Firebase Storage path
-        builder: (context, snapshot) {
-          ImageProvider imgOld;
-          imgOld = const AssetImage('assets/icons/globe.png');
-          if (snapshot.hasData) {
-            imgOld = NetworkImage(snapshot.data);
-          }
+    if (image == null) {
+      return FutureBuilder(
+          future:
+              StorageProvider.findImageUrl('websites/${website.id}/icon.png'),
+          //Firebase Storage path
+          builder: (context, snapshot) {
+            ImageProvider imgOld;
+            imgOld = const AssetImage('assets/icons/globe.png');
+            if (snapshot.hasData) {
+              imgOld = NetworkImage(snapshot.data);
+            }
 
-          return CircleImage(
-              label: website.label,
-              tooltip: website.infoByLocale[LocaleProvider.localeString],
-              image: image ?? imgOld,
-              enableOverlay: canEdit,
-              circleSize: size,
-              onTap: onTap);
-        });
+            return CircleImage(
+                label: website.label,
+                tooltip: website.infoByLocale[LocaleProvider.localeString],
+                image: imgOld,
+                enableOverlay: canEdit,
+                circleSize: size,
+                onTap: onTap);
+          });
+    } else {
+      return CircleImage(
+          label: website.label,
+          tooltip: website.infoByLocale[LocaleProvider.localeString],
+          image: image,
+          enableOverlay: canEdit,
+          circleSize: size,
+          onTap: onTap);
+    }
   }
 }
