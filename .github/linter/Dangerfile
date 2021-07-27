@@ -27,10 +27,15 @@ files.each do |f|
     end
 
     # Check for lack of spaces after comments or dartdoc comments
-    if f =~ /.*\.dart/ and diff.patch =~ /((\/\/)[^ \n\/])|((\/\/\/)[^ \n])/m
+    if f =~ /.*\.dart/ and diff.patch =~ /([^ \n\/](\/\/))|((\/\/)[^ \n\/])|((\/\/\/)[^ \n])/m
         File.readlines(f).each_with_index do |line, index|
+            if line =~ /[^ \n\/](\/\/)/
+                warn("Add a space between \"//\" and the code", file: f, line: index+1)
             if line =~ /(\/\/\/)[^ \n]/
-                warn("Add a space between \"///\" and the actual comment", file: f, line: index+1)
+                if line =~ /\/{4}/
+                    warn("That's probably too many slashes", file: f, line: index+1)
+                else
+                    warn("Add a space between \"///\" and the actual comment", file: f, line: index+1)
             elsif line =~ /(\/\/)[^ \n\/]/
                 warn("Add a space between \"//\" and the actual comment", file: f, line: index+1)
             end
