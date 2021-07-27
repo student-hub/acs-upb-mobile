@@ -83,8 +83,9 @@ class _WebsiteViewState extends State<WebsiteView> {
     _descriptionRoController = TextEditingController(text: description['ro']);
     _descriptionEnController = TextEditingController(text: description['en']);
     widget.website.getIconURL().then((value) => setState(() => {
-          imageWidget:
-              NetworkImage(value) ?? const AssetImage('assets/icons/globe.png')
+          imageWidget = value != null
+              ? NetworkImage(value)
+              : const AssetImage('assets/icons/globe.png')
         }));
   }
 
@@ -408,7 +409,6 @@ class WebsiteIcon extends StatelessWidget {
           //Firebase Storage path
           builder: (context, snapshot) {
             ImageProvider oldImage;
-            oldImage = const AssetImage('assets/icons/globe.png');
             if (snapshot.hasData) {
               oldImage = NetworkImage(snapshot.data);
             }
@@ -416,7 +416,7 @@ class WebsiteIcon extends StatelessWidget {
             return CircleImage(
                 label: website.label,
                 tooltip: website.infoByLocale[LocaleProvider.localeString],
-                image: oldImage,
+                image: oldImage ?? const AssetImage('assets/icons/globe.png'),
                 enableOverlay: canEdit,
                 circleSize: size,
                 onTap: onTap);
