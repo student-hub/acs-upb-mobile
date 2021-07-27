@@ -26,7 +26,7 @@ files.each do |f|
         end
     end
 
-    # Check for lack of spaces after comments or dartdoc comments
+    # Check comment formatting
     if f =~ /.*\.dart/ and diff.patch =~ /((\/\/)[^ \n\/])|((\/\/\/)[^ \n])|(\/\*)/m
         File.readlines(f).each_with_index do |line, index|
             if line =~ /\/\*/
