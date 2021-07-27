@@ -20,6 +20,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
+import 'package:positioned_tap_detector/positioned_tap_detector.dart';
 import 'package:provider/provider.dart';
 import 'package:recase/recase.dart';
 import 'package:validators/validators.dart';
@@ -200,18 +201,34 @@ class _WebsiteViewState extends State<WebsiteView> {
         ],
       );
 
+  // Returns a widget that behaves similarly to a textfield with a "clear"
+  // button, except it actually allows the user to select an image from the
+  // gallery instead of inputting text directly.
   Widget _uploadButton(BuildContext context) {
-    return GestureDetector(
-      onTap: () async {
-        final filePickerResult = await FilePicker.platform.pickFiles(
-            type: FileType.image, allowMultiple: false, withData: true);
-        if (filePickerResult != null) {
-          final uploadedImage = filePickerResult.files[0];
+    // We need to override the tap behaviour of the text field to obtain the
+    // behaviour we want.
+    return PositionedTapDetector(
+      onTap: (tapPosition) async {
+        final screenWidth = MediaQuery.of(context).size.width;
+        const iconSize = 24, paddingSize = 16, iconPaddingSize = 12;
+        if (screenWidth - tapPosition.global.dx <=
+            iconSize + paddingSize + iconPaddingSize * 2) {
+          // Tap is near the "clear" button
+          imageFieldController.clear();
           setState(() {
-            uploadedImageBytes = uploadedImage.bytes;
-            imageWidget = MemoryImage(uploadedImageBytes);
-            imageFieldController.text = uploadedImage.name;
+            imageWidget = const AssetImage('assets/icons/globe.png');
           });
+        } else {
+          final filePickerResult = await FilePicker.platform.pickFiles(
+              type: FileType.image, allowMultiple: false, withData: true);
+          if (filePickerResult != null) {
+            final uploadedImage = filePickerResult.files[0];
+            setState(() {
+              uploadedImageBytes = uploadedImage.bytes;
+              imageWidget = MemoryImage(uploadedImageBytes);
+              imageFieldController.text = uploadedImage.name;
+            });
+          }
         }
       },
       child: Container(
@@ -225,6 +242,9 @@ class _WebsiteViewState extends State<WebsiteView> {
             decoration: InputDecoration(
               labelText: S.current.labelUploadWebsiteIcon,
               prefixIcon: const Icon(Icons.add_photo_alternate_outlined),
+              suffixIcon: imageFieldController.text.isNotEmpty
+                  ? const Icon(Icons.clear)
+                  : null,
             ),
           ),
         ),
