@@ -283,6 +283,8 @@ int o; //// too much slash
 
 ///hello
 
+/*don't like block comments*/
+
 // An empty comment with no spaces after is okay:
 //
 //
