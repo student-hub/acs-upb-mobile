@@ -408,6 +408,7 @@ class WebsiteIcon extends StatelessWidget {
           //Firebase Storage path
           builder: (context, snapshot) {
             ImageProvider oldImage;
+            oldImage = const AssetImage('assets/icons/globe.png');
             if (snapshot.hasData) {
               oldImage = NetworkImage(snapshot.data);
             }
@@ -415,7 +416,7 @@ class WebsiteIcon extends StatelessWidget {
             return CircleImage(
                 label: website.label,
                 tooltip: website.infoByLocale[LocaleProvider.localeString],
-                image: oldImage ?? const AssetImage('assets/icons/globe.png'),
+                image: oldImage,
                 enableOverlay: canEdit,
                 circleSize: size,
                 onTap: onTap);
