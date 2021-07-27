@@ -200,40 +200,6 @@ class _WebsiteViewState extends State<WebsiteView> {
 
   Widget _uploadButton(BuildContext context) {
     return GestureDetector(
-      child: Container(
-        decoration: BoxDecoration(
-            color: Colors.transparent,
-            border: Border(
-              bottom:
-                  BorderSide(color: Theme.of(context).hintColor, width: 0.7),
-            )),
-        child: Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: <Widget>[
-              Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    const SizedBox(height: 10),
-                    Row(
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.only(left: 12),
-                          child: Icon(Icons.add_photo_alternate_outlined,
-                              color: Theme.of(context).formIconColor),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 12),
-                          child: AutoSizeText(
-                            S.current.labelUploadWebsiteIcon,
-                            style: Theme.of(context).textTheme.subtitle1,
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 10),
-                  ]),
-            ]),
-      ),
       onTap: () async {
         final Uint8List uploadedImage = await StorageProvider.showImagePicker();
         if (uploadedImage != null) {
@@ -243,6 +209,22 @@ class _WebsiteViewState extends State<WebsiteView> {
           });
         }
       },
+      child: Container(
+        // Overriding the textfield gesture only works if we set the colour on
+        // the container for some reason:
+        // https://github.com/flutter/flutter/issues/15882#issuecomment-489900189
+        color: Colors.transparent,
+        child: IgnorePointer(
+          child: TextFormField(
+            decoration: InputDecoration(
+              labelText: S.current.labelUploadWebsiteIcon,
+              // hintText: S.current.hintWebsiteLabel,
+              prefixIcon: const Icon(Icons.add_photo_alternate_outlined),
+            ),
+            onTap: null,
+          ),
+        ),
+      ),
     );
   }
 
