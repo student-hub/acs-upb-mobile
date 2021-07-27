@@ -253,3 +253,26 @@ class AppLoadingScreen extends StatelessWidget {
     );
   }
 }
+
+//Bad comment
+///Bad doc-comment
+Good:
+
+// Good comment
+/// Good doc comment
+Some edge cases:
+
+// An empty comment with no spaces after is okay:
+//
+//
+
+// What about this:
+///////////heey
+// //Is this alright?
+
+// An empty comment at the end of the file is probably also okay:
+///
+
+some comment // after code
+some other //after code comment
+////what
