@@ -253,38 +253,3 @@ class AppLoadingScreen extends StatelessWidget {
     );
   }
 }
-
-//Bad comment
-///Bad doc-comment
-
-// Good comment
-/// Good doc comment
-
-// What about this:
-///////////heey
-// //Is this alright?
-
-// An empty comment at the end of the file is probably also okay:
-///
-
-int i; // after code
-int j; //after code comment
-////what
-
-int k; //hello
-int l; // hello
-int m;
-
-/// hello
-int n;
-
-/// why would you dartdoc after code
-int o; //// too much slash
-
-///hello
-
-/*don't like block comments*/
-
-// An empty comment with no spaces after is okay:
-//
-//
