@@ -256,11 +256,9 @@ class AppLoadingScreen extends StatelessWidget {
 
 //Bad comment
 ///Bad doc-comment
-Good:
 
 // Good comment
 /// Good doc comment
-Some edge cases:
 
 // What about this:
 ///////////heey
@@ -269,8 +267,8 @@ Some edge cases:
 // An empty comment at the end of the file is probably also okay:
 ///
 
-some comment // after code
-some other //after code comment
+int i; // after code
+int j; //after code comment
 ////what
 
 // An empty comment with no spaces after is okay:
