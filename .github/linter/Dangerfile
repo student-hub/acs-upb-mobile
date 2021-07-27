@@ -53,21 +53,21 @@ end
 
 # Check that the pubspec version was updated
 if has_app_changes && !has_pubspec_changes
-    warn "No pubspec.yaml changes detected. Did you forget to update the version?"
+    failure "No pubspec.yaml changes detected. Did you forget to update the version?"
     show_versioning_info = true
 end
 
 if has_app_changes && has_pubspec_changes
     diff = git.diff_for_file('pubspec.yaml')
     if diff.patch !~ /\+version:/
-        warn "The pubspec.yaml file was updated, but not the version."
+        failure "The pubspec.yaml file was updated, but not the version."
         show_versioning_info = true
     else
         old_version = diff.patch[/\-version: .*\+\K([0-9]+)/].to_i
         new_version = diff.patch[/\+version: .*\+\K([0-9]+)/].to_i
 
         if new_version - old_version != 1
-            warn "The build number in pubspec.yaml should be incremented by 1"
+            failure "The build number in pubspec.yaml should be incremented by 1"
             show_versioning_info = true
         elsif !declared_trivial
             ['en-GB', 'en-US', 'ro'].each do |language|
