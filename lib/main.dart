@@ -271,6 +271,18 @@ int i; // after code
 int j; //after code comment
 ////what
 
+int k; //hello
+int l; // hello
+int m;
+
+/// hello
+int n;
+
+/// why would you dartdoc after code
+int o; //// too much slash
+
+///hello
+
 // An empty comment with no spaces after is okay:
 //
 //
