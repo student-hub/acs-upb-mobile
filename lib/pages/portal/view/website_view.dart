@@ -224,7 +224,6 @@ class _WebsiteViewState extends State<WebsiteView> {
             controller: imageFieldController,
             decoration: InputDecoration(
               labelText: S.current.labelUploadWebsiteIcon,
-              // hintText: S.current.hintWebsiteLabel,
               prefixIcon: const Icon(Icons.add_photo_alternate_outlined),
             ),
           ),
