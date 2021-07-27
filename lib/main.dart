@@ -262,10 +262,6 @@ Good:
 /// Good doc comment
 Some edge cases:
 
-// An empty comment with no spaces after is okay:
-//
-//
-
 // What about this:
 ///////////heey
 // //Is this alright?
@@ -276,3 +272,7 @@ Some edge cases:
 some comment // after code
 some other //after code comment
 ////what
+
+// An empty comment with no spaces after is okay:
+//
+//
