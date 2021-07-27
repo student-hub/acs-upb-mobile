@@ -36,6 +36,7 @@ files.each do |f|
                     warn("That's probably too many slashes", file: f, line: index+1)
                 else
                     warn("Add a space between \"///\" and the actual comment", file: f, line: index+1)
+                end
             elsif line =~ /(\/\/)[^ \n\/]/
                 warn("Add a space between \"//\" and the actual comment", file: f, line: index+1)
             end
