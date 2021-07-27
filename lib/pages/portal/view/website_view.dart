@@ -16,6 +16,7 @@ import 'package:acs_upb_mobile/widgets/dialog.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
@@ -53,8 +54,9 @@ class _WebsiteViewState extends State<WebsiteView> {
 
   User _user;
 
-  Uint8List uploadedImage;
+  Uint8List uploadedImageBytes;
   ImageProvider imageWidget;
+  TextEditingController imageFieldController = TextEditingController();
 
   Future<void> _fetchUser() async {
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
@@ -201,11 +203,14 @@ class _WebsiteViewState extends State<WebsiteView> {
   Widget _uploadButton(BuildContext context) {
     return GestureDetector(
       onTap: () async {
-        final Uint8List uploadedImage = await StorageProvider.showImagePicker();
-        if (uploadedImage != null) {
+        final filePickerResult = await FilePicker.platform.pickFiles(
+            type: FileType.image, allowMultiple: false, withData: true);
+        if (filePickerResult != null) {
+          final uploadedImage = filePickerResult.files[0];
           setState(() {
-            this.uploadedImage = uploadedImage;
-            imageWidget = MemoryImage(uploadedImage);
+            uploadedImageBytes = uploadedImage.bytes;
+            imageWidget = MemoryImage(uploadedImageBytes);
+            imageFieldController.text = uploadedImage.name;
           });
         }
       },
@@ -216,12 +221,12 @@ class _WebsiteViewState extends State<WebsiteView> {
         color: Colors.transparent,
         child: IgnorePointer(
           child: TextFormField(
+            controller: imageFieldController,
             decoration: InputDecoration(
               labelText: S.current.labelUploadWebsiteIcon,
               // hintText: S.current.hintWebsiteLabel,
               prefixIcon: const Icon(Icons.add_photo_alternate_outlined),
             ),
-            onTap: null,
           ),
         ),
       ),
@@ -250,8 +255,8 @@ class _WebsiteViewState extends State<WebsiteView> {
                   } else {
                     res = await websiteProvider.addWebsite(_buildWebsite());
                   }
-                  if (uploadedImage != null) {
-                    imageAsPNG = await Utils.convertToPNG(uploadedImage);
+                  if (uploadedImageBytes != null) {
+                    imageAsPNG = await Utils.convertToPNG(uploadedImageBytes);
                     res = await websiteProvider.uploadWebsiteIcon(
                         _buildWebsite(), imageAsPNG);
                   }

@@ -50,6 +50,9 @@ dependencies:
   # Package for dynamically changing the app theme
   dynamic_theme: ^1.0.1
 
+  # File picker widget
+  file_picker: 2.1.7
+
   # Firebase products
   firebase_analytics: ^5.0.2
   firebase_auth: ^0.18.3+1
