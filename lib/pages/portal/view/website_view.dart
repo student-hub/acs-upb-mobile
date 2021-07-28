@@ -403,7 +403,7 @@ class WebsiteIcon extends StatelessWidget {
   final bool canEdit;
   final double size;
 
-  // image represents the new uploaded website icon
+  // image represents the new website icon in case the user uploaded it
   final ImageProvider image;
   final Function onTap;
 
