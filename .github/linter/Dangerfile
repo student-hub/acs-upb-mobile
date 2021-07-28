@@ -16,11 +16,29 @@ flutter_lint.lint(inline_mode: true)
 files = git.added_files + git.modified_files
 files.each do |f|
     diff = git.diff_for_file(f)
+
     # Check for uses of S.of(context) or similar
     if f =~ /.*\.dart/ and diff.patch =~ /^\+.*S\.of\(.+\)/m
         File.readlines(f).each_with_index do |line, index|
             if line =~ /S\.of\(.+\)/
                 warn("Use S.current instead of S.of(context)", file: f, line: index+1)
+            end
+        end
+    end
+
+    # Check comment formatting
+    if f =~ /.*\.dart/ and diff.patch =~ /((\/\/)[^ \n\/])|((\/\/\/)[^ \n])|(\/\*)/m
+        File.readlines(f).each_with_index do |line, index|
+            if line =~ /\/\*/
+                warn("Don't use block comments", file: f, line: index+1)
+            elsif line =~ /(\/\/\/)[^ \n]/
+                if line =~ /\/{4}/
+                    warn("That's probably too many slashes", file: f, line: index+1)
+                else
+                    warn("Add a space between \"///\" and the actual comment", file: f, line: index+1)
+                end
+            elsif line =~ /(\/\/)[^ \n\/]/
+                warn("Add a space between \"//\" and the actual comment", file: f, line: index+1)
             end
         end
     end
