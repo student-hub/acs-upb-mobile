@@ -95,6 +95,36 @@ class S {
     );
   }
 
+  /// `Deny`
+  String get buttonDeny {
+    return Intl.message(
+      'Deny',
+      name: 'buttonDeny',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Accept`
+  String get buttonAccept {
+    return Intl.message(
+      'Accept',
+      name: 'buttonAccept',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Revert`
+  String get buttonRevert {
+    return Intl.message(
+      'Revert',
+      name: 'buttonRevert',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Email`
   String get labelEmail {
     return Intl.message(
@@ -1275,6 +1305,16 @@ class S {
     );
   }
 
+  /// `Could not load requests`
+  String get errorLoadRequests {
+    return Intl.message(
+      'Could not load requests',
+      name: 'errorLoadRequests',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Request already exists`
   String get warningRequestExists {
     return Intl.message(
@@ -1390,6 +1430,16 @@ class S {
     return Intl.message(
       'Already showing all content.',
       name: 'warningFilterAlreadyDisabled',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Already showing unprocessed requests`
+  String get warningFilterAlreadyUnprocessed {
+    return Intl.message(
+      'Already showing unprocessed requests',
+      name: 'warningFilterAlreadyUnprocessed',
       desc: '',
       args: [],
     );
@@ -1935,11 +1985,11 @@ class S {
     );
   }
 
-  /// `Permission to change other users' permission level`
-  String get settingsPermissionsPermissions {
+  /// `Admin permissions`
+  String get settingsAdminPermissions {
     return Intl.message(
-      'Permission to change other users\' permission level',
-      name: 'settingsPermissionsPermissions',
+      'Admin permissions',
+      name: 'settingsAdminPermissions',
       desc: '',
       args: [],
     );
@@ -1990,6 +2040,16 @@ class S {
     return Intl.message(
       'Auto',
       name: 'settingsItemLanguageAuto',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Admin Panel`
+  String get settingsItemAdmin {
+    return Intl.message(
+      'Admin Panel',
+      name: 'settingsItemAdmin',
       desc: '',
       args: [],
     );
@@ -2825,6 +2885,36 @@ class S {
     );
   }
 
+  /// `Handle permision requests`
+  String get infoAdmin {
+    return Intl.message(
+      'Handle permision requests',
+      name: 'infoAdmin',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Accepted`
+  String get infoAccepted {
+    return Intl.message(
+      'Accepted',
+      name: 'infoAccepted',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Denied`
+  String get infoDenied {
+    return Intl.message(
+      'Denied',
+      name: 'infoDenied',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `@stud.acs.upb.ro`
   String get stringEmailDomain {
     return Intl.message(
@@ -2865,36 +2955,6 @@ class S {
     );
   }
 
-  /// `assets/images/acs_banner_en.png`
-  String get fileAcsBanner {
-    return Intl.message(
-      'assets/images/acs_banner_en.png',
-      name: 'fileAcsBanner',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Admin Panel`
-  String get settingsAdmin {
-    return Intl.message(
-      'Admin Panel',
-      name: 'settingsAdmin',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Handle permision requests`
-  String get infoAdmin {
-    return Intl.message(
-      'Handle permision requests',
-      name: 'infoAdmin',
-      desc: '',
-      args: [],
-    );
-  }
-
   /// `at`
   String get stringAt {
     return Intl.message(
@@ -2905,31 +2965,11 @@ class S {
     );
   }
 
-  /// `Deny`
-  String get stringDeny {
+  /// `assets/images/acs_banner_en.png`
+  String get fileAcsBanner {
     return Intl.message(
-      'Deny',
-      name: 'stringDeny',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Accept`
-  String get stringAccept {
-    return Intl.message(
-      'Accept',
-      name: 'stringAccept',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Revert`
-  String get stringRevert {
-    return Intl.message(
-      'Revert',
-      name: 'stringRevert',
+      'assets/images/acs_banner_en.png',
+      name: 'fileAcsBanner',
       desc: '',
       args: [],
     );

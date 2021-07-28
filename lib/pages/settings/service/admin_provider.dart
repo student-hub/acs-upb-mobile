@@ -16,7 +16,8 @@ extension RequestExtension on Request {
       processed: data['done'],
       type: RequestType.permissions,
       dateSubmitted: data['dateSubmitted'],
-      formId: snap.id,
+      accepted: data['accepted'],
+      id: snap.id,
     );
   }
 
@@ -28,7 +29,14 @@ extension RequestExtension on Request {
 class AdminProvider with ChangeNotifier {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
 
-  Future<List<String>> fetchAllRequests() async {
+  AuthProvider _authProvider;
+
+  // ignore: use_setters_to_change_properties
+  void updateAuth(AuthProvider authProvider) {
+    _authProvider = authProvider;
+  }
+
+  Future<List<String>> fetchAllRequestsIds() async {
     try {
       final QuerySnapshot qSnapshot = await _db
           .collection('forms')
@@ -37,12 +45,12 @@ class AdminProvider with ChangeNotifier {
       return qSnapshot.docs.map(RequestExtension.getFormId).toList();
     } catch (e) {
       print(e);
-      AppToast.show(S.current.errorSomethingWentWrong);
+      AppToast.show(S.current.errorLoadRequests);
       return null;
     }
   }
 
-  Future<List<String>> fetchUnprocessedRequests() async {
+  Future<List<String>> fetchUnprocessedRequestsIds() async {
     try {
       final QuerySnapshot qSnapshot = await _db
           .collection('forms')
@@ -52,12 +60,12 @@ class AdminProvider with ChangeNotifier {
       return qSnapshot.docs.map(RequestExtension.getFormId).toList();
     } catch (e) {
       print(e);
-      AppToast.show(S.current.errorSomethingWentWrong);
+      AppToast.show(S.current.errorLoadRequests);
       return null;
     }
   }
 
-  Future<Request> fetchRequestData(String requestId) async {
+  Future<Request> fetchRequest(String requestId) async {
     try {
       final DocumentSnapshot docSnapshot =
           await _db.collection('forms').doc(requestId).get();
@@ -79,45 +87,68 @@ class AdminProvider with ChangeNotifier {
     return currentUser;
   }
 
-  Future<void> acceptRequest(String formId, String userId) async {
+  Future<void> acceptRequest(String requestId) async {
     try {
+      final request = await fetchRequest(requestId);
+      await _giveEditingPermissions(request.userId);
+      await _db
+          .collection('forms')
+          .doc(requestId)
+          .update({'processedBy': _authProvider.uid});
+      await _db.collection('forms').doc(requestId).update({'done': true});
+      await _db.collection('forms').doc(requestId).update({'accepted': true});
+      notifyListeners();
+    } catch (e) {
+      print(e);
+      AppToast.show(S.current.errorSomethingWentWrong);
+    }
+  }
+
+  Future<void> denyRequest(String requestId) async {
+    try {
+      await _db
+          .collection('forms')
+          .doc(requestId)
+          .update({'processedBy': _authProvider.uid});
+      await _db.collection('forms').doc(requestId).update({'done': true});
+      notifyListeners();
+    } catch (e) {
+      print(e);
+      AppToast.show(S.current.errorSomethingWentWrong);
+    }
+  }
+
+  Future<void> revertRequest(String requestId) async {
+    try {
+      final request = await fetchRequest(requestId);
+      if (request.accepted == true) {
+        await _db
+            .collection('users')
+            .doc(request.userId)
+            .update({'permissionLevel': 0});
+        await _db
+            .collection('forms')
+            .doc(requestId)
+            .update({'processedBy': ''});
+        await _db.collection('forms').doc(requestId).update({'done': false});
+        await _db
+            .collection('forms')
+            .doc(requestId)
+            .update({'accepted': false});
+      } else {
+        await _db.collection('forms').doc(requestId).update({'done': false});
+      }
+      notifyListeners();
+    } catch (e) {
+      print(e);
+      AppToast.show(S.current.errorSomethingWentWrong);
+    }
+  }
+
+  Future<void> _giveEditingPermissions(String userId) async {
+    final user = await fetchUserById(userId);
+    if (user.permissionLevel < 3) {
       await _db.collection('users').doc(userId).update({'permissionLevel': 3});
-      await _db.collection('forms').doc(formId).update({'done': true});
-      notifyListeners();
-    } catch (e) {
-      print(e);
-      AppToast.show(S.current.errorSomethingWentWrong);
-    }
-  }
-
-  Future<void> denyRequest(String formId, String userId) async {
-    try {
-      await _db.collection('forms').doc(formId).update({'done': null});
-      notifyListeners();
-    } catch (e) {
-      print(e);
-      AppToast.show(S.current.errorSomethingWentWrong);
-    }
-  }
-
-  Future<void> revertAcceptedRequest(String formId, String userId) async {
-    try {
-      await _db.collection('users').doc(userId).update({'permissionLevel': 0});
-      await _db.collection('forms').doc(formId).update({'done': false});
-      notifyListeners();
-    } catch (e) {
-      print(e);
-      AppToast.show(S.current.errorSomethingWentWrong);
-    }
-  }
-
-  Future<void> revertDeniedRequest(String formId, String userId) async {
-    try {
-      await _db.collection('forms').doc(formId).update({'done': false});
-      notifyListeners();
-    } catch (e) {
-      print(e);
-      AppToast.show(S.current.errorSomethingWentWrong);
     }
   }
 }

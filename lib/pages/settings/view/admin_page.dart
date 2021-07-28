@@ -16,87 +16,53 @@ class AdminPanelPage extends StatefulWidget {
 }
 
 class _AdminPanelPageState extends State<AdminPanelPage> {
-  Future<List<String>> requests;
-  List<String> requestIds;
   bool all = false;
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final adminProvider = Provider.of<AdminProvider>(context);
-    if (!all) {
-      requests = adminProvider.fetchUnprocessedRequests();
-    } else {
-      requests = adminProvider.fetchAllRequests();
-    }
+    final adminProvider = Provider.of<AdminProvider>(context, listen: false);
     return AppScaffold(
       actions: [
         AppScaffoldAction(
             icon: FeatherIcons.filter,
             tooltip: S.current.navigationFilter,
             items: {
-              S.current.filterMenuShowUnprocessed: () {
-                if (all) {
-                  requests = adminProvider.fetchUnprocessedRequests();
-                  setState(() => all = false);
+              S.current.filterMenuShowAll: () {
+                if (!all) {
+                  setState(() => all = true);
                 } else {
                   AppToast.show(S.current.warningFilterAlreadyDisabled);
                 }
               },
-              S.current.filterMenuShowAll: () {
+              S.current.filterMenuShowUnprocessed: () {
                 if (all) {
-                  AppToast.show(S.current.warningFilterAlreadyDisabled);
+                  setState(() => all = false);
                 } else {
-                  requests = adminProvider.fetchAllRequests();
-                  setState(() => all = true);
+                  AppToast.show(S.current.warningFilterAlreadyUnprocessed);
                 }
               },
             })
       ],
       title: Text(S.current.navigationAdmin),
       body: FutureBuilder(
-          future: requests,
+          future: all
+              ? adminProvider.fetchAllRequestsIds()
+              : adminProvider.fetchUnprocessedRequestsIds(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
-              requestIds = snapshot.data;
-              return Column(
-                children: [
-                  Expanded(
-                    child: RequestsList(requests: requestIds),
-                  )
-                ],
+              return ListView.builder(
+                itemCount:
+                    snapshot.data?.length != null ? snapshot.data.length : 0,
+                itemBuilder: (context, index) {
+                  return RequestCard(
+                    requestId: snapshot.data[index],
+                  );
+                },
               );
             } else {
               return const Center(child: CircularProgressIndicator());
             }
           }),
-    );
-  }
-}
-
-class RequestsList extends StatefulWidget {
-  const RequestsList({this.requests});
-
-  final List<String> requests;
-
-  @override
-  _RequestsListState createState() => _RequestsListState();
-}
-
-class _RequestsListState extends State<RequestsList> {
-  @override
-  Widget build(BuildContext context) {
-    return ListView.builder(
-      itemCount: widget.requests?.length != null ? widget.requests.length : 0,
-      itemBuilder: (context, index) {
-        return RequestCard(
-          requestId: widget.requests[index],
-        );
-      },
     );
   }
 }

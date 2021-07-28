@@ -28,6 +28,7 @@ class _SettingsPageState extends State<SettingsPage> {
   // Whether the user verified their email; this can be true, false or null if
   // the async check hasn't completed yet.
   bool isVerified;
+  bool isAdmin;
 
   // String describing the level of editing permissions that the user has.
   String userPermissionString = '';
@@ -48,6 +49,7 @@ class _SettingsPageState extends State<SettingsPage> {
       checkUserPermissionsString()
           .then((value) => setState(() => userPermissionString = value));
     }
+    checkUserIsAdmin().then((value) => setState(() => isAdmin = value));
 
     return AppScaffold(
       title: Text(S.current.navigationSettings),
@@ -116,11 +118,11 @@ class _SettingsPageState extends State<SettingsPage> {
                   ),
                 ),
                 Visibility(
-                  visible: userPermissionString == S.current.settingsPermissionsPermissions, //if permissionLevel>=4
+                  visible: isAdmin == true,
                   child: ListTile(
-                    onTap: () => Navigator.of(context)
-                        .pushNamed(Routes.adminPanel),
-                    title: Text(S.current.settingsAdmin),
+                    onTap: () =>
+                        Navigator.of(context).pushNamed(Routes.adminPanel),
+                    title: Text(S.current.settingsItemAdmin),
                     subtitle: Text(
                       S.current.infoAdmin,
                     ),
@@ -234,8 +236,8 @@ class _SettingsPageState extends State<SettingsPage> {
 
     if (authProvider.isAuthenticated && !authProvider.isAnonymous) {
       final user = await authProvider.currentUser;
-      if (user.canChangePermissionLevel) {
-        return S.current.settingsPermissionsPermissions;
+      if (user.isAdmin) {
+        return S.current.settingsAdminPermissions;
       } else if (user.canEditPublicInfo) {
         return S.current.settingsPermissionsEdit;
       } else if (user.canAddPublicInfo) {
@@ -245,5 +247,14 @@ class _SettingsPageState extends State<SettingsPage> {
       }
     }
     return S.current.settingsPermissionsNone;
+  }
+
+  Future<bool> checkUserIsAdmin() async {
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    if (authProvider.isAuthenticated && !authProvider.isAnonymous) {
+      final user = await authProvider.currentUser;
+      return user.isAdmin;
+    }
+    return false;
   }
 }
