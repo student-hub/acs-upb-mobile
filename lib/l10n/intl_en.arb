@@ -17,7 +17,7 @@
   "labelVersion": "Version",
   "labelFirstName": "First name",
   "labelLastName": "Last name",
-  "labelUploadWebsiteIcon": "Upload website icon",
+  "labelWebsiteIcon": "Upload website icon",
   "labelName": "Name",
   "labelCategory": "Category",
   "labelLink": "Link",

@@ -240,7 +240,7 @@ class _WebsiteViewState extends State<WebsiteView> {
           child: TextFormField(
             controller: imageFieldController,
             decoration: InputDecoration(
-              labelText: S.current.labelUploadWebsiteIcon,
+              labelText: S.current.labelWebsiteIcon,
               prefixIcon: const Icon(Icons.add_photo_alternate_outlined),
               suffixIcon: imageFieldController.text.isNotEmpty
                   ? const Icon(Icons.clear)

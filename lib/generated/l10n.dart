@@ -207,10 +207,10 @@ class S {
   }
 
   /// `Upload website icon`
-  String get labelUploadWebsiteIcon {
+  String get labelWebsiteIcon {
     return Intl.message(
       'Upload Website Icon',
-      name: 'labelUploadWebsiteIcon',
+      name: 'labelWebsiteIcon',
       desc: '',
       args: [],
     );
