@@ -313,7 +313,6 @@ class _WebsiteViewState extends State<WebsiteView> {
                 key: _formKey,
                 child: Column(
                   children: <Widget>[
-                    const SizedBox(height: 10),
                     _uploadButton(context),
                     TextFormField(
                       controller: _labelController,
@@ -403,6 +402,8 @@ class WebsiteIcon extends StatelessWidget {
   final Website website;
   final bool canEdit;
   final double size;
+
+  // image represents the new uploaded website icon
   final ImageProvider image;
   final Function onTap;
 
@@ -412,7 +413,7 @@ class WebsiteIcon extends StatelessWidget {
       return FutureBuilder(
           future:
               StorageProvider.findImageUrl('websites/${website.id}/icon.png'),
-          //Firebase Storage path
+          // Firebase Storage path
           builder: (context, snapshot) {
             ImageProvider oldImage;
             if (snapshot.hasData) {
