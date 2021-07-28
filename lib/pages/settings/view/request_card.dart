@@ -95,7 +95,8 @@ class _RequestCardState extends State<RequestCard>
                             maxLines: 2,
                           ),
                         ),
-                        if (processed == true) _buildAcceptedMarker(accepted),
+                        if (processed == true && accepted != null)
+                          _buildAcceptedMarker(accepted),
                       ],
                     ),
                     Text(

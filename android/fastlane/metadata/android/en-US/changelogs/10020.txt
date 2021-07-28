@@ -1,0 +1,2 @@
+Added
+    - Users with admin privileges now have a place in the app where they can respond to requests for editing public info

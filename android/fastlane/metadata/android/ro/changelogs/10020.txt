@@ -1,0 +1,2 @@
+Adăugat
+    - Acum utilizatorii în poziția de administrator au o interfață în care pot răspunde la cererile de permisiuni pentru editare de date publice
