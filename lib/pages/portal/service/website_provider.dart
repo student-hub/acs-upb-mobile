@@ -8,9 +8,10 @@ import 'package:acs_upb_mobile/pages/portal/model/website.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:preferences/preference_service.dart';
-import '../../../resources/storage/storage_provider.dart';
+import 'package:acs_upb_mobile/resources/storage/storage_provider.dart';
 
 extension IconURLExtension on Website {
   Future<String> getIconURL() => StorageProvider.findImageUrl(iconPath);
@@ -395,7 +396,9 @@ class WebsiteProvider with ChangeNotifier {
             .collection('websites')
             .doc(website.id);
       }
-
+      if (website.iconPath != null) {
+        await FirebaseStorage.instance.ref(website.iconPath).delete();
+      }
       await ref.delete();
       notifyListeners();
       return true;
