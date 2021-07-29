@@ -30,6 +30,7 @@ class Website {
     @required this.category,
     @required this.link,
     @required this.relevance,
+    @required this.iconPath,
     this.degree,
     List<String> editedBy,
     this.ownerUid,
@@ -64,6 +65,7 @@ class Website {
 
   final String degree;
   final List<String> relevance;
+  final String iconPath;
   int numberOfVisits = 0;
 
   static String labelFromLink(String link) => link.split('://').last;

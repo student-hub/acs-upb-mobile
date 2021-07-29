@@ -52,6 +52,7 @@ class _WebsiteViewState extends State<WebsiteView> {
   TextEditingController _descriptionRoController;
   TextEditingController _descriptionEnController;
   final RelevanceController _relevanceController = RelevanceController();
+  String _iconPath;
 
   User _user;
 
@@ -90,6 +91,7 @@ class _WebsiteViewState extends State<WebsiteView> {
               ? NetworkImage(value)
               : const AssetImage('assets/icons/globe.png')
         }));
+    _iconPath = widget.website.iconPath;
   }
 
   String _buildId() {
@@ -103,8 +105,10 @@ class _WebsiteViewState extends State<WebsiteView> {
   }
 
   Website _buildWebsite() {
+    final String _id = _buildId();
+
     return Website(
-      id: _buildId(),
+      id: _id,
       ownerUid: widget.updateExisting ? widget.website.ownerUid : _user?.uid,
       isPrivate: _relevanceController.private ?? true,
       editedBy: (widget.website?.editedBy ?? []) + [_user?.uid],
@@ -116,6 +120,7 @@ class _WebsiteViewState extends State<WebsiteView> {
         'en': _descriptionEnController.text
       },
       relevance: _relevanceController.customRelevance,
+      iconPath: _iconPath ?? 'websites/$_id/icon.png',
       degree: _relevanceController.degree ?? widget.website?.degree,
     );
   }
@@ -411,8 +416,7 @@ class WebsiteIcon extends StatelessWidget {
   Widget build(BuildContext context) {
     if (image == null) {
       return FutureBuilder(
-          future:
-              StorageProvider.findImageUrl('websites/${website.id}/icon.png'),
+          future: StorageProvider.findImageUrl(website.iconPath),
           // Firebase Storage path
           builder: (context, snapshot) {
             ImageProvider oldImage;

@@ -13,8 +13,7 @@ import 'package:preferences/preference_service.dart';
 import '../../../resources/storage/storage_provider.dart';
 
 extension IconURLExtension on Website {
-  Future<String> getIconURL() =>
-      StorageProvider.findImageUrl('websites/$id/icon.png');
+  Future<String> getIconURL() => StorageProvider.findImageUrl(iconPath);
 }
 
 extension UserExtension on User {
@@ -74,6 +73,7 @@ extension WebsiteExtension on Website {
       relevance: data['relevance'] == null
           ? null
           : List<String>.from(data['relevance']),
+      iconPath: 'websites/${snap.id}/icon.png',
     );
   }
 
@@ -404,8 +404,7 @@ class WebsiteProvider with ChangeNotifier {
   }
 
   Future<bool> uploadWebsiteIcon(Website website, Uint8List file) async {
-    final result = await StorageProvider.uploadImage(
-        file, 'websites/${website.id}/icon.png');
+    final result = await StorageProvider.uploadImage(file, website.iconPath);
     if (!result) {
       if (file.length > 5 * 1024 * 1024) {
         AppToast.show(S.current.errorPictureSizeToBig);
@@ -417,6 +416,6 @@ class WebsiteProvider with ChangeNotifier {
   }
 
   Future<String> getWebsiteIconURL(Website website) {
-    return StorageProvider.findImageUrl('websites/${website.id}/icon.png');
+    return StorageProvider.findImageUrl(website.iconPath);
   }
 }
