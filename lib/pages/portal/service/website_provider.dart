@@ -73,7 +73,9 @@ extension WebsiteExtension on Website {
       relevance: data['relevance'] == null
           ? null
           : List<String>.from(data['relevance']),
-      iconPath: 'websites/${snap.id}/icon.png',
+      iconPath: ownerUid != null
+          ? 'users/$ownerUid/websites/${snap.id}.png'
+          : 'websites/${snap.id}/icon.png',
     );
   }
 

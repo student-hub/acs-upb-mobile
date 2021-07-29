@@ -106,10 +106,12 @@ class _WebsiteViewState extends State<WebsiteView> {
 
   Website _buildWebsite() {
     final String _id = _buildId();
+    final String _ownerUid =
+        widget.updateExisting ? widget.website.ownerUid : _user?.uid;
 
     return Website(
       id: _id,
-      ownerUid: widget.updateExisting ? widget.website.ownerUid : _user?.uid,
+      ownerUid: _ownerUid,
       isPrivate: _relevanceController.private ?? true,
       editedBy: (widget.website?.editedBy ?? []) + [_user?.uid],
       label: _labelController.text,
@@ -120,7 +122,7 @@ class _WebsiteViewState extends State<WebsiteView> {
         'en': _descriptionEnController.text
       },
       relevance: _relevanceController.customRelevance,
-      iconPath: _iconPath ?? 'websites/$_id/icon.png',
+      iconPath: _iconPath ?? 'users/$_ownerUid/websites/$_id.png',
       degree: _relevanceController.degree ?? widget.website?.degree,
     );
   }
