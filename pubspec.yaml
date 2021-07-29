@@ -259,3 +259,5 @@ flutter_launcher_name:
 flutter_native_splash:
   image: assets/icons/acs_logo.png
   color: "#ffffff"
+  image_dark: assets/icons/acs_logo.png
+  color_dark: "#303030"
