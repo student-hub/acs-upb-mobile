@@ -249,7 +249,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   Future<Uint8List> convertToPNG(Uint8List image) async {
     final decodedImage = im.decodeImage(image);
-    return im.encodePng(im.copyResize(decodedImage, width: 500, height: 500),
+    return im.encodePng(im.copyResize(im.copyResizeCropSquare(decodedImage, 150), width: 500, height: 500),
         level: 9);
   }
 
