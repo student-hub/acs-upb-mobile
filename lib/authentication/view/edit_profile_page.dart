@@ -19,7 +19,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:preferences/preference_title.dart';
 import 'package:provider/provider.dart';
-import 'package:image/image.dart' as im;
 
 class EditProfilePage extends StatefulWidget {
   const EditProfilePage({Key key}) : super(key: key);
@@ -245,11 +244,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
         },
       ),
     );
-  }
-
-  Future<Uint8List> convertToPNG(Uint8List image) async {
-    final decodedImage = im.decodeImage(image);
-    return im.encodePng(im.copyResizeCropSquare(decodedImage, 500));
   }
 
   @override
