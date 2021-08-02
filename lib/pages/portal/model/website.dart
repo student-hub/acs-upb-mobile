@@ -30,7 +30,7 @@ class Website {
     @required this.category,
     @required this.link,
     @required this.relevance,
-    @required this.iconPath,
+    this.iconPath,
     this.degree,
     List<String> editedBy,
     this.ownerUid,
