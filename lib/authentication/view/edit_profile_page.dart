@@ -246,6 +246,11 @@ class _EditProfilePageState extends State<EditProfilePage> {
     );
   }
 
+  Future<Uint8List> convertToPNG(Uint8List image) async {
+    final decodedImage = im.decodeImage(image);
+    return im.encodePng(im.copyResizeCropSquare(decodedImage, 500));
+  }
+
   @override
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
