@@ -30,7 +30,6 @@ class Website {
     @required this.category,
     @required this.link,
     @required this.relevance,
-    this.iconPath,
     this.degree,
     List<String> editedBy,
     this.ownerUid,
@@ -46,6 +45,10 @@ class Website {
       }
     }
   }
+
+  String get iconPath => isPrivate
+      ? 'users/$ownerUid/websites/$id.png'
+      : 'websites/$id/icon.png';
 
   /// The user who created this website (or null if it's public)
   final String ownerUid;
@@ -65,7 +68,6 @@ class Website {
 
   final String degree;
   final List<String> relevance;
-  final String iconPath;
   int numberOfVisits = 0;
 
   static String labelFromLink(String link) => link.split('://').last;

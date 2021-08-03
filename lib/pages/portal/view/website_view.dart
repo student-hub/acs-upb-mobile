@@ -120,7 +120,6 @@ class _WebsiteViewState extends State<WebsiteView> {
         'en': descriptionEnController.text
       },
       relevance: relevanceController.customRelevance,
-      iconPath: widget.website.iconPath ?? 'users/$ownerUid/websites/$id.png',
       degree: relevanceController.degree ?? widget.website?.degree,
     );
   }
