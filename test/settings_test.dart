@@ -93,6 +93,8 @@ void main() {
       when(mockAuthProvider.getProfilePictureURL())
           .thenAnswer((_) => Future.value(null));
       when(mockAuthProvider.isVerified).thenAnswer((_) => Future.value(true));
+      when(mockAuthProvider.currentUserFromCache).thenReturn(User(
+          uid: '0', firstName: 'John', lastName: 'Doe', permissionLevel: 4));
 
       mockWebsiteProvider = MockWebsiteProvider();
       // ignore: invalid_use_of_protected_member
@@ -256,6 +258,8 @@ void main() {
       });
 
       testWidgets('Normal scenario', (WidgetTester tester) async {
+        when(mockAuthProvider.currentUserFromCache).thenReturn(User(
+            uid: '0', firstName: 'John', lastName: 'Doe', permissionLevel: 4));
         when(mockAuthProvider.isVerified).thenAnswer((_) => Future.value(true));
 
         await tester.pumpWidget(buildApp());

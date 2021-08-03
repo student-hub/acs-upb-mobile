@@ -28,7 +28,6 @@ class _SettingsPageState extends State<SettingsPage> {
   // Whether the user verified their email; this can be true, false or null if
   // the async check hasn't completed yet.
   bool isVerified;
-  bool isAdmin;
 
   // String describing the level of editing permissions that the user has.
   String userPermissionString = '';
@@ -49,7 +48,6 @@ class _SettingsPageState extends State<SettingsPage> {
       checkUserPermissionsString()
           .then((value) => setState(() => userPermissionString = value));
     }
-    checkUserIsAdmin().then((value) => setState(() => isAdmin = value));
 
     return AppScaffold(
       title: Text(S.current.navigationSettings),
@@ -118,8 +116,9 @@ class _SettingsPageState extends State<SettingsPage> {
                   ),
                 ),
                 Visibility(
-                  visible: isAdmin == true,
+                  visible: authProvider.currentUserFromCache.isAdmin == true,
                   child: ListTile(
+                    key: const Key('HandleRequests'),
                     onTap: () =>
                         Navigator.of(context).pushNamed(Routes.adminPanel),
                     title: Text(S.current.settingsItemAdmin),
@@ -247,14 +246,5 @@ class _SettingsPageState extends State<SettingsPage> {
       }
     }
     return S.current.settingsPermissionsNone;
-  }
-
-  Future<bool> checkUserIsAdmin() async {
-    final authProvider = Provider.of<AuthProvider>(context, listen: false);
-    if (authProvider.isAuthenticated && !authProvider.isAnonymous) {
-      final user = await authProvider.currentUser;
-      return user.isAdmin;
-    }
-    return false;
   }
 }

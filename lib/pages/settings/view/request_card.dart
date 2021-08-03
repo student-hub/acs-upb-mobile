@@ -2,6 +2,7 @@ import 'package:acs_upb_mobile/authentication/model/user.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/settings/model/request.dart';
 import 'package:acs_upb_mobile/pages/settings/service/admin_provider.dart';
+import 'package:acs_upb_mobile/resources/theme.dart';
 import 'package:acs_upb_mobile/widgets/button.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -39,16 +40,6 @@ class _RequestCardState extends State<RequestCard>
                     children: [
                       _buildUserHeader(request.userId, request.processed,
                           request.accepted, adminProvider),
-                      const SizedBox(height: 2),
-                      Text(
-                        '${DateFormat("dd-MM-yyyy '${S.current.stringAt}' HH:mm").format(request.dateSubmitted?.toDate() ?? DateTime.now())}',
-                        style: Theme.of(context)
-                            .textTheme
-                            .headline6
-                            .copyWith(fontSize: 14),
-                        overflow: TextOverflow.fade,
-                        maxLines: 2,
-                      ),
                       const SizedBox(height: 10),
                       Text(
                         request.requestBody ?? '',
@@ -58,8 +49,7 @@ class _RequestCardState extends State<RequestCard>
                             .copyWith(fontSize: 14),
                       ),
                       const SizedBox(height: 10),
-                      _buildButtons(
-                          request.processed, request.id, adminProvider)
+                      _buildButtons(request.processed, adminProvider, request)
                     ],
                   ),
                 ),
@@ -90,7 +80,8 @@ class _RequestCardState extends State<RequestCard>
                             style: Theme.of(context)
                                 .textTheme
                                 .headline6
-                                .copyWith(fontSize: 18),
+                                .copyWith(
+                                    fontSize: 18, fontWeight: FontWeight.bold),
                             overflow: TextOverflow.ellipsis,
                             maxLines: 2,
                           ),
@@ -104,7 +95,7 @@ class _RequestCardState extends State<RequestCard>
                       style: Theme.of(context)
                           .textTheme
                           .headline6
-                          .copyWith(fontSize: 14),
+                          .copyWith(fontSize: 14, fontWeight: FontWeight.bold),
                       overflow: TextOverflow.fade,
                       maxLines: 2,
                     ),
@@ -114,7 +105,7 @@ class _RequestCardState extends State<RequestCard>
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     Text(
-                      '...',
+                      '-',
                       style: Theme.of(context)
                           .textTheme
                           .headline6
@@ -145,20 +136,35 @@ class _RequestCardState extends State<RequestCard>
       );
 
   Widget _buildButtons(
-          bool processed, String requestId, AdminProvider adminProvider) =>
+          bool processed, AdminProvider adminProvider, Request request) =>
       Row(
-        mainAxisAlignment: MainAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.end,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
+          Text(
+            '${DateFormat("dd-MM-yyyy").format(request.dateSubmitted?.toDate() ?? DateTime.now())}',
+            style: Theme.of(context)
+                .textTheme
+                .headline6
+                .copyWith(fontSize: 12, color: Theme.of(context).hintColor),
+            overflow: TextOverflow.fade,
+            maxLines: 2,
+          ),
           if (processed == false)
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 AppButton(
                   text: S.current.buttonDeny,
-                  color: Theme.of(context).disabledColor,
+                  color: Theme.of(context).secondaryButtonColor,
                   width: 100,
                   onTap: () async {
-                    await adminProvider.denyRequest(requestId);
+                    await adminProvider.denyRequest(request.id);
+                    setState(() {
+                      request
+                        ..accepted = false
+                        ..processed = true;
+                    });
                   },
                 ),
                 const SizedBox(width: 10),
@@ -167,7 +173,12 @@ class _RequestCardState extends State<RequestCard>
                   color: Theme.of(context).accentColor,
                   width: 100,
                   onTap: () async {
-                    await adminProvider.acceptRequest(requestId);
+                    await adminProvider.acceptRequest(request.id);
+                    setState(() {
+                      request
+                        ..accepted = true
+                        ..processed = true;
+                    });
                   },
                 )
               ],
@@ -181,7 +192,12 @@ class _RequestCardState extends State<RequestCard>
                   color: Theme.of(context).accentColor,
                   width: 100,
                   onTap: () async {
-                    await adminProvider.revertRequest(requestId);
+                    await adminProvider.revertRequest(request.id);
+                    setState(() {
+                      request
+                        ..accepted = false
+                        ..processed = false;
+                    });
                   },
                 )
               ],

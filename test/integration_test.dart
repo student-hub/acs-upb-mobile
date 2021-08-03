@@ -3,11 +3,12 @@ import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/authentication/view/edit_profile_page.dart';
 import 'package:acs_upb_mobile/main.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question_dropdown.dart';
-import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question_slider.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question_rating.dart';
+import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question_slider.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question_text.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/service/feedback_provider.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/view/class_feedback_view.dart';
+import 'package:acs_upb_mobile/pages/class_feedback/view/feedback_question.dart';
 import 'package:acs_upb_mobile/pages/classes/model/class.dart';
 import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
 import 'package:acs_upb_mobile/pages/classes/view/class_view.dart';
@@ -32,6 +33,7 @@ import 'package:acs_upb_mobile/pages/portal/model/website.dart';
 import 'package:acs_upb_mobile/pages/portal/service/website_provider.dart';
 import 'package:acs_upb_mobile/pages/portal/view/portal_page.dart';
 import 'package:acs_upb_mobile/pages/portal/view/website_view.dart';
+import 'package:acs_upb_mobile/pages/settings/service/admin_provider.dart';
 import 'package:acs_upb_mobile/pages/settings/service/request_provider.dart';
 import 'package:acs_upb_mobile/pages/settings/view/request_permissions.dart';
 import 'package:acs_upb_mobile/pages/settings/view/settings_page.dart';
@@ -45,8 +47,8 @@ import 'package:acs_upb_mobile/pages/timetable/view/events/add_event_view.dart';
 import 'package:acs_upb_mobile/pages/timetable/view/events/event_view.dart';
 import 'package:acs_upb_mobile/pages/timetable/view/timetable_page.dart';
 import 'package:acs_upb_mobile/resources/locale_provider.dart';
+import 'package:acs_upb_mobile/resources/remote_config.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
-import 'package:acs_upb_mobile/pages/class_feedback/view/feedback_question.dart';
 import 'package:acs_upb_mobile/widgets/search_bar.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -58,9 +60,9 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:preferences/preferences.dart';
 import 'package:provider/provider.dart';
 import 'package:rrule/rrule.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:time_machine/time_machine.dart' hide Offset;
 import 'package:timetable/src/header/week_indicator.dart';
-import 'package:acs_upb_mobile/resources/remote_config.dart';
 
 import 'firebase_mock.dart';
 import 'test_utils.dart';
@@ -90,6 +92,8 @@ class MockNavigatorObserver extends Mock implements NavigatorObserver {}
 
 class MockFeedbackProvider extends Mock implements FeedbackProvider {}
 
+class MockAdminProvider extends Mock implements AdminProvider {}
+
 Future<void> main() async {
   AuthProvider mockAuthProvider;
   WebsiteProvider mockWebsiteProvider;
@@ -101,6 +105,7 @@ Future<void> main() async {
   UniEventProvider mockEventProvider;
   RequestProvider mockRequestProvider;
   FeedbackProvider mockFeedbackProvider;
+  AdminProvider mockAdminProvider;
 
   setupFirebaseAuthMocks();
   await Firebase.initializeApp();
@@ -140,6 +145,8 @@ Future<void> main() async {
           Provider<RequestProvider>(create: (_) => mockRequestProvider),
           ChangeNotifierProvider<FeedbackProvider>(
               create: (_) => mockFeedbackProvider),
+          ChangeNotifierProvider<AdminProvider>(
+              create: (_) => mockAdminProvider),
         ],
         child: const MyApp(),
       );
@@ -1551,6 +1558,11 @@ Future<void> main() async {
   });
 
   group('Settings', () {
+    setUp(() {
+      when(mockAuthProvider.currentUserFromCache).thenReturn(User(
+          uid: '0', firstName: 'John', lastName: 'Doe', permissionLevel: 4));
+    });
+
     for (final size in screenSizes) {
       testWidgets('${size.width}x${size.height}', (WidgetTester tester) async {
         await binding.setSurfaceSize(size);
@@ -1563,6 +1575,56 @@ Future<void> main() async {
         await tester.pumpAndSettle();
 
         expect(find.byType(SettingsPage), findsOneWidget);
+      });
+    }
+  });
+
+  group('Admin page', () {
+    setUp(() async {
+      when(mockAuthProvider.currentUser).thenAnswer((_) => Future.value(User(
+          uid: '0', firstName: 'John', lastName: 'Doe', permissionLevel: 4)));
+      when(mockAuthProvider.currentUserFromCache).thenReturn(User(
+          uid: '0', firstName: 'John', lastName: 'Doe', permissionLevel: 4));
+      when(mockAuthProvider.isAnonymous).thenReturn(false);
+      when(mockAuthProvider.isAuthenticated).thenReturn(true);
+      when(mockAuthProvider.isVerified).thenAnswer((_) => Future.value(true));
+      // ignore: invalid_use_of_protected_member
+      when(mockAuthProvider.hasListeners).thenReturn(false);
+      WidgetsFlutterBinding.ensureInitialized();
+      PrefService.enableCaching();
+      PrefService.cache = {};
+      // Assuming mock system language is English
+      SharedPreferences.setMockInitialValues({'language': 'auto'});
+
+      LocaleProvider.cultures = testCultures;
+      LocaleProvider.rruleL10ns = {'en': await RruleL10nTest.create()};
+
+      Utils.packageInfo = PackageInfo(
+          version: '1.2.7', buildNumber: '6', appName: 'ACS UPB Mobile');
+    });
+
+    for (final size in screenSizes) {
+      testWidgets('${size.width}x${size.height}', (WidgetTester tester) async {
+        await binding.setSurfaceSize(size);
+
+        await tester.pumpWidget(buildApp());
+        await tester.pumpAndSettle();
+
+        // Open settings page
+        await tester.tap(find.byIcon(Icons.settings_outlined));
+        await tester.pumpAndSettle();
+        //debugDumpApp();
+
+        await tester.ensureVisible(find.text('Dark Mode'));
+
+        // Open admin panel page
+
+        final adminPanelButton = find.byKey(const Key('HandleRequests'));
+        await tester.ensureVisible(adminPanelButton);
+        // await tester.tap(adminPanelButton);
+        // await tester.pumpAndSettle();
+        //
+        // expect(find.byType(AdminPanelPage), findsOneWidget);
       });
     }
   });

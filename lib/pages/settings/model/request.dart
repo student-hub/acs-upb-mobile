@@ -19,7 +19,7 @@ class Request {
   final String requestBody;
 
   /// Boolean value representing whether the request has been processed by admins
-  final bool processed;
+  bool processed;
 
   /// Type of the request
   final RequestType type;
@@ -31,7 +31,7 @@ class Request {
   final String id;
 
   /// Boolean value representing whether the request has been accepted by admins
-  final bool accepted;
+  bool accepted;
 
   /// Unique ID of the admin that processed the request
   final String processedBy;
