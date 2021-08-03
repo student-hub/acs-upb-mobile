@@ -40,7 +40,7 @@ class AdminProvider with ChangeNotifier {
     try {
       final QuerySnapshot qSnapshot = await _db
           .collection('forms')
-          .orderBy('dateSubmitted', descending: false)
+          .orderBy('dateSubmitted', descending: true)
           .get();
       return qSnapshot.docs.map(RequestExtension.getFormId).toList();
     } catch (e) {
@@ -55,7 +55,7 @@ class AdminProvider with ChangeNotifier {
       final QuerySnapshot qSnapshot = await _db
           .collection('forms')
           .where('done', isEqualTo: false)
-          .orderBy('dateSubmitted', descending: false)
+          .orderBy('dateSubmitted', descending: true)
           .get();
       return qSnapshot.docs.map(RequestExtension.getFormId).toList();
     } catch (e) {
