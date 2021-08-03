@@ -1591,20 +1591,7 @@ Future<void> main() async {
       when(mockAuthProvider.isAnonymous).thenReturn(false);
       when(mockAuthProvider.isAuthenticated).thenReturn(true);
       when(mockAuthProvider.isVerified).thenAnswer((_) => Future.value(true));
-      // ignore: invalid_use_of_protected_member
-      when(mockAuthProvider.hasListeners).thenReturn(false);
-      WidgetsFlutterBinding.ensureInitialized();
-      PrefService.enableCaching();
-      PrefService.cache = {};
-      // Assuming mock system language is English
       SharedPreferences.setMockInitialValues({'language': 'auto'});
-
-      LocaleProvider.cultures = testCultures;
-      LocaleProvider.rruleL10ns = {'en': await RruleL10nTest.create()};
-
-      Utils.packageInfo = PackageInfo(
-          version: '1.2.7', buildNumber: '6', appName: 'ACS UPB Mobile');
-
       when(mockAdminProvider.fetchUnprocessedRequestsIds())
           .thenAnswer((_) => Future.value(['string']));
       when(mockAdminProvider.fetchRequest('')).thenAnswer(
@@ -1623,12 +1610,12 @@ Future<void> main() async {
         await tester.pumpAndSettle();
 
         // Open admin panel page
-
         final adminPanelButton = find.byKey(const Key('HandleRequests'));
         await tester.ensureVisible(adminPanelButton);
+        await tester
+            .pumpAndSettle(); // No idea why this works, (AdrianMargineanu) said so
         await tester.tap(adminPanelButton);
         await tester.pumpAndSettle();
-        debugDumpApp();
 
         expect(find.byType(AdminPanelPage), findsWidgets);
       });
