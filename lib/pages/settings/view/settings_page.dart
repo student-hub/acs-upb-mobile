@@ -118,10 +118,10 @@ class _SettingsPageState extends State<SettingsPage> {
                 Visibility(
                   visible: authProvider.currentUserFromCache.isAdmin == true,
                   child: ListTile(
-                    key: const Key('HandleRequests'),
                     onTap: () =>
                         Navigator.of(context).pushNamed(Routes.adminPanel),
-                    title: Text(S.current.settingsItemAdmin),
+                    title: Text(S.current.settingsItemAdmin,
+                      key: const Key('HandleRequests'),),
                     subtitle: Text(
                       S.current.infoAdmin,
                     ),

@@ -97,7 +97,6 @@ class AdminProvider with ChangeNotifier {
           .update({'processedBy': _authProvider.uid});
       await _db.collection('forms').doc(requestId).update({'done': true});
       await _db.collection('forms').doc(requestId).update({'accepted': true});
-      //notifyListeners();
     } catch (e) {
       print(e);
       AppToast.show(S.current.errorSomethingWentWrong);
@@ -112,7 +111,6 @@ class AdminProvider with ChangeNotifier {
           .update({'processedBy': _authProvider.uid});
       await _db.collection('forms').doc(requestId).update({'accepted': false});
       await _db.collection('forms').doc(requestId).update({'done': true});
-      //notifyListeners();
     } catch (e) {
       print(e);
       AppToast.show(S.current.errorSomethingWentWrong);
@@ -139,7 +137,6 @@ class AdminProvider with ChangeNotifier {
       } else {
         await _db.collection('forms').doc(requestId).update({'done': false});
       }
-      //notifyListeners();
     } catch (e) {
       print(e);
       AppToast.show(S.current.errorSomethingWentWrong);

@@ -33,8 +33,10 @@ import 'package:acs_upb_mobile/pages/portal/model/website.dart';
 import 'package:acs_upb_mobile/pages/portal/service/website_provider.dart';
 import 'package:acs_upb_mobile/pages/portal/view/portal_page.dart';
 import 'package:acs_upb_mobile/pages/portal/view/website_view.dart';
+import 'package:acs_upb_mobile/pages/settings/model/request.dart';
 import 'package:acs_upb_mobile/pages/settings/service/admin_provider.dart';
 import 'package:acs_upb_mobile/pages/settings/service/request_provider.dart';
+import 'package:acs_upb_mobile/pages/settings/view/admin_page.dart';
 import 'package:acs_upb_mobile/pages/settings/view/request_permissions.dart';
 import 'package:acs_upb_mobile/pages/settings/view/settings_page.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/academic_calendar.dart';
@@ -714,6 +716,7 @@ Future<void> main() async {
         .thenAnswer((_) => Future.value(true));
     when(mockRequestProvider.userAlreadyRequested(any))
         .thenAnswer((_) => Future.value(false));
+    mockAdminProvider = MockAdminProvider();
   });
 
   group('Home', () {
@@ -1601,6 +1604,11 @@ Future<void> main() async {
 
       Utils.packageInfo = PackageInfo(
           version: '1.2.7', buildNumber: '6', appName: 'ACS UPB Mobile');
+
+      when(mockAdminProvider.fetchUnprocessedRequestsIds())
+          .thenAnswer((_) => Future.value(['string']));
+      when(mockAdminProvider.fetchRequest(''))
+          .thenAnswer((_) => Future.value(Request(requestBody: 'body', userId: '0')));
     });
 
     for (final size in screenSizes) {
@@ -1613,18 +1621,16 @@ Future<void> main() async {
         // Open settings page
         await tester.tap(find.byIcon(Icons.settings_outlined));
         await tester.pumpAndSettle();
-        //debugDumpApp();
-
-        await tester.ensureVisible(find.text('Dark Mode'));
 
         // Open admin panel page
 
         final adminPanelButton = find.byKey(const Key('HandleRequests'));
         await tester.ensureVisible(adminPanelButton);
-        // await tester.tap(adminPanelButton);
-        // await tester.pumpAndSettle();
-        //
-        // expect(find.byType(AdminPanelPage), findsOneWidget);
+        await tester.tap(adminPanelButton);
+        await tester.pumpAndSettle();
+        debugDumpApp();
+
+        expect(find.byType(AdminPanelPage), findsWidgets);
       });
     }
   });
@@ -1835,7 +1841,7 @@ Future<void> main() async {
         await tester.tap(find.byIcon(Icons.edit_outlined));
         await tester.pumpAndSettle();
 
-        //Open delete account popup
+        // Open delete account popup
         await tester.tap(find.byIcon(Icons.more_vert_outlined));
         await tester.pumpAndSettle();
 
@@ -1857,7 +1863,7 @@ Future<void> main() async {
         await tester.tap(find.byIcon(Icons.edit_outlined));
         await tester.pumpAndSettle();
 
-        //Open change password popup
+        // Open change password popup
         await tester.tap(find.byIcon(Icons.more_vert_outlined));
         await tester.pumpAndSettle();
 
@@ -1883,7 +1889,7 @@ Future<void> main() async {
         await tester.enterText(
             find.text('john.doe'), 'johndoe@stud.acs.upb.ro');
 
-        //Open change email popup
+        // Open change email popup
         await tester.tap(find.text('Save'));
         await tester.pumpAndSettle();
 
