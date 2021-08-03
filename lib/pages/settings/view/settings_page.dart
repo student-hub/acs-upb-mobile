@@ -120,8 +120,10 @@ class _SettingsPageState extends State<SettingsPage> {
                   child: ListTile(
                     onTap: () =>
                         Navigator.of(context).pushNamed(Routes.adminPanel),
-                    title: Text(S.current.settingsItemAdmin,
-                      key: const Key('HandleRequests'),),
+                    title: Text(
+                      S.current.settingsItemAdmin,
+                      key: const Key('HandleRequests'),
+                    ),
                     subtitle: Text(
                       S.current.infoAdmin,
                     ),

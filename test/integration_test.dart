@@ -1607,8 +1607,8 @@ Future<void> main() async {
 
       when(mockAdminProvider.fetchUnprocessedRequestsIds())
           .thenAnswer((_) => Future.value(['string']));
-      when(mockAdminProvider.fetchRequest(''))
-          .thenAnswer((_) => Future.value(Request(requestBody: 'body', userId: '0')));
+      when(mockAdminProvider.fetchRequest('')).thenAnswer(
+          (_) => Future.value(Request(requestBody: 'body', userId: '0')));
     });
 
     for (final size in screenSizes) {
