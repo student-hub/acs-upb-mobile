@@ -66,7 +66,22 @@ class _TimetablePageState extends State<TimetablePage> {
       needsToBeAuthenticated: true,
       leading: AppScaffoldAction(
         icon: Icons.today_outlined,
-        onPressed: () => _controller.animateToToday(),
+        onPressed: () =>
+            !_controller.currentlyVisibleDates.contains(LocalDate.today())
+                ? _controller.animateToToday()
+                : ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      backgroundColor: Color(0xFF43ACCD),
+                      content: Text(
+                        'You\'re already seeing the current week!',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontFamily: 'Montserrat',
+                        ),
+                      ),
+                      duration: Duration(seconds: 2),
+                    ),
+                  ),
         tooltip: S.current.actionJumpToToday,
       ),
       actions: [
