@@ -6,14 +6,22 @@ import 'package:flutter/material.dart';
 import 'package:positioned_tap_detector/positioned_tap_detector.dart';
 
 class UploadButtonController {
+  UploadButtonController(this.defaultImage);
+
+  final ImageProvider defaultImage;
+
   _UploadButtonState _uploadButtonState;
-  ImageProvider newImg = const AssetImage('assets/icons/globe.png');
+  ImageProvider newImg;
+  Uint8List newUploadedImageBytes;
 
-  bool get changeImg => _uploadButtonState?._changeImg;
+  ImageProvider get currentImage => newImg ?? defaultImage;
 
-  void setNewImg(ImageProvider img) {
+  void setNewImg(ImageProvider image, Uint8List uploadedImageBytes) {
     if (_uploadButtonState == null) return;
-    if (changeImg) newImg = img;
+    if (image != null) {
+      newImg = image;
+      newUploadedImageBytes = uploadedImageBytes;
+    }
   }
 }
 
@@ -21,17 +29,11 @@ class UploadButtonController {
 // button, except it actually allows the user to select an image from the
 // gallery instead of inputting text directly.
 class UploadButton extends StatefulWidget {
-  const UploadButton(
-      {Key key,
-      this.initiallyChanged = false,
-      this.imageFieldController,
-      this.image,
-      this.controller})
+  const UploadButton(this.imageFieldController, {Key key, this.controller})
       : super(key: key);
 
-  final bool initiallyChanged;
+  // TextController
   final TextEditingController imageFieldController;
-  final ImageProvider image;
   final UploadButtonController controller;
 
   @override
@@ -39,22 +41,28 @@ class UploadButton extends StatefulWidget {
 }
 
 class _UploadButtonState extends State<UploadButton> {
-  bool _changeImg;
-
   Uint8List uploadedImageBytes;
   ImageProvider imageWidget;
 
-  set changeImg(bool newValue) {
-    _changeImg = newValue;
+  set uploadNewImage(ImageProvider newImage) {
+    imageWidget = newImage;
     setState(() {});
   }
 
-  bool get changeImg => _changeImg;
+  set upLoadNewImageBytes(Uint8List newUploadedImageBytes) {
+    uploadedImageBytes = newUploadedImageBytes;
+    setState(() {});
+  }
+
+  ImageProvider get uploadNewImage => imageWidget;
+
+  Uint8List get upLoadNewImageBytes => uploadedImageBytes;
 
   @override
   void initState() {
     super.initState();
-    _changeImg = widget.initiallyChanged;
+    imageWidget = widget.controller.defaultImage;
+    uploadedImageBytes = null;
   }
 
   @override
@@ -72,7 +80,8 @@ class _UploadButtonState extends State<UploadButton> {
           widget.imageFieldController.clear();
           setState(() {
             imageWidget = const AssetImage('assets/icons/globe.png');
-            widget.controller.setNewImg(imageWidget);
+            widget.controller.setNewImg(imageWidget, uploadedImageBytes);
+            print('1.globe');
           });
         } else {
           final filePickerResult = await FilePicker.platform.pickFiles(
@@ -83,7 +92,10 @@ class _UploadButtonState extends State<UploadButton> {
               uploadedImageBytes = uploadedImage.bytes;
               imageWidget = MemoryImage(uploadedImageBytes);
               widget.imageFieldController.text = uploadedImage.name;
-              widget.controller.setNewImg(imageWidget);
+              widget.controller.setNewImg(imageWidget, uploadedImageBytes);
+              if (widget.controller.newImg != null) {
+                print('2.new Img');
+              }
             });
           }
         }

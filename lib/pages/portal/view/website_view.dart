@@ -54,9 +54,10 @@ class _WebsiteViewState extends State<WebsiteView> {
 
   User user;
 
-  Uint8List uploadedImageBytes;
   ImageProvider imageWidget;
   TextEditingController imageFieldController = TextEditingController();
+  UploadButtonController uploadButtonController;
+  UploadButton uploadButton;
 
   Future<void> fetchUser() async {
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
@@ -89,6 +90,10 @@ class _WebsiteViewState extends State<WebsiteView> {
               ? NetworkImage(value)
               : const AssetImage('assets/icons/globe.png')
         }));
+    // if (uploadButton.controller.currentImage)
+    uploadButtonController = UploadButtonController(imageWidget);
+    uploadButton =
+        UploadButton(imageFieldController, controller: uploadButtonController);
   }
 
   String buildId() {
@@ -153,7 +158,7 @@ class _WebsiteViewState extends State<WebsiteView> {
                         Expanded(
                             child: WebsiteIcon(
                           website: website,
-                          image: const UploadButton().image,
+                          image: uploadButton.controller.currentImage,
                           onTap: () {
                             Utils.launchURL(website.link);
                           },
@@ -226,8 +231,9 @@ class _WebsiteViewState extends State<WebsiteView> {
                   } else {
                     res = await websiteProvider.addWebsite(buildWebsite());
                   }
-                  if (uploadedImageBytes != null) {
-                    imageAsPNG = await Utils.convertToPNG(uploadedImageBytes);
+                  if (uploadButton.controller.newUploadedImageBytes != null) {
+                    imageAsPNG = await Utils.convertToPNG(
+                        uploadButton.controller.newUploadedImageBytes);
                     res = await websiteProvider.uploadWebsiteIcon(
                         buildWebsite(), imageAsPNG);
                   }
@@ -264,10 +270,7 @@ class _WebsiteViewState extends State<WebsiteView> {
                 key: formKey,
                 child: Column(
                   children: <Widget>[
-                    UploadButton(
-                      imageFieldController: imageFieldController,
-                      image: imageWidget,
-                    ),
+                    uploadButton,
                     TextFormField(
                       controller: labelController,
                       decoration: InputDecoration(
