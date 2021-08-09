@@ -17,7 +17,7 @@ class StorageProvider {
   static Future<bool> deleteImageUrl(String image) async {
     try {
       final String url =
-      await FirebaseStorage.instance.ref().child(image).getDownloadURL();
+          await FirebaseStorage.instance.ref().child(image).getDownloadURL();
       await FirebaseStorage.instance.refFromURL(url).delete();
       return true;
     } catch (e) {

@@ -15,8 +15,7 @@ class StorageProvider {
 
   static Future<bool> deleteImageUrl(String image) async {
     try {
-      final url =
-      await storage().ref(image).getDownloadURL();
+      final url = await storage().ref(image).getDownloadURL();
       await storage().refFromURL(url.toString()).delete();
       return true;
     } catch (e) {
