@@ -20,6 +20,7 @@
   "labelVersion": "Version",
   "labelFirstName": "First name",
   "labelLastName": "Last name",
+  "labelWebsiteIcon": "Website icon",
   "labelName": "Name",
   "labelCategory": "Category",
   "labelLink": "Link",
