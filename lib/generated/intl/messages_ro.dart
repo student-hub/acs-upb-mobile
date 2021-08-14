@@ -188,6 +188,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "labelUniversityYear" : MessageLookupByLibrary.simpleMessage("An universitar"),
     "labelUnknown" : MessageLookupByLibrary.simpleMessage("Necunoscut"),
     "labelVersion" : MessageLookupByLibrary.simpleMessage("Versiunea"),
+    "labelWebsiteIcon" : MessageLookupByLibrary.simpleMessage("Imagine website"),
     "labelWeek" : MessageLookupByLibrary.simpleMessage("Săptămână"),
     "labelYear" : MessageLookupByLibrary.simpleMessage("Anul"),
     "messageAccountCreated" : MessageLookupByLibrary.simpleMessage("Contul a fost creat cu succes."),
