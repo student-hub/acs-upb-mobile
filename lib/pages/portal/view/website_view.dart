@@ -91,7 +91,8 @@ class _WebsiteViewState extends State<WebsiteView> {
               : const AssetImage('assets/icons/globe.png')
         }));
     // if (uploadButton.controller.currentImage)
-    uploadButtonController = UploadButtonController(imageWidget);
+    uploadButtonController =
+        UploadButtonController(imageWidget, onUpdate: () => setState(() => {}));
     uploadButton =
         UploadButton(imageFieldController, controller: uploadButtonController);
   }

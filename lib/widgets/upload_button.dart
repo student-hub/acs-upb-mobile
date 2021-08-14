@@ -6,13 +6,14 @@ import 'package:flutter/material.dart';
 import 'package:positioned_tap_detector/positioned_tap_detector.dart';
 
 class UploadButtonController {
-  UploadButtonController(this.defaultImage);
+  UploadButtonController(this.defaultImage, {this.onUpdate});
 
   final ImageProvider defaultImage;
 
   _UploadButtonState _uploadButtonState;
   ImageProvider newImg;
   Uint8List newUploadedImageBytes;
+  void Function() onUpdate;
 
   ImageProvider get currentImage => newImg ?? defaultImage;
 
@@ -22,6 +23,7 @@ class UploadButtonController {
       newImg = image;
       newUploadedImageBytes = uploadedImageBytes;
     }
+    onUpdate();
   }
 }
 
