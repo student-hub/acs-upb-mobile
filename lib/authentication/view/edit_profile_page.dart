@@ -292,12 +292,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 if (uploadedImage != null) {
                   imageAsPNG = await Utils.convertToPNG(uploadedImage);
                   result = await authProvider.uploadProfilePicture(imageAsPNG);
-                  if (result) {
-                    AppToast.show(S.current.messagePictureUpdatedSuccess);
-                  }
                 }
                 if (result) {
                   if (await authProvider.updateProfile(info)) {
+
                     AppToast.show(S.current.messageEditProfileSuccess);
                     Navigator.pop(context);
                   }
