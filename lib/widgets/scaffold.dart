@@ -7,6 +7,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'action_sidebar.dart';
+
 class AppScaffoldAction {
   AppScaffoldAction({
     this.icon,
@@ -50,6 +52,7 @@ class AppScaffold extends StatelessWidget {
     this.leading,
     this.needsToBeAuthenticated = false,
     this.onWeb = false,
+    this.maxBodyWidth = 960,
   }) : actions = actions ?? [];
 
   final Widget body;
@@ -59,6 +62,7 @@ class AppScaffold extends StatelessWidget {
   final AppScaffoldAction leading;
   final bool needsToBeAuthenticated;
   final bool onWeb;
+  final double maxBodyWidth;
 
   Widget _widgetFromAction(AppScaffoldAction action,
       {@required bool enableContent, @required BuildContext context}) {
@@ -178,22 +182,17 @@ class AppScaffold extends StatelessWidget {
                 .where((element) => element != null)
                 .toList();
 
-    return !kIsWeb || actionButtons.isEmpty
-        ? body
-        : Row(
+    return kIsWeb && actionButtons.isNotEmpty
+        ? Stack(
             children: [
-              Expanded(child: body),
-              SizedBox(
-                width: 75,
-                child: Container(
-                  color: Theme.of(context).bottomAppBarColor,
-                  child: Column(
-                    children: actionButtons,
-                  ),
-                ),
-              )
+              Center(
+                  child: ConstrainedBox(
+                      constraints: BoxConstraints(maxWidth: maxBodyWidth),
+                      child: body)),
+              ActionSideBar(actionButtons),
             ],
-          );
+          )
+        : body;
   }
 
   ///

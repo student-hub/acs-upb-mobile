@@ -132,6 +132,7 @@ class _TimetablePageState extends State<TimetablePage> {
           ],
         ),
       ),
+      maxBodyWidth: 1920,
     );
   }
 
