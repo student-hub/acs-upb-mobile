@@ -1,20 +1,6 @@
 {
   "indexes": [
     {
-      "collectionGroup": "a",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "a",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "b",
-          "order": "ASCENDING"
-        }
-      ]
-    },
-    {
       "collectionGroup": "events",
       "queryScope": "COLLECTION",
       "fields": [

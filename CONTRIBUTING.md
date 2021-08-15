@@ -169,11 +169,7 @@ Firestore allows for defining specific security rules for each collection. Rules
 
 More information on Firestore security rules can be found [here](https://firebase.google.com/docs/firestore/security/rules-structure).
 
-You can update security rules directly from the Firebase console (select Firestore Database from the side menu, then click the "Rules" tab). However, that can lead to conflicts when we deploy the rules from [firestore.rules](firestore.rules). Always remember to update the repo file as well, otherwise you risk your changes being overwritten. In order to fetch the current rules and add them to the file, you can call:
-
-```bash
-firebase firestore:rules > firestore.rules
-```
+You can update security rules directly from the Firebase console (select Firestore Database from the side menu, then click the "Rules" tab). However, that can lead to conflicts when we deploy the rules from [firestore.rules](firestore.rules). Always remember to update the repo file as well, otherwise you risk your changes being overwritten. As of Aug 2021, there is no CLI command to fetch the current rules, so you have to manually copy them from the console to the file.
 
 The preferred method to update security rules is through the [Firebase CLI](https://firebase.google.com/docs/cli) (see section [Setup](#setup) above). Simply edit the [firestore.rules](firestore.rules) file, then deploy the rules using the following commands:
 
