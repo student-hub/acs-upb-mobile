@@ -720,7 +720,7 @@ It contains app resources such as icons and profile pictures, organised similarl
 
 #### Security rules
 
-Storage security rules are similar to [Firestore security rules](#security-rules). One of the reasons for keeping the storage structure as close to possible to the Firestore structure is the ability to have similar security rules (for example, if, in Firestore, a user can only access their own document, the same rule can be applied for a user's folder inside Storage).
+Storage security rules are similar to [Firestore security rules](#security-rules). One of the reasons for keeping the storage structure as close as possible to the Firestore structure is the ability to have similar security rules (for example, if, in Firestore, a user can only access their own document, the same rule can be applied for a user's folder inside Storage).
 
 More information on Storage security rules can be found [here](https://firebase.google.com/docs/storage/security).
 
