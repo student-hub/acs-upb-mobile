@@ -1,3 +1,5 @@
+import 'dart:ui' as ui;
+
 import 'package:acs_upb_mobile/authentication/model/user.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/settings/model/request.dart';
@@ -42,6 +44,7 @@ class _RequestCardState extends State<RequestCard>
                       const SizedBox(height: 10),
                       Text(
                         request.requestBody ?? '',
+                        textDirection: ui.TextDirection.ltr,
                         style: Theme.of(context)
                             .textTheme
                             .headline6
@@ -79,6 +82,7 @@ class _RequestCardState extends State<RequestCard>
                           snapshot.connectionState != ConnectionState.done
                               ? '-'
                               : '${user?.firstName ?? S.current.errorUnknownUser} ${user?.lastName ?? ''}',
+                          textDirection: ui.TextDirection.ltr,
                           style: Theme.of(context).textTheme.headline6.copyWith(
                               fontSize: 18, fontWeight: FontWeight.bold),
                           overflow: TextOverflow.ellipsis,
@@ -93,6 +97,7 @@ class _RequestCardState extends State<RequestCard>
                     snapshot.connectionState != ConnectionState.done
                         ? ''
                         : '${user?.classes != null ? user?.classes[user.classes.length - 1] : '-'}',
+                    textDirection: ui.TextDirection.ltr,
                     style: Theme.of(context)
                         .textTheme
                         .headline6
@@ -124,6 +129,7 @@ class _RequestCardState extends State<RequestCard>
         children: [
           Text(
             '${DateFormat("dd-MM-yyyy").format(request.dateSubmitted?.toDate() ?? DateTime.now())}',
+            textDirection: ui.TextDirection.ltr,
             style: Theme.of(context)
                 .textTheme
                 .headline6

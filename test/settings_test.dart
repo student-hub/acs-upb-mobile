@@ -12,7 +12,6 @@ import 'package:acs_upb_mobile/pages/portal/service/website_provider.dart';
 import 'package:acs_upb_mobile/pages/settings/model/request.dart';
 import 'package:acs_upb_mobile/pages/settings/service/admin_provider.dart';
 import 'package:acs_upb_mobile/pages/settings/service/request_provider.dart';
-import 'package:acs_upb_mobile/pages/settings/view/request_card.dart';
 import 'package:acs_upb_mobile/pages/settings/view/request_permissions.dart';
 import 'package:acs_upb_mobile/pages/settings/view/settings_page.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/events/uni_event.dart';
@@ -421,31 +420,6 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(find.text('Handle permission requests'), findsNothing);
-      });
-
-      testWidgets('Accept request', (WidgetTester tester) async {
-        when(mockAdminProvider.fetchRequest('')).thenAnswer((_) => Future.value(
-            Request(
-                requestBody: 'body',
-                userId: '0',
-                processed: false,
-                accepted: false)));
-        when(mockAdminProvider.fetchUserById('')).thenAnswer((_) =>
-            Future.value(User(
-                uid: '0',
-                firstName: 'John',
-                lastName: 'Doe',
-                permissionLevel: 4,
-                classes: null)));
-
-        await tester.pumpWidget(const RequestCard(requestId: 'string'));
-        await tester.pumpAndSettle();
-        debugDumpApp();
-        final acceptButton = find.byKey(const Key('AcceptButton'));
-        await tester.ensureVisible(acceptButton);
-        await tester.pumpAndSettle();
-        await tester.tap(acceptButton);
-        await tester.pumpAndSettle();
       });
     });
   });
