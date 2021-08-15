@@ -134,6 +134,7 @@
   "errorImage": "Imaginea nu putut fi încărcată.",
   "errorInsertGoogleEvents": "Evenimentele nu au putut fi inserate în Google Calendar.",
   "errorLoadRequests": "Cererile nu au putut fi încărcate",
+  "errorUnknownUser": "Utilizator Necunoscut",
 
   "warningRequestExists": "O cerere deja există",
   "warningInternetConnection": "Asigurați-vă că sunteți conectat la internet.",
@@ -148,6 +149,7 @@
   "warningTryAgainLater": "Încercați mai târziu.",
   "warningFilterAlreadyDisabled": "Întreg conținutul este vizibil deja.",
   "warningFilterAlreadyUnprocessed": "Deja sunt vizibile doar cererile fără răspuns",
+  "warningFilterAlreadyAll": "Toate cererile sunt vizibile deja.",
   "warningFeedbackAlreadySent": "Ați trimis deja feedback pentru această materie!",
   "warningFilterAlreadyShowingYours": "Deja sunt vizibile doar site-urile personale.",
   "warningInvalidURL": "Trebuie să introduceți un URL valid.",

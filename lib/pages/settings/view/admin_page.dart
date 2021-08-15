@@ -31,7 +31,7 @@ class _AdminPanelPageState extends State<AdminPanelPage> {
                 if (!all) {
                   setState(() => all = true);
                 } else {
-                  AppToast.show(S.current.warningFilterAlreadyDisabled);
+                  AppToast.show(S.current.warningFilterAlreadyAll);
                 }
               },
               S.current.filterMenuShowUnprocessed: () {
@@ -46,8 +46,8 @@ class _AdminPanelPageState extends State<AdminPanelPage> {
       title: Text(S.current.navigationAdmin),
       body: FutureBuilder(
           future: all
-              ? adminProvider.fetchAllRequestsIds()
-              : adminProvider.fetchUnprocessedRequestsIds(),
+              ? adminProvider.fetchAllRequestIds()
+              : adminProvider.fetchUnprocessedRequestIds(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
               return ListView.builder(

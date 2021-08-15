@@ -134,6 +134,7 @@
   "errorImage": "The image could not be loaded.",
   "errorInsertGoogleEvents": "Unable to insert events in Google Calendar.",
   "errorLoadRequests": "Could not load requests",
+  "errorUnknownUser": "Unknown User",
 
   "warningRequestExists": "Request already exists",
   "warningInternetConnection": "Please make sure you have an internet connection.",
@@ -148,6 +149,7 @@
   "warningTryAgainLater": "Please try again later.",
   "warningFilterAlreadyDisabled": "Already showing all content.",
   "warningFilterAlreadyUnprocessed": "Already showing unprocessed requests",
+  "warningFilterAlreadyAll": "Already showing all requests.",
   "warningFeedbackAlreadySent": "You have already submitted feedback for this class!",
   "warningFilterAlreadyShowingYours": "Already showing only custom websites.",
   "warningInvalidURL": "You need to provide a valid URL.",
@@ -301,7 +303,7 @@
   "infoReadThePolicy": "Read the {appName} policy",
   "infoExportToGoogleCalendar": "Export filtered events from Timetable",
   "infoFormAnonymous": "This form is anonymous.",
-  "infoAdmin": "Handle permision requests",
+  "infoAdmin": "Handle permission requests",
   "infoAccepted": "Accepted",
   "infoDenied": "Denied",
 

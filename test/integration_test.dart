@@ -1592,7 +1592,7 @@ Future<void> main() async {
       when(mockAuthProvider.isAuthenticated).thenReturn(true);
       when(mockAuthProvider.isVerified).thenAnswer((_) => Future.value(true));
       SharedPreferences.setMockInitialValues({'language': 'auto'});
-      when(mockAdminProvider.fetchUnprocessedRequestsIds())
+      when(mockAdminProvider.fetchUnprocessedRequestIds())
           .thenAnswer((_) => Future.value(['string']));
       when(mockAdminProvider.fetchRequest('')).thenAnswer(
           (_) => Future.value(Request(requestBody: 'body', userId: '0')));
@@ -1610,10 +1610,9 @@ Future<void> main() async {
         await tester.pumpAndSettle();
 
         // Open admin panel page
-        final adminPanelButton = find.byKey(const Key('HandleRequests'));
+        final adminPanelButton = find.byKey(const Key('AdminPanel'));
         await tester.ensureVisible(adminPanelButton);
-        await tester
-            .pumpAndSettle(); // No idea why this works, (AdrianMargineanu) said so
+        await tester.pumpAndSettle();
         await tester.tap(adminPanelButton);
         await tester.pumpAndSettle();
 

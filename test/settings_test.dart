@@ -9,7 +9,10 @@ import 'package:acs_upb_mobile/pages/faq/service/question_provider.dart';
 import 'package:acs_upb_mobile/pages/news_feed/model/news_feed_item.dart';
 import 'package:acs_upb_mobile/pages/news_feed/service/news_provider.dart';
 import 'package:acs_upb_mobile/pages/portal/service/website_provider.dart';
+import 'package:acs_upb_mobile/pages/settings/model/request.dart';
+import 'package:acs_upb_mobile/pages/settings/service/admin_provider.dart';
 import 'package:acs_upb_mobile/pages/settings/service/request_provider.dart';
+import 'package:acs_upb_mobile/pages/settings/view/admin_page.dart';
 import 'package:acs_upb_mobile/pages/settings/view/request_permissions.dart';
 import 'package:acs_upb_mobile/pages/settings/view/settings_page.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/events/uni_event.dart';
@@ -44,6 +47,8 @@ class MockFeedbackProvider extends Mock implements FeedbackProvider {}
 
 class MockClassProvider extends Mock implements ClassProvider {}
 
+class MockAdminProvider extends Mock implements AdminProvider {}
+
 void main() {
   AuthProvider mockAuthProvider;
   WebsiteProvider mockWebsiteProvider;
@@ -53,6 +58,7 @@ void main() {
   UniEventProvider mockEventProvider;
   FeedbackProvider mockFeedbackProvider;
   ClassProvider mockClassProvider;
+  AdminProvider mockAdminProvider;
 
   Widget buildApp() => MultiProvider(providers: [
         ChangeNotifierProvider<AuthProvider>(create: (_) => mockAuthProvider),
@@ -67,6 +73,7 @@ void main() {
         ChangeNotifierProvider<FeedbackProvider>(
             create: (_) => mockFeedbackProvider),
         ChangeNotifierProvider<ClassProvider>(create: (_) => mockClassProvider),
+        ChangeNotifierProvider<AdminProvider>(create: (_) => mockAdminProvider),
       ], child: const MyApp());
 
   group('Settings', () {
@@ -146,6 +153,7 @@ void main() {
           .thenAnswer((_) => Future.value({'M1': true, 'M2': true}));
 
       mockClassProvider = MockClassProvider();
+      mockAdminProvider = MockAdminProvider();
       // ignore: invalid_use_of_protected_member
       when(mockClassProvider.hasListeners).thenReturn(false);
       final userClassHeaders = [
@@ -385,6 +393,70 @@ void main() {
         await tester.pumpAndSettle();
         expect(find.byType(RequestPermissionsPage), findsOneWidget);
       });
+    });
+    group('Admin Panel', () {
+      setUpAll(() async {
+        when(mockAuthProvider.currentUser).thenAnswer((_) =>
+            Future.value(User(uid: '0', firstName: 'John', lastName: 'Doe')));
+        when(mockAuthProvider.currentUserFromCache)
+            .thenReturn(User(uid: '0', firstName: 'John', lastName: 'Doe'));
+        when(mockAuthProvider.isAnonymous).thenReturn(false);
+        when(mockAuthProvider.isAuthenticated).thenReturn(true);
+        when(mockAuthProvider.isVerified).thenAnswer((_) => Future.value(true));
+      });
+
+      testWidgets('User is not an admin', (WidgetTester tester) async {
+        when(mockAuthProvider.currentUserFromCache).thenReturn(User(
+            uid: '0', firstName: 'John', lastName: 'Doe', permissionLevel: 3));
+        when(mockAdminProvider.fetchUnprocessedRequestIds())
+            .thenAnswer((_) => Future.value(['string']));
+        when(mockAdminProvider.fetchRequest('')).thenAnswer(
+                (_) => Future.value(Request(requestBody: 'body', userId: '0')));
+
+        await tester.pumpWidget(buildApp());
+        await tester.pumpAndSettle();
+
+        // Open settings
+        await tester.tap(find.byIcon(Icons.settings_outlined));
+        await tester.pumpAndSettle();
+
+        expect(find.text('Handle permission requests'), findsNothing);
+      });
+
+      // testWidgets('Approve a request', (WidgetTester tester) async {
+      //   when(mockAuthProvider.currentUserFromCache).thenReturn(User(
+      //       uid: '0', firstName: 'John', lastName: 'Doe', permissionLevel: 4));
+      //   when(mockAuthProvider.isVerified).thenAnswer((_) => Future.value(true));
+      //
+      //   when(mockAdminProvider.fetchUnprocessedRequestIds())
+      //       .thenAnswer((_) => Future.value(['string']));
+      //   when(mockAdminProvider.fetchRequest('')).thenAnswer(
+      //           (_) => Future.value(Request(requestBody: 'body', userId: '0', processed: false, accepted: false)));
+      //
+      //   await tester.pumpWidget(buildApp());
+      //   await tester.pumpAndSettle();
+      //
+      //   // Open settings
+      //   await tester.tap(find.byIcon(Icons.settings_outlined));
+      //   await tester.pumpAndSettle();
+      //
+      //   // Open Admin Panel page
+      //   final adminPanelButton = find.byKey(const Key('AdminPanel'));
+      //   await tester.ensureVisible(adminPanelButton);
+      //   await tester.pumpAndSettle();
+      //   await tester.tap(adminPanelButton);
+      //   await tester.pumpAndSettle();
+      //
+      //   expect(find.byType(AdminPanelPage), findsWidgets);
+      //
+      //   // Accept a request
+      //   await tester.ensureVisible(find.text('Accept'));
+      //   await tester.pumpAndSettle();
+      //   await tester.tap(find.text('Accept'));
+      //   await tester.pumpAndSettle();
+      //
+      //   expect(find.text('Accepted'), findsOneWidget);
+      // });
     });
   });
 }

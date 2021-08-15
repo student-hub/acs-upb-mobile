@@ -28,7 +28,7 @@ extension ThemeExtension on ThemeData {
       case Brightness.light:
         return buttonColor;
       default:
-        return iconTheme.color;
+        return buttonColor;
     }
   }
 }

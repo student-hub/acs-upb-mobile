@@ -17,6 +17,7 @@ extension RequestExtension on Request {
       type: RequestType.permissions,
       dateSubmitted: data['dateSubmitted'],
       accepted: data['accepted'],
+      processedBy: data['processedBy'],
       id: snap.id,
     );
   }
@@ -36,7 +37,7 @@ class AdminProvider with ChangeNotifier {
     _authProvider = authProvider;
   }
 
-  Future<List<String>> fetchAllRequestsIds() async {
+  Future<List<String>> fetchAllRequestIds() async {
     try {
       final QuerySnapshot qSnapshot = await _db
           .collection('forms')
@@ -50,7 +51,7 @@ class AdminProvider with ChangeNotifier {
     }
   }
 
-  Future<List<String>> fetchUnprocessedRequestsIds() async {
+  Future<List<String>> fetchUnprocessedRequestIds() async {
     try {
       final QuerySnapshot qSnapshot = await _db
           .collection('forms')
@@ -91,12 +92,8 @@ class AdminProvider with ChangeNotifier {
     try {
       final request = await fetchRequest(requestId);
       await _giveEditingPermissions(request.userId);
-      await _db
-          .collection('forms')
-          .doc(requestId)
-          .update({'processedBy': _authProvider.uid});
-      await _db.collection('forms').doc(requestId).update({'done': true});
-      await _db.collection('forms').doc(requestId).update({'accepted': true});
+      await _db.collection('forms').doc(requestId).update(
+          {'processedBy': _authProvider.uid, 'done': true, 'accepted': true});
     } catch (e) {
       print(e);
       AppToast.show(S.current.errorSomethingWentWrong);
@@ -105,12 +102,8 @@ class AdminProvider with ChangeNotifier {
 
   Future<void> denyRequest(String requestId) async {
     try {
-      await _db
-          .collection('forms')
-          .doc(requestId)
-          .update({'processedBy': _authProvider.uid});
-      await _db.collection('forms').doc(requestId).update({'accepted': false});
-      await _db.collection('forms').doc(requestId).update({'done': true});
+      await _db.collection('forms').doc(requestId).update(
+          {'processedBy': _authProvider.uid, 'done': true, 'accepted': false});
     } catch (e) {
       print(e);
       AppToast.show(S.current.errorSomethingWentWrong);
@@ -128,12 +121,7 @@ class AdminProvider with ChangeNotifier {
         await _db
             .collection('forms')
             .doc(requestId)
-            .update({'processedBy': ''});
-        await _db.collection('forms').doc(requestId).update({'done': false});
-        await _db
-            .collection('forms')
-            .doc(requestId)
-            .update({'accepted': false});
+            .update({'processedBy': '', 'done': false, 'accepted': false});
       } else {
         await _db.collection('forms').doc(requestId).update({'done': false});
       }

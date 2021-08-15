@@ -1325,6 +1325,16 @@ class S {
     );
   }
 
+  /// `Unknown User`
+  String get errorUnknownUser {
+    return Intl.message(
+      'Unknown User',
+      name: 'errorUnknownUser',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Request already exists`
   String get warningRequestExists {
     return Intl.message(
@@ -1450,6 +1460,16 @@ class S {
     return Intl.message(
       'Already showing unprocessed requests',
       name: 'warningFilterAlreadyUnprocessed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Already showing all requests.`
+  String get warningFilterAlreadyAll {
+    return Intl.message(
+      'Already showing all requests.',
+      name: 'warningFilterAlreadyAll',
       desc: '',
       args: [],
     );
@@ -2895,10 +2915,10 @@ class S {
     );
   }
 
-  /// `Handle permision requests`
+  /// `Handle permission requests`
   String get infoAdmin {
     return Intl.message(
-      'Handle permision requests',
+      'Handle permission requests',
       name: 'infoAdmin',
       desc: '',
       args: [],

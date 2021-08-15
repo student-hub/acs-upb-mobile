@@ -38,8 +38,7 @@ class _RequestCardState extends State<RequestCard>
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      _buildUserHeader(request.userId, request.processed,
-                          request.accepted, adminProvider),
+                      _buildUserHeader(request, adminProvider),
                       const SizedBox(height: 10),
                       Text(
                         request.requestBody ?? '',
@@ -61,65 +60,47 @@ class _RequestCardState extends State<RequestCard>
         });
   }
 
-  Widget _buildUserHeader(String userId, bool processed, bool accepted,
-          AdminProvider adminProvider) =>
+  Widget _buildUserHeader(Request request, AdminProvider adminProvider) =>
       FutureBuilder(
-          future: adminProvider.fetchUserById(userId),
+          future: adminProvider.fetchUserById(request.userId),
           builder: (context, snapshot) {
+            User user;
             if (snapshot.connectionState == ConnectionState.done) {
-              final User user = snapshot.data;
-              return Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Flexible(
-                          child: Text(
-                            '${user?.firstName ?? 'Unknown User'} ${user?.lastName ?? ''}',
-                            style: Theme.of(context)
-                                .textTheme
-                                .headline6
-                                .copyWith(
-                                    fontSize: 18, fontWeight: FontWeight.bold),
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 2,
-                          ),
-                        ),
-                        if (processed == true && accepted != null)
-                          _buildAcceptedMarker(accepted),
-                      ],
-                    ),
-                    Text(
-                      '${user?.classes != null ? user?.classes[user.classes.length - 1] : '-'}',
-                      style: Theme.of(context)
-                          .textTheme
-                          .headline6
-                          .copyWith(fontSize: 14, fontWeight: FontWeight.bold),
-                      overflow: TextOverflow.fade,
-                      maxLines: 2,
-                    ),
-                  ]);
-            } else {
-              return Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Text(
-                      '-',
-                      style: Theme.of(context)
-                          .textTheme
-                          .headline6
-                          .copyWith(fontSize: 18),
-                    ),
-                    Text(
-                      '',
-                      style: Theme.of(context)
-                          .textTheme
-                          .headline6
-                          .copyWith(fontSize: 14),
-                    ),
-                  ]);
+              user = snapshot.data;
             }
+            return Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Flexible(
+                        child: Text(
+                          snapshot.connectionState != ConnectionState.done
+                              ? '-'
+                              : '${user?.firstName ?? S.current.errorUnknownUser} ${user?.lastName ?? ''}',
+                          style: Theme.of(context).textTheme.headline6.copyWith(
+                              fontSize: 18, fontWeight: FontWeight.bold),
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 2,
+                        ),
+                      ),
+                      if (request.processed && request.accepted != null)
+                        _buildAcceptedMarker(request.accepted),
+                    ],
+                  ),
+                  Text(
+                    snapshot.connectionState != ConnectionState.done
+                        ? ''
+                        : '${user?.classes != null ? user?.classes[user.classes.length - 1] : '-'}',
+                    style: Theme.of(context)
+                        .textTheme
+                        .headline6
+                        .copyWith(fontSize: 14, fontWeight: FontWeight.bold),
+                    overflow: TextOverflow.fade,
+                    maxLines: 2,
+                  ),
+                ]);
           });
 
   Widget _buildAcceptedMarker(bool accepted) => Container(
@@ -150,7 +131,7 @@ class _RequestCardState extends State<RequestCard>
             overflow: TextOverflow.fade,
             maxLines: 2,
           ),
-          if (processed == false)
+          if (!processed)
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
@@ -183,7 +164,7 @@ class _RequestCardState extends State<RequestCard>
                 )
               ],
             )
-          else if (processed == true)
+          else if (processed)
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
