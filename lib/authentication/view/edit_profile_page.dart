@@ -295,7 +295,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 }
                 if (result) {
                   if (await authProvider.updateProfile(info)) {
-
                     AppToast.show(S.current.messageEditProfileSuccess);
                     Navigator.pop(context);
                   }
