@@ -171,13 +171,13 @@ More information on Firestore security rules can be found [here](https://firebas
 
 You can update security rules directly from the Firebase console (select Firestore Database from the side menu, then click the "Rules" tab). However, that can lead to conflicts when we deploy the rules from [firestore.rules](firestore.rules). Always remember to update the repo file as well, otherwise you risk your changes being overwritten. In order to fetch the current rules and add them to the file, you can call:
 
-```cli
+```bash
 firebase firestore:rules > firestore.rules
 ```
 
 The preferred method to update security rules is through the [Firebase CLI](https://firebase.google.com/docs/cli) (see section [Setup](#setup) above). Simply edit the [firestore.rules](firestore.rules) file, then deploy the rules using the following commands:
 
-```cli
+```bash
 firebase use dev # Make sure the dev environment is selected
 firebase deploy --only firestore:rules
 ```
@@ -190,7 +190,7 @@ Indexes are useful to improve query performance, and Firestore requires an index
 
 :exclamation: When you create a new index from the Firebase console, you must update the [firestore.indexes.json](firestore.indexes.json) file by calling:
 
-```cli
+```bash
 firebase firestore:indexes > firestore.indexes.json
 ```
 
@@ -728,7 +728,7 @@ You can update security rules directly from the Firebase console (select Storage
 
 The preferred method to update security rules is through the [Firebase CLI](https://firebase.google.com/docs/cli) (see section [Setup](#setup) above). Simply edit the [storage.rules](storage.rules) file, then deploy the rules using the following commands:
 
-```cli
+```bash
 firebase use dev # Make sure the dev environment is selected
 firebase deploy --only storage
 ```
