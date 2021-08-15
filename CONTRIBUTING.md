@@ -72,6 +72,7 @@ Please update the resulting commit message, if needed. It should read as a coher
 
 Please refrain from creating several pull requests for the same change. Use the pull request that is already open (or was created earlier) to amend changes. This preserves the discussion and review that happened earlier for the respective change set.
 Similarly, please create one PR per development item, instead of bundling multiple fixes and improvements in a single PR.
+
 | :warning: | After the merging is concluded, please delete the branches related to the pull request that you just closed.|
 |-----------|:------------------------------------------------------------------------------------------------------------|
 
