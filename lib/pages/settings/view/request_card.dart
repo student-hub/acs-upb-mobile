@@ -150,6 +150,7 @@ class _RequestCardState extends State<RequestCard>
                 ),
                 const SizedBox(width: 10),
                 AppButton(
+                  key: const Key('AcceptButton'),
                   text: S.current.buttonAccept,
                   color: Theme.of(context).accentColor,
                   width: 100,

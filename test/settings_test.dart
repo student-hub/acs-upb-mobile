@@ -12,7 +12,7 @@ import 'package:acs_upb_mobile/pages/portal/service/website_provider.dart';
 import 'package:acs_upb_mobile/pages/settings/model/request.dart';
 import 'package:acs_upb_mobile/pages/settings/service/admin_provider.dart';
 import 'package:acs_upb_mobile/pages/settings/service/request_provider.dart';
-import 'package:acs_upb_mobile/pages/settings/view/admin_page.dart';
+import 'package:acs_upb_mobile/pages/settings/view/request_card.dart';
 import 'package:acs_upb_mobile/pages/settings/view/request_permissions.dart';
 import 'package:acs_upb_mobile/pages/settings/view/settings_page.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/events/uni_event.dart';
@@ -411,7 +411,7 @@ void main() {
         when(mockAdminProvider.fetchUnprocessedRequestIds())
             .thenAnswer((_) => Future.value(['string']));
         when(mockAdminProvider.fetchRequest('')).thenAnswer(
-                (_) => Future.value(Request(requestBody: 'body', userId: '0')));
+            (_) => Future.value(Request(requestBody: 'body', userId: '0')));
 
         await tester.pumpWidget(buildApp());
         await tester.pumpAndSettle();
@@ -423,40 +423,30 @@ void main() {
         expect(find.text('Handle permission requests'), findsNothing);
       });
 
-      // testWidgets('Approve a request', (WidgetTester tester) async {
-      //   when(mockAuthProvider.currentUserFromCache).thenReturn(User(
-      //       uid: '0', firstName: 'John', lastName: 'Doe', permissionLevel: 4));
-      //   when(mockAuthProvider.isVerified).thenAnswer((_) => Future.value(true));
-      //
-      //   when(mockAdminProvider.fetchUnprocessedRequestIds())
-      //       .thenAnswer((_) => Future.value(['string']));
-      //   when(mockAdminProvider.fetchRequest('')).thenAnswer(
-      //           (_) => Future.value(Request(requestBody: 'body', userId: '0', processed: false, accepted: false)));
-      //
-      //   await tester.pumpWidget(buildApp());
-      //   await tester.pumpAndSettle();
-      //
-      //   // Open settings
-      //   await tester.tap(find.byIcon(Icons.settings_outlined));
-      //   await tester.pumpAndSettle();
-      //
-      //   // Open Admin Panel page
-      //   final adminPanelButton = find.byKey(const Key('AdminPanel'));
-      //   await tester.ensureVisible(adminPanelButton);
-      //   await tester.pumpAndSettle();
-      //   await tester.tap(adminPanelButton);
-      //   await tester.pumpAndSettle();
-      //
-      //   expect(find.byType(AdminPanelPage), findsWidgets);
-      //
-      //   // Accept a request
-      //   await tester.ensureVisible(find.text('Accept'));
-      //   await tester.pumpAndSettle();
-      //   await tester.tap(find.text('Accept'));
-      //   await tester.pumpAndSettle();
-      //
-      //   expect(find.text('Accepted'), findsOneWidget);
-      // });
+      testWidgets('Accept request', (WidgetTester tester) async {
+        when(mockAdminProvider.fetchRequest('')).thenAnswer((_) => Future.value(
+            Request(
+                requestBody: 'body',
+                userId: '0',
+                processed: false,
+                accepted: false)));
+        when(mockAdminProvider.fetchUserById('')).thenAnswer((_) =>
+            Future.value(User(
+                uid: '0',
+                firstName: 'John',
+                lastName: 'Doe',
+                permissionLevel: 4,
+                classes: null)));
+
+        await tester.pumpWidget(const RequestCard(requestId: 'string'));
+        await tester.pumpAndSettle();
+        debugDumpApp();
+        final acceptButton = find.byKey(const Key('AcceptButton'));
+        await tester.ensureVisible(acceptButton);
+        await tester.pumpAndSettle();
+        await tester.tap(acceptButton);
+        await tester.pumpAndSettle();
+      });
     });
   });
 }

@@ -89,21 +89,24 @@ class AdminProvider with ChangeNotifier {
   }
 
   Future<void> acceptRequest(String requestId) async {
-    try {
-      final request = await fetchRequest(requestId);
-      await _giveEditingPermissions(request.userId);
-      await _db.collection('forms').doc(requestId).update(
-          {'processedBy': _authProvider.uid, 'done': true, 'accepted': true});
-    } catch (e) {
-      print(e);
-      AppToast.show(S.current.errorSomethingWentWrong);
-    }
+    return _processRequest(requestId, true);
   }
 
   Future<void> denyRequest(String requestId) async {
+    return _processRequest(requestId, false);
+  }
+
+  Future<void> _processRequest(String requestId, bool accepted) async {
     try {
-      await _db.collection('forms').doc(requestId).update(
-          {'processedBy': _authProvider.uid, 'done': true, 'accepted': false});
+      if (accepted) {
+        final request = await fetchRequest(requestId);
+        await _giveEditingPermissions(request.userId);
+      }
+      await _db.collection('forms').doc(requestId).update({
+        'processedBy': _authProvider.uid,
+        'done': true,
+        'accepted': accepted
+      });
     } catch (e) {
       print(e);
       AppToast.show(S.current.errorSomethingWentWrong);

@@ -71,7 +71,6 @@ Future<void> main() async {
   final classProvider = ClassProvider();
   final personProvider = PersonProvider();
   final feedbackProvider = FeedbackProvider();
-  final adminProvider = AdminProvider();
 
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider<AuthProvider>(create: (_) => authProvider),
