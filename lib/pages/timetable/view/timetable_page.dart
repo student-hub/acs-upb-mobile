@@ -69,19 +69,7 @@ class _TimetablePageState extends State<TimetablePage> {
         onPressed: () =>
             !_controller.currentlyVisibleDates.contains(LocalDate.today())
                 ? _controller.animateToToday()
-                : ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      backgroundColor: Color(0xFF43ACCD),
-                      content: Text(
-                        'You\'re already seeing the current week!',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontFamily: 'Montserrat',
-                        ),
-                      ),
-                      duration: Duration(seconds: 2),
-                    ),
-                  ),
+                : AppToast.show(S.current.messageAlreadySeeingCurrentWeek),
         tooltip: S.current.actionJumpToToday,
       ),
       actions: [

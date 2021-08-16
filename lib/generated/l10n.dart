@@ -1,6 +1,7 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+
 import 'intl/messages_all.dart';
 
 // **************************************************************************
@@ -2653,6 +2654,15 @@ class S {
       name: 'messageFeedbackLeft',
       desc: '',
       args: [number],
+    );
+  }
+
+  String get messageAlreadySeeingCurrentWeek {
+    return Intl.message(
+      'You\'re already seeing the current week!',
+      name: 'messageAlreadySeeingCurrentWeek',
+      desc: '',
+      args: [],
     );
   }
 
