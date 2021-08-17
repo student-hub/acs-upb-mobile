@@ -41,7 +41,7 @@ class _PersonViewState extends State<PersonView> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Container(
-        color: Theme.of(context).backgroundColor,
+        color: Theme.of(context).scaffoldBackgroundColor,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
