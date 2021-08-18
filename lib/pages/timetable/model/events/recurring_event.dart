@@ -80,7 +80,7 @@ class RecurringUniEvent extends UniEvent {
           interval: 1,
           byWeekDays: rrule.byWeekDays.isNotEmpty
               ? rrule.byWeekDays
-              : {ByWeekDayEntry(start.dayOfWeek)},
+              : {ByWeekDayEntry(start.dayOfWeek.value)},
           byWeeks: weeks);
     }
     return rrule;
@@ -93,13 +93,16 @@ class RecurringUniEvent extends UniEvent {
 
     // Calculate recurrences
     int i = 0;
-    for (final start in rrule.getInstances(start: start)) {
+    final Iterable<LocalDateTime> instances = rrule
+        .getInstances(start: start.toDateTimeLocal())
+        .map((dateTime) => LocalDateTime.dateTime(dateTime));
+
+    for (final start in instances) {
       final LocalDateTime end = start.add(duration);
       if (intersectingInterval != null) {
         if (end.calendarDate < intersectingInterval.start) continue;
         if (start.calendarDate > intersectingInterval.end) break;
       }
-
       bool skip = false;
       for (final holiday in calendar?.holidays ?? []) {
         final holidayInterval =

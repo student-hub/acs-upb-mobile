@@ -35,9 +35,10 @@ extension UniEventTypeExtension on UniEventType {
         return S.current.uniEventTypeHoliday;
       case UniEventType.examSession:
         return S.current.uniEventTypeExamSession;
-      default:
+      case UniEventType.other:
         return S.current.uniEventTypeOther;
     }
+    return S.current.uniEventTypeOther;
   }
 
   static List<UniEventType> get classTypes => [
@@ -84,9 +85,10 @@ extension UniEventTypeExtension on UniEventType {
         return Colors.yellow;
       case UniEventType.examSession:
         return Colors.red;
-      default:
+      case UniEventType.other:
         return Colors.white;
     }
+    return Colors.white;
   }
 }
 
@@ -182,26 +184,30 @@ class UniEventInstance extends Event {
   String get relativeDateString => getDateString(useRelativeDayFormat: true);
 
   String getDateString({bool useRelativeDayFormat}) {
-    final LocalDateTime end = this.end.clockTime.equals(LocalTime(00, 00, 00))
-        ? this.end.subtractDays(1)
-        : this.end;
+    final LocalDateTime defaultStart = LocalDateTime.dateTime(start);
+    final LocalDateTime defaultEnd = LocalDateTime.dateTime(this.end);
+    final LocalDateTime end = defaultEnd.clockTime.equals(LocalTime(00, 00, 00))
+        ? defaultEnd.subtractDays(1)
+        : defaultEnd;
 
-    String string =
-        useRelativeDayFormat && start.calendarDate.equals(LocalDate.today())
-            ? S.current.labelToday
-            : useRelativeDayFormat &&
-                    start.calendarDate.subtractDays(1).equals(LocalDate.today())
-                ? S.current.labelTomorrow
-                : start.calendarDate.toString('dddd, dd MMMM');
+    String string = useRelativeDayFormat &&
+            defaultStart.calendarDate.equals(LocalDate.today())
+        ? S.current.labelToday
+        : useRelativeDayFormat &&
+                defaultStart.calendarDate
+                    .subtractDays(1)
+                    .equals(LocalDate.today())
+            ? S.current.labelTomorrow
+            : defaultStart.calendarDate.toString('dddd, dd MMMM');
 
-    if (!start.clockTime.equals(LocalTime(00, 00, 00))) {
-      string += ' • ${start.clockTime.toString('HH:mm')}';
+    if (!defaultStart.clockTime.equals(LocalTime(00, 00, 00))) {
+      string += ' • ${defaultStart.clockTime.toString('HH:mm')}';
     }
-    if (start.calendarDate != end.calendarDate) {
+    if (defaultStart.calendarDate != defaultEnd.calendarDate) {
       string += ' - ${end.calendarDate.toString('dddd, dd MMMM')}';
     }
     if (!end.clockTime.equals(LocalTime(00, 00, 00))) {
-      if (start.calendarDate != end.calendarDate) {
+      if (defaultStart.calendarDate != defaultEnd.calendarDate) {
         string += ' • ';
       } else {
         string += '-';

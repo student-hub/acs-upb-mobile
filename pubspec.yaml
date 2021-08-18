@@ -136,7 +136,7 @@ dependencies:
   time_range_picker: ^2.0.1
 
   # Timetable widget
-  timetable: ^1.0.0-alpha.0
+  timetable: ^1.0.0-alpha.5
 
   # URL opener
   url_launcher: ^6.0.6

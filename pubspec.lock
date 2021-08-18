@@ -943,6 +943,15 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.3.0"
+  time_machine:
+    dependency: "direct main"
+    description:
+      path: "."
+      ref: master
+      resolved-ref: "040de1a261df442538ed97f6de5895465d7ca4dd"
+      url: "https://github.com/Dana-Ferguson/time_machine"
+    source: git
+    version: "0.9.17"
   time_range_picker:
     dependency: "direct main"
     description:
@@ -963,7 +972,7 @@ packages:
       name: timetable
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.0-alpha.0"
+    version: "1.0.0-alpha.5"
   tuple:
     dependency: transitive
     description:
