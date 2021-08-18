@@ -149,7 +149,6 @@ class UniEvent {
 
 class UniEventInstance extends Event {
   UniEventInstance({
-    @required String id,
     @required this.title,
     @required this.mainEvent,
     @required LocalDateTime start,
@@ -158,11 +157,11 @@ class UniEventInstance extends Event {
     this.location,
     this.info,
   })  : color = color ?? mainEvent?.color,
-        super(id: id, start: start, end: end);
+        super(start: start.toDateTimeLocal(), end: end.toDateTimeLocal());
 
   final UniEvent mainEvent;
-  final String title;
 
+  final String title;
   final Color color;
   final String location;
   final String info;
