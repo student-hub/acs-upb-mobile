@@ -37,88 +37,93 @@ class PersonView extends StatefulWidget {
 }
 
 class _PersonViewState extends State<PersonView> {
+  final ScrollController _controller = ScrollController();
+  
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Container(
         color: Theme.of(context).scaffoldBackgroundColor,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(30, 30, 30, 5),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  const Expanded(
-                    flex: 1,
-                    child: SizedBox(),
-                  ),
-                  Expanded(
-                    flex: 4,
-                    child: PersonBanner(
-                      name: widget.person.name,
-                      photoURL: widget.person.photo,
-                      position: widget.person.position,
-                      office: widget.person.office,
-                    ),
-                  ),
-                  const Expanded(
-                    flex: 1,
-                    child: SizedBox(
-                      width: 100,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(30, 5, 30, 30),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Expanded(
-                    flex: 1,
-                    child: SizedBox(
-                      width: 100,
-                    ),
-                  ),
-                  Expanded(
-                    flex: 2,
-                    child: ContactInfo(
-                      email: widget.person.email,
-                      phone: widget.person.phone,
-                    ),
-                  ),
-                  Expanded(
-                    flex: 2,
-                    child: Card(
-                      child: Padding(
-                        padding: const EdgeInsets.all(12),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Text('Courses',
-                                style: Theme.of(context).textTheme.bodyText1),
-                            Divider(
-                              color: Theme.of(context).backgroundColor,
-                            ),
-                            CoursesListView(lecturerName: widget.person.name),
-                          ],
+        // TODO(RavanRotaru): extract scrollbar in another widget
+        child: Scrollbar(
+          thickness: 10,
+          isAlwaysShown: true,
+          controller: _controller,
+          child: SingleChildScrollView(
+            controller: _controller,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(30, 30, 30, 5),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      const Expanded(
+                        flex: 1,
+                        child: SizedBox(),
+                      ),
+                      Expanded(
+                        flex: 4,
+                        child: PersonBanner(
+                          name: widget.person.name,
+                          photoURL: widget.person.photo,
+                          position: widget.person.position,
+                          office: widget.person.office,
                         ),
                       ),
-                    ),
+                      const Expanded(
+                        flex: 1,
+                        child: SizedBox(),
+                      ),
+                    ],
                   ),
-                  const Expanded(
-                    flex: 1,
-                    child: SizedBox(
-                      width: 100,
-                    ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(30, 5, 30, 30),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Expanded(
+                        flex: 1,
+                        child: SizedBox(),
+                      ),
+                      Expanded(
+                        flex: 2,
+                        child: ContactInfo(
+                          email: widget.person.email,
+                          phone: widget.person.phone,
+                        ),
+                      ),
+                      Expanded(
+                        flex: 2,
+                        child: Card(
+                          child: Padding(
+                            padding: const EdgeInsets.all(12),
+                            child: Column(
+                              children: [
+                                Text('Courses',
+                                    style: Theme.of(context).textTheme.bodyText1),
+                                Divider(
+                                  color: Theme.of(context).backgroundColor,
+                                ),
+                                CoursesListView(lecturerName: widget.person.name),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      const Expanded(
+                        flex: 1,
+                        child: SizedBox(),
+                      ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );

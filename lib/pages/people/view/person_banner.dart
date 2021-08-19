@@ -25,16 +25,13 @@ class PersonBanner extends StatelessWidget {
         padding: const EdgeInsets.all(12),
         child: Row(
           children: [
-            Expanded(
-              flex: 2,
-              child: PersonAvatar(
+             PersonAvatar(
                 photoURL: photoURL,
-              ),
             ),
             Expanded(
               flex: 6,
               child: Padding(
-                padding: const EdgeInsets.only(left: 15),
+                padding: const EdgeInsets.only(left: 12),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.start,

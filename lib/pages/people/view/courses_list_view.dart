@@ -10,8 +10,7 @@ class CoursesListView extends StatelessWidget {
   Widget build(BuildContext context) {
     return StreamBuilder(
       stream: FirebaseFirestore.instance
-          .collection('forms')
-          .doc('class_feedback_questions')
+          .collection('classes')
           // TODO(RazvanRotaru): Filter documents by lecturer name/id
           .snapshots(),
       builder: (context, snapshot) {
@@ -25,11 +24,11 @@ class CoursesListView extends StatelessWidget {
             children: [
               Expanded(
                 child: Padding(
-                  padding: const EdgeInsets.all(4),
+                  padding: const EdgeInsets.all(2),
                   child: Center(
                     child: Text(
                       // TODO(RazvanRotaru): Get course name
-                      snapshot.data['name'],
+                      snapshot.data.documents[0].id,
                       style: Theme.of(context).textTheme.bodyText1,
                     ),
                   ),

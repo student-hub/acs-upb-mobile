@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
@@ -11,25 +9,22 @@ class PersonAvatar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     print('photoURL: $photoURL}');
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        // TODO(TatucRobert): Make photo size fixed
-        final radius = min(constraints.maxHeight / 3, constraints.maxWidth / 3);
-        return Container(
-          child: Center(
-            child: photoURL != null
-                ? CircleAvatar(
-                    radius: radius,
-                    backgroundImage: CachedNetworkImageProvider(photoURL),
-                  )
-                : const CircleAvatar(
-                    child: Icon(
-                      Icons.person_outlined,
-                    ),
+    return Padding(
+      padding: const EdgeInsets.all(12),
+      child: Container(
+        child: Center(
+          child: photoURL != null
+              ? CircleAvatar(
+                  radius: 100,
+                  backgroundImage: CachedNetworkImageProvider(photoURL),
+                )
+              : const CircleAvatar(
+                  child: Icon(
+                    Icons.person_outlined,
                   ),
-          ),
-        );
-      },
+                ),
+        ),
+      ),
     );
   }
 }
