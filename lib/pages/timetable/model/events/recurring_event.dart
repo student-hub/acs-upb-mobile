@@ -5,13 +5,14 @@ import 'package:time_machine/time_machine.dart';
 import '../../../../resources/locale_provider.dart';
 import '../../../../resources/utils.dart';
 import '../../../classes/model/class.dart';
+import '../../timetable_utils.dart';
 import '../academic_calendar.dart';
 import 'uni_event.dart';
 
 class RecurringUniEvent extends UniEvent {
   const RecurringUniEvent({
     @required this.rrule,
-    @required LocalDateTime start,
+    @required DateTime start,
     @required Period duration,
     @required String id,
     List<String> relevance,
@@ -71,7 +72,7 @@ class RecurringUniEvent extends UniEvent {
             .whereIndex((index) =>
                 (startOdd ? index : index + 1) % rrule.interval !=
                 weeks.lookup(WeekYearRules.iso
-                        .getWeekOfWeekYear(start.calendarDate)) %
+                        .getWeekOfWeekYear(LocalDate.dateTime(start))) %
                     rrule.interval)
             .toSet();
       }
@@ -80,7 +81,7 @@ class RecurringUniEvent extends UniEvent {
           interval: 1,
           byWeekDays: rrule.byWeekDays.isNotEmpty
               ? rrule.byWeekDays
-              : {ByWeekDayEntry(start.dayOfWeek.value)},
+              : {ByWeekDayEntry(start.weekday)},
           byWeeks: weeks);
     }
     return rrule;
@@ -88,26 +89,24 @@ class RecurringUniEvent extends UniEvent {
 
   @override
   Iterable<UniEventInstance> generateInstances(
-      {DateInterval intersectingInterval}) sync* {
+      {DateTimeRange intersectingInterval}) sync* {
     final RecurrenceRule rrule = rruleBasedOnCalendar;
 
     // Calculate recurrences
     int i = 0;
-    final Iterable<LocalDateTime> instances = rrule
-        .getInstances(start: start.toDateTimeLocal())
-        .map((dateTime) => LocalDateTime.dateTime(dateTime));
-
-    for (final start in instances) {
-      final LocalDateTime end = start.add(duration);
+    for (final start in rrule.getInstances(start: start)) {
+      final DateTime end = start.add(duration.toTime().toDuration);
       if (intersectingInterval != null) {
-        if (end.calendarDate < intersectingInterval.start) continue;
-        if (start.calendarDate > intersectingInterval.end) break;
+        if (end < intersectingInterval.start) continue;
+        if (start > intersectingInterval.end) break;
       }
+
       bool skip = false;
       for (final holiday in calendar?.holidays ?? []) {
         final holidayInterval =
-            DateInterval(holiday.startDate, holiday.endDate);
-        if (holidayInterval.contains(start.calendarDate)) {
+            DateTimeRange(start: holiday.startDate, end: holiday.endDate);
+            // DateInterval(holiday.startDate, holiday.endDate);
+        if (holidayInterval.contains(start)) {
           // Skip holidays
           skip = true;
         }
@@ -115,7 +114,7 @@ class RecurringUniEvent extends UniEvent {
 
       if (!skip) {
         yield UniEventInstance(
-          id: '$id-$i',
+          // id: '$id-$i',
           title: name,
           mainEvent: this,
           color: color,

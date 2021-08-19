@@ -1,7 +1,10 @@
-import 'package:acs_upb_mobile/pages/timetable/model/events/all_day_event.dart';
-import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:time_machine/time_machine.dart';
+
+import '../../../resources/utils.dart';
+import '../timetable_utils.dart';
+import 'events/all_day_event.dart';
 
 class AcademicCalendar {
   AcademicCalendar(
@@ -15,12 +18,14 @@ class AcademicCalendar {
   List<AllDayUniEvent> holidays;
   List<AllDayUniEvent> exams;
 
-  Map<int, Set<int>> _getWeeksByYearInInterval(DateInterval interval) {
+  Map<int, Set<int>> _getWeeksByYearInInterval(DateTimeRange interval) {
     final Map<int, Set<int>> weeksByYear = {};
     final rule = WeekYearRules.iso;
 
-    final int firstWeek = rule.getWeekOfWeekYear(interval.start);
-    final int lastWeek = rule.getWeekOfWeekYear(interval.end);
+    final int firstWeek =
+        rule.getWeekOfWeekYear(LocalDate.dateTime(interval.start));
+    final int lastWeek =
+        rule.getWeekOfWeekYear(LocalDate.dateTime(interval.end));
 
     if (interval.start.year == interval.end.year) {
       weeksByYear[interval.start.year] = range(firstWeek, lastWeek + 1).toSet();
@@ -42,7 +47,7 @@ class AcademicCalendar {
 
     for (final semester in semesters) {
       for (final entry in _getWeeksByYearInInterval(
-              DateInterval(semester.startDate, semester.endDate))
+              DateTimeRange(start: semester.startDate, end: semester.endDate))
           .entries) {
         weeksByYear[entry.key] ??= {};
         weeksByYear[entry.key].addAll(entry.value);
@@ -50,8 +55,8 @@ class AcademicCalendar {
     }
 
     for (final holiday in holidays) {
-      final DateInterval holidayInterval =
-          DateInterval(holiday.startDate, holiday.endDate);
+      final DateTimeRange holidayInterval =
+          DateTimeRange(start: holiday.startDate, end: holiday.endDate);
       final Map<int, Set<int>> holidayWeeksByYear =
           _getWeeksByYearInInterval(holidayInterval);
 
@@ -60,10 +65,12 @@ class AcademicCalendar {
         final Set<int> weeks = entry.value;
 
         for (final week in weeks) {
-          final LocalDate monday = rule.getLocalDate(
-              year, week, DayOfWeek.monday, CalendarSystem.iso);
-          final LocalDate friday = rule.getLocalDate(
-              year, week, DayOfWeek.friday, CalendarSystem.iso);
+          final DateTime monday = rule
+              .getLocalDate(year, week, DayOfWeek.monday, CalendarSystem.iso)
+              .toDateTimeUnspecified();
+          final DateTime friday = rule
+              .getLocalDate(year, week, DayOfWeek.friday, CalendarSystem.iso)
+              .toDateTimeUnspecified();
 
           // If the holiday includes Monday to Friday in a week, exclude week
           // number from [nonHolidayWeeks].

@@ -12,7 +12,7 @@ class ClassEvent extends RecurringUniEvent {
  const ClassEvent({
    @required this.teacher,
    @required RecurrenceRule rrule,
-   @required LocalDateTime start,
+   @required DateTime start,
    @required Period duration,
    @required String id,
    List<String> relevance,

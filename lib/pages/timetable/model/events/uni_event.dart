@@ -1,11 +1,12 @@
 import 'dart:core';
 
-import 'package:acs_upb_mobile/generated/l10n.dart';
-import 'package:acs_upb_mobile/pages/classes/model/class.dart';
-import 'package:acs_upb_mobile/pages/timetable/model/academic_calendar.dart';
 import 'package:flutter/material.dart';
 import 'package:time_machine/time_machine.dart';
 import 'package:timetable/timetable.dart';
+import '../../../../generated/l10n.dart';
+import '../../../classes/model/class.dart';
+import '../../timetable_utils.dart';
+import '../academic_calendar.dart';
 
 enum UniEventType {
   lecture,
@@ -112,7 +113,7 @@ class UniEvent {
   final String id;
   final Color color;
   final UniEventType type;
-  final LocalDateTime start;
+  final DateTime start;
   final Period duration;
   final String name;
   final String location;
@@ -128,20 +129,20 @@ class UniEvent {
   }
 
   Iterable<UniEventInstance> generateInstances(
-      {DateInterval intersectingInterval}) sync* {
-    final LocalDateTime end = start.add(duration);
+      {DateTimeRange intersectingInterval}) sync* {
+    final DateTime end = start.add(duration.toTime().toDuration);
     if (intersectingInterval != null) {
-      if (end.calendarDate < intersectingInterval.start ||
-          start.calendarDate > intersectingInterval.end) return;
+      if (end < intersectingInterval.start || start > intersectingInterval.end)
+        return;
     }
 
     yield UniEventInstance(
-      id: id,
+      // id: id,
       title: name,
       mainEvent: this,
       color: color,
       start: start,
-      end: start.add(duration),
+      end: start.add(duration.toTime().toDuration),
       location: location,
     );
   }
@@ -151,13 +152,13 @@ class UniEventInstance extends Event {
   UniEventInstance({
     @required this.title,
     @required this.mainEvent,
-    @required LocalDateTime start,
-    @required LocalDateTime end,
+    @required DateTime start,
+    @required DateTime end,
     Color color,
     this.location,
     this.info,
   })  : color = color ?? mainEvent?.color,
-        super(start: start.toDateTimeLocal(), end: end.toDateTimeLocal());
+        super(start: start, end: end);
 
   final UniEvent mainEvent;
 
