@@ -175,21 +175,24 @@ class AppScaffold extends StatelessWidget {
     final List<AppScaffoldAction> actionsList =
         kIsWeb ? ([leading] + actions) : List.empty();
 
-    return kIsWeb && actionsList.isNotEmpty
-        ? Stack(
+    return !kIsWeb
+        ? body
+        : Stack(
             children: [
               Center(
                   child: ConstrainedBox(
                       constraints: BoxConstraints(maxWidth: maxBodyWidth),
                       child: body)),
-              ActionSideBar(actionsList
-                  .map((e) => _widgetFromAction(e,
-                      enableContent: enableContent, context: context))
-                  .where((element) => element != null)
-                  .toList()),
+              if (actionsList.isNotEmpty)
+                ActionSideBar(actionsList
+                    .map((e) => _widgetFromAction(e,
+                        enableContent: enableContent, context: context))
+                    .where((element) => element != null)
+                    .toList())
+              else
+                const SizedBox.shrink(),
             ],
-          )
-        : body;
+          );
   }
 
 }
