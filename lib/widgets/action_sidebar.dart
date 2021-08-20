@@ -2,9 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class ActionSideBar extends StatefulWidget {
-  const ActionSideBar(this.actions);
+  const ActionSideBar(this.actionButtons);
 
-  final List<Widget> actions;
+  final List<Widget> actionButtons;
 
   @override
   _ActionSideBarState createState() => _ActionSideBarState();
@@ -72,9 +72,7 @@ class _ActionSideBarState extends State<ActionSideBar>
                 constraints: const BoxConstraints(maxWidth: 50),
                 child: Container(
                   child: Column(
-                    children: widget.actions
-                        .map(buildMaterialActionButton)
-                        .toList(),
+                    children: widget.actionButtons,
                   ),
                   decoration: BoxDecoration(
                     color: Theme.of(context).bottomAppBarColor.withOpacity(0.9),
@@ -100,26 +98,6 @@ class _ActionSideBarState extends State<ActionSideBar>
         ),
       ),
     );
-  }
-
-  /// Wrap simple action button to enable hover and splash effects
-  AspectRatio buildMaterialActionButton(Widget action) {
-    return action == null
-        ? null
-        : AspectRatio(
-            aspectRatio: 1,
-            child: Material(
-              type: MaterialType.transparency,
-              clipBehavior: Clip.none,
-              child: Theme(
-                data: Theme.of(context).copyWith(
-                  splashColor: Theme.of(context).primaryColor.withOpacity(0.12),
-                  hoverColor: Theme.of(context).primaryColor.withOpacity(0.04),
-                ),
-                child: action,
-              ),
-            ),
-          );
   }
 }
 

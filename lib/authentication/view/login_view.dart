@@ -172,14 +172,16 @@ class _LoginViewState extends State<LoginView> {
                           minHeight: 1,
                         ),
                         child: Image.asset('assets/images/city_doodle.png',
-                            color: Theme.of(context).accentColor.withOpacity(0.4)),
+                            color:
+                                Theme.of(context).accentColor.withOpacity(0.4)),
                       ),
                     ),
                   ),
                 ),
                 SingleChildScrollView(
                   child: Padding(
-                    padding: const EdgeInsets.only(left: 28, right: 28, bottom: 10),
+                    padding:
+                        const EdgeInsets.only(left: 28, right: 28, bottom: 10),
                     child: IntrinsicHeight(
                       child: Column(
                         children: <Widget>[
@@ -200,7 +202,8 @@ class _LoginViewState extends State<LoginView> {
                             children: <Widget>[
                               Expanded(
                                 child: AppButton(
-                                  key: const ValueKey('log_in_anonymously_button'),
+                                  key: const ValueKey(
+                                      'log_in_anonymously_button'),
                                   text: S.current.actionLogInAnonymously,
                                   onTap: () async {
                                     final result =

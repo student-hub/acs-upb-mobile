@@ -4,7 +4,6 @@ import 'package:acs_upb_mobile/authentication/view/edit_profile_page.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:flutter/material.dart';
-import 'package:googleapis/cloudbuild/v1.dart';
 import 'package:provider/provider.dart';
 
 class ProfileCard extends StatefulWidget {
