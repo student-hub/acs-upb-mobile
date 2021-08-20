@@ -42,7 +42,7 @@ class _PeoplePageState extends State<PeoplePage> {
           onPressed: () {
             setState(() => searchClosed = !searchClosed);
           },
-          tooltip: 'Search'
+          tooltip: S.current.actionSearch
         )
       ],
       title: Text(S.current.navigationPeople),
