@@ -413,7 +413,7 @@ class _AddEventViewState extends State<AddEventView> {
           DateTime start = semester.startDate.at(startTime);
           if (weekSelected[WeekType.even] && !weekSelected[WeekType.odd]) {
             // Event is every even week, add a week to start date
-            start = start.add(const Period(weeks: 1));
+            start = start.addDays(7);
           }
 
           final rrule = RecurrenceRule(

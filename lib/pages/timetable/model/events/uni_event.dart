@@ -163,7 +163,6 @@ class UniEventInstance extends Event {
         super(start: start, end: end);
 
   final UniEvent mainEvent;
-
   final String title;
   final Color color;
   final String location;
