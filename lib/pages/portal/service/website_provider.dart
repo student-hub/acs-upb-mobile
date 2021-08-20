@@ -127,8 +127,8 @@ class WebsiteProvider with ChangeNotifier {
         print('User not found.');
         return false;
       }
-    } catch (e) {
-      print(e);
+    } on FirebaseException {
+      AppToast.show(S.current.errorPermissionDenied);
       return false;
     }
   }
@@ -153,8 +153,8 @@ class WebsiteProvider with ChangeNotifier {
         website.numberOfVisits = visitsByWebsiteId[website.id] ?? 0;
       }
       return true;
-    } catch (e) {
-      print(e);
+    } on FirebaseException {
+      AppToast.show(S.current.errorPermissionDenied);
       return false;
     }
   }
@@ -183,8 +183,8 @@ class WebsiteProvider with ChangeNotifier {
         print('User not found.');
         return false;
       }
-    } catch (e) {
-      print(e);
+    } on FirebaseException {
+      AppToast.show(S.current.errorPermissionDenied);
       return false;
     }
   }
@@ -216,8 +216,8 @@ class WebsiteProvider with ChangeNotifier {
           .setStringList('websiteVisits', websiteVisits);
       notifyListeners();
       return true;
-    } catch (e) {
-      print(e);
+    } on FirebaseException {
+      AppToast.show(S.current.errorPermissionDenied);
       return false;
     }
   }
@@ -281,8 +281,8 @@ class WebsiteProvider with ChangeNotifier {
           website2.numberOfVisits.compareTo(website1.numberOfVisits));
 
       return websites;
-    } catch (e) {
-      _errorHandler(e, showToast: false);
+    } on FirebaseException {
+      AppToast.show(S.current.errorPermissionDenied);
       return null;
     }
   }
@@ -326,8 +326,8 @@ class WebsiteProvider with ChangeNotifier {
 
       notifyListeners();
       return true;
-    } catch (e) {
-      _errorHandler(e);
+    } on FirebaseException {
+      AppToast.show(S.current.errorPermissionDenied);
       return false;
     }
   }
@@ -368,8 +368,8 @@ class WebsiteProvider with ChangeNotifier {
 
       notifyListeners();
       return true;
-    } catch (e) {
-      _errorHandler(e);
+    } on FirebaseException {
+      AppToast.show(S.current.errorPermissionDenied);
       return false;
     }
   }
@@ -390,8 +390,8 @@ class WebsiteProvider with ChangeNotifier {
       await ref.delete();
       notifyListeners();
       return true;
-    } catch (e) {
-      _errorHandler(e);
+    } on FirebaseException {
+      AppToast.show(S.current.errorPermissionDenied);
       return false;
     }
   }

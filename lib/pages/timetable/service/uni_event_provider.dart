@@ -388,8 +388,8 @@ class UniEventProvider extends EventProvider<UniEventInstance>
       await FirebaseFirestore.instance.collection('events').add(event.toData());
       notifyListeners();
       return true;
-    } catch (e) {
-      _errorHandler(e);
+    } on FirebaseException {
+      AppToast.show(S.current.errorPermissionDenied);
       return false;
     }
   }
@@ -406,8 +406,8 @@ class UniEventProvider extends EventProvider<UniEventInstance>
       await ref.update(event.toData());
       notifyListeners();
       return true;
-    } catch (e) {
-      _errorHandler(e);
+    } on FirebaseException {
+      AppToast.show(S.current.errorPermissionDenied);
       return false;
     }
   }
@@ -419,8 +419,8 @@ class UniEventProvider extends EventProvider<UniEventInstance>
       await ref.delete();
       notifyListeners();
       return true;
-    } catch (e) {
-      _errorHandler(e);
+    } on FirebaseException {
+      AppToast.show(S.current.errorPermissionDenied);
       return false;
     }
   }

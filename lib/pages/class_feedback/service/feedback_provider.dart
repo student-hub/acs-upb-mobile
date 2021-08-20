@@ -75,9 +75,8 @@ class FeedbackProvider with ChangeNotifier {
           .collection(response.questionNumber)
           .add(response.toData());
       return true;
-    } catch (e) {
-      print(e);
-      AppToast.show(S.current.errorSomethingWentWrong);
+    } on FirebaseException {
+      AppToast.show(S.current.errorPermissionDenied);
       return false;
     }
   }
@@ -95,9 +94,8 @@ class FeedbackProvider with ChangeNotifier {
         questions[key] = FeedbackQuestionExtension.fromJSON(value, key);
       }
       return questions;
-    } catch (e) {
-      print(e);
-      AppToast.show(S.current.errorSomethingWentWrong);
+    } on FirebaseException {
+      AppToast.show(S.current.errorPermissionDenied);
       return null;
     }
   }
@@ -116,9 +114,8 @@ class FeedbackProvider with ChangeNotifier {
             .map((key, value) => MapEntry(key?.toString(), value?.toString()));
       }
       return Map<String, Map<String, String>>.from(data);
-    } catch (e) {
-      print(e);
-      AppToast.show(S.current.errorSomethingWentWrong);
+    } on FirebaseException {
+      AppToast.show(S.current.errorPermissionDenied);
       return null;
     }
   }
@@ -133,8 +130,8 @@ class FeedbackProvider with ChangeNotifier {
       }, SetOptions(merge: true));
       notifyListeners();
       return true;
-    } catch (e) {
-      AppToast.show(S.current.errorSomethingWentWrong);
+    } on FirebaseException {
+      AppToast.show(S.current.errorPermissionDenied);
       return false;
     }
   }
@@ -179,8 +176,8 @@ class FeedbackProvider with ChangeNotifier {
         return true;
       }
       return false;
-    } catch (e) {
-      AppToast.show(S.current.errorSomethingWentWrong);
+    } on FirebaseException {
+      AppToast.show(S.current.errorPermissionDenied);
       return false;
     }
   }
@@ -195,8 +192,8 @@ class FeedbackProvider with ChangeNotifier {
         return true;
       }
       return false;
-    } catch (e) {
-      AppToast.show(S.current.errorSomethingWentWrong);
+    } on FirebaseException {
+      AppToast.show(S.current.errorPermissionDenied);
       return false;
     }
   }
@@ -209,8 +206,8 @@ class FeedbackProvider with ChangeNotifier {
         return Map<String, bool>.from(snap.data()['classesFeedback']);
       }
       return null;
-    } catch (e) {
-      AppToast.show(S.current.errorSomethingWentWrong);
+    } on FirebaseException {
+      AppToast.show(S.current.errorPermissionDenied);
       return null;
     }
   }
@@ -234,8 +231,8 @@ class FeedbackProvider with ChangeNotifier {
       }
 
       return feedbackFormsLeft;
-    } catch (e) {
-      AppToast.show(S.current.errorSomethingWentWrong);
+    } on FirebaseException {
+      AppToast.show(S.current.errorPermissionDenied);
       return null;
     }
   }

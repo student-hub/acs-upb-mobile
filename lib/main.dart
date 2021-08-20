@@ -38,6 +38,7 @@ import 'package:preferences/preferences.dart';
 import 'package:provider/provider.dart';
 import 'package:rrule/rrule.dart';
 import 'package:time_machine/time_machine.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 
 // FIXME: Our university website certificates have some issues, so we say we
 // trust them regardless.
@@ -58,7 +59,6 @@ Future<void> main() async {
   HttpOverrides.global = MyHttpOverrides();
 
   WidgetsFlutterBinding.ensureInitialized();
-
   // package_info_plus is not compatible with flutter_test
   // link to the issue: https://github.com/fluttercommunity/plus_plugins/issues/172
   Utils.packageInfo = await PackageInfo.fromPlatform();
@@ -98,6 +98,7 @@ Future<void> main() async {
       },
     ),
   ], child: const MyApp()));
+
 }
 
 class MyApp extends StatefulWidget {
@@ -212,6 +213,14 @@ class _MyAppState extends State<MyApp> {
 class AppLoadingScreen extends StatelessWidget {
   Future<String> _setUpAndChooseStartScreen(BuildContext context) async {
     // Make initializations if this is not a test
+
+     await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
+    FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
+    print(FirebaseCrashlytics.instance.isCrashlyticsCollectionEnabled);
+    print(FirebaseCrashlytics.instance.app.options.projectId);
+     FirebaseCrashlytics.instance.crash();
+
+
     if (!Platform.environment.containsKey('FLUTTER_TEST')) {
       await RemoteConfigService.initialize();
       await TimeMachine.initialize({'rootBundle': rootBundle});

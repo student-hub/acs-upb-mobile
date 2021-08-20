@@ -25,9 +25,8 @@ class PersonProvider with ChangeNotifier {
       final QuerySnapshot qSnapshot =
           await FirebaseFirestore.instance.collection('people').get();
       return qSnapshot.docs.map(PersonExtension.fromSnap).toList();
-    } catch (e) {
-      print(e);
-      AppToast.show(S.current.errorSomethingWentWrong);
+    }  on FirebaseException {
+      AppToast.show(S.current.errorPermissionDenied);
       return null;
     }
   }
@@ -46,9 +45,8 @@ class PersonProvider with ChangeNotifier {
       }
 
       return PersonExtension.fromSnap(query.docs.first);
-    } catch (e) {
-      print(e);
-      AppToast.show(S.current.errorSomethingWentWrong);
+    }  on FirebaseException {
+      AppToast.show(S.current.errorPermissionDenied);
       return null;
     }
   }
@@ -67,9 +65,8 @@ class PersonProvider with ChangeNotifier {
         return null;
       }
       return query.docs.first.get('teacher');
-    } catch (e) {
-      print(e);
-      AppToast.show(S.current.errorSomethingWentWrong);
+    } on FirebaseException {
+      AppToast.show(S.current.errorPermissionDenied);
       return null;
     }
   }

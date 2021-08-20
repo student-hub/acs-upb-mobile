@@ -73,8 +73,8 @@ class FilterProvider with ChangeNotifier {
       final DocumentReference doc =
           _db.collection('users').doc(_authProvider.uid);
       await doc.update({'filter_nodes': nodes});
-    } catch (e) {
-      print(e);
+    } on FirebaseException {
+      AppToast.show(S.current.errorPermissionDenied);
     }
   }
 
@@ -167,9 +167,8 @@ class FilterProvider with ChangeNotifier {
 
       notifyListeners();
       return cachedFilter;
-    } catch (e, _) {
-      print(e);
-      AppToast.show(S.current.errorSomethingWentWrong);
+    } on FirebaseException {
+      AppToast.show(S.current.errorPermissionDenied);
       return null;
     }
   }

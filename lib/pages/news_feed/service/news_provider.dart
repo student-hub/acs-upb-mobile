@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:math';
 
 import 'package:acs_upb_mobile/generated/l10n.dart';
@@ -35,13 +36,11 @@ class NewsProvider with ChangeNotifier {
       if (scrapeSuccess) {
         return _extractFromWebScraper(webScraper, limit);
       }
-    } catch (e) {
-      // Ignore "no internet" error
-      if (!e.message.contains('Failed host lookup')) {
-        print(e);
-        AppToast.show(S.current.errorSomethingWentWrong);
-      }
+    } on SocketException {
+      print('no internet');
+      AppToast.show(S.current.errorSomethingWentWrong);
     }
+
 
     return null;
   }
