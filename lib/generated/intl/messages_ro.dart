@@ -74,6 +74,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "actionRefresh" : MessageLookupByLibrary.simpleMessage("Reîncarcă"),
     "actionRequestPermissions" : MessageLookupByLibrary.simpleMessage("Cere permisiuni"),
     "actionResetPassword" : MessageLookupByLibrary.simpleMessage("Resetare parolă"),
+    "actionSearch" : MessageLookupByLibrary.simpleMessage("Căutare"),
     "actionSendEmail" : MessageLookupByLibrary.simpleMessage("Trimite e-mail"),
     "actionSendVerificationAgain" : MessageLookupByLibrary.simpleMessage("Trimite mail din nou?"),
     "actionShowMore" : MessageLookupByLibrary.simpleMessage("Mai multe"),
