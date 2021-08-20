@@ -169,56 +169,29 @@ class AppScaffold extends StatelessWidget {
   }
 
   ///
-  /// Build content body based on is web version.
-  /// When web version ad an action bar to right side.
+  /// Build content body based on platform.
+  /// On web, there are action buttons on the right side.
   ///
   Widget buildBody(BuildContext context, {bool enableContent = false}) {
-    final List<Widget> actionButtons =
-        !kIsWeb // check to avoid building action button twice in mobile
-            ? List.empty()
-            : ([leading] + actions)
-                .map((action) => buildMaterialActionButton(action, context,
-                    enableContent: enableContent))
-                .where((element) => element != null)
-                .toList();
+    // check if on web to avoid building action button twice in mobile
+    final List<AppScaffoldAction> actionsList =
+        kIsWeb ? ([leading] + actions) : List.empty();
 
-    return kIsWeb && actionButtons.isNotEmpty
+    return kIsWeb && actionsList.isNotEmpty
         ? Stack(
             children: [
               Center(
                   child: ConstrainedBox(
                       constraints: BoxConstraints(maxWidth: maxBodyWidth),
                       child: body)),
-              ActionSideBar(actionButtons),
+              ActionSideBar(actionsList
+                  .map((e) => _widgetFromAction(e,
+                      enableContent: enableContent, context: context))
+                  .where((element) => element != null)
+                  .toList()),
             ],
           )
         : body;
   }
 
-  ///
-  /// Wrap simple action button to enable hover and splash effects
-  ///
-  AspectRatio buildMaterialActionButton(
-      AppScaffoldAction action, BuildContext context,
-      {bool enableContent = false}) {
-    final widgetFromAction = _widgetFromAction(action,
-        enableContent: enableContent, context: context);
-
-    return widgetFromAction == null
-        ? null
-        : AspectRatio(
-            aspectRatio: 1,
-            child: Material(
-              type: MaterialType.transparency,
-              clipBehavior: Clip.none,
-              child: Theme(
-                data: Theme.of(context).copyWith(
-                  splashColor: Theme.of(context).primaryColor.withOpacity(0.12),
-                  hoverColor: Theme.of(context).primaryColor.withOpacity(0.04),
-                ),
-                child: widgetFromAction,
-              ),
-            ),
-          );
-  }
 }

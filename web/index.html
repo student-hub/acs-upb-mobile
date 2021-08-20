@@ -54,6 +54,8 @@
   // Initialize Firebase
   firebase.initializeApp(firebaseConfig);
   firebase.analytics();
+
+  // Enable authentication persistence per session
   firebase.auth().setPersistence(firebase.auth.Auth.Persistence.SESSION);
 
 </script>

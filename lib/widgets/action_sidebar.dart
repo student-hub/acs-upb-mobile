@@ -2,9 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class ActionSideBar extends StatefulWidget {
-  const ActionSideBar(this.actionButtons);
+  const ActionSideBar(this.actions);
 
-  final List<Widget> actionButtons;
+  final List<Widget> actions;
 
   @override
   _ActionSideBarState createState() => _ActionSideBarState();
@@ -12,15 +12,18 @@ class ActionSideBar extends StatefulWidget {
 
 class _ActionSideBarState extends State<ActionSideBar>
     with SingleTickerProviderStateMixin {
-  _ActionSideBarState({this.isExtended = false});
+  _ActionSideBarState();
 
-  bool isExtended;
+  bool isExtended = false;
 
-  AnimationController _controller;
+  // Max width for the action sidebar to be extendable
+  final extendedMaxWidth = 1100;
+
+  AnimationController controller;
 
   @override
   void initState() {
-    _controller = AnimationController(
+    controller = AnimationController(
       duration: const Duration(milliseconds: 250),
       vsync: this,
     );
@@ -29,7 +32,7 @@ class _ActionSideBarState extends State<ActionSideBar>
 
   @override
   void dispose() {
-    _controller.dispose();
+    controller.dispose();
     super.dispose();
   }
 
@@ -38,16 +41,16 @@ class _ActionSideBarState extends State<ActionSideBar>
       isExtended = !isExtended;
 
       if (isExtended) {
-        _controller.forward();
+        controller.forward();
       } else {
-        _controller.reverse();
+        controller.reverse();
       }
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    if (MediaQuery.of(context).size.width > 1100) {
+    if (MediaQuery.of(context).size.width > extendedMaxWidth) {
       isExtended = true;
     }
 
@@ -69,7 +72,9 @@ class _ActionSideBarState extends State<ActionSideBar>
                 constraints: const BoxConstraints(maxWidth: 50),
                 child: Container(
                   child: Column(
-                    children: widget.actionButtons,
+                    children: widget.actions
+                        .map(buildMaterialActionButton)
+                        .toList(),
                   ),
                   decoration: BoxDecoration(
                     color: Theme.of(context).bottomAppBarColor.withOpacity(0.9),
@@ -84,10 +89,10 @@ class _ActionSideBarState extends State<ActionSideBar>
                 ),
               ),
             ),
-            if (MediaQuery.of(context).size.width < 1100)
+            if (MediaQuery.of(context).size.width < extendedMaxWidth)
               Positioned(
                 right: 50,
-                child: ActionBarButton(onTap, _controller),
+                child: ActionBarButton(onTap, controller),
               )
             else
               const SizedBox.shrink(),
@@ -96,19 +101,40 @@ class _ActionSideBarState extends State<ActionSideBar>
       ),
     );
   }
+
+  ///
+  /// Wrap simple action button to enable hover and splash effects
+  ///
+  AspectRatio buildMaterialActionButton(Widget action) {
+    return action == null
+        ? null
+        : AspectRatio(
+            aspectRatio: 1,
+            child: Material(
+              type: MaterialType.transparency,
+              clipBehavior: Clip.none,
+              child: Theme(
+                data: Theme.of(context).copyWith(
+                  splashColor: Theme.of(context).primaryColor.withOpacity(0.12),
+                  hoverColor: Theme.of(context).primaryColor.withOpacity(0.04),
+                ),
+                child: action,
+              ),
+            ),
+          );
+  }
 }
 
 class ActionBarButton extends StatelessWidget {
-  const ActionBarButton(this.onTap, this.controller,
-      {this.maxWidth = 50, this.maxHeight = 50});
+  const ActionBarButton(this.onTap, this.controller);
 
   final void Function() onTap;
 
   final AnimationController controller;
 
-  final double maxWidth;
+  static const double maxWidth = 50;
 
-  final double maxHeight;
+  static const double maxHeight = 50;
 
   Offset get zeroPoint => Offset(maxWidth + 1, 0);
 
