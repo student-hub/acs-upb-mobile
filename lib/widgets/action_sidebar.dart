@@ -16,7 +16,7 @@ class _ActionSideBarState extends State<ActionSideBar>
 
   bool isExtended = false;
 
-  // Max width for the action sidebar to be extendable
+  /// Max width for the action sidebar to be extendable
   final extendedMaxWidth = 1100;
 
   AnimationController controller;
@@ -102,9 +102,7 @@ class _ActionSideBarState extends State<ActionSideBar>
     );
   }
 
-  ///
   /// Wrap simple action button to enable hover and splash effects
-  ///
   AspectRatio buildMaterialActionButton(Widget action) {
     return action == null
         ? null
@@ -138,10 +136,10 @@ class ActionBarButton extends StatelessWidget {
 
   Offset get zeroPoint => Offset(maxWidth + 1, 0);
 
-  Set<BezierPoint> getClipPoints() {
-    final BezierPoint first = BezierPoint(
+  Set<_BezierPoint> getClipPoints() {
+    final _BezierPoint first = _BezierPoint(
         maxWidth / 2 - 5, maxHeight / 5, maxWidth / 2 - 5, maxHeight / 2);
-    final BezierPoint second = BezierPoint(
+    final _BezierPoint second = _BezierPoint(
         maxWidth / 2 - 5, 4 * maxHeight / 5, maxWidth + 1, maxHeight);
 
     return {first, second};
@@ -178,8 +176,8 @@ class ActionBarButton extends StatelessWidget {
   }
 }
 
-class BezierPoint {
-  BezierPoint(this.x1, this.y1, this.x2, this.y2);
+class _BezierPoint {
+  _BezierPoint(this.x1, this.y1, this.x2, this.y2);
 
   double x1;
   double y1;
@@ -190,7 +188,7 @@ class BezierPoint {
 class CustomMenuClipper extends CustomClipper<Path> {
   CustomMenuClipper({@required this.zeroPoint, @required this.points});
 
-  Set<BezierPoint> points;
+  Set<_BezierPoint> points;
 
   Offset zeroPoint;
 
@@ -200,7 +198,7 @@ class CustomMenuClipper extends CustomClipper<Path> {
 
     path.moveTo(zeroPoint.dx, zeroPoint.dy);
 
-    for (final BezierPoint point in points) {
+    for (final _BezierPoint point in points) {
       path.quadraticBezierTo(point.x1, point.y1, point.x2, point.y2);
     }
 
@@ -218,7 +216,7 @@ class BoxShadowPainter extends CustomPainter {
   BoxShadowPainter(
       {@required this.zeroPoint, @required this.points, this.shadowWidth = 3});
 
-  Set<BezierPoint> points;
+  Set<_BezierPoint> points;
   Offset zeroPoint;
   int shadowWidth;
 
@@ -228,7 +226,7 @@ class BoxShadowPainter extends CustomPainter {
 
     path.moveTo(zeroPoint.dx, zeroPoint.dy - shadowWidth);
 
-    for (final BezierPoint point in points) {
+    for (final _BezierPoint point in points) {
       path.quadraticBezierTo(
           point.x1 - shadowWidth, point.y1, point.x2 - shadowWidth, point.y2);
     }

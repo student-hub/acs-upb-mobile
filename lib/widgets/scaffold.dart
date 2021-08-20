@@ -168,10 +168,8 @@ class AppScaffold extends StatelessWidget {
     );
   }
 
-  ///
   /// Build content body based on platform.
   /// On web, there are action buttons on the right side.
-  ///
   Widget buildBody(BuildContext context, {bool enableContent = false}) {
     // check if on web to avoid building action button twice in mobile
     final List<AppScaffoldAction> actionsList =
