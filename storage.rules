@@ -1,0 +1,31 @@
+// NOTE: Editing rules from the console can lead to conflicts. Always remember to update the GitHub
+// file as well, otherwise you risk your changes being overwritten.
+// https://firebase.google.com/docs/cli#deployment_conflicts
+
+rules_version = '2';
+service firebase.storage {
+    function isAuthenticated() {
+        return request.auth != null;
+    }
+
+    function isRightSize() {
+        return request.resource.size < 10 * 1024 * 1024;
+    }
+
+    match /b/{bucket}/o {
+        match /websites/{allPaths=**} {
+            allow read: if true;
+            allow write: if isAuthenticated() && isRightSize();
+        }
+
+        match /users/{user}/{allPaths=**} {
+            function isOwner() {
+                return isAuthenticated() && request.auth.uid == user;
+            }
+
+            allow read: if isOwner();
+            allow delete: if isOwner();
+            allow write: if isOwner() && isRightSize();
+        }
+    }
+}
