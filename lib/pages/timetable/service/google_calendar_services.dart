@@ -40,7 +40,7 @@ extension UniEventProviderGoogleCalendar on UniEventProvider {
     final g_cal.Event googleCalendarEvent = g_cal.Event();
 
     final g_cal.EventDateTime start = g_cal.EventDateTime();
-    final DateTime startDateTime = uniEvent.start.toDateTimeLocal();
+    final DateTime startDateTime = uniEvent.start;
 
     start
       ..timeZone = 'Europe/Bucharest'

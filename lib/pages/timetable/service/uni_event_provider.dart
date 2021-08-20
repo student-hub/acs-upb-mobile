@@ -1,11 +1,30 @@
+import 'dart:async';
+
+import 'package:async/async.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:googleapis/calendar/v3.dart' as g_cal;
+import 'package:rrule/rrule.dart';
 import 'package:time_machine/time_machine.dart';
+import 'package:timetable/timetable.dart';
 
 import '../../../authentication/service/auth_provider.dart';
+import '../../../generated/l10n.dart';
+import '../../../resources/utils.dart';
+import '../../../widgets/toast.dart';
+import '../../classes/model/class.dart';
 import '../../classes/service/class_provider.dart';
 import '../../filter/model/filter.dart';
 import '../../filter/service/filter_provider.dart';
+import '../../people/model/person.dart';
 import '../../people/service/person_provider.dart';
+import '../model/academic_calendar.dart';
+import '../model/events/all_day_event.dart';
+import '../model/events/class_event.dart';
+import '../model/events/recurring_event.dart';
+import '../model/events/uni_event.dart';
+import '../timetable_utils.dart';
+import 'google_calendar_services.dart';
 
 extension PeriodExtension on Period {
   static Period fromJSON(Map<String, dynamic> json) {
@@ -41,8 +60,8 @@ extension PeriodExtension on Period {
   }
 }
 
-extension LocalDateTimeExtension on LocalDateTime {
-  Timestamp toTimestamp() => Timestamp.fromDate(toDateTimeLocal());
+extension DateTimeExtension on DateTime {
+  Timestamp toTimestamp() => Timestamp.fromDate(this);
 }
 
 extension UniEventExtension on UniEvent {
@@ -61,8 +80,8 @@ extension UniEventExtension on UniEvent {
         type: type,
         name: json['name'],
         // Convert time to UTC and then to local time
-        start: (json['start'] as Timestamp).toLocalDateTime().calendarDate,
-        end: (json['end'] as Timestamp).toLocalDateTime().calendarDate,
+        start: (json['start'] as Timestamp).toDate(),
+        end: (json['end'] as Timestamp).toDate(),
         location: json['location'],
         // TODO(IoanaAlexandru): Allow users to set event colours in settings
         color: type.color,
@@ -83,7 +102,7 @@ extension UniEventExtension on UniEvent {
         type: type,
         name: json['name'],
         // Convert time to UTC and then to local time
-        start: (json['start'] as Timestamp).toLocalDateTime(),
+        start: (json['start'] as Timestamp).toDate(),
         duration: PeriodExtension.fromJSON(json['duration']),
         location: json['location'],
         // TODO(IoanaAlexandru): Allow users to set event colours in settings
@@ -104,7 +123,7 @@ extension UniEventExtension on UniEvent {
         id: id,
         type: type,
         name: json['name'],
-        start: (json['start'] as Timestamp).toLocalDateTime(),
+        start: (json['start'] as Timestamp).toDate(),
         duration: PeriodExtension.fromJSON(json['duration']),
         location: json['location'],
         color: type.color,
@@ -123,7 +142,7 @@ extension UniEventExtension on UniEvent {
         type: type,
         name: json['name'],
         // Convert time to UTC and then to local time
-        start: (json['start'] as Timestamp).toLocalDateTime(),
+        start: (json['start'] as Timestamp).toDate(),
         duration: PeriodExtension.fromJSON(json['duration']),
         location: json['location'],
         // TODO(IoanaAlexandru): Allow users to set event colours in settings
@@ -193,7 +212,7 @@ extension AcademicCalendarExtension on AcademicCalendar {
   }
 }
 
-class UniEventProvider extends EventProvider<UniEventInstance>
+class UniEventProvider extends DefaultEventProvider<UniEventInstance>
     with ChangeNotifier {
   UniEventProvider({AuthProvider authProvider, PersonProvider personProvider})
       : _authProvider = authProvider ?? AuthProvider(),
@@ -301,11 +320,11 @@ class UniEventProvider extends EventProvider<UniEventInstance>
 
   @override
   Stream<Iterable<UniEventInstance>> getAllDayEventsIntersecting(
-      DateInterval interval) {
+      DateTimeRange interval) {
     return _events.map((events) => events
         .map((event) => event.generateInstances(intersectingInterval: interval))
         .expand((i) => i)
-        .allDayEvents
+        .where((event) => event.isAllDay)
         .followedBy(_calendars.values.map((cal) {
           final List<AllDayUniEvent> events = cal.holidays + cal.exams;
           return events
@@ -321,25 +340,25 @@ class UniEventProvider extends EventProvider<UniEventInstance>
 
   @override
   Stream<Iterable<UniEventInstance>> getPartDayEventsIntersecting(
-      LocalDate date) {
+      DateTime date) {
     return _events.map((events) => events
         .map((event) => event.generateInstances(
-            intersectingInterval: DateInterval(date, date)))
+            intersectingInterval: DateTimeRange(start: date, end: date)))
         .expand((i) => i)
-        .partDayEvents);
+        .where((event) => event.isPartDay));
   }
 
-  Future<Iterable<UniEventInstance>> getUpcomingEvents(LocalDate date,
+  Future<Iterable<UniEventInstance>> getUpcomingEvents(DateTime date,
       {int limit = 3}) async {
     return _events
         .map((events) => events
             .where((event) => !(event is AllDayUniEvent))
             .map((event) => event.generateInstances(
-                intersectingInterval: DateInterval(date, date.addDays(6))))
+                intersectingInterval:
+                    DateTimeRange(start: date, end: date.addDays(6))))
             .expand((i) => i)
             .sortedByStartLength()
-            .where((element) =>
-                element.end.toDateTimeLocal().isAfter(DateTime.now()))
+            .where((element) => element.end.isAfter(DateTime.now()))
             .take(limit))
         .first;
   }

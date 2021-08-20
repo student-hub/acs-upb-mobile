@@ -132,8 +132,10 @@ class UniEvent {
       {DateTimeRange intersectingInterval}) sync* {
     final DateTime end = start.add(duration.toTime().toDuration);
     if (intersectingInterval != null) {
-      if (end < intersectingInterval.start || start > intersectingInterval.end)
+      if (end < intersectingInterval.start ||
+          start > intersectingInterval.end) {
         return;
+      }
     }
 
     yield UniEventInstance(
