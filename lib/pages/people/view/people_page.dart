@@ -5,6 +5,7 @@ import 'package:acs_upb_mobile/pages/people/view/person_view.dart';
 import 'package:acs_upb_mobile/widgets/autocomplete.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:acs_upb_mobile/widgets/search_bar.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dynamic_text_highlighting/dynamic_text_highlighting.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -107,6 +108,14 @@ class _PeopleListState extends State<PeopleList> {
         .where((element) => element != '')
         .toList();
 
+    widget.people.sort((p1, p2) {
+      final cmpLast = p1.lastName.compareTo(p2.lastName);
+      if (cmpLast != 0) {
+        return cmpLast;
+      }
+      return p1.name.compareTo(p2.name);
+    });
+
     return ListView.builder(
       shrinkWrap: true,
       itemCount: widget.people.length,
@@ -114,7 +123,9 @@ class _PeopleListState extends State<PeopleList> {
         return ListTile(
           key: ValueKey(widget.people[index].name),
           leading: CircleAvatar(
-            backgroundImage: NetworkImage(widget.people[index].photo),
+            backgroundImage: CachedNetworkImageProvider(
+              widget.people[index].photo,
+            ),
           ),
           title: filteredWords.isNotEmpty
               ? DynamicTextHighlighting(
@@ -124,6 +135,9 @@ class _PeopleListState extends State<PeopleList> {
                   color: Theme.of(context).accentColor,
                   caseSensitive: false,
                 )
+              : Text(
+                  widget.people[index].name,
+                ),
               : Text(
                   widget.people[index].name,
                 ),
