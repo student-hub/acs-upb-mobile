@@ -138,9 +138,6 @@ class _PeopleListState extends State<PeopleList> {
               : Text(
                   widget.people[index].name,
                 ),
-              : Text(
-                  widget.people[index].name,
-                ),
           subtitle: Text(widget.people[index].email),
           onTap: () => kIsWeb
               ? showPersonPage(widget.people[index].name)
