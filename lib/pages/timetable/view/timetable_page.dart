@@ -33,13 +33,15 @@ class TimetablePage extends StatefulWidget {
 }
 
 class _TimetablePageState extends State<TimetablePage> {
-  TimeController _controller;
+  TimeController _timeController;
+  DateController _dateController;
 
   /// UniEventInstance?
 
   @override
   void dispose() {
-    _controller?.dispose();
+    _timeController?.dispose();
+    _dateController?.dispose();
     super.dispose();
   }
 
@@ -47,8 +49,11 @@ class _TimetablePageState extends State<TimetablePage> {
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
     final eventProvider = Provider.of<UniEventProvider>(context);
-    if (_controller == null) {
-      _controller = TimeController(
+
+    _dateController ??= DateController();
+
+    if (_timeController == null) {
+      _timeController = TimeController(
         initialRange: TimeRange(7.hours + 55.minutes, 20.hours + 5.minutes),
         // TODO(IoanaAlexandru): Make initialTimeRange customizable in settings
       );
@@ -60,16 +65,17 @@ class _TimetablePageState extends State<TimetablePage> {
 
     return AppScaffold(
       title: AnimatedBuilder(
-        animation: _controller.dateListenable,
+        animation: _timeController.dateListenable,
         builder: (context, child) => Text(
             authProvider.isAuthenticated && !authProvider.isAnonymous
                 ? S.current.navigationTimetable
-                : _controller.currentMonth.titleCase),
+                : _timeController.currentMonth.titleCase),
       ),
       needsToBeAuthenticated: true,
       leading: AppScaffoldAction(
         icon: Icons.today_outlined,
-        onPressed: () => _controller.animateToToday(),
+        onPressed: () => _dateController.animateTo(DateTime.now(), vsync: null),
+        //.animateToToday(),
         tooltip: S.current.actionJumpToToday,
       ),
       actions: [
@@ -97,40 +103,42 @@ class _TimetablePageState extends State<TimetablePage> {
         padding: const EdgeInsets.all(10),
         child: Stack(
           children: [
-            Timetable<UniEventInstance>(
-              controller: _controller,
-              dateHeaderBuilder: (_, date) => DateHeader(date),
-              eventBuilder: (event) => UniEventWidget(event),
+            TimetableConfig<UniEventInstance>(
+              dateController: _dateController,
+              timeController: _timeController,
+              eventBuilder: (context, event) => UniEventWidget(event),
+              child: MultiDateTimetable<UniEventInstance>(),
+              eventProvider: (date) => someListOfEvents,
               allDayEventBuilder: (context, event, info) =>
-                  UniAllDayEventWidget(
-                event,
-                info: info,
-              ),
-              onEventBackgroundTap: (dateTime, isAllDay) {
-                if (!isAllDay) {
+                  UniAllDayEventWidget(event, info: info),
+              callbacks: TimetableCallbacks(
+                // TODO(bogpie): Typing on an all day event (e.g.: holiday).
+                onDateTimeBackgroundTap: (dateTime) {
                   final user = Provider.of<AuthProvider>(context, listen: false)
                       .currentUserFromCache;
                   if (user.canAddPublicInfo) {
-                    Navigator.of(context).push(MaterialPageRoute<AddEventView>(
-                      builder: (_) => ChangeNotifierProxyProvider<AuthProvider,
-                          FilterProvider>(
-                        create: (_) => FilterProvider(),
-                        update: (context, authProvider, filterProvider) {
-                          return filterProvider..updateAuth(authProvider);
-                        },
-                        child: AddEventView(
-                          initialEvent: UniEvent(
-                              start: dateTime,
-                              duration: const Period(hours: 2),
-                              id: null),
+                    Navigator.of(context).push(
+                      MaterialPageRoute<AddEventView>(
+                        builder: (_) => ChangeNotifierProxyProvider<
+                            AuthProvider, FilterProvider>(
+                          create: (_) => FilterProvider(),
+                          update: (context, authProvider, filterProvider) {
+                            return filterProvider..updateAuth(authProvider);
+                          },
+                          child: AddEventView(
+                            initialEvent: UniEvent(
+                                start: dateTime,
+                                duration: const Period(hours: 2),
+                                id: null),
+                          ),
                         ),
                       ),
-                    ));
+                    );
                   } else {
                     AppToast.show(S.current.errorPermissionDenied);
                   }
-                }
-              },
+                },
+              ),
             ),
           ],
         ),
