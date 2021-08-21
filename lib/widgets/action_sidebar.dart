@@ -112,7 +112,7 @@ class ActionBarButton extends StatelessWidget {
 
   static const double maxHeight = 50;
 
-  Offset get zeroPoint => Offset(maxWidth + 1, 0);
+  Offset get zeroPoint => const Offset(maxWidth + 1, 0);
 
   Set<_BezierPoint> getClipPoints() {
     final _BezierPoint first = _BezierPoint(
@@ -126,7 +126,7 @@ class ActionBarButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ConstrainedBox(
-      constraints: BoxConstraints(maxWidth: maxWidth),
+      constraints: const BoxConstraints(maxWidth: maxWidth),
       child: AspectRatio(
         aspectRatio: 1,
         child: GestureDetector(
@@ -143,7 +143,8 @@ class ActionBarButton extends StatelessWidget {
                 alignment: Alignment.centerRight,
                 color: Theme.of(context).bottomAppBarColor,
                 child: RotationTransition(
-                    turns: Tween(begin: 0.5, end: 0.0).animate(controller),
+                    turns: Tween(begin: 0.5, end: 0.toDouble())
+                        .animate(controller),
                     child: const Icon(Icons.double_arrow)),
               ),
             ),
@@ -172,9 +173,7 @@ class CustomMenuClipper extends CustomClipper<Path> {
 
   @override
   Path getClip(Size size) {
-    Path path = Path();
-
-    path.moveTo(zeroPoint.dx, zeroPoint.dy);
+    final Path path = Path()..moveTo(zeroPoint.dx, zeroPoint.dy);
 
     for (final _BezierPoint point in points) {
       path.quadraticBezierTo(point.x1, point.y1, point.x2, point.y2);
@@ -200,9 +199,7 @@ class BoxShadowPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    Path path = Path();
-
-    path.moveTo(zeroPoint.dx, zeroPoint.dy - shadowWidth);
+    final Path path = Path()..moveTo(zeroPoint.dx, zeroPoint.dy - shadowWidth);
 
     for (final _BezierPoint point in points) {
       path.quadraticBezierTo(
@@ -211,7 +208,7 @@ class BoxShadowPainter extends CustomPainter {
 
     path.close();
 
-    canvas.drawShadow(path, Colors.black45, 5.0, false);
+    canvas.drawShadow(path, Colors.black45, 5, false);
   }
 
   @override

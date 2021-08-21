@@ -34,7 +34,7 @@ class HomePage extends StatelessWidget {
       ],
       body: ListView(
         children: [
-          if (authProvider.isAuthenticated) ProfileCard(),
+          if (authProvider.isAuthenticated) const ProfileCard(),
           if (authProvider.isAuthenticated &&
               !authProvider.isAnonymous &&
               RemoteConfigService.feedbackEnabled)
