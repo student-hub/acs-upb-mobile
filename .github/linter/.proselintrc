@@ -1,3 +1,5 @@
+##### Configuration file for proselint, used to extend the functionality of textlint. #####
+
 {
   "checks": {
     "cliches.misc": false,
