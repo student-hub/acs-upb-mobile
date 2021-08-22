@@ -1,4 +1,4 @@
-# Configuration file for textlint, the documentation linter
+##### Configuration file for textlint, the documentation linter. #####
 
 {
     "rules": {
