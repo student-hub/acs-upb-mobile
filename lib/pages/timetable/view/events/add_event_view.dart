@@ -171,7 +171,8 @@ class _AddEventViewState extends State<AddEventView> {
     startTime = DateTime(startHour, 0, 0);
 
     List<_DayOfWeek> initialWeekDays = [
-      _DayOfWeek.from(widget.initialEvent?.start?.dayOfWeek) ??
+      _DayOfWeek.from(
+              LocalDate.dateTime(widget.initialEvent?.start)?.dayOfWeek) ??
           _DayOfWeek.monday
     ];
     if (widget.initialEvent != null &&
@@ -183,7 +184,7 @@ class _AddEventViewState extends State<AddEventView> {
       initialWeekDays = (widget.initialEvent as RecurringUniEvent)
           .rrule
           .byWeekDays
-          .map((entry) => _DayOfWeek.from(entry.day))
+          .map((entry) => _DayOfWeek.from(time_machine.DayOfWeek(entry.day)))
           .toList();
     }
     for (final initialWeekDay in initialWeekDays) {
@@ -421,7 +422,7 @@ class _AddEventViewState extends State<AddEventView> {
               byWeekDays: (Map<_DayOfWeek, bool>.from(weekDaySelected)
                     ..removeWhere((key, value) => !value))
                   .keys
-                  .map((weekDay) => ByWeekDayEntry(weekDay))
+                  .map((weekDay) => ByWeekDayEntry(weekDay.value))
                   .toSet(),
               interval:
                   weekSelected[WeekType.odd] != weekSelected[WeekType.even]
@@ -702,7 +703,7 @@ class _DayOfWeek extends time_machine.DayOfWeek with Localizable {
 
   @override
   String toLocalizedString() {
-    final helperDate = DateTime.now().next(this);
+    final helperDate = LocalDate.today().next(this);
     return LocalDatePattern.createWithCurrentCulture('ddd')
         .format(helperDate)
         .substring(0, 3);
