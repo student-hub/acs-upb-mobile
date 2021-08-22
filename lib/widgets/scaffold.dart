@@ -3,6 +3,7 @@ import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/widgets/error_page.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -48,6 +49,7 @@ class AppScaffold extends StatelessWidget {
     this.floatingActionButton,
     this.leading,
     this.needsToBeAuthenticated = false,
+    this.onWeb = false,
   }) : actions = actions ?? [];
 
   final Widget body;
@@ -56,6 +58,7 @@ class AppScaffold extends StatelessWidget {
   final List<AppScaffoldAction> actions;
   final AppScaffoldAction leading;
   final bool needsToBeAuthenticated;
+  final bool onWeb;
 
   Widget _widgetFromAction(AppScaffoldAction action,
       {@required bool enableContent, @required BuildContext context}) {
@@ -137,20 +140,25 @@ class AppScaffold extends StatelessWidget {
                 actionText: S.current.actionLogIn,
                 actionOnTap: () => Utils.signOut(context),
               ),
-        appBar: PreferredSize(
-          preferredSize: const Size.fromHeight(40),
-          child: AppBar(
-            title: title,
-            centerTitle: true,
-            toolbarOpacity: 0.8,
-            leading: _widgetFromAction(leading,
-                enableContent: enableContent, context: context),
-            actions: actions
-                .map((action) => _widgetFromAction(action,
-                    enableContent: enableContent, context: context))
-                .toList(),
-          ),
-        ),
+        appBar: (!kIsWeb || onWeb)
+            ? PreferredSize(
+                preferredSize: const Size.fromHeight(40),
+                child: AppBar(
+                  title: title,
+                  centerTitle: true,
+                  toolbarOpacity: 0.8,
+                  leading: _widgetFromAction(leading,
+                      enableContent: enableContent, context: context),
+                  actions: actions
+                      .map((action) => _widgetFromAction(action,
+                          enableContent: enableContent, context: context))
+                      .toList(),
+                ),
+              )
+            : const PreferredSize(
+                preferredSize: Size.fromHeight(40),
+                child: SizedBox.shrink(),
+              ),
         floatingActionButton: floatingActionButton,
       ),
     );
