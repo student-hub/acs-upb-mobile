@@ -47,31 +47,33 @@ class WeekdayIndicator extends StatelessWidget {
 
     final style =
         TimetableTheme.of(context).weekdayIndicatorStyleProvider(date);
+    //
+    // final pattern = timetableTheme?.weekDayIndicatorPattern?.resolve(states) ??
+    //     LocalDatePattern.createWithCurrentCulture('ddd');
+    // final decoration =
+    //     timetableTheme?.weekDayIndicatorDecoration?.resolve(states) ??
+    //         const BoxDecoration();
+    // final textStyle =
+    //     timetableTheme?.weekDayIndicatorTextStyle?.resolve(states) ??
+    //         TextStyle(
+    //           color: date.isToday
+    //               ? timetableTheme?.primaryColor ?? theme.primaryColor
+    //               : theme.highEmphasisOnBackground,
+    //         );
 
-    final pattern = timetableTheme?.weekDayIndicatorPattern?.resolve(states) ??
-        LocalDatePattern.createWithCurrentCulture('ddd');
-    final decoration =
-        timetableTheme?.weekDayIndicatorDecoration?.resolve(states) ??
-            const BoxDecoration();
-    final textStyle =
-        timetableTheme?.weekDayIndicatorTextStyle?.resolve(states) ??
-            TextStyle(
-              color: date.isToday
-                  ? timetableTheme?.primaryColor ?? theme.primaryColor
-                  : theme.highEmphasisOnBackground,
-            );
+    return const AutoSizeText('Placeholder');
 
-    return DecoratedBox(
-      decoration: decoration,
-      child: Padding(
-        padding: const EdgeInsets.all(4),
-        child: AutoSizeText(
-          pattern.format(date),
-          style: textStyle,
-          maxLines: 1,
-        ),
-      ),
-    );
+    // return DecoratedBox(
+    //   decoration: decoration,
+    //   child: Padding(
+    //     padding: const EdgeInsets.all(4),
+    //     child: AutoSizeText(
+    //       pattern.format(date),
+    //       style: textStyle,
+    //       maxLines: 1,
+    //     ),
+    //   ),
+    // );
   }
 
   static Set<MaterialState> statesFor(DateTime date) {

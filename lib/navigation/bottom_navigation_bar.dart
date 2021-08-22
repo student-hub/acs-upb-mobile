@@ -5,6 +5,7 @@ import '../generated/l10n.dart';
 import '../pages/home/home_page.dart';
 import '../pages/people/view/people_page.dart';
 import '../pages/portal/view/portal_page.dart';
+import '../pages/timetable/view/timetable_page.dart';
 
 class AppBottomNavigationBar extends StatefulWidget {
   const AppBottomNavigationBar({this.tabIndex = 0});
@@ -25,7 +26,7 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar>
   @override
   void initState() {
     super.initState();
-    tabController = TabController(vsync: this, length: 3);
+    tabController = TabController(vsync: this, length: 4);
     tabController.addListener(() {
       if (!tabController.indexIsChanging) {
         setState(() {
@@ -35,7 +36,7 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar>
     });
     tabs = [
       HomePage(key: const PageStorageKey('Home'), tabController: tabController),
-//      const TimetablePage(), // Cannot preserve state with PageStorageKey
+      const TimetablePage(), // Cannot preserve state with PageStorageKey
       const PortalPage(key: PageStorageKey('Portal')),
       const PeoplePage(key: PageStorageKey('People')),
     ];
@@ -59,7 +60,7 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar>
         ),
         bottomNavigationBar: SafeArea(
           child: SizedBox(
-            height: 50,
+            height: 52,
             child: Column(
               children: [
                 const Divider(indent: 0, endIndent: 0, height: 1),
@@ -72,36 +73,36 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar>
                             ? const Icon(Icons.home)
                             : const Icon(Icons.home_outlined),
                         text: S.current.navigationHome,
-                        iconMargin: const EdgeInsets.only(top: 5),
+                        iconMargin: EdgeInsets.zero,
                       ),
-//                      Tab(
-//                        icon: currentTab == 1
-//                            ? const Icon(Icons.calendar_today)
-//                            : const Icon(Icons.calendar_today_outlined),
-//                        text: S.current.navigationTimetable,
-//                        iconMargin: const EdgeInsets.only(top: 5),
-//                      ),
+                      Tab(
+                        icon: currentTab == 1
+                            ? const Icon(Icons.calendar_today)
+                            : const Icon(Icons.calendar_today_outlined),
+                        text: S.current.navigationTimetable,
+                        iconMargin: EdgeInsets.zero,
+                      ),
                       Tab(
                         icon: const Icon(FeatherIcons.globe),
                         text: S.current.navigationPortal,
-                        iconMargin: const EdgeInsets.only(top: 5),
+                        iconMargin: EdgeInsets.zero,
                       ),
                       Tab(
                         icon: currentTab == 3
                             ? const Icon(Icons.people)
                             : const Icon(Icons.people_outlined),
                         text: S.current.navigationPeople,
-                        iconMargin: const EdgeInsets.only(top: 5),
+                        iconMargin: EdgeInsets.zero,
                       ),
                     ],
                     labelColor: Theme.of(context).accentColor,
-                    labelPadding: EdgeInsets.zero,
-                    indicatorPadding: EdgeInsets.zero,
+                    labelPadding: const EdgeInsets.only(top: 4),
                     unselectedLabelColor:
-                        Theme.of(context).unselectedWidgetColor,
+                    Theme.of(context).unselectedWidgetColor,
                     indicatorColor: Theme.of(context).accentColor,
                   ),
                 ),
+                const SizedBox(height: 2)
               ],
             ),
           ),
