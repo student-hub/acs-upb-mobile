@@ -205,6 +205,16 @@ class S {
     );
   }
 
+  /// `Website icon`
+  String get labelWebsiteIcon {
+    return Intl.message(
+      'Website icon',
+      name: 'labelWebsiteIcon',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Name`
   String get labelName {
     return Intl.message(
