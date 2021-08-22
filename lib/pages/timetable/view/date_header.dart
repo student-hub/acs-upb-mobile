@@ -1,7 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:black_hole_flutter/black_hole_flutter.dart';
 import 'package:flutter/material.dart';
-import 'package:time_machine/time_machine.dart';
 import 'package:time_machine/time_machine_text_patterns.dart';
 
 // ignore: implementation_imports
@@ -45,6 +44,10 @@ class WeekdayIndicator extends StatelessWidget {
     final timetableTheme = TimetableTheme.of(context);
 
     final states = statesFor(date);
+
+    final style =
+        TimetableTheme.of(context).weekdayIndicatorStyleProvider(date);
+
     final pattern = timetableTheme?.weekDayIndicatorPattern?.resolve(states) ??
         LocalDatePattern.createWithCurrentCulture('ddd');
     final decoration =

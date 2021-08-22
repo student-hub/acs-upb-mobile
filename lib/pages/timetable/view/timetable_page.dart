@@ -37,7 +37,7 @@ class _TimetablePageState extends State<TimetablePage> {
   TimeController _timeController;
   DateController _dateController;
 
-  /// UniEventInstance?
+  // ? UniEventInstance
 
   @override
   void dispose() {
@@ -70,7 +70,7 @@ class _TimetablePageState extends State<TimetablePage> {
 
     return AppScaffold(
       title: AnimatedBuilder(
-        animation: null, // animation: _timeController.dateListenable,
+        animation: null, // ? animation: _timeController.dateListenable,
         builder: (context, child) => Text(
             authProvider.isAuthenticated && !authProvider.isAnonymous
                 ? S.current.navigationTimetable
@@ -80,7 +80,7 @@ class _TimetablePageState extends State<TimetablePage> {
       leading: AppScaffoldAction(
         icon: Icons.today_outlined,
         onPressed: () => _dateController.animateTo(DateTime.now(), vsync: null),
-        //.animateToToday(),
+        // ? .animateToToday(),
         tooltip: S.current.actionJumpToToday,
       ),
       actions: [
@@ -114,7 +114,7 @@ class _TimetablePageState extends State<TimetablePage> {
               eventBuilder: (context, event) => UniEventWidget(event),
               child: MultiDateTimetable<UniEventInstance>(),
               eventProvider: (date) => null,
-              // ??
+              // ?
               allDayEventBuilder: (context, event, info) =>
                   UniAllDayEventWidget(event, info: info),
               callbacks: TimetableCallbacks(
