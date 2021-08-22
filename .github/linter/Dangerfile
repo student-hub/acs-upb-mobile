@@ -62,7 +62,7 @@ show_trivial_hint = false
 has_app_changes = !git.modified_files.grep(/lib/).empty?
 has_test_changes = !git.modified_files.grep(/test/).empty?
 has_pubspec_changes = !git.modified_files.grep(/pubspec.yaml/).empty?
-base_branch_is_master = git.branch_for_base == "master"
+base_branch_is_master = github.branch_for_base == "master"
 
 # Check that the tests were updated if there are app updates
 if !declared_trivial && has_app_changes && !has_test_changes
