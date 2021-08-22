@@ -592,7 +592,7 @@ Future<void> main() async {
         calendar: calendar,
         rrule: rruleEveryWeekFirstSem,
         start: weekStart.at(LocalTime(8, 0, 0)),
-        duration: duration,
+        period: duration,
         id: '0',
       ),
       RecurringUniEvent(
@@ -600,7 +600,7 @@ Future<void> main() async {
         calendar: calendar,
         rrule: rruleEveryTwoWeeksFirstSem,
         start: weekStart.at(LocalTime(10, 0, 0)),
-        duration: duration,
+        period: duration,
         id: '1',
       ),
       RecurringUniEvent(
@@ -608,7 +608,7 @@ Future<void> main() async {
         calendar: calendar,
         rrule: rruleEveryWeekFirstSem,
         start: weekStart.addDays(1).at(LocalTime(8, 0, 0)),
-        duration: duration,
+        period: duration,
         id: '2',
       ),
       RecurringUniEvent(
@@ -616,7 +616,7 @@ Future<void> main() async {
         calendar: calendar,
         rrule: rruleEveryTwoWeeksFirstSem,
         start: weekStart.addDays(1).at(LocalTime(9, 0, 0)),
-        duration: duration,
+        period: duration,
         id: '3',
       ),
       RecurringUniEvent(
@@ -624,21 +624,21 @@ Future<void> main() async {
         calendar: calendar,
         rrule: rruleEveryWeekFirstSem,
         start: weekStart.addDays(2).at(LocalTime(8, 0, 0)),
-        duration: duration,
+        period: duration,
         id: '4',
       ),
       RecurringUniEvent(
         name: 'W2',
         rrule: rruleEveryWeek,
         start: weekStart.addDays(2).at(LocalTime(10, 0, 0)),
-        duration: duration,
+        period: duration,
         id: '5',
       ),
       RecurringUniEvent(
         name: 'W3',
         rrule: rruleEveryTwoWeeks,
         start: weekStart.addDays(2).at(LocalTime(12, 0, 0)),
-        duration: duration,
+        period: duration,
         id: '6',
       ),
       ClassEvent(
@@ -651,7 +651,7 @@ Future<void> main() async {
         calendar: calendar,
         rrule: rruleEveryWeek,
         start: weekStart.addDays(3).at(LocalTime(10, 0, 0)),
-        duration: duration,
+        period: duration,
         id: '7',
       ),
       RecurringUniEvent(
@@ -663,7 +663,7 @@ Future<void> main() async {
         calendar: calendar,
         rrule: rruleEveryTwoWeeks,
         start: weekStart.addDays(3).at(LocalTime(12, 0, 0)),
-        duration: duration,
+        period: duration,
         id: '8',
       ),
       RecurringUniEvent(
@@ -671,7 +671,7 @@ Future<void> main() async {
         calendar: calendar,
         rrule: rruleEveryWeek,
         start: weekStart.addDays(4).at(LocalTime(10, 0, 0)),
-        duration: duration,
+        period: duration,
         id: '9',
       ),
       RecurringUniEvent(
@@ -679,7 +679,7 @@ Future<void> main() async {
         calendar: calendar,
         rrule: rruleEveryTwoWeeks,
         start: weekStart.addDays(4).at(LocalTime(12, 0, 0)),
-        duration: duration,
+        period: duration,
         id: '10',
       ),
     ];

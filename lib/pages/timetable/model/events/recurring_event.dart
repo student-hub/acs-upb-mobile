@@ -13,7 +13,7 @@ class RecurringUniEvent extends UniEvent {
   const RecurringUniEvent({
     @required this.rrule,
     @required DateTime start,
-    @required Period duration,
+    @required Period period,
     @required String id,
     List<String> relevance,
     String degree,
@@ -30,7 +30,7 @@ class RecurringUniEvent extends UniEvent {
             name: name,
             location: location,
             start: start,
-            duration: duration,
+            period: period,
             degree: degree,
             relevance: relevance,
             id: id,
@@ -95,7 +95,7 @@ class RecurringUniEvent extends UniEvent {
     // Calculate recurrences
     int i = 0;
     for (final start in rrule.getInstances(start: start)) {
-      final DateTime end = start.add(duration.toTime().toDuration);
+      final DateTime end = start.add(period.toTime().toDuration);
       if (intersectingInterval != null) {
         if (end < intersectingInterval.start) continue;
         if (start > intersectingInterval.end) break;

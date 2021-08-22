@@ -103,7 +103,7 @@ extension UniEventExtension on UniEvent {
         name: json['name'],
         // Convert time to UTC and then to local time
         start: (json['start'] as Timestamp).toDate(),
-        duration: PeriodExtension.fromJSON(json['duration']),
+        period: PeriodExtension.fromJSON(json['duration']),
         location: json['location'],
         // TODO(IoanaAlexandru): Allow users to set event colours in settings
         color: type.color,
@@ -124,7 +124,7 @@ extension UniEventExtension on UniEvent {
         type: type,
         name: json['name'],
         start: (json['start'] as Timestamp).toDate(),
-        duration: PeriodExtension.fromJSON(json['duration']),
+        period: PeriodExtension.fromJSON(json['duration']),
         location: json['location'],
         color: type.color,
         classHeader: classHeader,
@@ -143,7 +143,7 @@ extension UniEventExtension on UniEvent {
         name: json['name'],
         // Convert time to UTC and then to local time
         start: (json['start'] as Timestamp).toDate(),
-        duration: PeriodExtension.fromJSON(json['duration']),
+        period: PeriodExtension.fromJSON(json['duration']),
         location: json['location'],
         // TODO(IoanaAlexandru): Allow users to set event colours in settings
         color: type.color,
@@ -166,7 +166,7 @@ extension UniEventExtension on UniEvent {
       'type': type,
       'name': name,
       'start': start.toTimestamp(),
-      'duration': duration.toJSON(),
+      'duration': period.toJSON(),
       'location': location,
       'class': classHeader.id,
       'degree': degree,

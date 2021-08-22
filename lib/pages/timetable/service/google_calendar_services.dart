@@ -47,7 +47,7 @@ extension UniEventProviderGoogleCalendar on UniEventProvider {
       // Google Calendar uses the IANA timezone format, but the native Dart `DateTime` uses an abbreviation provided by the operating system.
       ..dateTime = startDateTime;
 
-    final Duration duration = uniEvent.duration.toTime().toDuration;
+    final Duration duration = uniEvent.period.toTime().toDuration;
 
     final g_cal.EventDateTime end = g_cal.EventDateTime();
     final DateTime endDateTime = startDateTime.add(duration);

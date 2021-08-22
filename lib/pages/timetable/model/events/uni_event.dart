@@ -96,7 +96,7 @@ extension UniEventTypeExtension on UniEventType {
 class UniEvent {
   const UniEvent({
     @required this.start,
-    @required this.duration,
+    @required this.period,
     @required this.id,
     this.name,
     this.location,
@@ -114,7 +114,7 @@ class UniEvent {
   final Color color;
   final UniEventType type;
   final DateTime start;
-  final Period duration;
+  final Period period;
   final String name;
   final String location;
   final ClassHeader classHeader;
@@ -130,7 +130,7 @@ class UniEvent {
 
   Iterable<UniEventInstance> generateInstances(
       {DateTimeRange intersectingInterval}) sync* {
-    final DateTime end = start.add(duration.toTime().toDuration);
+    final DateTime end = start.add(period.toTime().toDuration);
     if (intersectingInterval != null) {
       if (end < intersectingInterval.start ||
           start > intersectingInterval.end) {
@@ -144,7 +144,7 @@ class UniEvent {
       mainEvent: this,
       color: color,
       start: start,
-      end: start.add(duration.toTime().toDuration),
+      end: start.add(period.toTime().toDuration),
       location: location,
     );
   }
@@ -185,35 +185,28 @@ class UniEventInstance extends Event {
   String get relativeDateString => getDateString(useRelativeDayFormat: true);
 
   String getDateString({bool useRelativeDayFormat}) {
-    final LocalDateTime defaultStart = LocalDateTime.dateTime(start);
-    final LocalDateTime defaultEnd = LocalDateTime.dateTime(this.end);
-    final LocalDateTime end = defaultEnd.clockTime.equals(LocalTime(00, 00, 00))
-        ? defaultEnd.subtractDays(1)
-        : defaultEnd;
+    final DateTime end =
+        this.end.isMidnight() ? this.end.subtractDays(1) : this.end;
 
-    String string = useRelativeDayFormat &&
-            defaultStart.calendarDate.equals(LocalDate.today())
+    String string = useRelativeDayFormat && start.isToday
         ? S.current.labelToday
-        : useRelativeDayFormat &&
-                defaultStart.calendarDate
-                    .subtractDays(1)
-                    .equals(LocalDate.today())
+        : useRelativeDayFormat && start.subtractDays(1).isToday
             ? S.current.labelTomorrow
-            : defaultStart.calendarDate.toString('dddd, dd MMMM');
+            : start.toStringWithFormat('dddd, dd MMMM');
 
-    if (!defaultStart.clockTime.equals(LocalTime(00, 00, 00))) {
-      string += ' • ${defaultStart.clockTime.toString('HH:mm')}';
+    if (!start.isMidnight()) {
+      string += ' • ${start.toStringWithFormat('HH:mm')}';
     }
-    if (defaultStart.calendarDate != defaultEnd.calendarDate) {
-      string += ' - ${end.calendarDate.toString('dddd, dd MMMM')}';
+    if (start.atStartOfDay != end.atStartOfDay) {
+      string += ' - ${end.toStringWithFormat('dddd, dd MMMM')}';
     }
-    if (!end.clockTime.equals(LocalTime(00, 00, 00))) {
-      if (defaultStart.calendarDate != defaultEnd.calendarDate) {
+    if (!end.isMidnight()) {
+      if (start.atStartOfDay != end.atStartOfDay) {
         string += ' • ';
       } else {
         string += '-';
       }
-      string += end.clockTime.toString('HH:mm');
+      string += end.toStringWithFormat('HH:mm');
     }
     return string;
   }

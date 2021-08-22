@@ -56,8 +56,8 @@ class _AddEventViewState extends State<AddEventView> {
   ClassHeader selectedClass;
   Person selectedTeacher;
   String selectedCalendar;
-  LocalTime startTime;
-  Period duration;
+  DateTime startTime;
+  Duration duration;
   Map<WeekType, bool> weekSelected = {
     WeekType.odd: null,
     WeekType.even: null,
@@ -167,10 +167,10 @@ class _AddEventViewState extends State<AddEventView> {
         TextEditingController(text: widget.initialEvent?.location ?? '');
 
     final startHour = widget.initialEvent?.start?.hour ?? 8;
-    duration = widget.initialEvent?.duration ?? const Period(hours: 2);
-    startTime = LocalTime(startHour, 0, 0);
+    duration = widget.initialEvent?.period ?? const Duration(hours: 2);
+    startTime = DateTime(startHour, 0, 0);
 
-    var initialWeekDays = [
+    List<_DayOfWeek> initialWeekDays = [
       _DayOfWeek.from(widget.initialEvent?.start?.dayOfWeek) ??
           _DayOfWeek.monday
     ];
@@ -427,13 +427,14 @@ class _AddEventViewState extends State<AddEventView> {
                   weekSelected[WeekType.odd] != weekSelected[WeekType.even]
                       ? 2
                       : 1,
-              until: semester.endDate.add(const Period(days: 1)).atMidnight());
+              until:
+                  semester.endDate.add(const Duration(days: 1)).atMidnight());
 
           final event = ClassEvent(
               teacher: selectedTeacher,
               rrule: rrule,
               start: start,
-              duration: duration,
+              period: duration.toPeriod(),
               id: widget.initialEvent?.id,
               relevance: relevanceController.customRelevance,
               degree: relevanceController.degree,
@@ -496,12 +497,13 @@ class _AddEventViewState extends State<AddEventView> {
             onPressed: () async {
               final TimeOfDay start = await showTimePicker(
                 context: context,
-                initialTime: startTime.toTimeOfDay(),
+                initialTime:
+                    TimeOfDay(hour: startTime.hour, minute: startTime.minute),
               );
-              setState(() => startTime = start.toLocalTime());
+              setState(() => startTime = start.toDateTime());
             },
             child: Text(
-              startTime.toString('HH:mm'),
+              startTime.toStringWithFormat('HH:mm'),
               style: Theme.of(context).textTheme.headline4,
             ),
           ),
@@ -538,11 +540,10 @@ class _AddEventViewState extends State<AddEventView> {
                 context: context,
                 initialTime: startTime.add(duration).toTimeOfDay(),
               );
-              setState(() => duration =
-                  Period.differenceBetweenTimes(startTime, end.toLocalTime()));
+              setState(() => duration = end.toDateTime().difference(startTime));
             },
             child: Text(
-              endTime.toString('HH:mm'),
+              endTime.toStringWithFormat('HH:mm'),
               style: Theme.of(context).textTheme.headline4,
             ),
           ),
@@ -752,7 +753,8 @@ extension LocalTimeConversion on LocalTime {
 }
 
 extension TimeOfDayConversion on TimeOfDay {
-  LocalTime toLocalTime() => LocalTime(hour, minute, 0);
+  DateTime toDateTime() => DateTime(0, 1, 1, hour, minute, 0);
+// LocalTime toLocalTime() => LocalTime(hour, minute, 0);
 }
 
 extension DateTimeComparisons on DateTime {

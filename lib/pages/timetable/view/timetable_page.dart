@@ -5,6 +5,7 @@ import 'package:recase/recase.dart';
 import 'package:supercharged/supercharged.dart';
 import 'package:time_machine/time_machine.dart';
 import 'package:timetable/timetable.dart';
+import 'package:intl/intl.dart';
 
 import '../../../authentication/service/auth_provider.dart';
 import '../../../generated/l10n.dart';
@@ -50,12 +51,16 @@ class _TimetablePageState extends State<TimetablePage> {
     final authProvider = Provider.of<AuthProvider>(context);
     final eventProvider = Provider.of<UniEventProvider>(context);
 
-    _dateController ??= DateController();
+    _dateController ??= DateController(
+      initialDate: DateTimeTimetable.today(),
+      visibleRange: VisibleDateRange.week(startOfWeek: DateTime.monday),
+    );
 
     if (_timeController == null) {
       _timeController = TimeController(
         initialRange: TimeRange(7.hours + 55.minutes, 20.hours + 5.minutes),
         // TODO(IoanaAlexandru): Make initialTimeRange customizable in settings
+        maxRange: TimeRange(0.hours, 24.hours),
       );
 
       if (authProvider.isAuthenticated && !authProvider.isAnonymous) {
@@ -65,11 +70,11 @@ class _TimetablePageState extends State<TimetablePage> {
 
     return AppScaffold(
       title: AnimatedBuilder(
-        animation: _timeController.dateListenable,
+        animation: null, // animation: _timeController.dateListenable,
         builder: (context, child) => Text(
             authProvider.isAuthenticated && !authProvider.isAnonymous
                 ? S.current.navigationTimetable
-                : _timeController.currentMonth.titleCase),
+                : _dateController.currentMonth.titleCase),
       ),
       needsToBeAuthenticated: true,
       leading: AppScaffoldAction(
@@ -108,7 +113,8 @@ class _TimetablePageState extends State<TimetablePage> {
               timeController: _timeController,
               eventBuilder: (context, event) => UniEventWidget(event),
               child: MultiDateTimetable<UniEventInstance>(),
-              eventProvider: (date) => someListOfEvents,
+              eventProvider: (date) => null,
+              // ??
               allDayEventBuilder: (context, event, info) =>
                   UniAllDayEventWidget(event, info: info),
               callbacks: TimetableCallbacks(
@@ -128,7 +134,7 @@ class _TimetablePageState extends State<TimetablePage> {
                           child: AddEventView(
                             initialEvent: UniEvent(
                                 start: dateTime,
-                                duration: const Period(hours: 2),
+                                period: const Period(hours: 2),
                                 id: null),
                           ),
                         ),
@@ -336,8 +342,16 @@ class _TimetablePageState extends State<TimetablePage> {
   }
 }
 
-extension MonthController on TimetableController {
-  String get currentMonth =>
-      LocalDateTime(2020, dateListenable.value.monthOfYear, 1, 1, 1, 1)
-          .toString('MMMM');
+extension MonthController on DateController {
+  String get currentMonth => DateFormat('MMMM').format(
+        DateTime(
+          value.date.year,
+          value.date.month,
+          1,
+          0,
+          0,
+          0,
+        ),
+      );
+// LocalDateTime(2020, this.value.monthOfYear, 1, 1, 1, 1).toString('MMMM');
 }

@@ -27,7 +27,7 @@ class AllDayUniEvent extends UniEvent {
             name: name,
             location: location,
             start: start.atMidnight(),
-            duration: Period.differenceBetweenDates(
+            period: Period.differenceBetweenDates(
                 LocalDate.dateTime(start), LocalDate.dateTime(end.addDays(1))),
             id: id,
             color: color,
