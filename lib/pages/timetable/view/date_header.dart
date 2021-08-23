@@ -47,7 +47,7 @@ class WeekdayIndicator extends StatelessWidget {
 
     final style =
         TimetableTheme.of(context).weekdayIndicatorStyleProvider(date);
-    //
+    // ?
     // final pattern = timetableTheme?.weekDayIndicatorPattern?.resolve(states) ??
     //     LocalDatePattern.createWithCurrentCulture('ddd');
     // final decoration =

@@ -11,6 +11,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:pref/pref.dart';
 import 'package:provider/provider.dart';
 import 'package:rrule/rrule.dart';
+import 'package:timetable/timetable.dart';
 
 import 'authentication/service/auth_provider.dart';
 import 'authentication/view/login_view.dart';
@@ -148,7 +149,8 @@ class _MyAppState extends State<MyApp> {
           localizationsDelegates: [
             GlobalMaterialLocalizations.delegate,
             GlobalWidgetsLocalizations.delegate,
-            S.delegate
+            S.delegate,
+            TimetableLocalizationsDelegate(),
           ],
           supportedLocales: S.delegate.supportedLocales,
           initialRoute: Routes.root,

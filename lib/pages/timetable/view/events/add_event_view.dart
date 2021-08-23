@@ -167,7 +167,8 @@ class _AddEventViewState extends State<AddEventView> {
         TextEditingController(text: widget.initialEvent?.location ?? '');
 
     final startHour = widget.initialEvent?.start?.hour ?? 8;
-    duration = widget.initialEvent?.period ?? const Duration(hours: 2);
+    duration = widget.initialEvent?.period?.toTime()?.toDuration ??
+        const Duration(hours: 2);
     startTime = DateTime(startHour, 0, 0);
 
     List<_DayOfWeek> initialWeekDays = [

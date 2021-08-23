@@ -33,7 +33,8 @@ class TimetablePage extends StatefulWidget {
   _TimetablePageState createState() => _TimetablePageState();
 }
 
-class _TimetablePageState extends State<TimetablePage> {
+class _TimetablePageState extends State<TimetablePage>
+    with TickerProviderStateMixin {
   TimeController _timeController;
   DateController _dateController;
 
@@ -67,7 +68,8 @@ class _TimetablePageState extends State<TimetablePage> {
     }
 
     return AppScaffold(
-      title: Builder( // ? AnimatedBuilder
+      title: Builder(
+        // ? AnimatedBuilder
         builder: (context) => Text(
             authProvider.isAuthenticated && !authProvider.isAnonymous
                 ? S.current.navigationTimetable
@@ -76,7 +78,10 @@ class _TimetablePageState extends State<TimetablePage> {
       needsToBeAuthenticated: true,
       leading: AppScaffoldAction(
         icon: Icons.today_outlined,
-        onPressed: () => _dateController.animateTo(DateTime.now(), vsync: null),
+        onPressed: () {
+          _dateController.animateToToday(vsync: this);
+          _timeController.animateToShowFullDay(vsync: this);
+        },
         // ? .animateToToday(),
         tooltip: S.current.actionJumpToToday,
       ),
