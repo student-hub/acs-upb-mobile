@@ -1,3 +1,5 @@
+##### Configuration file used for the Danger action. See https://danger.systems/ruby/ for more info. #####
+
 # Sometimes it's a README fix, or something like that - which isn't relevant for
 # including in a project's CHANGELOG for example
 declared_trivial = github.pr_title.include? "#trivial"
@@ -7,6 +9,16 @@ warn("PR is classed as Work in Progress") if github.pr_title.include? "[WIP]"
 
 # Warn when there is a big PR
 warn("Big PR") if git.lines_of_code > 500
+
+# Warn summary on pull request
+if github.pr_body.length < 5
+  warn "Please provide a summary in the Pull Request description"
+end
+
+# Analyze documentation
+textlint.config_file = '.github/linter/.textlintrc'
+textlint.max_severity = "warn"
+textlint.lint
 
 # Flutter analyze warnings
 flutter_lint.only_modified_files = true
@@ -44,16 +56,6 @@ files.each do |f|
     end
 end
 
-# Analyze documentation
-textlint.config_file = '.github/linter/.textlintrc'
-textlint.max_severity = "warn"
-textlint.lint
-
-# Warn summary on pull request
-if github.pr_body.length < 5
-  warn "Please provide a summary in the Pull Request description"
-end
-
 # Whether we should reference the versioning documentation in the Danger report
 show_versioning_info = false
 # Whether to show a hint about marking the PR as #trivial
@@ -62,6 +64,7 @@ show_trivial_hint = false
 has_app_changes = !git.modified_files.grep(/lib/).empty?
 has_test_changes = !git.modified_files.grep(/test/).empty?
 has_pubspec_changes = !git.modified_files.grep(/pubspec.yaml/).empty?
+base_branch_is_master = github.branch_for_base == "master"
 
 # Check that the tests were updated if there are app updates
 if !declared_trivial && has_app_changes && !has_test_changes
@@ -70,30 +73,30 @@ if !declared_trivial && has_app_changes && !has_test_changes
 end
 
 # Check that the pubspec version was updated
-if has_app_changes && !has_pubspec_changes
-    failure "No pubspec.yaml changes detected. Did you forget to update the version?"
-    show_versioning_info = true
-end
-
-if has_app_changes && has_pubspec_changes
-    diff = git.diff_for_file('pubspec.yaml')
-    if diff.patch !~ /\+version:/
-        failure "The pubspec.yaml file was updated, but not the version."
+if base_branch_is_master && has_app_changes
+    if !has_pubspec_changes
+        failure "No pubspec.yaml changes detected. Did you forget to update the version?"
         show_versioning_info = true
     else
-        old_version = diff.patch[/\-version: .*\+\K([0-9]+)/].to_i
-        new_version = diff.patch[/\+version: .*\+\K([0-9]+)/].to_i
-
-        if new_version - old_version != 1
-            failure "The build number in pubspec.yaml should be incremented by 1"
+        diff = git.diff_for_file('pubspec.yaml')
+        if diff.patch !~ /\+version:/
+            failure "The pubspec.yaml file was updated, but not the version."
             show_versioning_info = true
-        elsif !declared_trivial
-            ['en-GB', 'en-US', 'ro'].each do |language|
-                changelog_rxp = /android\/fastlane\/metadata\/android\/#{language}\/changelogs\/#{new_version + 10000}\.txt/
-                if git.added_files.grep(changelog_rxp).empty?
-                    changelog = "android/fastlane/metadata/android/#{language}/changelogs/#{new_version + 10000}.txt"
-                    warn "Missing #{language} changelog entry at #{changelog}"
-                    show_trivial_hint = true
+        else
+            old_version = diff.patch[/\-version: .*\+\K([0-9]+)/].to_i
+            new_version = diff.patch[/\+version: .*\+\K([0-9]+)/].to_i
+
+            if new_version - old_version != 1
+                failure "The build number in pubspec.yaml should be incremented by 1"
+                show_versioning_info = true
+            elsif !declared_trivial
+                ['en-GB', 'en-US', 'ro'].each do |language|
+                    changelog_rxp = /android\/fastlane\/metadata\/android\/#{language}\/changelogs\/#{new_version + 10000}\.txt/
+                    if git.added_files.grep(changelog_rxp).empty?
+                        changelog = "android/fastlane/metadata/android/#{language}/changelogs/#{new_version + 10000}.txt"
+                        warn "Missing #{language} changelog entry at #{changelog}"
+                        show_trivial_hint = true
+                    end
                 end
             end
         end
