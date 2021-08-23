@@ -5,7 +5,7 @@ import 'package:acs_upb_mobile/authentication/model/user.dart';
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/filter/view/filter_dropdown.dart';
-import 'package:acs_upb_mobile/resources/storage/storage_provider.dart';
+// import 'package:acs_upb_mobile/resources/storage/storage_provider.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/resources/validator.dart';
 import 'package:acs_upb_mobile/widgets/button.dart';
@@ -14,6 +14,7 @@ import 'package:acs_upb_mobile/widgets/dialog.dart';
 import 'package:acs_upb_mobile/widgets/icon_text.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
+import 'package:acs_upb_mobile/widgets/upload_button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -35,8 +36,11 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   final formKey = GlobalKey<FormState>();
 
-  Uint8List uploadedImage;
   ImageProvider imageWidget;
+
+  TextEditingController imageFieldController = TextEditingController();
+  UploadButtonController uploadButtonController;
+  UploadButton uploadButton;
 
   // Whether the user verified their email; this can be true, false or null if
   // the async check hasn't completed yet.
@@ -47,8 +51,16 @@ class _EditProfilePageState extends State<EditProfilePage> {
     super.initState();
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
     authProvider.isVerified.then((value) => setState(() => isVerified = value));
-    authProvider.getProfilePictureURL().then((value) =>
-        setState(() => {if (value != null) imageWidget = NetworkImage(value)}));
+    authProvider.getProfilePictureURL().then((value) => setState(() => {
+          // if (value != null) imageWidget = NetworkImage(value)
+          imageWidget = value != null
+              ? NetworkImage(value)
+              : const AssetImage('assets/illustrations/undraw_profile_pic.png'),
+        }));
+    uploadButtonController =
+        UploadButtonController(imageWidget, onUpdate: () => setState(() => {}));
+    uploadButton =
+        UploadButton(imageFieldController, controller: uploadButtonController);
   }
 
   AppDialog _changePasswordDialog(BuildContext context) {
@@ -222,30 +234,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
     );
   }
 
-  Widget buildEditableAvatar(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(10),
-      child: GestureDetector(
-        child: CircleImage(
-            circleSize: 150,
-            image: imageWidget ??
-                const AssetImage('assets/illustrations/undraw_profile_pic.png'),
-            enableOverlay: true,
-            overlayIcon: const Icon(Icons.edit_outlined)),
-        onTap: () async {
-          final Uint8List uploadedImage =
-              await StorageProvider.showImagePicker();
-          if (uploadedImage != null) {
-            setState(() {
-              this.uploadedImage = uploadedImage;
-              imageWidget = MemoryImage(uploadedImage);
-            });
-          }
-        },
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
@@ -289,8 +277,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
                           builder: _changeEmailConfirmationDialog)
                       .then((value) => result = value ?? false);
                 }
-                if (uploadedImage != null) {
-                  imageAsPNG = await Utils.convertToPNG(uploadedImage);
+                if (uploadButton.controller.newUploadedImageBytes != null) {
+                  imageAsPNG = await Utils.convertToPNG(
+                      uploadButton.controller.newUploadedImageBytes);
                   result = await authProvider.uploadProfilePicture(imageAsPNG);
                 }
                 if (result) {
@@ -314,11 +303,19 @@ class _EditProfilePageState extends State<EditProfilePage> {
       body: Container(
         child: ListView(padding: const EdgeInsets.all(12), children: [
           AccountNotVerifiedWarning(),
-          buildEditableAvatar(context),
+          Padding(
+            padding: const EdgeInsets.all(10),
+            child: CircleImage(
+              circleSize: 150,
+              image: uploadButton.controller.currentImage,
+            ),
+          ),
+          uploadButton,
           PreferenceTitle(
             S.current.labelPersonalInformation,
             leftPadding: 0,
           ),
+          //uploadButton,
           const SizedBox(height: 10),
           Form(
             key: formKey,

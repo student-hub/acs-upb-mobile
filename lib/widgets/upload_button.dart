@@ -83,7 +83,6 @@ class _UploadButtonState extends State<UploadButton> {
           setState(() {
             imageWidget = const AssetImage('assets/icons/globe.png');
             widget.controller.setNewImg(imageWidget, uploadedImageBytes);
-            print('1.globe');
           });
         } else {
           final filePickerResult = await FilePicker.platform.pickFiles(
@@ -95,9 +94,6 @@ class _UploadButtonState extends State<UploadButton> {
               imageWidget = MemoryImage(uploadedImageBytes);
               widget.imageFieldController.text = uploadedImage.name;
               widget.controller.setNewImg(imageWidget, uploadedImageBytes);
-              if (widget.controller.newImg != null) {
-                print('2.new Img');
-              }
             });
           }
         }
