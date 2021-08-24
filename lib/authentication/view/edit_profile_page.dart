@@ -52,7 +52,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
     authProvider.isVerified.then((value) => setState(() => isVerified = value));
     authProvider.getProfilePictureURL().then((value) => setState(() => {
-          // if (value != null) imageWidget = NetworkImage(value)
           imageWidget = value != null
               ? NetworkImage(value)
               : const AssetImage('assets/illustrations/undraw_profile_pic.png'),
