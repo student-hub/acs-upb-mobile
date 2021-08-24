@@ -166,6 +166,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "labelOldPassword" : MessageLookupByLibrary.simpleMessage("Parolă veche"),
     "labelPassword" : MessageLookupByLibrary.simpleMessage("Parolă"),
     "labelPermissionsConsent" : MessageLookupByLibrary.simpleMessage("consimțământul pentru drepturi de editare"),
+    "labelProfilePictureUpload" : MessageLookupByLibrary.simpleMessage("Imagine profil"),
     "labelPersonalInformation" : MessageLookupByLibrary.simpleMessage("Informații personale"),
     "labelPoints" : MessageLookupByLibrary.simpleMessage("Puncte"),
     "labelPreview" : MessageLookupByLibrary.simpleMessage("Previzualizare"),

@@ -56,7 +56,6 @@ class _WebsiteViewState extends State<WebsiteView> {
 
   ImageProvider imageWidget;
   TextEditingController imageFieldController = TextEditingController();
-  UploadButtonController uploadButtonController;
   UploadButton uploadButton;
 
   Future<void> fetchUser() async {
@@ -90,10 +89,9 @@ class _WebsiteViewState extends State<WebsiteView> {
               ? NetworkImage(value)
               : const AssetImage('assets/icons/globe.png')
         }));
-    uploadButtonController =
-        UploadButtonController(imageWidget, onUpdate: () => setState(() => {}));
-    uploadButton =
-        UploadButton(imageFieldController, controller: uploadButtonController);
+    uploadButton = UploadButton(imageFieldController,
+        pageType: false,
+        controller: UploadButtonController(onUpdate: () => setState(() => {})));
   }
 
   String buildId() {
@@ -158,7 +156,12 @@ class _WebsiteViewState extends State<WebsiteView> {
                         Expanded(
                             child: WebsiteIcon(
                           website: website,
-                          image: uploadButton.controller.currentImage,
+                          image: uploadButton
+                                      .controller.newUploadedImageBytes !=
+                                  null
+                              ? MemoryImage(
+                                  uploadButton.controller.newUploadedImageBytes)
+                              : imageWidget,
                           onTap: () {
                             Utils.launchURL(website.link);
                           },

@@ -166,6 +166,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "labelOldPassword" : MessageLookupByLibrary.simpleMessage("Old password"),
     "labelPassword" : MessageLookupByLibrary.simpleMessage("Password"),
     "labelPermissionsConsent" : MessageLookupByLibrary.simpleMessage("consent for editing rights"),
+    "labelProfilePictureTitle" : MessageLookupByLibrary.simpleMessage("Profile picture"),
     "labelPersonalInformation" : MessageLookupByLibrary.simpleMessage("Personal information"),
     "labelPoints" : MessageLookupByLibrary.simpleMessage("Points"),
     "labelPreview" : MessageLookupByLibrary.simpleMessage("Preview"),

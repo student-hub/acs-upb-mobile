@@ -5,6 +5,7 @@ import 'package:acs_upb_mobile/authentication/model/user.dart';
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/filter/view/filter_dropdown.dart';
+
 // import 'package:acs_upb_mobile/resources/storage/storage_provider.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/resources/validator.dart';
@@ -39,7 +40,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
   ImageProvider imageWidget;
 
   TextEditingController imageFieldController = TextEditingController();
-  UploadButtonController uploadButtonController;
   UploadButton uploadButton;
 
   // Whether the user verified their email; this can be true, false or null if
@@ -57,10 +57,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
               ? NetworkImage(value)
               : const AssetImage('assets/illustrations/undraw_profile_pic.png'),
         }));
-    uploadButtonController =
-        UploadButtonController(imageWidget, onUpdate: () => setState(() => {}));
-    uploadButton =
-        UploadButton(imageFieldController, controller: uploadButtonController);
+    uploadButton = UploadButton(imageFieldController,
+        pageType: true,
+        controller: UploadButtonController(onUpdate: () => setState(() => {})));
   }
 
   AppDialog _changePasswordDialog(BuildContext context) {
@@ -307,15 +306,21 @@ class _EditProfilePageState extends State<EditProfilePage> {
             padding: const EdgeInsets.all(10),
             child: CircleImage(
               circleSize: 150,
-              image: uploadButton.controller.currentImage,
+              image: uploadButton.controller.uploadImageBytes != null
+                  ? MemoryImage(uploadButton.controller.newUploadedImageBytes)
+                  : imageWidget,
             ),
           ),
+          PreferenceTitle(
+            S.current.labelProfilePictureTitle,
+            leftPadding: 0,
+          ),
+          const SizedBox(height: 10),
           uploadButton,
           PreferenceTitle(
             S.current.labelPersonalInformation,
             leftPadding: 0,
           ),
-          //uploadButton,
           const SizedBox(height: 10),
           Form(
             key: formKey,

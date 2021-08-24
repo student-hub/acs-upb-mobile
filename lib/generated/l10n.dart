@@ -206,6 +206,16 @@ class S {
     );
   }
 
+  /// `Upload profile pic`
+  String get labelProfilePicture {
+    return Intl.message(
+      'Upload Profile Picture',
+      name: 'labelProfilePicture',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Upload website icon`
   String get labelWebsiteIcon {
     return Intl.message(
@@ -441,6 +451,16 @@ class S {
     return Intl.message(
       'Privacy Policy',
       name: 'labelPrivacyPolicy',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Profile picture`
+  String get labelProfilePictureTitle {
+    return Intl.message(
+      'Profile picture',
+      name: 'labelProfilePicture',
       desc: '',
       args: [],
     );

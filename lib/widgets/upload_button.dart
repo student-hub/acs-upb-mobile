@@ -6,23 +6,17 @@ import 'package:flutter/material.dart';
 import 'package:positioned_tap_detector/positioned_tap_detector.dart';
 
 class UploadButtonController {
-  UploadButtonController(this.defaultImage, {this.onUpdate});
-
-  final ImageProvider defaultImage;
+  UploadButtonController({this.onUpdate});
 
   _UploadButtonState _uploadButtonState;
-  ImageProvider newImg;
   Uint8List newUploadedImageBytes;
   void Function() onUpdate;
 
-  ImageProvider get currentImage => newImg ?? defaultImage;
+  Uint8List get uploadImageBytes => newUploadedImageBytes;
 
-  void setNewImg(ImageProvider image, Uint8List uploadedImageBytes) {
+  void setNewImg(Uint8List uploadedImageBytes) {
     if (_uploadButtonState == null) return;
-    if (image != null) {
-      newImg = image;
-      newUploadedImageBytes = uploadedImageBytes;
-    }
+    newUploadedImageBytes = uploadedImageBytes;
     onUpdate();
   }
 }
@@ -31,11 +25,13 @@ class UploadButtonController {
 // button, except it actually allows the user to select an image from the
 // gallery instead of inputting text directly.
 class UploadButton extends StatefulWidget {
-  const UploadButton(this.imageFieldController, {Key key, this.controller})
+  const UploadButton(this.imageFieldController,
+      {Key key, this.pageType, this.controller})
       : super(key: key);
 
   // TextController
   final TextEditingController imageFieldController;
+  final bool pageType;
   final UploadButtonController controller;
 
   @override
@@ -44,26 +40,19 @@ class UploadButton extends StatefulWidget {
 
 class _UploadButtonState extends State<UploadButton> {
   Uint8List uploadedImageBytes;
-  ImageProvider imageWidget;
-
-  set uploadNewImage(ImageProvider newImage) {
-    imageWidget = newImage;
-    setState(() {});
-  }
 
   set upLoadNewImageBytes(Uint8List newUploadedImageBytes) {
     uploadedImageBytes = newUploadedImageBytes;
     setState(() {});
   }
 
-  ImageProvider get uploadNewImage => imageWidget;
+  Uint8List get uploadNewImageBytes => uploadedImageBytes;
 
   Uint8List get upLoadNewImageBytes => uploadedImageBytes;
 
   @override
   void initState() {
     super.initState();
-    imageWidget = widget.controller.defaultImage;
     uploadedImageBytes = null;
   }
 
@@ -81,8 +70,8 @@ class _UploadButtonState extends State<UploadButton> {
           // Tap is near the "clear" button
           widget.imageFieldController.clear();
           setState(() {
-            imageWidget = const AssetImage('assets/icons/globe.png');
-            widget.controller.setNewImg(imageWidget, uploadedImageBytes);
+            uploadedImageBytes = null;
+            widget.controller.setNewImg(uploadedImageBytes);
           });
         } else {
           final filePickerResult = await FilePicker.platform.pickFiles(
@@ -91,9 +80,8 @@ class _UploadButtonState extends State<UploadButton> {
             final uploadedImage = filePickerResult.files[0];
             setState(() {
               uploadedImageBytes = uploadedImage.bytes;
-              imageWidget = MemoryImage(uploadedImageBytes);
               widget.imageFieldController.text = uploadedImage.name;
-              widget.controller.setNewImg(imageWidget, uploadedImageBytes);
+              widget.controller.setNewImg(uploadedImageBytes);
             });
           }
         }
@@ -107,7 +95,9 @@ class _UploadButtonState extends State<UploadButton> {
           child: TextFormField(
             controller: widget.imageFieldController,
             decoration: InputDecoration(
-              labelText: S.current.labelWebsiteIcon,
+              labelText: widget.pageType
+                  ? S.current.labelProfilePicture
+                  : S.current.labelWebsiteIcon,
               prefixIcon: const Icon(Icons.add_photo_alternate_outlined),
               suffixIcon: widget.imageFieldController.text.isNotEmpty
                   ? const Icon(Icons.clear)
