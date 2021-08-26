@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:async/async.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dart_date/dart_date.dart' as DartDate show Interval;
 import 'package:flutter/material.dart';
 import 'package:googleapis/calendar/v3.dart' as g_cal;
 import 'package:rrule/rrule.dart';
@@ -212,8 +213,8 @@ extension AcademicCalendarExtension on AcademicCalendar {
   }
 }
 
-class UniEventProvider extends DefaultEventProvider<UniEventInstance>
-    with ChangeNotifier {
+// extends DefaultEventProvider<UniEventInstance>
+class UniEventProvider with ChangeNotifier {
   UniEventProvider({AuthProvider authProvider, PersonProvider personProvider})
       : _authProvider = authProvider ?? AuthProvider(),
         _personProvider = personProvider ?? PersonProvider() {
@@ -307,11 +308,23 @@ class UniEventProvider extends DefaultEventProvider<UniEventInstance>
     return stream.map((events) => events.expand((i) => i).toList());
   }
 
+  Future<List<UniEventInstance>> loadEventsForRange(DateTimeRange range) async {
+    final List<UniEvent> events = await _events.first;
+    final List<UniEventInstance> eventsInRange = events
+        .where((event) => range.contains(event.start))
+        .map((event) => event.generateInstances(
+            intersectingInterval:
+                DateTimeRange(start: event.start, end: event.start)))
+        .expand((i) => i)
+        .toList();
+    return eventsInRange;
+  }
+
   Future<void> exportToGoogleCalendar() async {
     final Stream<List<UniEvent>> eventsStream = _events;
-    final List<UniEvent> streamElement = await eventsStream.first;
+    final List<UniEvent> events = await eventsStream.first;
     final List<g_cal.Event> googleCalendarEvents = [];
-    for (final UniEvent eventInstance in streamElement) {
+    for (final UniEvent eventInstance in events) {
       final g_cal.Event googleCalendarEvent = convertEvent(eventInstance);
       googleCalendarEvents.add(googleCalendarEvent);
     }

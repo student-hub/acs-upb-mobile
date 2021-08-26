@@ -128,6 +128,16 @@ class UniEvent {
     return generateInstances().first.dateString;
   }
 
+  // UniEventInstance toUniEventInstance() {
+  //   return UniEventInstance(
+  //     title: name,
+  //     mainEvent: this,
+  //     start: start,
+  //     end: start.add(period.toTime().toDuration),
+  //     location: location,
+  //   );
+  // }
+
   Iterable<UniEventInstance> generateInstances(
       {DateTimeRange intersectingInterval}) sync* {
     final DateTime end = start.add(period.toTime().toDuration);

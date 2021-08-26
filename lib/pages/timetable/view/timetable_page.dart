@@ -110,44 +110,77 @@ class _TimetablePageState extends State<TimetablePage>
         padding: const EdgeInsets.all(10),
         child: Stack(
           children: [
-            TimetableConfig<UniEventInstance>(
-              dateController: _dateController,
-              timeController: _timeController,
-              eventBuilder: (context, event) => UniEventWidget(event),
-              child: MultiDateTimetable<UniEventInstance>(),
-              eventProvider:
-                  Provider.of<UniEventProvider>(context).eventProvider,
-              allDayEventBuilder: (context, event, info) =>
-                  UniAllDayEventWidget(event, info: info),
-              callbacks: TimetableCallbacks(
-                // TODO(bogpie): Typing on an all day event (e.g.: holiday).
-                onDateTimeBackgroundTap: (dateTime) {
-                  final user = Provider.of<AuthProvider>(context, listen: false)
-                      .currentUserFromCache;
-                  if (user.canAddPublicInfo) {
-                    Navigator.of(context).push(
-                      MaterialPageRoute<AddEventView>(
-                        builder: (_) => ChangeNotifierProxyProvider<
-                            AuthProvider, FilterProvider>(
-                          create: (_) => FilterProvider(),
-                          update: (context, authProvider, filterProvider) {
-                            return filterProvider..updateAuth(authProvider);
-                          },
-                          child: AddEventView(
-                            initialEvent: UniEvent(
-                                start: dateTime,
-                                period: const Period(hours: 2),
-                                id: null),
-                          ),
-                        ),
+            ValueListenableBuilder<DatePageValue>(
+              valueListenable: _dateController,
+              builder: (context, value, child) {
+                final Future<List<UniEventInstance>> events =
+                    Provider.of<UniEventProvider>(context, listen: false)
+                        .loadEventsForRange(
+                  DateTimeRange(
+                    start: DateTimeTimetable.dateFromPage(value.page.floor()),
+                    end: DateTimeTimetable.dateFromPage(
+                      value.page.ceil() + value.visibleDayCount,
+                    ),
+                  ),
+                );
+                // Or probably preload events outside this range, maybe
+                // for the previous and next page.
+
+                return FutureBuilder<List<UniEventInstance>>(
+                  future: events,
+                  builder: (context, snapshot) {
+                    if (snapshot.data == null || snapshot.hasError) {
+                      // Handle loading and error states
+                      return Container();
+                    }
+
+                    return TimetableConfig<UniEventInstance>(
+                      eventProvider:
+                          eventProviderFromFixedList(snapshot.data ?? []),
+                      child: child,
+                      // !,
+                      dateController: _dateController,
+                      timeController: _timeController,
+                      eventBuilder: (context, event) => UniEventWidget(event),
+                      allDayEventBuilder: (context, event, info) =>
+                          UniAllDayEventWidget(event, info: info),
+                      callbacks: TimetableCallbacks(
+                        // TODO(bogpie): Typing on an all day event (e.g.: holiday).
+                        onDateTimeBackgroundTap: (dateTime) {
+                          final user =
+                              Provider.of<AuthProvider>(context, listen: false)
+                                  .currentUserFromCache;
+                          if (user.canAddPublicInfo) {
+                            Navigator.of(context).push(
+                              MaterialPageRoute<AddEventView>(
+                                builder: (_) => ChangeNotifierProxyProvider<
+                                    AuthProvider, FilterProvider>(
+                                  create: (_) => FilterProvider(),
+                                  update:
+                                      (context, authProvider, filterProvider) {
+                                    return filterProvider
+                                      ..updateAuth(authProvider);
+                                  },
+                                  child: AddEventView(
+                                    initialEvent: UniEvent(
+                                        start: dateTime,
+                                        period: const Period(hours: 2),
+                                        id: null),
+                                  ),
+                                ),
+                              ),
+                            );
+                          } else {
+                            AppToast.show(S.current.errorPermissionDenied);
+                          }
+                        },
                       ),
                     );
-                  } else {
-                    AppToast.show(S.current.errorPermissionDenied);
-                  }
-                },
-              ),
-            ),
+                  },
+                );
+              },
+              child: MultiDateTimetable<UniEventInstance>(),
+            )
           ],
         ),
       ),
@@ -155,34 +188,36 @@ class _TimetablePageState extends State<TimetablePage>
   }
 
   Future<void> scheduleDialog(BuildContext context) async {
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      if (!mounted) {
-        return;
-      }
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) async {
+        if (!mounted) {
+          return;
+        }
 
-      // Fetch user classes, request necessary info from providers so it's
-      // cached when we check in the dialog
-      final user = Provider.of<AuthProvider>(context, listen: false)
-          .currentUserFromCache;
-      await Provider.of<ClassProvider>(context, listen: false)
-          .fetchClassHeaders(uid: user.uid);
-      await Provider.of<FilterProvider>(context, listen: false).fetchFilter();
-      await Provider.of<RequestProvider>(context, listen: false)
-          .userAlreadyRequested(user.uid);
+        // Fetch user classes, request necessary info from providers so it's
+        // cached when we check in the dialog
+        final user = Provider.of<AuthProvider>(context, listen: false)
+            .currentUserFromCache;
+        await Provider.of<ClassProvider>(context, listen: false)
+            .fetchClassHeaders(uid: user.uid);
+        await Provider.of<FilterProvider>(context, listen: false).fetchFilter();
+        await Provider.of<RequestProvider>(context, listen: false)
+            .userAlreadyRequested(user.uid);
 
-      // Slight delay between last frame and dialog
-      await Future<void>.delayed(const Duration(milliseconds: 100));
+        // Slight delay between last frame and dialog
+        await Future<void>.delayed(const Duration(milliseconds: 100));
 
-      // Show dialog if there are no events
-      final eventProvider =
-          Provider.of<UniEventProvider>(context, listen: false);
-      if (eventProvider.empty) {
-        await showDialog<String>(
-          context: context,
-          builder: buildDialog,
-        );
-      }
-    });
+        // Show dialog if there are no events
+        final eventProvider =
+            Provider.of<UniEventProvider>(context, listen: false);
+        if (eventProvider.empty) {
+          await showDialog<String>(
+            context: context,
+            builder: buildDialog,
+          );
+        }
+      },
+    );
   }
 
   Widget buildDialog(BuildContext context) {
