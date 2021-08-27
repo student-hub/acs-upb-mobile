@@ -1,7 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-
 import 'intl/messages_all.dart';
 
 // **************************************************************************
@@ -207,10 +206,10 @@ class S {
     );
   }
 
-  /// `Upload website icon`
+  /// `Website icon`
   String get labelWebsiteIcon {
     return Intl.message(
-      'Upload Website Icon',
+      'Website icon',
       name: 'labelWebsiteIcon',
       desc: '',
       args: [],
@@ -2657,6 +2656,7 @@ class S {
     );
   }
 
+  /// `You're already seeing the current week!`
   String get messageAlreadySeeingCurrentWeek {
     return Intl.message(
       'You\'re already seeing the current week!',
