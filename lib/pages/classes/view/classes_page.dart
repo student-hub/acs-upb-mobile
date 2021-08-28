@@ -8,7 +8,7 @@ import 'package:acs_upb_mobile/resources/remote_config.dart';
 import 'package:acs_upb_mobile/widgets/class_icon.dart';
 import 'package:acs_upb_mobile/widgets/error_page.dart';
 import 'package:acs_upb_mobile/widgets/icon_text.dart';
-import 'package:acs_upb_mobile/widgets/scaffold.dart';
+import 'package:acs_upb_mobile/navigation/view/scaffold.dart';
 import 'package:acs_upb_mobile/widgets/spoiler.dart';
 import 'package:flutter/material.dart';
 import 'package:pedantic/pedantic.dart';

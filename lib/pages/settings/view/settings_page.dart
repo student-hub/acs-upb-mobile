@@ -8,7 +8,7 @@ import 'package:acs_upb_mobile/pages/timetable/service/uni_event_provider.dart';
 import 'package:acs_upb_mobile/resources/locale_provider.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/widgets/icon_text.dart';
-import 'package:acs_upb_mobile/widgets/scaffold.dart';
+import 'package:acs_upb_mobile/navigation/view/scaffold.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/material.dart';

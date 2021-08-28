@@ -15,7 +15,7 @@ import 'package:acs_upb_mobile/widgets/button.dart';
 import 'package:acs_upb_mobile/widgets/class_icon.dart';
 import 'package:acs_upb_mobile/widgets/dialog.dart';
 import 'package:acs_upb_mobile/widgets/icon_text.dart';
-import 'package:acs_upb_mobile/widgets/scaffold.dart';
+import 'package:acs_upb_mobile/navigation/view/scaffold.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
