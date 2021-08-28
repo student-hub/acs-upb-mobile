@@ -141,30 +141,36 @@ class _LoginViewState extends State<LoginView> {
         }
       },
       child: Scaffold(
-        body: Center(
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 800),
-            child: Stack(
-              fit: StackFit.expand,
-              children: <Widget>[
-                Align(
-                  alignment: FractionalOffset.topRight,
-                  child: Padding(
-                    padding: const EdgeInsets.all(10),
-                    child: Container(
-                        height: MediaQuery.of(context).size.height / 3,
-                        child: Image.asset(
-                            'assets/illustrations/undraw_digital_nomad.png')),
-                  ),
+        body: Stack(
+          fit: StackFit.expand,
+          children: <Widget>[
+            Align(
+              alignment: FractionalOffset.topRight,
+              child: Padding(
+                padding: const EdgeInsets.all(10),
+                child: Container(
+                    height: MediaQuery
+                        .of(context)
+                        .size
+                        .height / 3,
+                    child: Image.asset(
+                        'assets/illustrations/undraw_digital_nomad.png')),
+              ),
+            ),
+            Align(
+              alignment: FractionalOffset.bottomCenter,
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  maxHeight: MediaQuery
+                      .of(context)
+                      .size
+                      .height / 4,
+                  maxWidth: MediaQuery
+                      .of(context)
+                      .size
+                      .width,
                 ),
-                Align(
-                  alignment: FractionalOffset.bottomCenter,
-                  child: ConstrainedBox(
-                    constraints: BoxConstraints(
-                      maxHeight: MediaQuery.of(context).size.height / 4,
-                      maxWidth: MediaQuery.of(context).size.width,
-                    ),
-                    child: FittedBox(
+                child: FittedBox(
                       fit: BoxFit.contain,
                       child: ConstrainedBox(
                         constraints: const BoxConstraints(
@@ -257,8 +263,6 @@ class _LoginViewState extends State<LoginView> {
               ],
             ),
           ),
-        ),
-      ),
     );
   }
 }
