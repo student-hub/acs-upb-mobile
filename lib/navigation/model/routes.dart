@@ -30,4 +30,3 @@ class Routes {
   static const String profile = PersonView.routeName;
   static const String editProfile = EditProfilePage.routeName;
 }
-  

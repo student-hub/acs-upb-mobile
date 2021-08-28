@@ -5,7 +5,6 @@ class AppRouteInformationParser extends RouteInformationParser<RoutePath> {
   @override
   Future<RoutePath> parseRouteInformation(
       RouteInformation routeInformation) async {
-
     final Uri uri = Uri.parse(routeInformation.location);
     print('\n++++++++++++\n'
         'parseRouteInformation: ${routeInformation.location}'
