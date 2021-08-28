@@ -4,43 +4,6 @@ import 'package:flutter/cupertino.dart';
 class NavigationStateProvider extends ChangeNotifier {
   final _NavigationState _state = _NavigationState();
 
-/*
-  String get profileName => _state.profileName;
-
-  set profileName(String name) {
-    _state.profileName = name;
-    notifyListeners();
-  }
-
-  String get websiteId => _state.websiteId;
-
-  set websiteId(String id) {
-    _state.websiteId = id;
-    notifyListeners();
-  }
-
-  String get websiteCategory => _state.websiteCategory;
-
-  set websiteCategory(String category) {
-    _state.websiteCategory = category;
-    notifyListeners();
-  }
-
-  String get classId => _state.classId;
-
-  set classId(String id) {
-    _state.classId = id;
-    notifyListeners();
-  }
-
-  String get eventId => _state.eventId;
-
-  set eventId(String id) {
-    _state.eventId = id;
-    notifyListeners();
-  }
-*/
-
   int get selectedTab => _state.selectedTab;
 
   set selectedTab(int tab) {
@@ -78,11 +41,6 @@ class NavigationStateProvider extends ChangeNotifier {
 
   void reset() {
     _state
-      // ..profileName = null
-      // ..websiteId = null
-      // ..websiteCategory = null
-      // ..eventId = null
-      // ..classId = null
       ..path = HomePath()
       ..view = null;
   }
@@ -98,23 +56,12 @@ class _NavigationState {
     isInitialized = false;
     path = null;
     selectedTab = 0;
-    // profileName = null;
-    // websiteId = null;
     isDrawerExtended = false;
     view = null;
-    // filter = false;
   }
 
   bool isInitialized;
   RoutePath path;
-
-  /*
-  String profileName;
-  String websiteId;
-  String websiteCategory;
-  String eventId;
-  String classId;
-  */
 
   int selectedTab;
   bool isDrawerExtended;

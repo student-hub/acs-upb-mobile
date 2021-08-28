@@ -135,6 +135,7 @@ class _WebShellState extends State<WebShell> {
           ),
           Expanded(
             flex: 5,
+            // TODO(WebTeam): Wrap with ConstrainedBox
             child: PageStorage(
               child: Router<dynamic>(
                 routerDelegate: _innerRouterDelegate,

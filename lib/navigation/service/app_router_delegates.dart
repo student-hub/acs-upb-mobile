@@ -101,27 +101,6 @@ class MainRouterDelegate extends AppRouterDelegate {
         return;
       }
     }
-/*
-    if (configuration is ProfilePath) {
-      _navigationState.profileName = configuration.name;
-    }
-
-    if (configuration is WebsiteViewPath) {
-      _navigationState.websiteId = configuration.id;
-    }
-
-    if (configuration is AddWebsitePath) {
-      _navigationState.websiteCategory = configuration.category;
-    }
-
-    if (configuration is ClassFeedbackViewPath) {
-      _navigationState.classId = configuration.id;
-    }
-
-    if (configuration is ClassViewPath) {
-      _navigationState.eventId = configuration.id;
-    }
-*/
 
     if (configuration is HomePath) {
       _navigationState.selectedTab = 0;
