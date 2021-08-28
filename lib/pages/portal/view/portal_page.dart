@@ -91,14 +91,15 @@ class _PortalPageState extends State<PortalPage> {
               AppNavigator.push(
                 context,
                 MaterialPageRoute<ChangeNotifierProvider>(
-                  builder: (_) => ChangeNotifierProvider<FilterProvider>(
-                    create: (_) =>
-                        Platform.environment.containsKey('FLUTTER_TEST')
-                            ? Provider.of<FilterProvider>(context)
-                            : FilterProvider(
-                                defaultDegree: website.degree,
-                                defaultRelevance: website.relevance,
-                              ),
+                  builder: (_) => ChangeNotifierProvider<FilterProvider>.value(
+                    // If testing, use the global (mocked) provider; otherwise instantiate a new local provider
+                    value: Platform.environment.containsKey('FLUTTER_TEST')
+                        ? Provider.of<FilterProvider>(context)
+                        : FilterProvider(
+                            defaultDegree: website.degree,
+                            defaultRelevance: website.relevance,
+                          )
+                      ..updateAuth(Provider.of<AuthProvider>(context)),
                     child: WebsiteView(
                       website: website,
                       updateExisting: true,
@@ -356,27 +357,21 @@ class _AddWebsiteButton extends StatelessWidget {
               AppNavigator.push(
                 context,
                 MaterialPageRoute<ChangeNotifierProvider>(
-                  builder: (_) {
-                    return ChangeNotifierProxyProvider<AuthProvider,
-                        FilterProvider>(
-                      create: (_) {
-                        return Platform.environment.containsKey('FLUTTER_TEST')
-                            ? Provider.of<FilterProvider>(context)
-                            : FilterProvider();
-                      },
-                      update: (context, authProvider, filterProvider) {
-                        return filterProvider..updateAuth(authProvider);
-                      },
-                      child: WebsiteView(
-                        website: Website(
-                            relevance: null,
-                            id: null,
-                            isPrivate: true,
-                            link: '',
-                            category: category),
-                      ),
-                    );
-                  },
+                  builder: (_) => ChangeNotifierProvider<FilterProvider>.value(
+                    // If testing, use the global (mocked) provider; otherwise instantiate a new local provider
+                    value: Platform.environment.containsKey('FLUTTER_TEST')
+                        ? Provider.of<FilterProvider>(context)
+                        : FilterProvider()
+                      ..updateAuth(authProvider),
+                    child: WebsiteView(
+                      website: Website(
+                          relevance: null,
+                          id: null,
+                          isPrivate: true,
+                          link: '',
+                          category: category),
+                    ),
+                  ),
                 ),
                 webPath: '${WebsiteView.routeName}/add?category=$category',
               );

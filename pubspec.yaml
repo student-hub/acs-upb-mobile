@@ -13,7 +13,7 @@ description: A mobile application for students at ACS UPB.
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 #
 # ACS UPB Mobile uses semantic versioning. You can read more in the CONTRIBUTING.md file.
-version: 1.2.12+16
+version: 1.2.13+23
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
@@ -49,6 +49,9 @@ dependencies:
 
   # Package for dynamically changing the app theme
   dynamic_theme: ^1.0.1
+
+  # File picker widget
+  file_picker: 2.1.7
 
   # Firebase products
   firebase_analytics: ^5.0.2
@@ -259,3 +262,5 @@ flutter_launcher_name:
 flutter_native_splash:
   image: assets/icons/acs_logo.png
   color: "#ffffff"
+  image_dark: assets/icons/acs_logo.png
+  color_dark: "#303030"
