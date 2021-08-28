@@ -143,8 +143,8 @@ class ActionBarButton extends StatelessWidget {
                 alignment: Alignment.centerRight,
                 color: Theme.of(context).bottomAppBarColor,
                 child: RotationTransition(
-                    turns: Tween(begin: 0.5, end: 0 as double)
-                        .animate(controller),
+                    turns:
+                        Tween(begin: 0.5, end: 0 as double).animate(controller),
                     child: const Icon(Icons.double_arrow)),
               ),
             ),
