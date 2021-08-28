@@ -5,7 +5,6 @@ import 'package:acs_upb_mobile/pages/classes/model/class.dart';
 import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
 import 'package:acs_upb_mobile/pages/classes/view/class_view.dart';
 import 'package:acs_upb_mobile/resources/remote_config.dart';
-import 'package:acs_upb_mobile/widgets/app_scaffold_action.dart';
 import 'package:acs_upb_mobile/widgets/class_icon.dart';
 import 'package:acs_upb_mobile/widgets/error_page.dart';
 import 'package:acs_upb_mobile/widgets/icon_text.dart';

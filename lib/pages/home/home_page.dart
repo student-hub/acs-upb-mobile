@@ -8,7 +8,6 @@ import 'package:acs_upb_mobile/pages/home/news_feed_card.dart';
 import 'package:acs_upb_mobile/pages/home/profile_card.dart';
 import 'package:acs_upb_mobile/pages/home/upcoming_events_card.dart';
 import 'package:acs_upb_mobile/resources/remote_config.dart';
-import 'package:acs_upb_mobile/widgets/app_scaffold_action.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

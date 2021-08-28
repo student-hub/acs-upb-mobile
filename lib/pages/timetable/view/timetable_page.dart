@@ -12,7 +12,6 @@ import 'package:acs_upb_mobile/pages/timetable/view/date_header.dart';
 import 'package:acs_upb_mobile/pages/timetable/view/events/add_event_view.dart';
 import 'package:acs_upb_mobile/pages/timetable/view/events/all_day_event_widget.dart';
 import 'package:acs_upb_mobile/pages/timetable/view/events/event_widget.dart';
-import 'package:acs_upb_mobile/widgets/app_scaffold_action.dart';
 import 'package:acs_upb_mobile/widgets/button.dart';
 import 'package:acs_upb_mobile/widgets/dialog.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';

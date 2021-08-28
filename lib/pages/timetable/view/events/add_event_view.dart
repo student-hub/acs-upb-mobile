@@ -16,7 +16,6 @@ import 'package:acs_upb_mobile/pages/timetable/model/events/uni_event.dart';
 import 'package:acs_upb_mobile/pages/timetable/service/uni_event_provider.dart';
 import 'package:acs_upb_mobile/resources/locale_provider.dart';
 import 'package:acs_upb_mobile/resources/theme.dart';
-import 'package:acs_upb_mobile/widgets/app_scaffold_action.dart';
 import 'package:acs_upb_mobile/widgets/button.dart';
 import 'package:acs_upb_mobile/widgets/chip_form_field.dart';
 import 'package:acs_upb_mobile/widgets/dialog.dart';

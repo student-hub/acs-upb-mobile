@@ -10,7 +10,6 @@ import 'package:acs_upb_mobile/resources/locale_provider.dart';
 import 'package:acs_upb_mobile/resources/storage/storage_provider.dart';
 import 'package:acs_upb_mobile/resources/theme.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
-import 'package:acs_upb_mobile/widgets/app_scaffold_action.dart';
 import 'package:acs_upb_mobile/widgets/button.dart';
 import 'package:acs_upb_mobile/widgets/circle_image.dart';
 import 'package:acs_upb_mobile/widgets/dialog.dart';

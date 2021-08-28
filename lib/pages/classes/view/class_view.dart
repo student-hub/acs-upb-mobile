@@ -11,7 +11,6 @@ import 'package:acs_upb_mobile/pages/people/service/person_provider.dart';
 import 'package:acs_upb_mobile/pages/people/view/person_view.dart';
 import 'package:acs_upb_mobile/resources/remote_config.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
-import 'package:acs_upb_mobile/widgets/app_scaffold_action.dart';
 import 'package:acs_upb_mobile/widgets/button.dart';
 import 'package:acs_upb_mobile/widgets/class_icon.dart';
 import 'package:acs_upb_mobile/widgets/dialog.dart';
