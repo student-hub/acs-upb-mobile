@@ -1,3 +1,4 @@
+import 'package:acs_upb_mobile/navigation/service/app_navigator.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/events/uni_event.dart';
 import 'package:acs_upb_mobile/pages/timetable/service/uni_event_provider.dart';
 import 'package:acs_upb_mobile/pages/timetable/view/events/event_view.dart';
@@ -45,10 +46,14 @@ class UpcomingEventsCard extends StatelessWidget {
                   '${'${event.mainEvent.classHeader.acronym} - '}${event.mainEvent.type.toLocalizedString()}',
                 ),
                 subtitle: Text(event.relativeDateString),
-                onTap: () =>
-                    Navigator.of(context).push(MaterialPageRoute<EventView>(
-                  builder: (_) => EventView(eventInstance: event),
-                )),
+                // TODO(RazvanRotaru): Retrieve event by id
+                onTap: () => AppNavigator.push(
+                  context,
+                  MaterialPageRoute<EventView>(
+                    builder: (_) => EventView(eventInstance: event),
+                  ),
+                  webPath: '${EventView.routeName}?id=${event.id}',
+                ),
               ),
             )
             .toList(),

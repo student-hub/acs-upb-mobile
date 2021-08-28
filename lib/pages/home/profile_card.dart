@@ -2,9 +2,9 @@ import 'package:acs_upb_mobile/authentication/model/user.dart';
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/authentication/view/edit_profile_page.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
+import 'package:acs_upb_mobile/navigation/service/app_navigator.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:flutter/material.dart';
-import 'package:googleapis/cloudbuild/v1.dart';
 import 'package:provider/provider.dart';
 
 class ProfileCard extends StatefulWidget {
@@ -38,12 +38,8 @@ class _ProfileCardState extends State<ProfileCard> {
     }
   }
 
-  void _loadEditMenu() async {
-    await Navigator.of(context).push(
-      MaterialPageRoute<EditProfilePage>(
-        builder: (context) => const EditProfilePage(),
-      ),
-    );
+  Future<void> _loadEditMenu() async {
+    await AppNavigator.pushNamed(context, EditProfilePage.routeName);
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
     final value = await authProvider.getProfilePictureURL();
     setState(() {

@@ -1,13 +1,9 @@
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/authentication/view/login_view.dart';
-import 'package:acs_upb_mobile/navigation/model/app_state.dart';
+import 'package:acs_upb_mobile/main.dart';
+import 'package:acs_upb_mobile/navigation/model/navigation_state.dart';
 import 'package:acs_upb_mobile/navigation/model/route_paths.dart';
 import 'package:acs_upb_mobile/navigation/view/web_shell.dart';
-import 'package:acs_upb_mobile/pages/home/home_page.dart';
-import 'package:acs_upb_mobile/pages/people/view/people_page.dart';
-import 'package:acs_upb_mobile/pages/people/view/person_view.dart';
-import 'package:acs_upb_mobile/pages/portal/view/portal_page.dart';
-import 'package:acs_upb_mobile/pages/timetable/view/timetable_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -21,14 +17,14 @@ abstract class AppRouterDelegate extends RouterDelegate<RoutePath>
 }
 
 class MainRouterDelegate extends AppRouterDelegate {
-  MainRouterDelegate({@required AppStateProvider appState})
+  MainRouterDelegate({@required NavigationStateProvider navigationState})
       : _navigatorKey = GlobalKey<NavigatorState>(),
-        _appState = appState {
-    _appState.addListener(notifyListeners);
+        _navigationState = navigationState {
+    _navigationState.addListener(notifyListeners);
   }
 
   final GlobalKey<NavigatorState> _navigatorKey;
-  final AppStateProvider _appState;
+  final NavigationStateProvider _navigationState;
 
   // Providers
   AuthProvider _authProvider;
@@ -43,92 +39,110 @@ class MainRouterDelegate extends AppRouterDelegate {
     return Navigator(
       key: _navigatorKey,
       pages: [
-        MaterialPage(
-          child: LoginView(),
-          key: const ValueKey<String>(LoginView.routeName),
-        ),
-        if (_authProvider.isAuthenticated)
-          MaterialPage<Widget>(
-            child: WebShell(
-              appState: _appState,
-            ),
+        if (!_navigationState.isInitialized)
+          MaterialPage(
+            child: AppLoadingScreen(),
+            key: const ValueKey<String>('LoadingScreen'),
           ),
+        if (_navigationState.isInitialized) ...[
+          MaterialPage(
+            child: LoginView(),
+            key: const ValueKey<String>(LoginView.routeName),
+          ),
+          if (_authProvider.isAuthenticated)
+            MaterialPage<Widget>(
+              child: WebShell(
+                navigationState: _navigationState,
+              ),
+            ),
+        ],
       ],
       onPopPage: (route, result) {
         if (!route.didPop(result)) {
           return false;
         }
         print('onPopPage called');
-        _appState.profileName = null;
+        _navigationState.reset();
         return true;
       },
     );
   }
 
   @override
-// TODO(RazvanRotaru): Complete this
   RoutePath get currentConfiguration {
     print('\n---------------\n'
-        'getConfiguration: $_appState'
+        'getConfiguration: $_navigationState'
         '\n-------------');
+
+    if (!_navigationState.isInitialized) {
+      return RootPath();
+    }
 
     if (!_authProvider.isAuthenticated) {
       return LoginPath();
     }
 
-    if (_appState.profileName != null) {
-      return ProfilePath(_appState.profileName);
-    }
-
-    if (_appState.selectedTab != null) {
-      switch (_appState.selectedTab) {
-        case 0:
-          return HomePath();
-        case 1:
-          return TimetablePath();
-        case 2:
-          return PortalPath();
-        case 3:
-          return PeoplePath();
-        default:
-          return HomePath();
-      }
-    }
-
-    return UnknownPath();
+    return _navigationState.path;
   }
 
   @override
-// TODO(RazvanRotaru): Complete this
   Future<void> setNewRoutePath(RoutePath configuration) async {
     print('\n---------------\n'
         'setNewRoute: $configuration'
-        '\n$_appState'
+        '\n$_navigationState'
         '\n-------------');
+
+    _navigationState.reset();
+
+    if (configuration is LoginPath) {
+      // await _authProvider.signOut();
+      if (_authProvider.isAuthenticated) {
+        _navigationState.path = HomePath();
+        return;
+      }
+    }
+/*
     if (configuration is ProfilePath) {
-      _appState.profileName = configuration.name;
-    } else {
-      _appState.profileName = null;
+      _navigationState.profileName = configuration.name;
     }
 
-    if (configuration is HomePath) {
-      _appState.selectedTab = 0;
-    } else if (configuration is TimetablePath) {
-      _appState.selectedTab = 1;
-    } else if (configuration is PortalPath) {
-      _appState.selectedTab = 2;
-    } else if (configuration is PeoplePath) {
-      _appState.selectedTab = 3;
+    if (configuration is WebsiteViewPath) {
+      _navigationState.websiteId = configuration.id;
     }
+
+    if (configuration is AddWebsitePath) {
+      _navigationState.websiteCategory = configuration.category;
+    }
+
+    if (configuration is ClassFeedbackViewPath) {
+      _navigationState.classId = configuration.id;
+    }
+
+    if (configuration is ClassViewPath) {
+      _navigationState.eventId = configuration.id;
+    }
+*/
+
+    if (configuration is HomePath) {
+      _navigationState.selectedTab = 0;
+    } else if (configuration is TimetablePath) {
+      _navigationState.selectedTab = 1;
+    } else if (configuration is PortalPath) {
+      _navigationState.selectedTab = 2;
+    } else if (configuration is PeoplePath) {
+      _navigationState.selectedTab = 3;
+    }
+
+    _navigationState.path = configuration;
   }
 }
 
 class InnerRouterDelegate extends AppRouterDelegate {
-  InnerRouterDelegate({@required AppStateProvider appState})
-      : _appState = appState;
+  InnerRouterDelegate({@required NavigationStateProvider navigationState})
+      : _navigationState = navigationState;
 
   final GlobalKey<NavigatorState> _navigatorKey = GlobalKey<NavigatorState>();
-  final AppStateProvider _appState;
+  final NavigationStateProvider _navigationState;
 
   @override
   GlobalKey<NavigatorState> get navigatorKey => _navigatorKey;
@@ -138,37 +152,22 @@ class InnerRouterDelegate extends AppRouterDelegate {
     return Navigator(
       key: _navigatorKey,
       pages: <Page<dynamic>>[
-        const MaterialPage(
-          child: HomePage(),
-          key: ValueKey<String>(HomePage.routeName),
+        MaterialPage(
+          child: _navigationState.path.page,
+          key: ValueKey<String>(_navigationState.path.location),
         ),
-        if (_appState.selectedTab == 1)
-          const MaterialPage(
-            child: TimetablePage(),
-            key: ValueKey<String>(TimetablePage.routeName),
-          ),
-        if (_appState.selectedTab == 2)
-          const MaterialPage(
-            child: PortalPage(),
-            key: ValueKey<String>(PortalPage.routeName),
-          ),
-        if (_appState.selectedTab == 3)
-          const MaterialPage(
-            child: PeoplePage(),
-            key: ValueKey<String>(PeoplePage.routeName),
-          ),
-        if (_appState.profileName != null)
+        if (_navigationState.customView != null)
           MaterialPage(
-            child: PersonView.fromName(context, _appState.profileName),
-            key: ValueKey<String>(_appState.profileName),
-          ),
+            child: _navigationState.customView,
+            key: ValueKey<String>('${_navigationState.customView.hashCode}'),
+          )
       ],
       onPopPage: (route, result) {
         if (!route.didPop(result)) {
           return false;
         }
 
-        _appState.profileName = null;
+        _navigationState.reset();
         notifyListeners();
         return true;
       },

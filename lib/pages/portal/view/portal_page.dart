@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:acs_upb_mobile/authentication/model/user.dart';
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
+import 'package:acs_upb_mobile/navigation/service/app_navigator.dart';
 import 'package:acs_upb_mobile/pages/filter/model/filter.dart';
 import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
 import 'package:acs_upb_mobile/pages/filter/view/filter_page.dart';
@@ -87,22 +88,25 @@ class _PortalPageState extends State<PortalPage> {
           size: size,
           onTap: () {
             if (canEdit) {
-              Navigator.of(context)
-                  .push(MaterialPageRoute<ChangeNotifierProvider>(
-                builder: (_) => ChangeNotifierProvider<FilterProvider>(
-                  create: (_) =>
-                      Platform.environment.containsKey('FLUTTER_TEST')
-                          ? Provider.of<FilterProvider>(context)
-                          : FilterProvider(
-                              defaultDegree: website.degree,
-                              defaultRelevance: website.relevance,
-                            ),
-                  child: WebsiteView(
-                    website: website,
-                    updateExisting: true,
+              AppNavigator.push(
+                context,
+                MaterialPageRoute<ChangeNotifierProvider>(
+                  builder: (_) => ChangeNotifierProvider<FilterProvider>(
+                    create: (_) =>
+                        Platform.environment.containsKey('FLUTTER_TEST')
+                            ? Provider.of<FilterProvider>(context)
+                            : FilterProvider(
+                                defaultDegree: website.degree,
+                                defaultRelevance: website.relevance,
+                              ),
+                    child: WebsiteView(
+                      website: website,
+                      updateExisting: true,
+                    ),
                   ),
                 ),
-              ));
+                webPath: '${WebsiteView.routeName}?id=${website.id}',
+              );
             } else {
               Provider.of<WebsiteProvider>(context, listen: false)
                   .incrementNumberOfVisits(website, uid: user?.uid);
@@ -254,13 +258,14 @@ class _PortalPageState extends State<PortalPage> {
           items: {
             S.current.filterMenuRelevance: () {
               userOnly = false;
-              Navigator.push(
+              AppNavigator.push(
                 context,
                 MaterialPageRoute<FilterPage>(
                   builder: (_) => FilterPage(
                     onSubmit: _updateFilter,
                   ),
                 ),
+                webPath: FilterPage.routeName,
               );
             },
             S.current.filterMenuShowMine: () {
@@ -348,27 +353,33 @@ class _AddWebsiteButton extends StatelessWidget {
             final authProvider =
                 Provider.of<AuthProvider>(context, listen: false);
             if (authProvider.isAuthenticated && !authProvider.isAnonymous) {
-              Navigator.of(context)
-                  .push(MaterialPageRoute<ChangeNotifierProvider>(
-                builder: (_) =>
-                    ChangeNotifierProxyProvider<AuthProvider, FilterProvider>(
-                  create: (_) =>
-                      Platform.environment.containsKey('FLUTTER_TEST')
-                          ? Provider.of<FilterProvider>(context)
-                          : FilterProvider(),
-                  update: (context, authProvider, filterProvider) {
-                    return filterProvider..updateAuth(authProvider);
+              AppNavigator.push(
+                context,
+                MaterialPageRoute<ChangeNotifierProvider>(
+                  builder: (_) {
+                    return ChangeNotifierProxyProvider<AuthProvider,
+                        FilterProvider>(
+                      create: (_) {
+                        return Platform.environment.containsKey('FLUTTER_TEST')
+                            ? Provider.of<FilterProvider>(context)
+                            : FilterProvider();
+                      },
+                      update: (context, authProvider, filterProvider) {
+                        return filterProvider..updateAuth(authProvider);
+                      },
+                      child: WebsiteView(
+                        website: Website(
+                            relevance: null,
+                            id: null,
+                            isPrivate: true,
+                            link: '',
+                            category: category),
+                      ),
+                    );
                   },
-                  child: WebsiteView(
-                    website: Website(
-                        relevance: null,
-                        id: null,
-                        isPrivate: true,
-                        link: '',
-                        category: category),
-                  ),
                 ),
-              ));
+                webPath: '${WebsiteView.routeName}/add?category=$category',
+              );
             } else {
               AppToast.show(S.current.warningAuthenticationNeeded);
             }

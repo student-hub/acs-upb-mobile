@@ -1,5 +1,6 @@
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
+import 'package:acs_upb_mobile/navigation/service/app_navigator.dart';
 import 'package:acs_upb_mobile/pages/classes/model/class.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +12,8 @@ class ShortcutView extends StatefulWidget {
   const ShortcutView({Key key, this.onSave}) : super(key: key);
 
   final void Function(Shortcut) onSave;
+
+  static const String routeName = '/shortcuts';
 
   @override
   _ShortcutViewState createState() => _ShortcutViewState();
@@ -38,7 +41,7 @@ class _ShortcutViewState extends State<ShortcutView> {
                   ownerUid:
                       Provider.of<AuthProvider>(context, listen: false).uid,
                 ));
-                Navigator.of(context).pop();
+                AppNavigator.pop(context);
               }
             })
       ],

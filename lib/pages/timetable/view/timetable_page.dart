@@ -1,6 +1,7 @@
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/navigation/model/routes.dart';
+import 'package:acs_upb_mobile/navigation/service/app_navigator.dart';
 import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
 import 'package:acs_upb_mobile/pages/classes/view/classes_page.dart';
 import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
@@ -75,20 +76,23 @@ class _TimetablePageState extends State<TimetablePage> {
         AppScaffoldAction(
           icon: FeatherIcons.bookOpen,
           tooltip: S.current.navigationClasses,
-          onPressed: () => Navigator.of(context).push(
+          onPressed: () => AppNavigator.push(
+            context,
             MaterialPageRoute<ChangeNotifierProvider>(
               builder: (_) => ChangeNotifierProvider.value(
                   value: Provider.of<ClassProvider>(context),
                   child: const ClassesPage()),
             ),
+            webPath: ClassesPage.routeName,
           ),
         ),
         AppScaffoldAction(
           icon: FeatherIcons.filter,
           tooltip: S.current.navigationFilter,
-          onPressed: () => Navigator.push(
+          onPressed: () => AppNavigator.push(
             context,
             MaterialPageRoute<FilterPage>(builder: (_) => const FilterPage()),
+            webPath: FilterPage.routeName,
           ),
         ),
       ],
@@ -110,21 +114,25 @@ class _TimetablePageState extends State<TimetablePage> {
                   final user = Provider.of<AuthProvider>(context, listen: false)
                       .currentUserFromCache;
                   if (user.canAddPublicInfo) {
-                    Navigator.of(context).push(MaterialPageRoute<AddEventView>(
-                      builder: (_) => ChangeNotifierProxyProvider<AuthProvider,
-                          FilterProvider>(
-                        create: (_) => FilterProvider(),
-                        update: (context, authProvider, filterProvider) {
-                          return filterProvider..updateAuth(authProvider);
-                        },
-                        child: AddEventView(
-                          initialEvent: UniEvent(
-                              start: dateTime,
-                              duration: const Period(hours: 2),
-                              id: null),
+                    AppNavigator.push(
+                      context,
+                      MaterialPageRoute<AddEventView>(
+                        builder: (_) => ChangeNotifierProxyProvider<
+                            AuthProvider, FilterProvider>(
+                          create: (_) => FilterProvider(),
+                          update: (context, authProvider, filterProvider) {
+                            return filterProvider..updateAuth(authProvider);
+                          },
+                          child: AddEventView(
+                            initialEvent: UniEvent(
+                                start: dateTime,
+                                duration: const Period(hours: 2),
+                                id: null),
+                          ),
                         ),
                       ),
-                    ));
+                      webPath: AddEventView.routeName,
+                    );
                   } else {
                     AppToast.show(S.current.errorPermissionDenied);
                   }
@@ -201,11 +209,12 @@ class _TimetablePageState extends State<TimetablePage> {
             width: 130,
             onTap: () async {
               // Pop the dialog
-              Navigator.of(context).pop();
+              AppNavigator.pop(context);
               // Push the Add classes page
-              await Navigator.of(context)
-                  .push(MaterialPageRoute<ChangeNotifierProvider>(
-                builder: (_) => ChangeNotifierProvider.value(
+              await AppNavigator.push(
+                context,
+                MaterialPageRoute<ChangeNotifierProvider>(
+                  builder: (_) => ChangeNotifierProvider.value(
                     value: classProvider,
                     child: FutureBuilder(
                       future: classProvider.fetchUserClassIds(user.uid),
@@ -216,15 +225,18 @@ class _TimetablePageState extends State<TimetablePage> {
                               onSave: (classIds) async {
                                 await classProvider.setUserClassIds(
                                     classIds, authProvider.uid);
-                                Navigator.pop(context);
+                                AppNavigator.pop(context);
                               });
                         } else {
                           return const Center(
                               child: CircularProgressIndicator());
                         }
                       },
-                    )),
-              ));
+                    ),
+                  ),
+                ),
+                webPath: AddClassesPage.routeName,
+              );
             },
           )
         ],
@@ -256,9 +268,9 @@ class _TimetablePageState extends State<TimetablePage> {
             width: 130,
             onTap: () async {
               // Pop the dialog
-              Navigator.of(context).pop();
+              AppNavigator.pop(context);
               // Push the Filter page
-              await Navigator.pushNamed(context, Routes.filter);
+              await AppNavigator.pushNamed(context, Routes.filter);
             },
           )
         ],
@@ -276,15 +288,15 @@ class _TimetablePageState extends State<TimetablePage> {
               // Check if user is verified
               final bool isVerified = await authProvider.isVerified;
               // Pop the dialog
-              Navigator.of(context).pop();
+              AppNavigator.pop(context);
               // Push the Permissions page
               if (authProvider.isAnonymous) {
                 AppToast.show(S.current.messageNotLoggedIn);
               } else if (!isVerified) {
                 AppToast.show(S.current.messageEmailNotVerifiedToPerformAction);
               } else {
-                await Navigator.of(context)
-                    .pushNamed(Routes.requestPermissions);
+                await AppNavigator.pushNamed(
+                    context, Routes.requestPermissions);
               }
             },
           )

@@ -1,5 +1,6 @@
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
+import 'package:acs_upb_mobile/navigation/service/app_navigator.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/widgets/error_page.dart';
 import 'package:flutter/cupertino.dart';
@@ -70,7 +71,7 @@ class AppScaffold extends StatelessWidget {
         !enableContent || (action?.onPressed == null && action?.route == null)
             ? null
             : action?.onPressed ??
-                () => Navigator.pushNamed(context, action?.route);
+                () => AppNavigator.pushNamed(context, action?.route);
 
     final icon = action.disabled
         ? Icon(action.icon ?? Icons.menu_outlined,

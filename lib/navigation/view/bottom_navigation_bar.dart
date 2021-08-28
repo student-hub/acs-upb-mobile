@@ -1,4 +1,5 @@
 import 'package:acs_upb_mobile/generated/l10n.dart';
+import 'package:acs_upb_mobile/navigation/service/app_navigator.dart';
 import 'package:acs_upb_mobile/pages/home/home_page.dart';
 import 'package:acs_upb_mobile/pages/home/profile_card.dart';
 import 'package:acs_upb_mobile/pages/people/view/people_page.dart';
@@ -11,6 +12,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 
+// TODO(IoanaAlexandru): maybe rename to AppNavigationBar
 class AppBottomNavigationBar extends StatefulWidget {
   const AppBottomNavigationBar({this.tabIndex = 0});
 
@@ -266,15 +268,12 @@ class _DummySearchBarState extends State<DummySearchBar> {
     return Container(
       color: Theme.of(context).accentColor.withAlpha(60),
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
           widget.leading ?? const SizedBox.shrink(),
-          SizedBox(
-            child: Padding(
-              padding: const EdgeInsets.only(left: 25),
-              // TODO(RazvanRotaru): Wrap in Button and goto /home
-              child: UniBanner(),
-            ),
-            width: 500,
+          InkWell(
+            child: UniBanner(),
+            onTap: () => AppNavigator.pushNamed(context, HomePage.routeName),
           ),
           const Expanded(
             child: Align(

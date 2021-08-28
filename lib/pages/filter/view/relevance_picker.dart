@@ -1,6 +1,7 @@
 import 'package:acs_upb_mobile/authentication/model/user.dart';
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
+import 'package:acs_upb_mobile/navigation/service/app_navigator.dart';
 import 'package:acs_upb_mobile/pages/filter/model/filter.dart';
 import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
 import 'package:acs_upb_mobile/pages/filter/view/filter_page.dart';
@@ -109,35 +110,38 @@ class _RelevancePickerState extends State<RelevancePicker> {
       child: GestureDetector(
         onTap: () {
           if (_user?.canAddPublicInfo ?? false) {
-            Navigator.of(context)
-                .push(MaterialPageRoute<ChangeNotifierProvider>(
-              builder: (_) => ChangeNotifierProvider.value(
-                value: widget.filterProvider,
-                child: FilterPage(
-                  title: S.current.labelRelevance,
-                  buttonText: S.current.buttonSet,
-                  canBeForEveryone: widget.canBeForEveryone,
-                  info:
-                      '${S.current.infoRelevanceNothingSelected} ${S.current.infoRelevance}',
-                  hint: S.current.infoRelevanceExample,
-                  onSubmit: () async {
-                    // Deselect all options
-                    _onlyMeController.deselect();
-                    _anyoneController.deselect();
+            AppNavigator.push(
+              context,
+              MaterialPageRoute<ChangeNotifierProvider>(
+                builder: (_) => ChangeNotifierProvider.value(
+                  value: widget.filterProvider,
+                  child: FilterPage(
+                    title: S.current.labelRelevance,
+                    buttonText: S.current.buttonSet,
+                    canBeForEveryone: widget.canBeForEveryone,
+                    info:
+                        '${S.current.infoRelevanceNothingSelected} ${S.current.infoRelevance}',
+                    hint: S.current.infoRelevanceExample,
+                    onSubmit: () async {
+                      // Deselect all options
+                      _onlyMeController.deselect();
+                      _anyoneController.deselect();
 
-                    // Select the new options
-                    await _fetchFilter();
-                    if (_filter.relevantLeaves.contains('All')) {
-                      _anyoneController.select();
-                    } else {
-                      for (final controller in _customControllers.values) {
-                        controller.select();
+                      // Select the new options
+                      await _fetchFilter();
+                      if (_filter.relevantLeaves.contains('All')) {
+                        _anyoneController.select();
+                      } else {
+                        for (final controller in _customControllers.values) {
+                          controller.select();
+                        }
                       }
-                    }
-                  },
+                    },
+                  ),
                 ),
               ),
-            ));
+              webPath: FilterPage.routeName,
+            );
           } else {
             AppToast.show(S.current.warningNoPermissionToAddPublicWebsite);
           }

@@ -1,6 +1,7 @@
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/navigation/model/routes.dart';
+import 'package:acs_upb_mobile/navigation/service/app_navigator.dart';
 import 'package:acs_upb_mobile/pages/filter/view/filter_dropdown.dart';
 import 'package:acs_upb_mobile/resources/banner.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
@@ -181,7 +182,7 @@ class _SignUpViewState extends State<SignUpView> {
 
         if (result) {
           // Remove all routes below and push home page
-          await Navigator.pushNamedAndRemoveUntil(
+          await AppNavigator.pushNamedAndRemoveUntil(
               context, Routes.home, (route) => false);
         }
       },
@@ -240,7 +241,7 @@ class _SignUpViewState extends State<SignUpView> {
                               key: const ValueKey('cancel_button'),
                               text: S.current.buttonCancel,
                               onTap: () async {
-                                return Navigator.pop(context);
+                                return AppNavigator.pop(context);
                               },
                             ),
                           ),

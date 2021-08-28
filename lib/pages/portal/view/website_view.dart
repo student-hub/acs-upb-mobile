@@ -1,6 +1,7 @@
 import 'package:acs_upb_mobile/authentication/model/user.dart';
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
+import 'package:acs_upb_mobile/navigation/service/app_navigator.dart';
 import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
 import 'package:acs_upb_mobile/pages/filter/view/relevance_picker.dart';
 import 'package:acs_upb_mobile/pages/portal/model/website.dart';
@@ -32,6 +33,8 @@ class WebsiteView extends StatefulWidget {
           'WebsiteView: website cannot be null if updateExisting is true');
     }
   }
+
+  static const String routeName = '/website';
 
   final Website website;
   final bool updateExisting;
@@ -172,13 +175,13 @@ class _WebsiteViewState extends State<WebsiteView> {
             text: S.current.actionDeleteWebsite,
             width: 130,
             onTap: () async {
-              Navigator.pop(context); // Pop dialog window
+              AppNavigator.pop(context); // Pop dialog window
 
               final websiteProvider =
                   Provider.of<WebsiteProvider>(context, listen: false);
               final res = await websiteProvider.deleteWebsite(widget.website);
               if (res) {
-                Navigator.pop(context); // Pop editing page
+                AppNavigator.pop(context); // Pop editing page
                 AppToast.show(S.current.messageWebsiteDeleted);
               }
             },
@@ -210,7 +213,7 @@ class _WebsiteViewState extends State<WebsiteView> {
                     AppToast.show(widget.updateExisting
                         ? S.current.messageWebsiteEdited
                         : S.current.messageWebsiteAdded);
-                    Navigator.of(context).pop();
+                    AppNavigator.pop(context);
                   }
                 }
               },

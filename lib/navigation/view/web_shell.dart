@@ -1,14 +1,19 @@
-import 'package:acs_upb_mobile/navigation/model/app_state.dart';
+import 'package:acs_upb_mobile/navigation/model/navigation_state.dart';
+import 'package:acs_upb_mobile/navigation/service/app_navigator.dart';
 import 'package:acs_upb_mobile/navigation/service/app_router_delegates.dart';
 import 'package:acs_upb_mobile/navigation/view/bottom_navigation_bar.dart';
+import 'package:acs_upb_mobile/pages/home/home_page.dart';
+import 'package:acs_upb_mobile/pages/people/view/people_page.dart';
+import 'package:acs_upb_mobile/pages/portal/view/portal_page.dart';
+import 'package:acs_upb_mobile/pages/timetable/view/timetable_page.dart';
 import 'package:flutter/material.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 
 class WebShell extends StatefulWidget {
-  WebShell({Key key, this.appState}) : super(key: key);
+  WebShell({Key key, this.navigationState}) : super(key: key);
 
-  final AppStateProvider appState;
+  final NavigationStateProvider navigationState;
   final PageStorageBucket bucket = PageStorageBucket();
 
   @override
@@ -23,7 +28,8 @@ class _WebShellState extends State<WebShell> {
   @override
   void initState() {
     super.initState();
-    _innerRouterDelegate = InnerRouterDelegate(appState: widget.appState);
+    _innerRouterDelegate =
+        InnerRouterDelegate(navigationState: widget.navigationState);
   }
 
   @override
@@ -38,6 +44,27 @@ class _WebShellState extends State<WebShell> {
   void dispose() {
     _innerRouterDelegate.dispose();
     super.dispose();
+  }
+
+  void handleNavigationBar(int index) {
+    setState(() {
+      widget.navigationState.selectedTab = index;
+
+      switch (index) {
+        case 0:
+          AppNavigator.pushNamed(context, HomePage.routeName);
+          break;
+        case 1:
+          AppNavigator.pushNamed(context, TimetablePage.routeName);
+          break;
+        case 2:
+          AppNavigator.pushNamed(context, PortalPage.routeName);
+          break;
+        case 3:
+          AppNavigator.pushNamed(context, PeoplePage.routeName);
+          break;
+      }
+    });
   }
 
   @override
@@ -70,12 +97,8 @@ class _WebShellState extends State<WebShell> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           NavigationRail(
-            selectedIndex: widget.appState.selectedTab,
-            onDestinationSelected: (int index) {
-              setState(() {
-                widget.appState.selectedTab = index;
-              });
-            },
+            selectedIndex: widget.navigationState.selectedTab,
+            onDestinationSelected: handleNavigationBar,
             extended: _extended,
             labelType: NavigationRailLabelType.none,
             destinations: [
@@ -113,7 +136,6 @@ class _WebShellState extends State<WebShell> {
           Expanded(
             flex: 5,
             child: PageStorage(
-              // TODO(RazvanRotaru): Add Router
               child: Router<dynamic>(
                 routerDelegate: _innerRouterDelegate,
                 backButtonDispatcher: _backButtonDispatcher,

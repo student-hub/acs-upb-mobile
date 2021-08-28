@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:acs_upb_mobile/authentication/model/user.dart';
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
+import 'package:acs_upb_mobile/navigation/service/app_navigator.dart';
 import 'package:acs_upb_mobile/pages/filter/view/filter_dropdown.dart';
 import 'package:acs_upb_mobile/resources/storage/storage_provider.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
@@ -23,6 +24,8 @@ import 'package:provider/provider.dart';
 
 class EditProfilePage extends StatefulWidget {
   const EditProfilePage({Key key}) : super(key: key);
+
+  static const String routeName = '/profile/edit';
 
   @override
   _EditProfilePageState createState() => _EditProfilePageState();
@@ -136,7 +139,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 if (await authProvider
                     .changePassword(newPasswordController.text)) {
                   AppToast.show(S.current.messageChangePasswordSuccess);
-                  Navigator.pop(context);
+                  AppNavigator.pop(context);
                 }
               }
             }
@@ -212,9 +215,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
               if (await authProvider.changeEmail(
                   emailController.text + S.current.stringEmailDomain)) {
                 AppToast.show(S.current.messageChangeEmailSuccess);
-                Navigator.pop(context, true);
+                AppNavigator.pop(context, true);
               } else {
-                Navigator.pop(context, false);
+                AppNavigator.pop(context, false);
               }
             }
           },
@@ -306,7 +309,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 if (result) {
                   if (await authProvider.updateProfile(info)) {
                     AppToast.show(S.current.messageEditProfileSuccess);
-                    Navigator.pop(context);
+                    AppNavigator.pop(context);
                   }
                 }
               }

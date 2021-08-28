@@ -1,4 +1,5 @@
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
+import 'package:acs_upb_mobile/navigation/service/app_navigator.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/service/feedback_provider.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/view/class_feedback_checklist.dart';
 import 'package:acs_upb_mobile/pages/classes/model/class.dart';
@@ -53,10 +54,12 @@ class _FeedbackNudgeState extends State<FeedbackNudge> {
           tooltip: S.current.navigationClassesFeedbackChecklist,
           backgroundColor: Theme.of(context).accentColor,
           onPressed: () {
-            Navigator.of(context).push(
+            AppNavigator.push(
+              context,
               MaterialPageRoute<ClassFeedbackChecklist>(
                 builder: (_) => ClassFeedbackChecklist(classes: userClasses),
               ),
+              webPath: ClassFeedbackChecklist.routeName,
             );
           },
           label: Row(

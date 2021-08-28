@@ -2,7 +2,12 @@ import 'dart:async';
 import 'dart:core';
 import 'dart:math';
 
+import 'package:acs_upb_mobile/navigation/model/navigation_state.dart';
+import 'package:acs_upb_mobile/navigation/service/app_navigator.dart';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class LoadingScreen extends StatefulWidget {
   const LoadingScreen(
@@ -34,13 +39,21 @@ class _LoadingScreenState extends State<LoadingScreen> {
     super.initState();
 
     widget.navigateAfterFuture.then((navigateTo) {
+      if (kIsWeb) {
+        Provider.of<NavigationStateProvider>(context, listen: false)
+            .isInitialized = true;
+      }
+
       if (navigateTo is String) {
         // It's fairly safe to assume this is using the in-built material
         // named route component
-        Navigator.of(context).pushReplacementNamed(navigateTo);
+        AppNavigator.pushReplacementNamed(context, navigateTo);
       } else if (navigateTo is Widget) {
-        Navigator.of(context).pushReplacement(MaterialPageRoute<Widget>(
-            builder: (BuildContext context) => navigateTo));
+        AppNavigator.pushReplacement(
+            context,
+            MaterialPageRoute<Widget>(
+                builder: (BuildContext context) => navigateTo),
+            webPath: '/');
       } else {
         throw ArgumentError(
             'widget.navigateAfterSeconds must either be a String or Widget');
