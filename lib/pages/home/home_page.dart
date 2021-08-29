@@ -4,10 +4,12 @@ import 'package:acs_upb_mobile/navigation/routes.dart';
 import 'package:acs_upb_mobile/pages/classes/view/classes_page.dart';
 import 'package:acs_upb_mobile/pages/home/faq_card.dart';
 import 'package:acs_upb_mobile/pages/home/favourite_websites_card.dart';
+import 'package:acs_upb_mobile/pages/home/feedback_nudge.dart';
 import 'package:acs_upb_mobile/pages/home/news_feed_card.dart';
 import 'package:acs_upb_mobile/pages/home/profile_card.dart';
 import 'package:acs_upb_mobile/pages/home/upcoming_events_card.dart';
 import 'package:acs_upb_mobile/pages/search/view/search_page.dart';
+import 'package:acs_upb_mobile/resources/remote_config.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -43,6 +45,10 @@ class HomePage extends StatelessWidget {
       body: ListView(
         children: [
           if (authProvider.isAuthenticated) ProfileCard(),
+          if (authProvider.isAuthenticated &&
+              !authProvider.isAnonymous &&
+              RemoteConfigService.feedbackEnabled)
+            FeedbackNudge(),
           if (authProvider.isAuthenticated && !authProvider.isAnonymous)
             UpcomingEventsCard(onShowMore: () => tabController?.animateTo(1)),
           if (authProvider.isAuthenticated && !authProvider.isAnonymous)

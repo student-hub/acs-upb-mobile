@@ -115,13 +115,16 @@ class _EventViewState extends State<EventView> {
             ClassListItem(
               classHeader: mainEvent.classHeader,
               hint: S.current.messageTapForMoreInfo,
-              onTap: () => Navigator.of(context)
-                  .push(MaterialPageRoute<ChangeNotifierProvider>(
-                builder: (context) => ChangeNotifierProvider.value(
-                  value: Provider.of<ClassProvider>(context),
-                  child: ClassView(classHeader: mainEvent.classHeader),
+              onTap: () => Navigator.of(context).push(
+                MaterialPageRoute<ChangeNotifierProvider>(
+                  builder: (context) => ChangeNotifierProvider.value(
+                    value: Provider.of<ClassProvider>(context),
+                    child: ClassView(
+                      classHeader: mainEvent.classHeader,
+                    ),
+                  ),
                 ),
-              )),
+              ),
             ),
           if (widget.eventInstance?.location?.isNotEmpty ?? false)
             Padding(

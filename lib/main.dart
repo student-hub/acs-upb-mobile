@@ -6,6 +6,7 @@ import 'package:acs_upb_mobile/authentication/view/sign_up_view.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/navigation/bottom_navigation_bar.dart';
 import 'package:acs_upb_mobile/navigation/routes.dart';
+import 'package:acs_upb_mobile/pages/class_feedback/service/feedback_provider.dart';
 import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
 import 'package:acs_upb_mobile/pages/faq/service/question_provider.dart';
 import 'package:acs_upb_mobile/pages/faq/view/faq_page.dart';
@@ -20,6 +21,7 @@ import 'package:acs_upb_mobile/pages/settings/view/request_permissions.dart';
 import 'package:acs_upb_mobile/pages/settings/view/settings_page.dart';
 import 'package:acs_upb_mobile/pages/timetable/service/uni_event_provider.dart';
 import 'package:acs_upb_mobile/resources/locale_provider.dart';
+import 'package:acs_upb_mobile/resources/remote_config.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/widgets/loading_screen.dart';
 import 'package:dynamic_theme/dynamic_theme.dart';
@@ -37,17 +39,17 @@ import 'package:provider/provider.dart';
 import 'package:rrule/rrule.dart';
 import 'package:time_machine/time_machine.dart';
 
-// FIXME: acs.pub.ro has some bad certificate configuration right now, and the
-// cs.pub.ro certificate is expired.
-// We get around this by accepting any certificate if the host is either
-// acs.pub.ro or cs.pub.ro.
+// FIXME: Our university website certificates have some issues, so we say we
+// trust them regardless.
 // Remove this in the future.
 class MyHttpOverrides extends HttpOverrides {
   @override
   HttpClient createHttpClient(SecurityContext context) {
     return super.createHttpClient(context)
       ..badCertificateCallback = (X509Certificate cert, String host, int port) {
-        return host == 'acs.pub.ro' || host == 'cs.pub.ro';
+        return host == 'acs.pub.ro' ||
+            host == 'cs.pub.ro' ||
+            host == 'aii.pub.ro';
       };
   }
 }
@@ -66,12 +68,14 @@ Future<void> main() async {
   final authProvider = AuthProvider();
   final classProvider = ClassProvider();
   final personProvider = PersonProvider();
+  final feedbackProvider = FeedbackProvider();
 
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider<AuthProvider>(create: (_) => authProvider),
     ChangeNotifierProvider<WebsiteProvider>(create: (_) => WebsiteProvider()),
     Provider<RequestProvider>(create: (_) => RequestProvider()),
     ChangeNotifierProvider<ClassProvider>(create: (_) => classProvider),
+    ChangeNotifierProvider<FeedbackProvider>(create: (_) => feedbackProvider),
     ChangeNotifierProvider<PersonProvider>(create: (_) => personProvider),
     ChangeNotifierProvider<QuestionProvider>(create: (_) => QuestionProvider()),
     ChangeNotifierProvider<NewsProvider>(create: (_) => NewsProvider()),
@@ -134,6 +138,24 @@ class _MyAppState extends State<MyApp> {
     );
   }
 
+  ChipThemeData defaultChipThemeData(Brightness brightness) =>
+      ChipThemeData.fromDefaults(
+        brightness: brightness,
+        secondaryColor: _accentColor,
+        labelStyle: ThemeData()
+            .accentTextTheme
+            .apply(
+                fontFamily: 'Montserrat',
+                bodyColor: _accentColor,
+                displayColor: _accentColor)
+            .bodyText2,
+      );
+
+  Color chipSelectedColor(Brightness brightness) =>
+      brightness == Brightness.light
+          ? _accentColor.withOpacity(0.3)
+          : _accentColor;
+
   @override
   Widget build(BuildContext context) {
     return DynamicTheme(
@@ -150,7 +172,21 @@ class _MyAppState extends State<MyApp> {
             displayColor: _accentColor),
         toggleableActiveColor: _accentColor,
         fontFamily: 'Montserrat',
-        primaryColor: const Color(0xFF4DB5E4),
+        primaryColor: _accentColor,
+        chipTheme: ChipThemeData(
+          brightness: brightness,
+          selectedColor: chipSelectedColor(brightness),
+          secondarySelectedColor: chipSelectedColor(brightness),
+          backgroundColor:
+              defaultChipThemeData(brightness).backgroundColor.withOpacity(0.1),
+          disabledColor: defaultChipThemeData(brightness).disabledColor,
+          padding: defaultChipThemeData(brightness).padding,
+          labelStyle: defaultChipThemeData(brightness).labelStyle,
+          secondaryLabelStyle:
+              defaultChipThemeData(brightness).secondaryLabelStyle,
+          checkmarkColor:
+              brightness == Brightness.light ? _accentColor : Colors.white,
+        ),
       ),
       themedWidgetBuilder: (context, theme) {
         return OKToast(
@@ -177,6 +213,7 @@ class AppLoadingScreen extends StatelessWidget {
   Future<String> _setUpAndChooseStartScreen(BuildContext context) async {
     // Make initializations if this is not a test
     if (!Platform.environment.containsKey('FLUTTER_TEST')) {
+      await RemoteConfigService.initialize();
       await TimeMachine.initialize({'rootBundle': rootBundle});
       await PrefService.init(prefix: 'pref_');
       PrefService.setDefaultValues(

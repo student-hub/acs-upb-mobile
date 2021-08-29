@@ -2,6 +2,12 @@ import 'package:acs_upb_mobile/authentication/model/user.dart';
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/authentication/view/edit_profile_page.dart';
 import 'package:acs_upb_mobile/main.dart';
+import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question_dropdown.dart';
+import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question_slider.dart';
+import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question_rating.dart';
+import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question_text.dart';
+import 'package:acs_upb_mobile/pages/class_feedback/service/feedback_provider.dart';
+import 'package:acs_upb_mobile/pages/class_feedback/view/class_feedback_view.dart';
 import 'package:acs_upb_mobile/pages/classes/model/class.dart';
 import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
 import 'package:acs_upb_mobile/pages/classes/view/class_view.dart';
@@ -40,6 +46,7 @@ import 'package:acs_upb_mobile/pages/timetable/view/events/event_view.dart';
 import 'package:acs_upb_mobile/pages/timetable/view/timetable_page.dart';
 import 'package:acs_upb_mobile/resources/locale_provider.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
+import 'package:acs_upb_mobile/pages/class_feedback/view/feedback_question.dart';
 import 'package:acs_upb_mobile/widgets/search_bar.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -53,6 +60,7 @@ import 'package:provider/provider.dart';
 import 'package:rrule/rrule.dart';
 import 'package:time_machine/time_machine.dart' hide Offset;
 import 'package:timetable/src/header/week_indicator.dart';
+import 'package:acs_upb_mobile/resources/remote_config.dart';
 
 import 'firebase_mock.dart';
 import 'test_utils.dart';
@@ -80,6 +88,8 @@ class MockRequestProvider extends Mock implements RequestProvider {}
 
 class MockNavigatorObserver extends Mock implements NavigatorObserver {}
 
+class MockFeedbackProvider extends Mock implements FeedbackProvider {}
+
 Future<void> main() async {
   AuthProvider mockAuthProvider;
   WebsiteProvider mockWebsiteProvider;
@@ -90,6 +100,7 @@ Future<void> main() async {
   MockNewsProvider mockNewsProvider;
   UniEventProvider mockEventProvider;
   RequestProvider mockRequestProvider;
+  FeedbackProvider mockFeedbackProvider;
 
   setupFirebaseAuthMocks();
   await Firebase.initializeApp();
@@ -127,6 +138,8 @@ Future<void> main() async {
           ChangeNotifierProvider<UniEventProvider>(
               create: (_) => mockEventProvider),
           Provider<RequestProvider>(create: (_) => mockRequestProvider),
+          ChangeNotifierProvider<FeedbackProvider>(
+              create: (_) => mockFeedbackProvider),
         ],
         child: const MyApp(),
       );
@@ -366,6 +379,8 @@ Future<void> main() async {
           ),
         ));
 
+    RemoteConfigService.overrides = {'feedback_enabled': true};
+
     mockPersonProvider = MockPersonProvider();
     // ignore: invalid_use_of_protected_member
     when(mockPersonProvider.hasListeners).thenReturn(false);
@@ -398,6 +413,54 @@ Future<void> main() async {
 
     when(mockPersonProvider.mostRecentLecturer(any))
         .thenAnswer((_) => Future.value('Jane Doe'));
+
+    mockFeedbackProvider = MockFeedbackProvider();
+    // ignore: invalid_use_of_protected_member
+    when(mockFeedbackProvider.hasListeners).thenReturn(true);
+    when(mockFeedbackProvider.fetchQuestions()).thenAnswer((_) => Future.value({
+          '0': FeedbackQuestionDropdown(
+            category: 'involvement',
+            question:
+                'Approximate number of activities that you attended (lectures + applications):',
+            id: '0',
+            answerOptions: ['option 1', 'option 2', 'option 3', 'option 4'],
+          ),
+          '1': FeedbackQuestionRating(
+            category: 'applications',
+            question: 'Was the exposure method appropriate?',
+            id: '1',
+          ),
+          '2': FeedbackQuestionText(
+            category: 'personal',
+            question: 'What are the positive aspects of this class?',
+            id: '2',
+          ),
+          '3': FeedbackQuestionSlider(
+            category: 'homework',
+            question:
+                'Estimate the average number of hours per week devoted to solving homework.',
+            id: '3',
+          ),
+        }));
+    when(mockFeedbackProvider.fetchCategories())
+        .thenAnswer((_) => Future.value({
+              'applications': {'en': 'Applications', 'ro': 'Aplicații'},
+              'homework': {'en': 'Homework', 'ro': 'Temă'},
+              'involvement': {'en': 'Involvement', 'ro': 'Implicare'},
+              'personal': {
+                'en': 'Personal comments',
+                'ro': 'Comentarii personale'
+              },
+            }));
+
+    when(mockFeedbackProvider.userSubmittedFeedbackForClass(any, any))
+        .thenAnswer((_) => Future.value(false));
+    when(mockFeedbackProvider.submitFeedback(any, any, any, any, any))
+        .thenAnswer((_) => Future.value(true));
+    when(mockFeedbackProvider.getClassesWithCompletedFeedback(any))
+        .thenAnswer((_) => Future.value({'M1': true, 'M2': true}));
+    when(mockFeedbackProvider.countClassesWithoutFeedback(any, any))
+        .thenAnswer((_) => Future.value('2'));
 
     mockQuestionProvider = MockQuestionProvider();
     // ignore: invalid_use_of_protected_member
@@ -1084,7 +1147,8 @@ Future<void> main() async {
           // Select lecturer - partial name
           await tester.tap(find.byIcon(FeatherIcons.user));
           await tester.pumpAndSettle();
-          await tester.enterText(find.byKey(const Key('Autocomplete')), 'John');
+          await tester.enterText(
+              find.byKey(const Key('AutocompleteLecturer')), 'John');
           await tester.pumpAndSettle();
           await tester.tap(find.text('John Doe'));
           await tester.pumpAndSettle();
@@ -1093,14 +1157,15 @@ Future<void> main() async {
           await tester.tap(find.byIcon(FeatherIcons.user));
           await tester.pumpAndSettle();
           await tester.enterText(
-              find.byKey(const Key('Autocomplete')), 'Isabel Steward');
+              find.byKey(const Key('AutocompleteLecturer')), 'Isabel Steward');
           await tester.tap(find.text('Isabel Steward'));
           await tester.pumpAndSettle();
 
           // Select lecturer - check autocomplete suggestions
           await tester.tap(find.byIcon(FeatherIcons.user));
           await tester.pumpAndSettle();
-          await tester.enterText(find.byKey(const Key('Autocomplete')), 'Doe');
+          await tester.enterText(
+              find.byKey(const Key('AutocompleteLecturer')), 'Doe');
           await tester.pumpAndSettle();
 
           expect(find.text('Jane Doe'), findsOneWidget);
@@ -1169,14 +1234,15 @@ Future<void> main() async {
           // Select lecturer
           await tester.tap(find.text('Lecturer'));
           await tester.pumpAndSettle();
-          await tester.enterText(find.byKey(const Key('Autocomplete')), 'Doe');
+          await tester.enterText(
+              find.byKey(const Key('AutocompleteLecturer')), 'Doe');
           await tester.pumpAndSettle();
 
           expect(find.text('Jane Doe'), findsOneWidget);
           expect(find.text('John Doe'), findsOneWidget);
 
           await tester.enterText(
-              find.byKey(const Key('Autocomplete')), 'John Doe');
+              find.byKey(const Key('AutocompleteLecturer')), 'John Doe');
           await tester.pumpAndSettle();
 
           FocusManager.instance.primaryFocus.unfocus();
@@ -1390,6 +1456,98 @@ Future<void> main() async {
         });
       }
     });
+  });
+
+  group('Feedback view', () {
+    setUp(() {
+      when(mockAuthProvider.currentUser).thenAnswer((_) => Future.value(User(
+          uid: '0', firstName: 'John', lastName: 'Doe', permissionLevel: 3)));
+      when(mockAuthProvider.currentUserFromCache).thenReturn(User(
+          uid: '0', firstName: 'John', lastName: 'Doe', permissionLevel: 3));
+      when(mockAuthProvider.isAuthenticated).thenReturn(true);
+      when(mockAuthProvider.isAnonymous).thenReturn(false);
+      when(mockAuthProvider.uid).thenReturn('0');
+      when(mockPersonProvider.fetchPerson(any))
+          .thenAnswer((_) => Future.value(Person(name: 'John Doe')));
+    });
+
+    for (final size in screenSizes) {
+      testWidgets('${size.width}x${size.height}', (WidgetTester tester) async {
+        await binding.setSurfaceSize(size);
+
+        await tester.pumpWidget(buildApp());
+        await tester.pumpAndSettle();
+
+        // Open timetable
+        await tester.tap(find.byIcon(Icons.calendar_today_outlined));
+        await tester.pumpAndSettle();
+
+        // Open classes
+        await tester.tap(find.byIcon(FeatherIcons.bookOpen));
+        await tester.pumpAndSettle();
+
+        // Open class view
+        await tester.tap(find.text('PC'));
+        await tester.pumpAndSettle();
+
+        expect(find.byType(ClassView), findsOneWidget);
+
+        // Open feedback page
+        await tester.tap(find.byIcon(Icons.rate_review_outlined));
+        await tester.pumpAndSettle();
+
+        expect(find.byType(ClassFeedbackView), findsOneWidget);
+
+        await tester.tap(find.byKey(const Key('AcknowledgementCheckbox')));
+        await tester.pumpAndSettle();
+
+        await tester.enterText(
+            find.byKey(const Key('AutocompleteAssistant')), 'John');
+        await tester.pumpAndSettle();
+        await tester.tap(find.text('John Doe').last);
+        await tester.pumpAndSettle();
+
+        expect(find.byType(Card), findsNWidgets(4));
+        expect(find.byType(FeedbackQuestionFormField), findsNWidgets(4));
+        expect(
+            find.text(
+                'Estimate the average number of hours per week devoted to solving homework.'),
+            findsOneWidget);
+        expect(
+            find.text(
+                'Approximate number of activities that you attended (lectures + applications):'),
+            findsOneWidget);
+        expect(
+            find.text('Was the exposure method appropriate?'), findsOneWidget);
+        expect(find.text('What are the positive aspects of this class?'),
+            findsOneWidget);
+
+        await tester.drag(
+            find.byKey(const Key('FeedbackSlider')), const Offset(2, 0));
+        await tester.pumpAndSettle();
+
+        await tester.tap(find.byIcon(Icons.sentiment_very_satisfied));
+        await tester.pumpAndSettle();
+
+        await tester.enterText(
+            find.byKey(const Key('FeedbackText')), 'Best class ever!');
+        await tester.pumpAndSettle();
+
+        await tester.tap(find.byKey(const Key('FeedbackDropdown')));
+        await tester.pumpAndSettle();
+        await tester.tap(find.text('option 3').last);
+        await tester.pumpAndSettle();
+
+        await tester.tap(find.text('Send'));
+        await tester.pumpAndSettle(const Duration(seconds: 5));
+
+        expect(find.text('You need to select your assistant for this class.'),
+            findsNothing);
+        expect(find.text('Answer cannot be empty.'), findsNothing);
+
+        expect(find.byType(ClassView), findsOneWidget);
+      });
+    }
   });
 
   group('Settings', () {

@@ -13,7 +13,7 @@ description: A mobile application for students at ACS UPB.
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 #
 # ACS UPB Mobile uses semantic versioning. You can read more in the CONTRIBUTING.md file.
-version: 1.2.11+14
+version: 1.2.13+24
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
@@ -50,10 +50,14 @@ dependencies:
   # Package for dynamically changing the app theme
   dynamic_theme: ^1.0.1
 
+  # File picker widget
+  file_picker: 2.1.7
+
   # Firebase products
   firebase_analytics: ^5.0.2
   firebase_auth: ^0.18.3+1
   firebase_core: ^0.5.2+1
+  firebase_remote_config: ^0.4.3
   firebase_storage: ^5.1.0
 
   # Flutter SDK
@@ -186,63 +190,63 @@ flutter:
   uses-material-design: true
 
   assets:
-  - assets/icons/
-  - assets/illustrations/
-  - assets/images/
-  - packages/time_machine/data/cultures/cultures.bin
-  - packages/time_machine/data/tzdb/tzdb.bin
+    - assets/icons/
+    - assets/illustrations/
+    - assets/images/
+    - packages/time_machine/data/cultures/cultures.bin
+    - packages/time_machine/data/tzdb/tzdb.bin
 
   fonts:
-  - family: CustomIcons
-    fonts:
-    - asset: assets/fonts/CustomIcons/CustomIcons.ttf
-  - family: Montserrat
-    fonts:
-    - asset: assets/fonts/Montserrat/Montserrat-Thin.otf
-      weight: 100
-    - asset: assets/fonts/Montserrat/Montserrat-ThinItalic.otf
-      weight: 100
-      style: italic
-    - asset: assets/fonts/Montserrat/Montserrat-ExtraLight.otf
-      weight: 200
-    - asset: assets/fonts/Montserrat/Montserrat-ExtraLightItalic.otf
-      weight: 200
-      style: italic
-    - asset: assets/fonts/Montserrat/Montserrat-Light.otf
-      weight: 300
-    - asset: assets/fonts/Montserrat/Montserrat-LightItalic.otf
-      weight: 300
-      style: italic
-    - asset: assets/fonts/Montserrat/Montserrat-Regular.otf
-      weight: 400
-    - asset: assets/fonts/Montserrat/Montserrat-Italic.otf
-      weight: 400
-      style: italic
-    - asset: assets/fonts/Montserrat/Montserrat-Medium.otf
-      weight: 500
-    - asset: assets/fonts/Montserrat/Montserrat-MediumItalic.otf
-      weight: 500
-      style: italic
-    - asset: assets/fonts/Montserrat/Montserrat-SemiBold.otf
-      weight: 600
-    - asset: assets/fonts/Montserrat/Montserrat-SemiBoldItalic.otf
-      weight: 600
-      style: italic
-    - asset: assets/fonts/Montserrat/Montserrat-Bold.otf
-      weight: 700
-    - asset: assets/fonts/Montserrat/Montserrat-BoldItalic.otf
-      weight: 700
-      style: italic
-    - asset: assets/fonts/Montserrat/Montserrat-ExtraBold.otf
-      weight: 800
-    - asset: assets/fonts/Montserrat/Montserrat-ExtraBoldItalic.otf
-      weight: 800
-      style: italic
-    - asset: assets/fonts/Montserrat/Montserrat-Black.otf
-      weight: 900
-    - asset: assets/fonts/Montserrat/Montserrat-BlackItalic.otf
-      weight: 900
-      style: italic
+    - family: CustomIcons
+      fonts:
+        - asset: assets/fonts/CustomIcons/CustomIcons.ttf
+    - family: Montserrat
+      fonts:
+        - asset: assets/fonts/Montserrat/Montserrat-Thin.otf
+          weight: 100
+        - asset: assets/fonts/Montserrat/Montserrat-ThinItalic.otf
+          weight: 100
+          style: italic
+        - asset: assets/fonts/Montserrat/Montserrat-ExtraLight.otf
+          weight: 200
+        - asset: assets/fonts/Montserrat/Montserrat-ExtraLightItalic.otf
+          weight: 200
+          style: italic
+        - asset: assets/fonts/Montserrat/Montserrat-Light.otf
+          weight: 300
+        - asset: assets/fonts/Montserrat/Montserrat-LightItalic.otf
+          weight: 300
+          style: italic
+        - asset: assets/fonts/Montserrat/Montserrat-Regular.otf
+          weight: 400
+        - asset: assets/fonts/Montserrat/Montserrat-Italic.otf
+          weight: 400
+          style: italic
+        - asset: assets/fonts/Montserrat/Montserrat-Medium.otf
+          weight: 500
+        - asset: assets/fonts/Montserrat/Montserrat-MediumItalic.otf
+          weight: 500
+          style: italic
+        - asset: assets/fonts/Montserrat/Montserrat-SemiBold.otf
+          weight: 600
+        - asset: assets/fonts/Montserrat/Montserrat-SemiBoldItalic.otf
+          weight: 600
+          style: italic
+        - asset: assets/fonts/Montserrat/Montserrat-Bold.otf
+          weight: 700
+        - asset: assets/fonts/Montserrat/Montserrat-BoldItalic.otf
+          weight: 700
+          style: italic
+        - asset: assets/fonts/Montserrat/Montserrat-ExtraBold.otf
+          weight: 800
+        - asset: assets/fonts/Montserrat/Montserrat-ExtraBoldItalic.otf
+          weight: 800
+          style: italic
+        - asset: assets/fonts/Montserrat/Montserrat-Black.otf
+          weight: 900
+        - asset: assets/fonts/Montserrat/Montserrat-BlackItalic.otf
+          weight: 900
+          style: italic
 
 flutter_intl:
   enabled: true
@@ -258,3 +262,5 @@ flutter_launcher_name:
 flutter_native_splash:
   image: assets/icons/acs_logo.png
   color: "#ffffff"
+  image_dark: assets/icons/acs_logo.png
+  color_dark: "#303030"
