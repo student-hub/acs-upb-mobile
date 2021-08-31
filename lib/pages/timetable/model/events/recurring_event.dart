@@ -94,7 +94,8 @@ class RecurringUniEvent extends UniEvent {
 
     // Calculate recurrences
     int i = 0;
-    for (final start in rrule.getInstances(start: start)) {
+
+    for (final start in rrule.getInstances(start: start.toUtc())) {
       final DateTime end = start.add(period.toTime().toDuration);
       if (intersectingInterval != null) {
         if (end < intersectingInterval.start) continue;
@@ -105,7 +106,7 @@ class RecurringUniEvent extends UniEvent {
       for (final holiday in calendar?.holidays ?? []) {
         final holidayInterval =
             DateTimeRange(start: holiday.startDate, end: holiday.endDate);
-            // DateInterval(holiday.startDate, holiday.endDate);
+        // DateInterval(holiday.startDate, holiday.endDate);
         if (holidayInterval.contains(start)) {
           // Skip holidays
           skip = true;

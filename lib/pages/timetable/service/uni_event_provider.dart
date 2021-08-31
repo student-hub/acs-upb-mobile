@@ -271,7 +271,6 @@ class UniEventProvider with ChangeNotifier {
             .snapshots()
             .asyncMap((snapshot) async {
           final events = <UniEvent>[];
-
           try {
             for (final doc in snapshot.docs) {
               ClassHeader classHeader;
@@ -308,18 +307,6 @@ class UniEventProvider with ChangeNotifier {
     return stream.map((events) => events.expand((i) => i).toList());
   }
 
-  Future<List<UniEventInstance>> loadEventsForRange(DateTimeRange range) async {
-    final List<UniEvent> events = await _events.first;
-    final List<UniEventInstance> eventsInRange = events
-        .where((event) => range.contains(event.start))
-        .map((event) => event.generateInstances(
-            intersectingInterval:
-                DateTimeRange(start: event.start, end: event.start)))
-        .expand((i) => i)
-        .toList();
-    return eventsInRange;
-  }
-
   Future<void> exportToGoogleCalendar() async {
     final Stream<List<UniEvent>> eventsStream = _events;
     final List<UniEvent> events = await eventsStream.first;
@@ -331,7 +318,19 @@ class UniEventProvider with ChangeNotifier {
     await insertGoogleEvents(googleCalendarEvents);
   }
 
-  @override
+  Stream<List<UniEventInstance>> getEventsIntersecting(DateTimeRange interval) {
+    final streams = <Stream<Iterable<UniEventInstance>>>[];
+    final Stream<Iterable<UniEventInstance>> allDay =
+        getAllDayEventsIntersecting(interval);
+    final Stream<Iterable<UniEventInstance>> partDay =
+        getPartDayEventsIntersecting(interval);
+    streams..add(allDay)..add(partDay);
+    final stream = StreamZip(streams);
+
+    // Flatten zipped streams
+    return stream.map((events) => events.expand((i) => i).toList());
+  }
+
   Stream<Iterable<UniEventInstance>> getAllDayEventsIntersecting(
       DateTimeRange interval) {
     return _events.map((events) => events
@@ -351,12 +350,12 @@ class UniEventProvider with ChangeNotifier {
         }).expand((e) => e)));
   }
 
-  @override
   Stream<Iterable<UniEventInstance>> getPartDayEventsIntersecting(
-      DateTime date) {
+      DateTimeRange interval) {
     return _events.map((events) => events
         .map((event) => event.generateInstances(
-            intersectingInterval: DateTimeRange(start: date, end: date)))
+            intersectingInterval:
+                DateTimeRange(start: interval.start, end: interval.end)))
         .expand((i) => i)
         .where((event) => event.isPartDay));
   }

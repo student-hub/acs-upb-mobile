@@ -48,7 +48,6 @@ class _TimetablePageState extends State<TimetablePage>
   @override
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
-    final eventProvider = Provider.of<UniEventProvider>(context);
 
     _dateController ??= DateController(
       initialDate: DateTimeTimetable.today(),
@@ -113,9 +112,9 @@ class _TimetablePageState extends State<TimetablePage>
             ValueListenableBuilder<DatePageValue>(
               valueListenable: _dateController,
               builder: (context, value, child) {
-                final Future<List<UniEventInstance>> events =
+                final Stream<List<UniEventInstance>> events =
                     Provider.of<UniEventProvider>(context, listen: false)
-                        .loadEventsForRange(
+                        .getEventsIntersecting(
                   DateTimeRange(
                     start: DateTimeTimetable.dateFromPage(value.page.floor()),
                     end: DateTimeTimetable.dateFromPage(
@@ -126,9 +125,10 @@ class _TimetablePageState extends State<TimetablePage>
                 // Or probably preload events outside this range, maybe
                 // for the previous and next page.
 
-                return FutureBuilder<List<UniEventInstance>>(
-                  future: events,
-                  builder: (context, snapshot) {
+                return StreamBuilder<List<UniEventInstance>>(
+                  stream: events,
+                  builder: (context,
+                      AsyncSnapshot<List<UniEventInstance>> snapshot) {
                     if (snapshot.data == null || snapshot.hasError) {
                       // Handle loading and error states
                       return Container();

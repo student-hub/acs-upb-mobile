@@ -153,8 +153,8 @@ class UniEvent {
       title: name,
       mainEvent: this,
       color: color,
-      start: start,
-      end: start.add(period.toTime().toDuration),
+      start: start.toUtc(),
+      end: start.add(period.toTime().toDuration).toUtc(),
       location: location,
     );
   }
