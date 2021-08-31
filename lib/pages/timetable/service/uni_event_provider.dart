@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:async/async.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:dart_date/dart_date.dart' as DartDate show Interval;
 import 'package:flutter/material.dart';
 import 'package:googleapis/calendar/v3.dart' as g_cal;
 import 'package:rrule/rrule.dart';

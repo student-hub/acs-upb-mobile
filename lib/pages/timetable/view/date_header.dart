@@ -1,13 +1,12 @@
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:black_hole_flutter/black_hole_flutter.dart';
+// import 'package:black_hole_flutter/black_hole_flutter.dart';
 import 'package:flutter/material.dart';
-import 'package:time_machine/time_machine_text_patterns.dart';
 
 // ignore: implementation_imports
 import 'package:timetable/src/components/date_indicator.dart';
 
 // ignore: implementation_imports
-import 'package:timetable/src/theme.dart';
+// import 'package:timetable/src/theme.dart';
 
 import '../timetable_utils.dart';
 
@@ -40,14 +39,14 @@ class WeekdayIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = context.theme;
-    final timetableTheme = TimetableTheme.of(context);
-
-    final states = statesFor(date);
-
-    final style =
-        TimetableTheme.of(context).weekdayIndicatorStyleProvider(date);
-    // ?
+    // // ?
+    // final theme = context.theme;
+    // final timetableTheme = TimetableTheme.of(context);
+    //
+    // final states = statesFor(date);
+    //
+    // final style =
+    //     TimetableTheme.of(context).weekdayIndicatorStyleProvider(date);
     // final pattern = timetableTheme?.weekDayIndicatorPattern?.resolve(states) ??
     //     LocalDatePattern.createWithCurrentCulture('ddd');
     // final decoration =

@@ -169,7 +169,9 @@ class _AddEventViewState extends State<AddEventView> {
     final startHour = widget.initialEvent?.start?.hour ?? 8;
     duration = widget.initialEvent?.period?.toTime()?.toDuration ??
         const Duration(hours: 2);
-    startTime = DateTime(startHour, 0, 0);
+    startTime = widget.initialEvent?.start
+            ?.copyWith(hour: startHour, minute: 0, second: 0, millisecond: 0) ??
+        0;
 
     List<_DayOfWeek> initialWeekDays = [
       _DayOfWeek.from(
@@ -429,8 +431,10 @@ class _AddEventViewState extends State<AddEventView> {
                   weekSelected[WeekType.odd] != weekSelected[WeekType.even]
                       ? 2
                       : 1,
-              until:
-                  semester.endDate.add(const Duration(days: 1)).atMidnight());
+              until: semester.endDate
+                  .add(const Duration(days: 1))
+                  .atMidnight()
+                  .toUtc());
 
           final event = ClassEvent(
               teacher: selectedTeacher,
@@ -515,7 +519,7 @@ class _AddEventViewState extends State<AddEventView> {
               child: Column(
                 children: [
                   Text(
-                    duration.toString().replaceAll(RegExp(r'[PT]'), ''),
+                    duration.toString().substring(0, 4),
                     style: Theme.of(context)
                         .textTheme
                         .bodyText1
@@ -645,7 +649,7 @@ class SelectableFormField extends FormField<Map<Localizable, bool>> {
                               Row(
                                 children: <Widget>[
                                   Expanded(
-                                    child: Container(
+                                    child: SizedBox(
                                       height: 40,
                                       child: ListView.builder(
                                         itemCount: labels.length,

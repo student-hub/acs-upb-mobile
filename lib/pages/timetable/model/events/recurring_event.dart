@@ -93,7 +93,7 @@ class RecurringUniEvent extends UniEvent {
     final RecurrenceRule rrule = rruleBasedOnCalendar;
 
     // Calculate recurrences
-    int i = 0;
+    // int i = 0;
 
     for (final start in rrule.getInstances(start: start.toUtc())) {
       final DateTime end = start.add(period.toTime().toDuration);
@@ -124,8 +124,7 @@ class RecurringUniEvent extends UniEvent {
           location: location,
         );
       }
-
-      i++;
+      // i++;
     }
   }
 }

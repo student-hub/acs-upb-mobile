@@ -150,7 +150,7 @@ class _MyAppState extends State<MyApp> {
             GlobalMaterialLocalizations.delegate,
             GlobalWidgetsLocalizations.delegate,
             S.delegate,
-            TimetableLocalizationsDelegate(),
+            const TimetableLocalizationsDelegate(),
           ],
           supportedLocales: S.delegate.supportedLocales,
           initialRoute: Routes.root,

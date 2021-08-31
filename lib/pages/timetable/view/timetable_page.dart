@@ -21,7 +21,6 @@ import '../../filter/view/filter_page.dart';
 import '../../settings/service/request_provider.dart';
 import '../model/events/uni_event.dart';
 import '../service/uni_event_provider.dart';
-import 'date_header.dart';
 import 'events/add_event_view.dart';
 import 'events/all_day_event_widget.dart';
 import 'events/event_widget.dart';
@@ -116,14 +115,15 @@ class _TimetablePageState extends State<TimetablePage>
                     Provider.of<UniEventProvider>(context, listen: false)
                         .getEventsIntersecting(
                   DateTimeRange(
-                    start: DateTimeTimetable.dateFromPage(value.page.floor()),
+                    // Events are preloaded for previous, current and next page
+                    start: DateTimeTimetable.dateFromPage(value.page.floor()) -
+                        7.days,
                     end: DateTimeTimetable.dateFromPage(
-                      value.page.ceil() + value.visibleDayCount,
-                    ),
+                          value.page.ceil() + value.visibleDayCount,
+                        ) +
+                        7.days,
                   ),
                 );
-                // Or probably preload events outside this range, maybe
-                // for the previous and next page.
 
                 return StreamBuilder<List<UniEventInstance>>(
                   stream: events,
