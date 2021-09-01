@@ -210,11 +210,13 @@ class _TimetablePageState extends State<TimetablePage>
         // Show dialog if there are no events
         final eventProvider =
             Provider.of<UniEventProvider>(context, listen: false);
-        if (eventProvider.empty) {
-          await showDialog<String>(
-            context: context,
-            builder: buildDialog,
-          );
+        if (eventProvider != null) {
+          if (eventProvider.empty) {
+            await showDialog<String>(
+              context: context,
+              builder: buildDialog,
+            );
+          }
         }
       },
     );

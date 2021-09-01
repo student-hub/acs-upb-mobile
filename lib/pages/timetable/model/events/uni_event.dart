@@ -202,13 +202,13 @@ class UniEventInstance extends Event {
         ? S.current.labelToday
         : useRelativeDayFormat && start.subtractDays(1).isToday
             ? S.current.labelTomorrow
-            : start.toStringWithFormat('dddd, dd MMMM');
+            : start.toStringWithFormat('EEEE, dd MMMM');
 
     if (!start.isMidnight()) {
       string += ' • ${start.toStringWithFormat('HH:mm')}';
     }
     if (start.atStartOfDay != end.atStartOfDay) {
-      string += ' - ${end.toStringWithFormat('dddd, dd MMMM')}';
+      string += ' - ${end.toStringWithFormat('EEEE, dd MMMM')}';
     }
     if (!end.isMidnight()) {
       if (start.atStartOfDay != end.atStartOfDay) {
