@@ -58,7 +58,7 @@ class AuthProvider with ChangeNotifier {
 
   void _errorHandler(dynamic e, {bool showToast = true}) {
     try {
-      print('$e.message e.code');
+      print('${e.message} code: ${e.code}');
       if (showToast) {
         switch (e.code) {
           case 'ERROR_INVALID_EMAIL':
