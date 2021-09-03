@@ -3,7 +3,7 @@ import 'package:acs_upb_mobile/pages/people/model/person.dart';
 import 'package:acs_upb_mobile/pages/people/service/person_provider.dart';
 import 'package:acs_upb_mobile/pages/people/view/person_view.dart';
 import 'package:acs_upb_mobile/widgets/autocomplete.dart';
-import 'package:acs_upb_mobile/widgets/scaffold.dart';
+import 'package:acs_upb_mobile/navigation/view/scaffold.dart';
 import 'package:acs_upb_mobile/widgets/search_bar.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dynamic_text_highlighting/dynamic_text_highlighting.dart';
@@ -39,11 +39,11 @@ class _PeoplePageState extends State<PeoplePage> {
     return AppScaffold(
       actions: [
         AppScaffoldAction(
-          icon: Icons.search_outlined,
-          onPressed: () {
-            setState(() => searchClosed = !searchClosed);
-          },
-        )
+            icon: Icons.search_outlined,
+            onPressed: () {
+              setState(() => searchClosed = !searchClosed);
+            },
+            tooltip: S.current.actionSearch)
       ],
       title: Text(S.current.navigationPeople),
       body: FutureBuilder(

@@ -74,6 +74,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "actionRefresh" : MessageLookupByLibrary.simpleMessage("Refresh"),
     "actionRequestPermissions" : MessageLookupByLibrary.simpleMessage("Request permissions"),
     "actionResetPassword" : MessageLookupByLibrary.simpleMessage("Reset password"),
+    "actionSearch" : MessageLookupByLibrary.simpleMessage("Search"),
     "actionSendEmail" : MessageLookupByLibrary.simpleMessage("Send e-mail"),
     "actionSendVerificationAgain" : MessageLookupByLibrary.simpleMessage("Send e-mail again?"),
     "actionShowMore" : MessageLookupByLibrary.simpleMessage("Show more"),
