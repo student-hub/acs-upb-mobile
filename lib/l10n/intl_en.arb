@@ -109,6 +109,7 @@
   "actionOpenFilter": "Open filter",
   "actionRequestPermissions": "Request permissions",
   "actionRefresh": "Refresh",
+  "actionSearch": "Search",
 
   "errorSomethingWentWrong": "Something went wrong.",
   "errorPasswordsDiffer": "The two passwords differ.",

@@ -56,6 +56,10 @@
   firebase.analytics();
   firebase.auth().setPersistence(firebase.auth.Auth.Persistence.SESSION);
 
+  // Enable authentication persistence per session
+  // https://github.com/student-hub/acs-upb-mobile/issues/207
+  firebase.auth().setPersistence(firebase.auth.Auth.Persistence.SESSION);
+
 </script>
 
 <!-- This script installs service_worker.js to provide PWA functionality to

@@ -109,6 +109,7 @@
   "actionOpenFilter": "Deschide filtru",
   "actionRequestPermissions": "Cere permisiuni",
   "actionRefresh": "Reîncarcă",
+  "actionSearch": "Căutare",
 
   "errorSomethingWentWrong": "A apărut o problemă.",
   "errorPasswordsDiffer": "Cele două parole diferă.",

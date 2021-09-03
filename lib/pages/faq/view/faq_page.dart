@@ -2,7 +2,7 @@ import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/faq/model/question.dart';
 import 'package:acs_upb_mobile/pages/faq/service/question_provider.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
-import 'package:acs_upb_mobile/widgets/scaffold.dart';
+import 'package:acs_upb_mobile/navigation/view/scaffold.dart';
 import 'package:acs_upb_mobile/widgets/search_bar.dart';
 import 'package:dynamic_text_highlighting/dynamic_text_highlighting.dart';
 import 'package:flutter/cupertino.dart';

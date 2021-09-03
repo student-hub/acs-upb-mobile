@@ -20,7 +20,7 @@ import 'package:acs_upb_mobile/resources/theme.dart';
 import 'package:acs_upb_mobile/widgets/button.dart';
 import 'package:acs_upb_mobile/widgets/chip_form_field.dart';
 import 'package:acs_upb_mobile/widgets/dialog.dart';
-import 'package:acs_upb_mobile/widgets/scaffold.dart';
+import 'package:acs_upb_mobile/navigation/view/scaffold.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
