@@ -41,6 +41,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
   // Whether the user verified their email; this can be true, false or null if
   // the async check hasn't completed yet.
   bool isVerified;
+  bool correctPassword;
 
   @override
   void initState() {
@@ -75,6 +76,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 validator: (value) {
                   if (value?.isEmpty ?? true) {
                     return S.current.errorNoPassword;
+                  }
+                  if (correctPassword == false) {
+                    return S.current.errorIncorrectPassword;
                   }
                   return null;
                 },
@@ -129,9 +133,12 @@ class _EditProfilePageState extends State<EditProfilePage> {
           color: Theme.of(context).accentColor,
           width: 130,
           onTap: () async {
+            correctPassword = false;
+            if (await authProvider.verifyPassword(oldPasswordController.text)) {
+              correctPassword = true;
+            }
             if (changePasswordKey.currentState.validate()) {
-              if (await authProvider
-                  .verifyPassword(oldPasswordController.text)) {
+              if (correctPassword == true) {
                 if (await authProvider
                     .changePassword(newPasswordController.text)) {
                   AppToast.show(S.current.messageChangePasswordSuccess);
