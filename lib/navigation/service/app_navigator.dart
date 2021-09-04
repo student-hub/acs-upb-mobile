@@ -1,7 +1,5 @@
 import 'package:acs_upb_mobile/navigation/model/navigation_state.dart';
 import 'package:acs_upb_mobile/navigation/model/route_paths.dart';
-import 'package:acs_upb_mobile/navigation/service/app_router_delegates.dart';
-import 'package:acs_upb_mobile/pages/timetable/view/timetable_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
