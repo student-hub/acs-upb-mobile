@@ -2655,6 +2655,16 @@ class S {
     );
   }
 
+  /// `You're already seeing the current week!`
+  String get messageAlreadySeeingCurrentWeek {
+    return Intl.message(
+      'You\'re already seeing the current week!',
+      name: 'messageAlreadySeeingCurrentWeek',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Please check your inbox for the password reset e-mail.`
   String get infoPasswordResetEmailSent {
     return Intl.message(

@@ -188,6 +188,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "messageAddCustomWebsite" : MessageLookupByLibrary.simpleMessage("Try adding a custom website."),
     "messageAgreeFeedbackPolicy" : MessageLookupByLibrary.simpleMessage("I understand this survey is extremely important for the continuous development of the educational process and I will only provide valuable and constructive feedback for this class."),
     "messageAgreePermissions" : MessageLookupByLibrary.simpleMessage("I will only upload information that is correct and accurate, to the best of my knowledge. I understand that submitting erroneous or offensive information on purpose will lead to my editing permissions being permanently revoked."),
+    "messageAlreadySeeingCurrentWeek" : MessageLookupByLibrary.simpleMessage("You\'re already seeing the current week!"),
     "messageAnnouncedOnMail" : MessageLookupByLibrary.simpleMessage("You will receive a mail confirmation if your request is approved."),
     "messageAskPermissionToEdit" : m6,
     "messageButtonAbove" : MessageLookupByLibrary.simpleMessage("button above"),
