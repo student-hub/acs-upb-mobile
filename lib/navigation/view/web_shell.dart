@@ -1,14 +1,15 @@
+import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/navigation/model/navigation_state.dart';
 import 'package:acs_upb_mobile/navigation/service/app_navigator.dart';
 import 'package:acs_upb_mobile/navigation/service/app_router_delegates.dart';
-import 'package:acs_upb_mobile/navigation/view/bottom_navigation_bar.dart';
 import 'package:acs_upb_mobile/pages/home/home_page.dart';
 import 'package:acs_upb_mobile/pages/people/view/people_page.dart';
 import 'package:acs_upb_mobile/pages/portal/view/portal_page.dart';
 import 'package:acs_upb_mobile/pages/timetable/view/timetable_page.dart';
 import 'package:flutter/material.dart';
-import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
+
+import 'dummy_search_bar.dart';
 
 class WebShell extends StatefulWidget {
   WebShell({Key key, this.navigationState}) : super(key: key);
@@ -21,7 +22,6 @@ class WebShell extends StatefulWidget {
 }
 
 class _WebShellState extends State<WebShell> {
-  bool _extended = false;
   InnerRouterDelegate _innerRouterDelegate;
   ChildBackButtonDispatcher _backButtonDispatcher;
 
@@ -55,7 +55,14 @@ class _WebShellState extends State<WebShell> {
           AppNavigator.pushNamed(context, HomePage.routeName);
           break;
         case 1:
-          AppNavigator.pushNamed(context, TimetablePage.routeName);
+          AppNavigator.push(
+            context,
+            MaterialPageRoute<Widget>(
+              builder: (_) => const Center(child: Text('ok')),
+            ),
+            webPath: '${TimetablePage.routeName}',
+          );
+          // AppNavigator.pushNamed(context, TimetablePage.routeName);
           break;
         case 2:
           AppNavigator.pushNamed(context, PortalPage.routeName);
@@ -83,7 +90,7 @@ class _WebShellState extends State<WebShell> {
               child: IconButton(
                 onPressed: () {
                   setState(() {
-                    _extended = !_extended;
+                    widget.navigationState.toggleDrawer();
                   });
                 },
                 icon: const Icon(Icons.menu),
@@ -99,7 +106,7 @@ class _WebShellState extends State<WebShell> {
           NavigationRail(
             selectedIndex: widget.navigationState.selectedTab,
             onDestinationSelected: handleNavigationBar,
-            extended: _extended,
+            extended: widget.navigationState.isDrawerExtended,
             labelType: NavigationRailLabelType.none,
             destinations: [
               NavigationRailDestination(

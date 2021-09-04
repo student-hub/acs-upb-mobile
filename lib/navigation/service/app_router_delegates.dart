@@ -1,11 +1,13 @@
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/authentication/view/login_view.dart';
+import 'package:acs_upb_mobile/authentication/view/sign_up_view.dart';
 import 'package:acs_upb_mobile/main.dart';
 import 'package:acs_upb_mobile/navigation/model/navigation_state.dart';
 import 'package:acs_upb_mobile/navigation/model/route_paths.dart';
 import 'package:acs_upb_mobile/navigation/view/web_shell.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 abstract class AppRouterDelegate extends RouterDelegate<RoutePath>
@@ -49,6 +51,11 @@ class MainRouterDelegate extends AppRouterDelegate {
             child: LoginView(),
             key: const ValueKey<String>(LoginView.routeName),
           ),
+          if (_navigationState.path.location == SignUpView.routeName)
+            MaterialPage(
+              child: SignUpView(),
+              key: const ValueKey<String>(LoginView.routeName),
+            ),
           if (_authProvider.isAuthenticated)
             MaterialPage<Widget>(
               child: WebShell(
@@ -63,6 +70,20 @@ class MainRouterDelegate extends AppRouterDelegate {
         }
         print('onPopPage called');
         _navigationState.reset();
+
+        // Motivation
+        /// This may lead to problems as the key is not always represented by the location
+        /// However, if the resulted [routePath] is UnknownPath we may just ignore the current change.
+        final key = (route.settings as MaterialPage).key.toString();
+        final pathFromKey = key.substring(3, key.length - 3);
+
+        final uri = Uri.parse(pathFromKey);
+        final routePath = PathFactory.from(uri);
+
+        if (!(routePath is UnknownPath)) {
+          _navigationState.path = routePath;
+        }
+
         return true;
       },
     );
@@ -78,9 +99,9 @@ class MainRouterDelegate extends AppRouterDelegate {
       return RootPath();
     }
 
-    if (!_authProvider.isAuthenticated) {
-      return LoginPath();
-    }
+    // if (!_authProvider.isAuthenticated) {
+    //   return LoginPath();
+    // }
 
     return _navigationState.path;
   }
@@ -99,6 +120,8 @@ class MainRouterDelegate extends AppRouterDelegate {
       if (_authProvider.isAuthenticated) {
         _navigationState.path = HomePath();
         return;
+      } else {
+        _navigationState.isDrawerExtended = false;
       }
     }
 

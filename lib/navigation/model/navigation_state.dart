@@ -21,11 +21,18 @@ class NavigationStateProvider extends ChangeNotifier {
   RoutePath get path => _state.path;
 
   set path(RoutePath path) {
-    _state.path = path;
+    _state
+      ..path = path
+      ..view = null;
     notifyListeners();
   }
 
   bool get isDrawerExtended => _state.isDrawerExtended;
+
+  set isDrawerExtended(bool value) {
+    _state.isDrawerExtended = value;
+    notifyListeners();
+  }
 
   void toggleDrawer() {
     _state.isDrawerExtended = !_state.isDrawerExtended;
@@ -35,7 +42,7 @@ class NavigationStateProvider extends ChangeNotifier {
   Widget get customView => _state.view;
 
   set customView(Widget view) {
-    _state.view = customView;
+    _state.view = view;
     notifyListeners();
   }
 
@@ -70,6 +77,6 @@ class _NavigationState {
 
   @override
   String toString() {
-    return '_NavigationState{path: $path, selectedTab: $selectedTab, view: $view}';
+    return '_NavigationState{path: $path, selectedTab: $selectedTab, isDrawerExtended: $isDrawerExtended, view: $view}';
   }
 }
