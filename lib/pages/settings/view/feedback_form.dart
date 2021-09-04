@@ -13,6 +13,7 @@ import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:acs_upb_mobile/resources/theme.dart';
 
 class FeedbackFormPage extends StatefulWidget {
   static const String routeName = '/feedbackForm';
@@ -72,6 +73,34 @@ class _FeedbackFormPageState extends State<FeedbackFormPage> {
             //     ),
             //   ],
             // ),
+            Padding(
+              padding: const EdgeInsets.only(top: 10),
+              child: Container(
+                  height: MediaQuery.of(context).size.height / 4,
+                  child: Image.asset('assets/illustrations/undraw_feedbackform.png')),
+            ),
+            Row(
+              children: [
+                ChoiceChip(
+                  label: Text(
+                    'Feedback',
+                    style: Theme.of(context)
+                        .chipTextStyle(selected: true),
+                  ),
+                  selected: true,
+                ),
+                const SizedBox(width: 10),
+                ChoiceChip(
+                  label: Text(
+                    'Issue',
+                    style: Theme.of(context)
+                        .chipTextStyle(selected: true),
+                  ),
+                  selected: true,
+                ),
+                const SizedBox(width: 10),
+              ],
+            ),
             TextFormField(
               controller: issueEmailController,
               // The validator receives the text that the user has entered.
