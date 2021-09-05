@@ -163,9 +163,7 @@ class AddClassesPage extends StatefulWidget {
 }
 
 class _AddClassesPageState extends State<AddClassesPage> {
-  _AddClassesPageState({Set<String> classIds}) {
-    classIds = Set<String>.from(widget.initialClassIds) ?? {};
-  }
+  _AddClassesPageState();
 
   Set<String> classIds;
   Set<ClassHeader> headers;
@@ -181,6 +179,7 @@ class _AddClassesPageState extends State<AddClassesPage> {
   @override
   void initState() {
     super.initState();
+    classIds = Set<String>.from(widget.initialClassIds) ?? {};
     updateClasses();
   }
 
@@ -364,15 +363,15 @@ class _Section {
 }
 
 class ClassListItem extends StatefulWidget {
-  ClassListItem(
-      {Key key,
-      this.classHeader,
-      this.initiallySelected = false,
-      void Function(bool) onSelected,
-      this.selectable = false,
-      void Function() onTap,
-      this.hint})
-      : onSelected = onSelected ?? ((_) {}),
+  ClassListItem({
+    Key key,
+    this.classHeader,
+    this.initiallySelected = false,
+    void Function(bool) onSelected,
+    this.selectable = false,
+    void Function() onTap,
+    this.hint,
+  })  : onSelected = onSelected ?? ((_) {}),
         onTap = onTap ?? (() {}),
         super(key: key);
 
@@ -388,11 +387,15 @@ class ClassListItem extends StatefulWidget {
 }
 
 class _ClassListItemState extends State<ClassListItem> {
-  _ClassListItemState() {
-    selected = widget.initiallySelected;
-  }
+  _ClassListItemState();
 
   bool selected;
+
+  @override
+  void initState() {
+    super.initState();
+    selected = widget.initiallySelected;
+  }
 
   @override
   Widget build(BuildContext context) {

@@ -119,8 +119,8 @@ class RecurringUniEvent extends UniEvent {
           title: name,
           mainEvent: this,
           color: color,
-          start: start,
-          end: end,
+          start: start.toUtc(),
+          end: end.toUtc(),
           location: location,
         );
       }

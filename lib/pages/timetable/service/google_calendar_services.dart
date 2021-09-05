@@ -11,7 +11,7 @@ import '../model/events/uni_event.dart';
 import 'uni_event_provider.dart';
 
 class GoogleCalendarServices {
-  GoogleCalendarServices();
+  const GoogleCalendarServices();
 
   // allows us to see, edit, share, and permanently delete all the calendars you can access using GCal
   static const List<String> _scopes = [CalendarApi.calendarScope];

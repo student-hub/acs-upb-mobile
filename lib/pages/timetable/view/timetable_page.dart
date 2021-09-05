@@ -163,7 +163,7 @@ class _TimetablePageState extends State<TimetablePage>
                                   },
                                   child: AddEventView(
                                     initialEvent: UniEvent(
-                                        start: dateTime,
+                                        start: dateTime.toUtc(),
                                         period: const Period(hours: 2),
                                         id: null),
                                   ),
@@ -208,16 +208,16 @@ class _TimetablePageState extends State<TimetablePage>
         await Future<void>.delayed(const Duration(milliseconds: 100));
 
         // Show dialog if there are no events
-        final eventProvider =
-            Provider.of<UniEventProvider>(context, listen: false);
-        if (eventProvider != null) {
-          if (eventProvider.empty) {
-            await showDialog<String>(
-              context: context,
-              builder: buildDialog,
-            );
-          }
-        }
+        // final eventProvider =
+        //     Provider.of<UniEventProvider>(context, listen: false);
+        // if (eventProvider != null) {
+        //   if (eventProvider.empty) {
+        //     await showDialog<String>(
+        //       context: context,
+        //       builder: buildDialog,
+        //     );
+        //   }
+        // }
       },
     );
   }

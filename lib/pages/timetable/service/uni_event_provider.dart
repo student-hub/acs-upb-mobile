@@ -324,10 +324,14 @@ class UniEventProvider with ChangeNotifier {
     final Stream<Iterable<UniEventInstance>> partDay =
         getPartDayEventsIntersecting(interval);
     streams..add(allDay)..add(partDay);
-    final stream = StreamZip(streams);
+    final StreamZip<Iterable<UniEventInstance>> stream = StreamZip(streams);
 
     // Flatten zipped streams
-    return stream.map((events) => events.expand((i) => i).toList());
+    return stream.map((events) => events
+        .expand((i) => i)
+        .map((UniEventInstance event) =>
+            event.copyWith(start: event.start.toUtc(), end: event.end.toUtc()))
+        .toList());
   }
 
   Stream<Iterable<UniEventInstance>> getAllDayEventsIntersecting(
