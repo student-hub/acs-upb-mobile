@@ -47,12 +47,6 @@ class _TimetablePageState extends State<TimetablePage>
   @override
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
-    // String timetablePageTitle =
-    //     authProvider.isAuthenticated && !authProvider.isAnonymous
-    //         ? _dateController?.currentMonth?.titleCase
-    //         : S.current.navigationTimetable;
-
-    String timetablePageTitle = S.current.navigationTimetable;
 
     _dateController ??= DateController(
       initialDate: DateTimeTimetable.today(),
@@ -72,10 +66,12 @@ class _TimetablePageState extends State<TimetablePage>
     }
 
     return AppScaffold(
-      title: Builder(
-        // ? AnimatedBuilder
-        builder: (context) {
-          return Text(timetablePageTitle);
+      title: AnimatedBuilder(
+        animation: _dateController,
+        builder: (context, child) {
+          return Text(authProvider.isAuthenticated && !authProvider.isAnonymous
+              ? _dateController.currentMonth.titleCase
+              : S.current.navigationTimetable);
         },
       ),
       needsToBeAuthenticated: true,
@@ -128,11 +124,6 @@ class _TimetablePageState extends State<TimetablePage>
                   ),
                 );
 
-                // timetablePageTitle =
-                //     authProvider.isAuthenticated && !authProvider.isAnonymous
-                //         ? _dateController?.currentMonth?.titleCase
-                //         : S.current.navigationTimetable;
-
                 return StreamBuilder<List<UniEventInstance>>(
                   stream: eventsInRange,
                   builder: (context,
@@ -146,7 +137,6 @@ class _TimetablePageState extends State<TimetablePage>
                       eventProvider:
                           eventProviderFromFixedList(snapshot.data ?? []),
                       child: child,
-                      // !,
                       dateController: _dateController,
                       timeController: _timeController,
                       eventBuilder: (context, event) => UniEventWidget(event),
