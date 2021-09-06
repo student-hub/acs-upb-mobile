@@ -5,7 +5,6 @@ import 'package:recase/recase.dart';
 import 'package:supercharged/supercharged.dart';
 import 'package:time_machine/time_machine.dart';
 import 'package:timetable/timetable.dart';
-import 'package:intl/intl.dart';
 
 import '../../../authentication/service/auth_provider.dart';
 import '../../../generated/l10n.dart';
@@ -19,6 +18,7 @@ import '../../classes/view/classes_page.dart';
 import '../../filter/service/filter_provider.dart';
 import '../../filter/view/filter_page.dart';
 import '../../settings/service/request_provider.dart';
+import '../../timetable/timetable_utils.dart';
 import '../model/events/uni_event.dart';
 import '../service/uni_event_provider.dart';
 import 'events/add_event_view.dart';
@@ -47,6 +47,12 @@ class _TimetablePageState extends State<TimetablePage>
   @override
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
+    // String timetablePageTitle =
+    //     authProvider.isAuthenticated && !authProvider.isAnonymous
+    //         ? _dateController?.currentMonth?.titleCase
+    //         : S.current.navigationTimetable;
+
+    String timetablePageTitle = S.current.navigationTimetable;
 
     _dateController ??= DateController(
       initialDate: DateTimeTimetable.today(),
@@ -68,10 +74,9 @@ class _TimetablePageState extends State<TimetablePage>
     return AppScaffold(
       title: Builder(
         // ? AnimatedBuilder
-        builder: (context) => Text(
-            authProvider.isAuthenticated && !authProvider.isAnonymous
-                ? S.current.navigationTimetable
-                : _dateController.currentMonth.titleCase),
+        builder: (context) {
+          return Text(timetablePageTitle);
+        },
       ),
       needsToBeAuthenticated: true,
       leading: AppScaffoldAction(
@@ -109,7 +114,7 @@ class _TimetablePageState extends State<TimetablePage>
             ValueListenableBuilder<DatePageValue>(
               valueListenable: _dateController,
               builder: (context, value, child) {
-                final Stream<List<UniEventInstance>> events =
+                final Stream<List<UniEventInstance>> eventsInRange =
                     Provider.of<UniEventProvider>(context, listen: false)
                         .getEventsIntersecting(
                   DateTimeRange(
@@ -123,12 +128,17 @@ class _TimetablePageState extends State<TimetablePage>
                   ),
                 );
 
+                // timetablePageTitle =
+                //     authProvider.isAuthenticated && !authProvider.isAnonymous
+                //         ? _dateController?.currentMonth?.titleCase
+                //         : S.current.navigationTimetable;
+
                 return StreamBuilder<List<UniEventInstance>>(
-                  stream: events,
+                  stream: eventsInRange,
                   builder: (context,
                       AsyncSnapshot<List<UniEventInstance>> snapshot) {
                     if (snapshot.data == null || snapshot.hasError) {
-                      // Handle loading and error states
+                      // TODO(bogpie): Handle loading and error states
                       return Container();
                     }
 
@@ -143,7 +153,6 @@ class _TimetablePageState extends State<TimetablePage>
                       allDayEventBuilder: (context, event, info) =>
                           UniAllDayEventWidget(event, info: info),
                       callbacks: TimetableCallbacks(
-                        // TODO(bogpie): Typing on an all day event (e.g.: holiday).
                         onDateTimeBackgroundTap: (dateTime) {
                           final user =
                               Provider.of<AuthProvider>(context, listen: false)
@@ -377,18 +386,4 @@ class _TimetablePageState extends State<TimetablePage>
       );
     }
   }
-}
-
-extension MonthController on DateController {
-  String get currentMonth => DateFormat('MMMM').format(
-        DateTime(
-          value.date.year,
-          value.date.month,
-          1,
-          0,
-          0,
-          0,
-        ),
-      );
-// LocalDateTime(2020, this.value.monthOfYear, 1, 1, 1, 1).toString('MMMM');
 }

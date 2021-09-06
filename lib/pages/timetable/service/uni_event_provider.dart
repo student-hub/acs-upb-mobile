@@ -4,6 +4,7 @@ import 'package:async/async.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:googleapis/calendar/v3.dart' as g_cal;
+import 'package:recase/recase.dart';
 import 'package:rrule/rrule.dart';
 import 'package:time_machine/time_machine.dart';
 import 'package:timetable/timetable.dart';
@@ -458,5 +459,11 @@ class UniEventProvider with ChangeNotifier {
         AppToast.show(S.current.errorSomethingWentWrong);
       }
     }
+  }
+
+  String updateTimetablePageTitle(DateController _dateController) {
+    return _authProvider.isAuthenticated && !_authProvider.isAnonymous
+        ? _dateController?.currentMonth?.titleCase
+        : S.current.navigationTimetable;
   }
 }

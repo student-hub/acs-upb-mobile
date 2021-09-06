@@ -6,10 +6,10 @@ import 'package:time_machine/time_machine.dart';
 
 // ignore: implementation_imports
 import 'package:timetable/src/utils.dart';
+import 'package:timetable/timetable.dart';
 
 import 'model/events/recurring_event.dart';
 import 'model/events/uni_event.dart';
-
 export 'package:timetable/src/utils.dart';
 
 extension DateTimeExtension on DateTime {
@@ -106,4 +106,16 @@ extension UniEventInstanceExtension on UniEventInstance {
         location: location,
         info: info);
   }
+}
+
+extension MonthController on DateController {
+  String get currentMonth => DateTime(
+        value?.date?.year,
+        value?.date?.month,
+        1,
+        0,
+        0,
+        0,
+      ).toStringWithFormat('MMMM');
+// LocalDateTime(2020, this.value.monthOfYear, 1, 1, 1, 1).toString('MMMM');
 }

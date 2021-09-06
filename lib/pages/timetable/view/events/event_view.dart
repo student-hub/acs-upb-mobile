@@ -151,11 +151,13 @@ class _EventViewState extends State<EventView> {
                   child: Icon(FeatherIcons.users),
                 ),
                 const SizedBox(width: 16),
-                Text(
-                    mainEvent.relevance == null
-                        ? S.current.relevanceAnyone
-                        : '${FilterNode.localizeName(mainEvent.degree, context)}: ${mainEvent.relevance.join(', ')}',
-                    style: Theme.of(context).textTheme.subtitle1),
+                Expanded(
+                  child: Text(
+                      mainEvent.relevance == null
+                          ? S.current.relevanceAnyone
+                          : '${FilterNode.localizeName(mainEvent.degree, context)}: ${mainEvent.relevance.join(', ')}',
+                      style: Theme.of(context).textTheme.subtitle1),
+                ),
               ],
             ),
           ),

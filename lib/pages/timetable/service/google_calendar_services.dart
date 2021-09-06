@@ -1,6 +1,7 @@
 import 'package:googleapis/calendar/v3.dart' as g_cal;
 import 'package:googleapis/calendar/v3.dart';
 import 'package:googleapis_auth/auth_io.dart';
+import 'package:rrule/rrule.dart';
 
 import '../../../generated/l10n.dart';
 import '../../../resources/utils.dart';
@@ -13,7 +14,7 @@ import 'uni_event_provider.dart';
 class GoogleCalendarServices {
   const GoogleCalendarServices();
 
-  // allows us to see, edit, share, and permanently delete all the calendars you can access using GCal
+  // Allows us to see, edit, share, and permanently delete all the calendars you can access using GCal
   static const List<String> _scopes = [CalendarApi.calendarScope];
 
   static List<String> get scopes => _scopes;
@@ -66,8 +67,8 @@ extension UniEventProviderGoogleCalendar on UniEventProvider {
 
     if (uniEvent is RecurringUniEvent) {
       final String rruleBasedOnCalendarString = uniEvent.rruleBasedOnCalendar
-          .toString()
-          .replaceAll(RegExp(r'T000000'), 'T000000Z');
+          .toString(
+              options: const RecurrenceRuleToStringOptions(isTimeUtc: true));
       googleCalendarEvent.recurrence = [rruleBasedOnCalendarString];
     }
 
