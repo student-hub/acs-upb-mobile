@@ -56,7 +56,7 @@ class _AddEventViewState extends State<AddEventView> {
   ClassHeader selectedClass;
   Person selectedTeacher;
   String selectedCalendar;
-  DateTime startTime;
+  DateTime startDateTime;
   Duration duration;
   Map<WeekType, bool> weekSelected = {
     WeekType.odd: null,
@@ -169,7 +169,7 @@ class _AddEventViewState extends State<AddEventView> {
     final startHour = widget.initialEvent?.start?.hour ?? 8;
     duration = widget.initialEvent?.period?.toTime()?.toDuration ??
         const Duration(hours: 2);
-    startTime = widget.initialEvent?.start
+    startDateTime = widget.initialEvent?.start
             ?.copyWith(hour: startHour, minute: 0, second: 0, millisecond: 0)
             ?.toUtc() ??
         0;
@@ -415,7 +415,8 @@ class _AddEventViewState extends State<AddEventView> {
         onPressed: () async {
           if (!formKey.currentState.validate()) return;
 
-          DateTime start = semester.startDate.at(startTime).toUtcForced();
+          DateTime start =
+              semester.startDate.at(dateTime: startDateTime).toUtcForced();
           if (weekSelected[WeekType.even] && !weekSelected[WeekType.odd]) {
             // Event is every even week, add a week to start date
             start = start.addDays(7);
@@ -484,8 +485,10 @@ class _AddEventViewState extends State<AddEventView> {
       );
 
   Widget timeIntervalPicker() {
-    final endTime = startTime.add(duration);
+    final endDateTime = startDateTime.add(duration);
     final textColor = Theme.of(context).textTheme.headline4.color;
+    TimeOfDay startTimeOfDay = startDateTime.toTimeOfDay();
+    TimeOfDay endTimeOfDay = endDateTime.toTimeOfDay();
     return Padding(
       padding: const EdgeInsets.only(top: 10),
       child: Row(
@@ -502,15 +505,16 @@ class _AddEventViewState extends State<AddEventView> {
               padding: MaterialStateProperty.all<EdgeInsets>(EdgeInsets.zero),
             ),
             onPressed: () async {
-              final TimeOfDay start = await showTimePicker(
+              startTimeOfDay = await showTimePicker(
                 context: context,
-                initialTime:
-                    TimeOfDay(hour: startTime.hour, minute: startTime.minute),
+                initialTime: TimeOfDay(
+                    hour: startDateTime.hour, minute: startDateTime.minute),
               );
-              setState(() => startTime = start.toDateTime());
+              setState(() =>
+                  startDateTime = startDateTime.at(timeOfDay: startTimeOfDay));
             },
             child: Text(
-              startTime.toStringWithFormat('HH:mm'),
+              startDateTime.toStringWithFormat('HH:mm'),
               style: Theme.of(context).textTheme.headline4,
             ),
           ),
@@ -520,7 +524,7 @@ class _AddEventViewState extends State<AddEventView> {
               child: Column(
                 children: [
                   Text(
-                    duration.toString().substring(0, 4),
+                    '${duration.inHours}H',
                     style: Theme.of(context)
                         .textTheme
                         .bodyText1
@@ -543,14 +547,15 @@ class _AddEventViewState extends State<AddEventView> {
               padding: MaterialStateProperty.all<EdgeInsets>(EdgeInsets.zero),
             ),
             onPressed: () async {
-              final TimeOfDay end = await showTimePicker(
+              endTimeOfDay = await showTimePicker(
                 context: context,
-                initialTime: startTime.add(duration).toTimeOfDay(),
+                initialTime: startDateTime.add(duration).toTimeOfDay(),
               );
-              setState(() => duration = end.toDateTime().difference(startTime));
+              setState(
+                  () => duration = endTimeOfDay.difference(startTimeOfDay));
             },
             child: Text(
-              endTime.toStringWithFormat('HH:mm'),
+              endDateTime.toStringWithFormat('HH:mm'),
               style: Theme.of(context).textTheme.headline4,
             ),
           ),
@@ -760,8 +765,11 @@ extension LocalTimeConversion on LocalTime {
 }
 
 extension TimeOfDayConversion on TimeOfDay {
-  DateTime toDateTime() => DateTime(0, 1, 1, hour, minute, 0);
-// LocalTime toLocalTime() => LocalTime(hour, minute, 0);
+  Duration difference(TimeOfDay startTimeOfDay) {
+    return Duration(
+        hours: hour - startTimeOfDay.hour,
+        minutes: minute - startTimeOfDay.minute);
+  }
 }
 
 extension DateTimeComparisons on DateTime {

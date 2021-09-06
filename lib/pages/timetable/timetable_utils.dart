@@ -26,13 +26,22 @@ extension DateTimeExtension on DateTime {
     return DateFormat(format).format(this);
   }
 
-  DateTime at(DateTime time) {
-    return copyWith(
-      hour: time.hour,
-      minute: time.minute,
-      second: time.second,
-      millisecond: time.millisecond,
-    );
+  DateTime at({DateTime dateTime, TimeOfDay timeOfDay}) {
+    if (dateTime != null) {
+      return copyWith(
+          hour: dateTime.hour,
+          minute: dateTime.minute,
+          second: dateTime.second,
+          millisecond: dateTime.millisecond);
+    } else if (timeOfDay != null) {
+      return copyWith(
+          hour: timeOfDay.hour,
+          minute: timeOfDay.minute,
+          second: 0,
+          millisecond: 0);
+    } else {
+      return null;
+    }
   }
 
   TimeOfDay toTimeOfDay() {
