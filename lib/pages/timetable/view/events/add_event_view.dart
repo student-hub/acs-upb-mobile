@@ -510,8 +510,9 @@ class _AddEventViewState extends State<AddEventView> {
                 initialTime: TimeOfDay(
                     hour: startDateTime.hour, minute: startDateTime.minute),
               );
-              setState(() =>
-                  startDateTime = startDateTime.at(timeOfDay: startTimeOfDay));
+              setState(() => startDateTime = startTimeOfDay != null
+                  ? startDateTime.at(timeOfDay: startTimeOfDay)
+                  : startDateTime);
             },
             child: Text(
               startDateTime.toStringWithFormat('HH:mm'),
@@ -552,7 +553,7 @@ class _AddEventViewState extends State<AddEventView> {
                 initialTime: startDateTime.add(duration).toTimeOfDay(),
               );
               setState(
-                  () => duration = endTimeOfDay.difference(startTimeOfDay));
+                  () => duration = endTimeOfDay.subtract(startTimeOfDay));
             },
             child: Text(
               endDateTime.toStringWithFormat('HH:mm'),
@@ -765,7 +766,7 @@ extension LocalTimeConversion on LocalTime {
 }
 
 extension TimeOfDayConversion on TimeOfDay {
-  Duration difference(TimeOfDay startTimeOfDay) {
+  Duration subtract(TimeOfDay startTimeOfDay) {
     return Duration(
         hours: hour - startTimeOfDay.hour,
         minutes: minute - startTimeOfDay.minute);
