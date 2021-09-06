@@ -78,9 +78,7 @@ class _TimetablePageState extends State<TimetablePage>
         icon: Icons.today_outlined,
         onPressed: () {
           _dateController.animateToToday(vsync: this);
-          _timeController.animateToShowFullDay(vsync: this);
         },
-        // ? .animateToToday(),
         tooltip: S.current.actionJumpToToday,
       ),
       actions: [
