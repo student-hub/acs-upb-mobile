@@ -1,3 +1,4 @@
+import 'package:acs_upb_mobile/pages/home/upcoming_events_card.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -34,12 +35,12 @@ class HomePage extends StatelessWidget {
       body: ListView(
         children: [
           if (authProvider.isAuthenticated) ProfileCard(),
-          if (authProvider.isAuthenticated &&
-              !authProvider.isAnonymous &&
-              RemoteConfigService.feedbackEnabled)
+          if (authProvider.isAuthenticated && !authProvider.isAnonymous
+              && RemoteConfigService.feedbackEnabled
+          )
             FeedbackNudge(),
-          // if (authProvider.isAuthenticated && !authProvider.isAnonymous)
-          //   UpcomingEventsCard(onShowMore: () => tabController?.animateTo(1)),
+          if (authProvider.isAuthenticated && !authProvider.isAnonymous)
+            UpcomingEventsCard(onShowMore: () => tabController?.animateTo(1)),
           if (authProvider.isAuthenticated && !authProvider.isAnonymous)
             FavouriteWebsitesCard(
                 onShowMore: () => tabController?.animateTo(2)),

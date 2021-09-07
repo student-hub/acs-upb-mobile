@@ -48,8 +48,8 @@ class AllDayUniEvent extends UniEvent {
     yield UniEventInstance(
       title: name,
       mainEvent: this,
-      start: startDate.atMidnight().toUtc(),
-      end: endDate.addDays(1).atMidnight().toUtc(),
+      start: startDate.atMidnight().toUtcForced(),
+      end: endDate.addDays(1).atMidnight().toUtcForced(),
       color: color,
     );
   }
