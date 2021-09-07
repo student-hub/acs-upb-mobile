@@ -171,7 +171,7 @@ class _AddEventViewState extends State<AddEventView> {
         const Duration(hours: 2);
     startDateTime = widget.initialEvent?.start
             ?.copyWith(hour: startHour, minute: 0, second: 0, millisecond: 0)
-            ?.toUtc() ??
+            ?.toUtcForced() ??
         0;
 
     List<_DayOfWeek> initialWeekDays = [
@@ -436,12 +436,12 @@ class _AddEventViewState extends State<AddEventView> {
               until: semester.endDate
                   .add(const Duration(days: 1))
                   .atMidnight()
-                  .toUtc());
+                  .toUtcForced());
 
           final event = ClassEvent(
               teacher: selectedTeacher,
               rrule: rrule,
-              start: start.toUtc(),
+              start: start,
               period: duration.toPeriod(),
               id: widget.initialEvent?.id,
               relevance: relevanceController.customRelevance,

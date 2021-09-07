@@ -166,7 +166,7 @@ extension UniEventExtension on UniEvent {
     final json = {
       'type': type,
       'name': name,
-      'start': start.toTimestamp(),
+      'start': start.toNonUtcForced().toTimestamp(),
       'duration': period.toJSON(),
       'location': location,
       'class': classHeader.id,
@@ -330,8 +330,8 @@ class UniEventProvider with ChangeNotifier {
     // Flatten zipped streams
     return stream.map((events) => events
         .expand((i) => i)
-        .map((UniEventInstance event) =>
-            event.copyWith(start: event.start.toUtc(), end: event.end.toUtc()))
+        .map((UniEventInstance event) => event.copyWith(
+            start: event.start.toUtcForced(), end: event.end.toUtcForced()))
         .toList());
   }
 
