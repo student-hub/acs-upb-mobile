@@ -2,12 +2,13 @@ import 'dart:async';
 
 import 'package:async/async.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide Interval;
 import 'package:googleapis/calendar/v3.dart' as g_cal;
 import 'package:recase/recase.dart';
 import 'package:rrule/rrule.dart';
-import 'package:time_machine/time_machine.dart';
+import 'package:time_machine/time_machine.dart' hide Interval;
 import 'package:timetable/timetable.dart';
+import 'package:dart_date/dart_date.dart' show Interval;
 
 import '../../../authentication/service/auth_provider.dart';
 import '../../../generated/l10n.dart';
@@ -325,7 +326,7 @@ class UniEventProvider with ChangeNotifier {
     await insertGoogleEvents(googleCalendarEvents);
   }
 
-  Stream<List<UniEventInstance>> getEventsIntersecting(DateTimeRange interval) {
+  Stream<List<UniEventInstance>> getEventsIntersecting(Interval interval) {
     final streams = <Stream<Iterable<UniEventInstance>>>[];
     final Stream<Iterable<UniEventInstance>> allDay =
         getAllDayEventsIntersecting(interval);
@@ -352,7 +353,7 @@ class UniEventProvider with ChangeNotifier {
   }
 
   Stream<Iterable<UniEventInstance>> getAllDayEventsIntersecting(
-      DateTimeRange interval) {
+      Interval interval) {
     return _events.map(
       (events) => events
           .map((event) =>
@@ -377,11 +378,10 @@ class UniEventProvider with ChangeNotifier {
   }
 
   Stream<Iterable<UniEventInstance>> getPartDayEventsIntersecting(
-      DateTimeRange interval) {
+      Interval interval) {
     return _events.map((events) => events
         .map((event) => event.generateInstances(
-            intersectingInterval:
-                DateTimeRange(start: interval.start, end: interval.end)))
+            intersectingInterval: Interval(interval.start, interval.end)))
         .expand((i) => i)
         .where((event) => event.isPartDay));
   }
@@ -392,8 +392,7 @@ class UniEventProvider with ChangeNotifier {
         .map((events) => events
             .where((event) => !(event is AllDayUniEvent))
             .map((event) => event.generateInstances(
-                intersectingInterval:
-                    DateTimeRange(start: date, end: date.addDays(6))))
+                intersectingInterval: Interval(date, date.addDays(6))))
             .expand((i) => i)
             .sortedByStartLength()
             .where((element) => element.end.isAfter(DateTime.now()))

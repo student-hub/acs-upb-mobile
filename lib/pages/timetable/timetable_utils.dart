@@ -61,12 +61,6 @@ extension DateTimeExtension on DateTime {
   }
 }
 
-extension DateTimeRangeExtension on DateTimeRange {
-  bool contains(DateTime dateTime) {
-    return dateTime >= start && dateTime <= end;
-  }
-}
-
 extension DurationExtension on Duration {
   Period toPeriod() {
     return Period(minutes: inMinutes).normalize();

@@ -1,11 +1,12 @@
+import 'package:dart_date/dart_date.dart' show Interval;
 import 'package:dotted_line/dotted_line.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide Interval;
 import 'package:flutter/rendering.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:provider/provider.dart';
 import 'package:rrule/rrule.dart';
 import 'package:time_machine/time_machine.dart' as time_machine show DayOfWeek;
-import 'package:time_machine/time_machine.dart' hide DayOfWeek;
+import 'package:time_machine/time_machine.dart' hide Interval;
 import 'package:time_machine/time_machine_text_patterns.dart';
 
 import '../../../../authentication/model/user.dart';
@@ -106,12 +107,11 @@ class _AddEventViewState extends State<AddEventView> {
         selectedCalendar = widget.initialEvent.calendar.id;
         final AllDayUniEvent secondSemester =
             widget.initialEvent.calendar.semesters.last;
-        selectedSemester = DateTimeRange(
-                    start: secondSemester.startDate,
-                    end: secondSemester.endDate)
-                .contains(widget.initialEvent.start)
-            ? 2
-            : 1;
+        selectedSemester =
+            Interval(secondSemester.startDate, secondSemester.endDate)
+                    .includes(widget.initialEvent.start)
+                ? 2
+                : 1;
       } else {
         bool foundSemester = false;
         for (final calendar in calendars.entries) {
@@ -781,8 +781,8 @@ extension TimeOfDayExtension on TimeOfDay {
 
 extension DateTimeComparisons on DateTime {
   bool isDuring(AllDayUniEvent semester) {
-    return DateTimeRange(start: semester.startDate, end: semester.endDate)
-        .contains(this);
+    return Interval(semester.startDate, semester.endDate)
+        .includes(this);
   }
 
   bool isBeforeOrDuring(AllDayUniEvent semester) {

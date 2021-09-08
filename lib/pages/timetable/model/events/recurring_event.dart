@@ -1,6 +1,7 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide Interval;
 import 'package:rrule/rrule.dart';
-import 'package:time_machine/time_machine.dart';
+import 'package:time_machine/time_machine.dart' hide Interval;
+import 'package:dart_date/dart_date.dart' show Interval;
 
 import '../../../../resources/locale_provider.dart';
 import '../../../../resources/utils.dart';
@@ -89,7 +90,7 @@ class RecurringUniEvent extends UniEvent {
 
   @override
   Iterable<UniEventInstance> generateInstances(
-      {DateTimeRange intersectingInterval}) sync* {
+      {Interval intersectingInterval}) sync* {
     final RecurrenceRule rrule = rruleBasedOnCalendar;
 
     // Calculate recurrences
@@ -104,10 +105,8 @@ class RecurringUniEvent extends UniEvent {
 
       bool skip = false;
       for (final holiday in calendar?.holidays ?? []) {
-        final holidayInterval =
-            DateTimeRange(start: holiday.startDate, end: holiday.endDate);
-        // DateInterval(holiday.startDate, holiday.endDate);
-        if (holidayInterval.contains(start)) {
+        final holidayInterval = Interval(holiday.startDate, holiday.endDate);
+        if (holidayInterval.includes(start)) {
           // Skip holidays
           skip = true;
         }

@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
-import 'package:time_machine/time_machine.dart';
+import 'package:flutter/material.dart' hide Interval;
+import 'package:time_machine/time_machine.dart' hide Interval;
+import 'package:dart_date/dart_date.dart' show Interval;
 
 import '../../../resources/utils.dart';
 import '../timetable_utils.dart';
@@ -18,7 +19,7 @@ class AcademicCalendar {
   List<AllDayUniEvent> holidays;
   List<AllDayUniEvent> exams;
 
-  Map<int, Set<int>> _getWeeksByYearInInterval(DateTimeRange interval) {
+  Map<int, Set<int>> _getWeeksByYearInInterval(Interval interval) {
     final Map<int, Set<int>> weeksByYear = {};
     final rule = WeekYearRules.iso;
 
@@ -47,7 +48,7 @@ class AcademicCalendar {
 
     for (final semester in semesters) {
       for (final entry in _getWeeksByYearInInterval(
-              DateTimeRange(start: semester.startDate, end: semester.endDate))
+              Interval(semester.startDate, semester.endDate))
           .entries) {
         weeksByYear[entry.key] ??= {};
         weeksByYear[entry.key].addAll(entry.value);
@@ -55,8 +56,8 @@ class AcademicCalendar {
     }
 
     for (final holiday in holidays) {
-      final DateTimeRange holidayInterval =
-          DateTimeRange(start: holiday.startDate, end: holiday.endDate);
+      final Interval holidayInterval =
+          Interval(holiday.startDate, holiday.endDate);
       final Map<int, Set<int>> holidayWeeksByYear =
           _getWeeksByYearInInterval(holidayInterval);
 
@@ -74,8 +75,8 @@ class AcademicCalendar {
 
           // If the holiday includes Monday to Friday in a week, exclude week
           // number from [nonHolidayWeeks].
-          if (holidayInterval.contains(monday) &&
-              holidayInterval.contains(friday)) {
+          if (holidayInterval.includes(monday) &&
+              holidayInterval.includes(friday)) {
             weeksByYear[year].remove(week);
           }
         }

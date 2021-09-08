@@ -1,5 +1,6 @@
-import 'package:flutter/material.dart';
-import 'package:time_machine/time_machine.dart';
+import 'package:flutter/material.dart' hide Interval;
+import 'package:time_machine/time_machine.dart' hide Interval;
+import 'package:dart_date/dart_date.dart' show Interval;
 
 import '../../../classes/model/class.dart';
 import '../../timetable_utils.dart';
@@ -44,7 +45,7 @@ class AllDayUniEvent extends UniEvent {
 
   @override
   Iterable<UniEventInstance> generateInstances(
-      {DateTimeRange intersectingInterval}) sync* {
+      {Interval intersectingInterval}) sync* {
     yield UniEventInstance(
       title: name,
       mainEvent: this,
