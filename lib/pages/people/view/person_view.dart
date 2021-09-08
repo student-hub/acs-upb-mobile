@@ -1,6 +1,7 @@
 import 'package:acs_upb_mobile/pages/people/model/person.dart';
 import 'package:acs_upb_mobile/pages/people/service/person_provider.dart';
-import 'package:acs_upb_mobile/pages/people/view/person_banner.dart';
+import 'package:acs_upb_mobile/pages/people/view/classes_card.dart';
+import 'package:acs_upb_mobile/pages/people/view/contact_info.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/widgets/icon_text.dart';
 import 'package:acs_upb_mobile/widgets/person_avatar.dart';
@@ -10,9 +11,6 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:provider/provider.dart';
-
-import 'package:acs_upb_mobile/pages/people/view/classes_card.dart';
-import 'package:acs_upb_mobile/pages/people/view/contact_info.dart';
 
 class PersonView extends StatelessWidget {
   const PersonView({Key key, this.person}) : super(key: key);
@@ -70,7 +68,7 @@ class PersonView extends StatelessWidget {
                     children: [
                       Padding(
                         padding: const EdgeInsets.fromLTRB(28, 28, 28, 5),
-                        child: PersonBanner(
+                        child: _PersonBanner(
                           name: person.name,
                           photoURL: person.photo,
                           position: person.position,
@@ -178,5 +176,58 @@ class PersonView extends StatelessWidget {
         ),
       );
     }
+  }
+}
+
+class _PersonBanner extends StatelessWidget {
+  const _PersonBanner({
+    @required this.name,
+    @required this.photoURL,
+    @required this.position,
+    @required this.office,
+    Key key,
+  }) : super(key: key);
+  final String name;
+  final String photoURL;
+  final String position;
+  final String office;
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Row(
+          children: [
+            PersonAvatar(
+              photoURL: photoURL,
+              size: 100,
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 12),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text(
+                    position,
+                    style: Theme.of(context).textTheme.bodyText1,
+                  ),
+                  Text(
+                    name,
+                    style: Theme.of(context).textTheme.headline3,
+                  ),
+                  const SizedBox(height: 12),
+                  IconText(
+                      icon: FeatherIcons.mapPin,
+                      text: office ?? '-',
+                      style: Theme.of(context).textTheme.bodyText1),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
