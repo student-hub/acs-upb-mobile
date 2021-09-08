@@ -84,8 +84,9 @@ class PersonProvider with ChangeNotifier {
       if (query == null || query.docs.isEmpty) {
         return null;
       }
-      print(query.docs.map((doc) => doc.get('class')).toList());
-      return query.docs.map((doc) => doc.get('class')).toList();
+      print('${query.docs.map((doc) => doc.get('class') as String).toList()}'
+          ' --- ${query.docs.map((doc) => doc.get('class') as String).toList().runtimeType}');
+      return query.docs.map((doc) => doc.get('class') as String).toList();
     } catch (e) {
       print(e);
       AppToast.show(S.current.errorSomethingWentWrong);

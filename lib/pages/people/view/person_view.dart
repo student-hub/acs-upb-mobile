@@ -1,9 +1,9 @@
 import 'package:acs_upb_mobile/pages/people/model/person.dart';
 import 'package:acs_upb_mobile/pages/people/service/person_provider.dart';
-import 'package:acs_upb_mobile/widgets/person_avatar.dart';
 import 'package:acs_upb_mobile/pages/people/view/person_banner.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/widgets/icon_text.dart';
+import 'package:acs_upb_mobile/widgets/person_avatar.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
@@ -11,8 +11,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:provider/provider.dart';
 
-import 'classes_card.dart';
-import 'contact_info.dart';
+import 'package:acs_upb_mobile/pages/people/view/classes_card.dart';
+import 'package:acs_upb_mobile/pages/people/view/contact_info.dart';
 
 class PersonView extends StatelessWidget {
   const PersonView({Key key, this.person}) : super(key: key);
