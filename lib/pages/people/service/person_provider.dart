@@ -73,4 +73,23 @@ class PersonProvider with ChangeNotifier {
       return null;
     }
   }
+
+  Future<List<String>> currentClasses(String lecturerName) async {
+    try {
+      final QuerySnapshot query = await FirebaseFirestore.instance
+          .collection('events')
+          .where('teacher', isEqualTo: lecturerName)
+          .get();
+
+      if (query == null || query.docs.isEmpty) {
+        return null;
+      }
+      print(query.docs.map((doc) => doc.get('class')).toList());
+      return query.docs.map((doc) => doc.get('class')).toList();
+    } catch (e) {
+      print(e);
+      AppToast.show(S.current.errorSomethingWentWrong);
+      return null;
+    }
+  }
 }

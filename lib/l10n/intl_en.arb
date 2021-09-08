@@ -52,6 +52,8 @@
   "labelToday": "Today",
   "labelTomorrow": "Tomorrow",
   "labelNow": "Now",
+  "labelContactInfo" : "Contact information",
+  "labelCourses" : "Courses",
 
   "sectionShortcuts": "Shortcuts",
   "sectionEvents": "Events",

@@ -1,8 +1,7 @@
-import 'package:acs_upb_mobile/pages/people/view/person_avatar.dart';
+import 'package:acs_upb_mobile/widgets/person_avatar.dart';
+import 'package:acs_upb_mobile/widgets/icon_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
-
-import 'package:acs_upb_mobile/widgets/icon_text.dart';
 
 class PersonBanner extends StatelessWidget {
   const PersonBanner({
@@ -12,7 +11,6 @@ class PersonBanner extends StatelessWidget {
     @required this.office,
     Key key,
   }) : super(key: key);
-
   final String name;
   final String photoURL;
   final String position;
@@ -25,8 +23,9 @@ class PersonBanner extends StatelessWidget {
         padding: const EdgeInsets.all(12),
         child: Row(
           children: [
-             PersonAvatar(
-                photoURL: photoURL,
+            PersonAvatar(
+              photoURL: photoURL,
+              size: 100,
             ),
             Expanded(
               flex: 6,
