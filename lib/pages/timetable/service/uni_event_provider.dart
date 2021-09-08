@@ -214,6 +214,7 @@ extension AcademicCalendarExtension on AcademicCalendar {
   }
 }
 
+// extends DefaultEventProvider<UniEventInstance>
 class UniEventProvider with ChangeNotifier {
   UniEventProvider({AuthProvider authProvider, PersonProvider personProvider})
       : _authProvider = authProvider ?? AuthProvider(),
