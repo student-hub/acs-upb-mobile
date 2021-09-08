@@ -59,54 +59,49 @@ class PersonView extends StatelessWidget {
                 maxHeight: MediaQuery.of(context).size.height,
                 maxWidth: MediaQuery.of(context).size.width / 1.50,
               ),
-                  child: Scrollbar(
-                    thickness: 10,
-                    isAlwaysShown: true,
-                    controller: _controller,
-                    child: SingleChildScrollView(
-                      controller: _controller,
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(28, 28, 28, 5),
-                            child: Expanded(
-                              flex: 4,
-                              child: PersonBanner(
-                                name: person.name,
-                                photoURL: person.photo,
-                                position: person.position,
-                                office: person.office,
+              child: Scrollbar(
+                thickness: 10,
+                isAlwaysShown: true,
+                controller: _controller,
+                child: SingleChildScrollView(
+                  controller: _controller,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(28, 28, 28, 5),
+                        child: PersonBanner(
+                          name: person.name,
+                          photoURL: person.photo,
+                          position: person.position,
+                          office: person.office,
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(28, 5, 28, 28),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Expanded(
+                              child: ContactInfo(
+                                email: person.email,
+                                phone: person.phone,
                               ),
                             ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(28, 5, 28, 28),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Expanded(
-                                  flex: 2,
-                                  child: ContactInfo(
-                                    email: person.email,
-                                    phone: person.phone,
-                                  ),
-                                ),
-                                Expanded(
-                                  flex: 2,
-                                  child: ClassesCard(lecturerName: person.name),
-                                ),
-                              ],
+                            Expanded(
+                              child: ClassesCard(lecturerName: person.name),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
+                    ],
                   ),
                 ),
               ),
             ),
+          ),
+        ),
       );
     } else {
       return SafeArea(
