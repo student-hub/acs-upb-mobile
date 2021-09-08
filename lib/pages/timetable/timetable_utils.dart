@@ -51,7 +51,7 @@ extension DateTimeExtension on DateTime {
     );
   }
 
-  /// Forcing conversion to avoid hour changes from original toUtcForced() method from [DateTime]
+  /// Forcing conversion to avoid hour changes from original toUtc() function from [DateTime]
   DateTime toUtcForced() {
     return copyWith(hour: hour, isUtc: true);
   }

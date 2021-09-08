@@ -61,7 +61,7 @@ extension UniEventProviderGoogleCalendar on UniEventProvider {
     googleCalendarEvent
       ..start = start
       ..end = end
-      ..summary = classHeader.acronym
+      ..summary = classHeader != null ? classHeader.acronym : uniEvent.name
       ..colorId = (uniEvent.type.googleCalendarColor.index).toString()
       ..location = uniEvent.location;
 

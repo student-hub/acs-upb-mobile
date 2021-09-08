@@ -213,7 +213,6 @@ extension AcademicCalendarExtension on AcademicCalendar {
   }
 }
 
-// extends DefaultEventProvider<UniEventInstance>
 class UniEventProvider with ChangeNotifier {
   UniEventProvider({AuthProvider authProvider, PersonProvider personProvider})
       : _authProvider = authProvider ?? AuthProvider(),
@@ -309,10 +308,18 @@ class UniEventProvider with ChangeNotifier {
 
   Future<void> exportToGoogleCalendar() async {
     final Stream<List<UniEvent>> eventsStream = _events;
-    final List<UniEvent> events = await eventsStream.first;
+    final List<UniEvent> uniEvents = await eventsStream.first;
+
+    final List<AllDayUniEvent> allDayUniEvents = _calendars.values
+        .map(getAllDayUniEventsForCalendar)
+        .expand((e) => e)
+        .toList();
+
+    uniEvents.addAll(allDayUniEvents);
+
     final List<g_cal.Event> googleCalendarEvents = [];
-    for (final UniEvent eventInstance in events) {
-      final g_cal.Event googleCalendarEvent = convertEvent(eventInstance);
+    for (final UniEvent uniEvent in uniEvents) {
+      final g_cal.Event googleCalendarEvent = convertEvent(uniEvent);
       googleCalendarEvents.add(googleCalendarEvent);
     }
     await insertGoogleEvents(googleCalendarEvents);
@@ -335,23 +342,38 @@ class UniEventProvider with ChangeNotifier {
         .toList());
   }
 
+  Iterable<AllDayUniEvent> getAllDayUniEventsForCalendar(AcademicCalendar cal) {
+    final List<AllDayUniEvent> events = cal.holidays + cal.exams;
+    return events.where((event) =>
+        event.relevance == null ||
+        (_filter != null &&
+            event.degree == _filter.baseNode &&
+            event.relevance.any(_filter.relevantNodes.contains)));
+  }
+
   Stream<Iterable<UniEventInstance>> getAllDayEventsIntersecting(
       DateTimeRange interval) {
-    return _events.map((events) => events
-        .map((event) => event.generateInstances(intersectingInterval: interval))
-        .expand((i) => i)
-        .where((event) => event.isAllDay)
-        .followedBy(_calendars.values.map((cal) {
-          final List<AllDayUniEvent> events = cal.holidays + cal.exams;
-          return events
-              .where((event) =>
-                  event.relevance == null ||
-                  (_filter != null &&
-                      event.degree == _filter.baseNode &&
-                      event.relevance.any(_filter.relevantNodes.contains)))
-              .map((e) => e.generateInstances(intersectingInterval: interval))
-              .expand((e) => e);
-        }).expand((e) => e)));
+    return _events.map(
+      (events) => events
+          .map((event) =>
+              event.generateInstances(intersectingInterval: interval))
+          .expand((i) => i)
+          .where((event) => event.isAllDay)
+          .followedBy(
+            _calendars.values.map(
+              (AcademicCalendar cal) {
+                final Iterable<AllDayUniEvent> allDayUniEvents =
+                    getAllDayUniEventsForCalendar(cal);
+                final Iterable<UniEventInstance> allDayUniEventInstances =
+                    allDayUniEvents
+                        .map((e) =>
+                            e.generateInstances(intersectingInterval: interval))
+                        .expand((e) => e);
+                return allDayUniEventInstances;
+              },
+            ).expand((e) => e),
+          ),
+    );
   }
 
   Stream<Iterable<UniEventInstance>> getPartDayEventsIntersecting(
