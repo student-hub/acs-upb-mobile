@@ -160,7 +160,7 @@ class _TimetablePageState extends State<TimetablePage>
                                   },
                                   child: AddEventView(
                                     initialEvent: UniEvent(
-                                        start: dateTime.toUtcForced(),
+                                        start: dateTime.copyWithUtc(),
                                         period: const Period(hours: 2),
                                         id: null),
                                   ),

@@ -171,7 +171,7 @@ class _AddEventViewState extends State<AddEventView> {
         const Duration(hours: 2);
     startDateTime = widget.initialEvent?.start
             ?.copyWith(hour: startHour, minute: 0, second: 0, millisecond: 0)
-            ?.toUtcForced() ??
+            ?.copyWithUtc() ??
         0;
 
     List<_DayOfWeek> initialWeekDays = [
@@ -416,7 +416,7 @@ class _AddEventViewState extends State<AddEventView> {
           if (!formKey.currentState.validate()) return;
 
           DateTime start =
-              semester.startDate.at(dateTime: startDateTime).toUtcForced();
+              semester.startDate.at(dateTime: startDateTime).copyWithUtc();
           if (weekSelected[WeekType.even] && !weekSelected[WeekType.odd]) {
             // Event is every even week, add a week to start date
             start = start.addDays(7);
@@ -436,7 +436,7 @@ class _AddEventViewState extends State<AddEventView> {
               until: semester.endDate
                   .add(const Duration(days: 1))
                   .atMidnight()
-                  .toUtcForced());
+                  .copyWithUtc());
 
           final event = ClassEvent(
               teacher: selectedTeacher,

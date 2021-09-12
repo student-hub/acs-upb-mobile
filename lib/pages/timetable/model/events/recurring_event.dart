@@ -96,7 +96,7 @@ class RecurringUniEvent extends UniEvent {
     // Calculate recurrences
     // int i = 0;
 
-    for (final start in rrule.getInstances(start: start.toUtcForced())) {
+    for (final start in rrule.getInstances(start: start.copyWithUtc())) {
       final DateTime end = start.add(period.toTime().toDuration);
       if (intersectingInterval != null) {
         if (end < intersectingInterval.start) continue;
@@ -118,8 +118,8 @@ class RecurringUniEvent extends UniEvent {
           title: name,
           mainEvent: this,
           color: color,
-          start: start.toUtcForced(),
-          end: end.toUtcForced(),
+          start: start.copyWithUtc(),
+          end: end.copyWithUtc(),
           location: location,
         );
       }

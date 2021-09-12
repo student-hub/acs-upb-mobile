@@ -167,7 +167,7 @@ extension UniEventExtension on UniEvent {
     final json = {
       'type': type,
       'name': name,
-      'start': start.toNonUtcForced().toTimestamp(),
+      'start': start.copyWithoutUtc().toTimestamp(),
       'duration': period.toJSON(),
       'location': location,
       'class': classHeader.id,
@@ -339,7 +339,7 @@ class UniEventProvider with ChangeNotifier {
     return stream.map((events) => events
         .expand((i) => i)
         .map((UniEventInstance event) => event.copyWith(
-            start: event.start.toUtcForced(), end: event.end.toUtcForced()))
+            start: event.start.copyWithUtc(), end: event.end.copyWithUtc()))
         .toList());
   }
 
