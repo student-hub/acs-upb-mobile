@@ -36,7 +36,7 @@ class HomePage extends StatelessWidget {
         children: [
           if (authProvider.isAuthenticated) ProfileCard(),
           if (authProvider.isAuthenticated && !authProvider.isAnonymous
-          // && RemoteConfigService.feedbackEnabled
+          && RemoteConfigService.feedbackEnabled
           )
             FeedbackNudge(),
           if (authProvider.isAuthenticated && !authProvider.isAnonymous)
