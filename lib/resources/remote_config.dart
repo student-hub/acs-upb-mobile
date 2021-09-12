@@ -2,11 +2,15 @@ import 'package:firebase_remote_config/firebase_remote_config.dart';
 
 const String _feedbackEnabled = 'feedback_enabled';
 const String _chatEnabled = 'chat_enabled';
+
 class RemoteConfigService {
   RemoteConfigService._();
 
   static RemoteConfig _remoteConfig;
-  static final defaults = <String, dynamic>{_feedbackEnabled: false, _chatEnabled: false};
+  static final defaults = <String, dynamic>{
+    _feedbackEnabled: false,
+    _chatEnabled: false
+  };
   static Map<String, dynamic> overrides;
 
   static bool get feedbackEnabled => overrides != null
