@@ -1,5 +1,6 @@
 import 'package:acs_upb_mobile/pages/search/view/classes_search_results.dart';
 import 'package:acs_upb_mobile/pages/search/view/people_search_results.dart';
+import 'package:acs_upb_mobile/resources/remote_config.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:acs_upb_mobile/widgets/search_bar.dart';
 import 'package:flutter/cupertino.dart';
@@ -35,7 +36,8 @@ class _SearchPageState extends State<SearchPage> {
           ),
           PeopleSearchResults(query: query),
           ClassesSearchResults(query: query),
-          ChatBotIntro()
+          if (RemoteConfigService.chatEnabled)
+            ChatBotIntro()
         ],
       ),
     );
