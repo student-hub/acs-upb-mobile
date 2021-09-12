@@ -311,13 +311,6 @@ class UniEventProvider with ChangeNotifier {
     final Stream<List<UniEvent>> eventsStream = _events;
     final List<UniEvent> uniEvents = await eventsStream.first;
 
-    final List<AllDayUniEvent> allDayUniEvents = _calendars.values
-        .map(getAllDayUniEventsForCalendar)
-        .expand((e) => e)
-        .toList();
-
-    uniEvents.addAll(allDayUniEvents);
-
     final List<g_cal.Event> googleCalendarEvents = [];
     for (final UniEvent uniEvent in uniEvents) {
       final g_cal.Event googleCalendarEvent = convertEvent(uniEvent);
