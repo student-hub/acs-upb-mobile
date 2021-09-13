@@ -50,7 +50,7 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
         .then((teachers) => setState(() => classTeachers = teachers));
 
     Provider.of<FeedbackProvider>(context, listen: false)
-        .fetchCategories()
+        .fetchCategories('class_feedback_questions')
         .then((categories) => setState(() => feedbackCategories = categories));
 
     Provider.of<PersonProvider>(context, listen: false)
@@ -62,7 +62,7 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
 
   Future<Map<String, dynamic>> fetchFeedbackQuestions() async {
     await Provider.of<FeedbackProvider>(context, listen: false)
-        .fetchQuestions()
+        .fetchQuestions('class_feedback_questions')
         .then((questions) => setState(() => feedbackQuestions = questions));
 
     for (int i = 0; i <= feedbackQuestions.length; i++) {
