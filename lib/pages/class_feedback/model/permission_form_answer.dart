@@ -1,29 +1,24 @@
 import 'package:acs_upb_mobile/pages/class_feedback/model/form_answer.dart';
-import 'package:acs_upb_mobile/pages/people/model/person.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class FeedbackAnswer extends FormAnswer {
-  FeedbackAnswer({
+class PermissionAnswer extends FormAnswer {
+  PermissionAnswer({
     String questionAnswer,
     final String questionNumber,
-    this.className,
-    this.teacher,
-    this.assistant,
+    this.userId,
   }) : super(questionAnswer: questionAnswer, questionNumber: questionNumber);
 
-  final String className;
-  final Person teacher;
-  final Person assistant;
+  final String userId;
 
   @override
   Map<String, dynamic> toData() {
     final Map<String, dynamic> data = {};
 
+    if (userId != null) data['addedBy'] = userId;
     if (questionAnswer != null) data['answer'] = questionAnswer;
     data['dateSubmitted'] = Timestamp.now();
-    data['class'] = className;
-    data['teacher'] = teacher.name;
-    data['assistant'] = assistant.name;
+    data['done'] = false;
+    data['accepted'] = false;
 
     return data;
   }

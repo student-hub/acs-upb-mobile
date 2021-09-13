@@ -36,7 +36,7 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
   List<Person> classTeachers = [];
   Map<String, Map<String, String>> feedbackCategories = {};
   List<Map<int, bool>> answerValues = [];
-  Map<String, FeedbackQuestion> feedbackQuestions = {};
+  Map<String, FormQuestion> feedbackQuestions = {};
 
   @override
   void initState() {

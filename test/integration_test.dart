@@ -427,24 +427,24 @@ Future<void> main() async {
     // ignore: invalid_use_of_protected_member
     when(mockFeedbackProvider.hasListeners).thenReturn(true);
     when(mockFeedbackProvider.fetchQuestions()).thenAnswer((_) => Future.value({
-          '0': FeedbackQuestionDropdown(
+          '0': FormQuestionDropdown(
             category: 'involvement',
             question:
                 'Approximate number of activities that you attended (lectures + applications):',
             id: '0',
             answerOptions: ['option 1', 'option 2', 'option 3', 'option 4'],
           ),
-          '1': FeedbackQuestionRating(
+          '1': FormQuestionRating(
             category: 'applications',
             question: 'Was the exposure method appropriate?',
             id: '1',
           ),
-          '2': FeedbackQuestionText(
+          '2': FormQuestionText(
             category: 'personal',
             question: 'What are the positive aspects of this class?',
             id: '2',
           ),
-          '3': FeedbackQuestionSlider(
+          '3': FormQuestionSlider(
             category: 'homework',
             question:
                 'Estimate the average number of hours per week devoted to solving homework.',

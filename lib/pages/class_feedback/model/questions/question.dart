@@ -1,5 +1,5 @@
-class FeedbackQuestion {
-  FeedbackQuestion({
+class FormQuestion {
+  FormQuestion({
     this.question,
     this.category,
     this.id,

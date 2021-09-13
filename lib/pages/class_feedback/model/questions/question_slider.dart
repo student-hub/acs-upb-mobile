@@ -1,7 +1,7 @@
 import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question.dart';
 
-class FeedbackQuestionSlider extends FeedbackQuestion {
-  FeedbackQuestionSlider({
+class FormQuestionSlider extends FormQuestion {
+  FormQuestionSlider({
     String question,
     String category,
     String id,

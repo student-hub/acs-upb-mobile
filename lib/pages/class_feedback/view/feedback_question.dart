@@ -15,7 +15,7 @@ class FeedbackQuestionFormField extends StatefulWidget {
     this.formKey,
   });
 
-  final FeedbackQuestion question;
+  final FormQuestion question;
   final List<Map<int, bool>> answerValues;
   final GlobalKey<FormState> formKey;
 
@@ -158,7 +158,7 @@ class _FeedbackQuestionFormFieldState extends State<FeedbackQuestionFormField> {
           onSaved: (selection) {
             widget.question.answer = selection;
           },
-          items: (widget.question as FeedbackQuestionDropdown)
+          items: (widget.question as FormQuestionDropdown)
               .options
               .map(
                 (type) => DropdownMenuItem<String>(
@@ -209,13 +209,13 @@ class _FeedbackQuestionFormFieldState extends State<FeedbackQuestionFormField> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.question is FeedbackQuestionSlider) {
+    if (widget.question is FormQuestionSlider) {
       return feedbackQuestionSlider();
-    } else if (widget.question is FeedbackQuestionRating) {
+    } else if (widget.question is FormQuestionRating) {
       return feedbackQuestionRating();
-    } else if (widget.question is FeedbackQuestionDropdown) {
+    } else if (widget.question is FormQuestionDropdown) {
       return feedbackQuestionDropdown();
-    } else if (widget.question is FeedbackQuestionText) {
+    } else if (widget.question is FormQuestionText) {
       return feedbackQuestionText();
     } else {
       return Container();

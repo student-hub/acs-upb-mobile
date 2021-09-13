@@ -26,38 +26,38 @@ extension ClassFeedbackAnswerExtension on FeedbackAnswer {
   }
 }
 
-extension FeedbackQuestionExtension on FeedbackQuestion {
-  static FeedbackQuestion fromJSON(dynamic json, String id) {
+extension FeedbackQuestionExtension on FormQuestion {
+  static FormQuestion fromJSON(dynamic json, String id) {
     if (json['type'] == 'dropdown' && json['options'] != null) {
       final List<dynamic> options = json['options'];
       final List<String> optionsString =
           options.map((e) => e[LocaleProvider.localeString] as String).toList();
-      return FeedbackQuestionDropdown(
+      return FormQuestionDropdown(
         category: json['category'],
         question: json['question'][LocaleProvider.localeString],
         id: id,
         answerOptions: optionsString,
       );
     } else if (json['type'] == 'rating') {
-      return FeedbackQuestionRating(
+      return FormQuestionRating(
         category: json['category'],
         question: json['question'][LocaleProvider.localeString],
         id: id,
       );
     } else if (json['type'] == 'text') {
-      return FeedbackQuestionText(
+      return FormQuestionText(
         category: json['category'],
         question: json['question'][LocaleProvider.localeString],
         id: id,
       );
     } else if (json['type'] == 'slider') {
-      return FeedbackQuestionSlider(
+      return FormQuestionSlider(
         category: json['category'],
         question: json['question'][LocaleProvider.localeString],
         id: id,
       );
     } else {
-      return FeedbackQuestion(
+      return FormQuestion(
         category: json['category'],
         question: json['question'][LocaleProvider.localeString],
         id: id,
@@ -82,14 +82,14 @@ class FeedbackProvider with ChangeNotifier {
     }
   }
 
-  Future<Map<String, FeedbackQuestion>> fetchQuestions() async {
+  Future<Map<String, FormQuestion>> fetchQuestions() async {
     try {
       final DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
           .collection('forms')
           .doc('class_feedback_questions')
           .get();
       final Map<String, dynamic> data = documentSnapshot['questions'];
-      final Map<String, FeedbackQuestion> questions = {};
+      final Map<String, FormQuestion> questions = {};
       for (final value in data.values) {
         final key = data.keys.firstWhere((element) => data[element] == value);
         questions[key] = FeedbackQuestionExtension.fromJSON(value, key);
@@ -141,7 +141,7 @@ class FeedbackProvider with ChangeNotifier {
 
   Future<bool> submitFeedback(
       String uid,
-      Map<String, FeedbackQuestion> feedbackQuestions,
+      Map<String, FormQuestion> feedbackQuestions,
       Person assistant,
       Person teacher,
       String className) async {
