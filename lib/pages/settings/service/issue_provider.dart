@@ -17,6 +17,7 @@ extension IssueExtension on Issue {
       data['email'] = '-';
     }
     if (issueBody != null) data['issueBody'] = issueBody;
+    if (type != null) data['type'] = type;
 
     return data;
   }
