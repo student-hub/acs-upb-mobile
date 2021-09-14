@@ -77,7 +77,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   if (value?.isEmpty ?? true) {
                     return S.current.errorNoPassword;
                   }
-                  if (correctPassword == false) {
+                  if (!correctPassword) {
                     return S.current.errorIncorrectPassword;
                   }
                   return null;
@@ -133,12 +133,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
           color: Theme.of(context).accentColor,
           width: 130,
           onTap: () async {
-            correctPassword = false;
-            if (await authProvider.verifyPassword(oldPasswordController.text)) {
-              correctPassword = true;
-            }
+            correctPassword =
+                await authProvider.verifyPassword(oldPasswordController.text);
             if (changePasswordKey.currentState.validate()) {
-              if (correctPassword == true) {
+              if (correctPassword) {
                 if (await authProvider
                     .changePassword(newPasswordController.text)) {
                   AppToast.show(S.current.messageChangePasswordSuccess);
