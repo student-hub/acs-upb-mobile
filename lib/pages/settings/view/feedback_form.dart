@@ -28,22 +28,24 @@ class _FeedbackFormPageState extends State<FeedbackFormPage> {
     return Form(
         key: _formKey,
         child: AppScaffold(
-          title: Text('Feedback'),
+          title: Text(S.current.labelFeedback),
           actions: [
             AppScaffoldAction(
-              text: 'Submit',
+              text: S.current.buttonSubmit,
               onPressed: () {
                 // Validate returns true if the form is valid, or false otherwise.
                 if (_formKey.currentState.validate()) {
                   // If the form is valid, it displays a snackbar and saves the
                   // information in the cloud
-                  ScaffoldMessenger.of(context)
-                      .showSnackBar(SnackBar(content: Text('Processing Data')));
+                  ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text(S.current.messageProcessingData)));
                   issueProvider.makeIssue(
                     Issue(
                         email: issueEmailController.text,
                         issueBody: issueController.text,
-                        type: _feedbackSelected ? 'feedback' : 'issue'),
+                        type: _feedbackSelected
+                            ? S.current.labelFeedback
+                            : S.current.labelIssue),
                   );
                 }
               },
@@ -63,7 +65,7 @@ class _FeedbackFormPageState extends State<FeedbackFormPage> {
                 children: [
                   ChoiceChip(
                     label: Text(
-                      'Feedback',
+                      S.current.labelFeedback,
                       style: Theme.of(context).chipTextStyle(selected: true),
                     ),
                     selected: _feedbackSelected,
@@ -77,7 +79,7 @@ class _FeedbackFormPageState extends State<FeedbackFormPage> {
                   const SizedBox(width: 10),
                   ChoiceChip(
                     label: Text(
-                      'Issue',
+                      S.current.labelIssue,
                       style: Theme.of(context).chipTextStyle(selected: true),
                     ),
                     selected: _issueSelected,
@@ -96,24 +98,24 @@ class _FeedbackFormPageState extends State<FeedbackFormPage> {
                 // The validator receives the text that the user has entered.
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please enter some text';
+                    return S.current.messageEnterText;
                   }
                   return null;
                 },
                 decoration: InputDecoration(
-                  labelText: 'Email',
-                  hintText: 'example: john.doe123@gmail.com',
+                  labelText: S.current.labelEmail,
+                  hintText: S.current.emailExample,
                   prefixIcon: const Icon(Icons.label_outlined),
                 ),
               ),
-              Padding(
+              const Padding(
                 padding: EdgeInsets.only(top: 8, bottom: 8),
               ),
               TextFormField(
                 controller: issueController,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please enter some text';
+                    return S.current.messageEnterText;
                   }
                   return null;
                 },
@@ -121,8 +123,12 @@ class _FeedbackFormPageState extends State<FeedbackFormPage> {
                 minLines: 1,
                 maxLines: 10,
                 decoration: InputDecoration(
-                  labelText: _feedbackSelected ? 'Feedback' : 'Issue',
-                  hintText: _feedbackSelected ? 'Feedback' : 'Issue',
+                  labelText: _feedbackSelected
+                      ? S.current.labelFeedback
+                      : S.current.labelIssue,
+                  hintText: _feedbackSelected
+                      ? S.current.labelFeedback
+                      : S.current.labelIssue,
                   prefixIcon: const Icon(Icons.label_outlined),
                 ),
               ),

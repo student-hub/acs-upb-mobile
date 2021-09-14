@@ -137,13 +137,13 @@ class _SettingsPageState extends State<SettingsPage> {
                     subtitle: Text(S.current.infoExportToGoogleCalendar),
                   ),
                 ),
-                PreferenceTitle('Feedback'),
+                PreferenceTitle(S.current.labelFeedback),
                 ListTile(
                   onTap: (){
                     Navigator.of(context).pushNamed(Routes.feedbackForm);
                   },
-                  title: Text('Feedback for the app'),
-                  subtitle: Text('here u can give feedback for app'),
+                  title: Text(S.current.settingsFeedbackForm),
+                  subtitle: Text(S.current.infoFeedbackForm),
                   ),
                 Column(
                   mainAxisSize: MainAxisSize.min,

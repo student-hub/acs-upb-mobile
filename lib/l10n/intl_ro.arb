@@ -5,6 +5,7 @@
   "buttonSend": "Trimitere",
   "buttonApply": "Aplică",
   "buttonSet": "Setează",
+  "buttonSubmit": "Trimiteți",
 
   "labelEmail": "Email",
   "labelPassword": "Parolă",
@@ -53,6 +54,8 @@
   "labelToday": "Astăzi",
   "labelTomorrow": "Mâine",
   "labelNow": "Acum",
+  "labelFeedback": "Feedback",
+  "labelIssue": "Issue",
 
   "sectionShortcuts": "Scurtături",
   "sectionEvents": "Evenimente",
@@ -208,6 +211,7 @@
   "settingsRelevanceFilter": "Filtru de relevanță",
   "settingsExportToGoogleCalendar": "Exportă evenimentele în Google Calendar",
   "settingsTitleTimetable": "Orar",
+  "settingsFeedbackForm": "Feedback pentru aplicație",
 
   "websiteCategoryLearning": "Cursuri",
   "websiteCategoryAdministrative": "Administrativ",
@@ -277,6 +281,8 @@
   "messagePictureUpdatedSuccess": "Poza a fost actualizată cu succes.",
   "messageFeedbackLeft": "Trebuie să completezi încă {number} formulare de feedback!",
   "messageAlreadySeeingCurrentWeek": "Ești deja la săptămâna curentă!",
+  "messageProcessingData" : "Se procesează",
+  "messageEnterText": "Vă rugăm introduceți text",
 
   "infoPasswordResetEmailSent": "Please check your inbox for the password reset e-mail.",
   "infoRelevance": "Încercați să selectați cea mai restrictivă categorie.",
@@ -294,11 +300,14 @@
   "infoReadThePolicy": "Citește politica {appName}",
   "infoExportToGoogleCalendar": "Exportă evenimentele filtrate din Orar",
   "infoFormAnonymous": "Acest formular este anonim.",
+  "infoFeedbackForm": "Oferiți feedback și raportați probleme",
 
   "stringEmailDomain": "@stud.acs.upb.ro",
   "stringForum": "cs.curs.pub.ro",
   "stringAnonymous": "Anonim",
   "stringAnd": "și",
 
-  "fileAcsBanner": "assets/images/acs_banner_ro.png"
+  "fileAcsBanner": "assets/images/acs_banner_ro.png",
+
+  "emailExample": "exemplu: john.doe123@gmail.com"
 }

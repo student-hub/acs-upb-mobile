@@ -95,6 +95,16 @@ class S {
     );
   }
 
+  /// `Submit`
+  String get buttonSubmit {
+    return Intl.message(
+      'Submit',
+      name: 'buttonSubmit',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Email`
   String get labelEmail {
     return Intl.message(
@@ -560,6 +570,26 @@ class S {
     return Intl.message(
       'Now',
       name: 'labelNow',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Feedback`
+  String get labelFeedback {
+    return Intl.message(
+      'Feedback',
+      name: 'labelFeedback',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Issue`
+  String get labelIssue {
+    return Intl.message(
+      'Issue',
+      name: 'labelIssue',
       desc: '',
       args: [],
     );
@@ -2005,6 +2035,16 @@ class S {
     );
   }
 
+  /// `Feedback for the app`
+  String get settingsFeedbackForm {
+    return Intl.message(
+      'Feedback for the app',
+      name: 'settingsFeedbackForm',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Learning`
   String get websiteCategoryLearning {
     return Intl.message(
@@ -2295,10 +2335,10 @@ class S {
     );
   }
 
-  /// `Enter your e-mai in order to receive instructions on how to reset your password.`
+  /// `Enter your e-mail in order to receive instructions on how to reset your password.`
   String get messageResetPassword {
     return Intl.message(
-      'Enter your e-mai in order to receive instructions on how to reset your password.',
+      'Enter your e-mail in order to receive instructions on how to reset your password.',
       name: 'messageResetPassword',
       desc: '',
       args: [],
@@ -2665,6 +2705,26 @@ class S {
     );
   }
 
+  /// `Processing Data`
+  String get messageProcessingData {
+    return Intl.message(
+      'Processing Data',
+      name: 'messageProcessingData',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please enter some text`
+  String get messageEnterText {
+    return Intl.message(
+      'Please enter some text',
+      name: 'messageEnterText',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Please check your inbox for the password reset e-mail.`
   String get infoPasswordResetEmailSent {
     return Intl.message(
@@ -2815,6 +2875,16 @@ class S {
     );
   }
 
+  /// `Offer feedback and report issues`
+  String get infoFeedbackForm {
+    return Intl.message(
+      'Offer feedback and report issues',
+      name: 'infoFeedbackForm',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `@stud.acs.upb.ro`
   String get stringEmailDomain {
     return Intl.message(
@@ -2860,6 +2930,16 @@ class S {
     return Intl.message(
       'assets/images/acs_banner_en.png',
       name: 'fileAcsBanner',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `example: john.doe123@gmail.com`
+  String get emailExample {
+    return Intl.message(
+      'example: john.doe123@gmail.com',
+      name: 'emailExample',
       desc: '',
       args: [],
     );
