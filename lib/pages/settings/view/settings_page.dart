@@ -139,12 +139,12 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
                 PreferenceTitle(S.current.labelFeedback),
                 ListTile(
-                  onTap: (){
+                  onTap: () {
                     Navigator.of(context).pushNamed(Routes.feedbackForm);
                   },
                   title: Text(S.current.settingsFeedbackForm),
                   subtitle: Text(S.current.infoFeedbackForm),
-                  ),
+                ),
                 Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
