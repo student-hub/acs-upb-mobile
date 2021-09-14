@@ -14,15 +14,14 @@ class RemoteConfigService {
       : _remoteConfig?.getBool(_feedbackEnabled) ?? defaults[_feedbackEnabled];
 
   static Future<dynamic> initialize() async {
-    // try {
+    try {
       _remoteConfig = RemoteConfig.instance;
       await _remoteConfig.setDefaults(defaults);
       await _remoteConfig.fetchAndActivate();
-    // } catch (e) {
-    //   print(
-    //       'Unable to fetch remote config. Cached or default values will be used.');
-    // }
-
-    // ? debug
+    } catch (e) {
+      print(
+          'Unable to fetch remote config. Cached or default values will be used.');
+    }
+    // Does not work on web
   }
 }
