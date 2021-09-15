@@ -98,6 +98,7 @@ Similarly, please create one PR per development item, instead of bundling multip
   - If you really need to test the release version (usually not necessary), run `flutter run --release` from the Terminal.
     * The release version cannot be ran in an emulator.
     * You may also need to temporarily change the release signing config. In the [android/app/build.gradle](android/app/build.gradle) file, replace `signingConfig signingConfigs.release` with `signingConfig signingConfigs.debug`.
+    * To switch to debug config on web, in the [web/index.html](web/index.html) file, replace `firebaseConfig.release` with `firebaseConfig.debug`.
     * For simplicity, you could call the default "main.dart" configuration in Android Studio "Debug", duplicate it and call the second one "Release", with `--release` as an argument. For example:
     <img src=screenshots/other/release_configuration.png>
 
