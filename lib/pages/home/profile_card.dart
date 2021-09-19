@@ -1,4 +1,3 @@
-import 'package:acs_upb_mobile/resources/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -6,6 +5,7 @@ import '../../authentication/model/user.dart';
 import '../../authentication/service/auth_provider.dart';
 import '../../authentication/view/edit_profile_page.dart';
 import '../../generated/l10n.dart';
+import '../../resources/theme.dart';
 import '../../resources/utils.dart';
 
 class ProfileCard extends StatefulWidget {

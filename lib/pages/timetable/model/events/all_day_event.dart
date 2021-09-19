@@ -1,6 +1,6 @@
+import 'package:dart_date/dart_date.dart' show Interval;
 import 'package:flutter/material.dart' hide Interval;
 import 'package:time_machine/time_machine.dart' hide Interval;
-import 'package:dart_date/dart_date.dart' show Interval;
 
 import '../../../classes/model/class.dart';
 import '../../timetable_utils.dart';

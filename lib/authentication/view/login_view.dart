@@ -1,4 +1,3 @@
-import 'package:acs_upb_mobile/resources/theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -6,6 +5,7 @@ import 'package:provider/provider.dart';
 import '../../generated/l10n.dart';
 import '../../navigation/routes.dart';
 import '../../resources/banner.dart';
+import '../../resources/theme.dart';
 import '../../widgets/button.dart';
 import '../../widgets/dialog.dart';
 import '../../widgets/form_card.dart';

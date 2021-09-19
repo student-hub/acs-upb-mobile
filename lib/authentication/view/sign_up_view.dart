@@ -1,4 +1,3 @@
-import 'package:acs_upb_mobile/resources/theme.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -8,6 +7,7 @@ import '../../generated/l10n.dart';
 import '../../navigation/routes.dart';
 import '../../pages/filter/view/filter_dropdown.dart';
 import '../../resources/banner.dart';
+import '../../resources/theme.dart';
 import '../../resources/utils.dart';
 import '../../resources/validator.dart';
 import '../../widgets/button.dart';

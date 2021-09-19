@@ -1,7 +1,7 @@
-import 'package:acs_upb_mobile/resources/theme.dart';
 import 'package:flutter/material.dart';
 
 import '../generated/l10n.dart';
+import '../resources/theme.dart';
 
 class InfoCard<T> extends StatelessWidget {
   const InfoCard(

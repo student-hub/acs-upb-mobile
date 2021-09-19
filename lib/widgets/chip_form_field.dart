@@ -1,7 +1,8 @@
-import 'package:acs_upb_mobile/generated/l10n.dart';
-import 'package:acs_upb_mobile/resources/locale_provider.dart';
-import 'package:acs_upb_mobile/resources/theme.dart';
 import 'package:flutter/material.dart';
+
+import '../generated/l10n.dart';
+import '../resources/locale_provider.dart';
+import '../resources/theme.dart';
 
 class FilterChipFormField extends ChipFormField<Map<Localizable, bool>> {
   FilterChipFormField({

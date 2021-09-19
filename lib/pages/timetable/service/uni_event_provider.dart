@@ -2,13 +2,13 @@ import 'dart:async';
 
 import 'package:async/async.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dart_date/dart_date.dart' show Interval;
 import 'package:flutter/material.dart' hide Interval;
 import 'package:googleapis/calendar/v3.dart' as g_cal;
 import 'package:recase/recase.dart';
 import 'package:rrule/rrule.dart';
 import 'package:time_machine/time_machine.dart' hide Interval;
 import 'package:timetable/timetable.dart';
-import 'package:dart_date/dart_date.dart' show Interval;
 
 import '../../../authentication/service/auth_provider.dart';
 import '../../../generated/l10n.dart';

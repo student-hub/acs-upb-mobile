@@ -1,9 +1,9 @@
-import 'package:acs_upb_mobile/resources/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../generated/l10n.dart';
 import '../../../resources/locale_provider.dart';
+import '../../../resources/theme.dart';
 import '../../../widgets/icon_text.dart';
 import '../../../widgets/scaffold.dart';
 import '../../../widgets/toast.dart';

@@ -1,3 +1,4 @@
+import 'package:dart_date/dart_date.dart' show Interval;
 import 'package:flutter/material.dart' hide Interval;
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:provider/provider.dart';
@@ -5,7 +6,6 @@ import 'package:recase/recase.dart';
 import 'package:supercharged/supercharged.dart';
 import 'package:time_machine/time_machine.dart' hide Interval;
 import 'package:timetable/timetable.dart';
-import 'package:dart_date/dart_date.dart' show Interval;
 
 import '../../../authentication/service/auth_provider.dart';
 import '../../../generated/l10n.dart';

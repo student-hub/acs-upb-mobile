@@ -1,5 +1,6 @@
-import 'package:acs_upb_mobile/resources/theme.dart';
 import 'package:flutter/material.dart';
+
+import '../resources/theme.dart';
 
 class ErrorPage extends StatelessWidget {
   const ErrorPage({
