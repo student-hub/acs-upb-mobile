@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:acs_upb_mobile/resources/theme.dart';
 import 'package:easy_dynamic_theme/easy_dynamic_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
