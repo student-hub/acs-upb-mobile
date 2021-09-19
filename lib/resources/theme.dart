@@ -1,6 +1,22 @@
 import 'package:flutter/material.dart';
 
-Color primaryColor = const Color(0xFF43ACCD);
+const int _primaryColorValue = 0xFF43ACCD;
+Color primaryColor = const Color(_primaryColorValue);
+MaterialColor primarySwatch = const MaterialColor(
+  _primaryColorValue,
+  <int, Color>{
+    50: Color(0xFF7CDEFF),
+    100: Color(0xFF71D4F5),
+    200: Color(0xFF65CAEB),
+    300: Color(0xFF65CAEB),
+    400: Color(0xFF4EB6D7),
+    500: Color(_primaryColorValue),
+    600: Color(0xFF32A0C1),
+    700: Color(0xFF2295B5),
+    800: Color(0xFF1189A8),
+    900: Color(0xFF007D9C),
+  },
+);
 
 Color chipSelectedColor(Brightness brightness) => brightness == Brightness.light
     ? primaryColor.withOpacity(0.3)
@@ -20,24 +36,36 @@ ChipThemeData chipThemeData(Brightness brightness) =>
 
 var lightThemeData = ThemeData(
   brightness: Brightness.light,
-// The following two lines are meant to remove the splash effect
+  primaryColor: primaryColor,
+  // This is deprecated, but some packages still use it.
+  accentColor: primaryColor,
+  // The following two lines are meant to remove the splash effect
   splashColor: Colors.transparent,
   highlightColor: Colors.transparent,
   toggleableActiveColor: primaryColor,
   fontFamily: 'Montserrat',
-  primaryColor: primaryColor,
   chipTheme: chipThemeData(Brightness.light),
+  colorScheme: ColorScheme.fromSwatch(
+    brightness: Brightness.light,
+    primarySwatch: primarySwatch,
+  ),
 );
 
 var darkThemeData = ThemeData(
   brightness: Brightness.dark,
-// The following two lines are meant to remove the splash effect
+  primaryColor: primaryColor,
+  // This is deprecated, but some packages still use it.
+  accentColor: primaryColor,
+  // The following two lines are meant to remove the splash effect
   splashColor: Colors.transparent,
   highlightColor: Colors.transparent,
   toggleableActiveColor: primaryColor,
   fontFamily: 'Montserrat',
-  primaryColor: primaryColor,
   chipTheme: chipThemeData(Brightness.dark),
+  colorScheme: ColorScheme.fromSwatch(
+    brightness: Brightness.dark,
+    primarySwatch: primarySwatch,
+  ),
 );
 
 extension ThemeExtension on ThemeData {
