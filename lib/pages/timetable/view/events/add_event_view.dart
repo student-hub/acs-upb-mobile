@@ -1,5 +1,6 @@
 import 'package:dart_date/dart_date.dart' show Interval;
 import 'package:dotted_line/dotted_line.dart';
+import 'package:duration_picker/duration_picker.dart';
 import 'package:flutter/material.dart' hide Interval;
 import 'package:flutter/rendering.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
@@ -33,6 +34,15 @@ import '../../model/events/recurring_event.dart';
 import '../../model/events/uni_event.dart';
 import '../../service/uni_event_provider.dart';
 import '../../timetable_utils.dart';
+
+extension DurationShortString on Duration {
+  // Display a short string with hours and minutes.
+  String toShortString() => inMinutes == 0
+      ? '0h'
+      : (inHours > 0 ? '${inHours}h' : '') +
+          (inMinutes % 60 > 0 ? '${inMinutes % 60}' : '') +
+          (inHours == 0 ? 'min' : '');
+}
 
 class AddEventView extends StatefulWidget {
   /// If the `id` of [initialEvent] is not null, this acts like an "Edit event"
@@ -510,12 +520,21 @@ class _AddEventViewState extends State<AddEventView> {
               padding: const EdgeInsets.symmetric(horizontal: 12),
               child: Column(
                 children: [
-                  Text(
-                    '${duration.inHours}H',
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyText1
-                        .copyWith(color: textColor),
+                  GestureDetector(
+                    onTap: () async {
+                      duration = await showDurationPicker(
+                        context: context,
+                        initialTime: duration,
+                      );
+                      setState(() {});
+                    },
+                    child: Text(
+                      duration.toShortString(),
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyText1
+                          .copyWith(color: textColor),
+                    ),
                   ),
                   DottedLine(
                     lineThickness: 4,
