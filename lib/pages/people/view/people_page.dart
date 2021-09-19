@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
@@ -86,54 +87,53 @@ class _PeoplePageState extends State<PeoplePage> {
       .toList();
 }
 
-class PeopleList extends StatefulWidget {
+class PeopleList extends StatelessWidget {
   const PeopleList({this.people, this.filter});
 
   final List<Person> people;
   final String filter;
 
   @override
-  _PeopleListState createState() => _PeopleListState();
-}
-
-class _PeopleListState extends State<PeopleList> {
-  @override
   Widget build(BuildContext context) {
-    final List<String> filteredWords = widget.filter
+    final List<String> filteredWords = filter
         .toLowerCase()
         .split(' ')
         .where((element) => element != '')
         .toList();
+    people.sort((p1, p2) {
+      final cmpLast = p1.lastName.compareTo(p2.lastName);
+      if (cmpLast != 0) {
+        return cmpLast;
+      }
+      return p1.name.compareTo(p2.name);
+    });
 
     return ListView.builder(
       shrinkWrap: true,
-      itemCount: widget.people.length,
+      itemCount: people.length,
       itemBuilder: (context, index) {
         return ListTile(
-          key: ValueKey(widget.people[index].name),
+          key: ValueKey(people[index].name),
           leading: CircleAvatar(
-            backgroundImage: NetworkImage(widget.people[index].photo),
+            backgroundImage: CachedNetworkImageProvider(
+              people[index].photo,
+            ),
           ),
           title: filteredWords.isNotEmpty
               ? Text(
-                  widget.people[index].name,
+                  people[index].name,
                   style: Theme.of(context).textTheme.subtitle1,
                 )
-              : Text(
-                  widget.people[index].name,
-                ),
-          subtitle: Text(widget.people[index].email),
-          onTap: () => showPersonInfo(widget.people[index]),
+              : Text(people[index].name),
+          subtitle: Text(people[index].email),
+          onTap: () => showModalBottomSheet<dynamic>(
+            isScrollControlled: true,
+            context: context,
+            builder: (BuildContext buildContext) =>
+                PersonView(person: people[index]),
+          ),
         );
       },
-    );
-  }
-
-  void showPersonInfo(Person person) {
-    showModalBottomSheet<dynamic>(
-      isScrollControlled: true,
-      context: context,
-      builder: (BuildContext buildContext) => PersonView(person: person),
     );
   }
 }

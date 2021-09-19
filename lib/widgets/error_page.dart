@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../resources/theme.dart';
+
 class ErrorPage extends StatelessWidget {
   const ErrorPage({
     this.imgPath = 'assets/illustrations/undraw_warning.png',
@@ -66,7 +68,7 @@ class ErrorPage extends StatelessWidget {
                         onTap: actionOnTap,
                         child: Text(actionText,
                             style: Theme.of(context)
-                                .accentTextTheme
+                                .coloredTextTheme
                                 .subtitle2
                                 .copyWith(fontWeight: FontWeight.w500)),
                       ),

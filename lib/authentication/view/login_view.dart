@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import '../../generated/l10n.dart';
 import '../../navigation/routes.dart';
 import '../../resources/banner.dart';
+import '../../resources/theme.dart';
 import '../../widgets/button.dart';
 import '../../widgets/dialog.dart';
 import '../../widgets/form_card.dart';
@@ -79,9 +80,7 @@ class _LoginViewState extends State<LoginView> {
                       .sendPasswordResetEmail(
                           emailController.text + S.current.stringEmailDomain);
               if (success) {
-                if (!mounted) {
-                  return;
-                }
+                if (!mounted) return;
                 Navigator.pop(context);
               }
               return;
@@ -102,9 +101,7 @@ class _LoginViewState extends State<LoginView> {
           fields[S.current.labelPassword],
         );
         if (result) {
-          if (!mounted) {
-            return;
-          }
+          if (!mounted) return;
           await Navigator.pushReplacementNamed(context, Routes.home);
         }
       },
@@ -117,12 +114,13 @@ class _LoginViewState extends State<LoginView> {
                 child: Text(
                   S.current.actionResetPassword,
                   style: Theme.of(context)
-                      .accentTextTheme
+                      .coloredTextTheme
                       .subtitle1
                       .copyWith(fontWeight: FontWeight.w500),
                 ),
                 onTap: () {
-                  showDialog(context: context, builder: _resetPasswordDialog);
+                  showDialog<dynamic>(
+                      context: context, builder: _resetPasswordDialog);
                   final currentFocus = FocusScope.of(context);
                   if (!currentFocus.hasPrimaryFocus) {
                     currentFocus.unfocus();
@@ -177,7 +175,7 @@ class _LoginViewState extends State<LoginView> {
                       minHeight: 1,
                     ),
                     child: Image.asset('assets/images/city_doodle.png',
-                        color: Theme.of(context).accentColor.withOpacity(0.4)),
+                        color: Theme.of(context).primaryColor.withOpacity(0.4)),
                   ),
                 ),
               ),
@@ -211,9 +209,7 @@ class _LoginViewState extends State<LoginView> {
                                 final result =
                                     await authProvider.signInAnonymously();
                                 if (result) {
-                                  if (!mounted) {
-                                    return;
-                                  }
+                                  if (!mounted) return;
                                   await Navigator.pushReplacementNamed(
                                       context, Routes.home);
                                 }
@@ -224,7 +220,7 @@ class _LoginViewState extends State<LoginView> {
                           Expanded(
                             child: AppButton(
                               key: const ValueKey('log_in_button'),
-                              color: Theme.of(context).accentColor,
+                              color: Theme.of(context).primaryColor,
                               text: S.current.actionLogIn,
                               onTap: () => loginForm.submit(),
                             ),
@@ -248,7 +244,7 @@ class _LoginViewState extends State<LoginView> {
                             },
                             child: Text(S.current.actionSignUp,
                                 style: Theme.of(context)
-                                    .accentTextTheme
+                                    .coloredTextTheme
                                     .subtitle1
                                     .copyWith(fontWeight: FontWeight.w500)),
                           ),

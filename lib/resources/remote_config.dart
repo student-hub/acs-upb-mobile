@@ -22,5 +22,6 @@ class RemoteConfigService {
       print(
           'Unable to fetch remote config. Cached or default values will be used.');
     }
+    // Does not work on web
   }
 }

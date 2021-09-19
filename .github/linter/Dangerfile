@@ -13,6 +13,19 @@ flutter_lint.only_modified_files = true
 flutter_lint.report_path = "flutter_analyze_report.txt"
 flutter_lint.lint(inline_mode: true)
 
+files = git.added_files + git.modified_files
+files.each do |f|
+    diff = git.diff_for_file(f)
+    # Check for uses of S.of(context) or similar
+    if f =~ /.*\.dart/ and diff.patch =~ /^\+.*S\.of\(.+\)/m
+        File.readlines(f).each_with_index do |line, index|
+            if line =~ /S\.of\(.+\)/
+                warn("Use S.current instead of S.of(context)", file: f, line: index+1)
+            end
+        end
+    end
+end
+
 # Analyze documentation
 textlint.config_file = '.github/linter/.textlintrc'
 textlint.max_severity = "warn"

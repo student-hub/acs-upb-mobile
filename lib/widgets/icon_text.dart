@@ -16,7 +16,7 @@ class IconText extends StatelessWidget {
   final String text;
 
   /// Optional "action" text. If this is specified, it will show after the
-  /// [text], have the theme's `accentColor`, and will be the trigger area for
+  /// [text], have the theme's `primaryColor`, and will be the trigger area for
   /// [onTap].
   final String actionText;
 
@@ -32,7 +32,7 @@ class IconText extends StatelessWidget {
   Widget build(BuildContext context) {
     final textStyle = style ?? Theme.of(context).textTheme.bodyText1;
     final actionStyle = textStyle
-        .copyWith(color: Theme.of(context).accentColor)
+        .copyWith(color: Theme.of(context).primaryColor)
         .apply(fontWeightDelta: 2);
 
     return InkWell(
