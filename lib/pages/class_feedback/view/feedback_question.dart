@@ -45,7 +45,7 @@ class _FeedbackQuestionFormFieldState extends State<FeedbackQuestionFormField> {
               // Offset to bypass slider padding
               offset: const Offset(10, 0),
               child: GestureDetector(
-                onTap: () => showDialog(
+                onTap: () => showDialog<dynamic>(
                   context: context,
                   builder: (context) => Dialog(
                     child: Padding(
@@ -92,7 +92,7 @@ class _FeedbackQuestionFormFieldState extends State<FeedbackQuestionFormField> {
                   max: 10,
                   divisions: 9,
                   label: widget.question.answer,
-                  activeColor: Theme.of(context).accentColor,
+                  activeColor: Theme.of(context).primaryColor,
                 ),
               ),
             ),

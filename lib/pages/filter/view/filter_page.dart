@@ -3,9 +3,9 @@ import 'package:provider/provider.dart';
 
 import '../../../generated/l10n.dart';
 import '../../../resources/locale_provider.dart';
+import '../../../resources/theme.dart';
 import '../../../widgets/icon_text.dart';
 import '../../../widgets/scaffold.dart';
-import '../../../widgets/selectable.dart';
 import '../../../widgets/toast.dart';
 import '../model/filter.dart';
 import '../service/filter_provider.dart';
@@ -47,7 +47,6 @@ class FilterPage extends StatefulWidget {
 
 class FilterPageState extends State<FilterPage> {
   Filter filter;
-  Map<FilterNode, SelectableController> nodeControllers = {};
   int selectedNodes = 0;
   final int maxSelectedNodes = 10;
 
@@ -93,37 +92,29 @@ class FilterPageState extends State<FilterPage> {
     final listItems = <Widget>[const SizedBox(width: 10)];
 
     for (final child in node.children) {
-      // Add option
-      nodeControllers.putIfAbsent(child, () => SelectableController());
-      final controller = nodeControllers[child];
-      listItems.add(Selectable(
-        label: child.localizedName(context),
-        initiallySelected: child.value,
-        controller: controller,
-        onSelected: (selection) {
-          if (selection && selectedNodes >= maxSelectedNodes) {
-            AppToast.show(
-                S.current.warningOnlyNOptionsAtATime(maxSelectedNodes));
-            controller.deselect();
-            return;
-          }
+      listItems
+        // Add option
+        ..add(FilterChip(
+          label: Text(
+            child.localizedName(context),
+            style: Theme.of(context).chipTextStyle(selected: child.value),
+          ),
+          selected: child.value,
+          showCheckmark: level != 0,
+          onSelected: (selection) {
+            if (selection && selectedNodes >= maxSelectedNodes && level != 0) {
+              AppToast.show(
+                  S.current.warningOnlyNOptionsAtATime(maxSelectedNodes));
+              return;
+            }
 
-          level != 0
-              ? _onSelected(selection, child)
-              : _onSelectedExclusive(selection, child, node.children);
-        },
-      ));
-      child.addListener(() {
-        if (child.value) {
-          controller.select();
-        } else {
-          controller.deselect();
-        }
-        setState(() {});
-      });
-
-      // Add padding
-      listItems.add(const SizedBox(width: 10));
+            level != 0
+                ? _onSelected(selection, child)
+                : _onSelectedExclusive(selection, child, node.children);
+          },
+        ))
+        // Add padding
+        ..add(const SizedBox(width: 10));
     }
 
     optionsByLevel[level].add(
@@ -195,7 +186,7 @@ class FilterPageState extends State<FilterPage> {
                     child: Text(
                         filter.localizedLevelNames[i]
                             [LocaleProvider.localeString],
-                        style: Theme.of(context).textTheme.headline6),
+                        style: Theme.of(context).textTheme.subtitle1),
                   ))
                   // Level options
                   ..addAll(optionsByLevel[i]);

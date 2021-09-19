@@ -11,6 +11,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:pref/pref.dart';
 import 'package:provider/provider.dart';
 import 'package:rrule/rrule.dart';
+import 'package:timetable/timetable.dart';
 
 import 'authentication/service/auth_provider.dart';
 import 'authentication/view/login_view.dart';
@@ -34,21 +35,21 @@ import 'pages/settings/view/settings_page.dart';
 import 'pages/timetable/service/uni_event_provider.dart';
 import 'resources/locale_provider.dart';
 import 'resources/remote_config.dart';
-import 'resources/themes.dart';
+import 'resources/theme.dart';
 import 'resources/utils.dart';
 import 'widgets/loading_screen.dart';
 
-// FIXME: acs.pub.ro has some bad certificate configuration right now, and the
-// cs.pub.ro certificate is expired.
-// We get around this by accepting any certificate if the host is either
-// acs.pub.ro or cs.pub.ro.
+// FIXME: Our university website certificates have some issues, so we say we
+// trust them regardless.
 // Remove this in the future.
 class MyHttpOverrides extends HttpOverrides {
   @override
   HttpClient createHttpClient(SecurityContext context) {
     return super.createHttpClient(context)
       ..badCertificateCallback = (X509Certificate cert, String host, int port) {
-        return host == 'acs.pub.ro' || host == 'cs.pub.ro';
+        return host == 'acs.pub.ro' ||
+            host == 'cs.pub.ro' ||
+            host == 'aii.pub.ro';
       };
   }
 }
@@ -130,7 +131,7 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return OKToast(
       textStyle: lightThemeData.textTheme.button,
-      backgroundColor: accentColor.withOpacity(.8),
+      backgroundColor: primaryColor.withOpacity(.8),
       position: ToastPosition.bottom,
       child: GestureDetector(
         onTap: () {
@@ -148,7 +149,8 @@ class _MyAppState extends State<MyApp> {
           localizationsDelegates: [
             GlobalMaterialLocalizations.delegate,
             GlobalWidgetsLocalizations.delegate,
-            S.delegate
+            S.delegate,
+            const TimetableLocalizationsDelegate(),
           ],
           supportedLocales: S.delegate.supportedLocales,
           initialRoute: Routes.root,
@@ -205,7 +207,7 @@ class AppLoadingScreen extends StatelessWidget {
     return LoadingScreen(
       navigateAfterFuture: _setUpAndChooseStartScreen(context),
       image: Image.asset('assets/icons/acs_logo.png'),
-      loaderColor: Theme.of(context).accentColor,
+      loaderColor: Theme.of(context).primaryColor,
     );
   }
 }

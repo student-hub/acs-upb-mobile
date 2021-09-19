@@ -128,7 +128,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
         AppButton(
           key: const ValueKey('change_password_button'),
           text: S.current.actionChangePassword.toUpperCase(),
-          color: Theme.of(context).accentColor,
+          color: Theme.of(context).primaryColor,
           width: 130,
           onTap: () async {
             if (changePasswordKey.currentState.validate()) {
@@ -204,7 +204,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
         AppButton(
           key: const ValueKey('change_email_button'),
           text: S.current.actionChangeEmail,
-          color: Theme.of(context).accentColor,
+          color: Theme.of(context).primaryColor,
           width: 130,
           onTap: () async {
             final authProvider =
@@ -292,10 +292,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 bool result = true;
                 if (isVerified == false &&
                     emailController.text + emailDomain != authProvider.email) {
-                  await showDialog(
-                          context: context,
-                          builder: _changeEmailConfirmationDialog)
-                      .then((value) => result = value ?? false);
+                  await showDialog<bool>(
+                    context: context,
+                    builder: _changeEmailConfirmationDialog,
+                  ).then((value) => result = value ?? false);
                 }
                 if (uploadedImage != null) {
                   imageAsPNG = await convertToPNG(uploadedImage);
@@ -307,9 +307,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 if (result) {
                   if (await authProvider.updateProfile(info)) {
                     AppToast.show(S.current.messageEditProfileSuccess);
-                    if (!mounted) {
-                      return;
-                    }
+                    if (!mounted) return;
                     Navigator.pop(context);
                   }
                 }
@@ -318,9 +316,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
         AppScaffoldAction(
           icon: Icons.more_vert_outlined,
           items: {
-            S.current.actionChangePassword: () =>
-                showDialog(context: context, builder: _changePasswordDialog),
-            S.current.actionDeleteAccount: () => showDialog(
+            S.current.actionChangePassword: () => showDialog<dynamic>(
+                context: context, builder: _changePasswordDialog),
+            S.current.actionDeleteAccount: () => showDialog<dynamic>(
                 context: context, builder: _deletionConfirmationDialog)
           },
         )

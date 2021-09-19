@@ -2,6 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../generated/l10n.dart';
+import '../../../widgets/event_list_tile.dart';
+import '../../../widgets/info_card.dart';
+import '../../timetable/model/events/uni_event.dart';
 import '../../timetable/service/uni_event_provider.dart';
 
 class ClassEventsCard extends StatefulWidget {
@@ -17,21 +21,19 @@ class _ClassEventsCardState extends State<ClassEventsCard> {
   Widget build(BuildContext context) {
     final UniEventProvider eventProvider =
         Provider.of<UniEventProvider>(context);
-
-    return Container();
-//    return InfoCard<Iterable<UniEvent>>(
-//      title: S.of(context).sectionEvents,
-//      padding: EdgeInsets.zero,
-//      future: eventProvider.getAllEventsOfClass(widget.currentClassId),
-//      builder: (events) => Column(
-//        children: events
-//            .map(
-//              (event) => EventListTile(
-//                uniEvent: event,
-//              ),
-//            )
-//            .toList(),
-//      ),
-//    );
+    return InfoCard<Iterable<UniEvent>>(
+      title: S.of(context).sectionEvents,
+      padding: EdgeInsets.zero,
+      future: eventProvider.getAllEventsOfClass(widget.currentClassId),
+      builder: (events) => Column(
+        children: events
+            .map(
+              (event) => EventListTile(
+                uniEvent: event,
+              ),
+            )
+            .toList(),
+      ),
+    );
   }
 }

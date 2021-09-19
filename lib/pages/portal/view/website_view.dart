@@ -9,16 +9,15 @@ import 'package:validators/validators.dart';
 import '../../../authentication/model/user.dart';
 import '../../../authentication/service/auth_provider.dart';
 import '../../../generated/l10n.dart';
-import '../../../resources/custom_icons.dart';
 import '../../../resources/locale_provider.dart';
 import '../../../resources/storage/storage_provider.dart';
+import '../../../resources/theme.dart';
 import '../../../resources/utils.dart';
 import '../../../widgets/button.dart';
 import '../../../widgets/circle_image.dart';
 import '../../../widgets/dialog.dart';
 import '../../../widgets/scaffold.dart';
 import '../../../widgets/toast.dart';
-import '../../filter/service/filter_provider.dart';
 import '../../filter/view/relevance_picker.dart';
 import '../model/website.dart';
 import '../service/website_provider.dart';
@@ -121,8 +120,10 @@ class _WebsiteViewState extends State<WebsiteView> {
               padding: const EdgeInsets.all(12),
               child: Row(
                 children: <Widget>[
-                  Icon(Icons.remove_red_eye_outlined,
-                      color: CustomIcons.formIconColor(Theme.of(context))),
+                  Icon(
+                    Icons.remove_red_eye_outlined,
+                    color: Theme.of(context).formIconColor,
+                  ),
                   const SizedBox(width: 12),
                   AutoSizeText(
                     '${S.current.labelPreview}:',
@@ -179,9 +180,7 @@ class _WebsiteViewState extends State<WebsiteView> {
                   Provider.of<WebsiteProvider>(context, listen: false);
               final res = await websiteProvider.deleteWebsite(widget.website);
               if (res) {
-                if (!mounted) {
-                  return;
-                }
+                if (!mounted) return;
                 Navigator.pop(context); // Pop editing page
                 AppToast.show(S.current.messageWebsiteDeleted);
               }
@@ -227,12 +226,15 @@ class _WebsiteViewState extends State<WebsiteView> {
                   AppScaffoldAction(
                     icon: Icons.more_vert_outlined,
                     items: {
-                      S.current.actionDeleteWebsite: () => showDialog(
-                          context: context,
-                          builder: _deletionConfirmationDialog)
+                      S.current.actionDeleteWebsite: () => showDialog<dynamic>(
+                            context: context,
+                            builder: _deletionConfirmationDialog,
+                          )
                     },
-                    onPressed: () => showDialog(
-                        context: context, builder: _deletionConfirmationDialog),
+                    onPressed: () => showDialog<dynamic>(
+                      context: context,
+                      builder: _deletionConfirmationDialog,
+                    ),
                   )
                 ]
               : <AppScaffoldAction>[]),
@@ -288,8 +290,9 @@ class _WebsiteViewState extends State<WebsiteView> {
                       },
                       onChanged: (_) => setState(() {}),
                     ),
-                    RelevancePicker(
-                      filterProvider: Provider.of<FilterProvider>(context),
+                    RelevanceFormField(
+                      canBePrivate: true,
+                      canBeForEveryone: true,
                       defaultPrivate: widget.website?.isPrivate ?? true,
                       controller: _relevanceController,
                     ),

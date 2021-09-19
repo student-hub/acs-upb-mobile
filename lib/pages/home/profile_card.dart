@@ -5,6 +5,7 @@ import '../../authentication/model/user.dart';
 import '../../authentication/service/auth_provider.dart';
 import '../../authentication/view/edit_profile_page.dart';
 import '../../generated/l10n.dart';
+import '../../resources/theme.dart';
 import '../../resources/utils.dart';
 
 class ProfileCard extends StatefulWidget {
@@ -88,7 +89,7 @@ class _ProfileCardState extends State<ProfileCard> {
                                       ? S.current.actionLogIn
                                       : S.current.actionLogOut,
                                   style: Theme.of(context)
-                                      .accentTextTheme
+                                      .coloredTextTheme
                                       .subtitle2
                                       .copyWith(fontWeight: FontWeight.w500)),
                             ),
@@ -110,9 +111,7 @@ class _ProfileCardState extends State<ProfileCard> {
                                   builder: (context) => const EditProfilePage(),
                                 ),
                               );
-                              if (!mounted) {
-                                return;
-                              }
+                              if (!mounted) return;
                               final authProvider = Provider.of<AuthProvider>(
                                   context,
                                   listen: false);

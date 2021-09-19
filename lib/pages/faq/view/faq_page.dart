@@ -3,12 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:markdown/markdown.dart' as md;
 import 'package:provider/provider.dart';
+import 'package:substring_highlight/substring_highlight.dart';
 
 import '../../../generated/l10n.dart';
+import '../../../resources/theme.dart';
 import '../../../resources/utils.dart';
 import '../../../widgets/scaffold.dart';
 import '../../../widgets/search_bar.dart';
-import '../../../widgets/selectable.dart';
 import '../model/question.dart';
 import '../service/question_provider.dart';
 
@@ -21,7 +22,7 @@ class FaqPage extends StatefulWidget {
 
 class _FaqPageState extends State<FaqPage> {
   List<Question> questions = <Question>[];
-  List<String> categories;
+  List<String> tags;
   String filter = '';
   bool searchClosed = true;
   List<String> activeTags = <String>[];
@@ -40,12 +41,17 @@ class _FaqPageState extends State<FaqPage> {
         child: ListView(
           scrollDirection: Axis.horizontal,
           children: <Widget>[const SizedBox(width: 10)] +
-              categories
+              tags
                   .map((category) => Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 3),
-                        child: Selectable(
-                          label: category,
-                          initiallySelected: false,
+                        child: FilterChip(
+                          label: Text(
+                            category,
+                            style: Theme.of(context).chipTextStyle(
+                              selected: activeTags.contains(category),
+                            ),
+                          ),
+                          selected: activeTags.contains(category),
                           onSelected: (selection) {
                             setState(() {
                               if (selection) {
@@ -83,7 +89,7 @@ class _FaqPageState extends State<FaqPage> {
               return const Center(child: CircularProgressIndicator());
             }
             questions = snapshot.data;
-            categories = questions.expand((e) => e.tags).toSet().toList();
+            tags = questions.expand((e) => e.tags).toSet().toList();
             return ListView(
               children: [
                 SearchWidget(
@@ -124,52 +130,48 @@ class _FaqPageState extends State<FaqPage> {
   }
 }
 
-class QuestionsList extends StatefulWidget {
+class QuestionsList extends StatelessWidget {
   const QuestionsList({this.questions, this.filter});
 
   final List<Question> questions;
   final String filter;
 
   @override
-  _QuestionsListState createState() => _QuestionsListState();
-}
-
-class _QuestionsListState extends State<QuestionsList> {
-  @override
   Widget build(BuildContext context) {
-    final List<String> filteredWords =
-        widget.filter.split(' ').where((element) => element != '').toList();
     return Padding(
       padding: const EdgeInsets.only(top: 12),
       child: ListView.builder(
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
-        itemCount: widget.questions.length,
+        itemCount: questions.length,
         itemBuilder: (context, index) {
           return ExpansionTile(
-            key: ValueKey(widget.questions[index].question),
-            title: filteredWords.isNotEmpty
-                ? Text(
-                    widget.questions[index].question,
-                    style: Theme.of(context).textTheme.subtitle1,
-                  )
-                : Text(
-                    widget.questions[index].question,
-                    style: Theme.of(context).textTheme.subtitle1,
-                  ),
+            key: ValueKey(questions[index].question),
+            // NOTE: This package only highlights the exact search term, so some
+            // questions may be matched without displaying any highlight.
+            //
+            // https://github.com/remoteportal/substring_highlight/issues/17
+            title: SubstringHighlight(
+              text: questions[index].question,
+              term: filter,
+              textStyle: Theme.of(context).textTheme.subtitle1,
+              textStyleHighlight:
+                  Theme.of(context).textTheme.subtitle1.copyWith(
+                        backgroundColor:
+                            Theme.of(context).primaryColor.withAlpha(100),
+                      ),
+            ),
             children: [
               Padding(
                 padding: const EdgeInsets.fromLTRB(15, 0, 15, 15),
                 child: MarkdownBody(
                   fitContent: false,
                   onTapLink: (text, link, title) => Utils.launchURL(link),
-                  /*
-                  This is a workaround because the strings in Firebase represent
-                  newlines as '\n' and Firebase replaces them with '\\n'. We need
-                  to replace them back for them to display properly.
-                  (See GitHub issue firebase/firebase-js-sdk#2366)
-                  */
-                  data: widget.questions[index].answer.replaceAll('\\n', '\n'),
+                  // This is a workaround because the strings in Firebase represent
+                  // newlines as '\n' and Firebase replaces them with '\\n'. We need
+                  // to replace them back for them to display properly.
+                  // (See GitHub issue firebase/firebase-js-sdk#2366)
+                  data: questions[index].answer.replaceAll('\\n', '\n'),
                   extensionSet: md.ExtensionSet(
                       md.ExtensionSet.gitHubFlavored.blockSyntaxes, [
                     md.EmojiSyntax(),

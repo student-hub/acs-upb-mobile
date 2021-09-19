@@ -43,7 +43,7 @@ class _RequestPermissionsPageState extends State<RequestPermissionsPage> {
         AppButton(
             key: const ValueKey('agree_overwrite_request'),
             text: S.current.buttonSend,
-            color: Theme.of(context).accentColor,
+            color: Theme.of(context).primaryColor,
             width: 130,
             onTap: () async {
               Navigator.of(context).pop();
@@ -87,11 +87,11 @@ class _RequestPermissionsPageState extends State<RequestPermissionsPage> {
                     await requestProvider.userAlreadyRequested(user.uid);
 
                 if (queryResult) {
-                  if (!mounted) {
-                    return;
-                  }
-                  await showDialog(
-                      context: context, builder: _requestAlreadyExistsDialog);
+                  if (!mounted) return;
+                  await showDialog<dynamic>(
+                    context: context,
+                    builder: _requestAlreadyExistsDialog,
+                  );
                 }
 
                 queryResult = await requestProvider.makeRequest(
@@ -102,9 +102,7 @@ class _RequestPermissionsPageState extends State<RequestPermissionsPage> {
                 );
                 if (queryResult) {
                   AppToast.show(S.current.messageRequestHasBeenSent);
-                  if (!mounted) {
-                    return;
-                  }
+                  if (!mounted) return;
                   Navigator.of(context).pop();
                 }
               })

@@ -52,7 +52,7 @@ class _FeedbackNudgeState extends State<FeedbackNudge> {
         child: ActionChip(
           padding: const EdgeInsets.all(12),
           tooltip: S.current.navigationClassesFeedbackChecklist,
-          backgroundColor: Theme.of(context).accentColor,
+          backgroundColor: Theme.of(context).primaryColor,
           onPressed: () {
             Navigator.of(context).push(
               MaterialPageRoute<ClassFeedbackChecklist>(

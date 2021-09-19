@@ -7,6 +7,7 @@ import '../../generated/l10n.dart';
 import '../../navigation/routes.dart';
 import '../../pages/filter/view/filter_dropdown.dart';
 import '../../resources/banner.dart';
+import '../../resources/theme.dart';
 import '../../resources/utils.dart';
 import '../../resources/validator.dart';
 import '../../widgets/button.dart';
@@ -138,7 +139,7 @@ class _SignUpViewState extends State<SignUpView> {
                     TextSpan(
                         text: S.current.labelPrivacyPolicy,
                         style: Theme.of(context)
-                            .accentTextTheme
+                            .coloredTextTheme
                             .subtitle1
                             .apply(fontWeightDelta: 2),
                         recognizer: TapGestureRecognizer()
@@ -181,9 +182,7 @@ class _SignUpViewState extends State<SignUpView> {
         final result = await authProvider.signUp(fields);
 
         if (result) {
-          if (!mounted) {
-            return;
-          }
+          if (!mounted) return;
           // Remove all routes below and push home page
           await Navigator.pushNamedAndRemoveUntil(
               context, Routes.home, (route) => false);
@@ -252,7 +251,7 @@ class _SignUpViewState extends State<SignUpView> {
                           Expanded(
                             child: AppButton(
                               key: const ValueKey('sign_up_button'),
-                              color: Theme.of(context).accentColor,
+                              color: Theme.of(context).primaryColor,
                               text: S.current.actionSignUp,
                               onTap: () => signUpForm.submit(),
                             ),
