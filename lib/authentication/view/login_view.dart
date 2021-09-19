@@ -80,9 +80,7 @@ class _LoginViewState extends State<LoginView> {
                       .sendPasswordResetEmail(
                           emailController.text + S.current.stringEmailDomain);
               if (success) {
-                if (!mounted) {
-                  return;
-                }
+                if (!mounted) return;
                 Navigator.pop(context);
               }
               return;
@@ -103,9 +101,7 @@ class _LoginViewState extends State<LoginView> {
           fields[S.current.labelPassword],
         );
         if (result) {
-          if (!mounted) {
-            return;
-          }
+          if (!mounted) return;
           await Navigator.pushReplacementNamed(context, Routes.home);
         }
       },
@@ -213,9 +209,7 @@ class _LoginViewState extends State<LoginView> {
                                 final result =
                                     await authProvider.signInAnonymously();
                                 if (result) {
-                                  if (!mounted) {
-                                    return;
-                                  }
+                                  if (!mounted) return;
                                   await Navigator.pushReplacementNamed(
                                       context, Routes.home);
                                 }

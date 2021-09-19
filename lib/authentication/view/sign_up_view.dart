@@ -182,9 +182,7 @@ class _SignUpViewState extends State<SignUpView> {
         final result = await authProvider.signUp(fields);
 
         if (result) {
-          if (!mounted) {
-            return;
-          }
+          if (!mounted) return;
           // Remove all routes below and push home page
           await Navigator.pushNamedAndRemoveUntil(
               context, Routes.home, (route) => false);

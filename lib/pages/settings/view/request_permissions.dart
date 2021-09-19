@@ -87,9 +87,7 @@ class _RequestPermissionsPageState extends State<RequestPermissionsPage> {
                     await requestProvider.userAlreadyRequested(user.uid);
 
                 if (queryResult) {
-                  if (!mounted) {
-                    return;
-                  }
+                  if (!mounted) return;
                   await showDialog<dynamic>(
                     context: context,
                     builder: _requestAlreadyExistsDialog,
@@ -104,9 +102,7 @@ class _RequestPermissionsPageState extends State<RequestPermissionsPage> {
                 );
                 if (queryResult) {
                   AppToast.show(S.current.messageRequestHasBeenSent);
-                  if (!mounted) {
-                    return;
-                  }
+                  if (!mounted) return;
                   Navigator.of(context).pop();
                 }
               })

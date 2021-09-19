@@ -94,9 +94,7 @@ class _ClassesPageState extends State<ClassesPage> {
                                       await classProvider.setUserClassIds(
                                           classIds, authProvider.uid);
                                       unawaited(updateClasses());
-                                      if (!mounted) {
-                                        return;
-                                      }
+                                      if (!mounted) return;
                                       Navigator.pop(context);
                                     });
                               } else {

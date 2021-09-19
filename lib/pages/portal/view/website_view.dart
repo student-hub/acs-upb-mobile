@@ -180,9 +180,7 @@ class _WebsiteViewState extends State<WebsiteView> {
                   Provider.of<WebsiteProvider>(context, listen: false);
               final res = await websiteProvider.deleteWebsite(widget.website);
               if (res) {
-                if (!mounted) {
-                  return;
-                }
+                if (!mounted) return;
                 Navigator.pop(context); // Pop editing page
                 AppToast.show(S.current.messageWebsiteDeleted);
               }

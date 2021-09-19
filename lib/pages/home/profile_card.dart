@@ -111,9 +111,7 @@ class _ProfileCardState extends State<ProfileCard> {
                                   builder: (context) => const EditProfilePage(),
                                 ),
                               );
-                              if (!mounted) {
-                                return;
-                              }
+                              if (!mounted) return;
                               final authProvider = Provider.of<AuthProvider>(
                                   context,
                                   listen: false);

@@ -234,9 +234,7 @@ class _ClassViewState extends State<ClassView> {
               )
             ]);
         if (option == S.current.actionDeleteShortcut) {
-          if (!mounted) {
-            return;
-          }
+          if (!mounted) return;
           await showDialog<dynamic>(
             context: context,
             builder: (context) => _deletionConfirmationDialog(
@@ -300,9 +298,7 @@ class _ClassViewState extends State<ClassView> {
                       final lecturer =
                           await personProvider.fetchPerson(lecturerName);
                       if (lecturer != null && lecturerName != null) {
-                        if (!mounted) {
-                          return;
-                        }
+                        if (!mounted) return;
                         await showModalBottomSheet<dynamic>(
                             isScrollControlled: true,
                             context: context,
