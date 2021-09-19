@@ -46,9 +46,6 @@ dependencies:
   # Dotted line painter
   dotted_line: ^3.0.0
 
-  # Highlight words
-  #  dynamic_text_highlighting: ^2.2.0
-
   # Package for dynamically changing the app theme
   #  dynamic_theme: ^1.0.1
   easy_dynamic_theme: ^2.2.0
@@ -124,6 +121,9 @@ dependencies:
 
   # Async utilities
   rxdart: ^0.26.0
+
+  # Highlight words
+  substring_highlight: ^1.0.33
 
   # Support lock/mutex
   synchronized: ^3.0.0

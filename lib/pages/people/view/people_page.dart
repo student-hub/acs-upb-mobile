@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:provider/provider.dart';
 import 'package:recase/recase.dart';
+import 'package:substring_highlight/substring_highlight.dart';
 
 import '../../../generated/l10n.dart';
 import '../../../widgets/scaffold.dart';
@@ -95,11 +96,6 @@ class PeopleList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<String> filteredWords = filter
-        .toLowerCase()
-        .split(' ')
-        .where((element) => element != '')
-        .toList();
     people.sort((p1, p2) {
       final cmpLast = p1.lastName.compareTo(p2.lastName);
       if (cmpLast != 0) {
@@ -119,12 +115,19 @@ class PeopleList extends StatelessWidget {
               people[index].photo,
             ),
           ),
-          title: filteredWords.isNotEmpty
-              ? Text(
-                  people[index].name,
-                  style: Theme.of(context).textTheme.subtitle1,
-                )
-              : Text(people[index].name),
+          // NOTE: This package only supports a single search term, so even
+          // though we match each word in the search term in any order (e.g.
+          // "John Doe" matches "Doe John" and vice versa), they won't be
+          // correctly highlighted if the match is not exact.
+          //
+          // https://github.com/remoteportal/substring_highlight/issues/17
+          title: SubstringHighlight(
+            text: people[index].name,
+            term: filter,
+            textStyle: Theme.of(context).textTheme.subtitle1,
+            textStyleHighlight: Theme.of(context).textTheme.subtitle1.copyWith(
+                backgroundColor: Theme.of(context).primaryColor.withAlpha(100)),
+          ),
           subtitle: Text(people[index].email),
           onTap: () => showModalBottomSheet<dynamic>(
             isScrollControlled: true,
