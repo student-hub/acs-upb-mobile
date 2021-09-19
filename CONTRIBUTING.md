@@ -56,9 +56,9 @@ auditore/fix_md_typo
 torvalds/android_speedups
 ```
 ### Merging
-When developing a new feature or working on a bug, your pull request will end up containing fixup commits (commits that change the same line of code repeatedly) or too fine-grained commits. An issue that can arise from this is that the main branch history will become poluted with unnecessary commits. To avoid it, we implement and enforce a squash policy.
+When developing a new feature or working on a bug, your pull request will end up containing fix-up commits (commits that change the same line of code repeatedly) or too fine-grained commits. An issue that can arise from this is that the main branch history will become polluted with unnecessary commits. To avoid it, we implement and enforce a squash policy.
 All commits that are merged into the main development branch have to be squashed ahead of the merge.
-You can do so by pressing "squash and merge" in GitHub (_recommended_), or, alternetively, following the generic local squash routine outlined bellow:
+You can do so by pressing "squash and merge" in GitHub (_recommended_), or, alternatively, following the generic local squash routine outlined bellow:
 ```
 git checkout your_branch_name
 git rebase -i HEAD~n
@@ -239,7 +239,7 @@ A user can define their own websites, that only they have access to. These will 
 
 Anyone can **create** a new user (a new document in this collection) _if the `permissionLevel` of the created user is 0, null or not set at all_.
 
-Authenticated users can only **read**, **delete** and **update** their own document (including its subcollections) and no one else's. However, they cannot modify the `permissionLevel` field.
+Authenticated users can only **read**, **delete** and **update** their own document (including its sub-collections) and no one else's. However, they cannot modify the `permissionLevel` field.
 
 </details>
 

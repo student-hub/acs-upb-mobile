@@ -99,7 +99,7 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar>
                     labelPadding: const EdgeInsets.only(top: 4),
                     unselectedLabelColor:
                     Theme.of(context).unselectedWidgetColor,
-                    indicatorColor: Theme.of(context).accentColor,
+                    indicatorColor: Colors.transparent,
                   ),
                 ),
                 const SizedBox(height: 2)
