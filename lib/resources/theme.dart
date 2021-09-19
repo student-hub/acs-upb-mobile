@@ -66,6 +66,10 @@ var darkThemeData = ThemeData(
     brightness: Brightness.dark,
     primarySwatch: primarySwatch,
   ),
+  // Make scaffold app bar look the same as on light mode
+  appBarTheme: const AppBarTheme().copyWith(
+    foregroundColor: lightThemeData.textTheme.bodyText1.color,
+  ),
 );
 
 extension ThemeExtension on ThemeData {
