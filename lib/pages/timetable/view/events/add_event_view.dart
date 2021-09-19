@@ -522,11 +522,15 @@ class _AddEventViewState extends State<AddEventView> {
                 children: [
                   GestureDetector(
                     onTap: () async {
-                      duration = await showDurationPicker(
+                      final newDuration = await showDurationPicker(
                         context: context,
                         initialTime: duration,
                       );
-                      setState(() {});
+                      if (newDuration != null) {
+                        setState(() {
+                          duration = newDuration;
+                        });
+                      }
                     },
                     child: Text(
                       duration.toShortString(),
