@@ -43,7 +43,7 @@ class _RequestPermissionsPageState extends State<RequestPermissionsPage> {
         AppButton(
             key: const ValueKey('agree_overwrite_request'),
             text: S.current.buttonSend,
-            color: Theme.of(context).accentColor,
+            color: Theme.of(context).primaryColor,
             width: 130,
             onTap: () async {
               Navigator.of(context).pop();

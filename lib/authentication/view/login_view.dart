@@ -1,3 +1,4 @@
+import 'package:acs_upb_mobile/resources/theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -117,7 +118,7 @@ class _LoginViewState extends State<LoginView> {
                 child: Text(
                   S.current.actionResetPassword,
                   style: Theme.of(context)
-                      .accentTextTheme
+                      .coloredTextTheme
                       .subtitle1
                       .copyWith(fontWeight: FontWeight.w500),
                 ),
@@ -177,7 +178,7 @@ class _LoginViewState extends State<LoginView> {
                       minHeight: 1,
                     ),
                     child: Image.asset('assets/images/city_doodle.png',
-                        color: Theme.of(context).accentColor.withOpacity(0.4)),
+                        color: Theme.of(context).primaryColor.withOpacity(0.4)),
                   ),
                 ),
               ),
@@ -224,7 +225,7 @@ class _LoginViewState extends State<LoginView> {
                           Expanded(
                             child: AppButton(
                               key: const ValueKey('log_in_button'),
-                              color: Theme.of(context).accentColor,
+                              color: Theme.of(context).primaryColor,
                               text: S.current.actionLogIn,
                               onTap: () => loginForm.submit(),
                             ),
@@ -248,7 +249,7 @@ class _LoginViewState extends State<LoginView> {
                             },
                             child: Text(S.current.actionSignUp,
                                 style: Theme.of(context)
-                                    .accentTextTheme
+                                    .coloredTextTheme
                                     .subtitle1
                                     .copyWith(fontWeight: FontWeight.w500)),
                           ),

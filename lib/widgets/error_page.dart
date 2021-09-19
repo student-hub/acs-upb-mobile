@@ -1,3 +1,4 @@
+import 'package:acs_upb_mobile/resources/theme.dart';
 import 'package:flutter/material.dart';
 
 class ErrorPage extends StatelessWidget {
@@ -66,7 +67,7 @@ class ErrorPage extends StatelessWidget {
                         onTap: actionOnTap,
                         child: Text(actionText,
                             style: Theme.of(context)
-                                .accentTextTheme
+                                .coloredTextTheme
                                 .subtitle2
                                 .copyWith(fontWeight: FontWeight.w500)),
                       ),

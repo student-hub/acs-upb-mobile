@@ -92,7 +92,7 @@ class _FeedbackQuestionFormFieldState extends State<FeedbackQuestionFormField> {
                   max: 10,
                   divisions: 9,
                   label: widget.question.answer,
-                  activeColor: Theme.of(context).accentColor,
+                  activeColor: Theme.of(context).primaryColor,
                 ),
               ),
             ),

@@ -131,7 +131,7 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return OKToast(
       textStyle: lightThemeData.textTheme.button,
-      backgroundColor: accentColor.withOpacity(.8),
+      backgroundColor: primaryColor.withOpacity(.8),
       position: ToastPosition.bottom,
       child: GestureDetector(
         onTap: () {
@@ -207,7 +207,7 @@ class AppLoadingScreen extends StatelessWidget {
     return LoadingScreen(
       navigateAfterFuture: _setUpAndChooseStartScreen(context),
       image: Image.asset('assets/icons/acs_logo.png'),
-      loaderColor: Theme.of(context).accentColor,
+      loaderColor: Theme.of(context).primaryColor,
     );
   }
 }

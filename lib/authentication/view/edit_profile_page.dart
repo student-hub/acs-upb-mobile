@@ -128,7 +128,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
         AppButton(
           key: const ValueKey('change_password_button'),
           text: S.current.actionChangePassword.toUpperCase(),
-          color: Theme.of(context).accentColor,
+          color: Theme.of(context).primaryColor,
           width: 130,
           onTap: () async {
             if (changePasswordKey.currentState.validate()) {
@@ -204,7 +204,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
         AppButton(
           key: const ValueKey('change_email_button'),
           text: S.current.actionChangeEmail,
-          color: Theme.of(context).accentColor,
+          color: Theme.of(context).primaryColor,
           width: 130,
           onTap: () async {
             final authProvider =

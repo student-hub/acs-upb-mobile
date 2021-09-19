@@ -1,3 +1,4 @@
+import 'package:acs_upb_mobile/resources/theme.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -138,7 +139,7 @@ class _SignUpViewState extends State<SignUpView> {
                     TextSpan(
                         text: S.current.labelPrivacyPolicy,
                         style: Theme.of(context)
-                            .accentTextTheme
+                            .coloredTextTheme
                             .subtitle1
                             .apply(fontWeightDelta: 2),
                         recognizer: TapGestureRecognizer()
@@ -252,7 +253,7 @@ class _SignUpViewState extends State<SignUpView> {
                           Expanded(
                             child: AppButton(
                               key: const ValueKey('sign_up_button'),
-                              color: Theme.of(context).accentColor,
+                              color: Theme.of(context).primaryColor,
                               text: S.current.actionSignUp,
                               onTap: () => signUpForm.submit(),
                             ),

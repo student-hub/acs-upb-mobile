@@ -1,3 +1,4 @@
+import 'package:acs_upb_mobile/resources/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -88,7 +89,7 @@ class _ProfileCardState extends State<ProfileCard> {
                                       ? S.current.actionLogIn
                                       : S.current.actionLogOut,
                                   style: Theme.of(context)
-                                      .accentTextTheme
+                                      .coloredTextTheme
                                       .subtitle2
                                       .copyWith(fontWeight: FontWeight.w500)),
                             ),

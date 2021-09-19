@@ -59,7 +59,7 @@ class RelevanceFormField extends ChipFormField<List<String>> {
       RelevanceController controller, bool canBeForEveryone) {
     final User user = Provider.of<AuthProvider>(context).currentUserFromCache;
     final buttonColor = user?.canAddPublicInfo ?? false
-        ? Theme.of(context).accentColor
+        ? Theme.of(context).primaryColor
         : Theme.of(context).hintColor;
 
     return IntrinsicWidth(
@@ -107,7 +107,7 @@ class RelevanceFormField extends ChipFormField<List<String>> {
             Text(
               S.current.labelCustom,
               style: Theme.of(context)
-                  .accentTextTheme
+                  .coloredTextTheme
                   .subtitle2
                   .copyWith(color: buttonColor),
             ),
