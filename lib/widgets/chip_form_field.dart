@@ -96,7 +96,7 @@ class ChipFormField<T> extends FormField<T> {
                       children: <Widget>[
                         const SizedBox(width: 12),
                         Expanded(
-                          child: Container(
+                          child: SizedBox(
                             height: 40,
                             child: contentBuilder(state),
                           ),
