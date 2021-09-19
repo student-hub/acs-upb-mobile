@@ -127,7 +127,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "infoClasses" : MessageLookupByLibrary.simpleMessage("classes you are interested in"),
     "infoEmail" : m3,
     "infoExportToGoogleCalendar" : MessageLookupByLibrary.simpleMessage("Export filtered events from Timetable"),
-    "infoFeedbackForm" : MessageLookupByLibrary.simpleMessage("Offer feedback and report issues"),
+    "infoFeedbackForm" : MessageLookupByLibrary.simpleMessage("Leave feedback and report issues"),
     "infoFormAnonymous" : MessageLookupByLibrary.simpleMessage("This form is anonymous."),
     "infoLoading" : MessageLookupByLibrary.simpleMessage("Loading..."),
     "infoMakeSureGroupIsSelected" : MessageLookupByLibrary.simpleMessage("Make sure your group/subgroup is selected in the"),

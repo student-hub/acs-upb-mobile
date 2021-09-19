@@ -299,7 +299,7 @@
   "infoReadThePolicy": "Read the {appName} policy",
   "infoExportToGoogleCalendar": "Export filtered events from Timetable",
   "infoFormAnonymous": "This form is anonymous.",
-  "infoFeedbackForm": "Offer feedback and report issues",
+  "infoFeedbackForm": "Leave feedback and report issues",
 
   "stringEmailDomain": "@stud.acs.upb.ro",
   "stringForum": "cs.curs.pub.ro",

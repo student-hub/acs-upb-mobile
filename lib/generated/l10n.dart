@@ -2875,10 +2875,10 @@ class S {
     );
   }
 
-  /// `Offer feedback and report issues`
+  /// `Leave feedback and report issues`
   String get infoFeedbackForm {
     return Intl.message(
-      'Offer feedback and report issues',
+      'Leave feedback and report issues',
       name: 'infoFeedbackForm',
       desc: '',
       args: [],
