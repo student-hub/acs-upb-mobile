@@ -90,8 +90,10 @@ class _RequestPermissionsPageState extends State<RequestPermissionsPage> {
                   if (!mounted) {
                     return;
                   }
-                  await showDialog(
-                      context: context, builder: _requestAlreadyExistsDialog);
+                  await showDialog<dynamic>(
+                    context: context,
+                    builder: _requestAlreadyExistsDialog,
+                  );
                 }
 
                 queryResult = await requestProvider.makeRequest(

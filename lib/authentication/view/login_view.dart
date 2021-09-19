@@ -123,7 +123,8 @@ class _LoginViewState extends State<LoginView> {
                       .copyWith(fontWeight: FontWeight.w500),
                 ),
                 onTap: () {
-                  showDialog(context: context, builder: _resetPasswordDialog);
+                  showDialog<dynamic>(
+                      context: context, builder: _resetPasswordDialog);
                   final currentFocus = FocusScope.of(context);
                   if (!currentFocus.hasPrimaryFocus) {
                     currentFocus.unfocus();

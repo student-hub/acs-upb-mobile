@@ -228,12 +228,15 @@ class _WebsiteViewState extends State<WebsiteView> {
                   AppScaffoldAction(
                     icon: Icons.more_vert_outlined,
                     items: {
-                      S.current.actionDeleteWebsite: () => showDialog(
-                          context: context,
-                          builder: _deletionConfirmationDialog)
+                      S.current.actionDeleteWebsite: () => showDialog<dynamic>(
+                            context: context,
+                            builder: _deletionConfirmationDialog,
+                          )
                     },
-                    onPressed: () => showDialog(
-                        context: context, builder: _deletionConfirmationDialog),
+                    onPressed: () => showDialog<dynamic>(
+                      context: context,
+                      builder: _deletionConfirmationDialog,
+                    ),
                   )
                 ]
               : <AppScaffoldAction>[]),

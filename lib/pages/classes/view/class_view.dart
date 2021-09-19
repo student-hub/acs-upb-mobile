@@ -237,7 +237,7 @@ class _ClassViewState extends State<ClassView> {
           if (!mounted) {
             return;
           }
-          await showDialog(
+          await showDialog<dynamic>(
             context: context,
             builder: (context) => _deletionConfirmationDialog(
               context: context,
