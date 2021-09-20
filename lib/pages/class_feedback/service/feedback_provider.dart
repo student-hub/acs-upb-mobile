@@ -70,20 +70,6 @@ class FeedbackProvider with ChangeNotifier {
     }
   }
 
-  Future<bool> _addResponseByUser(FormAnswer response, String document) async {
-    try {
-      await FirebaseFirestore.instance
-          .collection('forms')
-          .doc(document)
-          .set(response.toData());
-      return true;
-    } catch (e) {
-      print(e);
-      AppToast.show(S.current.errorSomethingWentWrong);
-      return false;
-    }
-  }
-
   Future<Map<String, FormQuestion>> fetchQuestions(String document) async {
     try {
       final DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
@@ -106,7 +92,8 @@ class FeedbackProvider with ChangeNotifier {
 
   // Fetch all feedback categories in the format
   // Map<categoryKey, Map<language, localizedCategoryName>>
-  Future<Map<String, Map<String, String>>> fetchCategories(String document) async {
+  Future<Map<String, Map<String, String>>> fetchCategories(
+      String document) async {
     try {
       final DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
           .collection('forms')
@@ -167,7 +154,8 @@ class FeedbackProvider with ChangeNotifier {
           questionAnswer: feedbackQuestions[i.toString()].answer,
         );
 
-        responseAddedSuccessfully = await _addResponseByQuestion(response, 'class_feedback_answers');
+        responseAddedSuccessfully =
+            await _addResponseByQuestion(response, 'class_feedback_answers');
         if (!responseAddedSuccessfully) break;
       }
 

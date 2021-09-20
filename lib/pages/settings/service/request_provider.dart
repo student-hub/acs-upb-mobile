@@ -2,19 +2,20 @@ import 'dart:async';
 
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/settings/model/request.dart';
-import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-extension RequestExtension on Request {
+extension PermissionRequestExtension on PermissionRequest {
   Map<String, dynamic> toData() {
     final Map<String, dynamic> data = {};
 
-    if (userId != null) data['addedBy'] = userId;
-    if (requestBody != null) data['requestBody'] = requestBody;
+    for (int i = 0; i < answers.length; ++i) {
+      if (answers[i].questionAnswer != null) {
+        data[i.toString()] = answers[i].questionAnswer;
+      }
+    }
     data['done'] = processed;
     data['dateSubmitted'] = Timestamp.now();
-    data['type'] = type.toShortString();
     data['accepted'] = false;
 
     return data;
@@ -25,15 +26,17 @@ class RequestProvider {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
   bool userAlreadyRequestedCache;
 
-  Future<bool> makeRequest(Request request) async {
-    assert(request.requestBody != null);
+  Future<bool> makeRequest(PermissionRequest request) async {
+    for (int i = 0; i < request.answers.length; ++i) {
+      assert(request.answers[i] != null);
+    }
 
     try {
-      CollectionReference ref;
-      ref = _db.collection('forms');
+      DocumentReference ref;
+      ref = _db.collection('forms').doc('permission_request_answers');
 
       final data = request.toData();
-      await ref.add(data);
+      await ref.update({request.userId: data});
 
       return userAlreadyRequestedCache = true;
     } catch (e) {

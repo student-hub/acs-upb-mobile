@@ -1,6 +1,7 @@
 import 'package:acs_upb_mobile/authentication/model/user.dart';
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
+import 'package:acs_upb_mobile/pages/class_feedback/model/form_answer.dart';
 import 'package:acs_upb_mobile/pages/settings/model/request.dart';
 import 'package:acs_upb_mobile/pages/settings/service/request_provider.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
@@ -90,10 +91,15 @@ class _RequestPermissionsPageState extends State<RequestPermissionsPage> {
                       context: context, builder: _requestAlreadyExistsDialog);
                 }
 
+                final List<FormAnswer> list = [
+                  FormAnswer(
+                      questionNumber: '0',
+                      questionAnswer: requestController.text)
+                ];
                 queryResult = await requestProvider.makeRequest(
-                  Request(
+                  PermissionRequest(
                     userId: user.uid,
-                    requestBody: requestController.text,
+                    answers: list,
                   ),
                 );
                 if (queryResult) {
@@ -135,6 +141,7 @@ class _RequestPermissionsPageState extends State<RequestPermissionsPage> {
               ),
             ),
             Padding(
+
               padding: const EdgeInsets.all(10),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,

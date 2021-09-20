@@ -31,7 +31,7 @@ class _RequestCardState extends State<RequestCard>
         future: adminProvider.fetchRequest(widget.requestId),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
-            final Request request = snapshot.data;
+            final PermissionRequest request = snapshot.data;
             return Padding(
               padding: const EdgeInsets.fromLTRB(12, 12, 12, 0),
               child: Card(
@@ -43,7 +43,7 @@ class _RequestCardState extends State<RequestCard>
                       _buildUserHeader(request, adminProvider),
                       const SizedBox(height: 10),
                       Text(
-                        request.requestBody ?? '',
+                        request.answers[0] ?? '',
                         textDirection: ui.TextDirection.ltr,
                         style: Theme.of(context)
                             .textTheme
@@ -63,7 +63,7 @@ class _RequestCardState extends State<RequestCard>
         });
   }
 
-  Widget _buildUserHeader(Request request, AdminProvider adminProvider) =>
+  Widget _buildUserHeader(PermissionRequest request, AdminProvider adminProvider) =>
       FutureBuilder(
           future: adminProvider.fetchUserById(request.userId),
           builder: (context, snapshot) {
@@ -122,7 +122,7 @@ class _RequestCardState extends State<RequestCard>
       );
 
   Widget _buildButtons(
-          bool processed, AdminProvider adminProvider, Request request) =>
+          bool processed, AdminProvider adminProvider, PermissionRequest request) =>
       Row(
         crossAxisAlignment: CrossAxisAlignment.end,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -146,7 +146,7 @@ class _RequestCardState extends State<RequestCard>
                   color: Theme.of(context).secondaryButtonColor,
                   width: 100,
                   onTap: () async {
-                    await adminProvider.denyRequest(request.id);
+                    await adminProvider.denyRequest(request.userId);
                     setState(() {
                       request
                         ..accepted = false
@@ -161,7 +161,7 @@ class _RequestCardState extends State<RequestCard>
                   color: Theme.of(context).accentColor,
                   width: 100,
                   onTap: () async {
-                    await adminProvider.acceptRequest(request.id);
+                    await adminProvider.acceptRequest(request.userId);
                     setState(() {
                       request
                         ..accepted = true
@@ -180,7 +180,7 @@ class _RequestCardState extends State<RequestCard>
                   color: Theme.of(context).accentColor,
                   width: 100,
                   onTap: () async {
-                    await adminProvider.revertRequest(request.id);
+                    await adminProvider.revertRequest(request.userId);
                     setState(() {
                       request
                         ..accepted = false

@@ -1,29 +1,31 @@
 import 'package:acs_upb_mobile/authentication/model/user.dart';
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
+import 'package:acs_upb_mobile/pages/class_feedback/model/form_answer.dart';
 import 'package:acs_upb_mobile/pages/settings/model/request.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-extension RequestExtension on Request {
-  static Request fromSnap(DocumentSnapshot snap) {
+extension PermissionRequestExtension on PermissionRequest {
+  static PermissionRequest fromSnap(DocumentSnapshot snap) {
     final data = snap.data();
-    return Request(
-      userId: data['addedBy'],
-      requestBody: data['requestBody'],
+    final List<FormAnswer> list = [];
+    int i = 0;
+    while (data[i.toString()] != null) {
+      list.add(FormAnswer(
+          questionNumber: i.toString(), questionAnswer: data[i.toString()]));
+      i++;
+    }
+    return PermissionRequest(
+      userId: snap.id,
+      answers: list,
       processed: data['done'],
-      type: RequestType.permissions,
       dateSubmitted: data['dateSubmitted'],
       accepted: data['accepted'],
       processedBy: data['processedBy'],
-      id: snap.id,
     );
-  }
-
-  static String getFormId(DocumentSnapshot snap) {
-    return snap.id;
   }
 }
 
@@ -43,7 +45,7 @@ class AdminProvider with ChangeNotifier {
           .collection('forms')
           .orderBy('dateSubmitted', descending: true)
           .get();
-      return qSnapshot.docs.map(RequestExtension.getFormId).toList();
+      return qSnapshot.docs.map((snap) => snap.id).toList();
     } catch (e) {
       print(e);
       AppToast.show(S.current.errorLoadRequests);
@@ -58,7 +60,7 @@ class AdminProvider with ChangeNotifier {
           .where('done', isEqualTo: false)
           .orderBy('dateSubmitted', descending: true)
           .get();
-      return qSnapshot.docs.map(RequestExtension.getFormId).toList();
+      return qSnapshot.docs.map((snap) => snap.id).toList();
     } catch (e) {
       print(e);
       AppToast.show(S.current.errorLoadRequests);
@@ -66,11 +68,11 @@ class AdminProvider with ChangeNotifier {
     }
   }
 
-  Future<Request> fetchRequest(String requestId) async {
+  Future<PermissionRequest> fetchRequest(String requestId) async {
     try {
       final DocumentSnapshot docSnapshot =
           await _db.collection('forms').doc(requestId).get();
-      return RequestExtension.fromSnap(docSnapshot);
+      return PermissionRequestExtension.fromSnap(docSnapshot);
     } catch (e) {
       print(e);
       AppToast.show(S.current.errorSomethingWentWrong);

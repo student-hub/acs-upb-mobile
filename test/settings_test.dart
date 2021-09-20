@@ -410,7 +410,7 @@ void main() {
         when(mockAdminProvider.fetchUnprocessedRequestIds())
             .thenAnswer((_) => Future.value(['string']));
         when(mockAdminProvider.fetchRequest('')).thenAnswer(
-            (_) => Future.value(Request(requestBody: 'body', userId: '0')));
+            (_) => Future.value(PermissionRequest(requestBody: 'body', userId: '0')));
 
         await tester.pumpWidget(buildApp());
         await tester.pumpAndSettle();

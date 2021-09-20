@@ -126,7 +126,7 @@ service cloud.firestore {
         match /forms/{form=**} {
             allow read: if true;
             allow create: if isAuthenticated();
-            allow update: if isAdmin();
+            allow update: if isAuthenticated();
             allow delete: if false;
         }
     }

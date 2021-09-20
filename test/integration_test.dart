@@ -426,7 +426,7 @@ Future<void> main() async {
     mockFeedbackProvider = MockFeedbackProvider();
     // ignore: invalid_use_of_protected_member
     when(mockFeedbackProvider.hasListeners).thenReturn(true);
-    when(mockFeedbackProvider.fetchQuestions()).thenAnswer((_) => Future.value({
+    when(mockFeedbackProvider.fetchQuestions('string')).thenAnswer((_) => Future.value({
           '0': FormQuestionDropdown(
             category: 'involvement',
             question:
@@ -451,7 +451,7 @@ Future<void> main() async {
             id: '3',
           ),
         }));
-    when(mockFeedbackProvider.fetchCategories())
+    when(mockFeedbackProvider.fetchCategories('string'))
         .thenAnswer((_) => Future.value({
               'applications': {'en': 'Applications', 'ro': 'Aplicații'},
               'homework': {'en': 'Homework', 'ro': 'Temă'},
@@ -1595,7 +1595,7 @@ Future<void> main() async {
       when(mockAdminProvider.fetchUnprocessedRequestIds())
           .thenAnswer((_) => Future.value(['string']));
       when(mockAdminProvider.fetchRequest('')).thenAnswer(
-          (_) => Future.value(Request(requestBody: 'body', userId: '0')));
+          (_) => Future.value(PermissionRequest(requestBody: 'body', userId: '0')));
     });
 
     for (final size in screenSizes) {
