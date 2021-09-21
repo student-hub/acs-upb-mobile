@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart' hide Interval;
-import 'package:time_machine/time_machine.dart' hide Interval;
 import 'package:dart_date/dart_date.dart' show Interval;
 
 import '../../../classes/model/class.dart';
@@ -28,8 +27,7 @@ class AllDayUniEvent extends UniEvent {
             name: name,
             location: location,
             start: start.atMidnight(),
-            period: Period.differenceBetweenDates(
-                LocalDate.dateTime(start), LocalDate.dateTime(end.addDays(1))),
+            duration: Interval(start, end.addDays(1)).duration,
             id: id,
             color: color,
             type: type,

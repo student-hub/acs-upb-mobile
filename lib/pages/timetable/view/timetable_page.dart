@@ -3,7 +3,6 @@ import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:provider/provider.dart';
 import 'package:recase/recase.dart';
 import 'package:supercharged/supercharged.dart';
-import 'package:time_machine/time_machine.dart' hide Interval;
 import 'package:timetable/timetable.dart';
 import 'package:dart_date/dart_date.dart' show Interval;
 
@@ -161,7 +160,7 @@ class _TimetablePageState extends State<TimetablePage>
                                   child: AddEventView(
                                     initialEvent: UniEvent(
                                         start: dateTime.copyWithUtc(),
-                                        period: const Period(hours: 2),
+                                        duration: const Duration(hours: 2),
                                         id: null),
                                   ),
                                 ),

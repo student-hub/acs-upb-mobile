@@ -1,7 +1,6 @@
 import 'dart:core';
 
 import 'package:flutter/material.dart' hide Interval;
-import 'package:time_machine/time_machine.dart' hide Interval;
 import 'package:dart_date/dart_date.dart' show Interval;
 import 'package:timetable/timetable.dart';
 import '../../../../generated/l10n.dart';
@@ -97,7 +96,7 @@ extension UniEventTypeExtension on UniEventType {
 class UniEvent {
   const UniEvent({
     @required this.start,
-    @required this.period,
+    @required this.duration,
     @required this.id,
     this.name,
     this.location,
@@ -115,7 +114,7 @@ class UniEvent {
   final Color color;
   final UniEventType type;
   final DateTime start;
-  final Period period;
+  final Duration duration;
   final String name;
   final String location;
   final ClassHeader classHeader;
@@ -141,7 +140,7 @@ class UniEvent {
 
   Iterable<UniEventInstance> generateInstances(
       {Interval intersectingInterval}) sync* {
-    final DateTime end = start.add(period.toTime().toDuration);
+    final DateTime end = start.add(duration);
     if (intersectingInterval != null) {
       if (end < intersectingInterval.start ||
           start > intersectingInterval.end) {
@@ -155,7 +154,7 @@ class UniEvent {
       mainEvent: this,
       color: color,
       start: start.copyWithUtc(),
-      end: start.add(period.toTime().toDuration).copyWithUtc(),
+      end: start.add(duration).copyWithUtc(),
       location: location,
     );
   }

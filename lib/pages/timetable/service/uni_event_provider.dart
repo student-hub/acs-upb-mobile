@@ -6,7 +6,6 @@ import 'package:flutter/material.dart' hide Interval;
 import 'package:googleapis/calendar/v3.dart' as g_cal;
 import 'package:recase/recase.dart';
 import 'package:rrule/rrule.dart';
-import 'package:time_machine/time_machine.dart' hide Interval;
 import 'package:timetable/timetable.dart';
 import 'package:dart_date/dart_date.dart' show Interval;
 
@@ -28,39 +27,65 @@ import '../model/events/uni_event.dart';
 import '../timetable_utils.dart';
 import 'google_calendar_services.dart';
 
-extension PeriodExtension on Period {
-  static Period fromJSON(Map<String, dynamic> json) {
-    return Period(
-      years: json['years'] ?? 0,
-      months: json['months'] ?? 0,
-      weeks: json['weeks'] ?? 0,
+extension DurationExtension on Duration {
+  static Duration fromJSON(Map<String, dynamic> json) {
+    return Duration(
       days: json['days'] ?? 0,
       hours: json['hours'] ?? 0,
       minutes: json['minutes'] ?? 0,
       seconds: json['seconds'] ?? 0,
       milliseconds: json['milliseconds'] ?? 0,
       microseconds: json['microseconds'] ?? 0,
-      nanoseconds: json['nanoseconds'] ?? 0,
     );
   }
 
   Map<String, dynamic> toJSON() {
     final json = {
-      'years': years,
-      'months': months,
-      'weeks': weeks,
-      'days': days,
-      'hours': hours,
-      'minutes': minutes,
-      'seconds': seconds,
-      'milliseconds': milliseconds,
-      'microseconds': microseconds,
-      'nanoseconds': nanoseconds
+      'days': 0,
+      'hours': 0,
+      'minutes': 0,
+      'seconds': 0,
+      'milliseconds': 0,
+      'microseconds': inMicroseconds,
     };
 
     return json..removeWhere((key, value) => value == 0);
   }
 }
+
+// extension PeriodExtension on Period {
+//   static Period fromJSON(Map<String, dynamic> json) {
+//     return Period(
+//       years: json['years'] ?? 0,
+//       months: json['months'] ?? 0,
+//       weeks: json['weeks'] ?? 0,
+//       days: json['days'] ?? 0,
+//       hours: json['hours'] ?? 0,
+//       minutes: json['minutes'] ?? 0,
+//       seconds: json['seconds'] ?? 0,
+//       milliseconds: json['milliseconds'] ?? 0,
+//       microseconds: json['microseconds'] ?? 0,
+//       nanoseconds: json['nanoseconds'] ?? 0,
+//     );
+//   }
+//
+//   Map<String, dynamic> toJSON() {
+//     final json = {
+//       'years': years,
+//       'months': months,
+//       'weeks': weeks,
+//       'days': days,
+//       'hours': hours,
+//       'minutes': minutes,
+//       'seconds': seconds,
+//       'milliseconds': milliseconds,
+//       'microseconds': microseconds,
+//       'nanoseconds': nanoseconds
+//     };
+//
+//     return json..removeWhere((key, value) => value == 0);
+//   }
+// }
 
 extension DateTimeExtension on DateTime {
   Timestamp toTimestamp() => Timestamp.fromDate(this);
@@ -105,7 +130,7 @@ extension UniEventExtension on UniEvent {
         name: json['name'],
         // Convert time to UTC and then to local time
         start: (json['start'] as Timestamp).toDate(),
-        period: PeriodExtension.fromJSON(json['duration']),
+        duration: DurationExtension.fromJSON(json['duration']),
         location: json['location'],
         // TODO(IoanaAlexandru): Allow users to set event colours in settings
         color: type.color,
@@ -126,7 +151,7 @@ extension UniEventExtension on UniEvent {
         type: type,
         name: json['name'],
         start: (json['start'] as Timestamp).toDate(),
-        period: PeriodExtension.fromJSON(json['duration']),
+        duration: DurationExtension.fromJSON(json['duration']),
         location: json['location'],
         color: type.color,
         classHeader: classHeader,
@@ -145,7 +170,7 @@ extension UniEventExtension on UniEvent {
         name: json['name'],
         // Convert time to UTC and then to local time
         start: (json['start'] as Timestamp).toDate(),
-        period: PeriodExtension.fromJSON(json['duration']),
+        duration: DurationExtension.fromJSON(json['duration']),
         location: json['location'],
         // TODO(IoanaAlexandru): Allow users to set event colours in settings
         color: type.color,
@@ -168,7 +193,7 @@ extension UniEventExtension on UniEvent {
       'type': type,
       'name': name,
       'start': start.copyWithoutUtc().toTimestamp(),
-      'duration': period.toJSON(),
+      'duration': duration.toJSON(),
       'location': location,
       'class': classHeader.id,
       'degree': degree,
