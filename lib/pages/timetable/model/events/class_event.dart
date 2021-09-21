@@ -1,7 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:rrule/rrule.dart';
-import 'package:time_machine/time_machine.dart';
-
 import '../../../classes/model/class.dart';
 import '../../../people/model/person.dart';
 import '../academic_calendar.dart';
@@ -13,7 +11,7 @@ class ClassEvent extends RecurringUniEvent {
    @required this.teacher,
    @required RecurrenceRule rrule,
    @required DateTime start,
-   @required Period period,
+   @required Duration duration,
    @required String id,
    List<String> relevance,
    String degree,
@@ -30,7 +28,7 @@ class ClassEvent extends RecurringUniEvent {
            name: name,
            location: location,
            start: start,
-           period: period,
+           duration: duration,
            degree: degree,
            relevance: relevance,
            id: id,

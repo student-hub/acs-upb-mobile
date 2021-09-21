@@ -167,7 +167,7 @@ class _AddEventViewState extends State<AddEventView> {
         TextEditingController(text: widget.initialEvent?.location ?? '');
 
     final startHour = widget.initialEvent?.start?.hour ?? 8;
-    duration = widget.initialEvent?.period?.toTime()?.toDuration ??
+    duration = widget.initialEvent?.duration ??
         const Duration(hours: 2);
     startDateTime = widget.initialEvent?.start
             ?.copyWith(hour: startHour, minute: 0, second: 0, millisecond: 0)
@@ -442,7 +442,7 @@ class _AddEventViewState extends State<AddEventView> {
               teacher: selectedTeacher,
               rrule: rrule,
               start: start,
-              period: duration.toPeriod(),
+              duration: duration,
               id: widget.initialEvent?.id,
               relevance: relevanceController.customRelevance,
               degree: relevanceController.degree,

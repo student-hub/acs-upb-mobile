@@ -73,7 +73,7 @@ extension RecurringUniEventExtension on RecurringUniEvent {
   }) {
     return RecurringUniEvent(
       start: start ?? this.start,
-      period: period,
+      duration: duration,
       id: id,
       name: name,
       location: location,

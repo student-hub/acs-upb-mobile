@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart' hide Interval;
 import 'package:rrule/rrule.dart';
-import 'package:time_machine/time_machine.dart' hide Interval;
 import 'package:dart_date/dart_date.dart' show Interval;
-
+import 'package:time_machine/time_machine.dart' hide Interval;
 import '../../../../resources/locale_provider.dart';
 import '../../../../resources/utils.dart';
 import '../../../classes/model/class.dart';
@@ -14,7 +13,7 @@ class RecurringUniEvent extends UniEvent {
   const RecurringUniEvent({
     @required this.rrule,
     @required DateTime start,
-    @required Period period,
+    @required Duration duration,
     @required String id,
     List<String> relevance,
     String degree,
@@ -31,7 +30,7 @@ class RecurringUniEvent extends UniEvent {
             name: name,
             location: location,
             start: start,
-            period: period,
+            duration: duration,
             degree: degree,
             relevance: relevance,
             id: id,
@@ -97,7 +96,7 @@ class RecurringUniEvent extends UniEvent {
     // int i = 0;
 
     for (final start in rrule.getInstances(start: start.copyWithUtc())) {
-      final DateTime end = start.add(period.toTime().toDuration);
+      final DateTime end = start.add(duration);
       if (intersectingInterval != null) {
         if (end < intersectingInterval.start) continue;
         if (start > intersectingInterval.end) break;
