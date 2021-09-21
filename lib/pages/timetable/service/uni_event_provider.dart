@@ -53,40 +53,6 @@ extension DurationExtension on Duration {
   }
 }
 
-// extension PeriodExtension on Period {
-//   static Period fromJSON(Map<String, dynamic> json) {
-//     return Period(
-//       years: json['years'] ?? 0,
-//       months: json['months'] ?? 0,
-//       weeks: json['weeks'] ?? 0,
-//       days: json['days'] ?? 0,
-//       hours: json['hours'] ?? 0,
-//       minutes: json['minutes'] ?? 0,
-//       seconds: json['seconds'] ?? 0,
-//       milliseconds: json['milliseconds'] ?? 0,
-//       microseconds: json['microseconds'] ?? 0,
-//       nanoseconds: json['nanoseconds'] ?? 0,
-//     );
-//   }
-//
-//   Map<String, dynamic> toJSON() {
-//     final json = {
-//       'years': years,
-//       'months': months,
-//       'weeks': weeks,
-//       'days': days,
-//       'hours': hours,
-//       'minutes': minutes,
-//       'seconds': seconds,
-//       'milliseconds': milliseconds,
-//       'microseconds': microseconds,
-//       'nanoseconds': nanoseconds
-//     };
-//
-//     return json..removeWhere((key, value) => value == 0);
-//   }
-// }
-
 extension DateTimeExtension on DateTime {
   Timestamp toTimestamp() => Timestamp.fromDate(this);
 }

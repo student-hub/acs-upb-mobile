@@ -61,12 +61,6 @@ extension DateTimeExtension on DateTime {
   }
 }
 
-extension DurationExtension on Duration {
-  Period toPeriod() {
-    return Period(minutes: inMinutes).normalize();
-  }
-}
-
 extension RecurringUniEventExtension on RecurringUniEvent {
   RecurringUniEvent copyWith({
     DateTime start,
