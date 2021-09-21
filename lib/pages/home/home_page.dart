@@ -1,3 +1,4 @@
+import 'package:acs_upb_mobile/resources/remote_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -36,7 +37,7 @@ class HomePage extends StatelessWidget {
         children: [
           if (authProvider.isAuthenticated) ProfileCard(),
           if (authProvider.isAuthenticated && !authProvider.isAnonymous
-          && Utils.feedbackEnabled
+          && RemoteConfigService.feedbackEnabled
           )
             FeedbackNudge(),
           if (authProvider.isAuthenticated && !authProvider.isAnonymous)

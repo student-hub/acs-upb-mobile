@@ -71,9 +71,4 @@ class Utils {
     appName: '\$appName',
     packageName: '\$packageName',
   );
-
-  static bool get feedbackEnabled {
-    if (!Platform.isAndroid && !Platform.isIOS) return false;
-    return RemoteConfigService.feedbackEnabled;
-  }
 }

@@ -1,3 +1,4 @@
+import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 
 const String _feedbackEnabled = 'feedback_enabled';
@@ -14,6 +15,7 @@ class RemoteConfigService {
       : _remoteConfig?.getBool(_feedbackEnabled) ?? defaults[_feedbackEnabled];
 
   static Future<dynamic> initialize() async {
+    if (!Platform.isAndroid && !Platform.isIOS) return;
     try {
       _remoteConfig = RemoteConfig.instance;
       await _remoteConfig.setDefaults(defaults);
