@@ -38,6 +38,7 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.3
 
+  # Used for painting all day event widget
   dartx: any
 
   # Date & time picker widget
@@ -130,6 +131,7 @@ dependencies:
 
   # DateTime utilities
   time_machine:
+    # The official release doesn't have null safety yet
     git:
       url: https://github.com/Dana-Ferguson/time_machine
       ref: master
