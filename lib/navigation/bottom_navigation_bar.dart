@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
-
 import '../generated/l10n.dart';
 import '../pages/home/home_page.dart';
 import '../pages/people/view/people_page.dart';
@@ -98,7 +97,7 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar>
                     labelColor: Theme.of(context).accentColor,
                     labelPadding: const EdgeInsets.only(top: 4),
                     unselectedLabelColor:
-                    Theme.of(context).unselectedWidgetColor,
+                        Theme.of(context).unselectedWidgetColor,
                     indicatorColor: Theme.of(context).accentColor,
                   ),
                 ),

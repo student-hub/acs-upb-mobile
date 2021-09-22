@@ -92,7 +92,8 @@ class RecurringUniEvent extends UniEvent {
       {Interval intersectingInterval}) sync* {
     final RecurrenceRule rrule = rruleBasedOnCalendar;
 
-    for (final start in rrule.getInstances(start: start.copyWith(isUtc: true))) {
+    for (final start
+        in rrule.getInstances(start: start.copyWith(isUtc: true))) {
       final DateTime end = start.add(duration);
       if (intersectingInterval != null) {
         if (end < intersectingInterval.start) continue;
