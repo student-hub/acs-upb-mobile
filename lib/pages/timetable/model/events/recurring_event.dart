@@ -92,9 +92,6 @@ class RecurringUniEvent extends UniEvent {
       {Interval intersectingInterval}) sync* {
     final RecurrenceRule rrule = rruleBasedOnCalendar;
 
-    // Calculate recurrences
-    // int i = 0;
-
     for (final start in rrule.getInstances(start: start.copyWithUtc())) {
       final DateTime end = start.add(duration);
       if (intersectingInterval != null) {
@@ -113,7 +110,6 @@ class RecurringUniEvent extends UniEvent {
 
       if (!skip) {
         yield UniEventInstance(
-          // id: '$id-$i',
           title: name,
           mainEvent: this,
           color: color,
@@ -122,7 +118,6 @@ class RecurringUniEvent extends UniEvent {
           location: location,
         );
       }
-      // i++;
     }
   }
 }

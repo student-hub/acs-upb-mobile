@@ -2,7 +2,6 @@ library timetable_utils;
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:time_machine/time_machine.dart';
 
 // ignore: implementation_imports
 import 'package:timetable/src/utils.dart';
