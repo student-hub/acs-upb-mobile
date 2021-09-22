@@ -60,5 +60,4 @@ extension MonthController on DateController {
         0,
         0,
       ).toStringWithFormat('MMMM');
-// LocalDateTime(2020, this.value.monthOfYear, 1, 1, 1, 1).toString('MMMM');
 }

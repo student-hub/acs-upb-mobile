@@ -157,7 +157,7 @@ extension UniEventExtension on UniEvent {
     final json = {
       'type': type,
       'name': name,
-      'start': start.copyWith(isUtc: true).toTimestamp(),
+      'start': start.copyWith(isUtc: false).toTimestamp(),
       'duration': duration.toJSON(),
       'location': location,
       'class': classHeader.id,

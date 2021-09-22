@@ -167,11 +167,9 @@ class _AddEventViewState extends State<AddEventView> {
         TextEditingController(text: widget.initialEvent?.location ?? '');
 
     final startHour = widget.initialEvent?.start?.hour ?? 8;
-    duration = widget.initialEvent?.duration ??
-        const Duration(hours: 2);
+    duration = widget.initialEvent?.duration ?? const Duration(hours: 2);
     startDateTime = widget.initialEvent?.start
-            ?.copyWith(hour: startHour, minute: 0, second: 0, millisecond: 0)
-            ?.copyWith(isUtc: true) ??
+            ?.copyWith(hour: startHour, minute: 0, second: 0, millisecond: 0) ??
         0;
 
     List<_DayOfWeek> initialWeekDays = [
@@ -415,8 +413,9 @@ class _AddEventViewState extends State<AddEventView> {
         onPressed: () async {
           if (!formKey.currentState.validate()) return;
 
-          DateTime start =
-              semester.startDate.at(dateTime: startDateTime).copyWith(isUtc: true);
+          DateTime start = semester.startDate
+              .at(dateTime: startDateTime)
+              .copyWith(isUtc: true);
           if (weekSelected[WeekType.even] && !weekSelected[WeekType.odd]) {
             // Event is every even week, add a week to start date
             start = start.addDays(7);
@@ -781,8 +780,7 @@ extension TimeOfDayExtension on TimeOfDay {
 
 extension DateTimeComparisons on DateTime {
   bool isDuring(AllDayUniEvent semester) {
-    return Interval(semester.startDate, semester.endDate)
-        .includes(this);
+    return Interval(semester.startDate, semester.endDate).includes(this);
   }
 
   bool isBeforeOrDuring(AllDayUniEvent semester) {
