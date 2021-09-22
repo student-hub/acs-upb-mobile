@@ -159,7 +159,7 @@ class _TimetablePageState extends State<TimetablePage>
                                   },
                                   child: AddEventView(
                                     initialEvent: UniEvent(
-                                        start: dateTime.copyWithUtc(),
+                                        start: dateTime.copyWith(isUtc: true),
                                         duration: const Duration(hours: 2),
                                         id: null),
                                   ),
@@ -253,9 +253,9 @@ class _TimetablePageState extends State<TimetablePage>
               // Pop the dialog
               Navigator.of(context).pop();
               // Push the Add classes page
-              await Navigator.of(context)
-                  .push(MaterialPageRoute<ChangeNotifierProvider>(
-                builder: (_) => ChangeNotifierProvider.value(
+              await Navigator.of(context).push(
+                MaterialPageRoute<ChangeNotifierProvider>(
+                  builder: (_) => ChangeNotifierProvider.value(
                     value: classProvider,
                     child: FutureBuilder(
                       future: classProvider.fetchUserClassIds(user.uid),
@@ -273,8 +273,10 @@ class _TimetablePageState extends State<TimetablePage>
                               child: CircularProgressIndicator());
                         }
                       },
-                    )),
-              ));
+                    ),
+                  ),
+                ),
+              );
             },
           )
         ],

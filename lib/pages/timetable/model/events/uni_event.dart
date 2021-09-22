@@ -142,8 +142,8 @@ class UniEvent {
       title: name,
       mainEvent: this,
       color: color,
-      start: start.copyWithUtc(),
-      end: start.add(duration).copyWithUtc(),
+      start: start.copyWith(isUtc: true),
+      end: start.add(duration).copyWith(isUtc: true),
       location: location,
     );
   }
@@ -208,5 +208,25 @@ class UniEventInstance extends Event {
       string += end.toStringWithFormat('HH:mm');
     }
     return string;
+  }
+
+  UniEventInstance copyWith({
+    DateTime start,
+    DateTime end,
+    String title,
+    UniEvent mainEvent,
+    Color color,
+    String location,
+    String info,
+  }) {
+    return UniEventInstance(
+      start: start ?? this.start,
+      end: end ?? this.end,
+      title: title ?? this.title,
+      mainEvent: mainEvent ?? this.mainEvent,
+      color: color ?? this.color,
+      location: location ?? this.location,
+      info: info ?? this.info,
+    );
   }
 }

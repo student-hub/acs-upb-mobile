@@ -49,54 +49,6 @@ extension DateTimeExtension on DateTime {
       minute: minute,
     );
   }
-
-  /// Returns the same DateTime with isUtc set as true to avoid hour changes from original toUtc() function of [DateTime]
-  DateTime copyWithUtc() {
-    return copyWith(hour: hour, isUtc: true);
-  }
-
-  DateTime copyWithoutUtc() {
-    return copyWith(hour: hour, isUtc: false);
-  }
-}
-
-extension RecurringUniEventExtension on RecurringUniEvent {
-  RecurringUniEvent copyWith({
-    DateTime start,
-  }) {
-    return RecurringUniEvent(
-      start: start ?? this.start,
-      duration: duration,
-      id: id,
-      name: name,
-      location: location,
-      color: color,
-      type: type,
-      classHeader: classHeader,
-      calendar: calendar,
-      relevance: relevance,
-      degree: degree,
-      addedBy: addedBy,
-      editable: editable,
-      rrule: rrule,
-    );
-  }
-}
-
-extension UniEventInstanceExtension on UniEventInstance {
-  UniEventInstance copyWith({
-    DateTime start,
-    DateTime end,
-  }) {
-    return UniEventInstance(
-        start: start ?? this.start,
-        end: end ?? this.end,
-        title: title,
-        mainEvent: mainEvent,
-        color: color,
-        location: location,
-        info: info);
-  }
 }
 
 extension MonthController on DateController {

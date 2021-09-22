@@ -74,8 +74,8 @@ extension UniEventExtension on UniEvent {
         id: id,
         type: type,
         name: json['name'],
-        start: (json['start'] as Timestamp).toDate().copyWithUtc(),
-        end: (json['end'] as Timestamp).toDate().copyWithUtc(),
+        start: (json['start'] as Timestamp).toDate().copyWith(isUtc: true),
+        end: (json['end'] as Timestamp).toDate().copyWith(isUtc: true),
         location: json['location'],
         // TODO(#168)
         color: type.color,
@@ -157,7 +157,7 @@ extension UniEventExtension on UniEvent {
     final json = {
       'type': type,
       'name': name,
-      'start': start.copyWithoutUtc().toTimestamp(),
+      'start': start.copyWith(isUtc: true).toTimestamp(),
       'duration': duration.toJSON(),
       'location': location,
       'class': classHeader.id,
@@ -323,9 +323,8 @@ class UniEventProvider with ChangeNotifier {
       (events) => events
           .expand((i) => i)
           .map(
-            (UniEventInstance event) => event.copyWith(
-                start: event.start,
-                end: event.end),
+            (UniEventInstance event) =>
+                event.copyWith(start: event.start, end: event.end),
           )
           .toList(),
     );
@@ -451,12 +450,6 @@ class UniEventProvider with ChangeNotifier {
       _errorHandler(e);
       return false;
     }
-  }
-
-  @override
-  // ignore: must_call_super
-  void dispose() {
-    // TODO(IoanaAlexandru): Find a better way to prevent Timetable from calling dispose on this provider
   }
 
   void _errorHandler(dynamic e, {bool showToast = true}) {
