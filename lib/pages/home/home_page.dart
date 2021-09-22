@@ -1,4 +1,3 @@
-import 'package:acs_upb_mobile/resources/remote_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -6,6 +5,7 @@ import 'package:provider/provider.dart';
 import '../../authentication/service/auth_provider.dart';
 import '../../generated/l10n.dart';
 import '../../navigation/routes.dart';
+import '../../resources/remote_config.dart';
 import '../../widgets/scaffold.dart';
 import 'faq_card.dart';
 import 'favourite_websites_card.dart';

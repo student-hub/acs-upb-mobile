@@ -6,9 +6,6 @@ import 'package:intl/intl.dart';
 // ignore: implementation_imports
 import 'package:timetable/src/utils.dart';
 import 'package:timetable/timetable.dart';
-
-import 'model/events/recurring_event.dart';
-import 'model/events/uni_event.dart';
 export 'package:timetable/src/utils.dart';
 
 extension DateTimeExtension on DateTime {
