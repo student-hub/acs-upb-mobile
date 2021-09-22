@@ -1,3 +1,5 @@
+// ignore_for_file: flutter_style_todos
+
 import 'package:flutter/material.dart' hide Interval;
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:provider/provider.dart';
@@ -56,7 +58,7 @@ class _TimetablePageState extends State<TimetablePage>
     if (_timeController == null) {
       _timeController = TimeController(
         initialRange: TimeRange(7.hours + 55.minutes, 20.hours + 5.minutes),
-        // TODO(IoanaAlexandru): Make initialTimeRange customizable in settings
+        // TODO(#99)
         maxRange: TimeRange(0.hours, 24.hours),
       );
 
@@ -115,11 +117,11 @@ class _TimetablePageState extends State<TimetablePage>
                         .getEventsIntersecting(
                   Interval(
                     // Events are preloaded for previous, current and next page
-                    DateTimeTimetable.dateFromPage(value.page.floor()) - 7.days,
                     DateTimeTimetable.dateFromPage(
-                          value.page.ceil() + value.visibleDayCount,
-                        ) +
-                        7.days,
+                        value.page.floor() - value.visibleDayCount),
+                    DateTimeTimetable.dateFromPage(
+                      value.page.ceil() + value.visibleDayCount,
+                    ),
                   ),
                 );
 
@@ -127,9 +129,13 @@ class _TimetablePageState extends State<TimetablePage>
                   stream: eventsInRange,
                   builder: (context,
                       AsyncSnapshot<List<UniEventInstance>> snapshot) {
-                    if (snapshot.data == null || snapshot.hasError) {
-                      // TODO(bogpie): Handle loading and error states
+                    if (snapshot.hasError) {
+                      AppToast.show(S.current.errorSomethingWentWrong);
                       return Container();
+                    } else {
+                      if (snapshot.hasData == false) {
+                        return const Center(child: CircularProgressIndicator());
+                      }
                     }
 
                     return TimetableConfig<UniEventInstance>(
@@ -204,16 +210,17 @@ class _TimetablePageState extends State<TimetablePage>
         await Future<void>.delayed(const Duration(milliseconds: 100));
 
         // Show dialog if there are no events
-        // final eventProvider =
-        //     Provider.of<UniEventProvider>(context, listen: false);
-        // if (eventProvider != null) {
-        //   if (eventProvider.empty) {
-        //     await showDialog<String>(
-        //       context: context,
-        //       builder: buildDialog,
-        //     );
-        //   }
-        // }
+        final eventProvider =
+            Provider.of<UniEventProvider>(context, listen: false);
+
+        if (eventProvider != null) {
+          if (eventProvider.empty) {
+            await showDialog<String>(
+              context: context,
+              builder: buildDialog,
+            );
+          }
+        }
       },
     );
   }
