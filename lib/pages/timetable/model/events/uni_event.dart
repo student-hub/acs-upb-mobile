@@ -139,7 +139,6 @@ class UniEvent {
     }
 
     yield UniEventInstance(
-      // id: id,
       title: name,
       mainEvent: this,
       color: color,

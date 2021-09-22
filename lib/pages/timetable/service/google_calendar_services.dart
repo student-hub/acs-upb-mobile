@@ -14,7 +14,7 @@ import 'uni_event_provider.dart';
 class GoogleCalendarServices {
   const GoogleCalendarServices();
 
-  // Allows us to see, edit, share, and permanently delete all the calendars you can access using GCal
+  // Allows us to see, edit, share, and permanently delete all the calendars you can access using GCal.
   static const List<String> _scopes = [CalendarApi.calendarScope];
 
   static List<String> get scopes => _scopes;
@@ -75,7 +75,7 @@ extension UniEventProviderGoogleCalendar on UniEventProvider {
     return googleCalendarEvent;
   }
 
-  // This opens a browser window asking the user to authenticate and allow access to edit their calendar
+  // This opens a browser window asking the user to authenticate and allow access to edit their calendar.
   Future<void> insertGoogleEvents(
       List<g_cal.Event> googleCalendarEvents) async {
     AutoRefreshingAuthClient client;

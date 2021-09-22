@@ -1,3 +1,5 @@
+// ignore_for_file: flutter_style_todos
+
 import 'dart:async';
 
 import 'package:async/async.dart';
@@ -72,11 +74,10 @@ extension UniEventExtension on UniEvent {
         id: id,
         type: type,
         name: json['name'],
-        // Convert time to UTC and then to local time
-        start: (json['start'] as Timestamp).toDate(),
-        end: (json['end'] as Timestamp).toDate(),
+        start: (json['start'] as Timestamp).toDate().copyWithUtc(),
+        end: (json['end'] as Timestamp).toDate().copyWithUtc(),
         location: json['location'],
-        // TODO(IoanaAlexandru): Allow users to set event colours in settings
+        // TODO(#168)
         color: type.color,
         classHeader: classHeader,
         calendar: calendars[json['calendar']],
@@ -94,11 +95,10 @@ extension UniEventExtension on UniEvent {
         id: id,
         type: type,
         name: json['name'],
-        // Convert time to UTC and then to local time
         start: (json['start'] as Timestamp).toDate(),
         duration: DurationExtension.fromJSON(json['duration']),
         location: json['location'],
-        // TODO(IoanaAlexandru): Allow users to set event colours in settings
+        // TODO(#168)
         color: type.color,
         classHeader: classHeader,
         calendar: calendars[json['calendar']],
@@ -134,11 +134,10 @@ extension UniEventExtension on UniEvent {
         id: id,
         type: type,
         name: json['name'],
-        // Convert time to UTC and then to local time
         start: (json['start'] as Timestamp).toDate(),
         duration: DurationExtension.fromJSON(json['duration']),
         location: json['location'],
-        // TODO(IoanaAlexandru): Allow users to set event colours in settings
+        // TODO(#168)
         color: type.color,
         classHeader: classHeader,
         calendar: calendars[json['calendar']],
@@ -152,7 +151,7 @@ extension UniEventExtension on UniEvent {
     }
   }
 
-  Map<String, dynamic> toData() {
+  Map<String, dynamic> toJSON() {
     final type = this.type.toShortString();
 
     final json = {
@@ -320,11 +319,16 @@ class UniEventProvider with ChangeNotifier {
     final StreamZip<Iterable<UniEventInstance>> stream = StreamZip(streams);
 
     // Flatten zipped streams
-    return stream.map((events) => events
-        .expand((i) => i)
-        .map((UniEventInstance event) => event.copyWith(
-            start: event.start.copyWithUtc(), end: event.end.copyWithUtc()))
-        .toList());
+    return stream.map(
+      (events) => events
+          .expand((i) => i)
+          .map(
+            (UniEventInstance event) => event.copyWith(
+                start: event.start,
+                end: event.end),
+          )
+          .toList(),
+    );
   }
 
   Iterable<AllDayUniEvent> getAllDayUniEventsForCalendar(AcademicCalendar cal) {
@@ -409,7 +413,7 @@ class UniEventProvider with ChangeNotifier {
 
   Future<bool> addEvent(UniEvent event) async {
     try {
-      await FirebaseFirestore.instance.collection('events').add(event.toData());
+      await FirebaseFirestore.instance.collection('events').add(event.toJSON());
       notifyListeners();
       return true;
     } catch (e) {
@@ -427,7 +431,7 @@ class UniEventProvider with ChangeNotifier {
         return false;
       }
 
-      await ref.update(event.toData());
+      await ref.update(event.toJSON());
       notifyListeners();
       return true;
     } catch (e) {

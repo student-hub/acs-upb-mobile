@@ -164,6 +164,7 @@ class FilterPageState extends State<FilterPage> {
                 ..updateFilter(filter);
               if (widget.onSubmit != null) {
                 widget.onSubmit();
+                // TODO(bogpie): Refresh events after updating filters
               }
               Navigator.of(context).pop();
             } else {
