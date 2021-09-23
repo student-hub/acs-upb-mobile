@@ -1,6 +1,8 @@
+import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/navigation/service/app_navigator.dart';
 import 'package:acs_upb_mobile/pages/home/home_page.dart';
 import 'package:acs_upb_mobile/pages/home/profile_card.dart';
+import 'package:acs_upb_mobile/pages/settings/view/settings_page.dart';
 import 'package:acs_upb_mobile/resources/banner.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/widgets/icon_text.dart';
@@ -48,12 +50,13 @@ class _DummySearchBarState extends State<DummySearchBar> {
             flex: 3,
           ),
           SizedBox(
+            width: 100,
             child: Padding(
               padding: const EdgeInsets.all(25),
               child: PopupMenuButton(
                 color: Theme.of(context).backgroundColor,
                 offset: const Offset(-5, 45),
-                tooltip: 'Profile Menu',
+                tooltip: S.current.navigationProfile,
                 child: const CircleAvatar(
                   radius: 25,
                   backgroundImage: AssetImage(
@@ -72,17 +75,17 @@ class _DummySearchBarState extends State<DummySearchBar> {
                     PopupMenuItem(
                       child: IconText(
                         icon: Icons.settings,
-                        text: 'Settings',
+                        text: S.current.navigationSettings,
                         onTap: () {
-                          // TODO(RazvanRotaru): add SettingsPage view
-                          print('Goto Settings');
+                          AppNavigator.pushNamed(
+                              context, SettingsPage.routeName);
                         },
                       ),
                     ),
                     PopupMenuItem(
                       child: IconText(
                         icon: Icons.logout,
-                        text: 'Log Out',
+                        text: S.current.actionLogOut,
                         onTap: () {
                           Utils.signOut(context);
                         },
@@ -92,7 +95,6 @@ class _DummySearchBarState extends State<DummySearchBar> {
                 },
               ),
             ),
-            width: 100,
           )
         ],
       ),
