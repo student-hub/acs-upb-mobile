@@ -240,7 +240,8 @@ class _LoginViewState extends State<LoginView> {
                               ),
                               InkWell(
                                 onTap: () {
-                                  AppNavigator.pushNamed(context, Routes.signUp);
+                                  AppNavigator.pushNamed(
+                                      context, Routes.signUp);
                                 },
                                 child: Text(S.current.actionSignUp,
                                     style: Theme.of(context)
