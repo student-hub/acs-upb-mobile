@@ -43,11 +43,6 @@ extension DurationExtension on Duration {
 
   Map<String, dynamic> toJSON() {
     final json = {
-      'days': 0,
-      'hours': 0,
-      'minutes': 0,
-      'seconds': 0,
-      'milliseconds': 0,
       'microseconds': inMicroseconds,
     };
 
