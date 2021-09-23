@@ -26,8 +26,6 @@ class MainRouterDelegate extends AppRouterDelegate {
 
   final GlobalKey<NavigatorState> _navigatorKey;
   final NavigationProvider _navigationProvider;
-
-  // Providers
   AuthProvider _authProvider;
 
   @override
@@ -67,7 +65,6 @@ class MainRouterDelegate extends AppRouterDelegate {
         if (!route.didPop(result)) {
           return false;
         }
-        print('onPopPage called');
         _navigationProvider.reset();
 
         // Motivation
@@ -90,10 +87,6 @@ class MainRouterDelegate extends AppRouterDelegate {
 
   @override
   RoutePath get currentConfiguration {
-    print('\n---------------\n'
-        'getConfiguration: $_navigationProvider'
-        '\n-------------');
-
     if (!_navigationProvider.isInitialized) {
       return RootPath();
     }
@@ -103,11 +96,6 @@ class MainRouterDelegate extends AppRouterDelegate {
 
   @override
   Future<void> setNewRoutePath(RoutePath configuration) async {
-    print('\n---------------\n'
-        'setNewRoute: $configuration'
-        '\n$_navigationProvider'
-        '\n-------------');
-
     _navigationProvider.reset();
 
     if (configuration is LoginPath) {
@@ -162,6 +150,6 @@ class InnerRouterDelegate extends AppRouterDelegate {
 
   @override
   Future<void> setNewRoutePath(RoutePath configuration) async {
-    assert(false);
+    return;
   }
 }
