@@ -142,114 +142,122 @@ class _LoginViewState extends State<LoginView> {
         }
       },
       child: Scaffold(
-        body: Stack(
-          fit: StackFit.expand,
-          children: <Widget>[
-            Align(
-              alignment: FractionalOffset.topRight,
-              child: Padding(
-                padding: const EdgeInsets.all(10),
-                child: Container(
-                    height: MediaQuery.of(context).size.height / 3,
-                    child: Image.asset(
-                        'assets/illustrations/undraw_digital_nomad.png')),
-              ),
-            ),
-            Align(
-              alignment: FractionalOffset.bottomCenter,
-              child: ConstrainedBox(
-                constraints: BoxConstraints(
-                  maxHeight: MediaQuery.of(context).size.height / 4,
-                  maxWidth: MediaQuery.of(context).size.width,
-                ),
-                child: FittedBox(
-                  fit: BoxFit.contain,
-                  child: ConstrainedBox(
-                    constraints: const BoxConstraints(
-                      minWidth: 1,
-                      minHeight: 1,
-                    ),
-                    child: Image.asset('assets/images/city_doodle.png',
-                        color: Theme.of(context).accentColor.withOpacity(0.4)),
-                  ),
-                ),
-              ),
-            ),
-            SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.only(left: 28, right: 28, bottom: 10),
-                child: IntrinsicHeight(
-                  child: Column(
-                    children: <Widget>[
-                      SizedBox(
+        body: Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 800),
+            child: Stack(
+              fit: StackFit.expand,
+              children: <Widget>[
+                Align(
+                  alignment: FractionalOffset.topRight,
+                  child: Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: Container(
                         height: MediaQuery.of(context).size.height / 3,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: <Widget>[
-                            UniBanner(),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      Expanded(child: loginForm),
-                      const SizedBox(height: 20),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Expanded(
-                            child: AppButton(
-                              key: const ValueKey('log_in_anonymously_button'),
-                              text: S.current.actionLogInAnonymously,
-                              onTap: () async {
-                                final result =
-                                    await authProvider.signInAnonymously();
-                                if (result) {
-                                  await AppNavigator.pushReplacementNamed(
-                                      context, Routes.home);
-                                }
-                              },
-                            ),
-                          ),
-                          const SizedBox(width: 20),
-                          Expanded(
-                            child: AppButton(
-                              key: const ValueKey('log_in_button'),
-                              color: Theme.of(context).accentColor,
-                              text: S.current.actionLogIn,
-                              onTap: () => loginForm.submit(),
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 30),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Text(
-                            '${S.current.messageNewUser} ',
-                            style: Theme.of(context)
-                                .textTheme
-                                .subtitle1
-                                .copyWith(fontWeight: FontWeight.w400),
-                          ),
-                          InkWell(
-                            onTap: () {
-                              AppNavigator.pushNamed(context, Routes.signUp);
-                            },
-                            child: Text(S.current.actionSignUp,
-                                style: Theme.of(context)
-                                    .accentTextTheme
-                                    .subtitle1
-                                    .copyWith(fontWeight: FontWeight.w500)),
-                          ),
-                        ],
-                      )
-                    ],
+                        child: Image.asset(
+                            'assets/illustrations/undraw_digital_nomad.png')),
                   ),
                 ),
-              ),
-            )
-          ],
+                Align(
+                  alignment: FractionalOffset.bottomCenter,
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(
+                      maxHeight: MediaQuery.of(context).size.height / 4,
+                      maxWidth: MediaQuery.of(context).size.width,
+                    ),
+                    child: FittedBox(
+                      fit: BoxFit.contain,
+                      child: ConstrainedBox(
+                        constraints: const BoxConstraints(
+                          minWidth: 1,
+                          minHeight: 1,
+                        ),
+                        child: Image.asset('assets/images/city_doodle.png',
+                            color:
+                                Theme.of(context).accentColor.withOpacity(0.4)),
+                      ),
+                    ),
+                  ),
+                ),
+                SingleChildScrollView(
+                  child: Padding(
+                    padding:
+                        const EdgeInsets.only(left: 28, right: 28, bottom: 10),
+                    child: IntrinsicHeight(
+                      child: Column(
+                        children: <Widget>[
+                          SizedBox(
+                            height: MediaQuery.of(context).size.height / 3,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: <Widget>[
+                                UniBanner(),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          Expanded(child: loginForm),
+                          const SizedBox(height: 20),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Expanded(
+                                child: AppButton(
+                                  key: const ValueKey(
+                                      'log_in_anonymously_button'),
+                                  text: S.current.actionLogInAnonymously,
+                                  onTap: () async {
+                                    final result =
+                                        await authProvider.signInAnonymously();
+                                    if (result) {
+                                      await AppNavigator.pushReplacementNamed(
+                                          context, Routes.home);
+                                    }
+                                  },
+                                ),
+                              ),
+                              const SizedBox(width: 20),
+                              Expanded(
+                                child: AppButton(
+                                  key: const ValueKey('log_in_button'),
+                                  color: Theme.of(context).accentColor,
+                                  text: S.current.actionLogIn,
+                                  onTap: () => loginForm.submit(),
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 30),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Text(
+                                '${S.current.messageNewUser} ',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .subtitle1
+                                    .copyWith(fontWeight: FontWeight.w400),
+                              ),
+                              InkWell(
+                                onTap: () {
+                                  AppNavigator.pushNamed(context, Routes.signUp);
+                                },
+                                child: Text(S.current.actionSignUp,
+                                    style: Theme.of(context)
+                                        .accentTextTheme
+                                        .subtitle1
+                                        .copyWith(fontWeight: FontWeight.w500)),
+                              ),
+                            ],
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                )
+              ],
+            ),
+          ),
         ),
       ),
     );
