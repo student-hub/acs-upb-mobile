@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:core';
 import 'dart:math';
 
-import 'package:acs_upb_mobile/navigation/model/navigation_state.dart';
+import 'package:acs_upb_mobile/navigation/service/navigation_provider.dart';
 import 'package:acs_upb_mobile/navigation/service/app_navigator.dart';
 
 import 'package:flutter/foundation.dart';
@@ -40,7 +40,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
 
     widget.navigateAfterFuture.then((navigateTo) {
       if (kIsWeb) {
-        Provider.of<NavigationStateProvider>(context, listen: false)
+        Provider.of<NavigationProvider>(context, listen: false)
             .isInitialized = true;
       }
 

@@ -1,5 +1,5 @@
 import 'package:acs_upb_mobile/generated/l10n.dart';
-import 'package:acs_upb_mobile/navigation/model/navigation_state.dart';
+import 'package:acs_upb_mobile/navigation/service/navigation_provider.dart';
 import 'package:acs_upb_mobile/navigation/service/app_router_delegates.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
@@ -7,9 +7,9 @@ import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'dummy_search_bar.dart';
 
 class WebShell extends StatefulWidget {
-  WebShell({Key key, this.navigationState}) : super(key: key);
+  WebShell({Key key, this.navigationProvider}) : super(key: key);
 
-  final NavigationStateProvider navigationState;
+  final NavigationProvider navigationProvider;
   final PageStorageBucket bucket = PageStorageBucket();
 
   @override
@@ -24,7 +24,7 @@ class _WebShellState extends State<WebShell> {
   void initState() {
     super.initState();
     _innerRouterDelegate =
-        InnerRouterDelegate(navigationState: widget.navigationState);
+        InnerRouterDelegate(navigationProvider: widget.navigationProvider);
   }
 
   @override
@@ -43,7 +43,7 @@ class _WebShellState extends State<WebShell> {
 
   void handleNavigationBar(int index) {
     setState(() {
-      widget.navigationState.selectedTab = index;
+      widget.navigationProvider.selectedTab = index;
     });
   }
 
@@ -63,7 +63,7 @@ class _WebShellState extends State<WebShell> {
               child: IconButton(
                 onPressed: () {
                   setState(() {
-                    widget.navigationState.toggleDrawer();
+                    widget.navigationProvider.toggleDrawer();
                   });
                 },
                 icon: const Icon(Icons.menu),
@@ -77,9 +77,9 @@ class _WebShellState extends State<WebShell> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           NavigationRail(
-            selectedIndex: widget.navigationState.selectedTab,
+            selectedIndex: widget.navigationProvider.selectedTab,
             onDestinationSelected: handleNavigationBar,
-            extended: widget.navigationState.isDrawerExtended,
+            extended: widget.navigationProvider.isDrawerExtended,
             labelType: NavigationRailLabelType.none,
             destinations: [
               NavigationRailDestination(

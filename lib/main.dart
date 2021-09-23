@@ -43,9 +43,9 @@ import 'package:rrule/rrule.dart';
 import 'package:time_machine/time_machine.dart';
 
 import 'authentication/view/edit_profile_page.dart';
-import 'navigation/model/navigation_state.dart';
 import 'navigation/model/routes.dart';
 import 'navigation/service/app_router_delegates.dart';
+import 'navigation/service/navigation_provider.dart';
 import 'navigation/view/bottom_navigation_bar.dart';
 
 // FIXME: Our university website certificates have some issues, so we say we
@@ -78,11 +78,11 @@ Future<void> main() async {
   final classProvider = ClassProvider();
   final personProvider = PersonProvider();
   final feedbackProvider = FeedbackProvider();
-  final appStateProvider = NavigationStateProvider();
+  final navigationProvider = NavigationProvider();
 
   runApp(MultiProvider(providers: [
-    ChangeNotifierProvider<NavigationStateProvider>(
-        create: (_) => appStateProvider),
+    ChangeNotifierProvider<NavigationProvider>(
+        create: (_) => navigationProvider),
     ChangeNotifierProvider<AuthProvider>(create: (_) => authProvider),
     ChangeNotifierProvider<WebsiteProvider>(create: (_) => WebsiteProvider()),
     Provider<RequestProvider>(create: (_) => RequestProvider()),
@@ -136,7 +136,7 @@ class _MyAppState extends State<MyApp> {
         supportedLocales: S.delegate.supportedLocales,
         theme: theme,
         routerDelegate: MainRouterDelegate(
-          navigationState: Provider.of<NavigationStateProvider>(context),
+          navigationProvider: Provider.of<NavigationProvider>(context),
         ),
         routeInformationParser: AppRouteInformationParser(),
       );

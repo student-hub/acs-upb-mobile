@@ -2,8 +2,8 @@ import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/authentication/view/login_view.dart';
 import 'package:acs_upb_mobile/authentication/view/sign_up_view.dart';
 import 'package:acs_upb_mobile/main.dart';
-import 'package:acs_upb_mobile/navigation/model/navigation_state.dart';
 import 'package:acs_upb_mobile/navigation/model/route_paths.dart';
+import 'package:acs_upb_mobile/navigation/service/navigation_provider.dart';
 import 'package:acs_upb_mobile/navigation/view/web_shell.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -18,14 +18,14 @@ abstract class AppRouterDelegate extends RouterDelegate<RoutePath>
 }
 
 class MainRouterDelegate extends AppRouterDelegate {
-  MainRouterDelegate({@required NavigationStateProvider navigationState})
+  MainRouterDelegate({@required NavigationProvider navigationProvider})
       : _navigatorKey = GlobalKey<NavigatorState>(),
-        _navigationState = navigationState {
-    _navigationState.addListener(notifyListeners);
+        _navigationProvider = navigationProvider {
+    _navigationProvider.addListener(notifyListeners);
   }
 
   final GlobalKey<NavigatorState> _navigatorKey;
-  final NavigationStateProvider _navigationState;
+  final NavigationProvider _navigationProvider;
 
   // Providers
   AuthProvider _authProvider;
@@ -40,17 +40,17 @@ class MainRouterDelegate extends AppRouterDelegate {
     return Navigator(
       key: _navigatorKey,
       pages: [
-        if (!_navigationState.isInitialized)
+        if (!_navigationProvider.isInitialized)
           MaterialPage(
             child: AppLoadingScreen(),
             key: const ValueKey<String>('LoadingScreen'),
           ),
-        if (_navigationState.isInitialized) ...[
+        if (_navigationProvider.isInitialized) ...[
           MaterialPage(
             child: LoginView(),
             key: const ValueKey<String>(LoginView.routeName),
           ),
-          if (_navigationState.path.location == SignUpView.routeName)
+          if (_navigationProvider.path.location == SignUpView.routeName)
             MaterialPage(
               child: SignUpView(),
               key: const ValueKey<String>(LoginView.routeName),
@@ -58,7 +58,7 @@ class MainRouterDelegate extends AppRouterDelegate {
           if (_authProvider.isAuthenticated)
             MaterialPage<Widget>(
               child: WebShell(
-                navigationState: _navigationState,
+                navigationProvider: _navigationProvider,
               ),
             ),
         ],
@@ -68,7 +68,7 @@ class MainRouterDelegate extends AppRouterDelegate {
           return false;
         }
         print('onPopPage called');
-        _navigationState.reset();
+        _navigationProvider.reset();
 
         // Motivation
         /// This may lead to problems as the key is not always represented by the location
@@ -80,7 +80,7 @@ class MainRouterDelegate extends AppRouterDelegate {
         final routePath = PathFactory.from(uri);
 
         if (!(routePath is UnknownPath)) {
-          _navigationState.path = routePath;
+          _navigationProvider.path = routePath;
         }
 
         return true;
@@ -91,44 +91,44 @@ class MainRouterDelegate extends AppRouterDelegate {
   @override
   RoutePath get currentConfiguration {
     print('\n---------------\n'
-        'getConfiguration: $_navigationState'
+        'getConfiguration: $_navigationProvider'
         '\n-------------');
 
-    if (!_navigationState.isInitialized) {
+    if (!_navigationProvider.isInitialized) {
       return RootPath();
     }
 
-    return _navigationState.path;
+    return _navigationProvider.path;
   }
 
   @override
   Future<void> setNewRoutePath(RoutePath configuration) async {
     print('\n---------------\n'
         'setNewRoute: $configuration'
-        '\n$_navigationState'
+        '\n$_navigationProvider'
         '\n-------------');
 
-    _navigationState.reset();
+    _navigationProvider.reset();
 
     if (configuration is LoginPath) {
       if (_authProvider.isAuthenticated) {
-        _navigationState.path = HomePath();
+        _navigationProvider.path = HomePath();
         return;
       } else {
-        _navigationState.isDrawerExtended = false;
+        _navigationProvider.isDrawerExtended = false;
       }
     }
 
-    _navigationState.path = configuration;
+    _navigationProvider.path = configuration;
   }
 }
 
 class InnerRouterDelegate extends AppRouterDelegate {
-  InnerRouterDelegate({@required NavigationStateProvider navigationState})
-      : _navigationState = navigationState;
+  InnerRouterDelegate({@required NavigationProvider navigationProvider})
+      : _navigationProvider = navigationProvider;
 
   final GlobalKey<NavigatorState> _navigatorKey = GlobalKey<NavigatorState>();
-  final NavigationStateProvider _navigationState;
+  final NavigationProvider _navigationProvider;
 
   @override
   GlobalKey<NavigatorState> get navigatorKey => _navigatorKey;
@@ -139,13 +139,13 @@ class InnerRouterDelegate extends AppRouterDelegate {
       key: _navigatorKey,
       pages: <Page<dynamic>>[
         MaterialPage(
-          child: _navigationState.path.page,
-          key: ValueKey<String>(_navigationState.path.location),
+          child: _navigationProvider.path.page,
+          key: ValueKey<String>(_navigationProvider.path.location),
         ),
-        if (_navigationState.customView != null)
+        if (_navigationProvider.customView != null)
           MaterialPage(
-            child: _navigationState.customView,
-            key: ValueKey<String>('${_navigationState.customView.hashCode}'),
+            child: _navigationProvider.customView,
+            key: ValueKey<String>('${_navigationProvider.customView.hashCode}'),
           )
       ],
       onPopPage: (route, result) {
@@ -153,7 +153,7 @@ class InnerRouterDelegate extends AppRouterDelegate {
           return false;
         }
 
-        _navigationState.reset();
+        _navigationProvider.reset();
         notifyListeners();
         return true;
       },

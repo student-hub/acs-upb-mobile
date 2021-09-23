@@ -1,4 +1,4 @@
-import 'package:acs_upb_mobile/navigation/model/navigation_state.dart';
+import 'package:acs_upb_mobile/navigation/service/navigation_provider.dart';
 import 'package:acs_upb_mobile/navigation/model/route_paths.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -12,7 +12,7 @@ class AppNavigator {
       assert(webPath != null);
       assert(route is MaterialPageRoute);
 
-      Provider.of<NavigationStateProvider>(context, listen: false)
+      Provider.of<NavigationProvider>(context, listen: false)
         ..path = PathFactory.from(Uri.parse(webPath))
         ..customView = (route as MaterialPageRoute).buildContent(context);
 
@@ -28,7 +28,7 @@ class AppNavigator {
     Object arguments,
   }) {
     if (kIsWeb) {
-      Provider.of<NavigationStateProvider>(context, listen: false).path =
+      Provider.of<NavigationProvider>(context, listen: false).path =
           PathFactory.from(Uri.parse(routeName));
 
       return Future.value(null);
@@ -45,7 +45,7 @@ class AppNavigator {
     Object arguments,
   }) {
     if (kIsWeb) {
-      Provider.of<NavigationStateProvider>(context, listen: false).path =
+      Provider.of<NavigationProvider>(context, listen: false).path =
           PathFactory.from(Uri.parse(newRouteName));
 
       return Future.value(null);
@@ -65,7 +65,7 @@ class AppNavigator {
     if (kIsWeb) {
       assert(webPath != null);
       assert(newRoute is MaterialPageRoute);
-      Provider.of<NavigationStateProvider>(context, listen: false)
+      Provider.of<NavigationProvider>(context, listen: false)
         ..path = PathFactory.from(Uri.parse(webPath))
         ..customView = (newRoute as MaterialPageRoute).buildContent(context);
 
@@ -83,7 +83,7 @@ class AppNavigator {
     Object arguments,
   }) {
     if (kIsWeb) {
-      Provider.of<NavigationStateProvider>(context, listen: false).path =
+      Provider.of<NavigationProvider>(context, listen: false).path =
           PathFactory.from(Uri.parse(routeName));
 
       return Future.value(null);

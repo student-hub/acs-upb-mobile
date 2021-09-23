@@ -5,7 +5,7 @@ import 'package:acs_upb_mobile/pages/portal/view/portal_page.dart';
 import 'package:acs_upb_mobile/pages/timetable/view/timetable_page.dart';
 import 'package:flutter/cupertino.dart';
 
-class NavigationStateProvider extends ChangeNotifier {
+class NavigationProvider extends ChangeNotifier {
   bool _isInitialized = false;
   RoutePath _path;
 
