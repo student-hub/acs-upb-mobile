@@ -1,11 +1,6 @@
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/navigation/model/navigation_state.dart';
-import 'package:acs_upb_mobile/navigation/service/app_navigator.dart';
 import 'package:acs_upb_mobile/navigation/service/app_router_delegates.dart';
-import 'package:acs_upb_mobile/pages/home/home_page.dart';
-import 'package:acs_upb_mobile/pages/people/view/people_page.dart';
-import 'package:acs_upb_mobile/pages/portal/view/portal_page.dart';
-import 'package:acs_upb_mobile/pages/timetable/view/timetable_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 
@@ -49,28 +44,6 @@ class _WebShellState extends State<WebShell> {
   void handleNavigationBar(int index) {
     setState(() {
       widget.navigationState.selectedTab = index;
-
-      switch (index) {
-        case 0:
-          AppNavigator.pushNamed(context, HomePage.routeName);
-          break;
-        case 1:
-          AppNavigator.push(
-            context,
-            MaterialPageRoute<Widget>(
-              builder: (_) => const Center(child: Text('ok')),
-            ),
-            webPath: '${TimetablePage.routeName}',
-          );
-          // AppNavigator.pushNamed(context, TimetablePage.routeName);
-          break;
-        case 2:
-          AppNavigator.pushNamed(context, PortalPage.routeName);
-          break;
-        case 3:
-          AppNavigator.pushNamed(context, PeoplePage.routeName);
-          break;
-      }
     });
   }
 
@@ -112,26 +85,21 @@ class _WebShellState extends State<WebShell> {
               NavigationRailDestination(
                 icon: const Icon(Icons.home),
                 selectedIcon: const Icon(Icons.home_outlined),
-                // TODO(RazvanRotaru): re-enable padding after Flutter2 migration (also works on 1.27+)
-                // padding: const EdgeInsets.only(right: 5),
                 label: Text(S.current.navigationHome),
               ),
               NavigationRailDestination(
                 icon: const Icon(Icons.calendar_today),
                 selectedIcon: const Icon(Icons.calendar_today_outlined),
-                // padding: const EdgeInsets.only(right: 5),
                 label: Text(S.current.navigationTimetable),
               ),
               NavigationRailDestination(
                 icon: const Icon(FeatherIcons.globe),
                 selectedIcon: const Icon(FeatherIcons.globe),
-                // padding: const EdgeInsets.only(right: 5),
                 label: Text(S.current.navigationPortal),
               ),
               NavigationRailDestination(
                 icon: const Icon(Icons.people),
                 selectedIcon: const Icon(Icons.people_outlined),
-                // padding: const EdgeInsets.only(right: 5),
                 label: Text(S.current.navigationPeople),
               ),
             ],
@@ -142,7 +110,6 @@ class _WebShellState extends State<WebShell> {
           ),
           Expanded(
             flex: 5,
-            // TODO(WebTeam): Wrap with ConstrainedBox
             child: PageStorage(
               child: Router<dynamic>(
                 routerDelegate: _innerRouterDelegate,

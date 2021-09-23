@@ -1,82 +1,102 @@
 import 'package:acs_upb_mobile/navigation/model/route_paths.dart';
+import 'package:acs_upb_mobile/pages/home/home_page.dart';
+import 'package:acs_upb_mobile/pages/people/view/people_page.dart';
+import 'package:acs_upb_mobile/pages/portal/view/portal_page.dart';
+import 'package:acs_upb_mobile/pages/timetable/view/timetable_page.dart';
 import 'package:flutter/cupertino.dart';
 
 class NavigationStateProvider extends ChangeNotifier {
-  final _NavigationState _state = _NavigationState();
+  bool _isInitialized = false;
+  RoutePath _path;
 
-  int get selectedTab => _state.selectedTab;
+  int _selectedTab = 0;
+  bool _isDrawerExtended = false;
+
+  Widget _view;
+
+  int get selectedTab => _selectedTab;
 
   set selectedTab(int tab) {
-    _state.selectedTab = tab;
+    _selectedTab = tab;
+
+    switch (tab) {
+      case 0:
+        _path = PathFactory.from(Uri.parse(HomePage.routeName));
+        break;
+      case 1:
+        _path = PathFactory.from(Uri.parse(TimetablePage.routeName));
+        break;
+      case 2:
+        _path = PathFactory.from(Uri.parse(PortalPage.routeName));
+        break;
+      case 3:
+        _path = PathFactory.from(Uri.parse(PeoplePage.routeName));
+        break;
+    }
+
     notifyListeners();
   }
 
-  bool get isInitialized => _state.isInitialized;
+  bool get isInitialized => _isInitialized;
 
   set isInitialized(bool value) {
-    _state.isInitialized = value;
+    _isInitialized = value;
     notifyListeners();
   }
 
-  RoutePath get path => _state.path;
+  RoutePath get path => _path;
 
   set path(RoutePath path) {
-    _state
-      ..path = path
-      ..view = null;
+    _path = path;
+    _view = null;
+
+    switch (path.runtimeType) {
+      case HomePath:
+        _selectedTab = 0;
+        break;
+      case TimetablePath:
+        _selectedTab = 1;
+        break;
+      case PortalPath:
+        _selectedTab = 2;
+        break;
+      case PeoplePath:
+        _selectedTab = 3;
+        break;
+      case LoginPath:
+        _isDrawerExtended = false;
+        break;
+    }
+
     notifyListeners();
   }
 
-  bool get isDrawerExtended => _state.isDrawerExtended;
+  bool get isDrawerExtended => _isDrawerExtended;
 
   set isDrawerExtended(bool value) {
-    _state.isDrawerExtended = value;
+    _isDrawerExtended = value;
     notifyListeners();
   }
 
   void toggleDrawer() {
-    _state.isDrawerExtended = !_state.isDrawerExtended;
+    _isDrawerExtended = !_isDrawerExtended;
     notifyListeners();
   }
 
-  Widget get customView => _state.view;
+  Widget get customView => _view;
 
   set customView(Widget view) {
-    _state.view = view;
+    _view = view;
     notifyListeners();
   }
 
   void reset() {
-    _state
-      ..path = HomePath()
-      ..view = null;
+    _path = HomePath();
+    _view = null;
   }
 
   @override
   String toString() {
-    return 'NavigationStateProvider{_state: $_state}';
-  }
-}
-
-class _NavigationState {
-  _NavigationState() {
-    isInitialized = false;
-    path = null;
-    selectedTab = 0;
-    isDrawerExtended = false;
-    view = null;
-  }
-
-  bool isInitialized;
-  RoutePath path;
-
-  int selectedTab;
-  bool isDrawerExtended;
-
-  Widget view;
-
-  @override
-  String toString() {
-    return '_NavigationState{path: $path, selectedTab: $selectedTab, isDrawerExtended: $isDrawerExtended, view: $view}';
+    return 'NavigationStateProvider{_path: $_path, _selectedTab: $_selectedTab, _view: $_view}';
   }
 }

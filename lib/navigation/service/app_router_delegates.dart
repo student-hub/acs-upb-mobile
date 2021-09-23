@@ -98,10 +98,6 @@ class MainRouterDelegate extends AppRouterDelegate {
       return RootPath();
     }
 
-    // if (!_authProvider.isAuthenticated) {
-    //   return LoginPath();
-    // }
-
     return _navigationState.path;
   }
 
@@ -115,23 +111,12 @@ class MainRouterDelegate extends AppRouterDelegate {
     _navigationState.reset();
 
     if (configuration is LoginPath) {
-      // await _authProvider.signOut();
       if (_authProvider.isAuthenticated) {
         _navigationState.path = HomePath();
         return;
       } else {
         _navigationState.isDrawerExtended = false;
       }
-    }
-
-    if (configuration is HomePath) {
-      _navigationState.selectedTab = 0;
-    } else if (configuration is TimetablePath) {
-      _navigationState.selectedTab = 1;
-    } else if (configuration is PortalPath) {
-      _navigationState.selectedTab = 2;
-    } else if (configuration is PeoplePath) {
-      _navigationState.selectedTab = 3;
     }
 
     _navigationState.path = configuration;
