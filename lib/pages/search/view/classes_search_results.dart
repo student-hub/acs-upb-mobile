@@ -7,6 +7,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
+import 'package:acs_upb_mobile/widgets/class_icon.dart';
 
 class ClassesSearchResults extends StatelessWidget {
   const ClassesSearchResults({this.query});
@@ -81,7 +82,7 @@ class ClassesCircleList extends StatelessWidget {
                           Padding(
                               padding: const EdgeInsets.fromLTRB(0, 0, 10, 10),
                               child: CircleAvatar(
-                                backgroundColor: Colors.grey,
+                                backgroundColor: classHeader.colorFromAcronym,
                                 child: Container(
                                   width: 30,
                                   child: Align(
