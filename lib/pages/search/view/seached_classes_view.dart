@@ -25,36 +25,39 @@ class SearchedClassesView extends StatelessWidget {
             scrollDirection: Axis.vertical,
             itemBuilder: (BuildContext context, int index) {
               return Container(
-                  padding: const EdgeInsets.fromLTRB(0, 0, 30, 0),
-                  child: GestureDetector(
-                      child: Row(children: <Widget>[
-                        Padding(
-                            padding: const EdgeInsets.fromLTRB(0, 0, 10, 10),
-                            child: CircleAvatar(
-                              backgroundColor: classHeaders[index].colorFromAcronym,
-                              child: Container(
-                                width: 30,
-                                child: Align(
-                                  alignment: Alignment.center,
-                                  child: AutoSizeText(
-                                    classHeaders[index].acronym,
-                                    minFontSize: 0,
-                                    maxLines: 1,
-                                  ),
-                                ),
+                padding: const EdgeInsets.fromLTRB(0, 0, 30, 0),
+                child: GestureDetector(
+                    child: Row(children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(0, 0, 10, 10),
+                        child: CircleAvatar(
+                          backgroundColor: classHeaders[index].colorFromAcronym,
+                          child: Container(
+                            width: 30,
+                            child: Align(
+                              alignment: Alignment.center,
+                              child: AutoSizeText(
+                                classHeaders[index].acronym,
+                                minFontSize: 0,
+                                maxLines: 1,
                               ),
-                            )),
-                        Expanded(
-                          child: Text(classHeaders[index].name),
-                        )
-                      ]),
-                      onTap: () => {
-                            Navigator.of(context)
-                                .push(MaterialPageRoute<ClassView>(
+                            ),
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: Text(classHeaders[index].name),
+                      )
+                    ]),
+                    onTap: () => {
+                          Navigator.of(context).push(
+                            MaterialPageRoute<ClassView>(
                               builder: (_) =>
                                   ClassView(classHeader: classHeaders[index]),
-                            ))
-                          }));
+                            ),
+                          )
+                        }),
+              );
             }),
       ),
     );
