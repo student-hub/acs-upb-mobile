@@ -12,7 +12,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:provider/provider.dart';
 
-
 class PersonView extends StatelessWidget {
   const PersonView({Key key, this.person}) : super(key: key);
   final Person person;
