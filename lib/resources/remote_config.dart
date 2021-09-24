@@ -25,7 +25,7 @@ class RemoteConfigService {
     try {
       _remoteConfig = await RemoteConfig.instance;
       await _remoteConfig.setDefaults(defaults);
-      await _remoteConfig.fetch();
+      await _remoteConfig.fetch(expiration: const Duration(seconds: 0));
       await _remoteConfig.activateFetched();
     } on FetchThrottledException catch (e) {
       print('Remote config fetch throttled: $e');
