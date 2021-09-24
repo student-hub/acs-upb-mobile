@@ -14,7 +14,7 @@ import 'package:acs_upb_mobile/pages/timetable/view/events/all_day_event_widget.
 import 'package:acs_upb_mobile/pages/timetable/view/events/event_widget.dart';
 import 'package:acs_upb_mobile/widgets/button.dart';
 import 'package:acs_upb_mobile/widgets/dialog.dart';
-import 'package:acs_upb_mobile/widgets/scaffold.dart';
+import 'package:acs_upb_mobile/navigation/view/scaffold.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
@@ -132,6 +132,7 @@ class _TimetablePageState extends State<TimetablePage> {
           ],
         ),
       ),
+      maxBodyWidth: 1920,
     );
   }
 

@@ -205,6 +205,16 @@ class S {
     );
   }
 
+  /// `Website icon`
+  String get labelWebsiteIcon {
+    return Intl.message(
+      'Website icon',
+      name: 'labelWebsiteIcon',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Name`
   String get labelName {
     return Intl.message(
@@ -1090,6 +1100,16 @@ class S {
     return Intl.message(
       'Refresh',
       name: 'actionRefresh',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Search`
+  String get actionSearch {
+    return Intl.message(
+      'Search',
+      name: 'actionSearch',
       desc: '',
       args: [],
     );

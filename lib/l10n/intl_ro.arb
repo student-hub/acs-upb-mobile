@@ -17,6 +17,7 @@
   "labelVersion": "Versiunea",
   "labelFirstName": "Prenume",
   "labelLastName": "Nume",
+  "labelWebsiteIcon": "Imagine website",
   "labelName": "Nume",
   "labelCategory": "Categorie",
   "labelLink": "Link",
@@ -111,6 +112,7 @@
   "actionOpenFilter": "Deschide filtru",
   "actionRequestPermissions": "Cere permisiuni",
   "actionRefresh": "Reîncarcă",
+  "actionSearch": "Căutare",
 
   "errorSomethingWentWrong": "A apărut o problemă.",
   "errorPasswordsDiffer": "Cele două parole diferă.",

@@ -7,6 +7,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'action_sidebar.dart';
+
 class AppScaffoldAction {
   AppScaffoldAction({
     this.icon,
@@ -39,51 +41,26 @@ class AppScaffoldAction {
 
   // Whether the icon color should be disabled.
   final bool disabled;
-}
 
-class AppScaffold extends StatelessWidget {
-  AppScaffold({
-    this.body,
-    this.title,
-    List<AppScaffoldAction> actions,
-    this.floatingActionButton,
-    this.leading,
-    this.needsToBeAuthenticated = false,
-    this.onWeb = false,
-  }) : actions = actions ?? [];
-
-  final Widget body;
-  final Widget title;
-  final Widget floatingActionButton;
-  final List<AppScaffoldAction> actions;
-  final AppScaffoldAction leading;
-  final bool needsToBeAuthenticated;
-  final bool onWeb;
-
-  Widget _widgetFromAction(AppScaffoldAction action,
+  Widget toWidget(
       {@required bool enableContent, @required BuildContext context}) {
-    if (action == null) {
-      return null;
-    }
-
     final void Function() onPressed =
-        !enableContent || (action?.onPressed == null && action?.route == null)
+        !enableContent || (this.onPressed == null && route == null)
             ? null
-            : action?.onPressed ??
-                () => Navigator.pushNamed(context, action?.route);
+            : this.onPressed ?? () => Navigator.pushNamed(context, route);
 
-    final icon = action.disabled
-        ? Icon(action.icon ?? Icons.menu_outlined,
+    final icon = disabled
+        ? Icon(this.icon ?? Icons.menu_outlined,
             color: Theme.of(context).disabledColor)
-        : Icon(action.icon);
+        : Icon(this.icon);
 
-    return action?.items != null
+    return items != null
         ? PopupMenuButton<String>(
             icon: icon,
-            tooltip: action.tooltip ?? action.text,
-            onSelected: (selected) => action.items[selected](),
+            tooltip: tooltip ?? text,
+            onSelected: (selected) => items[selected](),
             itemBuilder: (BuildContext context) {
-              return action.items.keys
+              return items.keys
                   .map((option) => PopupMenuItem(
                         value: option,
                         child: Text(option),
@@ -92,13 +69,13 @@ class AppScaffold extends StatelessWidget {
             },
           )
         : Tooltip(
-            message: action?.tooltip ?? action?.text ?? '',
-            child: action?.text != null
+            message: tooltip ?? text ?? '',
+            child: text != null
                 ? ButtonTheme(
                     minWidth: 10,
                     child: TextButton(
                       child: Text(
-                        action.text,
+                        text,
                         style: const TextStyle().apply(
                             color: Theme.of(context).primaryIconTheme.color),
                       ),
@@ -111,6 +88,47 @@ class AppScaffold extends StatelessWidget {
                   ),
           );
   }
+
+  /// Wrap simple action button to enable hover and splash effects
+  AspectRatio toMaterialActionButton(
+      {@required bool enableContent, @required BuildContext context}) {
+    return AspectRatio(
+      aspectRatio: 1,
+      child: Material(
+        type: MaterialType.transparency,
+        clipBehavior: Clip.none,
+        child: Theme(
+          data: Theme.of(context).copyWith(
+            splashColor: Theme.of(context).primaryColor.withOpacity(0.12),
+            hoverColor: Theme.of(context).primaryColor.withOpacity(0.04),
+          ),
+          child: toWidget(enableContent: enableContent, context: context),
+        ),
+      ),
+    );
+  }
+}
+
+class AppScaffold extends StatelessWidget {
+  AppScaffold({
+    this.body,
+    this.title,
+    List<AppScaffoldAction> actions,
+    this.floatingActionButton,
+    this.leading,
+    this.needsToBeAuthenticated = false,
+    this.onWeb = false,
+    this.maxBodyWidth = 960,
+  }) : actions = actions ?? [];
+
+  final Widget body;
+  final Widget title;
+  final Widget floatingActionButton;
+  final List<AppScaffoldAction> actions;
+  final AppScaffoldAction leading;
+  final bool needsToBeAuthenticated;
+  final bool onWeb;
+  final double maxBodyWidth;
 
   @override
   Widget build(BuildContext context) {
@@ -129,7 +147,7 @@ class AppScaffold extends StatelessWidget {
       },
       child: Scaffold(
         body: enableContent
-            ? body ??
+            ? buildBody(context, enableContent: enableContent) ??
                 ErrorPage(
                   imgPath: 'assets/illustrations/undraw_under_construction.png',
                   errorMessage: S.current.messageUnderConstruction,
@@ -147,11 +165,13 @@ class AppScaffold extends StatelessWidget {
                   title: title,
                   centerTitle: true,
                   toolbarOpacity: 0.8,
-                  leading: _widgetFromAction(leading,
+                  leading: leading?.toWidget(
                       enableContent: enableContent, context: context),
                   actions: actions
-                      .map((action) => _widgetFromAction(action,
-                          enableContent: enableContent, context: context))
+                      .map(
+                        (action) => action?.toWidget(
+                            enableContent: enableContent, context: context),
+                      )
                       .toList(),
                 ),
               )
@@ -162,5 +182,33 @@ class AppScaffold extends StatelessWidget {
         floatingActionButton: floatingActionButton,
       ),
     );
+  }
+
+  /// Build content body based on platform.
+  /// On web, there are action buttons on the right side.
+  Widget buildBody(BuildContext context, {bool enableContent = false}) {
+    // check if on web to avoid building action button twice in mobile
+    final List<AppScaffoldAction> actionsList = kIsWeb
+        ? ([leading] + actions).where((element) => element != null).toList()
+        : List.empty();
+
+    return !kIsWeb
+        ? body
+        : Stack(
+            children: [
+              Center(
+                  child: ConstrainedBox(
+                      constraints: BoxConstraints(maxWidth: maxBodyWidth),
+                      child: body)),
+              if (actionsList.isNotEmpty)
+                ActionSideBar(actionsList
+                    .map((e) => e?.toMaterialActionButton(
+                        enableContent: enableContent, context: context))
+                    .where((element) => element != null)
+                    .toList())
+              else
+                const SizedBox.shrink(),
+            ],
+          );
   }
 }

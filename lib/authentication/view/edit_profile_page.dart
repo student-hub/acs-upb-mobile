@@ -12,12 +12,11 @@ import 'package:acs_upb_mobile/widgets/button.dart';
 import 'package:acs_upb_mobile/widgets/circle_image.dart';
 import 'package:acs_upb_mobile/widgets/dialog.dart';
 import 'package:acs_upb_mobile/widgets/icon_text.dart';
-import 'package:acs_upb_mobile/widgets/scaffold.dart';
+import 'package:acs_upb_mobile/navigation/view/scaffold.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:image/image.dart' as im;
 import 'package:preferences/preference_title.dart';
 import 'package:provider/provider.dart';
 
@@ -247,12 +246,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
     );
   }
 
-  Future<Uint8List> convertToPNG(Uint8List image) async {
-    final decodedImage = im.decodeImage(image);
-    return im.encodePng(im.copyResize(decodedImage, width: 500, height: 500),
-        level: 9);
-  }
-
   @override
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
@@ -297,11 +290,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       .then((value) => result = value ?? false);
                 }
                 if (uploadedImage != null) {
-                  imageAsPNG = await convertToPNG(uploadedImage);
+                  imageAsPNG = await Utils.convertToPNG(uploadedImage);
                   result = await authProvider.uploadProfilePicture(imageAsPNG);
-                  if (result) {
-                    AppToast.show(S.current.messagePictureUpdatedSuccess);
-                  }
                 }
                 if (result) {
                   if (await authProvider.updateProfile(info)) {

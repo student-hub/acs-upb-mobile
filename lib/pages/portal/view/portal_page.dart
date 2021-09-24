@@ -13,7 +13,7 @@ import 'package:acs_upb_mobile/pages/portal/view/website_view.dart';
 import 'package:acs_upb_mobile/resources/custom_icons.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/widgets/circle_image.dart';
-import 'package:acs_upb_mobile/widgets/scaffold.dart';
+import 'package:acs_upb_mobile/navigation/view/scaffold.dart';
 import 'package:acs_upb_mobile/widgets/spoiler.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:flutter/material.dart';
@@ -87,14 +87,15 @@ class _PortalPageState extends State<PortalPage> {
             if (canEdit) {
               Navigator.of(context)
                   .push(MaterialPageRoute<ChangeNotifierProvider>(
-                builder: (_) => ChangeNotifierProvider<FilterProvider>(
-                  create: (_) =>
-                      Platform.environment.containsKey('FLUTTER_TEST')
-                          ? Provider.of<FilterProvider>(context)
-                          : FilterProvider(
-                              defaultDegree: website.degree,
-                              defaultRelevance: website.relevance,
-                            ),
+                builder: (_) => ChangeNotifierProvider<FilterProvider>.value(
+                  // If testing, use the global (mocked) provider; otherwise instantiate a new local provider
+                  value: Platform.environment.containsKey('FLUTTER_TEST')
+                      ? Provider.of<FilterProvider>(context)
+                      : FilterProvider(
+                          defaultDegree: website.degree,
+                          defaultRelevance: website.relevance,
+                        )
+                    ..updateAuth(Provider.of<AuthProvider>(context)),
                   child: WebsiteView(
                     website: website,
                     updateExisting: true,
@@ -348,15 +349,12 @@ class _AddWebsiteButton extends StatelessWidget {
             if (authProvider.isAuthenticated && !authProvider.isAnonymous) {
               Navigator.of(context)
                   .push(MaterialPageRoute<ChangeNotifierProvider>(
-                builder: (_) =>
-                    ChangeNotifierProxyProvider<AuthProvider, FilterProvider>(
-                  create: (_) =>
-                      Platform.environment.containsKey('FLUTTER_TEST')
-                          ? Provider.of<FilterProvider>(context)
-                          : FilterProvider(),
-                  update: (context, authProvider, filterProvider) {
-                    return filterProvider..updateAuth(authProvider);
-                  },
+                builder: (_) => ChangeNotifierProvider<FilterProvider>.value(
+                  // If testing, use the global (mocked) provider; otherwise instantiate a new local provider
+                  value: Platform.environment.containsKey('FLUTTER_TEST')
+                      ? Provider.of<FilterProvider>(context)
+                      : FilterProvider()
+                    ..updateAuth(authProvider),
                   child: WebsiteView(
                     website: Website(
                         relevance: null,
