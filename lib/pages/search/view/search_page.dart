@@ -36,14 +36,14 @@ class _SearchPageState extends State<SearchPage> {
           ),
           PeopleSearchResults(query: query),
           ClassesSearchResults(query: query),
-          if (RemoteConfigService.chatEnabled && query.isNotEmpty) ChatBotIntro()
+          if (RemoteConfigService.chatEnabled && query.isNotEmpty) ChatbotIntro()
         ],
       ),
     );
   }
 }
 
-class ChatBotIntro extends StatelessWidget {
+class ChatbotIntro extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
