@@ -5,6 +5,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:acs_upb_mobile/widgets/class_icon.dart';
 
 class SearchedClassesView extends StatelessWidget {
   const SearchedClassesView({this.classHeaders, this.query});
@@ -30,7 +31,7 @@ class SearchedClassesView extends StatelessWidget {
                         Padding(
                             padding: const EdgeInsets.fromLTRB(0, 0, 10, 10),
                             child: CircleAvatar(
-                              backgroundColor: Colors.grey,
+                              backgroundColor: classHeaders[index].colorFromAcronym,
                               child: Container(
                                 width: 30,
                                 child: Align(
