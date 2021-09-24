@@ -36,7 +36,8 @@ class _SearchPageState extends State<SearchPage> {
           ),
           PeopleSearchResults(query: query),
           ClassesSearchResults(query: query),
-          if (RemoteConfigService.chatEnabled && query.isNotEmpty) ChatbotIntro()
+          if (RemoteConfigService.chatEnabled && query.isNotEmpty)
+            ChatbotIntro()
         ],
       ),
     );
