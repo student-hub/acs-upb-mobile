@@ -1,13 +1,12 @@
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
+import 'package:acs_upb_mobile/navigation/view/action_bar.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/widgets/error_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
-import 'action_sidebar.dart';
 
 class AppScaffoldAction {
   AppScaffoldAction({
@@ -107,6 +106,56 @@ class AppScaffoldAction {
       ),
     );
   }
+
+  /// todo
+  Widget toActionBarButton(
+      {@required bool enableContent, @required BuildContext context}) {
+    final void Function() onPressed =
+        !enableContent || (this.onPressed == null && route == null)
+            ? null
+            : this.onPressed ?? () => Navigator.pushNamed(context, route);
+
+    final icon = disabled
+        ? Icon(this.icon ?? Icons.menu_outlined,
+            color: Theme.of(context).disabledColor)
+        : Icon(this.icon);
+
+    final child = items != null
+        ? PopupMenuButton<String>(
+            child: TextButton.icon(
+              icon: icon,
+              label: Text(tooltip ?? text),
+              onPressed: () => {},
+            ),
+            tooltip: tooltip ?? text,
+            onSelected: (selected) => items[selected](),
+            itemBuilder: (BuildContext context) {
+              return items.keys
+                  .map((option) => PopupMenuItem(
+                        value: option,
+                        child: Text(option),
+                      ))
+                  .toList();
+            },
+          )
+        : TextButton.icon(
+            label: Text(text ?? tooltip ?? ''),
+            icon: icon,
+            onPressed: onPressed,
+          );
+
+    return Material(
+      type: MaterialType.transparency,
+      clipBehavior: Clip.none,
+      child: Container(
+        color: Theme.of(context).bottomAppBarColor,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: child,
+        ),
+      ),
+    );
+  }
 }
 
 class AppScaffold extends StatelessWidget {
@@ -201,8 +250,8 @@ class AppScaffold extends StatelessWidget {
                       constraints: BoxConstraints(maxWidth: maxBodyWidth),
                       child: body)),
               if (actionsList.isNotEmpty)
-                ActionSideBar(actionsList
-                    .map((e) => e?.toMaterialActionButton(
+                ActionBar(actionsList
+                    .map((e) => e?.toActionBarButton(
                         enableContent: enableContent, context: context))
                     .where((element) => element != null)
                     .toList())
