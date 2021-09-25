@@ -17,6 +17,7 @@ import 'package:acs_upb_mobile/pages/people/service/person_provider.dart';
 import 'package:acs_upb_mobile/pages/people/view/people_page.dart';
 import 'package:acs_upb_mobile/pages/people/view/person_view.dart';
 import 'package:acs_upb_mobile/pages/portal/model/website.dart';
+import 'package:acs_upb_mobile/pages/portal/service/website_provider.dart';
 import 'package:acs_upb_mobile/pages/portal/view/portal_page.dart';
 import 'package:acs_upb_mobile/pages/portal/view/website_view.dart';
 import 'package:acs_upb_mobile/pages/settings/view/request_permissions.dart';
@@ -165,7 +166,40 @@ class WebsiteViewPath extends RoutePath {
 
   // TODO(RazvanRotaru): Retrieve [Website] for [WebsiteView] by id
   @override
-  Widget get page => throw UnimplementedError();
+  Widget get page {
+    return Builder(
+      builder: (BuildContext context) {
+        final websiteProvider =
+            Provider.of<WebsiteProvider>(context, listen: false);
+        print('context rebuilds');
+        return FutureBuilder<Website>(
+          future: websiteProvider.fetchWebsite(id),
+          builder: (BuildContext context, AsyncSnapshot<Website> snapshot) {
+            if (snapshot.connectionState == ConnectionState.done) {
+              print('future context rebuilds');
+
+              final website = snapshot.data;
+              return ChangeNotifierProvider<FilterProvider>.value(
+                // If testing, use the global (mocked) provider; otherwise instantiate a new local provider
+                value: Platform.environment.containsKey('FLUTTER_TEST')
+                    ? Provider.of<FilterProvider>(context)
+                    : FilterProvider(
+                        defaultDegree: website.degree,
+                        defaultRelevance: website.relevance,
+                      )
+                  ..updateAuth(Provider.of<AuthProvider>(context)),
+                child: WebsiteView(
+                  website: website,
+                  updateExisting: true,
+                ),
+              );
+            }
+            return const CircularProgressIndicator();
+          },
+        );
+      },
+    );
+  }
 }
 
 class AddWebsitePath extends RoutePath {

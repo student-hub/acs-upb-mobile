@@ -5,13 +5,13 @@ import 'package:acs_upb_mobile/authentication/model/user.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/filter/model/filter.dart';
 import 'package:acs_upb_mobile/pages/portal/model/website.dart';
+import 'package:acs_upb_mobile/resources/storage/storage_provider.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:preferences/preference_service.dart';
-import 'package:acs_upb_mobile/resources/storage/storage_provider.dart';
 
 extension IconURLExtension on Website {
   Future<String> getIconURL() => StorageProvider.findImageUrl(iconPath);
@@ -288,6 +288,18 @@ class WebsiteProvider with ChangeNotifier {
           website2.numberOfVisits.compareTo(website1.numberOfVisits));
 
       return websites;
+    } catch (e) {
+      _errorHandler(e, showToast: false);
+      return null;
+    }
+  }
+
+  Future<Website> fetchWebsite(String websiteId) async {
+    try {
+      final DocumentSnapshot docSnapshot =
+          await _db.collection('websites').doc(websiteId).get();
+
+      return WebsiteExtension.fromSnap(docSnapshot);
     } catch (e) {
       _errorHandler(e, showToast: false);
       return null;

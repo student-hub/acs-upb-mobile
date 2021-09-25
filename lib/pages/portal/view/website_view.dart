@@ -4,6 +4,7 @@ import 'package:acs_upb_mobile/authentication/model/user.dart';
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/navigation/service/app_navigator.dart';
+import 'package:acs_upb_mobile/navigation/view/scaffold.dart';
 import 'package:acs_upb_mobile/pages/filter/view/relevance_picker.dart';
 import 'package:acs_upb_mobile/pages/portal/model/website.dart';
 import 'package:acs_upb_mobile/pages/portal/service/website_provider.dart';
@@ -14,7 +15,6 @@ import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/widgets/button.dart';
 import 'package:acs_upb_mobile/widgets/circle_image.dart';
 import 'package:acs_upb_mobile/widgets/dialog.dart';
-import 'package:acs_upb_mobile/navigation/view/scaffold.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:file_picker/file_picker.dart';
@@ -222,19 +222,21 @@ class _WebsiteViewState extends State<WebsiteView> {
             iconSize + paddingSize + iconPaddingSize * 2) {
           // Tap is near the "clear" button
           imageFieldController.clear();
-          setState(() {
-            imageWidget = const AssetImage('assets/icons/globe.png');
-          });
+          mounted ??
+              setState(() {
+                imageWidget = const AssetImage('assets/icons/globe.png');
+              });
         } else {
           final filePickerResult = await FilePicker.platform.pickFiles(
               type: FileType.image, allowMultiple: false, withData: true);
           if (filePickerResult != null) {
             final uploadedImage = filePickerResult.files[0];
-            setState(() {
-              uploadedImageBytes = uploadedImage.bytes;
-              imageWidget = MemoryImage(uploadedImageBytes);
-              imageFieldController.text = uploadedImage.name;
-            });
+            mounted ??
+                setState(() {
+                  uploadedImageBytes = uploadedImage.bytes;
+                  imageWidget = MemoryImage(uploadedImageBytes);
+                  imageFieldController.text = uploadedImage.name;
+                });
           }
         }
       },
