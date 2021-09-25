@@ -42,29 +42,29 @@ class _ClassesCardState extends State<ClassesCard> {
         future: classProvider.fetchClassHeadersByIds(classIds),
         builder:
             (BuildContext context, AsyncSnapshot<Set<ClassHeader>> snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const CircularProgressIndicator();
-          }
+          if (snapshot.connectionState == ConnectionState.done) {
+            if (!snapshot.hasData) {
+              return const Center(child: Text('N/A'));
+            }
+            final classHeaders = snapshot.data;
 
-          if (!snapshot.hasData) {
-            return const Center(child: Text('N/A'));
-          }
-          final classHeaders = snapshot.data;
-
-          return ClassList(
-            classes: classHeaders,
-            sectioned: false,
-            onTap: (classHeader) => Navigator.of(context).push(
-              MaterialPageRoute<ChangeNotifierProvider>(
-                builder: (context) => ChangeNotifierProvider.value(
-                  value: classProvider,
-                  child: ClassView(
-                    classHeader: classHeader,
+            return ClassList(
+              classes: classHeaders,
+              sectioned: false,
+              onTap: (classHeader) => Navigator.of(context).push(
+                MaterialPageRoute<ChangeNotifierProvider>(
+                  builder: (context) => ChangeNotifierProvider.value(
+                    value: classProvider,
+                    child: ClassView(
+                      classHeader: classHeader,
+                    ),
                   ),
                 ),
               ),
-            ),
-          );
+            );
+          }
+
+          return const CircularProgressIndicator();
         },
       ),
     );
