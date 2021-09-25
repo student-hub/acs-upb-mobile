@@ -125,7 +125,7 @@ class _TimetablePageState extends State<TimetablePage>
                     DateTimeTimetable.dateFromPage(
                         value.page.floor() - value.visibleDayCount),
                     DateTimeTimetable.dateFromPage(
-                      value.page.ceil() + value.visibleDayCount,
+                      value.page.ceil() + value.visibleDayCount * 2,
                     ),
                   ),
                 );
