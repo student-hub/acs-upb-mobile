@@ -144,22 +144,18 @@ class AppScaffoldAction {
             onPressed: onPressed,
           );
 
-    return Material(
-      type: MaterialType.transparency,
-      clipBehavior: Clip.none,
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Container(
-          decoration: BoxDecoration(
-              color: Theme.of(context).bottomAppBarColor,
-              border: Border.all(
-                color: Theme.of(context).secondaryHeaderColor,
-              ),
-              borderRadius: const BorderRadius.all(Radius.circular(10))),
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: child,
-          ),
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Container(
+        decoration: BoxDecoration(
+            color: Theme.of(context).bottomAppBarColor,
+            border: Border.all(
+              color: Theme.of(context).secondaryHeaderColor,
+            ),
+            borderRadius: const BorderRadius.all(Radius.circular(10))),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: child,
         ),
       ),
     );
@@ -251,23 +247,25 @@ class AppScaffold extends StatelessWidget {
 
     return !kIsWeb
         ? body
-        : Column(
+        : Stack(
             children: [
               if (actionsList.isNotEmpty)
                 ActionBar(actionsList
                     .map((e) => e?.toActionBarButton(
                         enableContent: enableContent, context: context))
                     .where((element) => element != null)
-                    .toList())
-              else
-                const SizedBox.shrink(),
-              Expanded(
-                flex: 1,
-                child: Center(
-                    child: ConstrainedBox(
-                        constraints: BoxConstraints(maxWidth: maxBodyWidth),
-                        child: body)),
-              ),
+                    .toList()),
+              Center(
+                  child: ConstrainedBox(
+                      constraints: BoxConstraints(maxWidth: maxBodyWidth),
+                      child: Column(
+                        children: [
+                          SizedBox(
+                            height: 100,
+                          ),
+                          Expanded(flex: 1, child: body),
+                        ],
+                      ))),
             ],
           );
   }

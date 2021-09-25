@@ -57,6 +57,8 @@ class MyHttpOverrides extends HttpOverrides {
 
 Future<void> main() async {
   HttpOverrides.global = MyHttpOverrides();
+  await PrefService.init(prefix: 'pref_');
+
 
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -233,7 +235,6 @@ class AppLoadingScreen extends StatelessWidget {
     if (!Platform.environment.containsKey('FLUTTER_TEST')) {
       await RemoteConfigService.initialize();
       await TimeMachine.initialize({'rootBundle': rootBundle});
-      await PrefService.init(prefix: 'pref_');
       PrefService.setDefaultValues(
           {'language': 'auto', 'relevance_filter': true});
 
