@@ -67,6 +67,8 @@ part 'routes/signup_path.dart';
 
 part 'routes/timetable_path.dart';
 
+part 'routes/unknown_path.dart';
+
 part 'routes/website_path.dart';
 
 abstract class RoutePath {
@@ -99,6 +101,7 @@ class ClassViewPath extends RoutePath {
   Widget get page => const ClassView();
 }
 
+// TODO(RazvanRotaru): wrap [ClassesPage] in a [ChangeNotifierProvieder]
 class ClassesPagePath extends RoutePath {
   ClassesPagePath() : super(ClassesPage.routeName);
 
@@ -106,6 +109,7 @@ class ClassesPagePath extends RoutePath {
   Widget get page => const ClassesPage();
 }
 
+// TODO(RazvanRotaru): retrieve classIds for [AddClassesPage] like in TimetablePage
 class AddClassesPath extends RoutePath {
   AddClassesPath() : super(AddClassesPage.routeName);
 
@@ -123,19 +127,12 @@ class EventViewPath extends RoutePath {
   Widget get page => EventView();
 }
 
+// TODO(RazvanRotaru): get event for [AddEventView] by id
 class AddEventPath extends RoutePath {
   AddEventPath() : super(AddEventView.routeName);
 
   @override
   Widget get page => const AddEventView();
-}
-
-class UnknownPath extends RoutePath {
-  UnknownPath() : super('');
-
-  // TODO(RazvanRotaru): Use [ErrorPage] instead of plain [Text]
-  @override
-  Widget get page => const Text('404! Unknown location');
 }
 
 // TODO(RazvanRotaru): auto-generate PathFactory
