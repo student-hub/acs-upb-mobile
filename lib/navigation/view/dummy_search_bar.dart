@@ -1,3 +1,5 @@
+import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
+import 'package:acs_upb_mobile/authentication/view/login_view.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/navigation/service/app_navigator.dart';
 import 'package:acs_upb_mobile/pages/home/home_page.dart';
@@ -7,6 +9,7 @@ import 'package:acs_upb_mobile/resources/banner.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/widgets/icon_text.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class DummySearchBar extends StatefulWidget {
   const DummySearchBar({Key key, this.leading}) : super(key: key);
@@ -22,6 +25,8 @@ class _DummySearchBarState extends State<DummySearchBar> {
 
   @override
   Widget build(BuildContext context) {
+    final _authProvider = Provider.of<AuthProvider>(context);
+
     return Container(
       color: Theme.of(context).accentColor.withAlpha(60),
       child: Row(
@@ -83,13 +88,21 @@ class _DummySearchBarState extends State<DummySearchBar> {
                       ),
                     ),
                     PopupMenuItem(
-                      child: IconText(
-                        icon: Icons.logout,
-                        text: S.current.actionLogOut,
-                        onTap: () {
-                          Utils.signOut(context);
-                        },
-                      ),
+                      child: _authProvider.isAnonymous
+                          ? IconText(
+                              icon: Icons.login,
+                              text: S.current.actionLogIn,
+                              onTap: () {
+                                Utils.signOut(context);
+                              },
+                            )
+                          : IconText(
+                              icon: Icons.logout,
+                              text: S.current.actionLogOut,
+                              onTap: () {
+                                Utils.signOut(context);
+                              },
+                            ),
                     )
                   ];
                 },
