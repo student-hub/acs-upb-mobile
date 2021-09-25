@@ -294,6 +294,7 @@ class WebsiteProvider with ChangeNotifier {
     }
   }
 
+  // TODO(RazvanRotaru): Handle private websites
   Future<Website> fetchWebsite(String websiteId) async {
     try {
       final DocumentSnapshot docSnapshot =

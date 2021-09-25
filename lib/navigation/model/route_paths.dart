@@ -2,6 +2,7 @@ import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/authentication/view/edit_profile_page.dart';
 import 'package:acs_upb_mobile/authentication/view/login_view.dart';
 import 'package:acs_upb_mobile/authentication/view/sign_up_view.dart';
+import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/main.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/view/class_feedback_checklist.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/view/class_feedback_view.dart';
@@ -26,6 +27,7 @@ import 'package:acs_upb_mobile/pages/timetable/view/events/add_event_view.dart';
 import 'package:acs_upb_mobile/pages/timetable/view/events/event_view.dart';
 import 'package:acs_upb_mobile/pages/timetable/view/timetable_page.dart';
 import 'package:acs_upb_mobile/resources/platform.dart';
+import 'package:acs_upb_mobile/widgets/error_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -164,34 +166,44 @@ class WebsiteViewPath extends RoutePath {
 
   final String id;
 
-  // TODO(RazvanRotaru): Retrieve [Website] for [WebsiteView] by id
   @override
   Widget get page {
     return Builder(
       builder: (BuildContext context) {
-        final websiteProvider =
-            Provider.of<WebsiteProvider>(context, listen: false);
-        print('context rebuilds');
+        final websiteProvider = Provider.of<WebsiteProvider>(context);
+        final authProvider = Provider.of<AuthProvider>(context);
+
+        if (authProvider.isAnonymous) {
+          return ErrorPage(
+            errorMessage: S.current.warningAuthenticationNeeded,
+          );
+        }
+
         return FutureBuilder<Website>(
           future: websiteProvider.fetchWebsite(id),
           builder: (BuildContext context, AsyncSnapshot<Website> snapshot) {
-            if (snapshot.connectionState == ConnectionState.done) {
-              print('future context rebuilds');
+            final user = authProvider.currentUserFromCache;
 
+            if (snapshot.connectionState == ConnectionState.done) {
               final website = snapshot.data;
-              return ChangeNotifierProvider<FilterProvider>.value(
-                // If testing, use the global (mocked) provider; otherwise instantiate a new local provider
-                value: Platform.environment.containsKey('FLUTTER_TEST')
-                    ? Provider.of<FilterProvider>(context)
-                    : FilterProvider(
-                        defaultDegree: website.degree,
-                        defaultRelevance: website.relevance,
-                      )
-                  ..updateAuth(Provider.of<AuthProvider>(context)),
-                child: WebsiteView(
-                  website: website,
-                  updateExisting: true,
-                ),
+              if (website.isPrivate || (user.canEditPublicInfo ?? false)) {
+                return ChangeNotifierProvider<FilterProvider>.value(
+                  // If testing, use the global (mocked) provider; otherwise instantiate a new local provider
+                  value: Platform.environment.containsKey('FLUTTER_TEST')
+                      ? Provider.of<FilterProvider>(context)
+                      : FilterProvider(
+                          defaultDegree: website.degree,
+                          defaultRelevance: website.relevance,
+                        )
+                    ..updateAuth(Provider.of<AuthProvider>(context)),
+                  child: WebsiteView(
+                    website: website,
+                    updateExisting: true,
+                  ),
+                );
+              }
+              return ErrorPage(
+                errorMessage: S.current.errorPermissionDenied,
               );
             }
             return const CircularProgressIndicator();
