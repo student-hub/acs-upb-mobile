@@ -191,7 +191,7 @@ class FeedbackProvider with ChangeNotifier {
       final DocumentSnapshot snap =
           await FirebaseFirestore.instance.collection('users').doc(uid).get();
       if (snap.data()['classesFeedback'] != null &&
-          snap.data()['classesFeedback'][className]) {
+          snap.data()['classesFeedback'][className] == true) {
         return true;
       }
       return false;
