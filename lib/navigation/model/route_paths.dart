@@ -1,3 +1,5 @@
+library route_paths;
+
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/authentication/view/edit_profile_page.dart';
 import 'package:acs_upb_mobile/authentication/view/login_view.dart';
@@ -6,6 +8,8 @@ import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/main.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/view/class_feedback_checklist.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/view/class_feedback_view.dart';
+import 'package:acs_upb_mobile/pages/classes/model/class.dart';
+import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
 import 'package:acs_upb_mobile/pages/classes/view/class_view.dart';
 import 'package:acs_upb_mobile/pages/classes/view/classes_page.dart';
 import 'package:acs_upb_mobile/pages/faq/view/faq_page.dart';
@@ -31,6 +35,40 @@ import 'package:acs_upb_mobile/widgets/error_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+part 'routes/add_website_path.dart';
+
+part 'routes/classes_feedback_path.dart';
+
+part 'routes/edit_profile_path.dart';
+
+part 'routes/faq_path.dart';
+
+part 'routes/filter_path.dart';
+
+part 'routes/home_path.dart';
+
+part 'routes/login_path.dart';
+
+part 'routes/news_feed_path.dart';
+
+part 'routes/people_path.dart';
+
+part 'routes/portal_path.dart';
+
+part 'routes/profile_path.dart';
+
+part 'routes/request_permissions_path.dart';
+
+part 'routes/root_path.dart';
+
+part 'routes/settings_path.dart';
+
+part 'routes/signup_path.dart';
+
+part 'routes/timetable_path.dart';
+
+part 'routes/website_path.dart';
+
 abstract class RoutePath {
   RoutePath(this.location);
 
@@ -39,228 +77,6 @@ abstract class RoutePath {
   RouteInformation get routeInformation => RouteInformation(location: location);
 
   Widget get page;
-}
-
-class RootPath extends RoutePath {
-  RootPath() : super('/');
-
-  @override
-  Widget get page => AppLoadingScreen();
-}
-
-class HomePath extends RoutePath {
-  HomePath() : super(HomePage.routeName);
-
-  @override
-  Widget get page => const HomePage();
-}
-
-class TimetablePath extends RoutePath {
-  TimetablePath() : super(TimetablePage.routeName);
-
-  @override
-  Widget get page => const TimetablePage();
-}
-
-class PortalPath extends RoutePath {
-  PortalPath() : super(PortalPage.routeName);
-
-  @override
-  Widget get page => const PortalPage();
-}
-
-class SettingsPath extends RoutePath {
-  SettingsPath() : super(SettingsPage.routeName);
-
-  @override
-  Widget get page => SettingsPage();
-}
-
-class FilterPath extends RoutePath {
-  FilterPath() : super(FilterPage.routeName);
-
-  @override
-  Widget get page => const FilterPage();
-}
-
-class LoginPath extends RoutePath {
-  LoginPath() : super(LoginView.routeName);
-
-  @override
-  Widget get page => LoginView();
-}
-
-class SignUpPath extends RoutePath {
-  SignUpPath() : super(SignUpView.routeName);
-
-  @override
-  Widget get page => SignUpView();
-}
-
-class FaqPath extends RoutePath {
-  FaqPath() : super(FaqPage.routeName);
-
-  @override
-  Widget get page => FaqPage();
-}
-
-class NewsFeedPath extends RoutePath {
-  NewsFeedPath() : super(NewsFeedPage.routeName);
-
-  @override
-  Widget get page => NewsFeedPage();
-}
-
-class RequestPermissionsPath extends RoutePath {
-  RequestPermissionsPath() : super(RequestPermissionsPage.routeName);
-
-  @override
-  Widget get page => RequestPermissionsPage();
-}
-
-class PeoplePath extends RoutePath {
-  PeoplePath() : super(PeoplePage.routeName);
-
-  @override
-  Widget get page => const PeoplePage();
-}
-
-class ProfilePath extends RoutePath {
-  ProfilePath(this.name)
-      : super('${PersonView.routeName}?name=${name.replaceAll(' ', '%20')}');
-
-  String name;
-
-  @override
-  Widget get page {
-    return Builder(
-      builder: (BuildContext context) {
-        return FutureBuilder(
-          future: Provider.of<PersonProvider>(context, listen: false)
-              .fetchPerson(name),
-          builder: (_, snapshot) {
-            if (snapshot.connectionState == ConnectionState.done) {
-              final Person personData = snapshot.data;
-              return PersonView(
-                person: personData,
-              );
-            } else {
-              return const CircularProgressIndicator();
-            }
-          },
-        );
-      },
-    );
-  }
-}
-
-class EditProfilePath extends RoutePath {
-  EditProfilePath() : super(EditProfilePage.routeName);
-
-  @override
-  Widget get page => const EditProfilePage();
-}
-
-class WebsiteViewPath extends RoutePath {
-  WebsiteViewPath(this.id) : super('${WebsiteView.routeName}?id=$id');
-
-  final String id;
-
-  @override
-  Widget get page {
-    return Builder(
-      builder: (BuildContext context) {
-        final websiteProvider = Provider.of<WebsiteProvider>(context);
-        final authProvider = Provider.of<AuthProvider>(context);
-
-        if (authProvider.isAnonymous) {
-          return ErrorPage(
-            errorMessage: S.current.warningAuthenticationNeeded,
-          );
-        }
-
-        return FutureBuilder<Website>(
-          future: websiteProvider.fetchWebsite(id),
-          builder: (BuildContext context, AsyncSnapshot<Website> snapshot) {
-            final user = authProvider.currentUserFromCache;
-
-            if (snapshot.connectionState == ConnectionState.done) {
-              final website = snapshot.data;
-              if (website.isPrivate || (user.canEditPublicInfo ?? false)) {
-                return ChangeNotifierProvider<FilterProvider>.value(
-                  // If testing, use the global (mocked) provider; otherwise instantiate a new local provider
-                  value: Platform.environment.containsKey('FLUTTER_TEST')
-                      ? Provider.of<FilterProvider>(context)
-                      : FilterProvider(
-                          defaultDegree: website.degree,
-                          defaultRelevance: website.relevance,
-                        )
-                    ..updateAuth(Provider.of<AuthProvider>(context)),
-                  child: WebsiteView(
-                    website: website,
-                    updateExisting: true,
-                  ),
-                );
-              }
-              return ErrorPage(
-                errorMessage: S.current.errorPermissionDenied,
-              );
-            }
-            return const CircularProgressIndicator();
-          },
-        );
-      },
-    );
-  }
-}
-
-class AddWebsitePath extends RoutePath {
-  AddWebsitePath(this.category)
-      : super('${WebsiteView.routeName}/add?category=$category');
-
-  final String category;
-
-  WebsiteCategory get _websiteCategory {
-    return WebsiteCategory.values.firstWhere(
-        (element) => category == element.toString().split('.').last);
-  }
-
-  // TODO(RazvanRotaru): Update path whenever the category is changed
-  /// This requires [WebsiteView] to trigger the navigator whenever the dropdown
-  /// from here [lib/pages/portal/view/website_view.dart:254] is changed
-  /// OR remove [category] attribute which means that the usage from
-  /// [lib/pages/portal/view/portal_page.dart:358] will always redirect to
-  /// `category = [WebsiteCategory.learning]', which means a button on its parent page
-  /// will have no feedback.
-  /// OR rename [category] to 'defaultCategory' :bigbrain:
-  @override
-  Widget get page {
-    return ChangeNotifierProxyProvider<AuthProvider, FilterProvider>(
-      create: (BuildContext context) {
-        return Platform.environment.containsKey('FLUTTER_TEST')
-            ? Provider.of<FilterProvider>(context)
-            : FilterProvider();
-      },
-      update: (context, authProvider, filterProvider) {
-        return filterProvider..updateAuth(authProvider);
-      },
-      child: WebsiteView(
-        website: Website(
-            relevance: null,
-            id: null,
-            isPrivate: true,
-            link: '',
-            category: _websiteCategory),
-      ),
-    );
-  }
-}
-
-class ClassesFeedbackPath extends RoutePath {
-  ClassesFeedbackPath() : super(ClassFeedbackChecklist.routeName);
-
-  @override
-  Widget get page => const ClassFeedbackChecklist();
 }
 
 class ClassFeedbackViewPath extends RoutePath {
