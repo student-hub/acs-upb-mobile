@@ -1,5 +1,6 @@
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
+import 'package:acs_upb_mobile/navigation/view/scaffold.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/view/class_feedback_checklist.dart';
 import 'package:acs_upb_mobile/pages/classes/model/class.dart';
 import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
@@ -8,8 +9,8 @@ import 'package:acs_upb_mobile/resources/remote_config.dart';
 import 'package:acs_upb_mobile/widgets/class_icon.dart';
 import 'package:acs_upb_mobile/widgets/error_page.dart';
 import 'package:acs_upb_mobile/widgets/icon_text.dart';
-import 'package:acs_upb_mobile/navigation/view/scaffold.dart';
 import 'package:acs_upb_mobile/widgets/spoiler.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:pedantic/pedantic.dart';
 import 'package:provider/provider.dart';
@@ -213,6 +214,7 @@ class ClassList extends StatefulWidget {
       Set<String> initiallySelected,
       this.selectable = false,
       this.sectioned = true,
+      this.showDividers = !kIsWeb,
       void Function(ClassHeader) onTap})
       : onSelected = onSelected ?? ((selected, classId) {}),
         onTap = onTap ?? ((_) {}),
@@ -224,6 +226,7 @@ class ClassList extends StatefulWidget {
   final bool selectable;
   final void Function(ClassHeader) onTap;
   final bool sectioned;
+  final bool showDividers;
 
   @override
   _ClassListState createState() => _ClassListState();
@@ -316,7 +319,7 @@ class _ClassListState extends State<ClassList> {
             },
             onTap: () => widget.onTap(header),
           ),
-          const Divider(),
+          if (widget.showDividers) const Divider() else const SizedBox.shrink(),
         ],
       );
 
@@ -324,6 +327,7 @@ class _ClassListState extends State<ClassList> {
   Widget build(BuildContext context) {
     if (widget.classes != null) {
       return ListView(
+        shrinkWrap: true,
         children: [
           if (widget.sectioned)
             Padding(
