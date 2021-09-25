@@ -67,8 +67,8 @@ class PersonView extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Padding(
-                        padding: const EdgeInsets.fromLTRB(28, 28, 28, 5),
-                        child: _PersonBanner(
+                        padding: const EdgeInsets.fromLTRB(28, 28, 28, 0),
+                        child:  _PersonBanner(
                           name: person.name,
                           photoURL: person.photo,
                           position: person.position,
@@ -76,7 +76,7 @@ class PersonView extends StatelessWidget {
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.fromLTRB(28, 5, 28, 28),
+                        padding: const EdgeInsets.fromLTRB(28, 0, 28, 28),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -198,6 +198,7 @@ class _PersonBanner extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(12),
         child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             PersonAvatar(
               photoURL: photoURL,
