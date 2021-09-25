@@ -7,7 +7,7 @@ packages:
       name: _discoveryapis_commons
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.1"
+    version: "1.0.2"
   _fe_analyzer_shared:
     dependency: transitive
     description:

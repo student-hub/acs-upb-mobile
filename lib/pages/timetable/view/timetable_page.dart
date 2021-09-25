@@ -213,7 +213,9 @@ class _TimetablePageState extends State<TimetablePage>
             .currentUserFromCache;
         await Provider.of<ClassProvider>(context, listen: false)
             .fetchClassHeaders(uid: user.uid);
+        if (!mounted) return;
         await Provider.of<FilterProvider>(context, listen: false).fetchFilter();
+        if (!mounted) return;
         await Provider.of<RequestProvider>(context, listen: false)
             .userAlreadyRequested(user.uid);
 
@@ -221,6 +223,7 @@ class _TimetablePageState extends State<TimetablePage>
         await Future<void>.delayed(const Duration(milliseconds: 100));
 
         // Show dialog if there are no events
+        if (!mounted) return;
         final eventProvider =
             Provider.of<UniEventProvider>(context, listen: false);
 
@@ -284,6 +287,7 @@ class _TimetablePageState extends State<TimetablePage>
                               onSave: (classIds) async {
                                 await classProvider.setUserClassIds(
                                     classIds, authProvider.uid);
+                                if (!mounted) return;
                                 Navigator.pop(context);
                               });
                         } else {
@@ -346,6 +350,7 @@ class _TimetablePageState extends State<TimetablePage>
               // Check if user is verified
               final bool isVerified = await authProvider.isVerified;
               // Pop the dialog
+              if (!mounted) return;
               Navigator.of(context).pop();
               // Push the Permissions page
               if (authProvider.isAnonymous) {

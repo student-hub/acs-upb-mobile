@@ -399,6 +399,7 @@ class _AddEventViewState extends State<AddEventView> {
                   await Provider.of<UniEventProvider>(context, listen: false)
                       .deleteEvent(widget.initialEvent);
               if (res) {
+                if (!mounted) return;
                 Navigator.of(context)
                     .popUntil(ModalRoute.withName(Routes.home));
                 AppToast.show(S.current.messageEventDeleted);
@@ -458,6 +459,7 @@ class _AddEventViewState extends State<AddEventView> {
                 await Provider.of<UniEventProvider>(context, listen: false)
                     .addEvent(event);
             if (res) {
+              if (!mounted) return;
               Navigator.of(context).pop();
               AppToast.show(S.current.messageEventAdded);
             }
@@ -466,6 +468,7 @@ class _AddEventViewState extends State<AddEventView> {
                 await Provider.of<UniEventProvider>(context, listen: false)
                     .updateEvent(event);
             if (res) {
+              if (!mounted) return;
               Navigator.of(context).popUntil(ModalRoute.withName(Routes.home));
               AppToast.show(S.current.messageEventEdited);
             }

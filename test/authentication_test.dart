@@ -1,3 +1,5 @@
+// ignore_for_file: flutter_style_todos
+
 // import 'package:acs_upb_mobile/authentication/model/user.dart';
 // import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 // import 'package:acs_upb_mobile/authentication/view/login_view.dart';
