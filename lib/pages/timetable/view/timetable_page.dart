@@ -144,7 +144,9 @@ class _TimetablePageState extends State<TimetablePage>
                           return const Center(
                               child: CircularProgressIndicator());
                         case ConnectionState.waiting:
+                          break;
                         case ConnectionState.active:
+                          break;
                         case ConnectionState.done:
                           break;
                       }
