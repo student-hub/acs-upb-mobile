@@ -6,18 +6,13 @@ class ActionBar extends StatelessWidget {
 
   final List<Widget> actionButtons;
 
-
   @override
   Widget build(BuildContext context) {
-
-    return Positioned(
-      top: 0,
-      right: 0,
-      child: ConstrainedBox(
-        constraints: const BoxConstraints(maxHeight: 100),
-        child: Row(
-          children: actionButtons,
-        ),
+    return Container(
+      color: Theme.of(context).bottomAppBarColor.withOpacity(0),
+      child: Row(
+      textDirection: TextDirection.rtl,
+        children: actionButtons,
       ),
     );
   }

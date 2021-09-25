@@ -147,11 +147,19 @@ class AppScaffoldAction {
     return Material(
       type: MaterialType.transparency,
       clipBehavior: Clip.none,
-      child: Container(
-        color: Theme.of(context).bottomAppBarColor,
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: child,
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Container(
+          decoration: BoxDecoration(
+              color: Theme.of(context).bottomAppBarColor,
+              border: Border.all(
+                color: Theme.of(context).secondaryHeaderColor,
+              ),
+              borderRadius: const BorderRadius.all(Radius.circular(10))),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: child,
+          ),
         ),
       ),
     );
@@ -243,12 +251,8 @@ class AppScaffold extends StatelessWidget {
 
     return !kIsWeb
         ? body
-        : Stack(
+        : Column(
             children: [
-              Center(
-                  child: ConstrainedBox(
-                      constraints: BoxConstraints(maxWidth: maxBodyWidth),
-                      child: body)),
               if (actionsList.isNotEmpty)
                 ActionBar(actionsList
                     .map((e) => e?.toActionBarButton(
@@ -257,6 +261,13 @@ class AppScaffold extends StatelessWidget {
                     .toList())
               else
                 const SizedBox.shrink(),
+              Expanded(
+                flex: 1,
+                child: Center(
+                    child: ConstrainedBox(
+                        constraints: BoxConstraints(maxWidth: maxBodyWidth),
+                        child: body)),
+              ),
             ],
           );
   }
