@@ -68,7 +68,7 @@ class PersonView extends StatelessWidget {
                     children: [
                       Padding(
                         padding: const EdgeInsets.fromLTRB(28, 28, 28, 0),
-                        child:  _PersonBanner(
+                        child: _PersonBanner(
                           name: person.name,
                           photoURL: person.photo,
                           position: person.position,
@@ -217,6 +217,7 @@ class _PersonBanner extends StatelessWidget {
                   Text(
                     name,
                     style: Theme.of(context).textTheme.headline3,
+                    overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: 12),
                   IconText(
