@@ -199,32 +199,34 @@ class _PersonBanner extends StatelessWidget {
         padding: const EdgeInsets.all(12),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [
+          children: [ 
             PersonAvatar(
               photoURL: photoURL,
               size: 100,
             ),
-            Padding(
-              padding: const EdgeInsets.only(left: 12),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Text(
-                    position,
-                    style: Theme.of(context).textTheme.bodyText1,
-                  ),
-                  Text(
-                    name,
-                    style: Theme.of(context).textTheme.headline3,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  const SizedBox(height: 12),
-                  IconText(
-                      icon: FeatherIcons.mapPin,
-                      text: office ?? '-',
-                      style: Theme.of(context).textTheme.bodyText1),
-                ],
+            Flexible(
+              child: Padding(
+                padding: const EdgeInsets.only(left: 12),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Text(
+                      position,
+                      style: Theme.of(context).textTheme.bodyText1,
+                    ),
+                    Text(
+                      name,
+                      style: Theme.of(context).textTheme.headline3,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(height: 12),
+                    IconText(
+                        icon: FeatherIcons.mapPin,
+                        text: office ?? '-',
+                        style: Theme.of(context).textTheme.bodyText1),
+                  ],
+                ),
               ),
             ),
           ],
