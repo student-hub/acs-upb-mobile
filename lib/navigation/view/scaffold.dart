@@ -108,7 +108,7 @@ class AppScaffoldAction {
     );
   }
 
-  /// todo
+  /// Build an action bar button this AppScaffoldAction
   Widget toActionBarButton(
       {@required bool enableContent, @required BuildContext context}) {
     final void Function() onPressed =
