@@ -1,5 +1,6 @@
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
+import 'package:acs_upb_mobile/navigation/service/app_navigator.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/service/feedback_provider.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/view/feedback_question.dart';
@@ -20,6 +21,8 @@ class ClassFeedbackView extends StatefulWidget {
   const ClassFeedbackView({Key key, this.classHeader}) : super(key: key);
 
   final ClassHeader classHeader;
+
+  static const String routeName = '/class/feedback';
 
   @override
   _ClassFeedbackViewState createState() => _ClassFeedbackViewState();
@@ -253,7 +256,7 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
                       selectedTeacher, classController.text);
 
           if (feedbackSentSuccessfully) {
-            Navigator.of(context).pop();
+            AppNavigator.pop(context);
             AppToast.show(S.current.messageFeedbackHasBeenSent);
           }
         },

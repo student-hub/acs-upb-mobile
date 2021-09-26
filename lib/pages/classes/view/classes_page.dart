@@ -1,5 +1,7 @@
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
+import 'package:acs_upb_mobile/navigation/service/app_navigator.dart';
+import 'package:acs_upb_mobile/navigation/view/scaffold.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/view/class_feedback_checklist.dart';
 import 'package:acs_upb_mobile/pages/classes/model/class.dart';
 import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
@@ -8,7 +10,6 @@ import 'package:acs_upb_mobile/resources/remote_config.dart';
 import 'package:acs_upb_mobile/widgets/class_icon.dart';
 import 'package:acs_upb_mobile/widgets/error_page.dart';
 import 'package:acs_upb_mobile/widgets/icon_text.dart';
-import 'package:acs_upb_mobile/navigation/view/scaffold.dart';
 import 'package:acs_upb_mobile/widgets/spoiler.dart';
 import 'package:flutter/material.dart';
 import 'package:pedantic/pedantic.dart';
@@ -16,6 +17,8 @@ import 'package:provider/provider.dart';
 
 class ClassesPage extends StatefulWidget {
   const ClassesPage({Key key}) : super(key: key);
+
+  static const String routeName = '/classes';
 
   @override
   _ClassesPageState createState() => _ClassesPageState();
@@ -28,6 +31,8 @@ class _ClassesPageState extends State<ClassesPage> {
   Future<void> updateClasses() async {
     // If updating is null, classes haven't been initialized yet so they're not
     // technically "updating"
+    if (!mounted) return;
+
     if (updating != null) {
       updating = true;
     }
@@ -66,16 +71,19 @@ class _ClassesPageState extends State<ClassesPage> {
           AppScaffoldAction(
             icon: Icons.rate_review_outlined,
             tooltip: S.current.navigationClassesFeedbackChecklist,
-            onPressed: () => Navigator.of(context).push(
+            onPressed: () => AppNavigator.push(
+              context,
               MaterialPageRoute<ClassFeedbackChecklist>(
                 builder: (_) => ClassFeedbackChecklist(classes: headers),
               ),
+              webPath: ClassFeedbackChecklist.routeName,
             ),
           ),
         AppScaffoldAction(
           icon: Icons.edit_outlined,
           tooltip: S.current.actionChooseClasses,
-          onPressed: () => Navigator.of(context).push(
+          onPressed: () => AppNavigator.push(
+            context,
             MaterialPageRoute<ChangeNotifierProvider>(
               builder: (_) => ChangeNotifierProvider.value(
                   value: classProvider,
@@ -89,7 +97,7 @@ class _ClassesPageState extends State<ClassesPage> {
                               await classProvider.setUserClassIds(
                                   classIds, authProvider.uid);
                               unawaited(updateClasses());
-                              Navigator.pop(context);
+                              AppNavigator.pop(context);
                             });
                       } else {
                         return const Center(child: CircularProgressIndicator());
@@ -97,6 +105,7 @@ class _ClassesPageState extends State<ClassesPage> {
                     },
                   )),
             ),
+            webPath: AddClassesPage.routeName,
           ),
         ),
       ],
@@ -107,7 +116,8 @@ class _ClassesPageState extends State<ClassesPage> {
                 ? ClassList(
                     classes: headers,
                     sectioned: false,
-                    onTap: (classHeader) => Navigator.of(context).push(
+                    onTap: (classHeader) => AppNavigator.push(
+                      context,
                       MaterialPageRoute<ChangeNotifierProvider>(
                         builder: (context) => ChangeNotifierProvider.value(
                           value: classProvider,
@@ -116,6 +126,7 @@ class _ClassesPageState extends State<ClassesPage> {
                           ),
                         ),
                       ),
+                      webPath: '${ClassView.routeName}?id=${classHeader.id}',
                     ),
                   )
                 : ErrorPage(
@@ -154,6 +165,9 @@ class AddClassesPage extends StatefulWidget {
   final List<String> initialClassIds;
   final void Function(List<String>) onSave;
 
+  static const String routeName = '/classes/add';
+
+  // TODO(RotaruRazvan): verify that [initialClassIds] is not null, show error otherwise
   @override
   _AddClassesPageState createState() =>
       _AddClassesPageState(classIds: initialClassIds.toSet());

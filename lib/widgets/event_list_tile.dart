@@ -1,3 +1,4 @@
+import 'package:acs_upb_mobile/navigation/service/app_navigator.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/events/uni_event.dart';
 import 'package:acs_upb_mobile/pages/timetable/view/events/event_view.dart';
 import 'package:flutter/cupertino.dart';
@@ -33,9 +34,12 @@ class EventListTile extends StatelessWidget {
             .bodyText2
             .copyWith(color: Theme.of(context).hintColor),
       ),
-      onTap: () => Navigator.of(context).push(MaterialPageRoute<EventView>(
-        builder: (_) => EventView(uniEvent: uniEvent),
-      )),
+      onTap: () => AppNavigator.push(
+          context,
+          MaterialPageRoute<EventView>(
+            builder: (_) => EventView(uniEvent: uniEvent),
+          ),
+          webPath: '${EventView.routeName}?id=${uniEvent.id}'),
     );
   }
 }

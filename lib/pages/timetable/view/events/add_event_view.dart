@@ -1,7 +1,8 @@
 import 'package:acs_upb_mobile/authentication/model/user.dart';
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
-import 'package:acs_upb_mobile/navigation/routes.dart';
+import 'package:acs_upb_mobile/navigation/model/routes.dart';
+import 'package:acs_upb_mobile/navigation/service/app_navigator.dart';
 import 'package:acs_upb_mobile/pages/classes/model/class.dart';
 import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
 import 'package:acs_upb_mobile/pages/filter/view/relevance_picker.dart';
@@ -31,11 +32,14 @@ import 'package:time_machine/time_machine.dart' as time_machine show DayOfWeek;
 import 'package:time_machine/time_machine.dart' hide DayOfWeek;
 import 'package:time_machine/time_machine_text_patterns.dart';
 
+// TODO(RazvanRotaru): check permissions to add event
 class AddEventView extends StatefulWidget {
   /// If the `id` of [initialEvent] is not null, this acts like an "Edit event"
   /// page starting from the info in [initialEvent]. Otherwise, it acts like an
   /// "Add event" page with optional default values based on [initialEvent].
   const AddEventView({Key key, this.initialEvent}) : super(key: key);
+
+  static const String routeName = '/event/add';
 
   final UniEvent initialEvent;
 
@@ -373,8 +377,10 @@ class _AddEventViewState extends State<AddEventView> {
                   await Provider.of<UniEventProvider>(context, listen: false)
                       .deleteEvent(widget.initialEvent);
               if (res) {
-                Navigator.of(context)
-                    .popUntil(ModalRoute.withName(Routes.home));
+                AppNavigator.popUntil(
+                  context,
+                  ModalRoute.withName(Routes.home),
+                );
                 AppToast.show(S.current.messageEventDeleted);
               }
             },
@@ -427,7 +433,7 @@ class _AddEventViewState extends State<AddEventView> {
                 await Provider.of<UniEventProvider>(context, listen: false)
                     .addEvent(event);
             if (res) {
-              Navigator.of(context).pop();
+              AppNavigator.pop(context);
               AppToast.show(S.current.messageEventAdded);
             }
           } else {
@@ -435,7 +441,7 @@ class _AddEventViewState extends State<AddEventView> {
                 await Provider.of<UniEventProvider>(context, listen: false)
                     .updateEvent(event);
             if (res) {
-              Navigator.of(context).popUntil(ModalRoute.withName(Routes.home));
+              AppNavigator.popUntil(context, ModalRoute.withName(Routes.home));
               AppToast.show(S.current.messageEventEdited);
             }
           }

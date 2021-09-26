@@ -1,6 +1,7 @@
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
-import 'package:acs_upb_mobile/navigation/routes.dart';
+import 'package:acs_upb_mobile/navigation/model/routes.dart';
+import 'package:acs_upb_mobile/navigation/service/app_navigator.dart';
 import 'package:acs_upb_mobile/resources/banner.dart';
 import 'package:acs_upb_mobile/widgets/button.dart';
 import 'package:acs_upb_mobile/widgets/dialog.dart';
@@ -78,7 +79,7 @@ class _LoginViewState extends State<LoginView> {
                       .sendPasswordResetEmail(
                           emailController.text + S.current.stringEmailDomain);
               if (success) {
-                Navigator.pop(context);
+                AppNavigator.pop(context);
               }
               return;
             },
@@ -98,7 +99,7 @@ class _LoginViewState extends State<LoginView> {
           fields[S.current.labelPassword],
         );
         if (result) {
-          await Navigator.pushReplacementNamed(context, Routes.home);
+          await AppNavigator.pushReplacementNamed(context, Routes.home);
         }
       },
       trailing: <Widget>[
@@ -209,7 +210,7 @@ class _LoginViewState extends State<LoginView> {
                                     final result =
                                         await authProvider.signInAnonymously();
                                     if (result) {
-                                      await Navigator.pushReplacementNamed(
+                                      await AppNavigator.pushReplacementNamed(
                                           context, Routes.home);
                                     }
                                   },
@@ -239,7 +240,8 @@ class _LoginViewState extends State<LoginView> {
                               ),
                               InkWell(
                                 onTap: () {
-                                  Navigator.pushNamed(context, Routes.signUp);
+                                  AppNavigator.pushNamed(
+                                      context, Routes.signUp);
                                 },
                                 child: Text(S.current.actionSignUp,
                                     style: Theme.of(context)

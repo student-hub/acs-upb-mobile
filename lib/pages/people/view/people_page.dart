@@ -1,4 +1,5 @@
 import 'package:acs_upb_mobile/generated/l10n.dart';
+import 'package:acs_upb_mobile/navigation/service/app_navigator.dart';
 import 'package:acs_upb_mobile/pages/people/model/person.dart';
 import 'package:acs_upb_mobile/pages/people/service/person_provider.dart';
 import 'package:acs_upb_mobile/pages/people/view/person_view.dart';
@@ -16,6 +17,8 @@ import 'package:recase/recase.dart';
 
 class PeoplePage extends StatefulWidget {
   const PeoplePage({Key key}) : super(key: key);
+
+  static const String routeName = '/people';
 
   @override
   _PeoplePageState createState() => _PeoplePageState();
@@ -139,24 +142,23 @@ class _PeopleListState extends State<PeopleList> {
                   widget.people[index].name,
                 ),
           subtitle: Text(widget.people[index].email),
-          onTap: () => kIsWeb
-              ? showPersonPage(widget.people[index].name)
-              : showPersonInfo(widget.people[index]),
+          onTap: () => showPerson(widget.people[index]),
         );
       },
     );
   }
 
-  void showPersonInfo(Person person) {
-    showModalBottomSheet<dynamic>(
-      isScrollControlled: true,
-      context: context,
-      builder: (BuildContext buildContext) => PersonView(person: person),
-    );
-  }
-
-  void showPersonPage(String name) {
-    Navigator.pushNamed(context, '/people?profile=$name');
+  Future<void> showPerson(Person person) async {
+    if (kIsWeb) {
+      await AppNavigator.pushNamed(
+          context, '${PersonView.routeName}?name=${person.name}');
+    } else {
+      await showModalBottomSheet<dynamic>(
+        isScrollControlled: true,
+        context: context,
+        builder: (BuildContext buildContext) => PersonView(person: person),
+      );
+    }
   }
 }
 
