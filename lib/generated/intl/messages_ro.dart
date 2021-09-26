@@ -178,6 +178,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "labelPreview" : MessageLookupByLibrary.simpleMessage("Previzualizare"),
     "labelPrivacyPolicy" : MessageLookupByLibrary.simpleMessage("Politică de confidențialitate"),
     "labelRelevance" : MessageLookupByLibrary.simpleMessage("Relevanță"),
+    "labelReportType" : MessageLookupByLibrary.simpleMessage("Tipul raportului"),
     "labelSemester" : MessageLookupByLibrary.simpleMessage("Semestrul"),
     "labelStart" : MessageLookupByLibrary.simpleMessage("Început"),
     "labelTeam" : m5,

@@ -72,7 +72,7 @@ class _FeedbackFormPageState extends State<FeedbackFormPage> {
                             color: Theme.of(context).formIconColor),
                         const SizedBox(width: 12),
                         Text(
-                          'Report type:',
+                          S.current.labelReportType,
                           style: Theme.of(context)
                               .textTheme
                               .subtitle1

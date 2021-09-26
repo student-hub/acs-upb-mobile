@@ -595,6 +595,16 @@ class S {
     );
   }
 
+  /// `Report type`
+  String get labelReportType {
+    return Intl.message(
+      'Report type',
+      name: 'labelReportType',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Shortcuts`
   String get sectionShortcuts {
     return Intl.message(

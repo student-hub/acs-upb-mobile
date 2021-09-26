@@ -178,6 +178,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "labelPreview" : MessageLookupByLibrary.simpleMessage("Preview"),
     "labelPrivacyPolicy" : MessageLookupByLibrary.simpleMessage("Privacy Policy"),
     "labelRelevance" : MessageLookupByLibrary.simpleMessage("Relevance"),
+    "labelReportType" : MessageLookupByLibrary.simpleMessage("Report type"),
     "labelSemester" : MessageLookupByLibrary.simpleMessage("Semester"),
     "labelStart" : MessageLookupByLibrary.simpleMessage("Start"),
     "labelTeam" : m5,
