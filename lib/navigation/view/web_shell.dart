@@ -1,10 +1,10 @@
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/navigation/service/navigation_provider.dart';
-import 'package:acs_upb_mobile/navigation/service/app_router_delegates.dart';
+import 'package:acs_upb_mobile/navigation/service/router_delegates.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 
-import 'dummy_search_bar.dart';
+import 'webpage_header.dart';
 
 class WebShell extends StatefulWidget {
   WebShell({Key key, this.navigationProvider}) : super(key: key);
@@ -55,7 +55,8 @@ class _WebShellState extends State<WebShell> {
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size(screenSize.width, 100),
-        child: DummySearchBar(
+        child: WebPageHeader(
+          height: 60,
           leading: Align(
             alignment: AlignmentDirectional.centerStart,
             child: Padding(

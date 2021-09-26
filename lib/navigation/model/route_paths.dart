@@ -6,7 +6,7 @@ import 'package:acs_upb_mobile/authentication/view/login_view.dart';
 import 'package:acs_upb_mobile/authentication/view/sign_up_view.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/main.dart';
-import 'package:acs_upb_mobile/navigation/service/app_navigator.dart';
+import 'package:acs_upb_mobile/navigation/service/navigator.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/view/class_feedback_checklist.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/view/class_feedback_view.dart';
 import 'package:acs_upb_mobile/pages/classes/model/class.dart';

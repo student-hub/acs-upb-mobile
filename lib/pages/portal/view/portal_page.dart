@@ -4,7 +4,7 @@ import 'dart:math';
 import 'package:acs_upb_mobile/authentication/model/user.dart';
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
-import 'package:acs_upb_mobile/navigation/service/app_navigator.dart';
+import 'package:acs_upb_mobile/navigation/service/navigator.dart';
 import 'package:acs_upb_mobile/pages/filter/model/filter.dart';
 import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
 import 'package:acs_upb_mobile/pages/filter/view/filter_page.dart';

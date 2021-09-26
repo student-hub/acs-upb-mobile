@@ -6,8 +6,8 @@ import 'package:acs_upb_mobile/authentication/view/login_view.dart';
 import 'package:acs_upb_mobile/authentication/view/sign_up_view.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/navigation/model/routes.dart';
-import 'package:acs_upb_mobile/navigation/service/app_router_delegates.dart';
-import 'package:acs_upb_mobile/navigation/service/app_router_information_parser.dart';
+import 'package:acs_upb_mobile/navigation/service/router_delegates.dart';
+import 'package:acs_upb_mobile/navigation/service/router_information_parser.dart';
 import 'package:acs_upb_mobile/navigation/view/bottom_navigation_bar.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/service/feedback_provider.dart';
 import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
@@ -44,7 +44,7 @@ import 'package:time_machine/time_machine.dart';
 
 import 'authentication/view/edit_profile_page.dart';
 import 'navigation/model/routes.dart';
-import 'navigation/service/app_router_delegates.dart';
+import 'navigation/service/router_delegates.dart';
 import 'navigation/service/navigation_provider.dart';
 import 'navigation/view/bottom_navigation_bar.dart';
 

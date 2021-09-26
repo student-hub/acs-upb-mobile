@@ -1,6 +1,6 @@
 import 'dart:math' as math;
 
-import 'package:acs_upb_mobile/navigation/service/app_navigator.dart';
+import 'package:acs_upb_mobile/navigation/service/navigator.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/events/uni_event.dart';
 import 'package:acs_upb_mobile/pages/timetable/view/events/event_view.dart';
 import 'package:black_hole_flutter/black_hole_flutter.dart';

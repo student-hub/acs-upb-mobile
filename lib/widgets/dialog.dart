@@ -1,5 +1,5 @@
 import 'package:acs_upb_mobile/generated/l10n.dart';
-import 'package:acs_upb_mobile/navigation/service/app_navigator.dart';
+import 'package:acs_upb_mobile/navigation/service/navigator.dart';
 import 'package:acs_upb_mobile/widgets/button.dart';
 import 'package:acs_upb_mobile/widgets/icon_text.dart';
 import 'package:flutter/material.dart';

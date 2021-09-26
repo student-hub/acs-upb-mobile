@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:core';
 import 'dart:math';
 
-import 'package:acs_upb_mobile/navigation/service/app_navigator.dart';
+import 'package:acs_upb_mobile/navigation/service/navigator.dart';
 import 'package:acs_upb_mobile/navigation/service/navigation_provider.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
