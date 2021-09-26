@@ -1,7 +1,10 @@
 part of route_paths;
 
-class ClassesFeedbackPath extends RoutePath {
-  ClassesFeedbackPath() : super(ClassFeedbackChecklist.routeName);
+class ClassFeedbackViewPath extends RoutePath {
+  ClassFeedbackViewPath(this.id)
+      : super('${ClassFeedbackView.routeName}?id=$id');
+
+  final String id;
 
   @override
   Widget get page {
@@ -12,14 +15,13 @@ class ClassesFeedbackPath extends RoutePath {
 
         if (!authProvider.isAuthenticated || authProvider.isAnonymous) {
           return ErrorPage(
-              errorMessage: S.current.warningAuthenticationNeeded,
-           );
+            errorMessage: S.current.warningAuthenticationNeeded,
+          );
         }
 
-        return FutureBuilder<List<ClassHeader>>(
-          future: classProvider.fetchClassHeaders(uid: authProvider.uid),
-          builder: (BuildContext context,
-              AsyncSnapshot<List<ClassHeader>> snapshot) {
+        return FutureBuilder<ClassHeader>(
+          future: classProvider.fetchClassHeader(id),
+          builder: (BuildContext context, AsyncSnapshot<ClassHeader> snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
               if (!snapshot.hasData) {
                 return ErrorPage(
@@ -27,11 +29,12 @@ class ClassesFeedbackPath extends RoutePath {
                 );
               }
 
-              final headers = snapshot.data.toSet();
-              return ClassFeedbackChecklist(
-                classes: headers,
+              final header = snapshot.data;
+              return ClassFeedbackView(
+                classHeader: header,
               );
             }
+
             return const CircularProgressIndicator();
           },
         );

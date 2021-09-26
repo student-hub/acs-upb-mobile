@@ -6,6 +6,7 @@ import 'package:acs_upb_mobile/authentication/view/login_view.dart';
 import 'package:acs_upb_mobile/authentication/view/sign_up_view.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/main.dart';
+import 'package:acs_upb_mobile/navigation/service/app_navigator.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/view/class_feedback_checklist.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/view/class_feedback_view.dart';
 import 'package:acs_upb_mobile/pages/classes/model/class.dart';
@@ -35,9 +36,17 @@ import 'package:acs_upb_mobile/widgets/error_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+part 'routes/add_classes_path.dart';
+
 part 'routes/add_website_path.dart';
 
+part 'routes/class_feedback_view_path.dart';
+
+part 'routes/class_view_path.dart';
+
 part 'routes/classes_feedback_path.dart';
+
+part 'routes/classes_page_path.dart';
 
 part 'routes/edit_profile_path.dart';
 
@@ -79,42 +88,6 @@ abstract class RoutePath {
   RouteInformation get routeInformation => RouteInformation(location: location);
 
   Widget get page;
-}
-
-class ClassFeedbackViewPath extends RoutePath {
-  ClassFeedbackViewPath(this.id) : super(ClassFeedbackView.routeName);
-
-  final String id;
-
-  // TODO(RazvanRotaru): Retrieve [ClassHeader] for [ClassFeedbackView] by id
-  @override
-  Widget get page => const ClassFeedbackView();
-}
-
-class ClassViewPath extends RoutePath {
-  ClassViewPath(this.id) : super(ClassView.routeName);
-
-  final String id;
-
-  // TODO(RazvanRotaru): retrieve [ClassHeader] for [ClassView] by id
-  @override
-  Widget get page => const ClassView();
-}
-
-// TODO(RazvanRotaru): wrap [ClassesPage] in a [ChangeNotifierProvieder]
-class ClassesPagePath extends RoutePath {
-  ClassesPagePath() : super(ClassesPage.routeName);
-
-  @override
-  Widget get page => const ClassesPage();
-}
-
-// TODO(RazvanRotaru): retrieve classIds for [AddClassesPage] like in TimetablePage
-class AddClassesPath extends RoutePath {
-  AddClassesPath() : super(AddClassesPage.routeName);
-
-  @override
-  Widget get page => const AddClassesPage();
 }
 
 class EventViewPath extends RoutePath {
@@ -181,6 +154,7 @@ class PathFactory {
       case ClassFeedbackChecklist.routeName:
         return ClassesFeedbackPath();
       case ClassFeedbackView.routeName:
+        print('enters');
         final id = uri.queryParameters['id'];
         return ClassFeedbackViewPath(id);
       case ClassView.routeName:

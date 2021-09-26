@@ -74,6 +74,7 @@ class _ClassViewState extends State<ClassView> {
                         AppNavigator.push(
                           context,
                           MaterialPageRoute<ClassFeedbackView>(
+                            // Should this be wrapped in a ChangedNotifierProvider like it is in class_feedback_checklist.dart?
                             builder: (_) => ClassFeedbackView(
                                 classHeader: widget.classHeader),
                           ),

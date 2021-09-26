@@ -1,5 +1,4 @@
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
-import 'package:acs_upb_mobile/authentication/view/login_view.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/navigation/service/app_navigator.dart';
 import 'package:acs_upb_mobile/pages/home/home_page.dart';

@@ -22,7 +22,7 @@ class ClassFeedbackView extends StatefulWidget {
 
   final ClassHeader classHeader;
 
-  static const String routeName = 'class/feedback';
+  static const String routeName = '/class/feedback';
 
   @override
   _ClassFeedbackViewState createState() => _ClassFeedbackViewState();

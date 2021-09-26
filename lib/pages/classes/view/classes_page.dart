@@ -1,6 +1,7 @@
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/navigation/service/app_navigator.dart';
+import 'package:acs_upb_mobile/navigation/view/scaffold.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/view/class_feedback_checklist.dart';
 import 'package:acs_upb_mobile/pages/classes/model/class.dart';
 import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
@@ -9,7 +10,6 @@ import 'package:acs_upb_mobile/resources/remote_config.dart';
 import 'package:acs_upb_mobile/widgets/class_icon.dart';
 import 'package:acs_upb_mobile/widgets/error_page.dart';
 import 'package:acs_upb_mobile/widgets/icon_text.dart';
-import 'package:acs_upb_mobile/navigation/view/scaffold.dart';
 import 'package:acs_upb_mobile/widgets/spoiler.dart';
 import 'package:flutter/material.dart';
 import 'package:pedantic/pedantic.dart';
@@ -31,6 +31,8 @@ class _ClassesPageState extends State<ClassesPage> {
   Future<void> updateClasses() async {
     // If updating is null, classes haven't been initialized yet so they're not
     // technically "updating"
+    if (!mounted) return;
+
     if (updating != null) {
       updating = true;
     }
