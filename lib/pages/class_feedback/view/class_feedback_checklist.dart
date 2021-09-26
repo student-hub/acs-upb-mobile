@@ -1,4 +1,5 @@
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
+import 'package:acs_upb_mobile/navigation/service/app_navigator.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/service/feedback_provider.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/view/class_feedback_view.dart';
 import 'package:acs_upb_mobile/pages/classes/model/class.dart';
@@ -14,6 +15,8 @@ import 'package:provider/provider.dart';
 class ClassFeedbackChecklist extends StatefulWidget {
   const ClassFeedbackChecklist({Key key, this.classes}) : super(key: key);
   final Set<ClassHeader> classes;
+
+  static const String routeName = '/classes/feedback';
 
   @override
   _ClassFeedbackChecklistState createState() => _ClassFeedbackChecklistState();
@@ -128,13 +131,15 @@ class FeedbackClassListItem extends StatelessWidget {
 
   void onTap(BuildContext context) {
     if (!done) {
-      Navigator.of(context).push(
+      AppNavigator.push(
+        context,
         MaterialPageRoute<ChangeNotifierProvider>(
           builder: (context) => ChangeNotifierProvider.value(
             value: Provider.of<ClassProvider>(context),
             child: ClassFeedbackView(classHeader: classHeader),
           ),
         ),
+        webPath: '${ClassFeedbackView.routeName}?id=${classHeader.id}',
       );
     } else {
       AppToast.show(S.current.warningFeedbackAlreadySent);

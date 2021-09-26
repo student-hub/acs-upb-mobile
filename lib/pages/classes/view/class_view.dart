@@ -1,5 +1,6 @@
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
+import 'package:acs_upb_mobile/navigation/service/app_navigator.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/service/feedback_provider.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/view/class_feedback_view.dart';
 import 'package:acs_upb_mobile/pages/classes/model/class.dart';
@@ -28,6 +29,8 @@ class ClassView extends StatefulWidget {
   const ClassView({Key key, this.classHeader}) : super(key: key);
 
   final ClassHeader classHeader;
+
+  static const String routeName = '/class';
 
   @override
   _ClassViewState createState() => _ClassViewState();
@@ -68,14 +71,16 @@ class _ClassViewState extends State<ClassView> {
                   ? null
                   : () {
                       if (!alreadyCompletedFeedback) {
-                        Navigator.of(context)
-                            .push(
-                              MaterialPageRoute<ClassFeedbackView>(
-                                builder: (_) => ClassFeedbackView(
-                                    classHeader: widget.classHeader),
-                              ),
-                            )
-                            .then((value) => setState(() {}));
+                        AppNavigator.push(
+                          context,
+                          MaterialPageRoute<ClassFeedbackView>(
+                            // Should this be wrapped in a ChangedNotifierProvider like it is in class_feedback_checklist.dart?
+                            builder: (_) => ClassFeedbackView(
+                                classHeader: widget.classHeader),
+                          ),
+                          webPath:
+                              '${ClassFeedbackView.routeName}?id=${widget.classHeader.id}',
+                        ).then((value) => setState(() {}));
                       } else {
                         AppToast.show(S.current.warningFeedbackAlreadySent);
                       }
@@ -140,22 +145,26 @@ class _ClassViewState extends State<ClassView> {
                             S.current.warningNoPermissionToEditClassInfo),
                     child: IconButton(
                       icon: const Icon(Icons.add_outlined),
-                      onPressed:
-                          authProvider.currentUserFromCache.canEditClassInfo
-                              ? () => Navigator.of(context).push(
-                                      MaterialPageRoute<ChangeNotifierProvider>(
-                                    builder: (context) =>
-                                        ChangeNotifierProvider.value(
-                                      value: classProvider,
-                                      child: ShortcutView(onSave: (shortcut) {
-                                        setState(() =>
-                                            classInfo.shortcuts.add(shortcut));
-                                        classProvider.addShortcut(
-                                            widget.classHeader.id, shortcut);
-                                      }),
-                                    ),
-                                  ))
-                              : null,
+                      onPressed: authProvider
+                              .currentUserFromCache.canEditClassInfo
+                          // TODO(RazvanRotaru): Maybe add use a pop-up on web
+                          ? () => AppNavigator.push(
+                                context,
+                                MaterialPageRoute<ChangeNotifierProvider>(
+                                  builder: (context) =>
+                                      ChangeNotifierProvider.value(
+                                    value: classProvider,
+                                    child: ShortcutView(onSave: (shortcut) {
+                                      setState(() =>
+                                          classInfo.shortcuts.add(shortcut));
+                                      classProvider.addShortcut(
+                                          widget.classHeader.id, shortcut);
+                                    }),
+                                  ),
+                                ),
+                                webPath: ShortcutView.routeName,
+                              )
+                          : null,
                     ),
                   ),
                 ],
@@ -241,7 +250,7 @@ class _ClassViewState extends State<ClassView> {
               context: context,
               shortcutName: shortcut.name,
               onDelete: () async {
-                Navigator.pop(context); // Pop dialog window
+                AppNavigator.pop(context); // Pop dialog window
 
                 final success = await classProvider.deleteShortcut(
                     widget.classHeader.id, index);

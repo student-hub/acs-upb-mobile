@@ -1,6 +1,7 @@
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/navigation/view/action_bar.dart';
+import 'package:acs_upb_mobile/navigation/service/app_navigator.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/widgets/error_page.dart';
 import 'package:flutter/cupertino.dart';
@@ -46,7 +47,7 @@ class AppScaffoldAction {
     final void Function() onPressed =
         !enableContent || (this.onPressed == null && route == null)
             ? null
-            : this.onPressed ?? () => Navigator.pushNamed(context, route);
+            : this.onPressed ?? () => AppNavigator.pushNamed(context, route);
 
     final icon = disabled
         ? Icon(this.icon ?? Icons.menu_outlined,

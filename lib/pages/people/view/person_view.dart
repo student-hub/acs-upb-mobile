@@ -1,15 +1,15 @@
 import 'package:acs_upb_mobile/pages/people/model/person.dart';
-import 'package:acs_upb_mobile/pages/people/service/person_provider.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/widgets/icon_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
-import 'package:provider/provider.dart';
 
 class PersonView extends StatelessWidget {
   const PersonView({Key key, this.person}) : super(key: key);
+
+  static const String routeName = '/profile';
 
   final Person person;
 
@@ -97,26 +97,6 @@ class PersonView extends StatelessWidget {
           ),
         ],
       ),
-    );
-  }
-
-  static Widget fromName(BuildContext context, String name) {
-    final PersonProvider provider =
-        Provider.of<PersonProvider>(context, listen: false);
-    final Future<Person> person = provider.fetchPerson(name);
-
-    return FutureBuilder(
-      future: person,
-      builder: (_, snapshot) {
-        if (snapshot.connectionState == ConnectionState.done) {
-          final Person personData = snapshot.data;
-          return PersonView(
-            person: personData,
-          );
-        } else {
-          return const CircularProgressIndicator();
-        }
-      },
     );
   }
 }

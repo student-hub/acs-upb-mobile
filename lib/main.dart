@@ -1,11 +1,14 @@
 import 'dart:io';
 
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
+import 'package:acs_upb_mobile/authentication/view/edit_profile_page.dart';
 import 'package:acs_upb_mobile/authentication/view/login_view.dart';
 import 'package:acs_upb_mobile/authentication/view/sign_up_view.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
+import 'package:acs_upb_mobile/navigation/model/routes.dart';
+import 'package:acs_upb_mobile/navigation/service/app_router_delegates.dart';
+import 'package:acs_upb_mobile/navigation/service/app_router_information_parser.dart';
 import 'package:acs_upb_mobile/navigation/view/bottom_navigation_bar.dart';
-import 'package:acs_upb_mobile/navigation/routes.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/service/feedback_provider.dart';
 import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
 import 'package:acs_upb_mobile/pages/faq/service/question_provider.dart';
@@ -15,7 +18,6 @@ import 'package:acs_upb_mobile/pages/filter/view/filter_page.dart';
 import 'package:acs_upb_mobile/pages/news_feed/service/news_provider.dart';
 import 'package:acs_upb_mobile/pages/news_feed/view/news_feed_page.dart';
 import 'package:acs_upb_mobile/pages/people/service/person_provider.dart';
-import 'package:acs_upb_mobile/pages/people/view/person_view.dart';
 import 'package:acs_upb_mobile/pages/portal/service/website_provider.dart';
 import 'package:acs_upb_mobile/pages/settings/service/request_provider.dart';
 import 'package:acs_upb_mobile/pages/settings/view/request_permissions.dart';
@@ -39,6 +41,12 @@ import 'package:preferences/preferences.dart';
 import 'package:provider/provider.dart';
 import 'package:rrule/rrule.dart';
 import 'package:time_machine/time_machine.dart';
+
+import 'authentication/view/edit_profile_page.dart';
+import 'navigation/model/routes.dart';
+import 'navigation/service/app_router_delegates.dart';
+import 'navigation/service/navigation_provider.dart';
+import 'navigation/view/bottom_navigation_bar.dart';
 
 // FIXME: Our university website certificates have some issues, so we say we
 // trust them regardless.
@@ -72,8 +80,11 @@ Future<void> main() async {
   final classProvider = ClassProvider();
   final personProvider = PersonProvider();
   final feedbackProvider = FeedbackProvider();
+  final navigationProvider = NavigationProvider();
 
   runApp(MultiProvider(providers: [
+    ChangeNotifierProvider<NavigationProvider>(
+        create: (_) => navigationProvider),
     ChangeNotifierProvider<AuthProvider>(create: (_) => authProvider),
     ChangeNotifierProvider<WebsiteProvider>(create: (_) => WebsiteProvider()),
     Provider<RequestProvider>(create: (_) => RequestProvider()),
@@ -116,46 +127,50 @@ class _MyAppState extends State<MyApp> {
   final Color _accentColor = const Color(0xFF43ACCD);
 
   Widget buildApp(BuildContext context, ThemeData theme) {
-    return MaterialApp(
-      title: Utils.packageInfo.appName,
-      localizationsDelegates: [
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        S.delegate
-      ],
-      supportedLocales: S.delegate.supportedLocales,
-      theme: theme,
-      initialRoute: Routes.root,
-
-      // TODO(RazvanRotaru): Clean this v
-      onGenerateRoute: (RouteSettings settings) {
-        if (settings.name.startsWith('/people')) {
-          final String name =
-              settings.name.split('profile=').last.replaceAll('%20', ' ');
-          return MaterialPageRoute<void>(
-            builder: (BuildContext context) =>
-                PersonView.fromName(context, name),
-            settings: RouteSettings(
-                name: '/people?profile=$name', arguments: settings.arguments),
-          );
-        }
-
-        return MaterialPageRoute<void>(
-            builder: (BuildContext context) => const Scaffold());
-      },
-      routes: {
-        Routes.root: (_) => AppLoadingScreen(),
-        Routes.home: (_) => const AppBottomNavigationBar(),
-        Routes.settings: (_) => SettingsPage(),
-        Routes.login: (_) => LoginView(),
-        Routes.signUp: (_) => SignUpView(),
-        Routes.faq: (_) => FaqPage(),
-        Routes.filter: (_) => const FilterPage(),
-        Routes.newsFeed: (_) => NewsFeedPage(),
-        Routes.requestPermissions: (_) => RequestPermissionsPage(),
-      },
-      navigatorObservers: widget.navigationObservers ?? [],
-    );
+    if (kIsWeb) {
+      return MaterialApp.router(
+        title: Utils.packageInfo.appName,
+        localizationsDelegates: [
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          S.delegate
+        ],
+        supportedLocales: S.delegate.supportedLocales,
+        theme: theme,
+        routerDelegate: MainRouterDelegate(
+          navigationProvider: Provider.of<NavigationProvider>(context),
+        ),
+        routeInformationParser: AppRouteInformationParser(),
+      );
+    } else {
+      return MaterialApp(
+        title: Utils.packageInfo.appName,
+        localizationsDelegates: [
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          S.delegate
+        ],
+        supportedLocales: S.delegate.supportedLocales,
+        theme: theme,
+        initialRoute: Routes.root,
+        routes: {
+          Routes.root: (_) => AppLoadingScreen(),
+          Routes.home: (_) => const AppBottomNavigationBar(tabIndex: 0),
+          Routes.timetable: (_) => const AppBottomNavigationBar(tabIndex: 1),
+          Routes.portal: (_) => const AppBottomNavigationBar(tabIndex: 2),
+          Routes.people: (_) => const AppBottomNavigationBar(tabIndex: 3),
+          Routes.settings: (_) => SettingsPage(),
+          Routes.login: (_) => LoginView(),
+          Routes.signUp: (_) => SignUpView(),
+          Routes.faq: (_) => FaqPage(),
+          Routes.filter: (_) => const FilterPage(),
+          Routes.newsFeed: (_) => NewsFeedPage(),
+          Routes.requestPermissions: (_) => RequestPermissionsPage(),
+          Routes.editProfile: (_) => const EditProfilePage(),
+        },
+        navigatorObservers: widget.navigationObservers ?? [],
+      );
+    }
   }
 
   ChipThemeData defaultChipThemeData(Brightness brightness) =>

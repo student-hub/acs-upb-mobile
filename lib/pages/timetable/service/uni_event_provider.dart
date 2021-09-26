@@ -22,6 +22,7 @@ import 'package:googleapis/calendar/v3.dart' as g_cal;
 import 'package:rrule/rrule.dart';
 import 'package:time_machine/time_machine.dart';
 import 'package:timetable/timetable.dart';
+
 import 'google_calendar_services.dart';
 
 extension PeriodExtension on Period {
@@ -364,6 +365,12 @@ class UniEventProvider extends EventProvider<UniEventInstance>
     return _events
         .map((events) =>
             events.where((event) => event.classHeader.id == classId))
+        .first;
+  }
+
+  Future<UniEvent> getEventById(String id) async {
+    return _events
+        .map((events) => events.where((event) => event.id == id).first)
         .first;
   }
 
