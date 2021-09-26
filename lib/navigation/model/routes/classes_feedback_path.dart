@@ -12,8 +12,8 @@ class ClassesFeedbackPath extends RoutePath {
 
         if (!authProvider.isAuthenticated || authProvider.isAnonymous) {
           return ErrorPage(
-              errorMessage: S.current.warningAuthenticationNeeded,
-           );
+            errorMessage: S.current.warningAuthenticationNeeded,
+          );
         }
 
         return FutureBuilder<List<ClassHeader>>(

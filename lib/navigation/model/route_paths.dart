@@ -28,6 +28,8 @@ import 'package:acs_upb_mobile/pages/portal/view/portal_page.dart';
 import 'package:acs_upb_mobile/pages/portal/view/website_view.dart';
 import 'package:acs_upb_mobile/pages/settings/view/request_permissions.dart';
 import 'package:acs_upb_mobile/pages/settings/view/settings_page.dart';
+import 'package:acs_upb_mobile/pages/timetable/model/events/uni_event.dart';
+import 'package:acs_upb_mobile/pages/timetable/service/uni_event_provider.dart';
 import 'package:acs_upb_mobile/pages/timetable/view/events/add_event_view.dart';
 import 'package:acs_upb_mobile/pages/timetable/view/events/event_view.dart';
 import 'package:acs_upb_mobile/pages/timetable/view/timetable_page.dart';
@@ -35,8 +37,11 @@ import 'package:acs_upb_mobile/resources/platform.dart';
 import 'package:acs_upb_mobile/widgets/error_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:time_machine/time_machine.dart';
 
 part 'routes/add_classes_path.dart';
+
+part 'routes/add_event_path.dart';
 
 part 'routes/add_website_path.dart';
 
@@ -49,6 +54,8 @@ part 'routes/classes_feedback_path.dart';
 part 'routes/classes_page_path.dart';
 
 part 'routes/edit_profile_path.dart';
+
+part 'routes/event_view_path.dart';
 
 part 'routes/faq_path.dart';
 
@@ -88,24 +95,6 @@ abstract class RoutePath {
   RouteInformation get routeInformation => RouteInformation(location: location);
 
   Widget get page;
-}
-
-class EventViewPath extends RoutePath {
-  EventViewPath(this.id) : super('${EventView.routeName}?id=$id');
-
-  final String id;
-
-  // TODO(RazvanRotaru): retrieve [Event] for [EventView] by id
-  @override
-  Widget get page => EventView();
-}
-
-// TODO(RazvanRotaru): get event for [AddEventView] by id
-class AddEventPath extends RoutePath {
-  AddEventPath() : super(AddEventView.routeName);
-
-  @override
-  Widget get page => const AddEventView();
 }
 
 // TODO(RazvanRotaru): auto-generate PathFactory
