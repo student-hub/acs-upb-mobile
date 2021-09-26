@@ -1,3 +1,4 @@
+import 'package:acs_upb_mobile/navigation/service/app_navigator.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/events/uni_event.dart';
 import 'package:acs_upb_mobile/pages/timetable/view/events/event_view.dart';
 import 'package:auto_size_text/auto_size_text.dart';
@@ -24,9 +25,13 @@ class UniEventWidget extends StatelessWidget {
         (event.location?.isNotEmpty ?? false) ? event.location : event.info;
 
     return GestureDetector(
-      onTap: () => Navigator.of(context).push(MaterialPageRoute<EventView>(
-        builder: (_) => EventView(eventInstance: event),
-      )),
+      onTap: () => AppNavigator.push(
+        context,
+        MaterialPageRoute<EventView>(
+          builder: (_) => EventView(eventInstance: event),
+        ),
+        webPath: '${EventView.routeName}?id=${event.id}',
+      ),
       child: Material(
         shape: RoundedRectangleBorder(
           side: BorderSide(

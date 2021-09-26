@@ -1,5 +1,6 @@
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
+import 'package:acs_upb_mobile/navigation/service/app_navigator.dart';
 import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
 import 'package:acs_upb_mobile/pages/classes/view/class_view.dart';
 import 'package:acs_upb_mobile/pages/classes/view/classes_page.dart';
@@ -25,6 +26,8 @@ class EventView extends StatefulWidget {
         super(key: key);
   final UniEventInstance eventInstance;
   final UniEvent uniEvent;
+
+  static const String routeName = '/event';
 
   @override
   _EventViewState createState() => _EventViewState();
@@ -59,17 +62,21 @@ class _EventViewState extends State<EventView> {
             } else if (!user.canAddPublicInfo) {
               AppToast.show(S.current.errorPermissionDenied);
             } else {
-              Navigator.of(context).push(MaterialPageRoute<AddEventView>(
-                builder: (_) => ChangeNotifierProvider<FilterProvider>(
-                  create: (_) => FilterProvider(
-                    defaultDegree: mainEvent.degree,
-                    defaultRelevance: mainEvent.relevance,
-                  ),
-                  child: AddEventView(
-                    initialEvent: mainEvent,
+              AppNavigator.push(
+                context,
+                MaterialPageRoute<AddEventView>(
+                  builder: (_) => ChangeNotifierProvider<FilterProvider>(
+                    create: (_) => FilterProvider(
+                      defaultDegree: mainEvent.degree,
+                      defaultRelevance: mainEvent.relevance,
+                    ),
+                    child: AddEventView(
+                      initialEvent: mainEvent,
+                    ),
                   ),
                 ),
-              ));
+                webPath: AddEventView.routeName,
+              );
             }
           },
         )
@@ -115,7 +122,8 @@ class _EventViewState extends State<EventView> {
             ClassListItem(
               classHeader: mainEvent.classHeader,
               hint: S.current.messageTapForMoreInfo,
-              onTap: () => Navigator.of(context).push(
+              onTap: () => AppNavigator.push(
+                context,
                 MaterialPageRoute<ChangeNotifierProvider>(
                   builder: (context) => ChangeNotifierProvider.value(
                     value: Provider.of<ClassProvider>(context),
@@ -124,6 +132,8 @@ class _EventViewState extends State<EventView> {
                     ),
                   ),
                 ),
+                webPath:
+                    '${ClassView.routeName}?id=${mainEvent.classHeader.name}',
               ),
             ),
           if (widget.eventInstance?.location?.isNotEmpty ?? false)

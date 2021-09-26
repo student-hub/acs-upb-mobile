@@ -1,5 +1,6 @@
 import 'package:acs_upb_mobile/generated/l10n.dart';
-import 'package:acs_upb_mobile/navigation/routes.dart';
+import 'package:acs_upb_mobile/navigation/model/routes.dart';
+import 'package:acs_upb_mobile/navigation/service/app_navigator.dart';
 import 'package:acs_upb_mobile/pages/faq/model/question.dart';
 import 'package:acs_upb_mobile/pages/faq/service/question_provider.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
@@ -20,7 +21,7 @@ class FaqCard extends StatelessWidget {
     return InfoCard<List<Question>>(
       title: S.current.sectionFAQ,
       showMoreButtonKey: const ValueKey('show_more_faq'),
-      onShowMore: () => Navigator.of(context).pushNamed(Routes.faq),
+      onShowMore: () => AppNavigator.pushNamed(context, Routes.faq),
       future: Provider.of<QuestionProvider>(context).fetchQuestions(limit: 2),
       builder: (questions) => Column(
         children: questions

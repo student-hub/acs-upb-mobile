@@ -1,5 +1,6 @@
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
+import 'package:acs_upb_mobile/navigation/service/app_navigator.dart';
 import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
 import 'package:acs_upb_mobile/navigation/view/scaffold.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
@@ -69,17 +70,21 @@ class _GradingChartState extends State<GradingChart> {
                       icon: const Icon(Icons.edit_outlined),
                       onPressed:
                           authProvider.currentUserFromCache.canEditClassInfo
-                              ? () => Navigator.of(context).push(
-                                      MaterialPageRoute<ChangeNotifierProvider>(
-                                    builder: (context) =>
-                                        ChangeNotifierProvider.value(
-                                      value: classProvider,
-                                      child: GradingView(
-                                        grading: widget.grading,
-                                        onSave: widget.onSave,
-                                      ),
+                              ? () => AppNavigator.push(
+                                    context,
+                                    MaterialPageRoute<ChangeNotifierProvider>(
+                                      builder: (context) {
+                                        return ChangeNotifierProvider.value(
+                                          value: classProvider,
+                                          child: GradingView(
+                                            grading: widget.grading,
+                                            onSave: widget.onSave,
+                                          ),
+                                        );
+                                      },
                                     ),
-                                  ))
+                                    webPath: GradingView.routeName,
+                                  )
                               : null,
                     ),
                   ),
@@ -119,6 +124,8 @@ class GradingView extends StatefulWidget {
 
   final Map<String, double> grading;
   final void Function(Map<String, double>) onSave;
+
+  static const String routeName = '/grading/view';
 
   @override
   _GradingViewState createState() => _GradingViewState();
@@ -303,7 +310,7 @@ class _GradingViewState extends State<GradingView> {
               onPressed: () {
                 if (formKey.currentState.validate()) {
                   widget.onSave(grading);
-                  Navigator.of(context).pop();
+                  AppNavigator.pop(context);
                 }
               })
         ],

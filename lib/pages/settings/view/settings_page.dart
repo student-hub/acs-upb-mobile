@@ -2,7 +2,8 @@ import 'dart:io';
 
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
-import 'package:acs_upb_mobile/navigation/routes.dart';
+import 'package:acs_upb_mobile/navigation/model/routes.dart';
+import 'package:acs_upb_mobile/navigation/service/app_navigator.dart';
 import 'package:acs_upb_mobile/pages/settings/service/request_provider.dart';
 import 'package:acs_upb_mobile/pages/timetable/service/uni_event_provider.dart';
 import 'package:acs_upb_mobile/resources/locale_provider.dart';
@@ -101,8 +102,8 @@ class _SettingsPageState extends State<SettingsPage> {
                       AppToast.show(
                           S.current.messageEmailNotVerifiedToPerformAction);
                     } else {
-                      Navigator.of(context)
-                          .pushNamed(Routes.requestPermissions);
+                      AppNavigator.pushNamed(
+                          context, Routes.requestPermissions);
                     }
                   },
                   title: Text(S.current.settingsItemEditingPermissions),
@@ -190,7 +191,7 @@ class _SettingsPageState extends State<SettingsPage> {
         setState(() {
           Culture.current = LocaleProvider.cultures[preference];
           S.load(LocaleProvider.localeFromString(preference));
-          Navigator.of(context).pop();
+          AppNavigator.pop(context);
 
           // Hack to notify all widgets that something changed, since the
           // localizations delegate doesn't do that. Pretend to change the theme

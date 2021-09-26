@@ -1,6 +1,7 @@
 import 'package:acs_upb_mobile/authentication/model/user.dart';
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
+import 'package:acs_upb_mobile/navigation/service/app_navigator.dart';
 import 'package:acs_upb_mobile/pages/settings/model/request.dart';
 import 'package:acs_upb_mobile/pages/settings/service/request_provider.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
@@ -45,7 +46,7 @@ class _RequestPermissionsPageState extends State<RequestPermissionsPage> {
             color: Theme.of(context).accentColor,
             width: 130,
             onTap: () async {
-              Navigator.of(context).pop();
+              AppNavigator.pop(context);
             }),
       ],
     );
@@ -98,7 +99,7 @@ class _RequestPermissionsPageState extends State<RequestPermissionsPage> {
                 );
                 if (queryResult) {
                   AppToast.show(S.current.messageRequestHasBeenSent);
-                  Navigator.of(context).pop();
+                  AppNavigator.pop(context);
                 }
               })
         ],
