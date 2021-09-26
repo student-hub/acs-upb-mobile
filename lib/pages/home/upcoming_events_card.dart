@@ -46,7 +46,6 @@ class UpcomingEventsCard extends StatelessWidget {
                   '${'${event.mainEvent.classHeader.acronym} - '}${event.mainEvent.type.toLocalizedString()}',
                 ),
                 subtitle: Text(event.relativeDateString),
-                // TODO(RazvanRotaru): Retrieve event by id
                 onTap: () => AppNavigator.push(
                   context,
                   MaterialPageRoute<EventView>(

@@ -32,7 +32,6 @@ import 'package:time_machine/time_machine.dart' as time_machine show DayOfWeek;
 import 'package:time_machine/time_machine.dart' hide DayOfWeek;
 import 'package:time_machine/time_machine_text_patterns.dart';
 
-// TODO(RazvanRotaru): check permissions to add event
 class AddEventView extends StatefulWidget {
   /// If the `id` of [initialEvent] is not null, this acts like an "Edit event"
   /// page starting from the info in [initialEvent]. Otherwise, it acts like an

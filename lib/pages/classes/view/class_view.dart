@@ -147,7 +147,7 @@ class _ClassViewState extends State<ClassView> {
                       icon: const Icon(Icons.add_outlined),
                       onPressed: authProvider
                               .currentUserFromCache.canEditClassInfo
-                          // TODO(RazvanRotaru): Maybe add use a pop-up on web
+                          // TODO(RazvanRotaru): Maybe use a pop-up on web
                           ? () => AppNavigator.push(
                                 context,
                                 MaterialPageRoute<ChangeNotifierProvider>(
