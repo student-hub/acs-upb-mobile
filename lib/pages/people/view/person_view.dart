@@ -197,15 +197,18 @@ class _PersonBanner extends StatelessWidget {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(12),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [ 
-            PersonAvatar(
-              photoURL: photoURL,
-              size: 100,
-            ),
-            Flexible(
-              child: Padding(
+        child: Container(
+          width: MediaQuery.of(context).size.width,
+          child: Wrap(
+            alignment: WrapAlignment.center,
+            direction: Axis.horizontal,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            children: [
+              PersonAvatar(
+                photoURL: photoURL,
+                size: 100,
+              ),
+              Padding(
                 padding: const EdgeInsets.only(left: 12),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -228,8 +231,8 @@ class _PersonBanner extends StatelessWidget {
                   ],
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
