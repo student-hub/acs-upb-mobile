@@ -1,4 +1,6 @@
+import 'package:acs_upb_mobile/navigation/view/scaffold.dart';
 import 'package:acs_upb_mobile/pages/people/model/person.dart';
+import 'package:acs_upb_mobile/pages/people/service/person_provider.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/widgets/icon_text.dart';
 import 'package:acs_upb_mobile/widgets/person_avatar.dart';
@@ -7,6 +9,9 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:provider/provider.dart';
+
+import 'classes_card.dart';
+import 'contact_info.dart';
 
 class PersonView extends StatelessWidget {
   const PersonView({Key key, this.person}) : super(key: key);
@@ -33,7 +38,7 @@ class PersonView extends StatelessWidget {
             height: 100,
             width: 100,
             child: Center(
-              child: CircularProgressIndicator(),
+              child: Center(child: CircularProgressIndicator()),
             ),
           );
         }
@@ -43,60 +48,41 @@ class PersonView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ScrollController _controller = ScrollController();
     if (kIsWeb) {
       return AppScaffold(
-        body: Container(
-          color: Theme.of(context).scaffoldBackgroundColor,
-          // TODO(RavanRotaru): extract scrollbar in another widget
-          child: Align(
-            alignment: FractionalOffset.topCenter,
-            child: ConstrainedBox(
-              constraints: BoxConstraints(
-                maxHeight: MediaQuery.of(context).size.height,
-                maxWidth: MediaQuery.of(context).size.width / 1.50,
-              ),
-              child: Scrollbar(
-                thickness: 10,
-                isAlwaysShown: true,
-                controller: _controller,
-                child: SingleChildScrollView(
-                  controller: _controller,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(28, 28, 28, 0),
-                        child: _PersonBanner(
-                          name: person.name,
-                          photoURL: person.photo,
-                          position: person.position,
-                          office: person.office,
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(28, 0, 28, 28),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Expanded(
-                              child: ContactInfo(
-                                email: person.email,
-                                phone: person.phone,
-                              ),
-                            ),
-                            Expanded(
-                              child: ClassesCard(lecturerName: person.name),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
+        body: Align(
+          alignment: FractionalOffset.topCenter,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(28, 28, 28, 0),
+                child: _PersonBanner(
+                  name: person.name,
+                  photoURL: person.photo,
+                  position: person.position,
+                  office: person.office,
                 ),
               ),
-            ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(28, 0, 28, 28),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: ContactInfo(
+                        email: person.email,
+                        phone: person.phone,
+                      ),
+                    ),
+                    Expanded(
+                      child: ClassesCard(lecturerName: person.name),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
         ),
       );
@@ -196,7 +182,7 @@ class _PersonBanner extends StatelessWidget {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(12),
-        child: Container(
+        child: SizedBox(
           width: MediaQuery.of(context).size.width,
           child: Wrap(
             alignment: WrapAlignment.center,
