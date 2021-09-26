@@ -308,5 +308,7 @@
 
   "fileAcsBanner": "assets/images/acs_banner_en.png",
 
-  "emailExample": "example: john.doe123@gmail.com"
+  "emailExample": "example: john.doe123@gmail.com",
+  "feedbackExample": "Write your feedback",
+  "issueExample": "Describe the issue"
 }

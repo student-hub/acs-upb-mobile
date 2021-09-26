@@ -2944,6 +2944,26 @@ class S {
       args: [],
     );
   }
+
+  /// `Write your feedback`
+  String get feedbackExample {
+    return Intl.message(
+      'Write your feedback',
+      name: 'feedbackExample',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Describe the issue`
+  String get issueExample {
+    return Intl.message(
+      'Describe the issue',
+      name: 'issueExample',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

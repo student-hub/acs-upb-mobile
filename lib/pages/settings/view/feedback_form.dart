@@ -131,8 +131,8 @@ class _FeedbackFormPageState extends State<FeedbackFormPage> {
                       ? S.current.labelFeedback
                       : S.current.labelIssue,
                   hintText: _feedbackSelected
-                      ? S.current.labelFeedback
-                      : S.current.labelIssue,
+                      ? S.current.feedbackExample
+                      : S.current.issueExample,
                   prefixIcon: const Icon(Icons.label_outlined),
                 ),
               ),

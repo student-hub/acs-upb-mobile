@@ -309,5 +309,7 @@
 
   "fileAcsBanner": "assets/images/acs_banner_ro.png",
 
-  "emailExample": "exemplu: john.doe123@gmail.com"
+  "emailExample": "exemplu: john.doe123@gmail.com",
+  "feedbackExample": "Scrieți-vă feedback-ul",
+  "issueExample": "Descrieți problema"
 }
