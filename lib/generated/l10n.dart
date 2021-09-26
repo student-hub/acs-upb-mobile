@@ -205,6 +205,16 @@ class S {
     );
   }
 
+  /// `Website icon`
+  String get labelWebsiteIcon {
+    return Intl.message(
+      'Website icon',
+      name: 'labelWebsiteIcon',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Name`
   String get labelName {
     return Intl.message(
@@ -2642,6 +2652,16 @@ class S {
       name: 'messageFeedbackLeft',
       desc: '',
       args: [number],
+    );
+  }
+
+  /// `You're already seeing the current week!`
+  String get messageAlreadySeeingCurrentWeek {
+    return Intl.message(
+      'You\'re already seeing the current week!',
+      name: 'messageAlreadySeeingCurrentWeek',
+      desc: '',
+      args: [],
     );
   }
 

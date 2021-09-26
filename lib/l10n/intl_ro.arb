@@ -17,6 +17,7 @@
   "labelVersion": "Versiunea",
   "labelFirstName": "Prenume",
   "labelLastName": "Nume",
+  "labelWebsiteIcon": "Imagine website",
   "labelName": "Nume",
   "labelCategory": "Categorie",
   "labelLink": "Link",
@@ -275,6 +276,7 @@
   "messageThereAreNoEventsForSelected": "Nu există evenimente pentru selecția de ",
   "messagePictureUpdatedSuccess": "Poza a fost actualizată cu succes.",
   "messageFeedbackLeft": "Trebuie să completezi încă {number} formulare de feedback!",
+  "messageAlreadySeeingCurrentWeek": "Ești deja la săptămâna curentă!",
 
   "infoPasswordResetEmailSent": "Please check your inbox for the password reset e-mail.",
   "infoRelevance": "Încercați să selectați cea mai restrictivă categorie.",

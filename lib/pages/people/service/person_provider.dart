@@ -63,7 +63,9 @@ class PersonProvider with ChangeNotifier {
           .limit(1)
           .get();
 
-      if (query == null || query.docs.isEmpty) {
+      if (query == null ||
+          query.docs.isEmpty ||
+          !query.docs.first.data().containsKey('teacher')) {
         return null;
       }
       return query.docs.first.get('teacher');

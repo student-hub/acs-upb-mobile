@@ -17,6 +17,7 @@
   "labelVersion": "Version",
   "labelFirstName": "First name",
   "labelLastName": "Last name",
+  "labelWebsiteIcon": "Website icon",
   "labelName": "Name",
   "labelCategory": "Category",
   "labelLink": "Link",
@@ -275,6 +276,7 @@
   "messageThereAreNoEventsForSelected": "There are no events for the selected ",
   "messagePictureUpdatedSuccess": "Profile picture updated successfully.",
   "messageFeedbackLeft": "You need to complete {number} more feedback forms!",
+  "messageAlreadySeeingCurrentWeek": "You're already seeing the current week!",
 
   "infoPasswordResetEmailSent": "Please check your inbox for the password reset e-mail.",
   "infoRelevance": "Try to choose the most restrictive category.",
