@@ -4,6 +4,7 @@ import 'package:acs_upb_mobile/pages/settings/service/issue_provider.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:provider/provider.dart';
 import 'package:acs_upb_mobile/resources/theme.dart';
 
@@ -55,7 +56,7 @@ class _FeedbackFormPageState extends State<FeedbackFormPage> {
             padding: const EdgeInsets.all(16),
             children: <Widget>[
               Padding(
-                padding: const EdgeInsets.only(top: 10),
+                padding: const EdgeInsets.only(top: 12, bottom: 12),
                 child: Container(
                     height: MediaQuery.of(context).size.height / 4,
                     child: Image.asset(
@@ -63,6 +64,23 @@ class _FeedbackFormPageState extends State<FeedbackFormPage> {
               ),
               Row(
                 children: [
+                  Expanded(
+                    child: Row(
+                      children: [
+                        const SizedBox(width: 12),
+                        Icon(FeatherIcons.filter,
+                            color: Theme.of(context).formIconColor),
+                        const SizedBox(width: 12),
+                        Text(
+                          'Report type:',
+                          style: Theme.of(context)
+                              .textTheme
+                              .subtitle1
+                              .copyWith(fontWeight: FontWeight.w400),
+                        ),
+                      ],
+                    ),
+                  ),
                   ChoiceChip(
                     key: const ValueKey('choice_feedback'),
                     label: Text(
