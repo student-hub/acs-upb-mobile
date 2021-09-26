@@ -60,7 +60,7 @@ class PersonView extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               Padding(
-                padding: const EdgeInsets.fromLTRB(28, 28, 28, 0),
+                padding: const EdgeInsets.fromLTRB(18, 12, 18, 0),
                 child: _PersonBanner(
                   name: person.name,
                   photoURL: person.photo,
@@ -69,7 +69,7 @@ class PersonView extends StatelessWidget {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.fromLTRB(28, 0, 28, 28),
+                padding: const EdgeInsets.all(12),
                 child: Flex(
                   mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.start,
