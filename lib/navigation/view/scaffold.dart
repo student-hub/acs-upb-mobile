@@ -1,7 +1,7 @@
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
-import 'package:acs_upb_mobile/navigation/view/action_bar.dart';
 import 'package:acs_upb_mobile/navigation/service/app_navigator.dart';
+import 'package:acs_upb_mobile/navigation/view/action_bar.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/widgets/error_page.dart';
 import 'package:flutter/cupertino.dart';
@@ -248,7 +248,7 @@ class AppScaffold extends StatelessWidget {
 
     return !kIsWeb
         ? body
-        : Stack(
+        : Column(
             children: [
               if (actionsList.isNotEmpty)
                 ActionBar(actionsList
@@ -256,17 +256,12 @@ class AppScaffold extends StatelessWidget {
                         enableContent: enableContent, context: context))
                     .where((element) => element != null)
                     .toList()),
-              Center(
-                  child: ConstrainedBox(
-                      constraints: BoxConstraints(maxWidth: maxBodyWidth),
-                      child: Column(
-                        children: [
-                          SizedBox(
-                            height: 100,
-                          ),
-                          Expanded(flex: 1, child: body),
-                        ],
-                      ))),
+              Expanded(
+                child: Center(
+                    child: ConstrainedBox(
+                        constraints: BoxConstraints(maxWidth: maxBodyWidth),
+                        child: body)),
+              ),
             ],
           );
   }
