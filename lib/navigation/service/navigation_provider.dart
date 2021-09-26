@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:acs_upb_mobile/navigation/model/route_paths.dart';
 import 'package:acs_upb_mobile/pages/home/home_page.dart';
 import 'package:acs_upb_mobile/pages/people/view/people_page.dart';
@@ -8,6 +10,7 @@ import 'package:flutter/cupertino.dart';
 class NavigationProvider extends ChangeNotifier {
   bool _isInitialized = false;
   RoutePath _path;
+  final _previousPaths = Queue<RoutePath>();
 
   int _selectedTab = 0;
   bool _isDrawerExtended = false;
@@ -18,6 +21,7 @@ class NavigationProvider extends ChangeNotifier {
 
   set selectedTab(int tab) {
     _selectedTab = tab;
+    _view = null;
 
     switch (tab) {
       case 0:
@@ -47,6 +51,7 @@ class NavigationProvider extends ChangeNotifier {
   RoutePath get path => _path;
 
   set path(RoutePath path) {
+    _previousPaths.addFirst(_path);
     _path = path;
     _view = null;
 
@@ -68,6 +73,16 @@ class NavigationProvider extends ChangeNotifier {
         break;
     }
 
+    notifyListeners();
+  }
+
+  RoutePath get previousPath => _previousPaths.first;
+
+  void back() {
+    if (_previousPaths.isEmpty) reset();
+
+    _view = null;
+    _path = _previousPaths.removeFirst();
     notifyListeners();
   }
 

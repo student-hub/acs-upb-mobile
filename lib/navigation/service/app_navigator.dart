@@ -1,5 +1,5 @@
-import 'package:acs_upb_mobile/navigation/service/navigation_provider.dart';
 import 'package:acs_upb_mobile/navigation/model/route_paths.dart';
+import 'package:acs_upb_mobile/navigation/service/navigation_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';

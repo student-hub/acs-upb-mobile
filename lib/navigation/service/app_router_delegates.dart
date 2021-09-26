@@ -65,21 +65,8 @@ class MainRouterDelegate extends AppRouterDelegate {
         if (!route.didPop(result)) {
           return false;
         }
-        _navigationProvider.reset();
 
-        // Motivation
-        /// This may lead to problems as the key is not always represented by the location
-        /// However, if the resulted [routePath] is UnknownPath we may just ignore the current change.
-        final key = (route.settings as MaterialPage).key.toString();
-        final pathFromKey = key.substring(3, key.length - 3);
-
-        final uri = Uri.parse(pathFromKey);
-        final routePath = PathFactory.from(uri);
-
-        if (!(routePath is UnknownPath)) {
-          _navigationProvider.path = routePath;
-        }
-
+        _navigationProvider.back();
         return true;
       },
     );
@@ -141,8 +128,7 @@ class InnerRouterDelegate extends AppRouterDelegate {
           return false;
         }
 
-        _navigationProvider.reset();
-        notifyListeners();
+        _navigationProvider.back();
         return true;
       },
     );
