@@ -55,7 +55,7 @@ class _WebShellState extends State<WebShell> {
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size(screenSize.width, 100),
-        child: WebPageHeader(
+        child: WebpageHeader(
           height: 60,
           leading: Align(
             alignment: AlignmentDirectional.centerStart,

@@ -13,18 +13,18 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class WebPageHeader extends StatefulWidget {
-  const WebPageHeader({Key key, this.leading, this.height = 60})
+class WebpageHeader extends StatefulWidget {
+  const WebpageHeader({Key key, this.leading, this.height = 60})
       : super(key: key);
 
   final Widget leading;
   final double height;
 
   @override
-  _WebPageHeaderState createState() => _WebPageHeaderState();
+  _WebpageHeaderState createState() => _WebpageHeaderState();
 }
 
-class _WebPageHeaderState extends State<WebPageHeader> {
+class _WebpageHeaderState extends State<WebpageHeader> {
   TextEditingController textController = TextEditingController();
 
   @override
