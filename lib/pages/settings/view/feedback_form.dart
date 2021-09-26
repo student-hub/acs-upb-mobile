@@ -64,6 +64,7 @@ class _FeedbackFormPageState extends State<FeedbackFormPage> {
               Row(
                 children: [
                   ChoiceChip(
+                    key: const ValueKey('choice_feedback'),
                     label: Text(
                       S.current.labelFeedback,
                       style: Theme.of(context).chipTextStyle(selected: true),
@@ -78,6 +79,7 @@ class _FeedbackFormPageState extends State<FeedbackFormPage> {
                   ),
                   const SizedBox(width: 10),
                   ChoiceChip(
+                    key: const ValueKey('choice_issue'),
                     label: Text(
                       S.current.labelIssue,
                       style: Theme.of(context).chipTextStyle(selected: true),
@@ -94,6 +96,7 @@ class _FeedbackFormPageState extends State<FeedbackFormPage> {
                 ],
               ),
               TextFormField(
+                key: const ValueKey('contact'),
                 controller: issueEmailController,
                 // The validator receives the text that the user has entered.
                 validator: (value) {
@@ -112,6 +115,7 @@ class _FeedbackFormPageState extends State<FeedbackFormPage> {
                 padding: EdgeInsets.only(top: 8, bottom: 8),
               ),
               TextFormField(
+                key: const ValueKey('issue'),
                 controller: issueController,
                 validator: (value) {
                   if (value == null || value.isEmpty) {

@@ -139,6 +139,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
                 PreferenceTitle(S.current.labelFeedback),
                 ListTile(
+                  key: const ValueKey('feedback_and_issues'),
                   onTap: () {
                     Navigator.of(context).pushNamed(Routes.feedbackForm);
                   },
