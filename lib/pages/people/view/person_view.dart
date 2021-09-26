@@ -47,56 +47,44 @@ class PersonView extends StatelessWidget {
     final ScrollController _controller = ScrollController();
     if (kIsWeb) {
       return AppScaffold(
-        body: Container(
-          color: Theme.of(context).scaffoldBackgroundColor,
-          // TODO(RavanRotaru): extract scrollbar in another widget
-          child: Align(
-            alignment: FractionalOffset.topCenter,
-            child: ConstrainedBox(
-              constraints: BoxConstraints(
-                maxHeight: MediaQuery.of(context).size.height,
-                maxWidth: MediaQuery.of(context).size.width / 1.50,
-              ),
-              child: Scrollbar(
-                thickness: 10,
-                isAlwaysShown: true,
-                controller: _controller,
-                child: SingleChildScrollView(
-                  controller: _controller,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
+        body: Align(
+          alignment: FractionalOffset.topCenter,
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              maxHeight: MediaQuery.of(context).size.height,
+              maxWidth: MediaQuery.of(context).size.width / 1.50,
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(28, 28, 28, 0),
+                  child: _PersonBanner(
+                    name: person.name,
+                    photoURL: person.photo,
+                    position: person.position,
+                    office: person.office,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(28, 0, 28, 28),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(28, 28, 28, 0),
-                        child: _PersonBanner(
-                          name: person.name,
-                          photoURL: person.photo,
-                          position: person.position,
-                          office: person.office,
+                      Expanded(
+                        child: ContactInfo(
+                          email: person.email,
+                          phone: person.phone,
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(28, 0, 28, 28),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Expanded(
-                              child: ContactInfo(
-                                email: person.email,
-                                phone: person.phone,
-                              ),
-                            ),
-                            Expanded(
-                              child: ClassesCard(lecturerName: person.name),
-                            ),
-                          ],
-                        ),
+                      Expanded(
+                        child: ClassesCard(lecturerName: person.name),
                       ),
                     ],
                   ),
                 ),
-              ),
+              ],
             ),
           ),
         ),
@@ -199,7 +187,7 @@ class _PersonBanner extends StatelessWidget {
         padding: const EdgeInsets.all(12),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [ 
+          children: [
             PersonAvatar(
               photoURL: photoURL,
               size: 100,
