@@ -146,7 +146,7 @@ class AppScaffoldAction {
           );
 
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.all(8),
       child: Container(
         decoration: BoxDecoration(
             color: Theme.of(context).bottomAppBarColor,
@@ -155,7 +155,7 @@ class AppScaffoldAction {
             ),
             borderRadius: const BorderRadius.all(Radius.circular(10))),
         child: Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.all(8),
           child: child,
         ),
       ),

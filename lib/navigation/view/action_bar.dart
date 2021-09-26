@@ -11,7 +11,7 @@ class ActionBar extends StatelessWidget {
     return Container(
       color: Theme.of(context).bottomAppBarColor.withOpacity(0),
       child: Row(
-      textDirection: TextDirection.rtl,
+        textDirection: TextDirection.rtl,
         children: actionButtons,
       ),
     );
