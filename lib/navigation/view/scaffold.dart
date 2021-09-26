@@ -114,7 +114,7 @@ class AppScaffoldAction {
     final void Function() onPressed =
         !enableContent || (this.onPressed == null && route == null)
             ? null
-            : this.onPressed ?? () => Navigator.pushNamed(context, route);
+            : this.onPressed ?? () => AppNavigator.pushNamed(context, route);
 
     final icon = disabled
         ? Icon(this.icon ?? Icons.menu_outlined,
