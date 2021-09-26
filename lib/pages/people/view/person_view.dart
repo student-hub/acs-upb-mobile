@@ -2,6 +2,7 @@ import 'package:acs_upb_mobile/navigation/view/scaffold.dart';
 import 'package:acs_upb_mobile/pages/people/model/person.dart';
 import 'package:acs_upb_mobile/pages/people/service/person_provider.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
+import 'package:acs_upb_mobile/resources/web_layout_sizes.dart';
 import 'package:acs_upb_mobile/widgets/icon_text.dart';
 import 'package:acs_upb_mobile/widgets/person_avatar.dart';
 import 'package:flutter/cupertino.dart';
@@ -49,6 +50,9 @@ class PersonView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (kIsWeb) {
+      final isScreenNarrow =
+          MediaQuery.of(context).size.width <= Sizes.narrowScreen;
+
       return AppScaffold(
         body: Align(
           alignment: FractionalOffset.topCenter,
@@ -66,17 +70,21 @@ class PersonView extends StatelessWidget {
               ),
               Padding(
                 padding: const EdgeInsets.fromLTRB(28, 0, 28, 28),
-                child: Row(
+                child: Flex(
+                  mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
+                  direction: isScreenNarrow ? Axis.vertical : Axis.horizontal,
                   children: [
-                    Expanded(
+                    Flexible(
+                      fit: FlexFit.loose,
                       child: ContactInfo(
                         email: person.email,
                         phone: person.phone,
                       ),
                     ),
-                    Expanded(
+                    Flexible(
+                      fit: FlexFit.loose,
                       child: ClassesCard(lecturerName: person.name),
                     ),
                   ],
