@@ -17,6 +17,7 @@
   "labelVersion": "Version",
   "labelFirstName": "First name",
   "labelLastName": "Last name",
+  "labelProfilePicture": "Profile picture",
   "labelWebsiteIcon": "Website icon",
   "labelName": "Name",
   "labelCategory": "Category",
@@ -53,6 +54,8 @@
   "labelToday": "Today",
   "labelTomorrow": "Tomorrow",
   "labelNow": "Now",
+  "labelPeople": "People",
+  "labelClasses": "Classes",
 
   "sectionShortcuts": "Shortcuts",
   "sectionEvents": "Events",
@@ -179,6 +182,8 @@
   "navigationEventDetails": "Event details",
   "navigationNewsFeed": "News feed",
   "navigationClassInfo": "Class information",
+  "navigationSearch": "Search",
+  "navigationSearchResults": "Classes found",
   "navigationClassFeedback": "Feedback",
   "navigationClassesFeedbackChecklist": "Feedback checklist",
 
@@ -275,6 +280,8 @@
   "messageYouCanContribute": "You can contribute to the app data, but you first need to request permissions.",
   "messageThereAreNoEventsForSelected": "There are no events for the selected ",
   "messagePictureUpdatedSuccess": "Profile picture updated successfully.",
+  "messageAnotherQuestion": "Do you have another question?",
+  "messageTalkToChatbot": "Talk to Polly!",
   "messageFeedbackLeft": "You need to complete {number} more feedback forms!",
   "messageAlreadySeeingCurrentWeek": "You're already seeing the current week!",
 

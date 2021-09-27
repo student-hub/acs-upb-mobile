@@ -17,6 +17,7 @@
   "labelVersion": "Versiunea",
   "labelFirstName": "Prenume",
   "labelLastName": "Nume",
+  "labelProfilePicture": "Imagine profil",
   "labelWebsiteIcon": "Imagine website",
   "labelName": "Nume",
   "labelCategory": "Categorie",
@@ -53,6 +54,8 @@
   "labelToday": "Astăzi",
   "labelTomorrow": "Mâine",
   "labelNow": "Acum",
+  "labelPeople": "Persoane",
+  "labelClasses": "Materii",
 
   "sectionShortcuts": "Scurtături",
   "sectionEvents": "Evenimente",
@@ -179,6 +182,8 @@
   "navigationEventDetails": "Detalii eveniment",
   "navigationNewsFeed": "Știri",
   "navigationClassInfo": "Informații materie",
+  "navigationSearch": "Căutare",
+  "navigationSearchResults": "Materii găsite",
   "navigationClassFeedback": "Feedback",
   "navigationClassesFeedbackChecklist": "Listă feedback",
 
@@ -277,6 +282,8 @@
   "messagePictureUpdatedSuccess": "Poza a fost actualizată cu succes.",
   "messageFeedbackLeft": "Trebuie să completezi încă {number} formulare de feedback!",
   "messageAlreadySeeingCurrentWeek": "Ești deja la săptămâna curentă!",
+  "messageAnotherQuestion": "Ai altă întrebare?",
+  "messageTalkToChatbot": "Vorbește cu Polly!",
 
   "infoPasswordResetEmailSent": "Please check your inbox for the password reset e-mail.",
   "infoRelevance": "Încercați să selectați cea mai restrictivă categorie.",
