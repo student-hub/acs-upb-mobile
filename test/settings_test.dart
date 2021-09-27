@@ -401,7 +401,6 @@ void main() {
       });
 
       testWidgets('Normal scenario', (WidgetTester tester) async {
-
         await tester.pumpWidget(buildApp());
         await tester.pumpAndSettle();
 
@@ -410,9 +409,11 @@ void main() {
         await tester.pumpAndSettle();
 
         // Open Feedback/Issues form page
-        await tester.ensureVisible(find.byKey(const ValueKey('feedback_and_issues')));
+        await tester
+            .ensureVisible(find.byKey(const ValueKey('feedback_and_issues')));
         await tester.pumpAndSettle();
-        expect(find.byKey(const ValueKey('feedback_and_issues')), findsOneWidget);
+        expect(
+            find.byKey(const ValueKey('feedback_and_issues')), findsOneWidget);
         await tester.tap(find.byKey(const ValueKey('feedback_and_issues')));
         await tester.pumpAndSettle();
         expect(find.byType(FeedbackFormPage), findsOneWidget);
@@ -420,8 +421,10 @@ void main() {
         // Send normal feedback and issue reports
         await tester.tap(find.byKey(const ValueKey('choice_feedback')));
         await tester.pumpAndSettle();
-        await tester.enterText(find.byKey(const ValueKey('contact')), 'john.doe@gmail.com');
-        await tester.enterText(find.byKey(const ValueKey('issue')), 'There is some feedback');
+        await tester.enterText(
+            find.byKey(const ValueKey('contact')), 'john.doe@gmail.com');
+        await tester.enterText(
+            find.byKey(const ValueKey('issue')), 'There is some feedback');
         await tester.pumpAndSettle();
         await tester.tap(find.text('Submit'));
         await tester.pumpAndSettle(const Duration(seconds: 2));
@@ -447,9 +450,11 @@ void main() {
         await tester.pumpAndSettle();
 
         // Open Feedback/Issues form page
-        await tester.ensureVisible(find.byKey(const ValueKey('feedback_and_issues')));
+        await tester
+            .ensureVisible(find.byKey(const ValueKey('feedback_and_issues')));
         await tester.pumpAndSettle();
-        expect(find.byKey(const ValueKey('feedback_and_issues')), findsOneWidget);
+        expect(
+            find.byKey(const ValueKey('feedback_and_issues')), findsOneWidget);
         await tester.tap(find.byKey(const ValueKey('feedback_and_issues')));
         await tester.pumpAndSettle();
         expect(find.byType(FeedbackFormPage), findsOneWidget);
