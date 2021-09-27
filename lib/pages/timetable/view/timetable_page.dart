@@ -45,11 +45,6 @@ class _TimetablePageState extends State<TimetablePage>
   }
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
 
@@ -203,30 +198,28 @@ class _TimetablePageState extends State<TimetablePage>
   Future<void> scheduleDialog(BuildContext context) async {
     WidgetsBinding.instance.addPostFrameCallback(
       (_) async {
-        if (!mounted) {
-          return;
-        }
+        final authProvider = Provider.of<AuthProvider>(context, listen: false);
+        final classProvider =
+            Provider.of<ClassProvider>(context, listen: false);
+        final filterProvider =
+            Provider.of<FilterProvider>(context, listen: false);
+        final requestProvider =
+            Provider.of<RequestProvider>(context, listen: false);
+        final eventProvider =
+            Provider.of<UniEventProvider>(context, listen: true);
 
         // Fetch user classes, request necessary info from providers so it's
         // cached when we check in the dialog
-        final user = Provider.of<AuthProvider>(context, listen: false)
-            .currentUserFromCache;
-        await Provider.of<ClassProvider>(context, listen: false)
-            .fetchClassHeaders(uid: user.uid);
-        if (!mounted) return;
-        await Provider.of<FilterProvider>(context, listen: false).fetchFilter();
-        if (!mounted) return;
-        await Provider.of<RequestProvider>(context, listen: false)
-            .userAlreadyRequested(user.uid);
+        final user = authProvider.currentUserFromCache;
+        await classProvider.fetchClassHeaders(uid: user.uid);
+        await filterProvider.fetchFilter();
+        await requestProvider.userAlreadyRequested(user.uid);
 
         // Slight delay between last frame and dialog
         await Future<void>.delayed(const Duration(milliseconds: 100));
 
-        // Show dialog if there are no events
         if (!mounted) return;
-        final eventProvider =
-            Provider.of<UniEventProvider>(context, listen: false);
-
+        // Show dialog if there are no events
         if (eventProvider != null) {
           if (eventProvider.empty) {
             await showDialog<String>(
