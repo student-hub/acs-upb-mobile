@@ -4,14 +4,15 @@ import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/navigation/model/routes.dart';
 import 'package:acs_upb_mobile/navigation/service/app_navigator.dart';
+import 'package:acs_upb_mobile/navigation/view/scaffold.dart';
 import 'package:acs_upb_mobile/pages/settings/service/request_provider.dart';
 import 'package:acs_upb_mobile/pages/timetable/service/uni_event_provider.dart';
 import 'package:acs_upb_mobile/resources/locale_provider.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/widgets/icon_text.dart';
-import 'package:acs_upb_mobile/navigation/view/scaffold.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:dynamic_theme/dynamic_theme.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:preferences/preferences.dart';
@@ -191,7 +192,9 @@ class _SettingsPageState extends State<SettingsPage> {
         setState(() {
           Culture.current = LocaleProvider.cultures[preference];
           S.load(LocaleProvider.localeFromString(preference));
-          AppNavigator.pop(context);
+          if (!kIsWeb) {
+            AppNavigator.pop(context);
+          }
 
           // Hack to notify all widgets that something changed, since the
           // localizations delegate doesn't do that. Pretend to change the theme
