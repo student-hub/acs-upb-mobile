@@ -258,7 +258,13 @@ class AuthProvider with ChangeNotifier {
       final DocumentReference ref =
           FirebaseFirestore.instance.collection('users').doc(_firebaseUser.uid);
 
-      await StorageProvider.deleteImage(_currentUser.picturePath);
+      /*await StorageProvider.deleteImage(_currentUser.picturePath);*/
+      final result =
+          await StorageProvider.deleteImage(_currentUser.picturePath);
+      if (!result) {
+        AppToast.show(S.current.errorSomethingWentWrong);
+      }
+
       await ref.delete();
 
       await _firebaseUser.delete();
