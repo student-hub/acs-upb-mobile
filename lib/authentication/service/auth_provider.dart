@@ -58,7 +58,7 @@ class AuthProvider with ChangeNotifier {
 
   void _errorHandler(dynamic e, {bool showToast = true}) {
     try {
-      print(e.message);
+      print('${e.message} code: ${e.code}');
       if (showToast) {
         switch (e.code) {
           case 'ERROR_INVALID_EMAIL':
@@ -80,6 +80,8 @@ class AuthProvider with ChangeNotifier {
             break;
           case 'ERROR_EMAIL_ALREADY_IN_USE':
             AppToast.show(S.current.errorEmailInUse);
+            break;
+          case 'wrong-password':
             break;
           default:
             AppToast.show(e.message);
