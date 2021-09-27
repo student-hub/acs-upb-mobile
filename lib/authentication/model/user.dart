@@ -9,8 +9,7 @@ class User {
       int permissionLevel})
       : permissionLevel = permissionLevel ?? 0;
 
-  String get picturePath =>
-      'users/$uid/picture.png';
+  String get picturePath => 'users/$uid/picture.png';
 
   final String uid;
 

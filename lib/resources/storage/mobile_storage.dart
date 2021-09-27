@@ -19,10 +19,11 @@ class StorageProvider {
       final String url =
           await FirebaseStorage.instance.ref().child(image).getDownloadURL();
       bool result = false;
-      final UploadTask uploadTask = FirebaseStorage.instance.refFromURL(url).delete();
-      await uploadTask.whenComplete(() => result = true).catchError(
-              (dynamic error) async =>
-              print('Mobile_Storage - StorageUploadTask - deleteImageUrl $error'));
+      final UploadTask uploadTask =
+          FirebaseStorage.instance.refFromURL(url).delete();
+      await uploadTask.whenComplete(() => result = true).catchError((dynamic
+              error) async =>
+          print('Mobile_Storage - StorageUploadTask - deleteImageUrl $error'));
       return result;
     } catch (e) {
       return false;
