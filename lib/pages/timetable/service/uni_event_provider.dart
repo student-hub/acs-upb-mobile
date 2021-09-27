@@ -92,7 +92,7 @@ extension UniEventExtension on UniEvent {
         start: (json['start'] as Timestamp).toDate(),
         duration: DurationExtension.fromJSON(json['duration']),
         location: json['location'],
-         // TODO(IoanaAlexandru): Allow users to set event colours in settings, #168
+        // TODO(IoanaAlexandru): Allow users to set event colours in settings, #168
         color: type.color,
         classHeader: classHeader,
         calendar: calendars[json['calendar']],
@@ -131,7 +131,7 @@ extension UniEventExtension on UniEvent {
         start: (json['start'] as Timestamp).toDate(),
         duration: DurationExtension.fromJSON(json['duration']),
         location: json['location'],
-         // TODO(IoanaAlexandru): Allow users to set event colours in settings, #168
+        // TODO(IoanaAlexandru): Allow users to set event colours in settings, #168
         color: type.color,
         classHeader: classHeader,
         calendar: calendars[json['calendar']],
