@@ -54,11 +54,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
               ? NetworkImage(value)
               : const AssetImage('assets/illustrations/undraw_profile_pic.png'),
         }));
-    uploadButtonController = UploadButton(
-            pageType: true,
-            controller:
-                UploadButtonController(onUpdate: () => setState(() => {})))
-        .controller;
+    uploadButtonController =
+        UploadButtonController(onUpdate: () => setState(() => {}));
   }
 
   AppDialog _changePasswordDialog(BuildContext context) {

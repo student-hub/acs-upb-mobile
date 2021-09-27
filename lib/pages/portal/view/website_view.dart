@@ -88,11 +88,8 @@ class _WebsiteViewState extends State<WebsiteView> {
               ? NetworkImage(value)
               : const AssetImage('assets/icons/globe.png')
         }));
-    uploadButtonController = UploadButton(
-            pageType: false,
-            controller:
-                UploadButtonController(onUpdate: () => setState(() => {})))
-        .controller;
+    uploadButtonController =
+        UploadButtonController(onUpdate: () => setState(() => {}));
   }
 
   String buildId() {
