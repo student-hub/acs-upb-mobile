@@ -1,4 +1,5 @@
 import 'package:firebase_remote_config/firebase_remote_config.dart';
+import 'package:flutter/foundation.dart';
 
 const String _feedbackEnabled = 'feedback_enabled';
 const String _chatEnabled = 'chat_enabled';
@@ -22,10 +23,13 @@ class RemoteConfigService {
       : _remoteConfig?.getBool(_chatEnabled) ?? defaults[_chatEnabled];
 
   static Future<dynamic> initialize() async {
+    if (kIsWeb) {
+      return;
+    }
     try {
       _remoteConfig = await RemoteConfig.instance;
       await _remoteConfig.setDefaults(defaults);
-      await _remoteConfig.fetch(expiration: const Duration(seconds: 0));
+      await _remoteConfig.fetch();
       await _remoteConfig.activateFetched();
     } on FetchThrottledException catch (e) {
       print('Remote config fetch throttled: $e');
