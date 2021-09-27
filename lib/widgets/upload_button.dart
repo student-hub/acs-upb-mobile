@@ -25,12 +25,9 @@ class UploadButtonController {
 // button, except it actually allows the user to select an image from the
 // gallery instead of inputting text directly.
 class UploadButton extends StatefulWidget {
-  const UploadButton(this.imageFieldController,
-      {Key key, this.pageType, this.controller})
+  const UploadButton({Key key, this.pageType, this.controller})
       : super(key: key);
 
-  // TextController
-  final TextEditingController imageFieldController;
   final bool pageType;
   final UploadButtonController controller;
 
@@ -40,20 +37,13 @@ class UploadButton extends StatefulWidget {
 
 class _UploadButtonState extends State<UploadButton> {
   Uint8List uploadedImageBytes;
-
-  set upLoadNewImageBytes(Uint8List newUploadedImageBytes) {
-    uploadedImageBytes = newUploadedImageBytes;
-    setState(() {});
-  }
-
-  Uint8List get uploadNewImageBytes => uploadedImageBytes;
-
-  Uint8List get upLoadNewImageBytes => uploadedImageBytes;
+  TextEditingController imageFieldController;
 
   @override
   void initState() {
     super.initState();
     uploadedImageBytes = null;
+    imageFieldController = TextEditingController();
   }
 
   @override
@@ -68,7 +58,7 @@ class _UploadButtonState extends State<UploadButton> {
         if (screenWidth - tapPosition.global.dx <=
             iconSize + paddingSize + iconPaddingSize * 2) {
           // Tap is near the "clear" button
-          widget.imageFieldController.clear();
+          imageFieldController.clear();
           setState(() {
             uploadedImageBytes = null;
             widget.controller.setNewImg(uploadedImageBytes);
@@ -80,7 +70,7 @@ class _UploadButtonState extends State<UploadButton> {
             final uploadedImage = filePickerResult.files[0];
             setState(() {
               uploadedImageBytes = uploadedImage.bytes;
-              widget.imageFieldController.text = uploadedImage.name;
+              imageFieldController.text = uploadedImage.name;
               widget.controller.setNewImg(uploadedImageBytes);
             });
           }
@@ -93,13 +83,13 @@ class _UploadButtonState extends State<UploadButton> {
         color: Colors.transparent,
         child: IgnorePointer(
           child: TextFormField(
-            controller: widget.imageFieldController,
+            controller: imageFieldController,
             decoration: InputDecoration(
               labelText: widget.pageType
                   ? S.current.labelProfilePicture
                   : S.current.labelWebsiteIcon,
               prefixIcon: const Icon(Icons.add_photo_alternate_outlined),
-              suffixIcon: widget.imageFieldController.text.isNotEmpty
+              suffixIcon: imageFieldController.text.isNotEmpty
                   ? const Icon(Icons.clear)
                   : null,
             ),

@@ -37,8 +37,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   ImageProvider imageWidget;
 
-  TextEditingController imageFieldController = TextEditingController();
-  UploadButton uploadButton;
+  UploadButtonController uploadButtonController;
 
   // Whether the user verified their email; this can be true, false or null if
   // the async check hasn't completed yet.
@@ -54,9 +53,11 @@ class _EditProfilePageState extends State<EditProfilePage> {
               ? NetworkImage(value)
               : const AssetImage('assets/illustrations/undraw_profile_pic.png'),
         }));
-    uploadButton = UploadButton(imageFieldController,
-        pageType: true,
-        controller: UploadButtonController(onUpdate: () => setState(() => {})));
+    uploadButtonController = UploadButton(
+            pageType: true,
+            controller:
+                UploadButtonController(onUpdate: () => setState(() => {})))
+        .controller;
   }
 
   AppDialog _changePasswordDialog(BuildContext context) {
@@ -273,9 +274,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
                           builder: _changeEmailConfirmationDialog)
                       .then((value) => result = value ?? false);
                 }
-                if (uploadButton.controller.newUploadedImageBytes != null) {
+                if (uploadButtonController.newUploadedImageBytes != null) {
                   imageAsPNG = await Utils.convertToPNG(
-                      uploadButton.controller.newUploadedImageBytes);
+                      uploadButtonController.newUploadedImageBytes);
                   result = await authProvider.uploadProfilePicture(imageAsPNG);
                 }
                 if (result) {
@@ -303,13 +304,13 @@ class _EditProfilePageState extends State<EditProfilePage> {
             padding: const EdgeInsets.all(10),
             child: CircleImage(
               circleSize: 150,
-              image: uploadButton.controller.uploadImageBytes != null
-                  ? MemoryImage(uploadButton.controller.newUploadedImageBytes)
+              image: uploadButtonController.uploadImageBytes != null
+                  ? MemoryImage(uploadButtonController.newUploadedImageBytes)
                   : imageWidget,
             ),
           ),
           const SizedBox(height: 10),
-          uploadButton,
+          UploadButton(pageType: true, controller: uploadButtonController),
           PreferenceTitle(
             S.current.labelPersonalInformation,
             leftPadding: 0,

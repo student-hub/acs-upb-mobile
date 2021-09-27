@@ -55,8 +55,7 @@ class _WebsiteViewState extends State<WebsiteView> {
   User user;
 
   ImageProvider imageWidget;
-  TextEditingController imageFieldController = TextEditingController();
-  UploadButton uploadButton;
+  UploadButtonController uploadButtonController;
 
   Future<void> fetchUser() async {
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
@@ -89,9 +88,11 @@ class _WebsiteViewState extends State<WebsiteView> {
               ? NetworkImage(value)
               : const AssetImage('assets/icons/globe.png')
         }));
-    uploadButton = UploadButton(imageFieldController,
-        pageType: false,
-        controller: UploadButtonController(onUpdate: () => setState(() => {})));
+    uploadButtonController = UploadButton(
+            pageType: false,
+            controller:
+                UploadButtonController(onUpdate: () => setState(() => {})))
+        .controller;
   }
 
   String buildId() {
@@ -156,11 +157,10 @@ class _WebsiteViewState extends State<WebsiteView> {
                         Expanded(
                             child: WebsiteIcon(
                           website: website,
-                          image: uploadButton
-                                      .controller.newUploadedImageBytes !=
+                          image: uploadButtonController.newUploadedImageBytes !=
                                   null
                               ? MemoryImage(
-                                  uploadButton.controller.newUploadedImageBytes)
+                                  uploadButtonController.newUploadedImageBytes)
                               : imageWidget,
                           onTap: () {
                             Utils.launchURL(website.link);
@@ -234,9 +234,9 @@ class _WebsiteViewState extends State<WebsiteView> {
                   } else {
                     res = await websiteProvider.addWebsite(buildWebsite());
                   }
-                  if (uploadButton.controller.newUploadedImageBytes != null) {
+                  if (uploadButtonController.newUploadedImageBytes != null) {
                     imageAsPNG = await Utils.convertToPNG(
-                        uploadButton.controller.newUploadedImageBytes);
+                        uploadButtonController.newUploadedImageBytes);
                     res = await websiteProvider.uploadWebsiteIcon(
                         buildWebsite(), imageAsPNG);
                   }
@@ -273,7 +273,8 @@ class _WebsiteViewState extends State<WebsiteView> {
                 key: formKey,
                 child: Column(
                   children: <Widget>[
-                    uploadButton,
+                    UploadButton(
+                        pageType: true, controller: uploadButtonController),
                     TextFormField(
                       controller: labelController,
                       decoration: InputDecoration(
