@@ -45,6 +45,11 @@ class _TimetablePageState extends State<TimetablePage>
   }
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
 
@@ -205,8 +210,6 @@ class _TimetablePageState extends State<TimetablePage>
             Provider.of<FilterProvider>(context, listen: false);
         final requestProvider =
             Provider.of<RequestProvider>(context, listen: false);
-        final eventProvider =
-            Provider.of<UniEventProvider>(context, listen: true);
 
         // Fetch user classes, request necessary info from providers so it's
         // cached when we check in the dialog
@@ -218,8 +221,11 @@ class _TimetablePageState extends State<TimetablePage>
         // Slight delay between last frame and dialog
         await Future<void>.delayed(const Duration(milliseconds: 100));
 
-        if (!mounted) return;
         // Show dialog if there are no events
+        if (!mounted) return;
+        final eventProvider =
+            Provider.of<UniEventProvider>(context, listen: false);
+
         if (eventProvider != null) {
           if (eventProvider.empty) {
             await showDialog<String>(
