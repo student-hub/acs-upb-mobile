@@ -35,7 +35,6 @@ import 'package:acs_upb_mobile/pages/portal/view/portal_page.dart';
 import 'package:acs_upb_mobile/pages/portal/view/website_view.dart';
 import 'package:acs_upb_mobile/pages/settings/model/request.dart';
 import 'package:acs_upb_mobile/pages/settings/service/admin_provider.dart';
-import 'package:acs_upb_mobile/pages/settings/service/request_provider.dart';
 import 'package:acs_upb_mobile/pages/settings/view/admin_page.dart';
 import 'package:acs_upb_mobile/pages/settings/view/request_permissions.dart';
 import 'package:acs_upb_mobile/pages/settings/view/settings_page.dart';
@@ -88,8 +87,6 @@ class MockUniEventProvider extends Mock implements UniEventProvider {}
 
 class MockNewsProvider extends Mock implements NewsProvider {}
 
-class MockRequestProvider extends Mock implements RequestProvider {}
-
 class MockNavigatorObserver extends Mock implements NavigatorObserver {}
 
 class MockFeedbackProvider extends Mock implements FeedbackProvider {}
@@ -105,7 +102,6 @@ Future<void> main() async {
   MockQuestionProvider mockQuestionProvider;
   MockNewsProvider mockNewsProvider;
   UniEventProvider mockEventProvider;
-  RequestProvider mockRequestProvider;
   FeedbackProvider mockFeedbackProvider;
   AdminProvider mockAdminProvider;
 
@@ -144,7 +140,6 @@ Future<void> main() async {
           ChangeNotifierProvider<NewsProvider>(create: (_) => mockNewsProvider),
           ChangeNotifierProvider<UniEventProvider>(
               create: (_) => mockEventProvider),
-          Provider<RequestProvider>(create: (_) => mockRequestProvider),
           ChangeNotifierProvider<FeedbackProvider>(
               create: (_) => mockFeedbackProvider),
           ChangeNotifierProvider<AdminProvider>(
@@ -712,7 +707,7 @@ Future<void> main() async {
     when(mockEventProvider.addEvent(any)).thenAnswer((_) => Future.value(true));
 
     mockRequestProvider = MockRequestProvider();
-    when(mockRequestProvider.makeRequest(any))
+    when(mockRequestProvider.submitRequest(any))
         .thenAnswer((_) => Future.value(true));
     when(mockRequestProvider.userAlreadyRequested(any))
         .thenAnswer((_) => Future.value(false));

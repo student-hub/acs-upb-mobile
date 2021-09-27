@@ -180,13 +180,13 @@ class _FeedbackQuestionFormFieldState extends State<FeedbackQuestionFormField> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          widget.question.question,
-          style: const TextStyle(
-            fontSize: 18,
-          ),
-        ),
+        Text(widget.question.question, style: const TextStyle(fontSize: 18)),
         const SizedBox(height: 12),
+        if ((widget.question as FormQuestionText).additionalInfo != null)
+          Text((widget.question as FormQuestionText).additionalInfo,
+              style: const TextStyle(fontSize: 12)),
+        if ((widget.question as FormQuestionText).additionalInfo != null)
+          const SizedBox(height: 12),
         Padding(
           padding: const EdgeInsets.all(2),
           child: Column(

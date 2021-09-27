@@ -8,6 +8,7 @@ import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question_sli
 import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question_text.dart';
 import 'package:acs_upb_mobile/pages/classes/model/class.dart';
 import 'package:acs_upb_mobile/pages/people/model/person.dart';
+import 'package:acs_upb_mobile/pages/settings/model/request.dart';
 import 'package:acs_upb_mobile/resources/locale_provider.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -29,6 +30,13 @@ extension FeedbackQuestionExtension on FormQuestion {
       return FormQuestionRating(
         category: json['category'],
         question: json['question'][LocaleProvider.localeString],
+        id: id,
+      );
+    } else if (json['type'] == 'text' && json['additional_info'] != null) {
+      return FormQuestionText(
+        category: json['category'],
+        question: json['question'][LocaleProvider.localeString],
+        additionalInfo: json['additional_info'][LocaleProvider.localeString],
         id: id,
       );
     } else if (json['type'] == 'text') {
@@ -227,6 +235,48 @@ class FeedbackProvider with ChangeNotifier {
     } catch (e) {
       AppToast.show(S.current.errorSomethingWentWrong);
       return null;
+    }
+  }
+
+  final FirebaseFirestore _db = FirebaseFirestore.instance;
+  bool userAlreadyRequestedCache;
+
+  Future<bool> submitRequest(PermissionRequest request) async {
+    for (int i = 0; i < request.answers.length; ++i) {
+      assert(request.answers[i.toString()].answer != null);
+    }
+
+    try {
+      DocumentReference ref;
+      ref = _db.collection('forms').doc('permission_request_answers');
+
+      final data = request.toData();
+      await ref.update({request.userId: data});
+
+      return userAlreadyRequestedCache = true;
+    } catch (e) {
+      print(e);
+      AppToast.show(S.current.errorSomethingWentWrong);
+      return userAlreadyRequestedCache = false;
+    }
+  }
+
+  Future<bool> userAlreadyRequested(final String userId) async {
+    if (userAlreadyRequestedCache != null) return userAlreadyRequestedCache;
+
+    try {
+      final DocumentSnapshot snap = await _db
+          .collection('forms')
+          .doc('permission_request_questions')
+          .get(); //doc(userId).get();
+      if (snap.data() != null) {
+        return userAlreadyRequestedCache = true;
+      }
+      return userAlreadyRequestedCache = false;
+    } catch (e) {
+      print(e);
+      AppToast.show(S.current.errorSomethingWentWrong);
+      return userAlreadyRequestedCache = false;
     }
   }
 }

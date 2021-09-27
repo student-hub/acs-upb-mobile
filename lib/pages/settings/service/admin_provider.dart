@@ -1,7 +1,7 @@
 import 'package:acs_upb_mobile/authentication/model/user.dart';
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
-import 'package:acs_upb_mobile/pages/class_feedback/model/form_answer.dart';
+import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question.dart';
 import 'package:acs_upb_mobile/pages/settings/model/request.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -11,16 +11,16 @@ import 'package:flutter/material.dart';
 extension PermissionRequestExtension on PermissionRequest {
   static PermissionRequest fromSnap(DocumentSnapshot snap) {
     final data = snap.data();
-    final List<FormAnswer> list = [];
+    final List<FormQuestion> list = [];
     int i = 0;
-    while (data[i.toString()] != null) {
-      list.add(FormAnswer(
-          questionNumber: i.toString(), questionAnswer: data[i.toString()]));
-      i++;
-    }
+    // while (data[i.toString()] != null) {
+    //   list.add(FormAnswer(
+    //       questionNumber: i.toString(), questionAnswer: data[i.toString()]));
+    //   i++;
+    // }
     return PermissionRequest(
       userId: snap.id,
-      answers: list,
+      //answers: list,
       processed: data['done'],
       dateSubmitted: data['dateSubmitted'],
       accepted: data['accepted'],

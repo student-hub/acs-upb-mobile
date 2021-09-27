@@ -1,10 +1,10 @@
 import 'package:acs_upb_mobile/authentication/model/user.dart';
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
-import 'package:acs_upb_mobile/pages/class_feedback/model/form_answer.dart';
+import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question.dart';
+import 'package:acs_upb_mobile/pages/class_feedback/service/feedback_provider.dart';
+import 'package:acs_upb_mobile/pages/class_feedback/view/feedback_question.dart';
 import 'package:acs_upb_mobile/pages/settings/model/request.dart';
-import 'package:acs_upb_mobile/pages/settings/service/request_provider.dart';
-import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/widgets/button.dart';
 import 'package:acs_upb_mobile/widgets/dialog.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
@@ -21,9 +21,14 @@ class RequestPermissionsPage extends StatefulWidget {
 }
 
 class _RequestPermissionsPageState extends State<RequestPermissionsPage> {
+  final formKey = GlobalKey<FormState>();
   User user;
   bool agreedToResponsibilities = false;
-  TextEditingController requestController = TextEditingController();
+
+  // TextEditingController requestController = TextEditingController();
+  Map<String, Map<String, String>> questionCategories = {};
+  List<Map<int, bool>> answerValues = [];
+  Map<String, FormQuestion> requestQuestions = {};
 
   Future<void> _fetchUser() async {
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
@@ -55,12 +60,59 @@ class _RequestPermissionsPageState extends State<RequestPermissionsPage> {
   @override
   void initState() {
     super.initState();
+
+    Provider.of<FeedbackProvider>(context, listen: false)
+        .fetchCategories('permission_request_questions')
+        .then((categories) => setState(() => questionCategories = categories));
+
+    fetchFeedbackQuestions();
     _fetchUser();
+  }
+
+  Future<Map<String, dynamic>> fetchFeedbackQuestions() async {
+    await Provider.of<FeedbackProvider>(context, listen: false)
+        .fetchQuestions('permission_request_questions')
+        .then((questions) => setState(() => requestQuestions = questions));
+    for (int i = 0; i <= requestQuestions.length; i++) {
+      answerValues.insert(i, {
+        0: false,
+        1: false,
+        2: false,
+        3: false,
+        4: false,
+      });
+    }
+    return requestQuestions;
   }
 
   @override
   Widget build(BuildContext context) {
-    final requestProvider = Provider.of<RequestProvider>(context);
+    final requestProvider = Provider.of<FeedbackProvider>(context);
+    final List<Widget> children = [];
+
+    for (final category in questionCategories.keys.toList()..sort()) {
+      final List<Widget> categoryChildren = [];
+      for (final question
+          in requestQuestions.values.where((q) => q.category == category)) {
+        categoryChildren.add(FeedbackQuestionFormField(
+            question: question, answerValues: answerValues, formKey: formKey));
+      }
+      children.add(
+        Column(
+          children: [
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(15),
+                child: Column(
+                  children: categoryChildren,
+                ),
+              ),
+            ),
+            //const SizedBox(height: 24),
+          ],
+        ),
+      );
+    }
 
     return AppScaffold(
         title: Text(S.current.navigationAskPermissions),
@@ -74,10 +126,11 @@ class _RequestPermissionsPageState extends State<RequestPermissionsPage> {
                   return;
                 }
 
-                if (requestController.text == '') {
-                  AppToast.show(S.current.warningRequestEmpty);
-                  return;
-                }
+                if (!formKey.currentState.validate()) return;
+                // if (requestController.text == '') {
+                //   AppToast.show(S.current.warningRequestEmpty);
+                //   return;
+                // }
 
                 /*
                  * Check if there is already a request registered for the current
@@ -91,15 +144,22 @@ class _RequestPermissionsPageState extends State<RequestPermissionsPage> {
                       context: context, builder: _requestAlreadyExistsDialog);
                 }
 
-                final List<FormAnswer> list = [
-                  FormAnswer(
-                      questionNumber: '0',
-                      questionAnswer: requestController.text)
-                ];
-                queryResult = await requestProvider.makeRequest(
+                setState(() {
+                  formKey.currentState.save();
+                });
+
+                // final List<FormQuestion> list = [];
+                // for (int i = 0; i < requestQuestions.length; ++i) {
+                //   list.add(requestQuestions[i]);
+                // }
+                //   FormAnswer(
+                //       questionNumber: '0',
+                //       questionAnswer: requestController.text)
+                // ];
+                queryResult = await requestProvider.submitRequest(
                   PermissionRequest(
                     userId: user.uid,
-                    answers: list,
+                    answers: requestQuestions,
                   ),
                 );
                 if (queryResult) {
@@ -117,31 +177,23 @@ class _RequestPermissionsPageState extends State<RequestPermissionsPage> {
                   child: Image.asset('assets/illustrations/undraw_hiring.png')),
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(20, 20, 20, 8),
-              child: Text(
-                S
-                    .of(context)
-                    .messageAskPermissionToEdit(Utils.packageInfo.appName),
-                style: Theme.of(context).textTheme.headline6,
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 20),
-              child: Text(S.current.messageAnnouncedOnMail,
-                  style: Theme.of(context).textTheme.caption.apply(
-                      color: Theme.of(context).textTheme.headline5.color)),
-            ),
-            Padding(
               padding: const EdgeInsets.all(10),
-              child: TextFormField(
-                keyboardType: TextInputType.multiline,
-                minLines: 1,
-                maxLines: 10,
-                controller: requestController,
+              child: Form(
+                key: formKey,
+                child:
+                    Column(mainAxisSize: MainAxisSize.min, children: children),
               ),
             ),
+            // Padding(
+            //   padding: const EdgeInsets.all(10),
+            //   child: TextFormField(
+            //     keyboardType: TextInputType.multiline,
+            //     minLines: 1,
+            //     maxLines: 10,
+            //     controller: requestController,
+            //   ),
+            // ),
             Padding(
-
               padding: const EdgeInsets.all(10),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,

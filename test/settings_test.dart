@@ -11,7 +11,6 @@ import 'package:acs_upb_mobile/pages/news_feed/service/news_provider.dart';
 import 'package:acs_upb_mobile/pages/portal/service/website_provider.dart';
 import 'package:acs_upb_mobile/pages/settings/model/request.dart';
 import 'package:acs_upb_mobile/pages/settings/service/admin_provider.dart';
-import 'package:acs_upb_mobile/pages/settings/service/request_provider.dart';
 import 'package:acs_upb_mobile/pages/settings/view/request_permissions.dart';
 import 'package:acs_upb_mobile/pages/settings/view/settings_page.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/events/uni_event.dart';
@@ -36,8 +35,6 @@ class MockWebsiteProvider extends Mock implements WebsiteProvider {}
 
 class MockQuestionProvider extends Mock implements QuestionProvider {}
 
-class MockRequestProvider extends Mock implements RequestProvider {}
-
 class MockNewsProvider extends Mock implements NewsProvider {}
 
 class MockUniEventProvider extends Mock implements UniEventProvider {}
@@ -52,7 +49,6 @@ void main() {
   AuthProvider mockAuthProvider;
   WebsiteProvider mockWebsiteProvider;
   MockQuestionProvider mockQuestionProvider;
-  RequestProvider mockRequestProvider;
   MockNewsProvider mockNewsProvider;
   UniEventProvider mockEventProvider;
   FeedbackProvider mockFeedbackProvider;
@@ -67,7 +63,6 @@ void main() {
             create: (_) => mockWebsiteProvider),
         ChangeNotifierProvider<QuestionProvider>(
             create: (_) => mockQuestionProvider),
-        Provider<RequestProvider>(create: (_) => mockRequestProvider),
         ChangeNotifierProvider<NewsProvider>(create: (_) => mockNewsProvider),
         ChangeNotifierProvider<FeedbackProvider>(
             create: (_) => mockFeedbackProvider),
@@ -121,7 +116,7 @@ void main() {
           .thenAnswer((_) => Future.value(<Question>[]));
 
       mockRequestProvider = MockRequestProvider();
-      when(mockRequestProvider.makeRequest(any))
+      when(mockRequestProvider.submitRequest(any))
           .thenAnswer((_) => Future.value(true));
       when(mockRequestProvider.userAlreadyRequested(any))
           .thenAnswer((_) => Future.value(false));
@@ -290,7 +285,7 @@ void main() {
         await tester.pumpAndSettle(const Duration(seconds: 2));
 
         // Verify the request is sent and Settings Page pops back
-        verify(mockRequestProvider.makeRequest(any));
+        verify(mockRequestProvider.submitRequest(any));
         expect(find.byType(SettingsPage), findsOneWidget);
       });
 
@@ -326,7 +321,7 @@ void main() {
         await tester.pumpAndSettle(const Duration(seconds: 2));
 
         // Verify the request is sent and Settings Page pops back
-        verify(mockRequestProvider.makeRequest(any));
+        verify(mockRequestProvider.submitRequest(any));
         expect(find.byType(SettingsPage), findsOneWidget);
       });
 
@@ -409,8 +404,8 @@ void main() {
             uid: '0', firstName: 'John', lastName: 'Doe', permissionLevel: 3));
         when(mockAdminProvider.fetchUnprocessedRequestIds())
             .thenAnswer((_) => Future.value(['string']));
-        when(mockAdminProvider.fetchRequest('')).thenAnswer(
-            (_) => Future.value(PermissionRequest(requestBody: 'body', userId: '0')));
+        when(mockAdminProvider.fetchRequest('')).thenAnswer((_) =>
+            Future.value(PermissionRequest(requestBody: 'body', userId: '0')));
 
         await tester.pumpWidget(buildApp());
         await tester.pumpAndSettle();
