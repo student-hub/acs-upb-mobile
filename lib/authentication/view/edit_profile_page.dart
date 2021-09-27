@@ -116,7 +116,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   if (value?.isEmpty ?? true) {
                     return S.current.errorNoPassword;
                   }
-                  if (value == newPasswordController.text) {
+                  if (value != newPasswordController.text) {
                     return S.current.errorPasswordsDiffer;
                   }
                   return null;
