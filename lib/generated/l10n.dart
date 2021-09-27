@@ -2045,10 +2045,10 @@ class S {
     );
   }
 
-  /// `Feedback for the app`
+  /// `Contact us`
   String get settingsFeedbackForm {
     return Intl.message(
-      'Feedback for the app',
+      'Contact us',
       name: 'settingsFeedbackForm',
       desc: '',
       args: [],

@@ -266,7 +266,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "sectionGrading" : MessageLookupByLibrary.simpleMessage("Punctaj"),
     "sectionShortcuts" : MessageLookupByLibrary.simpleMessage("Scurtături"),
     "settingsExportToGoogleCalendar" : MessageLookupByLibrary.simpleMessage("Exportă evenimentele în Google Calendar"),
-    "settingsFeedbackForm" : MessageLookupByLibrary.simpleMessage("Feedback pentru aplicație"),
+    "settingsFeedbackForm" : MessageLookupByLibrary.simpleMessage("Contactați-ne"),
     "settingsItemDarkMode" : MessageLookupByLibrary.simpleMessage("Mod Întunecat"),
     "settingsItemEditingPermissions" : MessageLookupByLibrary.simpleMessage("Permisiunile tale de editare"),
     "settingsItemLanguage" : MessageLookupByLibrary.simpleMessage("Limbă"),

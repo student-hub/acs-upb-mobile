@@ -266,7 +266,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "sectionGrading" : MessageLookupByLibrary.simpleMessage("Grading"),
     "sectionShortcuts" : MessageLookupByLibrary.simpleMessage("Shortcuts"),
     "settingsExportToGoogleCalendar" : MessageLookupByLibrary.simpleMessage("Export events to Google Calendar"),
-    "settingsFeedbackForm" : MessageLookupByLibrary.simpleMessage("Feedback for the app"),
+    "settingsFeedbackForm" : MessageLookupByLibrary.simpleMessage("Contact us"),
     "settingsItemDarkMode" : MessageLookupByLibrary.simpleMessage("Dark Mode"),
     "settingsItemEditingPermissions" : MessageLookupByLibrary.simpleMessage("Your editing permissions"),
     "settingsItemLanguage" : MessageLookupByLibrary.simpleMessage("Language"),
