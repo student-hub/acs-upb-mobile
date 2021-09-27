@@ -15,12 +15,11 @@ import 'package:acs_upb_mobile/widgets/circle_image.dart';
 import 'package:acs_upb_mobile/widgets/dialog.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
+import 'package:acs_upb_mobile/widgets/upload_button.dart';
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
-import 'package:positioned_tap_detector/positioned_tap_detector.dart';
 import 'package:provider/provider.dart';
 import 'package:recase/recase.dart';
 import 'package:validators/validators.dart';
@@ -55,9 +54,8 @@ class _WebsiteViewState extends State<WebsiteView> {
 
   User user;
 
-  Uint8List uploadedImageBytes;
   ImageProvider imageWidget;
-  TextEditingController imageFieldController = TextEditingController();
+  UploadButtonController uploadButtonController;
 
   Future<void> fetchUser() async {
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
@@ -90,6 +88,8 @@ class _WebsiteViewState extends State<WebsiteView> {
               ? NetworkImage(value)
               : const AssetImage('assets/icons/globe.png')
         }));
+    uploadButtonController =
+        UploadButtonController(onUpdate: () => setState(() => {}));
   }
 
   String buildId() {
@@ -154,7 +154,11 @@ class _WebsiteViewState extends State<WebsiteView> {
                         Expanded(
                             child: WebsiteIcon(
                           website: website,
-                          image: imageWidget,
+                          image: uploadButtonController.newUploadedImageBytes !=
+                                  null
+                              ? MemoryImage(
+                                  uploadButtonController.newUploadedImageBytes)
+                              : imageWidget,
                           onTap: () {
                             Utils.launchURL(website.link);
                           },
@@ -205,57 +209,6 @@ class _WebsiteViewState extends State<WebsiteView> {
         ],
       );
 
-  // Returns a widget that behaves similarly to a textfield with a "clear"
-  // button, except it actually allows the user to select an image from the
-  // gallery instead of inputting text directly.
-  Widget uploadButton() {
-    // We need to override the tap behaviour of the text field to obtain the
-    // behaviour we want.
-    return PositionedTapDetector(
-      onTap: (tapPosition) async {
-        final screenWidth = MediaQuery.of(context).size.width;
-        const iconSize = 24, paddingSize = 16, iconPaddingSize = 12;
-        if (screenWidth - tapPosition.global.dx <=
-            iconSize + paddingSize + iconPaddingSize * 2) {
-          // Tap is near the "clear" button
-          imageFieldController.clear();
-          setState(() {
-            imageWidget = const AssetImage('assets/icons/globe.png');
-          });
-        } else {
-          final filePickerResult = await FilePicker.platform.pickFiles(
-              type: FileType.image, allowMultiple: false, withData: true);
-          if (filePickerResult != null) {
-            final uploadedImage = filePickerResult.files[0];
-            setState(() {
-              uploadedImageBytes = uploadedImage.bytes;
-              imageWidget = MemoryImage(uploadedImageBytes);
-              imageFieldController.text = uploadedImage.name;
-            });
-          }
-        }
-      },
-      child: Container(
-        // Overriding the textfield gesture only works if we set the colour on
-        // the container for some reason:
-        // https://github.com/flutter/flutter/issues/15882#issuecomment-489900189
-        color: Colors.transparent,
-        child: IgnorePointer(
-          child: TextFormField(
-            controller: imageFieldController,
-            decoration: InputDecoration(
-              labelText: S.current.labelWebsiteIcon,
-              prefixIcon: const Icon(Icons.add_photo_alternate_outlined),
-              suffixIcon: imageFieldController.text.isNotEmpty
-                  ? const Icon(Icons.clear)
-                  : null,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     Uint8List imageAsPNG;
@@ -278,8 +231,9 @@ class _WebsiteViewState extends State<WebsiteView> {
                   } else {
                     res = await websiteProvider.addWebsite(buildWebsite());
                   }
-                  if (uploadedImageBytes != null) {
-                    imageAsPNG = await Utils.convertToPNG(uploadedImageBytes);
+                  if (uploadButtonController.newUploadedImageBytes != null) {
+                    imageAsPNG = await Utils.convertToPNG(
+                        uploadButtonController.newUploadedImageBytes);
                     res = await websiteProvider.uploadWebsiteIcon(
                         buildWebsite(), imageAsPNG);
                   }
@@ -316,7 +270,8 @@ class _WebsiteViewState extends State<WebsiteView> {
                 key: formKey,
                 child: Column(
                   children: <Widget>[
-                    uploadButton(),
+                    UploadButton(
+                        pageType: true, controller: uploadButtonController),
                     TextFormField(
                       controller: labelController,
                       decoration: InputDecoration(

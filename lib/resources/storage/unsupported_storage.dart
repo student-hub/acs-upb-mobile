@@ -17,4 +17,9 @@ class StorageProvider extends ChangeNotifier {
     final Error error = ArgumentError('Platform not found!');
     throw error;
   }
+
+  static Future<bool> deleteImage(String imagePath) async {
+    final Error error = ArgumentError('Platform not found!');
+    throw error;
+  }
 }
