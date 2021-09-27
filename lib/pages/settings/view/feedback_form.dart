@@ -114,25 +114,6 @@ class _FeedbackFormPageState extends State<FeedbackFormPage> {
                 ],
               ),
               TextFormField(
-                key: const ValueKey('contact'),
-                controller: issueEmailController,
-                // The validator receives the text that the user has entered.
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return S.current.messageEnterText;
-                  }
-                  return null;
-                },
-                decoration: InputDecoration(
-                  labelText: S.current.labelEmail,
-                  hintText: S.current.emailExample,
-                  prefixIcon: const Icon(Icons.label_outlined),
-                ),
-              ),
-              const Padding(
-                padding: EdgeInsets.only(top: 8, bottom: 8),
-              ),
-              TextFormField(
                 key: const ValueKey('issue'),
                 controller: issueController,
                 validator: (value) {
@@ -151,7 +132,31 @@ class _FeedbackFormPageState extends State<FeedbackFormPage> {
                   hintText: _feedbackSelected
                       ? S.current.feedbackExample
                       : S.current.issueExample,
-                  prefixIcon: const Icon(Icons.label_outlined),
+                  prefixIcon: const Icon(Icons.message_outlined),
+                ),
+              ),
+              const Padding(
+                padding: EdgeInsets.only(top: 8, bottom: 8),
+              ),
+              TextFormField(
+                key: const ValueKey('contact'),
+                controller: issueEmailController,
+                // The validator receives the text that the user has entered.
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return S.current.messageEnterText;
+                  }
+                  return null;
+                },
+                decoration: InputDecoration(
+                  labelText: S.current.labelContactInfoOptional,
+                  helperText: S.current.helperContactInfo,
+                  helperStyle: Theme.of(context)
+                      .textTheme
+                      .subtitle2
+                      .copyWith(fontWeight: FontWeight.w300),
+                  hintText: S.current.emailExample,
+                  prefixIcon: const Icon(Icons.alternate_email_outlined),
                 ),
               ),
             ],

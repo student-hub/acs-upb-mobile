@@ -605,6 +605,16 @@ class S {
     );
   }
 
+  /// `Contact info (optional)`
+  String get labelContactInfoOptional {
+    return Intl.message(
+      'Contact info (optional)',
+      name: 'labelContactInfoOptional',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Shortcuts`
   String get sectionShortcuts {
     return Intl.message(
@@ -810,6 +820,16 @@ class S {
     return Intl.message(
       '4.0',
       name: 'hintPoints',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `In case we need to reach out for more info`
+  String get helperContactInfo {
+    return Intl.message(
+      'In case we need to reach out for more info',
+      name: 'helperContactInfo',
       desc: '',
       args: [],
     );

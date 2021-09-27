@@ -57,6 +57,7 @@
   "labelFeedback": "Feedback",
   "labelIssue": "Issue",
   "labelReportType": "Tipul raportului",
+  "labelContactInfoOptional": "Informații de contact (opțional)",
 
   "sectionShortcuts": "Scurtături",
   "sectionEvents": "Evenimente",
@@ -81,6 +82,8 @@
   "hintWebsiteLink": "http://google.com",
   "hintEvaluation": "Examen final",
   "hintPoints": "4.0",
+
+  "helperContactInfo": "În caz că avem nevoie de mai multe informații",
 
   "actionSignUp": "Înregistrare",
   "actionLogIn": "Conectare",

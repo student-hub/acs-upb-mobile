@@ -57,6 +57,7 @@
   "labelFeedback": "Feedback",
   "labelIssue": "Issue",
   "labelReportType": "Report type",
+  "labelContactInfoOptional": "Contact info (optional)",
 
   "sectionShortcuts": "Shortcuts",
   "sectionEvents": "Events",
@@ -81,6 +82,8 @@
   "hintWebsiteLink": "http://google.com",
   "hintEvaluation": "Final exam",
   "hintPoints": "4.0",
+
+  "helperContactInfo": "In case we need to reach out for more info",
 
   "actionSignUp": "Sign up",
   "actionLogIn": "Log in",
