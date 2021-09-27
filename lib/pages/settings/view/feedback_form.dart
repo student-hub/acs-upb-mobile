@@ -143,7 +143,7 @@ class _FeedbackFormPageState extends State<FeedbackFormPage> {
                 controller: issueEmailController,
                 // The validator receives the text that the user has entered.
                 validator: (value) {
-                  if (value == null || value.isEmpty) {
+                  if (value == null) {
                     return S.current.messageEnterText;
                   }
                   return null;

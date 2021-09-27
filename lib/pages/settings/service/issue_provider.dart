@@ -9,10 +9,8 @@ extension IssueExtension on Issue {
   Map<String, dynamic> toData() {
     final Map<String, dynamic> data = {};
 
-    if (email != null) {
+    if (email != null && email.isNotEmpty) {
       data['email'] = email;
-    } else {
-      data['email'] = '-';
     }
     if (issueBody != null) data['issueBody'] = issueBody;
     if (type != null) data['type'] = type;
