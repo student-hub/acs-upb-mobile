@@ -1,4 +1,5 @@
 import 'package:firebase_remote_config/firebase_remote_config.dart';
+import 'package:flutter/foundation.dart';
 
 import 'utils.dart';
 
@@ -16,7 +17,7 @@ class RemoteConfigService {
       : _remoteConfig?.getBool(_feedbackEnabled) ?? defaults[_feedbackEnabled];
 
   static Future<dynamic> initialize() async {
-    if (!Platform.isAndroid && !Platform.isIOS) return;
+    if (kIsWeb) return; // Remote config is not yet supported on web.
     try {
       _remoteConfig = RemoteConfig.instance;
       await _remoteConfig.setDefaults(defaults);
@@ -25,6 +26,5 @@ class RemoteConfigService {
       print(
           'Unable to fetch remote config. Cached or default values will be used.');
     }
-    // Does not work on web
   }
 }

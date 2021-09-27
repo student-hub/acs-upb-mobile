@@ -38,7 +38,7 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.3
 
-  # Used for painting all day event widget
+  # Useful static extension methods
   dartx: any
 
   # Date & time picker widget
