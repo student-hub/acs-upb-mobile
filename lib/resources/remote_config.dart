@@ -24,7 +24,7 @@ class RemoteConfigService {
 
   static Future<dynamic> initialize() async {
     if (kIsWeb) {
-      return;
+      return; // Remote config is not yet supported on web.
     }
     try {
       _remoteConfig = await RemoteConfig.instance;
