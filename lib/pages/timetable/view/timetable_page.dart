@@ -116,7 +116,7 @@ class _TimetablePageState extends State<TimetablePage>
               valueListenable: _dateController,
               builder: (context, value, child) {
                 final Stream<List<UniEventInstance>> eventsInRange =
-                    Provider.of<UniEventProvider>(context, listen: false)
+                    Provider.of<UniEventProvider>(context, listen: true)
                         .getEventsIntersecting(
                   Interval(
                     // Events are preloaded for previous, current and next page
