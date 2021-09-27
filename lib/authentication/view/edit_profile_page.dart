@@ -310,10 +310,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   : imageWidget,
             ),
           ),
-          PreferenceTitle(
-            S.current.labelProfilePictureTitle,
-            leftPadding: 0,
-          ),
           const SizedBox(height: 10),
           uploadButton,
           PreferenceTitle(

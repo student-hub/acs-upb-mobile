@@ -456,16 +456,6 @@ class S {
     );
   }
 
-  /// `Profile picture`
-  String get labelProfilePictureTitle {
-    return Intl.message(
-      'Profile picture',
-      name: 'labelProfilePicture',
-      desc: '',
-      args: [],
-    );
-  }
-
   /// `Personal information`
   String get labelPersonalInformation {
     return Intl.message(
