@@ -37,6 +37,7 @@
   "labelSemester": "Semestrul",
   "labelTeam": "Echipa {name}",
   "labelUnknown": "Necunoscut",
+  "labelUnknownLocation": "404! Adresă necunoscută",
   "labelEvaluation": "Evaluare",
   "labelPoints": "Puncte",
   "labelGrade": "Notă",
@@ -110,6 +111,7 @@
   "actionRequestPermissions": "Cere permisiuni",
   "actionRefresh": "Reîncarcă",
   "actionSearch": "Căutare",
+  "actionNavigateHome": "Înapoi la pagina principală",
 
   "errorSomethingWentWrong": "A apărut o problemă.",
   "errorPasswordsDiffer": "Cele două parole diferă.",

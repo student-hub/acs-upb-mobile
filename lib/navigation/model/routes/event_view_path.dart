@@ -18,6 +18,8 @@ class EventViewPath extends RoutePath {
         if (!authProvider.isAuthenticated || authProvider.isAnonymous) {
           return ErrorPage(
             errorMessage: S.current.warningAuthenticationNeeded,
+            actionText: S.current.actionLogIn,
+            actionOnTap: () => Utils.signOut(context),
           );
         }
 

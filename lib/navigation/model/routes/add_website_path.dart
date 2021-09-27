@@ -1,9 +1,10 @@
 part of route_paths;
 
 class AddWebsitePath extends RoutePath {
-  AddWebsitePath(this.category)
-      : super('${WebsiteView.routeName}/add?category=$category');
-
+  AddWebsitePath(String category)
+      : category = category ?? 'learning',
+        super(
+            '${WebsiteView.routeName}/add?category=${category ?? 'learning'}');
   final String category;
 
   WebsiteCategory get _websiteCategory {
@@ -21,23 +22,37 @@ class AddWebsitePath extends RoutePath {
   /// OR rename [category] to 'defaultCategory' :bigbrain:
   @override
   Widget get page {
-    return ChangeNotifierProxyProvider<AuthProvider, FilterProvider>(
-      create: (BuildContext context) {
-        return Platform.environment.containsKey('FLUTTER_TEST')
-            ? Provider.of<FilterProvider>(context)
-            : FilterProvider();
+    return Builder(
+      builder: (context) {
+        final authProvider = Provider.of<AuthProvider>(context);
+
+        if (!authProvider.isAuthenticated || authProvider.isAnonymous) {
+          return ErrorPage(
+            errorMessage: S.current.warningAuthenticationNeeded,
+            actionText: S.current.actionLogIn,
+            actionOnTap: () => Utils.signOut(context),
+          );
+        }
+
+        return ChangeNotifierProxyProvider<AuthProvider, FilterProvider>(
+          create: (BuildContext context) {
+            return Platform.environment.containsKey('FLUTTER_TEST')
+                ? Provider.of<FilterProvider>(context)
+                : FilterProvider();
+          },
+          update: (context, authProvider, filterProvider) {
+            return filterProvider..updateAuth(authProvider);
+          },
+          child: WebsiteView(
+            website: Website(
+                relevance: null,
+                id: null,
+                isPrivate: true,
+                link: '',
+                category: _websiteCategory),
+          ),
+        );
       },
-      update: (context, authProvider, filterProvider) {
-        return filterProvider..updateAuth(authProvider);
-      },
-      child: WebsiteView(
-        website: Website(
-            relevance: null,
-            id: null,
-            isPrivate: true,
-            link: '',
-            category: _websiteCategory),
-      ),
     );
   }
 }

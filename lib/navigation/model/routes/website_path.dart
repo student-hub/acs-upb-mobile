@@ -15,6 +15,8 @@ class WebsiteViewPath extends RoutePath {
         if (!authProvider.isAuthenticated || authProvider.isAnonymous) {
           return ErrorPage(
             errorMessage: S.current.warningAuthenticationNeeded,
+            actionText: S.current.actionLogIn,
+            actionOnTap: () => Utils.signOut(context),
           );
         }
 
@@ -43,9 +45,12 @@ class WebsiteViewPath extends RoutePath {
               }
               return ErrorPage(
                 errorMessage: S.current.errorPermissionDenied,
+                actionText: S.current.actionRequestPermissions,
+                actionOnTap: () => AppNavigator.pushNamed(
+                    context, RequestPermissionsPage.routeName),
               );
             }
-            return const CircularProgressIndicator();
+            return const Center(child: CircularProgressIndicator());
           },
         );
       },

@@ -10,9 +10,13 @@ class UnknownPath extends RoutePath {
 
   @override
   Widget get page {
-    return const ErrorPage(
-      errorMessage: '404! Unknown location',
-      imgPath: 'assets/illustrations/undraw_empty.png',
+    return Builder(
+      builder: (context) => ErrorPage(
+        errorMessage: S.current.labelUnknownLocation,
+        imgPath: 'assets/illustrations/undraw_empty.png',
+        actionText: S.current.actionNavigateHome,
+        actionOnTap: () => AppNavigator.pushNamed(context, HomePage.routeName),
+      ),
     );
   }
 }
