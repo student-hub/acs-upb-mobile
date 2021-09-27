@@ -1,5 +1,3 @@
-// ignore_for_file: flutter_style_todos
-
 import 'package:flutter/material.dart' hide Interval;
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:provider/provider.dart';
@@ -63,7 +61,7 @@ class _TimetablePageState extends State<TimetablePage>
     if (_timeController == null) {
       _timeController = TimeController(
         initialRange: TimeRange(7.hours + 55.minutes, 20.hours + 5.minutes),
-        // TODO(#99)
+        // TODO(IoanaAlexandru): Make initialTimeRange customizable in settings, #99
         maxRange: TimeRange(0.hours, 24.hours),
       );
 

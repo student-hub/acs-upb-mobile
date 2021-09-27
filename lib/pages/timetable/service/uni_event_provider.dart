@@ -1,5 +1,3 @@
-// ignore_for_file: flutter_style_todos
-
 import 'dart:async';
 
 import 'package:async/async.dart';
@@ -72,7 +70,8 @@ extension UniEventExtension on UniEvent {
         start: (json['start'] as Timestamp).toDate().copyWith(isUtc: true),
         end: (json['end'] as Timestamp).toDate().copyWith(isUtc: true),
         location: json['location'],
-        // TODO(#168)
+        // TODO(IoanaAlexandru): Allow users to set event colours in settings, #168
+
         color: type.color,
         classHeader: classHeader,
         calendar: calendars[json['calendar']],
@@ -93,7 +92,7 @@ extension UniEventExtension on UniEvent {
         start: (json['start'] as Timestamp).toDate(),
         duration: DurationExtension.fromJSON(json['duration']),
         location: json['location'],
-        // TODO(#168)
+         // TODO(IoanaAlexandru): Allow users to set event colours in settings, #168
         color: type.color,
         classHeader: classHeader,
         calendar: calendars[json['calendar']],
@@ -132,7 +131,7 @@ extension UniEventExtension on UniEvent {
         start: (json['start'] as Timestamp).toDate(),
         duration: DurationExtension.fromJSON(json['duration']),
         location: json['location'],
-        // TODO(#168)
+         // TODO(IoanaAlexandru): Allow users to set event colours in settings, #168
         color: type.color,
         classHeader: classHeader,
         calendar: calendars[json['calendar']],

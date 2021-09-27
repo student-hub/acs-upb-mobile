@@ -165,8 +165,6 @@ class AddClassesPage extends StatefulWidget {
 }
 
 class _AddClassesPageState extends State<AddClassesPage> {
-  _AddClassesPageState();
-
   Set<String> classIds;
   Set<ClassHeader> headers;
 
@@ -391,8 +389,6 @@ class ClassListItem extends StatefulWidget {
 }
 
 class _ClassListItemState extends State<ClassListItem> {
-  _ClassListItemState();
-
   bool selected;
 
   @override
