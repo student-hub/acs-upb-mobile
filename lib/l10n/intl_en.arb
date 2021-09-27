@@ -17,6 +17,7 @@
   "labelVersion": "Version",
   "labelFirstName": "First name",
   "labelLastName": "Last name",
+  "labelProfilePicture": "Profile picture",
   "labelWebsiteIcon": "Website icon",
   "labelName": "Name",
   "labelCategory": "Category",

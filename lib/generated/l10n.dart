@@ -205,6 +205,16 @@ class S {
     );
   }
 
+  /// `Upload profile pic`
+  String get labelProfilePicture {
+    return Intl.message(
+      'Upload Profile Picture',
+      name: 'labelProfilePicture',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Website icon`
   String get labelWebsiteIcon {
     return Intl.message(
