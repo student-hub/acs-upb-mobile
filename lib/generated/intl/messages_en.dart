@@ -181,6 +181,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "labelPoints" : MessageLookupByLibrary.simpleMessage("Points"),
     "labelPreview" : MessageLookupByLibrary.simpleMessage("Preview"),
     "labelPrivacyPolicy" : MessageLookupByLibrary.simpleMessage("Privacy Policy"),
+    "labelProfilePicture" : MessageLookupByLibrary.simpleMessage("Profile picture"),
     "labelRelevance" : MessageLookupByLibrary.simpleMessage("Relevance"),
     "labelSemester" : MessageLookupByLibrary.simpleMessage("Semester"),
     "labelStart" : MessageLookupByLibrary.simpleMessage("Start"),

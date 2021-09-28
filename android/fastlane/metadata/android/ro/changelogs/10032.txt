@@ -1,0 +1,13 @@
+Adăugat
+    - O pagină de căutare simplă, care se găsește pe pagina principală
+    - Utilizatorii în poziția de administrator au o interfață în care pot răspunde la cererile de permisiuni pentru editare
+
+Îmbunătățit
+    - Versiunea web a aplicației arată mai frumos⭐
+    - La apăsarea 'Sari la ziua de azi' in calendar, acum ești anunțat că pe ecran deja este săptămâna curentă
+    - Modul întunecat se aplică acum și ecranului de pornire
+    - Puțină ✨magie✨ internă ca să îmbunătățim aplicația
+
+Rezolvat
+    - Poza de profil este tăiată daca nu se potrivește ca dimensiune
+    - Problemă la schimbarea parolei

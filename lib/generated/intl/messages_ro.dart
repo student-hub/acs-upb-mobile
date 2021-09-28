@@ -181,6 +181,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "labelPoints" : MessageLookupByLibrary.simpleMessage("Puncte"),
     "labelPreview" : MessageLookupByLibrary.simpleMessage("Previzualizare"),
     "labelPrivacyPolicy" : MessageLookupByLibrary.simpleMessage("Politică de confidențialitate"),
+    "labelProfilePicture" : MessageLookupByLibrary.simpleMessage("Imagine profil"),
     "labelRelevance" : MessageLookupByLibrary.simpleMessage("Relevanță"),
     "labelSemester" : MessageLookupByLibrary.simpleMessage("Semestrul"),
     "labelStart" : MessageLookupByLibrary.simpleMessage("Început"),
