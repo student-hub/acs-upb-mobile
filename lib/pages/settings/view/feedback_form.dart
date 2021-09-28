@@ -85,7 +85,7 @@ class _FeedbackFormPageState extends State<FeedbackFormPage> {
                     key: const ValueKey('choice_feedback'),
                     label: Text(
                       S.current.labelFeedback,
-                      style: Theme.of(context).chipTextStyle(selected: true),
+                      style: Theme.of(context).chipTextStyle(selected: _feedbackSelected),
                     ),
                     selected: _feedbackSelected,
                     onSelected: (selected) => setState(() {
@@ -100,7 +100,7 @@ class _FeedbackFormPageState extends State<FeedbackFormPage> {
                     key: const ValueKey('choice_issue'),
                     label: Text(
                       S.current.labelIssue,
-                      style: Theme.of(context).chipTextStyle(selected: true),
+                      style: Theme.of(context).chipTextStyle(selected: _issueSelected),
                     ),
                     selected: _issueSelected,
                     onSelected: (selected) => setState(() {
