@@ -2,6 +2,7 @@ import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/settings/model/issue.dart';
 import 'package:acs_upb_mobile/pages/settings/service/issue_provider.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
+import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
@@ -32,14 +33,13 @@ class _FeedbackFormPageState extends State<FeedbackFormPage> {
           title: Text(S.current.labelFeedback),
           actions: [
             AppScaffoldAction(
-              text: S.current.buttonSubmit,
+              text: S.current.buttonSend,
               onPressed: () {
                 // Validate returns true if the form is valid, or false otherwise.
                 if (_formKey.currentState.validate()) {
-                  // If the form is valid, it displays a snackbar and saves the
+                  // If the form is valid, it displays a toast and saves the
                   // information in the cloud
-                  ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text(S.current.messageProcessingData)));
+                  AppToast.show(S.current.messageProcessingData);
                   issueProvider.makeIssue(
                     Issue(
                         email: issueEmailController.text,
