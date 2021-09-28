@@ -167,7 +167,6 @@ class AddClassesPage extends StatefulWidget {
 
   static const String routeName = '/classes/add';
 
-  // TODO(RotaruRazvan): verify that [initialClassIds] is not null, show error otherwise
   @override
   _AddClassesPageState createState() =>
       _AddClassesPageState(classIds: initialClassIds.toSet());
