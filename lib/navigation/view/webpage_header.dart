@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
+import 'package:acs_upb_mobile/authentication/view/edit_profile_page.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/navigation/service/navigator.dart';
 import 'package:acs_upb_mobile/pages/home/home_page.dart';
@@ -133,6 +134,15 @@ class _ProfileDropdownMenu extends StatelessWidget {
                   text: S.current.navigationSettings,
                   onTap: () {
                     AppNavigator.pushNamed(context, SettingsPage.routeName);
+                  },
+                ),
+              ),
+              PopupMenuItem(
+                child: IconText(
+                  icon: Icons.person,
+                  text: S.current.actionEditProfile,
+                  onTap: () {
+                    AppNavigator.pushNamed(context, EditProfilePage.routeName);
                   },
                 ),
               ),
