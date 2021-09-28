@@ -8,6 +8,7 @@ import 'package:acs_upb_mobile/pages/home/profile_card.dart';
 import 'package:acs_upb_mobile/pages/settings/view/settings_page.dart';
 import 'package:acs_upb_mobile/resources/banner.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
+import 'package:acs_upb_mobile/resources/web_layout_sizes.dart';
 import 'package:acs_upb_mobile/widgets/icon_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -29,6 +30,8 @@ class _WebPageHeaderState extends State<WebPageHeader> {
 
   @override
   Widget build(BuildContext context) {
+    final screenSize = MediaQuery.of(context).size.width;
+
     return Container(
       color: Theme.of(context).accentColor.withAlpha(60),
       child: SizedBox(
@@ -45,7 +48,10 @@ class _WebPageHeaderState extends State<WebPageHeader> {
                     AppNavigator.pushNamed(context, HomePage.routeName),
               ),
             ),
-            const Spacer(),
+            if (screenSize > Sizes.narrowScreen)
+              const Spacer()
+            else
+              const SizedBox.shrink(),
             const _DummySearchBar(),
             _ProfileDropdownMenu(
               headerHeight: widget.height,
