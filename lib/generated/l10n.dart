@@ -215,10 +215,10 @@ class S {
     );
   }
 
-  /// `Upload profile pic`
+  /// `Profile picture`
   String get labelProfilePicture {
     return Intl.message(
-      'Upload Profile Picture',
+      'Profile picture',
       name: 'labelProfilePicture',
       desc: '',
       args: [],
