@@ -565,6 +565,26 @@ class S {
     );
   }
 
+  /// `Contact information`
+  String get labelContactInfo {
+    return Intl.message(
+      'Contact information',
+      name: 'labelContactInfo',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Courses`
+  String get labelCourses {
+    return Intl.message(
+      'Courses',
+      name: 'labelCourses',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Shortcuts`
   String get sectionShortcuts {
     return Intl.message(
