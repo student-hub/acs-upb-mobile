@@ -5,13 +5,14 @@ import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/navigation/model/routes.dart';
 import 'package:acs_upb_mobile/navigation/service/navigator.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:image/image.dart' as im;
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:pedantic/pedantic.dart';
 import 'package:provider/provider.dart';
 import 'package:time_machine/time_machine.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:image/image.dart' as im;
 
 export 'package:acs_upb_mobile/resources/platform.dart'
     if (dart.library.io) 'dart:io';
@@ -55,9 +56,16 @@ class Utils {
 
   static Future<void> signOut(BuildContext context) async {
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
-    unawaited(AppNavigator.pushNamedAndRemoveUntil(
-        context, Routes.login, (route) => false));
-    unawaited(authProvider.signOut());
+    // TODO(IoanaAlexandru): Might actually be better to use the same login on mobile?
+    if (kIsWeb) {
+      await authProvider.signOut();
+      unawaited(AppNavigator.pushNamedAndRemoveUntil(
+          context, Routes.login, (route) => false));
+    } else {
+      unawaited(AppNavigator.pushNamedAndRemoveUntil(
+          context, Routes.login, (route) => false));
+      unawaited(authProvider.signOut());
+    }
   }
 
   static String wrapUrlWithCORS(String url) {
