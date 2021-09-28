@@ -14,6 +14,24 @@ class StorageProvider {
     }
   }
 
+  static Future<bool> deleteImage(String imagePath) async {
+    try {
+      final String url = await FirebaseStorage.instance
+          .ref()
+          .child(imagePath)
+          .getDownloadURL();
+      bool result = false;
+      final UploadTask uploadTask =
+          FirebaseStorage.instance.refFromURL(url).delete();
+      await uploadTask.whenComplete(() => result = true).catchError((dynamic
+              error) async =>
+          print('Mobile_Storage - StorageUploadTask - deleteImageUrl $error'));
+      return result;
+    } catch (e) {
+      return false;
+    }
+  }
+
   static Future<bool> uploadImage(Uint8List file, String ref) async {
     try {
       final Reference reference = FirebaseStorage.instance.ref().child(ref);
