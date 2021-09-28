@@ -155,6 +155,20 @@ class ClassProvider with ChangeNotifier {
     }
   }
 
+  Future<Set<ClassHeader>> fetchClassHeadersByIds(List<String> classIds) async {
+    final headers = <ClassHeader>[];
+    for (final classId in classIds) {
+      final ClassHeader header = await fetchClassHeader(classId);
+      if (header == null) {
+        // Class doesn't exist, ignore it
+        continue;
+      }
+      headers.add(header);
+    }
+
+    return headers.toSet();
+  }
+
   Future<List<ClassHeader>> fetchClassHeaders(
       {String uid, Filter filter}) async {
     try {

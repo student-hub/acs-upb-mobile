@@ -145,6 +145,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "labelColor" : MessageLookupByLibrary.simpleMessage("Color"),
     "labelConfirmNewPassword" : MessageLookupByLibrary.simpleMessage("Confirm new password"),
     "labelConfirmPassword" : MessageLookupByLibrary.simpleMessage("Confirm password"),
+    "labelContactInfo" : MessageLookupByLibrary.simpleMessage("Contact information"),
+    "labelCourses" : MessageLookupByLibrary.simpleMessage("Courses"),
     "labelCustom" : MessageLookupByLibrary.simpleMessage("Custom"),
     "labelDay" : MessageLookupByLibrary.simpleMessage("Day"),
     "labelDescription" : MessageLookupByLibrary.simpleMessage("Description"),

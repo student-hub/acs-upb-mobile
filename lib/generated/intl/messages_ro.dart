@@ -145,6 +145,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "labelColor" : MessageLookupByLibrary.simpleMessage("Culoare"),
     "labelConfirmNewPassword" : MessageLookupByLibrary.simpleMessage("Confirmare parolă nouă"),
     "labelConfirmPassword" : MessageLookupByLibrary.simpleMessage("Confirmare parolă"),
+    "labelContactInfo" : MessageLookupByLibrary.simpleMessage("Informații Contact"),
+    "labelCourses" : MessageLookupByLibrary.simpleMessage("Cursuri"),
     "labelCustom" : MessageLookupByLibrary.simpleMessage("Alta"),
     "labelDay" : MessageLookupByLibrary.simpleMessage("Zi"),
     "labelDescription" : MessageLookupByLibrary.simpleMessage("Descriere"),

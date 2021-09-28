@@ -53,6 +53,9 @@
   "labelToday": "Astăzi",
   "labelTomorrow": "Mâine",
   "labelNow": "Acum",
+  "labelContactInfo" : "Informații Contact",
+  "labelCourses" : "Cursuri",
+
 
   "sectionShortcuts": "Scurtături",
   "sectionEvents": "Evenimente",
