@@ -123,11 +123,13 @@ class AppScaffoldAction {
 
     final child = items != null
         ? PopupMenuButton<String>(
-            child: TextButton.icon(
-              icon: icon,
-              label: Text(tooltip ?? text),
-              onPressed: () => {},
-            ),
+            child: (text == null)
+                ? icon
+                : TextButton.icon(
+                    icon: icon,
+                    label: Text(tooltip ?? text),
+                    onPressed: () => {},
+                  ),
             tooltip: tooltip ?? text,
             onSelected: (selected) => items[selected](),
             itemBuilder: (BuildContext context) {
@@ -139,11 +141,16 @@ class AppScaffoldAction {
                   .toList();
             },
           )
-        : TextButton.icon(
-            label: Text(text ?? tooltip ?? ''),
-            icon: icon,
-            onPressed: onPressed,
-          );
+        : (tooltip == null)
+            ? TextButton(
+                child: Text(text),
+                onPressed: onPressed,
+              )
+            : TextButton.icon(
+                label: Text(text ?? tooltip ?? ''),
+                icon: icon,
+                onPressed: onPressed,
+              );
 
     return Padding(
       padding: const EdgeInsets.all(8),
