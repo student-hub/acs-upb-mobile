@@ -13,6 +13,8 @@ class ClassesFeedbackPath extends RoutePath {
         if (!authProvider.isAuthenticated || authProvider.isAnonymous) {
           return ErrorPage(
             errorMessage: S.current.warningAuthenticationNeeded,
+            actionText: S.current.actionLogIn,
+            actionOnTap: () => Utils.signOut(context),
           );
         }
 
@@ -24,6 +26,7 @@ class ClassesFeedbackPath extends RoutePath {
               if (!snapshot.hasData) {
                 return ErrorPage(
                   errorMessage: S.current.errorClassCannotBeEmpty,
+                  imgPath: 'assets/illustrations/undraw_empty.png',
                 );
               }
 

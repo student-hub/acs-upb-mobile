@@ -34,6 +34,7 @@ import 'package:acs_upb_mobile/pages/timetable/view/events/add_event_view.dart';
 import 'package:acs_upb_mobile/pages/timetable/view/events/event_view.dart';
 import 'package:acs_upb_mobile/pages/timetable/view/timetable_page.dart';
 import 'package:acs_upb_mobile/resources/platform.dart';
+import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/widgets/error_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -143,7 +144,6 @@ class PathFactory {
       case ClassFeedbackChecklist.routeName:
         return ClassesFeedbackPath();
       case ClassFeedbackView.routeName:
-        print('enters');
         final id = uri.queryParameters['id'];
         return ClassFeedbackViewPath(id);
       case ClassView.routeName:
