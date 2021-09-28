@@ -38,7 +38,7 @@ class _WebPageHeaderState extends State<WebPageHeader> {
           children: [
             widget.leading ?? const SizedBox.shrink(),
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: 6),
+              padding: const EdgeInsets.all(6),
               child: InkWell(
                 child: UniBanner(),
                 onTap: () =>
@@ -65,16 +65,17 @@ class _DummySearchBar extends StatelessWidget {
     return Expanded(
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxHeight: 60),
-        child: const Padding(
-          padding: EdgeInsets.symmetric(vertical: 6),
+        child: Padding(
+          padding: const EdgeInsets.all(6),
           child: Card(
             child: Align(
               alignment: Alignment.centerLeft,
               child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 10),
-                child: Text(
-                  'THIS IS A SEARCHBAR',
-                  overflow: TextOverflow.ellipsis,
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: IconText(
+                  icon: Icons.search,
+                  text: 'Search',
+                  style: Theme.of(context).primaryTextTheme.subtitle1,
                 ),
               ),
             ),
