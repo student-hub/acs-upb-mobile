@@ -80,7 +80,7 @@ class _TimetablePageState extends State<TimetablePage> {
             context,
             MaterialPageRoute<ChangeNotifierProvider>(
               builder: (_) => ChangeNotifierProvider.value(
-                  value: Provider.of<ClassProvider>(context),
+                  value: Provider.of<ClassProvider>(context, listen: false),
                   child: const ClassesPage()),
             ),
             webPath: ClassesPage.routeName,
