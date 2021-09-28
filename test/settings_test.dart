@@ -426,12 +426,12 @@ void main() {
         await tester.enterText(
             find.byKey(const ValueKey('issue')), 'There is some feedback');
         await tester.pumpAndSettle();
-        await tester.tap(find.text('Submit'));
+        await tester.tap(find.text('Send'));
         await tester.pumpAndSettle(const Duration(seconds: 2));
 
         // Verify the issue/feedback is sent
+        // expect(find.text('Processing Data'), findsOneWidget);
         verify(mockIssueProvider.makeIssue(any));
-        expect(find.text('Processing Data'), findsOneWidget);
 
         // Go back and verify Settings Page pops back
         await tester.tap(find.byIcon(Icons.arrow_back));
@@ -460,9 +460,9 @@ void main() {
         expect(find.byType(FeedbackFormPage), findsOneWidget);
 
         // Verify an empty form cannot be sent
-        await tester.tap(find.text('Submit'));
+        await tester.tap(find.text('Send'));
         await tester.pumpAndSettle();
-        expect(find.text('Please enter some text'), findsWidgets);
+        expect(find.text('Field cannot be empty.'), findsWidgets);
 
         // Go back and verify Settings Page pops back
         await tester.tap(find.byIcon(Icons.arrow_back));
