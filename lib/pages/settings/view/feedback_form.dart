@@ -118,7 +118,7 @@ class _FeedbackFormPageState extends State<FeedbackFormPage> {
                 controller: issueController,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return S.current.messageEnterText;
+                    return S.current.warningFieldCannotBeEmpty;
                   }
                   return null;
                 },
@@ -144,7 +144,7 @@ class _FeedbackFormPageState extends State<FeedbackFormPage> {
                 // The validator receives the text that the user has entered.
                 validator: (value) {
                   if (value == null) {
-                    return S.current.messageEnterText;
+                    return S.current.warningFieldCannotBeEmpty;
                   }
                   return null;
                 },
