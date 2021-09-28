@@ -337,6 +337,7 @@ class _ClassListState extends State<ClassList> {
   Widget build(BuildContext context) {
     if (widget.classes != null) {
       return ListView(
+        shrinkWrap: true,
         children: [
           if (widget.sectioned)
             Padding(
