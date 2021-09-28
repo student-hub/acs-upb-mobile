@@ -123,7 +123,7 @@ service cloud.firestore {
         }
 
         match /feedback/{feedback=**} {
-          // Anyone can read, anyone can write
+          // Anyone can create, no one can read, update or delete
           allow read: if false;
           allow create: if true;
           allow update: if false;
