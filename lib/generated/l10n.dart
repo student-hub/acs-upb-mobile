@@ -405,6 +405,16 @@ class S {
     );
   }
 
+  /// `404! Unknown Location`
+  String get labelUnknownLocation {
+    return Intl.message(
+      '404! Unknown Location',
+      name: 'labelUnknownLocation',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Evaluation`
   String get labelEvaluation {
     return Intl.message(
@@ -1110,6 +1120,16 @@ class S {
     return Intl.message(
       'Search',
       name: 'actionSearch',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Go to Homepage`
+  String get actionNavigateHome {
+    return Intl.message(
+      'Go to Homepage',
+      name: 'actionNavigateHome',
       desc: '',
       args: [],
     );

@@ -37,6 +37,7 @@
   "labelSemester": "Semester",
   "labelTeam": "{name} team",
   "labelUnknown": "Unknown",
+  "labelUnknownLocation": "404! Unknown Location",
   "labelEvaluation": "Evaluation",
   "labelPoints": "Points",
   "labelGrade": "Grade",
@@ -112,6 +113,7 @@
   "actionRequestPermissions": "Request permissions",
   "actionRefresh": "Refresh",
   "actionSearch": "Search",
+  "actionNavigateHome": "Go to Homepage",
 
   "errorSomethingWentWrong": "Something went wrong.",
   "errorPasswordsDiffer": "The two passwords differ.",
