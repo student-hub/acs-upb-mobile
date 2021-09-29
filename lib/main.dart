@@ -125,7 +125,7 @@ class _MyAppState extends State<MyApp> {
   final Color _accentColor = const Color(0xFF43ACCD);
 
   Widget buildApp(BuildContext context, ThemeData theme) {
-    if (kIsWeb) {
+    if (kIsWeb && !Platform.isAndroid && !Platform.isIOS) {
       return MaterialApp.router(
         title: Utils.packageInfo.appName,
         localizationsDelegates: [
