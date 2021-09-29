@@ -1,7 +1,7 @@
 Adăugat
     - Acum poți o imagine personalizată pentru site-urile web
     - Funcționalitate de căutare, care se găsește pe pagina principală
-    - Administratorii pot răspunde la cererile de permisiuni pentru editare direct din aplicație
+    - Adminii pot răspunde la cererile de permisiuni pentru editare direct din aplicație
 
 Îmbunătățit
     - La apăsarea 'Sari la ziua de azi' in calendar, acum ești anunțat dacă ești deja la săptămâna curentă
