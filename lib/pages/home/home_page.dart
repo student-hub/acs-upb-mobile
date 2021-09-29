@@ -1,5 +1,7 @@
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
+import 'package:acs_upb_mobile/navigation/routes.dart';
+import 'package:acs_upb_mobile/pages/classes/view/classes_page.dart';
 import 'package:acs_upb_mobile/navigation/model/routes.dart';
 import 'package:acs_upb_mobile/navigation/service/navigation_provider.dart';
 import 'package:acs_upb_mobile/navigation/view/scaffold.dart';
@@ -9,6 +11,7 @@ import 'package:acs_upb_mobile/pages/home/feedback_nudge.dart';
 import 'package:acs_upb_mobile/pages/home/news_feed_card.dart';
 import 'package:acs_upb_mobile/pages/home/profile_card.dart';
 import 'package:acs_upb_mobile/pages/home/upcoming_events_card.dart';
+import 'package:acs_upb_mobile/pages/search/view/search_page.dart';
 import 'package:acs_upb_mobile/resources/remote_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -36,6 +39,15 @@ class HomePage extends StatelessWidget {
     return AppScaffold(
       title: Text(S.current.navigationHome),
       actions: [
+        AppScaffoldAction(
+          icon: Icons.search,
+          tooltip: S.current.navigationSearch,
+          onPressed: () => {
+            Navigator.of(context).push(MaterialPageRoute<ClassesPage>(
+              builder: (_) => SearchPage(),
+            ))
+          },
+        ),
         AppScaffoldAction(
           icon: Icons.settings_outlined,
           tooltip: S.current.navigationSettings,
