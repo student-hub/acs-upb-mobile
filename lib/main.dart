@@ -46,8 +46,8 @@ import 'package:time_machine/time_machine.dart';
 // trust them regardless.
 import 'authentication/view/edit_profile_page.dart';
 import 'navigation/model/routes.dart';
-import 'navigation/service/router_delegates.dart';
 import 'navigation/service/navigation_provider.dart';
+import 'navigation/service/router_delegates.dart';
 import 'navigation/view/bottom_navigation_bar.dart';
 
 // FIXME: Our university website certificates have some issues, so we say we

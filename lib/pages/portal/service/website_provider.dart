@@ -12,11 +12,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:preferences/preference_service.dart';
-import 'package:acs_upb_mobile/resources/storage/storage_provider.dart';
-
-extension IconURLExtension on Website {
-  Future<String> getIconURL() => StorageProvider.findImageUrl(iconPath);
-}
 
 extension IconURLExtension on Website {
   Future<String> getIconURL() => StorageProvider.findImageUrl(iconPath);

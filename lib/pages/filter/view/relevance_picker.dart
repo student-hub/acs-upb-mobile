@@ -1,7 +1,6 @@
 import 'package:acs_upb_mobile/authentication/model/user.dart';
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
-import 'package:acs_upb_mobile/navigation/service/navigator.dart';
 import 'package:acs_upb_mobile/pages/filter/model/filter.dart';
 import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
 import 'package:acs_upb_mobile/pages/filter/view/filter_page.dart';
@@ -98,120 +97,6 @@ class RelevanceFormField extends ChipFormField<List<String>> {
                   ),
                 ),
               ),
-            );
-          } else {
-            AppToast.show(S.current.warningNoPermissionToAddPublicWebsite);
-          }
-        },
-        child: Row(
-          children: <Widget>[
-            Text(
-              S.current.labelCustom,
-              style: Theme.of(context)
-                  .accentTextTheme
-                  .subtitle2
-                  .copyWith(color: buttonColor),
-            ),
-            Icon(
-              Icons.arrow_forward_ios_outlined,
-              color: buttonColor,
-              size: Theme.of(context).textTheme.subtitle2.fontSize,
-            )
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class RelevanceFormField extends ChipFormField<List<String>> {
-  RelevanceFormField({
-    @required this.controller,
-    this.canBePrivate = true,
-    this.canBeForEveryone = true,
-    this.defaultPrivate = false,
-    Key key,
-  }) : super(
-          key: key,
-          icon: FeatherIcons.filter,
-          label: S.current.labelRelevance,
-          validator: (_) {
-            if (canBeForEveryone) {
-              // When the relevance can be for everyone, it's selected automatically
-              // if no custom relevance is selected; no error is possible.
-              return null;
-            }
-            if (controller.customRelevance?.isEmpty ?? true) {
-              return S.current.warningYouNeedToSelectAtLeastOne;
-            }
-            return null;
-          },
-          trailingBuilder: (FormFieldState<List<String>> state) {
-            return _customRelevanceButton(
-                state.context, controller, canBeForEveryone);
-          },
-          contentBuilder: (FormFieldState<List<String>> state) {
-            controller.onChanged = () {
-              state.didChange(controller.customRelevance);
-            };
-            return _RelevancePicker(
-              defaultPrivate: defaultPrivate,
-              canBePrivate: canBePrivate,
-              canBeForEveryone: canBeForEveryone,
-              controller: controller,
-            );
-          },
-        );
-
-  final RelevanceController controller;
-  final bool canBePrivate;
-  final bool canBeForEveryone;
-  final bool defaultPrivate;
-
-  static Widget _customRelevanceButton(BuildContext context,
-      RelevanceController controller, bool canBeForEveryone) {
-    final User user = Provider.of<AuthProvider>(context).currentUserFromCache;
-    final buttonColor = user?.canAddPublicInfo ?? false
-        ? Theme.of(context).accentColor
-        : Theme.of(context).hintColor;
-
-    return IntrinsicWidth(
-      child: GestureDetector(
-        onTap: () {
-          if (user?.canAddPublicInfo ?? false) {
-            AppNavigator.push(
-              context,
-              MaterialPageRoute<ChangeNotifierProvider>(
-                builder: (_) => ChangeNotifierProvider.value(
-                  value: Provider.of<FilterProvider>(context),
-                  child: FilterPage(
-                    title: S.current.labelRelevance,
-                    buttonText: S.current.buttonSet,
-                    canBeForEveryone: canBeForEveryone,
-                    info:
-                        '${S.current.infoRelevanceNothingSelected} ${S.current.infoRelevance}',
-                    hint: S.current.infoRelevanceExample,
-                    onSubmit: () async {
-                      // Deselect all other options
-                      controller._state._onlyMeSelected = false;
-                      controller._state._anyoneSelected = false;
-
-                      // Select the new options
-                      await controller._state._fetchFilter();
-                      if (controller._state._filter.relevantLeaves
-                          .contains('All')) {
-                        controller._state._anyoneSelected = true;
-                      } else {
-                        for (final node
-                            in controller._state._customSelected.keys) {
-                          controller._state._customSelected[node] = true;
-                        }
-                      }
-                    },
-                  ),
-                ),
-              ),
-              webPath: FilterPage.routeName,
             );
           } else {
             AppToast.show(S.current.warningNoPermissionToAddPublicWebsite);
