@@ -1,6 +1,7 @@
 import 'package:acs_upb_mobile/authentication/model/user.dart';
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
+import 'package:acs_upb_mobile/navigation/service/navigator.dart';
 import 'package:acs_upb_mobile/pages/filter/model/filter.dart';
 import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
 import 'package:acs_upb_mobile/pages/filter/view/filter_page.dart';
@@ -66,7 +67,8 @@ class RelevanceFormField extends ChipFormField<List<String>> {
       child: GestureDetector(
         onTap: () {
           if (user?.canAddPublicInfo ?? false) {
-            Navigator.of(context).push(
+            AppNavigator.push(
+              context,
               MaterialPageRoute<ChangeNotifierProvider>(
                 builder: (_) => ChangeNotifierProvider.value(
                   value: Provider.of<FilterProvider>(context),
@@ -97,6 +99,7 @@ class RelevanceFormField extends ChipFormField<List<String>> {
                   ),
                 ),
               ),
+              webPath: FilterPage.routeName,
             );
           } else {
             AppToast.show(S.current.warningNoPermissionToAddPublicWebsite);

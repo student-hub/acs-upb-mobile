@@ -11,6 +11,7 @@ import 'package:acs_upb_mobile/resources/banner.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/resources/web_layout_sizes.dart';
 import 'package:acs_upb_mobile/widgets/icon_text.dart';
+import 'package:acs_upb_mobile/widgets/search_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -53,7 +54,8 @@ class _WebPageHeaderState extends State<WebPageHeader> {
               const Spacer()
             else
               const SizedBox.shrink(),
-            const _DummySearchBar(),
+            // const _DummySearchBar(),
+            // const SearchBar(),
             _ProfileDropdownMenu(
               headerHeight: widget.height,
             )
