@@ -1,13 +1,14 @@
 Added
-    - Basic search page for the app, accessible from the home page
-    - Users with admin privileges now have a place in the app where they can respond to requests for editing permissions
+    - Option to set a custom icon for a website
+    - App search functionality, accessible from the home page
+    - Admins can now respond to requests for editing permissions directly from the app
 
 Improved
-    - Web version looks a lot nicer⭐
-    - When pressing 'go to today' in the timetable, you are now notified if you are already seeing the current week
+    - When pressing 'Jump to today' in the timetable, you are now notified if you are already seeing the current week
     - Dark mode also applies to the splash screen
     - Did some internal ✨magic✨ to improve the app
 
 Fixed
     - Profile picture is now cropped if it doesn't fit
     - Bug where you couldn't change your password
+    - More minor bugs
