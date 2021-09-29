@@ -17,6 +17,7 @@ import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/widgets/circle_image.dart';
 import 'package:acs_upb_mobile/widgets/spoiler.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:provider/provider.dart';
@@ -154,38 +155,28 @@ class _PortalPageState extends State<PortalPage> {
         ),
       );
     } else {
-      final rows = <Row>[];
-
-      for (var i = 0; i < websites.length;) {
-        List<Widget> children = [];
-        for (var j = 0; j < circlesPerRow && i < websites.length; j++, i++) {
-          children.add(websiteCircle(websites[i], circleSize));
-        }
-
-        // Add trailing "plus" button
-        if (i == websites.length) {
-          if (children.length == circlesPerRow) {
-            rows.add(Row(
-                children: children.map((e) => Flexible(child: e)).toList()));
-
-            children = [];
-          }
-          children.add(Container(
-            width: circleSize + 16,
-            child: _AddWebsiteButton(
-              key: ValueKey(
-                  'add_website_${ReCase(category.toLocalizedString()).snakeCase}'),
-              category: category,
-              size: circleSize * 0.6,
-            ),
-          ));
-        }
-
-        rows.add(
-            Row(children: children.map((e) => Flexible(child: e)).toList()));
-      }
-
-      content = Column(children: rows);
+      content = Align(
+        alignment: Alignment.centerLeft,
+        child: Wrap(
+          crossAxisAlignment: WrapCrossAlignment.center,
+          children: [
+            ...websites
+                .map(
+                  (website) => websiteCircle(website, maxCircleSize),
+                )
+                .toList(),
+            Container(
+              width: circleSize + 16,
+              child: _AddWebsiteButton(
+                key: ValueKey(
+                    'add_website_${ReCase(category.toLocalizedString()).snakeCase}'),
+                category: category,
+                size: circleSize * 0.6,
+              ),
+            )
+          ],
+        ),
+      );
     }
 
     return Padding(
