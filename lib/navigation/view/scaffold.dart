@@ -141,9 +141,9 @@ class AppScaffoldAction {
                   .toList();
             },
           )
-        : tooltip == null
+        : icon == null
             ? TextButton(
-                child: Text(text),
+                child: Text(text ?? tooltip ?? ''),
                 onPressed: onPressed,
               )
             : TextButton.icon(
