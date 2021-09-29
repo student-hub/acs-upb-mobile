@@ -147,12 +147,13 @@ class _ProfileDropdownMenu extends StatelessWidget {
                 ),
               ),
               PopupMenuItem(
-                child: IconText(
-                    icon: authProvider.isAnonymous ? Icons.login : Icons.logout,
-                    text: authProvider.isAnonymous ? S.current.actionLogIn : S.current.actionLogout,
-                    onTap: () => Utils.signOut(context),
-                  )
-              )
+                  child: IconText(
+                icon: authProvider.isAnonymous ? Icons.login : Icons.logout,
+                text: authProvider.isAnonymous
+                    ? S.current.actionLogIn
+                    : S.current.actionLogOut,
+                onTap: () => Utils.signOut(context),
+              ))
             ];
           },
         ),
