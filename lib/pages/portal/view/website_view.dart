@@ -41,31 +41,34 @@ class WebsiteView extends StatefulWidget {
 }
 
 class _WebsiteViewState extends State<WebsiteView> {
-  final _formKey = GlobalKey<FormState>();
+  final formKey = GlobalKey<FormState>();
 
-  WebsiteCategory _selectedCategory;
-  TextEditingController _labelController;
-  TextEditingController _linkController;
-  TextEditingController _descriptionRoController;
-  TextEditingController _descriptionEnController;
-  final RelevanceController _relevanceController = RelevanceController();
+  WebsiteCategory selectedCategory;
+  TextEditingController labelController;
+  TextEditingController linkController;
+  TextEditingController descriptionRoController;
+  TextEditingController descriptionEnController;
+  final RelevanceController relevanceController = RelevanceController();
 
-  User _user;
+  User user;
 
-  Future<void> _fetchUser() async {
+  ImageProvider imageWidget;
+  UploadButtonController uploadButtonController;
+
+  Future<void> fetchUser() async {
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
-    _user = await authProvider.currentUser;
+    user = await authProvider.currentUser;
     setState(() {});
   }
 
   @override
   void initState() {
     super.initState();
-    _fetchUser();
+    fetchUser();
 
-    _selectedCategory = widget.website?.category ?? WebsiteCategory.learning;
-    _labelController = TextEditingController(text: widget.website?.label ?? '');
-    _linkController = TextEditingController(text: widget.website?.link ?? '');
+    selectedCategory = widget.website?.category ?? WebsiteCategory.learning;
+    labelController = TextEditingController(text: widget.website?.label ?? '');
+    linkController = TextEditingController(text: widget.website?.link ?? '');
 
     final description = <String, String>{'en': '', 'ro': ''};
     if (widget.website != null) {
@@ -76,40 +79,51 @@ class _WebsiteViewState extends State<WebsiteView> {
           ? widget.website.infoByLocale['ro']
           : '';
     }
-    _descriptionRoController = TextEditingController(text: description['ro']);
-    _descriptionEnController = TextEditingController(text: description['en']);
+    descriptionRoController = TextEditingController(text: description['ro']);
+    descriptionEnController = TextEditingController(text: description['en']);
+    widget.website.getIconURL().then((value) => setState(() => {
+          imageWidget = value != null
+              ? NetworkImage(value)
+              : const AssetImage('assets/icons/globe.png')
+        }));
+    uploadButtonController =
+        UploadButtonController(onUpdate: () => setState(() => {}));
   }
 
-  String _buildId() {
+  String buildId() {
     if (widget.updateExisting) return widget.website.id;
-    final label = (_labelController.text ?? '') == ''
-        ? Website.labelFromLink(_linkController.text)
-        : _labelController.text;
+    final label = (labelController.text ?? '') == ''
+        ? Website.labelFromLink(linkController.text)
+        : labelController.text;
     // Sanitize label to obtain document ID
     return ReCase(label.replaceAll(RegExp('[^A-ZĂÂȘȚa-zăâșț0-9 ]'), ''))
         .snakeCase;
   }
 
-  Website _buildWebsite() {
+  Website buildWebsite() {
+    final String id = buildId();
+    final String ownerUid =
+        widget.updateExisting ? widget.website.ownerUid : user?.uid;
+
     return Website(
-      id: _buildId(),
-      ownerUid: widget.updateExisting ? widget.website.ownerUid : _user?.uid,
-      isPrivate: _relevanceController.private ?? true,
-      editedBy: (widget.website?.editedBy ?? []) + [_user?.uid],
-      label: _labelController.text,
-      link: _linkController.text,
-      category: _selectedCategory,
+      id: id,
+      ownerUid: ownerUid,
+      isPrivate: relevanceController.private ?? true,
+      editedBy: (widget.website?.editedBy ?? []) + [user?.uid],
+      label: labelController.text,
+      link: linkController.text,
+      category: selectedCategory,
       infoByLocale: {
-        'ro': _descriptionRoController.text,
-        'en': _descriptionEnController.text
+        'ro': descriptionRoController.text,
+        'en': descriptionEnController.text
       },
-      relevance: _relevanceController.customRelevance,
-      degree: _relevanceController.degree ?? widget.website?.degree,
+      relevance: relevanceController.customRelevance,
+      degree: relevanceController.degree ?? widget.website?.degree,
     );
   }
 
-  Widget _preview() {
-    final website = _buildWebsite();
+  Widget preview() {
+    final website = buildWebsite();
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(12, 12, 12, 0),
@@ -138,6 +152,11 @@ class _WebsiteViewState extends State<WebsiteView> {
                         Expanded(
                             child: WebsiteIcon(
                           website: website,
+                          image: uploadButtonController.newUploadedImageBytes !=
+                                  null
+                              ? MemoryImage(
+                                  uploadButtonController.newUploadedImageBytes)
+                              : imageWidget,
                           onTap: () {
                             Utils.launchURL(website.link);
                           },
@@ -162,7 +181,7 @@ class _WebsiteViewState extends State<WebsiteView> {
     );
   }
 
-  AppDialog _deletionConfirmationDialog(BuildContext context) => AppDialog(
+  AppDialog deletionConfirmationDialog(BuildContext context) => AppDialog(
         icon: const Icon(Icons.delete_outlined),
         title: S.current.actionDeleteWebsite,
         message: S.current.messageDeleteWebsite,
@@ -193,6 +212,8 @@ class _WebsiteViewState extends State<WebsiteView> {
 
   @override
   Widget build(BuildContext context) {
+    Uint8List imageAsPNG;
+
     return AppScaffold(
       title: Text(widget.updateExisting
           ? S.current.actionEditWebsite
@@ -201,15 +222,21 @@ class _WebsiteViewState extends State<WebsiteView> {
             AppScaffoldAction(
               text: S.current.buttonSave,
               onPressed: () async {
-                if (_formKey.currentState.validate()) {
+                if (formKey.currentState.validate()) {
                   final websiteProvider =
                       Provider.of<WebsiteProvider>(context, listen: false);
 
                   bool res = false;
                   if (widget.updateExisting) {
-                    res = await websiteProvider.updateWebsite(_buildWebsite());
+                    res = await websiteProvider.updateWebsite(buildWebsite());
                   } else {
-                    res = await websiteProvider.addWebsite(_buildWebsite());
+                    res = await websiteProvider.addWebsite(buildWebsite());
+                  }
+                  if (uploadButtonController.newUploadedImageBytes != null) {
+                    imageAsPNG = await Utils.convertToPNG(
+                        uploadButtonController.newUploadedImageBytes);
+                    res = await websiteProvider.uploadWebsiteIcon(
+                        buildWebsite(), imageAsPNG);
                   }
                   if (res) {
                     AppToast.show(widget.updateExisting
@@ -229,26 +256,27 @@ class _WebsiteViewState extends State<WebsiteView> {
                     icon: Icons.more_vert_outlined,
                     items: {
                       S.current.actionDeleteWebsite: () => showDialog(
-                          context: context,
-                          builder: _deletionConfirmationDialog)
+                          context: context, builder: deletionConfirmationDialog)
                     },
                     onPressed: () => showDialog(
-                        context: context, builder: _deletionConfirmationDialog),
+                        context: context, builder: deletionConfirmationDialog),
                   )
                 ]
               : <AppScaffoldAction>[]),
       body: SafeArea(
         child: ListView(
           children: <Widget>[
-            _preview(),
+            preview(),
             Padding(
               padding: const EdgeInsets.only(left: 16, right: 16),
               child: Form(
-                key: _formKey,
+                key: formKey,
                 child: Column(
                   children: <Widget>[
+                    UploadButton(
+                        pageType: true, controller: uploadButtonController),
                     TextFormField(
-                      controller: _labelController,
+                      controller: labelController,
                       decoration: InputDecoration(
                         labelText: S.current.labelName,
                         hintText: S.current.hintWebsiteLabel,
@@ -262,7 +290,7 @@ class _WebsiteViewState extends State<WebsiteView> {
                         labelText: S.current.labelCategory,
                         prefixIcon: const Icon(Icons.category_outlined),
                       ),
-                      value: _selectedCategory,
+                      value: selectedCategory,
                       items: WebsiteCategory.values
                           .map(
                             (category) => DropdownMenuItem<WebsiteCategory>(
@@ -272,10 +300,10 @@ class _WebsiteViewState extends State<WebsiteView> {
                           )
                           .toList(),
                       onChanged: (selection) =>
-                          setState(() => _selectedCategory = selection),
+                          setState(() => selectedCategory = selection),
                     ),
                     TextFormField(
-                      controller: _linkController,
+                      controller: linkController,
                       decoration: InputDecoration(
                         labelText: '${S.current.labelLink} *',
                         hintText: S.current.hintWebsiteLink,
@@ -293,10 +321,10 @@ class _WebsiteViewState extends State<WebsiteView> {
                       canBePrivate: true,
                       canBeForEveryone: true,
                       defaultPrivate: widget.website?.isPrivate ?? true,
-                      controller: _relevanceController,
+                      controller: relevanceController,
                     ),
                     TextFormField(
-                      controller: _descriptionRoController,
+                      controller: descriptionRoController,
                       decoration: InputDecoration(
                           labelText:
                               '${S.current.labelDescription} (${S.current.settingsItemLanguageRomanian.toLowerCase()})',
@@ -307,7 +335,7 @@ class _WebsiteViewState extends State<WebsiteView> {
                       maxLines: 5,
                     ),
                     TextFormField(
-                      controller: _descriptionEnController,
+                      controller: descriptionEnController,
                       decoration: InputDecoration(
                           labelText:
                               '${S.current.labelDescription} (${S.current.settingsItemLanguageEnglish.toLowerCase()})',
@@ -329,33 +357,45 @@ class _WebsiteViewState extends State<WebsiteView> {
 }
 
 class WebsiteIcon extends StatelessWidget {
-  const WebsiteIcon({this.website, this.canEdit, this.size, this.onTap});
+  const WebsiteIcon(
+      {this.website, this.canEdit, this.size, this.image, this.onTap});
 
   final Website website;
   final bool canEdit;
   final double size;
+
+  // If an image is not provided, the corresponding website icon is fetched from the storage, if available
+  final ImageProvider image;
   final Function onTap;
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: StorageProvider.findImageUrl('websites/${website.id}/icon.png'),
-      //Firebase Storage path
-      builder: (context, snapshot) {
-        ImageProvider image;
-        image = const AssetImage('assets/icons/globe.png');
-        if (snapshot.hasData) {
-          image = NetworkImage(snapshot.data);
-        }
+    if (image == null) {
+      return FutureBuilder(
+          future: StorageProvider.findImageUrl(website.iconPath),
+          // Firebase Storage path
+          builder: (context, snapshot) {
+            ImageProvider oldImage;
+            if (snapshot.hasData) {
+              oldImage = NetworkImage(snapshot.data);
+            }
 
-        return CircleImage(
-            label: website.label,
-            tooltip: website.infoByLocale[LocaleProvider.localeString],
-            image: image,
-            enableOverlay: canEdit,
-            circleSize: size,
-            onTap: onTap);
-      },
-    );
+            return CircleImage(
+                label: website.label,
+                tooltip: website.infoByLocale[LocaleProvider.localeString],
+                image: oldImage ?? const AssetImage('assets/icons/globe.png'),
+                enableOverlay: canEdit,
+                circleSize: size,
+                onTap: onTap);
+          });
+    } else {
+      return CircleImage(
+          label: website.label,
+          tooltip: website.infoByLocale[LocaleProvider.localeString],
+          image: image,
+          enableOverlay: canEdit,
+          circleSize: size,
+          onTap: onTap);
+    }
   }
 }

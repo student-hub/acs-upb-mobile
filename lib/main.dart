@@ -107,6 +107,12 @@ Future<void> main() async {
                 ..updateFilter(filterProvider);
             },
           ),
+          ChangeNotifierProxyProvider<AuthProvider, AdminProvider>(
+            create: (_) => AdminProvider(),
+            update: (context, authProvider, adminProvider) {
+              return adminProvider..updateAuth(authProvider);
+            },
+          ),
         ],
         child: PrefService(
           service: prefService,
@@ -164,6 +170,7 @@ class _MyAppState extends State<MyApp> {
             Routes.filter: (_) => const FilterPage(),
             Routes.newsFeed: (_) => NewsFeedPage(),
             Routes.requestPermissions: (_) => RequestPermissionsPage(),
+            Routes.adminPanel: (_) => const AdminPanelPage(),
           },
           navigatorObservers: widget.navigationObservers ?? [],
         ),

@@ -4,6 +4,7 @@ import 'package:pedantic/pedantic.dart';
 import 'package:pref/pref.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:image/image.dart' as im;
 
 import '../authentication/service/auth_provider.dart';
 import '../generated/l10n.dart';
@@ -71,6 +72,12 @@ class Utils {
     appName: '\$appName',
     packageName: '\$packageName',
   );
+
+  static Future<Uint8List> convertToPNG(Uint8List image) async {
+    final decodedImage = im.decodeImage(image);
+    return im.encodePng(im.copyResizeCropSquare(decodedImage, 500));
+  }
+}
 
   static bool get feedbackEnabled {
     if (!Platform.isAndroid && !Platform.isIOS) return false;

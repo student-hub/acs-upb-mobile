@@ -48,6 +48,9 @@ class Website {
     }
   }
 
+  String get iconPath =>
+      isPrivate ? 'users/$ownerUid/websites/$id.png' : 'websites/$id/icon.png';
+
   /// The user who created this website (or null if it's public)
   final String ownerUid;
 

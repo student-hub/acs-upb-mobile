@@ -95,6 +95,36 @@ class S {
     );
   }
 
+  /// `Deny`
+  String get buttonDeny {
+    return Intl.message(
+      'Deny',
+      name: 'buttonDeny',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Accept`
+  String get buttonAccept {
+    return Intl.message(
+      'Accept',
+      name: 'buttonAccept',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Revert`
+  String get buttonRevert {
+    return Intl.message(
+      'Revert',
+      name: 'buttonRevert',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Email`
   String get labelEmail {
     return Intl.message(
@@ -200,6 +230,26 @@ class S {
     return Intl.message(
       'Last name',
       name: 'labelLastName',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Profile picture`
+  String get labelProfilePicture {
+    return Intl.message(
+      'Profile picture',
+      name: 'labelProfilePicture',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Website icon`
+  String get labelWebsiteIcon {
+    return Intl.message(
+      'Website icon',
+      name: 'labelWebsiteIcon',
       desc: '',
       args: [],
     );
@@ -550,6 +600,26 @@ class S {
     return Intl.message(
       'Now',
       name: 'labelNow',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `People`
+  String get labelPeople {
+    return Intl.message(
+      'People',
+      name: 'labelPeople',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Classes`
+  String get labelClasses {
+    return Intl.message(
+      'Classes',
+      name: 'labelClasses',
       desc: '',
       args: [],
     );
@@ -1275,6 +1345,26 @@ class S {
     );
   }
 
+  /// `Could not load requests`
+  String get errorLoadRequests {
+    return Intl.message(
+      'Could not load requests',
+      name: 'errorLoadRequests',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Unknown User`
+  String get errorUnknownUser {
+    return Intl.message(
+      'Unknown User',
+      name: 'errorUnknownUser',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Request already exists`
   String get warningRequestExists {
     return Intl.message(
@@ -1390,6 +1480,26 @@ class S {
     return Intl.message(
       'Already showing all content.',
       name: 'warningFilterAlreadyDisabled',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Already showing unprocessed requests`
+  String get warningFilterAlreadyUnprocessed {
+    return Intl.message(
+      'Already showing unprocessed requests',
+      name: 'warningFilterAlreadyUnprocessed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Already showing all requests.`
+  String get warningFilterAlreadyAll {
+    return Intl.message(
+      'Already showing all requests.',
+      name: 'warningFilterAlreadyAll',
       desc: '',
       args: [],
     );
@@ -1745,6 +1855,26 @@ class S {
     );
   }
 
+  /// `Search`
+  String get navigationSearch {
+    return Intl.message(
+      'Search',
+      name: 'navigationSearch',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Classes found`
+  String get navigationSearchResults {
+    return Intl.message(
+      'Classes found',
+      name: 'navigationSearchResults',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Feedback`
   String get navigationClassFeedback {
     return Intl.message(
@@ -1760,6 +1890,16 @@ class S {
     return Intl.message(
       'Feedback checklist',
       name: 'navigationClassesFeedbackChecklist',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Permission requests`
+  String get navigationAdmin {
+    return Intl.message(
+      'Permission requests',
+      name: 'navigationAdmin',
       desc: '',
       args: [],
     );
@@ -1790,6 +1930,16 @@ class S {
     return Intl.message(
       'Filter by relevance',
       name: 'filterMenuRelevance',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Show unprocessed`
+  String get filterMenuShowUnprocessed {
+    return Intl.message(
+      'Show unprocessed',
+      name: 'filterMenuShowUnprocessed',
       desc: '',
       args: [],
     );
@@ -1915,6 +2065,16 @@ class S {
     );
   }
 
+  /// `Admin permissions`
+  String get settingsAdminPermissions {
+    return Intl.message(
+      'Admin permissions',
+      name: 'settingsAdminPermissions',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Permissions request already sent`
   String get settingsPermissionsRequestSent {
     return Intl.message(
@@ -1960,6 +2120,16 @@ class S {
     return Intl.message(
       'Auto',
       name: 'settingsItemLanguageAuto',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Admin Panel`
+  String get settingsItemAdmin {
+    return Intl.message(
+      'Admin Panel',
+      name: 'settingsItemAdmin',
       desc: '',
       args: [],
     );
@@ -2635,6 +2805,26 @@ class S {
     );
   }
 
+  /// `Do you have another question?`
+  String get messageAnotherQuestion {
+    return Intl.message(
+      'Do you have another question?',
+      name: 'messageAnotherQuestion',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Talk to Polly!`
+  String get messageTalkToChatbot {
+    return Intl.message(
+      'Talk to Polly!',
+      name: 'messageTalkToChatbot',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `You need to complete {number} more feedback forms!`
   String messageFeedbackLeft(Object number) {
     return Intl.message(
@@ -2642,6 +2832,16 @@ class S {
       name: 'messageFeedbackLeft',
       desc: '',
       args: [number],
+    );
+  }
+
+  /// `You're already seeing the current week!`
+  String get messageAlreadySeeingCurrentWeek {
+    return Intl.message(
+      'You\'re already seeing the current week!',
+      name: 'messageAlreadySeeingCurrentWeek',
+      desc: '',
+      args: [],
     );
   }
 
@@ -2795,6 +2995,36 @@ class S {
     );
   }
 
+  /// `Handle permission requests`
+  String get infoAdmin {
+    return Intl.message(
+      'Handle permission requests',
+      name: 'infoAdmin',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Accepted`
+  String get infoAccepted {
+    return Intl.message(
+      'Accepted',
+      name: 'infoAccepted',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Denied`
+  String get infoDenied {
+    return Intl.message(
+      'Denied',
+      name: 'infoDenied',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `@stud.acs.upb.ro`
   String get stringEmailDomain {
     return Intl.message(
@@ -2830,6 +3060,16 @@ class S {
     return Intl.message(
       'and',
       name: 'stringAnd',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `at`
+  String get stringAt {
+    return Intl.message(
+      'at',
+      name: 'stringAt',
       desc: '',
       args: [],
     );

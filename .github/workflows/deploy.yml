@@ -7,6 +7,20 @@ on:
 name: Deployment
 
 jobs:
+  firebase:
+    name: Firebase deployment
+    runs-on: ubuntu-latest
+    if: github.repository == 'student-hub/acs-upb-mobile'
+
+    steps:
+      - uses: actions/checkout@v1
+      - name: Deploy functions, rules and indexes to Firebase
+        uses: w9jds/firebase-action@master
+        with:
+          args: deploy --only functions,storage,firestore --project prod
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+
   web:
     name: Deploy website
     runs-on: ubuntu-latest
@@ -43,7 +57,7 @@ jobs:
       - name: Deploy to Firebase
         uses: w9jds/firebase-action@master
         with:
-          args: deploy --only hosting --project default
+          args: deploy --only hosting --project prod
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
 

@@ -78,9 +78,10 @@ class _TimetablePageState extends State<TimetablePage>
       needsToBeAuthenticated: true,
       leading: AppScaffoldAction(
         icon: Icons.today_outlined,
-        onPressed: () {
-          _dateController.animateToToday(vsync: this);
-        },
+        onPressed: () =>
+            !_dateController.currentlyVisibleDates.contains(LocalDate.today())
+                ? _dateController.animateToToday(vsync: this)
+                : AppToast.show(S.current.messageAlreadySeeingCurrentWeek),
         tooltip: S.current.actionJumpToToday,
       ),
       actions: [
