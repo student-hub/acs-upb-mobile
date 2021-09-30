@@ -1,16 +1,18 @@
+import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/navigation/view/scaffold.dart';
 import 'package:acs_upb_mobile/pages/search/view/classes_search_results.dart';
 import 'package:acs_upb_mobile/pages/search/view/people_search_results.dart';
 import 'package:acs_upb_mobile/resources/remote_config.dart';
 import 'package:acs_upb_mobile/widgets/search_bar.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 
 class SearchPage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => _SearchPageState();
+
+  static const String routeName = '/search';
 }
 
 class _SearchPageState extends State<SearchPage> {
