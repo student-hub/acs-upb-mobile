@@ -1,5 +1,5 @@
 Adăugat
-    - Acum poți o imagine personalizată pentru site-urile web
+    - Acum poți adăuga o imagine personalizată pentru site-urile web
     - Funcționalitate de căutare, care se găsește pe pagina principală
     - Adminii pot răspunde la cererile de permisiuni pentru editare direct din aplicație
 
