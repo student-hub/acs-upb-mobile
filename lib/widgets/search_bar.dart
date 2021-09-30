@@ -1,12 +1,15 @@
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class SearchBar extends StatefulWidget {
-  const SearchBar({this.cancel, this.textController, this.onSearch});
+  const SearchBar(
+      {this.cancel, this.textController, this.onSearch, this.onTap});
 
   final void Function() cancel;
   final void Function(String) onSearch;
+  final void Function() onTap;
   final TextEditingController textController;
 
   @override
@@ -33,6 +36,7 @@ class _SearchBarState extends State<SearchBar> {
               padding: const EdgeInsets.only(left: 10),
               child: TextField(
                 autofocus: true,
+                onTap: widget.onTap,
                 controller: widget.textController,
                 onChanged: widget.onSearch,
                 decoration: const InputDecoration(
@@ -43,19 +47,22 @@ class _SearchBarState extends State<SearchBar> {
             ),
           ),
         ),
-        GestureDetector(
-          onTap: widget.cancel,
-          key: const ValueKey('cancel_search_bar'),
-          child: Container(
-            width: MediaQuery.of(context).size.width * .2,
+        if (!kIsWeb)
+          GestureDetector(
+            onTap: widget.cancel,
+            key: const ValueKey('cancel_search_bar'),
             child: Container(
-              color: Colors.transparent,
-              child: Center(
-                child: Text(S.current.buttonCancel),
+              width: MediaQuery.of(context).size.width * .2,
+              child: Container(
+                color: Colors.transparent,
+                child: Center(
+                  child: Text(S.current.buttonCancel),
+                ),
               ),
             ),
-          ),
-        ),
+          )
+        else
+          const SizedBox.shrink(),
       ],
     );
   }
@@ -63,9 +70,14 @@ class _SearchBarState extends State<SearchBar> {
 
 class SearchWidget extends StatefulWidget {
   const SearchWidget(
-      {this.onSearch, this.header, this.cancelCallback, this.searchClosed});
+      {this.onSearch,
+      this.header,
+      this.cancelCallback,
+      this.searchClosed,
+      this.onTap});
 
   final void Function(String) onSearch;
+  final void Function() onTap;
   final Widget header;
   final void Function() cancelCallback;
   final bool searchClosed;
@@ -90,6 +102,7 @@ class _SearchWidgetState extends State<SearchWidget> {
                 child: SearchBar(
                   textController: _textEditingController,
                   onSearch: widget.onSearch,
+                  onTap: widget.onTap,
                   cancel: () {
                     setState(() {
                       _textEditingController.clear();
