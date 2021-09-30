@@ -1,4 +1,5 @@
 import 'package:firebase_remote_config/firebase_remote_config.dart';
+import 'package:flutter/foundation.dart';
 
 const String _feedbackEnabled = 'feedback_enabled';
 
@@ -14,6 +15,7 @@ class RemoteConfigService {
       : _remoteConfig?.getBool(_feedbackEnabled) ?? defaults[_feedbackEnabled];
 
   static Future<dynamic> initialize() async {
+    if (kIsWeb) return; // Remote config is not yet supported on web.
     try {
       _remoteConfig = RemoteConfig.instance;
       await _remoteConfig.setDefaults(defaults);

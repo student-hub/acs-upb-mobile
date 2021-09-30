@@ -12,6 +12,7 @@ import 'favourite_websites_card.dart';
 import 'feedback_nudge.dart';
 import 'news_feed_card.dart';
 import 'profile_card.dart';
+import 'upcoming_events_card.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({this.tabController, Key key}) : super(key: key);
@@ -38,8 +39,8 @@ class HomePage extends StatelessWidget {
               !authProvider.isAnonymous &&
               RemoteConfigService.feedbackEnabled)
             FeedbackNudge(),
-          // if (authProvider.isAuthenticated && !authProvider.isAnonymous)
-          //   UpcomingEventsCard(onShowMore: () => tabController?.animateTo(1)),
+          if (authProvider.isAuthenticated && !authProvider.isAnonymous)
+            UpcomingEventsCard(onShowMore: () => tabController?.animateTo(1)),
           if (authProvider.isAuthenticated && !authProvider.isAnonymous)
             FavouriteWebsitesCard(
                 onShowMore: () => tabController?.animateTo(2)),

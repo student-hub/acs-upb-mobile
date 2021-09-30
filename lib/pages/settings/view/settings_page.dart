@@ -131,7 +131,7 @@ class _SettingsPageState extends State<SettingsPage> {
                         final eventProvider = Provider.of<UniEventProvider>(
                             context,
                             listen: false);
-//                        await eventProvider.exportToGoogleCalendar();
+                        await eventProvider.exportToGoogleCalendar();
                       }
                     },
                     title: Text(S.current.settingsExportToGoogleCalendar),

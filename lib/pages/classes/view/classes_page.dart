@@ -79,27 +79,29 @@ class _ClassesPageState extends State<ClassesPage> {
           onPressed: () => Navigator.of(context).push(
             MaterialPageRoute<ChangeNotifierProvider>(
               builder: (_) => ChangeNotifierProvider.value(
-                  value: classProvider,
-                  child: FutureBuilder(
-                    future: classProvider.fetchUserClassIds(authProvider.uid),
-                    builder: (context, snap) {
-                      if (snap.hasData) {
-                        return AddClassesPage(
-                            initialClassIds: snap.data,
-                            onSave: (classIds) async {
-                              await classProvider.setUserClassIds(
-                                  classIds, authProvider.uid);
-                              unawaited(updateClasses());
-                              if (!mounted) {
-                                return;
-                              }
-                              Navigator.pop(context);
-                            });
-                      } else {
-                        return const Center(child: CircularProgressIndicator());
-                      }
-                    },
-                  )),
+                value: classProvider,
+                child: FutureBuilder(
+                  future: classProvider.fetchUserClassIds(authProvider.uid),
+                  builder: (context, snap) {
+                    if (snap.hasData) {
+                      return AddClassesPage(
+                        initialClassIds: snap.data,
+                        onSave: (classIds) async {
+                          await classProvider.setUserClassIds(
+                              classIds, authProvider.uid);
+                          unawaited(updateClasses());
+                          if (!mounted) {
+                            return;
+                          }
+                          Navigator.pop(context);
+                        },
+                      );
+                    } else {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+                  },
+                ),
+              ),
             ),
           ),
         ),
@@ -163,10 +165,6 @@ class AddClassesPage extends StatefulWidget {
 }
 
 class _AddClassesPageState extends State<AddClassesPage> {
-  _AddClassesPageState({Set<String> classIds}) {
-    classIds = Set<String>.from(widget.initialClassIds) ?? {};
-  }
-
   Set<String> classIds;
   Set<ClassHeader> headers;
 
@@ -181,6 +179,7 @@ class _AddClassesPageState extends State<AddClassesPage> {
   @override
   void initState() {
     super.initState();
+    classIds = Set<String>.from(widget.initialClassIds) ?? {};
     updateClasses();
   }
 
@@ -275,30 +274,32 @@ class _ClassListState extends State<ClassList> {
     final List<Widget> children = [const SizedBox(height: 4)];
     bool expanded = false;
 
-    sections.forEach((section, values) {
-      if (section == '/') {
-        children.addAll(values.map<Widget>(buildClassItem));
-        expanded = values.fold(
-            false,
-            (dynamic selected, ClassHeader header) =>
-                selected || widget.initiallySelected.contains(header.id));
-      } else {
-        final s = buildSections(context, sections[section], level: level + 1);
-        expanded = expanded || s.containsSelected;
+    sections.forEach(
+      (section, values) {
+        if (section == '/') {
+          children.addAll(values.map<Widget>(buildClassItem));
+          expanded = values.fold(
+              false,
+              (dynamic selected, ClassHeader header) =>
+                  selected || widget.initiallySelected.contains(header.id));
+        } else {
+          final s = buildSections(context, sections[section], level: level + 1);
+          expanded = expanded || s.containsSelected;
 
-        children.add(AppSpoiler(
-          title: section,
-          level: level,
-          initiallyExpanded: s.containsSelected,
-          content: Padding(
-            padding: const EdgeInsets.only(left: 16),
-            child: Column(
-              children: s.widgets,
+          children.add(AppSpoiler(
+            title: section,
+            level: level,
+            initiallyExpanded: s.containsSelected,
+            content: Padding(
+              padding: const EdgeInsets.only(left: 16),
+              child: Column(
+                children: s.widgets,
+              ),
             ),
-          ),
-        ));
-      }
-    });
+          ));
+        }
+      },
+    );
 
     return _Section(widgets: children, containsSelected: expanded);
   }
@@ -364,15 +365,15 @@ class _Section {
 }
 
 class ClassListItem extends StatefulWidget {
-  ClassListItem(
-      {Key key,
-      this.classHeader,
-      this.initiallySelected = false,
-      void Function(bool) onSelected,
-      this.selectable = false,
-      void Function() onTap,
-      this.hint})
-      : onSelected = onSelected ?? ((_) {}),
+  ClassListItem({
+    Key key,
+    this.classHeader,
+    this.initiallySelected = false,
+    void Function(bool) onSelected,
+    this.selectable = false,
+    void Function() onTap,
+    this.hint,
+  })  : onSelected = onSelected ?? ((_) {}),
         onTap = onTap ?? (() {}),
         super(key: key);
 
@@ -388,11 +389,13 @@ class ClassListItem extends StatefulWidget {
 }
 
 class _ClassListItemState extends State<ClassListItem> {
-  _ClassListItemState() {
+  bool selected;
+
+  @override
+  void initState() {
+    super.initState();
     selected = widget.initiallySelected;
   }
-
-  bool selected;
 
   @override
   Widget build(BuildContext context) {
@@ -416,13 +419,15 @@ class _ClassListItemState extends State<ClassListItem> {
             : Theme.of(context).textTheme.subtitle1,
       ),
       subtitle: widget.hint != null ? Text(widget.hint) : null,
-      onTap: () => setState(() {
-        if (widget.selectable) {
-          selected = !selected;
-          widget.onSelected(selected);
-        }
-        widget.onTap();
-      }),
+      onTap: () => setState(
+        () {
+          if (widget.selectable) {
+            selected = !selected;
+            widget.onSelected(selected);
+          }
+          widget.onTap();
+        },
+      ),
     );
   }
 }
