@@ -1,9 +1,10 @@
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
-import 'package:acs_upb_mobile/pages/classes/view/classes_page.dart';
 import 'package:acs_upb_mobile/navigation/model/routes.dart';
 import 'package:acs_upb_mobile/navigation/service/navigation_provider.dart';
+import 'package:acs_upb_mobile/navigation/service/navigator.dart';
 import 'package:acs_upb_mobile/navigation/view/scaffold.dart';
+import 'package:acs_upb_mobile/pages/classes/view/classes_page.dart';
 import 'package:acs_upb_mobile/pages/home/faq_card.dart';
 import 'package:acs_upb_mobile/pages/home/favourite_websites_card.dart';
 import 'package:acs_upb_mobile/pages/home/feedback_nudge.dart';
@@ -38,15 +39,22 @@ class HomePage extends StatelessWidget {
     return AppScaffold(
       title: Text(S.current.navigationHome),
       actions: [
-        AppScaffoldAction(
-          icon: Icons.search,
-          tooltip: S.current.navigationSearch,
-          onPressed: () => {
-            Navigator.of(context).push(MaterialPageRoute<ClassesPage>(
-              builder: (_) => SearchPage(),
-            ))
-          },
-        ),
+        if (!kIsWeb)
+          AppScaffoldAction(
+            icon: Icons.search,
+            tooltip: S.current.navigationSearch,
+            onPressed: () => {
+              AppNavigator.push(
+                context,
+                MaterialPageRoute<ClassesPage>(
+                  builder: (_) => SearchPage(),
+                ),
+                webPath: SearchPage.routeName,
+              )
+            },
+          )
+        else
+          null,
         AppScaffoldAction(
           icon: Icons.settings_outlined,
           tooltip: S.current.navigationSettings,
