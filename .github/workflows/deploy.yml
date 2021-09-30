@@ -13,6 +13,7 @@ jobs:
     if: github.repository == 'student-hub/acs-upb-mobile'
 
     steps:
+      - uses: actions/checkout@v1
       - name: Deploy functions, rules and indexes to Firebase
         uses: w9jds/firebase-action@master
         with:
