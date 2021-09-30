@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
-
 import '../generated/l10n.dart';
 import '../pages/home/home_page.dart';
 import '../pages/people/view/people_page.dart';

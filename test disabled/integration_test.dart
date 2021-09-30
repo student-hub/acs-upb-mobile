@@ -33,10 +33,7 @@
 // import 'package:acs_upb_mobile/pages/portal/service/website_provider.dart';
 // import 'package:acs_upb_mobile/pages/portal/view/portal_page.dart';
 // import 'package:acs_upb_mobile/pages/portal/view/website_view.dart';
-// import 'package:acs_upb_mobile/pages/settings/model/request.dart';
-// import 'package:acs_upb_mobile/pages/settings/service/admin_provider.dart';
 // import 'package:acs_upb_mobile/pages/settings/service/request_provider.dart';
-// import 'package:acs_upb_mobile/pages/settings/view/admin_page.dart';
 // import 'package:acs_upb_mobile/pages/settings/view/request_permissions.dart';
 // import 'package:acs_upb_mobile/pages/settings/view/settings_page.dart';
 // import 'package:acs_upb_mobile/pages/timetable/model/academic_calendar.dart';
@@ -62,9 +59,9 @@
 // import 'package:preferences/preferences.dart';
 // import 'package:provider/provider.dart';
 // import 'package:rrule/rrule.dart';
-// import 'package:shared_preferences/shared_preferences.dart';
 // import 'package:time_machine/time_machine.dart' hide Offset;
 // import 'package:timetable/src/header/week_indicator.dart';
+// import 'package:timetable/timetable.dart';
 //
 // import 'firebase_mock.dart';
 // import 'test_utils.dart';
@@ -94,8 +91,6 @@
 //
 // class MockFeedbackProvider extends Mock implements FeedbackProvider {}
 //
-// class MockAdminProvider extends Mock implements AdminProvider {}
-//
 // Future<void> main() async {
 //   AuthProvider mockAuthProvider;
 //   WebsiteProvider mockWebsiteProvider;
@@ -107,7 +102,6 @@
 //   UniEventProvider mockEventProvider;
 //   RequestProvider mockRequestProvider;
 //   FeedbackProvider mockFeedbackProvider;
-//   AdminProvider mockAdminProvider;
 //
 //   setupFirebaseAuthMocks();
 //   await Firebase.initializeApp();
@@ -147,8 +141,6 @@
 //           Provider<RequestProvider>(create: (_) => mockRequestProvider),
 //           ChangeNotifierProvider<FeedbackProvider>(
 //               create: (_) => mockFeedbackProvider),
-//           ChangeNotifierProvider<AdminProvider>(
-//               create: (_) => mockAdminProvider),
 //         ],
 //         child: const MyApp(),
 //       );
@@ -165,7 +157,11 @@
 //     LocaleProvider.rruleL10ns = {'en': await RruleL10nTest.create()};
 //
 //     Utils.packageInfo = PackageInfo(
-//         version: '1.2.7', buildNumber: '6', appName: 'ACS UPB Mobile');
+//       version: '1.2.7',
+//       buildNumber: '6',
+//       appName: 'ACS UPB Mobile',
+//       packageName: 'ro.upb.acs_upb_mobile',
+//     );
 //
 //     // Pretend an anonymous user is already logged in
 //     mockAuthProvider = MockAuthProvider();
@@ -590,7 +586,7 @@
 //       frequency: Frequency.weekly,
 //       interval: 2,
 //     );
-//     const duration = Period(hours: 2);
+//     const duration = Duration(hours: 2);
 //     final events = [
 //       RecurringUniEvent(
 //         name: 'M1',
@@ -716,7 +712,6 @@
 //         .thenAnswer((_) => Future.value(true));
 //     when(mockRequestProvider.userAlreadyRequested(any))
 //         .thenAnswer((_) => Future.value(false));
-//     mockAdminProvider = MockAdminProvider();
 //   });
 //
 //   group('Home', () {
@@ -1561,11 +1556,6 @@
 //   });
 //
 //   group('Settings', () {
-//     setUp(() {
-//       when(mockAuthProvider.currentUserFromCache).thenReturn(User(
-//           uid: '0', firstName: 'John', lastName: 'Doe', permissionLevel: 4));
-//     });
-//
 //     for (final size in screenSizes) {
 //       testWidgets('${size.width}x${size.height}', (WidgetTester tester) async {
 //         await binding.setSurfaceSize(size);
@@ -1578,45 +1568,6 @@
 //         await tester.pumpAndSettle();
 //
 //         expect(find.byType(SettingsPage), findsOneWidget);
-//       });
-//     }
-//   });
-//
-//   group('Admin page', () {
-//     setUp(() async {
-//       when(mockAuthProvider.currentUser).thenAnswer((_) => Future.value(User(
-//           uid: '0', firstName: 'John', lastName: 'Doe', permissionLevel: 4)));
-//       when(mockAuthProvider.currentUserFromCache).thenReturn(User(
-//           uid: '0', firstName: 'John', lastName: 'Doe', permissionLevel: 4));
-//       when(mockAuthProvider.isAnonymous).thenReturn(false);
-//       when(mockAuthProvider.isAuthenticated).thenReturn(true);
-//       when(mockAuthProvider.isVerified).thenAnswer((_) => Future.value(true));
-//       SharedPreferences.setMockInitialValues({'language': 'auto'});
-//       when(mockAdminProvider.fetchUnprocessedRequestIds())
-//           .thenAnswer((_) => Future.value(['string']));
-//       when(mockAdminProvider.fetchRequest('')).thenAnswer(
-//           (_) => Future.value(Request(requestBody: 'body', userId: '0')));
-//     });
-//
-//     for (final size in screenSizes) {
-//       testWidgets('${size.width}x${size.height}', (WidgetTester tester) async {
-//         await binding.setSurfaceSize(size);
-//
-//         await tester.pumpWidget(buildApp());
-//         await tester.pumpAndSettle();
-//
-//         // Open settings page
-//         await tester.tap(find.byIcon(Icons.settings_outlined));
-//         await tester.pumpAndSettle();
-//
-//         // Open admin panel page
-//         final adminPanelButton = find.byKey(const Key('AdminPanel'));
-//         await tester.ensureVisible(adminPanelButton);
-//         await tester.pumpAndSettle();
-//         await tester.tap(adminPanelButton);
-//         await tester.pumpAndSettle();
-//
-//         expect(find.byType(AdminPanelPage), findsWidgets);
 //       });
 //     }
 //   });
@@ -1827,7 +1778,7 @@
 //         await tester.tap(find.byIcon(Icons.edit_outlined));
 //         await tester.pumpAndSettle();
 //
-//         // Open delete account popup
+//         //Open delete account popup
 //         await tester.tap(find.byIcon(Icons.more_vert_outlined));
 //         await tester.pumpAndSettle();
 //
@@ -1849,7 +1800,7 @@
 //         await tester.tap(find.byIcon(Icons.edit_outlined));
 //         await tester.pumpAndSettle();
 //
-//         // Open change password popup
+//         //Open change password popup
 //         await tester.tap(find.byIcon(Icons.more_vert_outlined));
 //         await tester.pumpAndSettle();
 //
@@ -1875,7 +1826,7 @@
 //         await tester.enterText(
 //             find.text('john.doe'), 'johndoe@stud.acs.upb.ro');
 //
-//         // Open change email popup
+//         //Open change email popup
 //         await tester.tap(find.text('Save'));
 //         await tester.pumpAndSettle();
 //

@@ -23,9 +23,7 @@ class RemoteConfigService {
       : _remoteConfig?.getBool(_chatEnabled) ?? defaults[_chatEnabled];
 
   static Future<dynamic> initialize() async {
-    if (kIsWeb) {
-      return; // Remote config is not yet supported on web.
-    }
+    if (kIsWeb) return; // Remote config is not yet supported on web.
     try {
       _remoteConfig = RemoteConfig.instance;
       await _remoteConfig.setDefaults(defaults);

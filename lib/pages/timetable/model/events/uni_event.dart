@@ -1,7 +1,6 @@
 import 'dart:core';
 
 import 'package:flutter/material.dart' hide Interval;
-import 'package:time_machine/time_machine.dart' hide Interval;
 import 'package:dart_date/dart_date.dart' show Interval;
 import 'package:timetable/timetable.dart';
 import '../../../../generated/l10n.dart';
@@ -97,7 +96,7 @@ extension UniEventTypeExtension on UniEventType {
 class UniEvent {
   const UniEvent({
     @required this.start,
-    @required this.period,
+    @required this.duration,
     @required this.id,
     this.name,
     this.location,
@@ -115,7 +114,7 @@ class UniEvent {
   final Color color;
   final UniEventType type;
   final DateTime start;
-  final Period period;
+  final Duration duration;
   final String name;
   final String location;
   final ClassHeader classHeader;
@@ -129,19 +128,9 @@ class UniEvent {
     return generateInstances().first.dateString;
   }
 
-  // UniEventInstance toUniEventInstance() {
-  //   return UniEventInstance(
-  //     title: name,
-  //     mainEvent: this,
-  //     start: start,
-  //     end: start.add(period.toTime().toDuration),
-  //     location: location,
-  //   );
-  // }
-
   Iterable<UniEventInstance> generateInstances(
       {Interval intersectingInterval}) sync* {
-    final DateTime end = start.add(period.toTime().toDuration);
+    final DateTime end = start.add(duration);
     if (intersectingInterval != null) {
       if (end < intersectingInterval.start ||
           start > intersectingInterval.end) {
@@ -150,12 +139,11 @@ class UniEvent {
     }
 
     yield UniEventInstance(
-      // id: id,
       title: name,
       mainEvent: this,
       color: color,
-      start: start.copyWithUtc(),
-      end: start.add(period.toTime().toDuration).copyWithUtc(),
+      start: start.copyWith(isUtc: true),
+      end: start.add(duration).copyWith(isUtc: true),
       location: location,
     );
   }
@@ -203,13 +191,13 @@ class UniEventInstance extends Event {
         ? S.current.labelToday
         : useRelativeDayFormat && start.subtractDays(1).isToday
             ? S.current.labelTomorrow
-            : start.toStringWithFormat('EEEE, dd MMMM');
+            : start.toStringWithFormat('EEEE, d MMMM');
 
     if (!start.isMidnight()) {
       string += ' • ${start.toStringWithFormat('HH:mm')}';
     }
     if (start.atStartOfDay != end.atStartOfDay) {
-      string += ' - ${end.toStringWithFormat('EEEE, dd MMMM')}';
+      string += ' - ${end.toStringWithFormat('EEEE, d MMMM')}';
     }
     if (!end.isMidnight()) {
       if (start.atStartOfDay != end.atStartOfDay) {
@@ -220,5 +208,25 @@ class UniEventInstance extends Event {
       string += end.toStringWithFormat('HH:mm');
     }
     return string;
+  }
+
+  UniEventInstance copyWith({
+    DateTime start,
+    DateTime end,
+    String title,
+    UniEvent mainEvent,
+    Color color,
+    String location,
+    String info,
+  }) {
+    return UniEventInstance(
+      start: start ?? this.start,
+      end: end ?? this.end,
+      title: title ?? this.title,
+      mainEvent: mainEvent ?? this.mainEvent,
+      color: color ?? this.color,
+      location: location ?? this.location,
+      info: info ?? this.info,
+    );
   }
 }

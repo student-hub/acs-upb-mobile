@@ -14,7 +14,7 @@ import 'uni_event_provider.dart';
 class GoogleCalendarServices {
   const GoogleCalendarServices();
 
-  // Allows us to see, edit, share, and permanently delete all the calendars you can access using GCal
+  // Allows us to see, edit, share, and permanently delete all the calendars you can access using GCal.
   static const List<String> _scopes = [CalendarApi.calendarScope];
 
   static List<String> get scopes => _scopes;
@@ -48,7 +48,7 @@ extension UniEventProviderGoogleCalendar on UniEventProvider {
       // Google Calendar uses the IANA timezone format, but the native Dart `DateTime` uses an abbreviation provided by the operating system.
       ..dateTime = startDateTime;
 
-    final Duration duration = uniEvent.period.toTime().toDuration;
+    final Duration duration = uniEvent.duration;
 
     final g_cal.EventDateTime end = g_cal.EventDateTime();
     final DateTime endDateTime = startDateTime.add(duration);
@@ -75,7 +75,7 @@ extension UniEventProviderGoogleCalendar on UniEventProvider {
     return googleCalendarEvent;
   }
 
-  // This opens a browser window asking the user to authenticate and allow access to edit their calendar
+  // This opens a browser window asking the user to authenticate and allow access to edit their calendar.
   Future<void> insertGoogleEvents(
       List<g_cal.Event> googleCalendarEvents) async {
     AutoRefreshingAuthClient client;

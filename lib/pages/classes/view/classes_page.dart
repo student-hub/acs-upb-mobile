@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 
 import '../../../authentication/service/auth_provider.dart';
 import '../../../generated/l10n.dart';
-import '../../../resources/utils.dart';
+import '../../../resources/remote_config.dart';
 import '../../../widgets/class_icon.dart';
 import '../../../widgets/error_page.dart';
 import '../../../widgets/icon_text.dart';
@@ -34,9 +34,9 @@ class _ClassesPageState extends State<ClassesPage> {
     }
 
     final ClassProvider classProvider =
-    Provider.of<ClassProvider>(context, listen: false);
+        Provider.of<ClassProvider>(context, listen: false);
     final AuthProvider authProvider =
-    Provider.of<AuthProvider>(context, listen: false);
+        Provider.of<AuthProvider>(context, listen: false);
     headers =
         (await classProvider.fetchClassHeaders(uid: authProvider.uid)).toSet();
 
@@ -63,50 +63,47 @@ class _ClassesPageState extends State<ClassesPage> {
       // TODO(IoanaAlexandru): Simply show all classes if user is not authenticated
       needsToBeAuthenticated: true,
       actions: [
-        if (Utils.feedbackEnabled)
+        if (RemoteConfigService.feedbackEnabled)
           AppScaffoldAction(
             icon: Icons.rate_review_outlined,
             tooltip: S.current.navigationClassesFeedbackChecklist,
-            onPressed: () =>
-                Navigator.of(context).push(
-                  MaterialPageRoute<ClassFeedbackChecklist>(
-                    builder: (_) => ClassFeedbackChecklist(classes: headers),
-                  ),
-                ),
+            onPressed: () => Navigator.of(context).push(
+              MaterialPageRoute<ClassFeedbackChecklist>(
+                builder: (_) => ClassFeedbackChecklist(classes: headers),
+              ),
+            ),
           ),
         AppScaffoldAction(
           icon: Icons.edit_outlined,
           tooltip: S.current.actionChooseClasses,
-          onPressed: () =>
-              Navigator.of(context).push(
-                MaterialPageRoute<ChangeNotifierProvider>(
-                  builder: (_) =>
-                      ChangeNotifierProvider.value(
-                          value: classProvider,
-                          child: FutureBuilder(
-                            future: classProvider.fetchUserClassIds(
-                                authProvider.uid),
-                            builder: (context, snap) {
-                              if (snap.hasData) {
-                                return AddClassesPage(
-                                    initialClassIds: snap.data,
-                                    onSave: (classIds) async {
-                                      await classProvider.setUserClassIds(
-                                          classIds, authProvider.uid);
-                                      unawaited(updateClasses());
-                                      if (!mounted) {
-                                        return;
-                                      }
-                                      Navigator.pop(context);
-                                    });
-                              } else {
-                                return const Center(
-                                    child: CircularProgressIndicator());
-                              }
-                            },
-                          )),
+          onPressed: () => Navigator.of(context).push(
+            MaterialPageRoute<ChangeNotifierProvider>(
+              builder: (_) => ChangeNotifierProvider.value(
+                value: classProvider,
+                child: FutureBuilder(
+                  future: classProvider.fetchUserClassIds(authProvider.uid),
+                  builder: (context, snap) {
+                    if (snap.hasData) {
+                      return AddClassesPage(
+                        initialClassIds: snap.data,
+                        onSave: (classIds) async {
+                          await classProvider.setUserClassIds(
+                              classIds, authProvider.uid);
+                          unawaited(updateClasses());
+                          if (!mounted) {
+                            return;
+                          }
+                          Navigator.pop(context);
+                        },
+                      );
+                    } else {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+                  },
                 ),
               ),
+            ),
+          ),
         ),
       ],
       body: Stack(
@@ -114,49 +111,41 @@ class _ClassesPageState extends State<ClassesPage> {
           if (updating != null)
             headers != null && headers.isNotEmpty
                 ? ClassList(
-              classes: headers,
-              sectioned: false,
-              onTap: (classHeader) =>
-                  Navigator.of(context).push(
-                    MaterialPageRoute<ChangeNotifierProvider>(
-                      builder: (context) =>
-                          ChangeNotifierProvider.value(
-                            value: classProvider,
-                            child: ClassView(
-                              classHeader: classHeader,
-                            ),
+                    classes: headers,
+                    sectioned: false,
+                    onTap: (classHeader) => Navigator.of(context).push(
+                      MaterialPageRoute<ChangeNotifierProvider>(
+                        builder: (context) => ChangeNotifierProvider.value(
+                          value: classProvider,
+                          child: ClassView(
+                            classHeader: classHeader,
                           ),
+                        ),
+                      ),
                     ),
-                  ),
-            )
+                  )
                 : ErrorPage(
-                errorMessage: S.current.messageNoClassesYet,
-                imgPath: 'assets/illustrations/undraw_empty.png',
-                info: [
-                  TextSpan(
-                      text: '${S.current.messageGetStartedByPressing} '),
-                  WidgetSpan(
-                    alignment: PlaceholderAlignment.middle,
-                    child: Icon(
-                      Icons.edit_outlined,
-                      size:
-                      Theme
-                          .of(context)
-                          .textTheme
-                          .subtitle1
-                          .fontSize +
-                          2,
-                    ),
-                  ),
-                  TextSpan(text: ' ${S.current.messageButtonAbove}.'),
-                ]),
+                    errorMessage: S.current.messageNoClassesYet,
+                    imgPath: 'assets/illustrations/undraw_empty.png',
+                    info: [
+                        TextSpan(
+                            text: '${S.current.messageGetStartedByPressing} '),
+                        WidgetSpan(
+                          alignment: PlaceholderAlignment.middle,
+                          child: Icon(
+                            Icons.edit_outlined,
+                            size:
+                                Theme.of(context).textTheme.subtitle1.fontSize +
+                                    2,
+                          ),
+                        ),
+                        TextSpan(text: ' ${S.current.messageButtonAbove}.'),
+                      ]),
           if (updating == null)
             const Center(child: CircularProgressIndicator()),
           if (updating == true)
             Container(
-                color: Theme
-                    .of(context)
-                    .disabledColor,
+                color: Theme.of(context).disabledColor,
                 child: const Center(child: CircularProgressIndicator())),
         ],
       ),
@@ -176,8 +165,6 @@ class AddClassesPage extends StatefulWidget {
 }
 
 class _AddClassesPageState extends State<AddClassesPage> {
-  _AddClassesPageState();
-
   Set<String> classIds;
   Set<ClassHeader> headers;
 
@@ -223,12 +210,13 @@ class _AddClassesPageState extends State<AddClassesPage> {
 }
 
 class ClassList extends StatefulWidget {
-  ClassList({this.classes,
-    void Function(bool, String) onSelected,
-    Set<String> initiallySelected,
-    this.selectable = false,
-    this.sectioned = true,
-    void Function(ClassHeader) onTap})
+  ClassList(
+      {this.classes,
+      void Function(bool, String) onSelected,
+      Set<String> initiallySelected,
+      this.selectable = false,
+      this.sectioned = true,
+      void Function(ClassHeader) onTap})
       : onSelected = onSelected ?? ((selected, classId) {}),
         onTap = onTap ?? ((_) {}),
         initiallySelected = initiallySelected ?? {};
@@ -256,8 +244,8 @@ class _ClassListState extends State<ClassList> {
   String sectionName(BuildContext context, String year, String semester) =>
       '${S.current.labelYear} $year, ${S.current.labelSemester} $semester';
 
-  Map<String, dynamic> classesBySection(Set<ClassHeader> classes,
-      BuildContext context) {
+  Map<String, dynamic> classesBySection(
+      Set<ClassHeader> classes, BuildContext context) {
     final map = <String, dynamic>{};
 
     for (final c in classes) {
@@ -286,36 +274,37 @@ class _ClassListState extends State<ClassList> {
     final List<Widget> children = [const SizedBox(height: 4)];
     bool expanded = false;
 
-    sections.forEach((section, values) {
-      if (section == '/') {
-        children.addAll(values.map<Widget>(buildClassItem));
-        expanded = values.fold(
-            false,
-                (dynamic selected, ClassHeader header) =>
-            selected || widget.initiallySelected.contains(header.id));
-      } else {
-        final s = buildSections(context, sections[section], level: level + 1);
-        expanded = expanded || s.containsSelected;
+    sections.forEach(
+      (section, values) {
+        if (section == '/') {
+          children.addAll(values.map<Widget>(buildClassItem));
+          expanded = values.fold(
+              false,
+              (dynamic selected, ClassHeader header) =>
+                  selected || widget.initiallySelected.contains(header.id));
+        } else {
+          final s = buildSections(context, sections[section], level: level + 1);
+          expanded = expanded || s.containsSelected;
 
-        children.add(AppSpoiler(
-          title: section,
-          level: level,
-          initiallyExpanded: s.containsSelected,
-          content: Padding(
-            padding: const EdgeInsets.only(left: 16),
-            child: Column(
-              children: s.widgets,
+          children.add(AppSpoiler(
+            title: section,
+            level: level,
+            initiallyExpanded: s.containsSelected,
+            content: Padding(
+              padding: const EdgeInsets.only(left: 16),
+              child: Column(
+                children: s.widgets,
+              ),
             ),
-          ),
-        ));
-      }
-    });
+          ));
+        }
+      },
+    );
 
     return _Section(widgets: children, containsSelected: expanded);
   }
 
-  Widget buildClassItem(ClassHeader header) =>
-      Column(
+  Widget buildClassItem(ClassHeader header) => Column(
         children: [
           ClassListItem(
             selectable: widget.selectable,
@@ -347,10 +336,7 @@ class _ClassListState extends State<ClassList> {
               child: IconText(
                 icon: Icons.info_outlined,
                 text: '${S.current.infoSelect} ${S.current.infoClasses}.',
-                style: Theme
-                    .of(context)
-                    .textTheme
-                    .bodyText1,
+                style: Theme.of(context).textTheme.bodyText1,
               ),
             ),
           Padding(
@@ -358,8 +344,8 @@ class _ClassListState extends State<ClassList> {
             child: Column(
                 children: widget.sectioned
                     ? (buildSections(
-                    context, classesBySection(widget.classes, context)))
-                    .widgets
+                            context, classesBySection(widget.classes, context)))
+                        .widgets
                     : widget.classes.map(buildClassItem).toList()),
           ),
         ],
@@ -387,8 +373,7 @@ class ClassListItem extends StatefulWidget {
     this.selectable = false,
     void Function() onTap,
     this.hint,
-  })
-      : onSelected = onSelected ?? ((_) {}),
+  })  : onSelected = onSelected ?? ((_) {}),
         onTap = onTap ?? (() {}),
         super(key: key);
 
@@ -404,8 +389,6 @@ class ClassListItem extends StatefulWidget {
 }
 
 class _ClassListItemState extends State<ClassListItem> {
-  _ClassListItemState();
-
   bool selected;
 
   @override
@@ -425,32 +408,26 @@ class _ClassListItemState extends State<ClassListItem> {
         widget.classHeader.name,
         style: widget.selectable
             ? (selected
-            ? Theme
-            .of(context)
-            .textTheme
-            .subtitle1
-            .copyWith(fontWeight: FontWeight.bold)
-            : Theme
-            .of(context)
-            .textTheme
-            .subtitle1
-            .copyWith(color: Theme
-            .of(context)
-            .disabledColor))
-            : Theme
-            .of(context)
-            .textTheme
-            .subtitle1,
+                ? Theme.of(context)
+                    .textTheme
+                    .subtitle1
+                    .copyWith(fontWeight: FontWeight.bold)
+                : Theme.of(context)
+                    .textTheme
+                    .subtitle1
+                    .copyWith(color: Theme.of(context).disabledColor))
+            : Theme.of(context).textTheme.subtitle1,
       ),
       subtitle: widget.hint != null ? Text(widget.hint) : null,
-      onTap: () =>
-          setState(() {
-            if (widget.selectable) {
-              selected = !selected;
-              widget.onSelected(selected);
-            }
-            widget.onTap();
-          }),
+      onTap: () => setState(
+        () {
+          if (widget.selectable) {
+            selected = !selected;
+            widget.onSelected(selected);
+          }
+          widget.onTap();
+        },
+      ),
     );
   }
 }

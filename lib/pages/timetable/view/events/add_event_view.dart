@@ -13,15 +13,16 @@ import '../../../../authentication/model/user.dart';
 import '../../../../authentication/service/auth_provider.dart';
 import '../../../../generated/l10n.dart';
 import '../../../../navigation/routes.dart';
+import '../../../../resources/custom_icons.dart';
 import '../../../../resources/locale_provider.dart';
-import '../../../../resources/theme.dart';
 import '../../../../widgets/button.dart';
-import '../../../../widgets/chip_form_field.dart';
 import '../../../../widgets/dialog.dart';
 import '../../../../widgets/scaffold.dart';
+import '../../../../widgets/selectable.dart';
 import '../../../../widgets/toast.dart';
 import '../../../classes/model/class.dart';
 import '../../../classes/service/class_provider.dart';
+import '../../../filter/service/filter_provider.dart';
 import '../../../filter/view/relevance_picker.dart';
 import '../../../people/model/person.dart';
 import '../../../people/service/person_provider.dart';
@@ -166,11 +167,9 @@ class _AddEventViewState extends State<AddEventView> {
         TextEditingController(text: widget.initialEvent?.location ?? '');
 
     final startHour = widget.initialEvent?.start?.hour ?? 8;
-    duration = widget.initialEvent?.period?.toTime()?.toDuration ??
-        const Duration(hours: 2);
+    duration = widget.initialEvent?.duration ?? const Duration(hours: 2);
     startDateTime = widget.initialEvent?.start
-            ?.copyWith(hour: startHour, minute: 0, second: 0, millisecond: 0)
-            ?.copyWithUtc() ??
+            ?.copyWith(hour: startHour, minute: 0, second: 0, millisecond: 0) ??
         0;
 
     List<_DayOfWeek> initialWeekDays = [
@@ -260,9 +259,14 @@ class _AddEventViewState extends State<AddEventView> {
                     ],
                   ),
                   RelevanceFormField(
-                    canBePrivate: false,
-                    canBeForEveryone: false,
                     controller: relevanceController,
+                    validator: (_) {
+                      if (relevanceController.customRelevance?.isEmpty ??
+                          true) {
+                        return S.current.warningYouNeedToSelectAtLeastOne;
+                      }
+                      return null;
+                    },
                   ),
                   DropdownButtonFormField<UniEventType>(
                     decoration: InputDecoration(
@@ -335,25 +339,40 @@ class _AddEventViewState extends State<AddEventView> {
                           onChanged: (_) => setState(() {}),
                         ),
                         timeIntervalPicker(),
-                        Divider(
-                          thickness: 0.7,
-                          color: Theme.of(context).hintColor,
-                        ),
                         if (weekSelected[WeekType.odd] != null &&
                             weekSelected[WeekType.even] != null)
-                          FilterChipFormField(
+                          SelectableFormField(
                             key: const ValueKey('week_picker'),
                             icon: FeatherIcons.calendar,
                             label: S.current.labelWeek,
                             initialValues: weekSelected,
+                            validator: (selection) {
+                              if (selection.values
+                                  .where((e) => e != false)
+                                  .isEmpty) {
+                                return S
+                                    .of(context)
+                                    .warningYouNeedToSelectAtLeastOne;
+                              }
+                              return null;
+                            },
                           ),
-                        FilterChipFormField(
+                        SelectableFormField(
                           key: const ValueKey('day_picker'),
                           icon: Icons.today_outlined,
                           label: S.current.labelDay,
                           initialValues: weekDaySelected,
+                          validator: (selection) {
+                            if (selection.values
+                                .where((e) => e != false)
+                                .isEmpty) {
+                              return S
+                                  .of(context)
+                                  .warningYouNeedToSelectAtLeastOne;
+                            }
+                            return null;
+                          },
                         ),
-                        const SizedBox(height: 16),
                       ],
                     ),
                   const SizedBox(width: 16),
@@ -380,6 +399,7 @@ class _AddEventViewState extends State<AddEventView> {
                   await Provider.of<UniEventProvider>(context, listen: false)
                       .deleteEvent(widget.initialEvent);
               if (res) {
+                if (!mounted) return;
                 Navigator.of(context)
                     .popUntil(ModalRoute.withName(Routes.home));
                 AppToast.show(S.current.messageEventDeleted);
@@ -394,8 +414,9 @@ class _AddEventViewState extends State<AddEventView> {
         onPressed: () async {
           if (!formKey.currentState.validate()) return;
 
-          DateTime start =
-              semester.startDate.at(dateTime: startDateTime).copyWithUtc();
+          DateTime start = semester.startDate
+              .at(dateTime: startDateTime)
+              .copyWith(isUtc: true);
           if (weekSelected[WeekType.even] && !weekSelected[WeekType.odd]) {
             // Event is every even week, add a week to start date
             start = start.addDays(7);
@@ -415,13 +436,13 @@ class _AddEventViewState extends State<AddEventView> {
               until: semester.endDate
                   .add(const Duration(days: 1))
                   .atMidnight()
-                  .copyWithUtc());
+                  .copyWith(isUtc: true));
 
           final event = ClassEvent(
               teacher: selectedTeacher,
               rrule: rrule,
               start: start,
-              period: duration.toPeriod(),
+              duration: duration,
               id: widget.initialEvent?.id,
               relevance: relevanceController.customRelevance,
               degree: relevanceController.degree,
@@ -438,6 +459,7 @@ class _AddEventViewState extends State<AddEventView> {
                 await Provider.of<UniEventProvider>(context, listen: false)
                     .addEvent(event);
             if (res) {
+              if (!mounted) return;
               Navigator.of(context).pop();
               AppToast.show(S.current.messageEventAdded);
             }
@@ -446,6 +468,7 @@ class _AddEventViewState extends State<AddEventView> {
                 await Provider.of<UniEventProvider>(context, listen: false)
                     .updateEvent(event);
             if (res) {
+              if (!mounted) return;
               Navigator.of(context).popUntil(ModalRoute.withName(Routes.home));
               AppToast.show(S.current.messageEventEdited);
             }
@@ -476,7 +499,7 @@ class _AddEventViewState extends State<AddEventView> {
             padding: const EdgeInsets.all(12),
             child: Icon(
               FeatherIcons.clock,
-              color: Theme.of(context).formIconColor,
+              color: CustomIcons.formIconColor(Theme.of(context)),
             ),
           ),
           TextButton(
@@ -550,6 +573,147 @@ class _AddEventViewState extends State<AddEventView> {
       ),
     );
   }
+}
+
+class RelevanceFormField extends FormField<List<String>> {
+  RelevanceFormField({
+    @required this.controller,
+    String Function(List<String>) validator,
+    Key key,
+  }) : super(
+          key: key,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
+          validator: validator,
+          builder: (FormFieldState<List<String>> state) {
+            controller.onChanged = () {
+              state.didChange(controller.customRelevance);
+            };
+            final context = state.context;
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                RelevancePicker(
+                  canBePrivate: false,
+                  canBeForEveryone: false,
+                  filterProvider: Provider.of<FilterProvider>(context),
+                  controller: controller,
+                ),
+                if (state.hasError)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10),
+                    child: Text(
+                      state.errorText,
+                      style: Theme.of(context)
+                          .textTheme
+                          .caption
+                          .copyWith(color: Theme.of(context).errorColor),
+                    ),
+                  ),
+              ],
+            );
+          },
+        );
+
+  final RelevanceController controller;
+}
+
+class SelectableFormField extends FormField<Map<Localizable, bool>> {
+  SelectableFormField({
+    @required Map<Localizable, bool> initialValues,
+    @required IconData icon,
+    @required String label,
+    String Function(Map<Localizable, bool>) validator,
+    Key key,
+  }) : super(
+          autovalidateMode: AutovalidateMode.onUserInteraction,
+          initialValue: initialValues,
+          key: key,
+          validator: validator,
+          builder: (state) {
+            final context = state.context;
+            final labels = state.value.keys.toList();
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                IntrinsicHeight(
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 12, left: 12),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        Icon(icon,
+                            color:
+                                CustomIcons.formIconColor(Theme.of(context))),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Expanded(
+                                child: Text(
+                                  label,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .caption
+                                      .apply(
+                                          color: Theme.of(context).hintColor),
+                                ),
+                              ),
+                              const SizedBox(height: 10),
+                              Row(
+                                children: <Widget>[
+                                  Expanded(
+                                    child: SizedBox(
+                                      height: 40,
+                                      child: ListView.builder(
+                                        itemCount: labels.length,
+                                        scrollDirection: Axis.horizontal,
+                                        itemBuilder: (context, index) {
+                                          return Row(
+                                            children: [
+                                              Selectable(
+                                                label: labels[index]
+                                                    .toLocalizedString(),
+                                                initiallySelected:
+                                                    state.value[labels[index]],
+                                                onSelected: (selected) {
+                                                  state.value[labels[index]] =
+                                                      selected;
+                                                  state.didChange(state.value);
+                                                },
+                                              ),
+                                              const SizedBox(width: 10),
+                                            ],
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                if (state.hasError)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10),
+                    child: Text(
+                      state.errorText,
+                      style: Theme.of(context)
+                          .textTheme
+                          .caption
+                          .copyWith(color: Theme.of(context).errorColor),
+                    ),
+                  ),
+              ],
+            );
+          },
+        );
 }
 
 class _DayOfWeek extends time_machine.DayOfWeek with Localizable {

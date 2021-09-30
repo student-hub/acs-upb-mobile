@@ -3,7 +3,6 @@ import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:provider/provider.dart';
 import 'package:recase/recase.dart';
 import 'package:supercharged/supercharged.dart';
-import 'package:time_machine/time_machine.dart' hide Interval;
 import 'package:timetable/timetable.dart';
 import 'package:dart_date/dart_date.dart' show Interval;
 
@@ -46,6 +45,11 @@ class _TimetablePageState extends State<TimetablePage>
   }
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
 
@@ -57,7 +61,7 @@ class _TimetablePageState extends State<TimetablePage>
     if (_timeController == null) {
       _timeController = TimeController(
         initialRange: TimeRange(7.hours + 55.minutes, 20.hours + 5.minutes),
-        // TODO(IoanaAlexandru): Make initialTimeRange customizable in settings
+        // TODO(IoanaAlexandru): Make initialTimeRange customizable in settings, #99
         maxRange: TimeRange(0.hours, 24.hours),
       );
 
@@ -78,10 +82,9 @@ class _TimetablePageState extends State<TimetablePage>
       needsToBeAuthenticated: true,
       leading: AppScaffoldAction(
         icon: Icons.today_outlined,
-        onPressed: () =>
-            !_dateController.currentlyVisibleDates.contains(LocalDate.today())
-                ? _dateController.animateToToday(vsync: this)
-                : AppToast.show(S.current.messageAlreadySeeingCurrentWeek),
+        onPressed: () {
+          _dateController.animateToToday(vsync: this);
+        },
         tooltip: S.current.actionJumpToToday,
       ),
       actions: [
@@ -113,15 +116,15 @@ class _TimetablePageState extends State<TimetablePage>
               valueListenable: _dateController,
               builder: (context, value, child) {
                 final Stream<List<UniEventInstance>> eventsInRange =
-                    Provider.of<UniEventProvider>(context, listen: false)
+                    Provider.of<UniEventProvider>(context, listen: true)
                         .getEventsIntersecting(
                   Interval(
                     // Events are preloaded for previous, current and next page
-                    DateTimeTimetable.dateFromPage(value.page.floor()) - 7.days,
                     DateTimeTimetable.dateFromPage(
-                          value.page.ceil() + value.visibleDayCount,
-                        ) +
-                        7.days,
+                        value.page.floor() - value.visibleDayCount),
+                    DateTimeTimetable.dateFromPage(
+                      value.page.ceil() + value.visibleDayCount * 2,
+                    ),
                   ),
                 );
 
@@ -129,51 +132,63 @@ class _TimetablePageState extends State<TimetablePage>
                   stream: eventsInRange,
                   builder: (context,
                       AsyncSnapshot<List<UniEventInstance>> snapshot) {
-                    if (snapshot.data == null || snapshot.hasError) {
-                      // TODO(bogpie): Handle loading and error states
-                      return Container();
-                    }
-
-                    return TimetableConfig<UniEventInstance>(
-                      eventProvider:
-                          eventProviderFromFixedList(snapshot.data ?? []),
-                      child: child,
-                      dateController: _dateController,
-                      timeController: _timeController,
-                      eventBuilder: (context, event) => UniEventWidget(event),
-                      allDayEventBuilder: (context, event, info) =>
-                          UniAllDayEventWidget(event, info: info),
-                      callbacks: TimetableCallbacks(
-                        onDateTimeBackgroundTap: (dateTime) {
-                          final user =
-                              Provider.of<AuthProvider>(context, listen: false)
-                                  .currentUserFromCache;
-                          if (user.canAddPublicInfo) {
-                            Navigator.of(context).push(
-                              MaterialPageRoute<AddEventView>(
-                                builder: (_) => ChangeNotifierProxyProvider<
-                                    AuthProvider, FilterProvider>(
-                                  create: (_) => FilterProvider(),
-                                  update:
-                                      (context, authProvider, filterProvider) {
-                                    return filterProvider
-                                      ..updateAuth(authProvider);
-                                  },
-                                  child: AddEventView(
-                                    initialEvent: UniEvent(
-                                        start: dateTime.copyWithUtc(),
-                                        period: const Period(hours: 2),
-                                        id: null),
+                    if (snapshot.hasError) {
+                      AppToast.show(S.current.errorSomethingWentWrong);
+                      return const Center(child: CircularProgressIndicator());
+                    } else {
+                      switch (snapshot.connectionState) {
+                        case ConnectionState.none:
+                          AppToast.show(S.current.errorSomethingWentWrong);
+                          return const Center(
+                              child: CircularProgressIndicator());
+                        case ConnectionState.waiting:
+                          break;
+                        case ConnectionState.active:
+                          break;
+                        case ConnectionState.done:
+                          break;
+                      }
+                      return TimetableConfig<UniEventInstance>(
+                        eventProvider:
+                            eventProviderFromFixedList(snapshot.data ?? []),
+                        child: child,
+                        dateController: _dateController,
+                        timeController: _timeController,
+                        eventBuilder: (context, event) => UniEventWidget(event),
+                        allDayEventBuilder: (context, event, info) =>
+                            UniAllDayEventWidget(event, info: info),
+                        callbacks: TimetableCallbacks(
+                          onDateTimeBackgroundTap: (dateTime) {
+                            final user = Provider.of<AuthProvider>(context,
+                                    listen: false)
+                                .currentUserFromCache;
+                            if (user.canAddPublicInfo) {
+                              Navigator.of(context).push(
+                                MaterialPageRoute<AddEventView>(
+                                  builder: (_) => ChangeNotifierProxyProvider<
+                                      AuthProvider, FilterProvider>(
+                                    create: (_) => FilterProvider(),
+                                    update: (context, authProvider,
+                                        filterProvider) {
+                                      return filterProvider
+                                        ..updateAuth(authProvider);
+                                    },
+                                    child: AddEventView(
+                                      initialEvent: UniEvent(
+                                          start: dateTime.copyWith(isUtc: true),
+                                          duration: const Duration(hours: 2),
+                                          id: null),
+                                    ),
                                   ),
                                 ),
-                              ),
-                            );
-                          } else {
-                            AppToast.show(S.current.errorPermissionDenied);
-                          }
-                        },
-                      ),
-                    );
+                              );
+                            } else {
+                              AppToast.show(S.current.errorPermissionDenied);
+                            }
+                          },
+                        ),
+                      );
+                    }
                   },
                 );
               },
@@ -188,34 +203,37 @@ class _TimetablePageState extends State<TimetablePage>
   Future<void> scheduleDialog(BuildContext context) async {
     WidgetsBinding.instance.addPostFrameCallback(
       (_) async {
-        if (!mounted) {
-          return;
-        }
+        final authProvider = Provider.of<AuthProvider>(context, listen: false);
+        final classProvider =
+            Provider.of<ClassProvider>(context, listen: false);
+        final filterProvider =
+            Provider.of<FilterProvider>(context, listen: false);
+        final requestProvider =
+            Provider.of<RequestProvider>(context, listen: false);
 
         // Fetch user classes, request necessary info from providers so it's
         // cached when we check in the dialog
-        final user = Provider.of<AuthProvider>(context, listen: false)
-            .currentUserFromCache;
-        await Provider.of<ClassProvider>(context, listen: false)
-            .fetchClassHeaders(uid: user.uid);
-        await Provider.of<FilterProvider>(context, listen: false).fetchFilter();
-        await Provider.of<RequestProvider>(context, listen: false)
-            .userAlreadyRequested(user.uid);
+        final user = authProvider.currentUserFromCache;
+        await classProvider.fetchClassHeaders(uid: user.uid);
+        await filterProvider.fetchFilter();
+        await requestProvider.userAlreadyRequested(user.uid);
 
         // Slight delay between last frame and dialog
         await Future<void>.delayed(const Duration(milliseconds: 100));
 
         // Show dialog if there are no events
-        // final eventProvider =
-        //     Provider.of<UniEventProvider>(context, listen: false);
-        // if (eventProvider != null) {
-        //   if (eventProvider.empty) {
-        //     await showDialog<String>(
-        //       context: context,
-        //       builder: buildDialog,
-        //     );
-        //   }
-        // }
+        if (!mounted) return;
+        final eventProvider =
+            Provider.of<UniEventProvider>(context, listen: false);
+
+        if (eventProvider != null) {
+          if (eventProvider.empty) {
+            await showDialog<String>(
+              context: context,
+              builder: buildDialog,
+            );
+          }
+        }
       },
     );
   }
@@ -255,9 +273,9 @@ class _TimetablePageState extends State<TimetablePage>
               // Pop the dialog
               Navigator.of(context).pop();
               // Push the Add classes page
-              await Navigator.of(context)
-                  .push(MaterialPageRoute<ChangeNotifierProvider>(
-                builder: (_) => ChangeNotifierProvider.value(
+              await Navigator.of(context).push(
+                MaterialPageRoute<ChangeNotifierProvider>(
+                  builder: (_) => ChangeNotifierProvider.value(
                     value: classProvider,
                     child: FutureBuilder(
                       future: classProvider.fetchUserClassIds(user.uid),
@@ -268,6 +286,7 @@ class _TimetablePageState extends State<TimetablePage>
                               onSave: (classIds) async {
                                 await classProvider.setUserClassIds(
                                     classIds, authProvider.uid);
+                                if (!mounted) return;
                                 Navigator.pop(context);
                               });
                         } else {
@@ -275,8 +294,10 @@ class _TimetablePageState extends State<TimetablePage>
                               child: CircularProgressIndicator());
                         }
                       },
-                    )),
-              ));
+                    ),
+                  ),
+                ),
+              );
             },
           )
         ],
@@ -328,6 +349,7 @@ class _TimetablePageState extends State<TimetablePage>
               // Check if user is verified
               final bool isVerified = await authProvider.isVerified;
               // Pop the dialog
+              if (!mounted) return;
               Navigator.of(context).pop();
               // Push the Permissions page
               if (authProvider.isAnonymous) {

@@ -33,8 +33,8 @@ jobs:
           java-version: '12.x'
       - uses: subosito/flutter-action@v1
         with:
-          flutter-version: '1.24.x'
-          channel: 'beta'
+          flutter-version: '2.2.3'
+          channel: 'stable'
 
       - name: Get packages
         run: flutter pub get
@@ -67,41 +67,41 @@ jobs:
     if: github.repository == 'student-hub/acs-upb-mobile'
 
     steps:
-    - uses: actions/checkout@v1
-    - uses: actions/setup-java@v1
-      with:
-        java-version: '12.x'
-    - uses: subosito/flutter-action@v1
-      with:
-        flutter-version: '1.24.x'
-        channel: 'beta'
+      - uses: actions/checkout@v1
+      - uses: actions/setup-java@v1
+        with:
+          java-version: '12.x'
+      - uses: subosito/flutter-action@v1
+        with:
+          flutter-version: '2.2.3'
+          channel: 'stable'
 
-    - name: Get packages
-      run: flutter pub get
+      - name: Get packages
+        run: flutter pub get
 
-    - name: Run tests
-      run: flutter test
+      - name: Run tests
+        run: flutter test
 
-    - name: Decrypt Android keys
-      run: sh ./.github/scripts/decrypt_android_secrets.sh
-      env:
-        ANDROID_KEYS_SECRET_PASSPHRASE: ${{ secrets.ANDROID_KEYS_SECRET_PASSPHRASE }}
+      - name: Decrypt Android keys
+        run: sh ./.github/scripts/decrypt_android_secrets.sh
+        env:
+          ANDROID_KEYS_SECRET_PASSPHRASE: ${{ secrets.ANDROID_KEYS_SECRET_PASSPHRASE }}
 
-    # Apparently there's a known issue where there are some missing files if you don't build the debug/profile version first
-    # https://techshits.com/flutter-error-transforms-input-file-does-not-exist/
-    - name: Build debug APK
-      run: flutter build apk --debug
-    - name: Build profile APK
-      run: flutter build apk --profile
+      # Apparently there's a known issue where there are some missing files if you don't build the debug/profile version first
+      # https://techshits.com/flutter-error-transforms-input-file-does-not-exist/
+      - name: Build debug APK
+        run: flutter build apk --debug
+      - name: Build profile APK
+        run: flutter build apk --profile
 
-    - name: Build release APK
-      run: flutter build apk --release
+      - name: Build release APK
+        run: flutter build apk --release
 
-    - name: Create a Release APK
-      uses: ncipollo/release-action@v1
-      with:
-        artifacts: "build/app/outputs/apk/release/*.apk"
-        token: ${{ secrets.RELEASE_TOKEN }}
+      - name: Create a Release APK
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: "build/app/outputs/apk/release/*.apk"
+          token: ${{ secrets.RELEASE_TOKEN }}
 
   android:
     name: Deploy to Google Play
@@ -109,31 +109,31 @@ jobs:
     if: github.repository == 'student-hub/acs-upb-mobile'
 
     steps:
-    - uses: actions/checkout@v1
-    - uses: actions/setup-java@v1
-      with:
-        java-version: '12.x'
-    - uses: subosito/flutter-action@v1
-      with:
-        flutter-version: '1.24.x'
-        channel: 'beta'
+      - uses: actions/checkout@v1
+      - uses: actions/setup-java@v1
+        with:
+          java-version: '12.x'
+      - uses: subosito/flutter-action@v1
+        with:
+          flutter-version: '2.2.3'
+          channel: 'stable'
 
-    - name: Get packages
-      run: flutter pub get
+      - name: Get packages
+        run: flutter pub get
 
-    - name: Run tests
-      run: flutter test
+      - name: Run tests
+        run: flutter test
 
-    - name: Decrypt Android keys
-      run: sh ./.github/scripts/decrypt_android_secrets.sh
-      env:
-        ANDROID_KEYS_SECRET_PASSPHRASE: ${{ secrets.ANDROID_KEYS_SECRET_PASSPHRASE }}
+      - name: Decrypt Android keys
+        run: sh ./.github/scripts/decrypt_android_secrets.sh
+        env:
+          ANDROID_KEYS_SECRET_PASSPHRASE: ${{ secrets.ANDROID_KEYS_SECRET_PASSPHRASE }}
 
-    - name: Build app bundle
-      run: flutter build appbundle --release
+      - name: Build app bundle
+        run: flutter build appbundle --release
 
-    - name: Run Fastlane
-      uses: maierj/fastlane-action@v1.4.0
-      with:
-        lane: deploy
-        subdirectory: android
+      - name: Run Fastlane
+        uses: maierj/fastlane-action@v1.4.0
+        with:
+          lane: deploy
+          subdirectory: android
