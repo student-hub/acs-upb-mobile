@@ -4,7 +4,6 @@ Added
     - Admins can now respond to requests for editing permissions directly from the app
 
 Improved
-    - When pressing 'Jump to today' in the timetable, you are now notified if you are already seeing the current week
     - Dark mode also applies to the splash screen
     - Did some internal ✨magic✨ to improve the app
 
