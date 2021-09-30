@@ -1,11 +1,11 @@
+import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/people/model/person.dart';
 import 'package:acs_upb_mobile/pages/people/service/person_provider.dart';
-import 'package:acs_upb_mobile/pages/people/view/person_view.dart';
+import 'package:acs_upb_mobile/pages/people/view/people_page.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:acs_upb_mobile/generated/l10n.dart';
 
 class PeopleSearchResults extends StatelessWidget {
   const PeopleSearchResults({this.query});
@@ -65,12 +65,7 @@ class PeopleCircleList extends StatelessWidget {
               padding: const EdgeInsets.fromLTRB(0, 0, 25, 0),
               child: GestureDetector(
                   onTap: () {
-                    showModalBottomSheet<dynamic>(
-                        isScrollControlled: true,
-                        context: context,
-                        builder: (BuildContext buildContext) => PersonView(
-                              person: people[index],
-                            ));
+                    PeopleList.showPerson(context, people[index]);
                   },
                   child: Container(
                     width: 60,

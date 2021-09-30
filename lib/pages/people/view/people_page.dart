@@ -1,4 +1,5 @@
 import 'package:acs_upb_mobile/generated/l10n.dart';
+import 'package:acs_upb_mobile/navigation/service/navigator.dart';
 import 'package:acs_upb_mobile/navigation/view/scaffold.dart';
 import 'package:acs_upb_mobile/pages/people/model/person.dart';
 import 'package:acs_upb_mobile/pages/people/service/person_provider.dart';
@@ -8,6 +9,7 @@ import 'package:acs_upb_mobile/widgets/search_bar.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dynamic_text_highlighting/dynamic_text_highlighting.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:provider/provider.dart';
@@ -132,15 +134,23 @@ class PeopleList extends StatelessWidget {
                 )
               : Text(people[index].name),
           subtitle: Text(people[index].email),
-          onTap: () => showModalBottomSheet<dynamic>(
-            isScrollControlled: true,
-            context: context,
-            builder: (BuildContext buildContext) =>
-                PersonView(person: people[index]),
-          ),
+          onTap: () => showPerson(context, people[index]),
         );
       },
     );
+  }
+
+  static Future<void> showPerson(BuildContext context, Person person) async {
+    if (kIsWeb) {
+      await AppNavigator.pushNamed(
+          context, '${PersonView.routeName}?name=${person.name}');
+    } else {
+      await showModalBottomSheet<dynamic>(
+        isScrollControlled: true,
+        context: context,
+        builder: (BuildContext buildContext) => PersonView(person: person),
+      );
+    }
   }
 }
 
