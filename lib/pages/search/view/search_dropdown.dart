@@ -69,6 +69,7 @@ class _SearchDropdownState extends State<SearchDropdown> {
   @override
   Widget build(BuildContext context) {
     return SearchWidget(
+      padding: EdgeInsets.zero,
       onTap: () => setState(_createOverlay),
       onSearch: (searchText) => {
         setState(() {

@@ -51,10 +51,14 @@ class _WebPageHeaderState extends State<WebPageHeader> {
               ),
             ),
             if (screenSize > Sizes.narrowScreen)
-              const Spacer()
+              const Spacer(flex: 1)
             else
               const SizedBox.shrink(),
-            const _DummySearchBar(),
+            const _SearchBar(),
+            if (screenSize > Sizes.narrowScreen)
+              const Spacer(flex: 1)
+            else
+              const SizedBox.shrink(),
             _ProfileDropdownMenu(
               headerHeight: widget.height,
             )
@@ -65,21 +69,22 @@ class _WebPageHeaderState extends State<WebPageHeader> {
   }
 }
 
-class _DummySearchBar extends StatefulWidget {
-  const _DummySearchBar({Key key}) : super(key: key);
+class _SearchBar extends StatefulWidget {
+  const _SearchBar({Key key}) : super(key: key);
 
   @override
-  __DummySearchBarState createState() => __DummySearchBarState();
+  __SearchBarState createState() => __SearchBarState();
 }
 
-class __DummySearchBarState extends State<_DummySearchBar> {
+class __SearchBarState extends State<_SearchBar> {
   String query = '';
 
   @override
   Widget build(BuildContext context) {
     return const Expanded(
+      flex: 3,
       child: FractionallySizedBox(
-        heightFactor: 0.8,
+        heightFactor: 0.75,
         child: SearchDropdown(),
       ),
     );

@@ -69,18 +69,21 @@ class _SearchBarState extends State<SearchBar> {
 }
 
 class SearchWidget extends StatefulWidget {
-  const SearchWidget(
-      {this.onSearch,
-      this.header,
-      this.cancelCallback,
-      this.searchClosed,
-      this.onTap});
+  const SearchWidget({
+    this.onSearch,
+    this.header,
+    this.cancelCallback,
+    this.searchClosed,
+    this.onTap,
+    this.padding = const EdgeInsets.only(left: 10, top: 10),
+  });
 
   final void Function(String) onSearch;
   final void Function() onTap;
   final Widget header;
   final void Function() cancelCallback;
   final bool searchClosed;
+  final EdgeInsets padding;
 
   @override
   _SearchWidgetState createState() => _SearchWidgetState();
@@ -98,7 +101,7 @@ class _SearchWidgetState extends State<SearchWidget> {
         child: widget.searchClosed
             ? widget.header
             : Padding(
-                padding: const EdgeInsets.only(left: 10, top: 10),
+                padding: widget.padding,
                 child: SearchBar(
                   textController: _textEditingController,
                   onSearch: widget.onSearch,
