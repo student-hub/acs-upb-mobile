@@ -6,12 +6,12 @@ import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/navigation/service/navigator.dart';
 import 'package:acs_upb_mobile/pages/home/home_page.dart';
 import 'package:acs_upb_mobile/pages/home/profile_card.dart';
+import 'package:acs_upb_mobile/pages/search/view/search_dropdown.dart';
 import 'package:acs_upb_mobile/pages/settings/view/settings_page.dart';
 import 'package:acs_upb_mobile/resources/banner.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/resources/web_layout_sizes.dart';
 import 'package:acs_upb_mobile/widgets/icon_text.dart';
-import 'package:acs_upb_mobile/widgets/search_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -54,8 +54,7 @@ class _WebPageHeaderState extends State<WebPageHeader> {
               const Spacer()
             else
               const SizedBox.shrink(),
-            // const _DummySearchBar(),
-            // const SearchBar(),
+            const _DummySearchBar(),
             _ProfileDropdownMenu(
               headerHeight: widget.height,
             )
@@ -66,30 +65,22 @@ class _WebPageHeaderState extends State<WebPageHeader> {
   }
 }
 
-class _DummySearchBar extends StatelessWidget {
+class _DummySearchBar extends StatefulWidget {
   const _DummySearchBar({Key key}) : super(key: key);
 
   @override
+  __DummySearchBarState createState() => __DummySearchBarState();
+}
+
+class __DummySearchBarState extends State<_DummySearchBar> {
+  String query = '';
+
+  @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: ConstrainedBox(
-        constraints: const BoxConstraints(maxHeight: 60),
-        child: Padding(
-          padding: const EdgeInsets.all(6),
-          child: Card(
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: IconText(
-                  icon: Icons.search,
-                  text: 'Search',
-                  style: Theme.of(context).primaryTextTheme.subtitle1,
-                ),
-              ),
-            ),
-          ),
-        ),
+    return const Expanded(
+      child: FractionallySizedBox(
+        heightFactor: 0.8,
+        child: SearchDropdown(),
       ),
     );
   }
