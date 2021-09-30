@@ -7,8 +7,21 @@ on:
 name: Deployment
 
 jobs:
-  firebase:
-    name: Firebase deployment
+  rules:
+    name: Deploy Firebase/Storage rules
+    runs-on: ubuntu-latest
+    if: github.repository == 'student-hub/acs-upb-mobile'
+
+    steps:
+    - uses: actions/checkout@v1
+    - uses: w9jds/firebase-action@master
+      with:
+        args: deploy --only storage,firestore --project prod
+      env:
+        FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+
+  functions:
+    name: Deploy cloud functions
     runs-on: ubuntu-latest
     if: github.repository == 'student-hub/acs-upb-mobile'
 
@@ -19,10 +32,10 @@ jobs:
       shell: bash
       env:
         SERVICE_ACCOUNT: ${{secrets.FIREBASE_SERVICE_ACCOUNT}}
-    - name: Deploy functions, rules and indexes to Firebase
+    - name: Deploy functions to Firebase
       uses: w9jds/firebase-action@master
       with:
-        args: deploy --only functions,storage,firestore --project prod
+        args: deploy --only functions --project prod
       env:
         FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
 
