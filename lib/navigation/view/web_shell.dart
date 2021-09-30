@@ -53,7 +53,8 @@ class _WebShellState extends State<WebShell> {
     _backButtonDispatcher.takePriority();
 
     return Listener(
-      onPointerDown: (PointerDownEvent event) => FocusManager.instance.primaryFocus?.unfocus(),
+      onPointerDown: (PointerDownEvent event) =>
+          FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
         appBar: PreferredSize(
           preferredSize: Size(screenSize.width, 100),
