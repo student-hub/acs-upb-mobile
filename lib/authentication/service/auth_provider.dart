@@ -7,7 +7,7 @@ import 'package:firebase_auth/firebase_auth.dart' as firebase_auth show User;
 import 'package:flutter/material.dart';
 
 import '../../generated/l10n.dart';
-import '../../resources/storage/storage_provider.dart';
+import '../../resources/storage_provider.dart';
 import '../../resources/validator.dart';
 import '../../widgets/toast.dart';
 import '../model/user.dart';

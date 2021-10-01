@@ -94,10 +94,7 @@ dependencies:
   image: ^3.0.2
 
   # Image importer
-  image_picker: ^0.8.0+1
-
-  # Web image importer
-  image_picker_web: ^2.0.2
+  image_picker: ^0.8.4+1
 
   # Interval picker widget
   #  interval_time_picker: ^0.1.0

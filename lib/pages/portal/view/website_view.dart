@@ -375,11 +375,12 @@ class WebsiteIcon extends StatelessWidget {
     if (image == null) {
       return FutureBuilder(
           future: StorageProvider.findImageUrl(website.iconPath),
-          // Firebase Storage path
-          builder: (final context, final snapshot) {
-            ImageProvider oldImage;
+      //Firebase Storage path
+      builder: (final context, final snapshot) {
+
+        ImageProvider oldImage;
             if (snapshot.hasData) {
-              oldImage = NetworkImage(snapshot.data);
+              oldImage = Image.network(snapshot.data.toString()).image;
             }
 
             return CircleImage(
