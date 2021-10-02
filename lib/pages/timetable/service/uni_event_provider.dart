@@ -217,6 +217,7 @@ class UniEventProvider extends EventProvider<UniEventInstance>
     fetchCalendars();
   }
 
+
   final Map<String, AcademicCalendar> _calendars = {};
   ClassProvider _classProvider;
   FilterProvider _filterProvider;
@@ -226,7 +227,7 @@ class UniEventProvider extends EventProvider<UniEventInstance>
   Filter _filter;
   bool empty;
 
-  Future<Map<String, AcademicCalendar>> fetchCalendars() async {
+ Future<Map<String, AcademicCalendar>> fetchCalendars() async {
     final QuerySnapshot query =
         await FirebaseFirestore.instance.collection('calendars').get();
     for (final doc in query.docs) {
