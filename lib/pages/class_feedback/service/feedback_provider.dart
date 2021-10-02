@@ -19,7 +19,7 @@ extension FeedbackQuestionExtension on FormQuestion {
     if (json['type'] == 'dropdown' && json['options'] != null) {
       final List<dynamic> options = json['options'];
       final List<String> optionsString =
-          options.map((e) => e[LocaleProvider.localeString] as String).toList();
+      options.map((e) => e[LocaleProvider.localeString] as String).toList();
       return FormQuestionDropdown(
         category: json['category'],
         question: json['question'][LocaleProvider.localeString],
@@ -62,8 +62,8 @@ extension FeedbackQuestionExtension on FormQuestion {
 }
 
 class FeedbackProvider with ChangeNotifier {
-  Future<bool> _addResponseByQuestion(
-      FormAnswer response, String document) async {
+  Future<bool> _addResponseByQuestion(FormAnswer response,
+      String document) async {
     try {
       await FirebaseFirestore.instance
           .collection('forms')
@@ -120,11 +120,11 @@ class FeedbackProvider with ChangeNotifier {
     }
   }
 
-  Future<bool> _setUserSubmittedFeedbackForClass(
-      String uid, String className) async {
+  Future<bool> _setUserSubmittedFeedbackForClass(String uid,
+      String className) async {
     try {
       final DocumentReference ref =
-          FirebaseFirestore.instance.collection('users').doc(uid);
+      FirebaseFirestore.instance.collection('users').doc(uid);
       await ref.set({
         'classesFeedback': {className: true}
       }, SetOptions(merge: true));
@@ -136,8 +136,7 @@ class FeedbackProvider with ChangeNotifier {
     }
   }
 
-  Future<bool> submitFeedback(
-      String uid,
+  Future<bool> submitFeedback(String uid,
       Map<String, FormQuestion> feedbackQuestions,
       Person assistant,
       Person teacher,
@@ -163,15 +162,15 @@ class FeedbackProvider with ChangeNotifier {
         );
 
         responseAddedSuccessfully =
-            await _addResponseByQuestion(response, 'class_feedback_answers');
+        await _addResponseByQuestion(response, 'class_feedback_answers');
         if (!responseAddedSuccessfully) break;
       }
 
       userSubmittedFeedbackSuccessfully =
-          await _setUserSubmittedFeedbackForClass(uid, className);
+      await _setUserSubmittedFeedbackForClass(uid, className);
       if ((responseAddedSuccessfully ??
-              true && userSubmittedFeedbackSuccessfully ??
-              true) ||
+          true && userSubmittedFeedbackSuccessfully ??
+          true) ||
           (responseAddedSuccessfully && userSubmittedFeedbackSuccessfully)) {
         notifyListeners();
         return true;
@@ -183,11 +182,11 @@ class FeedbackProvider with ChangeNotifier {
     }
   }
 
-  Future<bool> userSubmittedFeedbackForClass(
-      String uid, String className) async {
+  Future<bool> userSubmittedFeedbackForClass(String uid,
+      String className) async {
     try {
       final DocumentSnapshot snap =
-          await FirebaseFirestore.instance.collection('users').doc(uid).get();
+      await FirebaseFirestore.instance.collection('users').doc(uid).get();
       if (snap.data()['classesFeedback'] != null &&
           snap.data()['classesFeedback'][className] == true) {
         return true;
@@ -202,7 +201,7 @@ class FeedbackProvider with ChangeNotifier {
   Future<Map<String, bool>> getClassesWithCompletedFeedback(String uid) async {
     try {
       final DocumentSnapshot snap =
-          await FirebaseFirestore.instance.collection('users').doc(uid).get();
+      await FirebaseFirestore.instance.collection('users').doc(uid).get();
       if (snap.data()['classesFeedback'] != null) {
         return Map<String, bool>.from(snap.data()['classesFeedback']);
       }
@@ -213,11 +212,11 @@ class FeedbackProvider with ChangeNotifier {
     }
   }
 
-  Future<String> countClassesWithoutFeedback(
-      String uid, Set<ClassHeader> userClasses) async {
+  Future<String> countClassesWithoutFeedback(String uid,
+      Set<ClassHeader> userClasses) async {
     try {
       final Map<String, bool> classesFeedbackCompleted =
-          await getClassesWithCompletedFeedback(uid);
+      await getClassesWithCompletedFeedback(uid);
       String feedbackFormsLeft;
 
       if (userClasses != null && classesFeedbackCompleted != null) {
@@ -238,7 +237,6 @@ class FeedbackProvider with ChangeNotifier {
     }
   }
 
-  final FirebaseFirestore _db = FirebaseFirestore.instance;
   bool userAlreadyRequestedCache;
 
   Future<bool> submitRequest(PermissionRequest request) async {
@@ -248,7 +246,8 @@ class FeedbackProvider with ChangeNotifier {
 
     try {
       DocumentReference ref;
-      ref = _db.collection('forms').doc('permission_request_answers');
+      ref = FirebaseFirestore.instance.collection('forms').doc(
+          'permission_request_answers');
 
       final data = request.toData();
       await ref.update({request.userId: data});
@@ -265,11 +264,11 @@ class FeedbackProvider with ChangeNotifier {
     if (userAlreadyRequestedCache != null) return userAlreadyRequestedCache;
 
     try {
-      final DocumentSnapshot snap = await _db
+      final DocumentSnapshot snap = await FirebaseFirestore.instance
           .collection('forms')
-          .doc('permission_request_questions')
-          .get(); //doc(userId).get();
-      if (snap.data() != null) {
+          .doc('permission_request_answers')
+          .get();
+      if (snap.data().containsKey(userId)) {
         return userAlreadyRequestedCache = true;
       }
       return userAlreadyRequestedCache = false;
