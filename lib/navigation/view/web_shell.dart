@@ -52,74 +52,78 @@ class _WebShellState extends State<WebShell> {
     final Size screenSize = MediaQuery.of(context).size;
     _backButtonDispatcher.takePriority();
 
-    return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: Size(screenSize.width, 100),
-        child: WebPageHeader(
-          height: 60,
-          leading: Align(
-            alignment: AlignmentDirectional.centerStart,
-            child: Padding(
-              padding: const EdgeInsets.only(left: 15),
-              child: IconButton(
-                onPressed: () {
-                  setState(() {
-                    widget.navigationProvider.toggleDrawer();
-                  });
-                },
-                icon: const Icon(Icons.menu),
+    return Listener(
+      onPointerDown: (PointerDownEvent event) =>
+          FocusManager.instance.primaryFocus?.unfocus(),
+      child: Scaffold(
+        appBar: PreferredSize(
+          preferredSize: Size(screenSize.width, 100),
+          child: WebPageHeader(
+            height: 60,
+            leading: Align(
+              alignment: AlignmentDirectional.centerStart,
+              child: Padding(
+                padding: const EdgeInsets.only(left: 15),
+                child: IconButton(
+                  onPressed: () {
+                    setState(() {
+                      widget.navigationProvider.toggleDrawer();
+                    });
+                  },
+                  icon: const Icon(Icons.menu),
+                ),
               ),
             ),
           ),
         ),
-      ),
-      body: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          NavigationRail(
-            selectedIndex: widget.navigationProvider.selectedTab,
-            onDestinationSelected: handleNavigationBar,
-            extended: widget.navigationProvider.isDrawerExtended,
-            labelType: NavigationRailLabelType.none,
-            destinations: [
-              NavigationRailDestination(
-                icon: const Icon(Icons.home),
-                selectedIcon: const Icon(Icons.home_outlined),
-                label: Text(S.current.navigationHome),
-              ),
-              NavigationRailDestination(
-                icon: const Icon(Icons.calendar_today),
-                selectedIcon: const Icon(Icons.calendar_today_outlined),
-                label: Text(S.current.navigationTimetable),
-              ),
-              NavigationRailDestination(
-                icon: const Icon(FeatherIcons.globe),
-                selectedIcon: const Icon(FeatherIcons.globe),
-                label: Text(S.current.navigationPortal),
-              ),
-              NavigationRailDestination(
-                icon: const Icon(Icons.people),
-                selectedIcon: const Icon(Icons.people_outlined),
-                label: Text(S.current.navigationPeople),
-              ),
-            ],
-          ),
-          const VerticalDivider(
-            thickness: 1,
-            width: 1,
-          ),
-          Expanded(
-            flex: 5,
-            child: PageStorage(
-              child: Router<dynamic>(
-                routerDelegate: _innerRouterDelegate,
-                backButtonDispatcher: _backButtonDispatcher,
-              ),
-              bucket: widget.bucket,
+        body: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            NavigationRail(
+              selectedIndex: widget.navigationProvider.selectedTab,
+              onDestinationSelected: handleNavigationBar,
+              extended: widget.navigationProvider.isDrawerExtended,
+              labelType: NavigationRailLabelType.none,
+              destinations: [
+                NavigationRailDestination(
+                  icon: const Icon(Icons.home),
+                  selectedIcon: const Icon(Icons.home_outlined),
+                  label: Text(S.current.navigationHome),
+                ),
+                NavigationRailDestination(
+                  icon: const Icon(Icons.calendar_today),
+                  selectedIcon: const Icon(Icons.calendar_today_outlined),
+                  label: Text(S.current.navigationTimetable),
+                ),
+                NavigationRailDestination(
+                  icon: const Icon(FeatherIcons.globe),
+                  selectedIcon: const Icon(FeatherIcons.globe),
+                  label: Text(S.current.navigationPortal),
+                ),
+                NavigationRailDestination(
+                  icon: const Icon(Icons.people),
+                  selectedIcon: const Icon(Icons.people_outlined),
+                  label: Text(S.current.navigationPeople),
+                ),
+              ],
             ),
-          ),
-        ],
+            const VerticalDivider(
+              thickness: 1,
+              width: 1,
+            ),
+            Expanded(
+              flex: 5,
+              child: PageStorage(
+                child: Router<dynamic>(
+                  routerDelegate: _innerRouterDelegate,
+                  backButtonDispatcher: _backButtonDispatcher,
+                ),
+                bucket: widget.bucket,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

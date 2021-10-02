@@ -1,9 +1,11 @@
 part of route_paths;
 
-class ClassViewPath extends RoutePath {
-  ClassViewPath(this.id) : super('${ClassView.routeName}?id=$id');
+class ClassesSearchResultPath extends RoutePath {
+  ClassesSearchResultPath(String location)
+      : classIds = location.split('&'),
+        super(location);
 
-  final String id;
+  final List<String> classIds;
 
   @override
   Widget get page {
@@ -20,9 +22,10 @@ class ClassViewPath extends RoutePath {
           );
         }
 
-        return FutureBuilder<ClassHeader>(
-          future: classProvider.fetchClassHeader(id),
-          builder: (BuildContext context, AsyncSnapshot<ClassHeader> snapshot) {
+        return FutureBuilder<Set<ClassHeader>>(
+          future: classProvider.fetchClassHeadersByIds(classIds),
+          builder:
+              (BuildContext context, AsyncSnapshot<Set<ClassHeader>> snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
               if (!snapshot.hasData) {
                 return ErrorPage(
@@ -31,14 +34,12 @@ class ClassViewPath extends RoutePath {
                 );
               }
 
-              final header = snapshot.data;
-              return ChangeNotifierProvider.value(
-                value: classProvider,
-                child: ClassView(
-                  classHeader: header,
-                ),
+              final classesSearched = snapshot.data;
+              return SearchedClassesView(
+                classHeaders: classesSearched.toList(),
               );
             }
+
             return const CircularProgressIndicator();
           },
         );

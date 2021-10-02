@@ -6,6 +6,7 @@ import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/navigation/service/navigator.dart';
 import 'package:acs_upb_mobile/pages/home/home_page.dart';
 import 'package:acs_upb_mobile/pages/home/profile_card.dart';
+import 'package:acs_upb_mobile/pages/search/view/search_dropdown.dart';
 import 'package:acs_upb_mobile/pages/settings/view/settings_page.dart';
 import 'package:acs_upb_mobile/resources/banner.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
@@ -50,10 +51,14 @@ class _WebPageHeaderState extends State<WebPageHeader> {
               ),
             ),
             if (screenSize > Sizes.narrowScreen)
-              const Spacer()
+              const Spacer(flex: 1)
             else
               const SizedBox.shrink(),
-            const _DummySearchBar(),
+            const _SearchBar(),
+            if (screenSize > Sizes.narrowScreen)
+              const Spacer(flex: 1)
+            else
+              const SizedBox.shrink(),
             _ProfileDropdownMenu(
               headerHeight: widget.height,
             )
@@ -64,30 +69,23 @@ class _WebPageHeaderState extends State<WebPageHeader> {
   }
 }
 
-class _DummySearchBar extends StatelessWidget {
-  const _DummySearchBar({Key key}) : super(key: key);
+class _SearchBar extends StatefulWidget {
+  const _SearchBar({Key key}) : super(key: key);
+
+  @override
+  __SearchBarState createState() => __SearchBarState();
+}
+
+class __SearchBarState extends State<_SearchBar> {
+  String query = '';
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: ConstrainedBox(
-        constraints: const BoxConstraints(maxHeight: 60),
-        child: Padding(
-          padding: const EdgeInsets.all(6),
-          child: Card(
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: IconText(
-                  icon: Icons.search,
-                  text: 'Search',
-                  style: Theme.of(context).primaryTextTheme.subtitle1,
-                ),
-              ),
-            ),
-          ),
-        ),
+    return const Expanded(
+      flex: 3,
+      child: FractionallySizedBox(
+        heightFactor: 0.75,
+        child: SearchDropdown(),
       ),
     );
   }
@@ -147,22 +145,13 @@ class _ProfileDropdownMenu extends StatelessWidget {
                 ),
               ),
               PopupMenuItem(
-                child: authProvider.isAnonymous
-                    ? IconText(
-                        icon: Icons.login,
-                        text: S.current.actionLogIn,
-                        onTap: () {
-                          Utils.signOut(context);
-                        },
-                      )
-                    : IconText(
-                        icon: Icons.logout,
-                        text: S.current.actionLogOut,
-                        onTap: () {
-                          Utils.signOut(context);
-                        },
-                      ),
-              )
+                  child: IconText(
+                icon: authProvider.isAnonymous ? Icons.login : Icons.logout,
+                text: authProvider.isAnonymous
+                    ? S.current.actionLogIn
+                    : S.current.actionLogOut,
+                onTap: () => Utils.signOut(context),
+              ))
             ];
           },
         ),

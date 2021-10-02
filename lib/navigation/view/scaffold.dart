@@ -123,7 +123,7 @@ class AppScaffoldAction {
 
     final child = items != null
         ? PopupMenuButton<String>(
-            child: (text == null)
+            child: text == null
                 ? icon
                 : TextButton.icon(
                     icon: icon,
@@ -141,9 +141,9 @@ class AppScaffoldAction {
                   .toList();
             },
           )
-        : (tooltip == null)
+        : icon == null
             ? TextButton(
-                child: Text(text),
+                child: Text(text ?? tooltip ?? ''),
                 onPressed: onPressed,
               )
             : TextButton.icon(

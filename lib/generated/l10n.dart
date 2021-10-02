@@ -205,6 +205,16 @@ class S {
     );
   }
 
+  /// `Upload profile pic`
+  String get labelProfilePicture {
+    return Intl.message(
+      'Upload Profile Picture',
+      name: 'labelProfilePicture',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Website icon`
   String get labelWebsiteIcon {
     return Intl.message(
@@ -570,6 +580,26 @@ class S {
     return Intl.message(
       'Now',
       name: 'labelNow',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `People`
+  String get labelPeople {
+    return Intl.message(
+      'People',
+      name: 'labelPeople',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Classes`
+  String get labelClasses {
+    return Intl.message(
+      'Classes',
+      name: 'labelClasses',
       desc: '',
       args: [],
     );
@@ -1805,6 +1835,26 @@ class S {
     );
   }
 
+  /// `Search`
+  String get navigationSearch {
+    return Intl.message(
+      'Search',
+      name: 'navigationSearch',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Classes found`
+  String get navigationSearchResults {
+    return Intl.message(
+      'Classes found',
+      name: 'navigationSearchResults',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Feedback`
   String get navigationClassFeedback {
     return Intl.message(
@@ -2695,6 +2745,26 @@ class S {
     );
   }
 
+  /// `Do you have another question?`
+  String get messageAnotherQuestion {
+    return Intl.message(
+      'Do you have another question?',
+      name: 'messageAnotherQuestion',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Talk to Polly!`
+  String get messageTalkToChatbot {
+    return Intl.message(
+      'Talk to Polly!',
+      name: 'messageTalkToChatbot',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `You need to complete {number} more feedback forms!`
   String messageFeedbackLeft(Object number) {
     return Intl.message(
@@ -2702,6 +2772,16 @@ class S {
       name: 'messageFeedbackLeft',
       desc: '',
       args: [number],
+    );
+  }
+
+  /// `You're already seeing the current week!`
+  String get messageAlreadySeeingCurrentWeek {
+    return Intl.message(
+      'You\'re already seeing the current week!',
+      name: 'messageAlreadySeeingCurrentWeek',
+      desc: '',
+      args: [],
     );
   }
 
