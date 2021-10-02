@@ -5,6 +5,7 @@ import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/navigation/routes.dart';
 import 'package:acs_upb_mobile/pages/settings/service/request_provider.dart';
 import 'package:acs_upb_mobile/pages/timetable/service/uni_event_provider.dart';
+import 'package:acs_upb_mobile/pages/timetable/view/lead_header.dart';
 import 'package:acs_upb_mobile/resources/locale_provider.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/widgets/icon_text.dart';
@@ -31,7 +32,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
   // String describing the level of editing permissions that the user has.
   String userPermissionString = '';
-
+  bool isSwitched = false;
   @override
   void initState() {
     super.initState();
@@ -147,6 +148,23 @@ class _SettingsPageState extends State<SettingsPage> {
                     subtitle: Text(S.current.infoExportToGoogleCalendar),
                   ),
                 ),
+
+
+                  SwitchPreference(
+                    'Academic week number',
+                    'Academic week number',
+
+                    onEnable: () {
+                      LeadHeader.academicWeekNumber=true;
+                    },
+                    onDisable: () {
+                      LeadHeader.academicWeekNumber=false;
+                    },
+                    defaultVal: false
+
+                  ),
+
+
                 Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [

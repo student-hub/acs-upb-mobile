@@ -6,6 +6,7 @@ import 'package:acs_upb_mobile/pages/classes/view/classes_page.dart';
 import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
 import 'package:acs_upb_mobile/pages/filter/view/filter_page.dart';
 import 'package:acs_upb_mobile/pages/settings/service/request_provider.dart';
+import 'package:acs_upb_mobile/pages/settings/view/settings_page.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/events/uni_event.dart';
 import 'package:acs_upb_mobile/pages/timetable/service/uni_event_provider.dart';
 import 'package:acs_upb_mobile/pages/timetable/view/date_header.dart';
@@ -23,6 +24,8 @@ import 'package:recase/recase.dart';
 import 'package:time_machine/time_machine.dart';
 import 'package:timetable/timetable.dart';
 
+import 'lead_header.dart';
+
 class TimetablePage extends StatefulWidget {
   const TimetablePage({Key key}) : super(key: key);
 
@@ -32,7 +35,6 @@ class TimetablePage extends StatefulWidget {
 
 class _TimetablePageState extends State<TimetablePage> {
   TimetableController<UniEventInstance> _controller;
-
   @override
   void dispose() {
     _controller?.dispose();
@@ -64,7 +66,7 @@ class _TimetablePageState extends State<TimetablePage> {
                 : _controller.currentMonth.titleCase),
       ),
       needsToBeAuthenticated: true,
-      leading: AppScaffoldAction(
+      leading:AppScaffoldAction(
         icon: Icons.today_outlined,
         onPressed: () =>
             !_controller.currentlyVisibleDates.contains(LocalDate.today())
@@ -73,6 +75,7 @@ class _TimetablePageState extends State<TimetablePage> {
         tooltip: S.current.actionJumpToToday,
       ),
       actions: [
+
         AppScaffoldAction(
           icon: FeatherIcons.bookOpen,
           tooltip: S.current.navigationClasses,
@@ -96,9 +99,10 @@ class _TimetablePageState extends State<TimetablePage> {
       body: Padding(
         padding: const EdgeInsets.all(10),
         child: Stack(
-          children: [
-            Timetable<UniEventInstance>(
-              controller: _controller,
+         children: [
+           Timetable<UniEventInstance>(
+             leadingHeaderBuilder:(_,date)=> LeadHeader(date),
+             controller: _controller,
               dateHeaderBuilder: (_, date) => DateHeader(date),
               eventBuilder: (event) => UniEventWidget(event),
               allDayEventBuilder: (context, event, info) =>
@@ -328,8 +332,11 @@ class _TimetablePageState extends State<TimetablePage> {
   }
 }
 
+
+
 extension MonthController on TimetableController {
   String get currentMonth =>
       LocalDateTime(2020, dateListenable.value.monthOfYear, 1, 1, 1, 1)
           .toString('MMMM');
 }
+
