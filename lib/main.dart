@@ -74,6 +74,7 @@ Future<void> main() async {
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider<AuthProvider>(create: (_) => authProvider),
     ChangeNotifierProvider<WebsiteProvider>(create: (_) => WebsiteProvider()),
+    Provider<RequestProvider>(create: (_) => RequestProvider()),
     ChangeNotifierProvider<ClassProvider>(create: (_) => classProvider),
     ChangeNotifierProvider<FeedbackProvider>(create: (_) => feedbackProvider),
     ChangeNotifierProvider<PersonProvider>(create: (_) => personProvider),

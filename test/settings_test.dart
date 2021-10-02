@@ -11,6 +11,9 @@ import 'package:acs_upb_mobile/pages/news_feed/service/news_provider.dart';
 import 'package:acs_upb_mobile/pages/portal/service/website_provider.dart';
 import 'package:acs_upb_mobile/pages/settings/model/request.dart';
 import 'package:acs_upb_mobile/pages/settings/service/admin_provider.dart';
+import 'package:acs_upb_mobile/pages/settings/service/request_provider.dart';
+import 'package:acs_upb_mobile/pages/settings/model/request.dart';
+import 'package:acs_upb_mobile/pages/settings/service/admin_provider.dart';
 import 'package:acs_upb_mobile/pages/settings/view/request_permissions.dart';
 import 'package:acs_upb_mobile/pages/settings/view/settings_page.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/events/uni_event.dart';
@@ -63,6 +66,7 @@ void main() {
             create: (_) => mockWebsiteProvider),
         ChangeNotifierProvider<QuestionProvider>(
             create: (_) => mockQuestionProvider),
+        Provider<RequestProvider>(create: (_) => mockRequestProvider),
         ChangeNotifierProvider<NewsProvider>(create: (_) => mockNewsProvider),
         ChangeNotifierProvider<FeedbackProvider>(
             create: (_) => mockFeedbackProvider),

@@ -40,20 +40,37 @@
 <script src="https://www.gstatic.com/firebasejs/7.9.2/firebase-storage.js"></script>
 
 <script>
-  // Your web app's Firebase configuration
-  var firebaseConfig = {
-    apiKey: "AIzaSyC6-BEfdxQHSOTdpOfqLUB8_j7CGu4DvV0",
-    authDomain: "acs-upb-mobile.firebaseapp.com",
-    databaseURL: "https://acs-upb-mobile.firebaseio.com",
-    projectId: "acs-upb-mobile",
-    storageBucket: "acs-upb-mobile.appspot.com",
-    messagingSenderId: "611150208061",
-    appId: "1:611150208061:web:b62a7862a75930f48a1e54",
-    measurementId: "G-S7BTKYBV5T"
-  };
-  // Initialize Firebase
-  firebase.initializeApp(firebaseConfig);
-  firebase.analytics();
+    // Your web app's Firebase configuration
+    var firebaseConfig = {
+      release: {
+        apiKey: "AIzaSyC6-BEfdxQHSOTdpOfqLUB8_j7CGu4DvV0",
+        authDomain: "acs-upb-mobile.firebaseapp.com",
+        databaseURL: "https://acs-upb-mobile.firebaseio.com",
+        projectId: "acs-upb-mobile",
+        storageBucket: "acs-upb-mobile.appspot.com",
+        messagingSenderId: "611150208061",
+        appId: "1:611150208061:web:b62a7862a75930f48a1e54",
+        measurementId: "G-S7BTKYBV5T"
+      },
+      debug: {
+        apiKey: "AIzaSyCcjPiIekx_HJ5b4xsanjrl-gmjWUIDee4",
+        authDomain: "acs-upb-mobile-dev.firebaseapp.com",
+        databaseURL: "https://acs-upb-mobile-dev.firebaseio.com",
+        projectId: "acs-upb-mobile-dev",
+        storageBucket: "acs-upb-mobile-dev.appspot.com",
+        messagingSenderId: "712935993826",
+        appId: "1:712935993826:web:9d4208b5a346aae7a849bb",
+        measurementId: "G-YB0Z77XG2L"
+      },
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig.release);
+    firebase.analytics();
+
+    // Enable authentication persistence per session
+    // https://github.com/student-hub/acs-upb-mobile/issues/207
+    firebase.auth().setPersistence(firebase.auth.Auth.Persistence.SESSION);
 
 </script>
 

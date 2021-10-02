@@ -75,12 +75,17 @@ Please update the resulting commit message, if needed. It should read as a coher
 Please refrain from creating several pull requests for the same change. Use the pull request that is already open (or was created earlier) to amend changes. This preserves the discussion and review that happened earlier for the respective change set.
 Similarly, please create one PR per development item, instead of bundling multiple fixes and improvements in a single PR.
 
+| :warning: | After the merging is concluded, please delete the branches related to the pull request that you just closed.|
+|-----------|:------------------------------------------------------------------------------------------------------------|
+
+
 ## Development tips
 
 * Make sure you have the *Project* view open in the **Project** tab on the left in Android Studio (not *Android*).
 * Flutter comes with **Hot Reload** (the lightning icon, or *Ctrl+\\* or *⌘\\*), which allows you to load changes in the code quickly into an already running app, without you needing to reinstall it. It's a very handy feature, but it doesn't work all the time - if you change the code, use Hot Reload but don't see the expected changes, or see some weird behaviour, you may need to close and restart the app (or even reinstall).
 * If **running on web** doesn't give the expected results after changing some code, you may need to clear the cache (in *Chrome*: *Ctrl+Shift+C* or *⌘+Shift+C* to open the Inspect menu, then right-click the *Refresh* button, and select *Empty cache and Hard reload*.)
 * [Flutter Inspector](https://flutter.dev/docs/development/tools/devtools/inspector) is a powerful tool which allows you to visualize and explore Flutter widget trees. You can use it to find out where a specific part of the UI is defined in the code (by turning on *Select widget mode* and selecting the widget you'd like to find), it can help you debug layouts (by enabling *Debug Paint*, you can visualize padding, alignments and widget borders) and much more.
+  - If *Flutter Inspector* doesn't work when running on web, a possible solution is to disable *embedding DevTools* (IntelliJ/Android Studio: `File > Settings > Languages & Frameworks > Flutter > Enable embedding DevTools in the Flutter Inspector tool window`).
 * Get used to **reading code and searching through the codebase**. The project is fairly large and for most things, you should be able to find a usage/implementation example within our codebase. Do try to reuse code as much as possible - prefer creating a customizable widget with the parameters you need for different use cases, over copy-pasting widget code. Some tips for exploring the codebase:
   - *Ctrl+Shift+F* or *⌘+Shift+F* upon clicking a directory in the Project view lets you search a keyword through the entire directory. This is particularly useful for searching for something in the entire codebase.
   - *Ctrl+click* or *⌘+click* through a class/method name takes you to its definition. You can also right-click on it and use "Find usages" or the various "Go To" options to explore how it is used/defined.
@@ -93,11 +98,14 @@ Similarly, please create one PR per development item, instead of bundling multip
   - If you really need to test the release version (usually not necessary), run `flutter run --release` from the Terminal.
     * The release version cannot be ran in an emulator.
     * You may also need to temporarily change the release signing config. In the [android/app/build.gradle](android/app/build.gradle) file, replace `signingConfig signingConfigs.release` with `signingConfig signingConfigs.debug`.
+    * To switch to debug config on web, in the [web/index.html](web/index.html) file, replace `firebaseConfig.release` with `firebaseConfig.debug`.
     * For simplicity, you could call the default "main.dart" configuration in Android Studio "Debug", duplicate it and call the second one "Release", with `--release` as an argument. For example:
     <img src=screenshots/other/release_configuration.png>
+    
+- On Android, ACS UPB Mobile uses **a separate (development) environment in debug mode**. That means a completely different Firebase project - separate data, including user info. This is not used automatically on iOS and web (#105), but on web you can manually switch to the dev environment by replacing `firebaseConfig.release` with `firebaseConfig.debug` in the [web/index.html](web/index.html) file.
 
-| :exclamation: | On Android, ACS UPB Mobile uses **a separate (development) environment in debug mode**. That means a completely different Firebase project - separate data, including user info. You should ALWAYS use this environment for testing the app when modifying any kind of data, so as not to risk breaking something in the production database. |
-|---------------|:---------------|
+  | :exclamation: | You should ALWAYS use the separate development environment for testing the app when modifying any kind of data, so as not to risk breaking something in the production database. |
+  |---------------|:---------------|
 
 ## Style guide
 
@@ -112,7 +120,7 @@ This project uses [the official Dart style guide](https://dart.dev/guides/langua
 This project uses [GitHub Actions](https://github.com/features/actions) for CI/CD. That means that testing and deployment are automated.
 
 The following actions are currently set up:
-* [Linter](https://github.com/acs-upb-mobile/acs-upb-mobile/actions?query=workflow%3ALinter): Checks for warnings and coding style issues. Runs on every push and pull request.
+* [Linter](https://github.com/acs-upb-mobile/acs-upb-mobile/actions?query=workflow%3ALinter): Checks for typos, warnings and coding style issues based on the [Dangerfile](.github/linter/Dangerfile). Runs on every push and pull request.
   - If your PR is made from a branch inside the repository (rather than a fork), which is the preferred way to make contributions, [acs-upb-mobile-bot](https://github.com/acs-upb-mobile-bot) should automatically *add code review comments pointing out any warnings*.
     * Sometimes, the automatic check for dead links in documentation fails with "429 too many requests" (see [this issue](https://github.com/textlint-rule/textlint-rule-no-dead-link/issues/135)). You can ignore those if you know the links in question are good.
     * Do not ask the bot for review, it does it automatically.
