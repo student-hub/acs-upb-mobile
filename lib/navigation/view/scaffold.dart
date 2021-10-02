@@ -1,6 +1,6 @@
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
-import 'package:acs_upb_mobile/navigation/service/app_navigator.dart';
+import 'package:acs_upb_mobile/navigation/service/navigator.dart';
 import 'package:acs_upb_mobile/navigation/view/action_bar.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/widgets/error_page.dart';
@@ -123,11 +123,13 @@ class AppScaffoldAction {
 
     final child = items != null
         ? PopupMenuButton<String>(
-            child: TextButton.icon(
-              icon: icon,
-              label: Text(tooltip ?? text),
-              onPressed: () => {},
-            ),
+            child: text == null
+                ? icon
+                : TextButton.icon(
+                    icon: icon,
+                    label: Text(tooltip ?? text),
+                    onPressed: () => {},
+                  ),
             tooltip: tooltip ?? text,
             onSelected: (selected) => items[selected](),
             itemBuilder: (BuildContext context) {
@@ -139,11 +141,16 @@ class AppScaffoldAction {
                   .toList();
             },
           )
-        : TextButton.icon(
-            label: Text(text ?? tooltip ?? ''),
-            icon: icon,
-            onPressed: onPressed,
-          );
+        : icon == null
+            ? TextButton(
+                child: Text(text ?? tooltip ?? ''),
+                onPressed: onPressed,
+              )
+            : TextButton.icon(
+                label: Text(text ?? tooltip ?? ''),
+                icon: icon,
+                onPressed: onPressed,
+              );
 
     return Padding(
       padding: const EdgeInsets.all(8),

@@ -1,7 +1,7 @@
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/navigation/model/routes.dart';
-import 'package:acs_upb_mobile/navigation/service/app_navigator.dart';
+import 'package:acs_upb_mobile/navigation/service/navigator.dart';
 import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
 import 'package:acs_upb_mobile/pages/classes/view/classes_page.dart';
 import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
@@ -69,7 +69,10 @@ class _TimetablePageState extends State<TimetablePage> {
       needsToBeAuthenticated: true,
       leading: AppScaffoldAction(
         icon: Icons.today_outlined,
-        onPressed: () => _controller.animateToToday(),
+        onPressed: () =>
+            !_controller.currentlyVisibleDates.contains(LocalDate.today())
+                ? _controller.animateToToday()
+                : AppToast.show(S.current.messageAlreadySeeingCurrentWeek),
         tooltip: S.current.actionJumpToToday,
       ),
       actions: [
@@ -80,7 +83,7 @@ class _TimetablePageState extends State<TimetablePage> {
             context,
             MaterialPageRoute<ChangeNotifierProvider>(
               builder: (_) => ChangeNotifierProvider.value(
-                  value: Provider.of<ClassProvider>(context),
+                  value: Provider.of<ClassProvider>(context, listen: false),
                   child: const ClassesPage()),
             ),
             webPath: ClassesPage.routeName,

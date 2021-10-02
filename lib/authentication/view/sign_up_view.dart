@@ -1,7 +1,7 @@
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/navigation/model/routes.dart';
-import 'package:acs_upb_mobile/navigation/service/app_navigator.dart';
+import 'package:acs_upb_mobile/navigation/service/navigator.dart';
 import 'package:acs_upb_mobile/pages/filter/view/filter_dropdown.dart';
 import 'package:acs_upb_mobile/resources/banner.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';

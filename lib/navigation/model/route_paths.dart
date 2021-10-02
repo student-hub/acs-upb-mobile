@@ -6,7 +6,7 @@ import 'package:acs_upb_mobile/authentication/view/login_view.dart';
 import 'package:acs_upb_mobile/authentication/view/sign_up_view.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/main.dart';
-import 'package:acs_upb_mobile/navigation/service/app_navigator.dart';
+import 'package:acs_upb_mobile/navigation/service/navigator.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/view/class_feedback_checklist.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/view/class_feedback_view.dart';
 import 'package:acs_upb_mobile/pages/classes/model/class.dart';
@@ -26,6 +26,7 @@ import 'package:acs_upb_mobile/pages/portal/model/website.dart';
 import 'package:acs_upb_mobile/pages/portal/service/website_provider.dart';
 import 'package:acs_upb_mobile/pages/portal/view/portal_page.dart';
 import 'package:acs_upb_mobile/pages/portal/view/website_view.dart';
+import 'package:acs_upb_mobile/pages/search/view/seached_classes_view.dart';
 import 'package:acs_upb_mobile/pages/settings/view/request_permissions.dart';
 import 'package:acs_upb_mobile/pages/settings/view/settings_page.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/events/uni_event.dart';
@@ -53,6 +54,8 @@ part 'routes/class_view_path.dart';
 part 'routes/classes_feedback_path.dart';
 
 part 'routes/classes_page_path.dart';
+
+part 'routes/classes_search_result_path.dart';
 
 part 'routes/edit_profile_path.dart';
 
@@ -153,6 +156,9 @@ class PathFactory {
         return ClassesPagePath();
       case AddClassesPage.routeName:
         return AddClassesPath();
+      case SearchedClassesView.routeName:
+        final ids = uri.queryParameters['ids'];
+        return ClassesSearchResultPath(ids);
       case EventView.routeName:
         final id = uri.queryParameters['id'];
         return EventViewPath(id);

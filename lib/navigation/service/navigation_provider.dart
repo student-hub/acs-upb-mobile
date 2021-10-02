@@ -13,7 +13,7 @@ class NavigationProvider extends ChangeNotifier {
   final _previousPaths = Queue<RoutePath>();
 
   int _selectedTab = 0;
-  bool _isDrawerExtended = false;
+  bool isDrawerExtended = false;
 
   Widget _view;
 
@@ -69,7 +69,7 @@ class NavigationProvider extends ChangeNotifier {
         _selectedTab = 3;
         break;
       case LoginPath:
-        _isDrawerExtended = false;
+        isDrawerExtended = false;
         break;
     }
 
@@ -86,16 +86,8 @@ class NavigationProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  bool get isDrawerExtended => _isDrawerExtended;
-
-  set isDrawerExtended(bool value) {
-    _isDrawerExtended = value;
-    notifyListeners();
-  }
-
   void toggleDrawer() {
-    _isDrawerExtended = !_isDrawerExtended;
-    notifyListeners();
+    isDrawerExtended = !isDrawerExtended;
   }
 
   Widget get customView => _view;

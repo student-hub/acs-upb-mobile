@@ -1,4 +1,5 @@
 import 'package:acs_upb_mobile/generated/l10n.dart';
+import 'package:acs_upb_mobile/navigation/service/navigator.dart';
 import 'package:acs_upb_mobile/pages/classes/model/class.dart';
 import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
 import 'package:acs_upb_mobile/pages/classes/view/class_view.dart';
@@ -51,16 +52,17 @@ class _ClassesCardState extends State<ClassesCard> {
             return ClassList(
               classes: classHeaders,
               sectioned: false,
-              onTap: (classHeader) => Navigator.of(context).push(
-                MaterialPageRoute<ChangeNotifierProvider>(
-                  builder: (context) => ChangeNotifierProvider.value(
-                    value: classProvider,
-                    child: ClassView(
-                      classHeader: classHeader,
+              onTap: (classHeader) => AppNavigator.push(
+                  context,
+                  MaterialPageRoute<ChangeNotifierProvider>(
+                    builder: (context) => ChangeNotifierProvider.value(
+                      value: classProvider,
+                      child: ClassView(
+                        classHeader: classHeader,
+                      ),
                     ),
                   ),
-                ),
-              ),
+                  webPath: '${ClassView.routeName}?id=${classHeader.id}'),
             );
           }
 

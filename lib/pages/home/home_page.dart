@@ -2,13 +2,16 @@ import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/navigation/model/routes.dart';
 import 'package:acs_upb_mobile/navigation/service/navigation_provider.dart';
+import 'package:acs_upb_mobile/navigation/service/navigator.dart';
 import 'package:acs_upb_mobile/navigation/view/scaffold.dart';
+import 'package:acs_upb_mobile/pages/classes/view/classes_page.dart';
 import 'package:acs_upb_mobile/pages/home/faq_card.dart';
 import 'package:acs_upb_mobile/pages/home/favourite_websites_card.dart';
 import 'package:acs_upb_mobile/pages/home/feedback_nudge.dart';
 import 'package:acs_upb_mobile/pages/home/news_feed_card.dart';
 import 'package:acs_upb_mobile/pages/home/profile_card.dart';
 import 'package:acs_upb_mobile/pages/home/upcoming_events_card.dart';
+import 'package:acs_upb_mobile/pages/search/view/search_page.dart';
 import 'package:acs_upb_mobile/resources/remote_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -36,6 +39,22 @@ class HomePage extends StatelessWidget {
     return AppScaffold(
       title: Text(S.current.navigationHome),
       actions: [
+        if (!kIsWeb)
+          AppScaffoldAction(
+            icon: Icons.search,
+            tooltip: S.current.navigationSearch,
+            onPressed: () => {
+              AppNavigator.push(
+                context,
+                MaterialPageRoute<ClassesPage>(
+                  builder: (_) => SearchPage(),
+                ),
+                webPath: SearchPage.routeName,
+              )
+            },
+          )
+        else
+          null,
         AppScaffoldAction(
           icon: Icons.settings_outlined,
           tooltip: S.current.navigationSettings,
@@ -44,7 +63,7 @@ class HomePage extends StatelessWidget {
       ],
       body: ListView(
         children: [
-          if (authProvider.isAuthenticated) const ProfileCard(),
+          if (authProvider.isAuthenticated && !kIsWeb) const ProfileCard(),
           if (authProvider.isAuthenticated &&
               !authProvider.isAnonymous &&
               RemoteConfigService.feedbackEnabled)
