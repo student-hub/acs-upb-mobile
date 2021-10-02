@@ -93,7 +93,6 @@ class RelevanceFormField extends ChipFormField<List<String>> {
                           controller._state._customSelected[node] = true;
                         }
                       }
-                        AppToast.show(controller._state._customSelected.isEmpty.toString());
                     },
                   ),
                 ),
