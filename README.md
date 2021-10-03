@@ -37,9 +37,12 @@ https://user-images.githubusercontent.com/25504811/120929790-1bc24080-c6f3-11eb-
 * [Anghel Andrei](https://github.com/AnghelAndrei28)
 * [Bogdan Piele](https://github.com/bogpie)
 * [Bogdan Iuga](https://github.com/iugabogdan98)
+* [Andrei Mirică](https://github.com/AndreiMirica19)
 * [Andreea-Giorgiana Adăscăliței](https://github.com/AndreeaAdascalitei)
+* [Ștefan-Alin Pahonțu](https://github.com/stafy2912)
 * [Alexandra Pavel](https://github.com/AlexandraPavel)
 * [Ștefan-Dragoș Badea](https://github.com/GhiaraD)
+* [Ștefan-Andrei Popa](https://github.com/AndreiPopa21)
 
 ## Building from source with Android Studio
 
@@ -82,6 +85,9 @@ flutter pub get
 
 * You need to have *Chrome* installed in order to be able to run the web version of the app.
 * Select *Chrome* from the dropdown list and hit the play button (*Shift+F10* or *^R*).
+
+|     :bulb:    | To switch to debug config on web, in the [web/index.html](web/index.html) file, replace `firebaseConfig.release` with `firebaseConfig.debug` |
+|---------------|:---------------------------------------------------------------------------------------------------------------------------------------------|
 
 ### Not working?
 

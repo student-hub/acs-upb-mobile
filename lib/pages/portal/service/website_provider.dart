@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:typed_data';
 
 import 'package:acs_upb_mobile/authentication/model/user.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
@@ -8,8 +9,14 @@ import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:preferences/preference_service.dart';
+import 'package:acs_upb_mobile/resources/storage/storage_provider.dart';
+
+extension IconURLExtension on Website {
+  Future<String> getIconURL() => StorageProvider.findImageUrl(iconPath);
+}
 
 extension UserExtension on User {
   /// Check if there is at least one website that the [User] has permission to edit
@@ -226,8 +233,10 @@ class WebsiteProvider with ChangeNotifier {
   }
 
   Future<List<Website>> fetchWebsites(Filter filter,
-      {bool userOnly = false, String uid,BuildContext context,
-        List<String> sources}) async {
+      {bool userOnly = false,
+      String uid,
+      BuildContext context,
+      List<String> sources}) async {
     try {
       final websites = <Website>[];
 
@@ -263,15 +272,15 @@ class WebsiteProvider with ChangeNotifier {
             // selected nodes
             final query = sources.isNotEmpty
                 ? _db
-                .collection('websites')
-                .where('degree', isEqualTo: filter.baseNode)
-                .where('source', whereIn: sources)
-                .where('relevance', arrayContains: string)
+                    .collection('websites')
+                    .where('degree', isEqualTo: filter.baseNode)
+                    .where('source', whereIn: sources)
+                    .where('relevance', arrayContains: string)
                 : _db
-                .collection('websites')
-                .where('degree', isEqualTo: filter.baseNode)
-                .where('source', isEqualTo: 'official')
-                .where('relevance', arrayContains: string);
+                    .collection('websites')
+                    .where('degree', isEqualTo: filter.baseNode)
+                    .where('source', isEqualTo: 'official')
+                    .where('relevance', arrayContains: string);
             final QuerySnapshot qSnapshot = await query.get();
             documents.addAll(qSnapshot.docs);
           }
@@ -418,7 +427,9 @@ class WebsiteProvider with ChangeNotifier {
             .collection('websites')
             .doc(website.id);
       }
-
+      if (website.iconPath != null) {
+        await FirebaseStorage.instance.ref(website.iconPath).delete();
+      }
       await ref.delete();
       notifyListeners();
       return true;
@@ -426,5 +437,21 @@ class WebsiteProvider with ChangeNotifier {
       _errorHandler(e);
       return false;
     }
+  }
+
+  Future<bool> uploadWebsiteIcon(Website website, Uint8List file) async {
+    final result = await StorageProvider.uploadImage(file, website.iconPath);
+    if (!result) {
+      if (file.length > 5 * 1024 * 1024) {
+        AppToast.show(S.current.errorPictureSizeToBig);
+      } else {
+        AppToast.show(S.current.errorSomethingWentWrong);
+      }
+    }
+    return result;
+  }
+
+  Future<String> getWebsiteIconURL(Website website) {
+    return StorageProvider.findImageUrl(website.iconPath);
   }
 }

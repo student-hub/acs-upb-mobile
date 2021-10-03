@@ -95,6 +95,36 @@ class S {
     );
   }
 
+  /// `Deny`
+  String get buttonDeny {
+    return Intl.message(
+      'Deny',
+      name: 'buttonDeny',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Accept`
+  String get buttonAccept {
+    return Intl.message(
+      'Accept',
+      name: 'buttonAccept',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Revert`
+  String get buttonRevert {
+    return Intl.message(
+      'Revert',
+      name: 'buttonRevert',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Email`
   String get labelEmail {
     return Intl.message(
@@ -200,6 +230,26 @@ class S {
     return Intl.message(
       'Last name',
       name: 'labelLastName',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Profile picture`
+  String get labelProfilePicture {
+    return Intl.message(
+      'Profile picture',
+      name: 'labelProfilePicture',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Website icon`
+  String get labelWebsiteIcon {
+    return Intl.message(
+      'Website icon',
+      name: 'labelWebsiteIcon',
       desc: '',
       args: [],
     );
@@ -555,6 +605,26 @@ class S {
     );
   }
 
+  /// `People`
+  String get labelPeople {
+    return Intl.message(
+      'People',
+      name: 'labelPeople',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Classes`
+  String get labelClasses {
+    return Intl.message(
+      'Classes',
+      name: 'labelClasses',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Shortcuts`
   String get sectionShortcuts {
     return Intl.message(
@@ -610,16 +680,6 @@ class S {
     return Intl.message(
       'Grading',
       name: 'sectionGrading',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Information sources`
-  String get sectionInformationSources {
-    return Intl.message(
-      'Information sources',
-      name: 'sectionInformationSources',
       desc: '',
       args: [],
     );
@@ -770,16 +830,6 @@ class S {
     return Intl.message(
       '4.0',
       name: 'hintPoints',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Please select the sources that you want to see information from:`
-  String get hintSelectSources {
-    return Intl.message(
-      'Please select the sources that you want to see information from:',
-      name: 'hintSelectSources',
       desc: '',
       args: [],
     );
@@ -1295,6 +1345,26 @@ class S {
     );
   }
 
+  /// `Could not load requests`
+  String get errorLoadRequests {
+    return Intl.message(
+      'Could not load requests',
+      name: 'errorLoadRequests',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Unknown User`
+  String get errorUnknownUser {
+    return Intl.message(
+      'Unknown User',
+      name: 'errorUnknownUser',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Request already exists`
   String get warningRequestExists {
     return Intl.message(
@@ -1410,6 +1480,26 @@ class S {
     return Intl.message(
       'Already showing all content.',
       name: 'warningFilterAlreadyDisabled',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Already showing unprocessed requests`
+  String get warningFilterAlreadyUnprocessed {
+    return Intl.message(
+      'Already showing unprocessed requests',
+      name: 'warningFilterAlreadyUnprocessed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Already showing all requests.`
+  String get warningFilterAlreadyAll {
+    return Intl.message(
+      'Already showing all requests.',
+      name: 'warningFilterAlreadyAll',
       desc: '',
       args: [],
     );
@@ -1765,6 +1855,26 @@ class S {
     );
   }
 
+  /// `Search`
+  String get navigationSearch {
+    return Intl.message(
+      'Search',
+      name: 'navigationSearch',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Classes found`
+  String get navigationSearchResults {
+    return Intl.message(
+      'Classes found',
+      name: 'navigationSearchResults',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Feedback`
   String get navigationClassFeedback {
     return Intl.message(
@@ -1780,6 +1890,16 @@ class S {
     return Intl.message(
       'Feedback checklist',
       name: 'navigationClassesFeedbackChecklist',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Permission requests`
+  String get navigationAdmin {
+    return Intl.message(
+      'Permission requests',
+      name: 'navigationAdmin',
       desc: '',
       args: [],
     );
@@ -1815,61 +1935,11 @@ class S {
     );
   }
 
-  /// `Official web pages`
-  String get sourceOfficial {
+  /// `Show unprocessed`
+  String get filterMenuShowUnprocessed {
     return Intl.message(
-      'Official web pages',
-      name: 'sourceOfficial',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `acs.pub.ro, upb.ro, curs.upb.ro, studenti.pub.ro`
-  String get sourceOfficialWebPages {
-    return Intl.message(
-      'acs.pub.ro, upb.ro, curs.upb.ro, studenti.pub.ro',
-      name: 'sourceOfficialWebPages',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Student organizations`
-  String get sourceOrganization {
-    return Intl.message(
-      'Student organizations',
-      name: 'sourceOrganization',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `LSAC, BEST, MLSA`
-  String get sourceStudentOrganizations {
-    return Intl.message(
-      'LSAC, BEST, MLSA',
-      name: 'sourceStudentOrganizations',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Representative students`
-  String get sourceStudentRepresentative {
-    return Intl.message(
-      'Representative students',
-      name: 'sourceStudentRepresentative',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `group/series representatives, student council members`
-  String get sourceStudentExamples {
-    return Intl.message(
-      'group/series representatives, student council members',
-      name: 'sourceStudentExamples',
+      'Show unprocessed',
+      name: 'filterMenuShowUnprocessed',
       desc: '',
       args: [],
     );
@@ -1995,6 +2065,16 @@ class S {
     );
   }
 
+  /// `Admin permissions`
+  String get settingsAdminPermissions {
+    return Intl.message(
+      'Admin permissions',
+      name: 'settingsAdminPermissions',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Permissions request already sent`
   String get settingsPermissionsRequestSent {
     return Intl.message(
@@ -2045,11 +2125,11 @@ class S {
     );
   }
 
-  /// `Data`
-  String get settingsTitleData {
+  /// `Admin Panel`
+  String get settingsItemAdmin {
     return Intl.message(
-      'Data',
-      name: 'settingsTitleData',
+      'Admin Panel',
+      name: 'settingsItemAdmin',
       desc: '',
       args: [],
     );
@@ -2725,11 +2805,21 @@ class S {
     );
   }
 
-  /// `ACS UPB Mobile aims to be an information hub for students, therefore it aggregates data from various sources (official or unofficial).`
-  String get messageSelectSource {
+  /// `Do you have another question?`
+  String get messageAnotherQuestion {
     return Intl.message(
-      'ACS UPB Mobile aims to be an information hub for students, therefore it aggregates data from various sources (official or unofficial).',
-      name: 'messageSelectSource',
+      'Do you have another question?',
+      name: 'messageAnotherQuestion',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Talk to Polly!`
+  String get messageTalkToChatbot {
+    return Intl.message(
+      'Talk to Polly!',
+      name: 'messageTalkToChatbot',
       desc: '',
       args: [],
     );
@@ -2742,6 +2832,16 @@ class S {
       name: 'messageFeedbackLeft',
       desc: '',
       args: [number],
+    );
+  }
+
+  /// `You're already seeing the current week!`
+  String get messageAlreadySeeingCurrentWeek {
+    return Intl.message(
+      'You\'re already seeing the current week!',
+      name: 'messageAlreadySeeingCurrentWeek',
+      desc: '',
+      args: [],
     );
   }
 
@@ -2895,11 +2995,31 @@ class S {
     );
   }
 
-  /// `Facultatea de Automatică și Calculatoare nu își asumă răspunderea pentru informațiile provenite din surse neoficiale.`
-  String get infoAdditionInformationSources {
+  /// `Handle permission requests`
+  String get infoAdmin {
     return Intl.message(
-      'Facultatea de Automatică și Calculatoare nu își asumă răspunderea pentru informațiile provenite din surse neoficiale.',
-      name: 'infoAdditionInformationSources',
+      'Handle permission requests',
+      name: 'infoAdmin',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Accepted`
+  String get infoAccepted {
+    return Intl.message(
+      'Accepted',
+      name: 'infoAccepted',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Denied`
+  String get infoDenied {
+    return Intl.message(
+      'Denied',
+      name: 'infoDenied',
       desc: '',
       args: [],
     );
@@ -2940,6 +3060,16 @@ class S {
     return Intl.message(
       'and',
       name: 'stringAnd',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `at`
+  String get stringAt {
+    return Intl.message(
+      'at',
+      name: 'stringAt',
       desc: '',
       args: [],
     );

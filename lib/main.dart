@@ -16,11 +16,14 @@ import 'package:acs_upb_mobile/pages/news_feed/service/news_provider.dart';
 import 'package:acs_upb_mobile/pages/news_feed/view/news_feed_page.dart';
 import 'package:acs_upb_mobile/pages/people/service/person_provider.dart';
 import 'package:acs_upb_mobile/pages/portal/service/website_provider.dart';
+import 'package:acs_upb_mobile/pages/settings/service/admin_provider.dart';
 import 'package:acs_upb_mobile/pages/settings/service/request_provider.dart';
+import 'package:acs_upb_mobile/pages/settings/view/admin_page.dart';
 import 'package:acs_upb_mobile/pages/settings/view/request_permissions.dart';
 import 'package:acs_upb_mobile/pages/settings/view/settings_page.dart';
 import 'package:acs_upb_mobile/pages/timetable/service/uni_event_provider.dart';
 import 'package:acs_upb_mobile/resources/locale_provider.dart';
+import 'package:acs_upb_mobile/resources/remote_config.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/widgets/loading_screen.dart';
 import 'package:dynamic_theme/dynamic_theme.dart';
@@ -37,19 +40,18 @@ import 'package:preferences/preferences.dart';
 import 'package:provider/provider.dart';
 import 'package:rrule/rrule.dart';
 import 'package:time_machine/time_machine.dart';
-import 'package:acs_upb_mobile/resources/remote_config.dart';
 
-// FIXME: acs.pub.ro has some bad certificate configuration right now, and the
-// cs.pub.ro certificate is expired.
-// We get around this by accepting any certificate if the host is either
-// acs.pub.ro or cs.pub.ro.
+// FIXME: Our university website certificates have some issues, so we say we
+// trust them regardless.
 // Remove this in the future.
 class MyHttpOverrides extends HttpOverrides {
   @override
   HttpClient createHttpClient(SecurityContext context) {
     return super.createHttpClient(context)
       ..badCertificateCallback = (X509Certificate cert, String host, int port) {
-        return host == 'acs.pub.ro' || host == 'cs.pub.ro';
+        return host == 'acs.pub.ro' ||
+            host == 'cs.pub.ro' ||
+            host == 'aii.pub.ro';
       };
   }
 }
@@ -97,6 +99,12 @@ Future<void> main() async {
           ..updateFilter(filterProvider);
       },
     ),
+    ChangeNotifierProxyProvider<AuthProvider, AdminProvider>(
+      create: (_) => AdminProvider(),
+      update: (context, authProvider, adminProvider) {
+        return adminProvider..updateAuth(authProvider);
+      },
+    ),
   ], child: const MyApp()));
 }
 
@@ -133,10 +141,29 @@ class _MyAppState extends State<MyApp> {
         Routes.filter: (_) => const FilterPage(),
         Routes.newsFeed: (_) => NewsFeedPage(),
         Routes.requestPermissions: (_) => RequestPermissionsPage(),
+        Routes.adminPanel: (_) => const AdminPanelPage(),
       },
       navigatorObservers: widget.navigationObservers ?? [],
     );
   }
+
+  ChipThemeData defaultChipThemeData(Brightness brightness) =>
+      ChipThemeData.fromDefaults(
+        brightness: brightness,
+        secondaryColor: _accentColor,
+        labelStyle: ThemeData()
+            .accentTextTheme
+            .apply(
+                fontFamily: 'Montserrat',
+                bodyColor: _accentColor,
+                displayColor: _accentColor)
+            .bodyText2,
+      );
+
+  Color chipSelectedColor(Brightness brightness) =>
+      brightness == Brightness.light
+          ? _accentColor.withOpacity(0.3)
+          : _accentColor;
 
   @override
   Widget build(BuildContext context) {
@@ -154,7 +181,21 @@ class _MyAppState extends State<MyApp> {
             displayColor: _accentColor),
         toggleableActiveColor: _accentColor,
         fontFamily: 'Montserrat',
-        primaryColor: const Color(0xFF4DB5E4),
+        primaryColor: _accentColor,
+        chipTheme: ChipThemeData(
+          brightness: brightness,
+          selectedColor: chipSelectedColor(brightness),
+          secondarySelectedColor: chipSelectedColor(brightness),
+          backgroundColor:
+              defaultChipThemeData(brightness).backgroundColor.withOpacity(0.1),
+          disabledColor: defaultChipThemeData(brightness).disabledColor,
+          padding: defaultChipThemeData(brightness).padding,
+          labelStyle: defaultChipThemeData(brightness).labelStyle,
+          secondaryLabelStyle:
+              defaultChipThemeData(brightness).secondaryLabelStyle,
+          checkmarkColor:
+              brightness == Brightness.light ? _accentColor : Colors.white,
+        ),
       ),
       themedWidgetBuilder: (context, theme) {
         return OKToast(
