@@ -16,7 +16,9 @@ import 'package:acs_upb_mobile/pages/news_feed/service/news_provider.dart';
 import 'package:acs_upb_mobile/pages/news_feed/view/news_feed_page.dart';
 import 'package:acs_upb_mobile/pages/people/service/person_provider.dart';
 import 'package:acs_upb_mobile/pages/portal/service/website_provider.dart';
+import 'package:acs_upb_mobile/pages/settings/service/admin_provider.dart';
 import 'package:acs_upb_mobile/pages/settings/service/request_provider.dart';
+import 'package:acs_upb_mobile/pages/settings/view/admin_page.dart';
 import 'package:acs_upb_mobile/pages/settings/view/request_permissions.dart';
 import 'package:acs_upb_mobile/pages/settings/view/settings_page.dart';
 import 'package:acs_upb_mobile/pages/timetable/service/uni_event_provider.dart';
@@ -97,6 +99,12 @@ Future<void> main() async {
           ..updateFilter(filterProvider);
       },
     ),
+    ChangeNotifierProxyProvider<AuthProvider, AdminProvider>(
+      create: (_) => AdminProvider(),
+      update: (context, authProvider, adminProvider) {
+        return adminProvider..updateAuth(authProvider);
+      },
+    ),
   ], child: const MyApp()));
 }
 
@@ -133,6 +141,7 @@ class _MyAppState extends State<MyApp> {
         Routes.filter: (_) => const FilterPage(),
         Routes.newsFeed: (_) => NewsFeedPage(),
         Routes.requestPermissions: (_) => RequestPermissionsPage(),
+        Routes.adminPanel: (_) => const AdminPanelPage(),
       },
       navigatorObservers: widget.navigationObservers ?? [],
     );
