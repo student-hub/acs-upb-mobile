@@ -82,8 +82,6 @@ class AuthProvider with ChangeNotifier {
           case 'ERROR_EMAIL_ALREADY_IN_USE':
             AppToast.show(S.current.errorEmailInUse);
             break;
-          case 'wrong-password':
-            break;
           default:
             AppToast.show(e.message);
         }
