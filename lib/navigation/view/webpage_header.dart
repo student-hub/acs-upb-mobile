@@ -96,9 +96,55 @@ class _ProfileDropdownMenu extends StatelessWidget {
 
   final double headerHeight;
 
+  Map<int, _PopupItem> get _popupItems => {
+        1: _PopupItem(
+          onTap: (context) =>
+              AppNavigator.pushNamed(context, SettingsPage.routeName),
+          child: Builder(
+            builder: (context) {
+              return IconText(
+                icon: Icons.settings,
+                text: S.current.navigationSettings,
+                onTap: () =>
+                    AppNavigator.pushNamed(context, SettingsPage.routeName),
+              );
+            },
+          ),
+        ),
+        2: _PopupItem(
+          onTap: (context) =>
+              AppNavigator.pushNamed(context, EditProfilePage.routeName),
+          child: Builder(
+            builder: (context) {
+              return IconText(
+                icon: Icons.person,
+                text: S.current.actionEditProfile,
+                onTap: () =>
+                    AppNavigator.pushNamed(context, EditProfilePage.routeName),
+              );
+            },
+          ),
+        ),
+        3: _PopupItem(
+          onTap: Utils.signOut,
+          child: Builder(
+            builder: (BuildContext context) {
+              final authProvider = Provider.of<AuthProvider>(context);
+
+              return IconText(
+                icon: authProvider.isAnonymous ? Icons.login : Icons.logout,
+                text: authProvider.isAnonymous
+                    ? S.current.actionLogIn
+                    : S.current.actionLogOut,
+                onTap: () => Utils.signOut(context),
+              );
+            },
+          ),
+        ),
+      };
+
   @override
   Widget build(BuildContext context) {
-    final authProvider = Provider.of<AuthProvider>(context);
     final size = min(headerHeight, 60);
     final padding = size / 8;
 
@@ -117,6 +163,7 @@ class _ProfileDropdownMenu extends StatelessWidget {
               'assets/illustrations/undraw_profile_pic.png',
             ),
           ),
+          onSelected: (value) => _popupItems[value].onTap(context),
           itemBuilder: (context) {
             return <PopupMenuEntry<void>>[
               const PopupMenuItem(
@@ -126,36 +173,21 @@ class _ProfileDropdownMenu extends StatelessWidget {
                 ),
               ),
               const PopupMenuDivider(),
-              PopupMenuItem(
-                child: IconText(
-                  icon: Icons.settings,
-                  text: S.current.navigationSettings,
-                  onTap: () {
-                    AppNavigator.pushNamed(context, SettingsPage.routeName);
-                  },
-                ),
-              ),
-              PopupMenuItem(
-                child: IconText(
-                  icon: Icons.person,
-                  text: S.current.actionEditProfile,
-                  onTap: () {
-                    AppNavigator.pushNamed(context, EditProfilePage.routeName);
-                  },
-                ),
-              ),
-              PopupMenuItem(
-                  child: IconText(
-                icon: authProvider.isAnonymous ? Icons.login : Icons.logout,
-                text: authProvider.isAnonymous
-                    ? S.current.actionLogIn
-                    : S.current.actionLogOut,
-                onTap: () => Utils.signOut(context),
-              ))
+              ..._popupItems.entries.map((entry) => PopupMenuItem(
+                    child: entry.value.child,
+                    value: entry.key,
+                  )),
             ];
           },
         ),
       ),
     );
   }
+}
+
+class _PopupItem {
+  _PopupItem({@required this.child, this.onTap});
+
+  final void Function(BuildContext context) onTap;
+  final Widget child;
 }
