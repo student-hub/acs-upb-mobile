@@ -1,11 +1,10 @@
-import 'package:acs_upb_mobile/resources/remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:pedantic/pedantic.dart';
 import 'package:provider/provider.dart';
 
 import '../../../authentication/service/auth_provider.dart';
 import '../../../generated/l10n.dart';
-import '../../../resources/utils.dart';
+import '../../../resources/remote_config.dart';
 import '../../../widgets/class_icon.dart';
 import '../../../widgets/error_page.dart';
 import '../../../widgets/icon_text.dart';

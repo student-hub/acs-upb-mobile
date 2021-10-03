@@ -1,14 +1,15 @@
 import 'dart:ui' as ui;
 
-import 'package:acs_upb_mobile/authentication/model/user.dart';
-import 'package:acs_upb_mobile/generated/l10n.dart';
-import 'package:acs_upb_mobile/pages/settings/model/request.dart';
-import 'package:acs_upb_mobile/pages/settings/service/admin_provider.dart';
-import 'package:acs_upb_mobile/resources/theme.dart';
-import 'package:acs_upb_mobile/widgets/button.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+
+import '../../../authentication/model/user.dart';
+import '../../../generated/l10n.dart';
+import '../../../resources/theme.dart';
+import '../../../widgets/button.dart';
+import '../model/request.dart';
+import '../service/admin_provider.dart';
 
 class RequestCard extends StatefulWidget {
   const RequestCard({this.requestId});
@@ -158,7 +159,7 @@ class _RequestCardState extends State<RequestCard>
                 AppButton(
                   key: const Key('AcceptButton'),
                   text: S.current.buttonAccept,
-                  color: Theme.of(context).accentColor,
+                  color: Theme.of(context).primaryColor,
                   width: 100,
                   onTap: () async {
                     await adminProvider.acceptRequest(request.id);
@@ -177,7 +178,7 @@ class _RequestCardState extends State<RequestCard>
               children: [
                 AppButton(
                   text: S.current.buttonRevert,
-                  color: Theme.of(context).accentColor,
+                  color: Theme.of(context).primaryColor,
                   width: 100,
                   onTap: () async {
                     await adminProvider.revertRequest(request.id);

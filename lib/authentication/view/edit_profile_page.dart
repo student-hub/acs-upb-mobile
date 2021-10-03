@@ -1,7 +1,6 @@
 import 'dart:typed_data';
 import 'dart:ui';
 
-import 'package:acs_upb_mobile/widgets/circle_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +12,7 @@ import '../../pages/filter/view/filter_dropdown.dart';
 import '../../resources/utils.dart';
 import '../../resources/validator.dart';
 import '../../widgets/button.dart';
+import '../../widgets/circle_image.dart';
 import '../../widgets/dialog.dart';
 import '../../widgets/icon_text.dart';
 import '../../widgets/scaffold.dart';
@@ -147,6 +147,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 if (await authProvider
                     .changePassword(newPasswordController.text)) {
                   AppToast.show(S.current.messageChangePasswordSuccess);
+                  if (!mounted) return;
                   Navigator.pop(context);
                 }
               }

@@ -1,11 +1,12 @@
-import 'package:acs_upb_mobile/pages/people/model/person.dart';
-import 'package:acs_upb_mobile/pages/people/service/person_provider.dart';
-import 'package:acs_upb_mobile/pages/people/view/person_view.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:acs_upb_mobile/generated/l10n.dart';
+
+import '../../../generated/l10n.dart';
+import '../../people/model/person.dart';
+import '../../people/service/person_provider.dart';
+import '../../people/view/person_view.dart';
 
 class PeopleSearchResults extends StatelessWidget {
   const PeopleSearchResults({this.query});
@@ -72,7 +73,7 @@ class PeopleCircleList extends StatelessWidget {
                               person: people[index],
                             ));
                   },
-                  child: Container(
+                  child: SizedBox(
                     width: 60,
                     height: 60,
                     child: Column(children: <Widget>[
