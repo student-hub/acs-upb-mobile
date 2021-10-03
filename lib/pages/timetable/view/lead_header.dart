@@ -79,38 +79,28 @@ class _leadHeaderState extends State<LeadHeader> {
 
   String getWeekNumber() {
     if (calendar != null) {
-      // print(widget.date);
-      LocalDate first_sem_start = calendar.semesters.first.startDate;
-      Period dif;
-      var nonHolidayWeeks = calendar.nonHolidayWeeks;
-      // print(nonHolidayWeeks);
+
+
+      List<int>nonHolidayWeeks = calendar.nonHolidayWeeks.toList();
+
+
       for (var i = 1; i < 53; i++) {
         if (!nonHolidayWeeks.contains(i)) HolidayWeeks.add(i);
       }
-      // print(nonHolidayWeeks);
-      //  print("----");
-      //  print(HolidayWeeks);
       var week =
-          ((widget.date.dayOfYear - widget.date.dayOfWeek.value + 10) / 7)
-              .floor();
+      ((widget.date.dayOfYear - widget.date.dayOfWeek.value + 10) / 7)
+          .floor();
+
       if (LeadHeader.academicWeekNumber == false) {
         return week.toString();
       } else {
-        if (HolidayWeeks.contains(week)) return "-";
-        dif = widget.date.periodSince(first_sem_start).normalize();
-        //print(dif);
-        academicWeek = (dif.days / 7).floor() + 1;
-        // print(dif.weeks);
-        // print(dif.toString()+" "+academicWeek.toString()+" ");
-        // print((academicWeek + 5 * dif.months)+1);
-        if (dif.months > 0) {
-          academicWeek = (academicWeek + 4 * dif.months) + 1;
-        }
-
-        getAcademicWeek();
-        return academicWeek.toString();
+        if (!nonHolidayWeeks.contains(week))
+          return "-";
+        else
+          return (nonHolidayWeeks.indexOf(week) + 1).toString();
       }
-    } else
+    }
+    else
       return "0";
   }
 
@@ -138,21 +128,5 @@ class _leadHeaderState extends State<LeadHeader> {
     });
   }
 
-  void getAcademicWeek() {
-    int d = 0;
-    // print(academicWeek);
-    if (widget.date.year == 2021) {
-      return;
-    }
-    d += 1;
-    for (var h in HolidayWeeks) {
-      if (((widget.date.dayOfYear - widget.date.dayOfWeek.value + 10) / 7)
-              .floor() >
-          h) {
-        d += 1;
-      }
-    }
 
-    academicWeek -= d;
-  }
 }
