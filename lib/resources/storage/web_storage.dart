@@ -13,6 +13,21 @@ class StorageProvider {
     }
   }
 
+  static Future<bool> deleteImage(String imagePath) async {
+    try {
+      final url = await storage().ref(imagePath).getDownloadURL();
+      bool result = false;
+      final Future<dynamic> uploadTask =
+          storage().refFromURL(url.toString()).delete();
+      await uploadTask.whenComplete(() => result = true).catchError(
+          (dynamic error) async =>
+              print('Web_Storage - StorageUploadTask - deleteImageUrl $error'));
+      return result;
+    } catch (e) {
+      return false;
+    }
+  }
+
   static Future<bool> uploadImage(Uint8List file, String ref) async {
     try {
       final StorageReference storageReference = storage().ref('').child(ref);
