@@ -10,6 +10,7 @@ import 'package:acs_upb_mobile/pages/filter/view/filter_dropdown.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/resources/validator.dart';
 import 'package:acs_upb_mobile/widgets/button.dart';
+import 'package:acs_upb_mobile/widgets/circle_image.dart';
 import 'package:acs_upb_mobile/widgets/dialog.dart';
 import 'package:acs_upb_mobile/widgets/icon_text.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
@@ -304,6 +305,17 @@ class _EditProfilePageState extends State<EditProfilePage> {
       body: Container(
         child: ListView(padding: const EdgeInsets.all(12), children: [
           AccountNotVerifiedWarning(),
+          Padding(
+            padding: const EdgeInsets.all(10),
+            child: CircleImage(
+              circleSize: 150,
+              image: uploadButtonController.uploadImageBytes != null
+                  ? MemoryImage(uploadButtonController.newUploadedImageBytes)
+                  : imageWidget,
+            ),
+          ),
+          const SizedBox(height: 10),
+          UploadButton(pageType: true, controller: uploadButtonController),
           PreferenceTitle(
             S.current.labelPersonalInformation,
             leftPadding: 0,

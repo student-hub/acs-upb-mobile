@@ -27,7 +27,7 @@ class NewsProvider with ChangeNotifier {
       // as CORS is a web browser thing.
       // See more: https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS
       final url = kIsWeb ? Utils.corsProxyUrl : 'https://acs.pub.ro';
-      final path =
+      const path =
           kIsWeb ? '/https://acs.pub.ro/topic/noutati' : '/topic/noutati';
       final webScraper = WebScraper(url);
       final bool scrapeSuccess = await webScraper.loadWebPage(path);
