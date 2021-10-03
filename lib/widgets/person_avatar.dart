@@ -19,8 +19,8 @@ class PersonAvatar extends StatelessWidget {
             )
           : CircleAvatar(
               radius: size,
-              child: const Icon(
-                Icons.person_outlined,
+              backgroundImage: const AssetImage(
+                'assets/illustrations/undraw_profile_pic.png',
               ),
             ),
     );

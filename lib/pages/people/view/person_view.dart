@@ -1,6 +1,5 @@
 import 'package:acs_upb_mobile/navigation/view/scaffold.dart';
 import 'package:acs_upb_mobile/pages/people/model/person.dart';
-import 'package:acs_upb_mobile/pages/people/service/person_provider.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/resources/web_layout_sizes.dart';
 import 'package:acs_upb_mobile/widgets/icon_text.dart';
@@ -9,7 +8,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
-import 'package:provider/provider.dart';
 
 import 'classes_card.dart';
 import 'contact_info.dart';
@@ -20,32 +18,6 @@ class PersonView extends StatelessWidget {
   static const String routeName = '/profile';
 
   final Person person;
-
-  static Widget fromName(BuildContext context, String name) {
-    final PersonProvider provider =
-        Provider.of<PersonProvider>(context, listen: false);
-    final Future<Person> person = provider.fetchPerson(name);
-
-    return FutureBuilder(
-      future: person,
-      builder: (_, snapshot) {
-        if (snapshot.connectionState == ConnectionState.done) {
-          final Person personData = snapshot.data;
-          return PersonView(
-            person: personData,
-          );
-        } else {
-          return const SizedBox(
-            height: 100,
-            width: 100,
-            child: Center(
-              child: Center(child: CircularProgressIndicator()),
-            ),
-          );
-        }
-      },
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -120,10 +92,11 @@ class PersonView extends StatelessWidget {
                   child: Row(
                     children: [
                       Expanded(
-                          child: PersonAvatar(
-                        photoURL: person.photo,
-                        size: 50,
-                      )),
+                        child: PersonAvatar(
+                          photoURL: person.photo,
+                          size: 50,
+                        ),
+                      ),
                       Expanded(
                         flex: 2,
                         child: Padding(
@@ -208,7 +181,7 @@ class _PersonBanner extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Text(
-                      position,
+                      position ?? '-',
                       style: Theme.of(context).textTheme.bodyText1,
                     ),
                     Text(
