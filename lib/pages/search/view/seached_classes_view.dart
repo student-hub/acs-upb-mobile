@@ -58,7 +58,6 @@ class SearchedClassesView extends StatelessWidget {
                   final currentUser =
                       Provider.of<AuthProvider>(context, listen: false)
                           .currentUserFromCache;
-                  print('CurrentUser: $currentUser');
                   if (currentUser != null) {
                     AppNavigator.push(
                         context,
