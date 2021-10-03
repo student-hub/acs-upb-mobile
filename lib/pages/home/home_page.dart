@@ -5,8 +5,6 @@ import 'package:acs_upb_mobile/navigation/service/navigation_provider.dart';
 import 'package:acs_upb_mobile/navigation/service/navigator.dart';
 import 'package:acs_upb_mobile/navigation/view/scaffold.dart';
 import 'package:acs_upb_mobile/pages/classes/view/classes_page.dart';
-import 'package:acs_upb_mobile/navigation/routes.dart';
-import 'package:acs_upb_mobile/pages/classes/view/classes_page.dart';
 import 'package:acs_upb_mobile/pages/home/faq_card.dart';
 import 'package:acs_upb_mobile/pages/home/favourite_websites_card.dart';
 import 'package:acs_upb_mobile/pages/home/feedback_nudge.dart';

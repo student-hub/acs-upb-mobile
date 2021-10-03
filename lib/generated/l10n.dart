@@ -235,10 +235,10 @@ class S {
     );
   }
 
-  /// `Upload profile pic`
+  /// `Profile picture`
   String get labelProfilePicture {
     return Intl.message(
-      'Upload Profile Picture',
+      'Profile picture',
       name: 'labelProfilePicture',
       desc: '',
       args: [],
@@ -250,16 +250,6 @@ class S {
     return Intl.message(
       'Website icon',
       name: 'labelWebsiteIcon',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Profile picture`
-  String get labelProfilePicture {
-    return Intl.message(
-      'Profile picture',
-      name: 'labelProfilePicture',
       desc: '',
       args: [],
     );
@@ -1910,26 +1900,6 @@ class S {
     return Intl.message(
       'Class information',
       name: 'navigationClassInfo',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Search`
-  String get navigationSearch {
-    return Intl.message(
-      'Search',
-      name: 'navigationSearch',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Classes found`
-  String get navigationSearchResults {
-    return Intl.message(
-      'Classes found',
-      name: 'navigationSearchResults',
       desc: '',
       args: [],
     );
