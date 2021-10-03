@@ -38,7 +38,7 @@ class ClassFeedbackViewPath extends RoutePath {
               );
             }
 
-            return const CircularProgressIndicator();
+            return const Center(child: CircularProgressIndicator());
           },
         );
       },
