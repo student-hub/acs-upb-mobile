@@ -66,6 +66,7 @@ class AuthProvider with ChangeNotifier {
             AppToast.show(S.current.errorInvalidEmail);
             break;
           case 'ERROR_WRONG_PASSWORD':
+          case 'wrong-password':
             AppToast.show(S.current.errorIncorrectPassword);
             break;
           case 'ERROR_USER_NOT_FOUND':
