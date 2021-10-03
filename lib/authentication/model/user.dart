@@ -24,4 +24,6 @@ class User {
   bool get canAddPublicInfo => permissionLevel >= 3;
 
   bool get canEditPublicInfo => permissionLevel >= 3;
+
+  bool get isAdmin => permissionLevel >= 4;
 }
