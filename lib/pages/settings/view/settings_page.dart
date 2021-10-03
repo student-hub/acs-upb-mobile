@@ -51,6 +51,12 @@ class _SettingsPageState extends State<SettingsPage> {
 
     return AppScaffold(
       title: Text(S.current.navigationSettings),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.chat),
+        onPressed: () {
+          Navigator.of(context).pushNamed(Routes.chat);
+        },
+      ),
       body: PreferencePage(
         [
           Padding(
