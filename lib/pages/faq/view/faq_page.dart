@@ -5,10 +5,10 @@ import 'package:markdown/markdown.dart' as md;
 import 'package:provider/provider.dart';
 
 import '../../../generated/l10n.dart';
+import '../../../resources/theme.dart';
 import '../../../resources/utils.dart';
 import '../../../widgets/scaffold.dart';
 import '../../../widgets/search_bar.dart';
-import '../../../widgets/selectable.dart';
 import '../model/question.dart';
 import '../service/question_provider.dart';
 
@@ -21,7 +21,7 @@ class FaqPage extends StatefulWidget {
 
 class _FaqPageState extends State<FaqPage> {
   List<Question> questions = <Question>[];
-  List<String> categories;
+  List<String> tags;
   String filter = '';
   bool searchClosed = true;
   List<String> activeTags = <String>[];
@@ -40,12 +40,17 @@ class _FaqPageState extends State<FaqPage> {
         child: ListView(
           scrollDirection: Axis.horizontal,
           children: <Widget>[const SizedBox(width: 10)] +
-              categories
+              tags
                   .map((category) => Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 3),
-                        child: Selectable(
-                          label: category,
-                          initiallySelected: false,
+                        child: FilterChip(
+                          label: Text(
+                            category,
+                            style: Theme.of(context).chipTextStyle(
+                              selected: activeTags.contains(category),
+                            ),
+                          ),
+                          selected: activeTags.contains(category),
                           onSelected: (selection) {
                             setState(() {
                               if (selection) {
@@ -83,7 +88,7 @@ class _FaqPageState extends State<FaqPage> {
               return const Center(child: CircularProgressIndicator());
             }
             questions = snapshot.data;
-            categories = questions.expand((e) => e.tags).toSet().toList();
+            tags = questions.expand((e) => e.tags).toSet().toList();
             return ListView(
               children: [
                 SearchWidget(

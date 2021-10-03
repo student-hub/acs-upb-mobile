@@ -1,4 +1,7 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
+import 'package:image/image.dart' as im;
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:pedantic/pedantic.dart';
 import 'package:pref/pref.dart';
@@ -69,4 +72,9 @@ class Utils {
     appName: '\$appName',
     packageName: '\$packageName',
   );
+
+  static Future<Uint8List> convertToPNG(Uint8List image) async {
+    final decodedImage = im.decodeImage(image);
+    return im.encodePng(im.copyResizeCropSquare(decodedImage, 500));
+  }
 }

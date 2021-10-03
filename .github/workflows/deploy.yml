@@ -2,50 +2,81 @@
 on:
   push:
     tags:
-      - 'v*'
+    - 'v*'
 
 name: Deployment
 
 jobs:
+  rules:
+    name: Deploy Firebase/Storage rules
+    runs-on: ubuntu-latest
+    if: github.repository == 'student-hub/acs-upb-mobile'
+
+    steps:
+    - uses: actions/checkout@v1
+    - uses: w9jds/firebase-action@master
+      with:
+        args: deploy --only storage,firestore --project prod
+      env:
+        FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+
+  functions:
+    name: Deploy cloud functions
+    runs-on: ubuntu-latest
+    if: github.repository == 'student-hub/acs-upb-mobile'
+
+    steps:
+    - uses: actions/checkout@v1
+    - name: Write serviceAccountKey.json
+      run: echo "$SERVICE_ACCOUNT" >> functions/serviceAccountKey.json
+      shell: bash
+      env:
+        SERVICE_ACCOUNT: ${{secrets.FIREBASE_SERVICE_ACCOUNT}}
+    - name: Deploy functions to Firebase
+      uses: w9jds/firebase-action@master
+      with:
+        args: deploy --only functions --project prod
+      env:
+        FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+
   web:
     name: Deploy website
     runs-on: ubuntu-latest
     if: github.repository == 'student-hub/acs-upb-mobile'
 
     steps:
-      - uses: actions/checkout@v1
-      - uses: actions/setup-java@v1
-        with:
-          java-version: '12.x'
-      - uses: subosito/flutter-action@v1
-        with:
-          flutter-version: '2.2.3'
-          channel: 'stable'
+    - uses: actions/checkout@v1
+    - uses: actions/setup-java@v1
+      with:
+        java-version: '12.x'
+    - uses: subosito/flutter-action@v1
+      with:
+        channel: 'stable'
 
-      - name: Get packages
-        run: flutter pub get
+    - name: Get packages
+      run: flutter pub get
 
-      - name: Enable web
-        run: flutter config --enable-web
+    - name: Enable web
+      run: flutter config --enable-web
 
-      - name: Run tests
-        run: flutter test
+    - name: Run tests
+      run: flutter test
 
-      - name: Build web
-        run: flutter build web --release
+    - name: Build web
+      run: flutter build web --release
 
-      - name: Fetch time_machine
-        run: git clone https://github.com/Dana-Ferguson/time_machine
+    - name: Fetch time_machine
+      run: git clone https://github.com/Dana-Ferguson/time_machine
 
-      - name: Copy time_machine data to the build area
-        run: mkdir -p build/web/packages/time_machine/data && cp -R time_machine/lib/data build/web/packages/time_machine
+    - name: Copy time_machine data to the build area
+      run: mkdir -p build/web/packages/time_machine/data && cp -R time_machine/lib/data build/web/packages/time_machine
 
-      - name: Deploy to Firebase
-        uses: w9jds/firebase-action@master
-        with:
-          args: deploy --only hosting --project default
-        env:
-          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+    - name: Deploy to Firebase
+      uses: w9jds/firebase-action@master
+      with:
+        args: deploy --only hosting --project prod
+      env:
+        FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
 
   github:
     name: Create GitHub release
@@ -59,7 +90,6 @@ jobs:
           java-version: '12.x'
       - uses: subosito/flutter-action@v1
         with:
-          flutter-version: '2.2.3'
           channel: 'stable'
 
       - name: Get packages
@@ -73,7 +103,14 @@ jobs:
         env:
           ANDROID_KEYS_SECRET_PASSPHRASE: ${{ secrets.ANDROID_KEYS_SECRET_PASSPHRASE }}
 
-      - name: Build APK
+      # Apparently there's a known issue where there are some missing files if you don't build the debug/profile version first
+      # https://techshits.com/flutter-error-transforms-input-file-does-not-exist/
+      - name: Build debug APK
+        run: flutter build apk --debug
+      - name: Build profile APK
+        run: flutter build apk --profile
+
+      - name: Build release APK
         run: flutter build apk --release
 
       - name: Create a Release APK
@@ -94,7 +131,6 @@ jobs:
           java-version: '12.x'
       - uses: subosito/flutter-action@v1
         with:
-          flutter-version: '2.2.3'
           channel: 'stable'
 
       - name: Get packages

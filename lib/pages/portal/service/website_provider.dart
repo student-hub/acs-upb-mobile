@@ -1,6 +1,8 @@
 import 'dart:async';
+import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 
 import '../../../authentication/model/user.dart';
@@ -9,6 +11,11 @@ import '../../../resources/utils.dart';
 import '../../../widgets/toast.dart';
 import '../../filter/model/filter.dart';
 import '../model/website.dart';
+import 'package:acs_upb_mobile/resources/storage/storage_provider.dart';
+
+extension IconURLExtension on Website {
+  Future<String> getIconURL() => StorageProvider.findImageUrl(iconPath);
+}
 
 extension UserExtension on User {
   /// Check if there is at least one website that the [User] has permission to edit
@@ -392,7 +399,9 @@ class WebsiteProvider with ChangeNotifier {
             .collection('websites')
             .doc(website.id);
       }
-
+      if (website.iconPath != null) {
+        await FirebaseStorage.instance.ref(website.iconPath).delete();
+      }
       await ref.delete();
       notifyListeners();
       return true;
@@ -400,5 +409,21 @@ class WebsiteProvider with ChangeNotifier {
       _errorHandler(e);
       return false;
     }
+  }
+
+  Future<bool> uploadWebsiteIcon(Website website, Uint8List file) async {
+    final result = await StorageProvider.uploadImage(file, website.iconPath);
+    if (!result) {
+      if (file.length > 5 * 1024 * 1024) {
+        AppToast.show(S.current.errorPictureSizeToBig);
+      } else {
+        AppToast.show(S.current.errorSomethingWentWrong);
+      }
+    }
+    return result;
+  }
+
+  Future<String> getWebsiteIconURL(Website website) {
+    return StorageProvider.findImageUrl(website.iconPath);
   }
 }
