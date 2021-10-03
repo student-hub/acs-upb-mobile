@@ -102,30 +102,27 @@ class _ProfileDropdownMenu extends StatefulWidget {
 }
 
 class __ProfileDropdownMenuState extends State<_ProfileDropdownMenu> {
-  Map<int, _PopupItem> get _popupItems => [
-        _PopupItem(
-          value: 0,
-          onTap: (context) =>
-              AppNavigator.pushNamed(context, SettingsPage.routeName),
-          icon: Icons.settings,
-          text: S.current.navigationSettings,
-        ),
-        _PopupItem(
-          value: 1,
-          onTap: (context) =>
-              AppNavigator.pushNamed(context, EditProfilePage.routeName),
-          icon: Icons.person,
-          text: S.current.actionEditProfile,
-        ),
-        _PopupItem(
-          value: 2,
-          onTap: Utils.signOut,
-          icon: Icons.logout,
-          text: S.current.actionLogOut,
-          anonymousIcon: Icons.login,
-          anonymousText: S.current.actionLogIn,
-        )
-      ].asMap();
+  final Map<int, _PopupItem> _popupItems = [
+    _PopupItem(
+      onTap: (context) =>
+          AppNavigator.pushNamed(context, SettingsPage.routeName),
+      icon: Icons.settings,
+      text: S.current.navigationSettings,
+    ),
+    _PopupItem(
+      onTap: (context) =>
+          AppNavigator.pushNamed(context, EditProfilePage.routeName),
+      icon: Icons.person,
+      text: S.current.actionEditProfile,
+    ),
+    _PopupItem(
+      onTap: Utils.signOut,
+      icon: Icons.logout,
+      text: S.current.actionLogOut,
+      anonymousIcon: Icons.login,
+      anonymousText: S.current.actionLogIn,
+    )
+  ].asMap();
 
   String profilePictureURL;
   User user;
@@ -156,12 +153,13 @@ class __ProfileDropdownMenuState extends State<_ProfileDropdownMenu> {
           offset: Offset(-5, size),
           tooltip: S.current.navigationProfile,
           child: CircleAvatar(
-              radius: 25,
-              backgroundImage: user != null && profilePictureURL != null
-                  ? NetworkImage(profilePictureURL)
-                  : const AssetImage(
-                      'assets/illustrations/undraw_profile_pic.png',
-                    )),
+            radius: 25,
+            backgroundImage: user != null && profilePictureURL != null
+                ? NetworkImage(profilePictureURL)
+                : const AssetImage(
+                    'assets/illustrations/undraw_profile_pic.png',
+                  ),
+          ),
           onSelected: (value) => _popupItems[value].onTap(context),
           itemBuilder: (context) {
             return <PopupMenuEntry<void>>[
@@ -172,7 +170,8 @@ class __ProfileDropdownMenuState extends State<_ProfileDropdownMenu> {
                 ),
               ),
               const PopupMenuDivider(),
-              ..._popupItems.values.map((item) => item.build(context)),
+              ..._popupItems.entries
+                  .map((item) => item.value.build(context, item.key)),
             ];
           },
         ),
@@ -181,26 +180,22 @@ class __ProfileDropdownMenuState extends State<_ProfileDropdownMenu> {
   }
 }
 
-class _PopupItem extends StatelessWidget {
+class _PopupItem {
   const _PopupItem({
-    Key key,
     this.onTap,
-    this.value,
     this.icon,
     this.text,
     this.anonymousText,
     this.anonymousIcon,
-  }) : super(key: key);
+  });
 
   final void Function(BuildContext context) onTap;
   final IconData icon;
   final IconData anonymousIcon;
   final String text;
   final String anonymousText;
-  final int value;
 
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, int value) {
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
 
     return PopupMenuItem(
