@@ -1,9 +1,11 @@
 import 'dart:typed_data';
 import 'dart:ui';
 
+import 'package:acs_upb_mobile/widgets/circle_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:pref/pref.dart';
 import 'package:provider/provider.dart';
 
 import '../../generated/l10n.dart';
@@ -15,6 +17,7 @@ import '../../widgets/dialog.dart';
 import '../../widgets/icon_text.dart';
 import '../../widgets/scaffold.dart';
 import '../../widgets/toast.dart';
+import '../../widgets/upload_button.dart';
 import '../model/user.dart';
 import '../service/auth_provider.dart';
 

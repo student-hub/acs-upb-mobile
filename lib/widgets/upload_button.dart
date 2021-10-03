@@ -3,7 +3,7 @@ import 'dart:typed_data';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:positioned_tap_detector/positioned_tap_detector.dart';
+import 'package:positioned_tap_detector_2/positioned_tap_detector_2.dart';
 
 class UploadButtonController {
   UploadButtonController({this.onUpdate});
@@ -51,7 +51,7 @@ class _UploadButtonState extends State<UploadButton> {
     widget.controller?._uploadButtonState = this;
     // We need to override the tap behaviour of the text field to obtain the
     // behaviour we want.
-    return PositionedTapDetector(
+    return PositionedTapDetector2(
       onTap: (tapPosition) async {
         final screenWidth = MediaQuery.of(context).size.width;
         const iconSize = 24, paddingSize = 16, iconPaddingSize = 12;

@@ -1,3 +1,6 @@
+import 'package:acs_upb_mobile/pages/classes/view/classes_page.dart';
+import 'package:acs_upb_mobile/pages/search/view/search_page.dart';
+import 'package:acs_upb_mobile/resources/remote_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -43,9 +46,9 @@ class HomePage extends StatelessWidget {
       body: ListView(
         children: [
           if (authProvider.isAuthenticated) ProfileCard(),
-          if (authProvider.isAuthenticated && !authProvider.isAnonymous
-          && Utils.feedbackEnabled
-          )
+          if (authProvider.isAuthenticated &&
+              !authProvider.isAnonymous &&
+              RemoteConfigService.feedbackEnabled)
             FeedbackNudge(),
           if (authProvider.isAuthenticated && !authProvider.isAnonymous)
             UpcomingEventsCard(onShowMore: () => tabController?.animateTo(1)),

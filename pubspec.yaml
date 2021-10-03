@@ -54,6 +54,9 @@ dependencies:
   #  dynamic_theme: ^1.0.1
   easy_dynamic_theme: ^2.2.0
 
+  # File picker widget
+  file_picker: ^4.1.3
+
   # Firebase products
   firebase_analytics: ^8.1.1
   firebase_auth: ^1.3.0

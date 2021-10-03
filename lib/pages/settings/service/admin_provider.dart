@@ -8,7 +8,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 extension RequestExtension on Request {
-  static Request fromSnap(DocumentSnapshot snap) {
+  static Request fromSnap(DocumentSnapshot<Map<String, dynamic>> snap) {
     final data = snap.data();
     return Request(
       userId: data['addedBy'],

@@ -1,17 +1,17 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
+import 'package:image/image.dart' as im;
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:pedantic/pedantic.dart';
 import 'package:pref/pref.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:image/image.dart' as im;
 
 import '../authentication/service/auth_provider.dart';
 import '../generated/l10n.dart';
 import '../navigation/routes.dart';
 import '../widgets/toast.dart';
-import 'platform.dart';
-import 'remote_config.dart';
 
 export 'package:acs_upb_mobile/resources/platform.dart'
     if (dart.library.io) 'dart:io';
@@ -76,11 +76,5 @@ class Utils {
   static Future<Uint8List> convertToPNG(Uint8List image) async {
     final decodedImage = im.decodeImage(image);
     return im.encodePng(im.copyResizeCropSquare(decodedImage, 500));
-  }
-}
-
-  static bool get feedbackEnabled {
-    if (!Platform.isAndroid && !Platform.isIOS) return false;
-    return RemoteConfigService.feedbackEnabled;
   }
 }
