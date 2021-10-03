@@ -11,16 +11,19 @@ import 'package:flutter/material.dart';
 extension PermissionRequestExtension on PermissionRequest {
   static PermissionRequest fromSnap(DocumentSnapshot snap) {
     final data = snap.data();
-    final List<FormQuestion> list = [];
+    final Map<String, FormQuestion> map = {};
     int i = 0;
-    // while (data[i.toString()] != null) {
-    //   list.add(FormAnswer(
-    //       questionNumber: i.toString(), questionAnswer: data[i.toString()]));
-    //   i++;
-    // }
+    while (data[i.toString()] != null) {
+      map[i.toString()] = FormQuestion(
+          question: '',
+          category: '',
+          id: i.toString(),
+          answer: data[i.toString()]);
+      i++;
+    }
     return PermissionRequest(
       userId: snap.id,
-      //answers: list,
+      answers: map,
       processed: data['done'],
       dateSubmitted: data['dateSubmitted'],
       accepted: data['accepted'],
@@ -41,8 +44,13 @@ class AdminProvider with ChangeNotifier {
 
   Future<List<String>> fetchAllRequestIds() async {
     try {
+      final snap =
+          await _db.collection('forms').doc('permission_request_answers').get();
+
+
       final QuerySnapshot qSnapshot = await _db
           .collection('forms')
+          .doc('permission_request_answers')
           .orderBy('dateSubmitted', descending: true)
           .get();
       return qSnapshot.docs.map((snap) => snap.id).toList();
