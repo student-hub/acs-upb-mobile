@@ -67,4 +67,14 @@ extension ThemeExtension on ThemeData {
     }
     return iconTheme.color;
   }
+
+  Color get secondaryButtonColor {
+    switch (brightness) {
+      case Brightness.dark:
+        return backgroundColor;
+      case Brightness.light:
+        return Colors.grey.shade200;
+    }
+    return Colors.grey.shade200;
+  }
 }
