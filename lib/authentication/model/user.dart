@@ -9,6 +9,8 @@ class User {
       int permissionLevel})
       : permissionLevel = permissionLevel ?? 0;
 
+  String get picturePath => 'users/$uid/picture.png';
+
   final String uid;
 
   String firstName;
@@ -22,4 +24,6 @@ class User {
   bool get canAddPublicInfo => permissionLevel >= 3;
 
   bool get canEditPublicInfo => permissionLevel >= 3;
+
+  bool get isAdmin => permissionLevel >= 4;
 }
