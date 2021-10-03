@@ -1,7 +1,5 @@
 import 'dart:io';
 
-import 'package:acs_upb_mobile/pages/settings/service/admin_provider.dart';
-import 'package:acs_upb_mobile/pages/settings/view/admin_page.dart';
 import 'package:easy_dynamic_theme/easy_dynamic_theme.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -31,7 +29,9 @@ import 'pages/news_feed/service/news_provider.dart';
 import 'pages/news_feed/view/news_feed_page.dart';
 import 'pages/people/service/person_provider.dart';
 import 'pages/portal/service/website_provider.dart';
+import 'pages/settings/service/admin_provider.dart';
 import 'pages/settings/service/request_provider.dart';
+import 'pages/settings/view/admin_page.dart';
 import 'pages/settings/view/request_permissions.dart';
 import 'pages/settings/view/settings_page.dart';
 import 'pages/timetable/service/uni_event_provider.dart';
@@ -139,7 +139,7 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return OKToast(
       textStyle: lightThemeData.textTheme.button,
-      backgroundColor: accentColor.withOpacity(.8),
+      backgroundColor: primaryColor.withOpacity(.8),
       position: ToastPosition.bottom,
       child: GestureDetector(
         onTap: () {
@@ -216,7 +216,7 @@ class AppLoadingScreen extends StatelessWidget {
     return LoadingScreen(
       navigateAfterFuture: _setUpAndChooseStartScreen(context),
       image: Image.asset('assets/icons/acs_logo.png'),
-      loaderColor: Theme.of(context).accentColor,
+      loaderColor: Theme.of(context).primaryColor,
     );
   }
 }

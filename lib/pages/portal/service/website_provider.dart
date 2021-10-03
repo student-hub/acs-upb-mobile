@@ -7,11 +7,11 @@ import 'package:flutter/material.dart';
 
 import '../../../authentication/model/user.dart';
 import '../../../generated/l10n.dart';
+import '../../../resources/storage/storage_provider.dart';
 import '../../../resources/utils.dart';
 import '../../../widgets/toast.dart';
 import '../../filter/model/filter.dart';
 import '../model/website.dart';
-import 'package:acs_upb_mobile/resources/storage/storage_provider.dart';
 
 extension IconURLExtension on Website {
   Future<String> getIconURL() => StorageProvider.findImageUrl(iconPath);

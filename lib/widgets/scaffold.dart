@@ -143,6 +143,7 @@ class AppScaffold extends StatelessWidget {
           child: AppBar(
             title: title,
             centerTitle: true,
+            backgroundColor: Theme.of(context).primaryColor,
             toolbarOpacity: 0.8,
             leading: _widgetFromAction(leading,
                 enableContent: enableContent, context: context),

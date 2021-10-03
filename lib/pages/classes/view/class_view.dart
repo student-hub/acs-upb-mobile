@@ -1,4 +1,3 @@
-import 'package:acs_upb_mobile/resources/remote_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +7,7 @@ import 'package:provider/provider.dart';
 
 import '../../../authentication/service/auth_provider.dart';
 import '../../../generated/l10n.dart';
+import '../../../resources/remote_config.dart';
 import '../../../resources/utils.dart';
 import '../../../widgets/button.dart';
 import '../../../widgets/class_icon.dart';
@@ -235,10 +235,8 @@ class _ClassViewState extends State<ClassView> {
               )
             ]);
         if (option == S.current.actionDeleteShortcut) {
-          if (!mounted) {
-            return;
-          }
-          await showDialog(
+          if (!mounted) return;
+          await showDialog<dynamic>(
             context: context,
             builder: (context) => _deletionConfirmationDialog(
               context: context,
@@ -301,9 +299,7 @@ class _ClassViewState extends State<ClassView> {
                       final lecturer =
                           await personProvider.fetchPerson(lecturerName);
                       if (lecturer != null && lecturerName != null) {
-                        if (!mounted) {
-                          return;
-                        }
+                        if (!mounted) return;
                         await showModalBottomSheet<dynamic>(
                             isScrollControlled: true,
                             context: context,

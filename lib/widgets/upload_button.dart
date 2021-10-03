@@ -1,9 +1,10 @@
 import 'dart:typed_data';
 
-import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:positioned_tap_detector_2/positioned_tap_detector_2.dart';
+
+import '../generated/l10n.dart';
 
 class UploadButtonController {
   UploadButtonController({this.onUpdate});

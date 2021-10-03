@@ -95,7 +95,7 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar>
                         iconMargin: EdgeInsets.zero,
                       ),
                     ],
-                    labelColor: Theme.of(context).accentColor,
+                    labelColor: Theme.of(context).primaryColor,
                     labelPadding: const EdgeInsets.only(top: 4),
                     unselectedLabelColor:
                         Theme.of(context).unselectedWidgetColor,

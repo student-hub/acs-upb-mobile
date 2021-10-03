@@ -254,9 +254,7 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
                       selectedTeacher, classController.text);
 
           if (feedbackSentSuccessfully) {
-            if (!mounted) {
-              return;
-            }
+            if (!mounted) return;
             Navigator.of(context).pop();
             AppToast.show(S.current.messageFeedbackHasBeenSent);
           }

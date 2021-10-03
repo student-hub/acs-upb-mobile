@@ -1,7 +1,6 @@
 import 'dart:typed_data';
 import 'dart:ui';
 
-import 'package:acs_upb_mobile/widgets/circle_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +12,7 @@ import '../../pages/filter/view/filter_dropdown.dart';
 import '../../resources/utils.dart';
 import '../../resources/validator.dart';
 import '../../widgets/button.dart';
+import '../../widgets/circle_image.dart';
 import '../../widgets/dialog.dart';
 import '../../widgets/icon_text.dart';
 import '../../widgets/scaffold.dart';
@@ -137,7 +137,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
         AppButton(
           key: const ValueKey('change_password_button'),
           text: S.current.actionChangePassword.toUpperCase(),
-          color: Theme.of(context).accentColor,
+          color: Theme.of(context).primaryColor,
           width: 130,
           onTap: () async {
             correctPassword =
@@ -147,6 +147,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 if (await authProvider
                     .changePassword(newPasswordController.text)) {
                   AppToast.show(S.current.messageChangePasswordSuccess);
+                  if (!mounted) return;
                   Navigator.pop(context);
                 }
               }
@@ -214,7 +215,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
         AppButton(
           key: const ValueKey('change_email_button'),
           text: S.current.actionChangeEmail,
-          color: Theme.of(context).accentColor,
+          color: Theme.of(context).primaryColor,
           width: 130,
           onTap: () async {
             final authProvider =
@@ -272,10 +273,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 bool result = true;
                 if (isVerified == false &&
                     emailController.text + emailDomain != authProvider.email) {
-                  await showDialog(
-                          context: context,
-                          builder: _changeEmailConfirmationDialog)
-                      .then((value) => result = value ?? false);
+                  await showDialog<bool>(
+                    context: context,
+                    builder: _changeEmailConfirmationDialog,
+                  ).then((value) => result = value ?? false);
                 }
                 if (uploadButtonController.newUploadedImageBytes != null) {
                   imageAsPNG = await Utils.convertToPNG(
@@ -285,9 +286,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 if (result) {
                   if (await authProvider.updateProfile(info)) {
                     AppToast.show(S.current.messageEditProfileSuccess);
-                    if (!mounted) {
-                      return;
-                    }
+                    if (!mounted) return;
                     Navigator.pop(context);
                   }
                 }
@@ -296,9 +295,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
         AppScaffoldAction(
           icon: Icons.more_vert_outlined,
           items: {
-            S.current.actionChangePassword: () =>
-                showDialog(context: context, builder: _changePasswordDialog),
-            S.current.actionDeleteAccount: () => showDialog(
+            S.current.actionChangePassword: () => showDialog<dynamic>(
+                context: context, builder: _changePasswordDialog),
+            S.current.actionDeleteAccount: () => showDialog<dynamic>(
                 context: context, builder: _deletionConfirmationDialog)
           },
         )

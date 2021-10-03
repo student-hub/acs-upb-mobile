@@ -21,10 +21,10 @@ class PersonView extends StatelessWidget {
           Container(
             width: MediaQuery.of(context).size.width,
             decoration: BoxDecoration(
-              color: Theme.of(context).accentColor,
+              color: Theme.of(context).primaryColor,
               shape: BoxShape.rectangle,
               border:
-                  Border.all(color: Theme.of(context).accentColor, width: 10),
+                  Border.all(color: Theme.of(context).primaryColor, width: 10),
             ),
             child: Center(
               child: Text(person.name,

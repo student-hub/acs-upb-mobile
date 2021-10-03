@@ -1,13 +1,14 @@
-import 'package:acs_upb_mobile/pages/classes/model/class.dart';
-import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
-import 'package:acs_upb_mobile/pages/classes/view/class_view.dart';
-import 'package:acs_upb_mobile/pages/search/view/seached_classes_view.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:acs_upb_mobile/generated/l10n.dart';
-import 'package:acs_upb_mobile/widgets/class_icon.dart';
+
+import '../../../generated/l10n.dart';
+import '../../../widgets/class_icon.dart';
+import '../../classes/model/class.dart';
+import '../../classes/service/class_provider.dart';
+import '../../classes/view/class_view.dart';
+import 'seached_classes_view.dart';
 
 class ClassesSearchResults extends StatelessWidget {
   const ClassesSearchResults({this.query});
@@ -83,7 +84,7 @@ class ClassesCircleList extends StatelessWidget {
                               padding: const EdgeInsets.fromLTRB(0, 0, 10, 10),
                               child: CircleAvatar(
                                 backgroundColor: classHeader.colorFromAcronym,
-                                child: Container(
+                                child: SizedBox(
                                   width: 30,
                                   child: Align(
                                     alignment: Alignment.center,

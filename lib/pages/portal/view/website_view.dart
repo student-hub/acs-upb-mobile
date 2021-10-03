@@ -202,9 +202,7 @@ class _WebsiteViewState extends State<WebsiteView> {
                   Provider.of<WebsiteProvider>(context, listen: false);
               final res = await websiteProvider.deleteWebsite(widget.website);
               if (res) {
-                if (!mounted) {
-                  return;
-                }
+                if (!mounted) return;
                 Navigator.pop(context); // Pop editing page
                 AppToast.show(S.current.messageWebsiteDeleted);
               }
@@ -258,10 +256,10 @@ class _WebsiteViewState extends State<WebsiteView> {
                   AppScaffoldAction(
                     icon: Icons.more_vert_outlined,
                     items: {
-                      S.current.actionDeleteWebsite: () => showDialog(
+                      S.current.actionDeleteWebsite: () => showDialog<dynamic>(
                           context: context, builder: deletionConfirmationDialog)
                     },
-                    onPressed: () => showDialog(
+                    onPressed: () => showDialog<dynamic>(
                         context: context, builder: deletionConfirmationDialog),
                   )
                 ]

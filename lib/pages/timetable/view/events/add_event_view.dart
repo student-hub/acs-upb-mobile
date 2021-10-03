@@ -1,5 +1,3 @@
-import 'package:acs_upb_mobile/resources/theme.dart';
-import 'package:acs_upb_mobile/widgets/chip_form_field.dart';
 import 'package:dart_date/dart_date.dart' show Interval;
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart' hide Interval;
@@ -7,8 +5,8 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:provider/provider.dart';
 import 'package:rrule/rrule.dart';
-import 'package:time_machine/time_machine.dart' as time_machine show DayOfWeek;
 import 'package:time_machine/time_machine.dart' hide Interval;
+import 'package:time_machine/time_machine.dart' as time_machine show DayOfWeek;
 import 'package:time_machine/time_machine_text_patterns.dart';
 
 import '../../../../authentication/model/user.dart';
@@ -16,7 +14,9 @@ import '../../../../authentication/service/auth_provider.dart';
 import '../../../../generated/l10n.dart';
 import '../../../../navigation/routes.dart';
 import '../../../../resources/locale_provider.dart';
+import '../../../../resources/theme.dart';
 import '../../../../widgets/button.dart';
+import '../../../../widgets/chip_form_field.dart';
 import '../../../../widgets/dialog.dart';
 import '../../../../widgets/scaffold.dart';
 import '../../../../widgets/toast.dart';
@@ -453,11 +453,11 @@ class _AddEventViewState extends State<AddEventView> {
   AppScaffoldAction _deleteButton() => AppScaffoldAction(
         icon: Icons.more_vert_outlined,
         items: {
-          S.current.actionDeleteEvent: () =>
-              showDialog(context: context, builder: _deletionConfirmationDialog)
+          S.current.actionDeleteEvent: () => showDialog<dynamic>(
+              context: context, builder: _deletionConfirmationDialog)
         },
-        onPressed: () =>
-            showDialog(context: context, builder: _deletionConfirmationDialog),
+        onPressed: () => showDialog<dynamic>(
+            context: context, builder: _deletionConfirmationDialog),
       );
 
   Widget timeIntervalPicker() {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../generated/l10n.dart';
+import '../resources/theme.dart';
 
 class InfoCard<T> extends StatelessWidget {
   const InfoCard(
@@ -51,13 +52,14 @@ class InfoCard<T> extends StatelessWidget {
                           Text(
                             S.current.actionShowMore,
                             style: Theme.of(context)
-                                .accentTextTheme
+                                .coloredTextTheme
                                 .subtitle2
-                                .copyWith(color: Theme.of(context).accentColor),
+                                .copyWith(
+                                    color: Theme.of(context).primaryColor),
                           ),
                           Icon(
                             Icons.arrow_forward_ios_outlined,
-                            color: Theme.of(context).accentColor,
+                            color: Theme.of(context).primaryColor,
                             size:
                                 Theme.of(context).textTheme.subtitle2.fontSize,
                           )

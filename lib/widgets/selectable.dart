@@ -59,13 +59,13 @@ class _SelectableState extends State<Selectable> {
         color: _isSelected
             ? (widget.disabled
                 ? Theme.of(context).disabledColor
-                : Theme.of(context).accentColor)
+                : Theme.of(context).primaryColor)
             : Colors.transparent,
         borderRadius: const BorderRadius.all(Radius.circular(24)),
         border: Border.all(
             color: widget.disabled
                 ? Theme.of(context).disabledColor
-                : Theme.of(context).accentColor),
+                : Theme.of(context).primaryColor),
       ),
       child: Material(
         color: Colors.transparent,
@@ -97,7 +97,7 @@ class _SelectableState extends State<Selectable> {
                       ? Colors.white
                       : widget.disabled
                           ? Theme.of(context).disabledColor
-                          : Theme.of(context).accentColor,
+                          : Theme.of(context).primaryColor,
                 ),
               ),
             ),
