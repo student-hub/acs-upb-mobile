@@ -98,48 +98,26 @@ class _ProfileDropdownMenu extends StatelessWidget {
 
   Map<int, _PopupItem> get _popupItems => {
         1: _PopupItem(
+          value: 1,
           onTap: (context) =>
               AppNavigator.pushNamed(context, SettingsPage.routeName),
-          child: Builder(
-            builder: (context) {
-              return IconText(
-                icon: Icons.settings,
-                text: S.current.navigationSettings,
-                onTap: () =>
-                    AppNavigator.pushNamed(context, SettingsPage.routeName),
-              );
-            },
-          ),
+          icon: Icons.settings,
+          text: S.current.navigationSettings,
         ),
         2: _PopupItem(
+          value: 2,
           onTap: (context) =>
               AppNavigator.pushNamed(context, EditProfilePage.routeName),
-          child: Builder(
-            builder: (context) {
-              return IconText(
-                icon: Icons.person,
-                text: S.current.actionEditProfile,
-                onTap: () =>
-                    AppNavigator.pushNamed(context, EditProfilePage.routeName),
-              );
-            },
-          ),
+          icon: Icons.person,
+          text: S.current.actionEditProfile,
         ),
         3: _PopupItem(
+          value: 3,
           onTap: Utils.signOut,
-          child: Builder(
-            builder: (BuildContext context) {
-              final authProvider = Provider.of<AuthProvider>(context);
-
-              return IconText(
-                icon: authProvider.isAnonymous ? Icons.login : Icons.logout,
-                text: authProvider.isAnonymous
-                    ? S.current.actionLogIn
-                    : S.current.actionLogOut,
-                onTap: () => Utils.signOut(context),
-              );
-            },
-          ),
+          icon: Icons.logout,
+          text: S.current.actionLogOut,
+          anonymousIcon: Icons.login,
+          anonymousText: S.current.actionLogIn,
         ),
       };
 
@@ -173,10 +151,7 @@ class _ProfileDropdownMenu extends StatelessWidget {
                 ),
               ),
               const PopupMenuDivider(),
-              ..._popupItems.entries.map((entry) => PopupMenuItem(
-                    child: entry.value.child,
-                    value: entry.key,
-                  )),
+              ..._popupItems.values.map((item) => item.build(context)),
             ];
           },
         ),
@@ -185,9 +160,39 @@ class _ProfileDropdownMenu extends StatelessWidget {
   }
 }
 
-class _PopupItem {
-  _PopupItem({@required this.child, this.onTap});
+class _PopupItem extends StatelessWidget {
+  const _PopupItem({
+    Key key,
+    this.onTap,
+    this.value,
+    this.icon,
+    this.text,
+    this.anonymousText,
+    this.anonymousIcon,
+  }) : super(key: key);
 
   final void Function(BuildContext context) onTap;
-  final Widget child;
+  final IconData icon;
+  final IconData anonymousIcon;
+  final String text;
+  final String anonymousText;
+  final int value;
+
+  @override
+  Widget build(BuildContext context) {
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+
+    return PopupMenuItem(
+      value: value,
+      child: IconText(
+        icon: authProvider.isAnonymous && anonymousIcon != null
+            ? anonymousIcon
+            : icon,
+        text: authProvider.isAnonymous && anonymousIcon != null
+            ? anonymousText
+            : text,
+        onTap: () => onTap(context),
+      ),
+    );
+  }
 }
