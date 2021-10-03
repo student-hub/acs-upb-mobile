@@ -1,7 +1,7 @@
+import 'package:acs_upb_mobile/pages/classes/model/class.dart';
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/navigation/service/navigator.dart';
-import 'package:acs_upb_mobile/pages/classes/model/class.dart';
 import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
 import 'package:acs_upb_mobile/pages/classes/view/class_view.dart';
 import 'package:acs_upb_mobile/pages/search/view/seached_classes_view.dart';
@@ -11,6 +11,8 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:acs_upb_mobile/generated/l10n.dart';
+import 'package:acs_upb_mobile/widgets/class_icon.dart';
 
 class ClassesSearchResults extends StatelessWidget {
   const ClassesSearchResults({this.query});
@@ -111,7 +113,6 @@ class ClassesCircleList extends StatelessWidget {
                   final currentUser =
                       Provider.of<AuthProvider>(context, listen: false)
                           .currentUserFromCache;
-                  print('CurrentUser: $currentUser');
                   if (currentUser != null) {
                     AppNavigator.push(
                         context,

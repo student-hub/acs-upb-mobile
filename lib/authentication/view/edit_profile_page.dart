@@ -304,6 +304,17 @@ class _EditProfilePageState extends State<EditProfilePage> {
       body: Container(
         child: ListView(padding: const EdgeInsets.all(12), children: [
           AccountNotVerifiedWarning(),
+          Padding(
+            padding: const EdgeInsets.all(10),
+            child: CircleImage(
+              circleSize: 150,
+              image: uploadButtonController.uploadImageBytes != null
+                  ? MemoryImage(uploadButtonController.newUploadedImageBytes)
+                  : imageWidget,
+            ),
+          ),
+          const SizedBox(height: 10),
+          UploadButton(pageType: true, controller: uploadButtonController),
           PreferenceTitle(
             S.current.labelPersonalInformation,
             leftPadding: 0,

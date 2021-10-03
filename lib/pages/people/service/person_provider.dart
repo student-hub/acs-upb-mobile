@@ -96,7 +96,6 @@ class PersonProvider with ChangeNotifier {
             .toList() ??
         <Person>[];
   }
-
   Future<List<String>> currentClasses(String lecturerName) async {
     try {
       final QuerySnapshot query = await FirebaseFirestore.instance

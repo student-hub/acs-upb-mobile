@@ -1,0 +1,13 @@
+Adăugat
+    - Acum poți adăuga o imagine personalizată pentru site-uri
+    - Funcționalitate de căutare, care se găsește pe pagina principală
+    - Adminii pot răspunde la cererile de permisiuni direct din aplicație
+
+Îmbunătățit
+    - Modul întunecat se aplică acum și ecranului de pornire
+    - Puțină ✨magie✨ internă ca să îmbunătățim aplicația
+
+Rezolvat
+    - Poza de profil este tăiată daca nu se potrivește ca dimensiune
+    - Problemă la schimbarea parolei
+    - Mai multe probleme minore
