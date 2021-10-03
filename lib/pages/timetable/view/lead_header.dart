@@ -28,11 +28,8 @@ import 'package:provider/provider.dart';
 
 class LeadHeader extends StatefulWidget {
   const LeadHeader(this.date, {Key key}) : super(key: key);
-
   final LocalDate date;
-
   static var academicWeekNumber;
-
   @override
   _leadHeaderState createState() => _leadHeaderState();
 }
@@ -45,7 +42,6 @@ class _leadHeaderState extends State<LeadHeader> {
   Map<String, AcademicCalendar> calendars = {};
   int academicWeek;
   Set<int> HolidayWeeks = new Set();
-
   @override
   Widget build(BuildContext context) {
     final theme = context.theme;
@@ -79,10 +75,9 @@ class _leadHeaderState extends State<LeadHeader> {
 
   String getWeekNumber() {
     if (calendar != null) {
-
-
       List<int>nonHolidayWeeks = calendar.nonHolidayWeeks.toList();
-
+      DateInterval winterSession=new DateInterval(calendar.exams.first.startDate, calendar.exams.first.endDate);
+      DateInterval summerSession=new DateInterval(calendar.exams.last.startDate, calendar.exams.last.endDate);
 
       for (var i = 1; i < 53; i++) {
         if (!nonHolidayWeeks.contains(i)) HolidayWeeks.add(i);
@@ -90,12 +85,14 @@ class _leadHeaderState extends State<LeadHeader> {
       var week =
       ((widget.date.dayOfYear - widget.date.dayOfWeek.value + 10) / 7)
           .floor();
-
       if (LeadHeader.academicWeekNumber == false) {
         return week.toString();
       } else {
         if (!nonHolidayWeeks.contains(week))
-          return "-";
+          if(winterSession.contains(widget.date)||summerSession.contains(widget.date))
+            return 'S';
+          else
+            return 'H';
         else
           return (nonHolidayWeeks.indexOf(week) + 1).toString();
       }
@@ -103,7 +100,6 @@ class _leadHeaderState extends State<LeadHeader> {
     else
       return "0";
   }
-
   @override
   void initState() {
     if (!mounted) {
@@ -127,6 +123,4 @@ class _leadHeaderState extends State<LeadHeader> {
       });
     });
   }
-
-
 }
