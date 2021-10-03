@@ -54,7 +54,8 @@ class InfoCard<T> extends StatelessWidget {
                             style: Theme.of(context)
                                 .coloredTextTheme
                                 .subtitle2
-                                .copyWith(color: Theme.of(context).primaryColor),
+                                .copyWith(
+                                    color: Theme.of(context).primaryColor),
                           ),
                           Icon(
                             Icons.arrow_forward_ios_outlined,
