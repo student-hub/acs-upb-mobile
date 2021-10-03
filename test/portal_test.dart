@@ -31,37 +31,40 @@ void main() {
   final WebsiteProvider mockWebsiteProvider = MockWebsiteProvider();
   // ignore: invalid_use_of_protected_member
   when(mockWebsiteProvider.hasListeners).thenReturn(false);
-  when(mockWebsiteProvider.fetchWebsites(any)).thenAnswer((_) => Future.value([
-        Website(
-          id: '1',
-          relevance: null,
-          category: WebsiteCategory.learning,
-          infoByLocale: {'en': 'info-en', 'ro': 'info-ro'},
-          label: 'Moodle',
-          link: 'http://acs.curs.pub.ro/',
-          isPrivate: false,
-        ),
-        Website(
-          id: '2',
-          relevance: null,
-          category: WebsiteCategory.learning,
-          infoByLocale: {},
-          label: 'OCW',
-          link: 'https://ocw.cs.pub.ro/',
-          isPrivate: false,
-        ),
-        Website(
-          id: '3',
-          relevance: null,
-          category: WebsiteCategory.association,
-          infoByLocale: {},
-          label: 'LSAC',
-          link: 'https://lsacbucuresti.ro/',
-          isPrivate: false,
-        ),
-      ]));
-  when(mockWebsiteProvider.fetchFavouriteWebsites(any)).thenAnswer(
-      (_) async => (await mockWebsiteProvider.fetchWebsites(any)).take(3));
+  final websites = [
+    Website(
+      id: '1',
+      relevance: null,
+      category: WebsiteCategory.learning,
+      infoByLocale: {'en': 'info-en', 'ro': 'info-ro'},
+      label: 'Moodle',
+      link: 'http://acs.curs.pub.ro/',
+      isPrivate: false,
+      source: 'official',
+    ),
+    Website(
+      id: '2',
+      relevance: null,
+      category: WebsiteCategory.learning,
+      infoByLocale: {},
+      label: 'OCW',
+      link: 'https://ocw.cs.pub.ro/',
+      isPrivate: false,
+      source: 'official',
+    ),
+    Website(
+      id: '3',
+      relevance: null,
+      category: WebsiteCategory.association,
+      infoByLocale: {},
+      label: 'LSAC',
+      link: 'https://lsacbucuresti.ro/',
+      isPrivate: false,
+      source: 'official',
+    ),
+  ];
+  when(mockWebsiteProvider.fetchWebsites(any, sources: anyNamed('sources')))
+      .thenAnswer((_) => Future.value(websites));
   when(mockWebsiteProvider.incrementNumberOfVisits(any, uid: anyNamed('uid')))
       .thenAnswer((_) => Future.value(true));
 
@@ -81,10 +84,14 @@ void main() {
   when(mockAuthProvider.hasListeners).thenReturn(false);
   when(mockAuthProvider.isAnonymous).thenReturn(false);
   when(mockAuthProvider.isAuthenticated).thenReturn(true);
-  when(mockAuthProvider.currentUser).thenAnswer(
-      (_) => Future.value(User(uid: '0', firstName: 'John', lastName: 'Doe')));
-  when(mockAuthProvider.currentUserFromCache)
-      .thenReturn(User(uid: '0', firstName: 'John', lastName: 'Doe'));
+  final user = User(
+    uid: '0',
+    firstName: 'John',
+    lastName: 'Doe',
+    sources: ['official'],
+  );
+  when(mockAuthProvider.currentUser).thenAnswer((_) => Future.value(user));
+  when(mockAuthProvider.currentUserFromCache).thenReturn(user);
 
   Widget buildPortalPage() => MultiProvider(
         providers: [
@@ -113,7 +120,7 @@ void main() {
 
     testWidgets('Names', (WidgetTester tester) async {
       await tester.pumpWidget(buildPortalPage());
-      await tester.pumpAndSettle();
+      await tester.pumpAndSettle(const Duration(seconds: 10));
 
       expect(find.text('Moodle'), findsOneWidget);
       expect(find.text('OCW'), findsOneWidget);

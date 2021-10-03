@@ -183,80 +183,88 @@ Future<void> main() async {
         .thenAnswer((_) => Future.value(true));
     when(mockAuthProvider.getProfilePictureURL())
         .thenAnswer((_) => Future.value(null));
-    when(mockWebsiteProvider.fetchWebsites(any))
+    when(mockWebsiteProvider.fetchWebsites(any, sources: anyNamed('sources')))
         .thenAnswer((_) => Future.value([
               Website(
-                  id: '1',
-                  relevance: null,
-                  category: WebsiteCategory.learning,
-                  infoByLocale: {'en': 'info-en', 'ro': 'info-ro'},
-                  label: 'Moodle1',
-                  link: 'http://acs.curs.pub.ro/',
-                  isPrivate: false,
-                  source: 'official'),
+                id: '1',
+                relevance: null,
+                category: WebsiteCategory.learning,
+                infoByLocale: {'en': 'info-en', 'ro': 'info-ro'},
+                label: 'Moodle1',
+                link: 'http://acs.curs.pub.ro/',
+                isPrivate: false,
+                source: 'official',
+              ),
               Website(
-                  id: '2',
-                  relevance: null,
-                  category: WebsiteCategory.learning,
-                  infoByLocale: {},
-                  label: 'OCW1',
-                  link: 'https://ocw.cs.pub.ro/',
-                  isPrivate: false,
-                  source: 'official'),
+                id: '2',
+                relevance: null,
+                category: WebsiteCategory.learning,
+                infoByLocale: {},
+                label: 'OCW1',
+                link: 'https://ocw.cs.pub.ro/',
+                isPrivate: false,
+                source: 'official',
+              ),
               Website(
-                  id: '3',
-                  relevance: null,
-                  category: WebsiteCategory.learning,
-                  infoByLocale: {'en': 'info-en', 'ro': 'info-ro'},
-                  label: 'Moodle2',
-                  link: 'http://acs.curs.pub.ro/',
-                  isPrivate: false,
-                  source: 'official'),
+                id: '3',
+                relevance: null,
+                category: WebsiteCategory.learning,
+                infoByLocale: {'en': 'info-en', 'ro': 'info-ro'},
+                label: 'Moodle2',
+                link: 'http://acs.curs.pub.ro/',
+                isPrivate: false,
+                source: 'official',
+              ),
               Website(
-                  id: '4',
-                  relevance: null,
-                  category: WebsiteCategory.learning,
-                  infoByLocale: {},
-                  label: 'OCW2',
-                  link: 'https://ocw.cs.pub.ro/',
-                  isPrivate: false,
-                  source: 'official'),
+                id: '4',
+                relevance: null,
+                category: WebsiteCategory.learning,
+                infoByLocale: {},
+                label: 'OCW2',
+                link: 'https://ocw.cs.pub.ro/',
+                isPrivate: false,
+                source: 'official',
+              ),
               Website(
-                  id: '5',
-                  relevance: null,
-                  category: WebsiteCategory.association,
-                  infoByLocale: {},
-                  label: 'LSAC1',
-                  link: 'https://lsacbucuresti.ro/',
-                  isPrivate: false,
-                  source: 'official'),
+                id: '5',
+                relevance: null,
+                category: WebsiteCategory.association,
+                infoByLocale: {},
+                label: 'LSAC1',
+                link: 'https://lsacbucuresti.ro/',
+                isPrivate: false,
+                source: 'official',
+              ),
               Website(
-                  id: '6',
-                  relevance: null,
-                  category: WebsiteCategory.administrative,
-                  infoByLocale: {},
-                  label: 'LSAC2',
-                  link: 'https://lsacbucuresti.ro/',
-                  isPrivate: false,
-                  source: 'official'),
+                id: '6',
+                relevance: null,
+                category: WebsiteCategory.administrative,
+                infoByLocale: {},
+                label: 'LSAC2',
+                link: 'https://lsacbucuresti.ro/',
+                isPrivate: false,
+                source: 'official',
+              ),
               Website(
-                  id: '7',
-                  relevance: null,
-                  category: WebsiteCategory.resource,
-                  infoByLocale: {},
-                  label: 'LSAC3',
-                  link: 'https://lsacbucuresti.ro/',
-                  isPrivate: false,
-                  source: 'official'),
+                id: '7',
+                relevance: null,
+                category: WebsiteCategory.resource,
+                infoByLocale: {},
+                label: 'LSAC3',
+                link: 'https://lsacbucuresti.ro/',
+                isPrivate: false,
+                source: 'official',
+              ),
               Website(
-                  id: '8',
-                  relevance: null,
-                  category: WebsiteCategory.other,
-                  infoByLocale: {},
-                  label: 'LSAC4',
-                  link: 'https://lsacbucuresti.ro/',
-                  isPrivate: false,
-                  source: 'official'),
+                id: '8',
+                relevance: null,
+                category: WebsiteCategory.other,
+                infoByLocale: {},
+                label: 'LSAC4',
+                link: 'https://lsacbucuresti.ro/',
+                isPrivate: false,
+                source: 'official',
+              ),
             ]));
     when(mockWebsiteProvider.fetchFavouriteWebsites(any)).thenAnswer(
         (_) async => (await mockWebsiteProvider.fetchWebsites(any)).take(3));
@@ -1525,10 +1533,15 @@ Future<void> main() async {
 
   group('Feedback view', () {
     setUp(() {
-      when(mockAuthProvider.currentUser).thenAnswer((_) => Future.value(User(
-          uid: '0', firstName: 'John', lastName: 'Doe', permissionLevel: 3)));
-      when(mockAuthProvider.currentUserFromCache).thenReturn(User(
-          uid: '0', firstName: 'John', lastName: 'Doe', permissionLevel: 3));
+      final user = User(
+        uid: '0',
+        firstName: 'John',
+        lastName: 'Doe',
+        permissionLevel: 3,
+        sources: ['official'],
+      );
+      when(mockAuthProvider.currentUser).thenAnswer((_) => Future.value(user));
+      when(mockAuthProvider.currentUserFromCache).thenReturn(user);
       when(mockAuthProvider.isAuthenticated).thenReturn(true);
       when(mockAuthProvider.isAnonymous).thenReturn(false);
       when(mockAuthProvider.uid).thenReturn('0');
@@ -1646,10 +1659,15 @@ Future<void> main() async {
 
   group('Admin page', () {
     setUp(() async {
-      when(mockAuthProvider.currentUser).thenAnswer((_) => Future.value(User(
-          uid: '0', firstName: 'John', lastName: 'Doe', permissionLevel: 4)));
-      when(mockAuthProvider.currentUserFromCache).thenReturn(User(
-          uid: '0', firstName: 'John', lastName: 'Doe', permissionLevel: 4));
+      final user = User(
+        uid: '0',
+        firstName: 'John',
+        lastName: 'Doe',
+        permissionLevel: 4,
+        sources: ['official'],
+      );
+      when(mockAuthProvider.currentUser).thenAnswer((_) => Future.value(user));
+      when(mockAuthProvider.currentUserFromCache).thenReturn(user);
       when(mockAuthProvider.isAnonymous).thenReturn(false);
       when(mockAuthProvider.isAuthenticated).thenReturn(true);
       when(mockAuthProvider.isVerified).thenAnswer((_) => Future.value(true));
@@ -1685,13 +1703,14 @@ Future<void> main() async {
 
   group('Portal', () {
     setUp(() {
-      when(mockAuthProvider.currentUser).thenAnswer((_) => Future.value(User(
-          uid: '0',
-          firstName: 'John',
-          lastName: 'Doe',
-          sources: ['official'])));
-      when(mockAuthProvider.currentUserFromCache).thenReturn(User(
-          uid: '0', firstName: 'John', lastName: 'Doe', sources: ['official']));
+      final user = User(
+        uid: '0',
+        firstName: 'John',
+        lastName: 'Doe',
+        sources: ['official'],
+      );
+      when(mockAuthProvider.currentUser).thenAnswer((_) => Future.value(user));
+      when(mockAuthProvider.currentUserFromCache).thenReturn(user);
     });
 
     for (final size in screenSizes) {

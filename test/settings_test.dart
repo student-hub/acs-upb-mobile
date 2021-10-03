@@ -257,16 +257,25 @@ void main() {
       expect(find.text('Settings'), findsOneWidget);
       expect(find.text('Auto'), findsOneWidget);
     });
+
     group('Request permissions', () {
       setUpAll(() async {
-        when(mockAuthProvider.currentUser).thenAnswer((_) =>
-            Future.value(User(uid: '0', firstName: 'John', lastName: 'Doe')));
+        when(mockAuthProvider.currentUser).thenAnswer((_) => Future.value(User(
+              uid: '0',
+              firstName: 'John',
+              lastName: 'Doe',
+              sources: ['official'],
+            )));
         when(mockAuthProvider.isAnonymous).thenReturn(false);
       });
 
       testWidgets('Normal scenario', (WidgetTester tester) async {
         when(mockAuthProvider.currentUserFromCache).thenReturn(User(
-            uid: '0', firstName: 'John', lastName: 'Doe', permissionLevel: 4));
+          uid: '0',
+          firstName: 'John',
+          lastName: 'Doe',
+          sources: ['official'],
+        ));
         when(mockAuthProvider.isVerified).thenAnswer((_) => Future.value(true));
 
         await tester.pumpWidget(buildApp());
@@ -393,25 +402,29 @@ void main() {
         expect(find.byType(RequestPermissionsPage), findsOneWidget);
       });
     });
+
     group('Admin Panel', () {
       setUpAll(() async {
-        when(mockAuthProvider.currentUser).thenAnswer((_) =>
-            Future.value(User(uid: '0', firstName: 'John', lastName: 'Doe')));
-        when(mockAuthProvider.currentUserFromCache)
-            .thenReturn(User(uid: '0', firstName: 'John', lastName: 'Doe'));
+        final user = User(
+          uid: '0',
+          firstName: 'John',
+          lastName: 'Doe',
+          permissionLevel: 3,
+          sources: ['official'],
+        );
+        when(mockAuthProvider.currentUser)
+            .thenAnswer((_) => Future.value(user));
+        when(mockAuthProvider.currentUserFromCache).thenReturn(user);
         when(mockAuthProvider.isAnonymous).thenReturn(false);
         when(mockAuthProvider.isAuthenticated).thenReturn(true);
         when(mockAuthProvider.isVerified).thenAnswer((_) => Future.value(true));
-      });
-
-      testWidgets('User is not an admin', (WidgetTester tester) async {
-        when(mockAuthProvider.currentUserFromCache).thenReturn(User(
-            uid: '0', firstName: 'John', lastName: 'Doe', permissionLevel: 3));
         when(mockAdminProvider.fetchUnprocessedRequestIds())
             .thenAnswer((_) => Future.value(['string']));
         when(mockAdminProvider.fetchRequest('')).thenAnswer(
             (_) => Future.value(Request(requestBody: 'body', userId: '0')));
+      });
 
+      testWidgets('User is not an admin', (WidgetTester tester) async {
         await tester.pumpWidget(buildApp());
         await tester.pumpAndSettle();
 
