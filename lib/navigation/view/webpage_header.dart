@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:acs_upb_mobile/authentication/model/user.dart';
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/authentication/view/edit_profile_page.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
@@ -91,11 +92,16 @@ class __SearchBarState extends State<_SearchBar> {
   }
 }
 
-class _ProfileDropdownMenu extends StatelessWidget {
+class _ProfileDropdownMenu extends StatefulWidget {
   const _ProfileDropdownMenu({Key key, this.headerHeight}) : super(key: key);
 
   final double headerHeight;
 
+  @override
+  __ProfileDropdownMenuState createState() => __ProfileDropdownMenuState();
+}
+
+class __ProfileDropdownMenuState extends State<_ProfileDropdownMenu> {
   Map<int, _PopupItem> get _popupItems => {
         1: _PopupItem(
           value: 1,
@@ -121,9 +127,23 @@ class _ProfileDropdownMenu extends StatelessWidget {
         ),
       };
 
+  String profilePictureURL;
+  User user;
+
+  @override
+  void initState() {
+    super.initState();
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    authProvider.getProfilePictureURL().then((value) => setState(() {
+          profilePictureURL = value;
+        }));
+
+    user = authProvider.currentUserFromCache;
+  }
+
   @override
   Widget build(BuildContext context) {
-    final size = min(headerHeight, 60);
+    final size = min(widget.headerHeight, 60);
     final padding = size / 8;
 
     return SizedBox(
@@ -135,12 +155,13 @@ class _ProfileDropdownMenu extends StatelessWidget {
           color: Theme.of(context).backgroundColor,
           offset: Offset(-5, size),
           tooltip: S.current.navigationProfile,
-          child: const CircleAvatar(
-            radius: 25,
-            backgroundImage: AssetImage(
-              'assets/illustrations/undraw_profile_pic.png',
-            ),
-          ),
+          child: CircleAvatar(
+              radius: 25,
+              backgroundImage: user != null && profilePictureURL != null
+                  ? NetworkImage(profilePictureURL)
+                  : const AssetImage(
+                      'assets/illustrations/undraw_profile_pic.png',
+                    )),
           onSelected: (value) => _popupItems[value].onTap(context),
           itemBuilder: (context) {
             return <PopupMenuEntry<void>>[
