@@ -1,0 +1,133 @@
+// NOTE: Editing rules from the console can lead to conflicts. Always remember to update the GitHub
+// file as well, otherwise you risk your changes being overwritten.
+// https://firebase.google.com/docs/cli#deployment_conflicts
+
+rules_version = '2';
+service cloud.firestore {
+    // Check if user is authenticated
+    function isAuthenticated() {
+        return request.auth != null;
+    }
+
+    function last(some_list) {
+        return some_list[some_list.size() - 1];
+    }
+
+    // Check if user signed the new data (with their uid)
+    function didSign() {
+        return request.resource.data.addedBy == request.auth.uid || last(request.resource.data.editedBy) == request.auth.uid;
+    }
+
+    match /databases/{database}/documents {
+        // Get the authenticated user's permission level
+        function permissionLevel() {
+            return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.permissionLevel;
+        }
+
+        function isAdmin() {
+            return permissionLevel() == 4;
+        }
+
+        match /users/{user}/{document=**} {
+            function isOwner() {
+                return isAuthenticated() && request.auth.uid == user;
+            }
+
+            // Allow users to see their own data and admins to see other users' data
+            allow read: if isOwner() || isAdmin();
+
+            // Only allow users delete their own data
+            allow delete: if isOwner();
+
+            // Allow anyone to create a new user with no permissions
+            allow create: if request.resource.data.permissionLevel == 0 || request.resource.data.permissionLevel == null || !('permissionLevel' in request.resource.data);
+
+            // Allow users to modify their own data, except for the permissionLevel
+            // Allow admins to change other users' data
+            allow update: if isAdmin() || (isOwner() && (!('permissionLevel' in request.resource.data) || request.resource.data.permissionLevel == resource.data.permissionLevel));
+        }
+
+        match /websites/{website} {
+            function isOwner() {
+                return isAuthenticated() && request.auth.uid == resource.data.addedBy;
+            }
+
+            // Anyone can read
+            allow read: if true;
+
+            // Only authenticated users with permissionLevel >= 2 can write
+            // Data must be signed
+            allow create: if isAuthenticated() && didSign() && permissionLevel() >= 2;
+
+            // The 'addedBy' field cannot be modified
+            allow update: if (!('addedBy' in request.resource.data) || request.resource.data.addedBy == resource.data.addedBy) && isAuthenticated() && didSign() && permissionLevel() >= 2;
+
+            // Users can only delete a website they created unless their permissionLevel is 3 or higher
+            allow delete: if isOwner() || permissionLevel() >= 3;
+        }
+
+        match /filters/{filter} {
+            // Anyone can read, no one can write
+            allow read: if true;
+            allow write: if false;
+        }
+
+        match /classes/{class}/{document=**} {
+            // Anyone can read
+            allow read: if true;
+
+            // Only authenticated users with permissionLevel >= 3 can edit
+            allow update, create: if isAuthenticated() && permissionLevel() >= 3;
+        }
+
+        match /people/{person} {
+            // Anyone can read, no one can write
+            allow read: if true;
+            allow write: if false;
+        }
+
+        match /import_moodle/{class} {
+            // Anyone can read, no one can write
+            allow read: if true;
+            allow write: if false;
+        }
+
+        match /import_studenti/{class} {
+            // Anyone can read, no one can write
+            allow read: if true;
+            allow write: if false;
+        }
+
+        match /faq/{question} {
+            // Anyone can read, no one can write
+            allow read: if true;
+            allow write: if false;
+        }
+
+        match /news/{announcement} {
+            // Anyone can read, no one can write
+            allow read: if true;
+            allow write: if false;
+        }
+
+        match /events/{event} {
+            // Anyone can read, no one can write
+            allow read: if true;
+            // Only authenticated users with permissionLevel >= 3 can edit
+            allow write: if isAuthenticated() && permissionLevel() >= 3;
+        }
+
+        match /calendars/{calendar} {
+            // Anyone can read, no one can write
+            allow read: if true;
+            allow write: if false;
+        }
+
+        match /forms/{form=**} {
+            allow read: if true;
+            allow create: if isAuthenticated();
+            allow update: if isAdmin();
+            allow delete: if false;
+        }
+    }
+}

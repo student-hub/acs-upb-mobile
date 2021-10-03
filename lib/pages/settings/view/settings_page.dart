@@ -118,6 +118,16 @@ class _SettingsPageState extends State<SettingsPage> {
                   ),
                 ),
                 Visibility(
+                  visible: authProvider.currentUserFromCache.isAdmin == true,
+                  child: ListTile(
+                    key: const Key('AdminPanel'),
+                    onTap: () =>
+                        Navigator.of(context).pushNamed(Routes.adminPanel),
+                    title: Text(S.current.settingsItemAdmin),
+                    subtitle: Text(S.current.infoAdmin),
+                  ),
+                ),
+                Visibility(
                   visible: Platform.isAndroid || Platform.isIOS,
                   child: categoryTitle(S.current.settingsTitleTimetable),
                 ),
@@ -229,7 +239,9 @@ class _SettingsPageState extends State<SettingsPage> {
 
     if (authProvider.isAuthenticated && !authProvider.isAnonymous) {
       final user = await authProvider.currentUser;
-      if (user.canEditPublicInfo) {
+      if (user.isAdmin) {
+        return S.current.settingsAdminPermissions;
+      } else if (user.canEditPublicInfo) {
         return S.current.settingsPermissionsEdit;
       } else if (user.canAddPublicInfo) {
         return S.current.settingsPermissionsAdd;

@@ -137,8 +137,10 @@ class _EventViewState extends State<EventView> {
                     child: Icon(FeatherIcons.mapPin),
                   ),
                   const SizedBox(width: 16),
-                  Text(widget.eventInstance?.location,
-                      style: Theme.of(context).textTheme.subtitle1),
+                  Expanded(
+                    child: Text(widget.eventInstance?.location,
+                        style: Theme.of(context).textTheme.subtitle1),
+                  ),
                 ],
               ),
             ),

@@ -96,15 +96,15 @@ class _ClassesPageState extends State<ClassesPage> {
                                       unawaited(updateClasses());
                                       if (!mounted) return;
                                       Navigator.pop(context);
-                                    });
-                              } else {
+                                    },
+                              );} else {
                                 return const Center(
                                     child: CircularProgressIndicator());
                               }
                             },
-                          )),
+                          ),
                 ),
-              ),
+              ),),
         ),
       ],
       body: Stack(
@@ -174,8 +174,6 @@ class AddClassesPage extends StatefulWidget {
 }
 
 class _AddClassesPageState extends State<AddClassesPage> {
-  _AddClassesPageState();
-
   Set<String> classIds;
   Set<ClassHeader> headers;
 
@@ -295,19 +293,20 @@ class _ClassListState extends State<ClassList> {
         final s = buildSections(context, sections[section], level: level + 1);
         expanded = expanded || s.containsSelected;
 
-        children.add(AppSpoiler(
-          title: section,
-          level: level,
-          initiallyExpanded: s.containsSelected,
-          content: Padding(
-            padding: const EdgeInsets.only(left: 16),
-            child: Column(
-              children: s.widgets,
+          children.add(AppSpoiler(
+            title: section,
+            level: level,
+            initiallyExpanded: s.containsSelected,
+            content: Padding(
+              padding: const EdgeInsets.only(left: 16),
+              child: Column(
+                children: s.widgets,
+              ),
             ),
-          ),
-        ));
-      }
-    });
+          ));
+        }
+      },
+    );
 
     return _Section(widgets: children, containsSelected: expanded);
   }
@@ -402,8 +401,6 @@ class ClassListItem extends StatefulWidget {
 }
 
 class _ClassListItemState extends State<ClassListItem> {
-  _ClassListItemState();
-
   bool selected;
 
   @override
@@ -442,13 +439,14 @@ class _ClassListItemState extends State<ClassListItem> {
       ),
       subtitle: widget.hint != null ? Text(widget.hint) : null,
       onTap: () =>
-          setState(() {
-            if (widget.selectable) {
+          setState(
+            () {if (widget.selectable) {
               selected = !selected;
               widget.onSelected(selected);
             }
             widget.onTap();
-          }),
+          },
+      ),
     );
   }
 }

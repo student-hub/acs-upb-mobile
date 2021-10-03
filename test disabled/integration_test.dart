@@ -61,6 +61,7 @@
 // import 'package:rrule/rrule.dart';
 // import 'package:time_machine/time_machine.dart' hide Offset;
 // import 'package:timetable/src/header/week_indicator.dart';
+// import 'package:timetable/timetable.dart';
 //
 // import 'firebase_mock.dart';
 // import 'test_utils.dart';
@@ -585,14 +586,14 @@
 //       frequency: Frequency.weekly,
 //       interval: 2,
 //     );
-//     const duration = Period(hours: 2);
+//     const duration = Duration(hours: 2);
 //     final events = [
 //       RecurringUniEvent(
 //         name: 'M1',
 //         calendar: calendar,
 //         rrule: rruleEveryWeekFirstSem,
 //         start: weekStart.at(LocalTime(8, 0, 0)),
-//         period: duration,
+//         duration: duration,
 //         id: '0',
 //       ),
 //       RecurringUniEvent(
@@ -600,7 +601,7 @@
 //         calendar: calendar,
 //         rrule: rruleEveryTwoWeeksFirstSem,
 //         start: weekStart.at(LocalTime(10, 0, 0)),
-//         period: duration,
+//         duration: duration,
 //         id: '1',
 //       ),
 //       RecurringUniEvent(
@@ -608,7 +609,7 @@
 //         calendar: calendar,
 //         rrule: rruleEveryWeekFirstSem,
 //         start: weekStart.addDays(1).at(LocalTime(8, 0, 0)),
-//         period: duration,
+//         duration: duration,
 //         id: '2',
 //       ),
 //       RecurringUniEvent(
@@ -616,7 +617,7 @@
 //         calendar: calendar,
 //         rrule: rruleEveryTwoWeeksFirstSem,
 //         start: weekStart.addDays(1).at(LocalTime(9, 0, 0)),
-//         period: duration,
+//         duration: duration,
 //         id: '3',
 //       ),
 //       RecurringUniEvent(
@@ -624,21 +625,21 @@
 //         calendar: calendar,
 //         rrule: rruleEveryWeekFirstSem,
 //         start: weekStart.addDays(2).at(LocalTime(8, 0, 0)),
-//         period: duration,
+//         duration: duration,
 //         id: '4',
 //       ),
 //       RecurringUniEvent(
 //         name: 'W2',
 //         rrule: rruleEveryWeek,
 //         start: weekStart.addDays(2).at(LocalTime(10, 0, 0)),
-//         period: duration,
+//         duration: duration,
 //         id: '5',
 //       ),
 //       RecurringUniEvent(
 //         name: 'W3',
 //         rrule: rruleEveryTwoWeeks,
 //         start: weekStart.addDays(2).at(LocalTime(12, 0, 0)),
-//         period: duration,
+//         duration: duration,
 //         id: '6',
 //       ),
 //       ClassEvent(
@@ -651,7 +652,7 @@
 //         calendar: calendar,
 //         rrule: rruleEveryWeek,
 //         start: weekStart.addDays(3).at(LocalTime(10, 0, 0)),
-//         period: duration,
+//         duration: duration,
 //         id: '7',
 //       ),
 //       RecurringUniEvent(
@@ -663,7 +664,7 @@
 //         calendar: calendar,
 //         rrule: rruleEveryTwoWeeks,
 //         start: weekStart.addDays(3).at(LocalTime(12, 0, 0)),
-//         period: duration,
+//         duration: duration,
 //         id: '8',
 //       ),
 //       RecurringUniEvent(
@@ -671,7 +672,7 @@
 //         calendar: calendar,
 //         rrule: rruleEveryWeek,
 //         start: weekStart.addDays(4).at(LocalTime(10, 0, 0)),
-//         period: duration,
+//         duration: duration,
 //         id: '9',
 //       ),
 //       RecurringUniEvent(
@@ -679,7 +680,7 @@
 //         calendar: calendar,
 //         rrule: rruleEveryTwoWeeks,
 //         start: weekStart.addDays(4).at(LocalTime(12, 0, 0)),
-//         period: duration,
+//         duration: duration,
 //         id: '10',
 //       ),
 //     ];

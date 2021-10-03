@@ -1,24 +1,23 @@
 import 'dart:typed_data';
 import 'dart:ui';
 
+import 'package:acs_upb_mobile/widgets/circle_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:image/image.dart' as im;
 import 'package:pref/pref.dart';
 import 'package:provider/provider.dart';
 
 import '../../generated/l10n.dart';
 import '../../pages/filter/view/filter_dropdown.dart';
-import '../../resources/storage/storage_provider.dart';
 import '../../resources/utils.dart';
 import '../../resources/validator.dart';
 import '../../widgets/button.dart';
-import '../../widgets/circle_image.dart';
 import '../../widgets/dialog.dart';
 import '../../widgets/icon_text.dart';
 import '../../widgets/scaffold.dart';
 import '../../widgets/toast.dart';
+import '../../widgets/upload_button.dart';
 import '../model/user.dart';
 import '../service/auth_provider.dart';
 
@@ -37,20 +36,27 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   final formKey = GlobalKey<FormState>();
 
-  Uint8List uploadedImage;
   ImageProvider imageWidget;
+
+  UploadButtonController uploadButtonController;
 
   // Whether the user verified their email; this can be true, false or null if
   // the async check hasn't completed yet.
   bool isVerified;
+  bool correctPassword;
 
   @override
   void initState() {
     super.initState();
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
     authProvider.isVerified.then((value) => setState(() => isVerified = value));
-    authProvider.getProfilePictureURL().then((value) =>
-        setState(() => {if (value != null) imageWidget = NetworkImage(value)}));
+    authProvider.getProfilePictureURL().then((value) => setState(() => {
+          imageWidget = value != null
+              ? NetworkImage(value)
+              : const AssetImage('assets/illustrations/undraw_profile_pic.png'),
+        }));
+    uploadButtonController =
+        UploadButtonController(onUpdate: () => setState(() => {}));
   }
 
   AppDialog _changePasswordDialog(BuildContext context) {
@@ -77,6 +83,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 validator: (value) {
                   if (value?.isEmpty ?? true) {
                     return S.current.errorNoPassword;
+                  }
+                  if (!correctPassword) {
+                    return S.current.errorIncorrectPassword;
                   }
                   return null;
                 },
@@ -114,7 +123,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   if (value?.isEmpty ?? true) {
                     return S.current.errorNoPassword;
                   }
-                  if (value == newPasswordController.text) {
+                  if (value != newPasswordController.text) {
                     return S.current.errorPasswordsDiffer;
                   }
                   return null;
@@ -131,9 +140,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
           color: Theme.of(context).primaryColor,
           width: 130,
           onTap: () async {
+            correctPassword =
+                await authProvider.verifyPassword(oldPasswordController.text);
             if (changePasswordKey.currentState.validate()) {
-              if (await authProvider
-                  .verifyPassword(oldPasswordController.text)) {
+              if (correctPassword) {
                 if (await authProvider
                     .changePassword(newPasswordController.text)) {
                   AppToast.show(S.current.messageChangePasswordSuccess);
@@ -224,36 +234,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
     );
   }
 
-  Widget buildEditableAvatar(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(10),
-      child: GestureDetector(
-        child: CircleImage(
-            circleSize: 150,
-            image: imageWidget ??
-                const AssetImage('assets/illustrations/undraw_profile_pic.png'),
-            enableOverlay: true,
-            overlayIcon: const Icon(Icons.edit_outlined)),
-        onTap: () async {
-          final Uint8List uploadedImage =
-              await StorageProvider.showImagePicker();
-          if (uploadedImage != null) {
-            setState(() {
-              this.uploadedImage = uploadedImage;
-              imageWidget = MemoryImage(uploadedImage);
-            });
-          }
-        },
-      ),
-    );
-  }
-
-  Future<Uint8List> convertToPNG(Uint8List image) async {
-    final decodedImage = im.decodeImage(image);
-    return im.encodePng(im.copyResize(decodedImage, width: 500, height: 500),
-        level: 9);
-  }
-
   @override
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
@@ -297,12 +277,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     builder: _changeEmailConfirmationDialog,
                   ).then((value) => result = value ?? false);
                 }
-                if (uploadedImage != null) {
-                  imageAsPNG = await convertToPNG(uploadedImage);
+                if (uploadButtonController.newUploadedImageBytes != null) {
+                  imageAsPNG = await Utils.convertToPNG(
+                      uploadButtonController.newUploadedImageBytes);
                   result = await authProvider.uploadProfilePicture(imageAsPNG);
-                  if (result) {
-                    AppToast.show(S.current.messagePictureUpdatedSuccess);
-                  }
                 }
                 if (result) {
                   if (await authProvider.updateProfile(info)) {
@@ -326,7 +304,17 @@ class _EditProfilePageState extends State<EditProfilePage> {
       body: Container(
         child: ListView(padding: const EdgeInsets.all(12), children: [
           AccountNotVerifiedWarning(),
-          buildEditableAvatar(context),
+          Padding(
+            padding: const EdgeInsets.all(10),
+            child: CircleImage(
+              circleSize: 150,
+              image: uploadButtonController.uploadImageBytes != null
+                  ? MemoryImage(uploadButtonController.newUploadedImageBytes)
+                  : imageWidget,
+            ),
+          ),
+          const SizedBox(height: 10),
+          UploadButton(pageType: true, controller: uploadButtonController),
           PrefTitle(
             title: Text(S.current.labelPersonalInformation),
             padding: const EdgeInsets.only(left: 0, bottom: 0, top: 20),

@@ -25,7 +25,7 @@
 // import 'package:provider/provider.dart';
 // import 'package:time_machine/time_machine.dart';
 //
-// import 'test_utils.dart';
+// import '../test/test_utils.dart';
 //
 // class MockAuthProvider extends Mock implements AuthProvider {}
 //
@@ -93,8 +93,8 @@
 //     when(mockFilterProvider.filterEnabled).thenReturn(true);
 //     when(mockFilterProvider.fetchFilter())
 //         .thenAnswer((_) => Future.value(Filter(localizedLevelNames: [
-//               {'en': 'Level', 'ro': 'Nivel'}
-//             ], root: FilterNode(name: 'root'))));
+//       {'en': 'Level', 'ro': 'Nivel'}
+//     ], root: FilterNode(name: 'root'))));
 //
 //     mockPersonProvider = MockPersonProvider();
 //     // ignore: invalid_use_of_protected_member
@@ -123,7 +123,7 @@
 //     when(mockEventProvider.getUpcomingEvents(LocalDate.today()))
 //         .thenAnswer((_) => Future.value(<UniEventInstance>[]));
 //     when(mockEventProvider.getUpcomingEvents(LocalDate.today(),
-//             limit: anyNamed('limit')))
+//         limit: anyNamed('limit')))
 //         .thenAnswer((_) => Future.value(<UniEventInstance>[]));
 //
 //     mockFeedbackProvider = MockFeedbackProvider();
@@ -154,20 +154,20 @@
 //     when(mockClassProvider.userClassHeadersCache).thenReturn(userClassHeaders);
 //     when(mockClassProvider.fetchClassHeaders(uid: anyNamed('uid')))
 //         .thenAnswer((_) => Future.value([
-//               ClassHeader(
-//                 id: '1',
-//                 name: 'Maths 1',
-//                 acronym: 'M1',
-//                 category: 'A/B',
-//               ),
-//               ClassHeader(
-//                 id: '2',
-//                 name: 'Maths 2',
-//                 acronym: 'M2',
-//                 category: 'A/C',
-//               ),
-//             ] +
-//             userClassHeaders));
+//       ClassHeader(
+//         id: '1',
+//         name: 'Maths 1',
+//         acronym: 'M1',
+//         category: 'A/B',
+//       ),
+//       ClassHeader(
+//         id: '2',
+//         name: 'Maths 2',
+//         acronym: 'M2',
+//         category: 'A/C',
+//       ),
+//     ] +
+//         userClassHeaders));
 //     when(mockClassProvider.fetchUserClassIds(any))
 //         .thenAnswer((_) => Future.value(['3', '4']));
 //   });
@@ -319,116 +319,116 @@
 //       when(mockFilterProvider.filterEnabled).thenReturn(true);
 //       when(mockFilterProvider.fetchFilter())
 //           .thenAnswer((_) => Future.value(Filter(
-//                   localizedLevelNames: [
-//                     {'en': 'Degree', 'ro': 'Nivel de studiu'},
-//                     {'en': 'Major', 'ro': 'Specializare'},
-//                     {'en': 'Year', 'ro': 'An'},
-//                     {'en': 'Series', 'ro': 'Serie'},
-//                     {'en': 'Group', 'ro': 'Group'},
-//                     {'en': 'Subgroup', 'ro': 'Semigrupă'}
-//                   ],
-//                   root: FilterNode(name: 'All', value: true, children: [
-//                     FilterNode(name: 'BSc', value: true, children: [
-//                       FilterNode(name: 'CTI', value: true, children: [
+//           localizedLevelNames: [
+//             {'en': 'Degree', 'ro': 'Nivel de studiu'},
+//             {'en': 'Major', 'ro': 'Specializare'},
+//             {'en': 'Year', 'ro': 'An'},
+//             {'en': 'Series', 'ro': 'Serie'},
+//             {'en': 'Group', 'ro': 'Group'},
+//             {'en': 'Subgroup', 'ro': 'Semigrupă'}
+//           ],
+//           root: FilterNode(name: 'All', value: true, children: [
+//             FilterNode(name: 'BSc', value: true, children: [
+//               FilterNode(name: 'CTI', value: true, children: [
+//                 FilterNode(
+//                   name: 'CTI-1',
+//                   value: true,
+//                   children: [
+//                     FilterNode(name: '1-CA'),
+//                     FilterNode(
+//                       name: '1-CB',
+//                       value: true,
+//                       children: [
 //                         FilterNode(
-//                           name: 'CTI-1',
+//                           name: '311CB',
 //                           value: true,
 //                           children: [
-//                             FilterNode(name: '1-CA'),
-//                             FilterNode(
-//                               name: '1-CB',
-//                               value: true,
-//                               children: [
-//                                 FilterNode(
-//                                   name: '311CB',
-//                                   value: true,
-//                                   children: [
-//                                     FilterNode(name: '311CBa'),
-//                                     FilterNode(name: '311CBb'),
-//                                   ],
-//                                 ),
-//                                 FilterNode(
-//                                   name: '312CB',
-//                                   value: true,
-//                                   children: [
-//                                     FilterNode(name: '312CBa'),
-//                                     FilterNode(name: '312CBb'),
-//                                   ],
-//                                 ),
-//                                 FilterNode(
-//                                   name: '313CB',
-//                                   value: true,
-//                                   children: [
-//                                     FilterNode(name: '313CBa'),
-//                                     FilterNode(name: '313CBb'),
-//                                   ],
-//                                 ),
-//                                 FilterNode(
-//                                   name: '314CB',
-//                                   value: true,
-//                                   children: [
-//                                     FilterNode(name: '314CBa'),
-//                                     FilterNode(name: '314CBb'),
-//                                   ],
-//                                 ),
-//                               ],
-//                             ),
-//                             FilterNode(name: '1-CC'),
-//                             FilterNode(name: '1-CD', children: [
-//                               FilterNode(
-//                                 name: '311CD',
-//                                 value: true,
-//                                 children: [
-//                                   FilterNode(name: '311CDa'),
-//                                   FilterNode(name: '311CDb'),
-//                                 ],
-//                               ),
-//                               FilterNode(
-//                                 name: '312CD',
-//                                 value: true,
-//                                 children: [
-//                                   FilterNode(name: '312CDa'),
-//                                   FilterNode(name: '312CDb'),
-//                                 ],
-//                               ),
-//                               FilterNode(
-//                                 name: '313CD',
-//                                 value: true,
-//                                 children: [
-//                                   FilterNode(name: '313CDa'),
-//                                   FilterNode(name: '313CDb'),
-//                                 ],
-//                               ),
-//                               FilterNode(
-//                                 name: '314CD',
-//                                 value: true,
-//                                 children: [
-//                                   FilterNode(name: '314CDa'),
-//                                   FilterNode(name: '314CDb'),
-//                                 ],
-//                               ),
-//                             ]),
+//                             FilterNode(name: '311CBa'),
+//                             FilterNode(name: '311CBb'),
 //                           ],
 //                         ),
 //                         FilterNode(
-//                           name: 'CTI-2',
+//                           name: '312CB',
+//                           value: true,
+//                           children: [
+//                             FilterNode(name: '312CBa'),
+//                             FilterNode(name: '312CBb'),
+//                           ],
 //                         ),
 //                         FilterNode(
-//                           name: 'CTI-3',
+//                           name: '313CB',
+//                           value: true,
+//                           children: [
+//                             FilterNode(name: '313CBa'),
+//                             FilterNode(name: '313CBb'),
+//                           ],
 //                         ),
 //                         FilterNode(
-//                           name: 'CTI-4',
+//                           name: '314CB',
+//                           value: true,
+//                           children: [
+//                             FilterNode(name: '314CBa'),
+//                             FilterNode(name: '314CBb'),
+//                           ],
 //                         ),
-//                       ]),
-//                       FilterNode(name: 'IS')
-//                     ]),
-//                     FilterNode(name: 'MSc', children: [
+//                       ],
+//                     ),
+//                     FilterNode(name: '1-CC'),
+//                     FilterNode(name: '1-CD', children: [
 //                       FilterNode(
-//                         name: 'IA',
+//                         name: '311CD',
+//                         value: true,
+//                         children: [
+//                           FilterNode(name: '311CDa'),
+//                           FilterNode(name: '311CDb'),
+//                         ],
 //                       ),
-//                       FilterNode(name: 'SPRC'),
-//                     ])
-//                   ]))));
+//                       FilterNode(
+//                         name: '312CD',
+//                         value: true,
+//                         children: [
+//                           FilterNode(name: '312CDa'),
+//                           FilterNode(name: '312CDb'),
+//                         ],
+//                       ),
+//                       FilterNode(
+//                         name: '313CD',
+//                         value: true,
+//                         children: [
+//                           FilterNode(name: '313CDa'),
+//                           FilterNode(name: '313CDb'),
+//                         ],
+//                       ),
+//                       FilterNode(
+//                         name: '314CD',
+//                         value: true,
+//                         children: [
+//                           FilterNode(name: '314CDa'),
+//                           FilterNode(name: '314CDb'),
+//                         ],
+//                       ),
+//                     ]),
+//                   ],
+//                 ),
+//                 FilterNode(
+//                   name: 'CTI-2',
+//                 ),
+//                 FilterNode(
+//                   name: 'CTI-3',
+//                 ),
+//                 FilterNode(
+//                   name: 'CTI-4',
+//                 ),
+//               ]),
+//               FilterNode(name: 'IS')
+//             ]),
+//             FilterNode(name: 'MSc', children: [
+//               FilterNode(
+//                 name: 'IA',
+//               ),
+//               FilterNode(name: 'SPRC'),
+//             ])
+//           ]))));
 //     });
 //
 //     testWidgets('Sign up', (WidgetTester tester) async {

@@ -1,8 +1,7 @@
-import 'package:dart_date/dart_date.dart' show Interval;
 import 'package:flutter/material.dart' hide Interval;
 import 'package:rrule/rrule.dart';
+import 'package:dart_date/dart_date.dart' show Interval;
 import 'package:time_machine/time_machine.dart' hide Interval;
-
 import '../../../../resources/locale_provider.dart';
 import '../../../../resources/utils.dart';
 import '../../../classes/model/class.dart';
@@ -14,7 +13,7 @@ class RecurringUniEvent extends UniEvent {
   const RecurringUniEvent({
     @required this.rrule,
     @required DateTime start,
-    @required Period period,
+    @required Duration duration,
     @required String id,
     List<String> relevance,
     String degree,
@@ -31,7 +30,7 @@ class RecurringUniEvent extends UniEvent {
             name: name,
             location: location,
             start: start,
-            period: period,
+            duration: duration,
             degree: degree,
             relevance: relevance,
             id: id,
@@ -93,11 +92,9 @@ class RecurringUniEvent extends UniEvent {
       {Interval intersectingInterval}) sync* {
     final RecurrenceRule rrule = rruleBasedOnCalendar;
 
-    // Calculate recurrences
-    // int i = 0;
-
-    for (final start in rrule.getInstances(start: start.copyWithUtc())) {
-      final DateTime end = start.add(period.toTime().toDuration);
+    for (final start
+        in rrule.getInstances(start: start.copyWith(isUtc: true))) {
+      final DateTime end = start.add(duration);
       if (intersectingInterval != null) {
         if (end < intersectingInterval.start) continue;
         if (start > intersectingInterval.end) break;
@@ -114,16 +111,14 @@ class RecurringUniEvent extends UniEvent {
 
       if (!skip) {
         yield UniEventInstance(
-          // id: '$id-$i',
           title: name,
           mainEvent: this,
           color: color,
-          start: start.copyWithUtc(),
-          end: end.copyWithUtc(),
+          start: start.copyWith(isUtc: true),
+          end: end.copyWith(isUtc: true),
           location: location,
         );
       }
-      // i++;
     }
   }
 }

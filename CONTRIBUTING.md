@@ -15,10 +15,12 @@ It is recommended that you go through [our workshop](https://github.com/acs-upb-
   + [Authentication](#authentication)
   + [Firestore](#firestore)
     - [Data model](#data-model)
+    - [Security rules](#security-rules)
+    - [Indexes](#indexes)
     - [Project database](#project-database)
   + [Storage](#storage)
     - [Structure](#structure)
-    - [Security](#security)
+    - [Security rules](#security-rules-1)
   + [Functions](#functions)
 * [Internationalization](#internationalization)
   + [On-device](#on-device)
@@ -59,7 +61,7 @@ torvalds/android_speedups
 When developing a new feature or working on a bug, your pull request will end up containing fix-up commits (commits that change the same line of code repeatedly) or too fine-grained commits. An issue that can arise from this is that the main branch history will become polluted with unnecessary commits. To avoid it, we implement and enforce a squash policy.
 All commits that are merged into the main development branch have to be squashed ahead of the merge.
 You can do so by pressing "squash and merge" in GitHub (_recommended_), or, alternatively, following the generic local squash routine outlined bellow:
-```
+```bash
 git checkout your_branch_name
 git rebase -i HEAD~n
 # n is normally the number of commits in the pull request.
@@ -73,12 +75,17 @@ Please update the resulting commit message, if needed. It should read as a coher
 Please refrain from creating several pull requests for the same change. Use the pull request that is already open (or was created earlier) to amend changes. This preserves the discussion and review that happened earlier for the respective change set.
 Similarly, please create one PR per development item, instead of bundling multiple fixes and improvements in a single PR.
 
+| :warning: | After the merging is concluded, please delete the branches related to the pull request that you just closed.|
+|-----------|:------------------------------------------------------------------------------------------------------------|
+
+
 ## Development tips
 
 * Make sure you have the *Project* view open in the **Project** tab on the left in Android Studio (not *Android*).
 * Flutter comes with **Hot Reload** (the lightning icon, or *Ctrl+\\* or *⌘\\*), which allows you to load changes in the code quickly into an already running app, without you needing to reinstall it. It's a very handy feature, but it doesn't work all the time - if you change the code, use Hot Reload but don't see the expected changes, or see some weird behaviour, you may need to close and restart the app (or even reinstall).
 * If **running on web** doesn't give the expected results after changing some code, you may need to clear the cache (in *Chrome*: *Ctrl+Shift+C* or *⌘+Shift+C* to open the Inspect menu, then right-click the *Refresh* button, and select *Empty cache and Hard reload*.)
 * [Flutter Inspector](https://flutter.dev/docs/development/tools/devtools/inspector) is a powerful tool which allows you to visualize and explore Flutter widget trees. You can use it to find out where a specific part of the UI is defined in the code (by turning on *Select widget mode* and selecting the widget you'd like to find), it can help you debug layouts (by enabling *Debug Paint*, you can visualize padding, alignments and widget borders) and much more.
+  - If *Flutter Inspector* doesn't work when running on web, a possible solution is to disable *embedding DevTools* (IntelliJ/Android Studio: `File > Settings > Languages & Frameworks > Flutter > Enable embedding DevTools in the Flutter Inspector tool window`).
 * Get used to **reading code and searching through the codebase**. The project is fairly large and for most things, you should be able to find a usage/implementation example within our codebase. Do try to reuse code as much as possible - prefer creating a customizable widget with the parameters you need for different use cases, over copy-pasting widget code. Some tips for exploring the codebase:
   - *Ctrl+Shift+F* or *⌘+Shift+F* upon clicking a directory in the Project view lets you search a keyword through the entire directory. This is particularly useful for searching for something in the entire codebase.
   - *Ctrl+click* or *⌘+click* through a class/method name takes you to its definition. You can also right-click on it and use "Find usages" or the various "Go To" options to explore how it is used/defined.
@@ -91,11 +98,14 @@ Similarly, please create one PR per development item, instead of bundling multip
   - If you really need to test the release version (usually not necessary), run `flutter run --release` from the Terminal.
     * The release version cannot be ran in an emulator.
     * You may also need to temporarily change the release signing config. In the [android/app/build.gradle](android/app/build.gradle) file, replace `signingConfig signingConfigs.release` with `signingConfig signingConfigs.debug`.
+    * To switch to debug config on web, in the [web/index.html](web/index.html) file, replace `firebaseConfig.release` with `firebaseConfig.debug`.
     * For simplicity, you could call the default "main.dart" configuration in Android Studio "Debug", duplicate it and call the second one "Release", with `--release` as an argument. For example:
     <img src=screenshots/other/release_configuration.png>
 
-| :exclamation: | On Android, ACS UPB Mobile uses **a separate (development) environment in debug mode**. That means a completely different Firebase project - separate data, including user info.|
-|---------------|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+- On Android, ACS UPB Mobile uses **a separate (development) environment in debug mode**. That means a completely different Firebase project - separate data, including user info. This is not used automatically on iOS and web (#105), but on web you can manually switch to the dev environment by replacing `firebaseConfig.release` with `firebaseConfig.debug` in the [web/index.html](web/index.html) file.
+
+  | :exclamation: | You should ALWAYS use the separate development environment for testing the app when modifying any kind of data, so as not to risk breaking something in the production database. |
+  |---------------|:---------------|
 
 ## Style guide
 
@@ -110,23 +120,28 @@ This project uses [the official Dart style guide](https://dart.dev/guides/langua
 This project uses [GitHub Actions](https://github.com/features/actions) for CI/CD. That means that testing and deployment are automated.
 
 The following actions are currently set up:
-* [Linter](https://github.com/acs-upb-mobile/acs-upb-mobile/actions?query=workflow%3ALinter): Checks for warnings and coding style issues. Runs on every push and pull request.
-  - If your PR is made from a branch inside the repository (rather than a fork), [acs-upb-mobile-bot](https://github.com/acs-upb-mobile-bot) should automatically *add code review comments pointing out any warnings*.
+* [Linter](https://github.com/acs-upb-mobile/acs-upb-mobile/actions?query=workflow%3ALinter): Checks for typos, warnings and coding style issues based on the [Dangerfile](.github/linter/Dangerfile). Runs on every push and pull request.
+  - If your PR is made from a branch inside the repository (rather than a fork), which is the preferred way to make contributions, [acs-upb-mobile-bot](https://github.com/acs-upb-mobile-bot) should automatically *add code review comments pointing out any warnings*.
     * Sometimes, the automatic check for dead links in documentation fails with "429 too many requests" (see [this issue](https://github.com/textlint-rule/textlint-rule-no-dead-link/issues/135)). You can ignore those if you know the links in question are good.
+    * Do not ask the bot for review, it does it automatically.
   - If you have formatting issues, the "Check formatting" step will *point out the files that need to be formatted* and the workflow will fail.
 * [Tests](https://github.com/acs-upb-mobile/acs-upb-mobile/actions?query=workflow%3ATests): Runs all tests in the [test/](test) directory and submits a coverage report to [codecov](https://codecov.io/gh/acs-upb-mobile/acs-upb-mobile). This action is triggered on every push and pull request.
   - If at least one test fails, this workflow will fail.
   - The *coverage* is the percentage of lines of code that are executed at least once in tests. This project aims to keep coverage above 70% at all times.
 * [Deployment](https://github.com/acs-upb-mobile/acs-upb-mobile/actions?query=workflow%3ADeployment):
-  Deploys the web version of the app to the website ([acs-upb-mobile.web.app](https://acs-upb-mobile.web.app/)) and creates a corresponding [GitHub Release](https://github.com/acs-upb-mobile/acs-upb-mobile/releases) including the APK. This action is triggered when a new version tag is pushed. **Do not push version tags** unless you know what you are doing.
+  Deploys the app to [Google Play](https://play.google.com/store/apps/details?id=ro.pub.acs.acs_upb_mobile), as well as the website ([acs-upb-mobile.web.app](https://acs-upb-mobile.web.app/)), and creates a corresponding [GitHub Release](https://github.com/acs-upb-mobile/acs-upb-mobile/releases) including the APK. It also deploys Firebase functions as well as Firestore security rules and indexes (see [Working with Firebase](#working-with-firebase) for more info). This action is triggered when a new version tag (e.g. `v1.2.10`) is pushed.
+  -  :exclamation: **Do not push version tags** unless you know what you are doing. If you do push a tag, you should annotate it (e.g. use a command like `git tag -a v1.2.10`) with the content of the en-US changelog file. The first line of the annotation should be the version (e.g. v1.2.10), followed by an empty line, followed by the content of the English changelog.
+  - For the Google Play release, we are using [fastlane](https://fastlane.tools/). It requires creating changelog files in each supported language under [android/fastlane/metadata/android](android/fastlane/metadata/android), with the name `$(pubspec_build_number + 10000).txt`. For example, if the version in [pubspec.yaml](pubspec.yaml) is `1.2.10+12`, the files should be named `100012.txt`. The content of the changelog file is what the users will se under the "What's new" section in Google Play, and should use a friendly language and generally be organised by sections like `Added`, `Fixed`, `Improved` etc. Look at the existing changelogs for examples.
 
 ## Working with Firebase
-ACS UPB Mobile uses [Firebase](https://firebase.google.com/) - an app development platform built on Google infrastructure and using [Google Cloud Platform](https://cloud.google.com/) - to manage remote storage and authentication, as well as other cloud resources.
+ACS UPB Mobile uses [Firebase](https://firebase.google.com/) - an app development platform built on Google infrastructure and using [Google Cloud Platform](https://cloud.google.com/) - to manage remote storage and authentication, as well as other cloud resources. We have two separate projects for the app - one for production (acs-upb-mobile) and one for development (acs-upb-mobile-dev). The former is the "real" app with actual user data, and we use the latter when developing and adding new features to avoid causing disturbances in the production environment that users could notice. You can ask a maintainer to gain access to the development project, and in most cases you shouldn't need access to the production project.
 
 ### Setup
 This application uses [flutterfire](https://github.com/FirebaseExtended/flutterfire) plugins in order to access Firebase services. They are already enabled in the [pubspec](pubspec.yaml) file and ready to import and use in the code.
 
 :exclamation: FlutterFire only has [Cloud Storage](#storage) support for Android and iOS. The web version needs a special implementation. See [resources/storage](lib/resources/storage) for an example.
+
+Firebase projects can be managed through the [Firebase console](https://console.firebase.google.com/) and the [Firebase CLI](https://firebase.google.com/docs/cli). To set up the CLI tools, follow [the official instructions](https://firebase.google.com/docs/cli#install_the_firebase_cli). You should then authenticate using `firebase login`. You **DO NOT** need to run `firebase init`, as the project is already initialized in the repo.
 
 ### Authentication
 
@@ -143,7 +158,7 @@ Firebase Authentication stores [user information](https://firebase.google.com/do
 
 This service automatically *handles the authentication tokens* and *enforces security rules*, which is particularly useful for an open-source application which users can fiddle with, such as ours. For example, multiple failed authentication attempts lead to a temporary timeout, and a user cannot delete their account unless they have logged in very recently (or refreshed their authentication token).
 
-[Firestore security rules](#firestore-security) can be enforced based on the user’s UID. This method means that, even though users can access the database connection string through the public repository, they can only do a limited set of actions on the database, depending on whether they are authenticated and their permissions.
+[Firestore security rules](#security-rules) can be enforced based on the user’s UID. This method means that, even though users can access the database connection string through the public repository, they can only do a limited set of actions on the database, depending on whether they are authenticated and their permissions.
 
 ### Firestore
 [Cloud Firestore](https://firebase.google.com/docs/firestore) is a noSQL database that organises its data in *collections* and *documents*.
@@ -156,11 +171,32 @@ In addition to fields, documents can contain collections… which contain other 
 
 More information about the Firestore data model can be found [here](https://firebase.google.com/docs/firestore/data-model).
 
-<h4 id="firestore-security">Security</h4>
+#### Security rules
 
 Firestore allows for defining specific security rules for each collection. Rules can be applied for each different type of transaction - `reads` (where single-document reads - `get` - and queries - `list` - can have different rules) and `writes` (where `create`, `delete` and `update` can be treated separately).
 
 More information on Firestore security rules can be found [here](https://firebase.google.com/docs/firestore/security/rules-structure).
+
+You can update security rules directly from the Firebase console (select Firestore Database from the side menu, then click the "Rules" tab). However, that can lead to conflicts when we deploy the rules from [firestore.rules](firestore.rules). Always remember to update the repo file as well, otherwise you risk your changes being overwritten. As of Aug 2021, there is no CLI command to fetch the current rules, so you have to manually copy them from the console to the file.
+
+The preferred method to update security rules is through the [Firebase CLI](https://firebase.google.com/docs/cli) (see section [Setup](#setup) above). Simply edit the [firestore.rules](firestore.rules) file, then deploy the rules using the following commands:
+
+```bash
+firebase use dev # Make sure the dev environment is selected
+firebase deploy --only firestore:rules
+```
+
+You do not need to worry about deploying to the production environment, as that is handled by the automated scripts that run when you merge a PR (see [GitHub Actions](#github-actions)).
+
+#### Indexes
+
+Indexes are useful to improve query performance, and Firestore requires an index for every query. Basic indexes are already generated, and when you run a query that requires a new index, you will get an error and a link that will walk you through creating the necessary indexes.
+
+:exclamation: When you create a new index from the Firebase console, you must update the [firestore.indexes.json](firestore.indexes.json) file by calling:
+
+```bash
+firebase firestore:indexes > firestore.indexes.json
+```
 
 #### Project database
 The project database contains the following collections:
@@ -686,11 +722,22 @@ It contains app resources such as icons and profile pictures, organised similarl
 * **Website icons** are stored in the `websites/` directory. The icon of a website in Firestore that has the ID "abcd" will be in storage under `websites/abcd/icon.png`.
 * **Profile pictures** are stored in the `users/` directory. The picture of a user with the UID "abcd" would be in storage under `users/abcd/picture.png`.
 
-#### Security
+#### Security rules
 
-Storage security rules are similar to [Firestore security rules](#firestore-security). One of the reasons for keeping the storage structure as close to possible to the Firestore structure is the ability to have similar security rules (for example, if, in Firestore, a user can only access their own document, the same rule can be applied for a user's folder inside Storage).
+Storage security rules are similar to [Firestore security rules](#security-rules). One of the reasons for keeping the storage structure as close as possible to the Firestore structure is the ability to have similar security rules (for example, if, in Firestore, a user can only access their own document, the same rule can be applied for a user's folder inside Storage).
 
 More information on Storage security rules can be found [here](https://firebase.google.com/docs/storage/security).
+
+You can update security rules directly from the Firebase console (select Storage from the side menu, then click the "Rules" tab). However, that can lead to conflicts when we deploy the rules from [storage.rules](storage.rules). Always remember to update the repo file as well, otherwise you risk your changes being overwritten. As of Aug 2021, there is no CLI command to fetch the current rules, so you have to manually copy them from the console to the file.
+
+The preferred method to update security rules is through the [Firebase CLI](https://firebase.google.com/docs/cli) (see section [Setup](#setup) above). Simply edit the [storage.rules](storage.rules) file, then deploy the rules using the following commands:
+
+```bash
+firebase use dev # Make sure the dev environment is selected
+firebase deploy --only storage
+```
+
+You do not need to worry about deploying to the production environment, as that is handled by the automated scripts that run when you merge a PR (see [GitHub Actions](#github-actions)).
 
 ### Functions
 [Cloud Functions for Firebase](https://firebase.google.com/docs/functions) is a serverless solution for running bits of code in response to events or at scheduled time intervals. They are, for all intents and purposes, JavaScript/TypeScript functions that run directly "in the cloud", without needing to be tied to an app or device.

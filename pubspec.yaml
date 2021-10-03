@@ -38,6 +38,7 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.3
 
+  # Useful static extension methods
   dartx: any
 
   # Date & time picker widget
@@ -52,6 +53,9 @@ dependencies:
   # Package for dynamically changing the app theme
   #  dynamic_theme: ^1.0.1
   easy_dynamic_theme: ^2.2.0
+
+  # File picker widget
+  file_picker: ^4.1.3
 
   # Firebase products
   firebase_analytics: ^8.1.1
@@ -130,6 +134,7 @@ dependencies:
 
   # DateTime utilities
   time_machine:
+    # The official release doesn't have null safety yet
     git:
       url: https://github.com/Dana-Ferguson/time_machine
       ref: master

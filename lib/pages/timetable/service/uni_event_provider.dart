@@ -7,7 +7,6 @@ import 'package:flutter/material.dart' hide Interval;
 import 'package:googleapis/calendar/v3.dart' as g_cal;
 import 'package:recase/recase.dart';
 import 'package:rrule/rrule.dart';
-import 'package:time_machine/time_machine.dart' hide Interval;
 import 'package:timetable/timetable.dart';
 
 import '../../../authentication/service/auth_provider.dart';
@@ -28,34 +27,21 @@ import '../model/events/uni_event.dart';
 import '../timetable_utils.dart';
 import 'google_calendar_services.dart';
 
-extension PeriodExtension on Period {
-  static Period fromJSON(Map<String, dynamic> json) {
-    return Period(
-      years: json['years'] ?? 0,
-      months: json['months'] ?? 0,
-      weeks: json['weeks'] ?? 0,
+extension DurationExtension on Duration {
+  static Duration fromJSON(Map<String, dynamic> json) {
+    return Duration(
       days: json['days'] ?? 0,
       hours: json['hours'] ?? 0,
       minutes: json['minutes'] ?? 0,
       seconds: json['seconds'] ?? 0,
       milliseconds: json['milliseconds'] ?? 0,
       microseconds: json['microseconds'] ?? 0,
-      nanoseconds: json['nanoseconds'] ?? 0,
     );
   }
 
   Map<String, dynamic> toJSON() {
     final json = {
-      'years': years,
-      'months': months,
-      'weeks': weeks,
-      'days': days,
-      'hours': hours,
-      'minutes': minutes,
-      'seconds': seconds,
-      'milliseconds': milliseconds,
-      'microseconds': microseconds,
-      'nanoseconds': nanoseconds
+      'microseconds': inMicroseconds,
     };
 
     return json..removeWhere((key, value) => value == 0);
@@ -81,11 +67,11 @@ extension UniEventExtension on UniEvent {
         id: id,
         type: type,
         name: json['name'],
-        // Convert time to UTC and then to local time
-        start: (json['start'] as Timestamp).toDate(),
-        end: (json['end'] as Timestamp).toDate(),
+        start: (json['start'] as Timestamp).toDate().copyWith(isUtc: true),
+        end: (json['end'] as Timestamp).toDate().copyWith(isUtc: true),
         location: json['location'],
-        // TODO(IoanaAlexandru): Allow users to set event colours in settings
+        // TODO(IoanaAlexandru): Allow users to set event colours in settings, #168
+
         color: type.color,
         classHeader: classHeader,
         calendar: calendars[json['calendar']],
@@ -103,11 +89,10 @@ extension UniEventExtension on UniEvent {
         id: id,
         type: type,
         name: json['name'],
-        // Convert time to UTC and then to local time
         start: (json['start'] as Timestamp).toDate(),
-        period: PeriodExtension.fromJSON(json['duration']),
+        duration: DurationExtension.fromJSON(json['duration']),
         location: json['location'],
-        // TODO(IoanaAlexandru): Allow users to set event colours in settings
+        // TODO(IoanaAlexandru): Allow users to set event colours in settings, #168
         color: type.color,
         classHeader: classHeader,
         calendar: calendars[json['calendar']],
@@ -126,7 +111,7 @@ extension UniEventExtension on UniEvent {
         type: type,
         name: json['name'],
         start: (json['start'] as Timestamp).toDate(),
-        period: PeriodExtension.fromJSON(json['duration']),
+        duration: DurationExtension.fromJSON(json['duration']),
         location: json['location'],
         color: type.color,
         classHeader: classHeader,
@@ -143,11 +128,10 @@ extension UniEventExtension on UniEvent {
         id: id,
         type: type,
         name: json['name'],
-        // Convert time to UTC and then to local time
         start: (json['start'] as Timestamp).toDate(),
-        period: PeriodExtension.fromJSON(json['duration']),
+        duration: DurationExtension.fromJSON(json['duration']),
         location: json['location'],
-        // TODO(IoanaAlexandru): Allow users to set event colours in settings
+        // TODO(IoanaAlexandru): Allow users to set event colours in settings, #168
         color: type.color,
         classHeader: classHeader,
         calendar: calendars[json['calendar']],
@@ -161,14 +145,14 @@ extension UniEventExtension on UniEvent {
     }
   }
 
-  Map<String, dynamic> toData() {
+  Map<String, dynamic> toJSON() {
     final type = this.type.toShortString();
 
     final json = {
       'type': type,
       'name': name,
-      'start': start.copyWithoutUtc().toTimestamp(),
-      'duration': period.toJSON(),
+      'start': start.copyWith(isUtc: false).toTimestamp(),
+      'duration': duration.toJSON(),
       'location': location,
       'class': classHeader.id,
       'degree': degree,
@@ -325,15 +309,21 @@ class UniEventProvider with ChangeNotifier {
         getAllDayEventsIntersecting(interval);
     final Stream<Iterable<UniEventInstance>> partDay =
         getPartDayEventsIntersecting(interval);
-    streams..add(allDay)..add(partDay);
+    streams
+      ..add(allDay)
+      ..add(partDay);
     final StreamZip<Iterable<UniEventInstance>> stream = StreamZip(streams);
 
     // Flatten zipped streams
-    return stream.map((events) => events
-        .expand((i) => i)
-        .map((UniEventInstance event) => event.copyWith(
-            start: event.start.copyWithUtc(), end: event.end.copyWithUtc()))
-        .toList());
+    return stream.map(
+      (events) => events
+          .expand((i) => i)
+          .map(
+            (UniEventInstance event) =>
+                event.copyWith(start: event.start, end: event.end),
+          )
+          .toList(),
+    );
   }
 
   Iterable<AllDayUniEvent> getAllDayUniEventsForCalendar(AcademicCalendar cal) {
@@ -418,7 +408,7 @@ class UniEventProvider with ChangeNotifier {
 
   Future<bool> addEvent(UniEvent event) async {
     try {
-      await FirebaseFirestore.instance.collection('events').add(event.toData());
+      await FirebaseFirestore.instance.collection('events').add(event.toJSON());
       notifyListeners();
       return true;
     } catch (e) {
@@ -436,7 +426,7 @@ class UniEventProvider with ChangeNotifier {
         return false;
       }
 
-      await ref.update(event.toData());
+      await ref.update(event.toJSON());
       notifyListeners();
       return true;
     } catch (e) {
@@ -456,12 +446,6 @@ class UniEventProvider with ChangeNotifier {
       _errorHandler(e);
       return false;
     }
-  }
-
-  @override
-  // ignore: must_call_super
-  void dispose() {
-    // TODO(IoanaAlexandru): Find a better way to prevent Timetable from calling dispose on this provider
   }
 
   void _errorHandler(dynamic e, {bool showToast = true}) {
