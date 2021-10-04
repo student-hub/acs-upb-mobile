@@ -42,7 +42,7 @@ class _RequestCardState extends State<RequestCard>
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      _buildUserHeader(request, adminProvider),
+                      _buildUserHeader(request),
                       const SizedBox(height: 10),
                       Text(
                         request.requestBody ?? '',
@@ -65,50 +65,51 @@ class _RequestCardState extends State<RequestCard>
         });
   }
 
-  Widget _buildUserHeader(Request request, AdminProvider adminProvider) =>
-      FutureBuilder(
-          future: adminProvider.fetchUserById(request.userId),
-          builder: (context, snapshot) {
-            User user;
-            if (snapshot.connectionState == ConnectionState.done) {
-              user = snapshot.data;
-            }
-            return Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
+  Widget _buildUserHeader(Request request) => FutureBuilder(
+      future: Provider.of<AdminProvider>(context).fetchUserById(request.userId),
+      builder: (context, snapshot) {
+        User user;
+        if (snapshot.connectionState == ConnectionState.done) {
+          user = snapshot.data;
+        }
+        return Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Flexible(
-                        child: Text(
-                          snapshot.connectionState != ConnectionState.done
-                              ? '-'
-                              : '${user?.firstName ?? S.current.errorUnknownUser} ${user?.lastName ?? ''}',
-                          textDirection: ui.TextDirection.ltr,
-                          style: Theme.of(context).textTheme.headline6.copyWith(
-                              fontSize: 18, fontWeight: FontWeight.bold),
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 2,
-                        ),
-                      ),
-                      if (request.processed && request.accepted != null)
-                        _buildAcceptedMarker(request.accepted),
-                    ],
+                  Flexible(
+                    child: Text(
+                      snapshot.connectionState != ConnectionState.done
+                          ? '-'
+                          : '${user?.firstName ?? S.current.errorUnknownUser} ${user?.lastName ?? ''}',
+                      textDirection: ui.TextDirection.ltr,
+                      style: Theme.of(context)
+                          .textTheme
+                          .headline6
+                          .copyWith(fontSize: 18, fontWeight: FontWeight.bold),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 2,
+                    ),
                   ),
-                  Text(
-                    snapshot.connectionState != ConnectionState.done
-                        ? ''
-                        : '${user?.classes != null ? user?.classes[user.classes.length - 1] : '-'}',
-                    textDirection: ui.TextDirection.ltr,
-                    style: Theme.of(context)
-                        .textTheme
-                        .headline6
-                        .copyWith(fontSize: 14, fontWeight: FontWeight.bold),
-                    overflow: TextOverflow.fade,
-                    maxLines: 2,
-                  ),
-                ]);
-          });
+                  if (request.processed && request.accepted != null)
+                    _buildAcceptedMarker(request.accepted),
+                ],
+              ),
+              Text(
+                snapshot.connectionState != ConnectionState.done
+                    ? ''
+                    : '${user?.classes != null ? user?.classes[user.classes.length - 1] : '-'}',
+                textDirection: ui.TextDirection.ltr,
+                style: Theme.of(context)
+                    .textTheme
+                    .headline6
+                    .copyWith(fontSize: 14, fontWeight: FontWeight.bold),
+                overflow: TextOverflow.fade,
+                maxLines: 2,
+              ),
+            ]);
+      });
 
   Widget _buildAcceptedMarker(bool accepted) => Container(
         padding: const EdgeInsets.all(5),
@@ -146,8 +147,9 @@ class _RequestCardState extends State<RequestCard>
                   color: Theme.of(context).secondaryButtonColor,
                   width: 100,
                   onTap: () async {
-                    await Provider.of<AdminProvider>(context, listen: false)
-                        .denyRequest(request.id);
+                    final adminProvider =
+                        Provider.of<AdminProvider>(context, listen: false);
+                    await adminProvider.denyRequest(request.id);
                     setState(() {
                       request
                         ..accepted = false
@@ -162,15 +164,18 @@ class _RequestCardState extends State<RequestCard>
                   color: Theme.of(context).accentColor,
                   width: 100,
                   onTap: () async {
-                    await Provider.of<AdminProvider>(context, listen: false)
-                        .acceptRequest(request.id);
+                    final adminProvider =
+                        Provider.of<AdminProvider>(context, listen: false);
+                    await adminProvider.acceptRequest(request.id);
                     setState(() {
                       request
                         ..accepted = true
                         ..processed = true;
                     });
+                    final authProvider =
+                        Provider.of<AuthProvider>(context, listen: false);
                     await Utils.launchURL(
-                        'mailto:${Provider.of<AuthProvider>(context, listen: false).email}?subject=Permisiuni%20ACS%20UPB%20Mobile&body=Ai%20primit%20permisiuni%20de%20editare%20în%20ACS%20UPB%20Mobile!');
+                        'mailto:${authProvider.email}?subject=Permisiuni%20ACS%20UPB%20Mobile&body=Ai%20primit%20permisiuni%20de%20editare%20în%20ACS%20UPB%20Mobile!');
                   },
                 )
               ],
@@ -184,8 +189,9 @@ class _RequestCardState extends State<RequestCard>
                   color: Theme.of(context).accentColor,
                   width: 100,
                   onTap: () async {
-                    await Provider.of<AdminProvider>(context, listen: false)
-                        .revertRequest(request.id);
+                    final adminProvider =
+                        Provider.of<AdminProvider>(context, listen: false);
+                    await adminProvider.revertRequest(request.id);
                     setState(() {
                       request
                         ..accepted = false
