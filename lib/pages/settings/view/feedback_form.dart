@@ -10,7 +10,9 @@ import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:provider/provider.dart';
 
 class FeedbackFormPage extends StatefulWidget {
-  static const String routeName = '/feedbackForm';
+  const FeedbackFormPage({Key key}) : super(key: key);
+
+  static const String routeName = '/feedback_form';
 
   @override
   _FeedbackFormPageState createState() => _FeedbackFormPageState();

@@ -27,6 +27,8 @@ import 'package:acs_upb_mobile/pages/portal/service/website_provider.dart';
 import 'package:acs_upb_mobile/pages/portal/view/portal_page.dart';
 import 'package:acs_upb_mobile/pages/portal/view/website_view.dart';
 import 'package:acs_upb_mobile/pages/search/view/seached_classes_view.dart';
+import 'package:acs_upb_mobile/pages/settings/view/admin_page.dart';
+import 'package:acs_upb_mobile/pages/settings/view/feedback_form.dart';
 import 'package:acs_upb_mobile/pages/settings/view/request_permissions.dart';
 import 'package:acs_upb_mobile/pages/settings/view/settings_page.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/events/uni_event.dart';
@@ -47,6 +49,8 @@ part 'routes/add_event_path.dart';
 
 part 'routes/add_website_path.dart';
 
+part 'routes/admin_panel_path.dart';
+
 part 'routes/class_feedback_view_path.dart';
 
 part 'routes/class_view_path.dart';
@@ -64,6 +68,8 @@ part 'routes/event_view_path.dart';
 part 'routes/faq_path.dart';
 
 part 'routes/filter_path.dart';
+
+part 'routes/feedback_form_path.dart';
 
 part 'routes/home_path.dart';
 
@@ -164,6 +170,10 @@ class PathFactory {
         return EventViewPath(id);
       case AddEventView.routeName:
         return AddEventPath();
+      case AdminPanelPage.routeName:
+        return AdminPanelPath();
+      case FeedbackFormPage.routeName:
+        return FeedbackFormPath();
       default:
         return UnknownPath();
     }
