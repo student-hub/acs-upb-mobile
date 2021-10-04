@@ -1,10 +1,12 @@
 import 'dart:ui' as ui;
 
 import 'package:acs_upb_mobile/authentication/model/user.dart';
+import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/settings/model/request.dart';
 import 'package:acs_upb_mobile/pages/settings/service/admin_provider.dart';
 import 'package:acs_upb_mobile/resources/theme.dart';
+import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/widgets/button.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -26,6 +28,7 @@ class _RequestCardState extends State<RequestCard>
   Widget build(BuildContext context) {
     super.build(context);
     final adminProvider = Provider.of<AdminProvider>(context);
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
 
     return FutureBuilder(
         future: adminProvider.fetchRequest(widget.requestId),
@@ -51,7 +54,8 @@ class _RequestCardState extends State<RequestCard>
                             .copyWith(fontSize: 14),
                       ),
                       const SizedBox(height: 10),
-                      _buildButtons(request.processed, adminProvider, request)
+                      _buildButtons(request.processed, adminProvider,
+                          authProvider, request)
                     ],
                   ),
                 ),
@@ -121,8 +125,8 @@ class _RequestCardState extends State<RequestCard>
         ),
       );
 
-  Widget _buildButtons(
-          bool processed, AdminProvider adminProvider, Request request) =>
+  Widget _buildButtons(bool processed, AdminProvider adminProvider,
+          AuthProvider authProvider, Request request) =>
       Row(
         crossAxisAlignment: CrossAxisAlignment.end,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -167,6 +171,8 @@ class _RequestCardState extends State<RequestCard>
                         ..accepted = true
                         ..processed = true;
                     });
+                    await Utils.launchURL(
+                        'mailto:${authProvider.email}?subject=Permisiuni%20ACS%20UPB%20Mobile&body=Ai%20primit%20permisiuni%20de%20editare%20în%20ACS%20UPB%20Mobile!');
                   },
                 )
               ],
