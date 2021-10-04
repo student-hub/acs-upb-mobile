@@ -24,19 +24,27 @@ service cloud.firestore {
             return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.permissionLevel;
         }
 
+        function isAdmin() {
+            return permissionLevel() == 4;
+        }
+
         match /users/{user}/{document=**} {
             function isOwner() {
                 return isAuthenticated() && request.auth.uid == user;
             }
 
-            // Only allow users to see or delete their own data
-            allow read, delete: if isOwner();
+            // Allow users to see their own data and admins to see other users' data
+            allow read: if isOwner() || isAdmin();
+
+            // Only allow users delete their own data
+            allow delete: if isOwner();
 
             // Allow anyone to create a new user with no permissions
             allow create: if request.resource.data.permissionLevel == 0 || request.resource.data.permissionLevel == null || !('permissionLevel' in request.resource.data);
 
             // Allow users to modify their own data, except for the permissionLevel
-            allow update: if isOwner() && (!('permissionLevel' in request.resource.data) || request.resource.data.permissionLevel == resource.data.permissionLevel);
+            // Allow admins to change other users' data
+            allow update: if isAdmin() || (isOwner() && (!('permissionLevel' in request.resource.data) || request.resource.data.permissionLevel == resource.data.permissionLevel));
         }
 
         match /websites/{website} {
@@ -118,7 +126,7 @@ service cloud.firestore {
         match /forms/{form=**} {
             allow read: if true;
             allow create: if isAuthenticated();
-            allow update: if false;
+            allow update: if isAdmin();
             allow delete: if false;
         }
 

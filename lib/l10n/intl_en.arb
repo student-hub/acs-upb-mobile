@@ -5,7 +5,9 @@
   "buttonSend": "Send",
   "buttonApply": "Apply",
   "buttonSet": "Set",
-  "buttonSubmit": "Submit",
+  "buttonDeny": "Deny",
+  "buttonAccept": "Accept",
+  "buttonRevert": "Revert",
 
   "labelEmail": "Email",
   "labelPassword": "Password",
@@ -141,6 +143,8 @@
   "errorPictureSizeToBig": "Please select a picture that is less than 5MB.",
   "errorImage": "The image could not be loaded.",
   "errorInsertGoogleEvents": "Unable to insert events in Google Calendar.",
+  "errorLoadRequests": "Could not load requests",
+  "errorUnknownUser": "Unknown User",
 
   "warningRequestExists": "Request already exists",
   "warningInternetConnection": "Please make sure you have an internet connection.",
@@ -154,6 +158,8 @@
   "warningUseProvider": "Please log in with {provider} to continue.",
   "warningTryAgainLater": "Please try again later.",
   "warningFilterAlreadyDisabled": "Already showing all content.",
+  "warningFilterAlreadyUnprocessed": "Already showing unprocessed requests",
+  "warningFilterAlreadyAll": "Already showing all requests.",
   "warningFeedbackAlreadySent": "You have already submitted feedback for this class!",
   "warningFilterAlreadyShowingYours": "Already showing only custom websites.",
   "warningInvalidURL": "You need to provide a valid URL.",
@@ -194,10 +200,12 @@
   "navigationSearchResults": "Classes found",
   "navigationClassFeedback": "Feedback",
   "navigationClassesFeedbackChecklist": "Feedback checklist",
+  "navigationAdmin": "Permission requests",
 
   "filterMenuShowAll": "Show all",
   "filterMenuShowMine": "Show only mine",
   "filterMenuRelevance": "Filter by relevance",
+  "filterMenuShowUnprocessed": "Show unprocessed",
 
   "filterNodeNameBSc": "Bachelor's",
   "filterNodeNameMSc": "Master's",
@@ -213,11 +221,13 @@
   "settingsPermissionsNone": "No special permissions",
   "settingsPermissionsAdd": "Permission to add public info",
   "settingsPermissionsEdit": "Permission to edit public info",
+  "settingsAdminPermissions": "Admin permissions",
   "settingsPermissionsRequestSent": "Permissions request already sent",
   "settingsItemLanguage": "Language",
   "settingsItemLanguageEnglish": "English",
   "settingsItemLanguageRomanian": "Romanian",
   "settingsItemLanguageAuto": "Auto",
+  "settingsItemAdmin": "Admin Panel",
   "settingsRelevanceFilter": "Relevance filter",
   "settingsExportToGoogleCalendar": "Export events to Google Calendar",
   "settingsTitleTimetable": "Timetable",
@@ -314,11 +324,15 @@
   "infoFormAnonymous": "This form is anonymous.",
   "infoFeedbackForm": "Leave feedback and report issues",
   "infoContactInfo": "In case we need to follow up with you",
+  "infoAdmin": "Handle permission requests",
+  "infoAccepted": "Accepted",
+  "infoDenied": "Denied",
 
   "stringEmailDomain": "@stud.acs.upb.ro",
   "stringForum": "cs.curs.pub.ro",
   "stringAnonymous": "Anonymous",
   "stringAnd": "and",
+  "stringAt": "at",
 
   "fileAcsBanner": "assets/images/acs_banner_en.png"
 }
