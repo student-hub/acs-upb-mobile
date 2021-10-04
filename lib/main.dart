@@ -6,7 +6,6 @@ import 'package:acs_upb_mobile/authentication/view/login_view.dart';
 import 'package:acs_upb_mobile/authentication/view/sign_up_view.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/navigation/model/routes.dart';
-import 'package:acs_upb_mobile/navigation/service/navigation_provider.dart';
 import 'package:acs_upb_mobile/navigation/service/router_delegates.dart';
 import 'package:acs_upb_mobile/navigation/service/router_information_parser.dart';
 import 'package:acs_upb_mobile/navigation/view/bottom_navigation_bar.dart';
@@ -44,6 +43,8 @@ import 'package:preferences/preferences.dart';
 import 'package:provider/provider.dart';
 import 'package:rrule/rrule.dart';
 import 'package:time_machine/time_machine.dart';
+
+import 'navigation/service/navigation_provider.dart';
 
 // FIXME: Our university website certificates have some issues, so we say we
 // trust them regardless.
@@ -128,7 +129,7 @@ class _MyAppState extends State<MyApp> {
   final Color _accentColor = const Color(0xFF43ACCD);
 
   Widget buildApp(BuildContext context, ThemeData theme) {
-    if (kIsWeb && !Platform.isAndroid && !Platform.isIOS) {
+    if (Platform.isWeb) {
       return MaterialApp.router(
         title: Utils.packageInfo.appName,
         localizationsDelegates: [

@@ -1,5 +1,5 @@
+import 'package:acs_upb_mobile/resources/platform.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
-import 'package:flutter/foundation.dart';
 
 const String _feedbackEnabled = 'feedback_enabled';
 const String _chatEnabled = 'chat_enabled';
@@ -23,7 +23,7 @@ class RemoteConfigService {
       : _remoteConfig?.getBool(_chatEnabled) ?? defaults[_chatEnabled];
 
   static Future<dynamic> initialize() async {
-    if (kIsWeb) {
+    if (Platform.isWeb) {
       return; // Remote config is not yet supported on web.
     }
     try {

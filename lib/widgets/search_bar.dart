@@ -1,4 +1,5 @@
 import 'package:acs_upb_mobile/generated/l10n.dart';
+import 'package:acs_upb_mobile/resources/platform.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -47,7 +48,7 @@ class _SearchBarState extends State<SearchBar> {
             ),
           ),
         ),
-        if (!kIsWeb)
+        if (!Platform.isWeb)
           GestureDetector(
             onTap: widget.cancel,
             key: const ValueKey('cancel_search_bar'),
