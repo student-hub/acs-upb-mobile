@@ -217,7 +217,6 @@ class UniEventProvider extends EventProvider<UniEventInstance>
     fetchCalendars();
   }
 
-
   final Map<String, AcademicCalendar> _calendars = {};
   ClassProvider _classProvider;
   FilterProvider _filterProvider;
