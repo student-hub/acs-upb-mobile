@@ -1,8 +1,6 @@
 import 'dart:async';
 
-import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/settings/model/issue.dart';
-import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 extension IssueExtension on Issue {
