@@ -303,7 +303,6 @@
   "messageTalkToChatbot": "Talk to Polly!",
   "messageFeedbackLeft": "You need to complete {number} more feedback forms!",
   "messageAlreadySeeingCurrentWeek": "You're already seeing the current week!",
-  "messageEnterText": "Please enter some text",
   "messageReportSent": "Report sent successfully.",
   "messageReportNotSent": "Report could not be sent.",
 

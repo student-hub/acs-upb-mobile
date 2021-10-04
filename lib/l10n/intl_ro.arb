@@ -1,8 +1,8 @@
 {
   "buttonNext": "Următorul",
-  "buttonCancel": "Anulare",
-  "buttonSave": "Salvare",
-  "buttonSend": "Trimitere",
+  "buttonCancel": "Anulează",
+  "buttonSave": "Salvează",
+  "buttonSend": "Trimite",
   "buttonApply": "Aplică",
   "buttonSet": "Setează",
   "buttonDeny": "Refuză",
@@ -303,7 +303,6 @@
   "messageAlreadySeeingCurrentWeek": "Ești deja la săptămâna curentă!",
   "messageAnotherQuestion": "Ai altă întrebare?",
   "messageTalkToChatbot": "Vorbește cu Polly!",
-  "messageEnterText": "Vă rugăm introduceți text",
   "messageReportSent": "Reposrt sent successfully.",
   "messageReportNotSent": "Reposrt could not be sent.",
 
