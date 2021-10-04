@@ -4,8 +4,8 @@ import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/navigation/model/routes.dart';
 import 'package:acs_upb_mobile/navigation/service/navigator.dart';
+import 'package:acs_upb_mobile/resources/platform.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image/image.dart' as im;
 import 'package:package_info_plus/package_info_plus.dart';
@@ -57,7 +57,7 @@ class Utils {
   static Future<void> signOut(BuildContext context) async {
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
     // TODO(IoanaAlexandru): Might actually be better to use the same login on mobile?
-    if (kIsWeb) {
+    if (Platform.isWeb) {
       await authProvider.signOut();
       unawaited(AppNavigator.pushNamedAndRemoveUntil(
           context, Routes.login, (route) => false));

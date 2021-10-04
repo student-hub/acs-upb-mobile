@@ -219,7 +219,7 @@ class AppScaffold extends StatelessWidget {
                 actionText: S.current.actionLogIn,
                 actionOnTap: () => Utils.signOut(context),
               ),
-        appBar: (!kIsWeb || onWeb)
+        appBar: (!Platform.isWeb || onWeb)
             ? PreferredSize(
                 preferredSize: const Size.fromHeight(40),
                 child: AppBar(
@@ -249,11 +249,11 @@ class AppScaffold extends StatelessWidget {
   /// On web, there are action buttons on the right side.
   Widget buildBody(BuildContext context, {bool enableContent = false}) {
     // check if on web to avoid building action button twice in mobile
-    final List<AppScaffoldAction> actionsList = kIsWeb
+    final List<AppScaffoldAction> actionsList = Platform.isWeb
         ? ([leading] + actions).where((element) => element != null).toList()
         : List.empty();
 
-    return !kIsWeb
+    return !Platform.isWeb
         ? body
         : Column(
             children: [

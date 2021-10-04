@@ -4,6 +4,7 @@ import 'package:acs_upb_mobile/navigation/view/scaffold.dart';
 import 'package:acs_upb_mobile/pages/people/model/person.dart';
 import 'package:acs_upb_mobile/pages/people/service/person_provider.dart';
 import 'package:acs_upb_mobile/pages/people/view/person_view.dart';
+import 'package:acs_upb_mobile/resources/platform.dart';
 import 'package:acs_upb_mobile/widgets/autocomplete.dart';
 import 'package:acs_upb_mobile/widgets/search_bar.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -141,7 +142,7 @@ class PeopleList extends StatelessWidget {
   }
 
   static Future<void> showPerson(BuildContext context, Person person) async {
-    if (kIsWeb) {
+    if (Platform.isWeb) {
       await AppNavigator.pushNamed(
           context, '${PersonView.routeName}?name=${person.name}');
     } else {

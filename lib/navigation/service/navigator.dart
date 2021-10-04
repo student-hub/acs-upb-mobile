@@ -1,5 +1,6 @@
 import 'package:acs_upb_mobile/navigation/model/route_paths.dart';
 import 'package:acs_upb_mobile/navigation/service/navigation_provider.dart';
+import 'package:acs_upb_mobile/resources/platform.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +9,7 @@ import 'package:provider/provider.dart';
 class AppNavigator {
   static Future<T> push<T extends Object>(BuildContext context, Route<T> route,
       {@required String webPath}) {
-    if (kIsWeb) {
+    if (Platform.isWeb) {
       assert(webPath != null);
       assert(route is MaterialPageRoute);
 
@@ -27,7 +28,7 @@ class AppNavigator {
     String routeName, {
     Object arguments,
   }) {
-    if (kIsWeb) {
+    if (Platform.isWeb) {
       Provider.of<NavigationProvider>(context, listen: false).path =
           PathFactory.from(Uri.parse(routeName));
 
@@ -44,7 +45,7 @@ class AppNavigator {
     RoutePredicate predicate, {
     Object arguments,
   }) {
-    if (kIsWeb) {
+    if (Platform.isWeb) {
       Provider.of<NavigationProvider>(context, listen: false).path =
           PathFactory.from(Uri.parse(newRouteName));
 
@@ -62,7 +63,7 @@ class AppNavigator {
     @required String webPath,
     TO result,
   }) {
-    if (kIsWeb) {
+    if (Platform.isWeb) {
       assert(webPath != null);
       assert(newRoute is MaterialPageRoute);
       Provider.of<NavigationProvider>(context, listen: false)
@@ -82,7 +83,7 @@ class AppNavigator {
     TO result,
     Object arguments,
   }) {
-    if (kIsWeb) {
+    if (Platform.isWeb) {
       Provider.of<NavigationProvider>(context, listen: false).path =
           PathFactory.from(Uri.parse(routeName));
 

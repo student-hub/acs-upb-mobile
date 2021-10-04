@@ -2,8 +2,9 @@ import 'dart:async';
 import 'dart:core';
 import 'dart:math';
 
-import 'package:acs_upb_mobile/navigation/service/navigator.dart';
 import 'package:acs_upb_mobile/navigation/service/navigation_provider.dart';
+import 'package:acs_upb_mobile/navigation/service/navigator.dart';
+import 'package:acs_upb_mobile/resources/platform.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -38,7 +39,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
     super.initState();
 
     widget.navigateAfterFuture.then((navigateTo) {
-      if (kIsWeb) {
+      if (Platform.isWeb) {
         Provider.of<NavigationProvider>(context, listen: false).isInitialized =
             true;
       }

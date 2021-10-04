@@ -12,6 +12,7 @@ import 'package:acs_upb_mobile/pages/home/news_feed_card.dart';
 import 'package:acs_upb_mobile/pages/home/profile_card.dart';
 import 'package:acs_upb_mobile/pages/home/upcoming_events_card.dart';
 import 'package:acs_upb_mobile/pages/search/view/search_page.dart';
+import 'package:acs_upb_mobile/resources/platform.dart';
 import 'package:acs_upb_mobile/resources/remote_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -26,7 +27,7 @@ class HomePage extends StatelessWidget {
   final TabController tabController;
 
   void _selectTab(BuildContext context, int index) {
-    kIsWeb
+    Platform.isWeb
         ? Provider.of<NavigationProvider>(context, listen: false).selectedTab =
             index
         : tabController?.animateTo(index);
@@ -39,7 +40,7 @@ class HomePage extends StatelessWidget {
     return AppScaffold(
       title: Text(S.current.navigationHome),
       actions: [
-        if (!kIsWeb)
+        if (!Platform.isWeb)
           AppScaffoldAction(
             icon: Icons.search,
             tooltip: S.current.navigationSearch,
@@ -63,7 +64,7 @@ class HomePage extends StatelessWidget {
       ],
       body: ListView(
         children: [
-          if (authProvider.isAuthenticated && !kIsWeb) const ProfileCard(),
+          if (authProvider.isAuthenticated && !Platform.isWeb) const ProfileCard(),
           if (authProvider.isAuthenticated &&
               !authProvider.isAnonymous &&
               RemoteConfigService.feedbackEnabled)

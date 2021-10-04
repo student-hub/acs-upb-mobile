@@ -202,7 +202,7 @@ class _SettingsPageState extends State<SettingsPage> {
         setState(() {
           Culture.current = LocaleProvider.cultures[preference];
           S.load(LocaleProvider.localeFromString(preference));
-          if (!kIsWeb) {
+          if (!Platform.isWeb) {
             AppNavigator.pop(context);
           }
 
