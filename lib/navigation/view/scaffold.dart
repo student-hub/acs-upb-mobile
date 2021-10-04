@@ -268,15 +268,11 @@ class AppScaffold extends StatelessWidget {
               Expanded(
                 child: fitScreen
                     ? body
-                    : Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          ConstrainedBox(
-                              constraints:
-                                  BoxConstraints(maxWidth: maxBodyWidth),
-                              child: body),
-                        ],
+                    : Align(
+                        alignment: Alignment.topCenter,
+                        child: ConstrainedBox(
+                            constraints: BoxConstraints(maxWidth: maxBodyWidth),
+                            child: body),
                       ),
               ),
             ],

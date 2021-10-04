@@ -69,6 +69,8 @@ class InfoCard<T> extends StatelessWidget {
               FutureBuilder(
                   future: future,
                   builder: (context, snapshot) {
+                    print(
+                        '[info_card] snapshot: ${snapshot.data}, has error: ${snapshot.hasError}, has data: ${snapshot.hasData}');
                     if (snapshot.connectionState == ConnectionState.done) {
                       if (snapshot.hasData) {
                         if ((snapshot.data is Map ||
@@ -77,8 +79,12 @@ class InfoCard<T> extends StatelessWidget {
                           return noneYet(context);
                         }
 
-                        return builder(snapshot.data);
+                        (snapshot.data as Iterable).forEach(print);
+                        final widget = builder(snapshot.data);
+                        print('[info_card] successful widget: $widget');
+                        return widget;
                       } else {
+                        print('[info_card] error: ${snapshot.error}');
                         return noneYet(context);
                       }
                     }

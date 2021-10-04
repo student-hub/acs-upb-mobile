@@ -74,8 +74,8 @@ class HomePage extends StatelessWidget {
             UpcomingEventsCard(onShowMore: () => _selectTab(context, 1)),
           if (authProvider.isAuthenticated && !authProvider.isAnonymous)
             FavouriteWebsitesCard(onShowMore: () => _selectTab(context, 2)),
-          if (!Platform.isWeb) NewsFeedCard(),
-          FaqCard(),
+          NewsFeedCard(),
+          // FaqCard(),
           const SizedBox(height: 12),
         ],
       ),

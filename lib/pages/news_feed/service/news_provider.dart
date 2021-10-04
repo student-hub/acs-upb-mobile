@@ -28,20 +28,26 @@ class NewsProvider with ChangeNotifier {
       // See more: https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS
       final url = Platform.isWeb ? Utils.corsProxyUrl : 'https://acs.pub.ro';
       final path = Platform.isWeb
-          ? '/https://acs.pub.ro/topic/noutati'
+          ? 'https://acs.pub.ro/topic/noutati'
           : '/topic/noutati';
-      final webScraper = WebScraper(url);
-      final bool scrapeSuccess = await webScraper.loadWebPage(path);
 
+      print('[news_provider] url: $url');
+      final webScraper = WebScraper(url);
+      print('[news_provider] webScraper = ${webScraper.baseUrl}');
+      final bool scrapeSuccess = await webScraper.loadWebPage(path);
+      print('[news_provider] scrapeSuccess: $scrapeSuccess');
       if (scrapeSuccess) {
+        print('scrap successful');
         return _extractFromWebScraper(webScraper, limit);
       }
     } catch (e) {
       // Ignore "no internet" error
-      if (!e.message.contains('Failed host lookup')) {
+      print(
+          '[news_provider] error: $e message: ${(e as WebScraperException).errorMessage()}');
+      if (e.message && !e.message.contains('Failed host lookup')) {
         print(e);
-        AppToast.show(S.current.errorSomethingWentWrong);
       }
+      AppToast.show(S.current.errorSomethingWentWrong);
     }
 
     return null;
@@ -51,8 +57,10 @@ class NewsProvider with ChangeNotifier {
       WebScraper webScraper, int wantedLimit) {
     final List<Map<String, dynamic>> dates =
         webScraper.getElement('div.event > ul > li > div.time', []);
+    print(dates);
     final List<Map<String, dynamic>> events =
         webScraper.getElement('div.event > ul > li > h3 > a', ['href']);
+    print(events);
 
     final List<NewsFeedItem> newsFeed = [];
     var limit = min(dates.length, events.length);
