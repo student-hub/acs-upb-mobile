@@ -9,6 +9,7 @@ import 'package:acs_upb_mobile/pages/timetable/service/uni_event_provider.dart';
 import 'package:black_hole_flutter/black_hole_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:time_machine/time_machine.dart';
+
 // ignore: implementation_imports
 import 'package:timetable/src/theme.dart';
 
@@ -18,7 +19,8 @@ import 'package:provider/provider.dart';
 class LeadHeader extends StatefulWidget {
   const LeadHeader(this.date, {Key key}) : super(key: key);
   final LocalDate date;
-  static var academicWeekNumber=false;
+  static var academicWeekNumber = false;
+
   @override
   _LeadHeaderState createState() => _LeadHeaderState();
 }
@@ -30,7 +32,8 @@ class _LeadHeaderState extends State<LeadHeader> {
   AcademicCalendar calendar;
   Map<String, AcademicCalendar> calendars = {};
   int academicWeek;
-  Set<int> holidayWeeks =  {};
+  Set<int> holidayWeeks = {};
+
   @override
   Widget build(BuildContext context) {
     final theme = context.theme;
@@ -51,7 +54,7 @@ class _LeadHeaderState extends State<LeadHeader> {
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(2),
               color: defaultBackgroundColor,
-              border:  Border.all(color: defaultBackgroundColor, width: 1)),
+              border: Border.all(color: defaultBackgroundColor, width: 1)),
           child: Text(
             getWeekNumber(),
             style: textStyle,
@@ -64,15 +67,17 @@ class _LeadHeaderState extends State<LeadHeader> {
 
   String getWeekNumber() {
     if (calendar != null) {
-      final List<int>  nonHolidayWeeks = calendar.nonHolidayWeeks.toList();
-      final DateInterval winterSession= DateInterval(calendar.exams.first.startDate, calendar.exams.first.endDate);
-      final DateInterval summerSession= DateInterval(calendar.exams.last.startDate, calendar.exams.last.endDate);
+      final List<int> nonHolidayWeeks = calendar.nonHolidayWeeks.toList();
+      final DateInterval winterSession = DateInterval(
+          calendar.exams.first.startDate, calendar.exams.first.endDate);
+      final DateInterval summerSession = DateInterval(
+          calendar.exams.last.startDate, calendar.exams.last.endDate);
       for (var i = 1; i < 53; i++) {
         if (!nonHolidayWeeks.contains(i)) holidayWeeks.add(i);
       }
-      final  week =
-      ((widget.date.dayOfYear - widget.date.dayOfWeek.value + 10) / 7)
-          .floor();
+      final week =
+          ((widget.date.dayOfYear - widget.date.dayOfWeek.value + 10) / 7)
+              .floor();
       if (LeadHeader.academicWeekNumber == false) {
         return week.toString();
       } else {
@@ -80,20 +85,18 @@ class _LeadHeaderState extends State<LeadHeader> {
           if (winterSession.contains(widget.date) ||
               summerSession.contains(widget.date)) {
             return 'S';
-          }
-          else {
+          } else {
             return 'H';
           }
-        }
-        else {
+        } else {
           return (nonHolidayWeeks.indexOf(week) + 1).toString();
         }
       }
-    }
-    else {
+    } else {
       return '0';
     }
   }
+
   @override
   void initState() {
     if (!mounted) {
