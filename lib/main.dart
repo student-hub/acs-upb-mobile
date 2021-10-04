@@ -22,8 +22,11 @@ import 'package:acs_upb_mobile/pages/portal/service/website_provider.dart';
 import 'package:acs_upb_mobile/pages/settings/service/admin_provider.dart';
 import 'package:acs_upb_mobile/pages/settings/service/request_provider.dart';
 import 'package:acs_upb_mobile/pages/settings/view/admin_page.dart';
+import 'package:acs_upb_mobile/pages/settings/view/admin_page.dart';
+import 'package:acs_upb_mobile/pages/settings/service/issue_provider.dart';
 import 'package:acs_upb_mobile/pages/settings/view/request_permissions.dart';
 import 'package:acs_upb_mobile/pages/settings/view/settings_page.dart';
+import 'package:acs_upb_mobile/pages/settings/view/feedback_form.dart';
 import 'package:acs_upb_mobile/pages/timetable/service/uni_event_provider.dart';
 import 'package:acs_upb_mobile/resources/locale_provider.dart';
 import 'package:acs_upb_mobile/resources/remote_config.dart';
@@ -84,6 +87,7 @@ Future<void> main() async {
     ChangeNotifierProvider<AuthProvider>(create: (_) => authProvider),
     ChangeNotifierProvider<WebsiteProvider>(create: (_) => WebsiteProvider()),
     Provider<RequestProvider>(create: (_) => RequestProvider()),
+    Provider<IssueProvider>(create: (_) => IssueProvider()),
     ChangeNotifierProvider<ClassProvider>(create: (_) => classProvider),
     ChangeNotifierProvider<FeedbackProvider>(create: (_) => feedbackProvider),
     ChangeNotifierProvider<PersonProvider>(create: (_) => personProvider),
@@ -170,6 +174,7 @@ class _MyAppState extends State<MyApp> {
           Routes.requestPermissions: (_) => RequestPermissionsPage(),
           Routes.editProfile: (_) => const EditProfilePage(),
           Routes.adminPanel: (_) => const AdminPanelPage(),
+          Routes.feedbackForm: (_) => FeedbackFormPage(),
         },
         navigatorObservers: widget.navigationObservers ?? [],
       );

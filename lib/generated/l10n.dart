@@ -635,6 +635,46 @@ class S {
     );
   }
 
+  /// `Feedback`
+  String get labelFeedback {
+    return Intl.message(
+      'Feedback',
+      name: 'labelFeedback',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Issue`
+  String get labelIssue {
+    return Intl.message(
+      'Issue',
+      name: 'labelIssue',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Report type`
+  String get labelReportType {
+    return Intl.message(
+      'Report type',
+      name: 'labelReportType',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Contact info (optional)`
+  String get labelContactInfoOptional {
+    return Intl.message(
+      'Contact info (optional)',
+      name: 'labelContactInfoOptional',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Contact information`
   String get labelContactInfo {
     return Intl.message(
@@ -785,6 +825,16 @@ class S {
     );
   }
 
+  /// `john.doe@gmail.com`
+  String get hintFullEmail {
+    return Intl.message(
+      'john.doe@gmail.com',
+      name: 'hintFullEmail',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `····················`
   String get hintPassword {
     return Intl.message(
@@ -860,6 +910,26 @@ class S {
     return Intl.message(
       '4.0',
       name: 'hintPoints',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `I love the app!`
+  String get hintFeedback {
+    return Intl.message(
+      'I love the app!',
+      name: 'hintFeedback',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `When I open the app...`
+  String get hintIssue {
+    return Intl.message(
+      'When I open the app...',
+      name: 'hintIssue',
       desc: '',
       args: [],
     );
@@ -2215,6 +2285,16 @@ class S {
     );
   }
 
+  /// `Contact us`
+  String get settingsFeedbackForm {
+    return Intl.message(
+      'Contact us',
+      name: 'settingsFeedbackForm',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Learning`
   String get websiteCategoryLearning {
     return Intl.message(
@@ -2505,10 +2585,10 @@ class S {
     );
   }
 
-  /// `Enter your e-mai in order to receive instructions on how to reset your password.`
+  /// `Enter your e-mail in order to receive instructions on how to reset your password.`
   String get messageResetPassword {
     return Intl.message(
-      'Enter your e-mai in order to receive instructions on how to reset your password.',
+      'Enter your e-mail in order to receive instructions on how to reset your password.',
       name: 'messageResetPassword',
       desc: '',
       args: [],
@@ -2895,6 +2975,26 @@ class S {
     );
   }
 
+  /// `Report sent successfully.`
+  String get messageReportSent {
+    return Intl.message(
+      'Report sent successfully.',
+      name: 'messageReportSent',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Report could not be sent.`
+  String get messageReportNotSent {
+    return Intl.message(
+      'Report could not be sent.',
+      name: 'messageReportNotSent',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Please check your inbox for the password reset e-mail.`
   String get infoPasswordResetEmailSent {
     return Intl.message(
@@ -3040,6 +3140,26 @@ class S {
     return Intl.message(
       'This form is anonymous.',
       name: 'infoFormAnonymous',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Leave feedback and report issues`
+  String get infoFeedbackForm {
+    return Intl.message(
+      'Leave feedback and report issues',
+      name: 'infoFeedbackForm',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `In case we need to follow up with you`
+  String get infoContactInfo {
+    return Intl.message(
+      'In case we need to follow up with you',
+      name: 'infoContactInfo',
       desc: '',
       args: [],
     );

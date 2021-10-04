@@ -4,6 +4,7 @@ import 'package:acs_upb_mobile/pages/class_feedback/service/feedback_provider.da
 import 'package:acs_upb_mobile/pages/class_feedback/view/class_feedback_checklist.dart';
 import 'package:acs_upb_mobile/pages/classes/model/class.dart';
 import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:flutter/material.dart';
@@ -65,13 +66,15 @@ class _FeedbackNudgeState extends State<FeedbackNudge> {
           label: Row(
             children: [
               Expanded(
-                // TODO(AndreiMirciu): Fix text wrapping property for both languages
-                child: Text(
+                child: AutoSizeText(
                   S.current.messageFeedbackLeft(feedbackFormsLeft),
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                      color: Colors.white, fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.center,
                 ),
               ),
               Icon(
