@@ -1,8 +1,8 @@
 import 'package:acs_upb_mobile/generated/l10n.dart';
+import 'package:acs_upb_mobile/navigation/view/scaffold.dart';
 import 'package:acs_upb_mobile/pages/settings/model/issue.dart';
 import 'package:acs_upb_mobile/pages/settings/service/issue_provider.dart';
 import 'package:acs_upb_mobile/resources/theme.dart';
-import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

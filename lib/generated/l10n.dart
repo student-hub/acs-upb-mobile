@@ -635,6 +635,26 @@ class S {
     );
   }
 
+  /// `Contact information`
+  String get labelContactInfo {
+    return Intl.message(
+      'Contact information',
+      name: 'labelContactInfo',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Courses`
+  String get labelCourses {
+    return Intl.message(
+      'Courses',
+      name: 'labelCourses',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Feedback`
   String get labelFeedback {
     return Intl.message(
@@ -670,26 +690,6 @@ class S {
     return Intl.message(
       'Contact info (optional)',
       name: 'labelContactInfoOptional',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Contact information`
-  String get labelContactInfo {
-    return Intl.message(
-      'Contact information',
-      name: 'labelContactInfo',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Courses`
-  String get labelCourses {
-    return Intl.message(
-      'Courses',
-      name: 'labelCourses',
       desc: '',
       args: [],
     );

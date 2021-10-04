@@ -9,6 +9,7 @@ import 'package:acs_upb_mobile/pages/people/view/people_page.dart';
 import 'package:acs_upb_mobile/pages/people/view/person_view.dart';
 import 'package:acs_upb_mobile/pages/portal/view/portal_page.dart';
 import 'package:acs_upb_mobile/pages/settings/view/admin_page.dart';
+import 'package:acs_upb_mobile/pages/settings/view/feedback_form.dart';
 import 'package:acs_upb_mobile/pages/settings/view/request_permissions.dart';
 import 'package:acs_upb_mobile/pages/settings/view/settings_page.dart';
 import 'package:acs_upb_mobile/pages/timetable/view/timetable_page.dart';
