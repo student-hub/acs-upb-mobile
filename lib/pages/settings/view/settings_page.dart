@@ -155,6 +155,15 @@ class _SettingsPageState extends State<SettingsPage> {
                 }, onDisable: () {
                   LeadHeader.academicWeekNumber = false;
                 }, defaultVal: false),
+                PreferenceTitle(S.current.labelFeedback),
+                ListTile(
+                  key: const ValueKey('feedback_and_issues'),
+                  onTap: () {
+                    Navigator.of(context).pushNamed(Routes.feedbackForm);
+                  },
+                  title: Text(S.current.settingsFeedbackForm),
+                  subtitle: Text(S.current.infoFeedbackForm),
+                ),
                 Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
