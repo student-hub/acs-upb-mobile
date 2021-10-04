@@ -471,11 +471,9 @@ void main() {
         await tester.pumpAndSettle(const Duration(seconds: 2));
 
         // Verify the issue/feedback is sent
-        // expect(find.text('Processing Data'), findsOneWidget);
         verify(mockIssueProvider.makeIssue(any));
 
-        // Go back and verify Settings Page pops back
-        await tester.tap(find.byIcon(Icons.arrow_back));
+        // Check that we're back on settings page
         await tester.pumpAndSettle();
         expect(find.byType(SettingsPage), findsOneWidget);
       });
@@ -502,11 +500,6 @@ void main() {
         await tester.tap(find.text('Send'));
         await tester.pumpAndSettle();
         expect(find.text('Field cannot be empty.'), findsWidgets);
-
-        // Go back and verify Settings Page pops back
-        await tester.tap(find.byIcon(Icons.arrow_back));
-        await tester.pumpAndSettle();
-        expect(find.byType(SettingsPage), findsOneWidget);
       });
     });
   });
