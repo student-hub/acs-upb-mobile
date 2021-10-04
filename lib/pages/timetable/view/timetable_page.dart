@@ -2,6 +2,7 @@ import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/navigation/model/routes.dart';
 import 'package:acs_upb_mobile/navigation/service/navigator.dart';
+import 'package:acs_upb_mobile/navigation/view/scaffold.dart';
 import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
 import 'package:acs_upb_mobile/pages/classes/view/classes_page.dart';
 import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
@@ -15,7 +16,6 @@ import 'package:acs_upb_mobile/pages/timetable/view/events/all_day_event_widget.
 import 'package:acs_upb_mobile/pages/timetable/view/events/event_widget.dart';
 import 'package:acs_upb_mobile/widgets/button.dart';
 import 'package:acs_upb_mobile/widgets/dialog.dart';
-import 'package:acs_upb_mobile/navigation/view/scaffold.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
@@ -145,8 +145,7 @@ class _TimetablePageState extends State<TimetablePage> {
           ],
         ),
       ),
-      maxBodyWidth: 1920,
-      fitScreen: true,
+      maxBodyWidth: double.infinity,
     );
   }
 
