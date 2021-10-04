@@ -180,6 +180,7 @@ class AppScaffold extends StatelessWidget {
     this.needsToBeAuthenticated = false,
     this.onWeb = false,
     this.maxBodyWidth = 960,
+    this.alignment = Alignment.topCenter,
   }) : actions = actions ?? [];
 
   final Widget body;
@@ -190,6 +191,7 @@ class AppScaffold extends StatelessWidget {
   final bool needsToBeAuthenticated;
   final bool onWeb;
   final double maxBodyWidth;
+  final Alignment alignment;
 
   @override
   Widget build(BuildContext context) {
@@ -265,7 +267,7 @@ class AppScaffold extends StatelessWidget {
                     .toList()),
               Expanded(
                 child: Align(
-                  alignment: Alignment.topCenter,
+                  alignment: alignment,
                   child: ConstrainedBox(
                       constraints: BoxConstraints(maxWidth: maxBodyWidth),
                       child: body),
