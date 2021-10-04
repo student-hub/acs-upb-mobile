@@ -180,6 +180,7 @@ class AppScaffold extends StatelessWidget {
     this.needsToBeAuthenticated = false,
     this.onWeb = false,
     this.maxBodyWidth = 960,
+    this.fitScreen = false,
   }) : actions = actions ?? [];
 
   final Widget body;
@@ -190,6 +191,7 @@ class AppScaffold extends StatelessWidget {
   final bool needsToBeAuthenticated;
   final bool onWeb;
   final double maxBodyWidth;
+  final bool fitScreen;
 
   @override
   Widget build(BuildContext context) {
@@ -264,15 +266,18 @@ class AppScaffold extends StatelessWidget {
                     .where((element) => element != null)
                     .toList()),
               Expanded(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    ConstrainedBox(
-                        constraints: BoxConstraints(maxWidth: maxBodyWidth),
-                        child: body),
-                  ],
-                ),
+                child: fitScreen
+                    ? body
+                    : Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          ConstrainedBox(
+                              constraints:
+                                  BoxConstraints(maxWidth: maxBodyWidth),
+                              child: body),
+                        ],
+                      ),
               ),
             ],
           );
