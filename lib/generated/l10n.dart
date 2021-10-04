@@ -775,6 +775,16 @@ class S {
     );
   }
 
+  /// `john.doe@gmail.com`
+  String get hintFullEmail {
+    return Intl.message(
+      'john.doe@gmail.com',
+      name: 'hintFullEmail',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `····················`
   String get hintPassword {
     return Intl.message(
@@ -855,11 +865,21 @@ class S {
     );
   }
 
-  /// `In case we need to reach out for more info`
-  String get helperContactInfo {
+  /// `I love the app!`
+  String get hintFeedback {
     return Intl.message(
-      'In case we need to reach out for more info',
-      name: 'helperContactInfo',
+      'I love the app!',
+      name: 'hintFeedback',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `When I open the app...`
+  String get hintIssue {
+    return Intl.message(
+      'When I open the app...',
+      name: 'hintIssue',
       desc: '',
       args: [],
     );
@@ -2805,21 +2825,31 @@ class S {
     );
   }
 
-  /// `Processing Data`
-  String get messageProcessingData {
-    return Intl.message(
-      'Processing Data',
-      name: 'messageProcessingData',
-      desc: '',
-      args: [],
-    );
-  }
-
   /// `Please enter some text`
   String get messageEnterText {
     return Intl.message(
       'Please enter some text',
       name: 'messageEnterText',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Report sent successfully.`
+  String get messageReportSent {
+    return Intl.message(
+      'Report sent successfully.',
+      name: 'messageReportSent',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Report could not be sent.`
+  String get messageReportNotSent {
+    return Intl.message(
+      'Report could not be sent.',
+      name: 'messageReportNotSent',
       desc: '',
       args: [],
     );
@@ -2985,6 +3015,16 @@ class S {
     );
   }
 
+  /// `In case we need to follow up with you`
+  String get infoContactInfo {
+    return Intl.message(
+      'In case we need to follow up with you',
+      name: 'infoContactInfo',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `@stud.acs.upb.ro`
   String get stringEmailDomain {
     return Intl.message(
@@ -3030,36 +3070,6 @@ class S {
     return Intl.message(
       'assets/images/acs_banner_en.png',
       name: 'fileAcsBanner',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `example: john.doe123@gmail.com`
-  String get emailExample {
-    return Intl.message(
-      'example: john.doe123@gmail.com',
-      name: 'emailExample',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Write your feedback`
-  String get feedbackExample {
-    return Intl.message(
-      'Write your feedback',
-      name: 'feedbackExample',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Describe the issue`
-  String get issueExample {
-    return Intl.message(
-      'Describe the issue',
-      name: 'issueExample',
       desc: '',
       args: [],
     );

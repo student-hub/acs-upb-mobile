@@ -440,8 +440,6 @@ void main() {
       });
 
       testWidgets('Empty form scenario', (WidgetTester tester) async {
-        // when(mockAuthProvider.isVerified).thenAnswer((_) => Future.value(true));
-
         await tester.pumpWidget(buildApp());
         await tester.pumpAndSettle();
 

@@ -1,13 +1,13 @@
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/settings/model/issue.dart';
 import 'package:acs_upb_mobile/pages/settings/service/issue_provider.dart';
+import 'package:acs_upb_mobile/resources/theme.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:provider/provider.dart';
-import 'package:acs_upb_mobile/resources/theme.dart';
 
 class FeedbackFormPage extends StatefulWidget {
   static const String routeName = '/feedbackForm';
@@ -34,13 +34,11 @@ class _FeedbackFormPageState extends State<FeedbackFormPage> {
           actions: [
             AppScaffoldAction(
               text: S.current.buttonSend,
-              onPressed: () {
+              onPressed: () async {
                 // Validate returns true if the form is valid, or false otherwise.
                 if (_formKey.currentState.validate()) {
-                  // If the form is valid, it displays a toast and saves the
-                  // information in the cloud
-                  AppToast.show(S.current.messageProcessingData);
-                  issueProvider.makeIssue(
+                  // If the form is valid, submit the report
+                  final result = await issueProvider.makeIssue(
                     Issue(
                         email: issueEmailController.text,
                         issueBody: issueController.text,
@@ -48,6 +46,13 @@ class _FeedbackFormPageState extends State<FeedbackFormPage> {
                             ? S.current.labelFeedback
                             : S.current.labelIssue),
                   );
+                  if (result) {
+                    AppToast.show(S.current.messageReportSent);
+                  } else {
+                    AppToast.show(S.current.messageReportNotSent);
+                  }
+                  // Return to settings page
+                  Navigator.of(context).pop();
                 }
               },
             ),
@@ -132,8 +137,8 @@ class _FeedbackFormPageState extends State<FeedbackFormPage> {
                       ? S.current.labelFeedback
                       : S.current.labelIssue,
                   hintText: _feedbackSelected
-                      ? S.current.feedbackExample
-                      : S.current.issueExample,
+                      ? S.current.hintFeedback
+                      : S.current.hintIssue,
                   prefixIcon: const Icon(Icons.message_outlined),
                 ),
               ),
@@ -152,12 +157,12 @@ class _FeedbackFormPageState extends State<FeedbackFormPage> {
                 },
                 decoration: InputDecoration(
                   labelText: S.current.labelContactInfoOptional,
-                  helperText: S.current.helperContactInfo,
+                  helperText: S.current.infoContactInfo,
                   helperStyle: Theme.of(context)
                       .textTheme
                       .subtitle2
                       .copyWith(fontWeight: FontWeight.w300),
-                  hintText: S.current.emailExample,
+                  hintText: S.current.hintFullEmail,
                   prefixIcon: const Icon(Icons.alternate_email_outlined),
                 ),
               ),

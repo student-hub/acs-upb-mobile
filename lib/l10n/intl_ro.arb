@@ -59,7 +59,7 @@
   "labelClasses": "Materii",
   "labelFeedback": "Feedback",
   "labelIssue": "Issue",
-  "labelReportType": "Tipul raportului",
+  "labelReportType": "Tip de raport",
   "labelContactInfoOptional": "Informații de contact (opțional)",
 
   "sectionShortcuts": "Scurtături",
@@ -77,6 +77,7 @@
   "shortcutTypeOther": "Alta",
 
   "hintEmail": "john.doe",
+  "hintFullEmail": "john.doe@gmail.com",
   "hintPassword": "····················",
   "hintFirstName": "John",
   "hintLastName": "Doe",
@@ -85,8 +86,8 @@
   "hintWebsiteLink": "http://google.com",
   "hintEvaluation": "Examen final",
   "hintPoints": "4.0",
-
-  "helperContactInfo": "În caz că avem nevoie de mai multe informații",
+  "hintFeedback": "Îmi place aplicația!",
+  "hintIssue": "Când deschid aplicația...",
 
   "actionSignUp": "Înregistrare",
   "actionLogIn": "Conectare",
@@ -220,7 +221,7 @@
   "settingsRelevanceFilter": "Filtru de relevanță",
   "settingsExportToGoogleCalendar": "Exportă evenimentele în Google Calendar",
   "settingsTitleTimetable": "Orar",
-  "settingsFeedbackForm": "Contactați-ne",
+  "settingsFeedbackForm": "Contactează-ne",
 
   "websiteCategoryLearning": "Cursuri",
   "websiteCategoryAdministrative": "Administrativ",
@@ -292,8 +293,9 @@
   "messageAlreadySeeingCurrentWeek": "Ești deja la săptămâna curentă!",
   "messageAnotherQuestion": "Ai altă întrebare?",
   "messageTalkToChatbot": "Vorbește cu Polly!",
-  "messageProcessingData" : "Se procesează",
   "messageEnterText": "Vă rugăm introduceți text",
+  "messageReportSent": "Reposrt sent successfully.",
+  "messageReportNotSent": "Reposrt could not be sent.",
 
   "infoPasswordResetEmailSent": "Please check your inbox for the password reset e-mail.",
   "infoRelevance": "Încercați să selectați cea mai restrictivă categorie.",
@@ -311,16 +313,13 @@
   "infoReadThePolicy": "Citește politica {appName}",
   "infoExportToGoogleCalendar": "Exportă evenimentele filtrate din Orar",
   "infoFormAnonymous": "Acest formular este anonim.",
-  "infoFeedbackForm": "Oferiți feedback și raportați probleme",
+  "infoFeedbackForm": "Oferă feedback sau raportează probleme",
+  "infoContactInfo": "În caz că avem nevoie de mai multe informații",
 
   "stringEmailDomain": "@stud.acs.upb.ro",
   "stringForum": "cs.curs.pub.ro",
   "stringAnonymous": "Anonim",
   "stringAnd": "și",
 
-  "fileAcsBanner": "assets/images/acs_banner_ro.png",
-
-  "emailExample": "exemplu: john.doe123@gmail.com",
-  "feedbackExample": "Scrieți-vă feedback-ul",
-  "issueExample": "Descrieți problema"
+  "fileAcsBanner": "assets/images/acs_banner_ro.png"
 }

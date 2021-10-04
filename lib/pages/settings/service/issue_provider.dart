@@ -22,7 +22,7 @@ extension IssueExtension on Issue {
 class IssueProvider {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
 
-  Future<void> makeIssue(Issue issue) async {
+  Future<bool> makeIssue(Issue issue) async {
     assert(issue.issueBody != null);
 
     try {
@@ -31,9 +31,10 @@ class IssueProvider {
 
       final data = issue.toData();
       await ref.add(data);
+      return true;
     } catch (e) {
       print(e);
-      AppToast.show(S.current.errorSomethingWentWrong);
+      return false;
     }
   }
 }
