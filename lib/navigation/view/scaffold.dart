@@ -141,7 +141,7 @@ class AppScaffoldAction {
                   .toList();
             },
           )
-        : icon == null
+        : icon.icon == null
             ? TextButton(
                 child: Text(text ?? tooltip ?? ''),
                 onPressed: onPressed,
@@ -264,10 +264,15 @@ class AppScaffold extends StatelessWidget {
                     .where((element) => element != null)
                     .toList()),
               Expanded(
-                child: Center(
-                    child: ConstrainedBox(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    ConstrainedBox(
                         constraints: BoxConstraints(maxWidth: maxBodyWidth),
-                        child: body)),
+                        child: body),
+                  ],
+                ),
               ),
             ],
           );
