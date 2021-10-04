@@ -64,7 +64,8 @@ class HomePage extends StatelessWidget {
       ],
       body: ListView(
         children: [
-          if (authProvider.isAuthenticated && !Platform.isWeb) const ProfileCard(),
+          if (authProvider.isAuthenticated && !Platform.isWeb)
+            const ProfileCard(),
           if (authProvider.isAuthenticated &&
               !authProvider.isAnonymous &&
               RemoteConfigService.feedbackEnabled)
@@ -73,7 +74,7 @@ class HomePage extends StatelessWidget {
             UpcomingEventsCard(onShowMore: () => _selectTab(context, 1)),
           if (authProvider.isAuthenticated && !authProvider.isAnonymous)
             FavouriteWebsitesCard(onShowMore: () => _selectTab(context, 2)),
-          NewsFeedCard(),
+          if (!Platform.isWeb) NewsFeedCard(),
           FaqCard(),
           const SizedBox(height: 12),
         ],
