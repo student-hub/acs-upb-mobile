@@ -233,6 +233,18 @@ All the documents in the collection share the same structure:
     <td>☐</td>
     <td>a numeric value that defines what the user is allowed to do; if missing, it is treated as being equal to zero</td>
   </tr>
+  <tr>
+    <td>classes</td>
+    <td><code>array&lt;string&gt;</code></td>
+    <td>🗹</td>
+    <td>list of classes in which the user is enrolled</td>
+  </tr>
+  <tr>
+    <td>classesFeedback</td>
+    <td><code>map&lt;string, boolean&gt;</code></td>
+    <td>☐</td>
+    <td>specifies whether the user completed or not the feedback form for a class</td>
+  </tr>
 </table>
 
 ###### Sub-collections
