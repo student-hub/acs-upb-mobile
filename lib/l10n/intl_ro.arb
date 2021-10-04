@@ -1,8 +1,8 @@
 {
   "buttonNext": "Următorul",
-  "buttonCancel": "Anulare",
-  "buttonSave": "Salvare",
-  "buttonSend": "Trimitere",
+  "buttonCancel": "Anulează",
+  "buttonSave": "Salvează",
+  "buttonSend": "Trimite",
   "buttonApply": "Aplică",
   "buttonSet": "Setează",
   "buttonDeny": "Refuză",
@@ -59,6 +59,10 @@
   "labelNow": "Acum",
   "labelPeople": "Persoane",
   "labelClasses": "Materii",
+  "labelFeedback": "Feedback",
+  "labelIssue": "Issue",
+  "labelReportType": "Tip de raport",
+  "labelContactInfoOptional": "Informații de contact (opțional)",
 
   "sectionShortcuts": "Scurtături",
   "sectionEvents": "Evenimente",
@@ -75,6 +79,7 @@
   "shortcutTypeOther": "Alta",
 
   "hintEmail": "john.doe",
+  "hintFullEmail": "john.doe@gmail.com",
   "hintPassword": "····················",
   "hintFirstName": "John",
   "hintLastName": "Doe",
@@ -83,6 +88,8 @@
   "hintWebsiteLink": "http://google.com",
   "hintEvaluation": "Examen final",
   "hintPoints": "4.0",
+  "hintFeedback": "Îmi place aplicația!",
+  "hintIssue": "Când deschid aplicația...",
 
   "actionSignUp": "Înregistrare",
   "actionLogIn": "Conectare",
@@ -224,6 +231,7 @@
   "settingsRelevanceFilter": "Filtru de relevanță",
   "settingsExportToGoogleCalendar": "Exportă evenimentele în Google Calendar",
   "settingsTitleTimetable": "Orar",
+  "settingsFeedbackForm": "Contactează-ne",
 
   "websiteCategoryLearning": "Cursuri",
   "websiteCategoryAdministrative": "Administrativ",
@@ -295,6 +303,8 @@
   "messageAlreadySeeingCurrentWeek": "Ești deja la săptămâna curentă!",
   "messageAnotherQuestion": "Ai altă întrebare?",
   "messageTalkToChatbot": "Vorbește cu Polly!",
+  "messageReportSent": "Reposrt sent successfully.",
+  "messageReportNotSent": "Reposrt could not be sent.",
 
   "infoPasswordResetEmailSent": "Please check your inbox for the password reset e-mail.",
   "infoRelevance": "Încercați să selectați cea mai restrictivă categorie.",
@@ -315,6 +325,8 @@
   "infoAdmin": "Trateaza cererile de permisiuni",
   "infoAccepted": "Acceptat",
   "infoDenied": "Refuzat",
+  "infoFeedbackForm": "Oferă feedback sau raportează probleme",
+  "infoContactInfo": "În caz că avem nevoie de mai multe informații",
 
   "stringEmailDomain": "@stud.acs.upb.ro",
   "stringForum": "cs.curs.pub.ro",

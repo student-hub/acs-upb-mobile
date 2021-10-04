@@ -1,0 +1,7 @@
+Added
+    - Feedback/issue reporting form accessible from the Settings page
+
+Fixed
+    - Month name not showing in the timetable
+    - Settings page not accessible when logged in anonymously
+    - Some minor visual bugs and errors
