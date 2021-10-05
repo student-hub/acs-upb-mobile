@@ -725,6 +725,16 @@ class S {
     );
   }
 
+  /// `Information sources`
+  String get sectionInformationSources {
+    return Intl.message(
+      'Information sources',
+      name: 'sectionInformationSources',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Feedback needed`
   String get sectionFeedbackNeeded {
     return Intl.message(
@@ -880,6 +890,16 @@ class S {
     return Intl.message(
       '4.0',
       name: 'hintPoints',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please select the sources that you want to see information from:`
+  String get hintSelectSources {
+    return Intl.message(
+      'Please select the sources that you want to see information from:',
+      name: 'hintSelectSources',
       desc: '',
       args: [],
     );
@@ -2015,6 +2035,66 @@ class S {
     );
   }
 
+  /// `Official web pages`
+  String get sourceOfficial {
+    return Intl.message(
+      'Official web pages',
+      name: 'sourceOfficial',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `acs.pub.ro, upb.ro, curs.upb.ro, studenti.pub.ro`
+  String get sourceOfficialWebPages {
+    return Intl.message(
+      'acs.pub.ro, upb.ro, curs.upb.ro, studenti.pub.ro',
+      name: 'sourceOfficialWebPages',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Student organizations`
+  String get sourceOrganization {
+    return Intl.message(
+      'Student organizations',
+      name: 'sourceOrganization',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `LSAC, BEST, MLSA`
+  String get sourceStudentOrganizations {
+    return Intl.message(
+      'LSAC, BEST, MLSA',
+      name: 'sourceStudentOrganizations',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Representative students`
+  String get sourceStudentRepresentative {
+    return Intl.message(
+      'Representative students',
+      name: 'sourceStudentRepresentative',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `group/series representatives, student council members`
+  String get sourceStudentExamples {
+    return Intl.message(
+      'group/series representatives, student council members',
+      name: 'sourceStudentExamples',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Bachelor's`
   String get filterNodeNameBSc {
     return Intl.message(
@@ -2190,6 +2270,16 @@ class S {
     return Intl.message(
       'Auto',
       name: 'settingsItemLanguageAuto',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Data`
+  String get settingsTitleData {
+    return Intl.message(
+      'Data',
+      name: 'settingsTitleData',
       desc: '',
       args: [],
     );
@@ -2905,6 +2995,16 @@ class S {
     );
   }
 
+  /// `ACS UPB Mobile aims to be an information hub for students, therefore it aggregates data from various sources (official or unofficial).`
+  String get messageSelectSource {
+    return Intl.message(
+      'ACS UPB Mobile aims to be an information hub for students, therefore it aggregates data from various sources (official or unofficial).',
+      name: 'messageSelectSource',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `You need to complete {number} more feedback forms!`
   String messageFeedbackLeft(Object number) {
     return Intl.message(
@@ -3140,6 +3240,16 @@ class S {
     return Intl.message(
       'Denied',
       name: 'infoDenied',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Facultatea de Automatică și Calculatoare nu își asumă răspunderea pentru informațiile provenite din surse neoficiale.`
+  String get infoAdditionInformationSources {
+    return Intl.message(
+      'Facultatea de Automatică și Calculatoare nu își asumă răspunderea pentru informațiile provenite din surse neoficiale.',
+      name: 'infoAdditionInformationSources',
       desc: '',
       args: [],
     );
