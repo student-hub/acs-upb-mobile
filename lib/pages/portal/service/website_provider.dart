@@ -233,9 +233,7 @@ class WebsiteProvider with ChangeNotifier {
   }
 
   Future<List<Website>> fetchWebsites(Filter filter,
-      {bool userOnly = false,
-      String uid,
-      List<String> sources}) async {
+      {bool userOnly = false, String uid, List<String> sources}) async {
     try {
       final websites = <Website>[];
 

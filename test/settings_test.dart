@@ -448,8 +448,11 @@ void main() {
 
     group('Feedback form', () {
       setUpAll(() async {
-        when(mockAuthProvider.currentUser).thenAnswer((_) =>
-            Future.value(User(uid: '0', firstName: 'John', lastName: 'Doe', sources: ['official'])));
+        when(mockAuthProvider.currentUser).thenAnswer((_) => Future.value(User(
+            uid: '0',
+            firstName: 'John',
+            lastName: 'Doe',
+            sources: ['official'])));
         when(mockAuthProvider.isAnonymous).thenReturn(false);
       });
 

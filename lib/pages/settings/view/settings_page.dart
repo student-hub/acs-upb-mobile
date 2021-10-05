@@ -80,8 +80,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 PreferenceTitle(S.current.settingsTitleLocalization),
                 PreferenceDialogLink(
                   S.current.settingsItemLanguage,
-                  desc:
-                      languagePrefString(PrefService.get('language')),
+                  desc: languagePrefString(PrefService.get('language')),
                   dialog: PreferenceDialog(
                     [
                       languageRadioPreference(context, 'ro'),
@@ -260,11 +259,11 @@ class _SettingsPageState extends State<SettingsPage> {
   String localizedSourceString(String source) {
     switch (source) {
       case 'official':
-        return  S.current.sourceOfficial;
+        return S.current.sourceOfficial;
       case 'organizations':
-        return  S.current.sourceOrganization;
+        return S.current.sourceOrganization;
       case 'students':
-        return  S.current.sourceStudentRepresentative;
+        return S.current.sourceStudentRepresentative;
       default:
         return source;
     }

@@ -9,7 +9,8 @@ import 'package:provider/provider.dart';
 import 'package:flutter/cupertino.dart';
 
 class QuestionProvider with ChangeNotifier {
-  Future<List<Question>> fetchQuestions({int limit,BuildContext context}) async {
+  Future<List<Question>> fetchQuestions(
+      {int limit, BuildContext context}) async {
     final User user =
         Provider.of<AuthProvider>(context, listen: false).currentUserFromCache;
     try {
@@ -40,7 +41,6 @@ class QuestionProvider with ChangeNotifier {
       return null;
     }
   }
-
 }
 
 extension DatabaseQuestion on Question {
