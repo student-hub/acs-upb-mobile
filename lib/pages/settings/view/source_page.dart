@@ -33,7 +33,7 @@ class _SourcePageState extends State<SourcePage> {
     return AppScaffold(
       actions: [
         AppScaffoldAction(
-            text: S.of(context).buttonSave,
+            text: S.current.buttonSave,
             onPressed: () async {
               final List<String> sources = ['official'];
               if (wantsOrganizationInfo) sources.add('organizations');
