@@ -7,7 +7,7 @@ class StorageProvider {
   static Future<String> findImageUrl(String image) async {
     try {
       final String url =
-      await FirebaseStorage.instance.ref().child(image).getDownloadURL();
+          await FirebaseStorage.instance.ref().child(image).getDownloadURL();
       return url.toString();
     } catch (e) {
       return null;
@@ -39,7 +39,7 @@ class StorageProvider {
           .getDownloadURL();
       bool result = false;
       final UploadTask uploadTask =
-      FirebaseStorage.instance.refFromURL(url).delete();
+          FirebaseStorage.instance.refFromURL(url).delete();
       await uploadTask
           .whenComplete(() => result = true)
           .catchError((dynamic error) async {
@@ -52,8 +52,8 @@ class StorageProvider {
   }
 
   static Future<dynamic> showImagePicker() async {
-    final pickedFile = await ImagePicker().pickImage(
-        source: ImageSource.gallery, maxHeight: 500, maxWidth: 500);
+    final pickedFile = await ImagePicker()
+        .pickImage(source: ImageSource.gallery, maxHeight: 500, maxWidth: 500);
     if (pickedFile == null) {
       return null;
     }
