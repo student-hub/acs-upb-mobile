@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 
 import '../../../authentication/model/user.dart';
 import '../../../generated/l10n.dart';
-import '../../../resources/storage/storage_provider.dart';
+import '../../../resources/storage_provider.dart';
 import '../../../resources/utils.dart';
 import '../../../widgets/toast.dart';
 import '../../filter/model/filter.dart';
