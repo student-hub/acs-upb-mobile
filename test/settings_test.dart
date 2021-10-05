@@ -11,6 +11,8 @@ import 'package:acs_upb_mobile/pages/news_feed/service/news_provider.dart';
 import 'package:acs_upb_mobile/pages/portal/service/website_provider.dart';
 import 'package:acs_upb_mobile/pages/settings/model/request.dart';
 import 'package:acs_upb_mobile/pages/settings/service/admin_provider.dart';
+import 'package:acs_upb_mobile/pages/settings/service/issue_provider.dart';
+import 'package:acs_upb_mobile/pages/settings/view/feedback_form.dart';
 import 'package:acs_upb_mobile/pages/settings/service/request_provider.dart';
 import 'package:acs_upb_mobile/pages/settings/view/request_permissions.dart';
 import 'package:acs_upb_mobile/pages/settings/view/settings_page.dart';
@@ -38,6 +40,8 @@ class MockQuestionProvider extends Mock implements QuestionProvider {}
 
 class MockRequestProvider extends Mock implements RequestProvider {}
 
+class MockIssueProvider extends Mock implements IssueProvider {}
+
 class MockNewsProvider extends Mock implements NewsProvider {}
 
 class MockUniEventProvider extends Mock implements UniEventProvider {}
@@ -53,6 +57,7 @@ void main() {
   WebsiteProvider mockWebsiteProvider;
   MockQuestionProvider mockQuestionProvider;
   RequestProvider mockRequestProvider;
+  IssueProvider mockIssueProvider;
   MockNewsProvider mockNewsProvider;
   UniEventProvider mockEventProvider;
   FeedbackProvider mockFeedbackProvider;
@@ -68,6 +73,7 @@ void main() {
         ChangeNotifierProvider<QuestionProvider>(
             create: (_) => mockQuestionProvider),
         Provider<RequestProvider>(create: (_) => mockRequestProvider),
+        Provider<IssueProvider>(create: (_) => mockIssueProvider),
         ChangeNotifierProvider<NewsProvider>(create: (_) => mockNewsProvider),
         ChangeNotifierProvider<FeedbackProvider>(
             create: (_) => mockFeedbackProvider),
@@ -125,6 +131,10 @@ void main() {
           .thenAnswer((_) => Future.value(true));
       when(mockRequestProvider.userAlreadyRequested(any))
           .thenAnswer((_) => Future.value(false));
+
+      mockIssueProvider = MockIssueProvider();
+      when(mockIssueProvider.makeIssue(any))
+          .thenAnswer((_) => Future.value(true));
 
       mockNewsProvider = MockNewsProvider();
       // ignore: invalid_use_of_protected_member
@@ -433,6 +443,75 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(find.text('Handle permission requests'), findsNothing);
+      });
+    });
+
+    group('Feedback form', () {
+      setUpAll(() async {
+        when(mockAuthProvider.currentUser).thenAnswer((_) =>
+            Future.value(User(uid: '0', firstName: 'John', lastName: 'Doe')));
+        when(mockAuthProvider.isAnonymous).thenReturn(false);
+      });
+
+      testWidgets('Normal scenario', (WidgetTester tester) async {
+        await tester.pumpWidget(buildApp());
+        await tester.pumpAndSettle();
+
+        // Open settings
+        await tester.tap(find.byIcon(Icons.settings_outlined));
+        await tester.pumpAndSettle();
+
+        // Open Feedback/Issues form page
+        await tester
+            .ensureVisible(find.byKey(const ValueKey('feedback_and_issues')));
+        await tester.pumpAndSettle();
+        expect(
+            find.byKey(const ValueKey('feedback_and_issues')), findsOneWidget);
+        await tester.tap(find.byKey(const ValueKey('feedback_and_issues')));
+        await tester.pumpAndSettle();
+        expect(find.byType(FeedbackFormPage), findsOneWidget);
+
+        // Send normal feedback and issue reports
+        await tester.tap(find.byKey(const ValueKey('choice_feedback')));
+        await tester.pumpAndSettle();
+        await tester.enterText(
+            find.byKey(const ValueKey('contact')), 'john.doe@gmail.com');
+        await tester.enterText(
+            find.byKey(const ValueKey('issue')), 'There is some feedback');
+        await tester.pumpAndSettle();
+        await tester.tap(find.text('Send'));
+        await tester.pumpAndSettle(const Duration(seconds: 2));
+
+        // Verify the issue/feedback is sent
+        verify(mockIssueProvider.makeIssue(any));
+
+        // Check that we're back on settings page
+        await tester.pumpAndSettle();
+        expect(find.byType(SettingsPage), findsOneWidget);
+      });
+
+      testWidgets('Empty form scenario', (WidgetTester tester) async {
+        await tester.pumpWidget(buildApp());
+        await tester.pumpAndSettle();
+
+        // Open settings
+        await tester.tap(find.byIcon(Icons.settings_outlined));
+        await tester.pumpAndSettle();
+
+        // Open Feedback/Issues form page
+        await tester
+            .ensureVisible(find.byKey(const ValueKey('feedback_and_issues')));
+        await tester.pumpAndSettle();
+        expect(
+            find.byKey(const ValueKey('feedback_and_issues')), findsOneWidget);
+        await tester.tap(find.byKey(const ValueKey('feedback_and_issues')));
+        await tester.pumpAndSettle();
+        expect(find.byType(FeedbackFormPage), findsOneWidget);
+
+        // Verify an empty form cannot be sent
+        await tester.tap(find.text('Send'));
+        await tester.pumpAndSettle();
+        expect(find.text('Field cannot be empty.'), findsWidgets);
       });
     });
   });

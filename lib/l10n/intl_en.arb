@@ -59,6 +59,10 @@
   "labelNow": "Now",
   "labelPeople": "People",
   "labelClasses": "Classes",
+  "labelFeedback": "Feedback",
+  "labelIssue": "Issue",
+  "labelReportType": "Report type",
+  "labelContactInfoOptional": "Contact info (optional)",
 
   "sectionShortcuts": "Shortcuts",
   "sectionEvents": "Events",
@@ -76,6 +80,7 @@
   "shortcutTypeOther": "Other",
 
   "hintEmail": "john.doe",
+  "hintFullEmail": "john.doe@gmail.com",
   "hintPassword": "····················",
   "hintFirstName": "John",
   "hintLastName": "Doe",
@@ -85,6 +90,8 @@
   "hintEvaluation": "Final exam",
   "hintPoints": "4.0",
   "hintSelectSources": "Please select the sources that you want to see information from:",
+  "hintFeedback": "I love the app!",
+  "hintIssue": "When I open the app...",
 
   "actionSignUp": "Sign up",
   "actionLogIn": "Log in",
@@ -234,6 +241,7 @@
   "settingsRelevanceFilter": "Relevance filter",
   "settingsExportToGoogleCalendar": "Export events to Google Calendar",
   "settingsTitleTimetable": "Timetable",
+  "settingsFeedbackForm": "Contact us",
 
   "websiteCategoryLearning": "Learning",
   "websiteCategoryAdministrative": "Administrative",
@@ -266,7 +274,7 @@
   "messageAccountDeleted": "Account deleted successfully.",
   "messageAnnouncedOnMail": "You will receive a mail confirmation if your request is approved.",
   "messageCheckEmailVerification": "Please check your email for account verification.",
-  "messageResetPassword": "Enter your e-mai in order to receive instructions on how to reset your password.",
+  "messageResetPassword": "Enter your e-mail in order to receive instructions on how to reset your password.",
   "messageDeleteAccount": "Are you sure you want to delete your account?",
   "messageCannotBeUndone": "This action cannot be undone.",
   "messageChangeEmail": "Are you sure you want to change the account email to {email}?",
@@ -306,6 +314,8 @@
   "messageSelectSource": "ACS UPB Mobile aims to be an information hub for students, therefore it aggregates data from various sources (official or unofficial).",
   "messageFeedbackLeft": "You need to complete {number} more feedback forms!",
   "messageAlreadySeeingCurrentWeek": "You're already seeing the current week!",
+  "messageReportSent": "Report sent successfully.",
+  "messageReportNotSent": "Report could not be sent.",
 
   "infoPasswordResetEmailSent": "Please check your inbox for the password reset e-mail.",
   "infoRelevance": "Try to choose the most restrictive category.",
@@ -322,6 +332,8 @@
   "infoReadThePolicy": "Read the {appName} policy",
   "infoExportToGoogleCalendar": "Export filtered events from Timetable",
   "infoFormAnonymous": "This form is anonymous.",
+  "infoFeedbackForm": "Leave feedback and report issues",
+  "infoContactInfo": "In case we need to follow up with you",
   "infoAdmin": "Handle permission requests",
   "infoAccepted": "Accepted",
   "infoDenied": "Denied",

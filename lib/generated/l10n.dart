@@ -625,6 +625,46 @@ class S {
     );
   }
 
+  /// `Feedback`
+  String get labelFeedback {
+    return Intl.message(
+      'Feedback',
+      name: 'labelFeedback',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Issue`
+  String get labelIssue {
+    return Intl.message(
+      'Issue',
+      name: 'labelIssue',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Report type`
+  String get labelReportType {
+    return Intl.message(
+      'Report type',
+      name: 'labelReportType',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Contact info (optional)`
+  String get labelContactInfoOptional {
+    return Intl.message(
+      'Contact info (optional)',
+      name: 'labelContactInfoOptional',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Shortcuts`
   String get sectionShortcuts {
     return Intl.message(
@@ -680,16 +720,6 @@ class S {
     return Intl.message(
       'Grading',
       name: 'sectionGrading',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Information sources`
-  String get sectionInformationSources {
-    return Intl.message(
-      'Information sources',
-      name: 'sectionInformationSources',
       desc: '',
       args: [],
     );
@@ -760,6 +790,16 @@ class S {
     return Intl.message(
       'john.doe',
       name: 'hintEmail',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `john.doe@gmail.com`
+  String get hintFullEmail {
+    return Intl.message(
+      'john.doe@gmail.com',
+      name: 'hintFullEmail',
       desc: '',
       args: [],
     );
@@ -845,11 +885,21 @@ class S {
     );
   }
 
-  /// `Please select the sources that you want to see information from:`
-  String get hintSelectSources {
+  /// `I love the app!`
+  String get hintFeedback {
     return Intl.message(
-      'Please select the sources that you want to see information from:',
-      name: 'hintSelectSources',
+      'I love the app!',
+      name: 'hintFeedback',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `When I open the app...`
+  String get hintIssue {
+    return Intl.message(
+      'When I open the app...',
+      name: 'hintIssue',
       desc: '',
       args: [],
     );
@@ -1965,66 +2015,6 @@ class S {
     );
   }
 
-  /// `Official web pages`
-  String get sourceOfficial {
-    return Intl.message(
-      'Official web pages',
-      name: 'sourceOfficial',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `acs.pub.ro, upb.ro, curs.upb.ro, studenti.pub.ro`
-  String get sourceOfficialWebPages {
-    return Intl.message(
-      'acs.pub.ro, upb.ro, curs.upb.ro, studenti.pub.ro',
-      name: 'sourceOfficialWebPages',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Student organizations`
-  String get sourceOrganization {
-    return Intl.message(
-      'Student organizations',
-      name: 'sourceOrganization',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `LSAC, BEST, MLSA`
-  String get sourceStudentOrganizations {
-    return Intl.message(
-      'LSAC, BEST, MLSA',
-      name: 'sourceStudentOrganizations',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Representative students`
-  String get sourceStudentRepresentative {
-    return Intl.message(
-      'Representative students',
-      name: 'sourceStudentRepresentative',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `group/series representatives, student council members`
-  String get sourceStudentExamples {
-    return Intl.message(
-      'group/series representatives, student council members',
-      name: 'sourceStudentExamples',
-      desc: '',
-      args: [],
-    );
-  }
-
   /// `Bachelor's`
   String get filterNodeNameBSc {
     return Intl.message(
@@ -2205,16 +2195,6 @@ class S {
     );
   }
 
-  /// `Data`
-  String get settingsTitleData {
-    return Intl.message(
-      'Data',
-      name: 'settingsTitleData',
-      desc: '',
-      args: [],
-    );
-  }
-
   /// `Admin Panel`
   String get settingsItemAdmin {
     return Intl.message(
@@ -2250,6 +2230,16 @@ class S {
     return Intl.message(
       'Timetable',
       name: 'settingsTitleTimetable',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Contact us`
+  String get settingsFeedbackForm {
+    return Intl.message(
+      'Contact us',
+      name: 'settingsFeedbackForm',
       desc: '',
       args: [],
     );
@@ -2545,10 +2535,10 @@ class S {
     );
   }
 
-  /// `Enter your e-mai in order to receive instructions on how to reset your password.`
+  /// `Enter your e-mail in order to receive instructions on how to reset your password.`
   String get messageResetPassword {
     return Intl.message(
-      'Enter your e-mai in order to receive instructions on how to reset your password.',
+      'Enter your e-mail in order to receive instructions on how to reset your password.',
       name: 'messageResetPassword',
       desc: '',
       args: [],
@@ -2915,16 +2905,6 @@ class S {
     );
   }
 
-  /// `ACS UPB Mobile aims to be an information hub for students, therefore it aggregates data from various sources (official or unofficial).`
-  String get messageSelectSource {
-    return Intl.message(
-      'ACS UPB Mobile aims to be an information hub for students, therefore it aggregates data from various sources (official or unofficial).',
-      name: 'messageSelectSource',
-      desc: '',
-      args: [],
-    );
-  }
-
   /// `You need to complete {number} more feedback forms!`
   String messageFeedbackLeft(Object number) {
     return Intl.message(
@@ -2940,6 +2920,26 @@ class S {
     return Intl.message(
       'You\'re already seeing the current week!',
       name: 'messageAlreadySeeingCurrentWeek',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Report sent successfully.`
+  String get messageReportSent {
+    return Intl.message(
+      'Report sent successfully.',
+      name: 'messageReportSent',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Report could not be sent.`
+  String get messageReportNotSent {
+    return Intl.message(
+      'Report could not be sent.',
+      name: 'messageReportNotSent',
       desc: '',
       args: [],
     );
@@ -3095,6 +3095,26 @@ class S {
     );
   }
 
+  /// `Leave feedback and report issues`
+  String get infoFeedbackForm {
+    return Intl.message(
+      'Leave feedback and report issues',
+      name: 'infoFeedbackForm',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `In case we need to follow up with you`
+  String get infoContactInfo {
+    return Intl.message(
+      'In case we need to follow up with you',
+      name: 'infoContactInfo',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Handle permission requests`
   String get infoAdmin {
     return Intl.message(
@@ -3120,16 +3140,6 @@ class S {
     return Intl.message(
       'Denied',
       name: 'infoDenied',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Facultatea de Automatică și Calculatoare nu își asumă răspunderea pentru informațiile provenite din surse neoficiale.`
-  String get infoAdditionInformationSources {
-    return Intl.message(
-      'Facultatea de Automatică și Calculatoare nu își asumă răspunderea pentru informațiile provenite din surse neoficiale.',
-      name: 'infoAdditionInformationSources',
       desc: '',
       args: [],
     );
