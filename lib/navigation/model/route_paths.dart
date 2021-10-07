@@ -94,7 +94,7 @@ part 'routes/website_path.dart';
 abstract class RoutePath {
   RoutePath(this.location);
 
-  String location;
+  final String location;
 
   RouteInformation get routeInformation => RouteInformation(location: location);
 

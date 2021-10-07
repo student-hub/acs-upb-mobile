@@ -133,7 +133,7 @@ class _EventViewState extends State<EventView> {
                   ),
                 ),
                 webPath:
-                    '${ClassView.routeName}?id=${mainEvent.classHeader.name}',
+                    '${ClassView.routeName}?id=${mainEvent.classHeader.id}',
               ),
             ),
           if (widget.eventInstance?.location?.isNotEmpty ?? false)
