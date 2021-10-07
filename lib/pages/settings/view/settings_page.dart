@@ -149,12 +149,23 @@ class _SettingsPageState extends State<SettingsPage> {
                     subtitle: Text(S.current.infoExportToGoogleCalendar),
                   ),
                 ),
-                SwitchPreference('Academic week number', 'Academic week number',
-                    onEnable: () {
-                  LeadHeader.academicWeekNumber = true;
-                }, onDisable: () {
-                  LeadHeader.academicWeekNumber = false;
-                }, defaultVal: false),
+                Column(
+                  children: [
+                    SwitchPreference(
+                      'Academic week number ',
+                      'Academic week number',
+                      onEnable: () {
+                        LeadHeader.academicWeekNumber = true;
+                      },
+                      onDisable: () {
+                        LeadHeader.academicWeekNumber = false;
+                      },
+                      defaultVal: false,
+                      desc:
+                          "show number of week in the semester instead of the calendar year",
+                    ),
+                  ],
+                ),
                 PreferenceTitle(S.current.labelFeedback),
                 ListTile(
                   key: const ValueKey('feedback_and_issues'),
