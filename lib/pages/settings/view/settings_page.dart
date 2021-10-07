@@ -162,7 +162,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       },
                       defaultVal: false,
                       desc:
-                          "show number of week in the semester instead of the calendar year",
+                          'show number of week in the semester instead of the calendar year',
                     ),
                   ],
                 ),
