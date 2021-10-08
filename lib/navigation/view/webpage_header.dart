@@ -102,7 +102,7 @@ class _ProfileDropdownMenu extends StatefulWidget {
 }
 
 class __ProfileDropdownMenuState extends State<_ProfileDropdownMenu> {
-  final Map<int, _PopupItem> _popupItems = [
+  final List<_PopupItem> _popupItems = [
     _PopupItem(
       onTap: (context) =>
           AppNavigator.pushNamed(context, SettingsPage.routeName),
@@ -122,7 +122,7 @@ class __ProfileDropdownMenuState extends State<_ProfileDropdownMenu> {
       anonymousIcon: Icons.login,
       anonymousText: S.current.actionLogIn,
     )
-  ].asMap();
+  ];
 
   String profilePictureURL;
   User user;
@@ -170,8 +170,8 @@ class __ProfileDropdownMenuState extends State<_ProfileDropdownMenu> {
                 ),
               ),
               const PopupMenuDivider(),
-              ..._popupItems.entries
-                  .map((item) => item.value.build(context, item.key)),
+              ..._popupItems.asMap().keys.toList()
+                  .map((index) => _popupItems[index].build(context, index)),
             ];
           },
         ),
