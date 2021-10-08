@@ -421,8 +421,6 @@ Filter structure is public information and should never (or very rarely) need to
 
 </details>
 
-</details>
-
 <details>
 <summary class="collection" id="import_moodle-collection"><b>import_moodle</b></summary>
 This collection contains class data imported directly from the University's Moodle instance. The data is exported as a spreadsheet from Moodle, and imported to our app's Firestore using <a href="https://github.com/acs-upb-mobile/data-import/blob/master/import.js">a Node.js script</a>.
