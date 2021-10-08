@@ -148,7 +148,7 @@ class _RequestCardState extends State<RequestCard>
                   onTap: () async {
                     final adminProvider =
                         Provider.of<AdminProvider>(context, listen: false);
-                    await adminProvider.denyRequest(request.id);
+                    await adminProvider.denyRequest(request.userId);
                     setState(() {
                       request
                         ..accepted = false
@@ -165,7 +165,7 @@ class _RequestCardState extends State<RequestCard>
                   onTap: () async {
                     final adminProvider =
                         Provider.of<AdminProvider>(context, listen: false);
-                    await adminProvider.acceptRequest(request.id);
+                    await adminProvider.acceptRequest(request.userId);
                     setState(() {
                       request
                         ..accepted = true
@@ -190,7 +190,7 @@ class _RequestCardState extends State<RequestCard>
                   onTap: () async {
                     final adminProvider =
                         Provider.of<AdminProvider>(context, listen: false);
-                    await adminProvider.revertRequest(request.id);
+                    await adminProvider.revertRequest(request.userId);
                     setState(() {
                       request
                         ..accepted = false

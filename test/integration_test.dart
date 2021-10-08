@@ -2,8 +2,8 @@ import 'package:acs_upb_mobile/authentication/model/user.dart';
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/authentication/view/edit_profile_page.dart';
 import 'package:acs_upb_mobile/main.dart';
+import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question_dropdown.dart';
-import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question_slider.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question_rating.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question_slider.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question_text.dart';
@@ -420,33 +420,38 @@ Future<void> main() async {
         .thenAnswer((_) => Future.value('Jane Doe'));
 
     mockFeedbackProvider = MockFeedbackProvider();
+    when(mockFeedbackProvider.submitRequest(any))
+        .thenAnswer((_) => Future.value(true));
+    when(mockFeedbackProvider.userAlreadyRequested(any))
+        .thenAnswer((_) => Future.value(false));
     // ignore: invalid_use_of_protected_member
     when(mockFeedbackProvider.hasListeners).thenReturn(true);
-    when(mockFeedbackProvider.fetchQuestions('string')).thenAnswer((_) => Future.value({
-          '0': FormQuestionDropdown(
-            category: 'involvement',
-            question:
-                'Approximate number of activities that you attended (lectures + applications):',
-            id: '0',
-            answerOptions: ['option 1', 'option 2', 'option 3', 'option 4'],
-          ),
-          '1': FormQuestionRating(
-            category: 'applications',
-            question: 'Was the exposure method appropriate?',
-            id: '1',
-          ),
-          '2': FormQuestionText(
-            category: 'personal',
-            question: 'What are the positive aspects of this class?',
-            id: '2',
-          ),
-          '3': FormQuestionSlider(
-            category: 'homework',
-            question:
-                'Estimate the average number of hours per week devoted to solving homework.',
-            id: '3',
-          ),
-        }));
+    when(mockFeedbackProvider.fetchQuestions('string'))
+        .thenAnswer((_) => Future.value({
+              '0': FormQuestionDropdown(
+                category: 'involvement',
+                question:
+                    'Approximate number of activities that you attended (lectures + applications):',
+                id: '0',
+                answerOptions: ['option 1', 'option 2', 'option 3', 'option 4'],
+              ),
+              '1': FormQuestionRating(
+                category: 'applications',
+                question: 'Was the exposure method appropriate?',
+                id: '1',
+              ),
+              '2': FormQuestionText(
+                category: 'personal',
+                question: 'What are the positive aspects of this class?',
+                id: '2',
+              ),
+              '3': FormQuestionSlider(
+                category: 'homework',
+                question:
+                    'Estimate the average number of hours per week devoted to solving homework.',
+                id: '3',
+              ),
+            }));
     when(mockFeedbackProvider.fetchCategories('string'))
         .thenAnswer((_) => Future.value({
               'applications': {'en': 'Applications', 'ro': 'Aplicații'},
@@ -707,11 +712,6 @@ Future<void> main() async {
         .thenAnswer((_) => Future.value(true));
     when(mockEventProvider.addEvent(any)).thenAnswer((_) => Future.value(true));
 
-    mockRequestProvider = MockRequestProvider();
-    when(mockRequestProvider.submitRequest(any))
-        .thenAnswer((_) => Future.value(true));
-    when(mockRequestProvider.userAlreadyRequested(any))
-        .thenAnswer((_) => Future.value(false));
     mockAdminProvider = MockAdminProvider();
   });
 
@@ -1590,8 +1590,14 @@ Future<void> main() async {
       SharedPreferences.setMockInitialValues({'language': 'auto'});
       when(mockAdminProvider.fetchUnprocessedRequestIds())
           .thenAnswer((_) => Future.value(['string']));
-      when(mockAdminProvider.fetchRequest('')).thenAnswer(
-          (_) => Future.value(PermissionRequest(requestBody: 'body', userId: '0')));
+      when(mockAdminProvider.fetchRequest(''))
+          .thenAnswer((_) => Future.value(PermissionRequest(answers: {
+                '0': FormQuestion(
+                  category: 'category',
+                  question: 'en',
+                  id: '0',
+                )
+              }, userId: '0')));
     });
 
     for (final size in screenSizes) {

@@ -36,6 +36,7 @@ class PermissionRequest {
         data[i.toString()] = answers[i.toString()].answer;
       }
     }
+    data['addedBy'] = userId;
     data['done'] = processed;
     data['dateSubmitted'] = Timestamp.now();
     data['accepted'] = false;
