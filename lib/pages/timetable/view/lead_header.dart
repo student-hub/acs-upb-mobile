@@ -5,6 +5,7 @@ import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
 import 'package:acs_upb_mobile/pages/people/model/person.dart';
 import 'package:acs_upb_mobile/pages/people/service/person_provider.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/academic_calendar.dart';
+import 'package:acs_upb_mobile/pages/timetable/model/events/all_day_event.dart';
 import 'package:acs_upb_mobile/pages/timetable/service/uni_event_provider.dart';
 import 'package:black_hole_flutter/black_hole_flutter.dart';
 import 'package:flutter/material.dart';
@@ -19,7 +20,7 @@ import 'package:provider/provider.dart';
 class LeadHeader extends StatefulWidget {
   const LeadHeader(this.date, {Key key}) : super(key: key);
   final LocalDate date;
-  static var academicWeekNumber = false;
+  static var academicWeekNumber = true;
 
   @override
   _LeadHeaderState createState() => _LeadHeaderState();
@@ -68,13 +69,15 @@ class _LeadHeaderState extends State<LeadHeader> {
   String getWeekNumber() {
     if (calendar != null) {
       final List<int> nonHolidayWeeks = calendar.nonHolidayWeeks.toList();
-      final DateInterval winterSession = DateInterval(
-          calendar.exams.first.startDate, calendar.exams.first.endDate);
-      final DateInterval summerSession = DateInterval(
-          calendar.exams.last.startDate, calendar.exams.last.endDate);
+      // final DateInterval winterSession = DateInterval(
+      // calendar.exams.first.startDate, calendar.exams.first.endDate);
+      // final DateInterval summerSession = DateInterval(
+      //  calendar.exams.last.startDate, calendar.exams.last.endDate);
+
       for (var i = 1; i < 53; i++) {
         if (!nonHolidayWeeks.contains(i)) holidayWeeks.add(i);
       }
+
       final week =
           ((widget.date.dayOfYear - widget.date.dayOfWeek.value + 10) / 7)
               .floor();
@@ -82,19 +85,12 @@ class _LeadHeaderState extends State<LeadHeader> {
         return week.toString();
       } else {
         if (!nonHolidayWeeks.contains(week)) {
-          if (winterSession.contains(widget.date) ||
-              summerSession.contains(widget.date)) {
-            return 'S';
-          } else {
-            return 'H';
-          }
-        } else {
           return (nonHolidayWeeks.indexOf(week) + 1).toString();
         }
       }
-    } else {
-      return '0';
     }
+      return '0';
+
   }
 
   @override

@@ -215,9 +215,11 @@
 
   "settingsTitlePersonalization": "Personalizare",
   "settingsItemDarkMode": "Mod Întunecat",
+  "settingsAcademicWeekNumber":"Săptămâni academice",
   "settingsTitleLocalization": "Localizare",
   "settingsTitleDataControl": "Control date",
   "settingsItemEditingPermissions": "Permisiunile tale de editare",
+  "settingsAcademicWeekNumberSubtitle":"Afișează săptămână din semestru în loc de cea din an"
   "settingsPermissionsNone": "Fără permisiuni speciale",
   "settingsPermissionsAdd": "Permisiune pentru adăugare de date publice",
   "settingsPermissionsEdit": "Permisiune pentru editare de date publice",

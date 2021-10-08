@@ -215,7 +215,9 @@
 
   "settingsTitlePersonalization": "Personalization",
   "settingsItemDarkMode": "Dark Mode",
+  "settingsAcademicWeekNumber":"Academic week number",
   "settingsTitleLocalization": "Localization",
+  "settingsAcademicWeekNumberSubtitle":"Show number of week in the semester instead of the calendar year"
   "settingsTitleDataControl": "Data control",
   "settingsItemEditingPermissions": "Your editing permissions",
   "settingsPermissionsNone": "No special permissions",

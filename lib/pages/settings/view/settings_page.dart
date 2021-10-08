@@ -32,7 +32,6 @@ class _SettingsPageState extends State<SettingsPage> {
 
   // String describing the level of editing permissions that the user has.
   String userPermissionString = '';
-  bool isSwitched = false;
 
   @override
   void initState() {
@@ -152,7 +151,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 Column(
                   children: [
                     SwitchPreference(
-                      'Academic week number ',
+                      S.current.settingsAcademicWeekNumber,
                       'Academic week number',
                       onEnable: () {
                         LeadHeader.academicWeekNumber = true;
@@ -161,8 +160,7 @@ class _SettingsPageState extends State<SettingsPage> {
                         LeadHeader.academicWeekNumber = false;
                       },
                       defaultVal: false,
-                      desc:
-                          'show number of week in the semester instead of the calendar year',
+                      desc: S.current.settingsAcademicWeekNumberSubtitle,
                     ),
                   ],
                 ),

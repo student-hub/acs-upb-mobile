@@ -99,7 +99,7 @@ class _TimetablePageState extends State<TimetablePage> {
         child: Stack(
           children: [
             Timetable<UniEventInstance>(
-              leadingHeaderBuilder: (_, date) => LeadHeader(date),
+              leadingHeaderBuilder: (_, date) => LeadHeader(date??LocalDate.today()),
               controller: _controller,
               dateHeaderBuilder: (_, date) => DateHeader(date),
               eventBuilder: (event) => UniEventWidget(event),

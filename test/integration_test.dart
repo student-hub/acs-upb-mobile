@@ -47,6 +47,7 @@ import 'package:acs_upb_mobile/pages/timetable/model/events/uni_event.dart';
 import 'package:acs_upb_mobile/pages/timetable/service/uni_event_provider.dart';
 import 'package:acs_upb_mobile/pages/timetable/view/events/add_event_view.dart';
 import 'package:acs_upb_mobile/pages/timetable/view/events/event_view.dart';
+import 'package:acs_upb_mobile/pages/timetable/view/lead_header.dart';
 import 'package:acs_upb_mobile/pages/timetable/view/timetable_page.dart';
 import 'package:acs_upb_mobile/resources/locale_provider.dart';
 import 'package:acs_upb_mobile/resources/remote_config.dart';
@@ -548,7 +549,7 @@ Future<void> main() async {
       ),
     ];
     final calendar = AcademicCalendar(
-      id: '2020',
+      id: '2021',
       semesters: [
         AllDayUniEvent(
           start: weekStart,
@@ -564,7 +565,7 @@ Future<void> main() async {
       holidays: holidays,
     );
     when(mockEventProvider.fetchCalendars())
-        .thenAnswer((_) => Future.value({'2020': calendar}));
+        .thenAnswer((_) => Future.value({'2021': calendar}));
     when(mockEventProvider.getUpcomingEvents(LocalDate.today()))
         .thenAnswer((_) => Future.value(<UniEventInstance>[]));
     when(mockEventProvider.getUpcomingEvents(LocalDate.today(),
@@ -915,15 +916,17 @@ Future<void> main() async {
 
           // Scroll to previous week
           await tester.drag(find.text('Tue'), Offset(size.width - 30, 0));
-          await tester.pumpAndSettle();
+
 
           // Expect previous week
           final previousWeek = WeekYearRules.iso
               .getWeekOfWeekYear(LocalDate.today().subtractWeeks(1));
+          await tester.pumpAndSettle();
+
           expect(
               find.byWidgetPredicate((widget) =>
-                  widget is WeekIndicator &&
-                  widget.week.toString() == previousWeek.toString()),
+                  widget is LeadHeader
+              ),
               findsOneWidget);
 
           expect(find.text('Holiday'), findsNothing);
@@ -949,8 +952,8 @@ Future<void> main() async {
               WeekYearRules.iso.getWeekOfWeekYear(LocalDate.today());
           expect(
               find.byWidgetPredicate((widget) =>
-                  widget is WeekIndicator &&
-                  widget.week.toString() == currentWeek.toString()),
+                  widget is LeadHeader
+                  ),
               findsOneWidget);
 
           expect(find.text('Holiday'), findsNothing);
@@ -976,8 +979,7 @@ Future<void> main() async {
               .getWeekOfWeekYear(LocalDate.today().addWeeks(1));
           expect(
               find.byWidgetPredicate((widget) =>
-                  widget is WeekIndicator &&
-                  widget.week.toString() == nextWeek.toString()),
+                  widget is LeadHeader ),
               findsOneWidget);
 
           expect(find.text('Holiday'), findsOneWidget);
@@ -1003,8 +1005,7 @@ Future<void> main() async {
               .getWeekOfWeekYear(LocalDate.today().addWeeks(2));
           expect(
               find.byWidgetPredicate((widget) =>
-                  widget is WeekIndicator &&
-                  widget.week.toString() == nextNextWeek.toString()),
+                  widget is LeadHeader ),
               findsOneWidget);
 
           expect(find.text('Holiday'), findsNothing);
@@ -1030,8 +1031,7 @@ Future<void> main() async {
               .getWeekOfWeekYear(LocalDate.today().addWeeks(3));
           expect(
               find.byWidgetPredicate((widget) =>
-                  widget is WeekIndicator &&
-                  widget.week.toString() == nextNextNextWeek.toString()),
+                  widget is LeadHeader ),
               findsOneWidget);
 
           expect(find.text('Holiday'), findsNothing);
@@ -1055,8 +1055,7 @@ Future<void> main() async {
           // Expect current week
           expect(
               find.byWidgetPredicate((widget) =>
-                  widget is WeekIndicator &&
-                  widget.week.toString() == currentWeek.toString()),
+                  widget is LeadHeader ),
               findsOneWidget);
         });
       }
@@ -1080,8 +1079,7 @@ Future<void> main() async {
               WeekYearRules.iso.getWeekOfWeekYear(LocalDate.today());
           expect(
               find.byWidgetPredicate((widget) =>
-                  widget is WeekIndicator &&
-                  widget.week.toString() == currentWeek.toString()),
+                  widget is LeadHeader ),
               findsOneWidget);
 
           // Scroll to next week
@@ -1093,8 +1091,7 @@ Future<void> main() async {
               .getWeekOfWeekYear(LocalDate.today().addWeeks(1));
           expect(
               find.byWidgetPredicate((widget) =>
-                  widget is WeekIndicator &&
-                  widget.week.toString() == nextWeek.toString()),
+                  widget is LeadHeader ),
               findsOneWidget);
 
           // Open holiday event
