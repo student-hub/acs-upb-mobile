@@ -116,7 +116,9 @@ class _SettingsPageState extends State<SettingsPage> {
                   ),
                 ),
                 Visibility(
-                  visible: authProvider.currentUserFromCache.isAdmin == true,
+                  visible: authProvider.isAuthenticated &&
+                      !authProvider.isAnonymous &&
+                      authProvider.currentUserFromCache.isAdmin == true,
                   child: ListTile(
                     key: const Key('AdminPanel'),
                     onTap: () =>
@@ -146,6 +148,15 @@ class _SettingsPageState extends State<SettingsPage> {
                     title: Text(S.current.settingsExportToGoogleCalendar),
                     subtitle: Text(S.current.infoExportToGoogleCalendar),
                   ),
+                ),
+                PreferenceTitle(S.current.labelFeedback),
+                ListTile(
+                  key: const ValueKey('feedback_and_issues'),
+                  onTap: () {
+                    Navigator.of(context).pushNamed(Routes.feedbackForm);
+                  },
+                  title: Text(S.current.settingsFeedbackForm),
+                  subtitle: Text(S.current.infoFeedbackForm),
                 ),
                 Column(
                   mainAxisSize: MainAxisSize.min,

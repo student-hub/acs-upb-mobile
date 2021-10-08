@@ -1,10 +1,12 @@
 import 'dart:ui' as ui;
 
 import 'package:acs_upb_mobile/authentication/model/user.dart';
+import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/settings/model/request.dart';
 import 'package:acs_upb_mobile/pages/settings/service/admin_provider.dart';
 import 'package:acs_upb_mobile/resources/theme.dart';
+import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/widgets/button.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -40,7 +42,7 @@ class _RequestCardState extends State<RequestCard>
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      _buildUserHeader(request, adminProvider),
+                      _buildUserHeader(request),
                       const SizedBox(height: 10),
                       Text(
                         request.answers[0] ?? '',
@@ -51,7 +53,7 @@ class _RequestCardState extends State<RequestCard>
                             .copyWith(fontSize: 14),
                       ),
                       const SizedBox(height: 10),
-                      _buildButtons(request.processed, adminProvider, request)
+                      _buildButtons(request.processed, request)
                     ],
                   ),
                 ),
@@ -63,9 +65,9 @@ class _RequestCardState extends State<RequestCard>
         });
   }
 
-  Widget _buildUserHeader(PermissionRequest request, AdminProvider adminProvider) =>
+  Widget _buildUserHeader(PermissionRequest request) =>
       FutureBuilder(
-          future: adminProvider.fetchUserById(request.userId),
+          future: Provider.of<AdminProvider>(context).fetchUserById(request.userId),
           builder: (context, snapshot) {
             User user;
             if (snapshot.connectionState == ConnectionState.done) {
@@ -121,9 +123,7 @@ class _RequestCardState extends State<RequestCard>
         ),
       );
 
-  Widget _buildButtons(
-          bool processed, AdminProvider adminProvider, PermissionRequest request) =>
-      Row(
+  Widget _buildButtons(bool processed, PermissionRequest request) => Row(
         crossAxisAlignment: CrossAxisAlignment.end,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -146,7 +146,9 @@ class _RequestCardState extends State<RequestCard>
                   color: Theme.of(context).secondaryButtonColor,
                   width: 100,
                   onTap: () async {
-                    await adminProvider.denyRequest(request.userId);
+                    final adminProvider =
+                        Provider.of<AdminProvider>(context, listen: false);
+                    await adminProvider.denyRequest(request.id);
                     setState(() {
                       request
                         ..accepted = false
@@ -161,12 +163,18 @@ class _RequestCardState extends State<RequestCard>
                   color: Theme.of(context).accentColor,
                   width: 100,
                   onTap: () async {
-                    await adminProvider.acceptRequest(request.userId);
+                    final adminProvider =
+                        Provider.of<AdminProvider>(context, listen: false);
+                    await adminProvider.acceptRequest(request.id);
                     setState(() {
                       request
                         ..accepted = true
                         ..processed = true;
                     });
+                    final authProvider =
+                        Provider.of<AuthProvider>(context, listen: false);
+                    await Utils.launchURL(
+                        'mailto:${authProvider.email}?subject=Permisiuni%20ACS%20UPB%20Mobile&body=Ai%20primit%20permisiuni%20de%20editare%20în%20ACS%20UPB%20Mobile!');
                   },
                 )
               ],
@@ -180,7 +188,9 @@ class _RequestCardState extends State<RequestCard>
                   color: Theme.of(context).accentColor,
                   width: 100,
                   onTap: () async {
-                    await adminProvider.revertRequest(request.userId);
+                    final adminProvider =
+                        Provider.of<AdminProvider>(context, listen: false);
+                    await adminProvider.revertRequest(request.id);
                     setState(() {
                       request
                         ..accepted = false

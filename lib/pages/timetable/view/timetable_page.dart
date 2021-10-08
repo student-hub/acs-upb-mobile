@@ -60,8 +60,8 @@ class _TimetablePageState extends State<TimetablePage> {
         animation: _controller.dateListenable,
         builder: (context, child) => Text(
             authProvider.isAuthenticated && !authProvider.isAnonymous
-                ? S.current.navigationTimetable
-                : _controller.currentMonth.titleCase),
+                ? _controller.currentMonth.titleCase
+                : S.current.navigationTimetable),
       ),
       needsToBeAuthenticated: true,
       leading: AppScaffoldAction(

@@ -129,5 +129,13 @@ service cloud.firestore {
             allow update: if isAuthenticated();
             allow delete: if false;
         }
+
+        match /feedback/{feedback=**} {
+          // Anyone can create, no one can read, update or delete
+          allow read: if false;
+          allow create: if true;
+          allow update: if false;
+          allow delete: if false;
+        }
     }
 }
