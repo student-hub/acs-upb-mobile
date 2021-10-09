@@ -311,9 +311,9 @@
   "messageFeedbackAspects": "Key aspects we take into account:",
   "messageFeedbackMotivation1": "Your data and privacy are respected. We do not report individual responses, but these are aggregated, thus an opinion cannot be associated with a particular profile.",
   "messageFeedbackMotivation2": "Information shared will be kept in our database for at least 4 years (study duration of a Bachelor's degree), so the evolution over time can be observed.",
-  "messageFeedbackMotivation3": "Access to statistics is allowed to any student who wants to find out impressions about a class during the semester. However, while the opportunity to share your review is active, only students who have already expressed their opinion can analyze the ideas of others.",
+  "messageFeedbackMotivation3": "Access to statistics is allowed to any student who wants to find out impressions about a class during the semester. However, while the opportunity to share your feedback is active, only students who have already expressed their opinion can analyze the ideas of others.",
   "messageFeedbackMotivation4": "The whole process of collecting and displaying reviews is transparent. Being an open-source application, source code is accessible to everyone.",
-  "messageFeedbackMotivation5": "We are constantly looking to improve the connection between different generations of students. As a result, any thought is extremely value. All the details supplied are used pro-actively.",
+  "messageFeedbackMotivation5": "We are constantly looking to improve the connection between different generations of students. As a result, any thought is extremely valuable. All the details supplied are used pro-actively.",
 
   "infoPasswordResetEmailSent": "Please check your inbox for the password reset e-mail.",
   "infoRelevance": "Try to choose the most restrictive category.",

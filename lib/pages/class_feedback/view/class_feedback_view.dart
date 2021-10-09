@@ -3,16 +3,12 @@ import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/service/feedback_provider.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/view/feedback_question.dart';
-import 'package:acs_upb_mobile/pages/class_feedback/model/class_feedback_answer.dart';
-import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question.dart';
-import 'package:acs_upb_mobile/pages/class_feedback/service/feedback_provider.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/view/feedback_motivation.dart';
 import 'package:acs_upb_mobile/pages/classes/model/class.dart';
 import 'package:acs_upb_mobile/pages/people/model/person.dart';
 import 'package:acs_upb_mobile/pages/people/service/person_provider.dart';
 import 'package:acs_upb_mobile/pages/people/view/people_page.dart';
 import 'package:acs_upb_mobile/resources/locale_provider.dart';
-import 'package:acs_upb_mobile/widgets/feedback_question.dart';
 import 'package:acs_upb_mobile/widgets/icon_text.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
@@ -218,7 +214,14 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
               child: IconText(
                 icon: Icons.info_outline,
                 text: S.current.infoFormAnonymous,
+                actionText: S.current.actionLearnMore,
+                actionArrow: true,
                 style: Theme.of(context).textTheme.bodyText1,
+                onTap: () => Navigator.of(context).push(
+                  MaterialPageRoute<FeedbackMotivation>(
+                    builder: (_) => FeedbackMotivation(),
+                  ),
+                ),
               ),
             ),
           ),

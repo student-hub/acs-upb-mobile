@@ -3005,10 +3005,10 @@ class S {
     );
   }
 
-  /// `Access to statistics is allowed to any student who wants to find out impressions about a class during the semester. However, while the opportunity to share your review is active, only students who have already expressed their opinion can analyze the ideas of others.`
+  /// `Access to statistics is allowed to any student who wants to find out impressions about a class during the semester. However, while the opportunity to share your feedback is active, only students who have already expressed their opinion can analyze the ideas of others.`
   String get messageFeedbackMotivation3 {
     return Intl.message(
-      'Access to statistics is allowed to any student who wants to find out impressions about a class during the semester. However, while the opportunity to share your review is active, only students who have already expressed their opinion can analyze the ideas of others.',
+      'Access to statistics is allowed to any student who wants to find out impressions about a class during the semester. However, while the opportunity to share your feedback is active, only students who have already expressed their opinion can analyze the ideas of others.',
       name: 'messageFeedbackMotivation3',
       desc: '',
       args: [],
@@ -3025,10 +3025,10 @@ class S {
     );
   }
 
-  /// `We are constantly looking to improve the connection between different generations of students. As a result, any thought is extremely value. All the details supplied are used pro-actively.`
+  /// `We are constantly looking to improve the connection between different generations of students. As a result, any thought is extremely valuable. All the details supplied are used pro-actively.`
   String get messageFeedbackMotivation5 {
     return Intl.message(
-      'We are constantly looking to improve the connection between different generations of students. As a result, any thought is extremely value. All the details supplied are used pro-actively.',
+      'We are constantly looking to improve the connection between different generations of students. As a result, any thought is extremely valuable. All the details supplied are used pro-actively.',
       name: 'messageFeedbackMotivation5',
       desc: '',
       args: [],
