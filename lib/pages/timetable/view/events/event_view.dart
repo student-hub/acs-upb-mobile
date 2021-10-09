@@ -126,6 +126,9 @@ class _EventViewState extends State<EventView> {
                 context,
                 MaterialPageRoute<ChangeNotifierProvider>(
                   builder: (context) => ChangeNotifierProvider.value(
+                    // TODO(RazvanRotaru): Is it trouble if we don't listen to this provider?
+                    // If it is we'll only not listen to it when on web.
+                    // ---> because this Widget won't exist when moving to the ClassView
                     value: Provider.of<ClassProvider>(context),
                     child: ClassView(
                       classHeader: mainEvent.classHeader,

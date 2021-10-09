@@ -1,8 +1,9 @@
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/navigation/service/navigator.dart';
-import 'package:acs_upb_mobile/pages/classes/model/class.dart';
 import 'package:acs_upb_mobile/navigation/view/scaffold.dart';
+import 'package:acs_upb_mobile/pages/classes/model/class.dart';
+import 'package:acs_upb_mobile/widgets/dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:provider/provider.dart';
@@ -14,6 +15,25 @@ class ShortcutView extends StatefulWidget {
   final void Function(Shortcut) onSave;
 
   static const String routeName = '/shortcuts';
+
+  static AppDialog popup(BuildContext context,
+      {void Function(Shortcut) onSave}) {
+    final size = MediaQuery.of(context).size;
+
+    return AppDialog(
+      title: S.current.actionAddShortcut,
+
+      content: [
+        SizedBox(
+          height: size.height * 0.6,
+          width: size.width * 0.8,
+          child: ShortcutView(
+            onSave: onSave,
+          ),
+        ),
+      ],
+    );
+  }
 
   @override
   _ShortcutViewState createState() => _ShortcutViewState();

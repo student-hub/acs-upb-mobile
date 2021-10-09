@@ -148,22 +148,41 @@ class _ClassViewState extends State<ClassView> {
                       onPressed: authProvider
                               .currentUserFromCache.canEditClassInfo
                           // TODO(RazvanRotaru): Maybe use a pop-up on web
-                          ? () => AppNavigator.push(
-                                context,
-                                MaterialPageRoute<ChangeNotifierProvider>(
-                                  builder: (context) =>
-                                      ChangeNotifierProvider.value(
-                                    value: classProvider,
-                                    child: ShortcutView(onSave: (shortcut) {
-                                      setState(() =>
-                                          classInfo.shortcuts.add(shortcut));
-                                      classProvider.addShortcut(
-                                          widget.classHeader.id, shortcut);
-                                    }),
+                          ? () {
+                              if (Platform.isWeb) {
+                                final AppDialog x = ShortcutView.popup(
+                                  context,
+                                  onSave: (shortcut) {
+                                    setState(() =>
+                                        classInfo.shortcuts.add(shortcut));
+                                    classProvider.addShortcut(
+                                        widget.classHeader.id, shortcut);
+                                  },
+                                );
+                                print('button pressed');
+                                showDialog(
+                                  context: context,
+                                  builder: (_) => x,
+                                );
+                              } else {
+                                return AppNavigator.push(
+                                  context,
+                                  MaterialPageRoute<ChangeNotifierProvider>(
+                                    builder: (context) =>
+                                        ChangeNotifierProvider.value(
+                                      value: classProvider,
+                                      child: ShortcutView(onSave: (shortcut) {
+                                        setState(() =>
+                                            classInfo.shortcuts.add(shortcut));
+                                        classProvider.addShortcut(
+                                            widget.classHeader.id, shortcut);
+                                      }),
+                                    ),
                                   ),
-                                ),
-                                webPath: ShortcutView.routeName,
-                              )
+                                  webPath: ShortcutView.routeName,
+                                );
+                              }
+                            }
                           : null,
                     ),
                   ),
