@@ -100,6 +100,10 @@ class _SettingsPageState extends State<SettingsPage> {
                     } else if (isVerified != true) {
                       AppToast.show(
                           S.current.messageEmailNotVerifiedToPerformAction);
+                    } else if (authProvider
+                            .currentUserFromCache.canEditPublicInfo ||
+                        authProvider.currentUserFromCache.isAdmin) {
+                      AppToast.show(S.current.messageYouAlreadyHavePermissions);
                     } else {
                       Navigator.of(context)
                           .pushNamed(Routes.requestPermissions);

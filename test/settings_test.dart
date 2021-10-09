@@ -156,14 +156,14 @@ void main() {
           .thenAnswer((_) => Future.value(false));
       when(mockFeedbackProvider.fetchCategories('string'))
           .thenAnswer((_) => Future.value({
-        'applications': {'en': 'Applications', 'ro': 'Aplicații'},
-        'homework': {'en': 'Homework', 'ro': 'Temă'},
-        'involvement': {'en': 'Involvement', 'ro': 'Implicare'},
-        'personal': {
-          'en': 'Personal comments',
-          'ro': 'Comentarii personale'
-        },
-      }));
+                'applications': {'en': 'Applications', 'ro': 'Aplicații'},
+                'homework': {'en': 'Homework', 'ro': 'Temă'},
+                'involvement': {'en': 'Involvement', 'ro': 'Implicare'},
+                'personal': {
+                  'en': 'Personal comments',
+                  'ro': 'Comentarii personale'
+                },
+              }));
 
       mockClassProvider = MockClassProvider();
       mockAdminProvider = MockAdminProvider();

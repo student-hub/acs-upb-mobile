@@ -65,50 +65,51 @@ class _RequestCardState extends State<RequestCard>
         });
   }
 
-  Widget _buildUserHeader(PermissionRequest request) =>
-      FutureBuilder(
-          future: Provider.of<AdminProvider>(context).fetchUserById(request.userId),
-          builder: (context, snapshot) {
-            User user;
-            if (snapshot.connectionState == ConnectionState.done) {
-              user = snapshot.data;
-            }
-            return Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
+  Widget _buildUserHeader(PermissionRequest request) => FutureBuilder(
+      future: Provider.of<AdminProvider>(context).fetchUserById(request.userId),
+      builder: (context, snapshot) {
+        User user;
+        if (snapshot.connectionState == ConnectionState.done) {
+          user = snapshot.data;
+        }
+        return Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Flexible(
-                        child: Text(
-                          snapshot.connectionState != ConnectionState.done
-                              ? '-'
-                              : '${user?.firstName ?? S.current.errorUnknownUser} ${user?.lastName ?? ''}',
-                          textDirection: ui.TextDirection.ltr,
-                          style: Theme.of(context).textTheme.headline6.copyWith(
-                              fontSize: 18, fontWeight: FontWeight.bold),
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 2,
-                        ),
-                      ),
-                      if (request.processed && request.accepted != null)
-                        _buildAcceptedMarker(request.accepted),
-                    ],
+                  Flexible(
+                    child: Text(
+                      snapshot.connectionState != ConnectionState.done
+                          ? '-'
+                          : '${user?.firstName ?? S.current.errorUnknownUser} ${user?.lastName ?? ''}',
+                      textDirection: ui.TextDirection.ltr,
+                      style: Theme.of(context)
+                          .textTheme
+                          .headline6
+                          .copyWith(fontSize: 18, fontWeight: FontWeight.bold),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 2,
+                    ),
                   ),
-                  Text(
-                    snapshot.connectionState != ConnectionState.done
-                        ? ''
-                        : '${user?.classes != null ? user?.classes[user.classes.length - 1] : '-'}',
-                    textDirection: ui.TextDirection.ltr,
-                    style: Theme.of(context)
-                        .textTheme
-                        .headline6
-                        .copyWith(fontSize: 14, fontWeight: FontWeight.bold),
-                    overflow: TextOverflow.fade,
-                    maxLines: 2,
-                  ),
-                ]);
-          });
+                  if (request.processed && request.accepted != null)
+                    _buildAcceptedMarker(request.accepted),
+                ],
+              ),
+              Text(
+                snapshot.connectionState != ConnectionState.done
+                    ? ''
+                    : '${user?.classes != null ? user?.classes[user.classes.length - 1] : '-'}',
+                textDirection: ui.TextDirection.ltr,
+                style: Theme.of(context)
+                    .textTheme
+                    .headline6
+                    .copyWith(fontSize: 14, fontWeight: FontWeight.bold),
+                overflow: TextOverflow.fade,
+                maxLines: 2,
+              ),
+            ]);
+      });
 
   Widget _buildAcceptedMarker(bool accepted) => Container(
         padding: const EdgeInsets.all(5),
