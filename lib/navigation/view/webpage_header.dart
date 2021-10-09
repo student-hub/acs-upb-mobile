@@ -74,10 +74,10 @@ class _SearchBar extends StatefulWidget {
   const _SearchBar({Key key}) : super(key: key);
 
   @override
-  __SearchBarState createState() => __SearchBarState();
+  _SearchBarState createState() => _SearchBarState();
 }
 
-class __SearchBarState extends State<_SearchBar> {
+class _SearchBarState extends State<_SearchBar> {
   String query = '';
 
   @override
@@ -98,10 +98,10 @@ class _ProfileDropdownMenu extends StatefulWidget {
   final double headerHeight;
 
   @override
-  __ProfileDropdownMenuState createState() => __ProfileDropdownMenuState();
+  _ProfileDropdownMenuState createState() => _ProfileDropdownMenuState();
 }
 
-class __ProfileDropdownMenuState extends State<_ProfileDropdownMenu> {
+class _ProfileDropdownMenuState extends State<_ProfileDropdownMenu> {
   final List<_PopupItem> _popupItems = [
     _PopupItem(
       onTap: (context) =>
@@ -170,7 +170,10 @@ class __ProfileDropdownMenuState extends State<_ProfileDropdownMenu> {
                 ),
               ),
               const PopupMenuDivider(),
-              ..._popupItems.asMap().keys.toList()
+              ..._popupItems
+                  .asMap()
+                  .keys
+                  .toList()
                   .map((index) => _popupItems[index].build(context, index)),
             ];
           },
