@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/navigation/routes.dart';
@@ -8,6 +10,7 @@ import 'package:pedantic/pedantic.dart';
 import 'package:provider/provider.dart';
 import 'package:time_machine/time_machine.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:image/image.dart' as im;
 
 export 'package:acs_upb_mobile/resources/platform.dart'
     if (dart.library.io) 'dart:io';
@@ -38,7 +41,7 @@ class Utils {
 
   static String privacyPolicyURL =
       'https://www.websitepolicies.com/policies/view/IIUFv381';
-  static String repoURL = 'https://github.com/acs-upb-mobile/acs-upb-mobile';
+  static String repoURL = 'https://github.com/student-hub/acs-upb-mobile';
   static const String corsProxyUrl = 'https://cors-anywhere.herokuapp.com';
 
   static Future<void> launchURL(String url) async {
@@ -62,6 +65,11 @@ class Utils {
 
   static PackageInfo packageInfo = PackageInfo(
       version: 'Unknown', buildNumber: 'Unknown', appName: 'Unknown');
+
+  static Future<Uint8List> convertToPNG(Uint8List image) async {
+    final decodedImage = im.decodeImage(image);
+    return im.encodePng(im.copyResizeCropSquare(decodedImage, 500));
+  }
 }
 
 extension PeriodExtension on Period {

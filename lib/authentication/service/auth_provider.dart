@@ -58,27 +58,27 @@ class AuthProvider with ChangeNotifier {
 
   void _errorHandler(dynamic e, {bool showToast = true}) {
     try {
-      print(e.message);
+      print('${e.message} code: ${e.code}');
       if (showToast) {
         switch (e.code) {
-          case 'ERROR_INVALID_EMAIL':
-          case 'ERROR_INVALID_CREDENTIAL':
+          case 'invalid-email':
+          case 'invalid-credential':
             AppToast.show(S.current.errorInvalidEmail);
             break;
-          case 'ERROR_WRONG_PASSWORD':
+          case 'wrong-password':
             AppToast.show(S.current.errorIncorrectPassword);
             break;
-          case 'ERROR_USER_NOT_FOUND':
+          case 'user-not-found':
             AppToast.show(S.current.errorEmailNotFound);
             break;
-          case 'ERROR_USER_DISABLED':
+          case 'user-disabled':
             AppToast.show(S.current.errorAccountDisabled);
             break;
-          case 'ERROR_TOO_MANY_REQUESTS':
+          case 'too-many-requests':
             AppToast.show(
                 '${S.current.errorTooManyRequests} ${S.current.warningTryAgainLater}');
             break;
-          case 'ERROR_EMAIL_ALREADY_IN_USE':
+          case 'email-already-in-use':
             AppToast.show(S.current.errorEmailInUse);
             break;
           default:
@@ -255,6 +255,13 @@ class AuthProvider with ChangeNotifier {
     try {
       final DocumentReference ref =
           FirebaseFirestore.instance.collection('users').doc(_firebaseUser.uid);
+
+      final result =
+          await StorageProvider.deleteImage(_currentUser.picturePath);
+      if (!result) {
+        AppToast.show(S.current.errorSomethingWentWrong);
+      }
+
       await ref.delete();
 
       await _firebaseUser.delete();

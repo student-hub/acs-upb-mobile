@@ -1,0 +1,8 @@
+Îmbunătățit
+  - Paginile de filtrare și bara de navigare arată mai frumos⭐
+  - Profesorii de pe pagina Persoane sunt acum sortați după numele de familie
+  - Puțină ✨magie✨ internă ca să îmbunătățim aplicația
+
+Rezolvat
+  - Uneori apăreau selectate opțiuni din filtru fără să fi fost apăsate
+  - Opțiunile de filtru default uneori erau goale la adăugarea de evenimente

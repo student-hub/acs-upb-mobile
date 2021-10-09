@@ -60,13 +60,16 @@ class _TimetablePageState extends State<TimetablePage> {
         animation: _controller.dateListenable,
         builder: (context, child) => Text(
             authProvider.isAuthenticated && !authProvider.isAnonymous
-                ? S.current.navigationTimetable
-                : _controller.currentMonth.titleCase),
+                ? _controller.currentMonth.titleCase
+                : S.current.navigationTimetable),
       ),
       needsToBeAuthenticated: true,
       leading: AppScaffoldAction(
         icon: Icons.today_outlined,
-        onPressed: () => _controller.animateToToday(),
+        onPressed: () =>
+            !_controller.currentlyVisibleDates.contains(LocalDate.today())
+                ? _controller.animateToToday()
+                : AppToast.show(S.current.messageAlreadySeeingCurrentWeek),
         tooltip: S.current.actionJumpToToday,
       ),
       actions: [

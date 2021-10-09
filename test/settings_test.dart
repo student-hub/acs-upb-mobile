@@ -1,11 +1,18 @@
 import 'package:acs_upb_mobile/authentication/model/user.dart';
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/main.dart';
+import 'package:acs_upb_mobile/pages/class_feedback/service/feedback_provider.dart';
+import 'package:acs_upb_mobile/pages/classes/model/class.dart';
+import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
 import 'package:acs_upb_mobile/pages/faq/model/question.dart';
 import 'package:acs_upb_mobile/pages/faq/service/question_provider.dart';
 import 'package:acs_upb_mobile/pages/news_feed/model/news_feed_item.dart';
 import 'package:acs_upb_mobile/pages/news_feed/service/news_provider.dart';
 import 'package:acs_upb_mobile/pages/portal/service/website_provider.dart';
+import 'package:acs_upb_mobile/pages/settings/model/request.dart';
+import 'package:acs_upb_mobile/pages/settings/service/admin_provider.dart';
+import 'package:acs_upb_mobile/pages/settings/service/issue_provider.dart';
+import 'package:acs_upb_mobile/pages/settings/view/feedback_form.dart';
 import 'package:acs_upb_mobile/pages/settings/service/request_provider.dart';
 import 'package:acs_upb_mobile/pages/settings/view/request_permissions.dart';
 import 'package:acs_upb_mobile/pages/settings/view/settings_page.dart';
@@ -33,17 +40,29 @@ class MockQuestionProvider extends Mock implements QuestionProvider {}
 
 class MockRequestProvider extends Mock implements RequestProvider {}
 
+class MockIssueProvider extends Mock implements IssueProvider {}
+
 class MockNewsProvider extends Mock implements NewsProvider {}
 
 class MockUniEventProvider extends Mock implements UniEventProvider {}
+
+class MockFeedbackProvider extends Mock implements FeedbackProvider {}
+
+class MockClassProvider extends Mock implements ClassProvider {}
+
+class MockAdminProvider extends Mock implements AdminProvider {}
 
 void main() {
   AuthProvider mockAuthProvider;
   WebsiteProvider mockWebsiteProvider;
   MockQuestionProvider mockQuestionProvider;
   RequestProvider mockRequestProvider;
+  IssueProvider mockIssueProvider;
   MockNewsProvider mockNewsProvider;
   UniEventProvider mockEventProvider;
+  FeedbackProvider mockFeedbackProvider;
+  ClassProvider mockClassProvider;
+  AdminProvider mockAdminProvider;
 
   Widget buildApp() => MultiProvider(providers: [
         ChangeNotifierProvider<AuthProvider>(create: (_) => mockAuthProvider),
@@ -54,7 +73,12 @@ void main() {
         ChangeNotifierProvider<QuestionProvider>(
             create: (_) => mockQuestionProvider),
         Provider<RequestProvider>(create: (_) => mockRequestProvider),
+        Provider<IssueProvider>(create: (_) => mockIssueProvider),
         ChangeNotifierProvider<NewsProvider>(create: (_) => mockNewsProvider),
+        ChangeNotifierProvider<FeedbackProvider>(
+            create: (_) => mockFeedbackProvider),
+        ChangeNotifierProvider<ClassProvider>(create: (_) => mockClassProvider),
+        ChangeNotifierProvider<AdminProvider>(create: (_) => mockAdminProvider),
       ], child: const MyApp());
 
   group('Settings', () {
@@ -81,6 +105,8 @@ void main() {
       when(mockAuthProvider.getProfilePictureURL())
           .thenAnswer((_) => Future.value(null));
       when(mockAuthProvider.isVerified).thenAnswer((_) => Future.value(true));
+      when(mockAuthProvider.currentUserFromCache).thenReturn(User(
+          uid: '0', firstName: 'John', lastName: 'Doe', permissionLevel: 4));
 
       mockWebsiteProvider = MockWebsiteProvider();
       // ignore: invalid_use_of_protected_member
@@ -106,6 +132,10 @@ void main() {
       when(mockRequestProvider.userAlreadyRequested(any))
           .thenAnswer((_) => Future.value(false));
 
+      mockIssueProvider = MockIssueProvider();
+      when(mockIssueProvider.makeIssue(any))
+          .thenAnswer((_) => Future.value(true));
+
       mockNewsProvider = MockNewsProvider();
       // ignore: invalid_use_of_protected_member
       when(mockNewsProvider.hasListeners).thenReturn(false);
@@ -122,6 +152,53 @@ void main() {
       when(mockEventProvider.getUpcomingEvents(LocalDate.today(),
               limit: anyNamed('limit')))
           .thenAnswer((_) => Future.value(<UniEventInstance>[]));
+
+      mockFeedbackProvider = MockFeedbackProvider();
+      // ignore: invalid_use_of_protected_member
+      when(mockFeedbackProvider.hasListeners).thenReturn(true);
+      when(mockFeedbackProvider.userSubmittedFeedbackForClass(any, any))
+          .thenAnswer((_) => Future.value(false));
+      when(mockFeedbackProvider.getClassesWithCompletedFeedback(any))
+          .thenAnswer((_) => Future.value({'M1': true, 'M2': true}));
+
+      mockClassProvider = MockClassProvider();
+      mockAdminProvider = MockAdminProvider();
+      // ignore: invalid_use_of_protected_member
+      when(mockClassProvider.hasListeners).thenReturn(false);
+      final userClassHeaders = [
+        ClassHeader(
+          id: '3',
+          name: 'Programming',
+          acronym: 'PC',
+          category: 'A',
+        ),
+        ClassHeader(
+          id: '4',
+          name: 'Physics',
+          acronym: 'PH',
+          category: 'D',
+        )
+      ];
+      when(mockClassProvider.userClassHeadersCache)
+          .thenReturn(userClassHeaders);
+      when(mockClassProvider.fetchClassHeaders(uid: anyNamed('uid')))
+          .thenAnswer((_) => Future.value([
+                ClassHeader(
+                  id: '1',
+                  name: 'Maths 1',
+                  acronym: 'M1',
+                  category: 'A/B',
+                ),
+                ClassHeader(
+                  id: '2',
+                  name: 'Maths 2',
+                  acronym: 'M2',
+                  category: 'A/C',
+                ),
+              ] +
+              userClassHeaders));
+      when(mockClassProvider.fetchUserClassIds(any))
+          .thenAnswer((_) => Future.value(['3', '4']));
     });
 
     testWidgets('Dark Mode', (WidgetTester tester) async {
@@ -198,6 +275,8 @@ void main() {
       });
 
       testWidgets('Normal scenario', (WidgetTester tester) async {
+        when(mockAuthProvider.currentUserFromCache).thenReturn(User(
+            uid: '0', firstName: 'John', lastName: 'Doe', permissionLevel: 4));
         when(mockAuthProvider.isVerified).thenAnswer((_) => Future.value(true));
 
         await tester.pumpWidget(buildApp());
@@ -322,6 +401,105 @@ void main() {
         // Verify Ask Permissions page is opened
         await tester.pumpAndSettle();
         expect(find.byType(RequestPermissionsPage), findsOneWidget);
+      });
+    });
+
+    group('Admin Panel', () {
+      setUpAll(() async {
+        when(mockAuthProvider.currentUser).thenAnswer((_) =>
+            Future.value(User(uid: '0', firstName: 'John', lastName: 'Doe')));
+        when(mockAuthProvider.currentUserFromCache)
+            .thenReturn(User(uid: '0', firstName: 'John', lastName: 'Doe'));
+        when(mockAuthProvider.isAnonymous).thenReturn(false);
+        when(mockAuthProvider.isAuthenticated).thenReturn(true);
+        when(mockAuthProvider.isVerified).thenAnswer((_) => Future.value(true));
+      });
+
+      testWidgets('User is not an admin', (WidgetTester tester) async {
+        when(mockAuthProvider.currentUserFromCache).thenReturn(User(
+            uid: '0', firstName: 'John', lastName: 'Doe', permissionLevel: 3));
+        when(mockAdminProvider.fetchUnprocessedRequestIds())
+            .thenAnswer((_) => Future.value(['string']));
+        when(mockAdminProvider.fetchRequest('')).thenAnswer(
+            (_) => Future.value(Request(requestBody: 'body', userId: '0')));
+
+        await tester.pumpWidget(buildApp());
+        await tester.pumpAndSettle();
+
+        // Open settings
+        await tester.tap(find.byIcon(Icons.settings_outlined));
+        await tester.pumpAndSettle();
+
+        expect(find.text('Handle permission requests'), findsNothing);
+      });
+    });
+
+    group('Feedback form', () {
+      setUpAll(() async {
+        when(mockAuthProvider.currentUser).thenAnswer((_) =>
+            Future.value(User(uid: '0', firstName: 'John', lastName: 'Doe')));
+        when(mockAuthProvider.isAnonymous).thenReturn(false);
+      });
+
+      testWidgets('Normal scenario', (WidgetTester tester) async {
+        await tester.pumpWidget(buildApp());
+        await tester.pumpAndSettle();
+
+        // Open settings
+        await tester.tap(find.byIcon(Icons.settings_outlined));
+        await tester.pumpAndSettle();
+
+        // Open Feedback/Issues form page
+        await tester
+            .ensureVisible(find.byKey(const ValueKey('feedback_and_issues')));
+        await tester.pumpAndSettle();
+        expect(
+            find.byKey(const ValueKey('feedback_and_issues')), findsOneWidget);
+        await tester.tap(find.byKey(const ValueKey('feedback_and_issues')));
+        await tester.pumpAndSettle();
+        expect(find.byType(FeedbackFormPage), findsOneWidget);
+
+        // Send normal feedback and issue reports
+        await tester.tap(find.byKey(const ValueKey('choice_feedback')));
+        await tester.pumpAndSettle();
+        await tester.enterText(
+            find.byKey(const ValueKey('contact')), 'john.doe@gmail.com');
+        await tester.enterText(
+            find.byKey(const ValueKey('issue')), 'There is some feedback');
+        await tester.pumpAndSettle();
+        await tester.tap(find.text('Send'));
+        await tester.pumpAndSettle(const Duration(seconds: 2));
+
+        // Verify the issue/feedback is sent
+        verify(mockIssueProvider.makeIssue(any));
+
+        // Check that we're back on settings page
+        await tester.pumpAndSettle();
+        expect(find.byType(SettingsPage), findsOneWidget);
+      });
+
+      testWidgets('Empty form scenario', (WidgetTester tester) async {
+        await tester.pumpWidget(buildApp());
+        await tester.pumpAndSettle();
+
+        // Open settings
+        await tester.tap(find.byIcon(Icons.settings_outlined));
+        await tester.pumpAndSettle();
+
+        // Open Feedback/Issues form page
+        await tester
+            .ensureVisible(find.byKey(const ValueKey('feedback_and_issues')));
+        await tester.pumpAndSettle();
+        expect(
+            find.byKey(const ValueKey('feedback_and_issues')), findsOneWidget);
+        await tester.tap(find.byKey(const ValueKey('feedback_and_issues')));
+        await tester.pumpAndSettle();
+        expect(find.byType(FeedbackFormPage), findsOneWidget);
+
+        // Verify an empty form cannot be sent
+        await tester.tap(find.text('Send'));
+        await tester.pumpAndSettle();
+        expect(find.text('Field cannot be empty.'), findsWidgets);
       });
     });
   });

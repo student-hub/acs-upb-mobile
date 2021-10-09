@@ -116,6 +116,18 @@ class _SettingsPageState extends State<SettingsPage> {
                   ),
                 ),
                 Visibility(
+                  visible: authProvider.isAuthenticated &&
+                      !authProvider.isAnonymous &&
+                      authProvider.currentUserFromCache.isAdmin == true,
+                  child: ListTile(
+                    key: const Key('AdminPanel'),
+                    onTap: () =>
+                        Navigator.of(context).pushNamed(Routes.adminPanel),
+                    title: Text(S.current.settingsItemAdmin),
+                    subtitle: Text(S.current.infoAdmin),
+                  ),
+                ),
+                Visibility(
                   visible: Platform.isAndroid || Platform.isIOS,
                   child: PreferenceTitle(S.current.settingsTitleTimetable),
                 ),
@@ -136,6 +148,15 @@ class _SettingsPageState extends State<SettingsPage> {
                     title: Text(S.current.settingsExportToGoogleCalendar),
                     subtitle: Text(S.current.infoExportToGoogleCalendar),
                   ),
+                ),
+                PreferenceTitle(S.current.labelFeedback),
+                ListTile(
+                  key: const ValueKey('feedback_and_issues'),
+                  onTap: () {
+                    Navigator.of(context).pushNamed(Routes.feedbackForm);
+                  },
+                  title: Text(S.current.settingsFeedbackForm),
+                  subtitle: Text(S.current.infoFeedbackForm),
                 ),
                 Column(
                   mainAxisSize: MainAxisSize.min,
@@ -223,7 +244,9 @@ class _SettingsPageState extends State<SettingsPage> {
 
     if (authProvider.isAuthenticated && !authProvider.isAnonymous) {
       final user = await authProvider.currentUser;
-      if (user.canEditPublicInfo) {
+      if (user.isAdmin) {
+        return S.current.settingsAdminPermissions;
+      } else if (user.canEditPublicInfo) {
         return S.current.settingsPermissionsEdit;
       } else if (user.canAddPublicInfo) {
         return S.current.settingsPermissionsAdd;
