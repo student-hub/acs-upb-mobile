@@ -553,6 +553,13 @@ The second document, class_feedback_answers, has a more complex structure. It is
   </tr>
 </table>
 
+###### Rules
+
+Since forms in this collection are public information (_anyone can **read**_), altering and adding data here is a privilege and needs to be monitored.
+
+Users can **update** an existing form document _if their `permissionLevel` is equal to four_, more precisely they must have the role of admin. Additionally, _anyone who wants to **create** a new form document needs to be authenticated_ in the first place.
+
+Documents in this collection cannot be **delete**d.
 
 </details>
 
