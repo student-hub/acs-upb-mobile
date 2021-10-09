@@ -456,7 +456,7 @@ Initially, all the documents in the collection shared the same structure:
 </table>
 
 Subsequently, to benefit from a database architecture as compact as possible, we decided to introduce two other documents in the same collection.
-The first document, class_feedback_questions, is responsible for storing all the questions from the feedback questionnaire and their corresponding categories. The structure of this document is as follows:
+The first document, `class_feedback_questions`, is responsible for storing all the questions from the feedback form and their corresponding categories. The structure of this document is as follows:
  
 <table>
   <tr>
@@ -473,13 +473,13 @@ The first document, class_feedback_questions, is responsible for storing all the
   </tr>
   <tr>
     <td>questions</td>
-    <td><code>map&lt;string, feedback_question*&gt;</code></td>
+    <td><code>map&lt;string, feedback_question&gt;</code></td>
     <td>☐</td>
-    <td>the data structure which stores all the questions from the feedback form</td>
+    <td>stores all the questions from the feedback form</td>
   </tr>
 </table>
 
-*A feedback_question has the following fields:
+*A `feedback_question` has the following fields:
 <table>
   <tr>
     <th>Field</th>
@@ -491,7 +491,7 @@ The first document, class_feedback_questions, is responsible for storing all the
     <td>category</td>
     <td><code>string</code></td>
     <td>☐</td>
-    <td>category name; the value of this field corresponds to the key of the nested map categories from class_feedback_questions document</td>
+    <td>category name; the value of this field corresponds to the key of the nested map categories from `class_feedback_questions` document</td>
   </tr>
   <tr>
     <td>question</td>
@@ -513,7 +513,7 @@ The first document, class_feedback_questions, is responsible for storing all the
   </tr>
 </table>
 
-The second document, class_feedback_answers, has a more complex structure. It is composed of multiple subcollections, whose keys are defined by the number of the question in the feedback form. Furthermore, each subcollection consists of a list of documents with an automatically generated key, while each document represents the answer submitted by a user to that question. As we reach the end of the hierarchy, an answer is composed of the actual value (the result or the comment provided), together with the details related to a class (its name, associated teacher, and assistant). To provide anonymity, we do not retain the ID of the user who completed a questionnaire. The structure of this document is as follows:
+The second document, `class_feedback_answers`, has a more complex structure. It is composed of multiple _subcollections, whose keys are defined by the number of the question in the feedback form. Furthermore, each _subcollection consists of a list of documents with an automatically generated key, while each document represents the answer submitted by a user to that question. As we reach the end of the hierarchy, an answer is composed of the actual value (the result or the comment provided), together with the details related to a class (its name, associated teacher, and assistant). To provide anonymity, we do not retain the ID of the user who completed a form. The structure of this document is as follows:
 <table>
   <tr>
     <th>Field</th>
