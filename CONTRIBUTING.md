@@ -423,7 +423,7 @@ Filter structure is public information and should never (or very rarely) need to
 
 <details>
 <summary class="collection" id="forms-collection"><b>forms</b></summary>
-Initially, the purpose of this collection was to gather requests from users to change their permission level to contribute with various details introduced in the application, such as <a href=#events-collection>events</a> in the timetable or information about a particular <a href=#classes-collection>class</a>, like grading, valuable links, and resources. This form can be accessed by each user from the Settings page of the application.
+Initially, the purpose of this collection was to gather requests from users to change their permission level to contribute with various details introduced in the application, such as <a href=#events-collection>events</a> in the timetable or information about a particular <a href=#classes-collection>class</a>, like grading, valuable links, and resources. This form can be accessed by each user from the <a href=lib/pages/settings/view/settings_page.dart><code>Settings</code></a> page of the application.
 
 ###### Fields
 Initially, all the documents in the collection shared the same structure:
