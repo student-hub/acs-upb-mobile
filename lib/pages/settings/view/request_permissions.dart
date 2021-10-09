@@ -25,7 +25,6 @@ class _RequestPermissionsPageState extends State<RequestPermissionsPage> {
   User user;
   bool agreedToResponsibilities = false;
 
-  // TextEditingController requestController = TextEditingController();
   Map<String, Map<String, String>> questionCategories = {};
   List<Map<int, bool>> answerValues = [];
   Map<String, FormQuestion> requestQuestions = {};
@@ -51,7 +50,7 @@ class _RequestPermissionsPageState extends State<RequestPermissionsPage> {
             color: Theme.of(context).accentColor,
             width: 130,
             onTap: () async {
-              Navigator.of(context).pop();
+              await _sendRequest();
             }),
       ],
     );
@@ -85,6 +84,40 @@ class _RequestPermissionsPageState extends State<RequestPermissionsPage> {
     return requestQuestions;
   }
 
+  Future<void> _sendRequest() async {
+    final requestProvider =
+        Provider.of<FeedbackProvider>(context, listen: false);
+    if (!agreedToResponsibilities) {
+      AppToast.show(
+          '${S.current.warningAgreeTo}${S.current.labelPermissionsConsent}.');
+      return;
+    }
+
+    setState(() {
+      formKey.currentState.save();
+    });
+
+    if (!formKey.currentState.validate()) return;
+    for (int i = 0; i < requestQuestions.length; ++i) {
+      if (requestQuestions.values.elementAt(i).answer == '') {
+        AppToast.show(S.current.warningFieldCannotBeEmpty);
+        Navigator.pop(context);
+        return;
+      }
+    }
+
+    final queryResult = await requestProvider.submitRequest(
+      PermissionRequest(
+        userId: user.uid,
+        answers: requestQuestions,
+      ),
+    );
+    if (queryResult) {
+      AppToast.show(S.current.messageRequestHasBeenSent);
+      Navigator.of(context).pop();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final requestProvider = Provider.of<FeedbackProvider>(context);
@@ -108,7 +141,6 @@ class _RequestPermissionsPageState extends State<RequestPermissionsPage> {
                 ),
               ),
             ),
-            //const SizedBox(height: 24),
           ],
         ),
       );
@@ -120,51 +152,13 @@ class _RequestPermissionsPageState extends State<RequestPermissionsPage> {
           AppScaffoldAction(
               text: S.current.buttonSave,
               onPressed: () async {
-                if (!agreedToResponsibilities) {
-                  AppToast.show(
-                      '${S.current.warningAgreeTo}${S.current.labelPermissionsConsent}.');
-                  return;
-                }
-
-                if (!formKey.currentState.validate()) return;
-                // if (requestController.text == '') {
-                //   AppToast.show(S.current.warningRequestEmpty);
-                //   return;
-                // }
-
-                /*
-                 * Check if there is already a request registered for the current
-                 * user.
-                 */
-                bool queryResult =
+                final bool queryResult =
                     await requestProvider.userAlreadyRequested(user.uid);
-
-                if (queryResult) {
+                if (!queryResult) {
+                  await _sendRequest();
+                } else {
                   await showDialog(
                       context: context, builder: _requestAlreadyExistsDialog);
-                }
-
-                setState(() {
-                  formKey.currentState.save();
-                });
-
-                // final List<FormQuestion> list = [];
-                // for (int i = 0; i < requestQuestions.length; ++i) {
-                //   list.add(requestQuestions[i]);
-                // }
-                //   FormAnswer(
-                //       questionNumber: '0',
-                //       questionAnswer: requestController.text)
-                // ];
-                queryResult = await requestProvider.submitRequest(
-                  PermissionRequest(
-                    userId: user.uid,
-                    answers: requestQuestions,
-                  ),
-                );
-                if (queryResult) {
-                  AppToast.show(S.current.messageRequestHasBeenSent);
-                  Navigator.of(context).pop();
                 }
               })
         ],
@@ -184,15 +178,6 @@ class _RequestPermissionsPageState extends State<RequestPermissionsPage> {
                     Column(mainAxisSize: MainAxisSize.min, children: children),
               ),
             ),
-            // Padding(
-            //   padding: const EdgeInsets.all(10),
-            //   child: TextFormField(
-            //     keyboardType: TextInputType.multiline,
-            //     minLines: 1,
-            //     maxLines: 10,
-            //     controller: requestController,
-            //   ),
-            // ),
             Padding(
               padding: const EdgeInsets.all(10),
               child: Row(
