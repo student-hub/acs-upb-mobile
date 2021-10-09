@@ -473,7 +473,7 @@ The first document, `class_feedback_questions`, is responsible for storing all t
   </tr>
   <tr>
     <td>questions</td>
-    <td><code>map&lt;string, feedback_question&gt;</code></td>
+    <td><code>map&lt;string, feedback_question*&gt;</code></td>
     <td>☐</td>
     <td>stores all the questions from the feedback form</td>
   </tr>
