@@ -813,7 +813,7 @@ All the documents in the collection share the same structure:
   </tr>
   <tr>
     <td>duration</td>
-    <td><code>map<string, number></code></td>
+    <td><code>map&lt;string, number&gt;</code></td>
     <td>🗹</td>
     <td>A map containing duration keys like "hours", "minutes" etc.</td>
   </tr>
