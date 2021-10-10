@@ -8,6 +8,7 @@ import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question_sli
 import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question_text.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/service/feedback_provider.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/view/class_feedback_view.dart';
+import 'package:acs_upb_mobile/pages/class_feedback/view/feedback_motivation.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/view/feedback_question.dart';
 import 'package:acs_upb_mobile/pages/classes/model/class.dart';
 import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
@@ -1504,6 +1505,19 @@ Future<void> main() async {
 
         // Open feedback page
         await tester.tap(find.byIcon(Icons.rate_review_outlined));
+        await tester.pumpAndSettle();
+
+        expect(find.byType(ClassFeedbackView), findsOneWidget);
+
+        await tester.tap(find.byIcon(Icons.arrow_forward_ios_outlined));
+        await tester.pumpAndSettle();
+        await tester.drag(
+            find.byIcon(Icons.timeline_outlined), const Offset(0, -300));
+        await tester.pumpAndSettle();
+
+        expect(find.byType(FeedbackMotivation), findsOneWidget);
+
+        await tester.tap(find.byIcon(Icons.arrow_back));
         await tester.pumpAndSettle();
 
         expect(find.byType(ClassFeedbackView), findsOneWidget);
