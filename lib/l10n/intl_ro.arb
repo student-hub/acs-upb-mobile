@@ -122,6 +122,7 @@
   "actionOpenFilter": "Deschide filtru",
   "actionRequestPermissions": "Cere permisiuni",
   "actionRefresh": "Reîncarcă",
+  "actionLearnMore": "Află mai multe",
 
   "errorSomethingWentWrong": "A apărut o problemă.",
   "errorPasswordsDiffer": "Cele două parole diferă.",
@@ -201,6 +202,7 @@
   "navigationClassFeedback": "Feedback",
   "navigationClassesFeedbackChecklist": "Listă feedback",
   "navigationAdmin": "Cereri permisiuni",
+  "navigationFeedbackMotivation": "Motivație",
 
   "filterMenuShowAll": "Arată tot",
   "filterMenuShowMine": "Arată doar pe ale mele",
@@ -305,6 +307,13 @@
   "messageTalkToChatbot": "Vorbește cu Polly!",
   "messageReportSent": "Reposrt sent successfully.",
   "messageReportNotSent": "Reposrt could not be sent.",
+  "messageFeedbackMotivationOverview": "Împărtășiți-vă experiența, astfel încât generațiile viitoare de studenți să primească statistici despre această materie!",
+  "messageFeedbackAspects": "Aspecte cheie pe care le luăm în considerare:",
+  "messageFeedbackMotivation1": "Datele și confidențialitatea ta sunt respectate. Nu colectăm răspunsuri individuale, ci acestea sunt agregate, astfel încât o opinie să nu poată fi asociată cu un profil anume.",
+  "messageFeedbackMotivation2": "Informațiile partajate vor fi păstrate în baza noastră de date timp de cel puțin 4 ani (durata studiului ciclului de licență), astfel încât să se poată observa evoluția în timp.",
+  "messageFeedbackMotivation3": "Accesul la statistici este permis oricărui student care dorește să afle impresii despre o disciplină în timpul semestrului. Cu toate acestea, în timp ce oportunitatea de a împărtăși feedback este activă, numai studenții care și-au exprimat deja opinia pot analiza ideile altora.",
+  "messageFeedbackMotivation4": "Întregul proces de colectare și afișare a recenziilor este transparent. Fiind o aplicație open-source, codul sursă este accesibil tuturor.",
+  "messageFeedbackMotivation5": "Căutăm în permanență să îmbunătățim legătura dintre diferite generații de studenți. Drept urmare, orice părere este extrem de valoroasă. Toate detaliile furnizate sunt utilizate pro-activ.",
 
   "infoPasswordResetEmailSent": "Please check your inbox for the password reset e-mail.",
   "infoRelevance": "Încercați să selectați cea mai restrictivă categorie.",

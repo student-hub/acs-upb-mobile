@@ -1215,6 +1215,16 @@ class S {
     );
   }
 
+  /// `Learn more`
+  String get actionLearnMore {
+    return Intl.message(
+      'Learn more',
+      name: 'actionLearnMore',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Something went wrong.`
   String get errorSomethingWentWrong {
     return Intl.message(
@@ -1970,6 +1980,16 @@ class S {
     return Intl.message(
       'Permission requests',
       name: 'navigationAdmin',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Motivation`
+  String get navigationFeedbackMotivation {
+    return Intl.message(
+      'Motivation',
+      name: 'navigationFeedbackMotivation',
       desc: '',
       args: [],
     );
@@ -2940,6 +2960,76 @@ class S {
     return Intl.message(
       'Report could not be sent.',
       name: 'messageReportNotSent',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Share your experience so future generations of students will receive statistics about this class!`
+  String get messageFeedbackMotivationOverview {
+    return Intl.message(
+      'Share your experience so future generations of students will receive statistics about this class!',
+      name: 'messageFeedbackMotivationOverview',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Key aspects we take into account:`
+  String get messageFeedbackAspects {
+    return Intl.message(
+      'Key aspects we take into account:',
+      name: 'messageFeedbackAspects',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your data and privacy are respected. We do not report individual responses, but these are aggregated, thus an opinion cannot be associated with a particular profile.`
+  String get messageFeedbackMotivation1 {
+    return Intl.message(
+      'Your data and privacy are respected. We do not report individual responses, but these are aggregated, thus an opinion cannot be associated with a particular profile.',
+      name: 'messageFeedbackMotivation1',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Information shared will be kept in our database for at least 4 years (study duration of a Bachelor's degree), so the evolution over time can be observed.`
+  String get messageFeedbackMotivation2 {
+    return Intl.message(
+      'Information shared will be kept in our database for at least 4 years (study duration of a Bachelor\'s degree), so the evolution over time can be observed.',
+      name: 'messageFeedbackMotivation2',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Access to statistics is allowed to any student who wants to find out impressions about a class during the semester. However, while the opportunity to share your feedback is active, only students who have already expressed their opinion can analyze the ideas of others.`
+  String get messageFeedbackMotivation3 {
+    return Intl.message(
+      'Access to statistics is allowed to any student who wants to find out impressions about a class during the semester. However, while the opportunity to share your feedback is active, only students who have already expressed their opinion can analyze the ideas of others.',
+      name: 'messageFeedbackMotivation3',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `The whole process of collecting and displaying reviews is transparent. Being an open-source application, source code is accessible to everyone.`
+  String get messageFeedbackMotivation4 {
+    return Intl.message(
+      'The whole process of collecting and displaying reviews is transparent. Being an open-source application, source code is accessible to everyone.',
+      name: 'messageFeedbackMotivation4',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `We are constantly looking to improve the connection between different generations of students. As a result, any thought is extremely valuable. All the details supplied are used pro-actively.`
+  String get messageFeedbackMotivation5 {
+    return Intl.message(
+      'We are constantly looking to improve the connection between different generations of students. As a result, any thought is extremely valuable. All the details supplied are used pro-actively.',
+      name: 'messageFeedbackMotivation5',
       desc: '',
       args: [],
     );
