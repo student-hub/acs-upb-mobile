@@ -2,6 +2,7 @@ import 'package:acs_upb_mobile/authentication/model/user.dart';
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/main.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question.dart';
+import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question_text.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/service/feedback_provider.dart';
 import 'package:acs_upb_mobile/pages/classes/model/class.dart';
 import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
@@ -154,7 +155,7 @@ void main() {
           .thenAnswer((_) => Future.value(true));
       when(mockFeedbackProvider.userAlreadyRequested(any))
           .thenAnswer((_) => Future.value(false));
-      when(mockFeedbackProvider.fetchCategories('string'))
+      when(mockFeedbackProvider.fetchCategories(any))
           .thenAnswer((_) => Future.value({
                 'applications': {'en': 'Applications', 'ro': 'Aplicații'},
                 'homework': {'en': 'Homework', 'ro': 'Temă'},
@@ -163,6 +164,14 @@ void main() {
                   'en': 'Personal comments',
                   'ro': 'Comentarii personale'
                 },
+              }));
+      when(mockFeedbackProvider.fetchQuestions(any))
+          .thenAnswer((_) => Future.value({
+                '0': FormQuestionText(
+                  category: 'personal',
+                  question: 'What are the positive aspects of this class?',
+                  id: '0',
+                )
               }));
 
       mockClassProvider = MockClassProvider();
@@ -273,14 +282,14 @@ void main() {
     });
     group('Request permissions', () {
       setUpAll(() async {
-        when(mockAuthProvider.currentUser).thenAnswer((_) =>
-            Future.value(User(uid: '0', firstName: 'John', lastName: 'Doe')));
+        when(mockAuthProvider.currentUser).thenAnswer((_) => Future.value(User(
+            uid: '0', firstName: 'John', lastName: 'Doe', permissionLevel: 0)));
         when(mockAuthProvider.isAnonymous).thenReturn(false);
       });
 
       testWidgets('Normal scenario', (WidgetTester tester) async {
         when(mockAuthProvider.currentUserFromCache).thenReturn(User(
-            uid: '0', firstName: 'John', lastName: 'Doe', permissionLevel: 4));
+            uid: '0', firstName: 'John', lastName: 'Doe', permissionLevel: 0));
         when(mockAuthProvider.isVerified).thenAnswer((_) => Future.value(true));
 
         await tester.pumpWidget(buildApp());
@@ -295,6 +304,7 @@ void main() {
         await tester.tap(find.byKey(const ValueKey('ask_permissions')));
         await tester.pumpAndSettle();
         expect(find.byType(RequestPermissionsPage), findsOneWidget);
+        await tester.pumpAndSettle();
 
         // Send a request
         await tester.enterText(
@@ -310,6 +320,8 @@ void main() {
 
       testWidgets('User has already sent a request scenario',
           (WidgetTester tester) async {
+        when(mockAuthProvider.currentUserFromCache).thenReturn(User(
+            uid: '0', firstName: 'John', lastName: 'Doe', permissionLevel: 0));
         when(mockAuthProvider.isVerified).thenAnswer((_) => Future.value(true));
         when(mockFeedbackProvider.userAlreadyRequested(any))
             .thenAnswer((_) => Future.value(true));

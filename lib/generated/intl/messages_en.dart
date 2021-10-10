@@ -254,6 +254,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "messageWebsitePreview" : MessageLookupByLibrary.simpleMessage("Try tapping/long-pressing/hovering the preview to test the new website."),
     "messageWelcomeName" : m10,
     "messageWelcomeSimple" : MessageLookupByLibrary.simpleMessage("Welcome!"),
+    "messageYouAlreadyHavePermissions" : MessageLookupByLibrary.simpleMessage("You already have permissions to edit public info."),
     "messageYouCanContribute" : MessageLookupByLibrary.simpleMessage("You can contribute to the app data, but you first need to request permissions."),
     "navigationAdmin" : MessageLookupByLibrary.simpleMessage("Permission requests"),
     "navigationAskPermissions" : MessageLookupByLibrary.simpleMessage("Ask for permissions"),

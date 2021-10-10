@@ -2945,6 +2945,16 @@ class S {
     );
   }
 
+  /// `You already have permissions to edit public info.`
+  String get messageYouAlreadyHavePermissions {
+    return Intl.message(
+      'You already have permissions to edit public info.',
+      name: 'messageYouAlreadyHavePermissions',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Please check your inbox for the password reset e-mail.`
   String get infoPasswordResetEmailSent {
     return Intl.message(

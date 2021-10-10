@@ -45,7 +45,7 @@ class _RequestCardState extends State<RequestCard>
                       _buildUserHeader(request),
                       const SizedBox(height: 10),
                       Text(
-                        request.answers[0] ?? '',
+                        request.answers['0'].answer ?? '',
                         textDirection: ui.TextDirection.ltr,
                         style: Theme.of(context)
                             .textTheme

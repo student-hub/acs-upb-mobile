@@ -159,6 +159,7 @@ class _RequestPermissionsPageState extends State<RequestPermissionsPage> {
                 } else {
                   await showDialog(
                       context: context, builder: _requestAlreadyExistsDialog);
+                  Navigator.pop(context);
                 }
               })
         ],

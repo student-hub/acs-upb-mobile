@@ -243,7 +243,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
   Future<String> checkUserPermissionsString() async {
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
-    final requestProvider =
+    final feedbackProvider =
         Provider.of<FeedbackProvider>(context, listen: false);
 
     if (authProvider.isAuthenticated && !authProvider.isAnonymous) {
@@ -254,7 +254,7 @@ class _SettingsPageState extends State<SettingsPage> {
         return S.current.settingsPermissionsEdit;
       } else if (user.canAddPublicInfo) {
         return S.current.settingsPermissionsAdd;
-      } else if (await requestProvider.userAlreadyRequested(user.uid)) {
+      } else if (await feedbackProvider.userAlreadyRequested(user.uid)) {
         return S.current.settingsPermissionsRequestSent;
       }
     }

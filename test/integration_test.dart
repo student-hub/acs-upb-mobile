@@ -426,7 +426,7 @@ Future<void> main() async {
         .thenAnswer((_) => Future.value(false));
     // ignore: invalid_use_of_protected_member
     when(mockFeedbackProvider.hasListeners).thenReturn(true);
-    when(mockFeedbackProvider.fetchQuestions('string'))
+    when(mockFeedbackProvider.fetchQuestions(any))
         .thenAnswer((_) => Future.value({
               '0': FormQuestionDropdown(
                 category: 'involvement',
@@ -452,7 +452,7 @@ Future<void> main() async {
                 id: '3',
               ),
             }));
-    when(mockFeedbackProvider.fetchCategories('string'))
+    when(mockFeedbackProvider.fetchCategories(any))
         .thenAnswer((_) => Future.value({
               'applications': {'en': 'Applications', 'ro': 'Aplicații'},
               'homework': {'en': 'Homework', 'ro': 'Temă'},
