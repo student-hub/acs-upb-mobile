@@ -25,11 +25,9 @@ import 'package:provider/provider.dart';
 import 'package:acs_upb_mobile/resources/remote_config.dart';
 
 class ClassView extends StatefulWidget {
-  const ClassView({Key key, this.classHeader, this.remoteConfigService})
-      : super(key: key);
+  const ClassView({Key key, this.classHeader}) : super(key: key);
 
   final ClassHeader classHeader;
-  final RemoteConfigService remoteConfigService;
 
   @override
   _ClassViewState createState() => _ClassViewState();
