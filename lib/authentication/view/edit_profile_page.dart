@@ -312,7 +312,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
             ),
           ),
           const SizedBox(height: 10),
-          UploadButton(pageType: true, controller: uploadButtonController),
+          UploadButton(
+              label: S.current.labelProfilePicture,
+              controller: uploadButtonController),
           PreferenceTitle(
             S.current.labelPersonalInformation,
             leftPadding: 0,
