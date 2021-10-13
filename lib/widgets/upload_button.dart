@@ -1,6 +1,5 @@
 import 'dart:typed_data';
 
-import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:positioned_tap_detector/positioned_tap_detector.dart';
@@ -25,10 +24,9 @@ class UploadButtonController {
 // button, except it actually allows the user to select an image from the
 // gallery instead of inputting text directly.
 class UploadButton extends StatefulWidget {
-  const UploadButton({Key key, this.pageType, this.controller})
-      : super(key: key);
+  const UploadButton({Key key, this.label, this.controller}) : super(key: key);
 
-  final bool pageType;
+  final String label;
   final UploadButtonController controller;
 
   @override
@@ -85,9 +83,7 @@ class _UploadButtonState extends State<UploadButton> {
           child: TextFormField(
             controller: imageFieldController,
             decoration: InputDecoration(
-              labelText: widget.pageType
-                  ? S.current.labelProfilePicture
-                  : S.current.labelWebsiteIcon,
+              labelText: widget.label,
               prefixIcon: const Icon(Icons.add_photo_alternate_outlined),
               suffixIcon: imageFieldController.text.isNotEmpty
                   ? const Icon(Icons.clear)
