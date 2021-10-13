@@ -77,7 +77,8 @@ class AcademicCalendar {
 
     return weeksByYear.values.expand((e) => e).toSet();
   }
-  int semesterForDate(LocalDate date){
+
+  int semesterForDate(LocalDate date) {
     for (final semester in semesters) {
       if (date._isBeforeOrDuring(semester)) {
         // semester.id is represented as "semesterN", where "semester0" is the first semester
@@ -86,8 +87,8 @@ class AcademicCalendar {
     }
     return -1;
   }
-
 }
+
 extension LocalDateComparisons on LocalDate {
   bool _isDuring(AllDayUniEvent semester) {
     return DateInterval(semester.startDate, semester.endDate).contains(this);
@@ -98,6 +99,3 @@ extension LocalDateComparisons on LocalDate {
     return _isDuring(semester);
   }
 }
-
-
-
