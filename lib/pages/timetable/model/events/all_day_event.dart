@@ -51,6 +51,4 @@ class AllDayUniEvent extends UniEvent {
       color: color,
     );
   }
-
-
 }

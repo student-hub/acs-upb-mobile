@@ -70,21 +70,18 @@ class _LeadHeaderState extends State<LeadHeader> {
     if (calendar != null) {
       final List<int> nonHolidayWeeks = calendar.nonHolidayWeeks.toList();
 
-
       for (var i = 1; i < 53; i++) {
         if (!nonHolidayWeeks.contains(i)) holidayWeeks.add(i);
       }
 
       final week =
-      ((widget.date.dayOfYear - widget.date.dayOfWeek.value + 10) / 7)
-          .floor();
+          ((widget.date.dayOfYear - widget.date.dayOfWeek.value + 10) / 7)
+              .floor();
       if (LeadHeader.academicWeekNumber == false) {
         return week.toString();
       } else {
         if (!nonHolidayWeeks.contains(week)) {
-
-            return 'H';
-
+          return 'H';
         } else {
           return (nonHolidayWeeks.indexOf(week) + 1).toString();
         }
@@ -92,8 +89,6 @@ class _LeadHeaderState extends State<LeadHeader> {
     } else {
       return ' ';
     }
-
-
   }
 
   @override

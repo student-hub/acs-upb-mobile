@@ -110,21 +110,17 @@ class _AddEventViewState extends State<AddEventView> {
                 : 1;
       } else {
         bool foundSemester = false;
-        for (final calendar in calendars.entries) {
-          for (final semester in calendar.value.semesters) {
-            final LocalDate date =
-                widget.initialEvent.start.calendarDate ?? LocalDate.today();
-            if (date.isBeforeOrDuring(semester)) {
-              // semester.id is represented as "semesterN", where "semester0" is the first semester
-              selectedSemester =
-                  1 + int.tryParse(semester.id[semester.id.length - 1]);
-              selectedCalendar = calendar.key;
-              foundSemester = true;
-              break;
-            }
+        final LocalDate date =
+            widget.initialEvent.start.calendarDate ?? LocalDate.today();
+        calendars.forEach((key, value) {
+          final semester = value.semesterForDate(date);
+          if (semester != -1) {
+            selectedCalendar = key;
+            selectedSemester = semester;
+            return;
           }
-          if (foundSemester) break;
-        }
+        });
+
         if (!foundSemester) {
           selectedCalendar = calendars.entries.last.value.id;
           selectedSemester = 2;

@@ -77,4 +77,27 @@ class AcademicCalendar {
 
     return weeksByYear.values.expand((e) => e).toSet();
   }
+  int semesterForDate(LocalDate date){
+    for (final semester in semesters) {
+      if (date._isBeforeOrDuring(semester)) {
+        // semester.id is represented as "semesterN", where "semester0" is the first semester
+        return 1 + int.tryParse(semester.id[semester.id.length - 1]);
+      }
+    }
+    return -1;
+  }
+
 }
+extension LocalDateComparisons on LocalDate {
+  bool _isDuring(AllDayUniEvent semester) {
+    return DateInterval(semester.startDate, semester.endDate).contains(this);
+  }
+
+  bool _isBeforeOrDuring(AllDayUniEvent semester) {
+    if (compareTo(semester.startDate) < 0) return true;
+    return _isDuring(semester);
+  }
+}
+
+
+
