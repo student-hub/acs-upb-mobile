@@ -174,7 +174,6 @@
   "warningNoneYet": "Nu există încă",
   "warningRequestEmpty": "Textul cererii nu poate să fie gol.",
   "warningAgreeTo": "Trebuie să fiți de acord cu ",
-  "warningOnlyNOptionsAtATime": "Doar {n} opțiuni pot fi selectate la un moment dat.",
   "warningNoEvents": "Nu există evenimente de afișat",
   "warningYouNeedToSelectAtLeastOne": "Trebuie să selectați cel puțin o opțiune.",
   "warningYouNeedToSelectAssistant": "Trebuie să selectați asistentul de la această materie.",

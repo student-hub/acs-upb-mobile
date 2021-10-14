@@ -46,7 +46,6 @@ class FilterPage extends StatefulWidget {
 class FilterPageState extends State<FilterPage> {
   Filter filter;
   int selectedNodes = 0;
-  final int maxSelectedNodes = 10;
 
   void _onSelected(bool selection, FilterNode node) => setState(() {
         if (node.value == selection) return;
@@ -97,12 +96,6 @@ class FilterPageState extends State<FilterPage> {
           selected: child.value,
           showCheckmark: level != 0,
           onSelected: (selection) {
-            if (selection && selectedNodes >= maxSelectedNodes && level != 0) {
-              AppToast.show(
-                  S.current.warningOnlyNOptionsAtATime(maxSelectedNodes));
-              return;
-            }
-
             level != 0
                 ? _onSelected(selection, child)
                 : _onSelectedExclusive(selection, child, node.children);

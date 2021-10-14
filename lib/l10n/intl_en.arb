@@ -174,7 +174,6 @@
   "warningNoneYet": "None yet",
   "warningAgreeTo": "You need to agree to the ",
   "warningRequestEmpty": "The request must not be empty",
-  "warningOnlyNOptionsAtATime": "Only {n} options can be selected at a time.",
   "warningNoEvents": "No events to show",
   "warningYouNeedToSelectAtLeastOne": "You need to select at least one option.",
   "warningYouNeedToSelectAssistant": "You need to select your assistant for this class.",
