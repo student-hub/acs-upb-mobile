@@ -66,7 +66,7 @@ class _ClassesCardState extends State<ClassesCard> {
             );
           }
 
-          return const CircularProgressIndicator();
+          return const Center(child: CircularProgressIndicator());
         },
       ),
     );

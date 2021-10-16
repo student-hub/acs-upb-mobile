@@ -23,11 +23,17 @@ class ProfilePath extends RoutePath {
 
               final Person personData = snapshot.data;
 
+              if (personData.office == null || personData.email == null) {
+                return ErrorPage(
+                  errorMessage: S.current.labelUnknown,
+                );
+              }
+
               return PersonView(
                 person: personData,
               );
             } else {
-              return const CircularProgressIndicator();
+              return const Center(child: CircularProgressIndicator());
             }
           },
         );

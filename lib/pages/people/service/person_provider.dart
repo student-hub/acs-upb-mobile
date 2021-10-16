@@ -1,5 +1,4 @@
 import 'dart:core';
-
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/people/model/person.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
