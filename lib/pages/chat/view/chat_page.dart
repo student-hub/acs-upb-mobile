@@ -43,23 +43,17 @@ class Messages extends StatelessWidget {
   }
 
   Future<bool> doesUsersChatAlreadyExist(String userId) async {
-    final QuerySnapshot result = await FirebaseFirestore.instance
-        .collection('chats')
-        .where('userId', isEqualTo: userId)
-        .limit(1)
-        .get();
-    final List<DocumentSnapshot> documents = result.docs;
-    return documents.length == 1;
+    final result = await FirebaseFirestore.instance
+        .collection('chats').doc(userId);
+    print(result.id);
   }
 
   Future<void> getRightMessages(String uid) async {
-    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+    final DocumentReference ref = FirebaseFirestore.instance
         .collection('chats')
-        .where('userId', isEqualTo: uid)
-        .limit(1)
-        .get();
+        .doc(uid);
+    final QuerySnapshot querySnapshot = await ref.collection('messages').get();
     final allData = querySnapshot.docs.map((doc) => doc.data()).toList();
-    print(allData[0]);
   }
 
   @override
@@ -76,24 +70,31 @@ class Messages extends StatelessWidget {
           return FutureBuilder(
               future: doesUsersChatAlreadyExist(uid),
               builder: (ctx, AsyncSnapshot<bool> result) {
+                //TODO: Trebuie sa vad cum verific daca exista sau nu chat-ul si daca nu sa il creeze
+                final chatsDb = FirebaseFirestore.instance.collection('chats');
                 if (!result.hasData) {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }
-                if (!result.data) {
-                  FirebaseFirestore.instance.collection('chats').add({
+                   chatsDb.doc(uid).set({
                     'fullName': 'Marcel',
-                    'userId': uid,
                     'imageUrl':
-                        'https://cdn.pixabay.com/photo/2016/10/02/22/17/red-t-shirt-1710578_1280.jpg'
+                    'https://cdn.pixabay.com/photo/2016/10/02/22/17/red-t-shirt-1710578_1280.jpg'
+                  });
+                  // return const Center(
+                  //   child: CircularProgressIndicator(),
+                  // );
+                }
+                if(!result.data) {
+                  chatsDb.doc(uid).collection('messages').add({
+                    'date' : Timestamp.now(),
+                    'text' : 'Salut! Cu ce te putem ajuta?',
+                    'imageUrl' : 'https://cdn.pixabay.com/photo/2016/10/02/22/17/red-t-shirt-1710578_1280.jpg',
+                    'userId' : 'ACS',
+                    'fullName' : 'ACS UPB MOBILE',
                   });
                 }
                 getRightMessages(uid);
                 return StreamBuilder(
                     stream: FirebaseFirestore.instance
-                        //Trb sa vad cum iau mesajele din colectia buna
-                        .collection('/chats/ZlEI178W90aca2x9hIMZ/messages')
+                        .collection('/chats/$uid/messages')
                         .orderBy('date', descending: true)
                         .snapshots(),
                     builder: (ctx, chatSnapshot) {
@@ -104,15 +105,18 @@ class Messages extends StatelessWidget {
                         );
                       }
                       final chatDocs = chatSnapshot.data.documents;
+                      print(uid);
+                      print(chatDocs[0]['userId']);
+                      print(chatDocs[1]['userId']);
                       return ListView.builder(
                         reverse: true,
                         itemCount: chatDocs.length,
                         itemBuilder: (ctx, index) => MessageBubble(
-                          chatDocs[index]['text'],
-                          chatDocs[index]['userId'] == uid,
-                          ValueKey(chatDocs[index].documentID),
-                          chatDocs[index]['fullName'],
-                          chatDocs[index]['imageUrl'],
+                          message: chatDocs[index]['text'],
+                          isMe: chatDocs[index]['userId'] == uid,
+                          key: ValueKey(chatDocs[index].documentID),
+                          userName: chatDocs[index]['fullName'],
+                          userImage: chatDocs[index]['imageUrl'],
                         ),
                       );
                     });
@@ -129,10 +133,11 @@ class MessageBubble extends StatelessWidget {
   final String userImage;
 
   MessageBubble(
-      this.message, this.isMe, this.key, this.userName, this.userImage);
+  {@required this.message,@required this.isMe,@required this.key,@required this.userName,@required this.userImage});
 
   @override
   Widget build(BuildContext context) {
+    print(isMe);
     return Stack(
       children: [
         Row(
