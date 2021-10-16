@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:acs_upb_mobile/authentication/model/user.dart';
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/authentication/view/edit_profile_page.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
@@ -73,10 +74,10 @@ class _SearchBar extends StatefulWidget {
   const _SearchBar({Key key}) : super(key: key);
 
   @override
-  __SearchBarState createState() => __SearchBarState();
+  _SearchBarState createState() => _SearchBarState();
 }
 
-class __SearchBarState extends State<_SearchBar> {
+class _SearchBarState extends State<_SearchBar> {
   String query = '';
 
   @override
@@ -91,15 +92,55 @@ class __SearchBarState extends State<_SearchBar> {
   }
 }
 
-class _ProfileDropdownMenu extends StatelessWidget {
+class _ProfileDropdownMenu extends StatefulWidget {
   const _ProfileDropdownMenu({Key key, this.headerHeight}) : super(key: key);
 
   final double headerHeight;
 
   @override
+  _ProfileDropdownMenuState createState() => _ProfileDropdownMenuState();
+}
+
+class _ProfileDropdownMenuState extends State<_ProfileDropdownMenu> {
+  final List<_PopupItem> _popupItems = [
+    _PopupItem(
+      onTap: (context) =>
+          AppNavigator.pushNamed(context, SettingsPage.routeName),
+      icon: Icons.settings,
+      text: S.current.navigationSettings,
+    ),
+    _PopupItem(
+      onTap: (context) =>
+          AppNavigator.pushNamed(context, EditProfilePage.routeName),
+      icon: Icons.person,
+      text: S.current.actionEditProfile,
+    ),
+    _PopupItem(
+      onTap: Utils.signOut,
+      icon: Icons.logout,
+      text: S.current.actionLogOut,
+      anonymousIcon: Icons.login,
+      anonymousText: S.current.actionLogIn,
+    )
+  ];
+
+  String profilePictureURL;
+  User user;
+
+  @override
+  void initState() {
+    super.initState();
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    authProvider.getProfilePictureURL().then((value) => setState(() {
+          profilePictureURL = value;
+        }));
+
+    user = authProvider.currentUserFromCache;
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final authProvider = Provider.of<AuthProvider>(context);
-    final size = min(headerHeight, 60);
+    final size = min(widget.headerHeight, 60);
     final padding = size / 8;
 
     return SizedBox(
@@ -111,12 +152,15 @@ class _ProfileDropdownMenu extends StatelessWidget {
           color: Theme.of(context).backgroundColor,
           offset: Offset(-5, size),
           tooltip: S.current.navigationProfile,
-          child: const CircleAvatar(
+          child: CircleAvatar(
             radius: 25,
-            backgroundImage: AssetImage(
-              'assets/illustrations/undraw_profile_pic.png',
-            ),
+            backgroundImage: user != null && profilePictureURL != null
+                ? NetworkImage(profilePictureURL)
+                : const AssetImage(
+                    'assets/illustrations/undraw_profile_pic.png',
+                  ),
           ),
+          onSelected: (value) => _popupItems[value].onTap(context),
           itemBuilder: (context) {
             return <PopupMenuEntry<void>>[
               const PopupMenuItem(
@@ -126,35 +170,47 @@ class _ProfileDropdownMenu extends StatelessWidget {
                 ),
               ),
               const PopupMenuDivider(),
-              PopupMenuItem(
-                child: IconText(
-                  icon: Icons.settings,
-                  text: S.current.navigationSettings,
-                  onTap: () {
-                    AppNavigator.pushNamed(context, SettingsPage.routeName);
-                  },
-                ),
-              ),
-              PopupMenuItem(
-                child: IconText(
-                  icon: Icons.person,
-                  text: S.current.actionEditProfile,
-                  onTap: () {
-                    AppNavigator.pushNamed(context, EditProfilePage.routeName);
-                  },
-                ),
-              ),
-              PopupMenuItem(
-                  child: IconText(
-                icon: authProvider.isAnonymous ? Icons.login : Icons.logout,
-                text: authProvider.isAnonymous
-                    ? S.current.actionLogIn
-                    : S.current.actionLogOut,
-                onTap: () => Utils.signOut(context),
-              ))
+              ..._popupItems
+                  .asMap()
+                  .keys
+                  .toList()
+                  .map((index) => _popupItems[index].build(context, index)),
             ];
           },
         ),
+      ),
+    );
+  }
+}
+
+class _PopupItem {
+  const _PopupItem({
+    this.onTap,
+    this.icon,
+    this.text,
+    this.anonymousText,
+    this.anonymousIcon,
+  });
+
+  final void Function(BuildContext context) onTap;
+  final IconData icon;
+  final IconData anonymousIcon;
+  final String text;
+  final String anonymousText;
+
+  Widget build(BuildContext context, int value) {
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+
+    return PopupMenuItem(
+      value: value,
+      child: IconText(
+        icon: authProvider.isAnonymous && anonymousIcon != null
+            ? anonymousIcon
+            : icon,
+        text: authProvider.isAnonymous && anonymousIcon != null
+            ? anonymousText
+            : text,
+        onTap: () => onTap(context),
       ),
     );
   }
