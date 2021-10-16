@@ -214,9 +214,6 @@ class _PortalPageState extends State<PortalPage> {
     filterProvider = Provider.of<FilterProvider>(context);
     final authProvider = Provider.of<AuthProvider>(context);
 
-    const CircularProgressIndicator progressIndicator =
-        CircularProgressIndicator();
-
     return AppScaffold(
       title: Text(S.current.navigationPortal),
       actions: [
@@ -319,7 +316,7 @@ class _PortalPageState extends State<PortalPage> {
                   // TODO(IoanaAlexandru): Show error toast
                   return Container();
                 } else {
-                  return const Center(child: progressIndicator);
+                  return const Center(child: CircularProgressIndicator());
                 }
               }),
           if (updating == true)
