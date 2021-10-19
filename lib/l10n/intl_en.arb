@@ -145,6 +145,7 @@
   "errorInsertGoogleEvents": "Unable to insert events in Google Calendar.",
   "errorLoadRequests": "Could not load requests",
   "errorUnknownUser": "Unknown User",
+  "errorDontHavePermissions": "You lack access permissions.",
 
   "warningRequestExists": "Request already exists",
   "warningInternetConnection": "Please make sure you have an internet connection.",

@@ -1435,6 +1435,16 @@ class S {
     );
   }
 
+  /// `You lack access permissions.`
+  String get errorDontHavePermissions {
+    return Intl.message(
+      'You lack access permissions.',
+      name: 'errorDontHavePermissions',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Request already exists`
   String get warningRequestExists {
     return Intl.message(

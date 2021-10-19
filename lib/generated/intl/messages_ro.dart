@@ -94,6 +94,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "errorAnswerIncorrect" : MessageLookupByLibrary.simpleMessage("Răspunsul introdus nu este corect."),
     "errorClassCannotBeEmpty" : MessageLookupByLibrary.simpleMessage("Materia trebuie precizată."),
     "errorCouldNotLaunchURL" : m1,
+    "errorDontHavePermissions" : MessageLookupByLibrary.simpleMessage("Nu ai destule permisiuni."),
     "errorEmailInUse" : MessageLookupByLibrary.simpleMessage("Există deja un cont asociat acestui e-mail."),
     "errorEmailNotFound" : MessageLookupByLibrary.simpleMessage("Nu am putut găsi un cont asociat cu adresa de mail. Vă rugăm să vă înregistrați."),
     "errorEventTypeCannotBeEmpty" : MessageLookupByLibrary.simpleMessage("Tipul de eveniment trebuie precizat."),
