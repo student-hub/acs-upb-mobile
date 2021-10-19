@@ -252,7 +252,7 @@ class FeedbackProvider with ChangeNotifier {
           .doc('permission_request_answers');
 
       final data = request.toData();
-      await ref.update({request.userId: data});
+      await ref.set({request.userId: data}, SetOptions(merge: true));
 
       return userAlreadyRequestedCache = true;
     } catch (e) {

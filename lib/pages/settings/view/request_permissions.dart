@@ -26,7 +26,6 @@ class _RequestPermissionsPageState extends State<RequestPermissionsPage> {
   bool agreedToResponsibilities = false;
 
   Map<String, Map<String, String>> questionCategories = {};
-  List<Map<int, bool>> answerValues = [];
   Map<String, FormQuestion> requestQuestions = {};
 
   Future<void> _fetchUser() async {
@@ -72,15 +71,6 @@ class _RequestPermissionsPageState extends State<RequestPermissionsPage> {
     await Provider.of<FeedbackProvider>(context, listen: false)
         .fetchQuestions('permission_request_questions')
         .then((questions) => setState(() => requestQuestions = questions));
-    for (int i = 0; i <= requestQuestions.length; i++) {
-      answerValues.insert(i, {
-        0: false,
-        1: false,
-        2: false,
-        3: false,
-        4: false,
-      });
-    }
     return requestQuestions;
   }
 
@@ -101,7 +91,7 @@ class _RequestPermissionsPageState extends State<RequestPermissionsPage> {
     for (int i = 0; i < requestQuestions.length; ++i) {
       if (requestQuestions.values.elementAt(i).answer == '') {
         AppToast.show(S.current.warningFieldCannotBeEmpty);
-        Navigator.pop(context);
+        Navigator.of(context).pop();
         return;
       }
     }
@@ -127,8 +117,8 @@ class _RequestPermissionsPageState extends State<RequestPermissionsPage> {
       final List<Widget> categoryChildren = [];
       for (final question
           in requestQuestions.values.where((q) => q.category == category)) {
-        categoryChildren.add(FeedbackQuestionFormField(
-            question: question, answerValues: answerValues, formKey: formKey));
+        categoryChildren.add(
+            FeedbackQuestionFormField(question: question, formKey: formKey));
       }
       children.add(
         Column(
@@ -169,7 +159,7 @@ class _RequestPermissionsPageState extends State<RequestPermissionsPage> {
               padding: const EdgeInsets.only(top: 10),
               child: Container(
                   height: MediaQuery.of(context).size.height / 4,
-                  child: Image.asset('assets/illustrations/undraw_hiring.png')),
+                  child: Image.asset('assets/illustrations/undxraw_hiring.png')),
             ),
             Padding(
               padding: const EdgeInsets.all(10),
