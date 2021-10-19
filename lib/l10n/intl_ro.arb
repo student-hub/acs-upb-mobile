@@ -302,8 +302,8 @@
   "messageAlreadySeeingCurrentWeek": "Ești deja la săptămâna curentă!",
   "messageAnotherQuestion": "Ai altă întrebare?",
   "messageTalkToChatbot": "Vorbește cu Polly!",
-  "messageReportSent": "Reposrt sent successfully.",
-  "messageReportNotSent": "Reposrt could not be sent.",
+  "messageReportSent": "Raportul a fost trimis cu succes.",
+  "messageReportNotSent": "Raportul nu a putut fi trimis.",
 
   "infoPasswordResetEmailSent": "Please check your inbox for the password reset e-mail.",
   "infoRelevance": "Încercați să selectați cea mai restrictivă categorie.",
