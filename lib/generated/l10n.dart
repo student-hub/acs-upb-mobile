@@ -1435,10 +1435,10 @@ class S {
     );
   }
 
-  /// `You lack access permissions.`
+  /// `You don't have permission to access this page.`
   String get errorDontHavePermissions {
     return Intl.message(
-      'You lack access permissions.',
+      'You don\'t have permission to access this page.',
       name: 'errorDontHavePermissions',
       desc: '',
       args: [],

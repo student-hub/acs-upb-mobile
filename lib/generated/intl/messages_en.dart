@@ -94,7 +94,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "errorAnswerIncorrect" : MessageLookupByLibrary.simpleMessage("The answer you entered is incorrect."),
     "errorClassCannotBeEmpty" : MessageLookupByLibrary.simpleMessage("Class cannot be empty."),
     "errorCouldNotLaunchURL" : m1,
-    "errorDontHavePermissions" : MessageLookupByLibrary.simpleMessage("You lack access permissions."),
+    "errorDontHavePermissions" : MessageLookupByLibrary.simpleMessage("You don\'t have permission to access this page."),
     "errorEmailInUse" : MessageLookupByLibrary.simpleMessage("There is already an account associated with this e-mail address"),
     "errorEmailNotFound" : MessageLookupByLibrary.simpleMessage("An account associated with that e-mail could not be found. Please sign up instead."),
     "errorEventTypeCannotBeEmpty" : MessageLookupByLibrary.simpleMessage("Event type cannot be empty."),

@@ -145,7 +145,7 @@
   "errorInsertGoogleEvents": "Evenimentele nu au putut fi inserate în Google Calendar.",
   "errorLoadRequests": "Cererile nu au putut fi încărcate",
   "errorUnknownUser": "Utilizator Necunoscut",
-  "errorDontHavePermissions": "Nu ai destule permisiuni.",
+  "errorDontHavePermissions": "Nu ai permisiune să accesezi această pagină.",
 
   "warningRequestExists": "O cerere deja există",
   "warningInternetConnection": "Asigurați-vă că sunteți conectat la internet.",
