@@ -303,8 +303,8 @@
   "messageAlreadySeeingCurrentWeek": "Ești deja la săptămâna curentă!",
   "messageAnotherQuestion": "Ai altă întrebare?",
   "messageTalkToChatbot": "Vorbește cu Polly!",
-  "messageReportSent": "Răspuns trimis cu succes.",
-  "messageReportNotSent": "Răspunsul nu a putut fi trimis.",
+  "messageReportSent": "Raportul a fost trimis cu succes.",
+  "messageReportNotSent": "Raportul nu a putut fi trimis.",
   "messageYouAlreadyHavePermissions": "Deja deții permisiuni pentru editare de date publice.",
 
   "infoPasswordResetEmailSent": "Please check your inbox for the password reset e-mail.",
