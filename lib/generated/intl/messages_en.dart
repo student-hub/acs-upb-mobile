@@ -288,6 +288,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "settingsFeedbackForm" : MessageLookupByLibrary.simpleMessage("Contact us"),
     "settingsItemAdmin" : MessageLookupByLibrary.simpleMessage("Admin Panel"),
     "settingsItemDarkMode" : MessageLookupByLibrary.simpleMessage("Dark Mode"),
+    "settingsAcademicWeekNumber":MessageLookupByLibrary.simpleMessage("Academic week number"),
+    "settingsAcademicWeekNumberSubtitle":MessageLookupByLibrary.simpleMessage("Show number of week in the semester instead of the calendar year"),
     "settingsItemEditingPermissions" : MessageLookupByLibrary.simpleMessage("Your editing permissions"),
     "settingsItemLanguage" : MessageLookupByLibrary.simpleMessage("Language"),
     "settingsItemLanguageAuto" : MessageLookupByLibrary.simpleMessage("Auto"),

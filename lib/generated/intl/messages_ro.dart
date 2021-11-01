@@ -288,6 +288,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "settingsFeedbackForm" : MessageLookupByLibrary.simpleMessage("Contactează-ne"),
     "settingsItemAdmin" : MessageLookupByLibrary.simpleMessage("Panoul Administratorului"),
     "settingsItemDarkMode" : MessageLookupByLibrary.simpleMessage("Mod Întunecat"),
+    "settingsAcademicWeekNumber":MessageLookupByLibrary.simpleMessage("Săptămâni academice"),
+    "settingsAcademicWeekNumberSubtitle":MessageLookupByLibrary.simpleMessage("Afișează săptămână din semestru în loc de cea din an"),
     "settingsItemEditingPermissions" : MessageLookupByLibrary.simpleMessage("Permisiunile tale de editare"),
     "settingsItemLanguage" : MessageLookupByLibrary.simpleMessage("Limbă"),
     "settingsItemLanguageAuto" : MessageLookupByLibrary.simpleMessage("Auto"),

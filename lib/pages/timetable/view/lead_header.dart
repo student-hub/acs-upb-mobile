@@ -110,7 +110,6 @@ class _LeadHeaderState extends State<LeadHeader> {
         .then((calendars) {
       setState(() {
         this.calendars = calendars;
-        calendar = calendars.values.last;
       });
     });
   }
