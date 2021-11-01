@@ -65,7 +65,6 @@ import 'package:provider/provider.dart';
 import 'package:rrule/rrule.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:time_machine/time_machine.dart' hide Offset;
-import 'package:timetable/src/header/week_indicator.dart';
 
 import 'firebase_mock.dart';
 import 'test_utils.dart';
@@ -917,9 +916,6 @@ Future<void> main() async {
           // Scroll to previous week
           await tester.drag(find.text('Tue'), Offset(size.width - 30, 0));
 
-          // Expect previous week
-          final previousWeek = WeekYearRules.iso
-              .getWeekOfWeekYear(LocalDate.today().subtractWeeks(1));
           await tester.pumpAndSettle();
 
           expect(find.byWidgetPredicate((widget) => widget is LeadHeader),
@@ -944,8 +940,6 @@ Future<void> main() async {
           await tester.pumpAndSettle();
 
           // Expect current week
-          final currentWeek =
-              WeekYearRules.iso.getWeekOfWeekYear(LocalDate.today());
           expect(find.byWidgetPredicate((widget) => widget is LeadHeader),
               findsOneWidget);
 
@@ -968,8 +962,6 @@ Future<void> main() async {
           await tester.pumpAndSettle();
 
           // Expect next week
-          final nextWeek = WeekYearRules.iso
-              .getWeekOfWeekYear(LocalDate.today().addWeeks(1));
           expect(find.byWidgetPredicate((widget) => widget is LeadHeader),
               findsOneWidget);
 
@@ -992,8 +984,6 @@ Future<void> main() async {
           await tester.pumpAndSettle();
 
           // Expect next week
-          final nextNextWeek = WeekYearRules.iso
-              .getWeekOfWeekYear(LocalDate.today().addWeeks(2));
           expect(find.byWidgetPredicate((widget) => widget is LeadHeader),
               findsOneWidget);
 
@@ -1016,8 +1006,6 @@ Future<void> main() async {
           await tester.pumpAndSettle();
 
           // Expect next week
-          final nextNextNextWeek = WeekYearRules.iso
-              .getWeekOfWeekYear(LocalDate.today().addWeeks(3));
           expect(find.byWidgetPredicate((widget) => widget is LeadHeader),
               findsOneWidget);
 
@@ -1060,8 +1048,6 @@ Future<void> main() async {
           await tester.pumpAndSettle();
 
           // Expect current week
-          final currentWeek =
-              WeekYearRules.iso.getWeekOfWeekYear(LocalDate.today());
           expect(find.byWidgetPredicate((widget) => widget is LeadHeader),
               findsOneWidget);
 
@@ -1069,9 +1055,6 @@ Future<void> main() async {
           await tester.drag(find.text('Sun'), Offset(-size.width + 10, 0));
           await tester.pumpAndSettle();
 
-          // Expect next week
-          final nextWeek = WeekYearRules.iso
-              .getWeekOfWeekYear(LocalDate.today().addWeeks(1));
           expect(find.byWidgetPredicate((widget) => widget is LeadHeader),
               findsOneWidget);
 

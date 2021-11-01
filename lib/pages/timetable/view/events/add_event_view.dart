@@ -109,7 +109,7 @@ class _AddEventViewState extends State<AddEventView> {
                 ? 2
                 : 1;
       } else {
-        bool foundSemester = false;
+        const bool foundSemester = false;
         final LocalDate date =
             widget.initialEvent.start.calendarDate ?? LocalDate.today();
         calendars.forEach((key, value) {

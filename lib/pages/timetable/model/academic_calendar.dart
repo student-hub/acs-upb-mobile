@@ -87,7 +87,26 @@ class AcademicCalendar {
     }
     return -1;
   }
-}
+  String getWeekNumber(LocalDate date) {
+
+    final Set<int> holidayWeeks = {};
+      for (var i = 1; i < 53; i++) {
+        if (!nonHolidayWeeks.contains(i)) holidayWeeks.add(i);
+      }
+
+      final week =
+      ((date.dayOfYear - date.dayOfWeek.value + 10) / 7)
+          .floor();
+
+        if (!nonHolidayWeeks.contains(week)) {
+          return 'H';
+        } else {
+          return (nonHolidayWeeks.toList().indexOf(week) + 1).toString();
+        }
+      }
+    }
+
+
 
 extension LocalDateComparisons on LocalDate {
   bool _isDuring(AllDayUniEvent semester) {

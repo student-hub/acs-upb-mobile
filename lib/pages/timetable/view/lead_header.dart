@@ -5,7 +5,6 @@ import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
 import 'package:acs_upb_mobile/pages/people/model/person.dart';
 import 'package:acs_upb_mobile/pages/people/service/person_provider.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/academic_calendar.dart';
-import 'package:acs_upb_mobile/pages/timetable/model/events/all_day_event.dart';
 import 'package:acs_upb_mobile/pages/timetable/service/uni_event_provider.dart';
 import 'package:black_hole_flutter/black_hole_flutter.dart';
 import 'package:flutter/material.dart';
@@ -33,7 +32,7 @@ class _LeadHeaderState extends State<LeadHeader> {
   AcademicCalendar calendar;
   Map<String, AcademicCalendar> calendars = {};
   int academicWeek;
-  Set<int> holidayWeeks = {};
+
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +56,7 @@ class _LeadHeaderState extends State<LeadHeader> {
               color: defaultBackgroundColor,
               border: Border.all(color: defaultBackgroundColor, width: 1)),
           child: Text(
-            getWeekNumber(),
+            calendars.values.where((element) => element.semesterForDate(widget.date)!=-1).first.getWeekNumber(widget.date),
             style: textStyle,
             textAlign: TextAlign.center,
           ),
@@ -66,30 +65,7 @@ class _LeadHeaderState extends State<LeadHeader> {
     );
   }
 
-  String getWeekNumber() {
-    if (calendar != null) {
-      final List<int> nonHolidayWeeks = calendar.nonHolidayWeeks.toList();
 
-      for (var i = 1; i < 53; i++) {
-        if (!nonHolidayWeeks.contains(i)) holidayWeeks.add(i);
-      }
-
-      final week =
-          ((widget.date.dayOfYear - widget.date.dayOfWeek.value + 10) / 7)
-              .floor();
-      if (LeadHeader.academicWeekNumber == false) {
-        return week.toString();
-      } else {
-        if (!nonHolidayWeeks.contains(week)) {
-          return 'H';
-        } else {
-          return (nonHolidayWeeks.indexOf(week) + 1).toString();
-        }
-      }
-    } else {
-      return ' ';
-    }
-  }
 
   @override
   void initState() {
@@ -110,6 +86,7 @@ class _LeadHeaderState extends State<LeadHeader> {
         .then((calendars) {
       setState(() {
         this.calendars = calendars;
+
       });
     });
   }
