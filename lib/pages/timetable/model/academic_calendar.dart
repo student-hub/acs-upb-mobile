@@ -92,13 +92,10 @@ class AcademicCalendar {
   String getWeekNumber(LocalDate date) {
     final Set<int> holidayWeeks = {};
     final week = ((date.dayOfYear - date.dayOfWeek.value + 10) / 7).floor();
-    if(LeadHeader.academicWeekNumber==false)
-      return week.toString();
+    if (LeadHeader.academicWeekNumber == false) return week.toString();
     for (var i = 1; i < 53; i++) {
       if (!nonHolidayWeeks.contains(i)) holidayWeeks.add(i);
     }
-
-
 
     if (!nonHolidayWeeks.contains(week)) {
       return 'H';
