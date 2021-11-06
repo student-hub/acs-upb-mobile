@@ -916,6 +916,8 @@ Future<void> main() async {
           // Scroll to previous week
           await tester.drag(find.text('Tue'), Offset(size.width - 30, 0));
 
+          // Expect previous week
+
           await tester.pumpAndSettle();
 
           expect(find.byWidgetPredicate((widget) => widget is LeadHeader),
@@ -962,6 +964,7 @@ Future<void> main() async {
           await tester.pumpAndSettle();
 
           // Expect next week
+
           expect(find.byWidgetPredicate((widget) => widget is LeadHeader),
               findsOneWidget);
 
@@ -984,6 +987,7 @@ Future<void> main() async {
           await tester.pumpAndSettle();
 
           // Expect next week
+
           expect(find.byWidgetPredicate((widget) => widget is LeadHeader),
               findsOneWidget);
 
@@ -1006,6 +1010,7 @@ Future<void> main() async {
           await tester.pumpAndSettle();
 
           // Expect next week
+
           expect(find.byWidgetPredicate((widget) => widget is LeadHeader),
               findsOneWidget);
 
@@ -1054,6 +1059,8 @@ Future<void> main() async {
           // Scroll to next week
           await tester.drag(find.text('Sun'), Offset(-size.width + 10, 0));
           await tester.pumpAndSettle();
+
+          // Expect next week
 
           expect(find.byWidgetPredicate((widget) => widget is LeadHeader),
               findsOneWidget);

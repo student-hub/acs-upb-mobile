@@ -1,4 +1,5 @@
 import 'package:acs_upb_mobile/pages/timetable/model/events/all_day_event.dart';
+import 'package:acs_upb_mobile/pages/timetable/view/lead_header.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:flutter/foundation.dart';
 import 'package:time_machine/time_machine.dart';
@@ -87,26 +88,25 @@ class AcademicCalendar {
     }
     return -1;
   }
+
   String getWeekNumber(LocalDate date) {
-
     final Set<int> holidayWeeks = {};
-      for (var i = 1; i < 53; i++) {
-        if (!nonHolidayWeeks.contains(i)) holidayWeeks.add(i);
-      }
-
-      final week =
-      ((date.dayOfYear - date.dayOfWeek.value + 10) / 7)
-          .floor();
-
-        if (!nonHolidayWeeks.contains(week)) {
-          return 'H';
-        } else {
-          return (nonHolidayWeeks.toList().indexOf(week) + 1).toString();
-        }
-      }
+    final week = ((date.dayOfYear - date.dayOfWeek.value + 10) / 7).floor();
+    if(LeadHeader.academicWeekNumber==false)
+      return week.toString();
+    for (var i = 1; i < 53; i++) {
+      if (!nonHolidayWeeks.contains(i)) holidayWeeks.add(i);
     }
 
 
+
+    if (!nonHolidayWeeks.contains(week)) {
+      return 'H';
+    } else {
+      return (nonHolidayWeeks.toList().indexOf(week) + 1).toString();
+    }
+  }
+}
 
 extension LocalDateComparisons on LocalDate {
   bool _isDuring(AllDayUniEvent semester) {

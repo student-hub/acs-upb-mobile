@@ -19,7 +19,7 @@ import 'package:provider/provider.dart';
 class LeadHeader extends StatefulWidget {
   const LeadHeader(this.date, {Key key}) : super(key: key);
   final LocalDate date;
-  static var academicWeekNumber = true;
+  static var academicWeekNumber = false;
 
   @override
   _LeadHeaderState createState() => _LeadHeaderState();
@@ -33,7 +33,6 @@ class _LeadHeaderState extends State<LeadHeader> {
   Map<String, AcademicCalendar> calendars = {};
   int academicWeek;
 
-
   @override
   Widget build(BuildContext context) {
     final theme = context.theme;
@@ -45,7 +44,9 @@ class _LeadHeaderState extends State<LeadHeader> {
                 .alphaBlendOn(theme.scaffoldBackgroundColor)
                 .mediumEmphasisOnColor,
             fontSize: 14);
-
+    final filteredCalendars = calendars?.values
+        ?.where((calendar) => calendar.semesterForDate(widget.date) != -1);
+    final calendar = filteredCalendars.isEmpty ? null : filteredCalendars.first;
     return Container(
       child: Center(
         child: Container(
@@ -55,17 +56,17 @@ class _LeadHeaderState extends State<LeadHeader> {
               borderRadius: BorderRadius.circular(2),
               color: defaultBackgroundColor,
               border: Border.all(color: defaultBackgroundColor, width: 1)),
-          child: Text(
-            calendars.values.where((element) => element.semesterForDate(widget.date)!=-1).first.getWeekNumber(widget.date),
-            style: textStyle,
-            textAlign: TextAlign.center,
-          ),
+          child: calendar == null
+              ? Container()
+              : Text(
+                  calendar.getWeekNumber(widget.date),
+                  style: textStyle,
+                  textAlign: TextAlign.center,
+                ),
         ),
       ),
     );
   }
-
-
 
   @override
   void initState() {
@@ -86,7 +87,6 @@ class _LeadHeaderState extends State<LeadHeader> {
         .then((calendars) {
       setState(() {
         this.calendars = calendars;
-
       });
     });
   }
