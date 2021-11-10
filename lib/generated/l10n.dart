@@ -2203,7 +2203,7 @@ class S {
       args: [],
     );
   }
-  ///'Show number of week in the semester instead of the calendar year'
+  /// 'Show number of week in the semester instead of the calendar year'
   String get settingsAcademicWeekNumberSubtitle {
     return Intl.message(
       'Show number of week in the semester instead of the calendar year',
