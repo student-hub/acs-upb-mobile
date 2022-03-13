@@ -22,6 +22,7 @@ It is recommended that you go through [our workshop](https://github.com/acs-upb-
     - [Structure](#structure)
     - [Security rules](#security-rules-1)
   + [Functions](#functions)
+    - [Testing](#testing)
 * [Internationalization](#internationalization)
   + [On-device](#on-device)
   + [Remote](#remote)
