@@ -35,10 +35,12 @@ class FilterProvider with ChangeNotifier {
     }
   }
 
-  final Firestore _db = Firestore.instance;
+  final FirebaseFirestore _db = FirebaseFirestore.instance;
   Filter _relevanceFilter; // filter cache
 
-  /// Whether this is the global filter instance and should update shared preferences
+  /// Whether this is the global filter instance and should update shared preferences.
+  /// If false, this is probably a local filter setting (e.g. for an event or website)
+  /// and should be the user's class by default.
   final bool global;
 
   final String defaultDegree;
@@ -69,8 +71,8 @@ class FilterProvider with ChangeNotifier {
   Future<void> _setFilterNodes(List<String> nodes) async {
     try {
       final DocumentReference doc =
-          _db.collection('users').document(_authProvider.uid);
-      await doc.updateData({'filter_nodes': nodes});
+          _db.collection('users').doc(_authProvider.uid);
+      await doc.update({'filter_nodes': nodes});
     } catch (e) {
       print(e);
     }
@@ -108,16 +110,16 @@ class FilterProvider with ChangeNotifier {
 
   Filter get cachedFilter => _relevanceFilter?.clone();
 
-  Future<Filter> fetchFilter({BuildContext context}) async {
+  Future<Filter> fetchFilter() async {
     if (_relevanceFilter != null) {
       return cachedFilter;
     }
 
     try {
       final col = _db.collection('filters');
-      final ref = col.document('relevance');
+      final ref = col.doc('relevance');
       final doc = await ref.get();
-      final data = doc.data;
+      final data = doc.data();
 
       final levelNames = <Map<String, String>>[];
       // Cast from List<dynamic> to List<Map<String, String>>
@@ -138,27 +140,36 @@ class FilterProvider with ChangeNotifier {
           _relevanceFilter.setRelevantUpToRoot(node, defaultDegree);
         }
         _relevantNodes = _relevanceFilter.relevantNodes;
+      } else if (!global) {
+        if (_authProvider != null &&
+            _authProvider.isAuthenticated &&
+            !_authProvider.isAnonymous) {
+          final userSnap =
+              await _db.collection('users').doc(_authProvider.uid).get();
+
+          // Load class information from Firestore
+          _relevantNodes = List<String>.from(userSnap['class']);
+          _relevanceFilter?.setRelevantNodes(_relevantNodes);
+        }
+      } else {
+        // Check if there is an existing setting already
+        if (_authProvider != null &&
+            _authProvider.isAuthenticated &&
+            !_authProvider.isAnonymous) {
+          final userSnap =
+              await _db.collection('users').doc(_authProvider.uid).get();
+
+          // Load filter_nodes from Firestore
+          _relevantNodes = List<String>.from(userSnap['filter_nodes']);
+          _relevanceFilter?.setRelevantNodes(_relevantNodes);
+        }
       }
 
-      // Check if there is an existing setting already
-      if (global &&
-          _authProvider.isAuthenticatedFromCache &&
-          !_authProvider.isAnonymous) {
-        final DocumentReference docUsers =
-            _db.collection('users').document(_authProvider.uid);
-        final DocumentSnapshot snapUsers = await docUsers.get();
-
-        //Load filter_nodes from Firestore
-        _relevantNodes = List<String>.from(snapUsers['filter_nodes']);
-        _relevanceFilter.setRelevantNodes(_relevantNodes);
-      }
-
+      notifyListeners();
       return cachedFilter;
     } catch (e, _) {
       print(e);
-      if (context != null) {
-        AppToast.show(S.of(context).errorSomethingWentWrong);
-      }
+      AppToast.show(S.current.errorSomethingWentWrong);
       return null;
     }
   }

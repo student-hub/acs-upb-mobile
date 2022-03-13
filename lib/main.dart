@@ -1,9 +1,12 @@
+import 'dart:io';
+
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/authentication/view/login_view.dart';
 import 'package:acs_upb_mobile/authentication/view/sign_up_view.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/navigation/bottom_navigation_bar.dart';
 import 'package:acs_upb_mobile/navigation/routes.dart';
+import 'package:acs_upb_mobile/pages/class_feedback/service/feedback_provider.dart';
 import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
 import 'package:acs_upb_mobile/pages/faq/service/question_provider.dart';
 import 'package:acs_upb_mobile/pages/faq/view/faq_page.dart';
@@ -13,37 +16,72 @@ import 'package:acs_upb_mobile/pages/news_feed/service/news_provider.dart';
 import 'package:acs_upb_mobile/pages/news_feed/view/news_feed_page.dart';
 import 'package:acs_upb_mobile/pages/people/service/person_provider.dart';
 import 'package:acs_upb_mobile/pages/portal/service/website_provider.dart';
+import 'package:acs_upb_mobile/pages/settings/service/admin_provider.dart';
 import 'package:acs_upb_mobile/pages/settings/service/request_provider.dart';
+import 'package:acs_upb_mobile/pages/settings/view/admin_page.dart';
+import 'package:acs_upb_mobile/pages/settings/service/issue_provider.dart';
+import 'package:acs_upb_mobile/pages/settings/view/request_permissions.dart';
 import 'package:acs_upb_mobile/pages/settings/view/settings_page.dart';
+import 'package:acs_upb_mobile/pages/settings/view/feedback_form.dart';
 import 'package:acs_upb_mobile/pages/timetable/service/uni_event_provider.dart';
 import 'package:acs_upb_mobile/resources/locale_provider.dart';
+import 'package:acs_upb_mobile/resources/remote_config.dart';
+import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/widgets/loading_screen.dart';
 import 'package:dynamic_theme/dynamic_theme.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:oktoast/oktoast.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:preferences/preferences.dart';
 import 'package:provider/provider.dart';
 import 'package:rrule/rrule.dart';
 import 'package:time_machine/time_machine.dart';
 
+// FIXME: Our university website certificates have some issues, so we say we
+// trust them regardless.
+// Remove this in the future.
+class MyHttpOverrides extends HttpOverrides {
+  @override
+  HttpClient createHttpClient(SecurityContext context) {
+    return super.createHttpClient(context)
+      ..badCertificateCallback = (X509Certificate cert, String host, int port) {
+        return host == 'acs.pub.ro' ||
+            host == 'cs.pub.ro' ||
+            host == 'aii.pub.ro';
+      };
+  }
+}
+
 Future<void> main() async {
+  HttpOverrides.global = MyHttpOverrides();
+
   WidgetsFlutterBinding.ensureInitialized();
-  await TimeMachine.initialize({'rootBundle': rootBundle});
-  await PrefService.init(prefix: 'pref_');
-  PrefService.setDefaultValues({'language': 'auto', 'relevance_filter': true});
+
+  // package_info_plus is not compatible with flutter_test
+  // link to the issue: https://github.com/fluttercommunity/plus_plugins/issues/172
+  Utils.packageInfo = await PackageInfo.fromPlatform();
+
+  await Firebase.initializeApp();
 
   final authProvider = AuthProvider();
   final classProvider = ClassProvider();
+  final personProvider = PersonProvider();
+  final feedbackProvider = FeedbackProvider();
 
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider<AuthProvider>(create: (_) => authProvider),
     ChangeNotifierProvider<WebsiteProvider>(create: (_) => WebsiteProvider()),
     Provider<RequestProvider>(create: (_) => RequestProvider()),
+    Provider<IssueProvider>(create: (_) => IssueProvider()),
     ChangeNotifierProvider<ClassProvider>(create: (_) => classProvider),
-    ChangeNotifierProvider<PersonProvider>(create: (_) => PersonProvider()),
+    ChangeNotifierProvider<FeedbackProvider>(create: (_) => feedbackProvider),
+    ChangeNotifierProvider<PersonProvider>(create: (_) => personProvider),
     ChangeNotifierProvider<QuestionProvider>(create: (_) => QuestionProvider()),
     ChangeNotifierProvider<NewsProvider>(create: (_) => NewsProvider()),
     ChangeNotifierProxyProvider<AuthProvider, FilterProvider>(
@@ -56,11 +94,18 @@ Future<void> main() async {
         UniEventProvider>(
       create: (_) => UniEventProvider(
         authProvider: authProvider,
+        personProvider: personProvider,
       ),
       update: (context, classProvider, filterProvider, uniEventProvider) {
         return uniEventProvider
           ..updateClasses(classProvider)
           ..updateFilter(filterProvider);
+      },
+    ),
+    ChangeNotifierProxyProvider<AuthProvider, AdminProvider>(
+      create: (_) => AdminProvider(),
+      update: (context, authProvider, adminProvider) {
+        return adminProvider..updateAuth(authProvider);
       },
     ),
   ], child: const MyApp()));
@@ -80,8 +125,7 @@ class _MyAppState extends State<MyApp> {
 
   Widget buildApp(BuildContext context, ThemeData theme) {
     return MaterialApp(
-      title: 'ACS UPB Mobile',
-      debugShowCheckedModeBanner: false,
+      title: Utils.packageInfo.appName,
       localizationsDelegates: [
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
@@ -99,10 +143,31 @@ class _MyAppState extends State<MyApp> {
         Routes.faq: (_) => FaqPage(),
         Routes.filter: (_) => const FilterPage(),
         Routes.newsFeed: (_) => NewsFeedPage(),
+        Routes.requestPermissions: (_) => RequestPermissionsPage(),
+        Routes.adminPanel: (_) => const AdminPanelPage(),
+        Routes.feedbackForm: (_) => FeedbackFormPage(),
       },
       navigatorObservers: widget.navigationObservers ?? [],
     );
   }
+
+  ChipThemeData defaultChipThemeData(Brightness brightness) =>
+      ChipThemeData.fromDefaults(
+        brightness: brightness,
+        secondaryColor: _accentColor,
+        labelStyle: ThemeData()
+            .accentTextTheme
+            .apply(
+                fontFamily: 'Montserrat',
+                bodyColor: _accentColor,
+                displayColor: _accentColor)
+            .bodyText2,
+      );
+
+  Color chipSelectedColor(Brightness brightness) =>
+      brightness == Brightness.light
+          ? _accentColor.withOpacity(0.3)
+          : _accentColor;
 
   @override
   Widget build(BuildContext context) {
@@ -120,7 +185,21 @@ class _MyAppState extends State<MyApp> {
             displayColor: _accentColor),
         toggleableActiveColor: _accentColor,
         fontFamily: 'Montserrat',
-        primaryColor: const Color(0xFF4DB5E4),
+        primaryColor: _accentColor,
+        chipTheme: ChipThemeData(
+          brightness: brightness,
+          selectedColor: chipSelectedColor(brightness),
+          secondarySelectedColor: chipSelectedColor(brightness),
+          backgroundColor:
+              defaultChipThemeData(brightness).backgroundColor.withOpacity(0.1),
+          disabledColor: defaultChipThemeData(brightness).disabledColor,
+          padding: defaultChipThemeData(brightness).padding,
+          labelStyle: defaultChipThemeData(brightness).labelStyle,
+          secondaryLabelStyle:
+              defaultChipThemeData(brightness).secondaryLabelStyle,
+          checkmarkColor:
+              brightness == Brightness.light ? _accentColor : Colors.white,
+        ),
       ),
       themedWidgetBuilder: (context, theme) {
         return OKToast(
@@ -145,28 +224,43 @@ class _MyAppState extends State<MyApp> {
 
 class AppLoadingScreen extends StatelessWidget {
   Future<String> _setUpAndChooseStartScreen(BuildContext context) async {
-    LocaleProvider.cultures ??= {
-      'ro': await Cultures.getCulture('ro'),
-      'en': await Cultures.getCulture('en')
-    };
+    // Make initializations if this is not a test
+    if (!Platform.environment.containsKey('FLUTTER_TEST')) {
+      await RemoteConfigService.initialize();
+      await TimeMachine.initialize({'rootBundle': rootBundle});
+      await PrefService.init(prefix: 'pref_');
+      PrefService.setDefaultValues(
+          {'language': 'auto', 'relevance_filter': true});
 
-    // TODO(IoanaAlexandru): Make `rrule` package support Romanian
-    LocaleProvider.rruleL10ns ??= {'en': await RruleL10nEn.create()};
+      if (kDebugMode || kProfileMode) {
+        await FirebaseAnalytics().setAnalyticsCollectionEnabled(false);
+      } else if (kReleaseMode) {
+        await FirebaseAnalytics().setAnalyticsCollectionEnabled(true);
+      }
 
-    Culture.current = LocaleProvider.cultures[LocaleProvider.localeString];
+      LocaleProvider.cultures ??= {
+        'ro': await Cultures.getCulture('ro'),
+        'en': await Cultures.getCulture('en')
+      };
+
+      // TODO(IoanaAlexandru): Make `rrule` package support Romanian
+      LocaleProvider.rruleL10ns ??= {'en': await RruleL10nEn.create()};
+
+      Culture.current = LocaleProvider.cultures[LocaleProvider.localeString];
+    }
+
     // Load locale from settings
     await S.load(LocaleProvider.locale);
 
+    // Choose start screen
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
-    final bool authenticated = await authProvider.isAuthenticatedFromService;
-    return authenticated ? Routes.home : Routes.login;
+    return authProvider.isAuthenticated ? Routes.home : Routes.login;
   }
 
   @override
   Widget build(BuildContext context) {
     return LoadingScreen(
       navigateAfterFuture: _setUpAndChooseStartScreen(context),
-      loadingText: const Text('Setting up...'),
       image: Image.asset('assets/icons/acs_logo.png'),
       loaderColor: Theme.of(context).accentColor,
     );

@@ -1,11 +1,16 @@
+import 'dart:typed_data';
+
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/navigation/routes.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:flutter/material.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:pedantic/pedantic.dart';
 import 'package:provider/provider.dart';
+import 'package:time_machine/time_machine.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:image/image.dart' as im;
 
 export 'package:acs_upb_mobile/resources/platform.dart'
     if (dart.library.io) 'dart:io';
@@ -34,13 +39,16 @@ extension EnumUtils on Object {
 class Utils {
   Utils._();
 
-  static Future<void> launchURL(String url, {BuildContext context}) async {
+  static String privacyPolicyURL =
+      'https://www.websitepolicies.com/policies/view/IIUFv381';
+  static String repoURL = 'https://github.com/student-hub/acs-upb-mobile';
+  static const String corsProxyUrl = 'https://cors-anywhere.herokuapp.com';
+
+  static Future<void> launchURL(String url) async {
     if (await canLaunch(url)) {
       await launch(url);
     } else {
-      if (context != null) {
-        AppToast.show(S.of(context).errorCouldNotLaunchURL(url));
-      }
+      AppToast.show(S.current.errorCouldNotLaunchURL(url));
     }
   }
 
@@ -52,6 +60,20 @@ class Utils {
   }
 
   static String wrapUrlWithCORS(String url) {
-    return 'https://cors-anywhere.herokuapp.com/$url';
+    return '${Utils.corsProxyUrl}/$url';
+  }
+
+  static PackageInfo packageInfo = PackageInfo(
+      version: 'Unknown', buildNumber: 'Unknown', appName: 'Unknown');
+
+  static Future<Uint8List> convertToPNG(Uint8List image) async {
+    final decodedImage = im.decodeImage(image);
+    return im.encodePng(im.copyResizeCropSquare(decodedImage, 500));
+  }
+}
+
+extension PeriodExtension on Period {
+  Duration toDuration() {
+    return Duration(hours: hours, minutes: minutes);
   }
 }

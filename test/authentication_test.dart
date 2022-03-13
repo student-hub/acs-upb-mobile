@@ -3,6 +3,9 @@ import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/authentication/view/login_view.dart';
 import 'package:acs_upb_mobile/authentication/view/sign_up_view.dart';
 import 'package:acs_upb_mobile/main.dart';
+import 'package:acs_upb_mobile/pages/class_feedback/service/feedback_provider.dart';
+import 'package:acs_upb_mobile/pages/classes/model/class.dart';
+import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
 import 'package:acs_upb_mobile/pages/faq/model/question.dart';
 import 'package:acs_upb_mobile/pages/faq/service/question_provider.dart';
 import 'package:acs_upb_mobile/pages/filter/model/filter.dart';
@@ -12,12 +15,15 @@ import 'package:acs_upb_mobile/pages/news_feed/model/news_feed_item.dart';
 import 'package:acs_upb_mobile/pages/news_feed/service/news_provider.dart';
 import 'package:acs_upb_mobile/pages/people/service/person_provider.dart';
 import 'package:acs_upb_mobile/pages/portal/service/website_provider.dart';
+import 'package:acs_upb_mobile/pages/timetable/model/events/uni_event.dart';
+import 'package:acs_upb_mobile/pages/timetable/service/uni_event_provider.dart';
 import 'package:acs_upb_mobile/resources/locale_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:preferences/preferences.dart';
 import 'package:provider/provider.dart';
+import 'package:time_machine/time_machine.dart';
 
 import 'test_utils.dart';
 
@@ -31,9 +37,15 @@ class MockWebsiteProvider extends Mock implements WebsiteProvider {}
 
 class MockPersonProvider extends Mock implements PersonProvider {}
 
+class MockUniEventProvider extends Mock implements UniEventProvider {}
+
 class MockQuestionProvider extends Mock implements QuestionProvider {}
 
 class MockNewsProvider extends Mock implements NewsProvider {}
+
+class MockFeedbackProvider extends Mock implements FeedbackProvider {}
+
+class MockClassProvider extends Mock implements ClassProvider {}
 
 void main() {
   AuthProvider mockAuthProvider;
@@ -41,7 +53,10 @@ void main() {
   FilterProvider mockFilterProvider;
   PersonProvider mockPersonProvider;
   MockQuestionProvider mockQuestionProvider;
+  UniEventProvider mockEventProvider;
   MockNewsProvider mockNewsProvider;
+  FeedbackProvider mockFeedbackProvider;
+  ClassProvider mockClassProvider;
 
   setUp(() async {
     WidgetsFlutterBinding.ensureInitialized();
@@ -56,30 +71,27 @@ void main() {
     mockAuthProvider = MockAuthProvider();
     // ignore: invalid_use_of_protected_member
     when(mockAuthProvider.hasListeners).thenReturn(false);
-    when(mockAuthProvider.isAuthenticatedFromCache).thenReturn(false);
-    when(mockAuthProvider.isAuthenticatedFromService)
-        .thenAnswer((realInvocation) => Future.value(false));
+    when(mockAuthProvider.isAuthenticated).thenReturn(false);
     when(mockAuthProvider.currentUser).thenAnswer((_) => Future.value(null));
     when(mockAuthProvider.isAnonymous).thenReturn(true);
-    when(mockAuthProvider.getProfilePictureURL(context: anyNamed('context')))
-        .thenAnswer((realInvocation) => Future.value(null));
+    when(mockAuthProvider.getProfilePictureURL())
+        .thenAnswer((_) => Future.value(null));
 
     mockWebsiteProvider = MockWebsiteProvider();
     // ignore: invalid_use_of_protected_member
     when(mockWebsiteProvider.hasListeners).thenReturn(false);
-    when(mockWebsiteProvider.deleteWebsite(any, context: anyNamed('context')))
-        .thenAnswer((realInvocation) => Future.value(true));
-    when(mockWebsiteProvider.fetchWebsites(any, context: anyNamed('context')))
+    when(mockWebsiteProvider.deleteWebsite(any))
+        .thenAnswer((_) => Future.value(true));
+    when(mockWebsiteProvider.fetchWebsites(any))
         .thenAnswer((_) => Future.value([]));
-    when(mockWebsiteProvider.fetchFavouriteWebsites(
-            uid: mockAuthProvider.uid, context: anyNamed('context')))
+    when(mockWebsiteProvider.fetchFavouriteWebsites(mockAuthProvider.uid))
         .thenAnswer((_) => Future.value(null));
 
     mockFilterProvider = MockFilterProvider();
     // ignore: invalid_use_of_protected_member
     when(mockFilterProvider.hasListeners).thenReturn(false);
     when(mockFilterProvider.filterEnabled).thenReturn(true);
-    when(mockFilterProvider.fetchFilter(context: anyNamed('context')))
+    when(mockFilterProvider.fetchFilter())
         .thenAnswer((_) => Future.value(Filter(localizedLevelNames: [
               {'en': 'Level', 'ro': 'Nivel'}
             ], root: FilterNode(name: 'root'))));
@@ -87,30 +99,85 @@ void main() {
     mockPersonProvider = MockPersonProvider();
     // ignore: invalid_use_of_protected_member
     when(mockPersonProvider.hasListeners).thenReturn(false);
-    when(mockPersonProvider.fetchPeople(context: anyNamed('context')))
-        .thenAnswer((_) => Future.value([]));
+    when(mockPersonProvider.fetchPeople()).thenAnswer((_) => Future.value([]));
 
     mockQuestionProvider = MockQuestionProvider();
     // ignore: invalid_use_of_protected_member
     when(mockQuestionProvider.hasListeners).thenReturn(false);
-    when(mockQuestionProvider.fetchQuestions(context: anyNamed('context')))
-        .thenAnswer((realInvocation) => Future.value(<Question>[]));
+    when(mockQuestionProvider.fetchQuestions())
+        .thenAnswer((_) => Future.value(<Question>[]));
     when(mockQuestionProvider.fetchQuestions(limit: anyNamed('limit')))
-        .thenAnswer((realInvocation) => Future.value(<Question>[]));
+        .thenAnswer((_) => Future.value(<Question>[]));
 
     mockNewsProvider = MockNewsProvider();
     // ignore: invalid_use_of_protected_member
     when(mockNewsProvider.hasListeners).thenReturn(false);
-    when(mockNewsProvider.fetchNewsFeedItems(context: anyNamed('context')))
-        .thenAnswer((realInvocation) => Future.value(<NewsFeedItem>[]));
+    when(mockNewsProvider.fetchNewsFeedItems())
+        .thenAnswer((_) => Future.value(<NewsFeedItem>[]));
     when(mockNewsProvider.fetchNewsFeedItems(limit: anyNamed('limit')))
-        .thenAnswer((realInvocation) => Future.value(<NewsFeedItem>[]));
+        .thenAnswer((_) => Future.value(<NewsFeedItem>[]));
+
+    mockEventProvider = MockUniEventProvider();
+    // ignore: invalid_use_of_protected_member
+    when(mockEventProvider.hasListeners).thenReturn(false);
+    when(mockEventProvider.getUpcomingEvents(LocalDate.today()))
+        .thenAnswer((_) => Future.value(<UniEventInstance>[]));
+    when(mockEventProvider.getUpcomingEvents(LocalDate.today(),
+            limit: anyNamed('limit')))
+        .thenAnswer((_) => Future.value(<UniEventInstance>[]));
+
+    mockFeedbackProvider = MockFeedbackProvider();
+    // ignore: invalid_use_of_protected_member
+    when(mockFeedbackProvider.hasListeners).thenReturn(true);
+    when(mockFeedbackProvider.userSubmittedFeedbackForClass(any, any))
+        .thenAnswer((_) => Future.value(false));
+    when(mockFeedbackProvider.getClassesWithCompletedFeedback(any))
+        .thenAnswer((_) => Future.value({'M1': true, 'M2': true}));
+
+    mockClassProvider = MockClassProvider();
+    // ignore: invalid_use_of_protected_member
+    when(mockClassProvider.hasListeners).thenReturn(false);
+    final userClassHeaders = [
+      ClassHeader(
+        id: '3',
+        name: 'Programming',
+        acronym: 'PC',
+        category: 'A',
+      ),
+      ClassHeader(
+        id: '4',
+        name: 'Physics',
+        acronym: 'PH',
+        category: 'D',
+      )
+    ];
+    when(mockClassProvider.userClassHeadersCache).thenReturn(userClassHeaders);
+    when(mockClassProvider.fetchClassHeaders(uid: anyNamed('uid')))
+        .thenAnswer((_) => Future.value([
+              ClassHeader(
+                id: '1',
+                name: 'Maths 1',
+                acronym: 'M1',
+                category: 'A/B',
+              ),
+              ClassHeader(
+                id: '2',
+                name: 'Maths 2',
+                acronym: 'M2',
+                category: 'A/C',
+              ),
+            ] +
+            userClassHeaders));
+    when(mockClassProvider.fetchUserClassIds(any))
+        .thenAnswer((_) => Future.value(['3', '4']));
   });
 
   group('Login', () {
     testWidgets('Anonymous login', (WidgetTester tester) async {
       await tester.pumpWidget(MultiProvider(providers: [
         ChangeNotifierProvider<AuthProvider>(create: (_) => mockAuthProvider),
+        ChangeNotifierProvider<UniEventProvider>(
+            create: (_) => mockEventProvider),
         ChangeNotifierProvider<WebsiteProvider>(
             create: (_) => mockWebsiteProvider),
         ChangeNotifierProvider<QuestionProvider>(
@@ -122,7 +189,7 @@ void main() {
       await tester.runAsync(() async {
         expect(find.byType(LoginView), findsOneWidget);
 
-        when(mockAuthProvider.signInAnonymously(context: anyNamed('context')))
+        when(mockAuthProvider.signInAnonymously())
             .thenAnswer((_) => Future.value(true));
 
         // Log in anonymously
@@ -130,8 +197,7 @@ void main() {
             .tap(find.byKey(const ValueKey('log_in_anonymously_button')));
         await tester.pumpAndSettle();
 
-        verify(
-            mockAuthProvider.signInAnonymously(context: anyNamed('context')));
+        verify(mockAuthProvider.signInAnonymously());
         expect(find.byType(HomePage), findsOneWidget);
 
         // Easy way to check that the login page can't be navigated back to
@@ -142,6 +208,8 @@ void main() {
     testWidgets('Credential login', (WidgetTester tester) async {
       await tester.pumpWidget(MultiProvider(providers: [
         ChangeNotifierProvider<AuthProvider>(create: (_) => mockAuthProvider),
+        ChangeNotifierProvider<UniEventProvider>(
+            create: (_) => mockEventProvider),
         ChangeNotifierProvider<WebsiteProvider>(
             create: (_) => mockWebsiteProvider),
         ChangeNotifierProvider<QuestionProvider>(
@@ -155,10 +223,7 @@ void main() {
 
         expect(find.text('@stud.acs.upb.ro'), findsOneWidget);
 
-        when(mockAuthProvider.signIn(
-                email: anyNamed('email'),
-                password: anyNamed('password'),
-                context: anyNamed('context')))
+        when(mockAuthProvider.signIn(any, any))
             .thenAnswer((_) => Future.value(true));
 
         // Enter credentials
@@ -171,9 +236,9 @@ void main() {
         await tester.pumpAndSettle();
 
         verify(mockAuthProvider.signIn(
-            email: argThat(equals('test@stud.acs.upb.ro'), named: 'email'),
-            password: argThat(equals('password'), named: 'password'),
-            context: anyNamed('context')));
+          argThat(equals('test@stud.acs.upb.ro')),
+          argThat(equals('password')),
+        ));
         expect(find.byType(HomePage), findsOneWidget);
 
         // Easy way to check that the login page can't be navigated back to
@@ -190,8 +255,7 @@ void main() {
 
       expect(find.byType(LoginView), findsOneWidget);
 
-      when(mockAuthProvider.sendPasswordResetEmail(
-              email: anyNamed('email'), context: anyNamed('context')))
+      when(mockAuthProvider.sendPasswordResetEmail(any))
           .thenAnswer((_) => Future.value(true));
 
       expect(find.byType(AlertDialog), findsNothing);
@@ -212,9 +276,8 @@ void main() {
 
       expect(find.byType(AlertDialog), findsNothing);
 
-      verify(mockAuthProvider.sendPasswordResetEmail(
-          email: argThat(equals('test@stud.acs.upb.ro'), named: 'email'),
-          context: anyNamed('context')));
+      verify(mockAuthProvider
+          .sendPasswordResetEmail(argThat(equals('test@stud.acs.upb.ro'))));
     });
 
     testWidgets('Cancel', (WidgetTester tester) async {
@@ -224,8 +287,7 @@ void main() {
 
       expect(find.byType(LoginView), findsOneWidget);
 
-      when(mockAuthProvider.sendPasswordResetEmail(
-              email: anyNamed('email'), context: anyNamed('context')))
+      when(mockAuthProvider.sendPasswordResetEmail(any))
           .thenAnswer((_) => Future.value(true));
 
       expect(find.byType(AlertDialog), findsNothing);
@@ -242,8 +304,7 @@ void main() {
 
       expect(find.byType(AlertDialog), findsNothing);
 
-      verifyNever(
-          mockAuthProvider.sendPasswordResetEmail(email: anyNamed('email')));
+      verifyNever(mockAuthProvider.sendPasswordResetEmail(any));
     });
   });
 
@@ -256,7 +317,7 @@ void main() {
       // ignore: invalid_use_of_protected_member
       when(mockFilterProvider.hasListeners).thenReturn(false);
       when(mockFilterProvider.filterEnabled).thenReturn(true);
-      when(mockFilterProvider.fetchFilter(context: anyNamed('context')))
+      when(mockFilterProvider.fetchFilter())
           .thenAnswer((_) => Future.value(Filter(
                   localizedLevelNames: [
                     {'en': 'Degree', 'ro': 'Nivel de studiu'},
@@ -394,11 +455,9 @@ void main() {
       verify(mockObserver.didPush(any, any));
       expect(find.byType(SignUpView), findsOneWidget);
 
-      when(mockAuthProvider.signUp(
-              info: anyNamed('info'), context: anyNamed('context')))
+      when(mockAuthProvider.signUp(any)).thenAnswer((_) => Future.value(true));
+      when(mockAuthProvider.canSignUpWithEmail(any))
           .thenAnswer((_) => Future.value(true));
-      when(mockAuthProvider.canSignUpWithEmail(email: anyNamed('email')))
-          .thenAnswer((realInvocation) => Future.value(true));
 
       // Test parser from email
       final Finder email = find.byKey(const ValueKey('email_text_field'));
@@ -511,17 +570,13 @@ void main() {
       await tester.tap(find.byKey(const ValueKey('sign_up_button')));
       await tester.pumpAndSettle();
 
-      verify(mockAuthProvider.signUp(
-          info: argThat(
-              equals({
-                'Email': 'john_alexander.doe1234@stud.acs.upb.ro',
-                'Password': 'password',
-                'Confirm password': 'password',
-                'First name': 'John Alexander',
-                'Last name': 'Doe',
-              }),
-              named: 'info'),
-          context: anyNamed('context')));
+      verify(mockAuthProvider.signUp(argThat(equals({
+        'Email': 'john_alexander.doe1234@stud.acs.upb.ro',
+        'Password': 'password',
+        'Confirm password': 'password',
+        'First name': 'John Alexander',
+        'Last name': 'Doe',
+      }))));
       expect(find.byType(HomePage), findsOneWidget);
       verify(mockObserver.didPush(any, any));
     });
@@ -545,17 +600,14 @@ void main() {
       verify(mockObserver.didPush(any, any));
       expect(find.byType(SignUpView), findsOneWidget);
 
-      when(mockAuthProvider.signUp(
-              info: anyNamed('info'), context: anyNamed('context')))
-          .thenAnswer((_) => Future.value(true));
+      when(mockAuthProvider.signUp(any)).thenAnswer((_) => Future.value(true));
 
       // Scroll cancel button into view and tap
       await tester.ensureVisible(find.byKey(const ValueKey('cancel_button')));
       await tester.tap(find.byKey(const ValueKey('cancel_button')));
       await tester.pumpAndSettle();
 
-      verifyNever(mockAuthProvider.signUp(
-          info: anyNamed('info'), context: anyNamed('context')));
+      verifyNever(mockAuthProvider.signUp(any));
       expect(find.byType(LoginView), findsOneWidget);
       expect(find.byType(SignUpView), findsNothing);
       verify(mockObserver.didPop(any, any));
@@ -567,16 +619,12 @@ void main() {
 
     setUp(() {
       // Mock an anonymous user already being logged in
-      when(mockAuthProvider.isAuthenticatedFromCache).thenReturn(true);
-      when(mockAuthProvider.isAuthenticatedFromService)
-          .thenAnswer((realInvocation) => Future.value(true));
-      when(mockAuthProvider.isVerifiedFromService)
-          .thenAnswer((realInvocation) => Future.value(false));
+      when(mockAuthProvider.isAuthenticated).thenReturn(true);
+      when(mockAuthProvider.isVerified).thenAnswer((_) => Future.value(false));
     });
 
     testWidgets('Sign out anonymous', (WidgetTester tester) async {
-      when(mockAuthProvider.currentUser)
-          .thenAnswer((realInvocation) => Future.value(null));
+      when(mockAuthProvider.currentUser).thenAnswer((_) => Future.value(null));
       when(mockAuthProvider.currentUserFromCache).thenReturn(null);
       when(mockAuthProvider.isAnonymous).thenReturn(true);
 
@@ -584,6 +632,8 @@ void main() {
         ChangeNotifierProvider<AuthProvider>(create: (_) => mockAuthProvider),
         ChangeNotifierProvider<FilterProvider>(
             create: (_) => mockFilterProvider),
+        ChangeNotifierProvider<UniEventProvider>(
+            create: (_) => mockEventProvider),
         ChangeNotifierProvider<WebsiteProvider>(
             create: (_) => mockWebsiteProvider),
         ChangeNotifierProvider<PersonProvider>(
@@ -608,7 +658,7 @@ void main() {
     });
 
     testWidgets('Sign out authenticated', (WidgetTester tester) async {
-      when(mockAuthProvider.currentUser).thenAnswer((realInvocation) =>
+      when(mockAuthProvider.currentUser).thenAnswer((_) =>
           Future.value(User(uid: '0', firstName: 'John', lastName: 'Doe')));
       when(mockAuthProvider.currentUserFromCache)
           .thenReturn(User(uid: '0', firstName: 'John', lastName: 'Doe'));
@@ -620,11 +670,16 @@ void main() {
             create: (_) => mockFilterProvider),
         ChangeNotifierProvider<WebsiteProvider>(
             create: (_) => mockWebsiteProvider),
+        ChangeNotifierProvider<UniEventProvider>(
+            create: (_) => mockEventProvider),
         ChangeNotifierProvider<PersonProvider>(
             create: (_) => mockPersonProvider),
         ChangeNotifierProvider<QuestionProvider>(
             create: (_) => mockQuestionProvider),
         ChangeNotifierProvider<NewsProvider>(create: (_) => mockNewsProvider),
+        ChangeNotifierProvider<FeedbackProvider>(
+            create: (_) => mockFeedbackProvider),
+        ChangeNotifierProvider<ClassProvider>(create: (_) => mockClassProvider),
       ], child: MyApp(navigationObservers: [mockObserver])));
       await tester.pumpAndSettle();
 

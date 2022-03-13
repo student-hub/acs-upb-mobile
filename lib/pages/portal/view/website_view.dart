@@ -1,22 +1,25 @@
+import 'dart:typed_data';
+
 import 'package:acs_upb_mobile/authentication/model/user.dart';
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
-import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
 import 'package:acs_upb_mobile/pages/filter/view/relevance_picker.dart';
 import 'package:acs_upb_mobile/pages/portal/model/website.dart';
 import 'package:acs_upb_mobile/pages/portal/service/website_provider.dart';
-import 'package:acs_upb_mobile/resources/custom_icons.dart';
 import 'package:acs_upb_mobile/resources/locale_provider.dart';
 import 'package:acs_upb_mobile/resources/storage/storage_provider.dart';
+import 'package:acs_upb_mobile/resources/theme.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/widgets/button.dart';
 import 'package:acs_upb_mobile/widgets/circle_image.dart';
 import 'package:acs_upb_mobile/widgets/dialog.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
+import 'package:acs_upb_mobile/widgets/upload_button.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:provider/provider.dart';
 import 'package:recase/recase.dart';
 import 'package:validators/validators.dart';
@@ -40,31 +43,34 @@ class WebsiteView extends StatefulWidget {
 }
 
 class _WebsiteViewState extends State<WebsiteView> {
-  final _formKey = GlobalKey<FormState>();
+  final formKey = GlobalKey<FormState>();
 
-  WebsiteCategory _selectedCategory;
-  TextEditingController _labelController;
-  TextEditingController _linkController;
-  TextEditingController _descriptionRoController;
-  TextEditingController _descriptionEnController;
-  final RelevanceController _relevanceController = RelevanceController();
+  WebsiteCategory selectedCategory;
+  TextEditingController labelController;
+  TextEditingController linkController;
+  TextEditingController descriptionRoController;
+  TextEditingController descriptionEnController;
+  final RelevanceController relevanceController = RelevanceController();
 
-  User _user;
+  User user;
 
-  Future<void> _fetchUser() async {
+  ImageProvider imageWidget;
+  UploadButtonController uploadButtonController;
+
+  Future<void> fetchUser() async {
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
-    _user = await authProvider.currentUser;
+    user = await authProvider.currentUser;
     setState(() {});
   }
 
   @override
   void initState() {
     super.initState();
-    _fetchUser();
+    fetchUser();
 
-    _selectedCategory = widget.website?.category ?? WebsiteCategory.learning;
-    _labelController = TextEditingController(text: widget.website?.label ?? '');
-    _linkController = TextEditingController(text: widget.website?.link ?? '');
+    selectedCategory = widget.website?.category ?? WebsiteCategory.learning;
+    labelController = TextEditingController(text: widget.website?.label ?? '');
+    linkController = TextEditingController(text: widget.website?.link ?? '');
 
     final description = <String, String>{'en': '', 'ro': ''};
     if (widget.website != null) {
@@ -75,55 +81,68 @@ class _WebsiteViewState extends State<WebsiteView> {
           ? widget.website.infoByLocale['ro']
           : '';
     }
-    _descriptionRoController = TextEditingController(text: description['ro']);
-    _descriptionEnController = TextEditingController(text: description['en']);
+    descriptionRoController = TextEditingController(text: description['ro']);
+    descriptionEnController = TextEditingController(text: description['en']);
+    widget.website.getIconURL().then((value) => setState(() => {
+          imageWidget = value != null
+              ? NetworkImage(value)
+              : const AssetImage('assets/icons/globe.png')
+        }));
+    uploadButtonController =
+        UploadButtonController(onUpdate: () => setState(() => {}));
   }
 
-  String _buildId() {
+  String buildId() {
     if (widget.updateExisting) return widget.website.id;
-    final label = (_labelController.text ?? '') == ''
-        ? Website.labelFromLink(_linkController.text)
-        : _labelController.text;
+    final label = (labelController.text ?? '') == ''
+        ? Website.labelFromLink(linkController.text)
+        : labelController.text;
     // Sanitize label to obtain document ID
     return ReCase(label.replaceAll(RegExp('[^A-ZĂÂȘȚa-zăâșț0-9 ]'), ''))
         .snakeCase;
   }
 
-  Website _buildWebsite() {
+  Website buildWebsite() {
+    final String id = buildId();
+    final String ownerUid =
+        widget.updateExisting ? widget.website.ownerUid : user?.uid;
+
     return Website(
-      id: _buildId(),
-      ownerUid: widget.updateExisting ? widget.website.ownerUid : _user?.uid,
-      isPrivate: _relevanceController.private ?? true,
-      editedBy: (widget.website?.editedBy ?? []) + [_user?.uid],
-      label: _labelController.text,
-      link: _linkController.text,
-      category: _selectedCategory,
+      id: id,
+      ownerUid: ownerUid,
+      isPrivate: relevanceController.private ?? true,
+      editedBy: (widget.website?.editedBy ?? []) + [user?.uid],
+      label: labelController.text,
+      link: linkController.text,
+      category: selectedCategory,
       infoByLocale: {
-        'ro': _descriptionRoController.text,
-        'en': _descriptionEnController.text
+        'ro': descriptionRoController.text,
+        'en': descriptionEnController.text
       },
-      relevance: _relevanceController.customRelevance,
-      degree: _relevanceController.degree ?? widget.website?.degree,
+      relevance: relevanceController.customRelevance,
+      degree: relevanceController.degree ?? widget.website?.degree,
     );
   }
 
-  Widget _preview() {
-    final website = _buildWebsite();
+  Widget preview() {
+    final website = buildWebsite();
 
     return Padding(
-      padding: const EdgeInsets.only(left: 8, right: 8, top: 8),
+      padding: const EdgeInsets.fromLTRB(12, 12, 12, 0),
       child: Card(
         child: Column(
           children: <Widget>[
             Padding(
-              padding: const EdgeInsets.all(8),
+              padding: const EdgeInsets.all(12),
               child: Row(
                 children: <Widget>[
-                  Icon(Icons.remove_red_eye,
-                      color: CustomIcons.formIconColor(Theme.of(context))),
+                  Icon(
+                    Icons.remove_red_eye_outlined,
+                    color: Theme.of(context).formIconColor,
+                  ),
                   const SizedBox(width: 12),
                   AutoSizeText(
-                    '${S.of(context).labelPreview}:',
+                    '${S.current.labelPreview}:',
                     style: Theme.of(context).textTheme.subtitle1,
                   ),
                   const SizedBox(width: 12),
@@ -135,8 +154,13 @@ class _WebsiteViewState extends State<WebsiteView> {
                         Expanded(
                             child: WebsiteIcon(
                           website: website,
+                          image: uploadButtonController.newUploadedImageBytes !=
+                                  null
+                              ? MemoryImage(
+                                  uploadButtonController.newUploadedImageBytes)
+                              : imageWidget,
                           onTap: () {
-                            Utils.launchURL(website.link, context: context);
+                            Utils.launchURL(website.link);
                           },
                         )),
                       ],
@@ -146,9 +170,9 @@ class _WebsiteViewState extends State<WebsiteView> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(left: 8, right: 8, bottom: 8),
+              padding: const EdgeInsets.fromLTRB(12, 0, 12, 12),
               child: AutoSizeText(
-                S.of(context).messageWebsitePreview,
+                S.current.messageWebsitePreview,
                 textAlign: TextAlign.center,
                 style: TextStyle(color: Theme.of(context).hintColor),
               ),
@@ -159,27 +183,26 @@ class _WebsiteViewState extends State<WebsiteView> {
     );
   }
 
-  AppDialog _deletionConfirmationDialog(BuildContext context) => AppDialog(
-        icon: const Icon(Icons.delete),
-        title: S.of(context).actionDeleteWebsite,
-        message: S.of(context).messageDeleteWebsite,
+  AppDialog deletionConfirmationDialog(BuildContext context) => AppDialog(
+        icon: const Icon(Icons.delete_outlined),
+        title: S.current.actionDeleteWebsite,
+        message: S.current.messageDeleteWebsite,
         info: widget.website.isPrivate
             ? null
-            : S.of(context).messageThisCouldAffectOtherStudents,
+            : S.current.messageThisCouldAffectOtherStudents,
         actions: [
           AppButton(
-            text: S.of(context).actionDeleteWebsite,
+            text: S.current.actionDeleteWebsite,
             width: 130,
             onTap: () async {
               Navigator.pop(context); // Pop dialog window
 
               final websiteProvider =
                   Provider.of<WebsiteProvider>(context, listen: false);
-              final res = await websiteProvider.deleteWebsite(widget.website,
-                  context: context);
+              final res = await websiteProvider.deleteWebsite(widget.website);
               if (res) {
                 Navigator.pop(context); // Pop editing page
-                AppToast.show(S.of(context).messageWebsiteDeleted);
+                AppToast.show(S.current.messageWebsiteDeleted);
               }
             },
           )
@@ -188,34 +211,36 @@ class _WebsiteViewState extends State<WebsiteView> {
 
   @override
   Widget build(BuildContext context) {
+    Uint8List imageAsPNG;
+
     return AppScaffold(
       title: Text(widget.updateExisting
-          ? S.of(context).actionEditWebsite
-          : S.of(context).actionAddWebsite),
+          ? S.current.actionEditWebsite
+          : S.current.actionAddWebsite),
       actions: [
             AppScaffoldAction(
-              text: S.of(context).buttonSave,
+              text: S.current.buttonSave,
               onPressed: () async {
-                if (_formKey.currentState.validate()) {
+                if (formKey.currentState.validate()) {
                   final websiteProvider =
                       Provider.of<WebsiteProvider>(context, listen: false);
 
                   bool res = false;
                   if (widget.updateExisting) {
-                    res = await websiteProvider.updateWebsite(
-                      _buildWebsite(),
-                      context: context,
-                    );
+                    res = await websiteProvider.updateWebsite(buildWebsite());
                   } else {
-                    res = await websiteProvider.addWebsite(
-                      _buildWebsite(),
-                      context: context,
-                    );
+                    res = await websiteProvider.addWebsite(buildWebsite());
+                  }
+                  if (uploadButtonController.newUploadedImageBytes != null) {
+                    imageAsPNG = await Utils.convertToPNG(
+                        uploadButtonController.newUploadedImageBytes);
+                    res = await websiteProvider.uploadWebsiteIcon(
+                        buildWebsite(), imageAsPNG);
                   }
                   if (res) {
                     AppToast.show(widget.updateExisting
-                        ? S.of(context).messageWebsiteEdited
-                        : S.of(context).messageWebsiteAdded);
+                        ? S.current.messageWebsiteEdited
+                        : S.current.messageWebsiteAdded);
                     Navigator.of(context).pop();
                   }
                 }
@@ -225,93 +250,95 @@ class _WebsiteViewState extends State<WebsiteView> {
           (widget.updateExisting
               ? [
                   AppScaffoldAction(
-                    icon: Icons.more_vert,
+                    icon: Icons.more_vert_outlined,
                     items: {
-                      S.of(context).actionDeleteWebsite: () => showDialog(
-                          context: context,
-                          child: _deletionConfirmationDialog(context))
+                      S.current.actionDeleteWebsite: () => showDialog(
+                          context: context, builder: deletionConfirmationDialog)
                     },
                     onPressed: () => showDialog(
-                        context: context,
-                        child: _deletionConfirmationDialog(context)),
+                        context: context, builder: deletionConfirmationDialog),
                   )
                 ]
               : <AppScaffoldAction>[]),
       body: SafeArea(
         child: ListView(
           children: <Widget>[
-            _preview(),
+            preview(),
             Padding(
               padding: const EdgeInsets.only(left: 16, right: 16),
               child: Form(
-                key: _formKey,
+                key: formKey,
                 child: Column(
                   children: <Widget>[
+                    UploadButton(
+                        label: S.current.labelWebsiteIcon,
+                        controller: uploadButtonController),
                     TextFormField(
-                      controller: _labelController,
+                      controller: labelController,
                       decoration: InputDecoration(
-                        labelText: S.of(context).labelName,
-                        hintText: S.of(context).hintWebsiteLabel,
-                        prefixIcon: const Icon(Icons.label),
+                        labelText: S.current.labelName,
+                        hintText: S.current.hintWebsiteLabel,
+                        prefixIcon: const Icon(Icons.label_outlined),
                       ),
                       onChanged: (_) => setState(() {}),
                     ),
                     DropdownButtonFormField<WebsiteCategory>(
                       isExpanded: true,
                       decoration: InputDecoration(
-                        labelText: S.of(context).labelCategory,
-                        prefixIcon: const Icon(Icons.category),
+                        labelText: S.current.labelCategory,
+                        prefixIcon: const Icon(Icons.category_outlined),
                       ),
-                      value: _selectedCategory,
+                      value: selectedCategory,
                       items: WebsiteCategory.values
                           .map(
                             (category) => DropdownMenuItem<WebsiteCategory>(
                               value: category,
-                              child: Text(category.toLocalizedString(context)),
+                              child: Text(category.toLocalizedString()),
                             ),
                           )
                           .toList(),
                       onChanged: (selection) =>
-                          setState(() => _selectedCategory = selection),
+                          setState(() => selectedCategory = selection),
                     ),
                     TextFormField(
-                      controller: _linkController,
+                      controller: linkController,
                       decoration: InputDecoration(
-                        labelText: '${S.of(context).labelLink} *',
-                        hintText: S.of(context).hintWebsiteLink,
-                        prefixIcon: const Icon(Icons.public),
+                        labelText: '${S.current.labelLink} *',
+                        hintText: S.current.hintWebsiteLink,
+                        prefixIcon: const Icon(FeatherIcons.globe),
                       ),
                       validator: (value) {
                         if (!isURL(value, requireProtocol: true)) {
-                          return S.of(context).warningInvalidURL;
+                          return S.current.warningInvalidURL;
                         }
                         return null;
                       },
                       onChanged: (_) => setState(() {}),
                     ),
-                    RelevancePicker(
-                      filterProvider: Provider.of<FilterProvider>(context),
+                    RelevanceFormField(
+                      canBePrivate: true,
+                      canBeForEveryone: true,
                       defaultPrivate: widget.website?.isPrivate ?? true,
-                      controller: _relevanceController,
+                      controller: relevanceController,
                     ),
                     TextFormField(
-                      controller: _descriptionRoController,
+                      controller: descriptionRoController,
                       decoration: InputDecoration(
                           labelText:
-                              '${S.of(context).labelDescription} (${S.of(context).settingsItemLanguageRomanian.toLowerCase()})',
+                              '${S.current.labelDescription} (${S.current.settingsItemLanguageRomanian.toLowerCase()})',
                           hintText: 'Cel mai popular motor de căutare.',
-                          prefixIcon: const Icon(Icons.info)),
+                          prefixIcon: const Icon(Icons.info_outlined)),
                       onChanged: (_) => setState(() {}),
                       minLines: 1,
                       maxLines: 5,
                     ),
                     TextFormField(
-                      controller: _descriptionEnController,
+                      controller: descriptionEnController,
                       decoration: InputDecoration(
                           labelText:
-                              '${S.of(context).labelDescription} (${S.of(context).settingsItemLanguageEnglish.toLowerCase()})',
+                              '${S.current.labelDescription} (${S.current.settingsItemLanguageEnglish.toLowerCase()})',
                           hintText: 'The most popular search engine.',
-                          prefixIcon: const Icon(Icons.info)),
+                          prefixIcon: const Icon(Icons.info_outlined)),
                       onChanged: (_) => setState(() {}),
                       minLines: 1,
                       maxLines: 5,
@@ -328,33 +355,45 @@ class _WebsiteViewState extends State<WebsiteView> {
 }
 
 class WebsiteIcon extends StatelessWidget {
-  const WebsiteIcon({this.website, this.canEdit, this.size, this.onTap});
+  const WebsiteIcon(
+      {this.website, this.canEdit, this.size, this.image, this.onTap});
 
   final Website website;
   final bool canEdit;
   final double size;
+
+  // If an image is not provided, the corresponding website icon is fetched from the storage, if available
+  final ImageProvider image;
   final Function onTap;
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: StorageProvider.findImageUrl(
-          context, 'websites/${website.id}/icon.png'), //Firebase Storage path
-      builder: (context, snapshot) {
-        ImageProvider image;
-        image = const AssetImage('assets/icons/globe.png');
-        if (snapshot.hasData) {
-          image = NetworkImage(snapshot.data);
-        }
+    if (image == null) {
+      return FutureBuilder(
+          future: StorageProvider.findImageUrl(website.iconPath),
+          // Firebase Storage path
+          builder: (context, snapshot) {
+            ImageProvider oldImage;
+            if (snapshot.hasData) {
+              oldImage = NetworkImage(snapshot.data);
+            }
 
-        return CircleImage(
-            label: website.label,
-            tooltip: website.infoByLocale[LocaleProvider.localeString],
-            image: image,
-            enableOverlay: canEdit,
-            circleSize: size,
-            onTap: onTap);
-      },
-    );
+            return CircleImage(
+                label: website.label,
+                tooltip: website.infoByLocale[LocaleProvider.localeString],
+                image: oldImage ?? const AssetImage('assets/icons/globe.png'),
+                enableOverlay: canEdit,
+                circleSize: size,
+                onTap: onTap);
+          });
+    } else {
+      return CircleImage(
+          label: website.label,
+          tooltip: website.infoByLocale[LocaleProvider.localeString],
+          image: image,
+          enableOverlay: canEdit,
+          circleSize: size,
+          onTap: onTap);
+    }
   }
 }

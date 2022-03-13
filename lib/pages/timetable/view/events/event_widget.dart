@@ -25,7 +25,7 @@ class UniEventWidget extends StatelessWidget {
 
     return GestureDetector(
       onTap: () => Navigator.of(context).push(MaterialPageRoute<EventView>(
-        builder: (_) => EventView(event: event),
+        builder: (_) => EventView(eventInstance: event),
       )),
       child: Material(
         shape: RoundedRectangleBorder(
@@ -60,9 +60,9 @@ class UniEventWidget extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(4, 2, 4, 2),
                   child: AutoSizeText(
-                    event.mainEvent.type.toLocalizedString(context),
+                    event.mainEvent.type.toLocalizedString(),
                     wrapWords: false,
-                    minFontSize: 8,
+                    minFontSize: 10,
                     maxFontSize: 10,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,

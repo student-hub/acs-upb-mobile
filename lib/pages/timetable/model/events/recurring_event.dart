@@ -1,46 +1,11 @@
 import 'package:acs_upb_mobile/pages/classes/model/class.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/academic_calendar.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/events/uni_event.dart';
+import 'package:acs_upb_mobile/resources/locale_provider.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:rrule/rrule.dart';
 import 'package:time_machine/time_machine.dart';
-
-extension on RecurrenceRule {
-  RecurrenceRule copyWith({
-    Frequency frequency,
-    LocalDateTime until,
-    int count,
-    int interval,
-    Set<int> bySeconds,
-    Set<int> byMinutes,
-    Set<int> byHours,
-    Set<ByWeekDayEntry> byWeekDays,
-    Set<int> byMonthDays,
-    Set<int> byYearDays,
-    Set<int> byWeeks,
-    Set<int> byMonths,
-    Set<int> bySetPositions,
-    DayOfWeek weekStart,
-  }) {
-    return RecurrenceRule(
-      frequency: frequency ?? this.frequency,
-      until: until ?? this.until,
-      count: count ?? this.count,
-      interval: interval ?? this.interval,
-      bySeconds: bySeconds ?? this.bySeconds,
-      byMinutes: byMinutes ?? this.byMinutes,
-      byHours: byHours ?? this.byHours,
-      byWeekDays: byWeekDays ?? this.byWeekDays,
-      byMonthDays: byMonthDays ?? this.byMonthDays,
-      byYearDays: byYearDays ?? this.byYearDays,
-      byWeeks: byWeeks ?? this.byWeeks,
-      byMonths: byMonths ?? this.byMonths,
-      bySetPositions: bySetPositions ?? this.bySetPositions,
-      weekStart: weekStart ?? this.weekStart,
-    );
-  }
-}
 
 class RecurringUniEvent extends UniEvent {
   const RecurringUniEvent({
@@ -57,6 +22,7 @@ class RecurringUniEvent extends UniEvent {
     ClassHeader classHeader,
     AcademicCalendar calendar,
     String addedBy,
+    bool editable,
   })  : assert(rrule != null),
         super(
             name: name,
@@ -70,14 +36,21 @@ class RecurringUniEvent extends UniEvent {
             type: type,
             classHeader: classHeader,
             calendar: calendar,
-            addedBy: addedBy);
+            addedBy: addedBy,
+            editable: editable);
 
   final RecurrenceRule rrule;
 
   @override
-  Iterable<UniEventInstance> generateInstances(
-      {DateInterval intersectingInterval}) sync* {
-    RecurrenceRule rrule = this.rrule;
+  String get info {
+    if (LocaleProvider.rruleL10n != null) {
+      return rrule.toText(l10n: LocaleProvider.rruleL10n);
+    }
+    return '';
+  }
+
+  RecurrenceRule get rruleBasedOnCalendar {
+    final RecurrenceRule rrule = this.rrule;
     if (calendar != null && rrule.frequency == Frequency.weekly) {
       var weeks = calendar.nonHolidayWeeks;
 
@@ -101,14 +74,21 @@ class RecurringUniEvent extends UniEvent {
                     rrule.interval)
             .toSet();
       }
-      rrule = rrule.copyWith(
-          frequency: Frequency.daily,
+      return rrule.copyWith(
+          frequency: Frequency.yearly,
           interval: 1,
           byWeekDays: rrule.byWeekDays.isNotEmpty
               ? rrule.byWeekDays
               : {ByWeekDayEntry(start.dayOfWeek)},
           byWeeks: weeks);
     }
+    return rrule;
+  }
+
+  @override
+  Iterable<UniEventInstance> generateInstances(
+      {DateInterval intersectingInterval}) sync* {
+    final RecurrenceRule rrule = rruleBasedOnCalendar;
 
     // Calculate recurrences
     int i = 0;

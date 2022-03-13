@@ -7,33 +7,39 @@ class InfoCard<T> extends StatelessWidget {
       @required this.builder,
       this.onShowMore,
       this.title,
-      this.showMoreButtonKey});
+      this.showMoreButtonKey,
+      this.padding});
 
   final Function onShowMore;
   final Future<T> future;
   final Widget Function(T) builder;
   final String title;
   final ValueKey<String> showMoreButtonKey;
+  final EdgeInsetsGeometry padding;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(left: 8, right: 8, top: 8),
+      padding: padding ?? const EdgeInsets.fromLTRB(12, 12, 12, 0),
       child: Card(
         child: Padding(
-          padding: const EdgeInsets.all(8),
+          padding: const EdgeInsets.all(12),
           child: Column(
             children: <Widget>[
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   if (title != null && title.isNotEmpty)
-                    Text(
-                      title,
-                      style: Theme.of(context)
-                          .textTheme
-                          .headline6
-                          .copyWith(fontSize: 18),
+                    Expanded(
+                      child: Text(
+                        title,
+                        style: Theme.of(context)
+                            .textTheme
+                            .headline6
+                            .copyWith(fontSize: 18),
+                        overflow: TextOverflow.fade,
+                        maxLines: 2,
+                      ),
                     ),
                   if (onShowMore != null)
                     GestureDetector(
@@ -42,14 +48,14 @@ class InfoCard<T> extends StatelessWidget {
                       child: Row(
                         children: <Widget>[
                           Text(
-                            S.of(context).actionShowMore,
+                            S.current.actionShowMore,
                             style: Theme.of(context)
                                 .accentTextTheme
                                 .subtitle2
                                 .copyWith(color: Theme.of(context).accentColor),
                           ),
                           Icon(
-                            Icons.arrow_forward_ios,
+                            Icons.arrow_forward_ios_outlined,
                             color: Theme.of(context).accentColor,
                             size:
                                 Theme.of(context).textTheme.subtitle2.fontSize,
@@ -59,7 +65,7 @@ class InfoCard<T> extends StatelessWidget {
                     ),
                 ],
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 10),
               FutureBuilder(
                   future: future,
                   builder: (context, snapshot) {
@@ -92,7 +98,7 @@ class InfoCard<T> extends StatelessWidget {
         height: 100,
         child: Center(
           child: Text(
-            S.of(context).warningNoneYet,
+            S.current.warningNoneYet,
             style: TextStyle(color: Theme.of(context).disabledColor),
           ),
         ),

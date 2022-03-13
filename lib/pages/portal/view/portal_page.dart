@@ -17,6 +17,7 @@ import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:acs_upb_mobile/widgets/spoiler.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:provider/provider.dart';
 import 'package:recase/recase.dart';
 
@@ -65,7 +66,7 @@ class _PortalPageState extends State<PortalPage> {
 
     final filterProvider = this.filterProvider ??
         Provider.of<FilterProvider>(context, listen: false);
-    filterCache = await filterProvider.fetchFilter(context: context);
+    filterCache = await filterProvider.fetchFilter();
 
     updating = false;
     if (mounted) {
@@ -77,7 +78,7 @@ class _PortalPageState extends State<PortalPage> {
     final bool canEdit = editingEnabled &&
         (website.isPrivate || (user.canEditPublicInfo ?? false));
     return Padding(
-        padding: const EdgeInsets.all(8),
+        padding: const EdgeInsets.all(10),
         child: WebsiteIcon(
           website: website,
           canEdit: canEdit,
@@ -86,14 +87,15 @@ class _PortalPageState extends State<PortalPage> {
             if (canEdit) {
               Navigator.of(context)
                   .push(MaterialPageRoute<ChangeNotifierProvider>(
-                builder: (_) => ChangeNotifierProvider<FilterProvider>(
-                  create: (_) =>
-                      Platform.environment.containsKey('FLUTTER_TEST')
-                          ? Provider.of<FilterProvider>(context)
-                          : FilterProvider(
-                              defaultDegree: website.degree,
-                              defaultRelevance: website.relevance,
-                            ),
+                builder: (_) => ChangeNotifierProvider<FilterProvider>.value(
+                  // If testing, use the global (mocked) provider; otherwise instantiate a new local provider
+                  value: Platform.environment.containsKey('FLUTTER_TEST')
+                      ? Provider.of<FilterProvider>(context)
+                      : FilterProvider(
+                          defaultDegree: website.degree,
+                          defaultRelevance: website.relevance,
+                        )
+                    ..updateAuth(Provider.of<AuthProvider>(context)),
                   child: WebsiteView(
                     website: website,
                     updateExisting: true,
@@ -112,19 +114,21 @@ class _PortalPageState extends State<PortalPage> {
   Widget listCategory(WebsiteCategory category, List<Website> websites) {
     final bool hasContent = websites != null && websites.isNotEmpty;
 
-    // The width available for displaying the circles (screen width minus a left
-    // right padding of 8)
-    final double availableWidth = MediaQuery.of(context).size.width - 16;
+    const double padding = 10;
+    // The width available for displaying the circles (screen width minus the
+    // left/right padding)
+    final double availableWidth =
+        MediaQuery.of(context).size.width - 2 * padding;
     // The maximum size of a circle, regardless of screen size
     const double maxCircleSize = 80;
     // The amount of circles that can fit on one row (given the screen size,
     // maximum circle size and the fact that there need to be at least 4 circles
     // on a row), including the padding.
     final int circlesPerRow =
-        max(4, (availableWidth / (maxCircleSize + 16)).floor());
+        max(4, (availableWidth / (maxCircleSize + 2 * padding)).floor());
     // The exact size of a circle (without the padding), so that they fit
     // perfectly in a row
-    final double circleSize = availableWidth / circlesPerRow - 16;
+    final double circleSize = availableWidth / circlesPerRow - 2 * padding;
 
     Widget content;
     if (!hasContent) {
@@ -139,7 +143,7 @@ class _PortalPageState extends State<PortalPage> {
               40.0, // text
           child: _AddWebsiteButton(
               key: ValueKey(
-                  'add_website_${ReCase(category.toLocalizedString(context)).snakeCase}'),
+                  'add_website_${ReCase(category.toLocalizedString()).snakeCase}'),
               category: category),
         ),
       );
@@ -162,7 +166,7 @@ class _PortalPageState extends State<PortalPage> {
             width: circleSize + 16,
             child: _AddWebsiteButton(
               key: ValueKey(
-                  'add_website_${ReCase(category.toLocalizedString(context)).snakeCase}'),
+                  'add_website_${ReCase(category.toLocalizedString()).snakeCase}'),
               category: category,
               size: circleSize * 0.6,
             ),
@@ -176,9 +180,9 @@ class _PortalPageState extends State<PortalPage> {
     }
 
     return Padding(
-      padding: const EdgeInsets.only(left: 8, right: 8),
+      padding: const EdgeInsets.only(left: 10, right: 10),
       child: AppSpoiler(
-        title: category.toLocalizedString(context),
+        title: category.toLocalizedString(),
         initiallyExpanded: hasContent,
         content: content,
       ),
@@ -214,39 +218,40 @@ class _PortalPageState extends State<PortalPage> {
         CircularProgressIndicator();
 
     return AppScaffold(
-      title: Text(S.of(context).navigationPortal),
+      title: Text(S.current.navigationPortal),
       actions: [
         AppScaffoldAction(
-          icon: editingEnabled ? CustomIcons.edit_slash : Icons.edit,
+          icon: editingEnabled
+              ? CustomIcons.edit_off_outlined
+              : Icons.edit_outlined,
           tooltip: editingEnabled
-              ? S.of(context).actionDisableEditing
-              : S.of(context).actionEnableEditing,
+              ? S.current.actionDisableEditing
+              : S.current.actionEnableEditing,
           onPressed: () {
             final authProvider =
                 Provider.of<AuthProvider>(context, listen: false);
-            if (authProvider.isAuthenticatedFromCache &&
-                !authProvider.isAnonymous) {
+            if (authProvider.isAuthenticated && !authProvider.isAnonymous) {
               // Show message if there is nothing the user can edit
               if (!editingEnabled) {
                 user.hasEditableWebsites.then((canEdit) {
                   if (!canEdit) {
                     AppToast.show(
-                        '${S.of(context).warningNothingToEdit} ${S.of(context).messageAddCustomWebsite}');
+                        '${S.current.warningNothingToEdit} ${S.current.messageAddCustomWebsite}');
                   }
                 });
               }
 
               setState(() => editingEnabled = !editingEnabled);
             } else {
-              AppToast.show(S.of(context).warningAuthenticationNeeded);
+              AppToast.show(S.current.warningAuthenticationNeeded);
             }
           },
         ),
         AppScaffoldAction(
-          icon: CustomIcons.filter,
-          tooltip: S.of(context).navigationFilter,
+          icon: FeatherIcons.filter,
+          tooltip: S.current.navigationFilter,
           items: {
-            S.of(context).filterMenuRelevance: () {
+            S.current.filterMenuRelevance: () {
               userOnly = false;
               Navigator.push(
                 context,
@@ -257,14 +262,13 @@ class _PortalPageState extends State<PortalPage> {
                 ),
               );
             },
-            S.of(context).filterMenuShowMine: () {
-              if (authProvider.isAuthenticatedFromCache &&
-                  !authProvider.isAnonymous) {
+            S.current.filterMenuShowMine: () {
+              if (authProvider.isAuthenticated && !authProvider.isAnonymous) {
                 // Show message if user has no private websites
                 if (!userOnly) {
                   user.hasPrivateWebsites.then((hasPrivate) {
                     if (!hasPrivate) {
-                      AppToast.show(S.of(context).warningNoPrivateWebsite);
+                      AppToast.show(S.current.warningNoPrivateWebsite);
                     }
                   });
 
@@ -272,15 +276,15 @@ class _PortalPageState extends State<PortalPage> {
                   setState(() => userOnly = true);
                   filterProvider.enableFilter();
                 } else {
-                  AppToast.show(S.of(context).warningFilterAlreadyShowingYours);
+                  AppToast.show(S.current.warningFilterAlreadyShowingYours);
                 }
               } else {
-                AppToast.show(S.of(context).warningAuthenticationNeeded);
+                AppToast.show(S.current.warningAuthenticationNeeded);
               }
             },
-            S.of(context).filterMenuShowAll: () {
+            S.current.filterMenuShowAll: () {
               if (!filterProvider.filterEnabled) {
-                AppToast.show(S.of(context).warningFilterAlreadyDisabled);
+                AppToast.show(S.current.warningFilterAlreadyDisabled);
               } else {
                 _updateFilter();
                 userOnly = false;
@@ -297,14 +301,13 @@ class _PortalPageState extends State<PortalPage> {
                 filterProvider.filterEnabled ? filterCache : null,
                 userOnly: userOnly,
                 uid: authProvider.uid,
-                context: context,
               ),
               builder: (context, AsyncSnapshot<List<Website>> websiteSnap) {
                 if (websiteSnap.hasData) {
                   websites = websiteSnap.data;
                   return SingleChildScrollView(
                     child: Padding(
-                      padding: const EdgeInsets.only(top: 8),
+                      padding: const EdgeInsets.only(top: 10),
                       child: Column(
                         children: listWebsitesByCategory(websites),
                       ),
@@ -338,38 +341,39 @@ class _AddWebsiteButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Tooltip(
-        message: S.of(context).actionAddWebsite,
+        message: S.current.actionAddWebsite,
         child: GestureDetector(
           onTap: () {
             final authProvider =
                 Provider.of<AuthProvider>(context, listen: false);
-            if (authProvider.isAuthenticatedFromCache &&
-                !authProvider.isAnonymous) {
+            if (authProvider.isAuthenticated && !authProvider.isAnonymous) {
               Navigator.of(context)
                   .push(MaterialPageRoute<ChangeNotifierProvider>(
-                builder: (_) => ChangeNotifierProvider<FilterProvider>(
-                    create: (_) =>
-                        Platform.environment.containsKey('FLUTTER_TEST')
-                            ? Provider.of<FilterProvider>(context)
-                            : FilterProvider(),
-                    child: WebsiteView(
-                      website: Website(
-                          relevance: null,
-                          id: null,
-                          isPrivate: true,
-                          link: '',
-                          category: category),
-                    )),
+                builder: (_) => ChangeNotifierProvider<FilterProvider>.value(
+                  // If testing, use the global (mocked) provider; otherwise instantiate a new local provider
+                  value: Platform.environment.containsKey('FLUTTER_TEST')
+                      ? Provider.of<FilterProvider>(context)
+                      : FilterProvider()
+                    ..updateAuth(authProvider),
+                  child: WebsiteView(
+                    website: Website(
+                        relevance: null,
+                        id: null,
+                        isPrivate: true,
+                        link: '',
+                        category: category),
+                  ),
+                ),
               ));
             } else {
-              AppToast.show(S.of(context).warningAuthenticationNeeded);
+              AppToast.show(S.current.warningAuthenticationNeeded);
             }
           },
           child: Padding(
-            padding: const EdgeInsets.only(top: 8, left: 8, right: 8),
+            padding: const EdgeInsets.only(top: 10, left: 10, right: 10),
             child: CircleImage(
               icon: Icon(
-                Icons.add,
+                Icons.add_outlined,
                 color: Theme.of(context).unselectedWidgetColor,
               ),
               label: '',

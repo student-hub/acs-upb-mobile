@@ -7,18 +7,18 @@ import 'package:validators/sanitizers.dart';
 enum WebsiteCategory { learning, administrative, association, resource, other }
 
 extension WebsiteCategoryExtension on WebsiteCategory {
-  String toLocalizedString(BuildContext context) {
+  String toLocalizedString() {
     switch (this) {
       case WebsiteCategory.learning:
-        return S.of(context).websiteCategoryLearning;
+        return S.current.websiteCategoryLearning;
       case WebsiteCategory.administrative:
-        return S.of(context).websiteCategoryAdministrative;
+        return S.current.websiteCategoryAdministrative;
       case WebsiteCategory.association:
-        return S.of(context).websiteCategoryAssociations;
+        return S.current.websiteCategoryAssociations;
       case WebsiteCategory.resource:
-        return S.of(context).websiteCategoryResources;
+        return S.current.websiteCategoryResources;
       default:
-        return S.of(context).websiteCategoryOthers;
+        return S.current.websiteCategoryOthers;
     }
   }
 }
@@ -45,6 +45,9 @@ class Website {
       }
     }
   }
+
+  String get iconPath =>
+      isPrivate ? 'users/$ownerUid/websites/$id.png' : 'websites/$id/icon.png';
 
   /// The user who created this website (or null if it's public)
   final String ownerUid;

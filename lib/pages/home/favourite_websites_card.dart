@@ -20,27 +20,27 @@ class FavouriteWebsitesCard extends StatelessWidget {
     final WebsiteProvider websiteProvider =
         Provider.of<WebsiteProvider>(context);
     return InfoCard<List<Website>>(
-      title: S.of(context).sectionFrequentlyAccessedWebsites,
+      title: S.current.sectionFrequentlyAccessedWebsites,
       onShowMore: onShowMore,
-      future:
-          websiteProvider.fetchFavouriteWebsites(uid: uid, context: context),
-      builder: (websites) => Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: websites
-            .map((website) => Expanded(
-                  child: Padding(
-                      padding: const EdgeInsets.all(8),
-                      child: WebsiteIcon(
-                        website: website,
-                        onTap: () {
-                          websiteProvider.incrementNumberOfVisits(website,
-                              uid: uid);
-                          Utils.launchURL(website.link, context: context);
-                        },
-                      )),
-                ))
-            .toList(),
+      future: websiteProvider.fetchFavouriteWebsites(uid),
+      builder: (websites) => Padding(
+        padding: const EdgeInsets.only(top: 10),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: websites
+              .map((website) => Expanded(
+                    child: WebsiteIcon(
+                      website: website,
+                      onTap: () {
+                        websiteProvider.incrementNumberOfVisits(website,
+                            uid: uid);
+                        Utils.launchURL(website.link);
+                      },
+                    ),
+                  ))
+              .toList(),
+        ),
       ),
     );
   }

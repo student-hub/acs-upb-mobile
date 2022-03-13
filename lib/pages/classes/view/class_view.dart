@@ -1,37 +1,28 @@
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
+import 'package:acs_upb_mobile/pages/class_feedback/service/feedback_provider.dart';
+import 'package:acs_upb_mobile/pages/class_feedback/view/class_feedback_view.dart';
 import 'package:acs_upb_mobile/pages/classes/model/class.dart';
 import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
+import 'package:acs_upb_mobile/pages/classes/view/class_events_card.dart';
 import 'package:acs_upb_mobile/pages/classes/view/grading_view.dart';
 import 'package:acs_upb_mobile/pages/classes/view/shortcut_view.dart';
-import 'package:acs_upb_mobile/resources/custom_icons.dart';
+import 'package:acs_upb_mobile/pages/people/service/person_provider.dart';
+import 'package:acs_upb_mobile/pages/people/view/person_view.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/widgets/button.dart';
+import 'package:acs_upb_mobile/widgets/class_icon.dart';
 import 'package:acs_upb_mobile/widgets/dialog.dart';
+import 'package:acs_upb_mobile/widgets/icon_text.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:positioned_tap_detector/positioned_tap_detector.dart';
 import 'package:provider/provider.dart';
-
-extension ClassExtension on ClassHeader {
-  Color get colorFromAcronym {
-    int r = 0, g = 0, b = 0;
-    if (acronym.isNotEmpty) {
-      b = acronym[0].codeUnitAt(0);
-      if (acronym.length >= 2) {
-        g = acronym[1].codeUnitAt(0);
-        if (acronym.length >= 3) {
-          r = acronym[2].codeUnitAt(0);
-        }
-      }
-    }
-    const int brightnessFactor = 2;
-    return Color.fromRGBO(
-        r * brightnessFactor, g * brightnessFactor, b * brightnessFactor, 1);
-  }
-}
+import 'package:acs_upb_mobile/resources/remote_config.dart';
 
 class ClassView extends StatefulWidget {
   const ClassView({Key key, this.classHeader}) : super(key: key);
@@ -44,16 +35,54 @@ class ClassView extends StatefulWidget {
 
 class _ClassViewState extends State<ClassView> {
   Class classInfo;
+  String lecturerName = '';
+  bool alreadyCompletedFeedback;
+
+  @override
+  void initState() {
+    super.initState();
+    final personProvider = Provider.of<PersonProvider>(context, listen: false);
+    personProvider
+        .mostRecentLecturer(widget.classHeader.id)
+        .then((lecturer) => setState(() => lecturerName = lecturer));
+  }
 
   @override
   Widget build(BuildContext context) {
     final classProvider = Provider.of<ClassProvider>(context);
+    final feedbackProvider =
+        Provider.of<FeedbackProvider>(context, listen: false);
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    feedbackProvider
+        .userSubmittedFeedbackForClass(authProvider.uid, widget.classHeader.id)
+        .then((value) => alreadyCompletedFeedback = value);
 
     return AppScaffold(
-      title: Text(widget.classHeader.name),
+      title: Text(S.current.navigationClassInfo),
+      actions: [
+        if (RemoteConfigService.feedbackEnabled)
+          AppScaffoldAction(
+              icon: Icons.rate_review_outlined,
+              tooltip: S.current.navigationClassFeedback,
+              onPressed: alreadyCompletedFeedback == null
+                  ? null
+                  : () {
+                      if (!alreadyCompletedFeedback) {
+                        Navigator.of(context)
+                            .push(
+                              MaterialPageRoute<ClassFeedbackView>(
+                                builder: (_) => ClassFeedbackView(
+                                    classHeader: widget.classHeader),
+                              ),
+                            )
+                            .then((value) => setState(() {}));
+                      } else {
+                        AppToast.show(S.current.warningFeedbackAlreadySent);
+                      }
+                    }),
+      ],
       body: FutureBuilder(
-          future: classProvider.fetchClassInfo(widget.classHeader,
-              context: context),
+          future: classProvider.fetchClassInfo(widget.classHeader),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
               classInfo = snapshot.data;
@@ -61,16 +90,21 @@ class _ClassViewState extends State<ClassView> {
               return ListView(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
                     child: Column(
                       children: [
+                        const SizedBox(height: 12),
+                        lecturerCard(context),
+                        const SizedBox(height: 12),
                         shortcuts(context),
-                        const SizedBox(height: 8),
+                        const SizedBox(height: 12),
+                        ClassEventsCard(widget.classHeader.id),
+                        const SizedBox(height: 12),
                         GradingChart(
                           grading: classInfo.grading,
                           lastUpdated: classInfo.gradingLastUpdated,
                           onSave: (grading) => classProvider.setGrading(
-                              classId: widget.classHeader.id, grading: grading),
+                              widget.classHeader.id, grading),
                         ),
                       ],
                     ),
@@ -89,23 +123,23 @@ class _ClassViewState extends State<ClassView> {
     final authProvider = Provider.of<AuthProvider>(context);
 
     return Padding(
-      padding: const EdgeInsets.all(8),
+      padding: const EdgeInsets.symmetric(horizontal: 12),
       child: Column(
         children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    S.of(context).sectionShortcuts,
+                    S.current.sectionShortcuts,
                     style: Theme.of(context).textTheme.headline6,
                   ),
                   GestureDetector(
                     onTap: authProvider.currentUserFromCache.canEditClassInfo
                         ? () {}
                         : () => AppToast.show(
-                            S.of(context).warningNoPermissionToEditClassInfo),
+                            S.current.warningNoPermissionToEditClassInfo),
                     child: IconButton(
-                      icon: const Icon(Icons.add),
+                      icon: const Icon(Icons.add_outlined),
                       onPressed:
                           authProvider.currentUserFromCache.canEditClassInfo
                               ? () => Navigator.of(context).push(
@@ -117,9 +151,7 @@ class _ClassViewState extends State<ClassView> {
                                         setState(() =>
                                             classInfo.shortcuts.add(shortcut));
                                         classProvider.addShortcut(
-                                            classId: widget.classHeader.id,
-                                            shortcut: shortcut,
-                                            context: context);
+                                            widget.classHeader.id, shortcut);
                                       }),
                                     ),
                                   ))
@@ -133,10 +165,10 @@ class _ClassViewState extends State<ClassView> {
             (classInfo.shortcuts.isEmpty
                 ? <Widget>[
                     Padding(
-                      padding: const EdgeInsets.all(8),
+                      padding: const EdgeInsets.all(12),
                       child: Center(
                         child: Text(
-                          S.of(context).labelUnknown,
+                          S.current.labelUnknown,
                           style:
                               TextStyle(color: Theme.of(context).disabledColor),
                         ),
@@ -156,26 +188,26 @@ class _ClassViewState extends State<ClassView> {
   IconData shortcutIcon(ShortcutType type) {
     switch (type) {
       case ShortcutType.main:
-        return Icons.home;
+        return Icons.home_outlined;
       case ShortcutType.classbook:
-        return CustomIcons.book;
+        return FeatherIcons.book;
       case ShortcutType.resource:
-        return Icons.insert_drive_file;
+        return Icons.insert_drive_file_outlined;
       default:
-        return Icons.public;
+        return FeatherIcons.globe;
     }
   }
 
   AppDialog _deletionConfirmationDialog(
           {BuildContext context, String shortcutName, Function onDelete}) =>
       AppDialog(
-        icon: const Icon(Icons.delete),
-        title: S.of(context).actionDeleteShortcut,
-        message: S.of(context).messageDeleteShortcut(shortcutName),
-        info: S.of(context).messageThisCouldAffectOtherStudents,
+        icon: const Icon(Icons.delete_outlined),
+        title: S.current.actionDeleteShortcut,
+        message: S.current.messageDeleteShortcut(shortcutName),
+        info: S.current.messageThisCouldAffectOtherStudents,
         actions: [
           AppButton(
-            text: S.of(context).actionDeleteShortcut,
+            text: S.current.actionDeleteShortcut,
             width: 130,
             onTap: onDelete,
           )
@@ -187,7 +219,7 @@ class _ClassViewState extends State<ClassView> {
     final classViewContext = context;
 
     return PositionedTapDetector(
-      onTap: (_) => Utils.launchURL(shortcut.link, context: context),
+      onTap: (_) => Utils.launchURL(shortcut.link),
       onLongPress: (position) async {
         final RenderBox overlay =
             Overlay.of(context).context.findRenderObject();
@@ -198,11 +230,11 @@ class _ClassViewState extends State<ClassView> {
                 Offset.zero & overlay.size),
             items: [
               PopupMenuItem(
-                value: S.of(context).actionDeleteShortcut,
-                child: Text(S.of(context).actionDeleteShortcut),
+                value: S.current.actionDeleteShortcut,
+                child: Text(S.current.actionDeleteShortcut),
               )
             ]);
-        if (option == S.of(context).actionDeleteShortcut) {
+        if (option == S.current.actionDeleteShortcut) {
           await showDialog(
             context: context,
             builder: (context) => _deletionConfirmationDialog(
@@ -212,9 +244,7 @@ class _ClassViewState extends State<ClassView> {
                 Navigator.pop(context); // Pop dialog window
 
                 final success = await classProvider.deleteShortcut(
-                    classId: widget.classHeader.id,
-                    shortcutIndex: index,
-                    context: context);
+                    widget.classHeader.id, index);
                 if (success) {
                   setState(() {
                     classInfo.shortcuts.removeAt(index);
@@ -233,11 +263,64 @@ class _ClassViewState extends State<ClassView> {
           foregroundColor: Theme.of(context).iconTheme.color,
         ),
         title: Text((shortcut.name?.isEmpty ?? true)
-            ? shortcut.type.toLocalizedString(context)
+            ? shortcut.type.toLocalizedString()
             : shortcut.name),
         contentPadding: EdgeInsets.zero,
         dense: true,
         visualDensity: VisualDensity.compact,
+      ),
+    );
+  }
+
+  Widget lecturerCard(BuildContext context) {
+    final personProvider = Provider.of<PersonProvider>(context);
+
+    return Card(
+      key: const Key('LecturerCard'),
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Row(
+          children: [
+            ClassIcon(classHeader: widget.classHeader),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  IconText(
+                    icon: FeatherIcons.bookOpen,
+                    text: widget.classHeader.name ?? '-',
+                    style: Theme.of(context).textTheme.bodyText1,
+                  ),
+                  const SizedBox(height: 10),
+                  GestureDetector(
+                    onTap: () async {
+                      final lecturer =
+                          await personProvider.fetchPerson(lecturerName);
+                      if (lecturer != null && lecturerName != null) {
+                        await showModalBottomSheet<dynamic>(
+                            isScrollControlled: true,
+                            context: context,
+                            builder: (BuildContext buildContext) =>
+                                PersonView(person: lecturer));
+                      }
+                    },
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        IconText(
+                          icon: FeatherIcons.user,
+                          text: lecturerName ?? '-',
+                          style: Theme.of(context).textTheme.bodyText1,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

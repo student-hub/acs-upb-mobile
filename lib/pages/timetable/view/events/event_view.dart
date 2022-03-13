@@ -5,47 +5,26 @@ import 'package:acs_upb_mobile/pages/classes/view/class_view.dart';
 import 'package:acs_upb_mobile/pages/classes/view/classes_page.dart';
 import 'package:acs_upb_mobile/pages/filter/model/filter.dart';
 import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
-import 'package:acs_upb_mobile/pages/timetable/model/events/recurring_event.dart';
+import 'package:acs_upb_mobile/pages/people/view/person_view.dart';
+import 'package:acs_upb_mobile/pages/timetable/model/events/class_event.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/events/uni_event.dart';
 import 'package:acs_upb_mobile/pages/timetable/view/events/add_event_view.dart';
-import 'package:acs_upb_mobile/resources/locale_provider.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:provider/provider.dart';
-import 'package:time_machine/time_machine.dart';
-import 'package:timetable/timetable.dart';
-
-extension EventExtension on Event {
-  String get dateString {
-    final LocalDateTime end = this.end.clockTime.equals(LocalTime(00, 00, 00))
-        ? this.end.subtractDays(1)
-        : this.end;
-
-    String string = start.calendarDate.toString('dddd, dd MMMM');
-    if (!start.clockTime.equals(LocalTime(00, 00, 00))) {
-      string += ' • ${start.clockTime.toString('HH:mm')}';
-    }
-    if (start.calendarDate != end.calendarDate) {
-      string += ' - ${end.calendarDate.toString('dddd, dd MMMM')}';
-    }
-    if (!end.clockTime.equals(LocalTime(00, 00, 00))) {
-      if (start.calendarDate != end.calendarDate) {
-        string += ' • ';
-      } else {
-        string += '-';
-      }
-      string += end.clockTime.toString('HH:mm');
-    }
-    return string;
-  }
-}
 
 class EventView extends StatefulWidget {
-  const EventView({Key key, this.event}) : super(key: key);
-
-  final UniEventInstance event;
+  const EventView({Key key, this.eventInstance, this.uniEvent})
+      : assert(
+            (eventInstance != null && uniEvent == null) ||
+                (eventInstance == null && uniEvent != null),
+            'Only one of the parameters must be provided'),
+        super(key: key);
+  final UniEventInstance eventInstance;
+  final UniEvent uniEvent;
 
   @override
   _EventViewState createState() => _EventViewState();
@@ -58,38 +37,42 @@ class _EventViewState extends State<EventView> {
           width: 20,
           height: 20,
           decoration: BoxDecoration(
-            borderRadius: const BorderRadius.all(Radius.circular(4)),
-            color: widget.event.color,
-          ),
+              borderRadius: const BorderRadius.all(Radius.circular(4)),
+              color: widget.uniEvent?.color ?? widget.eventInstance.color),
         ),
       );
 
   @override
   Widget build(BuildContext context) {
+    final user = Provider.of<AuthProvider>(context).currentUserFromCache;
+    final UniEvent mainEvent =
+        widget.eventInstance?.mainEvent ?? widget.uniEvent;
     return AppScaffold(
-      title: Text(S.of(context).navigationEventDetails),
+      title: Text(S.current.navigationEventDetails),
       actions: [
         AppScaffoldAction(
-            icon: Icons.edit,
-            onPressed: () {
-              final user = Provider.of<AuthProvider>(context, listen: false)
-                  .currentUserFromCache;
-              if (user.canAddPublicInfo) {
-                Navigator.of(context).push(MaterialPageRoute<AddEventView>(
-                  builder: (_) => ChangeNotifierProvider<FilterProvider>(
-                    create: (_) => FilterProvider(
-                      defaultDegree: widget.event.mainEvent.degree,
-                      defaultRelevance: widget.event.mainEvent.relevance,
-                    ),
-                    child: AddEventView(
-                      initialEvent: widget.event.mainEvent,
-                    ),
+          icon: Icons.edit_outlined,
+          disabled: !mainEvent.editable || !user.canAddPublicInfo,
+          onPressed: () {
+            if (!mainEvent.editable) {
+              AppToast.show(S.current.warningEventNotEditable);
+            } else if (!user.canAddPublicInfo) {
+              AppToast.show(S.current.errorPermissionDenied);
+            } else {
+              Navigator.of(context).push(MaterialPageRoute<AddEventView>(
+                builder: (_) => ChangeNotifierProvider<FilterProvider>(
+                  create: (_) => FilterProvider(
+                    defaultDegree: mainEvent.degree,
+                    defaultRelevance: mainEvent.relevance,
                   ),
-                ));
-              } else {
-                AppToast.show(S.of(context).errorPermissionDenied);
-              }
-            })
+                  child: AddEventView(
+                    initialEvent: mainEvent,
+                  ),
+                ),
+              ));
+            }
+          },
+        )
       ],
       body: SafeArea(
         child: ListView(children: [
@@ -105,67 +88,100 @@ class _EventViewState extends State<EventView> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text(
-                          widget.event.title ??
-                              widget.event.mainEvent.type
-                                  .toLocalizedString(context),
+                          widget.eventInstance?.title ??
+                              mainEvent.type.toLocalizedString(),
                           style: Theme.of(context).textTheme.headline6),
                       const SizedBox(height: 4),
-                      Text(widget.event.dateString),
-                      if (widget.event.mainEvent is RecurringUniEvent &&
-                          LocaleProvider.rruleL10n != null)
-                        Text((widget.event.mainEvent as RecurringUniEvent)
-                            .rrule
-                            .toText(l10n: LocaleProvider.rruleL10n)),
+                      if (widget.eventInstance != null)
+                        Text(widget.eventInstance.dateString),
+                      if (mainEvent.info != widget.eventInstance?.dateString)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 2),
+                          child: Text(
+                            mainEvent.info,
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyText2
+                                .copyWith(color: Theme.of(context).hintColor),
+                          ),
+                        ),
                     ],
                   ),
                 ),
               ],
             ),
           ),
-          if (widget.event.mainEvent?.classHeader != null)
+          if (mainEvent?.classHeader != null)
             ClassListItem(
-              classHeader: widget.event.mainEvent.classHeader,
-              hint: S.of(context).messageTapForMoreInfo,
-              onTap: () => Navigator.of(context)
-                  .push(MaterialPageRoute<ChangeNotifierProvider>(
-                builder: (context) => ChangeNotifierProvider.value(
-                  value: Provider.of<ClassProvider>(context),
-                  child: ClassView(
-                      classHeader: widget.event.mainEvent.classHeader),
+              classHeader: mainEvent.classHeader,
+              hint: S.current.messageTapForMoreInfo,
+              onTap: () => Navigator.of(context).push(
+                MaterialPageRoute<ChangeNotifierProvider>(
+                  builder: (context) => ChangeNotifierProvider.value(
+                    value: Provider.of<ClassProvider>(context),
+                    child: ClassView(
+                      classHeader: mainEvent.classHeader,
+                    ),
+                  ),
                 ),
-              )),
+              ),
             ),
-          if (widget.event.location?.isNotEmpty ?? false)
+          if (widget.eventInstance?.location?.isNotEmpty ?? false)
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
               child: Row(
                 children: <Widget>[
                   const Padding(
-                    padding: EdgeInsets.all(8),
-                    child: Icon(Icons.location_on),
+                    padding: EdgeInsets.all(10),
+                    child: Icon(FeatherIcons.mapPin),
                   ),
                   const SizedBox(width: 16),
-                  Text(widget.event.location,
+                  Text(widget.eventInstance?.location,
                       style: Theme.of(context).textTheme.subtitle1),
                 ],
               ),
             ),
-          if (widget.event.mainEvent != null)
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+            child: Row(
+              children: <Widget>[
+                const Padding(
+                  padding: EdgeInsets.all(10),
+                  child: Icon(FeatherIcons.users),
+                ),
+                const SizedBox(width: 16),
+                Text(
+                    mainEvent.relevance == null
+                        ? S.current.relevanceAnyone
+                        : '${FilterNode.localizeName(mainEvent.degree, context)}: ${mainEvent.relevance.join(', ')}',
+                    style: Theme.of(context).textTheme.subtitle1),
+              ],
+            ),
+          ),
+          if (mainEvent is ClassEvent)
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
-              child: Row(
-                children: <Widget>[
-                  const Padding(
-                    padding: EdgeInsets.all(8),
-                    child: Icon(Icons.people),
-                  ),
-                  const SizedBox(width: 16),
-                  Text(
-                      widget.event.mainEvent.relevance == null
-                          ? S.of(context).relevanceAnyone
-                          : '${FilterNode.localizeName(widget.event.mainEvent.degree, context)}: ${widget.event.mainEvent.relevance.join(', ')}',
-                      style: Theme.of(context).textTheme.subtitle1),
-                ],
+              child: GestureDetector(
+                onTap: () {
+                  if (mainEvent.teacher != null) {
+                    showModalBottomSheet<dynamic>(
+                        isScrollControlled: true,
+                        context: context,
+                        builder: (BuildContext buildContext) =>
+                            PersonView(person: mainEvent.teacher));
+                  }
+                },
+                child: Row(
+                  children: <Widget>[
+                    const Padding(
+                      padding: EdgeInsets.all(10),
+                      child: Icon(FeatherIcons.user),
+                    ),
+                    const SizedBox(width: 16),
+                    Text(mainEvent.teacher.name ?? S.current.labelUnknown,
+                        style: Theme.of(context).textTheme.subtitle1),
+                  ],
+                ),
               ),
             ),
         ]),

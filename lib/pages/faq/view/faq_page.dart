@@ -4,7 +4,6 @@ import 'package:acs_upb_mobile/pages/faq/service/question_provider.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:acs_upb_mobile/widgets/search_bar.dart';
-import 'package:acs_upb_mobile/widgets/selectable.dart';
 import 'package:dynamic_text_highlighting/dynamic_text_highlighting.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -21,7 +20,7 @@ class FaqPage extends StatefulWidget {
 
 class _FaqPageState extends State<FaqPage> {
   List<Question> questions = <Question>[];
-  List<String> categories;
+  List<String> tags;
   String filter = '';
   bool searchClosed = true;
   List<String> activeTags = <String>[];
@@ -32,7 +31,7 @@ class _FaqPageState extends State<FaqPage> {
   void initState() {
     final QuestionProvider questionProvider =
         Provider.of<QuestionProvider>(context, listen: false);
-    futureQuestions = questionProvider.fetchQuestions(context: context);
+    futureQuestions = questionProvider.fetchQuestions();
     super.initState();
   }
 
@@ -41,12 +40,12 @@ class _FaqPageState extends State<FaqPage> {
         child: ListView(
           scrollDirection: Axis.horizontal,
           children: <Widget>[const SizedBox(width: 10)] +
-              categories
+              tags
                   .map((category) => Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 3),
-                        child: Selectable(
-                          label: category,
-                          initiallySelected: false,
+                        child: FilterChip(
+                          label: Text(category),
+                          selected: activeTags.contains(category),
                           onSelected: (selection) {
                             setState(() {
                               if (selection) {
@@ -66,10 +65,10 @@ class _FaqPageState extends State<FaqPage> {
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
-      title: Text(S.of(context).sectionFAQ),
+      title: Text(S.current.sectionFAQ),
       actions: [
         AppScaffoldAction(
-          icon: Icons.search,
+          icon: Icons.search_outlined,
           onPressed: () {
             setState(() {
               _scrollController.animateTo(0,
@@ -87,7 +86,7 @@ class _FaqPageState extends State<FaqPage> {
               return const Center(child: CircularProgressIndicator());
             }
             questions = snapshot.data;
-            categories = questions.expand((e) => e.tags).toSet().toList();
+            tags = questions.expand((e) => e.tags).toSet().toList();
             return ListView(
               controller: _scrollController,
               children: [

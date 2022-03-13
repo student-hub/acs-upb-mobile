@@ -25,23 +25,23 @@ class _LoginViewState extends State<LoginView> {
     if (formItems != null) {
       return formItems;
     }
-    final emailDomain = S.of(context).stringEmailDomain;
+    final emailDomain = S.current.stringEmailDomain;
 
     final authProvider = Provider.of<AuthProvider>(context);
     return formItems = <FormCardField>[
       FormCardField(
-        label: S.of(context).labelEmail,
-        hint: S.of(context).hintEmail,
+        label: S.current.labelEmail,
+        hint: S.current.hintEmail,
         suffix: emailDomain,
         controller: emailController,
         autocorrect: false,
         autofillHints: [AutofillHints.username],
-        check: (email, {context}) => authProvider.canSignInWithPassword(
-            email: email + emailDomain, context: context),
+        check: (email, {showToast}) => authProvider
+            .canSignInWithPassword(email + emailDomain, showToast: showToast),
       ),
       FormCardField(
-        label: S.of(context).labelPassword,
-        hint: S.of(context).hintPassword,
+        label: S.current.labelPassword,
+        hint: S.current.hintPassword,
         obscureText: true,
         autofillHints: [AutofillHints.password],
       ),
@@ -49,8 +49,8 @@ class _LoginViewState extends State<LoginView> {
   }
 
   AppDialog _resetPasswordDialog(BuildContext context) => AppDialog(
-        title: S.of(context).actionResetPassword,
-        message: S.of(context).messageResetPassword,
+        title: S.current.actionResetPassword,
+        message: S.current.messageResetPassword,
         content: <Widget>[
           Row(
             children: <Widget>[
@@ -58,12 +58,11 @@ class _LoginViewState extends State<LoginView> {
                 child: TextField(
                   key: const ValueKey('reset_password_email_text_field'),
                   controller: emailController,
-                  decoration:
-                      InputDecoration(hintText: S.of(context).hintEmail),
+                  decoration: InputDecoration(hintText: S.current.hintEmail),
                 ),
               ),
               const SizedBox(width: 4),
-              Text(S.of(context).stringEmailDomain,
+              Text(S.current.stringEmailDomain,
                   style: Theme.of(context).inputDecorationTheme.suffixStyle),
             ],
           )
@@ -71,15 +70,13 @@ class _LoginViewState extends State<LoginView> {
         actions: [
           AppButton(
             key: const ValueKey('send_email_button'),
-            text: S.of(context).actionSendEmail.toUpperCase(),
+            text: S.current.actionSendEmail.toUpperCase(),
             width: 130,
             onTap: () async {
               final success =
                   await Provider.of<AuthProvider>(context, listen: false)
                       .sendPasswordResetEmail(
-                          email: emailController.text +
-                              S.of(context).stringEmailDomain,
-                          context: context);
+                          emailController.text + S.current.stringEmailDomain);
               if (success) {
                 Navigator.pop(context);
               }
@@ -93,14 +90,12 @@ class _LoginViewState extends State<LoginView> {
     final authProvider = Provider.of<AuthProvider>(context);
 
     return FormCard(
-      title: S.of(context).actionLogIn,
+      title: S.current.actionLogIn,
       fields: _buildFormItems(),
       onSubmitted: (fields) async {
         final result = await authProvider.signIn(
-          email: fields[S.of(context).labelEmail] +
-              S.of(context).stringEmailDomain,
-          password: fields[S.of(context).labelPassword],
-          context: context,
+          fields[S.current.labelEmail] + S.current.stringEmailDomain,
+          fields[S.current.labelPassword],
         );
         if (result) {
           await Navigator.pushReplacementNamed(context, Routes.home);
@@ -113,7 +108,7 @@ class _LoginViewState extends State<LoginView> {
           children: <Widget>[
             InkWell(
                 child: Text(
-                  S.of(context).actionResetPassword,
+                  S.current.actionResetPassword,
                   style: Theme.of(context)
                       .accentTextTheme
                       .subtitle1
@@ -181,7 +176,7 @@ class _LoginViewState extends State<LoginView> {
             ),
             SingleChildScrollView(
               child: Padding(
-                padding: const EdgeInsets.only(left: 28, right: 28, bottom: 8),
+                padding: const EdgeInsets.only(left: 28, right: 28, bottom: 10),
                 child: IntrinsicHeight(
                   child: Column(
                     children: <Widget>[
@@ -203,10 +198,10 @@ class _LoginViewState extends State<LoginView> {
                           Expanded(
                             child: AppButton(
                               key: const ValueKey('log_in_anonymously_button'),
-                              text: S.of(context).actionLogInAnonymously,
+                              text: S.current.actionLogInAnonymously,
                               onTap: () async {
-                                final result = await authProvider
-                                    .signInAnonymously(context: context);
+                                final result =
+                                    await authProvider.signInAnonymously();
                                 if (result) {
                                   await Navigator.pushReplacementNamed(
                                       context, Routes.home);
@@ -219,7 +214,7 @@ class _LoginViewState extends State<LoginView> {
                             child: AppButton(
                               key: const ValueKey('log_in_button'),
                               color: Theme.of(context).accentColor,
-                              text: S.of(context).actionLogIn,
+                              text: S.current.actionLogIn,
                               onTap: () => loginForm.submit(),
                             ),
                           ),
@@ -230,7 +225,7 @@ class _LoginViewState extends State<LoginView> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
                           Text(
-                            '${S.of(context).messageNewUser} ',
+                            '${S.current.messageNewUser} ',
                             style: Theme.of(context)
                                 .textTheme
                                 .subtitle1
@@ -240,7 +235,7 @@ class _LoginViewState extends State<LoginView> {
                             onTap: () {
                               Navigator.pushNamed(context, Routes.signUp);
                             },
-                            child: Text(S.of(context).actionSignUp,
+                            child: Text(S.current.actionSignUp,
                                 style: Theme.of(context)
                                     .accentTextTheme
                                     .subtitle1

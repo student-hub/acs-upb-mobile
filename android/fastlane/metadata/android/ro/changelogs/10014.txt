@@ -1,0 +1,5 @@
+Adăugat
+  - Acum poți vedea evenimentele asociate unei materii direct pe pagina materiei. Apasă pe un eveniment din orar, apoi pe numele materiei, și poți vedea schimbarea!
+
+Rezolvat
+  - Pozele persoanelor nu mai apăreau din cauza certificatului expirat de pe cs.pub.ro

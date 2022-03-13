@@ -30,13 +30,13 @@ class _SearchBarState extends State<SearchBar> {
               color: const Color.fromRGBO(142, 142, 147, .15),
             ),
             child: Padding(
-              padding: const EdgeInsets.only(left: 8),
+              padding: const EdgeInsets.only(left: 10),
               child: TextField(
                 autofocus: true,
                 controller: widget.textController,
                 onChanged: widget.onSearch,
                 decoration: const InputDecoration(
-                  icon: Icon(Icons.search),
+                  icon: Icon(Icons.search_outlined),
                   border: InputBorder.none,
                 ),
               ),
@@ -51,7 +51,7 @@ class _SearchBarState extends State<SearchBar> {
             child: Container(
               color: Colors.transparent,
               child: Center(
-                child: Text(S.of(context).buttonCancel),
+                child: Text(S.current.buttonCancel),
               ),
             ),
           ),

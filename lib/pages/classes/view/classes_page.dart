@@ -1,17 +1,18 @@
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
+import 'package:acs_upb_mobile/pages/class_feedback/view/class_feedback_checklist.dart';
 import 'package:acs_upb_mobile/pages/classes/model/class.dart';
 import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
 import 'package:acs_upb_mobile/pages/classes/view/class_view.dart';
+import 'package:acs_upb_mobile/widgets/class_icon.dart';
 import 'package:acs_upb_mobile/widgets/error_page.dart';
 import 'package:acs_upb_mobile/widgets/icon_text.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:acs_upb_mobile/widgets/spoiler.dart';
-import 'package:auto_size_text/auto_size_text.dart';
-import 'package:black_hole_flutter/black_hole_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:pedantic/pedantic.dart';
 import 'package:provider/provider.dart';
+import 'package:acs_upb_mobile/resources/remote_config.dart';
 
 class ClassesPage extends StatefulWidget {
   const ClassesPage({Key key}) : super(key: key);
@@ -57,29 +58,36 @@ class _ClassesPageState extends State<ClassesPage> {
     final authProvider = Provider.of<AuthProvider>(context);
 
     return AppScaffold(
-      title: Text(S.of(context).navigationClasses),
+      title: Text(S.current.navigationClasses),
       // TODO(IoanaAlexandru): Simply show all classes if user is not authenticated
       needsToBeAuthenticated: true,
       actions: [
+        if (RemoteConfigService.feedbackEnabled)
+          AppScaffoldAction(
+            icon: Icons.rate_review_outlined,
+            tooltip: S.current.navigationClassesFeedbackChecklist,
+            onPressed: () => Navigator.of(context).push(
+              MaterialPageRoute<ClassFeedbackChecklist>(
+                builder: (_) => ClassFeedbackChecklist(classes: headers),
+              ),
+            ),
+          ),
         AppScaffoldAction(
-          icon: Icons.edit,
-          tooltip: S.of(context).actionChooseClasses,
+          icon: Icons.edit_outlined,
+          tooltip: S.current.actionChooseClasses,
           onPressed: () => Navigator.of(context).push(
             MaterialPageRoute<ChangeNotifierProvider>(
               builder: (_) => ChangeNotifierProvider.value(
                   value: classProvider,
                   child: FutureBuilder(
-                    future: classProvider.fetchUserClassIds(
-                      uid: authProvider.uid,
-                      context: context,
-                    ),
+                    future: classProvider.fetchUserClassIds(authProvider.uid),
                     builder: (context, snap) {
                       if (snap.hasData) {
                         return AddClassesPage(
                             initialClassIds: snap.data,
                             onSave: (classIds) async {
                               await classProvider.setUserClassIds(
-                                  classIds: classIds, uid: authProvider.uid);
+                                  classIds, authProvider.uid);
                               unawaited(updateClasses());
                               Navigator.pop(context);
                             });
@@ -99,31 +107,33 @@ class _ClassesPageState extends State<ClassesPage> {
                 ? ClassList(
                     classes: headers,
                     sectioned: false,
-                    onTap: (classHeader) => Navigator.of(context)
-                        .push(MaterialPageRoute<ChangeNotifierProvider>(
-                      builder: (context) => ChangeNotifierProvider.value(
-                        value: classProvider,
-                        child: ClassView(classHeader: classHeader),
+                    onTap: (classHeader) => Navigator.of(context).push(
+                      MaterialPageRoute<ChangeNotifierProvider>(
+                        builder: (context) => ChangeNotifierProvider.value(
+                          value: classProvider,
+                          child: ClassView(
+                            classHeader: classHeader,
+                          ),
+                        ),
                       ),
-                    )),
+                    ),
                   )
                 : ErrorPage(
-                    errorMessage: S.of(context).messageNoClassesYet,
+                    errorMessage: S.current.messageNoClassesYet,
                     imgPath: 'assets/illustrations/undraw_empty.png',
                     info: [
                         TextSpan(
-                            text:
-                                '${S.of(context).messageGetStartedByPressing} '),
+                            text: '${S.current.messageGetStartedByPressing} '),
                         WidgetSpan(
                           alignment: PlaceholderAlignment.middle,
                           child: Icon(
-                            Icons.edit,
+                            Icons.edit_outlined,
                             size:
                                 Theme.of(context).textTheme.subtitle1.fontSize +
                                     2,
                           ),
                         ),
-                        TextSpan(text: ' ${S.of(context).messageButtonAbove}.'),
+                        TextSpan(text: ' ${S.current.messageButtonAbove}.'),
                       ]),
           if (updating == null)
             const Center(child: CircularProgressIndicator()),
@@ -173,10 +183,10 @@ class _AddClassesPageState extends State<AddClassesPage> {
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
-      title: Text(S.of(context).actionChooseClasses),
+      title: Text(S.current.actionChooseClasses),
       actions: [
         AppScaffoldAction(
-          text: S.of(context).buttonSave,
+          text: S.current.buttonSave,
           onPressed: () => widget.onSave(classIds.toList()),
         )
       ],
@@ -229,7 +239,7 @@ class _ClassListState extends State<ClassList> {
   }
 
   String sectionName(BuildContext context, String year, String semester) =>
-      '${S.of(context).labelYear} $year, ${S.of(context).labelSemester} $semester';
+      '${S.current.labelYear} $year, ${S.current.labelSemester} $semester';
 
   Map<String, dynamic> classesBySection(
       Set<ClassHeader> classes, BuildContext context) {
@@ -319,14 +329,13 @@ class _ClassListState extends State<ClassList> {
             Padding(
               padding: const EdgeInsets.only(left: 10, right: 10, top: 10),
               child: IconText(
-                icon: Icons.info,
-                text:
-                    '${S.of(context).infoSelect} ${S.of(context).infoClasses}.',
+                icon: Icons.info_outlined,
+                text: '${S.current.infoSelect} ${S.current.infoClasses}.',
                 style: Theme.of(context).textTheme.bodyText1,
               ),
             ),
           Padding(
-            padding: const EdgeInsets.all(8),
+            padding: const EdgeInsets.all(10),
             child: Column(
                 children: widget.sectioned
                     ? (buildSections(
@@ -383,29 +392,9 @@ class _ClassListItemState extends State<ClassListItem> {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      leading: CircleAvatar(
-        backgroundColor: widget.classHeader.colorFromAcronym,
-        child: Container(
-          width: 30,
-          child: (widget.selectable && selected)
-              ? Icon(
-                  Icons.check,
-                  color:
-                      widget.classHeader.colorFromAcronym.highEmphasisOnColor,
-                )
-              : Align(
-                  alignment: Alignment.center,
-                  child: AutoSizeText(
-                    widget.classHeader.acronym,
-                    minFontSize: 0,
-                    maxLines: 1,
-                    style: TextStyle(
-                      color: widget
-                          .classHeader.colorFromAcronym.highEmphasisOnColor,
-                    ),
-                  ),
-                ),
-        ),
+      leading: ClassIcon(
+        classHeader: widget.classHeader,
+        selected: widget.selectable && selected,
       ),
       title: Text(
         widget.classHeader.name,

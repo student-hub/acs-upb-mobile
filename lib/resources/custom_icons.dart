@@ -12,30 +12,24 @@ class CustomIcons {
       IconData(0xe800, fontFamily: _kFontFam, fontPackage: _kFontPkg);
 
   // ignore: constant_identifier_names
-  static const IconData github_brands =
+  static const IconData edit_off_outlined =
+      IconData(0xe801, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+
+  static const IconData github =
       IconData(0xe803, fontFamily: _kFontFam, fontPackage: _kFontPkg);
 
   // ignore: constant_identifier_names
-  static const IconData edit_slash =
+  static const IconData edit_off =
       IconData(0xe804, fontFamily: _kFontFam, fontPackage: _kFontPkg);
 
   static const IconData filter =
       IconData(0xf0b0, fontFamily: _kFontFam, fontPackage: _kFontPkg);
 
-  static const Icon valid = Icon(Icons.check_circle, color: Colors.green);
-  static const Icon invalid = Icon(Icons.cancel, color: Colors.red);
+  static const Icon valid =
+      Icon(Icons.check_circle_outlined, color: Colors.green);
+  static const Icon invalid = Icon(Icons.cancel_outlined, color: Colors.red);
 
   // Transparent icon to be used as a placeholder
-  static const Icon empty = Icon(Icons.cancel, color: Color(0x00000000));
-
-  static Color formIconColor(ThemeData themeData) {
-    switch (themeData.brightness) {
-      case Brightness.dark:
-        return Colors.white70;
-      case Brightness.light:
-        return Colors.black45;
-      default:
-        return themeData.iconTheme.color;
-    }
-  }
+  static const Icon empty =
+      Icon(Icons.cancel_outlined, color: Color(0x00000000));
 }

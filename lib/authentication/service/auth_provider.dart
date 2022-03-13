@@ -7,17 +7,19 @@ import 'package:acs_upb_mobile/resources/storage/storage_provider.dart';
 import 'package:acs_upb_mobile/resources/validator.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart' hide User;
+import 'package:firebase_auth/firebase_auth.dart' as firebase_auth show User;
 import 'package:flutter/material.dart';
 
 extension DatabaseUser on User {
   static User fromSnap(DocumentSnapshot snap) {
+    final data = snap.data();
     return User(
-        uid: snap.documentID,
-        firstName: snap.data['name']['first'],
-        lastName: snap.data['name']['last'],
-        classes: List.from(snap.data['class'] ?? []),
-        permissionLevel: snap.data['permissionLevel']);
+        uid: snap.id,
+        firstName: data['name']['first'],
+        lastName: data['name']['last'],
+        classes: List.from(data['class'] ?? []),
+        permissionLevel: data['permissionLevel']);
   }
 
   Map<String, dynamic> toData() {
@@ -31,19 +33,18 @@ extension DatabaseUser on User {
 
 class AuthProvider with ChangeNotifier {
   AuthProvider() {
-    _userAuthSub = FirebaseAuth.instance.onAuthStateChanged.listen((newUser) {
-      print('AuthProvider - FirebaseAuth - onAuthStateChanged - $newUser');
-      _firebaseUser = newUser;
+    _userAuthSub = FirebaseAuth.instance.authStateChanges().listen((newUser) {
+      print('AuthProvider - FirebaseAuth - authStateChanges - $newUser');
       _currentUser = null;
       _fetchUser();
       notifyListeners();
     }, onError: (dynamic e) {
-      print('AuthProvider - FirebaseAuth - onAuthStateChanged - $e');
+      print('AuthProvider - FirebaseAuth - authStateChanges - $e');
     });
   }
 
-  FirebaseUser _firebaseUser;
-  StreamSubscription<FirebaseUser> _userAuthSub;
+  firebase_auth.User get _firebaseUser => FirebaseAuth.instance.currentUser;
+  StreamSubscription<firebase_auth.User> _userAuthSub;
   User _currentUser;
 
   @override
@@ -55,30 +56,30 @@ class AuthProvider with ChangeNotifier {
     super.dispose();
   }
 
-  void _errorHandler(dynamic e, BuildContext context) {
+  void _errorHandler(dynamic e, {bool showToast = true}) {
     try {
-      print(e.message);
-      if (context != null) {
+      print('${e.message} code: ${e.code}');
+      if (showToast) {
         switch (e.code) {
-          case 'ERROR_INVALID_EMAIL':
-          case 'ERROR_INVALID_CREDENTIAL':
-            AppToast.show(S.of(context).errorInvalidEmail);
+          case 'invalid-email':
+          case 'invalid-credential':
+            AppToast.show(S.current.errorInvalidEmail);
             break;
-          case 'ERROR_WRONG_PASSWORD':
-            AppToast.show(S.of(context).errorIncorrectPassword);
+          case 'wrong-password':
+            AppToast.show(S.current.errorIncorrectPassword);
             break;
-          case 'ERROR_USER_NOT_FOUND':
-            AppToast.show(S.of(context).errorEmailNotFound);
+          case 'user-not-found':
+            AppToast.show(S.current.errorEmailNotFound);
             break;
-          case 'ERROR_USER_DISABLED':
-            AppToast.show(S.of(context).errorAccountDisabled);
+          case 'user-disabled':
+            AppToast.show(S.current.errorAccountDisabled);
             break;
-          case 'ERROR_TOO_MANY_REQUESTS':
+          case 'too-many-requests':
             AppToast.show(
-                '${S.of(context).errorTooManyRequests} ${S.of(context).warningTryAgainLater}');
+                '${S.current.errorTooManyRequests} ${S.current.warningTryAgainLater}');
             break;
-          case 'ERROR_EMAIL_ALREADY_IN_USE':
-            AppToast.show(S.of(context).errorEmailInUse);
+          case 'email-already-in-use':
+            AppToast.show(S.current.errorEmailInUse);
             break;
           default:
             AppToast.show(e.message);
@@ -87,7 +88,7 @@ class AuthProvider with ChangeNotifier {
     } catch (_) {
       // Unknown exception
       print(e);
-      AppToast.show(S.of(context).errorSomethingWentWrong);
+      AppToast.show(S.current.errorSomethingWentWrong);
     }
   }
 
@@ -98,9 +99,7 @@ class AuthProvider with ChangeNotifier {
 
     var isAnonymousUser = true;
     for (final info in _firebaseUser.providerData) {
-      if (info.providerId == 'facebook.com' ||
-          info.providerId == 'google.com' ||
-          info.providerId == 'password') {
+      if (info.providerId == 'password') {
         isAnonymousUser = false;
         break;
       }
@@ -108,35 +107,15 @@ class AuthProvider with ChangeNotifier {
     return isAnonymousUser;
   }
 
-  /// Check the memory cache to see if there is a user authenticated
-  bool get isVerifiedFromCache {
+  /// Check if the user verified their e-mail
+  Future<bool> get isVerified async {
     assert(_firebaseUser != null);
-    return !isAnonymous && _firebaseUser.isEmailVerified;
-  }
-
-  /// Check the network to see if there is a user authenticated
-  Future<bool> get isVerifiedFromService async {
-    if (isAnonymous) {
-      return false;
-    }
-
     await _firebaseUser.reload();
-    _firebaseUser = await FirebaseAuth.instance.currentUser();
-    return _firebaseUser.isEmailVerified;
+    return !isAnonymous && _firebaseUser.emailVerified;
   }
 
-  /// Check the memory cache to see if there is a user authenticated
-  bool get isAuthenticatedFromCache {
-    return _firebaseUser != null;
-  }
-
-  /// Check the filesystem to see if there is a user authenticated.
-  ///
-  /// This method is `async` and should only be necessary on app startup, since
-  /// for everything else, the [AuthProvider] will notify its listeners and
-  /// update the cache if the authentication state changes.
-  Future<bool> get isAuthenticatedFromService async {
-    _firebaseUser = await FirebaseAuth.instance.currentUser();
+  /// Check if there is a user authenticated
+  bool get isAuthenticated {
     return _firebaseUser != null;
   }
 
@@ -146,7 +125,7 @@ class AuthProvider with ChangeNotifier {
 
   String get email => _firebaseUser.email;
 
-  bool isOldFormat(Map<String, dynamic> userData) =>
+  bool _isOldFormat(Map<String, dynamic> userData) =>
       userData['class'] != null && userData['class'] is Map;
 
   /// Change the `class` of the user data in Firebase to the new format.
@@ -155,7 +134,7 @@ class AuthProvider with ChangeNotifier {
   /// where the key is the name of the level in the filter tree.
   /// In the new format, the class is simply a `List<String>` that contains the
   /// name of the nodes.
-  Future<void> migrateToNewClassFormat(Map<String, dynamic> userData) async {
+  Future<void> _migrateToNewClassFormat(Map<String, dynamic> userData) async {
     final classes = ['degree', 'domain', 'year', 'series', 'group', 'subgroup']
         .map((key) => userData['class'][key].toString())
         .where((s) => s != 'null')
@@ -163,24 +142,25 @@ class AuthProvider with ChangeNotifier {
 
     userData['class'] = classes;
 
-    await Firestore.instance
+    await FirebaseFirestore.instance
         .collection('users')
-        .document(_firebaseUser.uid)
-        .updateData(userData);
+        .doc(_firebaseUser.uid)
+        .update(userData);
   }
 
   Future<User> _fetchUser() async {
     if (isAnonymous) {
       return null;
     }
-    final snapshot = await Firestore.instance
+    final snapshot = await FirebaseFirestore.instance
         .collection('users')
-        .document(_firebaseUser.uid)
+        .doc(_firebaseUser.uid)
         .get();
-    if (snapshot.data == null) return null;
+    final data = snapshot.data();
+    if (data == null) return null;
 
-    if (isOldFormat(snapshot.data)) {
-      await migrateToNewClassFormat(snapshot.data);
+    if (_isOldFormat(data)) {
+      await _migrateToNewClassFormat(data);
     }
 
     _currentUser = DatabaseUser.fromSnap(snapshot);
@@ -192,54 +172,52 @@ class AuthProvider with ChangeNotifier {
 
   User get currentUserFromCache => _currentUser;
 
-  Future<bool> signInAnonymously({BuildContext context}) async {
+  Future<bool> signInAnonymously() async {
     return FirebaseAuth.instance.signInAnonymously().catchError((dynamic e) {
-      _errorHandler(e, context);
+      _errorHandler(e);
       return false;
     }).then((_) => true);
   }
 
-  Future<bool> changePassword({String password, BuildContext context}) async {
+  Future<bool> changePassword(String password) async {
     bool result = false;
     await _firebaseUser.updatePassword(password).then((_) {
       result = true;
     }).catchError((dynamic e) {
-      _errorHandler(e, context);
+      _errorHandler(e);
       result = false;
     });
     return result;
   }
 
-  Future<bool> changeEmail({String email, BuildContext context}) async {
+  Future<bool> changeEmail(String email) async {
     bool result = false;
     await _firebaseUser.updateEmail(email).then((_) {
       result = true;
     }).catchError((dynamic e) {
-      _errorHandler(e, context);
+      _errorHandler(e);
       result = false;
     });
     return result;
   }
 
-  Future<bool> verifyPassword({String password, BuildContext context}) async {
-    return signIn(
-        email: _firebaseUser.email, password: password, context: context);
+  Future<bool> verifyPassword(String password) async {
+    return signIn(_firebaseUser.email, password);
   }
 
-  Future<bool> signIn(
-      {String email, String password, BuildContext context}) async {
+  Future<bool> signIn(String email, String password) async {
     if (email == null || email == '') {
-      AppToast.show(S.of(context).errorInvalidEmail);
+      AppToast.show(S.current.errorInvalidEmail);
       return false;
     } else if (password == null || password == '') {
-      AppToast.show(S.of(context).errorNoPassword);
+      AppToast.show(S.current.errorNoPassword);
       return false;
     }
 
     final List<String> providers = await FirebaseAuth.instance
-        .fetchSignInMethodsForEmail(email: email)
+        .fetchSignInMethodsForEmail(email)
         .catchError((dynamic e) {
-      _errorHandler(e, context);
+      _errorHandler(e);
       return null;
     });
 
@@ -250,14 +228,14 @@ class AuthProvider with ChangeNotifier {
 
     // User has an account with a different provider
     if (providers.isNotEmpty && !providers.contains('password')) {
-      AppToast.show(S.of(context).warningUseProvider(providers[0]));
+      AppToast.show(S.current.warningUseProvider(providers[0]));
       return false;
     }
 
     final result = await FirebaseAuth.instance
         .signInWithEmailAndPassword(email: email, password: password)
         .catchError((dynamic e) {
-      _errorHandler(e, context);
+      _errorHandler(e);
       return null;
     });
     await _fetchUser();
@@ -265,154 +243,143 @@ class AuthProvider with ChangeNotifier {
   }
 
   Future<void> signOut() async {
-    await FirebaseAuth.instance.signOut();
-    if (isAnonymous) {
-      await delete();
+    if (isAuthenticated && isAnonymous) {
+      await delete(showToast: false);
     }
+    await FirebaseAuth.instance.signOut();
   }
 
-  Future<bool> delete({BuildContext context}) async {
-    _firebaseUser ??= await FirebaseAuth.instance.currentUser();
+  Future<bool> delete({bool showToast = true}) async {
     assert(_firebaseUser != null);
 
     try {
       final DocumentReference ref =
-          Firestore.instance.collection('users').document(_firebaseUser.uid);
+          FirebaseFirestore.instance.collection('users').doc(_firebaseUser.uid);
+
+      final result =
+          await StorageProvider.deleteImage(_currentUser.picturePath);
+      if (!result) {
+        AppToast.show(S.current.errorSomethingWentWrong);
+      }
+
       await ref.delete();
 
       await _firebaseUser.delete();
     } catch (e) {
-      _errorHandler(e, context);
+      _errorHandler(e, showToast: showToast);
       return false;
     }
 
-    if (context != null) {
-      AppToast.show(S.of(context).messageAccountDeleted);
+    if (showToast) {
+      AppToast.show(S.current.messageAccountDeleted);
     }
     return true;
   }
 
-  Future<bool> canSignInWithPassword(
-      {String email, BuildContext context}) async {
+  Future<bool> canSignInWithPassword(String email,
+      {bool showToast = true}) async {
     List<String> providers = [];
     try {
-      providers =
-          await FirebaseAuth.instance.fetchSignInMethodsForEmail(email: email);
+      providers = await FirebaseAuth.instance.fetchSignInMethodsForEmail(email);
     } catch (e) {
-      _errorHandler(e, context);
+      _errorHandler(e, showToast: showToast);
       return false;
     }
     final bool accountExists = providers.contains('password');
-    if (!accountExists && context != null) {
-      AppToast.show(S.of(context).errorEmailNotFound);
+    if (!accountExists && showToast) {
+      AppToast.show(S.current.errorEmailNotFound);
     }
     return accountExists;
   }
 
-  Future<bool> canSignUpWithEmail({String email, BuildContext context}) async {
+  Future<bool> canSignUpWithEmail(String email, {bool showToast = true}) async {
     List<String> providers = [];
     try {
-      providers =
-          await FirebaseAuth.instance.fetchSignInMethodsForEmail(email: email);
+      providers = await FirebaseAuth.instance.fetchSignInMethodsForEmail(email);
     } catch (e) {
-      _errorHandler(e, context);
+      _errorHandler(e, showToast: showToast);
       return false;
     }
     final bool accountExists = providers.isNotEmpty;
-    if (accountExists && context != null) {
-      AppToast.show(S.of(context).warningEmailInUse(email));
+    if (accountExists && showToast) {
+      AppToast.show(S.current.warningEmailInUse(email));
     }
     return !accountExists;
   }
 
-  Future<bool> sendPasswordResetEmail(
-      {String email, BuildContext context}) async {
+  Future<bool> sendPasswordResetEmail(String email) async {
     try {
       await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
-
-      if (context != null) {
-        AppToast.show(S.of(context).infoPasswordResetEmailSent);
-      }
+      AppToast.show(S.current.infoPasswordResetEmailSent);
       return true;
     } catch (e) {
-      _errorHandler(e, context);
+      _errorHandler(e);
       return false;
     }
   }
 
   /// Create a new user with the data in [info].
-  Future<bool> signUp({Map<String, dynamic> info, BuildContext context}) async {
+  Future<bool> signUp(Map<String, dynamic> info) async {
     try {
-      final email = info[S.of(context).labelEmail];
-      final password = info[S.of(context).labelPassword];
-      final confirmPassword = info[S.of(context).labelConfirmPassword];
-      final firstName = info[S.of(context).labelFirstName];
-      final lastName = info[S.of(context).labelLastName];
+      final email = info[S.current.labelEmail];
+      final password = info[S.current.labelPassword];
+      final confirmPassword = info[S.current.labelConfirmPassword];
+      final firstName = info[S.current.labelFirstName];
+      final lastName = info[S.current.labelLastName];
 
       final classes = info['class'];
 
       if (email == null || email == '') {
-        AppToast.show(S.of(context).errorInvalidEmail);
+        AppToast.show(S.current.errorInvalidEmail);
         return false;
       } else if (password == null || password == '') {
-        AppToast.show(S.of(context).errorNoPassword);
+        AppToast.show(S.current.errorNoPassword);
         return false;
       }
       if (confirmPassword == null || confirmPassword != password) {
-        AppToast.show(S.of(context).errorPasswordsDiffer);
+        AppToast.show(S.current.errorPasswordsDiffer);
         return false;
       }
       if (firstName == null || firstName == '') {
-        AppToast.show(S.of(context).errorMissingFirstName);
+        AppToast.show(S.current.errorMissingFirstName);
         return false;
       }
       if (lastName == null || lastName == '') {
-        AppToast.show(S.of(context).errorMissingLastName);
+        AppToast.show(S.current.errorMissingLastName);
         return false;
       }
 
-      final errorString = AppValidator.isStrongPassword(password, context);
+      final errorString = AppValidator.isStrongPassword(password);
       if (errorString != null) {
         AppToast.show(errorString);
         return false;
       }
 
       // Create user
-      final AuthResult res = await FirebaseAuth.instance
+      final UserCredential credential = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(email: email, password: password);
-
-      // Update display name
-      final userUpdateInfo = UserUpdateInfo()
-        ..displayName = '$firstName $lastName';
-      await res.user.updateProfile(userUpdateInfo);
-
-      // Update user with updated info
-      await _firebaseUser?.reload();
-      _firebaseUser = await FirebaseAuth.instance.currentUser();
 
       // Create document in 'users'
       _currentUser = User(
-        uid: res.user.uid,
+        uid: credential.user.uid,
         firstName: firstName,
         lastName: lastName,
         classes: classes,
       );
 
       final DocumentReference ref =
-          Firestore.instance.collection('users').document(_currentUser.uid);
-      await ref.setData(_currentUser.toData());
+          FirebaseFirestore.instance.collection('users').doc(_currentUser.uid);
+      await ref.set(_currentUser.toData());
 
       // Try to set the default from the user data
       if (_currentUser.classes != null) {
-        await ref.updateData({'filter_nodes': _currentUser.classes});
+        await ref.update({'filter_nodes': _currentUser.classes});
       }
       // Send verification e-mail
       await _firebaseUser.sendEmailVerification();
 
-      if (context != null) {
-        AppToast.show(
-            '${S.of(context).messageAccountCreated} ${S.of(context).messageCheckEmailVerification}');
-      }
+      AppToast.show(
+          '${S.current.messageAccountCreated} ${S.current.messageCheckEmailVerification}');
 
       notifyListeners();
       return true;
@@ -420,31 +387,28 @@ class AuthProvider with ChangeNotifier {
       // Remove user if it was created
       await _firebaseUser?.delete();
 
-      _errorHandler(e, context);
+      _errorHandler(e);
       return false;
     }
   }
 
-  Future<bool> sendEmailVerification({BuildContext context}) async {
+  Future<bool> sendEmailVerification() async {
     try {
       await _firebaseUser.sendEmailVerification();
     } catch (e) {
-      _errorHandler(e, context);
+      _errorHandler(e);
       return false;
     }
 
-    if (context != null) {
-      AppToast.show(S.of(context).messageCheckEmailVerification);
-    }
+    AppToast.show(S.current.messageCheckEmailVerification);
     return true;
   }
 
   /// Update the user information with the data in [info].
-  Future<bool> updateProfile(
-      {Map<String, dynamic> info, BuildContext context}) async {
+  Future<bool> updateProfile(Map<String, dynamic> info) async {
     try {
-      final firstName = info[S.of(context).labelFirstName];
-      final lastName = info[S.of(context).labelLastName];
+      final firstName = info[S.current.labelFirstName];
+      final lastName = info[S.current.labelLastName];
 
       final classes = info['class'];
 
@@ -453,40 +417,34 @@ class AuthProvider with ChangeNotifier {
         ..lastName = lastName
         ..classes = classes;
 
-      await Firestore.instance
+      await FirebaseFirestore.instance
           .collection('users')
-          .document(_currentUser.uid)
-          .updateData(_currentUser.toData());
-
-      // Update display name
-      final userUpdateInfo = UserUpdateInfo()
-        ..displayName = '$firstName $lastName';
-      await _firebaseUser.updateProfile(userUpdateInfo);
+          .doc(_currentUser.uid)
+          .update(_currentUser.toData());
 
       notifyListeners();
       return true;
     } catch (e) {
-      _errorHandler(e, context);
+      _errorHandler(e);
       return false;
     }
   }
 
-  Future<bool> uploadProfilePicture(
-      Uint8List file, BuildContext context) async {
+  Future<bool> uploadProfilePicture(Uint8List file) async {
     final result = await StorageProvider.uploadImage(
-        context, file, 'users/${_firebaseUser.uid}/picture.png');
+        file, 'users/${_firebaseUser.uid}/picture.png');
     if (!result) {
       if (file.length > 5 * 1024 * 1024) {
-        AppToast.show(S.of(context).errorPictureSizeToBig);
+        AppToast.show(S.current.errorPictureSizeToBig);
       } else {
-        AppToast.show(S.of(context).errorSomethingWentWrong);
+        AppToast.show(S.current.errorSomethingWentWrong);
       }
     }
     return result;
   }
 
-  Future<String> getProfilePictureURL({BuildContext context}) {
+  Future<String> getProfilePictureURL() {
     return StorageProvider.findImageUrl(
-        context, 'users/${_firebaseUser.uid}/picture.png');
+        'users/${_firebaseUser.uid}/picture.png');
   }
 }

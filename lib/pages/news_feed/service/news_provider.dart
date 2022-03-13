@@ -13,8 +13,7 @@ class NewsProvider with ChangeNotifier {
   static const _attributesSelector = 'attributes';
   static const _hrefSelector = 'href';
 
-  Future<List<NewsFeedItem>> fetchNewsFeedItems(
-      {BuildContext context, int limit}) async {
+  Future<List<NewsFeedItem>> fetchNewsFeedItems({int limit}) async {
     try {
       // The internet is a scary place. CORS (cross origin resource sharing)
       // prevents websites from accessing resources outside the server that
@@ -27,11 +26,11 @@ class NewsProvider with ChangeNotifier {
       // will go through the proxy. This is needed only for the web version,
       // as CORS is a web browser thing.
       // See more: https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS
-      final url = kIsWeb
-          ? Utils.wrapUrlWithCORS('https://acs.pub.ro')
-          : 'https://acs.pub.ro';
+      final url = kIsWeb ? Utils.corsProxyUrl : 'https://acs.pub.ro';
+      final path =
+          kIsWeb ? '/https://acs.pub.ro/topic/noutati' : '/topic/noutati';
       final webScraper = WebScraper(url);
-      final bool scrapeSuccess = await webScraper.loadWebPage('/topic/noutati');
+      final bool scrapeSuccess = await webScraper.loadWebPage(path);
 
       if (scrapeSuccess) {
         return _extractFromWebScraper(webScraper, limit);
@@ -40,9 +39,7 @@ class NewsProvider with ChangeNotifier {
       // Ignore "no internet" error
       if (!e.message.contains('Failed host lookup')) {
         print(e);
-        if (context != null) {
-          AppToast.show(S.of(context).errorSomethingWentWrong);
-        }
+        AppToast.show(S.current.errorSomethingWentWrong);
       }
     }
 

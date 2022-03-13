@@ -4,23 +4,27 @@ import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/navigation/routes.dart';
 import 'package:acs_upb_mobile/pages/classes/model/class.dart';
 import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
-import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
 import 'package:acs_upb_mobile/pages/filter/view/relevance_picker.dart';
+import 'package:acs_upb_mobile/pages/people/model/person.dart';
+import 'package:acs_upb_mobile/pages/people/service/person_provider.dart';
+import 'package:acs_upb_mobile/pages/people/view/people_page.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/academic_calendar.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/events/all_day_event.dart';
+import 'package:acs_upb_mobile/pages/timetable/model/events/class_event.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/events/recurring_event.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/events/uni_event.dart';
 import 'package:acs_upb_mobile/pages/timetable/service/uni_event_provider.dart';
-import 'package:acs_upb_mobile/resources/custom_icons.dart';
 import 'package:acs_upb_mobile/resources/locale_provider.dart';
+import 'package:acs_upb_mobile/resources/theme.dart';
 import 'package:acs_upb_mobile/widgets/button.dart';
+import 'package:acs_upb_mobile/widgets/chip_form_field.dart';
 import 'package:acs_upb_mobile/widgets/dialog.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
-import 'package:acs_upb_mobile/widgets/selectable.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:provider/provider.dart';
 import 'package:rrule/rrule.dart';
 import 'package:time_machine/time_machine.dart' as time_machine show DayOfWeek;
@@ -47,6 +51,7 @@ class _AddEventViewState extends State<AddEventView> {
 
   UniEventType selectedEventType;
   ClassHeader selectedClass;
+  Person selectedTeacher;
   String selectedCalendar;
   LocalTime startTime;
   Period duration;
@@ -64,13 +69,13 @@ class _AddEventViewState extends State<AddEventView> {
     _DayOfWeek.sunday: false,
   };
 
-  // TODO(IoanaAlexandru): Make default semester the one closest to now
   int selectedSemester = 1;
 
   AllDayUniEvent get semester =>
       calendars[selectedCalendar]?.semesters?.elementAt(selectedSemester - 1);
 
   List<ClassHeader> classHeaders = [];
+  List<Person> classTeachers = [];
   User user;
   Map<String, AcademicCalendar> calendars = {};
 
@@ -83,15 +88,48 @@ class _AddEventViewState extends State<AddEventView> {
     Provider.of<ClassProvider>(context, listen: false)
         .fetchClassHeaders(uid: user.uid)
         .then((headers) => setState(() => classHeaders = headers));
+    Provider.of<PersonProvider>(context, listen: false)
+        .fetchPeople()
+        .then((teachers) => setState(() => classTeachers = teachers));
     Provider.of<UniEventProvider>(context, listen: false)
         .fetchCalendars()
         .then((calendars) {
       setState(() {
         this.calendars = calendars;
-        // TODO(IoanaAlexandru): Make the default calendar the one closest
-        // to now and extract calendar/semester from [widget.initialEvent]
         selectedCalendar = calendars.keys.first;
       });
+
+      if (widget.initialEvent?.id != null) {
+        selectedCalendar = widget.initialEvent.calendar.id;
+        final AllDayUniEvent secondSemester =
+            widget.initialEvent.calendar.semesters.last;
+        selectedSemester =
+            DateInterval(secondSemester.startDate, secondSemester.endDate)
+                    .contains(widget.initialEvent.start.calendarDate)
+                ? 2
+                : 1;
+      } else {
+        bool foundSemester = false;
+        for (final calendar in calendars.entries) {
+          for (final semester in calendar.value.semesters) {
+            final LocalDate date =
+                widget.initialEvent.start.calendarDate ?? LocalDate.today();
+            if (date.isBeforeOrDuring(semester)) {
+              // semester.id is represented as "semesterN", where "semester0" is the first semester
+              selectedSemester =
+                  1 + int.tryParse(semester.id[semester.id.length - 1]);
+              selectedCalendar = calendar.key;
+              foundSemester = true;
+              break;
+            }
+          }
+          if (foundSemester) break;
+        }
+        if (!foundSemester) {
+          selectedCalendar = calendars.entries.last.value.id;
+          selectedSemester = 2;
+        }
+      }
 
       if (widget.initialEvent != null &&
           widget.initialEvent is RecurringUniEvent) {
@@ -119,6 +157,9 @@ class _AddEventViewState extends State<AddEventView> {
 
     selectedEventType = widget.initialEvent?.type;
     selectedClass = widget.initialEvent?.classHeader;
+    selectedTeacher = widget.initialEvent is ClassEvent
+        ? (widget.initialEvent as ClassEvent).teacher
+        : null;
     locationController =
         TextEditingController(text: widget.initialEvent?.location ?? '');
 
@@ -151,8 +192,8 @@ class _AddEventViewState extends State<AddEventView> {
   Widget build(BuildContext context) {
     return AppScaffold(
       title: Text(widget.initialEvent?.id == null
-          ? S.of(context).actionAddEvent
-          : S.of(context).actionEditEvent),
+          ? S.current.actionAddEvent
+          : S.current.actionEditEvent),
       actions: widget.initialEvent?.id == null
           ? [_saveButton()]
           : [
@@ -174,8 +215,9 @@ class _AddEventViewState extends State<AddEventView> {
                       Expanded(
                         child: DropdownButtonFormField<String>(
                           decoration: InputDecoration(
-                            labelText: S.of(context).labelUniversityYear,
-                            prefixIcon: const Icon(Icons.calendar_today),
+                            labelText: S.current.labelUniversityYear,
+                            prefixIcon:
+                                const Icon(Icons.calendar_today_outlined),
                           ),
                           value: selectedCalendar,
                           items: calendars.keys.map((key) {
@@ -194,8 +236,8 @@ class _AddEventViewState extends State<AddEventView> {
                       Expanded(
                         child: DropdownButtonFormField<int>(
                           decoration: InputDecoration(
-                            labelText: S.of(context).labelSemester,
-                            prefixIcon: const Icon(Icons.calendar_view_day),
+                            labelText: S.current.labelSemester,
+                            prefixIcon: const Icon(FeatherIcons.columns),
                           ),
                           value: selectedSemester,
                           items: [1, 2]
@@ -211,26 +253,21 @@ class _AddEventViewState extends State<AddEventView> {
                     ],
                   ),
                   RelevanceFormField(
+                    canBePrivate: false,
+                    canBeForEveryone: false,
                     controller: relevanceController,
-                    validator: (_) {
-                      if (relevanceController.customRelevance?.isEmpty ??
-                          true) {
-                        return S.of(context).warningYouNeedToSelectAtLeastOne;
-                      }
-                      return null;
-                    },
                   ),
                   DropdownButtonFormField<UniEventType>(
                     decoration: InputDecoration(
-                      labelText: S.of(context).labelType,
-                      prefixIcon: const Icon(Icons.category),
+                      labelText: S.current.labelType,
+                      prefixIcon: const Icon(Icons.category_outlined),
                     ),
                     value: selectedEventType,
                     items: UniEventTypeExtension.classTypes
                         .map(
                           (type) => DropdownMenuItem<UniEventType>(
                             value: type,
-                            child: Text(type.toLocalizedString(context)),
+                            child: Text(type.toLocalizedString()),
                           ),
                         )
                         .toList(),
@@ -240,7 +277,7 @@ class _AddEventViewState extends State<AddEventView> {
                     },
                     validator: (selection) {
                       if (selection == null) {
-                        return S.of(context).errorEventTypeCannotBeEmpty;
+                        return S.current.errorEventTypeCannotBeEmpty;
                       }
                       return null;
                     },
@@ -252,8 +289,8 @@ class _AddEventViewState extends State<AddEventView> {
                           DropdownButtonFormField<ClassHeader>(
                             isExpanded: true,
                             decoration: InputDecoration(
-                              labelText: S.of(context).labelClass,
-                              prefixIcon: const Icon(Icons.class_),
+                              labelText: S.current.labelClass,
+                              prefixIcon: const Icon(FeatherIcons.bookOpen),
                             ),
                             value: selectedClass,
                             items: classHeaders
@@ -268,56 +305,51 @@ class _AddEventViewState extends State<AddEventView> {
                             },
                             validator: (selection) {
                               if (selection == null) {
-                                return S.of(context).errorClassCannotBeEmpty;
+                                return S.current.errorClassCannotBeEmpty;
                               }
                               return null;
                             },
                           ),
-                        timeIntervalPicker(),
-                        if (weekSelected[WeekType.odd] != null &&
-                            weekSelected[WeekType.even] != null)
-                          SelectableFormField(
-                            key: const ValueKey('week_picker'),
-                            icon: Icons.calendar_today,
-                            label: S.of(context).labelWeek,
-                            initialValues: weekSelected,
-                            validator: (selection) {
-                              if (selection.values
-                                  .where((e) => e != false)
-                                  .isEmpty) {
-                                return S
-                                    .of(context)
-                                    .warningYouNeedToSelectAtLeastOne;
-                              }
-                              return null;
-                            },
+                        if ([UniEventType.lecture].contains(selectedEventType))
+                          AutocompletePerson(
+                            key: const Key('AutocompleteLecturer'),
+                            labelText: S.current.labelLecturer,
+                            formKey: formKey,
+                            onSaved: (value) => selectedTeacher = value,
+                            classTeachers: classTeachers,
+                            personDisplayed: selectedTeacher,
                           ),
-                        SelectableFormField(
-                          key: const ValueKey('day_picker'),
-                          icon: Icons.today,
-                          label: S.of(context).labelDay,
-                          initialValues: weekDaySelected,
-                          validator: (selection) {
-                            if (selection.values
-                                .where((e) => e != false)
-                                .isEmpty) {
-                              return S
-                                  .of(context)
-                                  .warningYouNeedToSelectAtLeastOne;
-                            }
-                            return null;
-                          },
-                        ),
                         TextFormField(
                           controller: locationController,
                           decoration: InputDecoration(
-                            labelText: S.of(context).labelLocation,
-                            prefixIcon: const Icon(Icons.location_on),
+                            labelText: S.current.labelLocation,
+                            prefixIcon: const Icon(FeatherIcons.mapPin),
                           ),
                           onChanged: (_) => setState(() {}),
                         ),
+                        timeIntervalPicker(),
+                        Divider(
+                          thickness: 0.7,
+                          color: Theme.of(context).hintColor,
+                        ),
+                        if (weekSelected[WeekType.odd] != null &&
+                            weekSelected[WeekType.even] != null)
+                          FilterChipFormField(
+                            key: const ValueKey('week_picker'),
+                            icon: FeatherIcons.calendar,
+                            label: S.current.labelWeek,
+                            initialValues: weekSelected,
+                          ),
+                        FilterChipFormField(
+                          key: const ValueKey('day_picker'),
+                          icon: Icons.today_outlined,
+                          label: S.current.labelDay,
+                          initialValues: weekDaySelected,
+                        ),
+                        const SizedBox(height: 16),
                       ],
                     ),
+                  const SizedBox(width: 16),
                 ],
               ),
             ),
@@ -328,22 +360,22 @@ class _AddEventViewState extends State<AddEventView> {
   }
 
   AppDialog _deletionConfirmationDialog(BuildContext context) => AppDialog(
-        icon: const Icon(Icons.delete),
-        title: S.of(context).actionDeleteEvent,
-        info: S.of(context).messageThisCouldAffectOtherStudents,
-        message: S.of(context).messageDeleteEvent,
+        icon: const Icon(Icons.delete_outlined),
+        title: S.current.actionDeleteEvent,
+        info: S.current.messageThisCouldAffectOtherStudents,
+        message: S.current.messageDeleteEvent,
         actions: [
           AppButton(
-            text: S.of(context).actionDeleteEvent,
+            text: S.current.actionDeleteEvent,
             width: 130,
             onTap: () async {
               final res =
                   await Provider.of<UniEventProvider>(context, listen: false)
-                      .deleteEvent(widget.initialEvent, context: context);
+                      .deleteEvent(widget.initialEvent);
               if (res) {
                 Navigator.of(context)
                     .popUntil(ModalRoute.withName(Routes.home));
-                AppToast.show(S.of(context).messageEventDeleted);
+                AppToast.show(S.current.messageEventDeleted);
               }
             },
           )
@@ -351,7 +383,7 @@ class _AddEventViewState extends State<AddEventView> {
       );
 
   AppScaffoldAction _saveButton() => AppScaffoldAction(
-        text: S.of(context).buttonSave,
+        text: S.current.buttonSave,
         onPressed: () async {
           if (!formKey.currentState.validate()) return;
 
@@ -374,7 +406,8 @@ class _AddEventViewState extends State<AddEventView> {
                       : 1,
               until: semester.endDate.add(const Period(days: 1)).atMidnight());
 
-          final event = RecurringUniEvent(
+          final event = ClassEvent(
+              teacher: selectedTeacher,
               rrule: rrule,
               start: start,
               duration: duration,
@@ -392,46 +425,51 @@ class _AddEventViewState extends State<AddEventView> {
           if (widget.initialEvent?.id == null) {
             final res =
                 await Provider.of<UniEventProvider>(context, listen: false)
-                    .addEvent(event, context: context);
+                    .addEvent(event);
             if (res) {
               Navigator.of(context).pop();
-              AppToast.show(S.of(context).messageEventAdded);
+              AppToast.show(S.current.messageEventAdded);
             }
           } else {
             final res =
                 await Provider.of<UniEventProvider>(context, listen: false)
-                    .updateEvent(event, context: context);
+                    .updateEvent(event);
             if (res) {
               Navigator.of(context).popUntil(ModalRoute.withName(Routes.home));
-              AppToast.show(S.of(context).messageEventEdited);
+              AppToast.show(S.current.messageEventEdited);
             }
           }
         },
       );
 
   AppScaffoldAction _deleteButton() => AppScaffoldAction(
-        icon: Icons.more_vert,
+        icon: Icons.more_vert_outlined,
         items: {
-          S.of(context).actionDeleteEvent: () => showDialog(
-              context: context, child: _deletionConfirmationDialog(context))
+          S.current.actionDeleteEvent: () =>
+              showDialog(context: context, builder: _deletionConfirmationDialog)
         },
-        onPressed: () => showDialog(
-            context: context, child: _deletionConfirmationDialog(context)),
+        onPressed: () =>
+            showDialog(context: context, builder: _deletionConfirmationDialog),
       );
 
   Widget timeIntervalPicker() {
     final endTime = startTime.add(duration);
     final textColor = Theme.of(context).textTheme.headline4.color;
     return Padding(
-      padding: const EdgeInsets.only(top: 8),
+      padding: const EdgeInsets.only(top: 10),
       child: Row(
         children: [
-          const SizedBox(width: 12),
-          Icon(
-            Icons.access_time,
-            color: CustomIcons.formIconColor(Theme.of(context)),
+          Padding(
+            padding: const EdgeInsets.all(12),
+            child: Icon(
+              FeatherIcons.clock,
+              color: Theme.of(context).formIconColor,
+            ),
           ),
-          FlatButton(
+          TextButton(
+            style: ButtonStyle(
+              padding: MaterialStateProperty.all<EdgeInsets>(EdgeInsets.zero),
+            ),
             onPressed: () async {
               final TimeOfDay start = await showTimePicker(
                 context: context,
@@ -445,27 +483,33 @@ class _AddEventViewState extends State<AddEventView> {
             ),
           ),
           Expanded(
-            child: Column(
-              children: [
-                Text(
-                  duration.toString().replaceAll(RegExp(r'[PT]'), ''),
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodyText1
-                      .copyWith(color: textColor),
-                ),
-                DottedLine(
-                  lineThickness: 4,
-                  dashRadius: 2,
-                  dashColor: textColor,
-                ),
-                // Text-sized box so that the line is centered
-                SizedBox(
-                    height: Theme.of(context).textTheme.bodyText1.fontSize),
-              ],
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              child: Column(
+                children: [
+                  Text(
+                    duration.toString().replaceAll(RegExp(r'[PT]'), ''),
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyText1
+                        .copyWith(color: textColor),
+                  ),
+                  DottedLine(
+                    lineThickness: 4,
+                    dashRadius: 2,
+                    dashColor: textColor,
+                  ),
+                  // Text-sized box so that the line is centered
+                  SizedBox(
+                      height: Theme.of(context).textTheme.bodyText1.fontSize),
+                ],
+              ),
             ),
           ),
-          FlatButton(
+          TextButton(
+            style: ButtonStyle(
+              padding: MaterialStateProperty.all<EdgeInsets>(EdgeInsets.zero),
+            ),
             onPressed: () async {
               final TimeOfDay end = await showTimePicker(
                 context: context,
@@ -479,151 +523,11 @@ class _AddEventViewState extends State<AddEventView> {
               style: Theme.of(context).textTheme.headline4,
             ),
           ),
+          const SizedBox(width: 12),
         ],
       ),
     );
   }
-}
-
-class RelevanceFormField extends FormField<List<String>> {
-  RelevanceFormField({
-    @required this.controller,
-    String Function(List<String>) validator,
-    Key key,
-  }) : super(
-          key: key,
-          autovalidateMode: AutovalidateMode.onUserInteraction,
-          validator: validator,
-          builder: (FormFieldState<List<String>> state) {
-            controller.onChanged = () {
-              state.didChange(controller.customRelevance);
-            };
-            final context = state.context;
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                RelevancePicker(
-                  canBePrivate: false,
-                  canBeForEveryone: false,
-                  filterProvider: Provider.of<FilterProvider>(context),
-                  controller: controller,
-                ),
-                if (state.hasError)
-                  Padding(
-                    padding: const EdgeInsets.only(top: 8),
-                    child: Text(
-                      state.errorText,
-                      style: Theme.of(context)
-                          .textTheme
-                          .caption
-                          .copyWith(color: Theme.of(context).errorColor),
-                    ),
-                  ),
-              ],
-            );
-          },
-        );
-
-  final RelevanceController controller;
-}
-
-class SelectableFormField extends FormField<Map<Localizable, bool>> {
-  SelectableFormField({
-    @required Map<Localizable, bool> initialValues,
-    @required IconData icon,
-    @required String label,
-    String Function(Map<Localizable, bool>) validator,
-    Key key,
-  }) : super(
-          autovalidateMode: AutovalidateMode.onUserInteraction,
-          initialValue: initialValues,
-          key: key,
-          validator: validator,
-          builder: (state) {
-            final context = state.context;
-            final labels = state.value.keys.toList();
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                IntrinsicHeight(
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 12, left: 12),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        Icon(icon,
-                            color:
-                                CustomIcons.formIconColor(Theme.of(context))),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Expanded(
-                                child: Text(
-                                  label,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .caption
-                                      .apply(
-                                          color: Theme.of(context).hintColor),
-                                ),
-                              ),
-                              const SizedBox(height: 8),
-                              Row(
-                                children: <Widget>[
-                                  Expanded(
-                                    child: Container(
-                                      height: 40,
-                                      child: ListView.builder(
-                                        itemCount: labels.length,
-                                        scrollDirection: Axis.horizontal,
-                                        itemBuilder: (context, index) {
-                                          return Row(
-                                            children: [
-                                              Selectable(
-                                                label: labels[index]
-                                                    .toLocalizedString(context),
-                                                initiallySelected:
-                                                    state.value[labels[index]],
-                                                onSelected: (selected) {
-                                                  state.value[labels[index]] =
-                                                      selected;
-                                                  state.didChange(state.value);
-                                                },
-                                              ),
-                                              const SizedBox(width: 8),
-                                            ],
-                                          );
-                                        },
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                if (state.hasError)
-                  Padding(
-                    padding: const EdgeInsets.only(top: 8),
-                    child: Text(
-                      state.errorText,
-                      style: Theme.of(context)
-                          .textTheme
-                          .caption
-                          .copyWith(color: Theme.of(context).errorColor),
-                    ),
-                  ),
-              ],
-            );
-          },
-        );
 }
 
 class _DayOfWeek extends time_machine.DayOfWeek with Localizable {
@@ -632,7 +536,7 @@ class _DayOfWeek extends time_machine.DayOfWeek with Localizable {
   _DayOfWeek.from(time_machine.DayOfWeek dayOfWeek) : super(dayOfWeek.value);
 
   @override
-  String toLocalizedString(BuildContext context) {
+  String toLocalizedString() {
     final helperDate = LocalDate.today().next(this);
     return LocalDatePattern.createWithCurrentCulture('ddd')
         .format(helperDate)
@@ -667,12 +571,12 @@ class WeekType with Localizable {
       other is int && other == _value;
 
   @override
-  String toLocalizedString(BuildContext context) {
+  String toLocalizedString() {
     switch (_value) {
       case 0:
-        return S.of(context).labelOdd;
+        return S.current.labelOdd;
       case 1:
-        return S.of(context).labelEven;
+        return S.current.labelEven;
       default:
         return '';
     }
@@ -685,4 +589,15 @@ extension LocalTimeConversion on LocalTime {
 
 extension TimeOfDayConversion on TimeOfDay {
   LocalTime toLocalTime() => LocalTime(hour, minute, 0);
+}
+
+extension LocalDateComparisons on LocalDate {
+  bool isDuring(AllDayUniEvent semester) {
+    return DateInterval(semester.startDate, semester.endDate).contains(this);
+  }
+
+  bool isBeforeOrDuring(AllDayUniEvent semester) {
+    if (compareTo(semester.startDate) < 0) return true;
+    return isDuring(semester);
+  }
 }

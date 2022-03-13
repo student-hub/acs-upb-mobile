@@ -13,92 +13,81 @@ description: A mobile application for students at ACS UPB.
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 #
 # ACS UPB Mobile uses semantic versioning. You can read more in the CONTRIBUTING.md file.
-version: 1.2.4+4
+version: 1.3.1+40
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
 
 dependencies:
-  flutter:
-    sdk: flutter
+  # Async utility classes
+  async: ^2.4.0
+
+  # Helps with sizing text to fit container
+  auto_size_text: ^2.1.0
+
+  # Dart helper methods
+  basic_utils: ^1.2.0
+
+  # Caching utilities
+  cached_network_image: ^2.0.0
+
+  # Firebase Firestore
+  cloud_firestore: ^0.14.3+1
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.2
 
+  # Date & time picker widget
+  datetime_picker_formfield: ^1.0.0
+
+  # Dotted line painter
+  dotted_line: ^2.0.1
+
+  # Highlight words
+  dynamic_text_highlighting: ^2.2.0
+
   # Package for dynamically changing the app theme
   dynamic_theme: ^1.0.1
+
+  # File picker widget
+  file_picker: 2.1.7
+
+  # Firebase products
+  firebase_analytics: ^5.0.2
+  firebase_auth: ^0.18.3+1
+  firebase_core: ^0.5.2+1
+  firebase_remote_config: ^0.4.3
+  firebase_storage: ^5.1.0
+
+  # Flutter SDK
+  flutter:
+    sdk: flutter
+
+  # Color picker widget
+  flutter_colorpicker: ^0.3.4
+
+  # Allow using feather icons (nice outlined icons)
+  flutter_feather_icons: ^1.0.2
 
   # Package that allows for supporting multiple languages
   flutter_localizations:
     sdk: flutter
 
-  # Used to create preference screens
-  preferences: ^5.1.0
-
-  # Allows querying the app version number
-  package_info: ^0.4.0+13
-
-  # Firebase products
-  firebase:
-  firebase_analytics: ^5.0.2
-  firebase_auth: ^0.15.5+2
-  firebase_auth_web: ^0.1.2
-  firebase_core: ^0.4.3+1
-  cloud_firestore: ^0.13.4
-  firebase_storage: ^3.1.3
-
-  # Highlight words
-  dynamic_text_highlighting: ^2.2.0
-
   # Display markdown-formatted text
   flutter_markdown: ^0.4.4
 
-  # Dart helper methods
-  basic_utils: ^1.2.0
-  recase: ^3.0.0
-  validators: ^2.0.0
+  # Use an in-app browser to ask user for Google Calendar permission
+  flutter_web_browser: ^0.13.1
 
-  # Helps with sizing text to fit container
-  auto_size_text: ^2.1.0
+  # Used for Google Calendar API
+  googleapis: 1.0.0
 
-  # Displays a custom toast
-  oktoast: ^2.3.1+1
+  # Used for getting the permission of the user to access their Google Calendar
+  googleapis_auth: 0.2.12+1
 
-  # Caching utilities
-  cached_network_image: ^2.0.0
-
-  # URL opener
-  url_launcher: ^5.4.2
-
-  # Async utility classes
-  async: ^2.4.0
-  rxdart: ^0.24.1
-
-  # Timetable widget
-  timetable: ^0.2.9
-
-  # Event recurrence rule handler
-  rrule: ^0.1.1
-
-  # DateTime utilities
-  time_machine: ^0.9.16
-
-  # Color picker widget
-  flutter_colorpicker: ^0.3.4
-
-  # Date & time picker widgets
-  datetime_picker_formfield: ^1.0.0
-  interval_time_picker: ^0.1.0
-
-  # Allows getting the position of taps
-  positioned_tap_detector: ^1.0.3
-
-  # Draws pie charts
-  pie_chart: ^3.1.1
-
-  # Adds Dart utilities
-  quiver: ^2.1.3
+  # Image decoder
+  image: ^2.1.18
 
   # Image importer
   image_picker: ^0.6.7+4
@@ -106,24 +95,57 @@ dependencies:
   # Web image importer
   image_picker_web: ^1.0.9
 
-  # Image decoder
-  image: ^2.1.18
+  # Interval picker widget
+  interval_time_picker: ^0.1.0
 
-  # Web scraper
-  web_scraper: ^0.0.6
+  # Displays a custom toast
+  oktoast: ^2.3.1+1
 
-  # Dotted line painter
-  dotted_line: ^2.0.1
+  # App information
+  package_info_plus: ^0.6.4
+
+  # Draws pie charts
+  pie_chart: ^3.1.1
+
+  # Allows getting the position of taps
+  positioned_tap_detector: ^1.0.3
+
+  # Used to create preference screens
+  preferences: ^5.1.0
+
+  # Dart utilities
+  quiver: ^2.1.3
+
+  # String utility methods
+  recase: ^3.0.0
+
+  # Event recurrence rule handler
+  rrule: ^0.1.2
+
+  # Async utilities
+  rxdart: ^0.24.1
 
   # Support lock/mutex
   synchronized: ^2.2.0
 
-dev_dependencies:
-  flutter_test:
-    sdk: flutter
+  # DateTime utilities
+  time_machine: ^0.9.16
 
-  # Helps with generating Dart code with the messages from `.arb` files
-  intl_translation: ^0.17.1
+  # Timetable widget
+  timetable: ^0.2.9
+
+  # URL opener
+  url_launcher: ^5.4.2
+
+  # Useful validators
+  validators: ^2.0.0
+
+  # Web scraper
+  web_scraper: ^0.0.6
+
+dev_dependencies:
+  # Code analysis
+  extra_pedantic: 1.2.0
 
   # Simplifies updating the launcher icon
   flutter_launcher_icons: ^0.7.4
@@ -134,21 +156,28 @@ dev_dependencies:
   # Generates native code for adding splash screens on iOS & Android
   flutter_native_splash: ^0.1.9
 
-  # Using Provider for state management
-  provider: ^4.0.4
+  # Testing framework
+  flutter_test:
+    sdk: flutter
+
+  # Helps with generating Dart code with the messages from `.arb` files
+  intl_translation: ^0.17.1
 
   # Mocking utility used for testing
   mockito: ^4.1.1
 
-  # Provider platform interfaces of federated flutter plugins, for testing (like url_launcher)
-  plugin_platform_interface: ^1.0.0
-
   # Testing utils
   network_image_mock: ^1.0.2
 
-  # Code analysis
-  extra_pedantic: 1.2.0
+  # Provider platform interfaces of federated flutter plugins, for testing (like url_launcher)
+  plugin_platform_interface: ^1.0.0
 
+  # Using Provider for state management
+  provider: ^4.0.4
+
+dependency_overrides:
+  # Temporary workaround to bypass intl_translation incompatibility
+  intl: ^0.17.0-nullsafety.2
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
@@ -233,3 +262,5 @@ flutter_launcher_name:
 flutter_native_splash:
   image: assets/icons/acs_logo.png
   color: "#ffffff"
+  image_dark: assets/icons/acs_logo.png
+  color_dark: "#303030"

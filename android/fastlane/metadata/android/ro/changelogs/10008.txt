@@ -1,0 +1,8 @@
+Îmbunătățit
+  - Interfața aplicației arată mai frumos⭐
+  - Puțină ✨magie✨ internă ca să îmbunătățim aplicația
+
+Rezolvat
+  - Când se apăsa pe un profesor necunoscut apărea fila cu informații despre persoană (chiar dacă nu erau disponibile)
+  - Versiunea de pe pagina de setări nu apărea corect uneori
+  - Un bug 🐞 când apăsai pe butonul de editare la o vacanță și apărea o eroare

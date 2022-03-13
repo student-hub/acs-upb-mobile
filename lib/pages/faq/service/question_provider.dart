@@ -5,21 +5,18 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 
 class QuestionProvider with ChangeNotifier {
-  Future<List<Question>> fetchQuestions(
-      {BuildContext context, int limit}) async {
+  Future<List<Question>> fetchQuestions({int limit}) async {
     try {
       final QuerySnapshot qSnapshot = limit == null
-          ? await Firestore.instance.collection('faq').getDocuments()
-          : await Firestore.instance
+          ? await FirebaseFirestore.instance.collection('faq').get()
+          : await FirebaseFirestore.instance
               .collection('faq')
               .limit(limit)
-              .getDocuments();
-      return qSnapshot.documents.map(DatabaseQuestion.fromSnap).toList();
+              .get();
+      return qSnapshot.docs.map(DatabaseQuestion.fromSnap).toList();
     } catch (e) {
       print(e);
-      if (context != null) {
-        AppToast.show(S.of(context).errorSomethingWentWrong);
-      }
+      AppToast.show(S.current.errorSomethingWentWrong);
       return null;
     }
   }
@@ -27,9 +24,12 @@ class QuestionProvider with ChangeNotifier {
 
 extension DatabaseQuestion on Question {
   static Question fromSnap(DocumentSnapshot snap) {
-    final String question = snap.data['question'];
-    final String answer = snap.data['answer'];
-    final List<String> tags = List.from(snap.data['tags']);
+    final data = snap.data();
+
+    final String question = data['question'];
+    final String answer = data['answer'];
+    final List<String> tags = List.from(data['tags']);
+
     return Question(question: question, answer: answer, tags: tags);
   }
 }

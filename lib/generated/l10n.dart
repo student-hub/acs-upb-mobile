@@ -95,6 +95,36 @@ class S {
     );
   }
 
+  /// `Deny`
+  String get buttonDeny {
+    return Intl.message(
+      'Deny',
+      name: 'buttonDeny',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Accept`
+  String get buttonAccept {
+    return Intl.message(
+      'Accept',
+      name: 'buttonAccept',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Revert`
+  String get buttonRevert {
+    return Intl.message(
+      'Revert',
+      name: 'buttonRevert',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Email`
   String get labelEmail {
     return Intl.message(
@@ -165,6 +195,26 @@ class S {
     );
   }
 
+  /// `Answer`
+  String get labelAnswer {
+    return Intl.message(
+      'Answer',
+      name: 'labelAnswer',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Version`
+  String get labelVersion {
+    return Intl.message(
+      'Version',
+      name: 'labelVersion',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `First name`
   String get labelFirstName {
     return Intl.message(
@@ -180,6 +230,26 @@ class S {
     return Intl.message(
       'Last name',
       name: 'labelLastName',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Profile picture`
+  String get labelProfilePicture {
+    return Intl.message(
+      'Profile picture',
+      name: 'labelProfilePicture',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Website icon`
+  String get labelWebsiteIcon {
+    return Intl.message(
+      'Website icon',
+      name: 'labelWebsiteIcon',
       desc: '',
       args: [],
     );
@@ -315,6 +385,26 @@ class S {
     );
   }
 
+  /// `Lecturer`
+  String get labelLecturer {
+    return Intl.message(
+      'Lecturer',
+      name: 'labelLecturer',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Assistant`
+  String get labelAssistant {
+    return Intl.message(
+      'Assistant',
+      name: 'labelAssistant',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Year`
   String get labelYear {
     return Intl.message(
@@ -375,6 +465,16 @@ class S {
     );
   }
 
+  /// `Grade`
+  String get labelGrade {
+    return Intl.message(
+      'Grade',
+      name: 'labelGrade',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Privacy Policy`
   String get labelPrivacyPolicy {
     return Intl.message(
@@ -400,6 +500,16 @@ class S {
     return Intl.message(
       'consent for editing rights',
       name: 'labelPermissionsConsent',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `feedback policy`
+  String get labelFeedbackPolicy {
+    return Intl.message(
+      'feedback policy',
+      name: 'labelFeedbackPolicy',
       desc: '',
       args: [],
     );
@@ -465,6 +575,96 @@ class S {
     );
   }
 
+  /// `Today`
+  String get labelToday {
+    return Intl.message(
+      'Today',
+      name: 'labelToday',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tomorrow`
+  String get labelTomorrow {
+    return Intl.message(
+      'Tomorrow',
+      name: 'labelTomorrow',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Now`
+  String get labelNow {
+    return Intl.message(
+      'Now',
+      name: 'labelNow',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `People`
+  String get labelPeople {
+    return Intl.message(
+      'People',
+      name: 'labelPeople',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Classes`
+  String get labelClasses {
+    return Intl.message(
+      'Classes',
+      name: 'labelClasses',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Feedback`
+  String get labelFeedback {
+    return Intl.message(
+      'Feedback',
+      name: 'labelFeedback',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Issue`
+  String get labelIssue {
+    return Intl.message(
+      'Issue',
+      name: 'labelIssue',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Report type`
+  String get labelReportType {
+    return Intl.message(
+      'Report type',
+      name: 'labelReportType',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Contact info (optional)`
+  String get labelContactInfoOptional {
+    return Intl.message(
+      'Contact info (optional)',
+      name: 'labelContactInfoOptional',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Shortcuts`
   String get sectionShortcuts {
     return Intl.message(
@@ -525,6 +725,26 @@ class S {
     );
   }
 
+  /// `Feedback needed`
+  String get sectionFeedbackNeeded {
+    return Intl.message(
+      'Feedback needed',
+      name: 'sectionFeedbackNeeded',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Feedback completed`
+  String get sectionFeedbackCompleted {
+    return Intl.message(
+      'Feedback completed',
+      name: 'sectionFeedbackCompleted',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Main page`
   String get shortcutTypeMain {
     return Intl.message(
@@ -570,6 +790,16 @@ class S {
     return Intl.message(
       'john.doe',
       name: 'hintEmail',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `john.doe@gmail.com`
+  String get hintFullEmail {
+    return Intl.message(
+      'john.doe@gmail.com',
+      name: 'hintFullEmail',
       desc: '',
       args: [],
     );
@@ -650,6 +880,26 @@ class S {
     return Intl.message(
       '4.0',
       name: 'hintPoints',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `I love the app!`
+  String get hintFeedback {
+    return Intl.message(
+      'I love the app!',
+      name: 'hintFeedback',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `When I open the app...`
+  String get hintIssue {
+    return Intl.message(
+      'When I open the app...',
+      name: 'hintIssue',
       desc: '',
       args: [],
     );
@@ -1115,6 +1365,26 @@ class S {
     );
   }
 
+  /// `Answer cannot be empty.`
+  String get errorAnswerCannotBeEmpty {
+    return Intl.message(
+      'Answer cannot be empty.',
+      name: 'errorAnswerCannotBeEmpty',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `The answer you entered is incorrect.`
+  String get errorAnswerIncorrect {
+    return Intl.message(
+      'The answer you entered is incorrect.',
+      name: 'errorAnswerIncorrect',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Please select a picture that is less than 5MB.`
   String get errorPictureSizeToBig {
     return Intl.message(
@@ -1130,6 +1400,36 @@ class S {
     return Intl.message(
       'The image could not be loaded.',
       name: 'errorImage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Unable to insert events in Google Calendar.`
+  String get errorInsertGoogleEvents {
+    return Intl.message(
+      'Unable to insert events in Google Calendar.',
+      name: 'errorInsertGoogleEvents',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Could not load requests`
+  String get errorLoadRequests {
+    return Intl.message(
+      'Could not load requests',
+      name: 'errorLoadRequests',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Unknown User`
+  String get errorUnknownUser {
+    return Intl.message(
+      'Unknown User',
+      name: 'errorUnknownUser',
       desc: '',
       args: [],
     );
@@ -1250,6 +1550,36 @@ class S {
     return Intl.message(
       'Already showing all content.',
       name: 'warningFilterAlreadyDisabled',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Already showing unprocessed requests`
+  String get warningFilterAlreadyUnprocessed {
+    return Intl.message(
+      'Already showing unprocessed requests',
+      name: 'warningFilterAlreadyUnprocessed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Already showing all requests.`
+  String get warningFilterAlreadyAll {
+    return Intl.message(
+      'Already showing all requests.',
+      name: 'warningFilterAlreadyAll',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You have already submitted feedback for this class!`
+  String get warningFeedbackAlreadySent {
+    return Intl.message(
+      'You have already submitted feedback for this class!',
+      name: 'warningFeedbackAlreadySent',
       desc: '',
       args: [],
     );
@@ -1415,6 +1745,16 @@ class S {
     );
   }
 
+  /// `You need to select your assistant for this class.`
+  String get warningYouNeedToSelectAssistant {
+    return Intl.message(
+      'You need to select your assistant for this class.',
+      name: 'warningYouNeedToSelectAssistant',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Could not read favourite websites.`
   String get warningFavouriteWebsitesInitializationFailed {
     return Intl.message(
@@ -1440,6 +1780,16 @@ class S {
     return Intl.message(
       'There are no news yet.',
       name: 'warningNoNews',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `This event cannot be edited.`
+  String get warningEventNotEditable {
+    return Intl.message(
+      'This event cannot be edited.',
+      name: 'warningEventNotEditable',
       desc: '',
       args: [],
     );
@@ -1565,6 +1915,66 @@ class S {
     );
   }
 
+  /// `Class information`
+  String get navigationClassInfo {
+    return Intl.message(
+      'Class information',
+      name: 'navigationClassInfo',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Search`
+  String get navigationSearch {
+    return Intl.message(
+      'Search',
+      name: 'navigationSearch',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Classes found`
+  String get navigationSearchResults {
+    return Intl.message(
+      'Classes found',
+      name: 'navigationSearchResults',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Feedback`
+  String get navigationClassFeedback {
+    return Intl.message(
+      'Feedback',
+      name: 'navigationClassFeedback',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Feedback checklist`
+  String get navigationClassesFeedbackChecklist {
+    return Intl.message(
+      'Feedback checklist',
+      name: 'navigationClassesFeedbackChecklist',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Permission requests`
+  String get navigationAdmin {
+    return Intl.message(
+      'Permission requests',
+      name: 'navigationAdmin',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Show all`
   String get filterMenuShowAll {
     return Intl.message(
@@ -1590,6 +2000,16 @@ class S {
     return Intl.message(
       'Filter by relevance',
       name: 'filterMenuRelevance',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Show unprocessed`
+  String get filterMenuShowUnprocessed {
+    return Intl.message(
+      'Show unprocessed',
+      name: 'filterMenuShowUnprocessed',
       desc: '',
       args: [],
     );
@@ -1665,6 +2085,76 @@ class S {
     );
   }
 
+  /// `Data control`
+  String get settingsTitleDataControl {
+    return Intl.message(
+      'Data control',
+      name: 'settingsTitleDataControl',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your editing permissions`
+  String get settingsItemEditingPermissions {
+    return Intl.message(
+      'Your editing permissions',
+      name: 'settingsItemEditingPermissions',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No special permissions`
+  String get settingsPermissionsNone {
+    return Intl.message(
+      'No special permissions',
+      name: 'settingsPermissionsNone',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Permission to add public info`
+  String get settingsPermissionsAdd {
+    return Intl.message(
+      'Permission to add public info',
+      name: 'settingsPermissionsAdd',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Permission to edit public info`
+  String get settingsPermissionsEdit {
+    return Intl.message(
+      'Permission to edit public info',
+      name: 'settingsPermissionsEdit',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Admin permissions`
+  String get settingsAdminPermissions {
+    return Intl.message(
+      'Admin permissions',
+      name: 'settingsAdminPermissions',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Permissions request already sent`
+  String get settingsPermissionsRequestSent {
+    return Intl.message(
+      'Permissions request already sent',
+      name: 'settingsPermissionsRequestSent',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Language`
   String get settingsItemLanguage {
     return Intl.message(
@@ -1705,11 +2195,51 @@ class S {
     );
   }
 
+  /// `Admin Panel`
+  String get settingsItemAdmin {
+    return Intl.message(
+      'Admin Panel',
+      name: 'settingsItemAdmin',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Relevance filter`
   String get settingsRelevanceFilter {
     return Intl.message(
       'Relevance filter',
       name: 'settingsRelevanceFilter',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Export events to Google Calendar`
+  String get settingsExportToGoogleCalendar {
+    return Intl.message(
+      'Export events to Google Calendar',
+      name: 'settingsExportToGoogleCalendar',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Timetable`
+  String get settingsTitleTimetable {
+    return Intl.message(
+      'Timetable',
+      name: 'settingsTitleTimetable',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Contact us`
+  String get settingsFeedbackForm {
+    return Intl.message(
+      'Contact us',
+      name: 'settingsFeedbackForm',
       desc: '',
       args: [],
     );
@@ -2005,10 +2535,10 @@ class S {
     );
   }
 
-  /// `Enter your e-mai in order to receive instructions on how to reset your password.`
+  /// `Enter your e-mail in order to receive instructions on how to reset your password.`
   String get messageResetPassword {
     return Intl.message(
-      'Enter your e-mai in order to receive instructions on how to reset your password.',
+      'Enter your e-mail in order to receive instructions on how to reset your password.',
       name: 'messageResetPassword',
       desc: '',
       args: [],
@@ -2215,21 +2745,31 @@ class S {
     );
   }
 
-  /// `Why do you want edit permissions for ACS UPB Mobile?`
-  String get messageAskPermissionToEdit {
+  /// `Why do you want edit permissions for {appName}?`
+  String messageAskPermissionToEdit(Object appName) {
     return Intl.message(
-      'Why do you want edit permissions for ACS UPB Mobile?',
+      'Why do you want edit permissions for $appName?',
       name: 'messageAskPermissionToEdit',
+      desc: '',
+      args: [appName],
+    );
+  }
+
+  /// `The request has been sent successfully.`
+  String get messageRequestHasBeenSent {
+    return Intl.message(
+      'The request has been sent successfully.',
+      name: 'messageRequestHasBeenSent',
       desc: '',
       args: [],
     );
   }
 
-  /// `The request has been sent succesfully.`
-  String get messageRequestHasBeenSent {
+  /// `The review has been sent successfully.`
+  String get messageFeedbackHasBeenSent {
     return Intl.message(
-      'The request has been sent succesfully.',
-      name: 'messageRequestHasBeenSent',
+      'The review has been sent successfully.',
+      name: 'messageFeedbackHasBeenSent',
       desc: '',
       args: [],
     );
@@ -2305,6 +2845,16 @@ class S {
     );
   }
 
+  /// `I understand this survey is extremely important for the continuous development of the educational process and I will only provide valuable and constructive feedback for this class.`
+  String get messageAgreeFeedbackPolicy {
+    return Intl.message(
+      'I understand this survey is extremely important for the continuous development of the educational process and I will only provide valuable and constructive feedback for this class.',
+      name: 'messageAgreeFeedbackPolicy',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `You can contribute to the app data, but you first need to request permissions.`
   String get messageYouCanContribute {
     return Intl.message(
@@ -2330,6 +2880,66 @@ class S {
     return Intl.message(
       'Profile picture updated successfully.',
       name: 'messagePictureUpdatedSuccess',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Do you have another question?`
+  String get messageAnotherQuestion {
+    return Intl.message(
+      'Do you have another question?',
+      name: 'messageAnotherQuestion',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Talk to Polly!`
+  String get messageTalkToChatbot {
+    return Intl.message(
+      'Talk to Polly!',
+      name: 'messageTalkToChatbot',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You need to complete {number} more feedback forms!`
+  String messageFeedbackLeft(Object number) {
+    return Intl.message(
+      'You need to complete $number more feedback forms!',
+      name: 'messageFeedbackLeft',
+      desc: '',
+      args: [number],
+    );
+  }
+
+  /// `You're already seeing the current week!`
+  String get messageAlreadySeeingCurrentWeek {
+    return Intl.message(
+      'You\'re already seeing the current week!',
+      name: 'messageAlreadySeeingCurrentWeek',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Report sent successfully.`
+  String get messageReportSent {
+    return Intl.message(
+      'Report sent successfully.',
+      name: 'messageReportSent',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Report could not be sent.`
+  String get messageReportNotSent {
+    return Intl.message(
+      'Report could not be sent.',
+      name: 'messageReportNotSent',
       desc: '',
       args: [],
     );
@@ -2425,13 +3035,13 @@ class S {
     );
   }
 
-  /// `ACS UPB Mobile is open source.`
-  String get infoAppIsOpenSource {
+  /// `{appName} is open source.`
+  String infoAppIsOpenSource(Object appName) {
     return Intl.message(
-      'ACS UPB Mobile is open source.',
+      '$appName is open source.',
       name: 'infoAppIsOpenSource',
       desc: '',
-      args: [],
+      args: [appName],
     );
   }
 
@@ -2442,6 +3052,96 @@ class S {
       name: 'infoEmail',
       desc: '',
       args: [forum],
+    );
+  }
+
+  /// `Loading...`
+  String get infoLoading {
+    return Intl.message(
+      'Loading...',
+      name: 'infoLoading',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Read the {appName} policy`
+  String infoReadThePolicy(Object appName) {
+    return Intl.message(
+      'Read the $appName policy',
+      name: 'infoReadThePolicy',
+      desc: '',
+      args: [appName],
+    );
+  }
+
+  /// `Export filtered events from Timetable`
+  String get infoExportToGoogleCalendar {
+    return Intl.message(
+      'Export filtered events from Timetable',
+      name: 'infoExportToGoogleCalendar',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `This form is anonymous.`
+  String get infoFormAnonymous {
+    return Intl.message(
+      'This form is anonymous.',
+      name: 'infoFormAnonymous',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Leave feedback and report issues`
+  String get infoFeedbackForm {
+    return Intl.message(
+      'Leave feedback and report issues',
+      name: 'infoFeedbackForm',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `In case we need to follow up with you`
+  String get infoContactInfo {
+    return Intl.message(
+      'In case we need to follow up with you',
+      name: 'infoContactInfo',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Handle permission requests`
+  String get infoAdmin {
+    return Intl.message(
+      'Handle permission requests',
+      name: 'infoAdmin',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Accepted`
+  String get infoAccepted {
+    return Intl.message(
+      'Accepted',
+      name: 'infoAccepted',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Denied`
+  String get infoDenied {
+    return Intl.message(
+      'Denied',
+      name: 'infoDenied',
+      desc: '',
+      args: [],
     );
   }
 
@@ -2480,6 +3180,16 @@ class S {
     return Intl.message(
       'and',
       name: 'stringAnd',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `at`
+  String get stringAt {
+    return Intl.message(
+      'at',
+      name: 'stringAt',
       desc: '',
       args: [],
     );
