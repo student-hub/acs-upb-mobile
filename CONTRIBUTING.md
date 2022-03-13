@@ -103,7 +103,9 @@ Similarly, please create one PR per development item, instead of bundling multip
     * For simplicity, you could call the default "main.dart" configuration in Android Studio "Debug", duplicate it and call the second one "Release", with `--release` as an argument. For example:
     <img src=screenshots/other/release_configuration.png>
     
-- On Android, ACS UPB Mobile uses **a separate (development) environment in debug mode**. That means a completely different Firebase project - separate data, including user info. This is not used automatically on iOS and web (#105), but on web you can manually switch to the dev environment by replacing `firebaseConfig.release` with `firebaseConfig.debug` in the [web/index.html](web/index.html) file.
+* On Android, ACS UPB Mobile uses **a separate (development) environment in debug mode**. That means a completely different Firebase project - separate data, including user info. Some important notes:
+  - This is not used automatically on iOS and web (#105), but on web you can manually switch to the dev environment by replacing `firebaseConfig.release` with `firebaseConfig.debug` in the [web/index.html](web/index.html) file.
+  - If you want to copy the data from the production environment into the development environment, you need to follow the export/import instructions from the Firebase [docs](https://firebase.google.com/docs/firestore/manage-data/export-import#export_data). This can help debug builds to match prod better, but this **should NEVER be used to copy user data**. Everything in the users/ collection should stay on the production project (and it would not work anyway, since the user IDs don't match the users in dev).
 
   | :exclamation: | You should ALWAYS use the separate development environment for testing the app when modifying any kind of data, so as not to risk breaking something in the production database. |
   |---------------|:---------------|
