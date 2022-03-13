@@ -744,6 +744,29 @@ You do not need to worry about deploying to the production environment, as that 
 
 The project currently has two functions set up to perform daily backups of the data in Firestore ([backupFirestore](functions/src/firestore-backup.js)) and Storage ([backupStorage](functions/src/storage-backup.js)). They are scheduled to run automatically, every day at 00:00 EEST.
 
+The Functions page in the Firebase console offers a useful overview of the functions and their logs, but for more details and control you can also view them in the [Cloud Functions dashboard](https://console.cloud.google.com/functions) of the Google Cloud Console.
+
+#### Testing
+
+Usually, cloud functions can be tested locally using the Firebase [emulator](https://firebase.google.com/docs/functions/local-emulator). However, since our backup functions are using [Pub/Sub & Cloud Scheduler](https://firebase.google.com/docs/firestore/solutions/schedule-export) to run at scheduled times, they are a bit trickier to test using the emulator. They can, however, be tested on the **dev** project by deploying them manually through the [Firebase CLI](https://firebase.google.com/docs/cli).
+
+To do that, you first need to create a service account key by going to the Firebase console of the development project, pressing the cogwheel, then "Users and permissions". On the "Service accounts" tab under "Firebase Admin SDK", make sure "Node.js" is selected and press "Generate new service key". The generated file needs to be named "serviceAccountKey.json" and placed in the functions/ folder of your local copy of the repository. Note that this file is currently used only by `backupStorage`, as `backupFirestore` automatically uses the default service account ([docs](https://firebase.google.com/docs/firestore/solutions/schedule-export#configure_access_permissions)).
+
+Next, to deploy the functions to the dev project, you need to run:
+
+```shell
+# IMPORTANT: Switch to the dev project
+firebase use dev
+# Deploy local functions/.
+firebase deploy --only functions
+# Alternatively, you can also deploy a specific function using, e.g.:
+# firebase deploy --only functions:backupFirestore
+```
+
+**NOTE:** Recent npm versions seem to have an issue with the `--prefix` flag not working on Windows ([older issue](https://github.com/npm/cli/issues/1290), [newer issue](https://github.com/npm/cli/issues/4511)). If you're getting an `ENOENT` error saying that acs_upb_mobile\package.json cannot be found, try replacing `--prefix` with `--cwd` in [firebase.json](firebase.json).
+
+You can then go to the Firebase console under Functions, press the three dots next to one of the functions and select "View in Cloud Scheduler". In this dashboard, you can trigger the functions manually when needed.
+
 ## Internationalization
 
 ### On-device
@@ -782,4 +805,4 @@ If you need to use icons other than the ones provided by the
 * Copy the IconData definitions from the `.dart` file in the archive and replace the corresponding definitions in the [`CustomIcons`](lib/resources/custom_icons.dart) class;
 * Check that everything still works correctly :)
 
-**Note**: [FontAwesome](https://fontawesome.com/icons?d=gallery) outline icons are recommended, where possible, because they are consistent with the overall style. For additional action icons check out [FontAwesomeActions](https://github.com/nyon/fontawesome-actions) - the repo provides an [`.svg` font](https://github.com/nyon/fontawesome-actions/blob/master/dist/fonts/fontawesome-webfont.svg) you can upload directly into [FlutterIcon](https://www.fluttericon.com/).
+**NOTE:** [FontAwesome](https://fontawesome.com/icons?d=gallery) outline icons are recommended, where possible, because they are consistent with the overall style. For additional action icons check out [FontAwesomeActions](https://github.com/nyon/fontawesome-actions) - the repo provides an [`.svg` font](https://github.com/nyon/fontawesome-actions/blob/master/dist/fonts/fontawesome-webfont.svg) you can upload directly into [FlutterIcon](https://www.fluttericon.com/).
