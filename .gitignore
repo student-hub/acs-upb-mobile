@@ -39,6 +39,7 @@ lib/generated_plugin_registrant.dart
 node_modules
 Gemfile.lock
 package-lock.json
+.fvm/
 
 # Exceptions to above rules.
 !/packages/flutter_tools/test/data/dart_dependencies_test/**/.packages
