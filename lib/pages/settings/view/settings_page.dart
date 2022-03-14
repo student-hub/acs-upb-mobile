@@ -117,7 +117,9 @@ class _SettingsPageState extends State<SettingsPage> {
                   ),
                 ),
                 Visibility(
-                  visible: authProvider.currentUserFromCache.isAdmin == true,
+                  visible: authProvider.isAuthenticated &&
+                      !authProvider.isAnonymous &&
+                      authProvider.currentUserFromCache.isAdmin == true,
                   child: ListTile(
                     key: const Key('AdminPanel'),
                     onTap: () =>

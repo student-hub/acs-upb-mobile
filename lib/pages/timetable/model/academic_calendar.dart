@@ -79,28 +79,30 @@ class AcademicCalendar {
     return weeksByYear.values.expand((e) => e).toSet();
   }
 
+
   int semesterForDate(LocalDate date) {
     for (final semester in semesters) {
       if (date._isBeforeOrDuring(semester)) {
-        // semester.id is represented as "semesterN", where "semester0" is the first semester
         return 1 + int.tryParse(semester.id[semester.id.length - 1]);
       }
     }
     return -1;
   }
 
+
   String getWeekNumber(LocalDate date) {
-    final Set<int> holidayWeeks = {};
+   
     final week = ((date.dayOfYear - date.dayOfWeek.value + 10) / 7).floor();
     if (LeadHeader.academicWeekNumber == false) return week.toString();
-    for (var i = 1; i < 53; i++) {
-      if (!nonHolidayWeeks.contains(i)) holidayWeeks.add(i);
-    }
-
+    final int finalWeekOfFirstSem = ((semesters[0].endDate.dayOfYear - semesters[0].endDate.dayOfWeek.value + 10) / 7).floor();
     if (!nonHolidayWeeks.contains(week)) {
       return 'H';
     } else {
-      return (nonHolidayWeeks.toList().indexOf(week) + 1).toString();
+      if(semesterForDate(date)==1) {
+        return (nonHolidayWeeks.toList().indexOf(week) + 1).toString();
+      } else {
+       return ((nonHolidayWeeks.toList().indexOf(week) + 1)-(nonHolidayWeeks.toList().indexOf(finalWeekOfFirstSem) + 1)).toString();
+      }
     }
   }
 }
