@@ -10,7 +10,6 @@ import 'package:black_hole_flutter/black_hole_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:time_machine/time_machine.dart';
 
-
 import 'package:timetable/src/theme.dart';
 
 // ignore: implementation_imports
