@@ -82,7 +82,7 @@ Similarly, please create one PR per development item, instead of bundling multip
 Future improvements on the app are tracked in Github's **Projects** and **Issues**. Use **Projects** for bugs which don't affect the normal usage of the app or less important features. Major bugs and more relevant features are tracked on **Issues**. Keep in mind that you can convert a **Project** into an **Issue** if necessary (e.g. if you start working on it and want to have it assigned or associated with a PR).
 
 When mentioning an issue in code using a *TODO* comment, consider using the format:
- ```TODO(username / name): Description, #issueID```
+ ```TODO(GitHub username): Description, #issueID```
 
 As mentioned in [flutter_style_todos](https://dart-lang.github.io/linter/lints/flutter_style_todos.html) lint, the person mentioned in the TODO is the person most familiar with the issue, **and not necesarily the one who is assigned to solve it**. 
 
