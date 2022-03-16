@@ -84,7 +84,7 @@ Future improvements on the app are tracked in Github's **Projects** and **Issues
 When mentioning an issue in code using a *TODO* comment, consider using the format:
  ```TODO(GitHub username): Description, #issueID```
 
-As mentioned in [flutter_style_todos](https://dart-lang.github.io/linter/lints/flutter_style_todos.html) lint, the person mentioned in the TODO is the person most familiar with the issue, **and not necesarily the one who is assigned to solve it**. 
+As mentioned in [flutter_style_todos](https://dart-lang.github.io/linter/lints/flutter_style_todos.html) lint, the person mentioned in the *TODO* is the person most familiar with the issue, **and not necesarily the one who is assigned to solve it**. 
 
 ## Development tips
 
