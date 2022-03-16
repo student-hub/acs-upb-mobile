@@ -79,7 +79,7 @@ Similarly, please create one PR per development item, instead of bundling multip
 |-----------|:------------------------------------------------------------------------------------------------------------|
 
 ### Bugs & features
-Future improvements on the app are tracked in Github's **Projects** and **Issues**. Use **Projects** for bugs which don't affect the normal usage of the app or less important features. Major bugs and more relevant features are tracked on **Issues**. Keep in mind that you can convert a **Project** into an **Issue** if necessary.
+Future improvements on the app are tracked in Github's **Projects** and **Issues**. Use **Projects** for bugs which don't affect the normal usage of the app or less important features. Major bugs and more relevant features are tracked on **Issues**. Keep in mind that you can convert a **Project** into an **Issue** if necessary (e.g. if you start working on it and want to have it assigned or associated with a PR).
 
 When mentioning an issue in code using a *TODO* comment, consider using the format:
  ```TODO(username / name): Description, #issueID```
