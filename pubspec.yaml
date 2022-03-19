@@ -26,13 +26,13 @@ dependencies:
   auto_size_text: ^3.0.0-nullsafety.0
 
   # Dart helper methods
-  basic_utils: ^3.1.0
+  basic_utils: ^4.2.0
 
   # Caching utilities
   cached_network_image: ^3.0.0
 
   # Firebase Firestore
-  cloud_firestore: ^2.2.1
+  cloud_firestore: ^3.1.10
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -58,18 +58,18 @@ dependencies:
   file_picker: ^4.1.3
 
   # Firebase products
-  firebase_analytics: ^8.1.1
-  firebase_auth: ^1.3.0
-  firebase_core: ^1.6.0
-  firebase_remote_config: ^0.11.0
-  firebase_storage: ^8.1.1
+  firebase_analytics: ^9.1.2
+  firebase_auth: ^3.3.11
+  firebase_core: ^1.6.1
+  firebase_remote_config: ^2.0.2
+  firebase_storage: ^10.2.9
 
   # Flutter SDK
   flutter:
     sdk: flutter
 
   # Color picker widget
-  flutter_colorpicker: ^0.4.0
+  flutter_colorpicker: ^1.0.3
 
   # Allow using feather icons (nice outlined icons)
   flutter_feather_icons: ^2.0.0+1
@@ -82,10 +82,10 @@ dependencies:
   flutter_markdown: ^0.6.2
 
   # Use an in-app browser to ask user for Google Calendar permission
-  flutter_web_browser: ^0.14.0
+  flutter_web_browser: ^0.17.0
 
   # Used for Google Calendar API
-  googleapis: ^3.0.0
+  googleapis: ^8.1.0
 
   # Used for getting the permission of the user to access their Google Calendar
   googleapis_auth: ^1.1.0
@@ -127,7 +127,7 @@ dependencies:
   rrule: ^0.2.3
 
   # Async utilities
-  rxdart: ^0.26.0
+  rxdart: ^0.27.3
 
   # Support lock/mutex
   synchronized: ^3.0.0
@@ -156,13 +156,13 @@ dependencies:
 
 dev_dependencies:
   # Code analysis
-  extra_pedantic: ^1.3.0
+  extra_pedantic: ^2.0.0
 
   # Simplifies updating the launcher icon
   flutter_launcher_icons: ^0.9.0
 
   # Generates native code for adding splash screens on iOS & Android
-  flutter_native_splash: ^1.1.8+4
+  flutter_native_splash: ^2.1.1
 
   # Testing framework
   flutter_test:
@@ -181,7 +181,7 @@ dev_dependencies:
   plugin_platform_interface: ^2.0.0
 
   # Using Provider for state management
-  provider: ^5.0.0
+  provider: ^6.0.2
 
 # The following section is specific to Flutter.
 flutter:

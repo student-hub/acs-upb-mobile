@@ -193,9 +193,9 @@ class AppLoadingScreen extends StatelessWidget {
       });
 
       if (kDebugMode || kProfileMode) {
-        await FirebaseAnalytics().setAnalyticsCollectionEnabled(false);
+        await FirebaseAnalytics.instance.setAnalyticsCollectionEnabled(false);
       } else if (kReleaseMode) {
-        await FirebaseAnalytics().setAnalyticsCollectionEnabled(true);
+        await FirebaseAnalytics.instance.setAnalyticsCollectionEnabled(true);
       }
 
       // TODO(IoanaAlexandru): Make `rrule` package support Romanian
