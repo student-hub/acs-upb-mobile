@@ -6,8 +6,8 @@
 // import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
 // import 'package:acs_upb_mobile/pages/faq/model/question.dart';
 // import 'package:acs_upb_mobile/pages/faq/service/question_provider.dart';
-// import 'package:acs_upb_mobile/pages/news_feed/model/news_feed_item.dart';
-// import 'package:acs_upb_mobile/pages/news_feed/service/news_provider.dart';
+// import 'package:acs_upb_mobile/pages/news_feed/model/agg_news_feed_item.dart';
+// import 'package:acs_upb_mobile/pages/news_feed/service/agg_news_provider.dart';
 // import 'package:acs_upb_mobile/pages/portal/service/website_provider.dart';
 // import 'package:acs_upb_mobile/pages/settings/service/request_provider.dart';
 // import 'package:acs_upb_mobile/pages/settings/view/request_permissions.dart';

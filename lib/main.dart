@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:acs_upb_mobile/pages/agg_news_feed/service/agg_news_provider.dart';
+import 'package:acs_upb_mobile/pages/agg_news_feed/view/agg_news_feed_page.dart';
 import 'package:easy_dynamic_theme/easy_dynamic_theme.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -91,6 +93,7 @@ Future<void> main() async {
           ChangeNotifierProvider<QuestionProvider>(
               create: (_) => QuestionProvider()),
           ChangeNotifierProvider<NewsProvider>(create: (_) => NewsProvider()),
+          ChangeNotifierProvider<AggNewsProvider>(create: (_) => AggNewsProvider()),
           ChangeNotifierProxyProvider<AuthProvider, FilterProvider>(
             create: (_) => FilterProvider(global: true),
             update: (context, authProvider, filterProvider) {
@@ -171,6 +174,7 @@ class _MyAppState extends State<MyApp> {
             Routes.faq: (_) => FaqPage(),
             Routes.filter: (_) => const FilterPage(),
             Routes.newsFeed: (_) => NewsFeedPage(),
+            Routes.aggNewsFeed: (_) => AggNewsFeedPage(),
             Routes.requestPermissions: (_) => RequestPermissionsPage(),
             Routes.adminPanel: (_) => const AdminPanelPage(),
           },

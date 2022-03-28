@@ -11,8 +11,8 @@
 // import 'package:acs_upb_mobile/pages/filter/model/filter.dart';
 // import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
 // import 'package:acs_upb_mobile/pages/home/home_page.dart';
-// import 'package:acs_upb_mobile/pages/news_feed/model/news_feed_item.dart';
-// import 'package:acs_upb_mobile/pages/news_feed/service/news_provider.dart';
+// import 'package:acs_upb_mobile/pages/news_feed/model/agg_news_feed_item.dart';
+// import 'package:acs_upb_mobile/pages/news_feed/service/agg_news_provider.dart';
 // import 'package:acs_upb_mobile/pages/people/service/person_provider.dart';
 // import 'package:acs_upb_mobile/pages/portal/service/website_provider.dart';
 // import 'package:acs_upb_mobile/pages/timetable/model/events/uni_event.dart';

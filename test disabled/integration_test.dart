@@ -22,9 +22,9 @@
 // import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
 // import 'package:acs_upb_mobile/pages/filter/view/filter_page.dart';
 // import 'package:acs_upb_mobile/pages/home/home_page.dart';
-// import 'package:acs_upb_mobile/pages/news_feed/model/news_feed_item.dart';
-// import 'package:acs_upb_mobile/pages/news_feed/service/news_provider.dart';
-// import 'package:acs_upb_mobile/pages/news_feed/view/news_feed_page.dart';
+// import 'package:acs_upb_mobile/pages/news_feed/model/agg_news_feed_item.dart';
+// import 'package:acs_upb_mobile/pages/news_feed/service/agg_news_provider.dart';
+// import 'package:acs_upb_mobile/pages/news_feed/view/agg_news_feed_page.dart';
 // import 'package:acs_upb_mobile/pages/people/model/person.dart';
 // import 'package:acs_upb_mobile/pages/people/service/person_provider.dart';
 // import 'package:acs_upb_mobile/pages/people/view/people_page.dart';

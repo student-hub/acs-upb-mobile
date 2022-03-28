@@ -1,5 +1,6 @@
 import '../authentication/view/login_view.dart';
 import '../authentication/view/sign_up_view.dart';
+import '../pages/agg_news_feed/view/agg_news_feed_page.dart';
 import '../pages/faq/view/faq_page.dart';
 import '../pages/filter/view/filter_page.dart';
 import '../pages/news_feed/view/news_feed_page.dart';
@@ -18,6 +19,7 @@ class Routes {
   static const String signUp = SignUpView.routeName;
   static const String faq = FaqPage.routeName;
   static const String newsFeed = NewsFeedPage.routeName;
+  static const String aggNewsFeed = AggNewsFeedPage.routeName;
   static const String requestPermissions = RequestPermissionsPage.routeName;
   static const String adminPanel = AdminPanelPage.routeName;
 }

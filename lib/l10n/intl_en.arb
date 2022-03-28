@@ -188,6 +188,7 @@
   "navigationClasses": "Classes",
   "navigationEventDetails": "Event details",
   "navigationNewsFeed": "News feed",
+  "aggNavigationNewsFeed": "ACS News feed",
   "navigationClassInfo": "Class information",
   "navigationSearch": "Search",
   "navigationSearchResults": "Classes found",
