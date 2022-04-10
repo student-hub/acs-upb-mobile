@@ -20,7 +20,7 @@ environment:
 
 dependencies:
   # Async utility classes
-  async: ^2.6.1
+  async: ^2.8.2
 
   # Helps with sizing text to fit container
   auto_size_text: ^3.0.0-nullsafety.0
