@@ -1,9 +1,7 @@
-import 'package:dart_date/dart_date.dart' show Interval;
 import 'package:flutter/material.dart' hide Interval;
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:provider/provider.dart';
 import 'package:recase/recase.dart';
-import 'package:supercharged/supercharged.dart';
 import 'package:timetable/timetable.dart';
 
 import '../../../authentication/service/auth_provider.dart';
@@ -202,11 +200,15 @@ class _TimetablePageState extends State<TimetablePage>
     );
   }
 
+  // TODO(IoanaAlexandru): This is not the cleanest approach, but the
+  //  functionality is missing from the timetable package:
+  //  https://github.com/JonasWanke/timetable/issues/119
   bool showingCurrentWeek() {
-    final todayPage = DateTime.now().page;
-    final currentPage = _dateController.visibleRange
-        .getTargetPageForFocus(_dateController.value.page);
-    return currentPage == todayPage;
+    final todayPage = DateTime.now().toUtc().atStartOfDay.datePage;
+    final currentPage = _dateController.value.page;
+    final visibleDayCount = _dateController.visibleRange.visibleDayCount;
+    return currentPage <= todayPage &&
+        todayPage <= currentPage + visibleDayCount - 1;
   }
 
   Future<void> scheduleDialog(BuildContext context) async {
