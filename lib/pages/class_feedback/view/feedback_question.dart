@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../../generated/l10n.dart';
@@ -47,14 +46,14 @@ class _FeedbackQuestionFormFieldState extends State<FeedbackQuestionFormField> {
               child: GestureDetector(
                 onTap: () => showDialog<dynamic>(
                   context: context,
-                  builder: (context) => Dialog(
+                  builder: (final context) => Dialog(
                     child: Padding(
                       padding: const EdgeInsets.all(10),
                       child: TextFormField(
                         keyboardType: TextInputType.number,
                         initialValue:
                             widget.question.answer ?? defaultVal.toString(),
-                        onChanged: (value) {
+                        onChanged: (final value) {
                           if (int.parse(value) >= 1 && int.parse(value) <= 10) {
                             setState(() =>
                                 widget.question.answer = value ?? defaultVal);
@@ -76,14 +75,14 @@ class _FeedbackQuestionFormFieldState extends State<FeedbackQuestionFormField> {
             ),
             Expanded(
               child: GestureDetector(
-                onTapDown: (_) => setState(() => _enabled = true),
+                onTapDown: (final _) => setState(() => _enabled = true),
                 child: Slider.adaptive(
                   key: const Key('FeedbackSlider'),
                   value: double.tryParse(widget.question.answer ?? '') ??
                       defaultVal,
                   onChanged: !_enabled
                       ? null
-                      : (newRating) {
+                      : (final newRating) {
                           setState(() {
                             widget.question.answer = newRating.toString();
                           });
@@ -101,7 +100,7 @@ class _FeedbackQuestionFormFieldState extends State<FeedbackQuestionFormField> {
               offset: const Offset(-20, 0),
               child: Checkbox(
                 value: !_enabled,
-                onChanged: (bool value) => setState(() {
+                onChanged: (final bool value) => setState(() {
                   _enabled = !value;
                   if (value) {
                     widget.question.answer = null;
@@ -127,9 +126,9 @@ class _FeedbackQuestionFormFieldState extends State<FeedbackQuestionFormField> {
       children: [
         EmojiFormField(
           question: widget.question.question,
-          onSaved: (value) {
+          onSaved: (final value) {
             widget.question.answer = value.keys
-                .firstWhere((element) => value[element] == true,
+                .firstWhere((final element) => value[element] == true,
                     orElse: () => -1)
                 .toString();
           },
@@ -156,19 +155,19 @@ class _FeedbackQuestionFormFieldState extends State<FeedbackQuestionFormField> {
             labelText: S.current.labelAnswer,
             prefixIcon: const Icon(Icons.list_outlined),
           ),
-          onSaved: (selection) {
+          onSaved: (final selection) {
             widget.question.answer = selection;
           },
           items: (widget.question as FeedbackQuestionDropdown)
               .options
               .map(
-                (type) => DropdownMenuItem<String>(
+                (final type) => DropdownMenuItem<String>(
                   value: type,
                   child: Text(type.toString()),
                 ),
               )
               .toList(),
-          onChanged: (selection) {
+          onChanged: (final selection) {
             widget.question.answer = selection;
           },
         ),
@@ -194,7 +193,7 @@ class _FeedbackQuestionFormFieldState extends State<FeedbackQuestionFormField> {
             children: [
               TextFormField(
                 key: const Key('FeedbackText'),
-                onSaved: (value) {
+                onSaved: (final value) {
                   widget.question.answer = value;
                 },
                 keyboardType: TextInputType.multiline,
@@ -209,7 +208,7 @@ class _FeedbackQuestionFormFieldState extends State<FeedbackQuestionFormField> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     if (widget.question is FeedbackQuestionSlider) {
       return feedbackQuestionSlider();
     } else if (widget.question is FeedbackQuestionRating) {

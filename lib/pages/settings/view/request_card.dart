@@ -24,13 +24,13 @@ class RequestCard extends StatefulWidget {
 class _RequestCardState extends State<RequestCard>
     with AutomaticKeepAliveClientMixin {
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     super.build(context);
     final adminProvider = Provider.of<AdminProvider>(context);
 
     return FutureBuilder(
         future: adminProvider.fetchRequest(widget.requestId),
-        builder: (context, snapshot) {
+        builder: (final context, final snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             final Request request = snapshot.data;
             return Padding(
@@ -41,7 +41,7 @@ class _RequestCardState extends State<RequestCard>
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      _buildUserHeader(request, adminProvider),
+                      _buildUserHeader(request),
                       const SizedBox(height: 10),
                       Text(
                         request.requestBody ?? '',
@@ -52,7 +52,7 @@ class _RequestCardState extends State<RequestCard>
                             .copyWith(fontSize: 14),
                       ),
                       const SizedBox(height: 10),
-                      _buildButtons(request.processed, adminProvider, request)
+                      _buildButtons(request.processed, request)
                     ],
                   ),
                 ),
@@ -64,52 +64,53 @@ class _RequestCardState extends State<RequestCard>
         });
   }
 
-  Widget _buildUserHeader(Request request, AdminProvider adminProvider) =>
-      FutureBuilder(
-          future: adminProvider.fetchUserById(request.userId),
-          builder: (context, snapshot) {
-            User user;
-            if (snapshot.connectionState == ConnectionState.done) {
-              user = snapshot.data;
-            }
-            return Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
+  Widget _buildUserHeader(final Request request) => FutureBuilder(
+      future: Provider.of<AdminProvider>(context).fetchUserById(request.userId),
+      builder: (final context, final snapshot) {
+        User user;
+        if (snapshot.connectionState == ConnectionState.done) {
+          user = snapshot.data;
+        }
+        return Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Flexible(
-                        child: Text(
-                          snapshot.connectionState != ConnectionState.done
-                              ? '-'
-                              : '${user?.firstName ?? S.current.errorUnknownUser} ${user?.lastName ?? ''}',
-                          textDirection: ui.TextDirection.ltr,
-                          style: Theme.of(context).textTheme.headline6.copyWith(
-                              fontSize: 18, fontWeight: FontWeight.bold),
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 2,
-                        ),
-                      ),
-                      if (request.processed && request.accepted != null)
-                        _buildAcceptedMarker(request.accepted),
-                    ],
+                  Flexible(
+                    child: Text(
+                      snapshot.connectionState != ConnectionState.done
+                          ? '-'
+                          : '${user?.firstName ?? S.current.errorUnknownUser} ${user?.lastName ?? ''}',
+                      textDirection: ui.TextDirection.ltr,
+                      style: Theme.of(context).textTheme.headline6.copyWith(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 2,
+                    ),
                   ),
-                  Text(
-                    snapshot.connectionState != ConnectionState.done
-                        ? ''
-                        : '${user?.classes != null ? user?.classes[user.classes.length - 1] : '-'}',
-                    textDirection: ui.TextDirection.ltr,
-                    style: Theme.of(context)
-                        .textTheme
-                        .headline6
-                        .copyWith(fontSize: 14, fontWeight: FontWeight.bold),
-                    overflow: TextOverflow.fade,
-                    maxLines: 2,
-                  ),
-                ]);
-          });
+                  if (request.processed && request.accepted != null)
+                    _buildAcceptedMarker(request.accepted),
+                ],
+              ),
+              Text(
+                snapshot.connectionState != ConnectionState.done
+                    ? ''
+                    : '${user?.classes != null ? user?.classes[user.classes.length - 1] : '-'}',
+                textDirection: ui.TextDirection.ltr,
+                style: Theme.of(context)
+                    .textTheme
+                    .headline6
+                    .copyWith(fontSize: 14, fontWeight: FontWeight.bold),
+                overflow: TextOverflow.fade,
+                maxLines: 2,
+              ),
+            ]);
+      });
 
-  Widget _buildAcceptedMarker(bool accepted) => Container(
+  Widget _buildAcceptedMarker(final bool accepted) => Container(
         padding: const EdgeInsets.all(5),
         decoration: BoxDecoration(
           border:
@@ -122,81 +123,83 @@ class _RequestCardState extends State<RequestCard>
         ),
       );
 
-  Widget _buildButtons(
-          bool processed, AdminProvider adminProvider, Request request) =>
-      Row(
-        crossAxisAlignment: CrossAxisAlignment.end,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            '${DateFormat("dd-MM-yyyy").format(request.dateSubmitted?.toDate() ?? DateTime.now())}',
-            textDirection: ui.TextDirection.ltr,
-            style: Theme.of(context)
-                .textTheme
-                .headline6
-                .copyWith(fontSize: 12, color: Theme.of(context).hintColor),
-            overflow: TextOverflow.fade,
-            maxLines: 2,
-          ),
-          if (!processed)
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                AppButton(
-                  text: S.current.buttonDeny,
-                  color: Theme.of(context).secondaryButtonColor,
-                  width: 100,
-                  onTap: () async {
-                    await adminProvider.denyRequest(request.id);
-                    setState(() {
-                      request
-                        ..accepted = false
-                        ..processed = true;
-                    });
-                  },
-                ),
-                const SizedBox(width: 10),
-                AppButton(
-                  key: const Key('AcceptButton'),
-                  text: S.current.buttonAccept,
-                  color: Theme.of(context).primaryColor,
-                  width: 100,
-                  onTap: () async {
-                    await adminProvider.acceptRequest(request.id);
-                    setState(() {
-                      request
-                        ..accepted = true
-                        ..processed = true;
-                    });
-                  },
-                )
-              ],
-            )
-          else if (processed)
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                AppButton(
-                  text: S.current.buttonRevert,
-                  color: Theme.of(context).primaryColor,
-                  width: 100,
-                  onTap: () async {
-                    await adminProvider.revertRequest(request.id);
-                    setState(() {
-                      request
-                        ..accepted = false
-                        ..processed = false;
-                    });
-                  },
-                )
-              ],
-            )
-        ],
-      );
+  Widget _buildButtons(final bool processed, final Request request) {
+    final adminProvider = Provider.of<AdminProvider>(context, listen: false);
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.end,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          '${DateFormat("dd-MM-yyyy").format(request.dateSubmitted?.toDate() ?? DateTime.now())}',
+          textDirection: ui.TextDirection.ltr,
+          style: Theme.of(context)
+              .textTheme
+              .headline6
+              .copyWith(fontSize: 12, color: Theme.of(context).hintColor),
+          overflow: TextOverflow.fade,
+          maxLines: 2,
+        ),
+        if (!processed)
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              AppButton(
+                text: S.current.buttonDeny,
+                color: Theme.of(context).secondaryButtonColor,
+                width: 100,
+                onTap: () async {
+                  await adminProvider.denyRequest(request.id);
+                  setState(() {
+                    request
+                      ..accepted = false
+                      ..processed = true;
+                  });
+                },
+              ),
+              const SizedBox(width: 10),
+              AppButton(
+                key: const Key('AcceptButton'),
+                text: S.current.buttonAccept,
+                color: Theme.of(context).primaryColor,
+                width: 100,
+                onTap: () async {
+                  await adminProvider.acceptRequest(request.id);
+                  setState(() {
+                    request
+                      ..accepted = true
+                      ..processed = true;
+                  });
+                },
+              )
+            ],
+          )
+        else if (processed)
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              AppButton(
+                text: S.current.buttonRevert,
+                color: Theme.of(context).primaryColor,
+                width: 100,
+                onTap: () async {
+                  await adminProvider.revertRequest(request.id);
+                  setState(() {
+                    request
+                      ..accepted = false
+                      ..processed = false;
+                  });
+                },
+              )
+            ],
+          )
+      ],
+    );
+  }
 
   @override
   bool get wantKeepAlive => true;
 
   @override
-  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
+  dynamic noSuchMethod(final Invocation invocation) =>
+      super.noSuchMethod(invocation);
 }

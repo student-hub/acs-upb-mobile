@@ -1,6 +1,5 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:black_hole_flutter/black_hole_flutter.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:timetable/timetable.dart';
 
@@ -10,14 +9,14 @@ import 'event_view.dart';
 /// Widget to display all day events in the timetable, based on
 /// [BasicEventWidget] from the timetable API.
 class UniEventWidget extends StatelessWidget {
-  const UniEventWidget(this.event, {Key key})
+  const UniEventWidget(this.event, {final Key key})
       : assert(event != null, 'event is null'),
         super(key: key);
 
   final UniEventInstance event;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final color = event.color ??
         event?.mainEvent?.color ??
         Theme.of(context).primaryColor;
@@ -26,7 +25,7 @@ class UniEventWidget extends StatelessWidget {
 
     return GestureDetector(
       onTap: () => Navigator.of(context).push(MaterialPageRoute<EventView>(
-        builder: (_) => EventView(eventInstance: event),
+        builder: (final _) => EventView(eventInstance: event),
       )),
       child: Material(
         shape: RoundedRectangleBorder(

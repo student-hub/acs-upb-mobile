@@ -37,7 +37,7 @@ class GoogleCalendarServices {
 }
 
 extension UniEventProviderGoogleCalendar on UniEventProvider {
-  g_cal.Event convertEvent(UniEvent uniEvent) {
+  g_cal.Event convertEvent(final UniEvent uniEvent) {
     final g_cal.Event googleCalendarEvent = g_cal.Event();
 
     final g_cal.EventDateTime start = g_cal.EventDateTime();
@@ -77,7 +77,7 @@ extension UniEventProviderGoogleCalendar on UniEventProvider {
 
   // This opens a browser window asking the user to authenticate and allow access to edit their calendar.
   Future<void> insertGoogleEvents(
-      List<g_cal.Event> googleCalendarEvents) async {
+      final List<g_cal.Event> googleCalendarEvents) async {
     AutoRefreshingAuthClient client;
     try {
       client = await clientViaUserConsent(GoogleCalendarServices.credentials,
@@ -107,7 +107,7 @@ extension UniEventProviderGoogleCalendar on UniEventProvider {
         final String calendarId = returnedCalendar.id;
         for (final g_cal.Event event in googleCalendarEvents) {
           await calendarApi.events.insert(event, calendarId).then(
-            (value) {
+            (final value) {
               print('Added event status: ${value.status}');
               if (value.status == 'confirmed') {
                 print('Event named ${event.summary} added in Google Calendar');

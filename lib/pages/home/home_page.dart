@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -17,12 +16,12 @@ import 'profile_card.dart';
 import 'upcoming_events_card.dart';
 
 class HomePage extends StatelessWidget {
-  const HomePage({this.tabController, Key key}) : super(key: key);
+  const HomePage({this.tabController, final Key key}) : super(key: key);
 
   final TabController tabController;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
 
     return AppScaffold(
@@ -33,7 +32,7 @@ class HomePage extends StatelessWidget {
           tooltip: S.current.navigationSearch,
           onPressed: () => {
             Navigator.of(context).push(MaterialPageRoute<ClassesPage>(
-              builder: (_) => SearchPage(),
+              builder: (final _) => SearchPage(),
             ))
           },
         ),

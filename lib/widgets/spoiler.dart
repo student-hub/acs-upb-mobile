@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 
 const Duration _kExpand = Duration(milliseconds: 200);
 
 class AppSpoiler extends StatefulWidget {
   AppSpoiler({
-    Key key,
+    final Key key,
     this.title = '',
-    Widget content,
+    final Widget content,
     this.initiallyExpanded = true,
     this.level = 0,
   })  : content = content ?? Container(),
@@ -51,7 +50,7 @@ class _AppSpoilerState extends State<AppSpoiler>
       if (_isExpanded) {
         _controller.forward();
       } else {
-        _controller.reverse().then<void>((void value) {
+        _controller.reverse().then<void>((final void value) {
           if (!mounted) return;
           setState(() {
             // Rebuild without widget.children.
@@ -62,7 +61,7 @@ class _AppSpoilerState extends State<AppSpoiler>
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return Theme(
       data: Theme.of(context).copyWith(
         dividerColor: Colors.transparent,
@@ -92,7 +91,7 @@ class _AppSpoilerState extends State<AppSpoiler>
           ),
           trailing: const SizedBox(width: 0, height: 0),
           tilePadding: EdgeInsets.zero,
-          onExpansionChanged: (expansion) {
+          onExpansionChanged: (final expansion) {
             _isExpanded = expansion;
             _handleTap();
           },

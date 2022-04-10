@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -33,7 +32,7 @@ class _RequestPermissionsPageState extends State<RequestPermissionsPage> {
     }
   }
 
-  AppDialog _requestAlreadyExistsDialog(BuildContext context) {
+  AppDialog _requestAlreadyExistsDialog(final BuildContext context) {
     return AppDialog(
       title: S.current.warningRequestExists,
       content: [
@@ -59,7 +58,7 @@ class _RequestPermissionsPageState extends State<RequestPermissionsPage> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final requestProvider = Provider.of<RequestProvider>(context);
 
     return AppScaffold(
@@ -148,7 +147,7 @@ class _RequestPermissionsPageState extends State<RequestPermissionsPage> {
                   Checkbox(
                     value: agreedToResponsibilities,
                     visualDensity: VisualDensity.compact,
-                    onChanged: (value) =>
+                    onChanged: (final value) =>
                         setState(() => agreedToResponsibilities = value),
                   ),
                   Expanded(

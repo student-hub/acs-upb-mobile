@@ -9,7 +9,7 @@ class ErrorPage extends StatelessWidget {
     this.info,
     this.actionText,
     this.actionOnTap,
-    Key key,
+    final Key key,
   }) : super(key: key);
 
   final String imgPath;
@@ -19,7 +19,7 @@ class ErrorPage extends StatelessWidget {
   final void Function() actionOnTap;
 
   @override
-  Widget build(BuildContext context) => Padding(
+  Widget build(final BuildContext context) => Padding(
         padding: const EdgeInsets.all(10),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,

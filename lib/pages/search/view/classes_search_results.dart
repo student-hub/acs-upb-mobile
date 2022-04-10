@@ -1,5 +1,4 @@
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -16,12 +15,12 @@ class ClassesSearchResults extends StatelessWidget {
   final String query;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     List<ClassHeader> classesSearched;
     return FutureBuilder(
         future:
             Provider.of<ClassProvider>(context, listen: false).search(query),
-        builder: (_, snapshot) {
+        builder: (final _, final snapshot) {
           if (snapshot.connectionState == ConnectionState.done &&
               query.isNotEmpty) {
             classesSearched = snapshot.data;
@@ -40,7 +39,7 @@ class ClassesSearchResults extends StatelessWidget {
                             onTap: () {
                               Navigator.of(context)
                                   .push(MaterialPageRoute<SearchedClassesView>(
-                                      builder: (_) => SearchedClassesView(
+                                      builder: (final _) => SearchedClassesView(
                                             classHeaders: classesSearched,
                                             query: query,
                                           )));
@@ -70,13 +69,13 @@ class ClassesCircleList extends StatelessWidget {
   final List<ClassHeader> classHeaders;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return Container(
         padding: const EdgeInsets.all(10),
         child: Column(
             children: classHeaders
                 .take(3)
-                .map((classHeader) => Container(
+                .map((final classHeader) => Container(
                     padding: const EdgeInsets.fromLTRB(0, 0, 30, 0),
                     child: GestureDetector(
                         child: Row(children: <Widget>[
@@ -103,7 +102,7 @@ class ClassesCircleList extends StatelessWidget {
                         onTap: () => {
                               Navigator.of(context)
                                   .push(MaterialPageRoute<ClassView>(
-                                builder: (_) =>
+                                builder: (final _) =>
                                     ClassView(classHeader: classHeader),
                               ))
                             })))

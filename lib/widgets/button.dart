@@ -3,7 +3,12 @@ import 'package:flutter/material.dart';
 
 class AppButton extends StatefulWidget {
   const AppButton(
-      {Key key, this.color, this.text, this.textColor, this.onTap, this.width})
+      {final Key key,
+      this.color,
+      this.text,
+      this.textColor,
+      this.onTap,
+      this.width})
       : super(key: key);
 
   final Color color;
@@ -36,7 +41,7 @@ class _AppButtonState extends State<AppButton> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     // Set default color if none is set
     final color = widget.color ?? Theme.of(context).backgroundColor;
 
@@ -63,7 +68,7 @@ class _AppButtonState extends State<AppButton> {
               padding: const EdgeInsets.all(5),
               child: FutureBuilder(
                 future: future,
-                builder: (context, snapshot) {
+                builder: (final context, final snapshot) {
                   if (snapshot.connectionState != ConnectionState.done) {
                     return SizedBox(
                         height: 20,

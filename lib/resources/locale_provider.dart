@@ -29,7 +29,7 @@ class LocaleProvider {
     }
   }
 
-  static Locale localeFromString(String preferenceString) {
+  static Locale localeFromString(final String preferenceString) {
     switch (preferenceString) {
       case 'auto':
         return localeFromString(Intl.defaultLocale);

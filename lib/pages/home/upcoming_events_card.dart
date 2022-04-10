@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -9,11 +8,11 @@ import '../timetable/service/uni_event_provider.dart';
 import '../timetable/view/events/event_view.dart';
 
 class UpcomingEventsCard extends StatelessWidget {
-  const UpcomingEventsCard({Key key, this.onShowMore}) : super(key: key);
+  const UpcomingEventsCard({final Key key, this.onShowMore}) : super(key: key);
   final void Function() onShowMore;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final UniEventProvider eventProvider =
         Provider.of<UniEventProvider>(context);
 
@@ -21,10 +20,10 @@ class UpcomingEventsCard extends StatelessWidget {
       title: S.current.sectionEventsComingUp,
       onShowMore: onShowMore,
       future: eventProvider.getUpcomingEvents(DateTime.now()),
-      builder: (events) => Column(
+      builder: (final events) => Column(
         children: events
             .map(
-              (event) => ListTile(
+              (final event) => ListTile(
                 key: ValueKey(event.mainEvent.id),
                 contentPadding: EdgeInsets.zero,
                 leading: Padding(
@@ -47,7 +46,7 @@ class UpcomingEventsCard extends StatelessWidget {
                 subtitle: Text(event.relativeDateString),
                 onTap: () =>
                     Navigator.of(context).push(MaterialPageRoute<EventView>(
-                  builder: (_) => EventView(eventInstance: event),
+                  builder: (final _) => EventView(eventInstance: event),
                 )),
               ),
             )

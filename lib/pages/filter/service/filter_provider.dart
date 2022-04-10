@@ -8,7 +8,8 @@ import '../../../widgets/toast.dart';
 import '../model/filter.dart';
 
 extension FilterNodeExtension on FilterNode {
-  static FilterNode fromMap(Map<String, dynamic> map, String parentName) {
+  static FilterNode fromMap(
+      final Map<String, dynamic> map, final String parentName) {
     final children = <FilterNode>[];
 
     final sortedKeys = map.keys.toList()..sort();
@@ -23,7 +24,7 @@ extension FilterNodeExtension on FilterNode {
 class FilterProvider with ChangeNotifier {
   FilterProvider(
       {this.global = false,
-      bool filterEnabled,
+      final bool filterEnabled,
       this.defaultDegree,
       this.defaultRelevance})
       : _enabled = filterEnabled ?? prefService.get('relevance_filter') ?? true,
@@ -52,7 +53,7 @@ class FilterProvider with ChangeNotifier {
 
   AuthProvider _authProvider;
 
-  void updateAuth(AuthProvider authProvider) {
+  void updateAuth(final AuthProvider authProvider) {
     _authProvider = authProvider;
     clearCache();
   }
@@ -69,7 +70,7 @@ class FilterProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> _setFilterNodes(List<String> nodes) async {
+  Future<void> _setFilterNodes(final List<String> nodes) async {
     try {
       final DocumentReference doc =
           _db.collection('users').doc(_authProvider.uid);
@@ -99,7 +100,7 @@ class FilterProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void updateFilter(Filter filter) {
+  void updateFilter(final Filter filter) {
     _relevanceFilter = filter;
     if (global) {
       _setFilterNodes(_relevanceFilter.relevantNodes);

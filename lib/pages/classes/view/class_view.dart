@@ -1,5 +1,3 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:positioned_tap_detector_2/positioned_tap_detector_2.dart';
@@ -25,7 +23,7 @@ import 'grading_view.dart';
 import 'shortcut_view.dart';
 
 class ClassView extends StatefulWidget {
-  const ClassView({Key key, this.classHeader}) : super(key: key);
+  const ClassView({final Key key, this.classHeader}) : super(key: key);
 
   final ClassHeader classHeader;
 
@@ -44,18 +42,18 @@ class _ClassViewState extends State<ClassView> {
     final personProvider = Provider.of<PersonProvider>(context, listen: false);
     personProvider
         .mostRecentLecturer(widget.classHeader.id)
-        .then((lecturer) => setState(() => lecturerName = lecturer));
+        .then((final lecturer) => setState(() => lecturerName = lecturer));
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final classProvider = Provider.of<ClassProvider>(context);
     final feedbackProvider =
         Provider.of<FeedbackProvider>(context, listen: false);
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
     feedbackProvider
         .userSubmittedFeedbackForClass(authProvider.uid, widget.classHeader.id)
-        .then((value) => alreadyCompletedFeedback = value);
+        .then((final value) => alreadyCompletedFeedback = value);
 
     return AppScaffold(
       title: Text(S.current.navigationClassInfo),
@@ -71,11 +69,11 @@ class _ClassViewState extends State<ClassView> {
                         Navigator.of(context)
                             .push(
                               MaterialPageRoute<ClassFeedbackView>(
-                                builder: (_) => ClassFeedbackView(
+                                builder: (final _) => ClassFeedbackView(
                                     classHeader: widget.classHeader),
                               ),
                             )
-                            .then((value) => setState(() {}));
+                            .then((final value) => setState(() {}));
                       } else {
                         AppToast.show(S.current.warningFeedbackAlreadySent);
                       }
@@ -83,7 +81,7 @@ class _ClassViewState extends State<ClassView> {
       ],
       body: FutureBuilder(
           future: classProvider.fetchClassInfo(widget.classHeader),
-          builder: (context, snapshot) {
+          builder: (final context, final snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
               classInfo = snapshot.data;
 
@@ -103,7 +101,7 @@ class _ClassViewState extends State<ClassView> {
                         GradingChart(
                           grading: classInfo.grading,
                           lastUpdated: classInfo.gradingLastUpdated,
-                          onSave: (grading) => classProvider.setGrading(
+                          onSave: (final grading) => classProvider.setGrading(
                               widget.classHeader.id, grading),
                         ),
                       ],
@@ -118,7 +116,7 @@ class _ClassViewState extends State<ClassView> {
     );
   }
 
-  Widget shortcuts(BuildContext context) {
+  Widget shortcuts(final BuildContext context) {
     final classProvider = Provider.of<ClassProvider>(context);
     final authProvider = Provider.of<AuthProvider>(context);
 
@@ -140,22 +138,22 @@ class _ClassViewState extends State<ClassView> {
                             S.current.warningNoPermissionToEditClassInfo),
                     child: IconButton(
                       icon: const Icon(Icons.add_outlined),
-                      onPressed:
-                          authProvider.currentUserFromCache.canEditClassInfo
-                              ? () => Navigator.of(context).push(
-                                      MaterialPageRoute<ChangeNotifierProvider>(
-                                    builder: (context) =>
-                                        ChangeNotifierProvider.value(
-                                      value: classProvider,
-                                      child: ShortcutView(onSave: (shortcut) {
-                                        setState(() =>
-                                            classInfo.shortcuts.add(shortcut));
-                                        classProvider.addShortcut(
-                                            widget.classHeader.id, shortcut);
-                                      }),
-                                    ),
-                                  ))
-                              : null,
+                      onPressed: authProvider
+                              .currentUserFromCache.canEditClassInfo
+                          ? () => Navigator.of(context).push(
+                                  MaterialPageRoute<ChangeNotifierProvider>(
+                                builder: (final context) =>
+                                    ChangeNotifierProvider.value(
+                                  value: classProvider,
+                                  child: ShortcutView(onSave: (final shortcut) {
+                                    setState(() =>
+                                        classInfo.shortcuts.add(shortcut));
+                                    classProvider.addShortcut(
+                                        widget.classHeader.id, shortcut);
+                                  }),
+                                ),
+                              ))
+                          : null,
                     ),
                   ),
                 ],
@@ -177,7 +175,7 @@ class _ClassViewState extends State<ClassView> {
                   ]
                 : classInfo.shortcuts
                     .asMap()
-                    .map((i, s) => MapEntry(
+                    .map((final i, final s) => MapEntry(
                         i, shortcut(index: i, shortcut: s, context: context)))
                     .values
                     .toList()),
@@ -185,7 +183,7 @@ class _ClassViewState extends State<ClassView> {
     );
   }
 
-  IconData shortcutIcon(ShortcutType type) {
+  IconData shortcutIcon(final ShortcutType type) {
     switch (type) {
       case ShortcutType.main:
         return Icons.home_outlined;
@@ -200,7 +198,9 @@ class _ClassViewState extends State<ClassView> {
   }
 
   AppDialog _deletionConfirmationDialog(
-          {BuildContext context, String shortcutName, Function onDelete}) =>
+          {final BuildContext context,
+          final String shortcutName,
+          final Function onDelete}) =>
       AppDialog(
         icon: const Icon(Icons.delete_outlined),
         title: S.current.actionDeleteShortcut,
@@ -215,12 +215,13 @@ class _ClassViewState extends State<ClassView> {
         ],
       );
 
-  Widget shortcut({int index, Shortcut shortcut, BuildContext context}) {
+  Widget shortcut(
+      {final int index, final Shortcut shortcut, final BuildContext context}) {
     final classProvider = Provider.of<ClassProvider>(context);
 
     return PositionedTapDetector2(
-      onTap: (_) => Utils.launchURL(shortcut.link),
-      onLongPress: (position) async {
+      onTap: (final _) => Utils.launchURL(shortcut.link),
+      onLongPress: (final position) async {
         final RenderBox overlay =
             Overlay.of(context).context.findRenderObject();
         final option = await showMenu(
@@ -238,7 +239,7 @@ class _ClassViewState extends State<ClassView> {
           if (!mounted) return;
           await showDialog<dynamic>(
             context: context,
-            builder: (context) => _deletionConfirmationDialog(
+            builder: (final context) => _deletionConfirmationDialog(
               context: context,
               shortcutName: shortcut.name,
               onDelete: () async {
@@ -273,7 +274,7 @@ class _ClassViewState extends State<ClassView> {
     );
   }
 
-  Widget lecturerCard(BuildContext context) {
+  Widget lecturerCard(final BuildContext context) {
     final personProvider = Provider.of<PersonProvider>(context);
 
     return Card(
@@ -303,7 +304,7 @@ class _ClassViewState extends State<ClassView> {
                         await showModalBottomSheet<dynamic>(
                             isScrollControlled: true,
                             context: context,
-                            builder: (BuildContext buildContext) =>
+                            builder: (final BuildContext buildContext) =>
                                 PersonView(person: lecturer));
                       }
                     },

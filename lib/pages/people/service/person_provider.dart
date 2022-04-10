@@ -7,7 +7,7 @@ import '../../../widgets/toast.dart';
 import '../model/person.dart';
 
 extension PersonExtension on Person {
-  static Person fromSnap(DocumentSnapshot<Map<String, dynamic>> snap) {
+  static Person fromSnap(final DocumentSnapshot<Map<String, dynamic>> snap) {
     final data = snap.data();
     return Person(
       name: data['name'],
@@ -33,7 +33,7 @@ class PersonProvider with ChangeNotifier {
     }
   }
 
-  Future<Person> fetchPerson(String personName) async {
+  Future<Person> fetchPerson(final String personName) async {
     try {
       // Get person with name [personName]
       final QuerySnapshot<Map<String, dynamic>> query = await FirebaseFirestore
@@ -55,7 +55,7 @@ class PersonProvider with ChangeNotifier {
     }
   }
 
-  Future<String> mostRecentLecturer(String classId) async {
+  Future<String> mostRecentLecturer(final String classId) async {
     try {
       final QuerySnapshot<Map<String, dynamic>> query = await FirebaseFirestore
           .instance
@@ -79,7 +79,7 @@ class PersonProvider with ChangeNotifier {
     }
   }
 
-  Future<List<Person>> search(String query) async {
+  Future<List<Person>> search(final String query) async {
     if (query.isEmpty) {
       return <Person>[];
     }
@@ -87,12 +87,12 @@ class PersonProvider with ChangeNotifier {
     final List<String> searchedWords = query
         .toLowerCase()
         .split(' ')
-        .where((element) => element != '')
+        .where((final element) => element != '')
         .toList();
     return people
-            .where((person) => searchedWords.fold(
+            .where((final person) => searchedWords.fold(
                 true,
-                (previousValue, filter) =>
+                (final previousValue, final filter) =>
                     previousValue &&
                     person.name.toLowerCase().contains(filter.toLowerCase())))
             .toList() ??

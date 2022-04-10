@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 import '../generated/l10n.dart';
 
 class UniBanner extends StatelessWidget {
   @override
-  Widget build(BuildContext context) => Row(
+  Widget build(final BuildContext context) => Row(
         children: <Widget>[
           Padding(
             padding: const EdgeInsets.only(bottom: 4),

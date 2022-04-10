@@ -20,7 +20,7 @@ class InfoCard<T> extends StatelessWidget {
   final EdgeInsetsGeometry padding;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return Padding(
       padding: padding ?? const EdgeInsets.fromLTRB(12, 12, 12, 0),
       child: Card(
@@ -71,7 +71,7 @@ class InfoCard<T> extends StatelessWidget {
               const SizedBox(height: 10),
               FutureBuilder(
                   future: future,
-                  builder: (context, snapshot) {
+                  builder: (final context, final snapshot) {
                     if (snapshot.connectionState == ConnectionState.done) {
                       if (snapshot.hasData) {
                         if ((snapshot.data is Map ||
@@ -97,7 +97,7 @@ class InfoCard<T> extends StatelessWidget {
     );
   }
 
-  Widget noneYet(BuildContext context) => SizedBox(
+  Widget noneYet(final BuildContext context) => SizedBox(
         height: 100,
         child: Center(
           child: Text(

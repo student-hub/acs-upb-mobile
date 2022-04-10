@@ -6,27 +6,27 @@ import '../resources/theme.dart';
 
 class FilterChipFormField extends ChipFormField<Map<Localizable, bool>> {
   FilterChipFormField({
-    @required Map<Localizable, bool> initialValues,
-    @required IconData icon,
-    @required String label,
-    Key key,
+    @required final Map<Localizable, bool> initialValues,
+    @required final IconData icon,
+    @required final String label,
+    final Key key,
   }) : super(
           key: key,
           icon: icon,
           label: label,
           initialValues: initialValues,
-          validator: (selection) {
-            if (selection.values.where((e) => e != false).isEmpty) {
+          validator: (final selection) {
+            if (selection.values.where((final e) => e != false).isEmpty) {
               return S.current.warningYouNeedToSelectAtLeastOne;
             }
             return null;
           },
-          contentBuilder: (state) {
+          contentBuilder: (final state) {
             final labels = state.value.keys.toList();
             return ListView.builder(
               itemCount: labels.length,
               scrollDirection: Axis.horizontal,
-              itemBuilder: (context, index) {
+              itemBuilder: (final context, final index) {
                 return Row(
                   children: [
                     FilterChip(
@@ -36,7 +36,7 @@ class FilterChipFormField extends ChipFormField<Map<Localizable, bool>> {
                             selected: state.value[labels[index]]),
                       ),
                       selected: state.value[labels[index]],
-                      onSelected: (selected) {
+                      onSelected: (final selected) {
                         state.value[labels[index]] = selected;
                         state.didChange(state.value);
                       },
@@ -52,19 +52,19 @@ class FilterChipFormField extends ChipFormField<Map<Localizable, bool>> {
 
 class ChipFormField<T> extends FormField<T> {
   ChipFormField({
-    @required IconData icon,
-    @required String label,
-    @required Widget Function(FormFieldState<T> state) contentBuilder,
-    Widget Function(FormFieldState<T>) trailingBuilder,
-    T initialValues,
-    String Function(T) validator,
-    Key key,
+    @required final IconData icon,
+    @required final String label,
+    @required final Widget Function(FormFieldState<T> state) contentBuilder,
+    final Widget Function(FormFieldState<T>) trailingBuilder,
+    final T initialValues,
+    final String Function(T) validator,
+    final Key key,
   }) : super(
           autovalidateMode: AutovalidateMode.onUserInteraction,
           initialValue: initialValues,
           key: key,
           validator: validator,
-          builder: (state) {
+          builder: (final state) {
             final context = state.context;
             return Padding(
               padding: const EdgeInsets.only(top: 12),

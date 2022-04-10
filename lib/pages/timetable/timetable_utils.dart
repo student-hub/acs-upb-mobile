@@ -2,10 +2,9 @@ library timetable_utils;
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-
 // ignore: implementation_imports
-import 'package:timetable/src/utils.dart';
 import 'package:timetable/timetable.dart';
+
 export 'package:timetable/src/utils.dart';
 
 extension DateTimeExtension on DateTime {
@@ -14,15 +13,15 @@ extension DateTimeExtension on DateTime {
   DateTime atMidnight() =>
       copyWith(hour: 0, minute: 0, second: 0, millisecond: 0);
 
-  DateTime addDays(int noDays) => add(Duration(days: noDays));
+  DateTime addDays(final int noDays) => add(Duration(days: noDays));
 
-  DateTime subtractDays(int noDays) => subtract(Duration(days: noDays));
+  DateTime subtractDays(final int noDays) => subtract(Duration(days: noDays));
 
-  String toStringWithFormat(String format) {
+  String toStringWithFormat(final String format) {
     return DateFormat(format).format(this);
   }
 
-  DateTime at({DateTime dateTime, TimeOfDay timeOfDay}) {
+  DateTime at({final DateTime dateTime, final TimeOfDay timeOfDay}) {
     if (dateTime != null) {
       return copyWith(
           hour: dateTime.hour,

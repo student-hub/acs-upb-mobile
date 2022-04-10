@@ -9,7 +9,7 @@ import '../service/admin_provider.dart';
 import 'request_card.dart';
 
 class AdminPanelPage extends StatefulWidget {
-  const AdminPanelPage({Key key}) : super(key: key);
+  const AdminPanelPage({final Key key}) : super(key: key);
   static const String routeName = '/admin';
 
   @override
@@ -20,7 +20,7 @@ class _AdminPanelPageState extends State<AdminPanelPage> {
   bool all = false;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final adminProvider = Provider.of<AdminProvider>(context, listen: false);
     return AppScaffold(
       actions: [
@@ -49,12 +49,12 @@ class _AdminPanelPageState extends State<AdminPanelPage> {
           future: all
               ? adminProvider.fetchAllRequestIds()
               : adminProvider.fetchUnprocessedRequestIds(),
-          builder: (context, snapshot) {
+          builder: (final context, final snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
               return ListView.builder(
                 itemCount:
                     snapshot.data?.length != null ? snapshot.data.length : 0,
-                itemBuilder: (context, index) {
+                itemBuilder: (final context, final index) {
                   return RequestCard(
                     requestId: snapshot.data[index],
                   );

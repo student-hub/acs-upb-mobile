@@ -1,0 +1,7 @@
+Adăugat
+    - Pagină de raportat probleme și oferit feedback la aplicație, accesibilă prin pagina de setări
+
+Rezolvat
+    - Luna nu apărea pe orar
+    - Pagina de setări nu putea fi accesată de utilizatorii anonimi
+    - Bug-uri și erori minore

@@ -37,7 +37,7 @@ class Selectable extends StatefulWidget {
 class _SelectableState extends State<Selectable> {
   bool _isSelected;
 
-  set isSelected(bool newValue) {
+  set isSelected(final bool newValue) {
     _isSelected = newValue;
     setState(() {});
   }
@@ -51,7 +51,7 @@ class _SelectableState extends State<Selectable> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     widget.controller?._selectableState = this;
 
     return Container(

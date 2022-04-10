@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:rrule/rrule.dart';
+
 import '../../../classes/model/class.dart';
 import '../../../people/model/person.dart';
 import '../academic_calendar.dart';
@@ -9,20 +10,20 @@ import 'uni_event.dart';
 class ClassEvent extends RecurringUniEvent {
   const ClassEvent({
     @required this.teacher,
-    @required RecurrenceRule rrule,
-    @required DateTime start,
-    @required Duration duration,
-    @required String id,
-    List<String> relevance,
-    String degree,
-    String name,
-    String location,
-    Color color,
-    UniEventType type,
-    ClassHeader classHeader,
-    AcademicCalendar calendar,
-    String addedBy,
-    bool editable,
+    @required final RecurrenceRule rrule,
+    @required final DateTime start,
+    @required final Duration duration,
+    @required final String id,
+    final List<String> relevance,
+    final String degree,
+    final String name,
+    final String location,
+    final Color color,
+    final UniEventType type,
+    final ClassHeader classHeader,
+    final AcademicCalendar calendar,
+    final String addedBy,
+    final bool editable,
   }) : super(
             rrule: rrule,
             name: name,

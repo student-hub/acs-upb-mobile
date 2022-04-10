@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -38,7 +37,7 @@ class _LoginViewState extends State<LoginView> {
         controller: emailController,
         autocorrect: false,
         autofillHints: [AutofillHints.username],
-        check: (email, {showToast}) => authProvider
+        check: (final email, {final showToast}) => authProvider
             .canSignInWithPassword(email + emailDomain, showToast: showToast),
       ),
       FormCardField(
@@ -50,7 +49,7 @@ class _LoginViewState extends State<LoginView> {
     ];
   }
 
-  AppDialog _resetPasswordDialog(BuildContext context) => AppDialog(
+  AppDialog _resetPasswordDialog(final BuildContext context) => AppDialog(
         title: S.current.actionResetPassword,
         message: S.current.messageResetPassword,
         content: <Widget>[
@@ -89,13 +88,13 @@ class _LoginViewState extends State<LoginView> {
         ],
       );
 
-  FormCard _buildForm(BuildContext context) {
+  FormCard _buildForm(final BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
 
     return FormCard(
       title: S.current.actionLogIn,
       fields: _buildFormItems(),
-      onSubmitted: (fields) async {
+      onSubmitted: (final fields) async {
         final result = await authProvider.signIn(
           fields[S.current.labelEmail] + S.current.stringEmailDomain,
           fields[S.current.labelPassword],
@@ -133,7 +132,7 @@ class _LoginViewState extends State<LoginView> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
     final loginForm = _buildForm(context);
 

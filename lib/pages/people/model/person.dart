@@ -20,7 +20,7 @@ class Person {
   int get hashCode => name.hashCode;
 
   @override
-  bool operator ==(Object other) {
+  bool operator ==(final Object other) {
     if (other is Person) {
       return other.name == name;
     }

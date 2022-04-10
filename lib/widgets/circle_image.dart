@@ -9,6 +9,7 @@ class CustomBoxShadow extends BoxShadow {
     this.blurStyle = BlurStyle.outer,
   }) : super(color: color, offset: offset, blurRadius: blurRadius);
 
+  @override
   final BlurStyle blurStyle;
 
   @override
@@ -26,14 +27,14 @@ class CustomBoxShadow extends BoxShadow {
 
 class CircleImage extends StatelessWidget {
   const CircleImage(
-      {Key key,
+      {final Key key,
       this.image,
       this.icon,
       this.onTap,
       this.label,
       this.tooltip,
-      double circleSize,
-      bool enableOverlay,
+      final double circleSize,
+      final bool enableOverlay,
       this.overlayIcon,
       this.overlayColor})
       : circleSize = circleSize ?? 80,
@@ -61,7 +62,7 @@ class CircleImage extends StatelessWidget {
   final Color overlayColor;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final circleImage = GestureDetector(
       onTap: onTap,
       child: Column(
