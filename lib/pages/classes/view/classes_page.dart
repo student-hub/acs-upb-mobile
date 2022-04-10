@@ -113,7 +113,8 @@ class _ClassesPageState extends State<ClassesPage> {
                     sectioned: false,
                     onTap: (final classHeader) => Navigator.of(context).push(
                       MaterialPageRoute<ChangeNotifierProvider>(
-                        builder: (final context) => ChangeNotifierProvider.value(
+                        builder: (final context) =>
+                            ChangeNotifierProvider.value(
                           value: classProvider,
                           child: ClassView(
                             classHeader: classHeader,
@@ -239,7 +240,8 @@ class _ClassListState extends State<ClassList> {
     selectedClasses = widget.initiallySelected;
   }
 
-  String sectionName(final BuildContext context, final String year, final String semester) =>
+  String sectionName(final BuildContext context, final String year,
+          final String semester) =>
       '${S.current.labelYear} $year, ${S.current.labelSemester} $semester';
 
   Map<String, dynamic> classesBySection(
@@ -267,7 +269,8 @@ class _ClassListState extends State<ClassList> {
     return map;
   }
 
-  _Section buildSections(final BuildContext context, final Map<String, dynamic> sections,
+  _Section buildSections(
+      final BuildContext context, final Map<String, dynamic> sections,
       {int level = 0}) {
     final List<Widget> children = [const SizedBox(height: 4)];
     bool expanded = false;

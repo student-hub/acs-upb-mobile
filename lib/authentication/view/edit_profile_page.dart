@@ -46,7 +46,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
   void initState() {
     super.initState();
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
-    authProvider.isVerified.then((final value) => setState(() => isVerified = value));
+    authProvider.isVerified
+        .then((final value) => setState(() => isVerified = value));
     authProvider.getProfilePictureURL().then((final value) => setState(() => {
           imageWidget = value != null
               ? NetworkImage(value)

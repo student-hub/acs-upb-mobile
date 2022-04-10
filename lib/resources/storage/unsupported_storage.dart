@@ -8,7 +8,8 @@ class StorageProvider extends ChangeNotifier {
     throw error;
   }
 
-  static Future<bool> uploadImage(final Uint8List file, final String ref) async {
+  static Future<bool> uploadImage(
+      final Uint8List file, final String ref) async {
     final Error error = ArgumentError('Platform not found!');
     throw error;
   }

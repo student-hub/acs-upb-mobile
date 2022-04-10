@@ -57,7 +57,8 @@ class _ClassFeedbackChecklistState extends State<ClassFeedbackChecklist> {
         if (classesFeedback != null)
           FeedbackClassList(
             classes: widget.classes
-                .where((final element) => classesFeedback.containsKey(element.id))
+                .where(
+                    (final element) => classesFeedback.containsKey(element.id))
                 ?.toSet(),
             done: true,
           ),
@@ -103,7 +104,8 @@ class _ClassFeedbackChecklistState extends State<ClassFeedbackChecklist> {
 }
 
 class FeedbackClassList extends StatelessWidget {
-  const FeedbackClassList({final Key key, this.classes, this.done}) : super(key: key);
+  const FeedbackClassList({final Key key, this.classes, this.done})
+      : super(key: key);
   final Set<ClassHeader> classes;
   final bool done;
 

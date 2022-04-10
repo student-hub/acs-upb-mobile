@@ -39,8 +39,10 @@ class _SignUpViewState extends State<SignUpView> {
   /// Special characters such as ".", "_" are used to separate the names,
   /// numbers are removed and names are capitalized.
   /// *Format example:* firstnameone_firstnametwo.lastname123@stud.acs.pub.ro
-  void parseNameFromEmail(final TextEditingController email,
-      final TextEditingController firstName, final TextEditingController lastName) {
+  void parseNameFromEmail(
+      final TextEditingController email,
+      final TextEditingController firstName,
+      final TextEditingController lastName) {
     final emailWithoutNumbers =
         email.text.replaceAll(RegExp('[^a-zA-Z._]'), '');
     final names = emailWithoutNumbers.split('.');

@@ -28,7 +28,8 @@ class StorageProvider {
     }
   }
 
-  static Future<bool> uploadImage(final Uint8List file, final String ref) async {
+  static Future<bool> uploadImage(
+      final Uint8List file, final String ref) async {
     try {
       final StorageReference storageReference = storage().ref('').child(ref);
 

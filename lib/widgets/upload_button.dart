@@ -4,7 +4,6 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:positioned_tap_detector_2/positioned_tap_detector_2.dart';
 
-
 class UploadButtonController {
   UploadButtonController({this.onUpdate});
 
@@ -25,7 +24,8 @@ class UploadButtonController {
 // button, except it actually allows the user to select an image from the
 // gallery instead of inputting text directly.
 class UploadButton extends StatefulWidget {
-  const UploadButton({final Key key, this.label, this.controller}) : super(key: key);
+  const UploadButton({final Key key, this.label, this.controller})
+      : super(key: key);
 
   final String label;
   final UploadButtonController controller;

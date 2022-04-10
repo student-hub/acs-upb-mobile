@@ -129,7 +129,8 @@ class Filter {
     return list;
   }
 
-  bool _setRelevantHelper(final String nodeName, final FilterNode node, final bool setParents) {
+  bool _setRelevantHelper(
+      final String nodeName, final FilterNode node, final bool setParents) {
     if (node.name == nodeName) {
       node.value = true;
       return true;
@@ -200,7 +201,8 @@ class FilterNode {
   void addListener(final void Function() listener) =>
       _valueNotifier.addListener(listener);
 
-  String localizedName(final BuildContext context) => localizeName(name, context);
+  String localizedName(final BuildContext context) =>
+      localizeName(name, context);
 
   static String localizeName(final String name, final BuildContext context) {
     if (name == 'BSc') return S.current.filterNodeNameBSc;

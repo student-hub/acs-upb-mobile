@@ -183,7 +183,8 @@ class _AddEventViewState extends State<AddEventView> {
       initialWeekDays = (widget.initialEvent as RecurringUniEvent)
           .rrule
           .byWeekDays
-          .map((final entry) => _DayOfWeek.from(time_machine.DayOfWeek(entry.day)))
+          .map((final entry) =>
+              _DayOfWeek.from(time_machine.DayOfWeek(entry.day)))
           .toList();
     }
     for (final initialWeekDay in initialWeekDays) {
@@ -362,7 +363,8 @@ class _AddEventViewState extends State<AddEventView> {
     );
   }
 
-  AppDialog _deletionConfirmationDialog(final BuildContext context) => AppDialog(
+  AppDialog _deletionConfirmationDialog(final BuildContext context) =>
+      AppDialog(
         icon: const Icon(Icons.delete_outlined),
         title: S.current.actionDeleteEvent,
         info: S.current.messageThisCouldAffectOtherStudents,
@@ -555,7 +557,8 @@ class _AddEventViewState extends State<AddEventView> {
 class _DayOfWeek extends time_machine.DayOfWeek with Localizable {
   const _DayOfWeek(final int value) : super(value);
 
-  _DayOfWeek.from(final time_machine.DayOfWeek dayOfWeek) : super(dayOfWeek.value);
+  _DayOfWeek.from(final time_machine.DayOfWeek dayOfWeek)
+      : super(dayOfWeek.value);
 
   @override
   String toLocalizedString() {

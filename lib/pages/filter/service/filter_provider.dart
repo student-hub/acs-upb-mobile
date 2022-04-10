@@ -8,7 +8,8 @@ import '../../../widgets/toast.dart';
 import '../model/filter.dart';
 
 extension FilterNodeExtension on FilterNode {
-  static FilterNode fromMap(final Map<String, dynamic> map, final String parentName) {
+  static FilterNode fromMap(
+      final Map<String, dynamic> map, final String parentName) {
     final children = <FilterNode>[];
 
     final sortedKeys = map.keys.toList()..sort();

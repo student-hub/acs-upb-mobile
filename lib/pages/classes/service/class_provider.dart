@@ -39,7 +39,8 @@ extension ShortcutExtension on Shortcut {
 }
 
 extension ClassHeaderExtension on ClassHeader {
-  static ClassHeader fromSnap(final DocumentSnapshot<Map<String, dynamic>> snap) {
+  static ClassHeader fromSnap(
+      final DocumentSnapshot<Map<String, dynamic>> snap) {
     final data = snap?.data();
     if (data == null) return null;
     final splitAcronym = data['shortname'].split('-');
@@ -57,7 +58,8 @@ extension ClassHeaderExtension on ClassHeader {
 
 extension ClassExtension on Class {
   static Class fromSnap(
-      {final ClassHeader header, final DocumentSnapshot<Map<String, dynamic>> snap}) {
+      {final ClassHeader header,
+      final DocumentSnapshot<Map<String, dynamic>> snap}) {
     final data = snap.data();
 
     if (data == null) {
@@ -77,7 +79,8 @@ extension ClassExtension on Class {
     Map<String, double> grading;
     if (data['grading'] != null) {
       grading = Map<String, double>.from(data['grading'].map(
-          (final String name, final dynamic value) => MapEntry(name, value.toDouble())));
+          (final String name, final dynamic value) =>
+              MapEntry(name, value.toDouble())));
     }
 
     final gradingLastUpdated = data['gradingLastUpdated'] == null
@@ -114,7 +117,8 @@ class ClassProvider with ChangeNotifier {
     }
   }
 
-  Future<bool> setUserClassIds(final List<String> classIds, final String uid) async {
+  Future<bool> setUserClassIds(
+      final List<String> classIds, final String uid) async {
     try {
       final DocumentReference ref =
           FirebaseFirestore.instance.collection('users').doc(uid);
@@ -214,7 +218,8 @@ class ClassProvider with ChangeNotifier {
     }
   }
 
-  Future<bool> addShortcut(final String classId, final Shortcut shortcut) async {
+  Future<bool> addShortcut(
+      final String classId, final Shortcut shortcut) async {
     try {
       final DocumentReference doc = _db.collection('classes').doc(classId);
       final DocumentSnapshot<Map<String, dynamic>> snap = await doc.get();
@@ -242,7 +247,8 @@ class ClassProvider with ChangeNotifier {
     }
   }
 
-  Future<bool> deleteShortcut(final String classId, final int shortcutIndex) async {
+  Future<bool> deleteShortcut(
+      final String classId, final int shortcutIndex) async {
     try {
       final DocumentReference<Map<String, dynamic>> doc =
           _db.collection('classes').doc(classId);
@@ -262,7 +268,8 @@ class ClassProvider with ChangeNotifier {
     }
   }
 
-  Future<bool> setGrading(final String classId, final Map<String, double> grading) async {
+  Future<bool> setGrading(
+      final String classId, final Map<String, double> grading) async {
     try {
       final DocumentReference doc = _db.collection('classes').doc(classId);
       final DocumentSnapshot<Map<String, dynamic>> snap = await doc.get();

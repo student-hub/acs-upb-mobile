@@ -138,22 +138,22 @@ class _ClassViewState extends State<ClassView> {
                             S.current.warningNoPermissionToEditClassInfo),
                     child: IconButton(
                       icon: const Icon(Icons.add_outlined),
-                      onPressed:
-                          authProvider.currentUserFromCache.canEditClassInfo
-                              ? () => Navigator.of(context).push(
-                                      MaterialPageRoute<ChangeNotifierProvider>(
-                                    builder: (final context) =>
-                                        ChangeNotifierProvider.value(
-                                      value: classProvider,
-                                      child: ShortcutView(onSave: (final shortcut) {
-                                        setState(() =>
-                                            classInfo.shortcuts.add(shortcut));
-                                        classProvider.addShortcut(
-                                            widget.classHeader.id, shortcut);
-                                      }),
-                                    ),
-                                  ))
-                              : null,
+                      onPressed: authProvider
+                              .currentUserFromCache.canEditClassInfo
+                          ? () => Navigator.of(context).push(
+                                  MaterialPageRoute<ChangeNotifierProvider>(
+                                builder: (final context) =>
+                                    ChangeNotifierProvider.value(
+                                  value: classProvider,
+                                  child: ShortcutView(onSave: (final shortcut) {
+                                    setState(() =>
+                                        classInfo.shortcuts.add(shortcut));
+                                    classProvider.addShortcut(
+                                        widget.classHeader.id, shortcut);
+                                  }),
+                                ),
+                              ))
+                          : null,
                     ),
                   ),
                 ],
@@ -198,7 +198,9 @@ class _ClassViewState extends State<ClassView> {
   }
 
   AppDialog _deletionConfirmationDialog(
-          {final BuildContext context, final String shortcutName, final Function onDelete}) =>
+          {final BuildContext context,
+          final String shortcutName,
+          final Function onDelete}) =>
       AppDialog(
         icon: const Icon(Icons.delete_outlined),
         title: S.current.actionDeleteShortcut,
@@ -213,7 +215,8 @@ class _ClassViewState extends State<ClassView> {
         ],
       );
 
-  Widget shortcut({final int index, final Shortcut shortcut, final BuildContext context}) {
+  Widget shortcut(
+      {final int index, final Shortcut shortcut, final BuildContext context}) {
     final classProvider = Provider.of<ClassProvider>(context);
 
     return PositionedTapDetector2(

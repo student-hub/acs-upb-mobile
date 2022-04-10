@@ -3,7 +3,12 @@ import 'package:flutter/material.dart';
 
 class AppButton extends StatefulWidget {
   const AppButton(
-      {final Key key, this.color, this.text, this.textColor, this.onTap, this.width})
+      {final Key key,
+      this.color,
+      this.text,
+      this.textColor,
+      this.onTap,
+      this.width})
       : super(key: key);
 
   final Color color;

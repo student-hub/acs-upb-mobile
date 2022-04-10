@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 
 Color primaryColor = const Color(0xFF43ACCD);
 
-Color chipSelectedColor(final Brightness brightness) => brightness == Brightness.light
-    ? primaryColor.withOpacity(0.3)
-    : primaryColor;
+Color chipSelectedColor(final Brightness brightness) =>
+    brightness == Brightness.light
+        ? primaryColor.withOpacity(0.3)
+        : primaryColor;
 
 ChipThemeData chipThemeData(final Brightness brightness) =>
     ChipThemeData.fromDefaults(

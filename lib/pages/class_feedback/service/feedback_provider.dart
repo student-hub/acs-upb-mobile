@@ -31,8 +31,9 @@ extension FeedbackQuestionExtension on FeedbackQuestion {
   static FeedbackQuestion fromJSON(final dynamic json, final String id) {
     if (json['type'] == 'dropdown' && json['options'] != null) {
       final List<dynamic> options = json['options'];
-      final List<String> optionsString =
-          options.map((final e) => e[LocaleProvider.localeString] as String).toList();
+      final List<String> optionsString = options
+          .map((final e) => e[LocaleProvider.localeString] as String)
+          .toList();
       return FeedbackQuestionDropdown(
         category: json['category'],
         question: json['question'][LocaleProvider.localeString],
@@ -92,7 +93,8 @@ class FeedbackProvider with ChangeNotifier {
       final Map<String, dynamic> data = documentSnapshot['questions'];
       final Map<String, FeedbackQuestion> questions = {};
       for (final value in data.values) {
-        final key = data.keys.firstWhere((final element) => data[element] == value);
+        final key =
+            data.keys.firstWhere((final element) => data[element] == value);
         questions[key] = FeedbackQuestionExtension.fromJSON(value, key);
       }
       return questions;
@@ -113,8 +115,9 @@ class FeedbackProvider with ChangeNotifier {
           .get();
       final Map<String, dynamic> data = documentSnapshot['categories'];
       for (final key in data.keys) {
-        data[key] = (data[key] as Map<dynamic, dynamic>)
-            .map((final key, final value) => MapEntry(key?.toString(), value?.toString()));
+        data[key] = (data[key] as Map<dynamic, dynamic>).map(
+            (final key, final value) =>
+                MapEntry(key?.toString(), value?.toString()));
       }
       return Map<String, Map<String, String>>.from(data);
     } catch (e) {
@@ -202,7 +205,8 @@ class FeedbackProvider with ChangeNotifier {
     }
   }
 
-  Future<Map<String, bool>> getClassesWithCompletedFeedback(final String uid) async {
+  Future<Map<String, bool>> getClassesWithCompletedFeedback(
+      final String uid) async {
     try {
       final DocumentSnapshot<Map<String, dynamic>> snap =
           await FirebaseFirestore.instance.collection('users').doc(uid).get();
@@ -225,8 +229,8 @@ class FeedbackProvider with ChangeNotifier {
 
       if (userClasses != null && classesFeedbackCompleted != null) {
         feedbackFormsLeft = userClasses
-            .where(
-                (final element) => !classesFeedbackCompleted.containsKey(element.id))
+            .where((final element) =>
+                !classesFeedbackCompleted.containsKey(element.id))
             .toSet()
             .length
             .toString();

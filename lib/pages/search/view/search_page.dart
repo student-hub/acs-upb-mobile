@@ -29,7 +29,8 @@ class _SearchPageState extends State<SearchPage> {
         scrollDirection: Axis.vertical,
         children: [
           SearchWidget(
-            onSearch: (final searchText) => {setState(() => query = searchText)},
+            onSearch: (final searchText) =>
+                {setState(() => query = searchText)},
             cancelCallback: () => {setState(() => query = '')},
             searchClosed: false,
           ),

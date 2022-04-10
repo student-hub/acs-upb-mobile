@@ -229,7 +229,8 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 
-  String languagePrefString(final BuildContext context, final String preference) {
+  String languagePrefString(
+      final BuildContext context, final String preference) {
     switch (preference) {
       case 'en':
         return S.current.settingsItemLanguageEnglish;

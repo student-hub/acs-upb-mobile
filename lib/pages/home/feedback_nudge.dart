@@ -56,7 +56,8 @@ class _FeedbackNudgeState extends State<FeedbackNudge> {
           onPressed: () {
             Navigator.of(context).push(
               MaterialPageRoute<ClassFeedbackChecklist>(
-                builder: (final _) => ClassFeedbackChecklist(classes: userClasses),
+                builder: (final _) =>
+                    ClassFeedbackChecklist(classes: userClasses),
               ),
             );
           },

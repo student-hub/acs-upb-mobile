@@ -38,7 +38,8 @@ class FaqCard extends StatelessWidget {
                   fitContent: false,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
-                  onTapLink: (final text, final link, final title) => Utils.launchURL(link),
+                  onTapLink: (final text, final link, final title) =>
+                      Utils.launchURL(link),
                   /*
                   This is a workaround because the strings in Firebase represent
                   newlines as '\n' and Firebase replaces them with '\\n'. We

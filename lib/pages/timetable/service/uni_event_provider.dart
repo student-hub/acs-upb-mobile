@@ -179,7 +179,8 @@ extension UniEventExtension on UniEvent {
 extension AcademicCalendarExtension on AcademicCalendar {
   static List<AllDayUniEvent> _eventsFromMapList(
           final List<dynamic> list, final String type) =>
-      List<AllDayUniEvent>.from((list ?? []).asMap().map((final index, final e) {
+      List<AllDayUniEvent>.from(
+          (list ?? []).asMap().map((final index, final e) {
         e['type'] = type;
         return MapEntry(
             index, UniEventExtension.fromJSON(type + index.toString(), e));
@@ -198,7 +199,8 @@ extension AcademicCalendarExtension on AcademicCalendar {
 }
 
 class UniEventProvider with ChangeNotifier {
-  UniEventProvider({final AuthProvider authProvider, final PersonProvider personProvider})
+  UniEventProvider(
+      {final AuthProvider authProvider, final PersonProvider personProvider})
       : _authProvider = authProvider ?? AuthProvider(),
         _personProvider = personProvider ?? PersonProvider() {
     fetchCalendars();
@@ -302,7 +304,8 @@ class UniEventProvider with ChangeNotifier {
     await insertGoogleEvents(googleCalendarEvents);
   }
 
-  Stream<List<UniEventInstance>> getEventsIntersecting(final Interval interval) {
+  Stream<List<UniEventInstance>> getEventsIntersecting(
+      final Interval interval) {
     final streams = <Stream<Iterable<UniEventInstance>>>[];
     final Stream<Iterable<UniEventInstance>> allDay =
         getAllDayEventsIntersecting(interval);
@@ -325,7 +328,8 @@ class UniEventProvider with ChangeNotifier {
     );
   }
 
-  Iterable<AllDayUniEvent> getAllDayUniEventsForCalendar(final AcademicCalendar cal) {
+  Iterable<AllDayUniEvent> getAllDayUniEventsForCalendar(
+      final AcademicCalendar cal) {
     final List<AllDayUniEvent> events = cal.holidays + cal.exams;
     return events.where((final event) =>
         event.relevance == null ||

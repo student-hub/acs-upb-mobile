@@ -184,7 +184,8 @@ class _FormCardTextFieldState extends State<_FormCardTextField> {
       : IntrinsicWidth(
           child: FutureBuilder(
             future: valid,
-            builder: (final BuildContext context, final AsyncSnapshot<bool> snapshot) {
+            builder: (final BuildContext context,
+                final AsyncSnapshot<bool> snapshot) {
               if (snapshot.data == null) {
                 // No icon
                 return Container();

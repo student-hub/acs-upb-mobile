@@ -51,7 +51,8 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
 
     Provider.of<FeedbackProvider>(context, listen: false)
         .fetchCategories()
-        .then((final categories) => setState(() => feedbackCategories = categories));
+        .then((final categories) =>
+            setState(() => feedbackCategories = categories));
 
     Provider.of<PersonProvider>(context, listen: false)
         .mostRecentLecturer(widget.classHeader.id)
@@ -63,7 +64,8 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
   Future<Map<String, dynamic>> fetchFeedbackQuestions() async {
     await Provider.of<FeedbackProvider>(context, listen: false)
         .fetchQuestions()
-        .then((final questions) => setState(() => feedbackQuestions = questions));
+        .then(
+            (final questions) => setState(() => feedbackQuestions = questions));
 
     for (int i = 0; i <= feedbackQuestions.length; i++) {
       answerValues.insert(i, {
@@ -180,8 +182,8 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
         categoryHeader(
             feedbackCategories[category][LocaleProvider.localeString])
       ];
-      for (final question
-          in feedbackQuestions.values.where((final q) => q.category == category)) {
+      for (final question in feedbackQuestions.values
+          .where((final q) => q.category == category)) {
         categoryChildren.add(FeedbackQuestionFormField(
             question: question, answerValues: answerValues, formKey: formKey));
       }

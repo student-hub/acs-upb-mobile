@@ -150,7 +150,8 @@ class AllDayEventBorder extends ShapeBorder {
   }
 
   @override
-  void paint(final Canvas canvas, final Rect rect, {final TextDirection textDirection}) {
+  void paint(final Canvas canvas, final Rect rect,
+      {final TextDirection textDirection}) {
     // For some reason, when we paint the background in this shape directly, it
     // lags while scrolling. Hence, we only use it to provide the outer path
     // used for clipping.
@@ -175,7 +176,8 @@ class AllDayEventBorder extends ShapeBorder {
       '${objectRuntimeType(this, 'RoundedRectangleBorder')}($side, $borderRadius)';
 }
 
-Path _getPath(final Size size, final AllDayEventLayoutInfo info, final double radius) {
+Path _getPath(
+    final Size size, final AllDayEventLayoutInfo info, final double radius) {
   final height = size.height;
   // final radius = borderRadius.coerceAtMost(width / 2);
 

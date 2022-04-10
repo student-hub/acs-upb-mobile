@@ -50,7 +50,8 @@ class MyHttpOverrides extends HttpOverrides {
   @override
   HttpClient createHttpClient(final SecurityContext context) {
     return super.createHttpClient(context)
-      ..badCertificateCallback = (final X509Certificate cert, final String host, final int port) {
+      ..badCertificateCallback =
+          (final X509Certificate cert, final String host, final int port) {
         return host == 'acs.pub.ro' ||
             host == 'cs.pub.ro' ||
             host == 'aii.pub.ro';
@@ -82,18 +83,22 @@ Future<void> main() async {
     EasyDynamicThemeWidget(
       child: MultiProvider(
         providers: [
-          ChangeNotifierProvider<AuthProvider>(create: (final _) => authProvider),
+          ChangeNotifierProvider<AuthProvider>(
+              create: (final _) => authProvider),
           ChangeNotifierProvider<WebsiteProvider>(
               create: (final _) => WebsiteProvider()),
           Provider<RequestProvider>(create: (final _) => RequestProvider()),
           Provider<IssueProvider>(create: (final _) => IssueProvider()),
-          ChangeNotifierProvider<ClassProvider>(create: (final _) => classProvider),
+          ChangeNotifierProvider<ClassProvider>(
+              create: (final _) => classProvider),
           ChangeNotifierProvider<FeedbackProvider>(
               create: (final _) => feedbackProvider),
-          ChangeNotifierProvider<PersonProvider>(create: (final _) => personProvider),
+          ChangeNotifierProvider<PersonProvider>(
+              create: (final _) => personProvider),
           ChangeNotifierProvider<QuestionProvider>(
               create: (final _) => QuestionProvider()),
-          ChangeNotifierProvider<NewsProvider>(create: (final _) => NewsProvider()),
+          ChangeNotifierProvider<NewsProvider>(
+              create: (final _) => NewsProvider()),
           ChangeNotifierProxyProvider<AuthProvider, FilterProvider>(
             create: (final _) => FilterProvider(global: true),
             update: (final context, final authProvider, final filterProvider) {
@@ -106,7 +111,8 @@ Future<void> main() async {
               authProvider: authProvider,
               personProvider: personProvider,
             ),
-            update: (final context, final classProvider, final filterProvider, final uniEventProvider) {
+            update: (final context, final classProvider, final filterProvider,
+                final uniEventProvider) {
               return uniEventProvider
                 ..updateClasses(classProvider)
                 ..updateFilter(filterProvider);

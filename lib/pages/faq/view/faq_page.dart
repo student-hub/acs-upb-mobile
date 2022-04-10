@@ -45,7 +45,7 @@ class _FaqPageState extends State<FaqPage> {
                         padding: const EdgeInsets.symmetric(horizontal: 3),
                         child: FilterChip(
                           label: Text(
-                              category,
+                            category,
                             style: Theme.of(context).chipTextStyle(
                               selected: activeTags.contains(category),
                             ),
@@ -127,7 +127,8 @@ class _FaqPageState extends State<FaqPage> {
           containsTag(activeTags, question.tags))
       .toList();
 
-  bool containsTag(final List<String> activeTags, final List<String> questionTags) {
+  bool containsTag(
+      final List<String> activeTags, final List<String> questionTags) {
     if (activeTags.isEmpty) return true;
     return questionTags.any(activeTags.contains);
   }
@@ -146,8 +147,10 @@ class QuestionsList extends StatefulWidget {
 class _QuestionsListState extends State<QuestionsList> {
   @override
   Widget build(final BuildContext context) {
-    final List<String> filteredWords =
-        widget.filter.split(' ').where((final element) => element != '').toList();
+    final List<String> filteredWords = widget.filter
+        .split(' ')
+        .where((final element) => element != '')
+        .toList();
     return Padding(
       padding: const EdgeInsets.only(top: 12),
       child: ListView.builder(
@@ -171,7 +174,8 @@ class _QuestionsListState extends State<QuestionsList> {
                 padding: const EdgeInsets.fromLTRB(15, 0, 15, 15),
                 child: MarkdownBody(
                   fitContent: false,
-                  onTapLink: (final text, final link, final title) => Utils.launchURL(link),
+                  onTapLink: (final text, final link, final title) =>
+                      Utils.launchURL(link),
                   /*
                   This is a workaround because the strings in Firebase represent
                   newlines as '\n' and Firebase replaces them with '\\n'. We need

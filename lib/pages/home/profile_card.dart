@@ -108,7 +108,8 @@ class _ProfileCardState extends State<ProfileCard> {
                             onPressed: () async {
                               await Navigator.of(context).push(
                                 MaterialPageRoute<EditProfilePage>(
-                                  builder: (final context) => const EditProfilePage(),
+                                  builder: (final context) =>
+                                      const EditProfilePage(),
                                 ),
                               );
                               if (!mounted) return;

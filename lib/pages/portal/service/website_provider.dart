@@ -148,7 +148,8 @@ class WebsiteProvider with ChangeNotifier {
   /// data is stored in 2 lists: the list of website IDs (`websiteIds`) and the list
   /// with the number of visits (`websiteVisits`), where `websiteVisits[i]` is the
   /// number of times the user accessed website with ID `websiteIds[i]`.
-  Future<bool> _initializeNumberOfVisitsLocally(final List<Website> websites) async {
+  Future<bool> _initializeNumberOfVisitsLocally(
+      final List<Website> websites) async {
     try {
       final List<String> websiteIds =
           prefService.sharedPreferences.getStringList('websiteIds') ?? [];
@@ -170,7 +171,8 @@ class WebsiteProvider with ChangeNotifier {
 
   /// Increments the number of visits of [website], both in-memory and on Firebase.
   /// If no [uid] is provided, update data in the local storage.
-  Future<bool> incrementNumberOfVisits(final Website website, {final String uid}) async {
+  Future<bool> incrementNumberOfVisits(final Website website,
+      {final String uid}) async {
     try {
       website.numberOfVisits++;
       if (uid == null) {
@@ -268,8 +270,9 @@ class WebsiteProvider with ChangeNotifier {
         // (a document may result out of more than one query)
         final seenDocumentIds = <String>{};
 
-        documents =
-            documents.where((final doc) => seenDocumentIds.add(doc.id)).toList();
+        documents = documents
+            .where((final doc) => seenDocumentIds.add(doc.id))
+            .toList();
 
         websites.addAll(documents.map(WebsiteExtension.fromSnap));
       }
@@ -411,7 +414,8 @@ class WebsiteProvider with ChangeNotifier {
     }
   }
 
-  Future<bool> uploadWebsiteIcon(final Website website, final Uint8List file) async {
+  Future<bool> uploadWebsiteIcon(
+      final Website website, final Uint8List file) async {
     final result = await StorageProvider.uploadImage(file, website.iconPath);
     if (!result) {
       if (file.length > 5 * 1024 * 1024) {

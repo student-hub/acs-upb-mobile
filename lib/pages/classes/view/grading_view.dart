@@ -32,8 +32,9 @@ class GradingChart extends StatefulWidget {
 }
 
 class _GradingChartState extends State<GradingChart> {
-  Map<String, double> get gradingDataMap => widget.grading?.map((final name, final value) =>
-      MapEntry('${name ?? ''}\n${value ?? 0.0}p', value ?? 0.0));
+  Map<String, double> get gradingDataMap =>
+      widget.grading?.map((final name, final value) =>
+          MapEntry('${name ?? ''}\n${value ?? 0.0}p', value ?? 0.0));
 
   @override
   Widget build(final BuildContext context) {
@@ -122,7 +123,8 @@ class _GradingChartState extends State<GradingChart> {
 }
 
 class GradingView extends StatefulWidget {
-  const GradingView({final Key key, this.grading, this.onSave}) : super(key: key);
+  const GradingView({final Key key, this.grading, this.onSave})
+      : super(key: key);
 
   final Map<String, double> grading;
   final void Function(Map<String, double>) onSave;

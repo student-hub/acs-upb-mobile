@@ -58,7 +58,8 @@ class AppScaffold extends StatelessWidget {
   final bool needsToBeAuthenticated;
 
   Widget _widgetFromAction(final AppScaffoldAction action,
-      {@required final bool enableContent, @required final BuildContext context}) {
+      {@required final bool enableContent,
+      @required final BuildContext context}) {
     if (action == null) {
       return null;
     }

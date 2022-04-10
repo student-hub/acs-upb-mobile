@@ -88,7 +88,8 @@ class _PortalPageState extends State<PortalPage> {
             if (canEdit) {
               Navigator.of(context)
                   .push(MaterialPageRoute<ChangeNotifierProvider>(
-                builder: (final _) => ChangeNotifierProvider<FilterProvider>.value(
+                builder: (final _) =>
+                    ChangeNotifierProvider<FilterProvider>.value(
                   // If testing, use the global (mocked) provider; otherwise instantiate a new local provider
                   value: Platform.environment.containsKey('FLUTTER_TEST')
                       ? Provider.of<FilterProvider>(context)
@@ -112,7 +113,8 @@ class _PortalPageState extends State<PortalPage> {
         ));
   }
 
-  Widget listCategory(final WebsiteCategory category, final List<Website> websites) {
+  Widget listCategory(
+      final WebsiteCategory category, final List<Website> websites) {
     final bool hasContent = websites != null && websites.isNotEmpty;
 
     const double padding = 10;
@@ -303,7 +305,8 @@ class _PortalPageState extends State<PortalPage> {
                 userOnly: userOnly,
                 uid: authProvider.uid,
               ),
-              builder: (final context, final AsyncSnapshot<List<Website>> websiteSnap) {
+              builder: (final context,
+                  final AsyncSnapshot<List<Website>> websiteSnap) {
                 if (websiteSnap.hasData) {
                   websites = websiteSnap.data;
                   return SingleChildScrollView(
@@ -350,7 +353,8 @@ class _AddWebsiteButton extends StatelessWidget {
             if (authProvider.isAuthenticated && !authProvider.isAnonymous) {
               Navigator.of(context)
                   .push(MaterialPageRoute<ChangeNotifierProvider>(
-                builder: (final _) => ChangeNotifierProvider<FilterProvider>.value(
+                builder: (final _) =>
+                    ChangeNotifierProvider<FilterProvider>.value(
                   // If testing, use the global (mocked) provider; otherwise instantiate a new local provider
                   value: Platform.environment.containsKey('FLUTTER_TEST')
                       ? Provider.of<FilterProvider>(context)

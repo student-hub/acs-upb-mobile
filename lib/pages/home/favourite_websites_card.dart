@@ -10,7 +10,8 @@ import '../portal/service/website_provider.dart';
 import '../portal/view/website_view.dart';
 
 class FavouriteWebsitesCard extends StatelessWidget {
-  const FavouriteWebsitesCard({final Key key, this.onShowMore}) : super(key: key);
+  const FavouriteWebsitesCard({final Key key, this.onShowMore})
+      : super(key: key);
 
   final void Function() onShowMore;
 

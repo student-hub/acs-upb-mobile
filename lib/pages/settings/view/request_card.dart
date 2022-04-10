@@ -200,5 +200,6 @@ class _RequestCardState extends State<RequestCard>
   bool get wantKeepAlive => true;
 
   @override
-  dynamic noSuchMethod(final Invocation invocation) => super.noSuchMethod(invocation);
+  dynamic noSuchMethod(final Invocation invocation) =>
+      super.noSuchMethod(invocation);
 }

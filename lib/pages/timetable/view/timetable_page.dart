@@ -102,7 +102,8 @@ class _TimetablePageState extends State<TimetablePage>
           tooltip: S.current.navigationFilter,
           onPressed: () => Navigator.push(
             context,
-            MaterialPageRoute<FilterPage>(builder: (final _) => const FilterPage()),
+            MaterialPageRoute<FilterPage>(
+                builder: (final _) => const FilterPage()),
           ),
         ),
       ],
@@ -154,9 +155,11 @@ class _TimetablePageState extends State<TimetablePage>
                         child: child,
                         dateController: _dateController,
                         timeController: _timeController,
-                        eventBuilder: (final context, final event) => UniEventWidget(event),
-                        allDayEventBuilder: (final context, final event, final info) =>
-                            UniAllDayEventWidget(event, info: info),
+                        eventBuilder: (final context, final event) =>
+                            UniEventWidget(event),
+                        allDayEventBuilder:
+                            (final context, final event, final info) =>
+                                UniAllDayEventWidget(event, info: info),
                         callbacks: TimetableCallbacks(
                           onDateTimeBackgroundTap: (final dateTime) {
                             final user = Provider.of<AuthProvider>(context,
@@ -165,8 +168,9 @@ class _TimetablePageState extends State<TimetablePage>
                             if (user.canAddPublicInfo) {
                               Navigator.of(context).push(
                                 MaterialPageRoute<AddEventView>(
-                                  builder: (final _) => ChangeNotifierProxyProvider<
-                                      AuthProvider, FilterProvider>(
+                                  builder: (final _) =>
+                                      ChangeNotifierProxyProvider<AuthProvider,
+                                          FilterProvider>(
                                     create: (final _) => FilterProvider(),
                                     update: (final context, final authProvider,
                                         final filterProvider) {

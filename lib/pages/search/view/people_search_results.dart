@@ -68,7 +68,8 @@ class PeopleCircleList extends StatelessWidget {
                     showModalBottomSheet<dynamic>(
                         isScrollControlled: true,
                         context: context,
-                        builder: (final BuildContext buildContext) => PersonView(
+                        builder: (final BuildContext buildContext) =>
+                            PersonView(
                               person: people[index],
                             ));
                   },

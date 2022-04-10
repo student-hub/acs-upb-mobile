@@ -97,7 +97,8 @@ class AdminProvider with ChangeNotifier {
     return _processRequest(requestId, false);
   }
 
-  Future<void> _processRequest(final String requestId, final bool accepted) async {
+  Future<void> _processRequest(
+      final String requestId, final bool accepted) async {
     try {
       if (accepted) {
         final request = await fetchRequest(requestId);

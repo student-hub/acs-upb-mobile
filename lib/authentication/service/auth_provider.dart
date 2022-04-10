@@ -34,7 +34,8 @@ extension DatabaseUser on User {
 
 class AuthProvider with ChangeNotifier {
   AuthProvider() {
-    _userAuthSub = FirebaseAuth.instance.authStateChanges().listen((final newUser) {
+    _userAuthSub =
+        FirebaseAuth.instance.authStateChanges().listen((final newUser) {
       print('AuthProvider - FirebaseAuth - authStateChanges - $newUser');
       _currentUser = null;
       _fetchUser();
@@ -135,7 +136,8 @@ class AuthProvider with ChangeNotifier {
   /// where the key is the name of the level in the filter tree.
   /// In the new format, the class is simply a `List<String>` that contains the
   /// name of the nodes.
-  Future<void> _migrateToNewClassFormat(final Map<String, dynamic> userData) async {
+  Future<void> _migrateToNewClassFormat(
+      final Map<String, dynamic> userData) async {
     final classes = ['degree', 'domain', 'year', 'series', 'group', 'subgroup']
         .map((final key) => userData['class'][key].toString())
         .where((final s) => s != 'null')
@@ -296,7 +298,8 @@ class AuthProvider with ChangeNotifier {
     return accountExists;
   }
 
-  Future<bool> canSignUpWithEmail(final String email, {bool showToast = true}) async {
+  Future<bool> canSignUpWithEmail(final String email,
+      {bool showToast = true}) async {
     List<String> providers = [];
     try {
       providers = await FirebaseAuth.instance.fetchSignInMethodsForEmail(email);

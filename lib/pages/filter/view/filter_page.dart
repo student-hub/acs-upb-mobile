@@ -68,8 +68,8 @@ class FilterPageState extends State<FilterPage> {
         }
       });
 
-  void _onSelectedExclusive(
-      final bool selection, final FilterNode node, final List<FilterNode> nodesOnLevel) {
+  void _onSelectedExclusive(final bool selection, final FilterNode node,
+      final List<FilterNode> nodesOnLevel) {
     // Only one node on level can be selected
     if (selection) {
       for (final otherNode in nodesOnLevel.where((final n) => n != node)) {
@@ -81,7 +81,9 @@ class FilterPageState extends State<FilterPage> {
   }
 
   void _buildTree(
-      {final FilterNode node, final Map<int, List<Widget>> optionsByLevel, int level = 0}) {
+      {final FilterNode node,
+      final Map<int, List<Widget>> optionsByLevel,
+      int level = 0}) {
     if (node.children == null || node.children.isEmpty) {
       return;
     }
