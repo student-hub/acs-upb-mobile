@@ -67,15 +67,21 @@ class RecurringUniEvent extends UniEvent {
       // an "odd" week, even though its number in the calendar would have the
       // same parity as the week before the holiday.
       if (rrule.interval != 1) {
-        // Check whether the first calendar week is odd
-        final bool startOdd = weeks.first.isOdd;
-        weeks = weeks
-            .whereIndex((index) =>
-                (startOdd ? index : index + 1) % rrule.interval !=
-                weeks.lookup(WeekYearRules.iso
-                        .getWeekOfWeekYear(LocalDate.dateTime(start))) %
-                    rrule.interval)
-            .toSet();
+        final eventStartWeek =
+            WeekYearRules.iso.getWeekOfWeekYear(LocalDate.dateTime(start));
+        int eventParity;
+        if (!weeks.contains(eventStartWeek)) {
+          eventParity = weeks.toList().indexOf(eventStartWeek - weeks.first) %
+              rrule.interval;
+        } else {
+          print(
+              'Expected first week of event to not be a holiday; falling back to default parity.');
+          eventParity = 1;
+        }
+        // Select the weeks where the parity matches the parity of the event.
+        weeks = weeks.whereIndex((index) {
+          return index % rrule.interval != eventParity;
+        }).toSet();
       }
       return rrule.copyWith(
           frequency: Frequency.yearly,

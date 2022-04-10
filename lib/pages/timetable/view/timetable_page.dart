@@ -134,11 +134,13 @@ class _TimetablePageState extends State<TimetablePage>
                       AsyncSnapshot<List<UniEventInstance>> snapshot) {
                     if (snapshot.hasError) {
                       AppToast.show(S.current.errorSomethingWentWrong);
+                      print(snapshot.error);
                       return const Center(child: CircularProgressIndicator());
                     } else {
                       switch (snapshot.connectionState) {
                         case ConnectionState.none:
                           AppToast.show(S.current.errorSomethingWentWrong);
+                          print(snapshot.error);
                           return const Center(
                               child: CircularProgressIndicator());
                         case ConnectionState.waiting:
@@ -227,7 +229,7 @@ class _TimetablePageState extends State<TimetablePage>
             Provider.of<UniEventProvider>(context, listen: false);
 
         if (eventProvider != null) {
-          if (eventProvider.empty) {
+          if (eventProvider?.empty == true) {
             await showDialog<String>(
               context: context,
               builder: buildDialog,
