@@ -333,6 +333,10 @@ class _AddEventViewState extends State<AddEventView> {
                           onChanged: (_) => setState(() {}),
                         ),
                         timeIntervalPicker(),
+                        Divider(
+                          thickness: 0.7,
+                          color: Theme.of(context).hintColor,
+                        ),
                         if (weekSelected[WeekType.odd] != null &&
                             weekSelected[WeekType.even] != null)
                           FilterChipFormField(
@@ -347,6 +351,7 @@ class _AddEventViewState extends State<AddEventView> {
                           label: S.current.labelDay,
                           initialValues: weekDaySelected,
                         ),
+                        const SizedBox(height: 16),
                       ],
                     ),
                   const SizedBox(width: 16),

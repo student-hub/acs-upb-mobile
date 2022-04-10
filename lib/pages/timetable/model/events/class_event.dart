@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:rrule/rrule.dart';
+
 import '../../../classes/model/class.dart';
 import '../../../people/model/person.dart';
 import '../academic_calendar.dart';

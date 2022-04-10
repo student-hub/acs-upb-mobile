@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -63,13 +64,15 @@ class _FeedbackNudgeState extends State<FeedbackNudge> {
           label: Row(
             children: [
               Expanded(
-                // TODO(AndreiMirciu): Fix text wrapping property for both languages
-                child: Text(
+                child: AutoSizeText(
                   S.current.messageFeedbackLeft(feedbackFormsLeft),
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                      color: Colors.white, fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.center,
                 ),
               ),
               Icon(

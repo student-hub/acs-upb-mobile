@@ -275,7 +275,8 @@ class _WebsiteViewState extends State<WebsiteView> {
                 child: Column(
                   children: <Widget>[
                     UploadButton(
-                        pageType: true, controller: uploadButtonController),
+                        label: S.current.labelWebsiteIcon,
+                        controller: uploadButtonController),
                     TextFormField(
                       controller: labelController,
                       decoration: InputDecoration(

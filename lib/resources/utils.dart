@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:image/image.dart' as im;
 import 'package:package_info_plus/package_info_plus.dart';
@@ -7,6 +8,7 @@ import 'package:pedantic/pedantic.dart';
 import 'package:pref/pref.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:image/image.dart' as im;
 
 import '../authentication/service/auth_provider.dart';
 import '../generated/l10n.dart';

@@ -30,8 +30,10 @@ import 'pages/news_feed/view/news_feed_page.dart';
 import 'pages/people/service/person_provider.dart';
 import 'pages/portal/service/website_provider.dart';
 import 'pages/settings/service/admin_provider.dart';
+import 'pages/settings/service/issue_provider.dart';
 import 'pages/settings/service/request_provider.dart';
 import 'pages/settings/view/admin_page.dart';
+import 'pages/settings/view/feedback_form.dart';
 import 'pages/settings/view/request_permissions.dart';
 import 'pages/settings/view/settings_page.dart';
 import 'pages/timetable/service/uni_event_provider.dart';
@@ -84,6 +86,7 @@ Future<void> main() async {
           ChangeNotifierProvider<WebsiteProvider>(
               create: (_) => WebsiteProvider()),
           Provider<RequestProvider>(create: (_) => RequestProvider()),
+          Provider<IssueProvider>(create: (_) => IssueProvider()),
           ChangeNotifierProvider<ClassProvider>(create: (_) => classProvider),
           ChangeNotifierProvider<FeedbackProvider>(
               create: (_) => feedbackProvider),
@@ -173,6 +176,7 @@ class _MyAppState extends State<MyApp> {
             Routes.newsFeed: (_) => NewsFeedPage(),
             Routes.requestPermissions: (_) => RequestPermissionsPage(),
             Routes.adminPanel: (_) => const AdminPanelPage(),
+            Routes.feedbackForm: (_) => FeedbackFormPage(),
           },
           navigatorObservers: widget.navigationObservers ?? [],
         ),

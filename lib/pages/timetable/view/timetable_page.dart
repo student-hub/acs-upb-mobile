@@ -82,9 +82,9 @@ class _TimetablePageState extends State<TimetablePage>
       needsToBeAuthenticated: true,
       leading: AppScaffoldAction(
         icon: Icons.today_outlined,
-        onPressed: () {
-          _dateController.animateToToday(vsync: this);
-        },
+        onPressed: () => !showingCurrentWeek()
+            ? _dateController.animateToToday(vsync: this)
+            : AppToast.show(S.current.messageAlreadySeeingCurrentWeek),
         tooltip: S.current.actionJumpToToday,
       ),
       actions: [
@@ -200,6 +200,13 @@ class _TimetablePageState extends State<TimetablePage>
         ),
       ),
     );
+  }
+
+  bool showingCurrentWeek() {
+    final todayPage = DateTime.now().page;
+    final currentPage = _dateController.visibleRange
+        .getTargetPageForFocus(_dateController.value.page);
+    return currentPage == todayPage;
   }
 
   Future<void> scheduleDialog(BuildContext context) async {
