@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:provider/provider.dart';
@@ -18,7 +17,7 @@ import '../service/feedback_provider.dart';
 import 'feedback_question.dart';
 
 class ClassFeedbackView extends StatefulWidget {
-  const ClassFeedbackView({Key key, this.classHeader}) : super(key: key);
+  const ClassFeedbackView({final Key key, this.classHeader}) : super(key: key);
 
   final ClassHeader classHeader;
 
@@ -48,15 +47,15 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
 
     Provider.of<PersonProvider>(context, listen: false)
         .fetchPeople()
-        .then((teachers) => setState(() => classTeachers = teachers));
+        .then((final teachers) => setState(() => classTeachers = teachers));
 
     Provider.of<FeedbackProvider>(context, listen: false)
         .fetchCategories()
-        .then((categories) => setState(() => feedbackCategories = categories));
+        .then((final categories) => setState(() => feedbackCategories = categories));
 
     Provider.of<PersonProvider>(context, listen: false)
         .mostRecentLecturer(widget.classHeader.id)
-        .then((value) => selectedTeacherName = value);
+        .then((final value) => selectedTeacherName = value);
 
     fetchFeedbackQuestions();
   }
@@ -64,7 +63,7 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
   Future<Map<String, dynamic>> fetchFeedbackQuestions() async {
     await Provider.of<FeedbackProvider>(context, listen: false)
         .fetchQuestions()
-        .then((questions) => setState(() => feedbackQuestions = questions));
+        .then((final questions) => setState(() => feedbackQuestions = questions));
 
     for (int i = 0; i <= feedbackQuestions.length; i++) {
       answerValues.insert(i, {
@@ -90,12 +89,12 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
     );
   }
 
-  Widget lecturerFormField(BuildContext context) {
+  Widget lecturerFormField(final BuildContext context) {
     final personProvider = Provider.of<PersonProvider>(context);
 
     return FutureBuilder(
       future: personProvider.fetchPerson(selectedTeacherName),
-      builder: (context, snapshot) {
+      builder: (final context, final snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
           final lecturer = snapshot.data;
           selectedTeacher = lecturer;
@@ -103,7 +102,7 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
             key: const Key('AutocompleteLecturer'),
             labelText: S.current.labelLecturer,
             formKey: formKey,
-            onSaved: (value) => selectedTeacher = value,
+            onSaved: (final value) => selectedTeacher = value,
             classTeachers: classTeachers,
             personDisplayed: selectedTeacherName == null
                 ? Person(name: '-')
@@ -122,7 +121,7 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
       labelText: S.current.labelAssistant,
       warning: S.current.warningYouNeedToSelectAssistant,
       formKey: formKey,
-      onSaved: (value) => selectedAssistant = value,
+      onSaved: (final value) => selectedAssistant = value,
       classTeachers: classTeachers,
     );
   }
@@ -137,7 +136,7 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
             key: const Key('AcknowledgementCheckbox'),
             value: agreedToResponsibilities,
             visualDensity: VisualDensity.compact,
-            onChanged: (value) =>
+            onChanged: (final value) =>
                 setState(() => agreedToResponsibilities = value),
           ),
           Expanded(
@@ -154,7 +153,7 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
     );
   }
 
-  Widget categoryHeader(String category) {
+  Widget categoryHeader(final String category) {
     return Column(
       children: [
         Text(
@@ -167,7 +166,7 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final List<Widget> children = [
       classFormField(),
       lecturerFormField(context),
@@ -182,7 +181,7 @@ class _ClassFeedbackViewState extends State<ClassFeedbackView> {
             feedbackCategories[category][LocaleProvider.localeString])
       ];
       for (final question
-          in feedbackQuestions.values.where((q) => q.category == category)) {
+          in feedbackQuestions.values.where((final q) => q.category == category)) {
         categoryChildren.add(FeedbackQuestionFormField(
             question: question, answerValues: answerValues, formKey: formKey));
       }

@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -11,16 +10,16 @@ import '../news_feed/service/news_provider.dart';
 
 class NewsFeedCard extends StatelessWidget {
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return InfoCard<List<NewsFeedItem>>(
         title: S.current.navigationNewsFeed,
         showMoreButtonKey: const ValueKey('show_more_news_feed'),
         onShowMore: () => Navigator.of(context).pushNamed(Routes.newsFeed),
         future: Provider.of<NewsProvider>(context).fetchNewsFeedItems(limit: 2),
-        builder: (newsFeedItems) {
+        builder: (final newsFeedItems) {
           return Column(
               children: newsFeedItems
-                  .map((item) => ListTile(
+                  .map((final item) => ListTile(
                         title: Text(item.title),
                         subtitle: Text(item.date),
                         trailing: const Icon(Icons.arrow_forward_ios_outlined),

@@ -39,8 +39,8 @@ class _SignUpViewState extends State<SignUpView> {
   /// Special characters such as ".", "_" are used to separate the names,
   /// numbers are removed and names are capitalized.
   /// *Format example:* firstnameone_firstnametwo.lastname123@stud.acs.pub.ro
-  void parseNameFromEmail(TextEditingController email,
-      TextEditingController firstName, TextEditingController lastName) {
+  void parseNameFromEmail(final TextEditingController email,
+      final TextEditingController firstName, final TextEditingController lastName) {
     final emailWithoutNumbers =
         email.text.replaceAll(RegExp('[^a-zA-Z._]'), '');
     final names = emailWithoutNumbers.split('.');
@@ -50,7 +50,7 @@ class _SignUpViewState extends State<SignUpView> {
         firstName.text = names[0].titleCase;
       } else {
         final firstNames = names[0].split('_');
-        firstName.text = firstNames.map((s) => s.titleCase).join(' ');
+        firstName.text = firstNames.map((final s) => s.titleCase).join(' ');
       }
 
       if (names.length > 1) {
@@ -76,9 +76,9 @@ class _SignUpViewState extends State<SignUpView> {
         suffix: emailDomain,
         autocorrect: false,
         autofillHints: [AutofillHints.newUsername],
-        check: (email, {showToast}) => authProvider
+        check: (final email, {final showToast}) => authProvider
             .canSignUpWithEmail(email + emailDomain, showToast: showToast),
-        onChanged: (_) => parseNameFromEmail(
+        onChanged: (final _) => parseNameFromEmail(
             emailController, firstNameController, lastNameController),
       ),
       FormCardField(
@@ -88,7 +88,7 @@ class _SignUpViewState extends State<SignUpView> {
           controller: passwordController,
           obscureText: true,
           autofillHints: [AutofillHints.newPassword],
-          check: (password, {showToast}) async {
+          check: (final password, {final showToast}) async {
             final errorString = AppValidator.isStrongPassword(password);
             if (showToast && errorString != null) {
               AppToast.show(errorString);
@@ -99,7 +99,7 @@ class _SignUpViewState extends State<SignUpView> {
         label: S.current.labelConfirmPassword,
         hint: S.current.hintPassword,
         obscureText: true,
-        check: (password, {showToast}) async {
+        check: (final password, {final showToast}) async {
           final bool ok = password == passwordController.text;
           if (!ok && showToast) {
             AppToast.show(S.current.errorPasswordsDiffer);
@@ -128,7 +128,7 @@ class _SignUpViewState extends State<SignUpView> {
           Checkbox(
             value: agreedToPolicy,
             visualDensity: VisualDensity.compact,
-            onChanged: (value) => setState(() => agreedToPolicy = value),
+            onChanged: (final value) => setState(() => agreedToPolicy = value),
           ),
           Expanded(
             child: RichText(
@@ -154,7 +154,7 @@ class _SignUpViewState extends State<SignUpView> {
     );
   }
 
-  FormCard _buildForm(BuildContext context) {
+  FormCard _buildForm(final BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
 
     return FormCard(
@@ -165,7 +165,7 @@ class _SignUpViewState extends State<SignUpView> {
         _privacyPolicy()
       ],
       submitOnEnter: false,
-      onSubmitted: (fields) async {
+      onSubmitted: (final fields) async {
         if (!agreedToPolicy) {
           AppToast.show(
               '${S.current.warningAgreeTo}${S.current.labelPrivacyPolicy}.');
@@ -185,14 +185,14 @@ class _SignUpViewState extends State<SignUpView> {
           if (!mounted) return;
           // Remove all routes below and push home page
           await Navigator.pushNamedAndRemoveUntil(
-              context, Routes.home, (route) => false);
+              context, Routes.home, (final route) => false);
         }
       },
     );
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final signUpForm = _buildForm(context);
 
     return GestureDetector(

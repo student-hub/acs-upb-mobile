@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -15,7 +14,7 @@ class AppScaffoldAction {
     this.tooltip,
     this.text,
     this.items,
-    bool disabled,
+    final bool disabled,
   }) : disabled = disabled ?? false;
 
   // Icon for the action button
@@ -45,7 +44,7 @@ class AppScaffold extends StatelessWidget {
   AppScaffold({
     this.body,
     this.title,
-    List<AppScaffoldAction> actions,
+    final List<AppScaffoldAction> actions,
     this.floatingActionButton,
     this.leading,
     this.needsToBeAuthenticated = false,
@@ -58,8 +57,8 @@ class AppScaffold extends StatelessWidget {
   final AppScaffoldAction leading;
   final bool needsToBeAuthenticated;
 
-  Widget _widgetFromAction(AppScaffoldAction action,
-      {@required bool enableContent, @required BuildContext context}) {
+  Widget _widgetFromAction(final AppScaffoldAction action,
+      {@required final bool enableContent, @required final BuildContext context}) {
     if (action == null) {
       return null;
     }
@@ -79,10 +78,10 @@ class AppScaffold extends StatelessWidget {
         ? PopupMenuButton<String>(
             icon: icon,
             tooltip: action.tooltip ?? action.text,
-            onSelected: (selected) => action.items[selected](),
-            itemBuilder: (BuildContext context) {
+            onSelected: (final selected) => action.items[selected](),
+            itemBuilder: (final BuildContext context) {
               return action.items.keys
-                  .map((option) => PopupMenuItem(
+                  .map((final option) => PopupMenuItem(
                         value: option,
                         child: Text(option),
                       ))
@@ -111,7 +110,7 @@ class AppScaffold extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
     final bool isAuthenticated =
         authProvider.isAuthenticated && !authProvider.isAnonymous;
@@ -148,7 +147,7 @@ class AppScaffold extends StatelessWidget {
             leading: _widgetFromAction(leading,
                 enableContent: enableContent, context: context),
             actions: actions
-                .map((action) => _widgetFromAction(action,
+                .map((final action) => _widgetFromAction(action,
                     enableContent: enableContent, context: context))
                 .toList(),
           ),

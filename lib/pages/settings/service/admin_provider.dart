@@ -9,7 +9,7 @@ import '../../../widgets/toast.dart';
 import '../model/request.dart';
 
 extension RequestExtension on Request {
-  static Request fromSnap(DocumentSnapshot<Map<String, dynamic>> snap) {
+  static Request fromSnap(final DocumentSnapshot<Map<String, dynamic>> snap) {
     final data = snap.data();
     return Request(
       userId: data['addedBy'],
@@ -23,7 +23,7 @@ extension RequestExtension on Request {
     );
   }
 
-  static String getFormId(DocumentSnapshot snap) {
+  static String getFormId(final DocumentSnapshot snap) {
     return snap.id;
   }
 }
@@ -34,7 +34,7 @@ class AdminProvider with ChangeNotifier {
   AuthProvider _authProvider;
 
   // ignore: use_setters_to_change_properties
-  void updateAuth(AuthProvider authProvider) {
+  void updateAuth(final AuthProvider authProvider) {
     _authProvider = authProvider;
   }
 
@@ -67,7 +67,7 @@ class AdminProvider with ChangeNotifier {
     }
   }
 
-  Future<Request> fetchRequest(String requestId) async {
+  Future<Request> fetchRequest(final String requestId) async {
     try {
       final DocumentSnapshot docSnapshot =
           await _db.collection('forms').doc(requestId).get();
@@ -89,15 +89,15 @@ class AdminProvider with ChangeNotifier {
     return currentUser;
   }
 
-  Future<void> acceptRequest(String requestId) async {
+  Future<void> acceptRequest(final String requestId) async {
     return _processRequest(requestId, true);
   }
 
-  Future<void> denyRequest(String requestId) async {
+  Future<void> denyRequest(final String requestId) async {
     return _processRequest(requestId, false);
   }
 
-  Future<void> _processRequest(String requestId, bool accepted) async {
+  Future<void> _processRequest(final String requestId, final bool accepted) async {
     try {
       if (accepted) {
         final request = await fetchRequest(requestId);
@@ -114,7 +114,7 @@ class AdminProvider with ChangeNotifier {
     }
   }
 
-  Future<void> revertRequest(String requestId) async {
+  Future<void> revertRequest(final String requestId) async {
     try {
       final request = await fetchRequest(requestId);
       if (request.accepted == true) {
@@ -135,7 +135,7 @@ class AdminProvider with ChangeNotifier {
     }
   }
 
-  Future<void> _giveEditingPermissions(String userId) async {
+  Future<void> _giveEditingPermissions(final String userId) async {
     final user = await fetchUserById(userId);
     if (user.permissionLevel < 3) {
       await _db.collection('users').doc(userId).update({'permissionLevel': 3});

@@ -1,5 +1,4 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:provider/provider.dart';
@@ -13,7 +12,7 @@ import '../service/person_provider.dart';
 import 'person_view.dart';
 
 class PeoplePage extends StatefulWidget {
-  const PeoplePage({Key key}) : super(key: key);
+  const PeoplePage({final Key key}) : super(key: key);
 
   @override
   _PeoplePageState createState() => _PeoplePageState();
@@ -33,7 +32,7 @@ class _PeoplePageState extends State<PeoplePage> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return AppScaffold(
       actions: [
         AppScaffoldAction(
@@ -46,13 +45,13 @@ class _PeoplePageState extends State<PeoplePage> {
       title: Text(S.current.navigationPeople),
       body: FutureBuilder(
           future: people,
-          builder: (_, snapshot) {
+          builder: (final _, final snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
               peopleData = snapshot.data;
               return Column(
                 children: [
                   SearchWidget(
-                    onSearch: (searchText) {
+                    onSearch: (final searchText) {
                       setState(() => filter = searchText);
                     },
                     cancelCallback: () {
@@ -76,12 +75,12 @@ class _PeoplePageState extends State<PeoplePage> {
   }
 
   List<Person> get filteredPeople => peopleData
-      .where((person) => filter
+      .where((final person) => filter
           .split(' ')
-          .where((element) => element != '')
+          .where((final element) => element != '')
           .fold(
               true,
-              (previousValue, filter) =>
+              (final previousValue, final filter) =>
                   previousValue &&
                   person.name.toLowerCase().contains(filter.toLowerCase())))
       .toList();
@@ -94,13 +93,13 @@ class PeopleList extends StatelessWidget {
   final String filter;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final List<String> filteredWords = filter
         .toLowerCase()
         .split(' ')
-        .where((element) => element != '')
+        .where((final element) => element != '')
         .toList();
-    people.sort((p1, p2) {
+    people.sort((final p1, final p2) {
       final cmpLast = p1.lastName.compareTo(p2.lastName);
       if (cmpLast != 0) {
         return cmpLast;
@@ -111,7 +110,7 @@ class PeopleList extends StatelessWidget {
     return ListView.builder(
       shrinkWrap: true,
       itemCount: people.length,
-      itemBuilder: (context, index) {
+      itemBuilder: (final context, final index) {
         return ListTile(
           key: ValueKey(people[index].name),
           leading: CircleAvatar(
@@ -129,7 +128,7 @@ class PeopleList extends StatelessWidget {
           onTap: () => showModalBottomSheet<dynamic>(
             isScrollControlled: true,
             context: context,
-            builder: (BuildContext buildContext) =>
+            builder: (final BuildContext buildContext) =>
                 PersonView(person: people[index]),
           ),
         );
@@ -142,7 +141,7 @@ class AutocompletePerson extends StatefulWidget {
   const AutocompletePerson(
       {@required this.labelText,
       @required this.classTeachers,
-      Key key,
+      final Key key,
       this.warning,
       this.formKey,
       this.onSaved,
@@ -164,13 +163,13 @@ class _AutocompletePersonState extends State<AutocompletePerson> {
   Person selectedPerson;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return Autocomplete<Person>(
       key: widget.key,
-      fieldViewBuilder: (BuildContext context,
-          TextEditingController textEditingController,
-          FocusNode focusNode,
-          VoidCallback onFieldSubmitted) {
+      fieldViewBuilder: (final BuildContext context,
+          final TextEditingController textEditingController,
+          final FocusNode focusNode,
+          final VoidCallback onFieldSubmitted) {
         textEditingController.text = selectedPerson?.name;
         if (selectedPerson == null) {
           textEditingController.text = widget.personDisplayed?.name;
@@ -182,10 +181,10 @@ class _AutocompletePersonState extends State<AutocompletePerson> {
             prefixIcon: const Icon(FeatherIcons.user),
           ),
           focusNode: focusNode,
-          onFieldSubmitted: (String value) {
+          onFieldSubmitted: (final String value) {
             onFieldSubmitted();
           },
-          validator: (_) {
+          validator: (final _) {
             if (textEditingController.text.isEmpty ?? true) {
               return widget.warning;
             }
@@ -193,12 +192,12 @@ class _AutocompletePersonState extends State<AutocompletePerson> {
           },
         );
       },
-      displayStringForOption: (Person person) => person.name,
-      optionsBuilder: (TextEditingValue textEditingValue) {
+      displayStringForOption: (final Person person) => person.name,
+      optionsBuilder: (final TextEditingValue textEditingValue) {
         if (textEditingValue.text == '' || textEditingValue.text.isEmpty) {
           return const Iterable<Person>.empty();
         }
-        if (widget.classTeachers.where((Person person) {
+        if (widget.classTeachers.where((final Person person) {
           return person.name
               .toLowerCase()
               .contains(textEditingValue.text.toLowerCase());
@@ -210,13 +209,13 @@ class _AutocompletePersonState extends State<AutocompletePerson> {
           return inputTeachers;
         }
 
-        return widget.classTeachers.where((Person person) {
+        return widget.classTeachers.where((final Person person) {
           return person.name
               .toLowerCase()
               .contains(textEditingValue.text.toLowerCase());
         });
       },
-      onSelected: (Person selection) {
+      onSelected: (final Person selection) {
         widget.formKey.currentState.validate();
         setState(() {
           selectedPerson = selection;

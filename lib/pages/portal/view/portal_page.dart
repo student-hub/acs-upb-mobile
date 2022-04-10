@@ -23,7 +23,7 @@ import '../service/website_provider.dart';
 import 'website_view.dart';
 
 class PortalPage extends StatefulWidget {
-  const PortalPage({Key key}) : super(key: key);
+  const PortalPage({final Key key}) : super(key: key);
 
   @override
   _PortalPageState createState() => _PortalPageState();
@@ -75,7 +75,7 @@ class _PortalPageState extends State<PortalPage> {
     }
   }
 
-  Widget websiteCircle(Website website, double size) {
+  Widget websiteCircle(final Website website, final double size) {
     final bool canEdit = editingEnabled &&
         (website.isPrivate || (user.canEditPublicInfo ?? false));
     return Padding(
@@ -88,7 +88,7 @@ class _PortalPageState extends State<PortalPage> {
             if (canEdit) {
               Navigator.of(context)
                   .push(MaterialPageRoute<ChangeNotifierProvider>(
-                builder: (_) => ChangeNotifierProvider<FilterProvider>.value(
+                builder: (final _) => ChangeNotifierProvider<FilterProvider>.value(
                   // If testing, use the global (mocked) provider; otherwise instantiate a new local provider
                   value: Platform.environment.containsKey('FLUTTER_TEST')
                       ? Provider.of<FilterProvider>(context)
@@ -112,7 +112,7 @@ class _PortalPageState extends State<PortalPage> {
         ));
   }
 
-  Widget listCategory(WebsiteCategory category, List<Website> websites) {
+  Widget listCategory(final WebsiteCategory category, final List<Website> websites) {
     final bool hasContent = websites != null && websites.isNotEmpty;
 
     const double padding = 10;
@@ -190,7 +190,7 @@ class _PortalPageState extends State<PortalPage> {
     );
   }
 
-  List<Widget> listWebsitesByCategory(List<Website> websites) {
+  List<Widget> listWebsitesByCategory(final List<Website> websites) {
     assert(websites != null, 'list of websites cannot be null');
 
     final map = <WebsiteCategory, List<Website>>{};
@@ -206,11 +206,11 @@ class _PortalPageState extends State<PortalPage> {
       WebsiteCategory.association,
       WebsiteCategory.resource,
       WebsiteCategory.other
-    ].map((category) => listCategory(category, map[category])).toList();
+    ].map((final category) => listCategory(category, map[category])).toList();
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final websiteProvider = Provider.of<WebsiteProvider>(context);
     filterProvider = Provider.of<FilterProvider>(context);
     final authProvider = Provider.of<AuthProvider>(context);
@@ -234,7 +234,7 @@ class _PortalPageState extends State<PortalPage> {
             if (authProvider.isAuthenticated && !authProvider.isAnonymous) {
               // Show message if there is nothing the user can edit
               if (!editingEnabled) {
-                user.hasEditableWebsites.then((canEdit) {
+                user.hasEditableWebsites.then((final canEdit) {
                   if (!canEdit) {
                     AppToast.show(
                         '${S.current.warningNothingToEdit} ${S.current.messageAddCustomWebsite}');
@@ -257,7 +257,7 @@ class _PortalPageState extends State<PortalPage> {
               Navigator.push(
                 context,
                 MaterialPageRoute<FilterPage>(
-                  builder: (_) => FilterPage(
+                  builder: (final _) => FilterPage(
                     onSubmit: _updateFilter,
                   ),
                 ),
@@ -267,7 +267,7 @@ class _PortalPageState extends State<PortalPage> {
               if (authProvider.isAuthenticated && !authProvider.isAnonymous) {
                 // Show message if user has no private websites
                 if (!userOnly) {
-                  user.hasPrivateWebsites.then((hasPrivate) {
+                  user.hasPrivateWebsites.then((final hasPrivate) {
                     if (!hasPrivate) {
                       AppToast.show(S.current.warningNoPrivateWebsite);
                     }
@@ -303,7 +303,7 @@ class _PortalPageState extends State<PortalPage> {
                 userOnly: userOnly,
                 uid: authProvider.uid,
               ),
-              builder: (context, AsyncSnapshot<List<Website>> websiteSnap) {
+              builder: (final context, final AsyncSnapshot<List<Website>> websiteSnap) {
                 if (websiteSnap.hasData) {
                   websites = websiteSnap.data;
                   return SingleChildScrollView(
@@ -334,14 +334,14 @@ class _PortalPageState extends State<PortalPage> {
 
 class _AddWebsiteButton extends StatelessWidget {
   const _AddWebsiteButton(
-      {Key key, this.category = WebsiteCategory.learning, this.size = 50})
+      {final Key key, this.category = WebsiteCategory.learning, this.size = 50})
       : super(key: key);
 
   final WebsiteCategory category;
   final double size;
 
   @override
-  Widget build(BuildContext context) => Tooltip(
+  Widget build(final BuildContext context) => Tooltip(
         message: S.current.actionAddWebsite,
         child: GestureDetector(
           onTap: () {
@@ -350,7 +350,7 @@ class _AddWebsiteButton extends StatelessWidget {
             if (authProvider.isAuthenticated && !authProvider.isAnonymous) {
               Navigator.of(context)
                   .push(MaterialPageRoute<ChangeNotifierProvider>(
-                builder: (_) => ChangeNotifierProvider<FilterProvider>.value(
+                builder: (final _) => ChangeNotifierProvider<FilterProvider>.value(
                   // If testing, use the global (mocked) provider; otherwise instantiate a new local provider
                   value: Platform.environment.containsKey('FLUTTER_TEST')
                       ? Provider.of<FilterProvider>(context)

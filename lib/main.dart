@@ -48,9 +48,9 @@ import 'widgets/loading_screen.dart';
 // Remove this in the future.
 class MyHttpOverrides extends HttpOverrides {
   @override
-  HttpClient createHttpClient(SecurityContext context) {
+  HttpClient createHttpClient(final SecurityContext context) {
     return super.createHttpClient(context)
-      ..badCertificateCallback = (X509Certificate cert, String host, int port) {
+      ..badCertificateCallback = (final X509Certificate cert, final String host, final int port) {
         return host == 'acs.pub.ro' ||
             host == 'cs.pub.ro' ||
             host == 'aii.pub.ro';
@@ -82,39 +82,39 @@ Future<void> main() async {
     EasyDynamicThemeWidget(
       child: MultiProvider(
         providers: [
-          ChangeNotifierProvider<AuthProvider>(create: (_) => authProvider),
+          ChangeNotifierProvider<AuthProvider>(create: (final _) => authProvider),
           ChangeNotifierProvider<WebsiteProvider>(
-              create: (_) => WebsiteProvider()),
-          Provider<RequestProvider>(create: (_) => RequestProvider()),
-          Provider<IssueProvider>(create: (_) => IssueProvider()),
-          ChangeNotifierProvider<ClassProvider>(create: (_) => classProvider),
+              create: (final _) => WebsiteProvider()),
+          Provider<RequestProvider>(create: (final _) => RequestProvider()),
+          Provider<IssueProvider>(create: (final _) => IssueProvider()),
+          ChangeNotifierProvider<ClassProvider>(create: (final _) => classProvider),
           ChangeNotifierProvider<FeedbackProvider>(
-              create: (_) => feedbackProvider),
-          ChangeNotifierProvider<PersonProvider>(create: (_) => personProvider),
+              create: (final _) => feedbackProvider),
+          ChangeNotifierProvider<PersonProvider>(create: (final _) => personProvider),
           ChangeNotifierProvider<QuestionProvider>(
-              create: (_) => QuestionProvider()),
-          ChangeNotifierProvider<NewsProvider>(create: (_) => NewsProvider()),
+              create: (final _) => QuestionProvider()),
+          ChangeNotifierProvider<NewsProvider>(create: (final _) => NewsProvider()),
           ChangeNotifierProxyProvider<AuthProvider, FilterProvider>(
-            create: (_) => FilterProvider(global: true),
-            update: (context, authProvider, filterProvider) {
+            create: (final _) => FilterProvider(global: true),
+            update: (final context, final authProvider, final filterProvider) {
               return filterProvider..updateAuth(authProvider);
             },
           ),
           ChangeNotifierProxyProvider2<ClassProvider, FilterProvider,
               UniEventProvider>(
-            create: (_) => UniEventProvider(
+            create: (final _) => UniEventProvider(
               authProvider: authProvider,
               personProvider: personProvider,
             ),
-            update: (context, classProvider, filterProvider, uniEventProvider) {
+            update: (final context, final classProvider, final filterProvider, final uniEventProvider) {
               return uniEventProvider
                 ..updateClasses(classProvider)
                 ..updateFilter(filterProvider);
             },
           ),
           ChangeNotifierProxyProvider<AuthProvider, AdminProvider>(
-            create: (_) => AdminProvider(),
-            update: (context, authProvider, adminProvider) {
+            create: (final _) => AdminProvider(),
+            update: (final context, final authProvider, final adminProvider) {
               return adminProvider..updateAuth(authProvider);
             },
           ),
@@ -139,7 +139,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return OKToast(
       textStyle: lightThemeData.textTheme.button,
       backgroundColor: primaryColor.withOpacity(.8),
@@ -166,17 +166,17 @@ class _MyAppState extends State<MyApp> {
           supportedLocales: S.delegate.supportedLocales,
           initialRoute: Routes.root,
           routes: {
-            Routes.root: (_) => AppLoadingScreen(),
-            Routes.home: (_) => const AppBottomNavigationBar(),
-            Routes.settings: (_) => SettingsPage(),
-            Routes.login: (_) => LoginView(),
-            Routes.signUp: (_) => SignUpView(),
-            Routes.faq: (_) => FaqPage(),
-            Routes.filter: (_) => const FilterPage(),
-            Routes.newsFeed: (_) => NewsFeedPage(),
-            Routes.requestPermissions: (_) => RequestPermissionsPage(),
-            Routes.adminPanel: (_) => const AdminPanelPage(),
-            Routes.feedbackForm: (_) => FeedbackFormPage(),
+            Routes.root: (final _) => AppLoadingScreen(),
+            Routes.home: (final _) => const AppBottomNavigationBar(),
+            Routes.settings: (final _) => SettingsPage(),
+            Routes.login: (final _) => LoginView(),
+            Routes.signUp: (final _) => SignUpView(),
+            Routes.faq: (final _) => FaqPage(),
+            Routes.filter: (final _) => const FilterPage(),
+            Routes.newsFeed: (final _) => NewsFeedPage(),
+            Routes.requestPermissions: (final _) => RequestPermissionsPage(),
+            Routes.adminPanel: (final _) => const AdminPanelPage(),
+            Routes.feedbackForm: (final _) => FeedbackFormPage(),
           },
           navigatorObservers: widget.navigationObservers ?? [],
         ),
@@ -186,7 +186,7 @@ class _MyAppState extends State<MyApp> {
 }
 
 class AppLoadingScreen extends StatelessWidget {
-  Future<String> _setUpAndChooseStartScreen(BuildContext context) async {
+  Future<String> _setUpAndChooseStartScreen(final BuildContext context) async {
     // Make initializations if this is not a test
     if (!Platform.environment.containsKey('FLUTTER_TEST')) {
       await RemoteConfigService.initialize();
@@ -216,7 +216,7 @@ class AppLoadingScreen extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return LoadingScreen(
       navigateAfterFuture: _setUpAndChooseStartScreen(context),
       image: Image.asset('assets/icons/acs_logo.png'),

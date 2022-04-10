@@ -6,7 +6,7 @@ class User {
       @required this.firstName,
       @required this.lastName,
       this.classes,
-      int permissionLevel})
+      final int permissionLevel})
       : permissionLevel = permissionLevel ?? 0;
 
   String get picturePath => 'users/$uid/picture.png';

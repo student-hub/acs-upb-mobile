@@ -19,7 +19,7 @@ class AcademicCalendar {
   List<AllDayUniEvent> holidays;
   List<AllDayUniEvent> exams;
 
-  Map<int, Set<int>> _getWeeksByYearInInterval(Interval interval) {
+  Map<int, Set<int>> _getWeeksByYearInInterval(final Interval interval) {
     final Map<int, Set<int>> weeksByYear = {};
     final rule = WeekYearRules.iso;
 
@@ -83,6 +83,6 @@ class AcademicCalendar {
       }
     }
 
-    return weeksByYear.values.expand((e) => e).toSet();
+    return weeksByYear.values.expand((final e) => e).toSet();
   }
 }

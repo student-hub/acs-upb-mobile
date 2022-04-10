@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:meta/meta.dart';
 
 import '../generated/l10n.dart';
 import 'button.dart';
@@ -8,7 +7,7 @@ import 'icon_text.dart';
 class AppDialog extends StatelessWidget {
   const AppDialog(
       {@required this.title,
-      Key key,
+      final Key key,
       this.icon,
       this.message,
       this.info,
@@ -40,7 +39,7 @@ class AppDialog extends StatelessWidget {
   final bool enableCancelButton;
 
   @override
-  AlertDialog build(BuildContext context) => AlertDialog(
+  AlertDialog build(final BuildContext context) => AlertDialog(
         title: icon == null
             ? Text(title)
             : Row(

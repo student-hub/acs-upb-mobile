@@ -12,7 +12,7 @@ import '../service/filter_provider.dart';
 
 class FilterPage extends StatefulWidget {
   const FilterPage(
-      {Key key,
+      {final Key key,
       this.title,
       this.info,
       this.hint,
@@ -50,7 +50,7 @@ class FilterPageState extends State<FilterPage> {
   int selectedNodes = 0;
   final int maxSelectedNodes = 10;
 
-  void _onSelected(bool selection, FilterNode node) => setState(() {
+  void _onSelected(final bool selection, final FilterNode node) => setState(() {
         if (node.value == selection) return;
 
         if (selection) {
@@ -69,10 +69,10 @@ class FilterPageState extends State<FilterPage> {
       });
 
   void _onSelectedExclusive(
-      bool selection, FilterNode node, List<FilterNode> nodesOnLevel) {
+      final bool selection, final FilterNode node, final List<FilterNode> nodesOnLevel) {
     // Only one node on level can be selected
     if (selection) {
-      for (final otherNode in nodesOnLevel.where((n) => n != node)) {
+      for (final otherNode in nodesOnLevel.where((final n) => n != node)) {
         _onSelected(false, otherNode);
       }
     }
@@ -81,7 +81,7 @@ class FilterPageState extends State<FilterPage> {
   }
 
   void _buildTree(
-      {FilterNode node, Map<int, List<Widget>> optionsByLevel, int level = 0}) {
+      {final FilterNode node, final Map<int, List<Widget>> optionsByLevel, int level = 0}) {
     if (node.children == null || node.children.isEmpty) {
       return;
     }
@@ -101,7 +101,7 @@ class FilterPageState extends State<FilterPage> {
           ),
           selected: child.value,
           showCheckmark: level != 0,
-          onSelected: (selection) {
+          onSelected: (final selection) {
             if (selection && selectedNodes >= maxSelectedNodes && level != 0) {
               AppToast.show(
                   S.current.warningOnlyNOptionsAtATime(maxSelectedNodes));
@@ -140,7 +140,7 @@ class FilterPageState extends State<FilterPage> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final filterProvider = Provider.of<FilterProvider>(context);
 
     return AppScaffold(
@@ -165,7 +165,7 @@ class FilterPageState extends State<FilterPage> {
       ],
       body: FutureBuilder<Filter>(
           future: Provider.of<FilterProvider>(context).fetchFilter(),
-          builder: (context, snapshot) {
+          builder: (final context, final snapshot) {
             if (snapshot.hasData) {
               filter ??= snapshot.data;
               final widgets = <Widget>[const SizedBox(height: 10)];

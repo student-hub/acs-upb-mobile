@@ -40,7 +40,7 @@ class Filter {
         localizedLevelNames: localizedLevelNames,
       );
 
-  void _relevantNodesHelper(List<String> list, FilterNode node) {
+  void _relevantNodesHelper(final List<String> list, final FilterNode node) {
     if (node.value) {
       if (node.children != null) {
         for (final child in node.children) {
@@ -58,7 +58,7 @@ class Filter {
     return list;
   }
 
-  List<FilterNode> findNodesByPath(List<String> path) {
+  List<FilterNode> findNodesByPath(final List<String> path) {
     final result = [root];
     if (path == null) {
       return result;
@@ -66,7 +66,7 @@ class Filter {
 
     for (final element in path) {
       final node = result.last.children
-          .firstWhere((e) => e.name == element, orElse: () => null);
+          .firstWhere((final e) => e.name == element, orElse: () => null);
       if (node == null) {
         return null;
       }
@@ -76,8 +76,8 @@ class Filter {
     return result;
   }
 
-  bool _relevantLeavesHelper(List<String> list, FilterNode node,
-      {BuildContext context}) {
+  bool _relevantLeavesHelper(final List<String> list, final FilterNode node,
+      {final BuildContext context}) {
     if (node.value) {
       bool hasSelectedChildren = false;
       if (node.children != null) {
@@ -113,7 +113,7 @@ class Filter {
   String get baseNode {
     if (root.children != null) {
       final selected =
-          root.children.where((child) => child.value == true).toList();
+          root.children.where((final child) => child.value == true).toList();
       assert(selected.length <= 1,
           'first level nodes should be mutually exclusive');
       if (selected.length == 1) {
@@ -123,13 +123,13 @@ class Filter {
     return null;
   }
 
-  List<String> relevantLocalizedLeaves(BuildContext context) {
+  List<String> relevantLocalizedLeaves(final BuildContext context) {
     final list = <String>[];
     _relevantLeavesHelper(list, root, context: context);
     return list;
   }
 
-  bool _setRelevantHelper(String nodeName, FilterNode node, bool setParents) {
+  bool _setRelevantHelper(final String nodeName, final FilterNode node, final bool setParents) {
     if (node.name == nodeName) {
       node.value = true;
       return true;
@@ -150,7 +150,7 @@ class Filter {
   }
 
   /// Set the value of node with name [nodeName] and its parents to `true`, on the [baseNode] branch
-  bool setRelevantUpToRoot(String nodeName, String baseNode) {
+  bool setRelevantUpToRoot(final String nodeName, final String baseNode) {
     if (nodeName == 'All') {
       return true;
     }
@@ -168,7 +168,7 @@ class Filter {
     return found;
   }
 
-  bool setRelevantNodes(List<String> nodes) {
+  bool setRelevantNodes(final List<String> nodes) {
     if (nodes == null || nodes.isEmpty) {
       return false;
     }
@@ -181,7 +181,7 @@ class Filter {
 }
 
 class FilterNode {
-  FilterNode({this.name = '', bool value, this.children})
+  FilterNode({this.name = '', final bool value, this.children})
       : _valueNotifier = ValueNotifier(value ?? false);
 
   /// Name of node
@@ -195,14 +195,14 @@ class FilterNode {
 
   bool get value => _valueNotifier.value;
 
-  set value(bool value) => _valueNotifier.value = value;
+  set value(final bool value) => _valueNotifier.value = value;
 
-  void addListener(void Function() listener) =>
+  void addListener(final void Function() listener) =>
       _valueNotifier.addListener(listener);
 
-  String localizedName(BuildContext context) => localizeName(name, context);
+  String localizedName(final BuildContext context) => localizeName(name, context);
 
-  static String localizeName(String name, BuildContext context) {
+  static String localizeName(final String name, final BuildContext context) {
     if (name == 'BSc') return S.current.filterNodeNameBSc;
     if (name == 'MSc') return S.current.filterNodeNameMSc;
 
@@ -212,6 +212,6 @@ class FilterNode {
   FilterNode clone() => FilterNode(
         name: name,
         value: value,
-        children: children?.map((c) => c.clone())?.toList(),
+        children: children?.map((final c) => c.clone())?.toList(),
       );
 }

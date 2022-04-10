@@ -1,5 +1,4 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 
@@ -8,12 +7,12 @@ import '../../../widgets/icon_text.dart';
 import '../model/person.dart';
 
 class PersonView extends StatelessWidget {
-  const PersonView({Key key, this.person}) : super(key: key);
+  const PersonView({final Key key, this.person}) : super(key: key);
 
   final Person person;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return SafeArea(
       child: Column(
         mainAxisSize: MainAxisSize.min,

@@ -1,5 +1,4 @@
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -45,7 +44,7 @@ class _FeedbackNudgeState extends State<FeedbackNudge> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return Visibility(
       visible: feedbackFormsLeft != null && feedbackFormsLeft != '0',
       child: Padding(
@@ -57,7 +56,7 @@ class _FeedbackNudgeState extends State<FeedbackNudge> {
           onPressed: () {
             Navigator.of(context).push(
               MaterialPageRoute<ClassFeedbackChecklist>(
-                builder: (_) => ClassFeedbackChecklist(classes: userClasses),
+                builder: (final _) => ClassFeedbackChecklist(classes: userClasses),
               ),
             );
           },

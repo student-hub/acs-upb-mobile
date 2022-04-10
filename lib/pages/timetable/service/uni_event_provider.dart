@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:async/async.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:dart_date/dart_date.dart' show Interval;
 import 'package:flutter/material.dart' hide Interval;
 import 'package:googleapis/calendar/v3.dart' as g_cal;
 import 'package:recase/recase.dart';
@@ -28,7 +27,7 @@ import '../timetable_utils.dart';
 import 'google_calendar_services.dart';
 
 extension DurationExtension on Duration {
-  static Duration fromJSON(Map<String, dynamic> json) {
+  static Duration fromJSON(final Map<String, dynamic> json) {
     return Duration(
       days: json['days'] ?? 0,
       hours: json['hours'] ?? 0,
@@ -44,7 +43,7 @@ extension DurationExtension on Duration {
       'microseconds': inMicroseconds,
     };
 
-    return json..removeWhere((key, value) => value == 0);
+    return json..removeWhere((final key, final value) => value == 0);
   }
 }
 
@@ -53,9 +52,9 @@ extension DateTimeExtension on DateTime {
 }
 
 extension UniEventExtension on UniEvent {
-  static UniEvent fromJSON(String id, Map<String, dynamic> json,
-      {ClassHeader classHeader,
-      Person teacher,
+  static UniEvent fromJSON(final String id, final Map<String, dynamic> json,
+      {final ClassHeader classHeader,
+      final Person teacher,
       Map<String, AcademicCalendar> calendars = const {}}) {
     if (json['start'] == null ||
         (json['duration'] == null && json['end'] == null)) return null;
@@ -179,15 +178,15 @@ extension UniEventExtension on UniEvent {
 
 extension AcademicCalendarExtension on AcademicCalendar {
   static List<AllDayUniEvent> _eventsFromMapList(
-          List<dynamic> list, String type) =>
-      List<AllDayUniEvent>.from((list ?? []).asMap().map((index, e) {
+          final List<dynamic> list, final String type) =>
+      List<AllDayUniEvent>.from((list ?? []).asMap().map((final index, final e) {
         e['type'] = type;
         return MapEntry(
             index, UniEventExtension.fromJSON(type + index.toString(), e));
       }).values);
 
   static AcademicCalendar fromSnap(
-      DocumentSnapshot<Map<String, dynamic>> snap) {
+      final DocumentSnapshot<Map<String, dynamic>> snap) {
     final data = snap.data();
     return AcademicCalendar(
       id: snap.id,
@@ -199,7 +198,7 @@ extension AcademicCalendarExtension on AcademicCalendar {
 }
 
 class UniEventProvider with ChangeNotifier {
-  UniEventProvider({AuthProvider authProvider, PersonProvider personProvider})
+  UniEventProvider({final AuthProvider authProvider, final PersonProvider personProvider})
       : _authProvider = authProvider ?? AuthProvider(),
         _personProvider = personProvider ?? PersonProvider() {
     fetchCalendars();
@@ -225,7 +224,7 @@ class UniEventProvider with ChangeNotifier {
     return _calendars;
   }
 
-  Future<void> checkIfEmpty(List<Stream<List<UniEvent>>> streams) async {
+  Future<void> checkIfEmpty(final List<Stream<List<UniEvent>>> streams) async {
     for (final stream in streams) {
       if ((await stream.first)?.isNotEmpty ?? false) {
         empty = false;
@@ -253,7 +252,7 @@ class UniEventProvider with ChangeNotifier {
             .where('relevance',
                 arrayContainsAny: _filter.relevantNodes..remove('All'))
             .snapshots()
-            .asyncMap((snapshot) async {
+            .asyncMap((final snapshot) async {
           final events = <UniEvent>[];
           try {
             for (final doc in snapshot.docs) {
@@ -273,7 +272,7 @@ class UniEventProvider with ChangeNotifier {
                   teacher: teacher,
                   calendars: _calendars));
             }
-            return events.where((element) => element != null).toList();
+            return events.where((final element) => element != null).toList();
           } catch (e) {
             print(e);
             return events;
@@ -288,7 +287,7 @@ class UniEventProvider with ChangeNotifier {
     final stream = StreamZip(streams);
 
     // Flatten zipped streams
-    return stream.map((events) => events.expand((i) => i).toList());
+    return stream.map((final events) => events.expand((final i) => i).toList());
   }
 
   Future<void> exportToGoogleCalendar() async {
@@ -303,7 +302,7 @@ class UniEventProvider with ChangeNotifier {
     await insertGoogleEvents(googleCalendarEvents);
   }
 
-  Stream<List<UniEventInstance>> getEventsIntersecting(Interval interval) {
+  Stream<List<UniEventInstance>> getEventsIntersecting(final Interval interval) {
     final streams = <Stream<Iterable<UniEventInstance>>>[];
     final Stream<Iterable<UniEventInstance>> allDay =
         getAllDayEventsIntersecting(interval);
@@ -316,19 +315,19 @@ class UniEventProvider with ChangeNotifier {
 
     // Flatten zipped streams
     return stream.map(
-      (events) => events
-          .expand((i) => i)
+      (final events) => events
+          .expand((final i) => i)
           .map(
-            (UniEventInstance event) =>
+            (final UniEventInstance event) =>
                 event.copyWith(start: event.start, end: event.end),
           )
           .toList(),
     );
   }
 
-  Iterable<AllDayUniEvent> getAllDayUniEventsForCalendar(AcademicCalendar cal) {
+  Iterable<AllDayUniEvent> getAllDayUniEventsForCalendar(final AcademicCalendar cal) {
     final List<AllDayUniEvent> events = cal.holidays + cal.exams;
-    return events.where((event) =>
+    return events.where((final event) =>
         event.relevance == null ||
         (_filter != null &&
             event.degree == _filter.baseNode &&
@@ -336,77 +335,77 @@ class UniEventProvider with ChangeNotifier {
   }
 
   Stream<Iterable<UniEventInstance>> getAllDayEventsIntersecting(
-      Interval interval) {
+      final Interval interval) {
     return _events.map(
-      (events) => events
-          .map((event) =>
+      (final events) => events
+          .map((final event) =>
               event.generateInstances(intersectingInterval: interval))
-          .expand((i) => i)
-          .where((event) => event.isAllDay)
+          .expand((final i) => i)
+          .where((final event) => event.isAllDay)
           .followedBy(
             _calendars.values.map(
-              (AcademicCalendar cal) {
+              (final AcademicCalendar cal) {
                 final Iterable<AllDayUniEvent> allDayUniEvents =
                     getAllDayUniEventsForCalendar(cal);
                 final Iterable<UniEventInstance> allDayUniEventInstances =
                     allDayUniEvents
-                        .map((e) =>
+                        .map((final e) =>
                             e.generateInstances(intersectingInterval: interval))
-                        .expand((e) => e);
+                        .expand((final e) => e);
                 return allDayUniEventInstances;
               },
-            ).expand((e) => e),
+            ).expand((final e) => e),
           ),
     );
   }
 
   Stream<Iterable<UniEventInstance>> getPartDayEventsIntersecting(
-      Interval interval) {
-    return _events.map((events) => events
-        .map((event) => event.generateInstances(
+      final Interval interval) {
+    return _events.map((final events) => events
+        .map((final event) => event.generateInstances(
             intersectingInterval: Interval(interval.start, interval.end)))
-        .expand((i) => i)
-        .where((event) => event.isPartDay));
+        .expand((final i) => i)
+        .where((final event) => event.isPartDay));
   }
 
-  Future<Iterable<UniEventInstance>> getUpcomingEvents(DateTime date,
+  Future<Iterable<UniEventInstance>> getUpcomingEvents(final DateTime date,
       {int limit = 3}) async {
     return _events
-        .map((events) => events
-            .where((event) => !(event is AllDayUniEvent))
-            .map((event) => event.generateInstances(
+        .map((final events) => events
+            .where((final event) => !(event is AllDayUniEvent))
+            .map((final event) => event.generateInstances(
                 intersectingInterval: Interval(date, date.addDays(6))))
-            .expand((i) => i)
+            .expand((final i) => i)
             .sortedByStartLength()
-            .where((element) => element.end.isAfter(DateTime.now()))
+            .where((final element) => element.end.isAfter(DateTime.now()))
             .take(limit))
         .first;
   }
 
-  Future<Iterable<UniEvent>> getAllEventsOfClass(String classId) async {
+  Future<Iterable<UniEvent>> getAllEventsOfClass(final String classId) async {
     return _events
-        .map((events) =>
-            events.where((event) => event.classHeader.id == classId))
+        .map((final events) =>
+            events.where((final event) => event.classHeader.id == classId))
         .first;
   }
 
-  void updateClasses(ClassProvider classProvider) {
+  void updateClasses(final ClassProvider classProvider) {
     _classProvider = classProvider;
-    _classProvider.fetchUserClassIds(_authProvider.uid).then((classIds) {
+    _classProvider.fetchUserClassIds(_authProvider.uid).then((final classIds) {
       _classIds = classIds;
       notifyListeners();
     });
   }
 
-  void updateFilter(FilterProvider filterProvider) {
+  void updateFilter(final FilterProvider filterProvider) {
     _filterProvider = filterProvider;
-    _filterProvider.fetchFilter().then((filter) {
+    _filterProvider.fetchFilter().then((final filter) {
       _filter = filter;
       notifyListeners();
     });
   }
 
-  Future<bool> addEvent(UniEvent event) async {
+  Future<bool> addEvent(final UniEvent event) async {
     try {
       await FirebaseFirestore.instance.collection('events').add(event.toJSON());
       notifyListeners();
@@ -417,7 +416,7 @@ class UniEventProvider with ChangeNotifier {
     }
   }
 
-  Future<bool> updateEvent(UniEvent event) async {
+  Future<bool> updateEvent(final UniEvent event) async {
     try {
       final ref = FirebaseFirestore.instance.collection('events').doc(event.id);
 
@@ -435,7 +434,7 @@ class UniEventProvider with ChangeNotifier {
     }
   }
 
-  Future<bool> deleteEvent(UniEvent event) async {
+  Future<bool> deleteEvent(final UniEvent event) async {
     try {
       DocumentReference ref;
       ref = FirebaseFirestore.instance.collection('events').doc(event.id);
@@ -448,7 +447,7 @@ class UniEventProvider with ChangeNotifier {
     }
   }
 
-  void _errorHandler(dynamic e, {bool showToast = true}) {
+  void _errorHandler(final dynamic e, {bool showToast = true}) {
     print(e.message);
     if (showToast) {
       if (e.message.contains('PERMISSION_DENIED')) {
@@ -459,7 +458,7 @@ class UniEventProvider with ChangeNotifier {
     }
   }
 
-  String updateTimetablePageTitle(DateController _dateController) {
+  String updateTimetablePageTitle(final DateController _dateController) {
     return _authProvider.isAuthenticated && !_authProvider.isAnonymous
         ? _dateController?.currentMonth?.titleCase
         : S.current.navigationTimetable;

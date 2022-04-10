@@ -3,7 +3,7 @@ import '../generated/l10n.dart';
 class AppValidator {
   AppValidator._();
 
-  static String isStrongPassword(String password) {
+  static String isStrongPassword(final String password) {
     assert(password != null, 'password cannot be null');
 
     if (password.length < 8) {

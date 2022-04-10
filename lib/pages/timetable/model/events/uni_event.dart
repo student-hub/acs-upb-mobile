@@ -1,6 +1,5 @@
 import 'dart:core';
 
-import 'package:dart_date/dart_date.dart' show Interval;
 import 'package:flutter/material.dart' hide Interval;
 import 'package:timetable/timetable.dart';
 
@@ -50,7 +49,7 @@ extension UniEventTypeExtension on UniEventType {
         UniEventType.sports
       ];
 
-  static UniEventType fromString(String string) {
+  static UniEventType fromString(final String string) {
     switch (string) {
       case 'lab':
         return UniEventType.lab;
@@ -108,7 +107,7 @@ class UniEvent {
     this.relevance,
     this.degree,
     this.addedBy,
-    bool editable,
+    final bool editable,
   }) : editable = editable ?? true;
 
   final String id;
@@ -130,7 +129,7 @@ class UniEvent {
   }
 
   Iterable<UniEventInstance> generateInstances(
-      {Interval intersectingInterval}) sync* {
+      {final Interval intersectingInterval}) sync* {
     final DateTime end = start.add(duration);
     if (intersectingInterval != null) {
       if (end < intersectingInterval.start ||
@@ -154,9 +153,9 @@ class UniEventInstance extends Event {
   UniEventInstance({
     @required this.title,
     @required this.mainEvent,
-    @required DateTime start,
-    @required DateTime end,
-    Color color,
+    @required final DateTime start,
+    @required final DateTime end,
+    final Color color,
     this.location,
     this.info,
   })  : color = color ?? mainEvent?.color,
@@ -169,7 +168,7 @@ class UniEventInstance extends Event {
   final String info;
 
   @override
-  bool operator ==(dynamic other) =>
+  bool operator ==(final dynamic other) =>
       super == other &&
       color == other.color &&
       location == other.location &&
@@ -184,7 +183,7 @@ class UniEventInstance extends Event {
 
   String get relativeDateString => getDateString(useRelativeDayFormat: true);
 
-  String getDateString({bool useRelativeDayFormat}) {
+  String getDateString({final bool useRelativeDayFormat}) {
     final DateTime end =
         this.end.isMidnight() ? this.end.subtractDays(1) : this.end;
 
@@ -212,13 +211,13 @@ class UniEventInstance extends Event {
   }
 
   UniEventInstance copyWith({
-    DateTime start,
-    DateTime end,
-    String title,
-    UniEvent mainEvent,
-    Color color,
-    String location,
-    String info,
+    final DateTime start,
+    final DateTime end,
+    final String title,
+    final UniEvent mainEvent,
+    final Color color,
+    final String location,
+    final String info,
   }) {
     return UniEventInstance(
       start: start ?? this.start,

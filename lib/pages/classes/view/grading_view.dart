@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pie_chart/pie_chart.dart';
 import 'package:provider/provider.dart';
@@ -16,7 +15,7 @@ extension DateTimeExtension on DateTime {
 
 class GradingChart extends StatefulWidget {
   const GradingChart(
-      {Key key,
+      {final Key key,
       this.grading,
       this.withHeader = true,
       this.onSave,
@@ -33,11 +32,11 @@ class GradingChart extends StatefulWidget {
 }
 
 class _GradingChartState extends State<GradingChart> {
-  Map<String, double> get gradingDataMap => widget.grading?.map((name, value) =>
+  Map<String, double> get gradingDataMap => widget.grading?.map((final name, final value) =>
       MapEntry('${name ?? ''}\n${value ?? 0.0}p', value ?? 0.0));
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final classProvider = Provider.of<ClassProvider>(context);
     final authProvider = Provider.of<AuthProvider>(context);
 
@@ -75,7 +74,7 @@ class _GradingChartState extends State<GradingChart> {
                           authProvider.currentUserFromCache.canEditClassInfo
                               ? () => Navigator.of(context).push(
                                       MaterialPageRoute<ChangeNotifierProvider>(
-                                    builder: (context) =>
+                                    builder: (final context) =>
                                         ChangeNotifierProvider.value(
                                       value: classProvider,
                                       child: GradingView(
@@ -123,7 +122,7 @@ class _GradingChartState extends State<GradingChart> {
 }
 
 class GradingView extends StatefulWidget {
-  const GradingView({Key key, this.grading, this.onSave}) : super(key: key);
+  const GradingView({final Key key, this.grading, this.onSave}) : super(key: key);
 
   final Map<String, double> grading;
   final void Function(Map<String, double>) onSave;
@@ -144,7 +143,7 @@ class _GradingViewState extends State<GradingView> {
   void initState() {
     super.initState();
     grading = widget.grading;
-    widget.grading?.forEach((name, value) {
+    widget.grading?.forEach((final name, final value) {
       nameControllers.add(TextEditingController(text: name));
       focusNodes.add(FocusNode());
       valueControllers.add(TextEditingController(text: value.toString()));
@@ -169,7 +168,7 @@ class _GradingViewState extends State<GradingView> {
 
   Future<void> updateChart() async {
     grading = {};
-    nameControllers.asMap().forEach((i, nameController) {
+    nameControllers.asMap().forEach((final i, final nameController) {
       if (nameController.text != '' && nameController.text != null) {
         if (valueControllers[i].text == '' ||
             valueControllers[i].text == null) {
@@ -237,7 +236,7 @@ class _GradingViewState extends State<GradingView> {
                 hintText: S.current.hintEvaluation,
                 prefixIcon: const Icon(Icons.label_outlined),
               ),
-              validator: (value) {
+              validator: (final value) {
                 if (i == focusNodes.length - 2) {
                   // Ignore the last row
                   return null;
@@ -247,11 +246,11 @@ class _GradingViewState extends State<GradingView> {
                 }
                 return null;
               },
-              onChanged: (_) {
+              onChanged: (final _) {
                 updateChart();
                 updateTextFields();
               },
-              onFieldSubmitted: (_) =>
+              onFieldSubmitted: (final _) =>
                   FocusScope.of(context).requestFocus(focusNodes[i + 1]),
             ),
           ),
@@ -265,7 +264,7 @@ class _GradingViewState extends State<GradingView> {
               decoration: InputDecoration(
                 hintText: S.current.hintPoints,
               ),
-              validator: (value) {
+              validator: (final value) {
                 if (i == focusNodes.length - 2) {
                   // Ignore the last row
                   return null;
@@ -278,12 +277,12 @@ class _GradingViewState extends State<GradingView> {
                 }
                 return null;
               },
-              onChanged: (_) {
+              onChanged: (final _) {
                 updateChart();
                 updateTotal();
                 updateTextFields();
               },
-              onFieldSubmitted: (_) =>
+              onFieldSubmitted: (final _) =>
                   FocusScope.of(context).requestFocus(focusNodes[i + 2]),
             ),
           )
@@ -294,7 +293,7 @@ class _GradingViewState extends State<GradingView> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return GestureDetector(
       onTap: () {
         final currentFocus = FocusScope.of(context);

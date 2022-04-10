@@ -1,8 +1,5 @@
 import 'dart:typed_data';
-import 'dart:ui';
 
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:pref/pref.dart';
 import 'package:provider/provider.dart';
@@ -22,7 +19,7 @@ import '../model/user.dart';
 import '../service/auth_provider.dart';
 
 class EditProfilePage extends StatefulWidget {
-  const EditProfilePage({Key key}) : super(key: key);
+  const EditProfilePage({final Key key}) : super(key: key);
 
   @override
   _EditProfilePageState createState() => _EditProfilePageState();
@@ -49,8 +46,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
   void initState() {
     super.initState();
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
-    authProvider.isVerified.then((value) => setState(() => isVerified = value));
-    authProvider.getProfilePictureURL().then((value) => setState(() => {
+    authProvider.isVerified.then((final value) => setState(() => isVerified = value));
+    authProvider.getProfilePictureURL().then((final value) => setState(() => {
           imageWidget = value != null
               ? NetworkImage(value)
               : const AssetImage('assets/illustrations/undraw_profile_pic.png'),
@@ -59,7 +56,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
         UploadButtonController(onUpdate: () => setState(() => {}));
   }
 
-  AppDialog _changePasswordDialog(BuildContext context) {
+  AppDialog _changePasswordDialog(final BuildContext context) {
     final newPasswordController = TextEditingController();
     final oldPasswordController = TextEditingController();
     final changePasswordKey = GlobalKey<FormState>();
@@ -80,7 +77,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   errorMaxLines: 2,
                 ),
                 controller: oldPasswordController,
-                validator: (value) {
+                validator: (final value) {
                   if (value?.isEmpty ?? true) {
                     return S.current.errorNoPassword;
                   }
@@ -98,7 +95,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   errorMaxLines: 2,
                 ),
                 controller: newPasswordController,
-                validator: (value) {
+                validator: (final value) {
                   if (value?.isEmpty ?? true) {
                     return S.current.errorNoPassword;
                   }
@@ -119,7 +116,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   hintText: S.current.hintPassword,
                   errorMaxLines: 2,
                 ),
-                validator: (value) {
+                validator: (final value) {
                   if (value?.isEmpty ?? true) {
                     return S.current.errorNoPassword;
                   }
@@ -158,7 +155,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
     );
   }
 
-  AppDialog _deletionConfirmationDialog(BuildContext context) {
+  AppDialog _deletionConfirmationDialog(final BuildContext context) {
     final passwordController = TextEditingController();
     return AppDialog(
       icon: const Icon(Icons.warning_amber_outlined, color: Colors.red),
@@ -195,7 +192,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
     );
   }
 
-  AppDialog _changeEmailConfirmationDialog(BuildContext context) {
+  AppDialog _changeEmailConfirmationDialog(final BuildContext context) {
     final passwordController = TextEditingController();
     return AppDialog(
       title: S.current.actionChangeEmail,
@@ -236,7 +233,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
     final emailDomain = S.current.stringEmailDomain;
     final User user = authProvider.currentUserFromCache;
@@ -276,7 +273,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   await showDialog<bool>(
                     context: context,
                     builder: _changeEmailConfirmationDialog,
-                  ).then((value) => result = value ?? false);
+                  ).then((final value) => result = value ?? false);
                 }
                 if (uploadButtonController.newUploadedImageBytes != null) {
                   imageAsPNG = await Utils.convertToPNG(
@@ -335,7 +332,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     hintText: S.current.hintFirstName,
                   ),
                   controller: firstNameController,
-                  validator: (value) {
+                  validator: (final value) {
                     if (value?.isEmpty ?? true) {
                       return S.current.errorMissingFirstName;
                     }
@@ -349,7 +346,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     hintText: S.current.hintLastName,
                   ),
                   controller: lastNameController,
-                  validator: (value) {
+                  validator: (final value) {
                     if (value?.isEmpty ?? true) {
                       return S.current.errorMissingLastName;
                     }
@@ -365,7 +362,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       suffix: Text(emailDomain),
                     ),
                     controller: emailController,
-                    validator: (value) {
+                    validator: (final value) {
                       if (value?.isEmpty ?? true) {
                         return S.current.errorMissingLastName;
                       }
@@ -397,7 +394,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
 class AccountNotVerifiedWarning extends StatelessWidget {
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
 
     if (!authProvider.isAuthenticated || authProvider.isAnonymous) {
@@ -406,7 +403,7 @@ class AccountNotVerifiedWarning extends StatelessWidget {
 
     return FutureBuilder(
       future: authProvider.isVerified,
-      builder: (context, snap) {
+      builder: (final context, final snap) {
         if (!snap.hasData || snap.data) {
           return Container();
         }

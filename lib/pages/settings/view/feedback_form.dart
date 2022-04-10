@@ -1,13 +1,13 @@
-import 'package:acs_upb_mobile/generated/l10n.dart';
-import 'package:acs_upb_mobile/pages/settings/model/issue.dart';
-import 'package:acs_upb_mobile/pages/settings/service/issue_provider.dart';
-import 'package:acs_upb_mobile/resources/theme.dart';
-import 'package:acs_upb_mobile/widgets/scaffold.dart';
-import 'package:acs_upb_mobile/widgets/toast.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:provider/provider.dart';
+
+import '../../../generated/l10n.dart';
+import '../../../resources/theme.dart';
+import '../../../widgets/scaffold.dart';
+import '../../../widgets/toast.dart';
+import '../model/issue.dart';
+import '../service/issue_provider.dart';
 
 class FeedbackFormPage extends StatefulWidget {
   static const String routeName = '/feedbackForm';
@@ -24,7 +24,7 @@ class _FeedbackFormPageState extends State<FeedbackFormPage> {
   bool _feedbackSelected = true;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final issueProvider = Provider.of<IssueProvider>(context);
 
     return Form(
@@ -62,7 +62,7 @@ class _FeedbackFormPageState extends State<FeedbackFormPage> {
             children: <Widget>[
               Padding(
                 padding: const EdgeInsets.only(top: 12, bottom: 12),
-                child: Container(
+                child: SizedBox(
                     height: MediaQuery.of(context).size.height / 4,
                     child: Image.asset(
                         'assets/illustrations/undraw_feedbackform.png')),
@@ -94,7 +94,7 @@ class _FeedbackFormPageState extends State<FeedbackFormPage> {
                           .chipTextStyle(selected: _feedbackSelected),
                     ),
                     selected: _feedbackSelected,
-                    onSelected: (selected) => setState(() {
+                    onSelected: (final selected) => setState(() {
                       _feedbackSelected = true;
                       if (selected) {
                         _issueSelected = false;
@@ -110,7 +110,7 @@ class _FeedbackFormPageState extends State<FeedbackFormPage> {
                           .chipTextStyle(selected: _issueSelected),
                     ),
                     selected: _issueSelected,
-                    onSelected: (selected) => setState(() {
+                    onSelected: (final selected) => setState(() {
                       _issueSelected = true;
                       if (selected) {
                         _feedbackSelected = false;
@@ -123,7 +123,7 @@ class _FeedbackFormPageState extends State<FeedbackFormPage> {
               TextFormField(
                 key: const ValueKey('issue'),
                 controller: issueController,
-                validator: (value) {
+                validator: (final value) {
                   if (value == null || value.isEmpty) {
                     return S.current.warningFieldCannotBeEmpty;
                   }
@@ -149,7 +149,7 @@ class _FeedbackFormPageState extends State<FeedbackFormPage> {
                 key: const ValueKey('contact'),
                 controller: issueEmailController,
                 // The validator receives the text that the user has entered.
-                validator: (value) {
+                validator: (final value) {
                   if (value == null || value == '') {
                     return S.current.warningFieldCannotBeEmpty;
                   }

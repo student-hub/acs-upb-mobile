@@ -1,4 +1,3 @@
-import 'package:dart_date/dart_date.dart' show Interval;
 import 'package:flutter/material.dart' hide Interval;
 import 'package:rrule/rrule.dart';
 import 'package:time_machine/time_machine.dart' hide Interval;
@@ -13,19 +12,19 @@ import 'uni_event.dart';
 class RecurringUniEvent extends UniEvent {
   const RecurringUniEvent({
     @required this.rrule,
-    @required DateTime start,
-    @required Duration duration,
-    @required String id,
-    List<String> relevance,
-    String degree,
-    String name,
-    String location,
-    Color color,
-    UniEventType type,
-    ClassHeader classHeader,
-    AcademicCalendar calendar,
-    String addedBy,
-    bool editable,
+    @required final DateTime start,
+    @required final Duration duration,
+    @required final String id,
+    final List<String> relevance,
+    final String degree,
+    final String name,
+    final String location,
+    final Color color,
+    final UniEventType type,
+    final ClassHeader classHeader,
+    final AcademicCalendar calendar,
+    final String addedBy,
+    final bool editable,
   })  : assert(rrule != null, 'rrule is null'),
         super(
             name: name,
@@ -79,7 +78,7 @@ class RecurringUniEvent extends UniEvent {
           eventParity = 1;
         }
         // Select the weeks where the parity matches the parity of the event.
-        weeks = weeks.whereIndex((index) {
+        weeks = weeks.whereIndex((final index) {
           return index % rrule.interval != eventParity;
         }).toSet();
       }
@@ -96,7 +95,7 @@ class RecurringUniEvent extends UniEvent {
 
   @override
   Iterable<UniEventInstance> generateInstances(
-      {Interval intersectingInterval}) sync* {
+      {final Interval intersectingInterval}) sync* {
     final RecurrenceRule rrule = rruleBasedOnCalendar;
 
     for (final start

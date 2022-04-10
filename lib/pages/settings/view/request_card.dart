@@ -24,13 +24,13 @@ class RequestCard extends StatefulWidget {
 class _RequestCardState extends State<RequestCard>
     with AutomaticKeepAliveClientMixin {
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     super.build(context);
     final adminProvider = Provider.of<AdminProvider>(context);
 
     return FutureBuilder(
         future: adminProvider.fetchRequest(widget.requestId),
-        builder: (context, snapshot) {
+        builder: (final context, final snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             final Request request = snapshot.data;
             return Padding(
@@ -64,9 +64,9 @@ class _RequestCardState extends State<RequestCard>
         });
   }
 
-  Widget _buildUserHeader(Request request) => FutureBuilder(
+  Widget _buildUserHeader(final Request request) => FutureBuilder(
       future: Provider.of<AdminProvider>(context).fetchUserById(request.userId),
-      builder: (context, snapshot) {
+      builder: (final context, final snapshot) {
         User user;
         if (snapshot.connectionState == ConnectionState.done) {
           user = snapshot.data;
@@ -110,7 +110,7 @@ class _RequestCardState extends State<RequestCard>
             ]);
       });
 
-  Widget _buildAcceptedMarker(bool accepted) => Container(
+  Widget _buildAcceptedMarker(final bool accepted) => Container(
         padding: const EdgeInsets.all(5),
         decoration: BoxDecoration(
           border:
@@ -123,7 +123,7 @@ class _RequestCardState extends State<RequestCard>
         ),
       );
 
-  Widget _buildButtons(bool processed, Request request) {
+  Widget _buildButtons(final bool processed, final Request request) {
     final adminProvider = Provider.of<AdminProvider>(context, listen: false);
     return Row(
       crossAxisAlignment: CrossAxisAlignment.end,
@@ -200,5 +200,5 @@ class _RequestCardState extends State<RequestCard>
   bool get wantKeepAlive => true;
 
   @override
-  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
+  dynamic noSuchMethod(final Invocation invocation) => super.noSuchMethod(invocation);
 }

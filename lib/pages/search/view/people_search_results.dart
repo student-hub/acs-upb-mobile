@@ -1,5 +1,4 @@
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -14,12 +13,12 @@ class PeopleSearchResults extends StatelessWidget {
   final String query;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     List<Person> peopleSearched;
     return FutureBuilder(
         future:
             Provider.of<PersonProvider>(context, listen: false).search(query),
-        builder: (_, snapshot) {
+        builder: (final _, final snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             peopleSearched = snapshot.data;
             if (peopleSearched.isNotEmpty) {
@@ -51,7 +50,7 @@ class PeopleCircleList extends StatelessWidget {
   final List<Person> people;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return Container(
       constraints: BoxConstraints.expand(
         height: Theme.of(context).textTheme.headline4.fontSize * 1.1 + 60.0,
@@ -61,7 +60,7 @@ class PeopleCircleList extends StatelessWidget {
         shrinkWrap: true,
         itemCount: people.length,
         scrollDirection: Axis.horizontal,
-        itemBuilder: (BuildContext context, int index) {
+        itemBuilder: (final BuildContext context, final int index) {
           return Container(
               padding: const EdgeInsets.fromLTRB(0, 0, 25, 0),
               child: GestureDetector(
@@ -69,7 +68,7 @@ class PeopleCircleList extends StatelessWidget {
                     showModalBottomSheet<dynamic>(
                         isScrollControlled: true,
                         context: context,
-                        builder: (BuildContext buildContext) => PersonView(
+                        builder: (final BuildContext buildContext) => PersonView(
                               person: people[index],
                             ));
                   },

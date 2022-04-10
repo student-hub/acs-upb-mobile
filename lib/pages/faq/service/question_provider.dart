@@ -6,7 +6,7 @@ import '../../../widgets/toast.dart';
 import '../model/question.dart';
 
 class QuestionProvider with ChangeNotifier {
-  Future<List<Question>> fetchQuestions({int limit}) async {
+  Future<List<Question>> fetchQuestions({final int limit}) async {
     try {
       final QuerySnapshot<Map<String, dynamic>> qSnapshot = limit == null
           ? await FirebaseFirestore.instance.collection('faq').get()
@@ -24,7 +24,7 @@ class QuestionProvider with ChangeNotifier {
 }
 
 extension DatabaseQuestion on Question {
-  static Question fromSnap(DocumentSnapshot<Map<String, dynamic>> snap) {
+  static Question fromSnap(final DocumentSnapshot<Map<String, dynamic>> snap) {
     final data = snap.data();
 
     final String question = data['question'];
