@@ -1,6 +1,6 @@
+import 'package:acs_upb_mobile/pages/chat/view/chat_page.dart';
 import 'package:acs_upb_mobile/pages/search/view/classes_search_results.dart';
 import 'package:acs_upb_mobile/pages/search/view/people_search_results.dart';
-import 'package:acs_upb_mobile/resources/remote_config.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:acs_upb_mobile/widgets/search_bar.dart';
 import 'package:flutter/cupertino.dart';
@@ -36,8 +36,7 @@ class _SearchPageState extends State<SearchPage> {
           ),
           PeopleSearchResults(query: query),
           ClassesSearchResults(query: query),
-          if (RemoteConfigService.chatEnabled && query.isNotEmpty)
-            ChatbotIntro()
+          if (query.isNotEmpty) ChatbotIntro()
         ],
       ),
     );
@@ -61,12 +60,18 @@ class ChatbotIntro extends StatelessWidget {
               Padding(
                   padding: const EdgeInsets.only(right: 10),
                   child: Text(S.current.messageAnotherQuestion)),
-              Text(
-                S.current.messageTalkToChatbot,
-                style: TextStyle(
-                    color: Theme.of(context).accentColor,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 15),
+              GestureDetector(
+                child: Text(
+                  S.current.messageTalkToChatbot,
+                  style: TextStyle(
+                      color: Theme.of(context).accentColor,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 15),
+                ),
+                onTap: () =>
+                    Navigator.of(context).push(MaterialPageRoute<ChatPage>(
+                  builder: (_) => ChatPage(),
+                )),
               )
             ],
           ),
