@@ -11,6 +11,8 @@ class UpcomingEventsCard extends StatelessWidget {
   const UpcomingEventsCard({final Key key, this.onShowMore}) : super(key: key);
   final void Function() onShowMore;
 
+  Widget showWhenNoItems() => const SizedBox.shrink();
+
   @override
   Widget build(final BuildContext context) {
     final UniEventProvider eventProvider =
@@ -19,6 +21,7 @@ class UpcomingEventsCard extends StatelessWidget {
     return InfoCard<Iterable<UniEventInstance>>(
       title: S.current.sectionEventsComingUp,
       onShowMore: onShowMore,
+      showWhenNoItems: showWhenNoItems(),
       future: eventProvider.getUpcomingEvents(DateTime.now()),
       builder: (final events) => Column(
         children: events
