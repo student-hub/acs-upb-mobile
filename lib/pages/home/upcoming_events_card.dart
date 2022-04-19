@@ -16,10 +16,13 @@ class UpcomingEventsCard extends StatelessWidget {
     final UniEventProvider eventProvider =
         Provider.of<UniEventProvider>(context);
 
+    Widget showWhenNoItems() => const SizedBox.shrink();
+
     return InfoCard<Iterable<UniEventInstance>>(
       title: S.current.sectionEventsComingUp,
       onShowMore: onShowMore,
       future: eventProvider.getUpcomingEvents(DateTime.now()),
+      showWhenNoItems: showWhenNoItems(),
       builder: (final events) => Column(
         children: events
             .map(
