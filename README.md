@@ -82,16 +82,17 @@ flutter pub get
 * Select your device from the dropdown list and hit the play button (*^R*).
 
 
-
-|     :bulb:    | There are limited resources on running iOS with different flavors, and the following solution was inspired by the  [Medium article](https://medium.com/@animeshjain/build-flavors-in-flutter-android-and-ios-with-different-firebase-projects-per-flavor-27c5c5dac10b). Basically, XCode can be configured to run with different flavors such as `Debug-dev` or `Debug-prod`, and the aforementioned article best describes the steps needed for such a configuration. Similarly, one can run the Bash script `./run-ios-flavor.bash prod` or `./run-ios-flavor.bash dev` from the root folder to run the application with a specific configuration.|
+|     :bulb:    | Running the app in debug mode is recommended for testing. To do this, run `./run-ios-flavor.bash dev`. Similarly, if you need to run the release version **(not recommended)**, you can run `./run-ios-flavor.bash prod`.|
 |---------------|:---------------------------------------------------------------------------------------------------------------------------------------------|
+
+* You can find more information about build flavours in Flutter [here](https://medium.com/@animeshjain/build-flavors-in-flutter-android-and-ios-with-different-firebase-projects-per-flavor-27c5c5dac10b).
 
 ### Building for Web
 
 * You need to have *Chrome* installed in order to be able to run the web version of the app.
 * Select *Chrome* from the dropdown list and hit the play button (*Shift+F10* or *^R*).
 
-|     :bulb:    | To switch to debug config on web, in the [web/index.html](web/index.html) file, replace `firebaseConfig.release` with `firebaseConfig.debug` |
+|     :bulb:    | Running the app in debug mode is recommended for testing. To do this, replace `firebaseConfig.release` with `firebaseConfig.debug` in the [web/index.html](web/index.html) file.|
 |---------------|:---------------------------------------------------------------------------------------------------------------------------------------------|
 
 ### Not working?
