@@ -1845,6 +1845,7 @@ class S {
     );
   }
 
+  /// `ACS News feed`
   String get aggNavigationNewsFeed {
     return Intl.message(
       'ACS News feed',

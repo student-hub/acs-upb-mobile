@@ -80,6 +80,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "actionSignInWith" : m0,
     "actionSignUp" : MessageLookupByLibrary.simpleMessage("Înregistrare"),
     "actionSocialLogin" : MessageLookupByLibrary.simpleMessage("Rețele sociale"),
+    "aggNavigationNewsFeed" : MessageLookupByLibrary.simpleMessage("Știri ACS"),
     "buttonAccept" : MessageLookupByLibrary.simpleMessage("Acceptă"),
     "buttonApply" : MessageLookupByLibrary.simpleMessage("Aplică"),
     "buttonCancel" : MessageLookupByLibrary.simpleMessage("Anulare"),

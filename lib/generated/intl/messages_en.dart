@@ -80,6 +80,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "actionSignInWith" : m0,
     "actionSignUp" : MessageLookupByLibrary.simpleMessage("Sign up"),
     "actionSocialLogin" : MessageLookupByLibrary.simpleMessage("Social login"),
+    "aggNavigationNewsFeed" : MessageLookupByLibrary.simpleMessage("ACS News feed"),
     "buttonAccept" : MessageLookupByLibrary.simpleMessage("Accept"),
     "buttonApply" : MessageLookupByLibrary.simpleMessage("Apply"),
     "buttonCancel" : MessageLookupByLibrary.simpleMessage("Cancel"),
