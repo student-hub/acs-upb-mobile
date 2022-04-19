@@ -29,6 +29,7 @@ import 'pages/filter/service/filter_provider.dart';
 import 'pages/filter/view/filter_page.dart';
 import 'pages/news_feed/service/news_provider.dart';
 import 'pages/news_feed/view/news_feed_page.dart';
+import 'pages/agg_news_feed/view/agg_news_feed_page.dart';
 import 'pages/people/service/person_provider.dart';
 import 'pages/portal/service/website_provider.dart';
 import 'pages/settings/service/admin_provider.dart';
@@ -182,6 +183,7 @@ class _MyAppState extends State<MyApp> {
             Routes.faq: (_) => FaqPage(),
             Routes.filter: (_) => const FilterPage(),
             Routes.newsFeed: (_) => NewsFeedPage(),
+            Routes.aggNewsFeed: (_) => AggNewsFeedPage(),
             Routes.requestPermissions: (_) => RequestPermissionsPage(),
             Routes.adminPanel: (_) => const AdminPanelPage(),
           },
