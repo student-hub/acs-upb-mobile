@@ -81,6 +81,11 @@ flutter pub get
 * Connect a physical iOS device or select *Open iOS Simulator* from the device drop-down menu to power on Xcode's simulator.
 * Select your device from the dropdown list and hit the play button (*^R*).
 
+
+
+|     :bulb:    | There are limited resources on running iOS with different flavors, and the following solution was inspired by the  [Medium article](https://medium.com/@animeshjain/build-flavors-in-flutter-android-and-ios-with-different-firebase-projects-per-flavor-27c5c5dac10b). Basically, XCode can be configured to run with different flavors such as `Debug-dev` or `Debug-prod`, and the aforementioned article best describes the steps needed for such a configuration. Similarly, one can run the Bash script `./run-ios-flavor.bash prod` or `./run-ios-flavor.bash dev` from the root folder to run the application with a specific configuration.|
+|---------------|:---------------------------------------------------------------------------------------------------------------------------------------------|
+
 ### Building for Web
 
 * You need to have *Chrome* installed in order to be able to run the web version of the app.
