@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:core';
 import 'dart:math';
 
@@ -33,14 +32,14 @@ class _LoadingScreenState extends State<LoadingScreen> {
   void initState() {
     super.initState();
 
-    widget.navigateAfterFuture.then((navigateTo) {
+    widget.navigateAfterFuture.then((final navigateTo) {
       if (navigateTo is String) {
         // It's fairly safe to assume this is using the in-built material
         // named route component
         Navigator.of(context).pushReplacementNamed(navigateTo);
       } else if (navigateTo is Widget) {
         Navigator.of(context).pushReplacement(MaterialPageRoute<Widget>(
-            builder: (BuildContext context) => navigateTo));
+            builder: (final BuildContext context) => navigateTo));
       } else {
         throw ArgumentError(
             'widget.navigateAfterSeconds must either be a String or Widget');
@@ -49,7 +48,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final double photoSize = min(MediaQuery.of(context).size.width,
             MediaQuery.of(context).size.height) /
         3;

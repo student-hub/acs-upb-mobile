@@ -18,12 +18,12 @@ class RelevanceFormField extends ChipFormField<List<String>> {
     this.canBePrivate = true,
     this.canBeForEveryone = true,
     this.defaultPrivate = false,
-    Key key,
+    final Key key,
   }) : super(
           key: key,
           icon: FeatherIcons.filter,
           label: S.current.labelRelevance,
-          validator: (_) {
+          validator: (final _) {
             if (canBeForEveryone) {
               // When the relevance can be for everyone, it's selected automatically
               // if no custom relevance is selected; no error is possible.
@@ -34,11 +34,11 @@ class RelevanceFormField extends ChipFormField<List<String>> {
             }
             return null;
           },
-          trailingBuilder: (FormFieldState<List<String>> state) {
+          trailingBuilder: (final FormFieldState<List<String>> state) {
             return _customRelevanceButton(
                 state.context, controller, canBeForEveryone);
           },
-          contentBuilder: (FormFieldState<List<String>> state) {
+          contentBuilder: (final FormFieldState<List<String>> state) {
             controller.onChanged = () {
               state.didChange(controller.customRelevance);
             };
@@ -56,8 +56,8 @@ class RelevanceFormField extends ChipFormField<List<String>> {
   final bool canBeForEveryone;
   final bool defaultPrivate;
 
-  static Widget _customRelevanceButton(BuildContext context,
-      RelevanceController controller, bool canBeForEveryone) {
+  static Widget _customRelevanceButton(final BuildContext context,
+      final RelevanceController controller, final bool canBeForEveryone) {
     final User user = Provider.of<AuthProvider>(context).currentUserFromCache;
     final buttonColor = user?.canAddPublicInfo ?? false
         ? Theme.of(context).primaryColor
@@ -69,7 +69,7 @@ class RelevanceFormField extends ChipFormField<List<String>> {
           if (user?.canAddPublicInfo ?? false) {
             Navigator.of(context).push(
               MaterialPageRoute<ChangeNotifierProvider>(
-                builder: (_) => ChangeNotifierProvider.value(
+                builder: (final _) => ChangeNotifierProvider.value(
                   value: Provider.of<FilterProvider>(context),
                   child: FilterPage(
                     title: S.current.labelRelevance,
@@ -143,7 +143,7 @@ class RelevanceController {
   List<String> get customRelevance {
     final relevance = <String>[];
     if (_state?._customSelected != null) {
-      _state._customSelected.forEach((node, selected) {
+      _state._customSelected.forEach((final node, final selected) {
         if (selected) {
           relevance.add(node);
         }
@@ -258,7 +258,7 @@ class _RelevancePickerState extends State<_RelevancePicker> {
               selected: _customSelected[node],
               onSelected: !_canAddPublicInfo
                   ? null
-                  : (selected) => setState(() {
+                  : (final selected) => setState(() {
                         _customSelected[node] = selected;
                         if (selected) {
                           _onlyMeSelected = false;
@@ -301,7 +301,7 @@ class _RelevancePickerState extends State<_RelevancePicker> {
                 selected: _customSelected[node],
                 onSelected: !_canAddPublicInfo
                     ? null
-                    : (bool selected) => setState(() {
+                    : (final bool selected) => setState(() {
                           _customSelected[node] = selected;
                           if (selected) {
                             _onlyMeSelected = false;
@@ -323,7 +323,7 @@ class _RelevancePickerState extends State<_RelevancePicker> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     if (widget.controller != null) {
       widget.controller._state = this;
     }
@@ -341,7 +341,7 @@ class _RelevancePickerState extends State<_RelevancePicker> {
                       .chipTextStyle(selected: _onlyMeSelected),
                 ),
                 selected: _onlyMeSelected,
-                onSelected: (selected) => setState(() {
+                onSelected: (final selected) => setState(() {
                   if (_user?.canAddPublicInfo ?? false) {
                     _onlyMeSelected = selected;
                     if (selected) {
@@ -383,7 +383,7 @@ class _RelevancePickerState extends State<_RelevancePicker> {
                   selected: !_somethingSelected || _anyoneSelected,
                   onSelected: !_canAddPublicInfo
                       ? null
-                      : (selected) => setState(() {
+                      : (final selected) => setState(() {
                             _anyoneSelected = selected;
                             if (selected) {
                               // Deselect all other options

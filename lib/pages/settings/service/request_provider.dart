@@ -26,7 +26,7 @@ class RequestProvider {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
   bool userAlreadyRequestedCache;
 
-  Future<bool> makeRequest(Request request) async {
+  Future<bool> makeRequest(final Request request) async {
     assert(request.requestBody != null, 'request body cannot be null');
 
     try {

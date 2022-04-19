@@ -16,14 +16,14 @@ import '../widgets/toast.dart';
 export 'package:acs_upb_mobile/resources/platform.dart'
     if (dart.library.io) 'dart:io';
 
-Iterable<int> range(int low, int high) sync* {
+Iterable<int> range(final int low, final int high) sync* {
   for (int i = low; i < high; ++i) {
     yield i;
   }
 }
 
 extension IterableUtils<E> on Iterable<E> {
-  Iterable<E> whereIndex(bool Function(int index) test) sync* {
+  Iterable<E> whereIndex(final bool Function(int index) test) sync* {
     int i = 0;
     for (final e in this) {
       if (test(i++)) yield e;
@@ -47,7 +47,7 @@ class Utils {
   static String repoURL = 'https://github.com/student-hub/acs-upb-mobile';
   static const String corsProxyUrl = 'https://cors-anywhere.herokuapp.com';
 
-  static Future<void> launchURL(String url) async {
+  static Future<void> launchURL(final String url) async {
     if (await canLaunch(url)) {
       await launch(url);
     } else {
@@ -55,14 +55,14 @@ class Utils {
     }
   }
 
-  static Future<void> signOut(BuildContext context) async {
+  static Future<void> signOut(final BuildContext context) async {
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
     unawaited(Navigator.pushNamedAndRemoveUntil(
-        context, Routes.login, (route) => false));
+        context, Routes.login, (final route) => false));
     unawaited(authProvider.signOut());
   }
 
-  static String wrapUrlWithCORS(String url) {
+  static String wrapUrlWithCORS(final String url) {
     return '${Utils.corsProxyUrl}/$url';
   }
 
@@ -73,7 +73,7 @@ class Utils {
     packageName: '\$packageName',
   );
 
-  static Future<Uint8List> convertToPNG(Uint8List image) async {
+  static Future<Uint8List> convertToPNG(final Uint8List image) async {
     final decodedImage = im.decodeImage(image);
     return im.encodePng(im.copyResizeCropSquare(decodedImage, 500));
   }

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:provider/provider.dart';
 
@@ -18,7 +17,7 @@ import '../../model/events/uni_event.dart';
 import 'add_event_view.dart';
 
 class EventView extends StatefulWidget {
-  const EventView({Key key, this.eventInstance, this.uniEvent})
+  const EventView({final Key key, this.eventInstance, this.uniEvent})
       : assert(
             (eventInstance != null && uniEvent == null) ||
                 (eventInstance == null && uniEvent != null),
@@ -44,7 +43,7 @@ class _EventViewState extends State<EventView> {
       );
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final user = Provider.of<AuthProvider>(context).currentUserFromCache;
     final UniEvent mainEvent =
         widget.eventInstance?.mainEvent ?? widget.uniEvent;
@@ -61,8 +60,8 @@ class _EventViewState extends State<EventView> {
               AppToast.show(S.current.errorPermissionDenied);
             } else {
               Navigator.of(context).push(MaterialPageRoute<AddEventView>(
-                builder: (_) => ChangeNotifierProvider<FilterProvider>(
-                  create: (_) => FilterProvider(
+                builder: (final _) => ChangeNotifierProvider<FilterProvider>(
+                  create: (final _) => FilterProvider(
                     defaultDegree: mainEvent.degree,
                     defaultRelevance: mainEvent.relevance,
                   ),
@@ -118,7 +117,7 @@ class _EventViewState extends State<EventView> {
               hint: S.current.messageTapForMoreInfo,
               onTap: () => Navigator.of(context).push(
                 MaterialPageRoute<ChangeNotifierProvider>(
-                  builder: (context) => ChangeNotifierProvider.value(
+                  builder: (final context) => ChangeNotifierProvider.value(
                     value: Provider.of<ClassProvider>(context),
                     child: ClassView(
                       classHeader: mainEvent.classHeader,
@@ -172,7 +171,7 @@ class _EventViewState extends State<EventView> {
                     showModalBottomSheet<dynamic>(
                         isScrollControlled: true,
                         context: context,
-                        builder: (BuildContext buildContext) =>
+                        builder: (final BuildContext buildContext) =>
                             PersonView(person: mainEvent.teacher));
                   }
                 },

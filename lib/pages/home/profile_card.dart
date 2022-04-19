@@ -20,13 +20,13 @@ class _ProfileCardState extends State<ProfileCard> {
   void initState() {
     super.initState();
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
-    authProvider.getProfilePictureURL().then((value) => setState(() {
+    authProvider.getProfilePictureURL().then((final value) => setState(() {
           profilePictureURL = value;
         }));
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
     String userName;
     final User user = authProvider.currentUserFromCache;
@@ -108,7 +108,8 @@ class _ProfileCardState extends State<ProfileCard> {
                             onPressed: () async {
                               await Navigator.of(context).push(
                                 MaterialPageRoute<EditProfilePage>(
-                                  builder: (context) => const EditProfilePage(),
+                                  builder: (final context) =>
+                                      const EditProfilePage(),
                                 ),
                               );
                               if (!mounted) return;

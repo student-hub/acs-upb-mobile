@@ -42,7 +42,7 @@ class ClassHeader {
   int get hashCode => id.hashCode;
 
   @override
-  bool operator ==(Object other) {
+  bool operator ==(final Object other) {
     if (other is ClassHeader) {
       return other.id == id;
     }
@@ -53,7 +53,7 @@ class ClassHeader {
 class Class {
   Class(
       {@required this.header,
-      List<Shortcut> shortcuts,
+      final List<Shortcut> shortcuts,
       this.grading,
       this.gradingLastUpdated})
       : shortcuts = shortcuts ?? [];

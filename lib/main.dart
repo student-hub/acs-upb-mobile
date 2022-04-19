@@ -32,8 +32,10 @@ import 'pages/news_feed/view/news_feed_page.dart';
 import 'pages/people/service/person_provider.dart';
 import 'pages/portal/service/website_provider.dart';
 import 'pages/settings/service/admin_provider.dart';
+import 'pages/settings/service/issue_provider.dart';
 import 'pages/settings/service/request_provider.dart';
 import 'pages/settings/view/admin_page.dart';
+import 'pages/settings/view/feedback_form.dart';
 import 'pages/settings/view/request_permissions.dart';
 import 'pages/settings/view/settings_page.dart';
 import 'pages/timetable/service/uni_event_provider.dart';
@@ -48,9 +50,10 @@ import 'widgets/loading_screen.dart';
 // Remove this in the future.
 class MyHttpOverrides extends HttpOverrides {
   @override
-  HttpClient createHttpClient(SecurityContext context) {
+  HttpClient createHttpClient(final SecurityContext context) {
     return super.createHttpClient(context)
-      ..badCertificateCallback = (X509Certificate cert, String host, int port) {
+      ..badCertificateCallback =
+          (final X509Certificate cert, final String host, final int port) {
         return host == 'acs.pub.ro' ||
             host == 'cs.pub.ro' ||
             host == 'aii.pub.ro';
@@ -82,39 +85,44 @@ Future<void> main() async {
     EasyDynamicThemeWidget(
       child: MultiProvider(
         providers: [
-          ChangeNotifierProvider<AuthProvider>(create: (_) => authProvider),
+          ChangeNotifierProvider<AuthProvider>(
+              create: (final _) => authProvider),
           ChangeNotifierProvider<WebsiteProvider>(
-              create: (_) => WebsiteProvider()),
-          Provider<RequestProvider>(create: (_) => RequestProvider()),
-          ChangeNotifierProvider<ClassProvider>(create: (_) => classProvider),
+              create: (final _) => WebsiteProvider()),
+          Provider<RequestProvider>(create: (final _) => RequestProvider()),
+          Provider<IssueProvider>(create: (final _) => IssueProvider()),
+          ChangeNotifierProvider<ClassProvider>(
+              create: (final _) => classProvider),
           ChangeNotifierProvider<FeedbackProvider>(
-              create: (_) => feedbackProvider),
-          ChangeNotifierProvider<PersonProvider>(create: (_) => personProvider),
+              create: (final _) => feedbackProvider),
+          ChangeNotifierProvider<PersonProvider>(
+              create: (final _) => personProvider),
           ChangeNotifierProvider<QuestionProvider>(
               create: (_) => QuestionProvider()),
           ChangeNotifierProvider<NewsProvider>(create: (_) => NewsProvider()),
           ChangeNotifierProvider<AggNewsProvider>(create: (_) => AggNewsProvider()),
           ChangeNotifierProxyProvider<AuthProvider, FilterProvider>(
-            create: (_) => FilterProvider(global: true),
-            update: (context, authProvider, filterProvider) {
+            create: (final _) => FilterProvider(global: true),
+            update: (final context, final authProvider, final filterProvider) {
               return filterProvider..updateAuth(authProvider);
             },
           ),
           ChangeNotifierProxyProvider2<ClassProvider, FilterProvider,
               UniEventProvider>(
-            create: (_) => UniEventProvider(
+            create: (final _) => UniEventProvider(
               authProvider: authProvider,
               personProvider: personProvider,
             ),
-            update: (context, classProvider, filterProvider, uniEventProvider) {
+            update: (final context, final classProvider, final filterProvider,
+                final uniEventProvider) {
               return uniEventProvider
                 ..updateClasses(classProvider)
                 ..updateFilter(filterProvider);
             },
           ),
           ChangeNotifierProxyProvider<AuthProvider, AdminProvider>(
-            create: (_) => AdminProvider(),
-            update: (context, authProvider, adminProvider) {
+            create: (final _) => AdminProvider(),
+            update: (final context, final authProvider, final adminProvider) {
               return adminProvider..updateAuth(authProvider);
             },
           ),
@@ -139,7 +147,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return OKToast(
       textStyle: lightThemeData.textTheme.button,
       backgroundColor: primaryColor.withOpacity(.8),
@@ -174,7 +182,6 @@ class _MyAppState extends State<MyApp> {
             Routes.faq: (_) => FaqPage(),
             Routes.filter: (_) => const FilterPage(),
             Routes.newsFeed: (_) => NewsFeedPage(),
-            Routes.aggNewsFeed: (_) => AggNewsFeedPage(),
             Routes.requestPermissions: (_) => RequestPermissionsPage(),
             Routes.adminPanel: (_) => const AdminPanelPage(),
           },
@@ -186,7 +193,7 @@ class _MyAppState extends State<MyApp> {
 }
 
 class AppLoadingScreen extends StatelessWidget {
-  Future<String> _setUpAndChooseStartScreen(BuildContext context) async {
+  Future<String> _setUpAndChooseStartScreen(final BuildContext context) async {
     // Make initializations if this is not a test
     if (!Platform.environment.containsKey('FLUTTER_TEST')) {
       await RemoteConfigService.initialize();
@@ -197,9 +204,9 @@ class AppLoadingScreen extends StatelessWidget {
       });
 
       if (kDebugMode || kProfileMode) {
-        await FirebaseAnalytics().setAnalyticsCollectionEnabled(false);
+        await FirebaseAnalytics.instance.setAnalyticsCollectionEnabled(false);
       } else if (kReleaseMode) {
-        await FirebaseAnalytics().setAnalyticsCollectionEnabled(true);
+        await FirebaseAnalytics.instance.setAnalyticsCollectionEnabled(true);
       }
 
       // TODO(IoanaAlexandru): Make `rrule` package support Romanian
@@ -216,7 +223,7 @@ class AppLoadingScreen extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return LoadingScreen(
       navigateAfterFuture: _setUpAndChooseStartScreen(context),
       image: Image.asset('assets/icons/acs_logo.png'),

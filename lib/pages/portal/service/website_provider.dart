@@ -36,7 +36,7 @@ extension UserExtension on User {
 }
 
 extension WebsiteCategoryExtension on WebsiteCategory {
-  static WebsiteCategory fromString(String category) {
+  static WebsiteCategory fromString(final String category) {
     switch (category) {
       case 'learning':
         return WebsiteCategory.learning;
@@ -54,8 +54,8 @@ extension WebsiteCategoryExtension on WebsiteCategory {
 
 extension WebsiteExtension on Website {
   // [ownerUid] should be provided if the website is user-private
-  static Website fromSnap(DocumentSnapshot<Map<String, dynamic>> snap,
-      {String ownerUid}) {
+  static Website fromSnap(final DocumentSnapshot<Map<String, dynamic>> snap,
+      {final String ownerUid}) {
     final data = snap.data();
     return Website(
       ownerUid: ownerUid ?? data['addedBy'],
@@ -102,7 +102,7 @@ extension WebsiteExtension on Website {
 class WebsiteProvider with ChangeNotifier {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
 
-  void _errorHandler(dynamic e, {bool showToast = true}) {
+  void _errorHandler(final dynamic e, {bool showToast = true}) {
     print(e.message);
     if (showToast) {
       if (e.message.contains('PERMISSION_DENIED')) {
@@ -116,7 +116,7 @@ class WebsiteProvider with ChangeNotifier {
   /// Initializes the number of visits of websites with the value stored from Firebase.
   /// If no [uid] is provided, store the data locally instead.
   Future<bool> _initializeNumberOfVisits(
-      List<Website> websites, String uid) async {
+      final List<Website> websites, final String uid) async {
     if (uid == null) {
       return _initializeNumberOfVisitsLocally(websites);
     }
@@ -148,7 +148,8 @@ class WebsiteProvider with ChangeNotifier {
   /// data is stored in 2 lists: the list of website IDs (`websiteIds`) and the list
   /// with the number of visits (`websiteVisits`), where `websiteVisits[i]` is the
   /// number of times the user accessed website with ID `websiteIds[i]`.
-  Future<bool> _initializeNumberOfVisitsLocally(List<Website> websites) async {
+  Future<bool> _initializeNumberOfVisitsLocally(
+      final List<Website> websites) async {
     try {
       final List<String> websiteIds =
           prefService.sharedPreferences.getStringList('websiteIds') ?? [];
@@ -156,7 +157,7 @@ class WebsiteProvider with ChangeNotifier {
           prefService.sharedPreferences.getStringList('websiteVisits') ?? [];
 
       final visitsByWebsiteId = Map<String, int>.from(websiteIds.asMap().map(
-          (index, key) =>
+          (final index, final key) =>
               MapEntry(key, int.tryParse(websiteVisits[index] ?? 0))));
       for (final Website website in websites) {
         website.numberOfVisits = visitsByWebsiteId[website.id] ?? 0;
@@ -170,7 +171,8 @@ class WebsiteProvider with ChangeNotifier {
 
   /// Increments the number of visits of [website], both in-memory and on Firebase.
   /// If no [uid] is provided, update data in the local storage.
-  Future<bool> incrementNumberOfVisits(Website website, {String uid}) async {
+  Future<bool> incrementNumberOfVisits(final Website website,
+      {final String uid}) async {
     try {
       website.numberOfVisits++;
       if (uid == null) {
@@ -205,7 +207,7 @@ class WebsiteProvider with ChangeNotifier {
   /// data is stored in 2 lists: the list of website IDs (`websiteIds`) and the list
   /// with the number of visits `websiteVisits`, where `websiteVisits[i]` is the
   /// number of times the user accessed website with ID `websiteIds[i]`.
-  Future<bool> incrementNumberOfVisitsLocally(Website website) async {
+  Future<bool> incrementNumberOfVisitsLocally(final Website website) async {
     try {
       website.numberOfVisits++;
       final List<String> websiteIds =
@@ -232,8 +234,8 @@ class WebsiteProvider with ChangeNotifier {
     }
   }
 
-  Future<List<Website>> fetchWebsites(Filter filter,
-      {bool userOnly = false, String uid}) async {
+  Future<List<Website>> fetchWebsites(final Filter filter,
+      {bool userOnly = false, final String uid}) async {
     try {
       final websites = <Website>[];
 
@@ -268,8 +270,9 @@ class WebsiteProvider with ChangeNotifier {
         // (a document may result out of more than one query)
         final seenDocumentIds = <String>{};
 
-        documents =
-            documents.where((doc) => seenDocumentIds.add(doc.id)).toList();
+        documents = documents
+            .where((final doc) => seenDocumentIds.add(doc.id))
+            .toList();
 
         websites.addAll(documents.map(WebsiteExtension.fromSnap));
       }
@@ -282,7 +285,7 @@ class WebsiteProvider with ChangeNotifier {
             await ref.collection('websites').get();
 
         websites.addAll(qSnapshot.docs
-            .map((doc) => WebsiteExtension.fromSnap(doc, ownerUid: uid)));
+            .map((final doc) => WebsiteExtension.fromSnap(doc, ownerUid: uid)));
       }
 
       final bool initializeReturnSuccess =
@@ -290,7 +293,7 @@ class WebsiteProvider with ChangeNotifier {
       if (!initializeReturnSuccess) {
         AppToast.show(S.current.warningFavouriteWebsitesInitializationFailed);
       }
-      websites.sort((website1, website2) =>
+      websites.sort((final website1, final website2) =>
           website2.numberOfVisits.compareTo(website1.numberOfVisits));
 
       return websites;
@@ -300,10 +303,10 @@ class WebsiteProvider with ChangeNotifier {
     }
   }
 
-  Future<List<Website>> fetchFavouriteWebsites(String uid,
+  Future<List<Website>> fetchFavouriteWebsites(final String uid,
       {int limit = 3}) async {
     final favouriteWebsites = (await fetchWebsites(null, uid: uid))
-        .where((website) => website.numberOfVisits > 0)
+        .where((final website) => website.numberOfVisits > 0)
         .take(limit)
         .toList();
     if (favouriteWebsites.isEmpty) {
@@ -312,7 +315,7 @@ class WebsiteProvider with ChangeNotifier {
     return favouriteWebsites;
   }
 
-  Future<bool> addWebsite(Website website) async {
+  Future<bool> addWebsite(final Website website) async {
     assert(website.label != null, 'website label cannot be null');
 
     try {
@@ -345,7 +348,7 @@ class WebsiteProvider with ChangeNotifier {
     }
   }
 
-  Future<bool> updateWebsite(Website website) async {
+  Future<bool> updateWebsite(final Website website) async {
     assert(website.label != null, 'website label cannot be null');
 
     try {
@@ -387,7 +390,7 @@ class WebsiteProvider with ChangeNotifier {
     }
   }
 
-  Future<bool> deleteWebsite(Website website) async {
+  Future<bool> deleteWebsite(final Website website) async {
     try {
       DocumentReference ref;
       if (!website.isPrivate) {
@@ -411,7 +414,8 @@ class WebsiteProvider with ChangeNotifier {
     }
   }
 
-  Future<bool> uploadWebsiteIcon(Website website, Uint8List file) async {
+  Future<bool> uploadWebsiteIcon(
+      final Website website, final Uint8List file) async {
     final result = await StorageProvider.uploadImage(file, website.iconPath);
     if (!result) {
       if (file.length > 5 * 1024 * 1024) {
@@ -423,7 +427,7 @@ class WebsiteProvider with ChangeNotifier {
     return result;
   }
 
-  Future<String> getWebsiteIconURL(Website website) {
+  Future<String> getWebsiteIconURL(final Website website) {
     return StorageProvider.findImageUrl(website.iconPath);
   }
 }

@@ -1,4 +1,3 @@
-import 'package:dart_date/dart_date.dart' show Interval;
 import 'package:flutter/material.dart' hide Interval;
 import 'package:rrule/rrule.dart';
 import 'package:time_machine/time_machine.dart' hide Interval;
@@ -13,19 +12,19 @@ import 'uni_event.dart';
 class RecurringUniEvent extends UniEvent {
   const RecurringUniEvent({
     @required this.rrule,
-    @required DateTime start,
-    @required Duration duration,
-    @required String id,
-    List<String> relevance,
-    String degree,
-    String name,
-    String location,
-    Color color,
-    UniEventType type,
-    ClassHeader classHeader,
-    AcademicCalendar calendar,
-    String addedBy,
-    bool editable,
+    @required final DateTime start,
+    @required final Duration duration,
+    @required final String id,
+    final List<String> relevance,
+    final String degree,
+    final String name,
+    final String location,
+    final Color color,
+    final UniEventType type,
+    final ClassHeader classHeader,
+    final AcademicCalendar calendar,
+    final String addedBy,
+    final bool editable,
   })  : assert(rrule != null, 'rrule is null'),
         super(
             name: name,
@@ -67,15 +66,21 @@ class RecurringUniEvent extends UniEvent {
       // an "odd" week, even though its number in the calendar would have the
       // same parity as the week before the holiday.
       if (rrule.interval != 1) {
-        // Check whether the first calendar week is odd
-        final bool startOdd = weeks.first.isOdd;
-        weeks = weeks
-            .whereIndex((index) =>
-                (startOdd ? index : index + 1) % rrule.interval !=
-                weeks.lookup(WeekYearRules.iso
-                        .getWeekOfWeekYear(LocalDate.dateTime(start))) %
-                    rrule.interval)
-            .toSet();
+        final eventStartWeek =
+            WeekYearRules.iso.getWeekOfWeekYear(LocalDate.dateTime(start));
+        int eventParity;
+        if (!weeks.contains(eventStartWeek)) {
+          eventParity = weeks.toList().indexOf(eventStartWeek - weeks.first) %
+              rrule.interval;
+        } else {
+          print(
+              'Expected first week of event to not be a holiday; falling back to default parity.');
+          eventParity = 1;
+        }
+        // Select the weeks where the parity matches the parity of the event.
+        weeks = weeks.whereIndex((final index) {
+          return index % rrule.interval != eventParity;
+        }).toSet();
       }
       return rrule.copyWith(
           frequency: Frequency.yearly,
@@ -90,7 +95,7 @@ class RecurringUniEvent extends UniEvent {
 
   @override
   Iterable<UniEventInstance> generateInstances(
-      {Interval intersectingInterval}) sync* {
+      {final Interval intersectingInterval}) sync* {
     final RecurrenceRule rrule = rruleBasedOnCalendar;
 
     for (final start

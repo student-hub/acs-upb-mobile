@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -18,14 +17,14 @@ class NewsFeedPage extends StatefulWidget {
 
 class _NewsFeedPageState extends State<NewsFeedPage> {
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final newsFeedProvider = Provider.of<NewsProvider>(context);
 
     return AppScaffold(
       title: Text(S.current.navigationNewsFeed),
       body: FutureBuilder(
         future: newsFeedProvider.fetchNewsFeedItems(),
-        builder: (_, snapshot) {
+        builder: (final _, final snapshot) {
           if (snapshot.connectionState != ConnectionState.done) {
             return const Center(child: CircularProgressIndicator());
           }
@@ -49,7 +48,7 @@ class _NewsFeedPageState extends State<NewsFeedPage> {
               children: ListTile.divideTiles(
             context: context,
             tiles: newsFeedItems
-                .map((item) => ListTile(
+                .map((final item) => ListTile(
                       title: Text(item.title),
                       subtitle: Text(item.date),
                       trailing: const Icon(Icons.arrow_forward_ios_outlined),

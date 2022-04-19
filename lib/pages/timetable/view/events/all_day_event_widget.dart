@@ -15,7 +15,7 @@ class UniAllDayEventWidget extends StatelessWidget {
   const UniAllDayEventWidget(
     this.event, {
     @required this.info,
-    Key key,
+    final Key key,
     this.borderRadius = 4,
   })  : assert(event != null, 'event is null'),
         assert(info != null, 'info is null'),
@@ -28,7 +28,7 @@ class UniAllDayEventWidget extends StatelessWidget {
   final double borderRadius;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final color = event.color ??
         event?.mainEvent?.color ??
         Theme.of(context).primaryColor;
@@ -52,7 +52,7 @@ class UniAllDayEventWidget extends StatelessWidget {
           child: InkWell(
             onTap: () =>
                 Navigator.of(context).push(MaterialPageRoute<EventView>(
-              builder: (_) => EventView(eventInstance: event),
+              builder: (final _) => EventView(eventInstance: event),
             )),
             child: _buildContent(context),
           ),
@@ -61,7 +61,7 @@ class UniAllDayEventWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildContent(BuildContext context) {
+  Widget _buildContent(final BuildContext context) {
     final color = event.color ?? Theme.of(context).primaryColor;
 
     return Padding(
@@ -97,7 +97,7 @@ class AllDayEventBackgroundPainter extends CustomPainter {
   final double borderRadius;
 
   @override
-  void paint(Canvas canvas, Size size) {
+  void paint(final Canvas canvas, final Size size) {
     canvas.drawPath(
       _getPath(size, info, borderRadius),
       Paint()..color = color,
@@ -105,7 +105,7 @@ class AllDayEventBackgroundPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant AllDayEventBackgroundPainter oldDelegate) {
+  bool shouldRepaint(covariant final AllDayEventBackgroundPainter oldDelegate) {
     return info != oldDelegate.info ||
         color != oldDelegate.color ||
         borderRadius != oldDelegate.borderRadius;
@@ -131,7 +131,7 @@ class AllDayEventBorder extends ShapeBorder {
   EdgeInsetsGeometry get dimensions => EdgeInsets.all(side.width);
 
   @override
-  ShapeBorder scale(double t) {
+  ShapeBorder scale(final double t) {
     return AllDayEventBorder(
       info: info,
       side: side.scale(t),
@@ -140,24 +140,25 @@ class AllDayEventBorder extends ShapeBorder {
   }
 
   @override
-  Path getInnerPath(Rect rect, {TextDirection textDirection}) {
+  Path getInnerPath(final Rect rect, {final TextDirection textDirection}) {
     return null;
   }
 
   @override
-  Path getOuterPath(Rect rect, {TextDirection textDirection}) {
+  Path getOuterPath(final Rect rect, {final TextDirection textDirection}) {
     return _getPath(rect.size, info, borderRadius);
   }
 
   @override
-  void paint(Canvas canvas, Rect rect, {TextDirection textDirection}) {
+  void paint(final Canvas canvas, final Rect rect,
+      {final TextDirection textDirection}) {
     // For some reason, when we paint the background in this shape directly, it
     // lags while scrolling. Hence, we only use it to provide the outer path
     // used for clipping.
   }
 
   @override
-  bool operator ==(Object other) {
+  bool operator ==(final Object other) {
     if (other.runtimeType != runtimeType) {
       return false;
     }
@@ -175,7 +176,8 @@ class AllDayEventBorder extends ShapeBorder {
       '${objectRuntimeType(this, 'RoundedRectangleBorder')}($side, $borderRadius)';
 }
 
-Path _getPath(Size size, AllDayEventLayoutInfo info, double radius) {
+Path _getPath(
+    final Size size, final AllDayEventLayoutInfo info, final double radius) {
   final height = size.height;
   // final radius = borderRadius.coerceAtMost(width / 2);
 

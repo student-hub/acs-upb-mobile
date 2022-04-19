@@ -1,4 +1,3 @@
-import 'package:dart_date/dart_date.dart' show Interval;
 import 'package:flutter/material.dart' hide Interval;
 
 import '../../../classes/model/class.dart';
@@ -8,19 +7,19 @@ import 'uni_event.dart';
 
 class AllDayUniEvent extends UniEvent {
   AllDayUniEvent({
-    @required DateTime start,
-    @required DateTime end,
-    @required String id,
-    String name,
-    String location,
-    Color color,
-    UniEventType type,
-    ClassHeader classHeader,
-    AcademicCalendar calendar,
-    List<String> relevance,
-    String degree,
-    String addedBy,
-    bool editable,
+    @required final DateTime start,
+    @required final DateTime end,
+    @required final String id,
+    final String name,
+    final String location,
+    final Color color,
+    final UniEventType type,
+    final ClassHeader classHeader,
+    final AcademicCalendar calendar,
+    final List<String> relevance,
+    final String degree,
+    final String addedBy,
+    final bool editable,
   })  : startDate = start,
         endDate = end,
         super(
@@ -43,7 +42,7 @@ class AllDayUniEvent extends UniEvent {
 
   @override
   Iterable<UniEventInstance> generateInstances(
-      {Interval intersectingInterval}) sync* {
+      {final Interval intersectingInterval}) sync* {
     yield UniEventInstance(
       title: name,
       mainEvent: this,

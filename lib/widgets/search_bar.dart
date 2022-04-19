@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../generated/l10n.dart';
@@ -16,7 +15,7 @@ class SearchBar extends StatefulWidget {
 
 class _SearchBarState extends State<SearchBar> {
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final double maxWidth = MediaQuery.of(context).size.width;
 
     return Row(
@@ -79,7 +78,7 @@ class _SearchWidgetState extends State<SearchWidget> {
   final TextEditingController _textEditingController = TextEditingController();
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return Visibility(
       visible: !widget.searchClosed || widget.header != null,
       child: SizedBox(

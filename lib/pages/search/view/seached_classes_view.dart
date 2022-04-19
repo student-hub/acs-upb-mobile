@@ -1,5 +1,4 @@
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../../generated/l10n.dart';
@@ -15,7 +14,7 @@ class SearchedClassesView extends StatelessWidget {
   final String query;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return AppScaffold(
       title: Text(S.current.navigationSearchResults),
       body: Container(
@@ -24,7 +23,7 @@ class SearchedClassesView extends StatelessWidget {
             shrinkWrap: true,
             itemCount: classHeaders.length,
             scrollDirection: Axis.vertical,
-            itemBuilder: (BuildContext context, int index) {
+            itemBuilder: (final BuildContext context, final int index) {
               return Container(
                 padding: const EdgeInsets.fromLTRB(0, 0, 30, 0),
                 child: GestureDetector(
@@ -53,7 +52,7 @@ class SearchedClassesView extends StatelessWidget {
                     onTap: () => {
                           Navigator.of(context).push(
                             MaterialPageRoute<ClassView>(
-                              builder: (_) =>
+                              builder: (final _) =>
                                   ClassView(classHeader: classHeaders[index]),
                             ),
                           )

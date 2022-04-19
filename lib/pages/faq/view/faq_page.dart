@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:markdown/markdown.dart' as md;
@@ -26,6 +25,7 @@ class _FaqPageState extends State<FaqPage> {
   bool searchClosed = true;
   List<String> activeTags = <String>[];
   Future<List<Question>> futureQuestions;
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
@@ -41,7 +41,7 @@ class _FaqPageState extends State<FaqPage> {
           scrollDirection: Axis.horizontal,
           children: <Widget>[const SizedBox(width: 10)] +
               tags
-                  .map((category) => Padding(
+                  .map((final category) => Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 3),
                         child: FilterChip(
                           label: Text(
@@ -51,7 +51,7 @@ class _FaqPageState extends State<FaqPage> {
                             ),
                           ),
                           selected: activeTags.contains(category),
-                          onSelected: (selection) {
+                          onSelected: (final selection) {
                             setState(() {
                               if (selection) {
                                 activeTags.add(category);
@@ -68,7 +68,7 @@ class _FaqPageState extends State<FaqPage> {
       );
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return AppScaffold(
       title: Text(S.current.sectionFAQ),
       actions: [
@@ -76,6 +76,9 @@ class _FaqPageState extends State<FaqPage> {
           icon: Icons.search_outlined,
           onPressed: () {
             setState(() {
+              _scrollController.animateTo(0,
+                  curve: Curves.easeOut,
+                  duration: const Duration(milliseconds: 500));
               searchClosed = !searchClosed;
             });
           },
@@ -83,19 +86,20 @@ class _FaqPageState extends State<FaqPage> {
       ],
       body: FutureBuilder(
           future: futureQuestions,
-          builder: (context, snapshot) {
+          builder: (final context, final snapshot) {
             if (!snapshot.hasData) {
               return const Center(child: CircularProgressIndicator());
             }
             questions = snapshot.data;
-            tags = questions.expand((e) => e.tags).toSet().toList();
+            tags = questions.expand((final e) => e.tags).toSet().toList();
             return ListView(
+              controller: _scrollController,
               children: [
                 SearchWidget(
                   header: categoryList(),
-                  onSearch: (searchText) {
+                  onSearch: (final searchText) {
                     setState(() {
-                      filter = searchText;
+                      filter = searchText.toLowerCase();
                     });
                   },
                   cancelCallback: () {
@@ -114,16 +118,17 @@ class _FaqPageState extends State<FaqPage> {
   }
 
   List<Question> get filteredQuestions => questions
-      .where((question) =>
-          filter.split(' ').where((element) => element != '').fold(
+      .where((final question) =>
+          filter.split(' ').where((final element) => element != '').fold(
               true,
-              (previousValue, filter) =>
+              (final previousValue, final filter) =>
                   previousValue &&
                   question.question.toLowerCase().contains(filter)) &&
           containsTag(activeTags, question.tags))
       .toList();
 
-  bool containsTag(List<String> activeTags, List<String> questionTags) {
+  bool containsTag(
+      final List<String> activeTags, final List<String> questionTags) {
     if (activeTags.isEmpty) return true;
     return questionTags.any(activeTags.contains);
   }
@@ -141,16 +146,18 @@ class QuestionsList extends StatefulWidget {
 
 class _QuestionsListState extends State<QuestionsList> {
   @override
-  Widget build(BuildContext context) {
-    final List<String> filteredWords =
-        widget.filter.split(' ').where((element) => element != '').toList();
+  Widget build(final BuildContext context) {
+    final List<String> filteredWords = widget.filter
+        .split(' ')
+        .where((final element) => element != '')
+        .toList();
     return Padding(
       padding: const EdgeInsets.only(top: 12),
       child: ListView.builder(
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
         itemCount: widget.questions.length,
-        itemBuilder: (context, index) {
+        itemBuilder: (final context, final index) {
           return ExpansionTile(
             key: ValueKey(widget.questions[index].question),
             title: filteredWords.isNotEmpty
@@ -167,7 +174,8 @@ class _QuestionsListState extends State<QuestionsList> {
                 padding: const EdgeInsets.fromLTRB(15, 0, 15, 15),
                 child: MarkdownBody(
                   fitContent: false,
-                  onTapLink: (text, link, title) => Utils.launchURL(link),
+                  onTapLink: (final text, final link, final title) =>
+                      Utils.launchURL(link),
                   /*
                   This is a workaround because the strings in Firebase represent
                   newlines as '\n' and Firebase replaces them with '\\n'. We need

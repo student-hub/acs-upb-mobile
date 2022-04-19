@@ -38,16 +38,16 @@ class _SettingsPageState extends State<SettingsPage> {
     super.initState();
     Provider.of<AuthProvider>(context, listen: false)
         .isVerified
-        .then((value) => setState(() => isVerified = value));
+        .then((final value) => setState(() => isVerified = value));
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final AuthProvider authProvider = Provider.of<AuthProvider>(context);
     if (userPermissionString.isEmpty) {
       userPermissionString = S.current.infoLoading;
       checkUserPermissionsString()
-          .then((value) => setState(() => userPermissionString = value));
+          .then((final value) => setState(() => userPermissionString = value));
     }
 
     return AppScaffold(
@@ -71,7 +71,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 PrefSwitch(
                   title: Text(S.current.settingsItemDarkMode),
                   pref: 'dark_mode',
-                  onChange: (selected) {
+                  onChange: (final selected) {
                     if (selected) {
                       EasyDynamicTheme.of(context).changeTheme(dark: true);
                     } else {
@@ -118,7 +118,9 @@ class _SettingsPageState extends State<SettingsPage> {
                   ),
                 ),
                 Visibility(
-                  visible: authProvider.currentUserFromCache.isAdmin == true,
+                  visible: authProvider.isAuthenticated &&
+                      !authProvider.isAnonymous &&
+                      authProvider.currentUserFromCache.isAdmin == true,
                   child: ListTile(
                     key: const Key('AdminPanel'),
                     onTap: () =>
@@ -148,6 +150,15 @@ class _SettingsPageState extends State<SettingsPage> {
                     title: Text(S.current.settingsExportToGoogleCalendar),
                     subtitle: Text(S.current.infoExportToGoogleCalendar),
                   ),
+                ),
+                categoryTitle(S.current.labelFeedback),
+                ListTile(
+                  key: const ValueKey('feedback_and_issues'),
+                  onTap: () {
+                    Navigator.of(context).pushNamed(Routes.feedbackForm);
+                  },
+                  title: Text(S.current.settingsFeedbackForm),
+                  subtitle: Text(S.current.infoFeedbackForm),
                 ),
                 Column(
                   mainAxisSize: MainAxisSize.min,
@@ -191,7 +202,7 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 
-  Widget categoryTitle(String title) => Padding(
+  Widget categoryTitle(final String title) => Padding(
         padding: const EdgeInsets.only(left: 10, top: 10),
         child: Text(
           title,
@@ -203,7 +214,7 @@ class _SettingsPageState extends State<SettingsPage> {
       );
 
   PrefRadio<String> languageRadioPreference(
-      BuildContext context, String preference) {
+      final BuildContext context, final String preference) {
     return PrefRadio(
       title: Text(languagePrefString(context, preference)),
       value: preference,
@@ -218,7 +229,8 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 
-  String languagePrefString(BuildContext context, String preference) {
+  String languagePrefString(
+      final BuildContext context, final String preference) {
     switch (preference) {
       case 'en':
         return S.current.settingsItemLanguageEnglish;

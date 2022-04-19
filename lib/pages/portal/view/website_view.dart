@@ -2,7 +2,6 @@ import 'dart:typed_data';
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:provider/provider.dart';
 import 'package:recase/recase.dart';
@@ -28,7 +27,7 @@ import '../service/website_provider.dart';
 class WebsiteView extends StatefulWidget {
   // If [updateExisting] is true, this acts like an "Edit website" page starting
   // from the info in [website]. Otherwise, it acts like an "Add website" page.
-  WebsiteView({Key key, this.website, this.updateExisting = false})
+  WebsiteView({final Key key, this.website, this.updateExisting = false})
       : super(key: key) {
     if (updateExisting == true && website == null) {
       throw ArgumentError(
@@ -84,7 +83,7 @@ class _WebsiteViewState extends State<WebsiteView> {
     }
     descriptionRoController = TextEditingController(text: description['ro']);
     descriptionEnController = TextEditingController(text: description['en']);
-    widget.website.getIconURL().then((value) => setState(() => {
+    widget.website.getIconURL().then((final value) => setState(() => {
           imageWidget = value != null
               ? NetworkImage(value)
               : const AssetImage('assets/icons/globe.png')
@@ -184,7 +183,7 @@ class _WebsiteViewState extends State<WebsiteView> {
     );
   }
 
-  AppDialog deletionConfirmationDialog(BuildContext context) => AppDialog(
+  AppDialog deletionConfirmationDialog(final BuildContext context) => AppDialog(
         icon: const Icon(Icons.delete_outlined),
         title: S.current.actionDeleteWebsite,
         message: S.current.messageDeleteWebsite,
@@ -212,7 +211,7 @@ class _WebsiteViewState extends State<WebsiteView> {
       );
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     Uint8List imageAsPNG;
 
     return AppScaffold(
@@ -275,7 +274,8 @@ class _WebsiteViewState extends State<WebsiteView> {
                 child: Column(
                   children: <Widget>[
                     UploadButton(
-                        pageType: true, controller: uploadButtonController),
+                        label: S.current.labelWebsiteIcon,
+                        controller: uploadButtonController),
                     TextFormField(
                       controller: labelController,
                       decoration: InputDecoration(
@@ -283,7 +283,7 @@ class _WebsiteViewState extends State<WebsiteView> {
                         hintText: S.current.hintWebsiteLabel,
                         prefixIcon: const Icon(Icons.label_outlined),
                       ),
-                      onChanged: (_) => setState(() {}),
+                      onChanged: (final _) => setState(() {}),
                     ),
                     DropdownButtonFormField<WebsiteCategory>(
                       isExpanded: true,
@@ -294,13 +294,14 @@ class _WebsiteViewState extends State<WebsiteView> {
                       value: selectedCategory,
                       items: WebsiteCategory.values
                           .map(
-                            (category) => DropdownMenuItem<WebsiteCategory>(
+                            (final category) =>
+                                DropdownMenuItem<WebsiteCategory>(
                               value: category,
                               child: Text(category.toLocalizedString()),
                             ),
                           )
                           .toList(),
-                      onChanged: (selection) =>
+                      onChanged: (final selection) =>
                           setState(() => selectedCategory = selection),
                     ),
                     TextFormField(
@@ -310,13 +311,13 @@ class _WebsiteViewState extends State<WebsiteView> {
                         hintText: S.current.hintWebsiteLink,
                         prefixIcon: const Icon(FeatherIcons.globe),
                       ),
-                      validator: (value) {
+                      validator: (final value) {
                         if (!isURL(value, requireProtocol: true)) {
                           return S.current.warningInvalidURL;
                         }
                         return null;
                       },
-                      onChanged: (_) => setState(() {}),
+                      onChanged: (final _) => setState(() {}),
                     ),
                     RelevanceFormField(
                       canBePrivate: true,
@@ -331,7 +332,7 @@ class _WebsiteViewState extends State<WebsiteView> {
                               '${S.current.labelDescription} (${S.current.settingsItemLanguageRomanian.toLowerCase()})',
                           hintText: 'Cel mai popular motor de căutare.',
                           prefixIcon: const Icon(Icons.info_outlined)),
-                      onChanged: (_) => setState(() {}),
+                      onChanged: (final _) => setState(() {}),
                       minLines: 1,
                       maxLines: 5,
                     ),
@@ -342,7 +343,7 @@ class _WebsiteViewState extends State<WebsiteView> {
                               '${S.current.labelDescription} (${S.current.settingsItemLanguageEnglish.toLowerCase()})',
                           hintText: 'The most popular search engine.',
                           prefixIcon: const Icon(Icons.info_outlined)),
-                      onChanged: (_) => setState(() {}),
+                      onChanged: (final _) => setState(() {}),
                       minLines: 1,
                       maxLines: 5,
                     ),
@@ -370,12 +371,12 @@ class WebsiteIcon extends StatelessWidget {
   final Function onTap;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     if (image == null) {
       return FutureBuilder(
           future: StorageProvider.findImageUrl(website.iconPath),
           // Firebase Storage path
-          builder: (context, snapshot) {
+          builder: (final context, final snapshot) {
             ImageProvider oldImage;
             if (snapshot.hasData) {
               oldImage = NetworkImage(snapshot.data);

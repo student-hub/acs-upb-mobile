@@ -4,7 +4,7 @@ class IconText extends StatelessWidget {
   const IconText(
       {@required this.icon,
       @required this.text,
-      Key key,
+      final Key key,
       this.actionText,
       this.actionArrow = false,
       this.style,
@@ -29,7 +29,7 @@ class IconText extends StatelessWidget {
   final TextAlign align;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final textStyle = style ?? Theme.of(context).textTheme.bodyText1;
     final actionStyle = textStyle
         .copyWith(color: Theme.of(context).primaryColor)

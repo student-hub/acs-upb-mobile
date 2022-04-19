@@ -49,7 +49,7 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar>
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return DefaultTabController(
       length: tabs.length,
       initialIndex: widget.tabIndex,

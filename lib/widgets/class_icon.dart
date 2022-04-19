@@ -25,7 +25,7 @@ extension ClassExtension on ClassHeader {
 class ClassIcon extends StatelessWidget {
   const ClassIcon({
     @required this.classHeader,
-    Key key,
+    final Key key,
     this.selected = false,
   }) : super(key: key);
 
@@ -33,7 +33,7 @@ class ClassIcon extends StatelessWidget {
   final bool selected;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return CircleAvatar(
       backgroundColor: classHeader.colorFromAcronym,
       child: SizedBox(

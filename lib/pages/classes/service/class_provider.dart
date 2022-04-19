@@ -13,7 +13,7 @@ extension UserExtension on User {
 }
 
 extension ShortcutTypeExtension on ShortcutType {
-  static ShortcutType fromString(String string) {
+  static ShortcutType fromString(final String string) {
     switch (string) {
       case 'main':
         return ShortcutType.main;
@@ -39,7 +39,8 @@ extension ShortcutExtension on Shortcut {
 }
 
 extension ClassHeaderExtension on ClassHeader {
-  static ClassHeader fromSnap(DocumentSnapshot<Map<String, dynamic>> snap) {
+  static ClassHeader fromSnap(
+      final DocumentSnapshot<Map<String, dynamic>> snap) {
     final data = snap?.data();
     if (data == null) return null;
     final splitAcronym = data['shortname'].split('-');
@@ -57,7 +58,8 @@ extension ClassHeaderExtension on ClassHeader {
 
 extension ClassExtension on Class {
   static Class fromSnap(
-      {ClassHeader header, DocumentSnapshot<Map<String, dynamic>> snap}) {
+      {final ClassHeader header,
+      final DocumentSnapshot<Map<String, dynamic>> snap}) {
     final data = snap.data();
 
     if (data == null) {
@@ -77,7 +79,8 @@ extension ClassExtension on Class {
     Map<String, double> grading;
     if (data['grading'] != null) {
       grading = Map<String, double>.from(data['grading'].map(
-          (String name, dynamic value) => MapEntry(name, value.toDouble())));
+          (final String name, final dynamic value) =>
+              MapEntry(name, value.toDouble())));
     }
 
     final gradingLastUpdated = data['gradingLastUpdated'] == null
@@ -98,7 +101,7 @@ class ClassProvider with ChangeNotifier {
   List<ClassHeader> classHeadersCache;
   List<ClassHeader> userClassHeadersCache;
 
-  Future<List<String>> fetchUserClassIds(String uid) async {
+  Future<List<String>> fetchUserClassIds(final String uid) async {
     try {
       // TODO(IoanaAlexandru): Get all classes if user is not authenticated
       final snap =
@@ -114,7 +117,8 @@ class ClassProvider with ChangeNotifier {
     }
   }
 
-  Future<bool> setUserClassIds(List<String> classIds, String uid) async {
+  Future<bool> setUserClassIds(
+      final List<String> classIds, final String uid) async {
     try {
       final DocumentReference ref =
           FirebaseFirestore.instance.collection('users').doc(uid);
@@ -128,7 +132,7 @@ class ClassProvider with ChangeNotifier {
     }
   }
 
-  Future<ClassHeader> fetchClassHeader(String classId) async {
+  Future<ClassHeader> fetchClassHeader(final String classId) async {
     try {
       // Get class with id [classId]
       final QuerySnapshot<Map<String, dynamic>> query = await FirebaseFirestore
@@ -151,7 +155,7 @@ class ClassProvider with ChangeNotifier {
   }
 
   Future<List<ClassHeader>> fetchClassHeaders(
-      {String uid, Filter filter}) async {
+      {final String uid, final Filter filter}) async {
     try {
       if (uid == null) {
         if (classHeadersCache != null) {
@@ -166,7 +170,7 @@ class ClassProvider with ChangeNotifier {
 
         return docs
             .map(ClassHeaderExtension.fromSnap)
-            .where((e) => e != null)
+            .where((final e) => e != null)
             .toList();
       } else {
         if (userClassHeadersCache != null) {
@@ -202,7 +206,7 @@ class ClassProvider with ChangeNotifier {
     }
   }
 
-  Future<Class> fetchClassInfo(ClassHeader header) async {
+  Future<Class> fetchClassInfo(final ClassHeader header) async {
     try {
       final DocumentSnapshot<Map<String, dynamic>> snap =
           await _db.collection('classes').doc(header.id).get();
@@ -214,7 +218,8 @@ class ClassProvider with ChangeNotifier {
     }
   }
 
-  Future<bool> addShortcut(String classId, Shortcut shortcut) async {
+  Future<bool> addShortcut(
+      final String classId, final Shortcut shortcut) async {
     try {
       final DocumentReference doc = _db.collection('classes').doc(classId);
       final DocumentSnapshot<Map<String, dynamic>> snap = await doc.get();
@@ -242,7 +247,8 @@ class ClassProvider with ChangeNotifier {
     }
   }
 
-  Future<bool> deleteShortcut(String classId, int shortcutIndex) async {
+  Future<bool> deleteShortcut(
+      final String classId, final int shortcutIndex) async {
     try {
       final DocumentReference<Map<String, dynamic>> doc =
           _db.collection('classes').doc(classId);
@@ -262,7 +268,8 @@ class ClassProvider with ChangeNotifier {
     }
   }
 
-  Future<bool> setGrading(String classId, Map<String, double> grading) async {
+  Future<bool> setGrading(
+      final String classId, final Map<String, double> grading) async {
     try {
       final DocumentReference doc = _db.collection('classes').doc(classId);
       final DocumentSnapshot<Map<String, dynamic>> snap = await doc.get();
@@ -285,17 +292,17 @@ class ClassProvider with ChangeNotifier {
     }
   }
 
-  Future<List<ClassHeader>> search(String query) async {
+  Future<List<ClassHeader>> search(final String query) async {
     final List<ClassHeader> classes = await fetchClassHeaders();
     final List<String> searchedWords = query
         .toLowerCase()
         .split(' ')
-        .where((element) => element != '')
+        .where((final element) => element != '')
         .toList();
     return classes
-            .where((element) => searchedWords.fold(
+            .where((final element) => searchedWords.fold(
                 true,
-                (previousValue, filter) =>
+                (final previousValue, final filter) =>
                     previousValue &&
                         element.name
                             .toLowerCase()

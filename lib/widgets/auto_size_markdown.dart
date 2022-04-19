@@ -4,14 +4,14 @@ import 'package:markdown/markdown.dart' as md;
 
 class AutoSizeMarkdownBody extends MarkdownWidget {
   const AutoSizeMarkdownBody(
-      {Key key,
-      String data,
-      MarkdownStyleSheet styleSheet,
-      SyntaxHighlighter syntaxHighlighter,
-      MarkdownTapLinkCallback onTapLink,
-      String imageDirectory,
-      bool fitContent,
-      md.ExtensionSet extensionSet,
+      {final Key key,
+      final String data,
+      final MarkdownStyleSheet styleSheet,
+      final SyntaxHighlighter syntaxHighlighter,
+      final MarkdownTapLinkCallback onTapLink,
+      final String imageDirectory,
+      final bool fitContent,
+      final md.ExtensionSet extensionSet,
       this.overflow,
       this.maxLines})
       : super(
@@ -29,7 +29,7 @@ class AutoSizeMarkdownBody extends MarkdownWidget {
   final int maxLines;
 
   @override
-  Widget build(BuildContext context, List<Widget> children) {
+  Widget build(final BuildContext context, final List<Widget> children) {
     final richText = _findWidgetOfType<RichText>(children.first);
     if (richText != null) {
       return RichText(
@@ -46,7 +46,7 @@ class AutoSizeMarkdownBody extends MarkdownWidget {
     return children.first;
   }
 
-  T _findWidgetOfType<T>(Widget widget) {
+  T _findWidgetOfType<T>(final Widget widget) {
     if (widget is T) {
       return widget as T;
     }
