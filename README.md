@@ -82,10 +82,8 @@ flutter pub get
 * Select your device from the dropdown list and hit the play button (*^R*).
 
 
-|     :bulb:    | Running the app in debug mode is recommended for testing. To do this, run `./run-ios-flavor.bash dev`. Similarly, if you need to run the release version **(not recommended)**, you can run `./run-ios-flavor.bash prod`.|
+|     :bulb:    | Running the app in debug mode is recommended for testing. To do this, run `./run-ios-flavor.sh dev`. Similarly, if you need to run the release version **(not recommended)**, you can run `./run-ios-flavor.sh prod`.|
 |---------------|:---------------------------------------------------------------------------------------------------------------------------------------------|
-
-* You can find more information about build flavours in Flutter [here](https://medium.com/@animeshjain/build-flavors-in-flutter-android-and-ios-with-different-firebase-projects-per-flavor-27c5c5dac10b).
 
 ### Building for Web
 
