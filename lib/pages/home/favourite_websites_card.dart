@@ -15,8 +15,6 @@ class FavouriteWebsitesCard extends StatelessWidget {
 
   final void Function() onShowMore;
 
-  Widget showWhenNoItems() => const SizedBox.shrink();
-
   @override
   Widget build(final BuildContext context) {
     final AuthProvider authProvider = Provider.of<AuthProvider>(context);
@@ -27,7 +25,7 @@ class FavouriteWebsitesCard extends StatelessWidget {
       title: S.current.sectionFrequentlyAccessedWebsites,
       onShowMore: onShowMore,
       future: websiteProvider.fetchFavouriteWebsites(uid),
-      showWhenNoItems: showWhenNoItems(),
+      showIfEmpty: false,
       builder: (final websites) => Padding(
         padding: const EdgeInsets.only(top: 10),
         child: Row(

@@ -8,7 +8,7 @@ class InfoCard<T> extends StatelessWidget {
       {@required this.future,
         @required this.builder,
         this.onShowMore,
-        this.showWhenNoItems,
+        this.showIfEmpty = false,
         this.title,
         this.showMoreButtonKey,
         this.padding});
@@ -19,7 +19,7 @@ class InfoCard<T> extends StatelessWidget {
   final String title;
   final ValueKey<String> showMoreButtonKey;
   final EdgeInsetsGeometry padding;
-  final Widget showWhenNoItems;
+  final bool showIfEmpty;
 
   @override
   Widget build(final BuildContext context) {
@@ -32,26 +32,11 @@ class InfoCard<T> extends StatelessWidget {
               if ((snapshot.data is Map ||
                   snapshot.data is Iterable) &&
                   snapshot.data.isEmpty) {
-                return showWhenNoItems
-                    ?? cardWrapper(
-                        context,
-                        cardBar(context, title, showMoreButtonKey, onShowMore),
-                        noneYet(context),
-                        padding);
+                return showIfEmpty ? cardWrapper(context, noneYet(context)) : const SizedBox();
               }
-
-              return cardWrapper(
-                  context,
-                  cardBar(context, title, showMoreButtonKey, onShowMore),
-                  builder(snapshot.data),
-                  padding);
+              return cardWrapper(context, builder(snapshot.data));
             } else {
-              return showWhenNoItems
-                  ?? cardWrapper(
-                      context,
-                      cardBar(context, title, showMoreButtonKey, onShowMore),
-                      noneYet(context),
-                      padding);
+              return showIfEmpty ? cardWrapper(context, noneYet(context)) : const SizedBox();
             }
           }
           return const SizedBox(
@@ -63,9 +48,7 @@ class InfoCard<T> extends StatelessWidget {
 
   Widget cardWrapper(
       final BuildContext context,
-      final Widget cardBar,
-      final Widget content,
-      final EdgeInsetsGeometry padding
+      final Widget cardContent
       ) => Padding(
       padding: padding ?? const EdgeInsets.fromLTRB(12, 12, 12, 0),
       child: Card(
@@ -73,9 +56,9 @@ class InfoCard<T> extends StatelessWidget {
               padding: const EdgeInsets.all(12),
               child: Column(
                   children: <Widget>[
-                    cardBar,
+                    cardHeader(context),
                     const SizedBox(height: 10),
-                    content,
+                    cardContent,
                   ]
               )
           )
@@ -93,11 +76,8 @@ class InfoCard<T> extends StatelessWidget {
     ),
   );
 
-  Widget cardBar(
-      final BuildContext context,
-      final String title,
-      final ValueKey<String> showMoreButtonKey,
-      final Function onShowMore
+  Widget cardHeader(
+      final BuildContext context
       ) => Row(
     mainAxisAlignment: MainAxisAlignment.spaceBetween,
     children: [
