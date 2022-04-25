@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# ./run-ios-bash.sh prod - runs the Firebase prod configuration
-# ./run-ios-bash.sh dev	- runs the Firebase dev configuration
+# ./run-ios-flavor.sh prod - runs the Firebase prod configuration
+# ./run-ios-flavor.sh dev - runs the Firebase dev configuration
 
 flavor=$1
 
