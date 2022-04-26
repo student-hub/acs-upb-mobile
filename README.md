@@ -81,12 +81,16 @@ flutter pub get
 * Connect a physical iOS device or select *Open iOS Simulator* from the device drop-down menu to power on Xcode's simulator.
 * Select your device from the dropdown list and hit the play button (*^R*).
 
+
+|     :bulb:    | Running the app in debug mode is recommended for testing. To do this, run `./run-ios-flavor.sh dev`. Similarly, if you need to run the release version **(not recommended)**, you can run `./run-ios-flavor.sh prod`.|
+|---------------|:---------------------------------------------------------------------------------------------------------------------------------------------|
+
 ### Building for Web
 
 * You need to have *Chrome* installed in order to be able to run the web version of the app.
 * Select *Chrome* from the dropdown list and hit the play button (*Shift+F10* or *^R*).
 
-|     :bulb:    | To switch to debug config on web, in the [web/index.html](web/index.html) file, replace `firebaseConfig.release` with `firebaseConfig.debug` |
+|     :bulb:    | Running the app in debug mode is recommended for testing. To do this, replace `firebaseConfig.release` with `firebaseConfig.debug` in the [web/index.html](web/index.html) file.|
 |---------------|:---------------------------------------------------------------------------------------------------------------------------------------------|
 
 ### Not working?
