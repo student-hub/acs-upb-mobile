@@ -19,6 +19,7 @@ class InfoCard<T> extends StatelessWidget {
   final String title;
   final ValueKey<String> showMoreButtonKey;
   final EdgeInsetsGeometry padding;
+  // If true, the card is displayed with a placeholder text ("None yet."). Otherwise, the card is hidden.
   final bool showIfEmpty;
 
   @override
