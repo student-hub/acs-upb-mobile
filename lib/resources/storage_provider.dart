@@ -16,7 +16,6 @@ class StorageProvider {
 
   static Future<bool> uploadImage(
       final Uint8List file, final String ref) async {
-    print('uploadImage');
     try {
       final Reference reference = FirebaseStorage.instance.ref().child(ref);
       bool result = false;
