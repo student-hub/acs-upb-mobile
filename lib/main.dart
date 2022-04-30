@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:acs_upb_mobile/pages/news_feed/service/old_news_provider.dart';
 import 'package:easy_dynamic_theme/easy_dynamic_theme.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -27,6 +28,7 @@ import 'pages/filter/service/filter_provider.dart';
 import 'pages/filter/view/filter_page.dart';
 import 'pages/news_feed/service/news_provider.dart';
 import 'pages/news_feed/view/news_feed_page.dart';
+import 'pages/news_feed/view/news_item_details_page.dart';
 import 'pages/people/service/person_provider.dart';
 import 'pages/portal/service/website_provider.dart';
 import 'pages/settings/service/admin_provider.dart';
@@ -99,6 +101,8 @@ Future<void> main() async {
               create: (final _) => QuestionProvider()),
           ChangeNotifierProvider<NewsProvider>(
               create: (final _) => NewsProvider()),
+          ChangeNotifierProvider<OldNewsProvider>(
+              create: (_) => OldNewsProvider()),
           ChangeNotifierProxyProvider<AuthProvider, FilterProvider>(
             create: (final _) => FilterProvider(global: true),
             update: (final context, final authProvider, final filterProvider) {
@@ -180,6 +184,7 @@ class _MyAppState extends State<MyApp> {
             Routes.faq: (final _) => FaqPage(),
             Routes.filter: (final _) => const FilterPage(),
             Routes.newsFeed: (final _) => NewsFeedPage(),
+            Routes.newsFeedItem: (final _) => NewsItemDetailsPage(),
             Routes.requestPermissions: (final _) => RequestPermissionsPage(),
             Routes.adminPanel: (final _) => const AdminPanelPage(),
             Routes.feedbackForm: (final _) => FeedbackFormPage(),

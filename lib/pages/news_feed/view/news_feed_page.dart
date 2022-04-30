@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../generated/l10n.dart';
-import '../../../resources/utils.dart';
+import '../../../navigation/routes.dart';
 import '../../../widgets/error_page.dart';
 import '../../../widgets/scaffold.dart';
 import '../model/news_feed_item.dart';
@@ -13,6 +13,11 @@ class NewsFeedPage extends StatefulWidget {
 
   @override
   _NewsFeedPageState createState() => _NewsFeedPageState();
+}
+
+class NewsItemDetailsRouteArguments {
+  NewsItemDetailsRouteArguments({@required this.itemId});
+  final String itemId;
 }
 
 class _NewsFeedPageState extends State<NewsFeedPage> {
@@ -50,9 +55,13 @@ class _NewsFeedPageState extends State<NewsFeedPage> {
             tiles: newsFeedItems
                 .map((final item) => ListTile(
                       title: Text(item.title),
-                      subtitle: Text(item.date),
+                      subtitle: Text(item.createdAt),
                       trailing: const Icon(Icons.arrow_forward_ios_outlined),
-                      onTap: () => Utils.launchURL(item.link),
+                      //onTap: () => Utils.launchURL(item.sourceLink),
+                      onTap: () => Navigator.of(context).pushNamed(
+                          Routes.newsFeedItem,
+                          arguments: NewsItemDetailsRouteArguments(
+                              itemId: item.itemId)),
                       dense: true,
                     ))
                 .toList(),
