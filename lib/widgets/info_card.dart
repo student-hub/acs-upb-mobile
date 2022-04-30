@@ -29,14 +29,8 @@ class InfoCard<T> extends StatelessWidget {
         future: future,
         builder: (final context, final snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
-            if (snapshot.hasData) {
-              if ((snapshot.data is Map || snapshot.data is Iterable) &&
-                  snapshot.data.isEmpty) {
-                return showIfEmpty
-                    ? cardWrapper(
-                        context: context, cardContent: noneYet(context))
-                    : const SizedBox();
-              }
+            if (snapshot.hasData && (snapshot.data is Map || snapshot.data is Iterable) &&
+                  snapshot.data.isNotEmpty) {
               return cardWrapper(
                   context: context, cardContent: builder(snapshot.data));
             } else {
