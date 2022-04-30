@@ -28,19 +28,19 @@ class InfoCard<T> extends StatelessWidget {
         future: future,
         builder: (final context, final snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
-            // this condition resolves to true if the snapshot contains some data and if that data is iterable and not empty
-            final bool toDisplayContent = snapshot.hasData &&
-                !((snapshot.data is Map || snapshot.data is Iterable) &&
-                    snapshot.data.isEmpty);
-
-            // if there is no content to be displayed, we default to the chosen strategy for the no-items widget
-            return toDisplayContent
-                ? cardWrapper(
-                    context: context, cardContent: builder(snapshot.data))
-                : (showIfEmpty
-                    ? cardWrapper(
-                        context: context, cardContent: noneYet(context))
-                    : const SizedBox());
+            if (snapshot.hasData) {
+              if ((snapshot.data is Map ||
+                  snapshot.data is Iterable) &&
+                  snapshot.data.isEmpty) {
+                return showIfEmpty ? cardWrapper(
+                    context: context, cardContent: noneYet(context)) : const SizedBox();
+              }
+              return cardWrapper(
+                  context: context, cardContent: builder(snapshot.data));
+            } else {
+              return showIfEmpty ? cardWrapper(
+                  context: context, cardContent: noneYet(context)) : const SizedBox();
+            }
           }
           return const SizedBox(
             height: 100,
@@ -60,8 +60,11 @@ class InfoCard<T> extends StatelessWidget {
                   child: Column(children: <Widget>[
                     cardHeader(context),
                     const SizedBox(height: 10),
-                    cardContent,
-                  ]))));
+                    cardContent],
+                  ),
+              ),
+          )
+      );
 
   Widget noneYet(final BuildContext context) => SizedBox(
         height: 100,
