@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 
 import '../../../authentication/model/user.dart';
 import '../../../generated/l10n.dart';
-import '../../../resources/storage/storage_provider.dart';
+import '../../../resources/storage_provider.dart';
 import '../../../resources/utils.dart';
 import '../../../widgets/toast.dart';
 import '../../filter/model/filter.dart';
@@ -102,7 +102,7 @@ extension WebsiteExtension on Website {
 class WebsiteProvider with ChangeNotifier {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
 
-  void _errorHandler(final dynamic e, {bool showToast = true}) {
+  void _errorHandler(final dynamic e, {final bool showToast = true}) {
     print(e.message);
     if (showToast) {
       if (e.message.contains('PERMISSION_DENIED')) {
@@ -235,7 +235,7 @@ class WebsiteProvider with ChangeNotifier {
   }
 
   Future<List<Website>> fetchWebsites(final Filter filter,
-      {bool userOnly = false, final String uid}) async {
+      {final bool userOnly = false, final String uid}) async {
     try {
       final websites = <Website>[];
 
@@ -304,7 +304,7 @@ class WebsiteProvider with ChangeNotifier {
   }
 
   Future<List<Website>> fetchFavouriteWebsites(final String uid,
-      {int limit = 3}) async {
+      {final int limit = 3}) async {
     final favouriteWebsites = (await fetchWebsites(null, uid: uid))
         .where((final website) => website.numberOfVisits > 0)
         .take(limit)

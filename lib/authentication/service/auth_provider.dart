@@ -7,7 +7,7 @@ import 'package:firebase_auth/firebase_auth.dart' as firebase_auth show User;
 import 'package:flutter/material.dart';
 
 import '../../generated/l10n.dart';
-import '../../resources/storage/storage_provider.dart';
+import '../../resources/storage_provider.dart';
 import '../../resources/validator.dart';
 import '../../widgets/toast.dart';
 import '../model/user.dart';
@@ -58,7 +58,7 @@ class AuthProvider with ChangeNotifier {
     super.dispose();
   }
 
-  void _errorHandler(final dynamic e, {bool showToast = true}) {
+  void _errorHandler(final dynamic e, {final bool showToast = true}) {
     try {
       print('${e.message} code: ${e.code}');
       if (showToast) {
@@ -255,7 +255,7 @@ class AuthProvider with ChangeNotifier {
     await FirebaseAuth.instance.signOut();
   }
 
-  Future<bool> delete({bool showToast = true}) async {
+  Future<bool> delete({final bool showToast = true}) async {
     assert(_firebaseUser != null, 'firebase user to be deleted cannot be null');
 
     try {
@@ -283,7 +283,7 @@ class AuthProvider with ChangeNotifier {
   }
 
   Future<bool> canSignInWithPassword(final String email,
-      {bool showToast = true}) async {
+      {final bool showToast = true}) async {
     List<String> providers = [];
     try {
       providers = await FirebaseAuth.instance.fetchSignInMethodsForEmail(email);
@@ -299,7 +299,7 @@ class AuthProvider with ChangeNotifier {
   }
 
   Future<bool> canSignUpWithEmail(final String email,
-      {bool showToast = true}) async {
+      {final bool showToast = true}) async {
     List<String> providers = [];
     try {
       providers = await FirebaseAuth.instance.fetchSignInMethodsForEmail(email);
