@@ -19,6 +19,7 @@ class InfoCard<T> extends StatelessWidget {
   final String title;
   final ValueKey<String> showMoreButtonKey;
   final EdgeInsetsGeometry padding;
+
   // If true, the card is displayed with a placeholder text ("None yet."). Otherwise, the card is hidden.
   final bool showIfEmpty;
 
@@ -29,17 +30,19 @@ class InfoCard<T> extends StatelessWidget {
         builder: (final context, final snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             if (snapshot.hasData) {
-              if ((snapshot.data is Map ||
-                  snapshot.data is Iterable) &&
+              if ((snapshot.data is Map || snapshot.data is Iterable) &&
                   snapshot.data.isEmpty) {
-                return showIfEmpty ? cardWrapper(
-                    context: context, cardContent: noneYet(context)) : const SizedBox();
+                return showIfEmpty
+                    ? cardWrapper(
+                        context: context, cardContent: noneYet(context))
+                    : const SizedBox();
               }
               return cardWrapper(
                   context: context, cardContent: builder(snapshot.data));
             } else {
-              return showIfEmpty ? cardWrapper(
-                  context: context, cardContent: noneYet(context)) : const SizedBox();
+              return showIfEmpty
+                  ? cardWrapper(context: context, cardContent: noneYet(context))
+                  : const SizedBox();
             }
           }
           return const SizedBox(
@@ -55,16 +58,17 @@ class InfoCard<T> extends StatelessWidget {
       Padding(
           padding: padding ?? const EdgeInsets.fromLTRB(12, 12, 12, 0),
           child: Card(
-              child: Padding(
-                  padding: const EdgeInsets.all(12),
-                  child: Column(children: <Widget>[
-                    cardHeader(context),
-                    const SizedBox(height: 10),
-                    cardContent],
-                  ),
+            child: Padding(
+              padding: const EdgeInsets.all(12),
+              child: Column(
+                children: <Widget>[
+                  cardHeader(context),
+                  const SizedBox(height: 10),
+                  cardContent
+                ],
               ),
-          )
-      );
+            ),
+          ));
 
   Widget noneYet(final BuildContext context) => SizedBox(
         height: 100,
