@@ -38,46 +38,33 @@ class InfoCard<T> extends StatelessWidget {
               return cardWrapper(context: context, content: null);
             }
           }
-          return const SizedBox(
-            height: 100,
-            child: Center(child: CircularProgressIndicator()),
-          );
+          return cardWrapper(context: context, content: loaderIndicator());
         });
   }
 
   Widget cardWrapper(
-          {@required final BuildContext context,
-          @required final Widget content}) =>
-      Padding(
-        padding: padding ?? const EdgeInsets.fromLTRB(12, 12, 12, 0),
-        child: (content != null)
-            ? Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(12),
-                  child: Column(
-                    children: <Widget>[
-                      cardHeader(context),
-                      const SizedBox(height: 10),
-                      content,
-                    ],
-                  ),
-                ),
-              )
-            : (showIfEmpty
-                ? Card(
-                    child: Padding(
-                      padding: const EdgeInsets.all(12),
-                      child: Column(
-                        children: <Widget>[
-                          cardHeader(context),
-                          const SizedBox(height: 10),
-                          noneYet(context),
-                        ],
-                      ),
-                    ),
-                  )
-                : const SizedBox()),
-      );
+      {@required final BuildContext context, @required final Widget content}) {
+    if (content == null && !showIfEmpty) return const SizedBox();
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          children: <Widget>[
+            cardHeader(context),
+            const SizedBox(height: 10),
+            content ?? noneYet(context),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget loaderIndicator() {
+    return const SizedBox(
+      height: 100,
+      child: Center(child: CircularProgressIndicator()),
+    );
+  }
 
   Widget noneYet(final BuildContext context) => SizedBox(
         height: 100,
