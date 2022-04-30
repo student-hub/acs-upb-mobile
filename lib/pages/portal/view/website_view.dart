@@ -11,7 +11,7 @@ import '../../../authentication/model/user.dart';
 import '../../../authentication/service/auth_provider.dart';
 import '../../../generated/l10n.dart';
 import '../../../resources/locale_provider.dart';
-import '../../../resources/storage/storage_provider.dart';
+import '../../../resources/storage_provider.dart';
 import '../../../resources/theme.dart';
 import '../../../resources/utils.dart';
 import '../../../widgets/button.dart';
@@ -375,10 +375,8 @@ class WebsiteIcon extends StatelessWidget {
     if (image == null) {
       return FutureBuilder(
           future: StorageProvider.findImageUrl(website.iconPath),
-      //Firebase Storage path
-      builder: (final context, final snapshot) {
-
-        ImageProvider oldImage;
+          builder: (final context, final snapshot) {
+            ImageProvider oldImage;
             if (snapshot.hasData) {
               oldImage = Image.network(snapshot.data.toString()).image;
             }

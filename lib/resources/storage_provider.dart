@@ -4,17 +4,18 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
 
 class StorageProvider {
-  static Future<String> findImageUrl(String image) async {
+  static Future<String> findImageUrl(final String image) async {
     try {
       final String url =
           await FirebaseStorage.instance.ref().child(image).getDownloadURL();
-      return url.toString();
+      return url;
     } catch (e) {
       return null;
     }
   }
 
-  static Future<bool> uploadImage(Uint8List file, String ref) async {
+  static Future<bool> uploadImage(
+      final Uint8List file, final String ref) async {
     print('uploadImage');
     try {
       final Reference reference = FirebaseStorage.instance.ref().child(ref);
@@ -22,7 +23,7 @@ class StorageProvider {
       final UploadTask uploadTask = reference.putData(file);
       await uploadTask
           .whenComplete(() => result = true)
-          .catchError((dynamic error) async {
+          .catchError((final dynamic error) async {
         print('Storage - StorageUploadTask - uploadImage $error');
       });
       return result;
@@ -31,7 +32,7 @@ class StorageProvider {
     }
   }
 
-  static Future<bool> deleteImage(String imagePath) async {
+  static Future<bool> deleteImage(final String imagePath) async {
     try {
       final String url = await FirebaseStorage.instance
           .ref()
@@ -42,7 +43,7 @@ class StorageProvider {
           FirebaseStorage.instance.refFromURL(url).delete();
       await uploadTask
           .whenComplete(() => result = true)
-          .catchError((dynamic error) async {
+          .catchError((final dynamic error) async {
         print('Storage - StorageUploadTask - deleteImageUrl $error');
       });
       return result;
