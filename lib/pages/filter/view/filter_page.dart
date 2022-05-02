@@ -1,16 +1,18 @@
-import 'package:acs_upb_mobile/generated/l10n.dart';
-import 'package:acs_upb_mobile/pages/filter/model/filter.dart';
-import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
-import 'package:acs_upb_mobile/resources/locale_provider.dart';
-import 'package:acs_upb_mobile/widgets/icon_text.dart';
-import 'package:acs_upb_mobile/widgets/scaffold.dart';
-import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../generated/l10n.dart';
+import '../../../resources/locale_provider.dart';
+import '../../../resources/theme.dart';
+import '../../../widgets/icon_text.dart';
+import '../../../widgets/scaffold.dart';
+import '../../../widgets/toast.dart';
+import '../model/filter.dart';
+import '../service/filter_provider.dart';
+
 class FilterPage extends StatefulWidget {
   const FilterPage(
-      {Key key,
+      {final Key key,
       this.title,
       this.info,
       this.hint,
@@ -48,7 +50,7 @@ class FilterPageState extends State<FilterPage> {
   int selectedNodes = 0;
   final int maxSelectedNodes = 10;
 
-  void _onSelected(bool selection, FilterNode node) => setState(() {
+  void _onSelected(final bool selection, final FilterNode node) => setState(() {
         if (node.value == selection) return;
 
         if (selection) {
@@ -66,11 +68,11 @@ class FilterPageState extends State<FilterPage> {
         }
       });
 
-  void _onSelectedExclusive(
-      bool selection, FilterNode node, List<FilterNode> nodesOnLevel) {
+  void _onSelectedExclusive(final bool selection, final FilterNode node,
+      final List<FilterNode> nodesOnLevel) {
     // Only one node on level can be selected
     if (selection) {
-      for (final otherNode in nodesOnLevel.where((n) => n != node)) {
+      for (final otherNode in nodesOnLevel.where((final n) => n != node)) {
         _onSelected(false, otherNode);
       }
     }
@@ -79,7 +81,9 @@ class FilterPageState extends State<FilterPage> {
   }
 
   void _buildTree(
-      {FilterNode node, Map<int, List<Widget>> optionsByLevel, int level = 0}) {
+      {final FilterNode node,
+      final Map<int, List<Widget>> optionsByLevel,
+      int level = 0}) {
     if (node.children == null || node.children.isEmpty) {
       return;
     }
@@ -93,10 +97,13 @@ class FilterPageState extends State<FilterPage> {
       listItems
         // Add option
         ..add(FilterChip(
-          label: Text(child.localizedName(context)),
+          label: Text(
+            child.localizedName(context),
+            style: Theme.of(context).chipTextStyle(selected: child.value),
+          ),
           selected: child.value,
           showCheckmark: level != 0,
-          onSelected: (selection) {
+          onSelected: (final selection) {
             if (selection && selectedNodes >= maxSelectedNodes && level != 0) {
               AppToast.show(
                   S.current.warningOnlyNOptionsAtATime(maxSelectedNodes));
@@ -115,7 +122,7 @@ class FilterPageState extends State<FilterPage> {
     optionsByLevel[level].add(
       Padding(
         padding: const EdgeInsets.only(bottom: 10),
-        child: Container(
+        child: SizedBox(
           height: 40,
           child: ListView(
             scrollDirection: Axis.horizontal,
@@ -135,7 +142,7 @@ class FilterPageState extends State<FilterPage> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final filterProvider = Provider.of<FilterProvider>(context);
 
     return AppScaffold(
@@ -160,7 +167,7 @@ class FilterPageState extends State<FilterPage> {
       ],
       body: FutureBuilder<Filter>(
           future: Provider.of<FilterProvider>(context).fetchFilter(),
-          builder: (context, snapshot) {
+          builder: (final context, final snapshot) {
             if (snapshot.hasData) {
               filter ??= snapshot.data;
               final widgets = <Widget>[const SizedBox(height: 10)];

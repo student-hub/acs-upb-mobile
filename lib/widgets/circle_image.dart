@@ -9,6 +9,7 @@ class CustomBoxShadow extends BoxShadow {
     this.blurStyle = BlurStyle.outer,
   }) : super(color: color, offset: offset, blurRadius: blurRadius);
 
+  @override
   final BlurStyle blurStyle;
 
   @override
@@ -19,21 +20,21 @@ class CustomBoxShadow extends BoxShadow {
     assert(() {
       if (debugDisableShadows) result.maskFilter = null;
       return true;
-    }());
+    }(), '');
     return result;
   }
 }
 
 class CircleImage extends StatelessWidget {
   const CircleImage(
-      {Key key,
+      {final Key key,
       this.image,
       this.icon,
       this.onTap,
       this.label,
       this.tooltip,
-      double circleSize,
-      bool enableOverlay,
+      final double circleSize,
+      final bool enableOverlay,
       this.overlayIcon,
       this.overlayColor})
       : circleSize = circleSize ?? 80,
@@ -61,14 +62,14 @@ class CircleImage extends StatelessWidget {
   final Color overlayColor;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final circleImage = GestureDetector(
       onTap: onTap,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          Container(
+          SizedBox(
             width: circleSize,
             child: Stack(
               children: <Widget>[
@@ -105,7 +106,7 @@ class CircleImage extends StatelessWidget {
                   child: icon,
                 ),
                 if (enableOverlay)
-                  Container(
+                  SizedBox(
                     width: circleSize,
                     height: circleSize,
                     child: Center(
@@ -120,7 +121,7 @@ class CircleImage extends StatelessWidget {
             ),
           ),
           if (label != null)
-            Container(
+            SizedBox(
               height: 40,
               width: circleSize,
               child: Center(

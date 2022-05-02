@@ -1,15 +1,15 @@
-import 'package:acs_upb_mobile/generated/l10n.dart';
-import 'package:acs_upb_mobile/pages/faq/model/question.dart';
-import 'package:acs_upb_mobile/pages/faq/service/question_provider.dart';
-import 'package:acs_upb_mobile/resources/utils.dart';
-import 'package:acs_upb_mobile/widgets/scaffold.dart';
-import 'package:acs_upb_mobile/widgets/search_bar.dart';
-import 'package:dynamic_text_highlighting/dynamic_text_highlighting.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:markdown/markdown.dart' as md;
 import 'package:provider/provider.dart';
+
+import '../../../generated/l10n.dart';
+import '../../../resources/theme.dart';
+import '../../../resources/utils.dart';
+import '../../../widgets/scaffold.dart';
+import '../../../widgets/search_bar.dart';
+import '../model/question.dart';
+import '../service/question_provider.dart';
 
 class FaqPage extends StatefulWidget {
   static const String routeName = '/faq';
@@ -41,12 +41,17 @@ class _FaqPageState extends State<FaqPage> {
           scrollDirection: Axis.horizontal,
           children: <Widget>[const SizedBox(width: 10)] +
               tags
-                  .map((category) => Padding(
+                  .map((final category) => Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 3),
                         child: FilterChip(
-                          label: Text(category),
+                          label: Text(
+                            category,
+                            style: Theme.of(context).chipTextStyle(
+                              selected: activeTags.contains(category),
+                            ),
+                          ),
                           selected: activeTags.contains(category),
-                          onSelected: (selection) {
+                          onSelected: (final selection) {
                             setState(() {
                               if (selection) {
                                 activeTags.add(category);
@@ -63,7 +68,7 @@ class _FaqPageState extends State<FaqPage> {
       );
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return AppScaffold(
       title: Text(S.current.sectionFAQ),
       actions: [
@@ -81,18 +86,18 @@ class _FaqPageState extends State<FaqPage> {
       ],
       body: FutureBuilder(
           future: futureQuestions,
-          builder: (context, snapshot) {
+          builder: (final context, final snapshot) {
             if (!snapshot.hasData) {
               return const Center(child: CircularProgressIndicator());
             }
             questions = snapshot.data;
-            tags = questions.expand((e) => e.tags).toSet().toList();
+            tags = questions.expand((final e) => e.tags).toSet().toList();
             return ListView(
               controller: _scrollController,
               children: [
                 SearchWidget(
                   header: categoryList(),
-                  onSearch: (searchText) {
+                  onSearch: (final searchText) {
                     setState(() {
                       filter = searchText.toLowerCase();
                     });
@@ -113,16 +118,17 @@ class _FaqPageState extends State<FaqPage> {
   }
 
   List<Question> get filteredQuestions => questions
-      .where((question) =>
-          filter.split(' ').where((element) => element != '').fold(
+      .where((final question) =>
+          filter.split(' ').where((final element) => element != '').fold(
               true,
-              (previousValue, filter) =>
+              (final previousValue, final filter) =>
                   previousValue &&
                   question.question.toLowerCase().contains(filter)) &&
           containsTag(activeTags, question.tags))
       .toList();
 
-  bool containsTag(List<String> activeTags, List<String> questionTags) {
+  bool containsTag(
+      final List<String> activeTags, final List<String> questionTags) {
     if (activeTags.isEmpty) return true;
     return questionTags.any(activeTags.contains);
   }
@@ -140,25 +146,24 @@ class QuestionsList extends StatefulWidget {
 
 class _QuestionsListState extends State<QuestionsList> {
   @override
-  Widget build(BuildContext context) {
-    final List<String> filteredWords =
-        widget.filter.split(' ').where((element) => element != '').toList();
+  Widget build(final BuildContext context) {
+    final List<String> filteredWords = widget.filter
+        .split(' ')
+        .where((final element) => element != '')
+        .toList();
     return Padding(
       padding: const EdgeInsets.only(top: 12),
       child: ListView.builder(
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
         itemCount: widget.questions.length,
-        itemBuilder: (context, index) {
+        itemBuilder: (final context, final index) {
           return ExpansionTile(
             key: ValueKey(widget.questions[index].question),
             title: filteredWords.isNotEmpty
-                ? DynamicTextHighlighting(
-                    text: widget.questions[index].question,
+                ? Text(
+                    widget.questions[index].question,
                     style: Theme.of(context).textTheme.subtitle1,
-                    highlights: filteredWords,
-                    color: Theme.of(context).accentColor,
-                    caseSensitive: false,
                   )
                 : Text(
                     widget.questions[index].question,
@@ -169,7 +174,8 @@ class _QuestionsListState extends State<QuestionsList> {
                 padding: const EdgeInsets.fromLTRB(15, 0, 15, 15),
                 child: MarkdownBody(
                   fitContent: false,
-                  onTapLink: Utils.launchURL,
+                  onTapLink: (final text, final link, final title) =>
+                      Utils.launchURL(link),
                   /*
                   This is a workaround because the strings in Firebase represent
                   newlines as '\n' and Firebase replaces them with '\\n'. We need

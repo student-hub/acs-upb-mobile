@@ -1,27 +1,25 @@
 import 'dart:typed_data';
-import 'dart:ui';
 
-import 'package:acs_upb_mobile/authentication/model/user.dart';
-import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
-import 'package:acs_upb_mobile/generated/l10n.dart';
-import 'package:acs_upb_mobile/pages/filter/view/filter_dropdown.dart';
-import 'package:acs_upb_mobile/resources/utils.dart';
-import 'package:acs_upb_mobile/resources/validator.dart';
-import 'package:acs_upb_mobile/widgets/button.dart';
-import 'package:acs_upb_mobile/widgets/circle_image.dart';
-import 'package:acs_upb_mobile/widgets/dialog.dart';
-import 'package:acs_upb_mobile/widgets/icon_text.dart';
-import 'package:acs_upb_mobile/widgets/scaffold.dart';
-import 'package:acs_upb_mobile/widgets/toast.dart';
-import 'package:acs_upb_mobile/widgets/upload_button.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:preferences/preference_title.dart';
+import 'package:pref/pref.dart';
 import 'package:provider/provider.dart';
 
+import '../../generated/l10n.dart';
+import '../../pages/filter/view/filter_dropdown.dart';
+import '../../resources/utils.dart';
+import '../../resources/validator.dart';
+import '../../widgets/button.dart';
+import '../../widgets/circle_image.dart';
+import '../../widgets/dialog.dart';
+import '../../widgets/icon_text.dart';
+import '../../widgets/scaffold.dart';
+import '../../widgets/toast.dart';
+import '../../widgets/upload_button.dart';
+import '../model/user.dart';
+import '../service/auth_provider.dart';
+
 class EditProfilePage extends StatefulWidget {
-  const EditProfilePage({Key key}) : super(key: key);
+  const EditProfilePage({final Key key}) : super(key: key);
 
   @override
   _EditProfilePageState createState() => _EditProfilePageState();
@@ -48,8 +46,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
   void initState() {
     super.initState();
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
-    authProvider.isVerified.then((value) => setState(() => isVerified = value));
-    authProvider.getProfilePictureURL().then((value) => setState(() => {
+    authProvider.isVerified
+        .then((final value) => setState(() => isVerified = value));
+    authProvider.getProfilePictureURL().then((final value) => setState(() => {
           imageWidget = value != null
               ? NetworkImage(value)
               : const AssetImage('assets/illustrations/undraw_profile_pic.png'),
@@ -58,7 +57,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
         UploadButtonController(onUpdate: () => setState(() => {}));
   }
 
-  AppDialog _changePasswordDialog(BuildContext context) {
+  AppDialog _changePasswordDialog(final BuildContext context) {
     final newPasswordController = TextEditingController();
     final oldPasswordController = TextEditingController();
     final changePasswordKey = GlobalKey<FormState>();
@@ -79,7 +78,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   errorMaxLines: 2,
                 ),
                 controller: oldPasswordController,
-                validator: (value) {
+                validator: (final value) {
                   if (value?.isEmpty ?? true) {
                     return S.current.errorNoPassword;
                   }
@@ -97,7 +96,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   errorMaxLines: 2,
                 ),
                 controller: newPasswordController,
-                validator: (value) {
+                validator: (final value) {
                   if (value?.isEmpty ?? true) {
                     return S.current.errorNoPassword;
                   }
@@ -118,7 +117,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   hintText: S.current.hintPassword,
                   errorMaxLines: 2,
                 ),
-                validator: (value) {
+                validator: (final value) {
                   if (value?.isEmpty ?? true) {
                     return S.current.errorNoPassword;
                   }
@@ -136,7 +135,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
         AppButton(
           key: const ValueKey('change_password_button'),
           text: S.current.actionChangePassword.toUpperCase(),
-          color: Theme.of(context).accentColor,
+          color: Theme.of(context).primaryColor,
           width: 130,
           onTap: () async {
             correctPassword =
@@ -146,6 +145,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 if (await authProvider
                     .changePassword(newPasswordController.text)) {
                   AppToast.show(S.current.messageChangePasswordSuccess);
+                  if (!mounted) return;
                   Navigator.pop(context);
                 }
               }
@@ -156,7 +156,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
     );
   }
 
-  AppDialog _deletionConfirmationDialog(BuildContext context) {
+  AppDialog _deletionConfirmationDialog(final BuildContext context) {
     final passwordController = TextEditingController();
     return AppDialog(
       icon: const Icon(Icons.warning_amber_outlined, color: Colors.red),
@@ -193,7 +193,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
     );
   }
 
-  AppDialog _changeEmailConfirmationDialog(BuildContext context) {
+  AppDialog _changeEmailConfirmationDialog(final BuildContext context) {
     final passwordController = TextEditingController();
     return AppDialog(
       title: S.current.actionChangeEmail,
@@ -213,7 +213,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
         AppButton(
           key: const ValueKey('change_email_button'),
           text: S.current.actionChangeEmail,
-          color: Theme.of(context).accentColor,
+          color: Theme.of(context).primaryColor,
           width: 130,
           onTap: () async {
             final authProvider =
@@ -234,7 +234,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
     final emailDomain = S.current.stringEmailDomain;
     final User user = authProvider.currentUserFromCache;
@@ -271,10 +271,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 bool result = true;
                 if (isVerified == false &&
                     emailController.text + emailDomain != authProvider.email) {
-                  await showDialog(
-                          context: context,
-                          builder: _changeEmailConfirmationDialog)
-                      .then((value) => result = value ?? false);
+                  await showDialog<bool>(
+                    context: context,
+                    builder: _changeEmailConfirmationDialog,
+                  ).then((final value) => result = value ?? false);
                 }
                 if (uploadButtonController.newUploadedImageBytes != null) {
                   imageAsPNG = await Utils.convertToPNG(
@@ -284,6 +284,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 if (result) {
                   if (await authProvider.updateProfile(info)) {
                     AppToast.show(S.current.messageEditProfileSuccess);
+                    if (!mounted) return;
                     Navigator.pop(context);
                   }
                 }
@@ -292,9 +293,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
         AppScaffoldAction(
           icon: Icons.more_vert_outlined,
           items: {
-            S.current.actionChangePassword: () =>
-                showDialog(context: context, builder: _changePasswordDialog),
-            S.current.actionDeleteAccount: () => showDialog(
+            S.current.actionChangePassword: () => showDialog<dynamic>(
+                context: context, builder: _changePasswordDialog),
+            S.current.actionDeleteAccount: () => showDialog<dynamic>(
                 context: context, builder: _deletionConfirmationDialog)
           },
         )
@@ -313,11 +314,12 @@ class _EditProfilePageState extends State<EditProfilePage> {
           ),
           const SizedBox(height: 10),
           UploadButton(
-              label: S.current.labelProfilePicture,
-              controller: uploadButtonController),
-          PreferenceTitle(
-            S.current.labelPersonalInformation,
-            leftPadding: 0,
+            label: S.current.labelProfilePicture,
+            controller: uploadButtonController,
+          ),
+          PrefTitle(
+            title: Text(S.current.labelPersonalInformation),
+            padding: const EdgeInsets.only(left: 0, bottom: 0, top: 20),
           ),
           const SizedBox(height: 10),
           Form(
@@ -331,7 +333,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     hintText: S.current.hintFirstName,
                   ),
                   controller: firstNameController,
-                  validator: (value) {
+                  validator: (final value) {
                     if (value?.isEmpty ?? true) {
                       return S.current.errorMissingFirstName;
                     }
@@ -345,7 +347,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     hintText: S.current.hintLastName,
                   ),
                   controller: lastNameController,
-                  validator: (value) {
+                  validator: (final value) {
                     if (value?.isEmpty ?? true) {
                       return S.current.errorMissingLastName;
                     }
@@ -361,7 +363,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       suffix: Text(emailDomain),
                     ),
                     controller: emailController,
-                    validator: (value) {
+                    validator: (final value) {
                       if (value?.isEmpty ?? true) {
                         return S.current.errorMissingLastName;
                       }
@@ -372,9 +374,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
             ),
           ),
           const SizedBox(height: 10),
-          PreferenceTitle(
-            S.current.labelClass,
-            leftPadding: 0,
+          PrefTitle(
+            title: Text(S.current.labelClass),
+            padding: const EdgeInsets.only(left: 0, bottom: 0, top: 20),
           ),
           FilterDropdown(
             initialPath: path,
@@ -393,7 +395,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
 class AccountNotVerifiedWarning extends StatelessWidget {
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
 
     if (!authProvider.isAuthenticated || authProvider.isAnonymous) {
@@ -402,7 +404,7 @@ class AccountNotVerifiedWarning extends StatelessWidget {
 
     return FutureBuilder(
       future: authProvider.isVerified,
-      builder: (context, snap) {
+      builder: (final context, final snap) {
         if (!snap.hasData || snap.data) {
           return Container();
         }

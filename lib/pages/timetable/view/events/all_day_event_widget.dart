@@ -1,12 +1,13 @@
 import 'dart:math' as math;
 
-import 'package:acs_upb_mobile/pages/timetable/model/events/uni_event.dart';
-import 'package:acs_upb_mobile/pages/timetable/view/events/event_view.dart';
 import 'package:black_hole_flutter/black_hole_flutter.dart';
 import 'package:dartx/dartx.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:timetable/timetable.dart';
+
+import '../../model/events/uni_event.dart';
+import 'event_view.dart';
 
 /// Widget to display all day events in the timetable, based on
 /// [BasicAllDayEventWidget] from the timetable API.
@@ -14,11 +15,11 @@ class UniAllDayEventWidget extends StatelessWidget {
   const UniAllDayEventWidget(
     this.event, {
     @required this.info,
-    Key key,
+    final Key key,
     this.borderRadius = 4,
-  })  : assert(event != null),
-        assert(info != null),
-        assert(borderRadius != null),
+  })  : assert(event != null, 'event is null'),
+        assert(info != null, 'info is null'),
+        assert(borderRadius != null, 'border radius is null'),
         super(key: key);
 
   /// The event to be displayed.
@@ -27,7 +28,7 @@ class UniAllDayEventWidget extends StatelessWidget {
   final double borderRadius;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final color = event.color ??
         event?.mainEvent?.color ??
         Theme.of(context).primaryColor;
@@ -51,7 +52,7 @@ class UniAllDayEventWidget extends StatelessWidget {
           child: InkWell(
             onTap: () =>
                 Navigator.of(context).push(MaterialPageRoute<EventView>(
-              builder: (_) => EventView(eventInstance: event),
+              builder: (final _) => EventView(eventInstance: event),
             )),
             child: _buildContent(context),
           ),
@@ -60,7 +61,7 @@ class UniAllDayEventWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildContent(BuildContext context) {
+  Widget _buildContent(final BuildContext context) {
     final color = event.color ?? Theme.of(context).primaryColor;
 
     return Padding(
@@ -87,16 +88,16 @@ class AllDayEventBackgroundPainter extends CustomPainter {
     @required this.info,
     @required this.color,
     this.borderRadius = 0,
-  })  : assert(info != null),
-        assert(color != null),
-        assert(borderRadius != null);
+  })  : assert(info != null, 'info is null'),
+        assert(color != null, 'color is null'),
+        assert(borderRadius != null, 'border radius is null');
 
   final AllDayEventLayoutInfo info;
   final Color color;
   final double borderRadius;
 
   @override
-  void paint(Canvas canvas, Size size) {
+  void paint(final Canvas canvas, final Size size) {
     canvas.drawPath(
       _getPath(size, info, borderRadius),
       Paint()..color = color,
@@ -104,7 +105,7 @@ class AllDayEventBackgroundPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant AllDayEventBackgroundPainter oldDelegate) {
+  bool shouldRepaint(covariant final AllDayEventBackgroundPainter oldDelegate) {
     return info != oldDelegate.info ||
         color != oldDelegate.color ||
         borderRadius != oldDelegate.borderRadius;
@@ -118,9 +119,9 @@ class AllDayEventBorder extends ShapeBorder {
     @required this.info,
     this.side = BorderSide.none,
     this.borderRadius = 0,
-  })  : assert(info != null),
-        assert(side != null),
-        assert(borderRadius != null);
+  })  : assert(info != null, 'info is null'),
+        assert(side != null, 'side is null'),
+        assert(borderRadius != null, 'borderRadius is null');
 
   final AllDayEventLayoutInfo info;
   final BorderSide side;
@@ -130,7 +131,7 @@ class AllDayEventBorder extends ShapeBorder {
   EdgeInsetsGeometry get dimensions => EdgeInsets.all(side.width);
 
   @override
-  ShapeBorder scale(double t) {
+  ShapeBorder scale(final double t) {
     return AllDayEventBorder(
       info: info,
       side: side.scale(t),
@@ -139,24 +140,25 @@ class AllDayEventBorder extends ShapeBorder {
   }
 
   @override
-  Path getInnerPath(Rect rect, {TextDirection textDirection}) {
+  Path getInnerPath(final Rect rect, {final TextDirection textDirection}) {
     return null;
   }
 
   @override
-  Path getOuterPath(Rect rect, {TextDirection textDirection}) {
+  Path getOuterPath(final Rect rect, {final TextDirection textDirection}) {
     return _getPath(rect.size, info, borderRadius);
   }
 
   @override
-  void paint(Canvas canvas, Rect rect, {TextDirection textDirection}) {
+  void paint(final Canvas canvas, final Rect rect,
+      {final TextDirection textDirection}) {
     // For some reason, when we paint the background in this shape directly, it
     // lags while scrolling. Hence, we only use it to provide the outer path
     // used for clipping.
   }
 
   @override
-  bool operator ==(Object other) {
+  bool operator ==(final Object other) {
     if (other.runtimeType != runtimeType) {
       return false;
     }
@@ -174,7 +176,8 @@ class AllDayEventBorder extends ShapeBorder {
       '${objectRuntimeType(this, 'RoundedRectangleBorder')}($side, $borderRadius)';
 }
 
-Path _getPath(Size size, AllDayEventLayoutInfo info, double radius) {
+Path _getPath(
+    final Size size, final AllDayEventLayoutInfo info, final double radius) {
   final height = size.height;
   // final radius = borderRadius.coerceAtMost(width / 2);
 

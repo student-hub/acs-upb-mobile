@@ -51,8 +51,7 @@ jobs:
         java-version: '12.x'
     - uses: subosito/flutter-action@v1
       with:
-        flutter-version: '1.24.x'
-        channel: 'beta'
+        channel: 'stable'
 
     - name: Get packages
       run: flutter pub get
@@ -91,8 +90,7 @@ jobs:
         java-version: '12.x'
     - uses: subosito/flutter-action@v1
       with:
-        flutter-version: '1.24.x'
-        channel: 'beta'
+        channel: 'stable'
 
     - name: Get packages
       run: flutter pub get
@@ -115,11 +113,11 @@ jobs:
     - name: Build release APK
       run: flutter build apk --release
 
-    - name: Create a Release APK
-      uses: ncipollo/release-action@v1
-      with:
-        artifacts: "build/app/outputs/apk/release/*.apk"
-        token: ${{ secrets.RELEASE_TOKEN }}
+      - name: Create a Release APK
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: "build/app/outputs/apk/release/*.apk"
+          token: ${{ secrets.RELEASE_TOKEN }}
 
   android:
     name: Deploy to Google Play
@@ -133,8 +131,7 @@ jobs:
         java-version: '12.x'
     - uses: subosito/flutter-action@v1
       with:
-        flutter-version: '1.24.x'
-        channel: 'beta'
+        channel: 'stable'
 
     - name: Get packages
       run: flutter pub get

@@ -1,13 +1,13 @@
-import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
-import 'package:acs_upb_mobile/pages/class_feedback/service/feedback_provider.dart';
-import 'package:acs_upb_mobile/pages/class_feedback/view/class_feedback_checklist.dart';
-import 'package:acs_upb_mobile/pages/classes/model/class.dart';
-import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import '../../authentication/service/auth_provider.dart';
+import '../../generated/l10n.dart';
+import '../class_feedback/service/feedback_provider.dart';
+import '../class_feedback/view/class_feedback_checklist.dart';
+import '../classes/model/class.dart';
+import '../classes/service/class_provider.dart';
 
 class FeedbackNudge extends StatefulWidget {
   @override
@@ -44,7 +44,7 @@ class _FeedbackNudgeState extends State<FeedbackNudge> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return Visibility(
       visible: feedbackFormsLeft != null && feedbackFormsLeft != '0',
       child: Padding(
@@ -52,11 +52,12 @@ class _FeedbackNudgeState extends State<FeedbackNudge> {
         child: ActionChip(
           padding: const EdgeInsets.all(12),
           tooltip: S.current.navigationClassesFeedbackChecklist,
-          backgroundColor: Theme.of(context).accentColor,
+          backgroundColor: Theme.of(context).primaryColor,
           onPressed: () {
             Navigator.of(context).push(
               MaterialPageRoute<ClassFeedbackChecklist>(
-                builder: (_) => ClassFeedbackChecklist(classes: userClasses),
+                builder: (final _) =>
+                    ClassFeedbackChecklist(classes: userClasses),
               ),
             );
           },

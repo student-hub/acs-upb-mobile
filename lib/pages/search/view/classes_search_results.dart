@@ -1,13 +1,13 @@
-import 'package:acs_upb_mobile/pages/classes/model/class.dart';
-import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
-import 'package:acs_upb_mobile/pages/classes/view/class_view.dart';
-import 'package:acs_upb_mobile/pages/search/view/seached_classes_view.dart';
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:acs_upb_mobile/generated/l10n.dart';
-import 'package:acs_upb_mobile/widgets/class_icon.dart';
+
+import '../../../generated/l10n.dart';
+import '../../../widgets/class_icon.dart';
+import '../../classes/model/class.dart';
+import '../../classes/service/class_provider.dart';
+import '../../classes/view/class_view.dart';
+import 'seached_classes_view.dart';
 
 class ClassesSearchResults extends StatelessWidget {
   const ClassesSearchResults({this.query});
@@ -15,12 +15,12 @@ class ClassesSearchResults extends StatelessWidget {
   final String query;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     List<ClassHeader> classesSearched;
     return FutureBuilder(
         future:
             Provider.of<ClassProvider>(context, listen: false).search(query),
-        builder: (_, snapshot) {
+        builder: (final _, final snapshot) {
           if (snapshot.connectionState == ConnectionState.done &&
               query.isNotEmpty) {
             classesSearched = snapshot.data;
@@ -39,7 +39,7 @@ class ClassesSearchResults extends StatelessWidget {
                             onTap: () {
                               Navigator.of(context)
                                   .push(MaterialPageRoute<SearchedClassesView>(
-                                      builder: (_) => SearchedClassesView(
+                                      builder: (final _) => SearchedClassesView(
                                             classHeaders: classesSearched,
                                             query: query,
                                           )));
@@ -69,13 +69,13 @@ class ClassesCircleList extends StatelessWidget {
   final List<ClassHeader> classHeaders;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return Container(
         padding: const EdgeInsets.all(10),
         child: Column(
             children: classHeaders
                 .take(3)
-                .map((classHeader) => Container(
+                .map((final classHeader) => Container(
                     padding: const EdgeInsets.fromLTRB(0, 0, 30, 0),
                     child: GestureDetector(
                         child: Row(children: <Widget>[
@@ -83,7 +83,7 @@ class ClassesCircleList extends StatelessWidget {
                               padding: const EdgeInsets.fromLTRB(0, 0, 10, 10),
                               child: CircleAvatar(
                                 backgroundColor: classHeader.colorFromAcronym,
-                                child: Container(
+                                child: SizedBox(
                                   width: 30,
                                   child: Align(
                                     alignment: Alignment.center,
@@ -102,7 +102,7 @@ class ClassesCircleList extends StatelessWidget {
                         onTap: () => {
                               Navigator.of(context)
                                   .push(MaterialPageRoute<ClassView>(
-                                builder: (_) =>
+                                builder: (final _) =>
                                     ClassView(classHeader: classHeader),
                               ))
                             })))

@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 
 class EmojiFormField extends FormField<Map<int, bool>> {
   EmojiFormField({
-    @required Map<int, bool> answerValues,
-    @required String question,
-    FormFieldSetter<Map<int, bool>> onSaved,
-    Key key,
+    @required final Map<int, bool> answerValues,
+    @required final String question,
+    final FormFieldSetter<Map<int, bool>> onSaved,
+    final Key key,
   }) : super(
           key: key,
           onSaved: onSaved,
           autovalidateMode: AutovalidateMode.onUserInteraction,
           initialValue: answerValues,
-          builder: (state) {
+          builder: (final state) {
             final context = state.context;
             final List<Icon> emojis = [
               const Icon(
@@ -41,17 +41,17 @@ class EmojiFormField extends FormField<Map<int, bool>> {
               )
             ];
             final List<SelectableIconController> emojiControllers =
-                emojis.map((_) => SelectableIconController()).toList();
+                emojis.map((final _) => SelectableIconController()).toList();
 
             final emojiSelectables = emojiControllers
                 .asMap()
                 .map(
-                  (i, controller) => MapEntry(
+                  (final i, final controller) => MapEntry(
                     i,
                     SelectableIcon(
                       icon: emojis[i],
                       controller: controller,
-                      onSelected: (selected) {
+                      onSelected: (final selected) {
                         if (selected) {
                           for (final c in emojiControllers) {
                             if (c != controller) {
@@ -85,7 +85,7 @@ class EmojiFormField extends FormField<Map<int, bool>> {
                     fontSize: 18,
                   ),
                 ),
-                Container(
+                SizedBox(
                   width: MediaQuery.of(context).size.width - 20,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -135,7 +135,7 @@ class SelectableIcon extends StatefulWidget {
   SelectableIcon({
     this.onSelected,
     this.icon,
-    SelectableIconController controller,
+    final SelectableIconController controller,
   }) : controller = controller ?? SelectableIconController();
 
   final void Function(bool) onSelected;
@@ -143,14 +143,11 @@ class SelectableIcon extends StatefulWidget {
   final SelectableIconController controller;
 
   @override
-  State<SelectableIcon> createState() => _SelectableIconState(icon);
+  State<SelectableIcon> createState() => _SelectableIconState();
 }
 
 class _SelectableIconState extends State<SelectableIcon>
     with SingleTickerProviderStateMixin {
-  _SelectableIconState(this.icon);
-
-  Icon icon;
   AnimationController animationController;
   Animation<double> animation;
   bool isSelected;
@@ -173,7 +170,7 @@ class _SelectableIconState extends State<SelectableIcon>
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     widget.controller._state = this;
 
     return GestureDetector(
@@ -197,8 +194,8 @@ class _SelectableIconState extends State<SelectableIcon>
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
         child: AnimatedBuilder(
           animation: animation,
-          child: icon,
-          builder: (BuildContext context, Widget child) {
+          child: widget.icon,
+          builder: (final BuildContext context, final Widget child) {
             return Transform.scale(
               scale: animation.value,
               child: child,

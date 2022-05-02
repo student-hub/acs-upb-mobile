@@ -1,10 +1,11 @@
-import 'package:acs_upb_mobile/generated/l10n.dart';
-import 'package:acs_upb_mobile/pages/home/home_page.dart';
-import 'package:acs_upb_mobile/pages/people/view/people_page.dart';
-import 'package:acs_upb_mobile/pages/portal/view/portal_page.dart';
-import 'package:acs_upb_mobile/pages/timetable/view/timetable_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
+
+import '../generated/l10n.dart';
+import '../pages/home/home_page.dart';
+import '../pages/people/view/people_page.dart';
+import '../pages/portal/view/portal_page.dart';
+import '../pages/timetable/view/timetable_page.dart';
 
 class AppBottomNavigationBar extends StatefulWidget {
   const AppBottomNavigationBar({this.tabIndex = 0});
@@ -48,7 +49,7 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar>
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return DefaultTabController(
       length: tabs.length,
       initialIndex: widget.tabIndex,
@@ -94,7 +95,7 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar>
                         iconMargin: EdgeInsets.zero,
                       ),
                     ],
-                    labelColor: Theme.of(context).accentColor,
+                    labelColor: Theme.of(context).primaryColor,
                     labelPadding: const EdgeInsets.only(top: 4),
                     unselectedLabelColor:
                         Theme.of(context).unselectedWidgetColor,

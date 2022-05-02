@@ -265,7 +265,7 @@ void main() {
     });
 
     test('findNodesByPath no input', () {
-      expect(testFilter.findNodesByPath(null).map((e) => e.name).toList(),
+      expect(testFilter.findNodesByPath(null).map((final e) => e.name).toList(),
           ['All']);
     });
 
@@ -273,7 +273,7 @@ void main() {
       expect(
           testFilter
               .findNodesByPath(['BSc', 'CTI', 'CTI-1', '1-CB', '311CB'])
-              .map((e) => e.name)
+              .map((final e) => e.name)
               .toList(),
           ['All', 'BSc', 'CTI', 'CTI-1', '1-CB', '311CB']);
     });
@@ -286,7 +286,7 @@ void main() {
                 'CTI',
                 'CTI-1',
               ])
-              .map((e) => e.name)
+              .map((final e) => e.name)
               .toList(),
           [
             'All',

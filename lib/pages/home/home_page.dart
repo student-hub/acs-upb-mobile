@@ -1,27 +1,27 @@
-import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
-import 'package:acs_upb_mobile/generated/l10n.dart';
-import 'package:acs_upb_mobile/navigation/routes.dart';
-import 'package:acs_upb_mobile/pages/classes/view/classes_page.dart';
-import 'package:acs_upb_mobile/pages/home/faq_card.dart';
-import 'package:acs_upb_mobile/pages/home/favourite_websites_card.dart';
-import 'package:acs_upb_mobile/pages/home/feedback_nudge.dart';
-import 'package:acs_upb_mobile/pages/home/news_feed_card.dart';
-import 'package:acs_upb_mobile/pages/home/profile_card.dart';
-import 'package:acs_upb_mobile/pages/home/upcoming_events_card.dart';
-import 'package:acs_upb_mobile/pages/search/view/search_page.dart';
-import 'package:acs_upb_mobile/resources/remote_config.dart';
-import 'package:acs_upb_mobile/widgets/scaffold.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../authentication/service/auth_provider.dart';
+import '../../generated/l10n.dart';
+import '../../navigation/routes.dart';
+import '../../resources/remote_config.dart';
+import '../../widgets/scaffold.dart';
+import '../classes/view/classes_page.dart';
+import '../search/view/search_page.dart';
+import 'faq_card.dart';
+import 'favourite_websites_card.dart';
+import 'feedback_nudge.dart';
+import 'news_feed_card.dart';
+import 'profile_card.dart';
+import 'upcoming_events_card.dart';
+
 class HomePage extends StatelessWidget {
-  const HomePage({this.tabController, Key key}) : super(key: key);
+  const HomePage({this.tabController, final Key key}) : super(key: key);
 
   final TabController tabController;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
 
     return AppScaffold(
@@ -32,7 +32,7 @@ class HomePage extends StatelessWidget {
           tooltip: S.current.navigationSearch,
           onPressed: () => {
             Navigator.of(context).push(MaterialPageRoute<ClassesPage>(
-              builder: (_) => SearchPage(),
+              builder: (final _) => SearchPage(),
             ))
           },
         ),

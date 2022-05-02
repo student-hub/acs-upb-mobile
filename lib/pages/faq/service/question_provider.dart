@@ -1,13 +1,14 @@
-import 'package:acs_upb_mobile/generated/l10n.dart';
-import 'package:acs_upb_mobile/pages/faq/model/question.dart';
-import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 
+import '../../../generated/l10n.dart';
+import '../../../widgets/toast.dart';
+import '../model/question.dart';
+
 class QuestionProvider with ChangeNotifier {
-  Future<List<Question>> fetchQuestions({int limit}) async {
+  Future<List<Question>> fetchQuestions({final int limit}) async {
     try {
-      final QuerySnapshot qSnapshot = limit == null
+      final QuerySnapshot<Map<String, dynamic>> qSnapshot = limit == null
           ? await FirebaseFirestore.instance.collection('faq').get()
           : await FirebaseFirestore.instance
               .collection('faq')
@@ -23,7 +24,7 @@ class QuestionProvider with ChangeNotifier {
 }
 
 extension DatabaseQuestion on Question {
-  static Question fromSnap(DocumentSnapshot snap) {
+  static Question fromSnap(final DocumentSnapshot<Map<String, dynamic>> snap) {
     final data = snap.data();
 
     final String question = data['question'];

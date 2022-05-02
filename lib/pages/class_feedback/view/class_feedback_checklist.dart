@@ -1,18 +1,18 @@
-import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
-import 'package:acs_upb_mobile/pages/class_feedback/service/feedback_provider.dart';
-import 'package:acs_upb_mobile/pages/class_feedback/view/class_feedback_view.dart';
-import 'package:acs_upb_mobile/pages/classes/model/class.dart';
-import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
-import 'package:acs_upb_mobile/widgets/error_page.dart';
-import 'package:acs_upb_mobile/widgets/scaffold.dart';
-import 'package:acs_upb_mobile/widgets/toast.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../authentication/service/auth_provider.dart';
+import '../../../generated/l10n.dart';
+import '../../../widgets/error_page.dart';
+import '../../../widgets/scaffold.dart';
+import '../../../widgets/toast.dart';
+import '../../classes/model/class.dart';
+import '../../classes/service/class_provider.dart';
+import '../service/feedback_provider.dart';
+import 'class_feedback_view.dart';
+
 class ClassFeedbackChecklist extends StatefulWidget {
-  const ClassFeedbackChecklist({Key key, this.classes}) : super(key: key);
+  const ClassFeedbackChecklist({final Key key, this.classes}) : super(key: key);
   final Set<ClassHeader> classes;
 
   @override
@@ -42,7 +42,7 @@ class _ClassFeedbackChecklistState extends State<ClassFeedbackChecklist> {
         const SizedBox(height: 6),
         FeedbackClassList(
           classes: widget.classes
-              .where((element) =>
+              .where((final element) =>
                   !(classesFeedback?.containsKey(element.id) ?? false))
               ?.toSet(),
           done: false,
@@ -57,7 +57,8 @@ class _ClassFeedbackChecklistState extends State<ClassFeedbackChecklist> {
         if (classesFeedback != null)
           FeedbackClassList(
             classes: widget.classes
-                .where((element) => classesFeedback.containsKey(element.id))
+                .where(
+                    (final element) => classesFeedback.containsKey(element.id))
                 ?.toSet(),
             done: true,
           ),
@@ -66,7 +67,7 @@ class _ClassFeedbackChecklistState extends State<ClassFeedbackChecklist> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     fetchCompletedFeedback();
     return AppScaffold(
       title: Text(S.current.navigationClassesFeedbackChecklist),
@@ -103,16 +104,17 @@ class _ClassFeedbackChecklistState extends State<ClassFeedbackChecklist> {
 }
 
 class FeedbackClassList extends StatelessWidget {
-  const FeedbackClassList({Key key, this.classes, this.done}) : super(key: key);
+  const FeedbackClassList({final Key key, this.classes, this.done})
+      : super(key: key);
   final Set<ClassHeader> classes;
   final bool done;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return Column(
         children: classes
             .map(
-              (classHeader) =>
+              (final classHeader) =>
                   FeedbackClassListItem(classHeader: classHeader, done: done),
             )
             .toList());
@@ -120,17 +122,17 @@ class FeedbackClassList extends StatelessWidget {
 }
 
 class FeedbackClassListItem extends StatelessWidget {
-  const FeedbackClassListItem({Key key, this.classHeader, this.done})
+  const FeedbackClassListItem({final Key key, this.classHeader, this.done})
       : super(key: key);
 
   final ClassHeader classHeader;
   final bool done;
 
-  void onTap(BuildContext context) {
+  void onTap(final BuildContext context) {
     if (!done) {
       Navigator.of(context).push(
         MaterialPageRoute<ChangeNotifierProvider>(
-          builder: (context) => ChangeNotifierProvider.value(
+          builder: (final context) => ChangeNotifierProvider.value(
             value: Provider.of<ClassProvider>(context),
             child: ClassFeedbackView(classHeader: classHeader),
           ),
@@ -142,11 +144,11 @@ class FeedbackClassListItem extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return ListTile(
       leading: Checkbox(
         value: done,
-        onChanged: (_) => onTap(context),
+        onChanged: (final _) => onTap(context),
         activeColor: Colors.grey,
       ),
       title: Text(

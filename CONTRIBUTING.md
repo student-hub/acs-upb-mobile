@@ -85,7 +85,7 @@ Future improvements on the app are tracked in Github's **Projects** and **Issues
 When mentioning an issue in code using a *TODO* comment, consider using the format:
  ```TODO(GitHub username): Description, #issueID```
 
-As mentioned in [flutter_style_todos](https://dart-lang.github.io/linter/lints/flutter_style_todos.html) lint, the person mentioned in the *TODO* is the person most familiar with the issue, **and not necesarily the one who is assigned to solve it**. 
+As mentioned in [flutter_style_todos](https://dart-lang.github.io/linter/lints/flutter_style_todos.html) lint, the person mentioned in the *TODO* is the person most familiar with the issue, **and not necesarily the one who is assigned to solve it**.
 
 ## Development tips
 
@@ -109,10 +109,12 @@ As mentioned in [flutter_style_todos](https://dart-lang.github.io/linter/lints/f
     * To switch to debug config on web, in the [web/index.html](web/index.html) file, replace `firebaseConfig.release` with `firebaseConfig.debug`.
     * For simplicity, you could call the default "main.dart" configuration in Android Studio "Debug", duplicate it and call the second one "Release", with `--release` as an argument. For example:
     <img src=screenshots/other/release_configuration.png>
-    
+
 * On Android, ACS UPB Mobile uses **a separate (development) environment in debug mode**. That means a completely different Firebase project - separate data, including user info. Some important notes:
   - This is not used automatically on iOS and web (#105), but there are some solutions. On `web`, you can manually switch to the dev environment by replacing `firebaseConfig.release` with `firebaseConfig.debug` in the [web/index.html](web/index.html) file. On `iOS`, you can test the app in debug mode by running `./run-ios-flavor.sh dev` in the root folder of the project. Similarly, if you need to run the release version **(not recommended)**, you can run `./run-ios-flavor.sh prod`. You can find more information about build flavors in Flutter [here](https://medium.com/@animeshjain/build-flavors-in-flutter-android-and-ios-with-different-firebase-projects-per-flavor-27c5c5dac10b).
   - If you want to copy the data from the production environment into the development environment, you need to follow the export/import instructions from the Firebase [docs](https://firebase.google.com/docs/firestore/manage-data/export-import#export_data). This can help debug builds to match prod better, but this **should NEVER be used to copy user data**. Everything in the users/ collection should stay on the production project (and it would not work anyway, since the user IDs don't match the users in dev).
+
+- On Android, ACS UPB Mobile uses **a separate (development) environment in debug mode**. That means a completely different Firebase project - separate data, including user info. This is not used automatically on iOS and web (#105), but on web you can manually switch to the dev environment by replacing `firebaseConfig.release` with `firebaseConfig.debug` in the [web/index.html](web/index.html) file.
 
   | :exclamation: | You should ALWAYS use the separate development environment for testing the app when modifying any kind of data, so as not to risk breaking something in the production database. |
   |---------------|:---------------|

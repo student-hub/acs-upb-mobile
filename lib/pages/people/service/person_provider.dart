@@ -1,13 +1,13 @@
-import 'dart:core';
-import 'package:acs_upb_mobile/generated/l10n.dart';
-import 'package:acs_upb_mobile/pages/people/model/person.dart';
-import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../../../generated/l10n.dart';
+import '../../../widgets/toast.dart';
+import '../model/person.dart';
+
 extension PersonExtension on Person {
-  static Person fromSnap(DocumentSnapshot snap) {
+  static Person fromSnap(final DocumentSnapshot<Map<String, dynamic>> snap) {
     final data = snap.data();
     return Person(
       name: data['name'],
@@ -23,7 +23,7 @@ extension PersonExtension on Person {
 class PersonProvider with ChangeNotifier {
   Future<List<Person>> fetchPeople() async {
     try {
-      final QuerySnapshot qSnapshot =
+      final QuerySnapshot<Map<String, dynamic>> qSnapshot =
           await FirebaseFirestore.instance.collection('people').get();
       return qSnapshot.docs.map(PersonExtension.fromSnap).toList();
     } catch (e) {
@@ -33,10 +33,11 @@ class PersonProvider with ChangeNotifier {
     }
   }
 
-  Future<Person> fetchPerson(String personName) async {
+  Future<Person> fetchPerson(final String personName) async {
     try {
       // Get person with name [personName]
-      final QuerySnapshot query = await FirebaseFirestore.instance
+      final QuerySnapshot<Map<String, dynamic>> query = await FirebaseFirestore
+          .instance
           .collection('people')
           .where('name', isEqualTo: personName)
           .limit(1)
@@ -54,9 +55,10 @@ class PersonProvider with ChangeNotifier {
     }
   }
 
-  Future<String> mostRecentLecturer(String classId) async {
+  Future<String> mostRecentLecturer(final String classId) async {
     try {
-      final QuerySnapshot query = await FirebaseFirestore.instance
+      final QuerySnapshot<Map<String, dynamic>> query = await FirebaseFirestore
+          .instance
           .collection('events')
           .where('class', isEqualTo: classId)
           .where('type', isEqualTo: 'lecture')
@@ -77,7 +79,7 @@ class PersonProvider with ChangeNotifier {
     }
   }
 
-  Future<List<Person>> search(String query) async {
+  Future<List<Person>> search(final String query) async {
     if (query.isEmpty) {
       return <Person>[];
     }
@@ -85,12 +87,12 @@ class PersonProvider with ChangeNotifier {
     final List<String> searchedWords = query
         .toLowerCase()
         .split(' ')
-        .where((element) => element != '')
+        .where((final element) => element != '')
         .toList();
     return people
-            .where((person) => searchedWords.fold(
+            .where((final person) => searchedWords.fold(
                 true,
-                (previousValue, filter) =>
+                (final previousValue, final filter) =>
                     previousValue &&
                     person.name.toLowerCase().contains(filter.toLowerCase())))
             .toList() ??

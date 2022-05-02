@@ -1,12 +1,12 @@
-import 'package:acs_upb_mobile/generated/l10n.dart';
-import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question.dart';
-import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question_dropdown.dart';
-import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question_rating.dart';
-import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question_slider.dart';
-import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question_text.dart';
-import 'package:acs_upb_mobile/widgets/radio_emoji.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
+import '../../../generated/l10n.dart';
+import '../../../widgets/radio_emoji.dart';
+import '../model/questions/question.dart';
+import '../model/questions/question_dropdown.dart';
+import '../model/questions/question_rating.dart';
+import '../model/questions/question_slider.dart';
+import '../model/questions/question_text.dart';
 
 class FeedbackQuestionFormField extends StatefulWidget {
   const FeedbackQuestionFormField({
@@ -44,16 +44,16 @@ class _FeedbackQuestionFormFieldState extends State<FeedbackQuestionFormField> {
               // Offset to bypass slider padding
               offset: const Offset(10, 0),
               child: GestureDetector(
-                onTap: () => showDialog(
+                onTap: () => showDialog<dynamic>(
                   context: context,
-                  builder: (context) => Dialog(
+                  builder: (final context) => Dialog(
                     child: Padding(
                       padding: const EdgeInsets.all(10),
                       child: TextFormField(
                         keyboardType: TextInputType.number,
                         initialValue:
                             widget.question.answer ?? defaultVal.toString(),
-                        onChanged: (value) {
+                        onChanged: (final value) {
                           if (int.parse(value) >= 1 && int.parse(value) <= 10) {
                             setState(() =>
                                 widget.question.answer = value ?? defaultVal);
@@ -75,14 +75,14 @@ class _FeedbackQuestionFormFieldState extends State<FeedbackQuestionFormField> {
             ),
             Expanded(
               child: GestureDetector(
-                onTapDown: (_) => setState(() => _enabled = true),
+                onTapDown: (final _) => setState(() => _enabled = true),
                 child: Slider.adaptive(
                   key: const Key('FeedbackSlider'),
                   value: double.tryParse(widget.question.answer ?? '') ??
                       defaultVal,
                   onChanged: !_enabled
                       ? null
-                      : (newRating) {
+                      : (final newRating) {
                           setState(() {
                             widget.question.answer = newRating.toString();
                           });
@@ -91,7 +91,7 @@ class _FeedbackQuestionFormFieldState extends State<FeedbackQuestionFormField> {
                   max: 10,
                   divisions: 9,
                   label: widget.question.answer,
-                  activeColor: Theme.of(context).accentColor,
+                  activeColor: Theme.of(context).primaryColor,
                 ),
               ),
             ),
@@ -100,7 +100,7 @@ class _FeedbackQuestionFormFieldState extends State<FeedbackQuestionFormField> {
               offset: const Offset(-20, 0),
               child: Checkbox(
                 value: !_enabled,
-                onChanged: (bool value) => setState(() {
+                onChanged: (final bool value) => setState(() {
                   _enabled = !value;
                   if (value) {
                     widget.question.answer = null;
@@ -126,9 +126,9 @@ class _FeedbackQuestionFormFieldState extends State<FeedbackQuestionFormField> {
       children: [
         EmojiFormField(
           question: widget.question.question,
-          onSaved: (value) {
+          onSaved: (final value) {
             widget.question.answer = value.keys
-                .firstWhere((element) => value[element] == true,
+                .firstWhere((final element) => value[element] == true,
                     orElse: () => -1)
                 .toString();
           },
@@ -155,19 +155,19 @@ class _FeedbackQuestionFormFieldState extends State<FeedbackQuestionFormField> {
             labelText: S.current.labelAnswer,
             prefixIcon: const Icon(Icons.list_outlined),
           ),
-          onSaved: (selection) {
+          onSaved: (final selection) {
             widget.question.answer = selection;
           },
           items: (widget.question as FeedbackQuestionDropdown)
               .options
               .map(
-                (type) => DropdownMenuItem<String>(
+                (final type) => DropdownMenuItem<String>(
                   value: type,
                   child: Text(type.toString()),
                 ),
               )
               .toList(),
-          onChanged: (selection) {
+          onChanged: (final selection) {
             widget.question.answer = selection;
           },
         ),
@@ -193,7 +193,7 @@ class _FeedbackQuestionFormFieldState extends State<FeedbackQuestionFormField> {
             children: [
               TextFormField(
                 key: const Key('FeedbackText'),
-                onSaved: (value) {
+                onSaved: (final value) {
                   widget.question.answer = value;
                 },
                 keyboardType: TextInputType.multiline,
@@ -208,7 +208,7 @@ class _FeedbackQuestionFormFieldState extends State<FeedbackQuestionFormField> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     if (widget.question is FeedbackQuestionSlider) {
       return feedbackQuestionSlider();
     } else if (widget.question is FeedbackQuestionRating) {

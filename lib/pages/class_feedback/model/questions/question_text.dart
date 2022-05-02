@@ -1,11 +1,11 @@
-import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question.dart';
+import 'question.dart';
 
 class FeedbackQuestionText extends FeedbackQuestion {
   FeedbackQuestionText({
-    String question,
-    String category,
-    String id,
-    String answer,
+    final String question,
+    final String category,
+    final String id,
+    final String answer,
   }) : super(
           question: question,
           category: category,

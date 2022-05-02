@@ -1,11 +1,11 @@
-import 'package:acs_upb_mobile/pages/classes/model/class.dart';
-import 'package:acs_upb_mobile/pages/classes/view/class_view.dart';
-import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:acs_upb_mobile/generated/l10n.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:acs_upb_mobile/widgets/class_icon.dart';
+
+import '../../../generated/l10n.dart';
+import '../../../widgets/class_icon.dart';
+import '../../../widgets/scaffold.dart';
+import '../../classes/model/class.dart';
+import '../../classes/view/class_view.dart';
 
 class SearchedClassesView extends StatelessWidget {
   const SearchedClassesView({this.classHeaders, this.query});
@@ -14,7 +14,7 @@ class SearchedClassesView extends StatelessWidget {
   final String query;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return AppScaffold(
       title: Text(S.current.navigationSearchResults),
       body: Container(
@@ -23,7 +23,7 @@ class SearchedClassesView extends StatelessWidget {
             shrinkWrap: true,
             itemCount: classHeaders.length,
             scrollDirection: Axis.vertical,
-            itemBuilder: (BuildContext context, int index) {
+            itemBuilder: (final BuildContext context, final int index) {
               return Container(
                 padding: const EdgeInsets.fromLTRB(0, 0, 30, 0),
                 child: GestureDetector(
@@ -32,7 +32,7 @@ class SearchedClassesView extends StatelessWidget {
                         padding: const EdgeInsets.fromLTRB(0, 0, 10, 10),
                         child: CircleAvatar(
                           backgroundColor: classHeaders[index].colorFromAcronym,
-                          child: Container(
+                          child: SizedBox(
                             width: 30,
                             child: Align(
                               alignment: Alignment.center,
@@ -52,7 +52,7 @@ class SearchedClassesView extends StatelessWidget {
                     onTap: () => {
                           Navigator.of(context).push(
                             MaterialPageRoute<ClassView>(
-                              builder: (_) =>
+                              builder: (final _) =>
                                   ClassView(classHeader: classHeaders[index]),
                             ),
                           )

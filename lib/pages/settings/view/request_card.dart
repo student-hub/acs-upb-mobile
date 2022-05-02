@@ -1,16 +1,15 @@
 import 'dart:ui' as ui;
 
-import 'package:acs_upb_mobile/authentication/model/user.dart';
-import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
-import 'package:acs_upb_mobile/generated/l10n.dart';
-import 'package:acs_upb_mobile/pages/settings/model/request.dart';
-import 'package:acs_upb_mobile/pages/settings/service/admin_provider.dart';
-import 'package:acs_upb_mobile/resources/theme.dart';
-import 'package:acs_upb_mobile/resources/utils.dart';
-import 'package:acs_upb_mobile/widgets/button.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+
+import '../../../authentication/model/user.dart';
+import '../../../generated/l10n.dart';
+import '../../../resources/theme.dart';
+import '../../../widgets/button.dart';
+import '../model/request.dart';
+import '../service/admin_provider.dart';
 
 class RequestCard extends StatefulWidget {
   const RequestCard({this.requestId});
@@ -25,13 +24,13 @@ class RequestCard extends StatefulWidget {
 class _RequestCardState extends State<RequestCard>
     with AutomaticKeepAliveClientMixin {
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     super.build(context);
     final adminProvider = Provider.of<AdminProvider>(context);
 
     return FutureBuilder(
         future: adminProvider.fetchRequest(widget.requestId),
-        builder: (context, snapshot) {
+        builder: (final context, final snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             final Request request = snapshot.data;
             return Padding(
@@ -65,9 +64,9 @@ class _RequestCardState extends State<RequestCard>
         });
   }
 
-  Widget _buildUserHeader(Request request) => FutureBuilder(
+  Widget _buildUserHeader(final Request request) => FutureBuilder(
       future: Provider.of<AdminProvider>(context).fetchUserById(request.userId),
-      builder: (context, snapshot) {
+      builder: (final context, final snapshot) {
         User user;
         if (snapshot.connectionState == ConnectionState.done) {
           user = snapshot.data;
@@ -84,10 +83,10 @@ class _RequestCardState extends State<RequestCard>
                           ? '-'
                           : '${user?.firstName ?? S.current.errorUnknownUser} ${user?.lastName ?? ''}',
                       textDirection: ui.TextDirection.ltr,
-                      style: Theme.of(context)
-                          .textTheme
-                          .headline6
-                          .copyWith(fontSize: 18, fontWeight: FontWeight.bold),
+                      style: Theme.of(context).textTheme.headline6.copyWith(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
                       overflow: TextOverflow.ellipsis,
                       maxLines: 2,
                     ),
@@ -111,7 +110,7 @@ class _RequestCardState extends State<RequestCard>
             ]);
       });
 
-  Widget _buildAcceptedMarker(bool accepted) => Container(
+  Widget _buildAcceptedMarker(final bool accepted) => Container(
         padding: const EdgeInsets.all(5),
         decoration: BoxDecoration(
           border:
@@ -124,89 +123,83 @@ class _RequestCardState extends State<RequestCard>
         ),
       );
 
-  Widget _buildButtons(bool processed, Request request) => Row(
-        crossAxisAlignment: CrossAxisAlignment.end,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            '${DateFormat("dd-MM-yyyy").format(request.dateSubmitted?.toDate() ?? DateTime.now())}',
-            textDirection: ui.TextDirection.ltr,
-            style: Theme.of(context)
-                .textTheme
-                .headline6
-                .copyWith(fontSize: 12, color: Theme.of(context).hintColor),
-            overflow: TextOverflow.fade,
-            maxLines: 2,
-          ),
-          if (!processed)
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                AppButton(
-                  text: S.current.buttonDeny,
-                  color: Theme.of(context).secondaryButtonColor,
-                  width: 100,
-                  onTap: () async {
-                    final adminProvider =
-                        Provider.of<AdminProvider>(context, listen: false);
-                    await adminProvider.denyRequest(request.id);
-                    setState(() {
-                      request
-                        ..accepted = false
-                        ..processed = true;
-                    });
-                  },
-                ),
-                const SizedBox(width: 10),
-                AppButton(
-                  key: const Key('AcceptButton'),
-                  text: S.current.buttonAccept,
-                  color: Theme.of(context).accentColor,
-                  width: 100,
-                  onTap: () async {
-                    final adminProvider =
-                        Provider.of<AdminProvider>(context, listen: false);
-                    await adminProvider.acceptRequest(request.id);
-                    setState(() {
-                      request
-                        ..accepted = true
-                        ..processed = true;
-                    });
-                    final authProvider =
-                        Provider.of<AuthProvider>(context, listen: false);
-                    await Utils.launchURL(
-                        'mailto:${authProvider.email}?subject=Permisiuni%20ACS%20UPB%20Mobile&body=Ai%20primit%20permisiuni%20de%20editare%20în%20ACS%20UPB%20Mobile!');
-                  },
-                )
-              ],
-            )
-          else if (processed)
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                AppButton(
-                  text: S.current.buttonRevert,
-                  color: Theme.of(context).accentColor,
-                  width: 100,
-                  onTap: () async {
-                    final adminProvider =
-                        Provider.of<AdminProvider>(context, listen: false);
-                    await adminProvider.revertRequest(request.id);
-                    setState(() {
-                      request
-                        ..accepted = false
-                        ..processed = false;
-                    });
-                  },
-                )
-              ],
-            )
-        ],
-      );
+  Widget _buildButtons(final bool processed, final Request request) {
+    final adminProvider = Provider.of<AdminProvider>(context, listen: false);
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.end,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          '${DateFormat("dd-MM-yyyy").format(request.dateSubmitted?.toDate() ?? DateTime.now())}',
+          textDirection: ui.TextDirection.ltr,
+          style: Theme.of(context)
+              .textTheme
+              .headline6
+              .copyWith(fontSize: 12, color: Theme.of(context).hintColor),
+          overflow: TextOverflow.fade,
+          maxLines: 2,
+        ),
+        if (!processed)
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              AppButton(
+                text: S.current.buttonDeny,
+                color: Theme.of(context).secondaryButtonColor,
+                width: 100,
+                onTap: () async {
+                  await adminProvider.denyRequest(request.id);
+                  setState(() {
+                    request
+                      ..accepted = false
+                      ..processed = true;
+                  });
+                },
+              ),
+              const SizedBox(width: 10),
+              AppButton(
+                key: const Key('AcceptButton'),
+                text: S.current.buttonAccept,
+                color: Theme.of(context).primaryColor,
+                width: 100,
+                onTap: () async {
+                  await adminProvider.acceptRequest(request.id);
+                  setState(() {
+                    request
+                      ..accepted = true
+                      ..processed = true;
+                  });
+                },
+              )
+            ],
+          )
+        else if (processed)
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              AppButton(
+                text: S.current.buttonRevert,
+                color: Theme.of(context).primaryColor,
+                width: 100,
+                onTap: () async {
+                  await adminProvider.revertRequest(request.id);
+                  setState(() {
+                    request
+                      ..accepted = false
+                      ..processed = false;
+                  });
+                },
+              )
+            ],
+          )
+      ],
+    );
+  }
 
   @override
   bool get wantKeepAlive => true;
 
   @override
-  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
+  dynamic noSuchMethod(final Invocation invocation) =>
+      super.noSuchMethod(invocation);
 }

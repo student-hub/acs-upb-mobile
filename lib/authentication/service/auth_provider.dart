@@ -1,18 +1,19 @@
 import 'dart:async';
 import 'dart:typed_data';
 
-import 'package:acs_upb_mobile/authentication/model/user.dart';
-import 'package:acs_upb_mobile/generated/l10n.dart';
-import 'package:acs_upb_mobile/resources/storage/storage_provider.dart';
-import 'package:acs_upb_mobile/resources/validator.dart';
-import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' hide User;
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth show User;
 import 'package:flutter/material.dart';
 
+import '../../generated/l10n.dart';
+import '../../resources/storage_provider.dart';
+import '../../resources/validator.dart';
+import '../../widgets/toast.dart';
+import '../model/user.dart';
+
 extension DatabaseUser on User {
-  static User fromSnap(DocumentSnapshot snap) {
+  static User fromSnap(final DocumentSnapshot<Map<String, dynamic>> snap) {
     final data = snap.data();
     return User(
         uid: snap.id,
@@ -33,12 +34,13 @@ extension DatabaseUser on User {
 
 class AuthProvider with ChangeNotifier {
   AuthProvider() {
-    _userAuthSub = FirebaseAuth.instance.authStateChanges().listen((newUser) {
+    _userAuthSub =
+        FirebaseAuth.instance.authStateChanges().listen((final newUser) {
       print('AuthProvider - FirebaseAuth - authStateChanges - $newUser');
       _currentUser = null;
       _fetchUser();
       notifyListeners();
-    }, onError: (dynamic e) {
+    }, onError: (final dynamic e) {
       print('AuthProvider - FirebaseAuth - authStateChanges - $e');
     });
   }
@@ -56,7 +58,7 @@ class AuthProvider with ChangeNotifier {
     super.dispose();
   }
 
-  void _errorHandler(dynamic e, {bool showToast = true}) {
+  void _errorHandler(final dynamic e, {final bool showToast = true}) {
     try {
       print('${e.message} code: ${e.code}');
       if (showToast) {
@@ -109,7 +111,7 @@ class AuthProvider with ChangeNotifier {
 
   /// Check if the user verified their e-mail
   Future<bool> get isVerified async {
-    assert(_firebaseUser != null);
+    assert(_firebaseUser != null, 'firebase user should not be null');
     await _firebaseUser.reload();
     return !isAnonymous && _firebaseUser.emailVerified;
   }
@@ -125,7 +127,7 @@ class AuthProvider with ChangeNotifier {
 
   String get email => _firebaseUser.email;
 
-  bool _isOldFormat(Map<String, dynamic> userData) =>
+  bool _isOldFormat(final Map<String, dynamic> userData) =>
       userData['class'] != null && userData['class'] is Map;
 
   /// Change the `class` of the user data in Firebase to the new format.
@@ -134,10 +136,11 @@ class AuthProvider with ChangeNotifier {
   /// where the key is the name of the level in the filter tree.
   /// In the new format, the class is simply a `List<String>` that contains the
   /// name of the nodes.
-  Future<void> _migrateToNewClassFormat(Map<String, dynamic> userData) async {
+  Future<void> _migrateToNewClassFormat(
+      final Map<String, dynamic> userData) async {
     final classes = ['degree', 'domain', 'year', 'series', 'group', 'subgroup']
-        .map((key) => userData['class'][key].toString())
-        .where((s) => s != 'null')
+        .map((final key) => userData['class'][key].toString())
+        .where((final s) => s != 'null')
         .toList();
 
     userData['class'] = classes;
@@ -173,39 +176,42 @@ class AuthProvider with ChangeNotifier {
   User get currentUserFromCache => _currentUser;
 
   Future<bool> signInAnonymously() async {
-    return FirebaseAuth.instance.signInAnonymously().catchError((dynamic e) {
+    try {
+      await FirebaseAuth.instance.signInAnonymously();
+      return true;
+    } catch (e) {
       _errorHandler(e);
       return false;
-    }).then((_) => true);
+    }
   }
 
-  Future<bool> changePassword(String password) async {
+  Future<bool> changePassword(final String password) async {
     bool result = false;
-    await _firebaseUser.updatePassword(password).then((_) {
+    await _firebaseUser.updatePassword(password).then((final _) {
       result = true;
-    }).catchError((dynamic e) {
+    }).catchError((final dynamic e) {
       _errorHandler(e);
       result = false;
     });
     return result;
   }
 
-  Future<bool> changeEmail(String email) async {
+  Future<bool> changeEmail(final String email) async {
     bool result = false;
-    await _firebaseUser.updateEmail(email).then((_) {
+    await _firebaseUser.updateEmail(email).then((final _) {
       result = true;
-    }).catchError((dynamic e) {
+    }).catchError((final dynamic e) {
       _errorHandler(e);
       result = false;
     });
     return result;
   }
 
-  Future<bool> verifyPassword(String password) async {
+  Future<bool> verifyPassword(final String password) async {
     return signIn(_firebaseUser.email, password);
   }
 
-  Future<bool> signIn(String email, String password) async {
+  Future<bool> signIn(final String email, final String password) async {
     if (email == null || email == '') {
       AppToast.show(S.current.errorInvalidEmail);
       return false;
@@ -216,7 +222,7 @@ class AuthProvider with ChangeNotifier {
 
     final List<String> providers = await FirebaseAuth.instance
         .fetchSignInMethodsForEmail(email)
-        .catchError((dynamic e) {
+        .catchError((final dynamic e) {
       _errorHandler(e);
       return null;
     });
@@ -234,7 +240,7 @@ class AuthProvider with ChangeNotifier {
 
     final result = await FirebaseAuth.instance
         .signInWithEmailAndPassword(email: email, password: password)
-        .catchError((dynamic e) {
+        .catchError((final dynamic e) {
       _errorHandler(e);
       return null;
     });
@@ -249,8 +255,8 @@ class AuthProvider with ChangeNotifier {
     await FirebaseAuth.instance.signOut();
   }
 
-  Future<bool> delete({bool showToast = true}) async {
-    assert(_firebaseUser != null);
+  Future<bool> delete({final bool showToast = true}) async {
+    assert(_firebaseUser != null, 'firebase user to be deleted cannot be null');
 
     try {
       final DocumentReference ref =
@@ -276,8 +282,8 @@ class AuthProvider with ChangeNotifier {
     return true;
   }
 
-  Future<bool> canSignInWithPassword(String email,
-      {bool showToast = true}) async {
+  Future<bool> canSignInWithPassword(final String email,
+      {final bool showToast = true}) async {
     List<String> providers = [];
     try {
       providers = await FirebaseAuth.instance.fetchSignInMethodsForEmail(email);
@@ -292,7 +298,8 @@ class AuthProvider with ChangeNotifier {
     return accountExists;
   }
 
-  Future<bool> canSignUpWithEmail(String email, {bool showToast = true}) async {
+  Future<bool> canSignUpWithEmail(final String email,
+      {final bool showToast = true}) async {
     List<String> providers = [];
     try {
       providers = await FirebaseAuth.instance.fetchSignInMethodsForEmail(email);
@@ -307,7 +314,7 @@ class AuthProvider with ChangeNotifier {
     return !accountExists;
   }
 
-  Future<bool> sendPasswordResetEmail(String email) async {
+  Future<bool> sendPasswordResetEmail(final String email) async {
     try {
       await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
       AppToast.show(S.current.infoPasswordResetEmailSent);
@@ -319,7 +326,7 @@ class AuthProvider with ChangeNotifier {
   }
 
   /// Create a new user with the data in [info].
-  Future<bool> signUp(Map<String, dynamic> info) async {
+  Future<bool> signUp(final Map<String, dynamic> info) async {
     try {
       final email = info[S.current.labelEmail];
       final password = info[S.current.labelPassword];
@@ -405,7 +412,7 @@ class AuthProvider with ChangeNotifier {
   }
 
   /// Update the user information with the data in [info].
-  Future<bool> updateProfile(Map<String, dynamic> info) async {
+  Future<bool> updateProfile(final Map<String, dynamic> info) async {
     try {
       final firstName = info[S.current.labelFirstName];
       final lastName = info[S.current.labelLastName];
@@ -430,7 +437,7 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
-  Future<bool> uploadProfilePicture(Uint8List file) async {
+  Future<bool> uploadProfilePicture(final Uint8List file) async {
     final result = await StorageProvider.uploadImage(
         file, 'users/${_firebaseUser.uid}/picture.png');
     if (!result) {

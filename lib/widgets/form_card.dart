@@ -1,17 +1,17 @@
-import 'package:acs_upb_mobile/resources/custom_icons.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:recase/recase.dart';
+
+import '../resources/custom_icons.dart';
 
 class FormCardField {
   FormCardField({
     this.label,
     this.additionalHint,
     this.hint,
-    TextEditingController controller,
-    FocusNode focusNode,
-    void Function(String) onSubmitted,
-    void Function(String) onChanged,
+    final TextEditingController controller,
+    final FocusNode focusNode,
+    final void Function(String) onSubmitted,
+    final void Function(String) onChanged,
     this.check,
     this.obscureText = false,
     this.suffix,
@@ -19,8 +19,8 @@ class FormCardField {
     this.enableSuggestions = true,
     this.keyboardType = TextInputType.text,
     this.autofillHints,
-  })  : onSubmitted = onSubmitted ?? ((_) {}),
-        onChanged = onChanged ?? ((_) {}),
+  })  : onSubmitted = onSubmitted ?? ((final _) {}),
+        onChanged = onChanged ?? ((final _) {}),
         controller = controller ?? TextEditingController(),
         focusNode = focusNode ?? FocusNode();
 
@@ -45,7 +45,7 @@ class FormCard extends StatefulWidget {
       {this.title,
       this.fields,
       this.onSubmitted,
-      List<Widget> trailing,
+      final List<Widget> trailing,
       this.submitOnEnter = true})
       : trailing = trailing ?? <Widget>[];
 
@@ -70,14 +70,14 @@ class FormCard extends StatefulWidget {
 
 class _FormCardState extends State<FormCard> {
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final children = widget.fields
         .asMap()
-        .map((index, field) => MapEntry(
+        .map((final index, final field) => MapEntry(
             index,
             _FormCardTextField(
               field: field,
-              onSubmitted: (input) {
+              onSubmitted: (final input) {
                 if (index < widget.fields.length - 1) {
                   FocusScope.of(context)
                       .requestFocus(widget.fields[index + 1].focusNode);
@@ -151,7 +151,7 @@ class _FormCardState extends State<FormCard> {
 }
 
 class _FormCardTextField extends StatefulWidget {
-  const _FormCardTextField({Key key, this.field, this.onSubmitted})
+  const _FormCardTextField({final Key key, this.field, this.onSubmitted})
       : super(key: key);
 
   final FormCardField field;
@@ -184,7 +184,8 @@ class _FormCardTextFieldState extends State<_FormCardTextField> {
       : IntrinsicWidth(
           child: FutureBuilder(
             future: valid,
-            builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+            builder: (final BuildContext context,
+                final AsyncSnapshot<bool> snapshot) {
               if (snapshot.data == null) {
                 // No icon
                 return Container();
@@ -206,7 +207,7 @@ class _FormCardTextFieldState extends State<_FormCardTextField> {
         );
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final Widget suffixIcon = buildSuffixIcon();
 
     return IntrinsicHeight(
@@ -242,7 +243,7 @@ class _FormCardTextFieldState extends State<_FormCardTextField> {
                     controller: widget.field.controller,
                     focusNode: widget.field.focusNode,
                     showCursor: showCursor,
-                    onChanged: (text) => setState(() {
+                    onChanged: (final text) => setState(() {
                       if (widget.field.onChanged != null) {
                         widget.field.onChanged(text);
                       }

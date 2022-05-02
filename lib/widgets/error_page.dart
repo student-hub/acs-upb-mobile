@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../resources/theme.dart';
+
 class ErrorPage extends StatelessWidget {
   const ErrorPage({
     this.imgPath = 'assets/illustrations/undraw_warning.png',
@@ -7,7 +9,7 @@ class ErrorPage extends StatelessWidget {
     this.info,
     this.actionText,
     this.actionOnTap,
-    Key key,
+    final Key key,
   }) : super(key: key);
 
   final String imgPath;
@@ -17,7 +19,7 @@ class ErrorPage extends StatelessWidget {
   final void Function() actionOnTap;
 
   @override
-  Widget build(BuildContext context) => Padding(
+  Widget build(final BuildContext context) => Padding(
         padding: const EdgeInsets.all(10),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -66,7 +68,7 @@ class ErrorPage extends StatelessWidget {
                         onTap: actionOnTap,
                         child: Text(actionText,
                             style: Theme.of(context)
-                                .accentTextTheme
+                                .coloredTextTheme
                                 .subtitle2
                                 .copyWith(fontWeight: FontWeight.w500)),
                       ),

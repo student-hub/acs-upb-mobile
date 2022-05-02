@@ -1,7 +1,8 @@
 import 'dart:async';
 
-import 'package:acs_upb_mobile/pages/settings/model/issue.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+
+import '../model/issue.dart';
 
 extension IssueExtension on Issue {
   Map<String, dynamic> toData() {
@@ -20,7 +21,7 @@ extension IssueExtension on Issue {
 class IssueProvider {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
 
-  Future<bool> makeIssue(Issue issue) async {
+  Future<bool> makeIssue(final Issue issue) async {
     assert(issue.issueBody != null);
 
     try {

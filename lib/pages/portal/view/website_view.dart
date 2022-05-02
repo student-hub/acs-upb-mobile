@@ -1,33 +1,33 @@
 import 'dart:typed_data';
 
-import 'package:acs_upb_mobile/authentication/model/user.dart';
-import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
-import 'package:acs_upb_mobile/generated/l10n.dart';
-import 'package:acs_upb_mobile/pages/filter/view/relevance_picker.dart';
-import 'package:acs_upb_mobile/pages/portal/model/website.dart';
-import 'package:acs_upb_mobile/pages/portal/service/website_provider.dart';
-import 'package:acs_upb_mobile/resources/locale_provider.dart';
-import 'package:acs_upb_mobile/resources/storage/storage_provider.dart';
-import 'package:acs_upb_mobile/resources/theme.dart';
-import 'package:acs_upb_mobile/resources/utils.dart';
-import 'package:acs_upb_mobile/widgets/button.dart';
-import 'package:acs_upb_mobile/widgets/circle_image.dart';
-import 'package:acs_upb_mobile/widgets/dialog.dart';
-import 'package:acs_upb_mobile/widgets/scaffold.dart';
-import 'package:acs_upb_mobile/widgets/toast.dart';
-import 'package:acs_upb_mobile/widgets/upload_button.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:provider/provider.dart';
 import 'package:recase/recase.dart';
 import 'package:validators/validators.dart';
 
+import '../../../authentication/model/user.dart';
+import '../../../authentication/service/auth_provider.dart';
+import '../../../generated/l10n.dart';
+import '../../../resources/locale_provider.dart';
+import '../../../resources/storage_provider.dart';
+import '../../../resources/theme.dart';
+import '../../../resources/utils.dart';
+import '../../../widgets/button.dart';
+import '../../../widgets/circle_image.dart';
+import '../../../widgets/dialog.dart';
+import '../../../widgets/scaffold.dart';
+import '../../../widgets/toast.dart';
+import '../../../widgets/upload_button.dart';
+import '../../filter/view/relevance_picker.dart';
+import '../model/website.dart';
+import '../service/website_provider.dart';
+
 class WebsiteView extends StatefulWidget {
   // If [updateExisting] is true, this acts like an "Edit website" page starting
   // from the info in [website]. Otherwise, it acts like an "Add website" page.
-  WebsiteView({Key key, this.website, this.updateExisting = false})
+  WebsiteView({final Key key, this.website, this.updateExisting = false})
       : super(key: key) {
     if (updateExisting == true && website == null) {
       throw ArgumentError(
@@ -83,7 +83,7 @@ class _WebsiteViewState extends State<WebsiteView> {
     }
     descriptionRoController = TextEditingController(text: description['ro']);
     descriptionEnController = TextEditingController(text: description['en']);
-    widget.website.getIconURL().then((value) => setState(() => {
+    widget.website.getIconURL().then((final value) => setState(() => {
           imageWidget = value != null
               ? NetworkImage(value)
               : const AssetImage('assets/icons/globe.png')
@@ -183,7 +183,7 @@ class _WebsiteViewState extends State<WebsiteView> {
     );
   }
 
-  AppDialog deletionConfirmationDialog(BuildContext context) => AppDialog(
+  AppDialog deletionConfirmationDialog(final BuildContext context) => AppDialog(
         icon: const Icon(Icons.delete_outlined),
         title: S.current.actionDeleteWebsite,
         message: S.current.messageDeleteWebsite,
@@ -201,6 +201,7 @@ class _WebsiteViewState extends State<WebsiteView> {
                   Provider.of<WebsiteProvider>(context, listen: false);
               final res = await websiteProvider.deleteWebsite(widget.website);
               if (res) {
+                if (!mounted) return;
                 Navigator.pop(context); // Pop editing page
                 AppToast.show(S.current.messageWebsiteDeleted);
               }
@@ -210,7 +211,7 @@ class _WebsiteViewState extends State<WebsiteView> {
       );
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     Uint8List imageAsPNG;
 
     return AppScaffold(
@@ -241,6 +242,8 @@ class _WebsiteViewState extends State<WebsiteView> {
                     AppToast.show(widget.updateExisting
                         ? S.current.messageWebsiteEdited
                         : S.current.messageWebsiteAdded);
+
+                    if (!mounted) return;
                     Navigator.of(context).pop();
                   }
                 }
@@ -252,10 +255,10 @@ class _WebsiteViewState extends State<WebsiteView> {
                   AppScaffoldAction(
                     icon: Icons.more_vert_outlined,
                     items: {
-                      S.current.actionDeleteWebsite: () => showDialog(
+                      S.current.actionDeleteWebsite: () => showDialog<dynamic>(
                           context: context, builder: deletionConfirmationDialog)
                     },
-                    onPressed: () => showDialog(
+                    onPressed: () => showDialog<dynamic>(
                         context: context, builder: deletionConfirmationDialog),
                   )
                 ]
@@ -280,7 +283,7 @@ class _WebsiteViewState extends State<WebsiteView> {
                         hintText: S.current.hintWebsiteLabel,
                         prefixIcon: const Icon(Icons.label_outlined),
                       ),
-                      onChanged: (_) => setState(() {}),
+                      onChanged: (final _) => setState(() {}),
                     ),
                     DropdownButtonFormField<WebsiteCategory>(
                       isExpanded: true,
@@ -291,13 +294,14 @@ class _WebsiteViewState extends State<WebsiteView> {
                       value: selectedCategory,
                       items: WebsiteCategory.values
                           .map(
-                            (category) => DropdownMenuItem<WebsiteCategory>(
+                            (final category) =>
+                                DropdownMenuItem<WebsiteCategory>(
                               value: category,
                               child: Text(category.toLocalizedString()),
                             ),
                           )
                           .toList(),
-                      onChanged: (selection) =>
+                      onChanged: (final selection) =>
                           setState(() => selectedCategory = selection),
                     ),
                     TextFormField(
@@ -307,13 +311,13 @@ class _WebsiteViewState extends State<WebsiteView> {
                         hintText: S.current.hintWebsiteLink,
                         prefixIcon: const Icon(FeatherIcons.globe),
                       ),
-                      validator: (value) {
+                      validator: (final value) {
                         if (!isURL(value, requireProtocol: true)) {
                           return S.current.warningInvalidURL;
                         }
                         return null;
                       },
-                      onChanged: (_) => setState(() {}),
+                      onChanged: (final _) => setState(() {}),
                     ),
                     RelevanceFormField(
                       canBePrivate: true,
@@ -328,7 +332,7 @@ class _WebsiteViewState extends State<WebsiteView> {
                               '${S.current.labelDescription} (${S.current.settingsItemLanguageRomanian.toLowerCase()})',
                           hintText: 'Cel mai popular motor de căutare.',
                           prefixIcon: const Icon(Icons.info_outlined)),
-                      onChanged: (_) => setState(() {}),
+                      onChanged: (final _) => setState(() {}),
                       minLines: 1,
                       maxLines: 5,
                     ),
@@ -339,7 +343,7 @@ class _WebsiteViewState extends State<WebsiteView> {
                               '${S.current.labelDescription} (${S.current.settingsItemLanguageEnglish.toLowerCase()})',
                           hintText: 'The most popular search engine.',
                           prefixIcon: const Icon(Icons.info_outlined)),
-                      onChanged: (_) => setState(() {}),
+                      onChanged: (final _) => setState(() {}),
                       minLines: 1,
                       maxLines: 5,
                     ),
@@ -367,15 +371,14 @@ class WebsiteIcon extends StatelessWidget {
   final Function onTap;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     if (image == null) {
       return FutureBuilder(
           future: StorageProvider.findImageUrl(website.iconPath),
-          // Firebase Storage path
-          builder: (context, snapshot) {
+          builder: (final context, final snapshot) {
             ImageProvider oldImage;
             if (snapshot.hasData) {
-              oldImage = NetworkImage(snapshot.data);
+              oldImage = Image.network(snapshot.data.toString()).image;
             }
 
             return CircleImage(

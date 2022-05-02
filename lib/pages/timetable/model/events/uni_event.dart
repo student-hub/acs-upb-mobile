@@ -1,11 +1,12 @@
 import 'dart:core';
 
-import 'package:acs_upb_mobile/generated/l10n.dart';
-import 'package:acs_upb_mobile/pages/classes/model/class.dart';
-import 'package:acs_upb_mobile/pages/timetable/model/academic_calendar.dart';
-import 'package:flutter/material.dart';
-import 'package:time_machine/time_machine.dart';
+import 'package:flutter/material.dart' hide Interval;
 import 'package:timetable/timetable.dart';
+
+import '../../../../generated/l10n.dart';
+import '../../../classes/model/class.dart';
+import '../../timetable_utils.dart';
+import '../academic_calendar.dart';
 
 enum UniEventType {
   lecture,
@@ -35,9 +36,10 @@ extension UniEventTypeExtension on UniEventType {
         return S.current.uniEventTypeHoliday;
       case UniEventType.examSession:
         return S.current.uniEventTypeExamSession;
-      default:
+      case UniEventType.other:
         return S.current.uniEventTypeOther;
     }
+    return S.current.uniEventTypeOther;
   }
 
   static List<UniEventType> get classTypes => [
@@ -47,7 +49,7 @@ extension UniEventTypeExtension on UniEventType {
         UniEventType.sports
       ];
 
-  static UniEventType fromString(String string) {
+  static UniEventType fromString(final String string) {
     switch (string) {
       case 'lab':
         return UniEventType.lab;
@@ -84,9 +86,10 @@ extension UniEventTypeExtension on UniEventType {
         return Colors.yellow;
       case UniEventType.examSession:
         return Colors.red;
-      default:
+      case UniEventType.other:
         return Colors.white;
     }
+    return Colors.white;
   }
 }
 
@@ -104,14 +107,14 @@ class UniEvent {
     this.relevance,
     this.degree,
     this.addedBy,
-    bool editable,
+    final bool editable,
   }) : editable = editable ?? true;
 
   final String id;
   final Color color;
   final UniEventType type;
-  final LocalDateTime start;
-  final Period duration;
+  final DateTime start;
+  final Duration duration;
   final String name;
   final String location;
   final ClassHeader classHeader;
@@ -126,20 +129,21 @@ class UniEvent {
   }
 
   Iterable<UniEventInstance> generateInstances(
-      {DateInterval intersectingInterval}) sync* {
-    final LocalDateTime end = start.add(duration);
+      {final Interval intersectingInterval}) sync* {
+    final DateTime end = start.add(duration);
     if (intersectingInterval != null) {
-      if (end.calendarDate < intersectingInterval.start ||
-          start.calendarDate > intersectingInterval.end) return;
+      if (end < intersectingInterval.start ||
+          start > intersectingInterval.end) {
+        return;
+      }
     }
 
     yield UniEventInstance(
-      id: id,
       title: name,
       mainEvent: this,
       color: color,
-      start: start,
-      end: start.add(duration),
+      start: start.copyWith(isUtc: true),
+      end: start.add(duration).copyWith(isUtc: true),
       location: location,
     );
   }
@@ -147,26 +151,24 @@ class UniEvent {
 
 class UniEventInstance extends Event {
   UniEventInstance({
-    @required String id,
     @required this.title,
     @required this.mainEvent,
-    @required LocalDateTime start,
-    @required LocalDateTime end,
-    Color color,
+    @required final DateTime start,
+    @required final DateTime end,
+    final Color color,
     this.location,
     this.info,
   })  : color = color ?? mainEvent?.color,
-        super(id: id, start: start, end: end);
+        super(start: start, end: end);
 
   final UniEvent mainEvent;
   final String title;
-
   final Color color;
   final String location;
   final String info;
 
   @override
-  bool operator ==(dynamic other) =>
+  bool operator ==(final dynamic other) =>
       super == other &&
       color == other.color &&
       location == other.location &&
@@ -181,33 +183,50 @@ class UniEventInstance extends Event {
 
   String get relativeDateString => getDateString(useRelativeDayFormat: true);
 
-  String getDateString({bool useRelativeDayFormat}) {
-    final LocalDateTime end = this.end.clockTime.equals(LocalTime(00, 00, 00))
-        ? this.end.subtractDays(1)
-        : this.end;
+  String getDateString({final bool useRelativeDayFormat}) {
+    final DateTime end =
+        this.end.isMidnight() ? this.end.subtractDays(1) : this.end;
 
-    String string =
-        useRelativeDayFormat && start.calendarDate.equals(LocalDate.today())
-            ? S.current.labelToday
-            : useRelativeDayFormat &&
-                    start.calendarDate.subtractDays(1).equals(LocalDate.today())
-                ? S.current.labelTomorrow
-                : start.calendarDate.toString('dddd, dd MMMM');
+    String string = useRelativeDayFormat && start.isToday
+        ? S.current.labelToday
+        : useRelativeDayFormat && start.subtractDays(1).isToday
+            ? S.current.labelTomorrow
+            : start.toStringWithFormat('EEEE, d MMMM');
 
-    if (!start.clockTime.equals(LocalTime(00, 00, 00))) {
-      string += ' • ${start.clockTime.toString('HH:mm')}';
+    if (!start.isMidnight()) {
+      string += ' • ${start.toStringWithFormat('HH:mm')}';
     }
-    if (start.calendarDate != end.calendarDate) {
-      string += ' - ${end.calendarDate.toString('dddd, dd MMMM')}';
+    if (start.atStartOfDay != end.atStartOfDay) {
+      string += ' - ${end.toStringWithFormat('EEEE, d MMMM')}';
     }
-    if (!end.clockTime.equals(LocalTime(00, 00, 00))) {
-      if (start.calendarDate != end.calendarDate) {
+    if (!end.isMidnight()) {
+      if (start.atStartOfDay != end.atStartOfDay) {
         string += ' • ';
       } else {
         string += '-';
       }
-      string += end.clockTime.toString('HH:mm');
+      string += end.toStringWithFormat('HH:mm');
     }
     return string;
+  }
+
+  UniEventInstance copyWith({
+    final DateTime start,
+    final DateTime end,
+    final String title,
+    final UniEvent mainEvent,
+    final Color color,
+    final String location,
+    final String info,
+  }) {
+    return UniEventInstance(
+      start: start ?? this.start,
+      end: end ?? this.end,
+      title: title ?? this.title,
+      mainEvent: mainEvent ?? this.mainEvent,
+      color: color ?? this.color,
+      location: location ?? this.location,
+      info: info ?? this.info,
+    );
   }
 }

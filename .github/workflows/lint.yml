@@ -1,90 +1,86 @@
 on:
   push:
     branches:
-      - master
+    - master
   pull_request:
 
 name: Linter
 jobs:
   format:
-      name: Format
-      runs-on: ubuntu-latest
-      steps:
-      - uses: actions/checkout@v1
-      - uses: subosito/flutter-action@v1
-        with:
-          flutter-version: '1.24.x'
-          channel: 'beta'
-      - name: Check formattting
-        run: |
-          if find . -name *.dart -not -path "./lib/generated/*" -exec flutter format --set-exit-if-changed --dry-run {} +
-          then
-            echo "The code formatting is nice and tidy."
-          else
-            echo "Please fix the formatting of the files listed above."
-            exit 1
-          fi
-
+    name: Format
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - uses: subosito/flutter-action@v1
+      with:
+        channel: 'stable'
+    - name: Check formattting
+      run: |
+        if find . -name *.dart -not -path "./lib/generated/*" -exec flutter format --set-exit-if-changed --dry-run {} +
+        then
+          echo "The code formatting is nice and tidy."
+        else
+          echo "Please fix the formatting of the files listed above."
+          exit 1
+        fi
   analysis:
     name: Lint
     runs-on: ubuntu-latest
     if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name != github.repository)
     steps:
-      - uses: actions/checkout@v1
-      - uses: subosito/flutter-action@v1
-        with:
-          flutter-version: '1.24.x'
-          channel: 'beta'
-      - name: Install dependencies
-        run: flutter pub get
-      - name: Run linter
-        run: flutter analyze
+    - uses: actions/checkout@v1
+    - uses: subosito/flutter-action@v1
+      with:
+        channel: 'stable'
+    - name: Install dependencies
+      run: flutter pub get
+    - name: Run linter
+      run: flutter analyze
 
   code_review:
-      name: Code Review
-      runs-on: ubuntu-latest
-      if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
-      steps:
-        - uses: actions/checkout@v1
-        - uses: subosito/flutter-action@v1
-          with:
-            flutter-version: '1.24.x'
-            channel: 'beta'
-        - name: Install dependencies
-          run: flutter pub get
-        - name: Run linter
-          run: flutter analyze > flutter_analyze_report.txt
-          continue-on-error: true
-        - name: Install Ruby
-          uses: actions/setup-ruby@v1
-          with:
-            ruby-version: "2.6"
-        - uses: actions/cache@v1
-          with:
-            path: vendor/bundle
-            key: ${{ runner.os }}-gems-${{ hashFiles('.github/linter/Gemfile') }}
-            restore-keys: |
-              ${{ runner.os }}-gems-
-        - name: Install Node
-          uses: actions/setup-node@v1
-          with:
-            node-version: '12'
-        - name: Install Node packages
-          run: npm install .github/linter
-        - name: Install Python
-          uses: actions/setup-python@v2
-          with:
-            python-version: '3.x'
-        - name: Install proselint
-          run: pip install proselint
-        - name: Set up proselint config
-          run: cp .github/linter/.proselintrc ~/.proselintrc
-        - name: Run danger on generated report
-          uses: MeilCli/danger-action@v5
-          with:
-            danger_file: .github/linter/Dangerfile
-            plugins_file: .github/linter/Gemfile
-            install_path: 'vendor/bundle'
-            danger_id: "danger-pr"
-          env:
-            DANGER_GITHUB_API_TOKEN: ${{ secrets.BOT_TOKEN }}
+    name: Code Review
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
+    steps:
+    - uses: actions/checkout@v1
+    - uses: subosito/flutter-action@v1
+      with:
+        channel: 'stable'
+    - name: Install dependencies
+      run: flutter pub get
+    - name: Run linter
+      run: flutter analyze > flutter_analyze_report.txt
+      continue-on-error: true
+    - name: Install Ruby
+      uses: actions/setup-ruby@v1
+      with:
+        ruby-version: "2.6"
+    - uses: actions/cache@v1
+      with:
+        path: vendor/bundle
+        key: ${{ runner.os }}-gems-${{ hashFiles('.github/linter/Gemfile') }}
+        restore-keys: |
+          ${{ runner.os }}-gems-
+    - name: Install Node
+      uses: actions/setup-node@v1
+      with:
+        node-version: '12'
+    - name: Install Node packages
+      run: npm install .github/linter
+    - name: Install Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'
+    - name: Install proselint
+      run: pip install proselint
+    - name: Set up proselint config
+      run: cp .github/linter/.proselintrc ~/.proselintrc
+    - name: Run danger on generated report
+      uses: MeilCli/danger-action@v5
+      with:
+        danger_file: .github/linter/Dangerfile
+        plugins_file: .github/linter/Gemfile
+        install_path: 'vendor/bundle'
+        danger_id: "danger-pr"
+      env:
+        DANGER_GITHUB_API_TOKEN: ${{ secrets.BOT_TOKEN }}

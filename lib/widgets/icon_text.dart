@@ -4,7 +4,7 @@ class IconText extends StatelessWidget {
   const IconText(
       {@required this.icon,
       @required this.text,
-      Key key,
+      final Key key,
       this.actionText,
       this.actionArrow = false,
       this.style,
@@ -16,7 +16,7 @@ class IconText extends StatelessWidget {
   final String text;
 
   /// Optional "action" text. If this is specified, it will show after the
-  /// [text], have the theme's `accentColor`, and will be the trigger area for
+  /// [text], have the theme's `primaryColor`, and will be the trigger area for
   /// [onTap].
   final String actionText;
 
@@ -29,10 +29,10 @@ class IconText extends StatelessWidget {
   final TextAlign align;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final textStyle = style ?? Theme.of(context).textTheme.bodyText1;
     final actionStyle = textStyle
-        .copyWith(color: Theme.of(context).accentColor)
+        .copyWith(color: Theme.of(context).primaryColor)
         .apply(fontWeightDelta: 2);
 
     return InkWell(

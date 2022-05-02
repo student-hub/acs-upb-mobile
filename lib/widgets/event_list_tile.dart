@@ -1,7 +1,7 @@
-import 'package:acs_upb_mobile/pages/timetable/model/events/uni_event.dart';
-import 'package:acs_upb_mobile/pages/timetable/view/events/event_view.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
+import '../pages/timetable/model/events/uni_event.dart';
+import '../pages/timetable/view/events/event_view.dart';
 
 class EventListTile extends StatelessWidget {
   const EventListTile({
@@ -11,7 +11,7 @@ class EventListTile extends StatelessWidget {
   final UniEvent uniEvent;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return ListTile(
       key: ValueKey(uniEvent.id),
       leading: Padding(
@@ -34,7 +34,7 @@ class EventListTile extends StatelessWidget {
             .copyWith(color: Theme.of(context).hintColor),
       ),
       onTap: () => Navigator.of(context).push(MaterialPageRoute<EventView>(
-        builder: (_) => EventView(uniEvent: uniEvent),
+        builder: (final _) => EventView(uniEvent: uniEvent),
       )),
     );
   }

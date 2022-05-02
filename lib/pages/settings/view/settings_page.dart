@@ -1,21 +1,22 @@
 import 'dart:io';
 
-import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
-import 'package:acs_upb_mobile/generated/l10n.dart';
-import 'package:acs_upb_mobile/navigation/routes.dart';
-import 'package:acs_upb_mobile/pages/settings/service/request_provider.dart';
-import 'package:acs_upb_mobile/pages/timetable/service/uni_event_provider.dart';
-import 'package:acs_upb_mobile/resources/locale_provider.dart';
-import 'package:acs_upb_mobile/resources/utils.dart';
-import 'package:acs_upb_mobile/widgets/icon_text.dart';
-import 'package:acs_upb_mobile/widgets/scaffold.dart';
-import 'package:acs_upb_mobile/widgets/toast.dart';
-import 'package:dynamic_theme/dynamic_theme.dart';
+import 'package:easy_dynamic_theme/easy_dynamic_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
-import 'package:preferences/preferences.dart';
+import 'package:pref/pref.dart';
 import 'package:provider/provider.dart';
-import 'package:time_machine/time_machine.dart';
+
+import '../../../authentication/service/auth_provider.dart';
+import '../../../generated/l10n.dart';
+import '../../../navigation/routes.dart';
+import '../../../resources/locale_provider.dart';
+import '../../../resources/theme.dart';
+import '../../../resources/utils.dart';
+import '../../../widgets/icon_text.dart';
+import '../../../widgets/scaffold.dart';
+import '../../../widgets/toast.dart';
+import '../../timetable/service/uni_event_provider.dart';
+import '../service/request_provider.dart';
 
 class SettingsPage extends StatefulWidget {
   static const String routeName = '/settings';
@@ -37,53 +38,54 @@ class _SettingsPageState extends State<SettingsPage> {
     super.initState();
     Provider.of<AuthProvider>(context, listen: false)
         .isVerified
-        .then((value) => setState(() => isVerified = value));
+        .then((final value) => setState(() => isVerified = value));
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final AuthProvider authProvider = Provider.of<AuthProvider>(context);
     if (userPermissionString.isEmpty) {
       userPermissionString = S.current.infoLoading;
       checkUserPermissionsString()
-          .then((value) => setState(() => userPermissionString = value));
+          .then((final value) => setState(() => userPermissionString = value));
     }
 
     return AppScaffold(
       title: Text(S.current.navigationSettings),
-      body: PreferencePage(
-        [
+      body: PrefPage(
+        children: [
           Padding(
             padding: const EdgeInsets.all(10),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Center(
-                  child: Container(
+                  child: SizedBox(
                       height: MediaQuery.of(context).size.height / 3,
                       child: Image.asset(
                           'assets/illustrations/undraw_settings.png')),
                 ),
-                PreferenceTitle(S.current.settingsTitlePersonalization),
-                SwitchPreference(
-                  S.current.settingsItemDarkMode,
-                  'dark_mode',
-                  onEnable: () {
-                    DynamicTheme.of(context).setBrightness(Brightness.dark);
+                const SizedBox(height: 10),
+                categoryTitle(S.current.settingsTitlePersonalization),
+                // TODO(IoanaAlexandru): Make this an option out of 3 (light, dark, auto)
+                PrefSwitch(
+                  title: Text(S.current.settingsItemDarkMode),
+                  pref: 'dark_mode',
+                  onChange: (final selected) {
+                    if (selected) {
+                      EasyDynamicTheme.of(context).changeTheme(dark: true);
+                    } else {
+                      EasyDynamicTheme.of(context).changeTheme(dark: false);
+                    }
                   },
-                  onDisable: () {
-                    DynamicTheme.of(context).setBrightness(Brightness.light);
-                  },
-                  defaultVal: MediaQuery.of(context).platformBrightness ==
-                      Brightness.dark,
                 ),
-                PreferenceTitle(S.current.settingsTitleLocalization),
-                PreferenceDialogLink(
-                  S.current.settingsItemLanguage,
-                  desc:
-                      languagePrefString(context, PrefService.get('language')),
-                  dialog: PreferenceDialog(
-                    [
+                categoryTitle(S.current.settingsTitleLocalization),
+                PrefDialogButton(
+                  title: Text(S.current.settingsItemLanguage),
+                  subtitle: Text(
+                      languagePrefString(context, prefService.get('language'))),
+                  dialog: PrefDialog(
+                    children: [
                       languageRadioPreference(context, 'ro'),
                       languageRadioPreference(context, 'en'),
                       languageRadioPreference(context, 'auto'),
@@ -91,7 +93,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     onlySaveOnSubmit: false,
                   ),
                 ),
-                PreferenceTitle(S.current.settingsTitleDataControl),
+                categoryTitle(S.current.settingsTitleDataControl),
                 ListTile(
                   key: const ValueKey('ask_permissions'),
                   onTap: () {
@@ -129,7 +131,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
                 Visibility(
                   visible: Platform.isAndroid || Platform.isIOS,
-                  child: PreferenceTitle(S.current.settingsTitleTimetable),
+                  child: categoryTitle(S.current.settingsTitleTimetable),
                 ),
                 Visibility(
                   visible: Platform.isAndroid || Platform.isIOS,
@@ -149,7 +151,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     subtitle: Text(S.current.infoExportToGoogleCalendar),
                   ),
                 ),
-                PreferenceTitle(S.current.labelFeedback),
+                categoryTitle(S.current.labelFeedback),
                 ListTile(
                   key: const ValueKey('feedback_and_issues'),
                   onTap: () {
@@ -200,30 +202,35 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 
-  RadioPreference<String> languageRadioPreference(
-      BuildContext context, String preference) {
-    return RadioPreference(
-      languagePrefString(context, preference),
-      preference,
-      'language',
+  Widget categoryTitle(final String title) => Padding(
+        padding: const EdgeInsets.only(left: 10, top: 10),
+        child: Text(
+          title,
+          style: Theme.of(context)
+              .coloredTextTheme
+              .subtitle2
+              .apply(fontWeightDelta: 2),
+        ),
+      );
+
+  PrefRadio<String> languageRadioPreference(
+      final BuildContext context, final String preference) {
+    return PrefRadio(
+      title: Text(languagePrefString(context, preference)),
+      value: preference,
+      pref: 'language',
       onSelect: () {
         // Reload settings page
         setState(() {
-          Culture.current = LocaleProvider.cultures[preference];
           S.load(LocaleProvider.localeFromString(preference));
           Navigator.of(context).pop();
-
-          // Hack to notify all widgets that something changed, since the
-          // localizations delegate doesn't do that. Pretend to change the theme
-          // so that listeners have to reload.
-          DynamicTheme.of(context)
-              .setBrightness(DynamicTheme.of(context).brightness);
         });
       },
     );
   }
 
-  String languagePrefString(BuildContext context, String preference) {
+  String languagePrefString(
+      final BuildContext context, final String preference) {
     switch (preference) {
       case 'en':
         return S.current.settingsItemLanguageEnglish;

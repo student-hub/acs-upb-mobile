@@ -1,18 +1,20 @@
-import 'package:acs_upb_mobile/pages/classes/model/class.dart';
-import 'package:acs_upb_mobile/pages/timetable/model/events/recurring_event.dart';
-import 'package:acs_upb_mobile/pages/timetable/model/events/uni_event.dart';
-import 'package:acs_upb_mobile/pages/timetable/service/uni_event_provider.dart';
-import 'package:acs_upb_mobile/resources/utils.dart';
-import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:googleapis/calendar/v3.dart' as g_cal;
 import 'package:googleapis/calendar/v3.dart';
 import 'package:googleapis_auth/auth_io.dart';
-import 'package:acs_upb_mobile/generated/l10n.dart';
+import 'package:rrule/rrule.dart';
+
+import '../../../generated/l10n.dart';
+import '../../../resources/utils.dart';
+import '../../../widgets/toast.dart';
+import '../../classes/model/class.dart';
+import '../model/events/recurring_event.dart';
+import '../model/events/uni_event.dart';
+import 'uni_event_provider.dart';
 
 class GoogleCalendarServices {
-  GoogleCalendarServices();
+  const GoogleCalendarServices();
 
-  // allows us to see, edit, share, and permanently delete all the calendars you can access using GCal
+  // Allows us to see, edit, share, and permanently delete all the calendars you can access using GCal.
   static const List<String> _scopes = [CalendarApi.calendarScope];
 
   static List<String> get scopes => _scopes;
@@ -35,18 +37,18 @@ class GoogleCalendarServices {
 }
 
 extension UniEventProviderGoogleCalendar on UniEventProvider {
-  g_cal.Event convertEvent(UniEvent uniEvent) {
+  g_cal.Event convertEvent(final UniEvent uniEvent) {
     final g_cal.Event googleCalendarEvent = g_cal.Event();
 
     final g_cal.EventDateTime start = g_cal.EventDateTime();
-    final DateTime startDateTime = uniEvent.start.toDateTimeLocal();
+    final DateTime startDateTime = uniEvent.start;
 
     start
       ..timeZone = 'Europe/Bucharest'
       // Google Calendar uses the IANA timezone format, but the native Dart `DateTime` uses an abbreviation provided by the operating system.
       ..dateTime = startDateTime;
 
-    final Duration duration = uniEvent.duration.toDuration();
+    final Duration duration = uniEvent.duration;
 
     final g_cal.EventDateTime end = g_cal.EventDateTime();
     final DateTime endDateTime = startDateTime.add(duration);
@@ -59,23 +61,23 @@ extension UniEventProviderGoogleCalendar on UniEventProvider {
     googleCalendarEvent
       ..start = start
       ..end = end
-      ..summary = classHeader.acronym
+      ..summary = classHeader != null ? classHeader.acronym : uniEvent.name
       ..colorId = (uniEvent.type.googleCalendarColor.index).toString()
       ..location = uniEvent.location;
 
     if (uniEvent is RecurringUniEvent) {
       final String rruleBasedOnCalendarString = uniEvent.rruleBasedOnCalendar
-          .toString()
-          .replaceAll(RegExp(r'T000000'), 'T000000Z');
+          .toString(
+              options: const RecurrenceRuleToStringOptions(isTimeUtc: true));
       googleCalendarEvent.recurrence = [rruleBasedOnCalendarString];
     }
 
     return googleCalendarEvent;
   }
 
-  // This opens a browser window asking the user to authenticate and allow access to edit their calendar
+  // This opens a browser window asking the user to authenticate and allow access to edit their calendar.
   Future<void> insertGoogleEvents(
-      List<g_cal.Event> googleCalendarEvents) async {
+      final List<g_cal.Event> googleCalendarEvents) async {
     AutoRefreshingAuthClient client;
     try {
       client = await clientViaUserConsent(GoogleCalendarServices.credentials,
@@ -105,7 +107,7 @@ extension UniEventProviderGoogleCalendar on UniEventProvider {
         final String calendarId = returnedCalendar.id;
         for (final g_cal.Event event in googleCalendarEvents) {
           await calendarApi.events.insert(event, calendarId).then(
-            (value) {
+            (final value) {
               print('Added event status: ${value.status}');
               if (value.status == 'confirmed') {
                 print('Event named ${event.summary} added in Google Calendar');
@@ -157,8 +159,9 @@ extension UniEventTypeGCalColor on UniEventType {
         return GoogleCalendarColorNames.grape;
       case UniEventType.examSession:
         return GoogleCalendarColorNames.tomato;
-      default:
+      case UniEventType.other:
         return GoogleCalendarColorNames.undefined;
     }
+    return GoogleCalendarColorNames.undefined;
   }
 }

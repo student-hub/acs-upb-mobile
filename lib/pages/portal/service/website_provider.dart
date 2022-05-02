@@ -1,17 +1,17 @@
 import 'dart:async';
 import 'dart:typed_data';
 
-import 'package:acs_upb_mobile/authentication/model/user.dart';
-import 'package:acs_upb_mobile/generated/l10n.dart';
-import 'package:acs_upb_mobile/pages/filter/model/filter.dart';
-import 'package:acs_upb_mobile/pages/portal/model/website.dart';
-import 'package:acs_upb_mobile/resources/utils.dart';
-import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:preferences/preference_service.dart';
-import 'package:acs_upb_mobile/resources/storage/storage_provider.dart';
+
+import '../../../authentication/model/user.dart';
+import '../../../generated/l10n.dart';
+import '../../../resources/storage_provider.dart';
+import '../../../resources/utils.dart';
+import '../../../widgets/toast.dart';
+import '../../filter/model/filter.dart';
+import '../model/website.dart';
 
 extension IconURLExtension on Website {
   Future<String> getIconURL() => StorageProvider.findImageUrl(iconPath);
@@ -36,7 +36,7 @@ extension UserExtension on User {
 }
 
 extension WebsiteCategoryExtension on WebsiteCategory {
-  static WebsiteCategory fromString(String category) {
+  static WebsiteCategory fromString(final String category) {
     switch (category) {
       case 'learning':
         return WebsiteCategory.learning;
@@ -54,7 +54,8 @@ extension WebsiteCategoryExtension on WebsiteCategory {
 
 extension WebsiteExtension on Website {
   // [ownerUid] should be provided if the website is user-private
-  static Website fromSnap(DocumentSnapshot snap, {String ownerUid}) {
+  static Website fromSnap(final DocumentSnapshot<Map<String, dynamic>> snap,
+      {final String ownerUid}) {
     final data = snap.data();
     return Website(
       ownerUid: ownerUid ?? data['addedBy'],
@@ -101,7 +102,7 @@ extension WebsiteExtension on Website {
 class WebsiteProvider with ChangeNotifier {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
 
-  void _errorHandler(dynamic e, {bool showToast = true}) {
+  void _errorHandler(final dynamic e, {final bool showToast = true}) {
     print(e.message);
     if (showToast) {
       if (e.message.contains('PERMISSION_DENIED')) {
@@ -115,12 +116,13 @@ class WebsiteProvider with ChangeNotifier {
   /// Initializes the number of visits of websites with the value stored from Firebase.
   /// If no [uid] is provided, store the data locally instead.
   Future<bool> _initializeNumberOfVisits(
-      List<Website> websites, String uid) async {
+      final List<Website> websites, final String uid) async {
     if (uid == null) {
       return _initializeNumberOfVisitsLocally(websites);
     }
     try {
-      final DocumentReference userDoc = _db.collection('users').doc(uid);
+      final DocumentReference<Map<String, dynamic>> userDoc =
+          _db.collection('users').doc(uid);
       final userData = (await userDoc.get()).data();
 
       if (userData != null) {
@@ -142,19 +144,20 @@ class WebsiteProvider with ChangeNotifier {
 
   /// Initializes the number of visits of websites with the value stored locally.
   ///
-  /// Because [PrefService] doesn't support storing maps, the
+  /// Because [prefService] doesn't support storing maps, the
   /// data is stored in 2 lists: the list of website IDs (`websiteIds`) and the list
   /// with the number of visits (`websiteVisits`), where `websiteVisits[i]` is the
   /// number of times the user accessed website with ID `websiteIds[i]`.
-  Future<bool> _initializeNumberOfVisitsLocally(List<Website> websites) async {
+  Future<bool> _initializeNumberOfVisitsLocally(
+      final List<Website> websites) async {
     try {
       final List<String> websiteIds =
-          PrefService.sharedPreferences.getStringList('websiteIds') ?? [];
+          prefService.sharedPreferences.getStringList('websiteIds') ?? [];
       final List<String> websiteVisits =
-          PrefService.sharedPreferences.getStringList('websiteVisits') ?? [];
+          prefService.sharedPreferences.getStringList('websiteVisits') ?? [];
 
       final visitsByWebsiteId = Map<String, int>.from(websiteIds.asMap().map(
-          (index, key) =>
+          (final index, final key) =>
               MapEntry(key, int.tryParse(websiteVisits[index] ?? 0))));
       for (final Website website in websites) {
         website.numberOfVisits = visitsByWebsiteId[website.id] ?? 0;
@@ -168,14 +171,16 @@ class WebsiteProvider with ChangeNotifier {
 
   /// Increments the number of visits of [website], both in-memory and on Firebase.
   /// If no [uid] is provided, update data in the local storage.
-  Future<bool> incrementNumberOfVisits(Website website, {String uid}) async {
+  Future<bool> incrementNumberOfVisits(final Website website,
+      {final String uid}) async {
     try {
       website.numberOfVisits++;
       if (uid == null) {
         return await incrementNumberOfVisitsLocally(website);
       }
 
-      final DocumentReference userDoc = _db.collection('users').doc(uid);
+      final DocumentReference<Map<String, dynamic>> userDoc =
+          _db.collection('users').doc(uid);
       final userData = (await userDoc.get()).data();
 
       if (userData != null) {
@@ -198,17 +203,17 @@ class WebsiteProvider with ChangeNotifier {
 
   /// Increments the number of visits of [website], both in-memory and on the local storage.
   ///
-  /// Because [PrefService] doesn't support storing maps, the
+  /// Because [prefService] doesn't support storing maps, the
   /// data is stored in 2 lists: the list of website IDs (`websiteIds`) and the list
   /// with the number of visits `websiteVisits`, where `websiteVisits[i]` is the
   /// number of times the user accessed website with ID `websiteIds[i]`.
-  Future<bool> incrementNumberOfVisitsLocally(Website website) async {
+  Future<bool> incrementNumberOfVisitsLocally(final Website website) async {
     try {
       website.numberOfVisits++;
       final List<String> websiteIds =
-          PrefService.sharedPreferences.getStringList('websiteIds') ?? [];
+          prefService.sharedPreferences.getStringList('websiteIds') ?? [];
       final List<String> websiteVisits =
-          PrefService.sharedPreferences.getStringList('websiteVisits') ?? [];
+          prefService.sharedPreferences.getStringList('websiteVisits') ?? [];
 
       if (websiteIds.contains(website.id)) {
         final int index = websiteIds.indexOf(website.id);
@@ -216,10 +221,10 @@ class WebsiteProvider with ChangeNotifier {
       } else {
         websiteIds.add(website.id);
         websiteVisits.add(website.numberOfVisits.toString());
-        await PrefService.sharedPreferences
+        await prefService.sharedPreferences
             .setStringList('websiteIds', websiteIds);
       }
-      await PrefService.sharedPreferences
+      await prefService.sharedPreferences
           .setStringList('websiteVisits', websiteVisits);
       notifyListeners();
       return true;
@@ -229,23 +234,24 @@ class WebsiteProvider with ChangeNotifier {
     }
   }
 
-  Future<List<Website>> fetchWebsites(Filter filter,
-      {bool userOnly = false, String uid}) async {
+  Future<List<Website>> fetchWebsites(final Filter filter,
+      {final bool userOnly = false, final String uid}) async {
     try {
       final websites = <Website>[];
 
       if (!userOnly) {
-        List<DocumentSnapshot> documents = [];
+        List<DocumentSnapshot<Map<String, dynamic>>> documents = [];
 
         if (filter == null) {
-          final QuerySnapshot qSnapshot =
+          final QuerySnapshot<Map<String, dynamic>> qSnapshot =
               await _db.collection('websites').get();
           documents.addAll(qSnapshot.docs);
         } else {
           // Documents without a 'relevance' field are relevant for everyone
           final query =
               _db.collection('websites').where('relevance', isNull: true);
-          final QuerySnapshot qSnapshot = await query.get();
+          final QuerySnapshot<Map<String, dynamic>> qSnapshot =
+              await query.get();
           documents.addAll(qSnapshot.docs);
 
           for (final string in filter.relevantNodes) {
@@ -254,7 +260,8 @@ class WebsiteProvider with ChangeNotifier {
                 .collection('websites')
                 .where('degree', isEqualTo: filter.baseNode)
                 .where('relevance', arrayContains: string);
-            final QuerySnapshot qSnapshot = await query.get();
+            final QuerySnapshot<Map<String, dynamic>> qSnapshot =
+                await query.get();
             documents.addAll(qSnapshot.docs);
           }
         }
@@ -263,8 +270,9 @@ class WebsiteProvider with ChangeNotifier {
         // (a document may result out of more than one query)
         final seenDocumentIds = <String>{};
 
-        documents =
-            documents.where((doc) => seenDocumentIds.add(doc.id)).toList();
+        documents = documents
+            .where((final doc) => seenDocumentIds.add(doc.id))
+            .toList();
 
         websites.addAll(documents.map(WebsiteExtension.fromSnap));
       }
@@ -273,10 +281,11 @@ class WebsiteProvider with ChangeNotifier {
       if (uid != null) {
         final DocumentReference ref =
             FirebaseFirestore.instance.collection('users').doc(uid);
-        final QuerySnapshot qSnapshot = await ref.collection('websites').get();
+        final QuerySnapshot<Map<String, dynamic>> qSnapshot =
+            await ref.collection('websites').get();
 
         websites.addAll(qSnapshot.docs
-            .map((doc) => WebsiteExtension.fromSnap(doc, ownerUid: uid)));
+            .map((final doc) => WebsiteExtension.fromSnap(doc, ownerUid: uid)));
       }
 
       final bool initializeReturnSuccess =
@@ -284,7 +293,7 @@ class WebsiteProvider with ChangeNotifier {
       if (!initializeReturnSuccess) {
         AppToast.show(S.current.warningFavouriteWebsitesInitializationFailed);
       }
-      websites.sort((website1, website2) =>
+      websites.sort((final website1, final website2) =>
           website2.numberOfVisits.compareTo(website1.numberOfVisits));
 
       return websites;
@@ -294,10 +303,10 @@ class WebsiteProvider with ChangeNotifier {
     }
   }
 
-  Future<List<Website>> fetchFavouriteWebsites(String uid,
-      {int limit = 3}) async {
+  Future<List<Website>> fetchFavouriteWebsites(final String uid,
+      {final int limit = 3}) async {
     final favouriteWebsites = (await fetchWebsites(null, uid: uid))
-        .where((website) => website.numberOfVisits > 0)
+        .where((final website) => website.numberOfVisits > 0)
         .take(limit)
         .toList();
     if (favouriteWebsites.isEmpty) {
@@ -306,8 +315,8 @@ class WebsiteProvider with ChangeNotifier {
     return favouriteWebsites;
   }
 
-  Future<bool> addWebsite(Website website) async {
-    assert(website.label != null);
+  Future<bool> addWebsite(final Website website) async {
+    assert(website.label != null, 'website label cannot be null');
 
     try {
       DocumentReference ref;
@@ -339,8 +348,8 @@ class WebsiteProvider with ChangeNotifier {
     }
   }
 
-  Future<bool> updateWebsite(Website website) async {
-    assert(website.label != null);
+  Future<bool> updateWebsite(final Website website) async {
+    assert(website.label != null, 'website label cannot be null');
 
     try {
       final DocumentReference publicRef =
@@ -381,7 +390,7 @@ class WebsiteProvider with ChangeNotifier {
     }
   }
 
-  Future<bool> deleteWebsite(Website website) async {
+  Future<bool> deleteWebsite(final Website website) async {
     try {
       DocumentReference ref;
       if (!website.isPrivate) {
@@ -405,7 +414,8 @@ class WebsiteProvider with ChangeNotifier {
     }
   }
 
-  Future<bool> uploadWebsiteIcon(Website website, Uint8List file) async {
+  Future<bool> uploadWebsiteIcon(
+      final Website website, final Uint8List file) async {
     final result = await StorageProvider.uploadImage(file, website.iconPath);
     if (!result) {
       if (file.length > 5 * 1024 * 1024) {
@@ -417,7 +427,7 @@ class WebsiteProvider with ChangeNotifier {
     return result;
   }
 
-  Future<String> getWebsiteIconURL(Website website) {
+  Future<String> getWebsiteIconURL(final Website website) {
     return StorageProvider.findImageUrl(website.iconPath);
   }
 }

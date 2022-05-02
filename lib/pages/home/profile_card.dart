@@ -1,10 +1,12 @@
-import 'package:acs_upb_mobile/authentication/model/user.dart';
-import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
-import 'package:acs_upb_mobile/authentication/view/edit_profile_page.dart';
-import 'package:acs_upb_mobile/generated/l10n.dart';
-import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import '../../authentication/model/user.dart';
+import '../../authentication/service/auth_provider.dart';
+import '../../authentication/view/edit_profile_page.dart';
+import '../../generated/l10n.dart';
+import '../../resources/theme.dart';
+import '../../resources/utils.dart';
 
 class ProfileCard extends StatefulWidget {
   @override
@@ -18,13 +20,13 @@ class _ProfileCardState extends State<ProfileCard> {
   void initState() {
     super.initState();
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
-    authProvider.getProfilePictureURL().then((value) => setState(() {
+    authProvider.getProfilePictureURL().then((final value) => setState(() {
           profilePictureURL = value;
         }));
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
     String userName;
     final User user = authProvider.currentUserFromCache;
@@ -87,7 +89,7 @@ class _ProfileCardState extends State<ProfileCard> {
                                       ? S.current.actionLogIn
                                       : S.current.actionLogOut,
                                   style: Theme.of(context)
-                                      .accentTextTheme
+                                      .coloredTextTheme
                                       .subtitle2
                                       .copyWith(fontWeight: FontWeight.w500)),
                             ),
@@ -106,9 +108,11 @@ class _ProfileCardState extends State<ProfileCard> {
                             onPressed: () async {
                               await Navigator.of(context).push(
                                 MaterialPageRoute<EditProfilePage>(
-                                  builder: (context) => const EditProfilePage(),
+                                  builder: (final context) =>
+                                      const EditProfilePage(),
                                 ),
                               );
+                              if (!mounted) return;
                               final authProvider = Provider.of<AuthProvider>(
                                   context,
                                   listen: false);

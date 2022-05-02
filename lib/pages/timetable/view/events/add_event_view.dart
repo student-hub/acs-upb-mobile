@@ -1,41 +1,42 @@
-import 'package:acs_upb_mobile/authentication/model/user.dart';
-import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
-import 'package:acs_upb_mobile/generated/l10n.dart';
-import 'package:acs_upb_mobile/navigation/routes.dart';
-import 'package:acs_upb_mobile/pages/classes/model/class.dart';
-import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
-import 'package:acs_upb_mobile/pages/filter/view/relevance_picker.dart';
-import 'package:acs_upb_mobile/pages/people/model/person.dart';
-import 'package:acs_upb_mobile/pages/people/service/person_provider.dart';
-import 'package:acs_upb_mobile/pages/people/view/people_page.dart';
-import 'package:acs_upb_mobile/pages/timetable/model/academic_calendar.dart';
-import 'package:acs_upb_mobile/pages/timetable/model/events/all_day_event.dart';
-import 'package:acs_upb_mobile/pages/timetable/model/events/class_event.dart';
-import 'package:acs_upb_mobile/pages/timetable/model/events/recurring_event.dart';
-import 'package:acs_upb_mobile/pages/timetable/model/events/uni_event.dart';
-import 'package:acs_upb_mobile/pages/timetable/service/uni_event_provider.dart';
-import 'package:acs_upb_mobile/resources/locale_provider.dart';
-import 'package:acs_upb_mobile/resources/theme.dart';
-import 'package:acs_upb_mobile/widgets/button.dart';
-import 'package:acs_upb_mobile/widgets/chip_form_field.dart';
-import 'package:acs_upb_mobile/widgets/dialog.dart';
-import 'package:acs_upb_mobile/widgets/scaffold.dart';
-import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:dotted_line/dotted_line.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
+import 'package:flutter/material.dart' hide Interval;
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:provider/provider.dart';
 import 'package:rrule/rrule.dart';
+import 'package:time_machine/time_machine.dart' hide Interval;
 import 'package:time_machine/time_machine.dart' as time_machine show DayOfWeek;
-import 'package:time_machine/time_machine.dart' hide DayOfWeek;
 import 'package:time_machine/time_machine_text_patterns.dart';
+
+import '../../../../authentication/model/user.dart';
+import '../../../../authentication/service/auth_provider.dart';
+import '../../../../generated/l10n.dart';
+import '../../../../navigation/routes.dart';
+import '../../../../resources/locale_provider.dart';
+import '../../../../resources/theme.dart';
+import '../../../../widgets/button.dart';
+import '../../../../widgets/chip_form_field.dart';
+import '../../../../widgets/dialog.dart';
+import '../../../../widgets/scaffold.dart';
+import '../../../../widgets/toast.dart';
+import '../../../classes/model/class.dart';
+import '../../../classes/service/class_provider.dart';
+import '../../../filter/view/relevance_picker.dart';
+import '../../../people/model/person.dart';
+import '../../../people/service/person_provider.dart';
+import '../../../people/view/people_page.dart';
+import '../../model/academic_calendar.dart';
+import '../../model/events/all_day_event.dart';
+import '../../model/events/class_event.dart';
+import '../../model/events/recurring_event.dart';
+import '../../model/events/uni_event.dart';
+import '../../service/uni_event_provider.dart';
+import '../../timetable_utils.dart';
 
 class AddEventView extends StatefulWidget {
   /// If the `id` of [initialEvent] is not null, this acts like an "Edit event"
   /// page starting from the info in [initialEvent]. Otherwise, it acts like an
   /// "Add event" page with optional default values based on [initialEvent].
-  const AddEventView({Key key, this.initialEvent}) : super(key: key);
+  const AddEventView({final Key key, this.initialEvent}) : super(key: key);
 
   final UniEvent initialEvent;
 
@@ -53,8 +54,8 @@ class _AddEventViewState extends State<AddEventView> {
   ClassHeader selectedClass;
   Person selectedTeacher;
   String selectedCalendar;
-  LocalTime startTime;
-  Period duration;
+  DateTime startDateTime;
+  Duration duration;
   Map<WeekType, bool> weekSelected = {
     WeekType.odd: null,
     WeekType.even: null,
@@ -87,13 +88,13 @@ class _AddEventViewState extends State<AddEventView> {
         Provider.of<AuthProvider>(context, listen: false).currentUserFromCache;
     Provider.of<ClassProvider>(context, listen: false)
         .fetchClassHeaders(uid: user.uid)
-        .then((headers) => setState(() => classHeaders = headers));
+        .then((final headers) => setState(() => classHeaders = headers));
     Provider.of<PersonProvider>(context, listen: false)
         .fetchPeople()
-        .then((teachers) => setState(() => classTeachers = teachers));
+        .then((final teachers) => setState(() => classTeachers = teachers));
     Provider.of<UniEventProvider>(context, listen: false)
         .fetchCalendars()
-        .then((calendars) {
+        .then((final calendars) {
       setState(() {
         this.calendars = calendars;
         selectedCalendar = calendars.keys.first;
@@ -104,16 +105,15 @@ class _AddEventViewState extends State<AddEventView> {
         final AllDayUniEvent secondSemester =
             widget.initialEvent.calendar.semesters.last;
         selectedSemester =
-            DateInterval(secondSemester.startDate, secondSemester.endDate)
-                    .contains(widget.initialEvent.start.calendarDate)
+            Interval(secondSemester.startDate, secondSemester.endDate)
+                    .includes(widget.initialEvent.start)
                 ? 2
                 : 1;
       } else {
         bool foundSemester = false;
         for (final calendar in calendars.entries) {
           for (final semester in calendar.value.semesters) {
-            final LocalDate date =
-                widget.initialEvent.start.calendarDate ?? LocalDate.today();
+            final DateTime date = widget.initialEvent.start ?? DateTime.now();
             if (date.isBeforeOrDuring(semester)) {
               // semester.id is represented as "semesterN", where "semester0" is the first semester
               selectedSemester =
@@ -136,8 +136,8 @@ class _AddEventViewState extends State<AddEventView> {
         final RecurringUniEvent event = widget.initialEvent;
         if (event.rrule.interval != 1) {
           final rule = WeekYearRules.iso;
-          if (rule.getWeekOfWeekYear(semester.start.calendarDate) ==
-              rule.getWeekOfWeekYear(event.start.calendarDate)) {
+          if (rule.getWeekOfWeekYear(LocalDate.dateTime(semester.start)) ==
+              rule.getWeekOfWeekYear(LocalDate.dateTime(event.start))) {
             // Week is odd
             weekSelected[WeekType.even] = false;
             weekSelected[WeekType.odd] = true;
@@ -163,12 +163,15 @@ class _AddEventViewState extends State<AddEventView> {
     locationController =
         TextEditingController(text: widget.initialEvent?.location ?? '');
 
-    final startHour = widget.initialEvent?.start?.hourOfDay ?? 8;
-    duration = widget.initialEvent?.duration ?? const Period(hours: 2);
-    startTime = LocalTime(startHour, 0, 0);
+    final startHour = widget.initialEvent?.start?.hour ?? 8;
+    duration = widget.initialEvent?.duration ?? const Duration(hours: 2);
+    startDateTime = widget.initialEvent?.start
+            ?.copyWith(hour: startHour, minute: 0, second: 0, millisecond: 0) ??
+        0;
 
-    var initialWeekDays = [
-      _DayOfWeek.from(widget.initialEvent?.start?.dayOfWeek) ??
+    List<_DayOfWeek> initialWeekDays = [
+      _DayOfWeek.from(
+              LocalDate.dateTime(widget.initialEvent?.start)?.dayOfWeek) ??
           _DayOfWeek.monday
     ];
     if (widget.initialEvent != null &&
@@ -180,7 +183,8 @@ class _AddEventViewState extends State<AddEventView> {
       initialWeekDays = (widget.initialEvent as RecurringUniEvent)
           .rrule
           .byWeekDays
-          .map((entry) => _DayOfWeek.from(entry.day))
+          .map((final entry) =>
+              _DayOfWeek.from(time_machine.DayOfWeek(entry.day)))
           .toList();
     }
     for (final initialWeekDay in initialWeekDays) {
@@ -189,7 +193,7 @@ class _AddEventViewState extends State<AddEventView> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return AppScaffold(
       title: Text(widget.initialEvent?.id == null
           ? S.current.actionAddEvent
@@ -220,7 +224,7 @@ class _AddEventViewState extends State<AddEventView> {
                                 const Icon(Icons.calendar_today_outlined),
                           ),
                           value: selectedCalendar,
-                          items: calendars.keys.map((key) {
+                          items: calendars.keys.map((final key) {
                             final year = int.tryParse(key);
                             return DropdownMenuItem<String>(
                               value: key,
@@ -228,7 +232,7 @@ class _AddEventViewState extends State<AddEventView> {
                                   year != null ? '$year-${year + 1}' : key),
                             );
                           }).toList(),
-                          onChanged: (selection) =>
+                          onChanged: (final selection) =>
                               selectedCalendar = selection,
                         ),
                       ),
@@ -241,12 +245,12 @@ class _AddEventViewState extends State<AddEventView> {
                           ),
                           value: selectedSemester,
                           items: [1, 2]
-                              .map((semester) => DropdownMenuItem<int>(
+                              .map((final semester) => DropdownMenuItem<int>(
                                     value: semester,
                                     child: Text(semester.toString()),
                                   ))
                               .toList(),
-                          onChanged: (selection) =>
+                          onChanged: (final selection) =>
                               selectedSemester = selection,
                         ),
                       ),
@@ -265,17 +269,17 @@ class _AddEventViewState extends State<AddEventView> {
                     value: selectedEventType,
                     items: UniEventTypeExtension.classTypes
                         .map(
-                          (type) => DropdownMenuItem<UniEventType>(
+                          (final type) => DropdownMenuItem<UniEventType>(
                             value: type,
                             child: Text(type.toLocalizedString()),
                           ),
                         )
                         .toList(),
-                    onChanged: (selection) {
+                    onChanged: (final selection) {
                       formKey.currentState.validate();
                       setState(() => selectedEventType = selection);
                     },
-                    validator: (selection) {
+                    validator: (final selection) {
                       if (selection == null) {
                         return S.current.errorEventTypeCannotBeEmpty;
                       }
@@ -295,15 +299,15 @@ class _AddEventViewState extends State<AddEventView> {
                             value: selectedClass,
                             items: classHeaders
                                 .map(
-                                  (header) => DropdownMenuItem(
+                                  (final header) => DropdownMenuItem(
                                       value: header, child: Text(header.name)),
                                 )
                                 .toList(),
-                            onChanged: (selection) {
+                            onChanged: (final selection) {
                               formKey.currentState.validate();
                               setState(() => selectedClass = selection);
                             },
-                            validator: (selection) {
+                            validator: (final selection) {
                               if (selection == null) {
                                 return S.current.errorClassCannotBeEmpty;
                               }
@@ -315,7 +319,7 @@ class _AddEventViewState extends State<AddEventView> {
                             key: const Key('AutocompleteLecturer'),
                             labelText: S.current.labelLecturer,
                             formKey: formKey,
-                            onSaved: (value) => selectedTeacher = value,
+                            onSaved: (final value) => selectedTeacher = value,
                             classTeachers: classTeachers,
                             personDisplayed: selectedTeacher,
                           ),
@@ -325,7 +329,7 @@ class _AddEventViewState extends State<AddEventView> {
                             labelText: S.current.labelLocation,
                             prefixIcon: const Icon(FeatherIcons.mapPin),
                           ),
-                          onChanged: (_) => setState(() {}),
+                          onChanged: (final _) => setState(() {}),
                         ),
                         timeIntervalPicker(),
                         Divider(
@@ -359,7 +363,8 @@ class _AddEventViewState extends State<AddEventView> {
     );
   }
 
-  AppDialog _deletionConfirmationDialog(BuildContext context) => AppDialog(
+  AppDialog _deletionConfirmationDialog(final BuildContext context) =>
+      AppDialog(
         icon: const Icon(Icons.delete_outlined),
         title: S.current.actionDeleteEvent,
         info: S.current.messageThisCouldAffectOtherStudents,
@@ -373,6 +378,7 @@ class _AddEventViewState extends State<AddEventView> {
                   await Provider.of<UniEventProvider>(context, listen: false)
                       .deleteEvent(widget.initialEvent);
               if (res) {
+                if (!mounted) return;
                 Navigator.of(context)
                     .popUntil(ModalRoute.withName(Routes.home));
                 AppToast.show(S.current.messageEventDeleted);
@@ -387,24 +393,29 @@ class _AddEventViewState extends State<AddEventView> {
         onPressed: () async {
           if (!formKey.currentState.validate()) return;
 
-          LocalDateTime start = semester.startDate.at(startTime);
+          DateTime start = semester.startDate
+              .at(dateTime: startDateTime)
+              .copyWith(isUtc: true);
           if (weekSelected[WeekType.even] && !weekSelected[WeekType.odd]) {
             // Event is every even week, add a week to start date
-            start = start.add(const Period(weeks: 1));
+            start = start.addDays(7);
           }
 
           final rrule = RecurrenceRule(
               frequency: Frequency.weekly,
               byWeekDays: (Map<_DayOfWeek, bool>.from(weekDaySelected)
-                    ..removeWhere((key, value) => !value))
+                    ..removeWhere((final key, final value) => !value))
                   .keys
-                  .map((weekDay) => ByWeekDayEntry(weekDay))
+                  .map((final weekDay) => ByWeekDayEntry(weekDay.value))
                   .toSet(),
               interval:
                   weekSelected[WeekType.odd] != weekSelected[WeekType.even]
                       ? 2
                       : 1,
-              until: semester.endDate.add(const Period(days: 1)).atMidnight());
+              until: semester.endDate
+                  .add(const Duration(days: 1))
+                  .atMidnight()
+                  .copyWith(isUtc: true));
 
           final event = ClassEvent(
               teacher: selectedTeacher,
@@ -427,6 +438,7 @@ class _AddEventViewState extends State<AddEventView> {
                 await Provider.of<UniEventProvider>(context, listen: false)
                     .addEvent(event);
             if (res) {
+              if (!mounted) return;
               Navigator.of(context).pop();
               AppToast.show(S.current.messageEventAdded);
             }
@@ -435,6 +447,7 @@ class _AddEventViewState extends State<AddEventView> {
                 await Provider.of<UniEventProvider>(context, listen: false)
                     .updateEvent(event);
             if (res) {
+              if (!mounted) return;
               Navigator.of(context).popUntil(ModalRoute.withName(Routes.home));
               AppToast.show(S.current.messageEventEdited);
             }
@@ -445,16 +458,18 @@ class _AddEventViewState extends State<AddEventView> {
   AppScaffoldAction _deleteButton() => AppScaffoldAction(
         icon: Icons.more_vert_outlined,
         items: {
-          S.current.actionDeleteEvent: () =>
-              showDialog(context: context, builder: _deletionConfirmationDialog)
+          S.current.actionDeleteEvent: () => showDialog<dynamic>(
+              context: context, builder: _deletionConfirmationDialog)
         },
-        onPressed: () =>
-            showDialog(context: context, builder: _deletionConfirmationDialog),
+        onPressed: () => showDialog<dynamic>(
+            context: context, builder: _deletionConfirmationDialog),
       );
 
   Widget timeIntervalPicker() {
-    final endTime = startTime.add(duration);
+    final endDateTime = startDateTime.add(duration);
     final textColor = Theme.of(context).textTheme.headline4.color;
+    TimeOfDay startTimeOfDay = startDateTime.toTimeOfDay();
+    TimeOfDay endTimeOfDay = endDateTime.toTimeOfDay();
     return Padding(
       padding: const EdgeInsets.only(top: 10),
       child: Row(
@@ -471,14 +486,17 @@ class _AddEventViewState extends State<AddEventView> {
               padding: MaterialStateProperty.all<EdgeInsets>(EdgeInsets.zero),
             ),
             onPressed: () async {
-              final TimeOfDay start = await showTimePicker(
+              startTimeOfDay = await showTimePicker(
                 context: context,
-                initialTime: startTime.toTimeOfDay(),
+                initialTime: TimeOfDay(
+                    hour: startDateTime.hour, minute: startDateTime.minute),
               );
-              setState(() => startTime = start.toLocalTime());
+              setState(() => startDateTime = startTimeOfDay != null
+                  ? startDateTime.at(timeOfDay: startTimeOfDay)
+                  : startDateTime);
             },
             child: Text(
-              startTime.toString('HH:mm'),
+              startDateTime.toStringWithFormat('HH:mm'),
               style: Theme.of(context).textTheme.headline4,
             ),
           ),
@@ -488,7 +506,7 @@ class _AddEventViewState extends State<AddEventView> {
               child: Column(
                 children: [
                   Text(
-                    duration.toString().replaceAll(RegExp(r'[PT]'), ''),
+                    '${duration.inHours}H',
                     style: Theme.of(context)
                         .textTheme
                         .bodyText1
@@ -511,15 +529,21 @@ class _AddEventViewState extends State<AddEventView> {
               padding: MaterialStateProperty.all<EdgeInsets>(EdgeInsets.zero),
             ),
             onPressed: () async {
-              final TimeOfDay end = await showTimePicker(
+              endTimeOfDay = await showTimePicker(
                 context: context,
-                initialTime: startTime.add(duration).toTimeOfDay(),
+                initialTime: startDateTime.add(duration).toTimeOfDay(),
               );
-              setState(() => duration =
-                  Period.differenceBetweenTimes(startTime, end.toLocalTime()));
+              setState(
+                () {
+                  if (endTimeOfDay.subtract(startTimeOfDay).isNegative) {
+                    endTimeOfDay = startTimeOfDay;
+                  }
+                  duration = endTimeOfDay.subtract(startTimeOfDay);
+                },
+              );
             },
             child: Text(
-              endTime.toString('HH:mm'),
+              endDateTime.toStringWithFormat('HH:mm'),
               style: Theme.of(context).textTheme.headline4,
             ),
           ),
@@ -531,9 +555,10 @@ class _AddEventViewState extends State<AddEventView> {
 }
 
 class _DayOfWeek extends time_machine.DayOfWeek with Localizable {
-  const _DayOfWeek(int value) : super(value);
+  const _DayOfWeek(final int value) : super(value);
 
-  _DayOfWeek.from(time_machine.DayOfWeek dayOfWeek) : super(dayOfWeek.value);
+  _DayOfWeek.from(final time_machine.DayOfWeek dayOfWeek)
+      : super(dayOfWeek.value);
 
   @override
   String toLocalizedString() {
@@ -566,7 +591,7 @@ class WeekType with Localizable {
   int get hashCode => _value.hashCode;
 
   @override
-  bool operator ==(dynamic other) =>
+  bool operator ==(final dynamic other) =>
       other is WeekType && other._value == _value ||
       other is int && other == _value;
 
@@ -587,16 +612,20 @@ extension LocalTimeConversion on LocalTime {
   TimeOfDay toTimeOfDay() => TimeOfDay(hour: hourOfDay, minute: minuteOfHour);
 }
 
-extension TimeOfDayConversion on TimeOfDay {
-  LocalTime toLocalTime() => LocalTime(hour, minute, 0);
+extension TimeOfDayExtension on TimeOfDay {
+  Duration subtract(final TimeOfDay startTimeOfDay) {
+    return Duration(
+        hours: hour - startTimeOfDay.hour,
+        minutes: minute - startTimeOfDay.minute);
+  }
 }
 
-extension LocalDateComparisons on LocalDate {
-  bool isDuring(AllDayUniEvent semester) {
-    return DateInterval(semester.startDate, semester.endDate).contains(this);
+extension DateTimeComparisons on DateTime {
+  bool isDuring(final AllDayUniEvent semester) {
+    return Interval(semester.startDate, semester.endDate).includes(this);
   }
 
-  bool isBeforeOrDuring(AllDayUniEvent semester) {
+  bool isBeforeOrDuring(final AllDayUniEvent semester) {
     if (compareTo(semester.startDate) < 0) return true;
     return isDuring(semester);
   }

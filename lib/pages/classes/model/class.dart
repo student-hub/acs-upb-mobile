@@ -1,7 +1,7 @@
-import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:meta/meta.dart';
-import 'package:time_machine/time_machine.dart';
+
+import '../../../generated/l10n.dart';
 
 enum ShortcutType { main, classbook, resource, other }
 
@@ -14,9 +14,10 @@ extension ShortcutTypeExtension on ShortcutType {
         return S.current.shortcutTypeClassbook;
       case ShortcutType.resource:
         return S.current.shortcutTypeResource;
-      default:
+      case ShortcutType.other:
         return S.current.shortcutTypeOther;
     }
+    return S.current.shortcutTypeOther;
   }
 }
 
@@ -41,7 +42,7 @@ class ClassHeader {
   int get hashCode => id.hashCode;
 
   @override
-  bool operator ==(Object other) {
+  bool operator ==(final Object other) {
     if (other is ClassHeader) {
       return other.id == id;
     }
@@ -52,7 +53,7 @@ class ClassHeader {
 class Class {
   Class(
       {@required this.header,
-      List<Shortcut> shortcuts,
+      final List<Shortcut> shortcuts,
       this.grading,
       this.gradingLastUpdated})
       : shortcuts = shortcuts ?? [];
@@ -60,5 +61,5 @@ class Class {
   ClassHeader header;
   final List<Shortcut> shortcuts;
   final Map<String, double> grading;
-  final LocalDateTime gradingLastUpdated;
+  final DateTime gradingLastUpdated;
 }

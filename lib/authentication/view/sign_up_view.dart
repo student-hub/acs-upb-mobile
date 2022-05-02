@@ -1,17 +1,19 @@
-import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
-import 'package:acs_upb_mobile/generated/l10n.dart';
-import 'package:acs_upb_mobile/navigation/routes.dart';
-import 'package:acs_upb_mobile/pages/filter/view/filter_dropdown.dart';
-import 'package:acs_upb_mobile/resources/banner.dart';
-import 'package:acs_upb_mobile/resources/utils.dart';
-import 'package:acs_upb_mobile/resources/validator.dart';
-import 'package:acs_upb_mobile/widgets/button.dart';
-import 'package:acs_upb_mobile/widgets/form_card.dart';
-import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:recase/recase.dart';
+
+import '../../generated/l10n.dart';
+import '../../navigation/routes.dart';
+import '../../pages/filter/view/filter_dropdown.dart';
+import '../../resources/banner.dart';
+import '../../resources/theme.dart';
+import '../../resources/utils.dart';
+import '../../resources/validator.dart';
+import '../../widgets/button.dart';
+import '../../widgets/form_card.dart';
+import '../../widgets/toast.dart';
+import '../service/auth_provider.dart';
 
 class SignUpView extends StatefulWidget {
   static const String routeName = '/signup';
@@ -37,8 +39,10 @@ class _SignUpViewState extends State<SignUpView> {
   /// Special characters such as ".", "_" are used to separate the names,
   /// numbers are removed and names are capitalized.
   /// *Format example:* firstnameone_firstnametwo.lastname123@stud.acs.pub.ro
-  void parseNameFromEmail(TextEditingController email,
-      TextEditingController firstName, TextEditingController lastName) {
+  void parseNameFromEmail(
+      final TextEditingController email,
+      final TextEditingController firstName,
+      final TextEditingController lastName) {
     final emailWithoutNumbers =
         email.text.replaceAll(RegExp('[^a-zA-Z._]'), '');
     final names = emailWithoutNumbers.split('.');
@@ -48,7 +52,7 @@ class _SignUpViewState extends State<SignUpView> {
         firstName.text = names[0].titleCase;
       } else {
         final firstNames = names[0].split('_');
-        firstName.text = firstNames.map((s) => s.titleCase).join(' ');
+        firstName.text = firstNames.map((final s) => s.titleCase).join(' ');
       }
 
       if (names.length > 1) {
@@ -74,9 +78,9 @@ class _SignUpViewState extends State<SignUpView> {
         suffix: emailDomain,
         autocorrect: false,
         autofillHints: [AutofillHints.newUsername],
-        check: (email, {showToast}) => authProvider
+        check: (final email, {final showToast}) => authProvider
             .canSignUpWithEmail(email + emailDomain, showToast: showToast),
-        onChanged: (_) => parseNameFromEmail(
+        onChanged: (final _) => parseNameFromEmail(
             emailController, firstNameController, lastNameController),
       ),
       FormCardField(
@@ -86,7 +90,7 @@ class _SignUpViewState extends State<SignUpView> {
           controller: passwordController,
           obscureText: true,
           autofillHints: [AutofillHints.newPassword],
-          check: (password, {showToast}) async {
+          check: (final password, {final showToast}) async {
             final errorString = AppValidator.isStrongPassword(password);
             if (showToast && errorString != null) {
               AppToast.show(errorString);
@@ -97,7 +101,7 @@ class _SignUpViewState extends State<SignUpView> {
         label: S.current.labelConfirmPassword,
         hint: S.current.hintPassword,
         obscureText: true,
-        check: (password, {showToast}) async {
+        check: (final password, {final showToast}) async {
           final bool ok = password == passwordController.text;
           if (!ok && showToast) {
             AppToast.show(S.current.errorPasswordsDiffer);
@@ -126,7 +130,7 @@ class _SignUpViewState extends State<SignUpView> {
           Checkbox(
             value: agreedToPolicy,
             visualDensity: VisualDensity.compact,
-            onChanged: (value) => setState(() => agreedToPolicy = value),
+            onChanged: (final value) => setState(() => agreedToPolicy = value),
           ),
           Expanded(
             child: RichText(
@@ -137,7 +141,7 @@ class _SignUpViewState extends State<SignUpView> {
                     TextSpan(
                         text: S.current.labelPrivacyPolicy,
                         style: Theme.of(context)
-                            .accentTextTheme
+                            .coloredTextTheme
                             .subtitle1
                             .apply(fontWeightDelta: 2),
                         recognizer: TapGestureRecognizer()
@@ -152,7 +156,7 @@ class _SignUpViewState extends State<SignUpView> {
     );
   }
 
-  FormCard _buildForm(BuildContext context) {
+  FormCard _buildForm(final BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
 
     return FormCard(
@@ -163,7 +167,7 @@ class _SignUpViewState extends State<SignUpView> {
         _privacyPolicy()
       ],
       submitOnEnter: false,
-      onSubmitted: (fields) async {
+      onSubmitted: (final fields) async {
         if (!agreedToPolicy) {
           AppToast.show(
               '${S.current.warningAgreeTo}${S.current.labelPrivacyPolicy}.');
@@ -180,16 +184,17 @@ class _SignUpViewState extends State<SignUpView> {
         final result = await authProvider.signUp(fields);
 
         if (result) {
+          if (!mounted) return;
           // Remove all routes below and push home page
           await Navigator.pushNamedAndRemoveUntil(
-              context, Routes.home, (route) => false);
+              context, Routes.home, (final route) => false);
         }
       },
     );
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final signUpForm = _buildForm(context);
 
     return GestureDetector(
@@ -208,7 +213,7 @@ class _SignUpViewState extends State<SignUpView> {
               alignment: FractionalOffset.topRight,
               child: Padding(
                 padding: const EdgeInsets.all(10),
-                child: Container(
+                child: SizedBox(
                     height: MediaQuery.of(context).size.height / 3 - 20,
                     child: Image.asset(
                         'assets/illustrations/undraw_personal_information.png')),
@@ -248,7 +253,7 @@ class _SignUpViewState extends State<SignUpView> {
                           Expanded(
                             child: AppButton(
                               key: const ValueKey('sign_up_button'),
-                              color: Theme.of(context).accentColor,
+                              color: Theme.of(context).primaryColor,
                               text: S.current.actionSignUp,
                               onTap: () => signUpForm.submit(),
                             ),

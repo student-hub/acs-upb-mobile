@@ -23,19 +23,15 @@ class RemoteConfigService {
       : _remoteConfig?.getBool(_chatEnabled) ?? defaults[_chatEnabled];
 
   static Future<dynamic> initialize() async {
-    if (kIsWeb) {
-      return; // Remote config is not yet supported on web.
-    }
+    if (kIsWeb) return; // Remote config is not yet supported on web.
     try {
-      _remoteConfig = await RemoteConfig.instance;
+      _remoteConfig = RemoteConfig.instance;
       await _remoteConfig.setDefaults(defaults);
-      await _remoteConfig.fetch();
-      await _remoteConfig.activateFetched();
-    } on FetchThrottledException catch (e) {
-      print('Remote config fetch throttled: $e');
+      await _remoteConfig.fetchAndActivate();
     } catch (e) {
       print(
           'Unable to fetch remote config. Cached or default values will be used.');
     }
+    // Does not work on web
   }
 }

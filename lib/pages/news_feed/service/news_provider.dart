@@ -1,19 +1,19 @@
 import 'dart:math';
 
-import 'package:acs_upb_mobile/generated/l10n.dart';
-import 'package:acs_upb_mobile/pages/news_feed/model/news_feed_item.dart';
-import 'package:acs_upb_mobile/resources/utils.dart';
-import 'package:acs_upb_mobile/widgets/toast.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:web_scraper/web_scraper.dart';
+
+import '../../../generated/l10n.dart';
+import '../../../resources/utils.dart';
+import '../../../widgets/toast.dart';
+import '../model/news_feed_item.dart';
 
 class NewsProvider with ChangeNotifier {
   static const _textSelector = 'title';
   static const _attributesSelector = 'attributes';
   static const _hrefSelector = 'href';
 
-  Future<List<NewsFeedItem>> fetchNewsFeedItems({int limit}) async {
+  Future<List<NewsFeedItem>> fetchNewsFeedItems({final int limit}) async {
     try {
       // The internet is a scary place. CORS (cross origin resource sharing)
       // prevents websites from accessing resources outside the server that
@@ -26,8 +26,8 @@ class NewsProvider with ChangeNotifier {
       // will go through the proxy. This is needed only for the web version,
       // as CORS is a web browser thing.
       // See more: https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS
-      final url = kIsWeb ? Utils.corsProxyUrl : 'https://acs.pub.ro';
-      final path =
+      const url = kIsWeb ? Utils.corsProxyUrl : 'https://acs.pub.ro';
+      const path =
           kIsWeb ? '/https://acs.pub.ro/topic/noutati' : '/topic/noutati';
       final webScraper = WebScraper(url);
       final bool scrapeSuccess = await webScraper.loadWebPage(path);
@@ -47,7 +47,7 @@ class NewsProvider with ChangeNotifier {
   }
 
   static Iterable<NewsFeedItem> _extractFromWebScraper(
-      WebScraper webScraper, int wantedLimit) {
+      final WebScraper webScraper, final int wantedLimit) {
     final List<Map<String, dynamic>> dates =
         webScraper.getElement('div.event > ul > li > div.time', []);
     final List<Map<String, dynamic>> events =

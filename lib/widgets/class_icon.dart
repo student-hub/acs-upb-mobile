@@ -1,7 +1,8 @@
-import 'package:acs_upb_mobile/pages/classes/model/class.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:black_hole_flutter/black_hole_flutter.dart';
 import 'package:flutter/material.dart';
+
+import '../pages/classes/model/class.dart';
 
 extension ClassExtension on ClassHeader {
   Color get colorFromAcronym {
@@ -24,7 +25,7 @@ extension ClassExtension on ClassHeader {
 class ClassIcon extends StatelessWidget {
   const ClassIcon({
     @required this.classHeader,
-    Key key,
+    final Key key,
     this.selected = false,
   }) : super(key: key);
 
@@ -32,10 +33,10 @@ class ClassIcon extends StatelessWidget {
   final bool selected;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return CircleAvatar(
       backgroundColor: classHeader.colorFromAcronym,
-      child: Container(
+      child: SizedBox(
         width: 30,
         child: selected
             ? Icon(

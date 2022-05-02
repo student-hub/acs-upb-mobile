@@ -1,12 +1,11 @@
-import 'package:acs_upb_mobile/pages/search/view/classes_search_results.dart';
-import 'package:acs_upb_mobile/pages/search/view/people_search_results.dart';
-import 'package:acs_upb_mobile/resources/remote_config.dart';
-import 'package:acs_upb_mobile/widgets/scaffold.dart';
-import 'package:acs_upb_mobile/widgets/search_bar.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/painting.dart';
+
+import '../../../generated/l10n.dart';
+import '../../../resources/remote_config.dart';
+import '../../../widgets/scaffold.dart';
+import '../../../widgets/search_bar.dart';
+import 'classes_search_results.dart';
+import 'people_search_results.dart';
 
 class SearchPage extends StatefulWidget {
   @override
@@ -23,14 +22,15 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return AppScaffold(
       title: Text(S.current.navigationSearch),
       body: ListView(
         scrollDirection: Axis.vertical,
         children: [
           SearchWidget(
-            onSearch: (searchText) => {setState(() => query = searchText)},
+            onSearch: (final searchText) =>
+                {setState(() => query = searchText)},
             cancelCallback: () => {setState(() => query = '')},
             searchClosed: false,
           ),
@@ -46,7 +46,7 @@ class _SearchPageState extends State<SearchPage> {
 
 class ChatbotIntro extends StatelessWidget {
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return Container(
         child: Column(
       children: [
@@ -64,7 +64,7 @@ class ChatbotIntro extends StatelessWidget {
               Text(
                 S.current.messageTalkToChatbot,
                 style: TextStyle(
-                    color: Theme.of(context).accentColor,
+                    color: Theme.of(context).primaryColor,
                     fontWeight: FontWeight.bold,
                     fontSize: 15),
               )

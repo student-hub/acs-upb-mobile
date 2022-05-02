@@ -1,23 +1,23 @@
-import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
-import 'package:acs_upb_mobile/generated/l10n.dart';
-import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
-import 'package:acs_upb_mobile/pages/classes/view/class_view.dart';
-import 'package:acs_upb_mobile/pages/classes/view/classes_page.dart';
-import 'package:acs_upb_mobile/pages/filter/model/filter.dart';
-import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
-import 'package:acs_upb_mobile/pages/people/view/person_view.dart';
-import 'package:acs_upb_mobile/pages/timetable/model/events/class_event.dart';
-import 'package:acs_upb_mobile/pages/timetable/model/events/uni_event.dart';
-import 'package:acs_upb_mobile/pages/timetable/view/events/add_event_view.dart';
-import 'package:acs_upb_mobile/widgets/scaffold.dart';
-import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../authentication/service/auth_provider.dart';
+import '../../../../generated/l10n.dart';
+import '../../../../widgets/scaffold.dart';
+import '../../../../widgets/toast.dart';
+import '../../../classes/service/class_provider.dart';
+import '../../../classes/view/class_view.dart';
+import '../../../classes/view/classes_page.dart';
+import '../../../filter/model/filter.dart';
+import '../../../filter/service/filter_provider.dart';
+import '../../../people/view/person_view.dart';
+import '../../model/events/class_event.dart';
+import '../../model/events/uni_event.dart';
+import 'add_event_view.dart';
+
 class EventView extends StatefulWidget {
-  const EventView({Key key, this.eventInstance, this.uniEvent})
+  const EventView({final Key key, this.eventInstance, this.uniEvent})
       : assert(
             (eventInstance != null && uniEvent == null) ||
                 (eventInstance == null && uniEvent != null),
@@ -43,7 +43,7 @@ class _EventViewState extends State<EventView> {
       );
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final user = Provider.of<AuthProvider>(context).currentUserFromCache;
     final UniEvent mainEvent =
         widget.eventInstance?.mainEvent ?? widget.uniEvent;
@@ -60,8 +60,8 @@ class _EventViewState extends State<EventView> {
               AppToast.show(S.current.errorPermissionDenied);
             } else {
               Navigator.of(context).push(MaterialPageRoute<AddEventView>(
-                builder: (_) => ChangeNotifierProvider<FilterProvider>(
-                  create: (_) => FilterProvider(
+                builder: (final _) => ChangeNotifierProvider<FilterProvider>(
+                  create: (final _) => FilterProvider(
                     defaultDegree: mainEvent.degree,
                     defaultRelevance: mainEvent.relevance,
                   ),
@@ -117,7 +117,7 @@ class _EventViewState extends State<EventView> {
               hint: S.current.messageTapForMoreInfo,
               onTap: () => Navigator.of(context).push(
                 MaterialPageRoute<ChangeNotifierProvider>(
-                  builder: (context) => ChangeNotifierProvider.value(
+                  builder: (final context) => ChangeNotifierProvider.value(
                     value: Provider.of<ClassProvider>(context),
                     child: ClassView(
                       classHeader: mainEvent.classHeader,
@@ -136,8 +136,10 @@ class _EventViewState extends State<EventView> {
                     child: Icon(FeatherIcons.mapPin),
                   ),
                   const SizedBox(width: 16),
-                  Text(widget.eventInstance?.location,
-                      style: Theme.of(context).textTheme.subtitle1),
+                  Expanded(
+                    child: Text(widget.eventInstance?.location,
+                        style: Theme.of(context).textTheme.subtitle1),
+                  ),
                 ],
               ),
             ),
@@ -150,11 +152,13 @@ class _EventViewState extends State<EventView> {
                   child: Icon(FeatherIcons.users),
                 ),
                 const SizedBox(width: 16),
-                Text(
-                    mainEvent.relevance == null
-                        ? S.current.relevanceAnyone
-                        : '${FilterNode.localizeName(mainEvent.degree, context)}: ${mainEvent.relevance.join(', ')}',
-                    style: Theme.of(context).textTheme.subtitle1),
+                Expanded(
+                  child: Text(
+                      mainEvent.relevance == null
+                          ? S.current.relevanceAnyone
+                          : '${FilterNode.localizeName(mainEvent.degree, context)}: ${mainEvent.relevance.join(', ')}',
+                      style: Theme.of(context).textTheme.subtitle1),
+                ),
               ],
             ),
           ),
@@ -167,7 +171,7 @@ class _EventViewState extends State<EventView> {
                     showModalBottomSheet<dynamic>(
                         isScrollControlled: true,
                         context: context,
-                        builder: (BuildContext buildContext) =>
+                        builder: (final BuildContext buildContext) =>
                             PersonView(person: mainEvent.teacher));
                   }
                 },

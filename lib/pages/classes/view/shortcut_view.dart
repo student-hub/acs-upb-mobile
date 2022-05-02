@@ -1,14 +1,15 @@
-import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
-import 'package:acs_upb_mobile/generated/l10n.dart';
-import 'package:acs_upb_mobile/pages/classes/model/class.dart';
-import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:provider/provider.dart';
 import 'package:validators/validators.dart';
 
+import '../../../authentication/service/auth_provider.dart';
+import '../../../generated/l10n.dart';
+import '../../../widgets/scaffold.dart';
+import '../model/class.dart';
+
 class ShortcutView extends StatefulWidget {
-  const ShortcutView({Key key, this.onSave}) : super(key: key);
+  const ShortcutView({final Key key, this.onSave}) : super(key: key);
 
   final void Function(Shortcut) onSave;
 
@@ -23,7 +24,7 @@ class _ShortcutViewState extends State<ShortcutView> {
   TextEditingController linkController = TextEditingController();
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return AppScaffold(
       title: Text(S.current.actionAddShortcut),
       actions: [
@@ -50,7 +51,7 @@ class _ShortcutViewState extends State<ShortcutView> {
             children: <Widget>[
               Padding(
                 padding: const EdgeInsets.only(top: 10),
-                child: Container(
+                child: SizedBox(
                     height: MediaQuery.of(context).size.height / 3,
                     child: Image.asset(
                         'assets/illustrations/undraw_share_link.png')),
@@ -62,7 +63,7 @@ class _ShortcutViewState extends State<ShortcutView> {
                   hintText: S.current.hintWebsiteLabel,
                   prefixIcon: const Icon(Icons.label_outlined),
                 ),
-                onChanged: (_) => setState(() {}),
+                onChanged: (final _) => setState(() {}),
               ),
               DropdownButtonFormField<ShortcutType>(
                 isExpanded: true,
@@ -73,13 +74,13 @@ class _ShortcutViewState extends State<ShortcutView> {
                 value: selectedType,
                 items: ShortcutType.values
                     .map(
-                      (type) => DropdownMenuItem<ShortcutType>(
+                      (final type) => DropdownMenuItem<ShortcutType>(
                         value: type,
                         child: Text(type.toLocalizedString()),
                       ),
                     )
                     .toList(),
-                onChanged: (selection) =>
+                onChanged: (final selection) =>
                     setState(() => selectedType = selection),
               ),
               TextFormField(
@@ -89,13 +90,13 @@ class _ShortcutViewState extends State<ShortcutView> {
                   hintText: S.current.hintWebsiteLink,
                   prefixIcon: const Icon(FeatherIcons.globe),
                 ),
-                validator: (value) {
+                validator: (final value) {
                   if (!isURL(value, requireProtocol: true)) {
                     return S.current.warningInvalidURL;
                   }
                   return null;
                 },
-                onChanged: (_) => setState(() {}),
+                onChanged: (final _) => setState(() {}),
               ),
             ],
           ),

@@ -1,8 +1,9 @@
-import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 import 'package:validators/sanitizers.dart';
+
+import '../../../generated/l10n.dart';
 
 enum WebsiteCategory { learning, administrative, association, resource, other }
 
@@ -17,9 +18,10 @@ extension WebsiteCategoryExtension on WebsiteCategory {
         return S.current.websiteCategoryAssociations;
       case WebsiteCategory.resource:
         return S.current.websiteCategoryResources;
-      default:
+      case WebsiteCategory.other:
         return S.current.websiteCategoryOthers;
     }
+    return S.current.websiteCategoryOthers;
   }
 }
 
@@ -31,10 +33,10 @@ class Website {
     @required this.link,
     @required this.relevance,
     this.degree,
-    List<String> editedBy,
+    final List<String> editedBy,
     this.ownerUid,
-    String label,
-    Map<String, String> infoByLocale,
+    final String label,
+    final Map<String, String> infoByLocale,
   })  : editedBy = editedBy ?? [],
         label = toString(label).isEmpty ? labelFromLink(link) : label,
         infoByLocale = infoByLocale ?? {} {
@@ -69,5 +71,5 @@ class Website {
   final List<String> relevance;
   int numberOfVisits = 0;
 
-  static String labelFromLink(String link) => link.split('://').last;
+  static String labelFromLink(final String link) => link.split('://').last;
 }

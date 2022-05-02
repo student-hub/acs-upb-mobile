@@ -1,12 +1,12 @@
-import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question.dart';
+import 'question.dart';
 
 class FeedbackQuestionDropdown extends FeedbackQuestion {
   FeedbackQuestionDropdown({
-    String question,
-    String category,
-    String id,
-    List<String> answerOptions,
-    String answer,
+    final String question,
+    final String category,
+    final String id,
+    final List<String> answerOptions,
+    final String answer,
   })  : options = answerOptions,
         super(
           question: question,

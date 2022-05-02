@@ -1,4 +1,4 @@
-import 'package:acs_upb_mobile/pages/people/model/person.dart';
+import '../../people/model/person.dart';
 
 class FeedbackAnswer {
   FeedbackAnswer({

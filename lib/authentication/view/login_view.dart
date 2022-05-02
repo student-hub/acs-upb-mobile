@@ -1,13 +1,14 @@
-import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
-import 'package:acs_upb_mobile/generated/l10n.dart';
-import 'package:acs_upb_mobile/navigation/routes.dart';
-import 'package:acs_upb_mobile/resources/banner.dart';
-import 'package:acs_upb_mobile/widgets/button.dart';
-import 'package:acs_upb_mobile/widgets/dialog.dart';
-import 'package:acs_upb_mobile/widgets/form_card.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import '../../generated/l10n.dart';
+import '../../navigation/routes.dart';
+import '../../resources/banner.dart';
+import '../../resources/theme.dart';
+import '../../widgets/button.dart';
+import '../../widgets/dialog.dart';
+import '../../widgets/form_card.dart';
+import '../service/auth_provider.dart';
 
 class LoginView extends StatefulWidget {
   static const String routeName = '/login';
@@ -36,7 +37,7 @@ class _LoginViewState extends State<LoginView> {
         controller: emailController,
         autocorrect: false,
         autofillHints: [AutofillHints.username],
-        check: (email, {showToast}) => authProvider
+        check: (final email, {final showToast}) => authProvider
             .canSignInWithPassword(email + emailDomain, showToast: showToast),
       ),
       FormCardField(
@@ -48,7 +49,7 @@ class _LoginViewState extends State<LoginView> {
     ];
   }
 
-  AppDialog _resetPasswordDialog(BuildContext context) => AppDialog(
+  AppDialog _resetPasswordDialog(final BuildContext context) => AppDialog(
         title: S.current.actionResetPassword,
         message: S.current.messageResetPassword,
         content: <Widget>[
@@ -78,6 +79,7 @@ class _LoginViewState extends State<LoginView> {
                       .sendPasswordResetEmail(
                           emailController.text + S.current.stringEmailDomain);
               if (success) {
+                if (!mounted) return;
                 Navigator.pop(context);
               }
               return;
@@ -86,18 +88,19 @@ class _LoginViewState extends State<LoginView> {
         ],
       );
 
-  FormCard _buildForm(BuildContext context) {
+  FormCard _buildForm(final BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
 
     return FormCard(
       title: S.current.actionLogIn,
       fields: _buildFormItems(),
-      onSubmitted: (fields) async {
+      onSubmitted: (final fields) async {
         final result = await authProvider.signIn(
           fields[S.current.labelEmail] + S.current.stringEmailDomain,
           fields[S.current.labelPassword],
         );
         if (result) {
+          if (!mounted) return;
           await Navigator.pushReplacementNamed(context, Routes.home);
         }
       },
@@ -110,12 +113,13 @@ class _LoginViewState extends State<LoginView> {
                 child: Text(
                   S.current.actionResetPassword,
                   style: Theme.of(context)
-                      .accentTextTheme
+                      .coloredTextTheme
                       .subtitle1
                       .copyWith(fontWeight: FontWeight.w500),
                 ),
                 onTap: () {
-                  showDialog(context: context, builder: _resetPasswordDialog);
+                  showDialog<dynamic>(
+                      context: context, builder: _resetPasswordDialog);
                   final currentFocus = FocusScope.of(context);
                   if (!currentFocus.hasPrimaryFocus) {
                     currentFocus.unfocus();
@@ -128,7 +132,7 @@ class _LoginViewState extends State<LoginView> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
     final loginForm = _buildForm(context);
 
@@ -148,10 +152,11 @@ class _LoginViewState extends State<LoginView> {
               alignment: FractionalOffset.topRight,
               child: Padding(
                 padding: const EdgeInsets.all(10),
-                child: Container(
-                    height: MediaQuery.of(context).size.height / 3,
-                    child: Image.asset(
-                        'assets/illustrations/undraw_digital_nomad.png')),
+                child: SizedBox(
+                  height: MediaQuery.of(context).size.height / 3,
+                  child: Image.asset(
+                      'assets/illustrations/undraw_digital_nomad.png'),
+                ),
               ),
             ),
             Align(
@@ -169,7 +174,7 @@ class _LoginViewState extends State<LoginView> {
                       minHeight: 1,
                     ),
                     child: Image.asset('assets/images/city_doodle.png',
-                        color: Theme.of(context).accentColor.withOpacity(0.4)),
+                        color: Theme.of(context).primaryColor.withOpacity(0.4)),
                   ),
                 ),
               ),
@@ -203,6 +208,7 @@ class _LoginViewState extends State<LoginView> {
                                 final result =
                                     await authProvider.signInAnonymously();
                                 if (result) {
+                                  if (!mounted) return;
                                   await Navigator.pushReplacementNamed(
                                       context, Routes.home);
                                 }
@@ -213,7 +219,7 @@ class _LoginViewState extends State<LoginView> {
                           Expanded(
                             child: AppButton(
                               key: const ValueKey('log_in_button'),
-                              color: Theme.of(context).accentColor,
+                              color: Theme.of(context).primaryColor,
                               text: S.current.actionLogIn,
                               onTap: () => loginForm.submit(),
                             ),
@@ -237,7 +243,7 @@ class _LoginViewState extends State<LoginView> {
                             },
                             child: Text(S.current.actionSignUp,
                                 style: Theme.of(context)
-                                    .accentTextTheme
+                                    .coloredTextTheme
                                     .subtitle1
                                     .copyWith(fontWeight: FontWeight.w500)),
                           ),

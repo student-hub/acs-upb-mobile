@@ -2,7 +2,7 @@ import 'dart:typed_data';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:positioned_tap_detector/positioned_tap_detector.dart';
+import 'package:positioned_tap_detector_2/positioned_tap_detector_2.dart';
 
 class UploadButtonController {
   UploadButtonController({this.onUpdate});
@@ -13,7 +13,7 @@ class UploadButtonController {
 
   Uint8List get uploadImageBytes => newUploadedImageBytes;
 
-  void setNewImg(Uint8List uploadedImageBytes) {
+  void setNewImg(final Uint8List uploadedImageBytes) {
     if (_uploadButtonState == null) return;
     newUploadedImageBytes = uploadedImageBytes;
     onUpdate();
@@ -24,7 +24,8 @@ class UploadButtonController {
 // button, except it actually allows the user to select an image from the
 // gallery instead of inputting text directly.
 class UploadButton extends StatefulWidget {
-  const UploadButton({Key key, this.label, this.controller}) : super(key: key);
+  const UploadButton({final Key key, this.label, this.controller})
+      : super(key: key);
 
   final String label;
   final UploadButtonController controller;
@@ -45,12 +46,12 @@ class _UploadButtonState extends State<UploadButton> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     widget.controller?._uploadButtonState = this;
     // We need to override the tap behaviour of the text field to obtain the
     // behaviour we want.
-    return PositionedTapDetector(
-      onTap: (tapPosition) async {
+    return PositionedTapDetector2(
+      onTap: (final tapPosition) async {
         final screenWidth = MediaQuery.of(context).size.width;
         const iconSize = 24, paddingSize = 16, iconPaddingSize = 12;
         if (screenWidth - tapPosition.global.dx <=

@@ -1,6 +1,6 @@
-import 'package:acs_upb_mobile/generated/l10n.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
+import '../generated/l10n.dart';
 
 class SearchBar extends StatefulWidget {
   const SearchBar({this.cancel, this.textController, this.onSearch});
@@ -15,7 +15,7 @@ class SearchBar extends StatefulWidget {
 
 class _SearchBarState extends State<SearchBar> {
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final double maxWidth = MediaQuery.of(context).size.width;
 
     return Row(
@@ -46,7 +46,7 @@ class _SearchBarState extends State<SearchBar> {
         GestureDetector(
           onTap: widget.cancel,
           key: const ValueKey('cancel_search_bar'),
-          child: Container(
+          child: SizedBox(
             width: MediaQuery.of(context).size.width * .2,
             child: Container(
               color: Colors.transparent,
@@ -78,10 +78,10 @@ class _SearchWidgetState extends State<SearchWidget> {
   final TextEditingController _textEditingController = TextEditingController();
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return Visibility(
       visible: !widget.searchClosed || widget.header != null,
-      child: Container(
+      child: SizedBox(
         height: 60,
         child: widget.searchClosed
             ? widget.header

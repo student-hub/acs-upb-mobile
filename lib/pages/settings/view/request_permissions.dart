@@ -1,16 +1,16 @@
-import 'package:acs_upb_mobile/authentication/model/user.dart';
-import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
-import 'package:acs_upb_mobile/generated/l10n.dart';
-import 'package:acs_upb_mobile/pages/settings/model/request.dart';
-import 'package:acs_upb_mobile/pages/settings/service/request_provider.dart';
-import 'package:acs_upb_mobile/resources/utils.dart';
-import 'package:acs_upb_mobile/widgets/button.dart';
-import 'package:acs_upb_mobile/widgets/dialog.dart';
-import 'package:acs_upb_mobile/widgets/scaffold.dart';
-import 'package:acs_upb_mobile/widgets/toast.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import '../../../authentication/model/user.dart';
+import '../../../authentication/service/auth_provider.dart';
+import '../../../generated/l10n.dart';
+import '../../../resources/utils.dart';
+import '../../../widgets/button.dart';
+import '../../../widgets/dialog.dart';
+import '../../../widgets/scaffold.dart';
+import '../../../widgets/toast.dart';
+import '../model/request.dart';
+import '../service/request_provider.dart';
 
 class RequestPermissionsPage extends StatefulWidget {
   static const String routeName = '/requestPermissions';
@@ -32,7 +32,7 @@ class _RequestPermissionsPageState extends State<RequestPermissionsPage> {
     }
   }
 
-  AppDialog _requestAlreadyExistsDialog(BuildContext context) {
+  AppDialog _requestAlreadyExistsDialog(final BuildContext context) {
     return AppDialog(
       title: S.current.warningRequestExists,
       content: [
@@ -42,7 +42,7 @@ class _RequestPermissionsPageState extends State<RequestPermissionsPage> {
         AppButton(
             key: const ValueKey('agree_overwrite_request'),
             text: S.current.buttonSend,
-            color: Theme.of(context).accentColor,
+            color: Theme.of(context).primaryColor,
             width: 130,
             onTap: () async {
               Navigator.of(context).pop();
@@ -58,7 +58,7 @@ class _RequestPermissionsPageState extends State<RequestPermissionsPage> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final requestProvider = Provider.of<RequestProvider>(context);
 
     return AppScaffold(
@@ -86,8 +86,11 @@ class _RequestPermissionsPageState extends State<RequestPermissionsPage> {
                     await requestProvider.userAlreadyRequested(user.uid);
 
                 if (queryResult) {
-                  await showDialog(
-                      context: context, builder: _requestAlreadyExistsDialog);
+                  if (!mounted) return;
+                  await showDialog<dynamic>(
+                    context: context,
+                    builder: _requestAlreadyExistsDialog,
+                  );
                 }
 
                 queryResult = await requestProvider.makeRequest(
@@ -98,6 +101,7 @@ class _RequestPermissionsPageState extends State<RequestPermissionsPage> {
                 );
                 if (queryResult) {
                   AppToast.show(S.current.messageRequestHasBeenSent);
+                  if (!mounted) return;
                   Navigator.of(context).pop();
                 }
               })
@@ -106,9 +110,10 @@ class _RequestPermissionsPageState extends State<RequestPermissionsPage> {
           children: [
             Padding(
               padding: const EdgeInsets.only(top: 10),
-              child: Container(
-                  height: MediaQuery.of(context).size.height / 4,
-                  child: Image.asset('assets/illustrations/undraw_hiring.png')),
+              child: SizedBox(
+                height: MediaQuery.of(context).size.height / 4,
+                child: Image.asset('assets/illustrations/undraw_hiring.png'),
+              ),
             ),
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 20, 20, 8),
@@ -142,7 +147,7 @@ class _RequestPermissionsPageState extends State<RequestPermissionsPage> {
                   Checkbox(
                     value: agreedToResponsibilities,
                     visualDensity: VisualDensity.compact,
-                    onChanged: (value) =>
+                    onChanged: (final value) =>
                         setState(() => agreedToResponsibilities = value),
                   ),
                   Expanded(

@@ -1,31 +1,32 @@
-import 'package:acs_upb_mobile/pages/classes/model/class.dart';
-import 'package:acs_upb_mobile/pages/timetable/model/academic_calendar.dart';
-import 'package:acs_upb_mobile/pages/timetable/model/events/uni_event.dart';
-import 'package:flutter/material.dart';
-import 'package:time_machine/time_machine.dart';
+import 'package:flutter/material.dart' hide Interval;
+
+import '../../../classes/model/class.dart';
+import '../../timetable_utils.dart';
+import '../academic_calendar.dart';
+import 'uni_event.dart';
 
 class AllDayUniEvent extends UniEvent {
   AllDayUniEvent({
-    @required LocalDate start,
-    @required LocalDate end,
-    @required String id,
-    String name,
-    String location,
-    Color color,
-    UniEventType type,
-    ClassHeader classHeader,
-    AcademicCalendar calendar,
-    List<String> relevance,
-    String degree,
-    String addedBy,
-    bool editable,
+    @required final DateTime start,
+    @required final DateTime end,
+    @required final String id,
+    final String name,
+    final String location,
+    final Color color,
+    final UniEventType type,
+    final ClassHeader classHeader,
+    final AcademicCalendar calendar,
+    final List<String> relevance,
+    final String degree,
+    final String addedBy,
+    final bool editable,
   })  : startDate = start,
         endDate = end,
         super(
             name: name,
             location: location,
             start: start.atMidnight(),
-            duration: Period.differenceBetweenDates(start, end.addDays(1)),
+            duration: Interval(start, end.addDays(1)).duration,
             id: id,
             color: color,
             type: type,
@@ -36,18 +37,17 @@ class AllDayUniEvent extends UniEvent {
             addedBy: addedBy,
             editable: editable);
 
-  LocalDate startDate;
-  LocalDate endDate;
+  DateTime startDate;
+  DateTime endDate;
 
   @override
   Iterable<UniEventInstance> generateInstances(
-      {DateInterval intersectingInterval}) sync* {
+      {final Interval intersectingInterval}) sync* {
     yield UniEventInstance(
-      id: id,
       title: name,
       mainEvent: this,
-      start: startDate.atMidnight(),
-      end: endDate.addDays(1).atMidnight(),
+      start: startDate.atMidnight().copyWith(isUtc: true),
+      end: endDate.addDays(1).atMidnight().copyWith(isUtc: true),
       color: color,
     );
   }
