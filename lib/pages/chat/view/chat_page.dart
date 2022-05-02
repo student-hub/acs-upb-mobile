@@ -1,6 +1,8 @@
 import 'package:acs_upb_mobile/authentication/model/user.dart';
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
+import 'package:acs_upb_mobile/pages/chat/model/conversation.dart';
 import 'package:acs_upb_mobile/pages/chat/model/message_rasa.dart';
+import 'package:acs_upb_mobile/pages/chat/service/conversation_provider.dart';
 import 'package:acs_upb_mobile/pages/chat/service/message_rasa_provider.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:flutter/cupertino.dart';
@@ -15,13 +17,15 @@ class ChatPage extends StatefulWidget {
 
 class _ChatPageState extends State<ChatPage> {
   final languagePref = PrefService.get('language');
-  final List<ChatMessage> _messages = [
-    const ChatMessage(content: 'How can I help you?', type: 'receiver'),
-    const ChatMessage(content: 'Hello!', type: 'receiver'),
-  ];
+  List<ChatMessage> _messages;
+  // = [
+  //   const ChatMessage(content: 'How can I help you?', type: 'receiver'),
+  //   const ChatMessage(content: 'Hello!', type: 'receiver'),
+  // ];
   final _textController = TextEditingController();
   final FocusNode _focusNode = FocusNode();
   MessageRasa _futureMessage;
+  Conversation conversation;
   User user;
 
   Future<void> _fetchUser() async {
@@ -32,10 +36,30 @@ class _ChatPageState extends State<ChatPage> {
     }
   }
 
+  Future<void> _fetchConversation() async {
+    final conv = await addConversation();
+    setState(() {
+      conversation = conv;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
     _fetchUser();
+    _fetchConversation();
+
+    if (languagePref == 'ro') {
+      _messages = [
+        const ChatMessage(content: 'Cu ce te pot ajuta?', type: 'receiver'),
+        const ChatMessage(content: 'Salut!', type: 'receiver'),
+      ];
+    } else {
+      _messages = [
+        const ChatMessage(content: 'How can I help you?', type: 'receiver'),
+        const ChatMessage(content: 'Hello!', type: 'receiver'),
+      ];
+    }
   }
 
   @override

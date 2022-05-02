@@ -137,5 +137,12 @@ service cloud.firestore {
           allow update: if false;
           allow delete: if false;
         }
+
+         match /conversations/{conversation}/{document=**} {
+            // no one can read
+            allow read: if true;
+            // Only authenticated users can edit or create
+            allow update, create, write: if isAuthenticated();
+        }
     }
 }
