@@ -18,10 +18,6 @@ class ChatPage extends StatefulWidget {
 class _ChatPageState extends State<ChatPage> {
   final languagePref = PrefService.get('language');
   List<ChatMessage> _messages;
-  // = [
-  //   const ChatMessage(content: 'How can I help you?', type: 'receiver'),
-  //   const ChatMessage(content: 'Hello!', type: 'receiver'),
-  // ];
   final _textController = TextEditingController();
   final FocusNode _focusNode = FocusNode();
   MessageRasa _futureMessage;
@@ -98,17 +94,7 @@ class _ChatPageState extends State<ChatPage> {
             child: TextField(
               controller: _textController,
               onSubmitted: (value) async {
-                var auxMessage = await createMessage(_textController.text,
-                    user.uid, languagePref);
-                _handleSubmitted(_textController.text);
-                setState(() {
-                  _futureMessage = auxMessage;
-                  final ChatMessage message = ChatMessage(
-                    content: _futureMessage.messageText,
-                    type: 'receiver',
-                  );
-                  _messages.insert(0, message);
-                });
+                await _handleMessages();
               },
               // onSubmitted: _handleSubmitted,
               decoration:
@@ -121,17 +107,7 @@ class _ChatPageState extends State<ChatPage> {
             child: IconButton(
               icon: const Icon(Icons.send),
               onPressed: () async {
-                var auxMessage = await createMessage(_textController.text,
-                    user.uid, languagePref);
-                _handleSubmitted(_textController.text);
-                setState(() {
-                  _futureMessage = auxMessage;
-                  final ChatMessage message = ChatMessage(
-                    content: _futureMessage.messageText,
-                    type: 'receiver',
-                  );
-                  _messages.insert(0, message);
-                });
+                await _handleMessages();
                 // _handleReceived(),
               },
               color: Theme.of(context).primaryColor,
@@ -140,6 +116,20 @@ class _ChatPageState extends State<ChatPage> {
         ],
       ),
     );
+  }
+
+  Future<void> _handleMessages() async {
+    final auxMessage = await createMessage(_textController.text,
+        user.uid, languagePref);
+    _handleSubmitted(_textController.text);
+    setState(() {
+      _futureMessage = auxMessage;
+      final ChatMessage message = ChatMessage(
+        content: _futureMessage.messageText,
+        type: 'receiver',
+      );
+      _messages.insert(0, message);
+    });
   }
 
   void _handleSubmitted(String messageContent) {
