@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:markdown/markdown.dart' as md;
 import 'package:oktoast/oktoast.dart';
 
 import '../../../widgets/scaffold.dart';
@@ -39,13 +41,21 @@ class _NewsItemDetailsState extends State<NewsItemDetailsPage> {
     return args.itemId;
   }
 
-  String returnLongText() {
-    return 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s\n\nwith the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing';
+  String _returnLongText() {
+    return '# Title';
+  }
+
+  String _returnShortText() {
+    return 'Pokemon';
   }
 
   @override
   Widget build(final BuildContext context) {
-    final String longText = returnLongText();
+    final captionStyle = Theme.of(context).textTheme.caption;
+    final captionSizeFactor =
+        captionStyle.fontSize / Theme.of(context).textTheme.bodyText1.fontSize;
+    final captionColor = captionStyle.color;
+
     return AppScaffold(
       title: const Text('Detalii'),
       body: SingleChildScrollView(
@@ -66,7 +76,7 @@ class _NewsItemDetailsState extends State<NewsItemDetailsPage> {
                       child: Text('a postat:'),
                     ),
                   ]),
-                  Row(
+                  /*Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Expanded(
@@ -78,7 +88,68 @@ class _NewsItemDetailsState extends State<NewsItemDetailsPage> {
                         ),
                       )),
                     ],
+                  ),*/
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 12, bottom: 12),
+                          child: MarkdownBody(
+                              data:
+                                  '''# Tee\n ## Title\n ![Tux, the Linux mascot](https://wallpaperaccess.com/full/345330.jpg)''',
+                              styleSheet: MarkdownStyleSheet(
+                                h1: const TextStyle(
+                                    fontSize: 40, color: Colors.blue),
+                                code: const TextStyle(
+                                    fontSize: 12, color: Colors.blue),
+                              ),
+                              extensionSet: md.ExtensionSet(
+                                md.ExtensionSet.gitHubFlavored.blockSyntaxes,
+                                [
+                                  md.EmojiSyntax(),
+                                  ...md.ExtensionSet.gitHubFlavored
+                                      .inlineSyntaxes
+                                ],
+                              )),
+                        ),
+                      ),
+                    ],
                   ),
+                  /*Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Expanded(
+                          child: Padding(
+                        padding: const EdgeInsets.only(top: 12, bottom: 12),
+                        child: AutoSizeMarkdownBody(
+                          styleSheet: MarkdownStyleSheet.largeFromTheme(
+                              Theme.of(context).copyWith(
+                                  textTheme: Theme.of(context).textTheme.apply(
+                                      bodyColor: captionColor,
+                                      displayColor: captionColor,
+                                      fontSizeFactor: captionSizeFactor))),
+                          fitContent: false,
+                          maxLines: 5,
+                          overflow: TextOverflow.ellipsis,
+                          onTapLink: (final text, final link, final title) =>
+                              Utils.launchURL(link),
+                          */ /*
+                  This is a workaround because the strings in Firebase represent
+                  newlines as '\n' and Firebase replaces them with '\\n'. We
+                  need to replace them back for them to display properly.
+                  (See GitHub issue firebase/firebase-js-sdk#2366)
+                  */ /*
+                          data: _returnLongText().replaceAll('\\n', '\n'),
+                          extensionSet: md.ExtensionSet(
+                              md.ExtensionSet.gitHubFlavored.blockSyntaxes, [
+                            md.EmojiSyntax(),
+                            ...md.ExtensionSet.gitHubFlavored.inlineSyntaxes
+                          ]),
+                        ),
+                      ))
+                    ],
+                  ),*/
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
