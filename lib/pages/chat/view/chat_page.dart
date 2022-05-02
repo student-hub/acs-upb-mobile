@@ -97,7 +97,20 @@ class _ChatPageState extends State<ChatPage> {
           Flexible(
             child: TextField(
               controller: _textController,
-              onSubmitted: _handleSubmitted,
+              onSubmitted: (value) async {
+                var auxMessage = await createMessage(_textController.text,
+                    user.uid, languagePref);
+                _handleSubmitted(_textController.text);
+                setState(() {
+                  _futureMessage = auxMessage;
+                  final ChatMessage message = ChatMessage(
+                    content: _futureMessage.messageText,
+                    type: 'receiver',
+                  );
+                  _messages.insert(0, message);
+                });
+              },
+              // onSubmitted: _handleSubmitted,
               decoration:
                   const InputDecoration.collapsed(hintText: 'Send a message'),
               focusNode: _focusNode,
