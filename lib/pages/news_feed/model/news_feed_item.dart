@@ -9,6 +9,7 @@ class NewsFeedItem {
       @required this.createdAt,
       @required this.type,
       @required this.relevance,
+      @required this.sourceTags,
       @required this.sourceLink});
 
   final String itemId;
@@ -18,5 +19,6 @@ class NewsFeedItem {
   final String createdAt;
   final String type;
   final String relevance;
+  final List<String> sourceTags;
   final String sourceLink;
 }
