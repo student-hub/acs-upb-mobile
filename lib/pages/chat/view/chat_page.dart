@@ -1,12 +1,14 @@
 import 'package:acs_upb_mobile/authentication/model/user.dart';
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/pages/chat/model/conversation.dart';
+import 'package:acs_upb_mobile/pages/chat/model/message.dart';
 import 'package:acs_upb_mobile/pages/chat/model/message_rasa.dart';
 import 'package:acs_upb_mobile/pages/chat/service/conversation_provider.dart';
 import 'package:acs_upb_mobile/pages/chat/service/message_rasa_provider.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:preferences/preference_service.dart';
 import 'package:provider/provider.dart';
 
@@ -17,9 +19,14 @@ class ChatPage extends StatefulWidget {
 
 class _ChatPageState extends State<ChatPage> {
   final languagePref = PrefService.get('language');
-  List<ChatMessage> _messages;
+  List<ChatMessage> _messages = [
+    ChatMessage(content: S.current.messageContent, type: 'receiver'),
+    ChatMessage(content: S.current.messageGreeting, type: 'receiver'),
+  ];
+  List<Message> _savedMessages;
   final _textController = TextEditingController();
   final FocusNode _focusNode = FocusNode();
+  final _idxMess = 0;
   MessageRasa _futureMessage;
   Conversation conversation;
   User user;
@@ -44,18 +51,6 @@ class _ChatPageState extends State<ChatPage> {
     super.initState();
     _fetchUser();
     _fetchConversation();
-
-    if (languagePref == 'ro') {
-      _messages = [
-        const ChatMessage(content: 'Cu ce te pot ajuta?', type: 'receiver'),
-        const ChatMessage(content: 'Salut!', type: 'receiver'),
-      ];
-    } else {
-      _messages = [
-        const ChatMessage(content: 'How can I help you?', type: 'receiver'),
-        const ChatMessage(content: 'Hello!', type: 'receiver'),
-      ];
-    }
   }
 
   @override
@@ -147,7 +142,7 @@ class _ChatPageState extends State<ChatPage> {
 }
 
 class ChatMessage extends StatefulWidget {
-  const ChatMessage({Key key, this.content, this.type}) : super(key: key);
+  ChatMessage({Key key, this.content, this.type}) : super(key: key);
 
   final String content;
   final String type;

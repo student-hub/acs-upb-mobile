@@ -2945,6 +2945,26 @@ class S {
     );
   }
 
+  /// `Hello!`
+  String get messageGreeting {
+    return Intl.message(
+      'Hello!',
+      name: 'messageGreeting',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `How can I help you?`
+  String get messageContent {
+    return Intl.message(
+      'How can I help you?',
+      name: 'messageContent',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Please check your inbox for the password reset e-mail.`
   String get infoPasswordResetEmailSent {
     return Intl.message(
