@@ -2,7 +2,7 @@ import 'package:meta/meta.dart';
 
 class NewsFeedItem {
   NewsFeedItem(
-      {@required this.itemId,
+      {@required this.itemGuid,
       @required this.title,
       @required this.body,
       @required this.source,
@@ -12,7 +12,7 @@ class NewsFeedItem {
       @required this.sourceTags,
       @required this.sourceLink});
 
-  final String itemId;
+  final String itemGuid;
   final String title;
   final String body;
   final String source;

@@ -1,22 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:markdown/markdown.dart' as md;
 import 'package:oktoast/oktoast.dart';
 
 import '../../../widgets/scaffold.dart';
+import '../service/news_provider.dart';
 import 'news_feed_page.dart';
 
 class NewsItemDetailsPage extends StatefulWidget {
-  static const String routeName = '/news-item-details';
+  const NewsItemDetailsPage({@required this.newsItemGuid});
+  final String newsItemGuid;
 
   @override
-  _NewsItemDetailsState createState() => _NewsItemDetailsState();
+  _NewsItemDetailsState createState() =>
+      // ignore: no_logic_in_create_state
+      _NewsItemDetailsState(newsItemGuid: newsItemGuid);
 }
 
 class _NewsItemDetailsState extends State<NewsItemDetailsPage> {
-  static const String routeName = '/news-feed-items';
+  _NewsItemDetailsState({@required this.newsItemGuid});
 
+  final String newsItemGuid;
   bool isBookmarked = false;
 
   void _toggleBookmark() {
@@ -56,6 +62,8 @@ class _NewsItemDetailsState extends State<NewsItemDetailsPage> {
         captionStyle.fontSize / Theme.of(context).textTheme.bodyText1.fontSize;
     final captionColor = captionStyle.color;
 
+    final newsFeedProvider = Provider.of<NewsProvider>(context);
+
     return AppScaffold(
       title: const Text('Detalii'),
       body: SingleChildScrollView(
@@ -76,19 +84,23 @@ class _NewsItemDetailsState extends State<NewsItemDetailsPage> {
                       child: Text('a postat:'),
                     ),
                   ]),
-                  /*Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Expanded(
-                          child: Padding(
-                        padding: const EdgeInsets.only(top: 12, bottom: 12),
-                        child: Text(
-                          longText,
-                          style: const TextStyle(fontSize: 12),
-                        ),
-                      )),
-                    ],
-                  ),*/
+                  FutureBuilder(
+                      future:
+                          newsFeedProvider.fetchNewsItemDetails(newsItemGuid),
+                      builder: (final context, final snapshot) {
+                        if (snapshot.connectionState == ConnectionState.done) {
+                          if (snapshot.hasData) {
+                            print(snapshot.data);
+                          }
+                          return const Text('More details could not be loaded');
+                        }
+                        return const SizedBox(
+                          height: 100,
+                          child: Center(
+                            child: CircularProgressIndicator(),
+                          ),
+                        );
+                      }),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [

@@ -184,7 +184,6 @@ class _MyAppState extends State<MyApp> {
             Routes.faq: (final _) => FaqPage(),
             Routes.filter: (final _) => const FilterPage(),
             Routes.newsFeed: (final _) => NewsFeedPage(),
-            Routes.newsFeedItem: (final _) => NewsItemDetailsPage(),
             Routes.requestPermissions: (final _) => RequestPermissionsPage(),
             Routes.adminPanel: (final _) => const AdminPanelPage(),
             Routes.feedbackForm: (final _) => FeedbackFormPage(),

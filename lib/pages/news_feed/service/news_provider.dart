@@ -21,6 +21,18 @@ class NewsProvider with ChangeNotifier {
       return null;
     }
   }
+
+  Future<NewsFeedItem> fetchNewsItemDetails(final String newsId) async {
+    try {
+      final DocumentSnapshot doc =
+          await FirebaseFirestore.instance.collection('news').doc(newsId).get();
+      return DatabaseNews.fromSnap(doc);
+    } catch (e) {
+      print(e);
+      AppToast.show(S.current.errorSomethingWentWrong);
+      return null;
+    }
+  }
 }
 
 extension DatabaseNews on NewsFeedItem {
@@ -28,7 +40,7 @@ extension DatabaseNews on NewsFeedItem {
       final DocumentSnapshot<Map<String, dynamic>> snap) {
     final data = snap.data();
 
-    final String itemId = snap.id;
+    final String itemGuid = snap.id;
     final String title = data['title'];
     final String body = data['body'];
     final String source = data['source'];
@@ -38,7 +50,7 @@ extension DatabaseNews on NewsFeedItem {
     final String relevance = data['relevance'];
 
     return NewsFeedItem(
-        itemId: itemId,
+        itemGuid: itemGuid,
         title: title,
         body: body,
         source: source,

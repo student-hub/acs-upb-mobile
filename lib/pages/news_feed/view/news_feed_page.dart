@@ -7,6 +7,7 @@ import '../../../widgets/error_page.dart';
 import '../../../widgets/scaffold.dart';
 import '../model/news_feed_item.dart';
 import '../service/news_provider.dart';
+import 'news_item_details_page.dart';
 
 class NewsFeedPage extends StatefulWidget {
   static const String routeName = '/news_feed';
@@ -57,11 +58,11 @@ class _NewsFeedPageState extends State<NewsFeedPage> {
                       title: Text(item.title),
                       subtitle: Text(item.createdAt),
                       trailing: const Icon(Icons.arrow_forward_ios_outlined),
-                      //onTap: () => Utils.launchURL(item.sourceLink),
-                      onTap: () => Navigator.of(context).pushNamed(
-                          Routes.newsFeedItem,
-                          arguments: NewsItemDetailsRouteArguments(
-                              itemId: item.itemId)),
+                      onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (final context) => NewsItemDetailsPage(
+                                  newsItemGuid: item.itemGuid))),
                       dense: true,
                     ))
                 .toList(),
