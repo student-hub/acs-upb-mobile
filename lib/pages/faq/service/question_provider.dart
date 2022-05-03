@@ -14,26 +14,13 @@ class QuestionProvider with ChangeNotifier {
     final User user =
         Provider.of<AuthProvider>(context, listen: false).currentUserFromCache;
     try {
-      QuerySnapshot qSnapshot;
-      if (user != null) {
-        qSnapshot = limit == null
-            ? await FirebaseFirestore.instance
-                .collection('faq')
-                .where('source', whereIn: user.sources ?? ['official'])
-                .get()
-            : await FirebaseFirestore.instance
-                .collection('faq')
-                .limit(limit)
-                .where('source', whereIn: user.sources ?? ['official'])
-                .get();
-      } else {
-        qSnapshot = limit == null
-            ? await FirebaseFirestore.instance.collection('faq').get()
-            : await FirebaseFirestore.instance
-                .collection('faq')
-                .limit(limit)
-                .get();
-      }
+      final CollectionReference faqs =
+          FirebaseFirestore.instance.collection('faq');
+      final List<String> userSources = user?.sources ?? ['official'];
+      print(userSources);
+      final QuerySnapshot qSnapshot = limit == null
+          ? await faqs.where('source', whereIn: userSources).get()
+          : await faqs.where('source', whereIn: userSources).limit(limit).get();
       return qSnapshot.docs.map(DatabaseQuestion.fromSnap).toList();
     } catch (e) {
       print(e);

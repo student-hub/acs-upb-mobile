@@ -210,11 +210,11 @@
   "filterMenuShowUnprocessed": "Show unprocessed",
 
   "sourceOfficial": "Official web pages",
-  "sourceOfficialWebPages": "acs.pub.ro, upb.ro, curs.upb.ro, studenti.pub.ro",
+  "sourceInfoOfficialWebPages": "acs.pub.ro, upb.ro, curs.upb.ro, studenti.pub.ro",
   "sourceOrganization": "Student organizations",
-  "sourceStudentOrganizations": "LSAC, BEST, MLSA",
+  "sourceInfoStudentOrganizations": "LSAC, BEST, MLSA",
   "sourceStudentRepresentative": "Representative students",
-  "sourceStudentExamples": "group/series representatives, student council members",
+  "sourceInfoStudentExamples": "group/series representatives, student council members",
 
   "filterNodeNameBSc": "Bachelor's",
   "filterNodeNameMSc": "Master's",
@@ -337,7 +337,7 @@
   "infoAdmin": "Handle permission requests",
   "infoAccepted": "Accepted",
   "infoDenied": "Denied",
-  "infoAdditionInformationSources": "Facultatea de Automatică și Calculatoare nu își asumă răspunderea pentru informațiile provenite din surse neoficiale.",
+  "infoAdditionInformationSources": "The Faculty of Automatic Control and Computers is not responsible for information originating from unofficial sources.",
 
   "stringEmailDomain": "@stud.acs.upb.ro",
   "stringForum": "cs.curs.pub.ro",

@@ -239,7 +239,6 @@ class WebsiteProvider with ChangeNotifier {
 
       if (!userOnly) {
         List<DocumentSnapshot> documents = [];
-        debugPrint(sources.isNotEmpty.toString());
         if (filter == null) {
           final QuerySnapshot qSnapshot = sources.isNotEmpty
               ? await _db

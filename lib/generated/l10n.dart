@@ -1,7 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-
 import 'intl/messages_all.dart';
 
 // **************************************************************************
@@ -2047,10 +2046,10 @@ class S {
   }
 
   /// `acs.pub.ro, upb.ro, curs.upb.ro, studenti.pub.ro`
-  String get sourceOfficialWebPages {
+  String get sourceInfoOfficialWebPages {
     return Intl.message(
       'acs.pub.ro, upb.ro, curs.upb.ro, studenti.pub.ro',
-      name: 'sourceOfficialWebPages',
+      name: 'sourceInfoOfficialWebPages',
       desc: '',
       args: [],
     );
@@ -2067,10 +2066,10 @@ class S {
   }
 
   /// `LSAC, BEST, MLSA`
-  String get sourceStudentOrganizations {
+  String get sourceInfoStudentOrganizations {
     return Intl.message(
       'LSAC, BEST, MLSA',
-      name: 'sourceStudentOrganizations',
+      name: 'sourceInfoStudentOrganizations',
       desc: '',
       args: [],
     );
@@ -2087,10 +2086,10 @@ class S {
   }
 
   /// `group/series representatives, student council members`
-  String get sourceStudentExamples {
+  String get sourceInfoStudentExamples {
     return Intl.message(
       'group/series representatives, student council members',
-      name: 'sourceStudentExamples',
+      name: 'sourceInfoStudentExamples',
       desc: '',
       args: [],
     );
@@ -3246,10 +3245,10 @@ class S {
     );
   }
 
-  /// `Facultatea de Automatică și Calculatoare nu își asumă răspunderea pentru informațiile provenite din surse neoficiale.`
+  /// `The Faculty of Automatic Control and Computers is not responsible for information originating from unofficial sources.`
   String get infoAdditionInformationSources {
     return Intl.message(
-      'Facultatea de Automatică și Calculatoare nu își asumă răspunderea pentru informațiile provenite din surse neoficiale.',
+      'The Faculty of Automatic Control and Computers is not responsible for information originating from unofficial sources.',
       name: 'infoAdditionInformationSources',
       desc: '',
       args: [],

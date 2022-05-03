@@ -255,17 +255,4 @@ class _SettingsPageState extends State<SettingsPage> {
     }
     return S.current.settingsPermissionsNone;
   }
-
-  String localizedSourceString(String source) {
-    switch (source) {
-      case 'official':
-        return S.current.sourceOfficial;
-      case 'organizations':
-        return S.current.sourceOrganization;
-      case 'students':
-        return S.current.sourceStudentRepresentative;
-      default:
-        return source;
-    }
-  }
 }

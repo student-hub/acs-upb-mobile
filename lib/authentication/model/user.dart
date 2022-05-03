@@ -23,12 +23,6 @@ class User {
 
   int permissionLevel;
 
-  bool get canReadFacultyInfo => sources?.contains('official');
-
-  bool get canReadOrganizationInfo => sources?.contains('organizations');
-
-  bool get canReadStudentInfo => sources?.contains('students');
-
   bool get canAddPublicInfo => permissionLevel >= 3;
 
   bool get canEditPublicInfo => permissionLevel >= 3;

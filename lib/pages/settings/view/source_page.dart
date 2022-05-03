@@ -24,8 +24,9 @@ class _SourcePageState extends State<SourcePage> {
 
     authProvider = Provider.of<AuthProvider>(context, listen: false);
     final user = authProvider.currentUserFromCache;
-    wantsOrganizationInfo = user.canReadOrganizationInfo ?? false;
-    wantsStudentsInfo = user.canReadStudentInfo ?? false;
+    wantsOfficialInfo = user.sources?.contains('official') ?? false;
+    wantsOrganizationInfo = user.sources?.contains('organizations') ?? false;
+    wantsStudentsInfo = user.sources?.contains('students') ?? false;
   }
 
   @override
@@ -64,7 +65,7 @@ class _SourcePageState extends State<SourcePage> {
             value: true,
             onChanged: null,
             title: Text(S.current.sourceOfficial),
-            subtitle: Text(S.current.sourceOfficialWebPages),
+            subtitle: Text(S.current.sourceInfoOfficialWebPages),
             controlAffinity: ListTileControlAffinity.leading,
           ),
           CheckboxListTile(
@@ -75,7 +76,7 @@ class _SourcePageState extends State<SourcePage> {
               });
             },
             title: Text('${S.current.sourceOrganization}*'),
-            subtitle: Text(S.current.sourceStudentOrganizations),
+            subtitle: Text(S.current.sourceInfoStudentOrganizations),
             controlAffinity: ListTileControlAffinity.leading,
           ),
           CheckboxListTile(
@@ -86,7 +87,7 @@ class _SourcePageState extends State<SourcePage> {
               });
             },
             title: Text('${S.current.sourceStudentRepresentative}*'),
-            subtitle: Text(S.current.sourceStudentExamples),
+            subtitle: Text(S.current.sourceInfoStudentExamples),
             controlAffinity: ListTileControlAffinity.leading,
           ),
           Padding(

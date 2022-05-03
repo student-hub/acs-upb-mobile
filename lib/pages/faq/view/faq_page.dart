@@ -24,14 +24,12 @@ class _FaqPageState extends State<FaqPage> {
   String filter = '';
   bool searchClosed = true;
   List<String> activeTags = <String>[];
-  Future<List<Question>> futureQuestions;
   final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
     final QuestionProvider questionProvider =
         Provider.of<QuestionProvider>(context, listen: false);
-    futureQuestions = questionProvider.fetchQuestions();
     super.initState();
   }
 
@@ -64,6 +62,8 @@ class _FaqPageState extends State<FaqPage> {
 
   @override
   Widget build(BuildContext context) {
+    final QuestionProvider questionProvider =
+        Provider.of<QuestionProvider>(context);
     return AppScaffold(
       title: Text(S.current.sectionFAQ),
       actions: [
@@ -80,7 +80,7 @@ class _FaqPageState extends State<FaqPage> {
         )
       ],
       body: FutureBuilder(
-          future: futureQuestions,
+          future: questionProvider.fetchQuestions(context: context),
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
               return const Center(child: CircularProgressIndicator());

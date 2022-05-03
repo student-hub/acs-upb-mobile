@@ -210,11 +210,11 @@
   "filterMenuShowUnprocessed": "Arată fără răspuns",
 
   "sourceOfficial": "Site-uri oficiale",
-  "sourceOfficialWebPages": "acs.pub.ro, upb.ro, curs.upb.ro, studenti.pub.ro",
+  "sourceInfoOfficialWebPages": "acs.pub.ro, upb.ro, curs.upb.ro, studenti.pub.ro",
   "sourceOrganization": "Organizații studențești",
-  "sourceStudentOrganizations": "LSAC, BEST, MLSA",
+  "sourceInfoStudentOrganizations": "LSAC, BEST, MLSA",
   "sourceStudentRepresentative": "Studenți reprezentanți",
-  "sourceStudentExamples": "șefi de grupă, serie și studenții consilieri",
+  "sourceInfoStudentExamples": "șefi de grupă, serie și studenții consilieri",
 
   "filterNodeNameBSc": "Licență",
   "filterNodeNameMSc": "Master",
@@ -228,7 +228,7 @@
   "settingsTitleDataControl": "Control date",
   "settingsItemEditingPermissions": "Permisiunile tale de editare",
   "settingsPermissionsNone": "Fără permisiuni speciale",
-  "settingsPermissionsAdd": "Permisiune pentru adăugare de date publice",
+  "settingsPermissionsAdd": "Permisi Fune pentru adăugare de date publice",
   "settingsPermissionsEdit": "Permisiune pentru editare de date publice",
   "settingsAdminPermissions": "Permisiuni de administrator",
   "settingsPermissionsRequestSent": "Cerere pentru permisiuni trimisă",
@@ -336,7 +336,8 @@
   "infoAdmin": "Trateaza cererile de permisiuni",
   "infoAccepted": "Acceptat",
   "infoDenied": "Refuzat",
-  "infoAdditionInformationSources": "The Faculty of Automatic Control and Computers is not responsible for information originating from unofficial sources.",
+  "infoAdditionInformationSources": "Facultatea de Automatică și Calculatoare nu își asumă răspunderea pentru informațiile provenite din surse neoficiale.",
+
   "infoFeedbackForm": "Oferă feedback sau raportează probleme",
   "infoContactInfo": "În caz că avem nevoie de mai multe informații",
 
