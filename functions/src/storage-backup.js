@@ -4,8 +4,6 @@ const serviceAccount = require("../serviceAccountKey.json");
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount)
 });
-const sourceBucket = admin.storage().bucket("acs-upb-mobile.appspot.com");
-const destBucket = admin.storage().bucket("acs-upb-mobile-storage-backups");
 
 exports.backupStorage = functions.region("europe-west3")
   .pubsub
@@ -13,14 +11,15 @@ exports.backupStorage = functions.region("europe-west3")
   .timeZone('Europe/Bucharest')
   .onRun(async (_) => {
 
+    const projectId = process.env.GCP_PROJECT || process.env.GCLOUD_PROJECT;
+    const sourceBucket = admin.storage().bucket(`${projectId}.appspot.com`);
+    const destBucket = admin.storage().bucket(`${projectId}-storage-backups`);
+
     console.log("Starting storage backup...")
     const timestamp = new Date().toISOString();
 
     const [sourceFiles] = await sourceBucket.getFiles();
-
-    const sourceFileNames = sourceFiles.map(
-      (file) => file.name);
-
+    const sourceFileNames = sourceFiles.map((file) => file.name);
     console.log(timestamp, "# Total", sourceFileNames.length);
 
     let promises = [];

@@ -22,6 +22,7 @@ It is recommended that you go through [our workshop](https://github.com/acs-upb-
     - [Structure](#structure)
     - [Security rules](#security-rules-1)
   + [Functions](#functions)
+    - [Testing](#testing)
 * [Internationalization](#internationalization)
   + [On-device](#on-device)
   + [Remote](#remote)
@@ -78,6 +79,13 @@ Similarly, please create one PR per development item, instead of bundling multip
 | :warning: | After the merging is concluded, please delete the branches related to the pull request that you just closed.|
 |-----------|:------------------------------------------------------------------------------------------------------------|
 
+### Bugs & features
+Future improvements on the app are tracked in Github's **Projects** and **Issues**. Use **Projects** for bugs which don't affect the normal usage of the app or less important features. Major bugs and more relevant features are tracked on **Issues**. Keep in mind that you can convert a **Project** into an **Issue** if necessary (e.g. if you start working on it and want to have it assigned or associated with a PR).
+
+When mentioning an issue in code using a *TODO* comment, consider using the format:
+ ```TODO(GitHub username): Description, #issueID```
+
+As mentioned in [flutter_style_todos](https://dart-lang.github.io/linter/lints/flutter_style_todos.html) lint, the person mentioned in the *TODO* is the person most familiar with the issue, **and not necesarily the one who is assigned to solve it**. 
 
 ## Development tips
 
@@ -102,7 +110,9 @@ Similarly, please create one PR per development item, instead of bundling multip
     * For simplicity, you could call the default "main.dart" configuration in Android Studio "Debug", duplicate it and call the second one "Release", with `--release` as an argument. For example:
     <img src=screenshots/other/release_configuration.png>
     
-- On Android, ACS UPB Mobile uses **a separate (development) environment in debug mode**. That means a completely different Firebase project - separate data, including user info. This is not used automatically on iOS and web (#105), but on web you can manually switch to the dev environment by replacing `firebaseConfig.release` with `firebaseConfig.debug` in the [web/index.html](web/index.html) file.
+* On Android, ACS UPB Mobile uses **a separate (development) environment in debug mode**. That means a completely different Firebase project - separate data, including user info. Some important notes:
+  - This is not used automatically on iOS and web (#105), but there are some solutions. On `web`, you can manually switch to the dev environment by replacing `firebaseConfig.release` with `firebaseConfig.debug` in the [web/index.html](web/index.html) file. On `iOS`, you can test the app in debug mode by running `./run-ios-flavor.sh dev` in the root folder of the project. Similarly, if you need to run the release version **(not recommended)**, you can run `./run-ios-flavor.sh prod`. You can find more information about build flavors in Flutter [here](https://medium.com/@animeshjain/build-flavors-in-flutter-android-and-ios-with-different-firebase-projects-per-flavor-27c5c5dac10b).
+  - If you want to copy the data from the production environment into the development environment, you need to follow the export/import instructions from the Firebase [docs](https://firebase.google.com/docs/firestore/manage-data/export-import#export_data). This can help debug builds to match prod better, but this **should NEVER be used to copy user data**. Everything in the users/ collection should stay on the production project (and it would not work anyway, since the user IDs don't match the users in dev).
 
   | :exclamation: | You should ALWAYS use the separate development environment for testing the app when modifying any kind of data, so as not to risk breaking something in the production database. |
   |---------------|:---------------|
@@ -744,6 +754,29 @@ You do not need to worry about deploying to the production environment, as that 
 
 The project currently has two functions set up to perform daily backups of the data in Firestore ([backupFirestore](functions/src/firestore-backup.js)) and Storage ([backupStorage](functions/src/storage-backup.js)). They are scheduled to run automatically, every day at 00:00 EEST.
 
+The Functions page in the Firebase console offers a useful overview of the functions and their logs, but for more details and control you can also view them in the [Cloud Functions dashboard](https://console.cloud.google.com/functions) of the Google Cloud Console.
+
+#### Testing
+
+Usually, cloud functions can be tested locally using the Firebase [emulator](https://firebase.google.com/docs/functions/local-emulator). However, since our backup functions are using [Pub/Sub & Cloud Scheduler](https://firebase.google.com/docs/firestore/solutions/schedule-export) to run at scheduled times, they are a bit trickier to test using the emulator. They can, however, be tested on the **dev** project by deploying them manually through the [Firebase CLI](https://firebase.google.com/docs/cli).
+
+To do that, you first need to create a service account key by going to the Firebase console of the development project, pressing the cogwheel, then "Users and permissions". On the "Service accounts" tab under "Firebase Admin SDK", make sure "Node.js" is selected and press "Generate new service key". The generated file needs to be named "serviceAccountKey.json" and placed in the functions/ folder of your local copy of the repository. Note that this file is currently used only by `backupStorage`, as `backupFirestore` automatically uses the default service account ([docs](https://firebase.google.com/docs/firestore/solutions/schedule-export#configure_access_permissions)).
+
+Next, to deploy the functions to the dev project, you need to run:
+
+```shell
+# IMPORTANT: Switch to the dev project
+firebase use dev
+# Deploy local functions/.
+firebase deploy --only functions
+# Alternatively, you can also deploy a specific function using, e.g.:
+# firebase deploy --only functions:backupFirestore
+```
+
+**NOTE:** Recent npm versions seem to have an issue with the `--prefix` flag not working on Windows ([older issue](https://github.com/npm/cli/issues/1290), [newer issue](https://github.com/npm/cli/issues/4511)). If you're getting an `ENOENT` error saying that acs_upb_mobile\package.json cannot be found, try replacing `--prefix` with `--cwd` in [firebase.json](firebase.json).
+
+You can then go to the Firebase console under Functions, press the three dots next to one of the functions and select "View in Cloud Scheduler". In this dashboard, you can trigger the functions manually when needed.
+
 ## Internationalization
 
 ### On-device
@@ -782,4 +815,4 @@ If you need to use icons other than the ones provided by the
 * Copy the IconData definitions from the `.dart` file in the archive and replace the corresponding definitions in the [`CustomIcons`](lib/resources/custom_icons.dart) class;
 * Check that everything still works correctly :)
 
-**Note**: [FontAwesome](https://fontawesome.com/icons?d=gallery) outline icons are recommended, where possible, because they are consistent with the overall style. For additional action icons check out [FontAwesomeActions](https://github.com/nyon/fontawesome-actions) - the repo provides an [`.svg` font](https://github.com/nyon/fontawesome-actions/blob/master/dist/fonts/fontawesome-webfont.svg) you can upload directly into [FlutterIcon](https://www.fluttericon.com/).
+**NOTE:** [FontAwesome](https://fontawesome.com/icons?d=gallery) outline icons are recommended, where possible, because they are consistent with the overall style. For additional action icons check out [FontAwesomeActions](https://github.com/nyon/fontawesome-actions) - the repo provides an [`.svg` font](https://github.com/nyon/fontawesome-actions/blob/master/dist/fonts/fontawesome-webfont.svg) you can upload directly into [FlutterIcon](https://www.fluttericon.com/).
