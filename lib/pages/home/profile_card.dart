@@ -13,24 +13,24 @@ class ProfileCard extends StatefulWidget {
 
 class _ProfileCardState extends State<ProfileCard> {
   String profilePictureURL;
-  User user;
 
   @override
   void initState() {
     super.initState();
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
-    user = authProvider.currentUserFromCache;
-    authProvider.getProfilePictureURL().then((value) => setState(() {
-          profilePictureURL = value;
-        }));
-    authProvider.currentUser.then((value) => setState(() {
-          user = value;
-        }));
+    authProvider.getProfilePictureURL().then(
+          (value) => setState(
+            () {
+              profilePictureURL = value;
+            },
+          ),
+        );
   }
 
   @override
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
+    final User user = authProvider.currentUserFromCache;
     String userName;
     String userGroup;
     if (user != null) {

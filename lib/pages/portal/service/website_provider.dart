@@ -5,14 +5,14 @@ import 'package:acs_upb_mobile/authentication/model/user.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/filter/model/filter.dart';
 import 'package:acs_upb_mobile/pages/portal/model/website.dart';
+import 'package:acs_upb_mobile/resources/storage/storage_provider.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/foundation.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:preferences/preference_service.dart';
-import 'package:acs_upb_mobile/resources/storage/storage_provider.dart';
 
 extension IconURLExtension on Website {
   Future<String> getIconURL() => StorageProvider.findImageUrl(iconPath);
@@ -239,44 +239,29 @@ class WebsiteProvider with ChangeNotifier {
 
       if (!userOnly) {
         List<DocumentSnapshot> documents = [];
+        final _sources = sources.isNotEmpty ? sources : ['official'];
         if (filter == null) {
-          final QuerySnapshot qSnapshot = sources.isNotEmpty
-              ? await _db
-                  .collection('websites')
-                  .where('source', whereIn: sources)
-                  .get()
-              : await _db
-                  .collection('websites')
-                  .where('source', isEqualTo: 'official')
-                  .get();
+          final QuerySnapshot qSnapshot = await _db
+              .collection('websites')
+              .where('source', whereIn: _sources)
+              .get();
           documents.addAll(qSnapshot.docs);
         } else {
           // Documents without a 'relevance' field are relevant for everyone
-          final query = sources.isNotEmpty
-              ? _db
-                  .collection('websites')
-                  .where('source', whereIn: sources)
-                  .where('relevance', isNull: true)
-              : _db
-                  .collection('websites')
-                  .where('source', isEqualTo: 'official')
-                  .where('relevance', isNull: true);
+          final query = _db
+              .collection('websites')
+              .where('source', whereIn: _sources)
+              .where('relevance', isNull: true);
           final QuerySnapshot qSnapshot = await query.get();
           documents.addAll(qSnapshot.docs);
 
           for (final string in filter.relevantNodes) {
             // selected nodes
-            final query = sources.isNotEmpty
-                ? _db
-                    .collection('websites')
-                    .where('degree', isEqualTo: filter.baseNode)
-                    .where('source', whereIn: sources)
-                    .where('relevance', arrayContains: string)
-                : _db
-                    .collection('websites')
-                    .where('degree', isEqualTo: filter.baseNode)
-                    .where('source', isEqualTo: 'official')
-                    .where('relevance', arrayContains: string);
+            final query = _db
+                .collection('websites')
+                .where('degree', isEqualTo: filter.baseNode)
+                .where('source', whereIn: _sources)
+                .where('relevance', arrayContains: string);
             final QuerySnapshot qSnapshot = await query.get();
             documents.addAll(qSnapshot.docs);
           }
@@ -301,7 +286,6 @@ class WebsiteProvider with ChangeNotifier {
             ? await ref
                 .collection('websites')
                 .where('source', whereIn: sources)
-                .where('source', isEqualTo: 'official')
                 .get()
             : await ref.collection('websites').get();
 
