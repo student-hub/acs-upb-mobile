@@ -1,3 +1,4 @@
+
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/faq/model/question.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
@@ -10,15 +11,17 @@ class QuestionProvider with ChangeNotifier {
       final QuerySnapshot qSnapshot = limit == null
           ? await FirebaseFirestore.instance.collection('faq').get()
           : await FirebaseFirestore.instance
-              .collection('faq')
-              .limit(limit)
-              .get();
+          .collection('faq')
+          .limit(limit)
+          .get();
       return qSnapshot.docs.map(DatabaseQuestion.fromSnap).toList();
-    } catch (e) {
-      print(e);
+    } on FormatException {
       AppToast.show(S.current.errorSomethingWentWrong);
-      return null;
+    } on FirebaseException {
+      AppToast.show(S.current.errorPermissionDenied);
     }
+
+
   }
 }
 
@@ -33,3 +36,6 @@ extension DatabaseQuestion on Question {
     return Question(question: question, answer: answer, tags: tags);
   }
 }
+
+
+

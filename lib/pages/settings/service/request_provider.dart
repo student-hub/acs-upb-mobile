@@ -36,9 +36,8 @@ class RequestProvider {
       await ref.add(data);
 
       return userAlreadyRequestedCache = true;
-    } catch (e) {
-      print(e);
-      AppToast.show(S.current.errorSomethingWentWrong);
+    } on FirebaseException {
+      AppToast.show(S.current.errorPermissionDenied);
       return userAlreadyRequestedCache = false;
     }
   }
@@ -53,9 +52,8 @@ class RequestProvider {
         return userAlreadyRequestedCache = true;
       }
       return userAlreadyRequestedCache = false;
-    } catch (e) {
-      print(e);
-      AppToast.show(S.current.errorSomethingWentWrong);
+    } on FirebaseException {
+      AppToast.show(S.current.errorPermissionDenied);
       return userAlreadyRequestedCache = false;
     }
   }

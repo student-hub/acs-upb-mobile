@@ -113,9 +113,8 @@ class ClassProvider with ChangeNotifier {
         return [];
       }
       return List<String>.from(snap.data()['classes'] ?? []);
-    } catch (e) {
-      print(e);
-      AppToast.show(S.current.errorSomethingWentWrong);
+    } on FirebaseException {
+      AppToast.show(S.current.errorPermissionDenied);
       return null;
     }
   }
@@ -128,8 +127,8 @@ class ClassProvider with ChangeNotifier {
       userClassHeadersCache = null;
       notifyListeners();
       return true;
-    } catch (e) {
-      AppToast.show(S.current.errorSomethingWentWrong);
+    } on FirebaseException {
+      AppToast.show(S.current.errorPermissionDenied);
       return false;
     }
   }
@@ -148,9 +147,8 @@ class ClassProvider with ChangeNotifier {
       }
 
       return ClassHeaderExtension.fromSnap(query.docs.first);
-    } catch (e) {
-      print(e);
-      AppToast.show(S.current.errorSomethingWentWrong);
+    } on FirebaseException {
+      AppToast.show(S.current.errorPermissionDenied);
       return null;
     }
   }
@@ -199,9 +197,8 @@ class ClassProvider with ChangeNotifier {
 
         return userClassHeadersCache = headers;
       }
-    } catch (e) {
-      print(e);
-      AppToast.show(S.current.errorSomethingWentWrong);
+    } on FirebaseException {
+      AppToast.show(S.current.errorPermissionDenied);
       return null;
     }
   }
@@ -211,9 +208,8 @@ class ClassProvider with ChangeNotifier {
       final DocumentSnapshot snap =
           await _db.collection('classes').doc(header.id).get();
       return ClassExtension.fromSnap(header: header, snap: snap);
-    } catch (e) {
-      print(e);
-      AppToast.show(S.current.errorSomethingWentWrong);
+    } on FirebaseException {
+      AppToast.show(S.current.errorPermissionDenied);
       return null;
     }
   }
@@ -239,9 +235,8 @@ class ClassProvider with ChangeNotifier {
 
       notifyListeners();
       return true;
-    } catch (e) {
-      print(e);
-      AppToast.show(S.current.errorSomethingWentWrong);
+    } on FirebaseException {
+      AppToast.show(S.current.errorPermissionDenied);
       return false;
     }
   }
@@ -258,9 +253,8 @@ class ClassProvider with ChangeNotifier {
 
       notifyListeners();
       return true;
-    } catch (e) {
-      print(e);
-      AppToast.show(S.current.errorSomethingWentWrong);
+    } on FirebaseException {
+      AppToast.show(S.current.errorPermissionDenied);
       return false;
     }
   }
@@ -281,9 +275,8 @@ class ClassProvider with ChangeNotifier {
 
       notifyListeners();
       return true;
-    } catch (e) {
-      print(e);
-      AppToast.show(S.current.errorSomethingWentWrong);
+    } on FirebaseException {
+      AppToast.show(S.current.errorPermissionDenied);
       return false;
     }
   }

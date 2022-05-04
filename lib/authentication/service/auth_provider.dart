@@ -174,7 +174,7 @@ class AuthProvider with ChangeNotifier {
 
   Future<bool> signInAnonymously() async {
     return FirebaseAuth.instance.signInAnonymously().catchError((dynamic e) {
-      _errorHandler(e);
+      AppToast.show('No internet');
       return false;
     }).then((_) => true);
   }
@@ -184,7 +184,7 @@ class AuthProvider with ChangeNotifier {
     await _firebaseUser.updatePassword(password).then((_) {
       result = true;
     }).catchError((dynamic e) {
-      _errorHandler(e);
+      AppToast.show(e.toString());
       result = false;
     });
     return result;
@@ -195,7 +195,7 @@ class AuthProvider with ChangeNotifier {
     await _firebaseUser.updateEmail(email).then((_) {
       result = true;
     }).catchError((dynamic e) {
-      _errorHandler(e);
+      AppToast.show(e.toString());
       result = false;
     });
     return result;
@@ -217,7 +217,7 @@ class AuthProvider with ChangeNotifier {
     final List<String> providers = await FirebaseAuth.instance
         .fetchSignInMethodsForEmail(email)
         .catchError((dynamic e) {
-      _errorHandler(e);
+      AppToast.show('No internet');
       return null;
     });
 
@@ -235,7 +235,7 @@ class AuthProvider with ChangeNotifier {
     final result = await FirebaseAuth.instance
         .signInWithEmailAndPassword(email: email, password: password)
         .catchError((dynamic e) {
-      _errorHandler(e);
+      AppToast.show(S.current.errorNoPassword);
       return null;
     });
     await _fetchUser();
@@ -281,8 +281,8 @@ class AuthProvider with ChangeNotifier {
     List<String> providers = [];
     try {
       providers = await FirebaseAuth.instance.fetchSignInMethodsForEmail(email);
-    } catch (e) {
-      _errorHandler(e, showToast: showToast);
+    } on FirebaseAuthException{
+      AppToast.show(S.current.errorPermissionDenied);
       return false;
     }
     final bool accountExists = providers.contains('password');
@@ -296,13 +296,13 @@ class AuthProvider with ChangeNotifier {
     List<String> providers = [];
     try {
       providers = await FirebaseAuth.instance.fetchSignInMethodsForEmail(email);
-    } catch (e) {
-      _errorHandler(e, showToast: showToast);
-      return false;
+    } on FirebaseAuthException{
+      AppToast.show(S.current.errorInvalidEmail);
     }
     final bool accountExists = providers.isNotEmpty;
     if (accountExists && showToast) {
       AppToast.show(S.current.warningEmailInUse(email));
+      return false;
     }
     return !accountExists;
   }
@@ -312,8 +312,8 @@ class AuthProvider with ChangeNotifier {
       await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
       AppToast.show(S.current.infoPasswordResetEmailSent);
       return true;
-    } catch (e) {
-      _errorHandler(e);
+    } on FirebaseAuthException{
+      AppToast.show(S.current.errorPermissionDenied);
       return false;
     }
   }
@@ -383,11 +383,9 @@ class AuthProvider with ChangeNotifier {
 
       notifyListeners();
       return true;
-    } catch (e) {
+    } on FirebaseException {
       // Remove user if it was created
       await _firebaseUser?.delete();
-
-      _errorHandler(e);
       return false;
     }
   }
@@ -395,8 +393,8 @@ class AuthProvider with ChangeNotifier {
   Future<bool> sendEmailVerification() async {
     try {
       await _firebaseUser.sendEmailVerification();
-    } catch (e) {
-      _errorHandler(e);
+    } on FirebaseException  {
+      AppToast.show(S.current.errorSomethingWentWrong);
       return false;
     }
 
@@ -424,8 +422,8 @@ class AuthProvider with ChangeNotifier {
 
       notifyListeners();
       return true;
-    } catch (e) {
-      _errorHandler(e);
+    } on FirebaseException  {
+      AppToast.show(S.current.errorSomethingWentWrong);
       return false;
     }
   }
