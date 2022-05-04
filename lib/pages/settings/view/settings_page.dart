@@ -112,9 +112,6 @@ class _SettingsPageState extends State<SettingsPage> {
                   onTap: () {
                     if (authProvider.isAnonymous) {
                       AppToast.show(S.current.messageNotLoggedIn);
-                    } else if (isVerified != true) {
-                      AppToast.show(
-                          S.current.messageEmailNotVerifiedToPerformAction);
                     } else {
                       Navigator.of(context).pushNamed(Routes.sources);
                     }

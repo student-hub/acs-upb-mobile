@@ -291,6 +291,30 @@ class _TimetablePageState extends State<TimetablePage> {
           )
         ],
       );
+    } else if (!user.sources.contains('students')) {
+      return AppDialog(
+        title: S.current.warningNoEvents,
+        content: [
+          Text(
+            S.current.warningNoStudentSource,
+          ),
+        ],
+        actions: [
+          AppButton(
+            text: S.current.settingsSourceSelection,
+            width: 130,
+            onTap: () async {
+              Navigator.of(context).pop();
+              if (authProvider.isAnonymous) {
+                AppToast.show(S.current.messageNotLoggedIn);
+              } else {
+                await Navigator.of(context)
+                    .pushNamed(Routes.requestPermissions);
+              }
+            },
+          ),
+        ],
+      );
     } else {
       return AppDialog(
         title: S.current.warningNoEvents,

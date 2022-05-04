@@ -184,6 +184,7 @@
   "warningUnableToReachNewsFeed": "Nu am putut încărca fluxul de știri.",
   "warningNoNews": "Nu au fost postate știri încă.",
   "warningEventNotEditable": "Acest eveniment nu poate fi modificat.",
+  "warningNoStudentSource": "Toate evenimentele sunt adaugate de studenți.Trebuie să selectați sursa de informație stundenți",
 
   "navigationAskPermissions": "Cere permisiuni",
   "navigationHome": "Acasă",
