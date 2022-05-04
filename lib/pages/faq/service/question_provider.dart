@@ -17,7 +17,6 @@ class QuestionProvider with ChangeNotifier {
       final CollectionReference faqs =
           FirebaseFirestore.instance.collection('faq');
       final List<String> userSources = user?.sources ?? ['official'];
-      print(userSources);
       final QuerySnapshot qSnapshot = limit == null
           ? await faqs.where('source', whereIn: userSources).get()
           : await faqs.where('source', whereIn: userSources).limit(limit).get();
