@@ -10,5 +10,14 @@ class Message {
   String entity;
   bool isFlagged;
   int index;
+
+  Map<String, dynamic> toJson() {
+    return {
+      'index': index,
+      'entity': entity,
+      'isFlagged': isFlagged,
+      'content': content
+    };
+  }
    
 }

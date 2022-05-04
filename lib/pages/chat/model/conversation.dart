@@ -1,5 +1,4 @@
 import 'package:acs_upb_mobile/pages/chat/model/message.dart';
-import 'package:googleapis/admob/v1.dart';
 import 'package:meta/meta.dart';
 
 class Conversation {

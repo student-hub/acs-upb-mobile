@@ -23,10 +23,15 @@ class _ChatPageState extends State<ChatPage> {
     ChatMessage(content: S.current.messageContent, type: 'receiver'),
     ChatMessage(content: S.current.messageGreeting, type: 'receiver'),
   ];
-  List<Message> _savedMessages;
+  List<Message> _savedMessages = [
+    Message(index: 0, content: S.current.messageGreeting, entity: 'Polly',
+    isFlagged: false),
+    Message(index: 1, content: S.current.messageContent, entity: 'Polly',
+    isFlagged: false),
+  ];
   final _textController = TextEditingController();
   final FocusNode _focusNode = FocusNode();
-  final _idxMess = 0;
+  final _idxMess = 2;
   MessageRasa _futureMessage;
   Conversation conversation;
   User user;
@@ -40,7 +45,8 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   Future<void> _fetchConversation() async {
-    final conv = await addConversation();
+    print(_savedMessages);
+    final conv = await addConversation(_savedMessages);
     setState(() {
       conversation = conv;
     });
