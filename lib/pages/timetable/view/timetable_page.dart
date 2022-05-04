@@ -22,6 +22,7 @@ import 'package:provider/provider.dart';
 import 'package:recase/recase.dart';
 import 'package:time_machine/time_machine.dart';
 import 'package:timetable/timetable.dart';
+import 'lead_header.dart';
 
 class TimetablePage extends StatefulWidget {
   const TimetablePage({Key key}) : super(key: key);
@@ -98,6 +99,8 @@ class _TimetablePageState extends State<TimetablePage> {
         child: Stack(
           children: [
             Timetable<UniEventInstance>(
+              leadingHeaderBuilder: (_, date) =>
+                  LeadHeader(date ?? LocalDate.today()),
               controller: _controller,
               dateHeaderBuilder: (_, date) => DateHeader(date),
               eventBuilder: (event) => UniEventWidget(event),

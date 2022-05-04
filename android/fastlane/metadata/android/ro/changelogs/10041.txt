@@ -1,0 +1,2 @@
+Adăugat:
+    -Utilizatorii pot alege din setări dacă vor să vadă în timetable numărul săptămânii din calendarul academic.

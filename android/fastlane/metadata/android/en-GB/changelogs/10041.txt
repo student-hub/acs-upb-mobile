@@ -1,0 +1,2 @@
+Added:
+     -Users can now choose from setting if they want to see in the week indicator,from the timetable,the academic week number.

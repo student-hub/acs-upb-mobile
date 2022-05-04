@@ -1,4 +1,5 @@
 import 'package:acs_upb_mobile/pages/timetable/model/events/all_day_event.dart';
+import 'package:acs_upb_mobile/pages/timetable/view/lead_header.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:flutter/foundation.dart';
 import 'package:time_machine/time_machine.dart';
@@ -76,5 +77,46 @@ class AcademicCalendar {
     }
 
     return weeksByYear.values.expand((e) => e).toSet();
+  }
+
+  int semesterForDate(LocalDate date) {
+    for (final semester in semesters) {
+      if (date._isBeforeOrDuring(semester)) {
+        return 1 + int.tryParse(semester.id[semester.id.length - 1]);
+      }
+    }
+    return -1;
+  }
+
+  String getWeekNumber(LocalDate date) {
+    final week = ((date.dayOfYear - date.dayOfWeek.value + 10) / 7).floor();
+    if (LeadHeader.academicWeekNumber == false) return week.toString();
+    final int finalWeekOfFirstSem = ((semesters[0].endDate.dayOfYear -
+                semesters[0].endDate.dayOfWeek.value +
+                10) /
+            7)
+        .floor();
+    if (!nonHolidayWeeks.contains(week)) {
+      return 'H';
+    } else {
+      if (semesterForDate(date) == 1) {
+        return (nonHolidayWeeks.toList().indexOf(week) + 1).toString();
+      } else {
+        return ((nonHolidayWeeks.toList().indexOf(week) + 1) -
+                (nonHolidayWeeks.toList().indexOf(finalWeekOfFirstSem) + 1))
+            .toString();
+      }
+    }
+  }
+}
+
+extension LocalDateComparisons on LocalDate {
+  bool _isDuring(AllDayUniEvent semester) {
+    return DateInterval(semester.startDate, semester.endDate).contains(this);
+  }
+
+  bool _isBeforeOrDuring(AllDayUniEvent semester) {
+    if (compareTo(semester.startDate) < 0) return true;
+    return _isDuring(semester);
   }
 }

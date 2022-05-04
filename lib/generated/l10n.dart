@@ -2195,6 +2195,25 @@ class S {
       args: [],
     );
   }
+  /// `Academic week number`
+  String get settingsAcademicWeekNumber {
+    return Intl.message(
+      'Academic week number',
+      name: 'settingsAcademicWeekNumber',
+      desc: '',
+      args: [],
+    );
+  }
+  /// 'Show number of week in the semester instead of the calendar year'
+  String get settingsAcademicWeekNumberSubtitle {
+    return Intl.message(
+      'Show number of week in the semester instead of the calendar year',
+      name: 'settingsAcademicWeekNumberSubtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
 
   /// `Admin Panel`
   String get settingsItemAdmin {

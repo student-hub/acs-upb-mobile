@@ -5,6 +5,7 @@ import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/navigation/routes.dart';
 import 'package:acs_upb_mobile/pages/settings/service/request_provider.dart';
 import 'package:acs_upb_mobile/pages/timetable/service/uni_event_provider.dart';
+import 'package:acs_upb_mobile/pages/timetable/view/lead_header.dart';
 import 'package:acs_upb_mobile/resources/locale_provider.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/widgets/icon_text.dart';
@@ -148,6 +149,22 @@ class _SettingsPageState extends State<SettingsPage> {
                     title: Text(S.current.settingsExportToGoogleCalendar),
                     subtitle: Text(S.current.infoExportToGoogleCalendar),
                   ),
+                ),
+                Column(
+                  children: [
+                    SwitchPreference(
+                      S.current.settingsAcademicWeekNumber,
+                      'Academic week number',
+                      onEnable: () {
+                        LeadHeader.academicWeekNumber = true;
+                      },
+                      onDisable: () {
+                        LeadHeader.academicWeekNumber = false;
+                      },
+                      defaultVal: false,
+                      desc: S.current.settingsAcademicWeekNumberSubtitle,
+                    ),
+                  ],
                 ),
                 PreferenceTitle(S.current.labelFeedback),
                 ListTile(
