@@ -243,6 +243,18 @@ All the documents in the collection share the same structure:
     <td>☐</td>
     <td>a numeric value that defines what the user is allowed to do; if missing, it is treated as being equal to zero</td>
   </tr>
+  <tr>
+    <td>classes</td>
+    <td><code>array&lt;string&gt;</code></td>
+    <td>🗹</td>
+    <td>list of classes in which the user is enrolled</td>
+  </tr>
+  <tr>
+    <td>classesFeedback</td>
+    <td><code>map&lt;string, boolean&gt;</code></td>
+    <td>☐</td>
+    <td>specifies whether the user completed or not the feedback form for a class</td>
+  </tr>
 </table>
 
 ###### Sub-collections
@@ -418,6 +430,146 @@ All the documents in the collection share the same structure:
 Filter structure is public information and should never (or very rarely) need to be modified, therefore for this collection, _anyone can **read**_ but _no one can **write**_.
 
 </details>
+
+<details>
+<summary class="collection" id="forms-collection"><b>forms</b></summary>
+Initially, the purpose of this collection was to gather requests from users to change their permission level to contribute with various details introduced in the application, such as <a href=#events-collection>events</a> in the timetable or information about a particular <a href=#classes-collection>class</a>, like grading, valuable links, and resources. This form can be accessed by each user from the *Settings* page of the application.
+
+###### Fields
+Initially, all the documents in the collection shared the same structure:
+
+<table>
+  <tr>
+    <th>Field</th>
+    <th>Type</th>
+    <th>Required?</th>
+    <th>Additional info</th>
+  </tr>
+  <tr>
+    <td>addedBy</td>
+    <td><code>string</code></td>
+    <td>☐</td>
+    <td>ID of the user who submitted the request</td>
+  </tr>
+  <tr>
+    <td>dateSubmitted</td>
+    <td><code>timestamp</code></td>
+    <td>☐</td>
+    <td>timestamp when a request was sent</td>
+  </tr>
+  <tr>
+    <td>requestBody</td>
+    <td><code>string</code></td>
+    <td>🗹</td>
+    <td>actual message sent by a user</td>
+  </tr>
+</table>
+
+Subsequently, to benefit from a database architecture as compact as possible, we decided to introduce two other documents in the same collection.
+The first document, `class_feedback_questions`, is responsible for storing all the questions from the feedback form and their corresponding categories. The structure of this document is as follows:
+ 
+<table>
+  <tr>
+    <th>Field</th>
+    <th>Type</th>
+    <th>Required?</th>
+    <th>Additional info</th>
+  </tr>
+  <tr>
+    <td>categories</td>
+    <td><code>map&lt;string, map&lt;string, string>&gt;</code></td>
+    <td>☐</td>
+    <td>nested map composed of the category name as key and another map as value, which stores pairs of elements that contain the language reference and the corresponding localized category name</td>
+  </tr>
+  <tr>
+    <td>questions</td>
+    <td><code>map&lt;string, feedback_question*&gt;</code></td>
+    <td>☐</td>
+    <td>stores all the questions from the feedback form</td>
+  </tr>
+</table>
+
+*A `feedback_question` has the following fields:
+<table>
+  <tr>
+    <th>Field</th>
+    <th>Type</th>
+    <th>Required?</th>
+    <th>Additional info</th>
+  </tr>
+  <tr>
+    <td>category</td>
+    <td><code>string</code></td>
+    <td>☐</td>
+    <td>category name; the value of this field corresponds to the key of the nested map categories from `class_feedback_questions` document</td>
+  </tr>
+  <tr>
+    <td>question</td>
+    <td><code>map&lt;string, string&gt;</code></td>
+    <td>☐</td>
+    <td>stores the actual question as value, while the key specifies the language ("en", "ro")</td>
+  </tr>
+  <tr>
+    <td>type</td>
+    <td><code>string</code></td>
+    <td>☐</td>
+    <td>one of: "rating", "dropdown", "text", "slider"</td>
+  </tr>
+  <tr>
+    <td>options</td>
+    <td><code>array&lt;map&lt;string, string&gt;&gt;</code></td>
+    <td>☐</td>
+    <td>answer options for dropdown questions; key of the map contains the language, whereas the value corresponds to the localized answer</td>
+  </tr>
+</table>
+
+The second document, `class_feedback_answers`, has a more complex structure. It is composed of multiple _subcollections, whose keys are defined by the number of the question in the feedback form. Furthermore, each _subcollection consists of a list of documents with an automatically generated key, while each document represents the answer submitted by a user to that question. As we reach the end of the hierarchy, an answer is composed of the actual value (the result or the comment provided), together with the details related to a class (its name, associated teacher, and assistant). To provide anonymity, we do not retain the ID of the user who completed a form. The structure of this document is as follows:
+<table>
+  <tr>
+    <th>Field</th>
+    <th>Type</th>
+    <th>Required?</th>
+    <th>Additional info</th>
+  </tr>
+  <tr>
+    <td>answer</td>
+    <td><code>string</code></td>
+    <td>☐</td>
+    <td>actual value of the answer provided for a question</td>
+  </tr>
+  <tr>
+    <td>assistant</td>
+    <td><code>string</code></td>
+    <td>🗹</td>
+    <td>name of the assistant</td>
+  </tr>
+  <tr>
+    <td>class</td>
+    <td><code>string</code></td>
+    <td>☐</td>
+    <td>ID of the class for which feedback is given</td>
+  </tr>
+  <tr>
+    <td>dateSubmitted</td>
+    <td><code>timestamp</code></td>
+    <td>☐</td>
+    <td>records the exact time when the feedback form was sent</td>
+  </tr>
+  <tr>
+    <td>teacher</td>
+    <td><code>string</code></td>
+    <td>🗹</td>
+    <td>name of the teacher</td>
+  </tr>
+</table>
+
+###### Rules
+
+Since forms in this collection are public information (_anyone can **read**_), altering and adding data here is a privilege and needs to be monitored.
+
+Users can **update** an existing form document _if their `permissionLevel` is equal to four_, more precisely they must have the role of admin. Additionally, _anyone who wants to **create** a new form document needs to be authenticated_ in the first place.
+
+Documents in this collection cannot be **delete**d.
 
 </details>
 
@@ -671,7 +823,7 @@ All the documents in the collection share the same structure:
   </tr>
   <tr>
     <td>duration</td>
-    <td><code>map<string, number></code></td>
+    <td><code>map&lt;string, number&gt;</code></td>
     <td>🗹</td>
     <td>A map containing duration keys like "hours", "minutes" etc.</td>
   </tr>
