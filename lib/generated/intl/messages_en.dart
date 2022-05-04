@@ -302,6 +302,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "settingsPermissionsNone" : MessageLookupByLibrary.simpleMessage("No special permissions"),
     "settingsPermissionsRequestSent" : MessageLookupByLibrary.simpleMessage("Permissions request already sent"),
     "settingsRelevanceFilter" : MessageLookupByLibrary.simpleMessage("Relevance filter"),
+    "settingsSourceSelection" : MessageLookupByLibrary.simpleMessage("Information sources selection"),
     "settingsTitleData" : MessageLookupByLibrary.simpleMessage("Data"),
     "settingsTitleDataControl" : MessageLookupByLibrary.simpleMessage("Data control"),
     "settingsTitleLocalization" : MessageLookupByLibrary.simpleMessage("Localization"),

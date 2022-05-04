@@ -8,6 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class SourcePage extends StatefulWidget {
+  static const String routeName = '/sources';
+
   @override
   _SourcePageState createState() => _SourcePageState();
 }

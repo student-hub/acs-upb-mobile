@@ -2185,6 +2185,16 @@ class S {
     );
   }
 
+  /// `Information sources selection`
+  String get settingsSourceSelection {
+    return Intl.message(
+      'Information sources selection',
+      name: 'settingsSourceSelection',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `No special permissions`
   String get settingsPermissionsNone {
     return Intl.message(

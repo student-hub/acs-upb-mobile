@@ -28,8 +28,6 @@ class _FaqPageState extends State<FaqPage> {
 
   @override
   void initState() {
-    final QuestionProvider questionProvider =
-        Provider.of<QuestionProvider>(context, listen: false);
     super.initState();
   }
 

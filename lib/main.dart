@@ -23,6 +23,7 @@ import 'package:acs_upb_mobile/pages/settings/service/issue_provider.dart';
 import 'package:acs_upb_mobile/pages/settings/view/request_permissions.dart';
 import 'package:acs_upb_mobile/pages/settings/view/settings_page.dart';
 import 'package:acs_upb_mobile/pages/settings/view/feedback_form.dart';
+import 'package:acs_upb_mobile/pages/settings/view/source_page.dart';
 import 'package:acs_upb_mobile/pages/timetable/service/uni_event_provider.dart';
 import 'package:acs_upb_mobile/resources/locale_provider.dart';
 import 'package:acs_upb_mobile/resources/remote_config.dart';
@@ -138,6 +139,7 @@ class _MyAppState extends State<MyApp> {
         Routes.root: (_) => AppLoadingScreen(),
         Routes.home: (_) => const AppBottomNavigationBar(),
         Routes.settings: (_) => SettingsPage(),
+        Routes.sources: (_) => SourcePage(),
         Routes.login: (_) => LoginView(),
         Routes.signUp: (_) => SignUpView(),
         Routes.faq: (_) => FaqPage(),

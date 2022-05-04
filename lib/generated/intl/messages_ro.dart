@@ -302,6 +302,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "settingsPermissionsNone" : MessageLookupByLibrary.simpleMessage("Fără permisiuni speciale"),
     "settingsPermissionsRequestSent" : MessageLookupByLibrary.simpleMessage("Cerere pentru permisiuni trimisă"),
     "settingsRelevanceFilter" : MessageLookupByLibrary.simpleMessage("Filtru de relevanță"),
+    "settingsSourceSelection" : MessageLookupByLibrary.simpleMessage("Selectare surse informații"),
     "settingsTitleData" : MessageLookupByLibrary.simpleMessage("Date"),
     "settingsTitleDataControl" : MessageLookupByLibrary.simpleMessage("Control date"),
     "settingsTitleLocalization" : MessageLookupByLibrary.simpleMessage("Localizare"),

@@ -108,6 +108,20 @@ class _SettingsPageState extends State<SettingsPage> {
                   subtitle: Text(userPermissionString),
                 ),
                 ListTile(
+                  key: const ValueKey('edit_source_selection'),
+                  onTap: () {
+                    if (authProvider.isAnonymous) {
+                      AppToast.show(S.current.messageNotLoggedIn);
+                    } else if (isVerified != true) {
+                      AppToast.show(
+                          S.current.messageEmailNotVerifiedToPerformAction);
+                    } else {
+                      Navigator.of(context).pushNamed(Routes.sources);
+                    }
+                  },
+                  title: Text(S.current.settingsSourceSelection),
+                ),
+                ListTile(
                   onTap: () => Utils.launchURL(Utils.privacyPolicyURL),
                   title: Text(S.current.labelPrivacyPolicy),
                   subtitle: Text(

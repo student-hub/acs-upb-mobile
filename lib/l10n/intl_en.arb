@@ -227,6 +227,7 @@
   "settingsTitleLocalization": "Localization",
   "settingsTitleDataControl": "Data control",
   "settingsItemEditingPermissions": "Your editing permissions",
+  "settingsSourceSelection": "Information sources selection",
   "settingsPermissionsNone": "No special permissions",
   "settingsPermissionsAdd": "Permission to add public info",
   "settingsPermissionsEdit": "Permission to edit public info",
