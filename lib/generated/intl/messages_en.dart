@@ -356,6 +356,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "warningNoPermissionToAddPublicWebsite" : MessageLookupByLibrary.simpleMessage("You do not have permission to create a public website."),
     "warningNoPermissionToEditClassInfo" : MessageLookupByLibrary.simpleMessage("You do not have permission to edit class information."),
     "warningNoPrivateWebsite" : MessageLookupByLibrary.simpleMessage("You have not created any private websites yet."),
+    "warningNoStudentSource" : MessageLookupByLibrary.simpleMessage("All events are added by the student. You need to select the student information source."),
     "warningNoneYet" : MessageLookupByLibrary.simpleMessage("None yet"),
     "warningNothingToEdit" : MessageLookupByLibrary.simpleMessage("There is nothing you have permission to edit."),
     "warningOnlyNOptionsAtATime" : m12,
