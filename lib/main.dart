@@ -83,13 +83,17 @@ Future<void> main() async {
     ChangeNotifierProvider<ClassProvider>(create: (_) => classProvider),
     ChangeNotifierProvider<FeedbackProvider>(create: (_) => feedbackProvider),
     ChangeNotifierProvider<PersonProvider>(create: (_) => personProvider),
-    ChangeNotifierProvider<FaqQuestionProvider>(
-        create: (_) => FaqQuestionProvider()),
     ChangeNotifierProvider<NewsProvider>(create: (_) => NewsProvider()),
     ChangeNotifierProxyProvider<AuthProvider, FilterProvider>(
       create: (_) => FilterProvider(global: true),
       update: (context, authProvider, filterProvider) {
         return filterProvider..updateAuth(authProvider);
+      },
+    ),
+    ChangeNotifierProxyProvider<AuthProvider, FaqQuestionProvider>(
+      create: (_) => FaqQuestionProvider(),
+      update: (context, authProvider, faqQuestionProvider) {
+        return faqQuestionProvider..updateAuth(authProvider);
       },
     ),
     ChangeNotifierProxyProvider2<ClassProvider, FilterProvider,

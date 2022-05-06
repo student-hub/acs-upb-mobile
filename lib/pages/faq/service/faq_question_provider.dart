@@ -9,10 +9,15 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class FaqQuestionProvider with ChangeNotifier {
-  Future<List<FaqQuestion>> fetchFaqQuestions(
-      {int limit, BuildContext context}) async {
-    final User user =
-        Provider.of<AuthProvider>(context, listen: false).currentUserFromCache;
+  AuthProvider _authProvider;
+
+  // ignore: use_setters_to_change_properties
+  void updateAuth(AuthProvider authProvider) {
+    _authProvider = authProvider;
+  }
+
+  Future<List<FaqQuestion>> fetchFaqQuestions({int limit}) async {
+    final User user = _authProvider.currentUserFromCache;
     try {
       final CollectionReference faqs =
           FirebaseFirestore.instance.collection('faq');

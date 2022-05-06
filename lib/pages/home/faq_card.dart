@@ -21,8 +21,8 @@ class FaqCard extends StatelessWidget {
       title: S.current.sectionFAQ,
       showMoreButtonKey: const ValueKey('show_more_faq'),
       onShowMore: () => Navigator.of(context).pushNamed(Routes.faq),
-      future: Provider.of<FaqQuestionProvider>(context)
-          .fetchFaqQuestions(limit: 2, context: context),
+      future:
+          Provider.of<FaqQuestionProvider>(context).fetchFaqQuestions(limit: 2),
       builder: (questions) => Column(
         children: questions
             .map(

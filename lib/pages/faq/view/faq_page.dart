@@ -73,7 +73,7 @@ class _FaqPageState extends State<FaqPage> {
         )
       ],
       body: FutureBuilder(
-          future: faqQuestionProvider.fetchFaqQuestions(context: context),
+          future: faqQuestionProvider.fetchFaqQuestions(),
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
               return const Center(child: CircularProgressIndicator());
