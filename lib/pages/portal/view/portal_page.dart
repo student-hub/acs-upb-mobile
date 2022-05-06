@@ -301,7 +301,6 @@ class _PortalPageState extends State<PortalPage> {
                 filterProvider.filterEnabled ? filterCache : null,
                 userOnly: userOnly,
                 uid: authProvider.uid,
-                sources: user?.sources ?? [],
               ),
               builder: (context, AsyncSnapshot<List<Website>> websiteSnap) {
                 if (websiteSnap.hasData) {

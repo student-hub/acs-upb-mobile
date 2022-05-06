@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:acs_upb_mobile/authentication/model/user.dart';
+import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/filter/model/filter.dart';
 import 'package:acs_upb_mobile/pages/portal/model/website.dart';
@@ -103,6 +104,13 @@ extension WebsiteExtension on Website {
 
 class WebsiteProvider with ChangeNotifier {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
+
+  AuthProvider _authProvider;
+
+  // ignore: use_setters_to_change_properties
+  void updateAuth(AuthProvider authProvider) {
+    _authProvider = authProvider;
+  }
 
   void _errorHandler(dynamic e, {bool showToast = true}) {
     print(e.message);
@@ -233,13 +241,14 @@ class WebsiteProvider with ChangeNotifier {
   }
 
   Future<List<Website>> fetchWebsites(Filter filter,
-      {bool userOnly = false, String uid, List<String> sources}) async {
+      {bool userOnly = false, String uid}) async {
     try {
       final websites = <Website>[];
+      final _sources =
+          _authProvider.currentUserFromCache.sources ?? ['official'];
 
       if (!userOnly) {
         List<DocumentSnapshot> documents = [];
-        final _sources = sources.isNotEmpty ? sources : ['official'];
         if (filter == null) {
           final QuerySnapshot qSnapshot = await _db
               .collection('websites')
@@ -282,10 +291,10 @@ class WebsiteProvider with ChangeNotifier {
         final DocumentReference ref =
             FirebaseFirestore.instance.collection('users').doc(uid);
 
-        final QuerySnapshot qSnapshot = sources.isNotEmpty
+        final QuerySnapshot qSnapshot = _sources.isNotEmpty
             ? await ref
                 .collection('websites')
-                .where('source', whereIn: sources)
+                .where('source', whereIn: _sources)
                 .get()
             : await ref.collection('websites').get();
 

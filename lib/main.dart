@@ -77,7 +77,6 @@ Future<void> main() async {
 
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider<AuthProvider>(create: (_) => authProvider),
-    ChangeNotifierProvider<WebsiteProvider>(create: (_) => WebsiteProvider()),
     Provider<RequestProvider>(create: (_) => RequestProvider()),
     Provider<IssueProvider>(create: (_) => IssueProvider()),
     ChangeNotifierProvider<ClassProvider>(create: (_) => classProvider),
@@ -94,6 +93,12 @@ Future<void> main() async {
       create: (_) => FaqQuestionProvider(),
       update: (context, authProvider, faqQuestionProvider) {
         return faqQuestionProvider..updateAuth(authProvider);
+      },
+    ),
+    ChangeNotifierProxyProvider<AuthProvider, WebsiteProvider>(
+      create: (_) => WebsiteProvider(),
+      update: (context, authProvider, websiteProvider) {
+        return websiteProvider..updateAuth(authProvider);
       },
     ),
     ChangeNotifierProxyProvider2<ClassProvider, FilterProvider,
