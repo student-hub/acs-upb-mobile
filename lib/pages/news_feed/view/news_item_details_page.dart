@@ -5,7 +5,10 @@ import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:markdown/markdown.dart' as md;
 import 'package:oktoast/oktoast.dart';
 
+import '../../../resources/utils.dart';
+import '../../../widgets/auto_size_markdown.dart';
 import '../../../widgets/scaffold.dart';
+import '../model/news_feed_item.dart';
 import '../service/news_provider.dart';
 import 'news_feed_page.dart';
 
@@ -57,11 +60,6 @@ class _NewsItemDetailsState extends State<NewsItemDetailsPage> {
 
   @override
   Widget build(final BuildContext context) {
-    final captionStyle = Theme.of(context).textTheme.caption;
-    final captionSizeFactor =
-        captionStyle.fontSize / Theme.of(context).textTheme.bodyText1.fontSize;
-    final captionColor = captionStyle.color;
-
     final newsFeedProvider = Provider.of<NewsProvider>(context);
 
     return AppScaffold(
@@ -72,118 +70,25 @@ class _NewsItemDetailsState extends State<NewsItemDetailsPage> {
           child: Card(
             child: Padding(
               padding: const EdgeInsets.all(12),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
-                  Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-                    const Text('Ola',
-                        style: TextStyle(fontWeight: FontWeight.bold)),
-                    const Padding(
-                      padding:
-                          EdgeInsets.only(left: 4, right: 0, top: 0, bottom: 0),
-                      child: Text('a postat:'),
-                    ),
-                  ]),
-                  FutureBuilder(
+                  Expanded(
+                    child: FutureBuilder(
                       future:
                           newsFeedProvider.fetchNewsItemDetails(newsItemGuid),
                       builder: (final context, final snapshot) {
                         if (snapshot.connectionState == ConnectionState.done) {
                           if (snapshot.hasData) {
-                            print(snapshot.data);
+                            final NewsFeedItem newsFeedItem = snapshot.data;
+                            return _newsDetailsWrapper(
+                                context: context, newsFeedItem: newsFeedItem);
                           }
-                          return const Text('More details could not be loaded');
+                          return _detailsNotLoadedWidget();
                         }
-                        return const SizedBox(
-                          height: 100,
-                          child: Center(
-                            child: CircularProgressIndicator(),
-                          ),
-                        );
-                      }),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.only(top: 12, bottom: 12),
-                          child: MarkdownBody(
-                              data:
-                                  '''# Tee\n ## Title\n ![Tux, the Linux mascot](https://wallpaperaccess.com/full/345330.jpg)''',
-                              styleSheet: MarkdownStyleSheet(
-                                h1: const TextStyle(
-                                    fontSize: 40, color: Colors.blue),
-                                code: const TextStyle(
-                                    fontSize: 12, color: Colors.blue),
-                              ),
-                              extensionSet: md.ExtensionSet(
-                                md.ExtensionSet.gitHubFlavored.blockSyntaxes,
-                                [
-                                  md.EmojiSyntax(),
-                                  ...md.ExtensionSet.gitHubFlavored
-                                      .inlineSyntaxes
-                                ],
-                              )),
-                        ),
-                      ),
-                    ],
-                  ),
-                  /*Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Expanded(
-                          child: Padding(
-                        padding: const EdgeInsets.only(top: 12, bottom: 12),
-                        child: AutoSizeMarkdownBody(
-                          styleSheet: MarkdownStyleSheet.largeFromTheme(
-                              Theme.of(context).copyWith(
-                                  textTheme: Theme.of(context).textTheme.apply(
-                                      bodyColor: captionColor,
-                                      displayColor: captionColor,
-                                      fontSizeFactor: captionSizeFactor))),
-                          fitContent: false,
-                          maxLines: 5,
-                          overflow: TextOverflow.ellipsis,
-                          onTapLink: (final text, final link, final title) =>
-                              Utils.launchURL(link),
-                          */ /*
-                  This is a workaround because the strings in Firebase represent
-                  newlines as '\n' and Firebase replaces them with '\\n'. We
-                  need to replace them back for them to display properly.
-                  (See GitHub issue firebase/firebase-js-sdk#2366)
-                  */ /*
-                          data: _returnLongText().replaceAll('\\n', '\n'),
-                          extensionSet: md.ExtensionSet(
-                              md.ExtensionSet.gitHubFlavored.blockSyntaxes, [
-                            md.EmojiSyntax(),
-                            ...md.ExtensionSet.gitHubFlavored.inlineSyntaxes
-                          ]),
-                        ),
-                      ))
-                    ],
-                  ),*/
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      IconButton(
-                        icon: const Icon(Icons.share),
-                        onPressed: _shareNewsItem,
-                      ),
-                      IconButton(
-                        icon: const Icon(Icons.copy_outlined),
-                        onPressed: () => _copyToClipboard('ola'),
-                      ),
-                      if (!isBookmarked)
-                        IconButton(
-                          icon: const Icon(Icons.bookmark_border_outlined),
-                          onPressed: _toggleBookmark,
-                        )
-                      else
-                        IconButton(
-                          icon: const Icon(Icons.bookmark_rounded),
-                          onPressed: _toggleBookmark,
-                        ),
-                    ],
+                        return _detailsCircularProgressIndicator();
+                      },
+                    ),
                   ),
                 ],
               ),
@@ -193,4 +98,109 @@ class _NewsItemDetailsState extends State<NewsItemDetailsPage> {
       ),
     );
   }
+
+  Widget _detailsCircularProgressIndicator() => const Padding(
+        padding: EdgeInsets.only(top: 12, bottom: 12),
+        child: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+
+  Widget _detailsNotLoadedWidget() => const Expanded(
+        child: Padding(
+          padding: EdgeInsets.only(top: 12, bottom: 12),
+          child: Center(
+            child: Text(
+              'More details could not be loaded',
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ),
+      );
+
+  Widget _newsDetailsWrapper(
+      {final BuildContext context, final NewsFeedItem newsFeedItem}) {
+    final captionStyle = Theme.of(context).textTheme.caption;
+    final captionSizeFactor =
+        captionStyle.fontSize / Theme.of(context).textTheme.bodyText1.fontSize;
+    final captionColor = captionStyle.color;
+
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: <Widget>[
+        _newsDetailsAuthor(author: newsFeedItem.source),
+        _newsDetailsContent(
+            content: newsFeedItem.body,
+            captionColor: captionColor,
+            captionSizeFactor: captionSizeFactor),
+        _newsDetailsAction(),
+      ],
+    );
+  }
+
+  Widget _newsDetailsAuthor({final String author}) => Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Text(author, style: const TextStyle(fontWeight: FontWeight.bold)),
+          const Padding(
+            padding: EdgeInsets.only(left: 4, right: 0, top: 0, bottom: 0),
+            child: Text('a postat:'),
+          ),
+        ],
+      );
+
+  Widget _newsDetailsContent(
+          {final String content,
+          final Color captionColor,
+          final double captionSizeFactor}) =>
+      Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Expanded(
+              child: Padding(
+            padding: const EdgeInsets.only(top: 12, bottom: 12),
+            child: MarkdownBody(
+              fitContent: false,
+              onTapLink: (final text, final link, final title) =>
+                  Utils.launchURL(link),
+              /*
+                  This is a workaround because the strings in Firebase represent
+                  newlines as '\n' and Firebase replaces them with '\\n'. We need
+                  to replace them back for them to display properly.
+                  (See GitHub issue firebase/firebase-js-sdk#2366)
+                  */
+              data: content.replaceAll('\\n', '\n'),
+              extensionSet: md.ExtensionSet(
+                  md.ExtensionSet.gitHubFlavored.blockSyntaxes, [
+                md.EmojiSyntax(),
+                ...md.ExtensionSet.gitHubFlavored.inlineSyntaxes
+              ]),
+            ),
+          ))
+        ],
+      );
+
+  Widget _newsDetailsAction() => Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          IconButton(
+            icon: const Icon(Icons.share),
+            onPressed: _shareNewsItem,
+          ),
+          IconButton(
+            icon: const Icon(Icons.copy_outlined),
+            onPressed: () => _copyToClipboard('ola'),
+          ),
+          if (!isBookmarked)
+            IconButton(
+              icon: const Icon(Icons.bookmark_border_outlined),
+              onPressed: _toggleBookmark,
+            )
+          else
+            IconButton(
+              icon: const Icon(Icons.bookmark_rounded),
+              onPressed: _toggleBookmark,
+            ),
+        ],
+      );
 }

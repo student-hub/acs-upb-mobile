@@ -3,11 +3,19 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 
+import '../../../authentication/service/auth_provider.dart';
 import '../../../generated/l10n.dart';
 import '../../../widgets/toast.dart';
 import '../model/news_feed_item.dart';
 
 class NewsProvider with ChangeNotifier {
+  AuthProvider _authProvider;
+
+  // ignore: prefer_final_parameters, use_setters_to_change_properties
+  void updateAuth(AuthProvider authProvider) {
+    _authProvider = authProvider;
+  }
+
   Future<List<NewsFeedItem>> fetchNewsFeedItems({final int limit}) async {
     try {
       final CollectionReference news =
@@ -57,6 +65,7 @@ extension DatabaseNews on NewsFeedItem {
         createdAt: createdAt,
         type: type,
         relevance: relevance,
+        sourceTags: null,
         sourceLink: sourceLink);
   }
 }
