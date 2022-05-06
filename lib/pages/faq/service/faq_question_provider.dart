@@ -1,15 +1,15 @@
 import 'package:acs_upb_mobile/authentication/model/user.dart';
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
-import 'package:acs_upb_mobile/pages/faq/model/question.dart';
+import 'package:acs_upb_mobile/pages/faq/model/faq_question.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class QuestionProvider with ChangeNotifier {
-  Future<List<Question>> fetchQuestions(
+class FaqQuestionProvider with ChangeNotifier {
+  Future<List<FaqQuestion>> fetchFaqQuestions(
       {int limit, BuildContext context}) async {
     final User user =
         Provider.of<AuthProvider>(context, listen: false).currentUserFromCache;
@@ -29,8 +29,8 @@ class QuestionProvider with ChangeNotifier {
   }
 }
 
-extension DatabaseQuestion on Question {
-  static Question fromSnap(DocumentSnapshot snap) {
+extension DatabaseQuestion on FaqQuestion {
+  static FaqQuestion fromSnap(DocumentSnapshot snap) {
     final data = snap.data();
 
     final String question = data['question'];
@@ -38,7 +38,7 @@ extension DatabaseQuestion on Question {
     final List<String> tags = List.from(data['tags']);
 
     final String source = data['source'];
-    return Question(
+    return FaqQuestion(
         source: source, question: question, answer: answer, tags: tags);
   }
 }

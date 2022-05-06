@@ -15,8 +15,8 @@ import 'package:acs_upb_mobile/pages/classes/view/class_view.dart';
 import 'package:acs_upb_mobile/pages/classes/view/classes_page.dart';
 import 'package:acs_upb_mobile/pages/classes/view/grading_view.dart';
 import 'package:acs_upb_mobile/pages/classes/view/shortcut_view.dart';
-import 'package:acs_upb_mobile/pages/faq/model/question.dart';
-import 'package:acs_upb_mobile/pages/faq/service/question_provider.dart';
+import 'package:acs_upb_mobile/pages/faq/model/faq_question.dart';
+import 'package:acs_upb_mobile/pages/faq/service/faq_question_provider.dart';
 import 'package:acs_upb_mobile/pages/faq/view/faq_page.dart';
 import 'package:acs_upb_mobile/pages/filter/model/filter.dart';
 import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
@@ -82,7 +82,7 @@ class MockClassProvider extends Mock implements ClassProvider {}
 
 class MockPersonProvider extends Mock implements PersonProvider {}
 
-class MockQuestionProvider extends Mock implements QuestionProvider {}
+class MockFaqQuestionProvider extends Mock implements FaqQuestionProvider {}
 
 class MockUniEventProvider extends Mock implements UniEventProvider {}
 
@@ -102,7 +102,7 @@ Future<void> main() async {
   FilterProvider mockFilterProvider;
   ClassProvider mockClassProvider;
   PersonProvider mockPersonProvider;
-  MockQuestionProvider mockQuestionProvider;
+  MockFaqQuestionProvider mockFaqQuestionProvider;
   MockNewsProvider mockNewsProvider;
   UniEventProvider mockEventProvider;
   RequestProvider mockRequestProvider;
@@ -139,8 +139,8 @@ Future<void> main() async {
               create: (_) => mockClassProvider),
           ChangeNotifierProvider<PersonProvider>(
               create: (_) => mockPersonProvider),
-          ChangeNotifierProvider<QuestionProvider>(
-              create: (_) => mockQuestionProvider),
+          ChangeNotifierProvider<FaqQuestionProvider>(
+              create: (_) => mockFaqQuestionProvider),
           ChangeNotifierProvider<NewsProvider>(create: (_) => mockNewsProvider),
           ChangeNotifierProvider<UniEventProvider>(
               create: (_) => mockEventProvider),
@@ -479,30 +479,30 @@ Future<void> main() async {
     when(mockFeedbackProvider.countClassesWithoutFeedback(any, any))
         .thenAnswer((_) => Future.value('2'));
 
-    mockQuestionProvider = MockQuestionProvider();
+    mockFaqQuestionProvider = MockFaqQuestionProvider();
     // ignore: invalid_use_of_protected_member
-    when(mockQuestionProvider.hasListeners).thenReturn(false);
-    when(mockQuestionProvider.fetchQuestions())
-        .thenAnswer((_) => Future.value(<Question>[
-              Question(
+    when(mockFaqQuestionProvider.hasListeners).thenReturn(false);
+    when(mockFaqQuestionProvider.fetchFaqQuestions())
+        .thenAnswer((_) => Future.value(<FaqQuestion>[
+              FaqQuestion(
                   question: 'Care este programul la secretariat?',
                   answer:
                       'Secretariatul este deschis în timpul săptămânii între orele 9:00 si 11:00.',
                   tags: ['Licență']),
-              Question(
+              FaqQuestion(
                   question: 'Cum mă conectez la eduroam?',
                   answer:
                       'Conectarea în rețeaua *eduroam* se face pe baza aceluiași cont folosit și pe site-ul de cursuri.',
                   tags: ['Conectare', 'Informații'])
             ]));
-    when(mockQuestionProvider.fetchQuestions(limit: anyNamed('limit')))
-        .thenAnswer((_) => Future.value(<Question>[
-              Question(
+    when(mockFaqQuestionProvider.fetchFaqQuestions(limit: anyNamed('limit')))
+        .thenAnswer((_) => Future.value(<FaqQuestion>[
+              FaqQuestion(
                   question: 'Care este programul la secretariat?',
                   answer:
                       'Secretariatul este deschis în timpul săptămânii între orele 9:00 si 11:00.',
                   tags: ['Licență']),
-              Question(
+              FaqQuestion(
                   question: 'Cum mă conectez la eduroam?',
                   answer:
                       'Conectarea în rețeaua *eduroam* se face pe baza aceluiași cont folosit și pe site-ul de cursuri.',

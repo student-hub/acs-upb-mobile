@@ -1,7 +1,7 @@
 import 'package:meta/meta.dart';
 
-class Question {
-  Question({
+class FaqQuestion {
+  FaqQuestion({
     @required this.question,
     @required this.answer,
     @required this.tags,

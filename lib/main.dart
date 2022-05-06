@@ -8,7 +8,7 @@ import 'package:acs_upb_mobile/navigation/bottom_navigation_bar.dart';
 import 'package:acs_upb_mobile/navigation/routes.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/service/feedback_provider.dart';
 import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
-import 'package:acs_upb_mobile/pages/faq/service/question_provider.dart';
+import 'package:acs_upb_mobile/pages/faq/service/faq_question_provider.dart';
 import 'package:acs_upb_mobile/pages/faq/view/faq_page.dart';
 import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
 import 'package:acs_upb_mobile/pages/filter/view/filter_page.dart';
@@ -83,7 +83,8 @@ Future<void> main() async {
     ChangeNotifierProvider<ClassProvider>(create: (_) => classProvider),
     ChangeNotifierProvider<FeedbackProvider>(create: (_) => feedbackProvider),
     ChangeNotifierProvider<PersonProvider>(create: (_) => personProvider),
-    ChangeNotifierProvider<QuestionProvider>(create: (_) => QuestionProvider()),
+    ChangeNotifierProvider<FaqQuestionProvider>(
+        create: (_) => FaqQuestionProvider()),
     ChangeNotifierProvider<NewsProvider>(create: (_) => NewsProvider()),
     ChangeNotifierProxyProvider<AuthProvider, FilterProvider>(
       create: (_) => FilterProvider(global: true),

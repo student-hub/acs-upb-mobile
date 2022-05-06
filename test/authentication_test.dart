@@ -6,8 +6,8 @@ import 'package:acs_upb_mobile/main.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/service/feedback_provider.dart';
 import 'package:acs_upb_mobile/pages/classes/model/class.dart';
 import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
-import 'package:acs_upb_mobile/pages/faq/model/question.dart';
-import 'package:acs_upb_mobile/pages/faq/service/question_provider.dart';
+import 'package:acs_upb_mobile/pages/faq/model/faq_question.dart';
+import 'package:acs_upb_mobile/pages/faq/service/faq_question_provider.dart';
 import 'package:acs_upb_mobile/pages/filter/model/filter.dart';
 import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
 import 'package:acs_upb_mobile/pages/home/home_page.dart';
@@ -39,7 +39,7 @@ class MockPersonProvider extends Mock implements PersonProvider {}
 
 class MockUniEventProvider extends Mock implements UniEventProvider {}
 
-class MockQuestionProvider extends Mock implements QuestionProvider {}
+class MockFaqQuestionProvider extends Mock implements FaqQuestionProvider {}
 
 class MockNewsProvider extends Mock implements NewsProvider {}
 
@@ -52,7 +52,7 @@ void main() {
   WebsiteProvider mockWebsiteProvider;
   FilterProvider mockFilterProvider;
   PersonProvider mockPersonProvider;
-  MockQuestionProvider mockQuestionProvider;
+  MockFaqQuestionProvider mockFaqQuestionProvider;
   UniEventProvider mockEventProvider;
   MockNewsProvider mockNewsProvider;
   FeedbackProvider mockFeedbackProvider;
@@ -101,13 +101,13 @@ void main() {
     when(mockPersonProvider.hasListeners).thenReturn(false);
     when(mockPersonProvider.fetchPeople()).thenAnswer((_) => Future.value([]));
 
-    mockQuestionProvider = MockQuestionProvider();
+    mockFaqQuestionProvider = MockFaqQuestionProvider();
     // ignore: invalid_use_of_protected_member
-    when(mockQuestionProvider.hasListeners).thenReturn(false);
-    when(mockQuestionProvider.fetchQuestions())
-        .thenAnswer((_) => Future.value(<Question>[]));
-    when(mockQuestionProvider.fetchQuestions(limit: anyNamed('limit')))
-        .thenAnswer((_) => Future.value(<Question>[]));
+    when(mockFaqQuestionProvider.hasListeners).thenReturn(false);
+    when(mockFaqQuestionProvider.fetchFaqQuestions())
+        .thenAnswer((_) => Future.value(<FaqQuestion>[]));
+    when(mockFaqQuestionProvider.fetchFaqQuestions(limit: anyNamed('limit')))
+        .thenAnswer((_) => Future.value(<FaqQuestion>[]));
 
     mockNewsProvider = MockNewsProvider();
     // ignore: invalid_use_of_protected_member
@@ -180,8 +180,8 @@ void main() {
             create: (_) => mockEventProvider),
         ChangeNotifierProvider<WebsiteProvider>(
             create: (_) => mockWebsiteProvider),
-        ChangeNotifierProvider<QuestionProvider>(
-            create: (_) => mockQuestionProvider),
+        ChangeNotifierProvider<FaqQuestionProvider>(
+            create: (_) => mockFaqQuestionProvider),
         ChangeNotifierProvider<NewsProvider>(create: (_) => mockNewsProvider),
       ], child: const MyApp()));
       await tester.pumpAndSettle();
@@ -212,8 +212,8 @@ void main() {
             create: (_) => mockEventProvider),
         ChangeNotifierProvider<WebsiteProvider>(
             create: (_) => mockWebsiteProvider),
-        ChangeNotifierProvider<QuestionProvider>(
-            create: (_) => mockQuestionProvider),
+        ChangeNotifierProvider<FaqQuestionProvider>(
+            create: (_) => mockFaqQuestionProvider),
         ChangeNotifierProvider<NewsProvider>(create: (_) => mockNewsProvider),
       ], child: const MyApp()));
       await tester.pumpAndSettle();
@@ -438,8 +438,8 @@ void main() {
             create: (_) => mockFilterProvider),
         ChangeNotifierProvider<WebsiteProvider>(
             create: (_) => mockWebsiteProvider),
-        ChangeNotifierProvider<QuestionProvider>(
-            create: (_) => mockQuestionProvider),
+        ChangeNotifierProvider<FaqQuestionProvider>(
+            create: (_) => mockFaqQuestionProvider),
         ChangeNotifierProvider<NewsProvider>(create: (_) => mockNewsProvider),
       ], child: MyApp(navigationObservers: [mockObserver])));
       await tester.pumpAndSettle();
@@ -638,8 +638,8 @@ void main() {
             create: (_) => mockWebsiteProvider),
         ChangeNotifierProvider<PersonProvider>(
             create: (_) => mockPersonProvider),
-        ChangeNotifierProvider<QuestionProvider>(
-            create: (_) => mockQuestionProvider),
+        ChangeNotifierProvider<FaqQuestionProvider>(
+            create: (_) => mockFaqQuestionProvider),
         ChangeNotifierProvider<NewsProvider>(create: (_) => mockNewsProvider),
       ], child: MyApp(navigationObservers: [mockObserver])));
       await tester.pumpAndSettle();
@@ -677,8 +677,8 @@ void main() {
             create: (_) => mockEventProvider),
         ChangeNotifierProvider<PersonProvider>(
             create: (_) => mockPersonProvider),
-        ChangeNotifierProvider<QuestionProvider>(
-            create: (_) => mockQuestionProvider),
+        ChangeNotifierProvider<FaqQuestionProvider>(
+            create: (_) => mockFaqQuestionProvider),
         ChangeNotifierProvider<NewsProvider>(create: (_) => mockNewsProvider),
         ChangeNotifierProvider<FeedbackProvider>(
             create: (_) => mockFeedbackProvider),
