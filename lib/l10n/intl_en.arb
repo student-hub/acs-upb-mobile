@@ -184,7 +184,7 @@
   "warningUnableToReachNewsFeed": "Unable to reach the news feed.",
   "warningNoNews": "There are no news yet.",
   "warningEventNotEditable": "This event cannot be edited.",
-  "warningNoStudentSource": "All events are added by the student. You need to select the student information source.",
+  "warningEventsAreAddedByStudents": "Events in the calendar are added by other students. You can add the \"students\" information source to be able to view them.",
 
   "navigationAskPermissions": "Ask for permissions",
   "navigationHome": "Home",

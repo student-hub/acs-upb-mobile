@@ -295,7 +295,7 @@ class _TimetablePageState extends State<TimetablePage> {
       return AppDialog(
         title: S.current.warningNoEvents,
         content: [
-          Text(S.current.warningNoStudentSource),
+          Text(S.current.warningEventsAreAddedByStudents),
         ],
         actions: [
           AppButton(

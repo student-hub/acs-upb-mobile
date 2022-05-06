@@ -1815,11 +1815,11 @@ class S {
     );
   }
 
-  /// `All events are added by the student. You need to select the student information source.`
-  String get warningNoStudentSource {
+  /// `Events in the calendar are added by other students. You can add the "students" information source to be able to view them.`
+  String get warningEventsAreAddedByStudents {
     return Intl.message(
-      'All events are added by the student. You need to select the student information source.',
-      name: 'warningNoStudentSource',
+      'Events in the calendar are added by other students. You can add the "students" information source to be able to view them.',
+      name: 'warningEventsAreAddedByStudents',
       desc: '',
       args: [],
     );
