@@ -295,9 +295,7 @@ class _TimetablePageState extends State<TimetablePage> {
       return AppDialog(
         title: S.current.warningNoEvents,
         content: [
-          Text(
-            S.current.warningNoStudentSource,
-          ),
+          Text(S.current.warningNoStudentSource),
         ],
         actions: [
           AppButton(
@@ -308,8 +306,7 @@ class _TimetablePageState extends State<TimetablePage> {
               if (authProvider.isAnonymous) {
                 AppToast.show(S.current.messageNotLoggedIn);
               } else {
-                await Navigator.of(context)
-                    .pushNamed(Routes.requestPermissions);
+                await Navigator.of(context).pushNamed(Routes.sources);
               }
             },
           ),

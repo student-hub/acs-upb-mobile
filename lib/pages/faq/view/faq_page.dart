@@ -26,11 +26,6 @@ class _FaqPageState extends State<FaqPage> {
   List<String> activeTags = <String>[];
   final ScrollController _scrollController = ScrollController();
 
-  @override
-  void initState() {
-    super.initState();
-  }
-
   Widget categoryList() => Padding(
         padding: const EdgeInsets.only(top: 20),
         child: ListView(

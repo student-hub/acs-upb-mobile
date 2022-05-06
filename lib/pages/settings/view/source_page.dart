@@ -15,10 +15,8 @@ class SourcePage extends StatefulWidget {
 }
 
 class _SourcePageState extends State<SourcePage> {
-  bool wantsOfficialInfo;
-  bool wantsOrganizationInfo;
-  bool wantsStudentsInfo;
   AuthProvider authProvider;
+  Map<String, bool> sourceSelected = {};
 
   @override
   void initState() {
@@ -26,9 +24,10 @@ class _SourcePageState extends State<SourcePage> {
 
     authProvider = Provider.of<AuthProvider>(context, listen: false);
     final user = authProvider.currentUserFromCache;
-    wantsOfficialInfo = user.sources?.contains('official') ?? false;
-    wantsOrganizationInfo = user.sources?.contains('organizations') ?? false;
-    wantsStudentsInfo = user.sources?.contains('students') ?? false;
+    sourceSelected['official'] = user.sources?.contains('official') ?? false;
+    sourceSelected['organizations'] =
+        user.sources?.contains('organizations') ?? false;
+    sourceSelected['students'] = user.sources?.contains('students') ?? false;
   }
 
   @override
@@ -39,8 +38,8 @@ class _SourcePageState extends State<SourcePage> {
             text: S.current.buttonSave,
             onPressed: () async {
               final List<String> sources = ['official'];
-              if (wantsOrganizationInfo) sources.add('organizations');
-              if (wantsStudentsInfo) sources.add('students');
+              if (sourceSelected['organizations']) sources.add('organizations');
+              if (sourceSelected['students']) sources.add('students');
               await authProvider.setSourcePreferences(sources);
               Navigator.of(context).pop();
             })
@@ -66,30 +65,26 @@ class _SourcePageState extends State<SourcePage> {
           CheckboxListTile(
             value: true,
             onChanged: null,
-            title: Text(S.current.sourceOfficial),
-            subtitle: Text(S.current.sourceInfoOfficialWebPages),
+            title: Text(S.current.sourceOfficialWebPages),
+            subtitle: Text(S.current.sourceOfficialWebPagesInfo),
             controlAffinity: ListTileControlAffinity.leading,
           ),
           CheckboxListTile(
-            value: wantsOrganizationInfo,
+            value: sourceSelected['organizations'],
             onChanged: (value) {
-              setState(() {
-                wantsOrganizationInfo = value;
-              });
+              setState(() => sourceSelected['organizations'] = value);
             },
-            title: Text('${S.current.sourceOrganization}*'),
-            subtitle: Text(S.current.sourceInfoStudentOrganizations),
+            title: Text('${S.current.sourceStudentOrganizations}*'),
+            subtitle: Text(S.current.sourceStudentOrganizationsInfo),
             controlAffinity: ListTileControlAffinity.leading,
           ),
           CheckboxListTile(
-            value: wantsStudentsInfo,
+            value: sourceSelected['students'],
             onChanged: (value) {
-              setState(() {
-                wantsStudentsInfo = value;
-              });
+              setState(() => sourceSelected['students'] = value);
             },
             title: Text('${S.current.sourceStudentRepresentative}*'),
-            subtitle: Text(S.current.sourceInfoStudentExamples),
+            subtitle: Text(S.current.sourceStudentRepresentativesInfo),
             controlAffinity: ListTileControlAffinity.leading,
           ),
           Padding(

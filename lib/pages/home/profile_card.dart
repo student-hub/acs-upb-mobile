@@ -18,13 +18,9 @@ class _ProfileCardState extends State<ProfileCard> {
   void initState() {
     super.initState();
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
-    authProvider.getProfilePictureURL().then(
-          (value) => setState(
-            () {
-              profilePictureURL = value;
-            },
-          ),
-        );
+    authProvider
+        .getProfilePictureURL()
+        .then((value) => setState(() => profilePictureURL = value));
   }
 
   @override

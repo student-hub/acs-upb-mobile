@@ -2046,40 +2046,40 @@ class S {
   }
 
   /// `Official web pages`
-  String get sourceOfficial {
+  String get sourceOfficialWebPages {
     return Intl.message(
       'Official web pages',
-      name: 'sourceOfficial',
+      name: 'sourceOfficialWebPages',
       desc: '',
       args: [],
     );
   }
 
   /// `acs.pub.ro, upb.ro, curs.upb.ro, studenti.pub.ro`
-  String get sourceInfoOfficialWebPages {
+  String get sourceOfficialWebPagesInfo {
     return Intl.message(
       'acs.pub.ro, upb.ro, curs.upb.ro, studenti.pub.ro',
-      name: 'sourceInfoOfficialWebPages',
+      name: 'sourceOfficialWebPagesInfo',
       desc: '',
       args: [],
     );
   }
 
   /// `Student organizations`
-  String get sourceOrganization {
+  String get sourceStudentOrganizations {
     return Intl.message(
       'Student organizations',
-      name: 'sourceOrganization',
+      name: 'sourceStudentOrganizations',
       desc: '',
       args: [],
     );
   }
 
   /// `LSAC, BEST, MLSA`
-  String get sourceInfoStudentOrganizations {
+  String get sourceStudentOrganizationsInfo {
     return Intl.message(
       'LSAC, BEST, MLSA',
-      name: 'sourceInfoStudentOrganizations',
+      name: 'sourceStudentOrganizationsInfo',
       desc: '',
       args: [],
     );
@@ -2096,10 +2096,20 @@ class S {
   }
 
   /// `group/series representatives, student council members`
-  String get sourceInfoStudentExamples {
+  String get sourceStudentRepresentativesInfo {
     return Intl.message(
       'group/series representatives, student council members',
-      name: 'sourceInfoStudentExamples',
+      name: 'sourceStudentRepresentativesInfo',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Unknown source`
+  String get sourceUnknown {
+    return Intl.message(
+      'Unknown source',
+      name: 'sourceUnknown',
       desc: '',
       args: [],
     );
@@ -2195,11 +2205,21 @@ class S {
     );
   }
 
-  /// `Information sources selection`
+  /// `Select information sources`
   String get settingsSourceSelection {
     return Intl.message(
-      'Information sources selection',
+      'Select information sources',
       name: 'settingsSourceSelection',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Select the sources you want information from`
+  String get settingsSourceSelectionSubtitle {
+    return Intl.message(
+      'Select the sources you want information from',
+      name: 'settingsSourceSelectionSubtitle',
       desc: '',
       args: [],
     );
@@ -2290,16 +2310,6 @@ class S {
     return Intl.message(
       'Auto',
       name: 'settingsItemLanguageAuto',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Data`
-  String get settingsTitleData {
-    return Intl.message(
-      'Data',
-      name: 'settingsTitleData',
       desc: '',
       args: [],
     );
