@@ -240,37 +240,37 @@ class WebsiteProvider with ChangeNotifier {
     }
   }
 
+  List<String> getUserSources() =>
+      _authProvider.currentUserFromCache?.sources ??
+      ['official', 'organizations', 'students'];
+
+  Query filterBySource(Query query) =>
+      query.where('source', whereIn: getUserSources());
+
   Future<List<Website>> fetchWebsites(Filter filter,
       {bool userOnly = false, String uid}) async {
     try {
       final websites = <Website>[];
-      final _sources = _authProvider.currentUserFromCache.sources ??
-          ['official', 'organizations', 'students'];
 
       if (!userOnly) {
         List<DocumentSnapshot> documents = [];
         if (filter == null) {
-          final QuerySnapshot qSnapshot = await _db
-              .collection('websites')
-              .where('source', whereIn: _sources)
-              .get();
+          final QuerySnapshot qSnapshot =
+              await filterBySource(_db.collection('websites')).get();
           documents.addAll(qSnapshot.docs);
         } else {
           // Documents without a 'relevance' field are relevant for everyone
-          final query = _db
-              .collection('websites')
-              .where('source', whereIn: _sources)
-              .where('relevance', isNull: true);
+          final query = filterBySource(
+              _db.collection('websites').where('relevance', isNull: true));
           final QuerySnapshot qSnapshot = await query.get();
           documents.addAll(qSnapshot.docs);
 
           for (final string in filter.relevantNodes) {
             // selected nodes
-            final query = _db
+            final query = filterBySource(_db
                 .collection('websites')
                 .where('degree', isEqualTo: filter.baseNode)
-                .where('source', whereIn: _sources)
-                .where('relevance', arrayContains: string);
+                .where('relevance', arrayContains: string));
             final QuerySnapshot qSnapshot = await query.get();
             documents.addAll(qSnapshot.docs);
           }
@@ -290,12 +290,8 @@ class WebsiteProvider with ChangeNotifier {
       if (uid != null) {
         final DocumentReference ref =
             FirebaseFirestore.instance.collection('users').doc(uid);
-
-        final QuerySnapshot qSnapshot = _sources.isNotEmpty
-            ? await ref
-                .collection('websites')
-                .where('source', whereIn: _sources)
-                .get()
+        final QuerySnapshot qSnapshot = getUserSources().isNotEmpty
+            ? await filterBySource(ref.collection('websites')).get()
             : await ref.collection('websites').get();
 
         websites.addAll(qSnapshot.docs

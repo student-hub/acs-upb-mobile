@@ -15,16 +15,21 @@ class FaqQuestionProvider with ChangeNotifier {
     _authProvider = authProvider;
   }
 
+  List<String> getUserSources() =>
+      _authProvider.currentUserFromCache?.sources ??
+      ['official', 'organizations', 'students'];
+
+  Query filterBySource(Query query) =>
+      query.where('source', whereIn: getUserSources());
+
   Future<List<FaqQuestion>> fetchFaqQuestions({int limit}) async {
     final User user = _authProvider.currentUserFromCache;
     try {
       final CollectionReference faqs =
           FirebaseFirestore.instance.collection('faq');
-      final List<String> userSources =
-          user?.sources ?? ['official', 'organizations', 'students'];
       final QuerySnapshot qSnapshot = limit == null
-          ? await faqs.where('source', whereIn: userSources).get()
-          : await faqs.where('source', whereIn: userSources).limit(limit).get();
+          ? await filterBySource(faqs).get()
+          : await filterBySource(faqs.limit(limit)).get();
       return qSnapshot.docs.map(DatabaseQuestion.fromSnap).toList();
     } catch (e) {
       print(e);
