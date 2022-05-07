@@ -23,7 +23,6 @@ class FaqQuestionProvider with ChangeNotifier {
       query.where('source', whereIn: getUserSources());
 
   Future<List<FaqQuestion>> fetchFaqQuestions({int limit}) async {
-    final User user = _authProvider.currentUserFromCache;
     try {
       final CollectionReference faqs =
           FirebaseFirestore.instance.collection('faq');
