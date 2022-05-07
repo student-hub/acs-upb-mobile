@@ -303,11 +303,7 @@ class _TimetablePageState extends State<TimetablePage> {
             width: 130,
             onTap: () async {
               Navigator.of(context).pop();
-              if (authProvider.isAnonymous) {
-                AppToast.show(S.current.messageNotLoggedIn);
-              } else {
-                await Navigator.of(context).pushNamed(Routes.sources);
-              }
+              await Navigator.of(context).pushNamed(Routes.sources);
             },
           ),
         ],

@@ -244,8 +244,8 @@ class WebsiteProvider with ChangeNotifier {
       {bool userOnly = false, String uid}) async {
     try {
       final websites = <Website>[];
-      final _sources =
-          _authProvider.currentUserFromCache.sources ?? ['official'];
+      final _sources = _authProvider.currentUserFromCache.sources ??
+          ['official', 'organizations', 'students'];
 
       if (!userOnly) {
         List<DocumentSnapshot> documents = [];

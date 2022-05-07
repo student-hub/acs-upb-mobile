@@ -183,7 +183,7 @@ Future<void> main() async {
         .thenAnswer((_) => Future.value(true));
     when(mockAuthProvider.getProfilePictureURL())
         .thenAnswer((_) => Future.value(null));
-    when(mockWebsiteProvider.fetchWebsites(any, sources: anyNamed('sources')))
+    when(mockWebsiteProvider.fetchWebsites(any))
         .thenAnswer((_) => Future.value([
               Website(
                 id: '1',

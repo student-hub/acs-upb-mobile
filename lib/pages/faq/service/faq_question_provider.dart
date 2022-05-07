@@ -6,7 +6,6 @@ import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class FaqQuestionProvider with ChangeNotifier {
   AuthProvider _authProvider;
@@ -21,7 +20,8 @@ class FaqQuestionProvider with ChangeNotifier {
     try {
       final CollectionReference faqs =
           FirebaseFirestore.instance.collection('faq');
-      final List<String> userSources = user?.sources ?? ['official'];
+      final List<String> userSources =
+          user?.sources ?? ['official', 'organizations', 'students'];
       final QuerySnapshot qSnapshot = limit == null
           ? await faqs.where('source', whereIn: userSources).get()
           : await faqs.where('source', whereIn: userSources).limit(limit).get();

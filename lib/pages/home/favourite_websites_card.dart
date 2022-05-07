@@ -22,7 +22,6 @@ class FavouriteWebsitesCard extends StatelessWidget {
     return InfoCard<List<Website>>(
       title: S.current.sectionFrequentlyAccessedWebsites,
       onShowMore: onShowMore,
-      showIfEmpty: true,
       future: websiteProvider.fetchFavouriteWebsites(uid),
       builder: (websites) => Padding(
         padding: const EdgeInsets.only(top: 10),

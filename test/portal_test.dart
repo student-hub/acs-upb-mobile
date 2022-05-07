@@ -63,7 +63,7 @@ void main() {
       source: 'official',
     ),
   ];
-  when(mockWebsiteProvider.fetchWebsites(any, sources: anyNamed('sources')))
+  when(mockWebsiteProvider.fetchWebsites(any))
       .thenAnswer((_) => Future.value(websites));
   when(mockWebsiteProvider.incrementNumberOfVisits(any, uid: anyNamed('uid')))
       .thenAnswer((_) => Future.value(true));

@@ -24,10 +24,10 @@ class _SourcePageState extends State<SourcePage> {
 
     authProvider = Provider.of<AuthProvider>(context, listen: false);
     final user = authProvider.currentUserFromCache;
-    sourceSelected['official'] = user.sources?.contains('official') ?? false;
+    sourceSelected['official'] = user.sources?.contains('official') ?? true;
     sourceSelected['organizations'] =
-        user.sources?.contains('organizations') ?? false;
-    sourceSelected['students'] = user.sources?.contains('students') ?? false;
+        user.sources?.contains('organizations') ?? true;
+    sourceSelected['students'] = user.sources?.contains('students') ?? true;
   }
 
   @override

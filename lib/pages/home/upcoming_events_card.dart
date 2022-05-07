@@ -20,7 +20,6 @@ class UpcomingEventsCard extends StatelessWidget {
     return InfoCard<Iterable<UniEventInstance>>(
       title: S.current.sectionEventsComingUp,
       onShowMore: onShowMore,
-      showIfEmpty: true,
       future: eventProvider.getUpcomingEvents(LocalDate.today()),
       builder: (events) => Column(
         children: events
