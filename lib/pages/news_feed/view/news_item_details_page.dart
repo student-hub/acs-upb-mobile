@@ -12,6 +12,7 @@ import '../../../widgets/scaffold.dart';
 import '../model/news_feed_item.dart';
 import '../service/news_provider.dart';
 import 'news_feed_page.dart';
+import 'news_item_details_actions.dart';
 
 class NewsItemDetailsPage extends StatefulWidget {
   const NewsItemDetailsPage({@required this.newsItemGuid});
@@ -27,37 +28,6 @@ class _NewsItemDetailsState extends State<NewsItemDetailsPage> {
   _NewsItemDetailsState({@required this.newsItemGuid});
 
   final String newsItemGuid;
-  bool isBookmarked = false;
-
-  void _toggleBookmark() {
-    showToast(isBookmarked ? 'Removed from favorites' : 'Added to favorites');
-    setState(() {
-      isBookmarked = !isBookmarked;
-    });
-  }
-
-  void _copyToClipboard(text) {
-    showToast('Copied content to clipboard');
-    Clipboard.setData(ClipboardData(text: text));
-  }
-
-  void _shareNewsItem() {
-    print('Share news item');
-  }
-
-  String _extractUrl(final BuildContext context) {
-    final NewsItemDetailsRouteArguments args =
-        ModalRoute.of(context).settings.arguments;
-    return args.itemId;
-  }
-
-  String _returnLongText() {
-    return '# Title';
-  }
-
-  String _returnShortText() {
-    return 'Pokemon';
-  }
 
   String _formatDate(final String date) {
     final DateTime dateTime = DateTime.parse(date);
@@ -140,7 +110,7 @@ class _NewsItemDetailsState extends State<NewsItemDetailsPage> {
             captionColor: captionColor,
             captionSizeFactor: captionSizeFactor),
         _newsDetailsTimestamp(createdAt: _formatDate(newsFeedItem.createdAt)),
-        _newsDetailsAction(),
+        _newsDetailsActions(),
       ],
     );
   }
@@ -194,27 +164,6 @@ class _NewsItemDetailsState extends State<NewsItemDetailsPage> {
         ],
       );
 
-  Widget _newsDetailsAction() => Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          IconButton(
-            icon: const Icon(Icons.share),
-            onPressed: _shareNewsItem,
-          ),
-          IconButton(
-            icon: const Icon(Icons.copy_outlined),
-            onPressed: () => _copyToClipboard('ola'),
-          ),
-          if (!isBookmarked)
-            IconButton(
-              icon: const Icon(Icons.bookmark_border_outlined),
-              onPressed: _toggleBookmark,
-            )
-          else
-            IconButton(
-              icon: const Icon(Icons.bookmark_rounded),
-              onPressed: _toggleBookmark,
-            ),
-        ],
-      );
+  Widget _newsDetailsActions() =>
+      NewsItemDetailsAction(newsItemGuid: newsItemGuid);
 }

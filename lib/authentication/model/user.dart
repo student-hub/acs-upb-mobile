@@ -6,6 +6,7 @@ class User {
       @required this.firstName,
       @required this.lastName,
       this.classes,
+      this.bookmarkedNews,
       final int permissionLevel})
       : permissionLevel = permissionLevel ?? 0;
 
@@ -18,6 +19,9 @@ class User {
 
   /// Info about the user's assigned group (including degree, year of study, series etc)
   List<String> classes;
+
+  /// News items that were bookmarked by the user
+  List<String> bookmarkedNews;
 
   int permissionLevel;
 

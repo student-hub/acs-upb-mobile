@@ -20,6 +20,7 @@ extension DatabaseUser on User {
         firstName: data['name']['first'],
         lastName: data['name']['last'],
         classes: List.from(data['class'] ?? []),
+        bookmarkedNews: List.from(data['bookmarkedNews'] ?? []),
         permissionLevel: data['permissionLevel']);
   }
 
@@ -27,6 +28,7 @@ extension DatabaseUser on User {
     return {
       'name': {'first': firstName, 'last': lastName},
       'class': classes,
+      'bookmarkedNews': bookmarkedNews,
       'permissionLevel': permissionLevel
     };
   }

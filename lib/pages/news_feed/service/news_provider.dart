@@ -32,6 +32,7 @@ class NewsProvider with ChangeNotifier {
 
   Future<NewsFeedItem> fetchNewsItemDetails(final String newsId) async {
     try {
+      await Future.delayed(const Duration(milliseconds: 1500));
       final DocumentSnapshot doc =
           await FirebaseFirestore.instance.collection('news').doc(newsId).get();
       return DatabaseNews.fromSnap(doc);
@@ -39,6 +40,95 @@ class NewsProvider with ChangeNotifier {
       print(e);
       AppToast.show(S.current.errorSomethingWentWrong);
       return null;
+    }
+  }
+
+  bool isNewsItemBookmarked(final String newsItemGuid) {
+    final _currentUser = _authProvider.currentUserFromCache;
+    if (_currentUser.bookmarkedNews == null ||
+        _currentUser.bookmarkedNews.isEmpty) {
+      return false;
+    }
+    return _currentUser.bookmarkedNews.contains(newsItemGuid);
+  }
+
+  Future<bool> bookmarkNewsItem(final String newsItemGuid) async {
+    try {
+      print('bookmarking news item $newsItemGuid');
+      final _currentUser = _authProvider.currentUserFromCache;
+
+      if (_currentUser.bookmarkedNews.contains(newsItemGuid)) {
+        throw Exception('News item already bookmarked');
+      }
+
+      _currentUser.bookmarkedNews.add(newsItemGuid);
+
+      await FirebaseFirestore.instance
+          .collection('user')
+          .doc(_currentUser.uid)
+          .update({});
+
+      notifyListeners();
+      return true;
+    } catch (e) {
+      _errorHandler(e);
+      return false;
+    }
+  }
+
+  Future<bool> unbookmarkNewsItem(final String newsItemGuid) async {
+    try {
+      print('un-bookmarking news item $newsItemGuid');
+      final _currentUser = _authProvider.currentUserFromCache;
+      _currentUser.bookmarkedNews
+          .removeWhere((final item) => item == newsItemGuid);
+
+      await FirebaseFirestore.instance
+          .collection('user')
+          .doc(_currentUser.uid)
+          .update(_currentUser.toData());
+
+      notifyListeners();
+      return true;
+    } catch (e) {
+      _errorHandler(e);
+      return false;
+    }
+  }
+
+  void _errorHandler(final dynamic e, {bool showToast = true}) {
+    try {
+      print('${e.message} code: ${e.code}');
+      if (showToast) {
+        switch (e.code) {
+          case 'invalid-email':
+          case 'invalid-credential':
+            AppToast.show(S.current.errorInvalidEmail);
+            break;
+          case 'wrong-password':
+            AppToast.show(S.current.errorIncorrectPassword);
+            break;
+          case 'user-not-found':
+            AppToast.show(S.current.errorEmailNotFound);
+            break;
+          case 'user-disabled':
+            AppToast.show(S.current.errorAccountDisabled);
+            break;
+          case 'too-many-requests':
+            AppToast.show(
+                '${S.current.errorTooManyRequests} ${S.current.warningTryAgainLater}');
+            break;
+          case 'email-already-in-use':
+            AppToast.show(S.current.errorEmailInUse);
+            break;
+          default:
+            AppToast.show(e.message);
+        }
+      }
+    } catch (_) {
+      // Unknown exception
+      print(e);
+      AppToast.show(S.current.errorSomethingWentWrong);
     }
   }
 }
