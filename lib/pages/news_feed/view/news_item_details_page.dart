@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
@@ -56,6 +57,11 @@ class _NewsItemDetailsState extends State<NewsItemDetailsPage> {
 
   String _returnShortText() {
     return 'Pokemon';
+  }
+
+  String _formatDate(final String date) {
+    final DateTime dateTime = DateTime.parse(date);
+    return DateFormat('yyyy-MM-dd').format(dateTime);
   }
 
   @override
@@ -133,6 +139,7 @@ class _NewsItemDetailsState extends State<NewsItemDetailsPage> {
             content: newsFeedItem.body,
             captionColor: captionColor,
             captionSizeFactor: captionSizeFactor),
+        _newsDetailsTimestamp(createdAt: _formatDate(newsFeedItem.createdAt)),
         _newsDetailsAction(),
       ],
     );
@@ -177,6 +184,13 @@ class _NewsItemDetailsState extends State<NewsItemDetailsPage> {
               ]),
             ),
           ))
+        ],
+      );
+
+  Widget _newsDetailsTimestamp({final String createdAt}) => Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Text('Posted on: $createdAt', style: const TextStyle(fontSize: 12)),
         ],
       );
 

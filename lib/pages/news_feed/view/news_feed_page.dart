@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../../../generated/l10n.dart';
-import '../../../navigation/routes.dart';
 import '../../../widgets/error_page.dart';
 import '../../../widgets/scaffold.dart';
 import '../model/news_feed_item.dart';
@@ -22,6 +22,11 @@ class NewsItemDetailsRouteArguments {
 }
 
 class _NewsFeedPageState extends State<NewsFeedPage> {
+  String _formatDate(final String date) {
+    final DateTime dateTime = DateTime.parse(date);
+    return DateFormat('yyyy-MM-dd').format(dateTime);
+  }
+
   @override
   Widget build(final BuildContext context) {
     final newsFeedProvider = Provider.of<NewsProvider>(context);
@@ -56,7 +61,7 @@ class _NewsFeedPageState extends State<NewsFeedPage> {
             tiles: newsFeedItems
                 .map((final item) => ListTile(
                       title: Text(item.title),
-                      subtitle: Text(item.createdAt),
+                      subtitle: Text(_formatDate(item.createdAt)),
                       trailing: const Icon(Icons.arrow_forward_ios_outlined),
                       onTap: () => Navigator.push(
                           context,
