@@ -46,7 +46,7 @@ class _ChatPageState extends State<ChatPage> {
 
   Future<void> _fetchConversation() async {
     print(_savedMessages);
-    final conv = await addConversation(_savedMessages);
+    final conv = await addConversation(_savedMessages, languagePref);
     setState(() {
       conversation = conv;
     });
@@ -132,7 +132,7 @@ class _ChatPageState extends State<ChatPage> {
       final Message messageConv = Message(index: _idxMess,
           content: _futureMessage.messageText, entity: 'Polly', isFlagged: false);
       _savedMessages.insert(0, messageConv);
-      updateConversation(conversation.uid, _savedMessages);
+      updateConversation(conversation.uid, _savedMessages, languagePref);
       _messages.insert(0, message);
     });
   }
