@@ -10,9 +10,10 @@ extension DatabaseConversation on Conversation {
         messages: List.from(data['messages'] ?? []));
   }
 
-  Map<dynamic, dynamic> toData() {
+  Map<String, dynamic> toData() {
     return {
-      'messages': messages.map((message) => message.toJson()).toList(),
+      // 'messages': List<String>.from(messages.map((message) => message.toJson())),
+      'messages': List<dynamic>.from(messages.map((x) => x.toJson())),
     };
   }
 }
