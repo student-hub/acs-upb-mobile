@@ -19,16 +19,8 @@ class ChatPage extends StatefulWidget {
 
 class _ChatPageState extends State<ChatPage> {
   final languagePref = PrefService.get('language');
-  List<ChatMessage> _messages = [
-    ChatMessage(content: S.current.messageContent, type: 'receiver', idx: 0),
-    ChatMessage(content: S.current.messageGreeting, type: 'receiver', idx: 1),
-  ];
-  List<Message> _savedMessages = [
-    Message(index: 0, content: S.current.messageGreeting, entity: 'Polly',
-        isFlagged: false),
-    Message(index: 1, content: S.current.messageContent, entity: 'Polly',
-        isFlagged: false),
-  ];
+  List<ChatMessage> _messages;
+  List<Message> _savedMessages;
   final _textController = TextEditingController();
   final FocusNode _focusNode = FocusNode();
   int _idxMess = 2;
@@ -55,7 +47,18 @@ class _ChatPageState extends State<ChatPage> {
   void initState() {
     super.initState();
     _fetchUser();
+    _messages = [
+      ChatMessage(content: S.current.messageContent, type: 'receiver', idx: 0),
+      ChatMessage(content: S.current.messageGreeting, type: 'receiver', idx: 1),
+    ];
+    _savedMessages = [
+      Message(index: 0, content: S.current.messageGreeting, entity: 'Polly',
+          isFlagged: false),
+      Message(index: 1, content: S.current.messageContent, entity: 'Polly',
+          isFlagged: false),
+    ];
     _fetchConversation();
+
   }
 
   @override
@@ -158,7 +161,7 @@ class _ChatPageState extends State<ChatPage> {
 }
 
 class ChatMessage extends StatefulWidget {
-  ChatMessage({Key key, this.content, this.type, this.idx}) : super(key: key);
+  const ChatMessage({Key key, this.content, this.type, this.idx}) : super(key: key);
 
   final String content;
   final String type;
@@ -191,6 +194,7 @@ class _ChatMessage extends State<ChatMessage> {
             style: const TextStyle(fontSize: 15),
           )
               : Row(
+              mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 Flexible(
