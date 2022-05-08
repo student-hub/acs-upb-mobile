@@ -20,8 +20,8 @@ class ChatPage extends StatefulWidget {
 class _ChatPageState extends State<ChatPage> {
   final languagePref = PrefService.get('language');
   List<ChatMessage> _messages = [
-    ChatMessage(content: S.current.messageContent, type: 'receiver'),
-    ChatMessage(content: S.current.messageGreeting, type: 'receiver'),
+    ChatMessage(content: S.current.messageContent, type: 'receiver', idx: 0),
+    ChatMessage(content: S.current.messageGreeting, type: 'receiver', idx: 1),
   ];
   List<Message> _savedMessages = [
     Message(index: 0, content: S.current.messageGreeting, entity: 'Polly',
@@ -31,7 +31,7 @@ class _ChatPageState extends State<ChatPage> {
   ];
   final _textController = TextEditingController();
   final FocusNode _focusNode = FocusNode();
-  final _idxMess = 2;
+  int _idxMess = 2;
   MessageRasa _futureMessage;
   Conversation conversation;
   User user;
@@ -45,7 +45,6 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   Future<void> _fetchConversation() async {
-    print(_savedMessages);
     final conv = await addConversation(_savedMessages, languagePref);
     setState(() {
       conversation = conv;
@@ -128,9 +127,11 @@ class _ChatPageState extends State<ChatPage> {
       final ChatMessage message = ChatMessage(
         content: _futureMessage.messageText,
         type: 'receiver',
+        idx: _idxMess,
       );
       final Message messageConv = Message(index: _idxMess,
           content: _futureMessage.messageText, entity: 'Polly', isFlagged: false);
+      _idxMess = _idxMess + 1;
       _savedMessages.insert(0, messageConv);
       updateConversation(conversation.uid, _savedMessages, languagePref);
       _messages.insert(0, message);
@@ -142,9 +143,11 @@ class _ChatPageState extends State<ChatPage> {
     final ChatMessage message = ChatMessage(
       content: messageContent,
       type: 'sender',
+      idx: _idxMess,
     );
     final Message messageConv = Message(index: _idxMess,
         content: messageContent, entity: 'Human', isFlagged: false);
+    _idxMess = _idxMess + 1;
     setState(() {
       _messages.insert(0, message);
       _savedMessages.insert(0, messageConv);
@@ -155,10 +158,11 @@ class _ChatPageState extends State<ChatPage> {
 }
 
 class ChatMessage extends StatefulWidget {
-  ChatMessage({Key key, this.content, this.type}) : super(key: key);
+  ChatMessage({Key key, this.content, this.type, this.idx}) : super(key: key);
 
   final String content;
   final String type;
+  final int idx;
 
   @override
   _ChatMessage createState() => _ChatMessage();
