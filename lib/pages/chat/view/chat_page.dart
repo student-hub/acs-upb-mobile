@@ -25,9 +25,9 @@ class _ChatPageState extends State<ChatPage> {
   ];
   List<Message> _savedMessages = [
     Message(index: 0, content: S.current.messageGreeting, entity: 'Polly',
-    isFlagged: false),
+        isFlagged: false),
     Message(index: 1, content: S.current.messageContent, entity: 'Polly',
-    isFlagged: false),
+        isFlagged: false),
   ];
   final _textController = TextEditingController();
   final FocusNode _focusNode = FocusNode();
@@ -99,7 +99,7 @@ class _ChatPageState extends State<ChatPage> {
               },
               // onSubmitted: _handleSubmitted,
               decoration:
-                  const InputDecoration.collapsed(hintText: 'Send a message'),
+              const InputDecoration.collapsed(hintText: 'Send a message'),
               focusNode: _focusNode,
             ),
           ),
@@ -129,6 +129,10 @@ class _ChatPageState extends State<ChatPage> {
         content: _futureMessage.messageText,
         type: 'receiver',
       );
+      final Message messageConv = Message(index: _idxMess,
+          content: _futureMessage.messageText, entity: 'Polly', isFlagged: false);
+      _savedMessages.insert(0, messageConv);
+      updateConversation(conversation.uid, _savedMessages);
       _messages.insert(0, message);
     });
   }
@@ -139,8 +143,11 @@ class _ChatPageState extends State<ChatPage> {
       content: messageContent,
       type: 'sender',
     );
+    final Message messageConv = Message(index: _idxMess,
+        content: messageContent, entity: 'Human', isFlagged: false);
     setState(() {
       _messages.insert(0, message);
+      _savedMessages.insert(0, messageConv);
     });
     _focusNode.requestFocus();
   }
@@ -165,7 +172,7 @@ class _ChatMessage extends State<ChatMessage> {
   Widget build(BuildContext context) {
     return Align(
       alignment:
-          widget.type == 'receiver' ? Alignment.topLeft : Alignment.topRight,
+      widget.type == 'receiver' ? Alignment.topLeft : Alignment.topRight,
       child: Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(20),
@@ -176,22 +183,22 @@ class _ChatMessage extends State<ChatMessage> {
           padding: const EdgeInsets.all(16),
           child: widget.type == 'sender'
               ? Text(
-                  widget.content,
-                  style: const TextStyle(fontSize: 15),
-                )
+            widget.content,
+            style: const TextStyle(fontSize: 15),
+          )
               : Row(
-            mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 Flexible(
-                     child: GestureDetector(
-                    child: Text(
-                      widget.content,
-                      style: const TextStyle(fontSize: 15),
-                    ),
-                    onTap: _flagMessage
-                  )),
-                 Icon(Icons.flag, color: _flagColor)
-                ])),
+                    child: GestureDetector(
+                        child: Text(
+                          widget.content,
+                          style: const TextStyle(fontSize: 15),
+                        ),
+                        onTap: _flagMessage
+                    )),
+                Icon(Icons.flag, color: _flagColor)
+              ])),
     );
   }
 
