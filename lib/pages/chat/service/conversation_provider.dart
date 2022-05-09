@@ -3,6 +3,7 @@ import 'package:acs_upb_mobile/pages/chat/model/message.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
+import 'package:preferences/preference_service.dart';
 
 extension DatabaseConversation on Conversation {
   static Conversation fromSnap(DocumentSnapshot snap) {
@@ -38,9 +39,23 @@ class ConversationProvider with ChangeNotifier {
   }
 
   List<Message> _savedMessages;
+  Conversation conv;
 
   void updateListOfMessages(Message messageConv) {
     _savedMessages.insert(0, messageConv);
+  }
+
+  Future<void> flagMessage(int idx, bool isFlagged) async {
+    final index = _savedMessages.indexWhere((mess) => mess.index == idx);
+    _savedMessages[index].isFlagged = isFlagged;
+    final fireStoreConversationRef =
+    FirebaseFirestore.instance.collection('conversations').doc(conv.uid);
+    final Conversation conversation = Conversation(
+        uid: fireStoreConversationRef.id,
+        language: PrefService.get('language'),
+        messages: _savedMessages);
+
+    await fireStoreConversationRef.update(conversation.toData());
   }
 
   Future<Conversation> addConversation(String language) async {
@@ -50,7 +65,7 @@ class ConversationProvider with ChangeNotifier {
         uid: fireStoreConversationRef.id,
         language: language,
         messages: _savedMessages);
-
+    conv = conversation;
     await fireStoreConversationRef.set(conversation.toData());
     return conversation;
   }

@@ -38,7 +38,7 @@ class _ChatPageState extends State<ChatPage> {
 
   Future<void> _fetchConversation() async {
     final ConversationProvider conProvider =
-      Provider.of<ConversationProvider>(context, listen: false);
+        Provider.of<ConversationProvider>(context, listen: false);
     final conv = await conProvider.addConversation(languagePref);
     setState(() {
       conversation = conv;
@@ -220,5 +220,7 @@ class _ChatMessage extends State<ChatMessage> {
         _flagColor = Colors.red;
       }
     });
+    Provider.of<ConversationProvider>(context, listen: false)
+        .flagMessage(widget.idx, _isFlagged);
   }
 }
