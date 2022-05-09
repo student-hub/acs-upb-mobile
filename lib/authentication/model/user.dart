@@ -28,4 +28,7 @@ class User {
   bool get canEditPublicInfo => permissionLevel >= 3;
 
   bool get isAdmin => permissionLevel >= 4;
+
+  List<String> get sourcesList =>
+      sources ?? ['official', 'organizations', 'students'];
 }

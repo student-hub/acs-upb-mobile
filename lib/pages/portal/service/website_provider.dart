@@ -241,8 +241,7 @@ class WebsiteProvider with ChangeNotifier {
   }
 
   List<String> getUserSources() =>
-      _authProvider.currentUserFromCache?.sources ??
-      ['official', 'organizations', 'students'];
+      _authProvider.currentUserFromCache?.sourcesList;
 
   Query filterBySource(Query query) =>
       query.where('source', whereIn: getUserSources());
