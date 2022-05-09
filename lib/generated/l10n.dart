@@ -895,10 +895,10 @@ class S {
     );
   }
 
-  /// `Please select the sources that you want to see information from:`
+  /// `Filter information in the app based on who added it:`
   String get hintSelectSources {
     return Intl.message(
-      'Please select the sources that you want to see information from:',
+      'Filter information in the app based on who added it:',
       name: 'hintSelectSources',
       desc: '',
       args: [],
@@ -2086,10 +2086,10 @@ class S {
   }
 
   /// `Representative students`
-  String get sourceStudentRepresentative {
+  String get sourceStudentRepresentatives {
     return Intl.message(
       'Representative students',
-      name: 'sourceStudentRepresentative',
+      name: 'sourceStudentRepresentatives',
       desc: '',
       args: [],
     );
@@ -2215,10 +2215,10 @@ class S {
     );
   }
 
-  /// `Select the sources you want information from`
+  /// `Filter information in the app based on who added it`
   String get settingsSourceSelectionSubtitle {
     return Intl.message(
-      'Select the sources you want information from',
+      'Filter information in the app based on who added it',
       name: 'settingsSourceSelectionSubtitle',
       desc: '',
       args: [],

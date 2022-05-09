@@ -89,7 +89,7 @@
   "hintWebsiteLink": "http://google.com",
   "hintEvaluation": "Final exam",
   "hintPoints": "4.0",
-  "hintSelectSources": "Please select the sources that you want to see information from:",
+  "hintSelectSources": "Filter information in the app based on who added it:",
   "hintFeedback": "I love the app!",
   "hintIssue": "When I open the app...",
 
@@ -214,7 +214,7 @@
   "sourceOfficialWebPagesInfo": "acs.pub.ro, upb.ro, curs.upb.ro, studenti.pub.ro",
   "sourceStudentOrganizations": "Student organizations",
   "sourceStudentOrganizationsInfo": "LSAC, BEST, MLSA",
-  "sourceStudentRepresentative": "Representative students",
+  "sourceStudentRepresentatives": "Representative students",
   "sourceStudentRepresentativesInfo": "group/series representatives, student council members",
   "sourceUnknown": "Unknown source",
 
@@ -230,7 +230,7 @@
   "settingsTitleDataControl": "Data control",
   "settingsItemEditingPermissions": "Your editing permissions",
   "settingsSourceSelection": "Select information sources",
-  "settingsSourceSelectionSubtitle": "Select the sources you want information from",
+  "settingsSourceSelectionSubtitle": "Filter information in the app based on who added it",
   "settingsPermissionsNone": "No special permissions",
   "settingsPermissionsAdd": "Permission to add public info",
   "settingsPermissionsEdit": "Permission to edit public info",

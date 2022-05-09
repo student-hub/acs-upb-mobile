@@ -10,7 +10,7 @@ extension SourceCategoryExtension on SourceCategory {
       case SourceCategory.organizations:
         return S.current.sourceStudentOrganizations;
       case SourceCategory.students:
-        return S.current.sourceStudentRepresentative;
+        return S.current.sourceStudentRepresentatives;
       default:
         return S.current.sourceUnknown;
     }

@@ -108,16 +108,17 @@ class _SettingsPageState extends State<SettingsPage> {
                   subtitle: Text(userPermissionString),
                 ),
                 ListTile(
-                    key: const ValueKey('edit_source_selection'),
-                    onTap: () {
-                      if (authProvider.isAnonymous) {
-                        AppToast.show(S.current.messageNotLoggedIn);
-                      } else {
-                        Navigator.of(context).pushNamed(Routes.sources);
-                      }
-                    },
-                    title: Text(S.current.settingsSourceSelection),
-                    subtitle: Text(S.current.settingsSourceSelectionSubtitle)),
+                  key: const ValueKey('edit_source_selection'),
+                  onTap: () {
+                    if (authProvider.isAnonymous) {
+                      AppToast.show(S.current.messageNotLoggedIn);
+                    } else {
+                      Navigator.of(context).pushNamed(Routes.sources);
+                    }
+                  },
+                  title: Text(S.current.settingsSourceSelection),
+                  subtitle: Text(S.current.settingsSourceSelectionSubtitle),
+                ),
                 ListTile(
                   onTap: () => Utils.launchURL(Utils.privacyPolicyURL),
                   title: Text(S.current.labelPrivacyPolicy),

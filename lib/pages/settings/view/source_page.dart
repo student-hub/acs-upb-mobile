@@ -83,7 +83,7 @@ class _SourcePageState extends State<SourcePage> {
             onChanged: (value) {
               setState(() => sourceSelected['students'] = value);
             },
-            title: Text('${S.current.sourceStudentRepresentative}*'),
+            title: Text('${S.current.sourceStudentRepresentatives}*'),
             subtitle: Text(S.current.sourceStudentRepresentativesInfo),
             controlAffinity: ListTileControlAffinity.leading,
           ),

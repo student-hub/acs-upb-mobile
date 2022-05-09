@@ -184,7 +184,7 @@
   "warningUnableToReachNewsFeed": "Nu am putut încărca fluxul de știri.",
   "warningNoNews": "Nu au fost postate știri încă.",
   "warningEventNotEditable": "Acest eveniment nu poate fi modificat.",
-  "warningEventsAreAddedByStudents": "Evenimentele din calendar sunt adăugate de studenți. Puteți să selectați sursa de informație \"stundenți\" pentru a le vedea.",
+  "warningEventsAreAddedByStudents": "Evenimentele din calendar sunt adăugate de studenți. Poți selecta sursa de informație \"stundenți\" pentru a le vedea.",
 
   "navigationAskPermissions": "Cere permisiuni",
   "navigationHome": "Acasă",
@@ -214,7 +214,7 @@
   "sourceOfficialWebPagesInfo": "acs.pub.ro, upb.ro, curs.upb.ro, studenti.pub.ro",
   "sourceStudentOrganizations": "Organizații studențești",
   "sourceStudentOrganizationsInfo": "LSAC, BEST, MLSA",
-  "sourceStudentRepresentative": "Studenți reprezentanți",
+  "sourceStudentRepresentatives": "Studenți reprezentanți",
   "sourceStudentRepresentativesInfo": "șefi de grupă, serie și studenții consilieri",
   "sourceUnknown": "Sursă necunoscută",
 
@@ -230,7 +230,7 @@
   "settingsTitleDataControl": "Control date",
   "settingsItemEditingPermissions": "Permisiunile tale de editare",
   "settingsSourceSelection": "Selectează sursele de informații",
-  "settingsSourceSelectionSubtitle": "Selectează sursele din care vrei informații",
+  "settingsSourceSelectionSubtitle": "Filtrează informațiile din aplicație în funcție de cine le-a adăugat",
   "settingsPermissionsNone": "Fără permisiuni speciale",
   "settingsPermissionsAdd": "Permisiune pentru adăugare de date publice",
   "settingsPermissionsEdit": "Permisiune pentru editare de date publice",
