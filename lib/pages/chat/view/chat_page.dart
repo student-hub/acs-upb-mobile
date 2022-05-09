@@ -20,12 +20,12 @@ class ChatPage extends StatefulWidget {
 class _ChatPageState extends State<ChatPage> {
   final languagePref = PrefService.get('language');
   List<ChatMessage> _messages;
-  List<Message> _savedMessages;
   final _textController = TextEditingController();
   final FocusNode _focusNode = FocusNode();
   int _idxMess = 2;
   MessageRasa _futureMessage;
   Conversation conversation;
+  ConversationProvider conversationProvider;
   User user;
 
   Future<void> _fetchUser() async {
@@ -37,33 +37,28 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   Future<void> _fetchConversation() async {
-    final conv = await addConversation(_savedMessages, languagePref);
+    final ConversationProvider conProvider =
+      Provider.of<ConversationProvider>(context, listen: false);
+    final conv = await conProvider.addConversation(languagePref);
     setState(() {
       conversation = conv;
+      conversationProvider = conProvider;
     });
   }
 
   @override
   void initState() {
     super.initState();
+    _fetchConversation();
     _fetchUser();
     _messages = [
       ChatMessage(content: S.current.messageContent, type: 'receiver', idx: 0),
       ChatMessage(content: S.current.messageGreeting, type: 'receiver', idx: 1),
     ];
-    _savedMessages = [
-      Message(index: 0, content: S.current.messageGreeting, entity: 'Polly',
-          isFlagged: false),
-      Message(index: 1, content: S.current.messageContent, entity: 'Polly',
-          isFlagged: false),
-    ];
-    _fetchConversation();
-
   }
 
   @override
   Widget build(BuildContext context) {
-
     return AppScaffold(
       title: const Text('Polly'),
       body: Column(
@@ -99,9 +94,8 @@ class _ChatPageState extends State<ChatPage> {
               onSubmitted: (value) async {
                 await _handleMessages();
               },
-              // onSubmitted: _handleSubmitted,
               decoration:
-              const InputDecoration.collapsed(hintText: 'Send a message'),
+                  const InputDecoration.collapsed(hintText: 'Send a message'),
               focusNode: _focusNode,
             ),
           ),
@@ -122,8 +116,8 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   Future<void> _handleMessages() async {
-    final auxMessage = await createMessage(_textController.text,
-        user.uid, languagePref);
+    final auxMessage =
+        await createMessage(_textController.text, user.uid, languagePref);
     _handleSubmitted(_textController.text);
     setState(() {
       _futureMessage = auxMessage;
@@ -132,11 +126,14 @@ class _ChatPageState extends State<ChatPage> {
         type: 'receiver',
         idx: _idxMess,
       );
-      final Message messageConv = Message(index: _idxMess,
-          content: _futureMessage.messageText, entity: 'Polly', isFlagged: false);
+      final Message messageConv = Message(
+          index: _idxMess,
+          content: _futureMessage.messageText,
+          entity: 'Polly',
+          isFlagged: false);
       _idxMess = _idxMess + 1;
-      _savedMessages.insert(0, messageConv);
-      updateConversation(conversation.uid, _savedMessages, languagePref);
+      Provider.of<ConversationProvider>(context, listen: false)
+          .updateConversation(conversation.uid, messageConv, languagePref);
       _messages.insert(0, message);
     });
   }
@@ -148,20 +145,24 @@ class _ChatPageState extends State<ChatPage> {
       type: 'sender',
       idx: _idxMess,
     );
-    final Message messageConv = Message(index: _idxMess,
-        content: messageContent, entity: 'Human', isFlagged: false);
+    final Message messageConv = Message(
+        index: _idxMess,
+        content: messageContent,
+        entity: 'Human',
+        isFlagged: false);
+    Provider.of<ConversationProvider>(context, listen: false)
+        .updateListOfMessages(messageConv);
     _idxMess = _idxMess + 1;
     setState(() {
       _messages.insert(0, message);
-      _savedMessages.insert(0, messageConv);
     });
     _focusNode.requestFocus();
   }
-
 }
 
 class ChatMessage extends StatefulWidget {
-  const ChatMessage({Key key, this.content, this.type, this.idx}) : super(key: key);
+  const ChatMessage({Key key, this.content, this.type, this.idx})
+      : super(key: key);
 
   final String content;
   final String type;
@@ -179,7 +180,7 @@ class _ChatMessage extends State<ChatMessage> {
   Widget build(BuildContext context) {
     return Align(
       alignment:
-      widget.type == 'receiver' ? Alignment.topLeft : Alignment.topRight,
+          widget.type == 'receiver' ? Alignment.topLeft : Alignment.topRight,
       child: Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(20),
@@ -190,23 +191,22 @@ class _ChatMessage extends State<ChatMessage> {
           padding: const EdgeInsets.all(16),
           child: widget.type == 'sender'
               ? Text(
-            widget.content,
-            style: const TextStyle(fontSize: 15),
-          )
+                  widget.content,
+                  style: const TextStyle(fontSize: 15),
+                )
               : Row(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                Flexible(
-                    child: GestureDetector(
-                        child: Text(
-                          widget.content,
-                          style: const TextStyle(fontSize: 15),
-                        ),
-                        onTap: _flagMessage
-                    )),
-                Icon(Icons.flag, color: _flagColor)
-              ])),
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                      Flexible(
+                          child: GestureDetector(
+                              child: Text(
+                                widget.content,
+                                style: const TextStyle(fontSize: 15),
+                              ),
+                              onTap: _flagMessage)),
+                      Icon(Icons.flag, color: _flagColor)
+                    ])),
     );
   }
 
