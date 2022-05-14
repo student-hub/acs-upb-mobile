@@ -217,13 +217,16 @@ class _ChatMessage extends State<ChatMessage> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
                       Flexible(
-                          child: GestureDetector(
                               child: SelectableText(
                                 widget.content,
                                 style: const TextStyle(fontSize: 15),
                               ),
-                              onTap: _flagMessage)),
-                      Icon(Icons.flag, color: _flagColor)
+                             ),
+                    GestureDetector(
+                      child: Icon(Icons.flag, color: _flagColor ),
+                      onTap: () { _flagMessage(); },
+                    )
+
                     ])),
     );
   }

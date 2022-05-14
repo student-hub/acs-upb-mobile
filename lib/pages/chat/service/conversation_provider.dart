@@ -35,6 +35,16 @@ class ConversationProvider with ChangeNotifier {
           content: S.current.messageContent,
           entity: 'Polly',
           isFlagged: false),
+      Message(
+          index: 2,
+          content: S.current.messageConsent,
+          entity: 'Polly',
+          isFlagged: false),
+      Message(
+          index: 3,
+          content: 'Id: ${getConversationUid()}',
+          entity: 'Polly',
+          isFlagged: false),
     ];
   }
 
