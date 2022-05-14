@@ -207,7 +207,7 @@ class _ChatMessage extends State<ChatMessage> {
           ),
           padding: const EdgeInsets.all(16),
           child: widget.type == 'sender'
-              ? Text(
+              ? SelectableText(
                   widget.content,
                   style: const TextStyle(fontSize: 15),
                 )
@@ -217,7 +217,7 @@ class _ChatMessage extends State<ChatMessage> {
                   children: <Widget>[
                       Flexible(
                           child: GestureDetector(
-                              child: Text(
+                              child: SelectableText(
                                 widget.content,
                                 style: const TextStyle(fontSize: 15),
                               ),
