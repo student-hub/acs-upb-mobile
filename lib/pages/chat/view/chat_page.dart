@@ -26,6 +26,7 @@ class _ChatPageState extends State<ChatPage> {
   MessageRasa _futureMessage;
   Conversation conversation;
   User user;
+  Color _sendButtonColor;
 
   Future<void> _fetchUser() async {
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
@@ -55,6 +56,8 @@ class _ChatPageState extends State<ChatPage> {
           type: 'receiver',
           idx: 2)
     ];
+    Future.delayed(Duration.zero,
+        () => {_sendButtonColor = Theme.of(context).disabledColor});
   }
 
   @override
@@ -96,6 +99,17 @@ class _ChatPageState extends State<ChatPage> {
                   await _handleMessages();
                 }
               },
+              onChanged: (text) {
+                if (text.isNotEmpty) {
+                  setState(() {
+                    _sendButtonColor = Theme.of(context).primaryColor;
+                  });
+                } else {
+                  setState(() {
+                    _sendButtonColor = Theme.of(context).disabledColor;
+                  });
+                }
+              },
               decoration:
                   const InputDecoration.collapsed(hintText: 'Send a message'),
               focusNode: _focusNode,
@@ -105,12 +119,12 @@ class _ChatPageState extends State<ChatPage> {
             margin: const EdgeInsets.symmetric(horizontal: 4),
             child: IconButton(
               icon: const Icon(Icons.send),
+              color: _sendButtonColor,
               onPressed: () async {
                 if (_textController.text.isNotEmpty) {
                   await _handleMessages();
                 }
               },
-              color: Theme.of(context).primaryColor,
             ),
           )
         ],
