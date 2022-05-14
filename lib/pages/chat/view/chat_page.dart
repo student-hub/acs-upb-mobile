@@ -112,7 +112,7 @@ class _ChatPageState extends State<ChatPage> {
                 }
               },
               decoration:
-                  const InputDecoration.collapsed(hintText: 'Send a message'),
+                  InputDecoration.collapsed(hintText: S.current.hintMessageChatbot),
               focusNode: _focusNode,
             ),
           ),

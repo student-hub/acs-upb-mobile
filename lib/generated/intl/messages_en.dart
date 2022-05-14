@@ -126,6 +126,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "hintGroup" : MessageLookupByLibrary.simpleMessage("314CB"),
     "hintIssue" : MessageLookupByLibrary.simpleMessage("When I open the app..."),
     "hintLastName" : MessageLookupByLibrary.simpleMessage("Doe"),
+    "hintMessageChatbot" : MessageLookupByLibrary.simpleMessage("Send a message"),
     "hintPassword" : MessageLookupByLibrary.simpleMessage("····················"),
     "hintPoints" : MessageLookupByLibrary.simpleMessage("4.0"),
     "hintWebsiteLabel" : MessageLookupByLibrary.simpleMessage("Google"),

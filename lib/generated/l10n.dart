@@ -2975,6 +2975,16 @@ class S {
     );
   }
 
+  /// `Send a message`
+  String get hintMessageChatbot {
+    return Intl.message(
+      'Send a message',
+      name: 'hintMessageChatbot',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Please check your inbox for the password reset e-mail.`
   String get infoPasswordResetEmailSent {
     return Intl.message(
