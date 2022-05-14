@@ -25,7 +25,6 @@ class _ChatPageState extends State<ChatPage> {
   int _idxMess = 2;
   MessageRasa _futureMessage;
   Conversation conversation;
-  ConversationProvider conversationProvider;
   User user;
 
   Future<void> _fetchUser() async {
@@ -39,11 +38,7 @@ class _ChatPageState extends State<ChatPage> {
   Future<void> _fetchConversation() async {
     final ConversationProvider conProvider =
         Provider.of<ConversationProvider>(context, listen: false);
-    final conv = await conProvider.addConversation(languagePref);
-    setState(() {
-      conversation = conv;
-      conversationProvider = conProvider;
-    });
+    conversation = await conProvider.addConversation(languagePref);
   }
 
   @override
@@ -54,13 +49,17 @@ class _ChatPageState extends State<ChatPage> {
     _messages = [
       ChatMessage(content: S.current.messageContent, type: 'receiver', idx: 0),
       ChatMessage(content: S.current.messageGreeting, type: 'receiver', idx: 1),
+      ChatMessage(
+          content: Provider.of<ConversationProvider>(context, listen: false)
+              .getConversationUid(),
+          type: 'receiver',
+          idx: 2)
     ];
   }
 
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
-      title: const Text('Polly'),
       body: Column(
         children: [
           Expanded(
@@ -80,6 +79,7 @@ class _ChatPageState extends State<ChatPage> {
           ),
         ],
       ),
+      title: const Text('Polly'),
     );
   }
 
@@ -92,7 +92,9 @@ class _ChatPageState extends State<ChatPage> {
             child: TextField(
               controller: _textController,
               onSubmitted: (value) async {
-                await _handleMessages();
+                if (_textController.text.isNotEmpty) {
+                  await _handleMessages();
+                }
               },
               decoration:
                   const InputDecoration.collapsed(hintText: 'Send a message'),
@@ -104,8 +106,9 @@ class _ChatPageState extends State<ChatPage> {
             child: IconButton(
               icon: const Icon(Icons.send),
               onPressed: () async {
-                await _handleMessages();
-                // _handleReceived(),
+                if (_textController.text.isNotEmpty) {
+                  await _handleMessages();
+                }
               },
               color: Theme.of(context).primaryColor,
             ),

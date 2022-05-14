@@ -40,6 +40,10 @@ class ConversationProvider with ChangeNotifier {
 
   List<Message> _savedMessages;
   Conversation conv;
+  
+  String getConversationUid() {
+    return conv.uid;
+  }
 
   void updateListOfMessages(Message messageConv) {
     _savedMessages.insert(0, messageConv);
