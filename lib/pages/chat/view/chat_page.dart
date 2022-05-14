@@ -50,11 +50,12 @@ class _ChatPageState extends State<ChatPage> {
     _messages = [
       ChatMessage(content: S.current.messageContent, type: 'receiver', idx: 0),
       ChatMessage(content: S.current.messageGreeting, type: 'receiver', idx: 1),
+      ChatMessage(content: S.current.messageConsent, type: 'receiver', idx: 2),
       ChatMessage(
-          content: Provider.of<ConversationProvider>(context, listen: false)
-              .getConversationUid(),
+          content: 'Id: ${Provider.of<ConversationProvider>(context, listen: false)
+              .getConversationUid()}',
           type: 'receiver',
-          idx: 2)
+          idx: 3)
     ];
     Future.delayed(Duration.zero,
         () => {_sendButtonColor = Theme.of(context).disabledColor});

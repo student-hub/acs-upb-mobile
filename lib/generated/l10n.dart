@@ -2965,6 +2965,16 @@ class S {
     );
   }
 
+  /// `Please be informed that your messages will be recorded in order to improve the chatbot. Continuing the conversation at this time means that you agree that your messages will be saved for later use.`
+  String get messageConsent {
+    return Intl.message(
+      'Please be informed that your messages will be recorded in order to improve the chatbot. Continuing the conversation at this time means that you agree that your messages will be saved for later use.',
+      name: 'messageConsent',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Please check your inbox for the password reset e-mail.`
   String get infoPasswordResetEmailSent {
     return Intl.message(

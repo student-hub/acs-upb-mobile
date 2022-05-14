@@ -307,6 +307,8 @@
   "messageReportNotSent": "Report could not be sent.",
   "messageGreeting": "Hello!",
   "messageContent": "How can I help you?",
+  "messageConsent": "Please be informed that your messages will be recorded in order to improve the chatbot. Continuing the conversation at this time means that you agree that your messages will be saved for later use.",
+
 
   "infoPasswordResetEmailSent": "Please check your inbox for the password reset e-mail.",
   "infoRelevance": "Try to choose the most restrictive category.",

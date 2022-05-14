@@ -219,6 +219,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "messageChangeEmailSuccess" : MessageLookupByLibrary.simpleMessage("Email changed successfully"),
     "messageChangePasswordSuccess" : MessageLookupByLibrary.simpleMessage("Password changed successfully."),
     "messageCheckEmailVerification" : MessageLookupByLibrary.simpleMessage("Please check your email for account verification."),
+    "messageConsent" : MessageLookupByLibrary.simpleMessage("Please be informed that your messages will be recorded in order to improve the chatbot. Continuing the conversation at this time means that you agree that your messages will be saved for later use."),
     "messageContent" : MessageLookupByLibrary.simpleMessage("How can I help you?"),
     "messageDeleteAccount" : MessageLookupByLibrary.simpleMessage("Are you sure you want to delete your account?"),
     "messageDeleteEvent" : MessageLookupByLibrary.simpleMessage("Are you sure you want to delete this event?"),

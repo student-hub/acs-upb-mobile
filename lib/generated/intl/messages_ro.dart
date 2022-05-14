@@ -219,6 +219,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "messageChangeEmailSuccess" : MessageLookupByLibrary.simpleMessage("Email-ul a fost schimbat cu succes"),
     "messageChangePasswordSuccess" : MessageLookupByLibrary.simpleMessage("Parola a fost schimbată cu succes."),
     "messageCheckEmailVerification" : MessageLookupByLibrary.simpleMessage("Verificați-vă mail-ul pentru confirmarea contului."),
+    "messageConsent" : MessageLookupByLibrary.simpleMessage("Vă informez că mesajele dvs. vor fi înregistrate pentru a îmbunătăți agentul conversational în viitor. Continuarea conversației din acest moment înseamnă că sunteți de acord sa salvăm toată mesajele pentru a le utiliza ulterior."),
     "messageContent" : MessageLookupByLibrary.simpleMessage("Cu ce te pot ajuta?"),
     "messageDeleteAccount" : MessageLookupByLibrary.simpleMessage("Sunteți sigur că doriți să ștergeți contul?"),
     "messageDeleteEvent" : MessageLookupByLibrary.simpleMessage("Sunteți sigur că doriți să ștergeți acest eveniment?"),
