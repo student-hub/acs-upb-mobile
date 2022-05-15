@@ -23,7 +23,10 @@ extension DatabaseConversation on Conversation {
 }
 
 class ConversationProvider with ChangeNotifier {
-  ConversationProvider() {
+  List<Message> _savedMessages;
+  Conversation conv;
+
+  void initListOfMessages() {
     _savedMessages = [
       Message(
           index: 0,
@@ -40,16 +43,9 @@ class ConversationProvider with ChangeNotifier {
           content: S.current.messageConsent,
           entity: 'Polly',
           isFlagged: false),
-      Message(
-          index: 3,
-          content: 'Id: ${getConversationUid()}',
-          entity: 'Polly',
-          isFlagged: false),
     ];
   }
 
-  List<Message> _savedMessages;
-  Conversation conv;
   
   String getConversationUid() {
     return conv.uid;
@@ -75,6 +71,12 @@ class ConversationProvider with ChangeNotifier {
   Future<Conversation> addConversation(String language) async {
     final fireStoreConversationRef =
     FirebaseFirestore.instance.collection('conversations').doc();
+    final Message messageConv = Message(
+        index: 3,
+        content: 'Id: ${fireStoreConversationRef.id}',
+        entity: 'Polly',
+        isFlagged: false);
+    _savedMessages.insert(0, messageConv);
     final Conversation conversation = Conversation(
         uid: fireStoreConversationRef.id,
         language: language,

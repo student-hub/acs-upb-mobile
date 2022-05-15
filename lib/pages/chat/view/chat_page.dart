@@ -45,6 +45,8 @@ class _ChatPageState extends State<ChatPage> {
   @override
   void initState() {
     super.initState();
+    Provider.of<ConversationProvider>(context, listen: false)
+        .initListOfMessages();
     _fetchConversation();
     _fetchUser();
     _messages = [
