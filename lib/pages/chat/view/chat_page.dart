@@ -54,8 +54,8 @@ class _ChatPageState extends State<ChatPage> {
       ChatMessage(content: S.current.messageGreeting, type: 'receiver', idx: 1),
       ChatMessage(content: S.current.messageConsent, type: 'receiver', idx: 2),
       ChatMessage(
-          content: 'Id: ${Provider.of<ConversationProvider>(context, listen: false)
-              .getConversationUid()}',
+          content:
+              'Id: ${Provider.of<ConversationProvider>(context, listen: false).getConversationUid()}',
           type: 'receiver',
           idx: 3)
     ];
@@ -113,8 +113,8 @@ class _ChatPageState extends State<ChatPage> {
                   });
                 }
               },
-              decoration:
-                  InputDecoration.collapsed(hintText: S.current.hintMessageChatbot),
+              decoration: InputDecoration.collapsed(
+                  hintText: S.current.hintMessageChatbot),
               focusNode: _focusNode,
             ),
           ),
@@ -194,7 +194,7 @@ class ChatMessage extends StatefulWidget {
 
 class _ChatMessage extends State<ChatMessage> {
   bool _isFlagged = false;
-  Color _flagColor = Colors.black;
+  Color _flagColor;
 
   @override
   Widget build(BuildContext context) {
@@ -219,16 +219,19 @@ class _ChatMessage extends State<ChatMessage> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
                       Flexible(
-                              child: SelectableText(
-                                widget.content,
-                                style: const TextStyle(fontSize: 15),
-                              ),
-                             ),
-                    GestureDetector(
-                      child: Icon(Icons.flag, color: _flagColor ),
-                      onTap: () { _flagMessage(); },
-                    )
-
+                        child: SelectableText(
+                          widget.content,
+                          style: const TextStyle(fontSize: 15),
+                        ),
+                      ),
+                      GestureDetector(
+                        child: Icon(Icons.flag,
+                            color:
+                                _flagColor ?? Theme.of(context).primaryColor),
+                        onTap: () {
+                          _flagMessage();
+                        },
+                      )
                     ])),
     );
   }
@@ -237,10 +240,10 @@ class _ChatMessage extends State<ChatMessage> {
     setState(() {
       if (_isFlagged) {
         _isFlagged = false;
-        _flagColor = Colors.black;
+        _flagColor = Theme.of(context).primaryColor;
       } else {
         _isFlagged = true;
-        _flagColor = Colors.red;
+        _flagColor = Theme.of(context).errorColor;
       }
     });
     Provider.of<ConversationProvider>(context, listen: false)
