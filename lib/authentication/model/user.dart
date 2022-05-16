@@ -6,6 +6,7 @@ class User {
       @required this.firstName,
       @required this.lastName,
       this.classes,
+      this.sources,
       int permissionLevel})
       : permissionLevel = permissionLevel ?? 0;
 
@@ -15,6 +16,7 @@ class User {
 
   String firstName;
   String lastName;
+  List<String> sources;
 
   /// Info about the user's assigned group (including degree, year of study, series etc)
   List<String> classes;
@@ -26,4 +28,7 @@ class User {
   bool get canEditPublicInfo => permissionLevel >= 3;
 
   bool get isAdmin => permissionLevel >= 4;
+
+  List<String> get sourcesList =>
+      sources ?? ['official', 'organizations', 'students'];
 }

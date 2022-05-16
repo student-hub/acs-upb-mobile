@@ -4,8 +4,8 @@ import 'package:acs_upb_mobile/main.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/service/feedback_provider.dart';
 import 'package:acs_upb_mobile/pages/classes/model/class.dart';
 import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
-import 'package:acs_upb_mobile/pages/faq/model/question.dart';
-import 'package:acs_upb_mobile/pages/faq/service/question_provider.dart';
+import 'package:acs_upb_mobile/pages/faq/model/faq_question.dart';
+import 'package:acs_upb_mobile/pages/faq/service/faq_question_provider.dart';
 import 'package:acs_upb_mobile/pages/news_feed/model/news_feed_item.dart';
 import 'package:acs_upb_mobile/pages/news_feed/service/news_provider.dart';
 import 'package:acs_upb_mobile/pages/portal/service/website_provider.dart';
@@ -36,7 +36,7 @@ class MockAuthProvider extends Mock implements AuthProvider {}
 
 class MockWebsiteProvider extends Mock implements WebsiteProvider {}
 
-class MockQuestionProvider extends Mock implements QuestionProvider {}
+class MockFaqQuestionProvider extends Mock implements FaqQuestionProvider {}
 
 class MockRequestProvider extends Mock implements RequestProvider {}
 
@@ -55,7 +55,7 @@ class MockAdminProvider extends Mock implements AdminProvider {}
 void main() {
   AuthProvider mockAuthProvider;
   WebsiteProvider mockWebsiteProvider;
-  MockQuestionProvider mockQuestionProvider;
+  MockFaqQuestionProvider mockFaqQuestionProvider;
   RequestProvider mockRequestProvider;
   IssueProvider mockIssueProvider;
   MockNewsProvider mockNewsProvider;
@@ -70,8 +70,8 @@ void main() {
             create: (_) => mockEventProvider),
         ChangeNotifierProvider<WebsiteProvider>(
             create: (_) => mockWebsiteProvider),
-        ChangeNotifierProvider<QuestionProvider>(
-            create: (_) => mockQuestionProvider),
+        ChangeNotifierProvider<FaqQuestionProvider>(
+            create: (_) => mockFaqQuestionProvider),
         Provider<RequestProvider>(create: (_) => mockRequestProvider),
         Provider<IssueProvider>(create: (_) => mockIssueProvider),
         ChangeNotifierProvider<NewsProvider>(create: (_) => mockNewsProvider),
@@ -118,13 +118,13 @@ void main() {
       when(mockWebsiteProvider.fetchFavouriteWebsites(any))
           .thenAnswer((_) => Future.value(null));
 
-      mockQuestionProvider = MockQuestionProvider();
+      mockFaqQuestionProvider = MockFaqQuestionProvider();
       // ignore: invalid_use_of_protected_member
-      when(mockQuestionProvider.hasListeners).thenReturn(false);
-      when(mockQuestionProvider.fetchQuestions())
-          .thenAnswer((_) => Future.value(<Question>[]));
-      when(mockQuestionProvider.fetchQuestions(limit: anyNamed('limit')))
-          .thenAnswer((_) => Future.value(<Question>[]));
+      when(mockFaqQuestionProvider.hasListeners).thenReturn(false);
+      when(mockFaqQuestionProvider.fetchFaqQuestions())
+          .thenAnswer((_) => Future.value(<FaqQuestion>[]));
+      when(mockFaqQuestionProvider.fetchFaqQuestions(limit: anyNamed('limit')))
+          .thenAnswer((_) => Future.value(<FaqQuestion>[]));
 
       mockRequestProvider = MockRequestProvider();
       when(mockRequestProvider.makeRequest(any))
@@ -267,16 +267,25 @@ void main() {
       expect(find.text('Settings'), findsOneWidget);
       expect(find.text('Auto'), findsOneWidget);
     });
+
     group('Request permissions', () {
       setUpAll(() async {
-        when(mockAuthProvider.currentUser).thenAnswer((_) =>
-            Future.value(User(uid: '0', firstName: 'John', lastName: 'Doe')));
+        when(mockAuthProvider.currentUser).thenAnswer((_) => Future.value(User(
+              uid: '0',
+              firstName: 'John',
+              lastName: 'Doe',
+              sources: ['official'],
+            )));
         when(mockAuthProvider.isAnonymous).thenReturn(false);
       });
 
       testWidgets('Normal scenario', (WidgetTester tester) async {
         when(mockAuthProvider.currentUserFromCache).thenReturn(User(
-            uid: '0', firstName: 'John', lastName: 'Doe', permissionLevel: 4));
+          uid: '0',
+          firstName: 'John',
+          lastName: 'Doe',
+          sources: ['official'],
+        ));
         when(mockAuthProvider.isVerified).thenAnswer((_) => Future.value(true));
 
         await tester.pumpWidget(buildApp());
@@ -406,23 +415,26 @@ void main() {
 
     group('Admin Panel', () {
       setUpAll(() async {
-        when(mockAuthProvider.currentUser).thenAnswer((_) =>
-            Future.value(User(uid: '0', firstName: 'John', lastName: 'Doe')));
-        when(mockAuthProvider.currentUserFromCache)
-            .thenReturn(User(uid: '0', firstName: 'John', lastName: 'Doe'));
+        final user = User(
+          uid: '0',
+          firstName: 'John',
+          lastName: 'Doe',
+          permissionLevel: 3,
+          sources: ['official'],
+        );
+        when(mockAuthProvider.currentUser)
+            .thenAnswer((_) => Future.value(user));
+        when(mockAuthProvider.currentUserFromCache).thenReturn(user);
         when(mockAuthProvider.isAnonymous).thenReturn(false);
         when(mockAuthProvider.isAuthenticated).thenReturn(true);
         when(mockAuthProvider.isVerified).thenAnswer((_) => Future.value(true));
-      });
-
-      testWidgets('User is not an admin', (WidgetTester tester) async {
-        when(mockAuthProvider.currentUserFromCache).thenReturn(User(
-            uid: '0', firstName: 'John', lastName: 'Doe', permissionLevel: 3));
         when(mockAdminProvider.fetchUnprocessedRequestIds())
             .thenAnswer((_) => Future.value(['string']));
         when(mockAdminProvider.fetchRequest('')).thenAnswer(
             (_) => Future.value(Request(requestBody: 'body', userId: '0')));
+      });
 
+      testWidgets('User is not an admin', (WidgetTester tester) async {
         await tester.pumpWidget(buildApp());
         await tester.pumpAndSettle();
 
@@ -436,8 +448,11 @@ void main() {
 
     group('Feedback form', () {
       setUpAll(() async {
-        when(mockAuthProvider.currentUser).thenAnswer((_) =>
-            Future.value(User(uid: '0', firstName: 'John', lastName: 'Doe')));
+        when(mockAuthProvider.currentUser).thenAnswer((_) => Future.value(User(
+            uid: '0',
+            firstName: 'John',
+            lastName: 'Doe',
+            sources: ['official'])));
         when(mockAuthProvider.isAnonymous).thenReturn(false);
       });
 

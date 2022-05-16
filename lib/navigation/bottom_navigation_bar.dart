@@ -1,10 +1,13 @@
+import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/home/home_page.dart';
 import 'package:acs_upb_mobile/pages/people/view/people_page.dart';
 import 'package:acs_upb_mobile/pages/portal/view/portal_page.dart';
+import 'package:acs_upb_mobile/pages/settings/view/source_page.dart';
 import 'package:acs_upb_mobile/pages/timetable/view/timetable_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
+import 'package:provider/provider.dart';
 
 class AppBottomNavigationBar extends StatefulWidget {
   const AppBottomNavigationBar({this.tabIndex = 0});
@@ -39,6 +42,17 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar>
       const PortalPage(key: PageStorageKey('Portal')),
       const PeoplePage(key: PageStorageKey('People')),
     ];
+
+    // Show "Select sources" page if user has no preference set
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    if (!authProvider.isAnonymous) {
+      authProvider.currentUser.then((user) {
+        if (user?.sources?.isEmpty ?? true) {
+          Navigator.of(context).push(MaterialPageRoute<SourcePage>(
+              builder: (context) => SourcePage()));
+        }
+      });
+    }
   }
 
   @override

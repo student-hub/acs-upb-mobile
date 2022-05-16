@@ -80,8 +80,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 PreferenceTitle(S.current.settingsTitleLocalization),
                 PreferenceDialogLink(
                   S.current.settingsItemLanguage,
-                  desc:
-                      languagePrefString(context, PrefService.get('language')),
+                  desc: languagePrefString(PrefService.get('language')),
                   dialog: PreferenceDialog(
                     [
                       languageRadioPreference(context, 'ro'),
@@ -107,6 +106,18 @@ class _SettingsPageState extends State<SettingsPage> {
                   },
                   title: Text(S.current.settingsItemEditingPermissions),
                   subtitle: Text(userPermissionString),
+                ),
+                ListTile(
+                  key: const ValueKey('edit_source_selection'),
+                  onTap: () {
+                    if (authProvider.isAnonymous) {
+                      AppToast.show(S.current.messageNotLoggedIn);
+                    } else {
+                      Navigator.of(context).pushNamed(Routes.sources);
+                    }
+                  },
+                  title: Text(S.current.settingsSourceSelection),
+                  subtitle: Text(S.current.settingsSourceSelectionSubtitle),
                 ),
                 ListTile(
                   onTap: () => Utils.launchURL(Utils.privacyPolicyURL),
@@ -203,7 +214,7 @@ class _SettingsPageState extends State<SettingsPage> {
   RadioPreference<String> languageRadioPreference(
       BuildContext context, String preference) {
     return RadioPreference(
-      languagePrefString(context, preference),
+      languagePrefString(preference),
       preference,
       'language',
       onSelect: () {
@@ -223,7 +234,7 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 
-  String languagePrefString(BuildContext context, String preference) {
+  String languagePrefString(String preference) {
     switch (preference) {
       case 'en':
         return S.current.settingsItemLanguageEnglish;

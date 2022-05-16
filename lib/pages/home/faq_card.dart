@@ -1,7 +1,7 @@
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/navigation/routes.dart';
-import 'package:acs_upb_mobile/pages/faq/model/question.dart';
-import 'package:acs_upb_mobile/pages/faq/service/question_provider.dart';
+import 'package:acs_upb_mobile/pages/faq/model/faq_question.dart';
+import 'package:acs_upb_mobile/pages/faq/service/faq_question_provider.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/widgets/auto_size_markdown.dart';
 import 'package:acs_upb_mobile/widgets/info_card.dart';
@@ -17,11 +17,12 @@ class FaqCard extends StatelessWidget {
     final captionSizeFactor =
         captionStyle.fontSize / Theme.of(context).textTheme.bodyText1.fontSize;
     final captionColor = captionStyle.color;
-    return InfoCard<List<Question>>(
+    return InfoCard<List<FaqQuestion>>(
       title: S.current.sectionFAQ,
       showMoreButtonKey: const ValueKey('show_more_faq'),
       onShowMore: () => Navigator.of(context).pushNamed(Routes.faq),
-      future: Provider.of<QuestionProvider>(context).fetchQuestions(limit: 2),
+      future:
+          Provider.of<FaqQuestionProvider>(context).fetchFaqQuestions(limit: 2),
       builder: (questions) => Column(
         children: questions
             .map(

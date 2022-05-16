@@ -1,6 +1,6 @@
 import 'package:acs_upb_mobile/generated/l10n.dart';
-import 'package:acs_upb_mobile/pages/faq/model/question.dart';
-import 'package:acs_upb_mobile/pages/faq/service/question_provider.dart';
+import 'package:acs_upb_mobile/pages/faq/model/faq_question.dart';
+import 'package:acs_upb_mobile/pages/faq/service/faq_question_provider.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
 import 'package:acs_upb_mobile/widgets/search_bar.dart';
@@ -19,21 +19,12 @@ class FaqPage extends StatefulWidget {
 }
 
 class _FaqPageState extends State<FaqPage> {
-  List<Question> questions = <Question>[];
+  List<FaqQuestion> questions = <FaqQuestion>[];
   List<String> tags;
   String filter = '';
   bool searchClosed = true;
   List<String> activeTags = <String>[];
-  Future<List<Question>> futureQuestions;
   final ScrollController _scrollController = ScrollController();
-
-  @override
-  void initState() {
-    final QuestionProvider questionProvider =
-        Provider.of<QuestionProvider>(context, listen: false);
-    futureQuestions = questionProvider.fetchQuestions();
-    super.initState();
-  }
 
   Widget categoryList() => Padding(
         padding: const EdgeInsets.only(top: 20),
@@ -64,6 +55,8 @@ class _FaqPageState extends State<FaqPage> {
 
   @override
   Widget build(BuildContext context) {
+    final FaqQuestionProvider faqQuestionProvider =
+        Provider.of<FaqQuestionProvider>(context);
     return AppScaffold(
       title: Text(S.current.sectionFAQ),
       actions: [
@@ -80,7 +73,7 @@ class _FaqPageState extends State<FaqPage> {
         )
       ],
       body: FutureBuilder(
-          future: futureQuestions,
+          future: faqQuestionProvider.fetchFaqQuestions(),
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
               return const Center(child: CircularProgressIndicator());
@@ -112,7 +105,7 @@ class _FaqPageState extends State<FaqPage> {
     );
   }
 
-  List<Question> get filteredQuestions => questions
+  List<FaqQuestion> get filteredQuestions => questions
       .where((question) =>
           filter.split(' ').where((element) => element != '').fold(
               true,
@@ -131,7 +124,7 @@ class _FaqPageState extends State<FaqPage> {
 class QuestionsList extends StatefulWidget {
   const QuestionsList({this.questions, this.filter});
 
-  final List<Question> questions;
+  final List<FaqQuestion> questions;
   final String filter;
 
   @override

@@ -18,16 +18,16 @@ class _ProfileCardState extends State<ProfileCard> {
   void initState() {
     super.initState();
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
-    authProvider.getProfilePictureURL().then((value) => setState(() {
-          profilePictureURL = value;
-        }));
+    authProvider
+        .getProfilePictureURL()
+        .then((value) => setState(() => profilePictureURL = value));
   }
 
   @override
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
-    String userName;
     final User user = authProvider.currentUserFromCache;
+    String userName;
     String userGroup;
     if (user != null) {
       userName = '${user.firstName} ${user.lastName}';

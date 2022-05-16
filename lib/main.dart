@@ -8,7 +8,7 @@ import 'package:acs_upb_mobile/navigation/bottom_navigation_bar.dart';
 import 'package:acs_upb_mobile/navigation/routes.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/service/feedback_provider.dart';
 import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
-import 'package:acs_upb_mobile/pages/faq/service/question_provider.dart';
+import 'package:acs_upb_mobile/pages/faq/service/faq_question_provider.dart';
 import 'package:acs_upb_mobile/pages/faq/view/faq_page.dart';
 import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
 import 'package:acs_upb_mobile/pages/filter/view/filter_page.dart';
@@ -23,6 +23,7 @@ import 'package:acs_upb_mobile/pages/settings/service/issue_provider.dart';
 import 'package:acs_upb_mobile/pages/settings/view/request_permissions.dart';
 import 'package:acs_upb_mobile/pages/settings/view/settings_page.dart';
 import 'package:acs_upb_mobile/pages/settings/view/feedback_form.dart';
+import 'package:acs_upb_mobile/pages/settings/view/source_page.dart';
 import 'package:acs_upb_mobile/pages/timetable/service/uni_event_provider.dart';
 import 'package:acs_upb_mobile/resources/locale_provider.dart';
 import 'package:acs_upb_mobile/resources/remote_config.dart';
@@ -76,18 +77,28 @@ Future<void> main() async {
 
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider<AuthProvider>(create: (_) => authProvider),
-    ChangeNotifierProvider<WebsiteProvider>(create: (_) => WebsiteProvider()),
     Provider<RequestProvider>(create: (_) => RequestProvider()),
     Provider<IssueProvider>(create: (_) => IssueProvider()),
     ChangeNotifierProvider<ClassProvider>(create: (_) => classProvider),
     ChangeNotifierProvider<FeedbackProvider>(create: (_) => feedbackProvider),
     ChangeNotifierProvider<PersonProvider>(create: (_) => personProvider),
-    ChangeNotifierProvider<QuestionProvider>(create: (_) => QuestionProvider()),
     ChangeNotifierProvider<NewsProvider>(create: (_) => NewsProvider()),
     ChangeNotifierProxyProvider<AuthProvider, FilterProvider>(
       create: (_) => FilterProvider(global: true),
       update: (context, authProvider, filterProvider) {
         return filterProvider..updateAuth(authProvider);
+      },
+    ),
+    ChangeNotifierProxyProvider<AuthProvider, FaqQuestionProvider>(
+      create: (_) => FaqQuestionProvider(),
+      update: (context, authProvider, faqQuestionProvider) {
+        return faqQuestionProvider..updateAuth(authProvider);
+      },
+    ),
+    ChangeNotifierProxyProvider<AuthProvider, WebsiteProvider>(
+      create: (_) => WebsiteProvider(),
+      update: (context, authProvider, websiteProvider) {
+        return websiteProvider..updateAuth(authProvider);
       },
     ),
     ChangeNotifierProxyProvider2<ClassProvider, FilterProvider,
@@ -138,6 +149,7 @@ class _MyAppState extends State<MyApp> {
         Routes.root: (_) => AppLoadingScreen(),
         Routes.home: (_) => const AppBottomNavigationBar(),
         Routes.settings: (_) => SettingsPage(),
+        Routes.sources: (_) => SourcePage(),
         Routes.login: (_) => LoginView(),
         Routes.signUp: (_) => SignUpView(),
         Routes.faq: (_) => FaqPage(),

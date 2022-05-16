@@ -15,8 +15,8 @@ import 'package:acs_upb_mobile/pages/classes/view/class_view.dart';
 import 'package:acs_upb_mobile/pages/classes/view/classes_page.dart';
 import 'package:acs_upb_mobile/pages/classes/view/grading_view.dart';
 import 'package:acs_upb_mobile/pages/classes/view/shortcut_view.dart';
-import 'package:acs_upb_mobile/pages/faq/model/question.dart';
-import 'package:acs_upb_mobile/pages/faq/service/question_provider.dart';
+import 'package:acs_upb_mobile/pages/faq/model/faq_question.dart';
+import 'package:acs_upb_mobile/pages/faq/service/faq_question_provider.dart';
 import 'package:acs_upb_mobile/pages/faq/view/faq_page.dart';
 import 'package:acs_upb_mobile/pages/filter/model/filter.dart';
 import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
@@ -82,7 +82,7 @@ class MockClassProvider extends Mock implements ClassProvider {}
 
 class MockPersonProvider extends Mock implements PersonProvider {}
 
-class MockQuestionProvider extends Mock implements QuestionProvider {}
+class MockFaqQuestionProvider extends Mock implements FaqQuestionProvider {}
 
 class MockUniEventProvider extends Mock implements UniEventProvider {}
 
@@ -102,7 +102,7 @@ Future<void> main() async {
   FilterProvider mockFilterProvider;
   ClassProvider mockClassProvider;
   PersonProvider mockPersonProvider;
-  MockQuestionProvider mockQuestionProvider;
+  MockFaqQuestionProvider mockFaqQuestionProvider;
   MockNewsProvider mockNewsProvider;
   UniEventProvider mockEventProvider;
   RequestProvider mockRequestProvider;
@@ -139,8 +139,8 @@ Future<void> main() async {
               create: (_) => mockClassProvider),
           ChangeNotifierProvider<PersonProvider>(
               create: (_) => mockPersonProvider),
-          ChangeNotifierProvider<QuestionProvider>(
-              create: (_) => mockQuestionProvider),
+          ChangeNotifierProvider<FaqQuestionProvider>(
+              create: (_) => mockFaqQuestionProvider),
           ChangeNotifierProvider<NewsProvider>(create: (_) => mockNewsProvider),
           ChangeNotifierProvider<UniEventProvider>(
               create: (_) => mockEventProvider),
@@ -193,6 +193,7 @@ Future<void> main() async {
                 label: 'Moodle1',
                 link: 'http://acs.curs.pub.ro/',
                 isPrivate: false,
+                source: 'official',
               ),
               Website(
                 id: '2',
@@ -202,6 +203,7 @@ Future<void> main() async {
                 label: 'OCW1',
                 link: 'https://ocw.cs.pub.ro/',
                 isPrivate: false,
+                source: 'official',
               ),
               Website(
                 id: '3',
@@ -211,6 +213,7 @@ Future<void> main() async {
                 label: 'Moodle2',
                 link: 'http://acs.curs.pub.ro/',
                 isPrivate: false,
+                source: 'official',
               ),
               Website(
                 id: '4',
@@ -220,6 +223,7 @@ Future<void> main() async {
                 label: 'OCW2',
                 link: 'https://ocw.cs.pub.ro/',
                 isPrivate: false,
+                source: 'official',
               ),
               Website(
                 id: '5',
@@ -229,6 +233,7 @@ Future<void> main() async {
                 label: 'LSAC1',
                 link: 'https://lsacbucuresti.ro/',
                 isPrivate: false,
+                source: 'official',
               ),
               Website(
                 id: '6',
@@ -238,6 +243,7 @@ Future<void> main() async {
                 label: 'LSAC2',
                 link: 'https://lsacbucuresti.ro/',
                 isPrivate: false,
+                source: 'official',
               ),
               Website(
                 id: '7',
@@ -247,6 +253,7 @@ Future<void> main() async {
                 label: 'LSAC3',
                 link: 'https://lsacbucuresti.ro/',
                 isPrivate: false,
+                source: 'official',
               ),
               Website(
                 id: '8',
@@ -256,6 +263,7 @@ Future<void> main() async {
                 label: 'LSAC4',
                 link: 'https://lsacbucuresti.ro/',
                 isPrivate: false,
+                source: 'official',
               ),
             ]));
     when(mockWebsiteProvider.fetchFavouriteWebsites(any)).thenAnswer(
@@ -471,30 +479,30 @@ Future<void> main() async {
     when(mockFeedbackProvider.countClassesWithoutFeedback(any, any))
         .thenAnswer((_) => Future.value('2'));
 
-    mockQuestionProvider = MockQuestionProvider();
+    mockFaqQuestionProvider = MockFaqQuestionProvider();
     // ignore: invalid_use_of_protected_member
-    when(mockQuestionProvider.hasListeners).thenReturn(false);
-    when(mockQuestionProvider.fetchQuestions())
-        .thenAnswer((_) => Future.value(<Question>[
-              Question(
+    when(mockFaqQuestionProvider.hasListeners).thenReturn(false);
+    when(mockFaqQuestionProvider.fetchFaqQuestions())
+        .thenAnswer((_) => Future.value(<FaqQuestion>[
+              FaqQuestion(
                   question: 'Care este programul la secretariat?',
                   answer:
                       'Secretariatul este deschis în timpul săptămânii între orele 9:00 si 11:00.',
                   tags: ['Licență']),
-              Question(
+              FaqQuestion(
                   question: 'Cum mă conectez la eduroam?',
                   answer:
                       'Conectarea în rețeaua *eduroam* se face pe baza aceluiași cont folosit și pe site-ul de cursuri.',
                   tags: ['Conectare', 'Informații'])
             ]));
-    when(mockQuestionProvider.fetchQuestions(limit: anyNamed('limit')))
-        .thenAnswer((_) => Future.value(<Question>[
-              Question(
+    when(mockFaqQuestionProvider.fetchFaqQuestions(limit: anyNamed('limit')))
+        .thenAnswer((_) => Future.value(<FaqQuestion>[
+              FaqQuestion(
                   question: 'Care este programul la secretariat?',
                   answer:
                       'Secretariatul este deschis în timpul săptămânii între orele 9:00 si 11:00.',
                   tags: ['Licență']),
-              Question(
+              FaqQuestion(
                   question: 'Cum mă conectez la eduroam?',
                   answer:
                       'Conectarea în rețeaua *eduroam* se face pe baza aceluiași cont folosit și pe site-ul de cursuri.',
@@ -720,6 +728,15 @@ Future<void> main() async {
   });
 
   group('Home', () {
+    setUp(() {
+      when(mockAuthProvider.currentUser).thenAnswer((_) => Future.value(User(
+          uid: '0',
+          firstName: 'John',
+          lastName: 'Doe',
+          sources: ['official'])));
+      when(mockAuthProvider.currentUserFromCache).thenReturn(User(
+          uid: '0', firstName: 'John', lastName: 'Doe', sources: ['official']));
+    });
     for (final size in screenSizes) {
       testWidgets('${size.width}x${size.height}', (WidgetTester tester) async {
         await binding.setSurfaceSize(size);
@@ -741,9 +758,17 @@ Future<void> main() async {
   group('Timetable', () {
     setUp(() {
       when(mockAuthProvider.currentUser).thenAnswer((_) => Future.value(User(
-          uid: '0', firstName: 'John', lastName: 'Doe', permissionLevel: 3)));
+          uid: '0',
+          firstName: 'John',
+          lastName: 'Doe',
+          permissionLevel: 3,
+          sources: ['official'])));
       when(mockAuthProvider.currentUserFromCache).thenReturn(User(
-          uid: '0', firstName: 'John', lastName: 'Doe', permissionLevel: 3));
+          uid: '0',
+          firstName: 'John',
+          lastName: 'Doe',
+          permissionLevel: 3,
+          sources: ['official']));
       when(mockAuthProvider.isAuthenticated).thenReturn(true);
       when(mockAuthProvider.isAnonymous).thenReturn(false);
       when(mockAuthProvider.uid).thenReturn('0');
@@ -751,6 +776,16 @@ Future<void> main() async {
 
     group('Timetable no events/no classes', () {
       setUp(() {
+        when(mockAuthProvider.currentUser).thenAnswer((_) => Future.value(User(
+            uid: '0',
+            firstName: 'John',
+            lastName: 'Doe',
+            sources: ['official'])));
+        when(mockAuthProvider.currentUserFromCache).thenReturn(User(
+            uid: '0',
+            firstName: 'John',
+            lastName: 'Doe',
+            sources: ['official']));
         when(mockEventProvider.getAllDayEventsIntersecting(any))
             .thenAnswer((_) => Stream.value([]));
         when(mockEventProvider.getPartDayEventsIntersecting(any))
@@ -820,9 +855,17 @@ Future<void> main() async {
     group('Timetable no events/no permissions', () {
       setUp(() {
         when(mockAuthProvider.currentUser).thenAnswer((_) => Future.value(User(
-            uid: '0', firstName: 'John', lastName: 'Doe', permissionLevel: 0)));
+            uid: '0',
+            firstName: 'John',
+            lastName: 'Doe',
+            permissionLevel: 0,
+            sources: ['official'])));
         when(mockAuthProvider.currentUserFromCache).thenReturn(User(
-            uid: '0', firstName: 'John', lastName: 'Doe', permissionLevel: 0));
+            uid: '0',
+            firstName: 'John',
+            lastName: 'Doe',
+            permissionLevel: 0,
+            sources: ['official']));
         when(mockAuthProvider.isAnonymous).thenReturn(false);
         when(mockAuthProvider.isVerified).thenAnswer((_) => Future.value(true));
 
@@ -1336,10 +1379,16 @@ Future<void> main() async {
   group('Classes', () {
     group('Class', () {
       setUp(() {
-        when(mockAuthProvider.currentUser).thenAnswer((_) =>
-            Future.value(User(uid: '0', firstName: 'John', lastName: 'Doe')));
-        when(mockAuthProvider.currentUserFromCache)
-            .thenReturn(User(uid: '0', firstName: 'John', lastName: 'Doe'));
+        when(mockAuthProvider.currentUser).thenAnswer((_) => Future.value(User(
+            uid: '0',
+            firstName: 'John',
+            lastName: 'Doe',
+            sources: ['official'])));
+        when(mockAuthProvider.currentUserFromCache).thenReturn(User(
+            uid: '0',
+            firstName: 'John',
+            lastName: 'Doe',
+            sources: ['official']));
         when(mockAuthProvider.isAuthenticated).thenReturn(true);
         when(mockAuthProvider.isAnonymous).thenReturn(false);
         when(mockAuthProvider.uid).thenReturn('0');
@@ -1369,10 +1418,16 @@ Future<void> main() async {
 
     group('Add class', () {
       setUp(() {
-        when(mockAuthProvider.currentUser).thenAnswer((_) =>
-            Future.value(User(uid: '0', firstName: 'John', lastName: 'Doe')));
-        when(mockAuthProvider.currentUserFromCache)
-            .thenReturn(User(uid: '0', firstName: 'John', lastName: 'Doe'));
+        when(mockAuthProvider.currentUser).thenAnswer((_) => Future.value(User(
+            uid: '0',
+            firstName: 'John',
+            lastName: 'Doe',
+            sources: ['official'])));
+        when(mockAuthProvider.currentUserFromCache).thenReturn(User(
+            uid: '0',
+            firstName: 'John',
+            lastName: 'Doe',
+            sources: ['official']));
         when(mockAuthProvider.isAuthenticated).thenReturn(true);
         when(mockAuthProvider.isAnonymous).thenReturn(false);
         when(mockAuthProvider.uid).thenReturn('0');
@@ -1412,9 +1467,17 @@ Future<void> main() async {
     group('Class view', () {
       setUp(() {
         when(mockAuthProvider.currentUser).thenAnswer((_) => Future.value(User(
-            uid: '0', firstName: 'John', lastName: 'Doe', permissionLevel: 3)));
+            uid: '0',
+            firstName: 'John',
+            lastName: 'Doe',
+            permissionLevel: 3,
+            sources: ['official'])));
         when(mockAuthProvider.currentUserFromCache).thenReturn(User(
-            uid: '0', firstName: 'John', lastName: 'Doe', permissionLevel: 3));
+            uid: '0',
+            firstName: 'John',
+            lastName: 'Doe',
+            permissionLevel: 3,
+            sources: ['official']));
         when(mockAuthProvider.isAuthenticated).thenReturn(true);
         when(mockAuthProvider.isAnonymous).thenReturn(false);
         when(mockAuthProvider.uid).thenReturn('0');
@@ -1470,10 +1533,15 @@ Future<void> main() async {
 
   group('Feedback view', () {
     setUp(() {
-      when(mockAuthProvider.currentUser).thenAnswer((_) => Future.value(User(
-          uid: '0', firstName: 'John', lastName: 'Doe', permissionLevel: 3)));
-      when(mockAuthProvider.currentUserFromCache).thenReturn(User(
-          uid: '0', firstName: 'John', lastName: 'Doe', permissionLevel: 3));
+      final user = User(
+        uid: '0',
+        firstName: 'John',
+        lastName: 'Doe',
+        permissionLevel: 3,
+        sources: ['official'],
+      );
+      when(mockAuthProvider.currentUser).thenAnswer((_) => Future.value(user));
+      when(mockAuthProvider.currentUserFromCache).thenReturn(user);
       when(mockAuthProvider.isAuthenticated).thenReturn(true);
       when(mockAuthProvider.isAnonymous).thenReturn(false);
       when(mockAuthProvider.uid).thenReturn('0');
@@ -1562,8 +1630,15 @@ Future<void> main() async {
 
   group('Settings', () {
     setUp(() {
-      when(mockAuthProvider.currentUserFromCache).thenReturn(User(
-          uid: '0', firstName: 'John', lastName: 'Doe', permissionLevel: 4));
+      final user = User(
+        uid: '0',
+        firstName: 'John',
+        lastName: 'Doe',
+        sources: ['official'],
+        permissionLevel: 4,
+      );
+      when(mockAuthProvider.currentUser).thenAnswer((_) => Future.value(user));
+      when(mockAuthProvider.currentUserFromCache).thenReturn(user);
     });
 
     for (final size in screenSizes) {
@@ -1584,10 +1659,15 @@ Future<void> main() async {
 
   group('Admin page', () {
     setUp(() async {
-      when(mockAuthProvider.currentUser).thenAnswer((_) => Future.value(User(
-          uid: '0', firstName: 'John', lastName: 'Doe', permissionLevel: 4)));
-      when(mockAuthProvider.currentUserFromCache).thenReturn(User(
-          uid: '0', firstName: 'John', lastName: 'Doe', permissionLevel: 4));
+      final user = User(
+        uid: '0',
+        firstName: 'John',
+        lastName: 'Doe',
+        permissionLevel: 4,
+        sources: ['official'],
+      );
+      when(mockAuthProvider.currentUser).thenAnswer((_) => Future.value(user));
+      when(mockAuthProvider.currentUserFromCache).thenReturn(user);
       when(mockAuthProvider.isAnonymous).thenReturn(false);
       when(mockAuthProvider.isAuthenticated).thenReturn(true);
       when(mockAuthProvider.isVerified).thenAnswer((_) => Future.value(true));
@@ -1622,6 +1702,17 @@ Future<void> main() async {
   });
 
   group('Portal', () {
+    setUp(() {
+      final user = User(
+        uid: '0',
+        firstName: 'John',
+        lastName: 'Doe',
+        sources: ['official'],
+      );
+      when(mockAuthProvider.currentUser).thenAnswer((_) => Future.value(user));
+      when(mockAuthProvider.currentUserFromCache).thenReturn(user);
+    });
+
     for (final size in screenSizes) {
       testWidgets('${size.width}x${size.height}', (WidgetTester tester) async {
         await binding.setSurfaceSize(size);
@@ -1639,6 +1730,16 @@ Future<void> main() async {
   });
 
   group('Filter', () {
+    setUp(() {
+      when(mockAuthProvider.currentUser).thenAnswer((_) => Future.value(User(
+          uid: '0',
+          firstName: 'John',
+          lastName: 'Doe',
+          sources: ['official'])));
+      when(mockAuthProvider.currentUserFromCache).thenReturn(User(
+          uid: '0', firstName: 'John', lastName: 'Doe', sources: ['official']));
+    });
+
     for (final size in screenSizes) {
       testWidgets('${size.width}x${size.height}', (WidgetTester tester) async {
         await binding.setSurfaceSize(size);
@@ -1663,6 +1764,13 @@ Future<void> main() async {
 
   group('Add website', () {
     setUp(() {
+      when(mockAuthProvider.currentUser).thenAnswer((_) => Future.value(User(
+          uid: '0',
+          firstName: 'John',
+          lastName: 'Doe',
+          sources: ['official'])));
+      when(mockAuthProvider.currentUserFromCache).thenReturn(User(
+          uid: '0', firstName: 'John', lastName: 'Doe', sources: ['official']));
       when(mockAuthProvider.isAuthenticated).thenReturn(true);
       when(mockAuthProvider.isAnonymous).thenReturn(false);
     });
@@ -1697,7 +1805,17 @@ Future<void> main() async {
       when(mockAuthProvider.isAuthenticated).thenReturn(true);
       when(mockAuthProvider.isAnonymous).thenReturn(false);
       when(mockAuthProvider.currentUser).thenAnswer((_) => Future.value(User(
-          uid: '1', firstName: 'John', lastName: 'Doe', permissionLevel: 3)));
+          uid: '1',
+          firstName: 'John',
+          lastName: 'Doe',
+          permissionLevel: 3,
+          sources: ['official'])));
+      when(mockAuthProvider.currentUserFromCache).thenAnswer((_) => User(
+          uid: '1',
+          firstName: 'John',
+          lastName: 'Doe',
+          permissionLevel: 3,
+          sources: ['official']));
     });
 
     for (final size in screenSizes) {
@@ -1732,7 +1850,17 @@ Future<void> main() async {
       when(mockAuthProvider.isAuthenticated).thenReturn(true);
       when(mockAuthProvider.isAnonymous).thenReturn(false);
       when(mockAuthProvider.currentUser).thenAnswer((_) => Future.value(User(
-          uid: '1', firstName: 'John', lastName: 'Doe', permissionLevel: 3)));
+          uid: '1',
+          firstName: 'John',
+          lastName: 'Doe',
+          permissionLevel: 3,
+          sources: ['official'])));
+      when(mockAuthProvider.currentUserFromCache).thenAnswer((_) => User(
+          uid: '1',
+          firstName: 'John',
+          lastName: 'Doe',
+          permissionLevel: 3,
+          sources: ['official']));
     });
 
     for (final size in screenSizes) {
@@ -1794,9 +1922,17 @@ Future<void> main() async {
       when(mockAuthProvider.isAuthenticated).thenReturn(true);
       when(mockAuthProvider.isAnonymous).thenReturn(false);
       when(mockAuthProvider.currentUser).thenAnswer((_) => Future.value(User(
-          uid: '1', firstName: 'John', lastName: 'Doe', permissionLevel: 3)));
+          uid: '1',
+          firstName: 'John',
+          lastName: 'Doe',
+          permissionLevel: 3,
+          sources: ['official'])));
       when(mockAuthProvider.currentUserFromCache).thenReturn(User(
-          uid: '1', firstName: 'John', lastName: 'Doe', permissionLevel: 3));
+          uid: '1',
+          firstName: 'John',
+          lastName: 'Doe',
+          permissionLevel: 3,
+          sources: ['official']));
       when(mockAuthProvider.email).thenReturn('john.doe@stud.acs.upb.ro');
       when(mockAuthProvider.getProfilePictureURL())
           .thenAnswer((_) => Future.value(null));

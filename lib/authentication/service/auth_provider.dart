@@ -15,18 +15,21 @@ extension DatabaseUser on User {
   static User fromSnap(DocumentSnapshot snap) {
     final data = snap.data();
     return User(
-        uid: snap.id,
-        firstName: data['name']['first'],
-        lastName: data['name']['last'],
-        classes: List.from(data['class'] ?? []),
-        permissionLevel: data['permissionLevel']);
+      uid: snap.id,
+      firstName: data['name']['first'],
+      lastName: data['name']['last'],
+      classes: List.from(data['class'] ?? []),
+      permissionLevel: data['permissionLevel'],
+      sources: data['sources'] != null ? List.from(data['sources']) : null,
+    );
   }
 
   Map<String, dynamic> toData() {
     return {
       'name': {'first': firstName, 'last': lastName},
       'class': classes,
-      'permissionLevel': permissionLevel
+      'permissionLevel': permissionLevel,
+      'sources': sources
     };
   }
 }
@@ -173,10 +176,14 @@ class AuthProvider with ChangeNotifier {
   User get currentUserFromCache => _currentUser;
 
   Future<bool> signInAnonymously() async {
-    return FirebaseAuth.instance.signInAnonymously().catchError((dynamic e) {
+    bool result = false;
+    await FirebaseAuth.instance.signInAnonymously().then((_) {
+      result = true;
+    }).catchError((dynamic e) {
       _errorHandler(e);
-      return false;
-    }).then((_) => true);
+      result = false;
+    });
+    return result;
   }
 
   Future<bool> changePassword(String password) async {
@@ -402,6 +409,23 @@ class AuthProvider with ChangeNotifier {
 
     AppToast.show(S.current.messageCheckEmailVerification);
     return true;
+  }
+
+  Future<bool> setSourcePreferences(List<String> sources,
+      {BuildContext context}) async {
+    try {
+      _currentUser.sources = sources;
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(_currentUser.uid)
+          .update(_currentUser.toData());
+
+      notifyListeners();
+      return true;
+    } catch (e) {
+      _errorHandler(e);
+      return false;
+    }
   }
 
   /// Update the user information with the data in [info].

@@ -23,7 +23,6 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
-
     return AppScaffold(
       title: Text(S.current.navigationHome),
       actions: [
