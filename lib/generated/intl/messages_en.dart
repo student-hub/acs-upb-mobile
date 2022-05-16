@@ -128,7 +128,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "hintLastName" : MessageLookupByLibrary.simpleMessage("Doe"),
     "hintPassword" : MessageLookupByLibrary.simpleMessage("····················"),
     "hintPoints" : MessageLookupByLibrary.simpleMessage("4.0"),
-    "hintSelectSources" : MessageLookupByLibrary.simpleMessage("Filter information in the app based on who added it:"),
+    "hintSelectSources" : MessageLookupByLibrary.simpleMessage("Select information sources:"),
     "hintWebsiteLabel" : MessageLookupByLibrary.simpleMessage("Google"),
     "hintWebsiteLink" : MessageLookupByLibrary.simpleMessage("http://google.com"),
     "infoAccepted" : MessageLookupByLibrary.simpleMessage("Accepted"),

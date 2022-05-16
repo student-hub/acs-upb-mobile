@@ -895,10 +895,10 @@ class S {
     );
   }
 
-  /// `Filter information in the app based on who added it:`
+  /// `Select information sources:`
   String get hintSelectSources {
     return Intl.message(
-      'Filter information in the app based on who added it:',
+      'Select information sources:',
       name: 'hintSelectSources',
       desc: '',
       args: [],
