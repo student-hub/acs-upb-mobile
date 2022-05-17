@@ -8,27 +8,9 @@ class StorageProvider {
     try {
       final String url =
           await FirebaseStorage.instance.ref().child(image).getDownloadURL();
-      return url.toString();
+      return url;
     } catch (e) {
       return null;
-    }
-  }
-
-  static Future<bool> deleteImage(final String imagePath) async {
-    try {
-      final String url = await FirebaseStorage.instance
-          .ref()
-          .child(imagePath)
-          .getDownloadURL();
-      bool result = false;
-      final UploadTask uploadTask =
-          FirebaseStorage.instance.refFromURL(url).delete();
-      await uploadTask.whenComplete(() => result = true).catchError(
-          (final dynamic error) async => print(
-              'Mobile_Storage - StorageUploadTask - deleteImageUrl $error'));
-      return result;
-    } catch (e) {
-      return false;
     }
   }
 
@@ -41,7 +23,27 @@ class StorageProvider {
       await uploadTask
           .whenComplete(() => result = true)
           .catchError((final dynamic error) async {
-        print('Mobile_Storage - StorageUploadTask - uploadImage $error');
+        print('Storage - StorageUploadTask - uploadImage $error');
+      });
+      return result;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  static Future<bool> deleteImage(final String imagePath) async {
+    try {
+      final String url = await FirebaseStorage.instance
+          .ref()
+          .child(imagePath)
+          .getDownloadURL();
+      bool result = false;
+      final UploadTask uploadTask =
+          FirebaseStorage.instance.refFromURL(url).delete();
+      await uploadTask
+          .whenComplete(() => result = true)
+          .catchError((final dynamic error) async {
+        print('Storage - StorageUploadTask - deleteImageUrl $error');
       });
       return result;
     } catch (e) {
@@ -51,7 +53,7 @@ class StorageProvider {
 
   static Future<dynamic> showImagePicker() async {
     final pickedFile = await ImagePicker()
-        .getImage(source: ImageSource.gallery, maxHeight: 500, maxWidth: 500);
+        .pickImage(source: ImageSource.gallery, maxHeight: 500, maxWidth: 500);
     if (pickedFile == null) {
       return null;
     }
