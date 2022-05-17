@@ -16,13 +16,14 @@ extension DatabaseUser on User {
   static User fromSnap(final DocumentSnapshot<Map<String, dynamic>> snap) {
     final data = snap.data();
     return User(
-        uid: snap.id,
-        firstName: data['name']['first'],
-        lastName: data['name']['last'],
-        classes: List.from(data['class'] ?? []),
-        bookmarkedNews: List.from(data['bookmarkedNews'] ?? []),
-        permissionLevel: data['permissionLevel'],
-        sources: data['sources'] != null ? List.from(data['sources']) : null,
+      uid: snap.id,
+      firstName: data['name']['first'],
+      lastName: data['name']['last'],
+      classes: List.from(data['class'] ?? []),
+      bookmarkedNews: List.from(data['bookmarkedNews'] ?? []),
+      permissionLevel: data['permissionLevel'],
+      sources: data['sources'] != null ? List.from(data['sources']) : null,
+    );
   }
 
   Map<String, dynamic> toData() {

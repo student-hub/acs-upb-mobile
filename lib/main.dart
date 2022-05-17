@@ -22,13 +22,12 @@ import 'navigation/bottom_navigation_bar.dart';
 import 'navigation/routes.dart';
 import 'pages/class_feedback/service/feedback_provider.dart';
 import 'pages/classes/service/class_provider.dart';
-import 'pages/faq/service/question_provider.dart';
+import 'pages/faq/service/faq_question_provider.dart';
 import 'pages/faq/view/faq_page.dart';
 import 'pages/filter/service/filter_provider.dart';
 import 'pages/filter/view/filter_page.dart';
 import 'pages/news_feed/service/news_provider.dart';
 import 'pages/news_feed/view/news_feed_page.dart';
-import 'pages/news_feed/view/news_item_details_page.dart';
 import 'pages/people/service/person_provider.dart';
 import 'pages/portal/service/website_provider.dart';
 import 'pages/settings/service/admin_provider.dart';
@@ -38,6 +37,7 @@ import 'pages/settings/view/admin_page.dart';
 import 'pages/settings/view/feedback_form.dart';
 import 'pages/settings/view/request_permissions.dart';
 import 'pages/settings/view/settings_page.dart';
+import 'pages/settings/view/source_page.dart';
 import 'pages/timetable/service/uni_event_provider.dart';
 import 'resources/locale_provider.dart';
 import 'resources/remote_config.dart';
@@ -96,7 +96,7 @@ Future<void> main() async {
           ChangeNotifierProvider<PersonProvider>(
               create: (final _) => personProvider),
           ChangeNotifierProvider<OldNewsProvider>(
-              create: (_) => OldNewsProvider()),
+              create: (final _) => OldNewsProvider()),
           ChangeNotifierProxyProvider<AuthProvider, FilterProvider>(
             create: (final _) => FilterProvider(global: true),
             update: (final context, final authProvider, final filterProvider) {
@@ -110,14 +110,15 @@ Future<void> main() async {
             },
           ),
           ChangeNotifierProxyProvider<AuthProvider, FaqQuestionProvider>(
-            create: (_) => FaqQuestionProvider(),
-            update: (context, authProvider, faqQuestionProvider) {
+            create: (final _) => FaqQuestionProvider(),
+            update:
+                (final context, final authProvider, final faqQuestionProvider) {
               return faqQuestionProvider..updateAuth(authProvider);
             },
           ),
           ChangeNotifierProxyProvider<AuthProvider, WebsiteProvider>(
-            create: (_) => WebsiteProvider(),
-            update: (context, authProvider, websiteProvider) {
+            create: (final _) => WebsiteProvider(),
+            update: (final context, final authProvider, final websiteProvider) {
               return websiteProvider..updateAuth(authProvider);
             },
           ),
@@ -191,6 +192,7 @@ class _MyAppState extends State<MyApp> {
             Routes.root: (final _) => AppLoadingScreen(),
             Routes.home: (final _) => const AppBottomNavigationBar(),
             Routes.settings: (final _) => SettingsPage(),
+            Routes.sources: (final _) => SourcePage(),
             Routes.login: (final _) => LoginView(),
             Routes.signUp: (final _) => SignUpView(),
             Routes.faq: (final _) => FaqPage(),
