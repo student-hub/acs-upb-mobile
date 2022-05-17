@@ -22,14 +22,16 @@ class _NewsItemDetailsActionState extends State<NewsItemDetailsAction> {
   bool isBookmarked = false;
   final String newsItemGuid;
 
-  void _toggleBookmark(final NewsProvider newsProvider) {
+  Future<void> _toggleBookmark(final NewsProvider newsProvider) async {
     showToast(isBookmarked ? 'Removed from favorites' : 'Added to favorites');
     if (isBookmarked) {
-      newsProvider.unbookmarkNewsItem(newsItemGuid);
-      setState(() => isBookmarked = false);
+      if (await newsProvider.unbookmarkNewsItem(newsItemGuid)) {
+        setState(() => isBookmarked = false);
+      }
     } else {
-      newsProvider.bookmarkNewsItem(newsItemGuid);
-      setState(() => isBookmarked = true);
+      if (await newsProvider.bookmarkNewsItem(newsItemGuid)) {
+        setState(() => isBookmarked = true);
+      }
     }
   }
 

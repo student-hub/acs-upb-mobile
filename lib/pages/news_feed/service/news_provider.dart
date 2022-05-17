@@ -32,7 +32,6 @@ class NewsProvider with ChangeNotifier {
 
   Future<NewsFeedItem> fetchNewsItemDetails(final String newsId) async {
     try {
-      await Future.delayed(const Duration(milliseconds: 1500));
       final DocumentSnapshot doc =
           await FirebaseFirestore.instance.collection('news').doc(newsId).get();
       return DatabaseNews.fromSnap(doc);
@@ -64,9 +63,9 @@ class NewsProvider with ChangeNotifier {
       _currentUser.bookmarkedNews.add(newsItemGuid);
 
       await FirebaseFirestore.instance
-          .collection('user')
+          .collection('users')
           .doc(_currentUser.uid)
-          .update({});
+          .update(_currentUser.toData());
 
       notifyListeners();
       return true;
@@ -84,7 +83,7 @@ class NewsProvider with ChangeNotifier {
           .removeWhere((final item) => item == newsItemGuid);
 
       await FirebaseFirestore.instance
-          .collection('user')
+          .collection('users')
           .doc(_currentUser.uid)
           .update(_currentUser.toData());
 
