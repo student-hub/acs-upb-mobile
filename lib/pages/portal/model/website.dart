@@ -32,6 +32,7 @@ class Website {
     @required this.category,
     @required this.link,
     @required this.relevance,
+    this.source,
     this.degree,
     final List<String> editedBy,
     this.ownerUid,
@@ -71,5 +72,7 @@ class Website {
   final List<String> relevance;
   int numberOfVisits = 0;
 
-  static String labelFromLink(final String link) => link.split('://').last;
+  String source;
+
+  static String labelFromLink(String link) => link.split('://').last;
 }

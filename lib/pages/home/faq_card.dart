@@ -8,8 +8,8 @@ import '../../navigation/routes.dart';
 import '../../resources/utils.dart';
 import '../../widgets/auto_size_markdown.dart';
 import '../../widgets/info_card.dart';
-import '../faq/model/question.dart';
-import '../faq/service/question_provider.dart';
+import '../faq/model/faq_question.dart';
+import '../faq/service/faq_question_provider.dart';
 
 class FaqCard extends StatelessWidget {
   @override
@@ -18,12 +18,13 @@ class FaqCard extends StatelessWidget {
     final captionSizeFactor =
         captionStyle.fontSize / Theme.of(context).textTheme.bodyText1.fontSize;
     final captionColor = captionStyle.color;
-    return InfoCard<List<Question>>(
+    return InfoCard<List<FaqQuestion>>(
       title: S.current.sectionFAQ,
       showMoreButtonKey: const ValueKey('show_more_faq'),
       onShowMore: () => Navigator.of(context).pushNamed(Routes.faq),
-      future: Provider.of<QuestionProvider>(context).fetchQuestions(limit: 2),
-      builder: (final questions) => Column(
+      future:
+          Provider.of<FaqQuestionProvider>(context).fetchFaqQuestions(limit: 2),
+      builder: (questions) => Column(
         children: questions
             .map(
               (final q) => ListTile(

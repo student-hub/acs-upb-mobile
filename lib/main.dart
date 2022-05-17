@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:acs_upb_mobile/pages/news_feed/service/old_news_provider.dart';
 import 'package:easy_dynamic_theme/easy_dynamic_theme.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -21,7 +22,7 @@ import 'navigation/bottom_navigation_bar.dart';
 import 'navigation/routes.dart';
 import 'pages/class_feedback/service/feedback_provider.dart';
 import 'pages/classes/service/class_provider.dart';
-import 'pages/faq/service/question_provider.dart';
+import 'pages/faq/service/faq_question_provider.dart';
 import 'pages/faq/view/faq_page.dart';
 import 'pages/filter/service/filter_provider.dart';
 import 'pages/filter/view/filter_page.dart';
@@ -36,6 +37,7 @@ import 'pages/settings/view/admin_page.dart';
 import 'pages/settings/view/feedback_form.dart';
 import 'pages/settings/view/request_permissions.dart';
 import 'pages/settings/view/settings_page.dart';
+import 'pages/settings/view/source_page.dart';
 import 'pages/timetable/service/uni_event_provider.dart';
 import 'resources/locale_provider.dart';
 import 'resources/remote_config.dart';
@@ -85,8 +87,6 @@ Future<void> main() async {
         providers: [
           ChangeNotifierProvider<AuthProvider>(
               create: (final _) => authProvider),
-          ChangeNotifierProvider<WebsiteProvider>(
-              create: (final _) => WebsiteProvider()),
           Provider<RequestProvider>(create: (final _) => RequestProvider()),
           Provider<IssueProvider>(create: (final _) => IssueProvider()),
           ChangeNotifierProvider<ClassProvider>(
@@ -95,14 +95,31 @@ Future<void> main() async {
               create: (final _) => feedbackProvider),
           ChangeNotifierProvider<PersonProvider>(
               create: (final _) => personProvider),
-          ChangeNotifierProvider<QuestionProvider>(
-              create: (final _) => QuestionProvider()),
-          ChangeNotifierProvider<NewsProvider>(
-              create: (final _) => NewsProvider()),
+          ChangeNotifierProvider<OldNewsProvider>(
+              create: (final _) => OldNewsProvider()),
           ChangeNotifierProxyProvider<AuthProvider, FilterProvider>(
             create: (final _) => FilterProvider(global: true),
             update: (final context, final authProvider, final filterProvider) {
               return filterProvider..updateAuth(authProvider);
+            },
+          ),
+          ChangeNotifierProxyProvider<AuthProvider, NewsProvider>(
+            create: (final _) => NewsProvider(),
+            update: (final context, final authProvider, final newsProvider) {
+              return newsProvider..updateAuth(authProvider);
+            },
+          ),
+          ChangeNotifierProxyProvider<AuthProvider, FaqQuestionProvider>(
+            create: (final _) => FaqQuestionProvider(),
+            update:
+                (final context, final authProvider, final faqQuestionProvider) {
+              return faqQuestionProvider..updateAuth(authProvider);
+            },
+          ),
+          ChangeNotifierProxyProvider<AuthProvider, WebsiteProvider>(
+            create: (final _) => WebsiteProvider(),
+            update: (final context, final authProvider, final websiteProvider) {
+              return websiteProvider..updateAuth(authProvider);
             },
           ),
           ChangeNotifierProxyProvider2<ClassProvider, FilterProvider,
@@ -175,6 +192,7 @@ class _MyAppState extends State<MyApp> {
             Routes.root: (final _) => AppLoadingScreen(),
             Routes.home: (final _) => const AppBottomNavigationBar(),
             Routes.settings: (final _) => SettingsPage(),
+            Routes.sources: (final _) => SourcePage(),
             Routes.login: (final _) => LoginView(),
             Routes.signUp: (final _) => SignUpView(),
             Routes.faq: (final _) => FaqPage(),

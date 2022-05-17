@@ -725,6 +725,16 @@ class S {
     );
   }
 
+  /// `Information sources`
+  String get sectionInformationSources {
+    return Intl.message(
+      'Information sources',
+      name: 'sectionInformationSources',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Feedback needed`
   String get sectionFeedbackNeeded {
     return Intl.message(
@@ -880,6 +890,16 @@ class S {
     return Intl.message(
       '4.0',
       name: 'hintPoints',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Select information sources:`
+  String get hintSelectSources {
+    return Intl.message(
+      'Select information sources:',
+      name: 'hintSelectSources',
       desc: '',
       args: [],
     );
@@ -1795,6 +1815,16 @@ class S {
     );
   }
 
+  /// `Events in the calendar are added by other students. You can add the "students" information source to be able to view them.`
+  String get warningEventsAreAddedByStudents {
+    return Intl.message(
+      'Events in the calendar are added by other students. You can add the "students" information source to be able to view them.',
+      name: 'warningEventsAreAddedByStudents',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Ask for permissions`
   String get navigationAskPermissions {
     return Intl.message(
@@ -2015,6 +2045,76 @@ class S {
     );
   }
 
+  /// `Official web pages`
+  String get sourceOfficialWebPages {
+    return Intl.message(
+      'Official web pages',
+      name: 'sourceOfficialWebPages',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `acs.pub.ro, upb.ro, curs.upb.ro, studenti.pub.ro`
+  String get sourceOfficialWebPagesInfo {
+    return Intl.message(
+      'acs.pub.ro, upb.ro, curs.upb.ro, studenti.pub.ro',
+      name: 'sourceOfficialWebPagesInfo',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Student organizations`
+  String get sourceStudentOrganizations {
+    return Intl.message(
+      'Student organizations',
+      name: 'sourceStudentOrganizations',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `LSAC, BEST, MLSA`
+  String get sourceStudentOrganizationsInfo {
+    return Intl.message(
+      'LSAC, BEST, MLSA',
+      name: 'sourceStudentOrganizationsInfo',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Representative students`
+  String get sourceStudentRepresentatives {
+    return Intl.message(
+      'Representative students',
+      name: 'sourceStudentRepresentatives',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `group/series representatives, student council members`
+  String get sourceStudentRepresentativesInfo {
+    return Intl.message(
+      'group/series representatives, student council members',
+      name: 'sourceStudentRepresentativesInfo',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Unknown source`
+  String get sourceUnknown {
+    return Intl.message(
+      'Unknown source',
+      name: 'sourceUnknown',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Bachelor's`
   String get filterNodeNameBSc {
     return Intl.message(
@@ -2100,6 +2200,26 @@ class S {
     return Intl.message(
       'Your editing permissions',
       name: 'settingsItemEditingPermissions',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Select information sources`
+  String get settingsSourceSelection {
+    return Intl.message(
+      'Select information sources',
+      name: 'settingsSourceSelection',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Filter information in the app based on who added it`
+  String get settingsSourceSelectionSubtitle {
+    return Intl.message(
+      'Filter information in the app based on who added it',
+      name: 'settingsSourceSelectionSubtitle',
       desc: '',
       args: [],
     );
@@ -2905,6 +3025,16 @@ class S {
     );
   }
 
+  /// `ACS UPB Mobile aims to be an information hub for students, therefore it aggregates data from various sources (official or unofficial).`
+  String get messageSelectSource {
+    return Intl.message(
+      'ACS UPB Mobile aims to be an information hub for students, therefore it aggregates data from various sources (official or unofficial).',
+      name: 'messageSelectSource',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `You need to complete {number} more feedback forms!`
   String messageFeedbackLeft(Object number) {
     return Intl.message(
@@ -3140,6 +3270,16 @@ class S {
     return Intl.message(
       'Denied',
       name: 'infoDenied',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `The Faculty of Automatic Control and Computers is not responsible for information originating from unofficial sources.`
+  String get infoAdditionInformationSources {
+    return Intl.message(
+      'The Faculty of Automatic Control and Computers is not responsible for information originating from unofficial sources.',
+      name: 'infoAdditionInformationSources',
       desc: '',
       args: [],
     );

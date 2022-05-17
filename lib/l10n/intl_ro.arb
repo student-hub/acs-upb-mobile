@@ -70,6 +70,7 @@
   "sectionEventsComingUp": "Evenimente următoare",
   "sectionFAQ": "Întrebări frecvente",
   "sectionGrading": "Punctaj",
+  "sectionInformationSources": "Surse de informații",
   "sectionFeedbackNeeded": "Feedback necesar",
   "sectionFeedbackCompleted": "Feedback completat",
 
@@ -88,6 +89,7 @@
   "hintWebsiteLink": "http://google.com",
   "hintEvaluation": "Examen final",
   "hintPoints": "4.0",
+  "hintSelectSources": "Selectează sursele de informații pe care dorești să le folosești:",
   "hintFeedback": "Îmi place aplicația!",
   "hintIssue": "Când deschid aplicația...",
 
@@ -182,6 +184,7 @@
   "warningUnableToReachNewsFeed": "Nu am putut încărca fluxul de știri.",
   "warningNoNews": "Nu au fost postate știri încă.",
   "warningEventNotEditable": "Acest eveniment nu poate fi modificat.",
+  "warningEventsAreAddedByStudents": "Evenimentele din calendar sunt adăugate de studenți. Poți selecta sursa de informație \"stundenți\" pentru a le vedea.",
 
   "navigationAskPermissions": "Cere permisiuni",
   "navigationHome": "Acasă",
@@ -207,6 +210,14 @@
   "filterMenuRelevance": "Filtrează după relevanță",
   "filterMenuShowUnprocessed": "Arată fără răspuns",
 
+  "sourceOfficialWebPages": "Site-uri oficiale",
+  "sourceOfficialWebPagesInfo": "acs.pub.ro, upb.ro, curs.upb.ro, studenti.pub.ro",
+  "sourceStudentOrganizations": "Organizații studențești",
+  "sourceStudentOrganizationsInfo": "LSAC, BEST, MLSA",
+  "sourceStudentRepresentatives": "Studenți reprezentanți",
+  "sourceStudentRepresentativesInfo": "șefi de grupă, serie și studenții consilieri",
+  "sourceUnknown": "Sursă necunoscută",
+
   "filterNodeNameBSc": "Licență",
   "filterNodeNameMSc": "Master",
 
@@ -218,6 +229,8 @@
   "settingsTitleLocalization": "Localizare",
   "settingsTitleDataControl": "Control date",
   "settingsItemEditingPermissions": "Permisiunile tale de editare",
+  "settingsSourceSelection": "Selectează sursele de informații",
+  "settingsSourceSelectionSubtitle": "Filtrează informațiile din aplicație în funcție de cine le-a adăugat",
   "settingsPermissionsNone": "Fără permisiuni speciale",
   "settingsPermissionsAdd": "Permisiune pentru adăugare de date publice",
   "settingsPermissionsEdit": "Permisiune pentru editare de date publice",
@@ -299,6 +312,7 @@
   "messageYouCanContribute": "Poți contribui la datele din aplicație, dar trebuie mai întâi să ceri permisiuni.",
   "messageThereAreNoEventsForSelected": "Nu există evenimente pentru selecția de ",
   "messagePictureUpdatedSuccess": "Poza a fost actualizată cu succes.",
+  "messageSelectSource": "Aplicația ACS UPB Mobile își propune să fie un hub de informații despre facultate, așadar culege date din diverse surse (oficiale sau neoficiale).",
   "messageFeedbackLeft": "Trebuie să completezi încă {number} formulare de feedback!",
   "messageAlreadySeeingCurrentWeek": "Ești deja la săptămâna curentă!",
   "messageAnotherQuestion": "Ai altă întrebare?",
@@ -325,6 +339,8 @@
   "infoAdmin": "Trateaza cererile de permisiuni",
   "infoAccepted": "Acceptat",
   "infoDenied": "Refuzat",
+  "infoAdditionInformationSources": "Facultatea de Automatică și Calculatoare nu își asumă răspunderea pentru informațiile provenite din surse neoficiale.",
+
   "infoFeedbackForm": "Oferă feedback sau raportează probleme",
   "infoContactInfo": "În caz că avem nevoie de mai multe informații",
 

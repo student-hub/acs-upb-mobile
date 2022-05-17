@@ -100,13 +100,13 @@ class InfoCard<T> extends StatelessWidget {
                   Text(
                     S.current.actionShowMore,
                     style: Theme.of(context)
-                        .coloredTextTheme
+                        .accentTextTheme
                         .subtitle2
-                        .copyWith(color: Theme.of(context).primaryColor),
+                        .copyWith(color: Theme.of(context).accentColor),
                   ),
                   Icon(
                     Icons.arrow_forward_ios_outlined,
-                    color: Theme.of(context).primaryColor,
+                    color: Theme.of(context).accentColor,
                     size: Theme.of(context).textTheme.subtitle2.fontSize,
                   )
                 ],

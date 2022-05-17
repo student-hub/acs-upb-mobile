@@ -111,6 +111,18 @@ class _SettingsPageState extends State<SettingsPage> {
                   subtitle: Text(userPermissionString),
                 ),
                 ListTile(
+                  key: const ValueKey('edit_source_selection'),
+                  onTap: () {
+                    if (authProvider.isAnonymous) {
+                      AppToast.show(S.current.messageNotLoggedIn);
+                    } else {
+                      Navigator.of(context).pushNamed(Routes.sources);
+                    }
+                  },
+                  title: Text(S.current.settingsSourceSelection),
+                  subtitle: Text(S.current.settingsSourceSelectionSubtitle),
+                ),
+                ListTile(
                   onTap: () => Utils.launchURL(Utils.privacyPolicyURL),
                   title: Text(S.current.labelPrivacyPolicy),
                   subtitle: Text(
@@ -202,23 +214,12 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 
-  Widget categoryTitle(final String title) => Padding(
-        padding: const EdgeInsets.only(left: 10, top: 10),
-        child: Text(
-          title,
-          style: Theme.of(context)
-              .coloredTextTheme
-              .subtitle2
-              .apply(fontWeightDelta: 2),
-        ),
-      );
-
-  PrefRadio<String> languageRadioPreference(
-      final BuildContext context, final String preference) {
-    return PrefRadio(
-      title: Text(languagePrefString(context, preference)),
-      value: preference,
-      pref: 'language',
+  RadioPreference<String> languageRadioPreference(
+      BuildContext context, String preference) {
+    return RadioPreference(
+      languagePrefString(context, preference),
+      preference,
+      'language',
       onSelect: () {
         // Reload settings page
         setState(() {

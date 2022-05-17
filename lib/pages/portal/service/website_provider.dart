@@ -1,13 +1,17 @@
+
+   
 import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../../../authentication/model/user.dart';
+import '../../../authentication/service/auth_provider.dart';
 import '../../../generated/l10n.dart';
-import '../../../resources/storage_provider.dart';
+import '../../../resources/storage/storage_provider.dart';
 import '../../../resources/utils.dart';
 import '../../../widgets/toast.dart';
 import '../../filter/model/filter.dart';
@@ -58,6 +62,7 @@ extension WebsiteExtension on Website {
       {final String ownerUid}) {
     final data = snap.data();
     return Website(
+      source: data['source'],
       ownerUid: ownerUid ?? data['addedBy'],
       id: snap.id,
       isPrivate: ownerUid != null,
@@ -94,6 +99,7 @@ extension WebsiteExtension on Website {
     }
     if (link != null) data['link'] = link;
     if (infoByLocale != null) data['info'] = infoByLocale;
+    data['source'] = source;
 
     return data;
   }
@@ -101,6 +107,13 @@ extension WebsiteExtension on Website {
 
 class WebsiteProvider with ChangeNotifier {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
+
+  AuthProvider _authProvider;
+
+  // ignore: use_setters_to_change_properties
+  void updateAuth(final AuthProvider authProvider) {
+    _authProvider = authProvider;
+  }
 
   void _errorHandler(final dynamic e, {final bool showToast = true}) {
     print(e.message);
@@ -234,6 +247,12 @@ class WebsiteProvider with ChangeNotifier {
     }
   }
 
+  List<String> getUserSources() =>
+      _authProvider.currentUserFromCache?.sourcesList;
+
+  Query filterBySource(final Query query) =>
+      query.where('source', whereIn: getUserSources());
+
   Future<List<Website>> fetchWebsites(final Filter filter,
       {final bool userOnly = false, final String uid}) async {
     try {
@@ -241,25 +260,24 @@ class WebsiteProvider with ChangeNotifier {
 
       if (!userOnly) {
         List<DocumentSnapshot<Map<String, dynamic>>> documents = [];
-
         if (filter == null) {
           final QuerySnapshot<Map<String, dynamic>> qSnapshot =
-              await _db.collection('websites').get();
+              await filterBySource(_db.collection('websites')).get();
           documents.addAll(qSnapshot.docs);
         } else {
           // Documents without a 'relevance' field are relevant for everyone
-          final query =
-              _db.collection('websites').where('relevance', isNull: true);
+          final query = filterBySource(
+              _db.collection('websites').where('relevance', isNull: true));
           final QuerySnapshot<Map<String, dynamic>> qSnapshot =
               await query.get();
           documents.addAll(qSnapshot.docs);
 
           for (final string in filter.relevantNodes) {
             // selected nodes
-            final query = _db
+            final query = filterBySource(_db
                 .collection('websites')
                 .where('degree', isEqualTo: filter.baseNode)
-                .where('relevance', arrayContains: string);
+                .where('relevance', arrayContains: string));
             final QuerySnapshot<Map<String, dynamic>> qSnapshot =
                 await query.get();
             documents.addAll(qSnapshot.docs);
@@ -282,7 +300,9 @@ class WebsiteProvider with ChangeNotifier {
         final DocumentReference ref =
             FirebaseFirestore.instance.collection('users').doc(uid);
         final QuerySnapshot<Map<String, dynamic>> qSnapshot =
-            await ref.collection('websites').get();
+            getUserSources().isNotEmpty
+                ? await filterBySource(ref.collection('websites')).get()
+                : await ref.collection('websites').get();
 
         websites.addAll(qSnapshot.docs
             .map((final doc) => WebsiteExtension.fromSnap(doc, ownerUid: uid)));
