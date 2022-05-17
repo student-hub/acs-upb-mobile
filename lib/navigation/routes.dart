@@ -7,6 +7,7 @@ import '../pages/settings/view/admin_page.dart';
 import '../pages/settings/view/feedback_form.dart';
 import '../pages/settings/view/request_permissions.dart';
 import '../pages/settings/view/settings_page.dart';
+import '../pages/settings/view/source_page.dart';
 
 class Routes {
   Routes._();
@@ -14,6 +15,7 @@ class Routes {
   static const String root = '/';
   static const String home = '/home';
   static const String settings = SettingsPage.routeName;
+  static const String sources = SourcePage.routeName;
   static const String filter = FilterPage.routeName;
   static const String login = LoginView.routeName;
   static const String signUp = SignUpView.routeName;

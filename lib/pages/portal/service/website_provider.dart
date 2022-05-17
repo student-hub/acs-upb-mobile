@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../../../authentication/model/user.dart';
@@ -58,6 +59,7 @@ extension WebsiteExtension on Website {
       {final String ownerUid}) {
     final data = snap.data();
     return Website(
+      source: data['source'],
       ownerUid: ownerUid ?? data['addedBy'],
       id: snap.id,
       isPrivate: ownerUid != null,
@@ -94,6 +96,7 @@ extension WebsiteExtension on Website {
     }
     if (link != null) data['link'] = link;
     if (infoByLocale != null) data['info'] = infoByLocale;
+    data['source'] = source;
 
     return data;
   }
@@ -102,7 +105,14 @@ extension WebsiteExtension on Website {
 class WebsiteProvider with ChangeNotifier {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
 
-  void _errorHandler(final dynamic e, {bool showToast = true}) {
+  AuthProvider _authProvider;
+
+  // ignore: use_setters_to_change_properties
+  void updateAuth(AuthProvider authProvider) {
+    _authProvider = authProvider;
+  }
+
+  void _errorHandler(dynamic e, {bool showToast = true}) {
     print(e.message);
     if (showToast) {
       if (e.message.contains('PERMISSION_DENIED')) {
@@ -234,34 +244,37 @@ class WebsiteProvider with ChangeNotifier {
     }
   }
 
-  Future<List<Website>> fetchWebsites(final Filter filter,
-      {bool userOnly = false, final String uid}) async {
+  List<String> getUserSources() =>
+      _authProvider.currentUserFromCache?.sourcesList;
+
+  Query filterBySource(Query query) =>
+      query.where('source', whereIn: getUserSources());
+
+  Future<List<Website>> fetchWebsites(Filter filter,
+      {bool userOnly = false, String uid}) async {
     try {
       final websites = <Website>[];
 
       if (!userOnly) {
-        List<DocumentSnapshot<Map<String, dynamic>>> documents = [];
-
+        List<DocumentSnapshot> documents = [];
         if (filter == null) {
-          final QuerySnapshot<Map<String, dynamic>> qSnapshot =
-              await _db.collection('websites').get();
+          final QuerySnapshot qSnapshot =
+              await filterBySource(_db.collection('websites')).get();
           documents.addAll(qSnapshot.docs);
         } else {
           // Documents without a 'relevance' field are relevant for everyone
-          final query =
-              _db.collection('websites').where('relevance', isNull: true);
-          final QuerySnapshot<Map<String, dynamic>> qSnapshot =
-              await query.get();
+          final query = filterBySource(
+              _db.collection('websites').where('relevance', isNull: true));
+          final QuerySnapshot qSnapshot = await query.get();
           documents.addAll(qSnapshot.docs);
 
           for (final string in filter.relevantNodes) {
             // selected nodes
-            final query = _db
+            final query = filterBySource(_db
                 .collection('websites')
                 .where('degree', isEqualTo: filter.baseNode)
-                .where('relevance', arrayContains: string);
-            final QuerySnapshot<Map<String, dynamic>> qSnapshot =
-                await query.get();
+                .where('relevance', arrayContains: string));
+            final QuerySnapshot qSnapshot = await query.get();
             documents.addAll(qSnapshot.docs);
           }
         }
@@ -281,8 +294,9 @@ class WebsiteProvider with ChangeNotifier {
       if (uid != null) {
         final DocumentReference ref =
             FirebaseFirestore.instance.collection('users').doc(uid);
-        final QuerySnapshot<Map<String, dynamic>> qSnapshot =
-            await ref.collection('websites').get();
+        final QuerySnapshot qSnapshot = getUserSources().isNotEmpty
+            ? await filterBySource(ref.collection('websites')).get()
+            : await ref.collection('websites').get();
 
         websites.addAll(qSnapshot.docs
             .map((final doc) => WebsiteExtension.fromSnap(doc, ownerUid: uid)));

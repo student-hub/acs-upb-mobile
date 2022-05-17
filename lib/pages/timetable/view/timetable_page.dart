@@ -379,6 +379,23 @@ class _TimetablePageState extends State<TimetablePage>
           )
         ],
       );
+    } else if (!user.sources.contains('students')) {
+      return AppDialog(
+        title: S.current.warningNoEvents,
+        content: [
+          Text(S.current.warningEventsAreAddedByStudents),
+        ],
+        actions: [
+          AppButton(
+            text: S.current.settingsSourceSelection,
+            width: 130,
+            onTap: () async {
+              Navigator.of(context).pop();
+              await Navigator.of(context).pushNamed(Routes.sources);
+            },
+          ),
+        ],
+      );
     } else {
       return AppDialog(
         title: S.current.warningNoEvents,

@@ -70,6 +70,7 @@
   "sectionEventsComingUp": "Events coming up",
   "sectionFAQ": "FAQ",
   "sectionGrading": "Grading",
+  "sectionInformationSources": "Information sources",
   "sectionFeedbackNeeded": "Feedback needed",
   "sectionFeedbackCompleted": "Feedback completed",
 
@@ -88,6 +89,7 @@
   "hintWebsiteLink": "http://google.com",
   "hintEvaluation": "Final exam",
   "hintPoints": "4.0",
+  "hintSelectSources": "Select information sources:",
   "hintFeedback": "I love the app!",
   "hintIssue": "When I open the app...",
 
@@ -182,6 +184,7 @@
   "warningUnableToReachNewsFeed": "Unable to reach the news feed.",
   "warningNoNews": "There are no news yet.",
   "warningEventNotEditable": "This event cannot be edited.",
+  "warningEventsAreAddedByStudents": "Events in the calendar are added by other students. You can add the \"students\" information source to be able to view them.",
 
   "navigationAskPermissions": "Ask for permissions",
   "navigationHome": "Home",
@@ -207,6 +210,14 @@
   "filterMenuRelevance": "Filter by relevance",
   "filterMenuShowUnprocessed": "Show unprocessed",
 
+  "sourceOfficialWebPages": "Official web pages",
+  "sourceOfficialWebPagesInfo": "acs.pub.ro, upb.ro, curs.upb.ro, studenti.pub.ro",
+  "sourceStudentOrganizations": "Student organizations",
+  "sourceStudentOrganizationsInfo": "LSAC, BEST, MLSA",
+  "sourceStudentRepresentatives": "Representative students",
+  "sourceStudentRepresentativesInfo": "group/series representatives, student council members",
+  "sourceUnknown": "Unknown source",
+
   "filterNodeNameBSc": "Bachelor's",
   "filterNodeNameMSc": "Master's",
 
@@ -218,6 +229,8 @@
   "settingsTitleLocalization": "Localization",
   "settingsTitleDataControl": "Data control",
   "settingsItemEditingPermissions": "Your editing permissions",
+  "settingsSourceSelection": "Select information sources",
+  "settingsSourceSelectionSubtitle": "Filter information in the app based on who added it",
   "settingsPermissionsNone": "No special permissions",
   "settingsPermissionsAdd": "Permission to add public info",
   "settingsPermissionsEdit": "Permission to edit public info",
@@ -301,6 +314,7 @@
   "messagePictureUpdatedSuccess": "Profile picture updated successfully.",
   "messageAnotherQuestion": "Do you have another question?",
   "messageTalkToChatbot": "Talk to Polly!",
+  "messageSelectSource": "ACS UPB Mobile aims to be an information hub for students, therefore it aggregates data from various sources (official or unofficial).",
   "messageFeedbackLeft": "You need to complete {number} more feedback forms!",
   "messageAlreadySeeingCurrentWeek": "You're already seeing the current week!",
   "messageReportSent": "Report sent successfully.",
@@ -326,6 +340,7 @@
   "infoAdmin": "Handle permission requests",
   "infoAccepted": "Accepted",
   "infoDenied": "Denied",
+  "infoAdditionInformationSources": "The Faculty of Automatic Control and Computers is not responsible for information originating from unofficial sources.",
 
   "stringEmailDomain": "@stud.acs.upb.ro",
   "stringForum": "cs.curs.pub.ro",

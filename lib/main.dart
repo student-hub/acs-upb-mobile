@@ -87,8 +87,6 @@ Future<void> main() async {
         providers: [
           ChangeNotifierProvider<AuthProvider>(
               create: (final _) => authProvider),
-          ChangeNotifierProvider<WebsiteProvider>(
-              create: (final _) => WebsiteProvider()),
           Provider<RequestProvider>(create: (final _) => RequestProvider()),
           Provider<IssueProvider>(create: (final _) => IssueProvider()),
           ChangeNotifierProvider<ClassProvider>(
@@ -97,8 +95,6 @@ Future<void> main() async {
               create: (final _) => feedbackProvider),
           ChangeNotifierProvider<PersonProvider>(
               create: (final _) => personProvider),
-          ChangeNotifierProvider<QuestionProvider>(
-              create: (final _) => QuestionProvider()),
           ChangeNotifierProvider<OldNewsProvider>(
               create: (_) => OldNewsProvider()),
           ChangeNotifierProxyProvider<AuthProvider, FilterProvider>(
@@ -111,6 +107,18 @@ Future<void> main() async {
             create: (final _) => NewsProvider(),
             update: (final context, final authProvider, final newsProvider) {
               return newsProvider..updateAuth(authProvider);
+            },
+          ),
+          ChangeNotifierProxyProvider<AuthProvider, FaqQuestionProvider>(
+            create: (_) => FaqQuestionProvider(),
+            update: (context, authProvider, faqQuestionProvider) {
+              return faqQuestionProvider..updateAuth(authProvider);
+            },
+          ),
+          ChangeNotifierProxyProvider<AuthProvider, WebsiteProvider>(
+            create: (_) => WebsiteProvider(),
+            update: (context, authProvider, websiteProvider) {
+              return websiteProvider..updateAuth(authProvider);
             },
           ),
           ChangeNotifierProxyProvider2<ClassProvider, FilterProvider,

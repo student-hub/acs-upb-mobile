@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
+import 'package:provider/provider.dart';
 
 import '../generated/l10n.dart';
 import '../pages/home/home_page.dart';
@@ -40,6 +41,17 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar>
       const PortalPage(key: PageStorageKey('Portal')),
       const PeoplePage(key: PageStorageKey('People')),
     ];
+
+    // Show "Select sources" page if user has no preference set
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    if (!authProvider.isAnonymous) {
+      authProvider.currentUser.then((user) {
+        if (user?.sources?.isEmpty ?? true) {
+          Navigator.of(context).push(MaterialPageRoute<SourcePage>(
+              builder: (context) => SourcePage()));
+        }
+      });
+    }
   }
 
   @override
