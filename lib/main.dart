@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:acs_upb_mobile/pages/news_feed/service/old_news_provider.dart';
 import 'package:easy_dynamic_theme/easy_dynamic_theme.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -95,18 +94,12 @@ Future<void> main() async {
               create: (final _) => feedbackProvider),
           ChangeNotifierProvider<PersonProvider>(
               create: (final _) => personProvider),
-          ChangeNotifierProvider<OldNewsProvider>(
-              create: (final _) => OldNewsProvider()),
+          ChangeNotifierProvider<NewsProvider>(
+              create: (final _) => NewsProvider()),
           ChangeNotifierProxyProvider<AuthProvider, FilterProvider>(
             create: (final _) => FilterProvider(global: true),
             update: (final context, final authProvider, final filterProvider) {
               return filterProvider..updateAuth(authProvider);
-            },
-          ),
-          ChangeNotifierProxyProvider<AuthProvider, NewsProvider>(
-            create: (final _) => NewsProvider(),
-            update: (final context, final authProvider, final newsProvider) {
-              return newsProvider..updateAuth(authProvider);
             },
           ),
           ChangeNotifierProxyProvider<AuthProvider, FaqQuestionProvider>(
