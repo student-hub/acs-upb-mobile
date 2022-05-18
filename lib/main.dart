@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:acs_upb_mobile/pages/news_feed/service/old_news_provider.dart';
 import 'package:easy_dynamic_theme/easy_dynamic_theme.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -27,6 +26,7 @@ import 'pages/faq/view/faq_page.dart';
 import 'pages/filter/service/filter_provider.dart';
 import 'pages/filter/view/filter_page.dart';
 import 'pages/news_feed/service/news_provider.dart';
+import 'pages/news_feed/service/old_news_provider.dart';
 import 'pages/news_feed/view/news_feed_page.dart';
 import 'pages/people/service/person_provider.dart';
 import 'pages/portal/service/website_provider.dart';
@@ -36,6 +36,7 @@ import 'pages/settings/service/request_provider.dart';
 import 'pages/settings/view/admin_page.dart';
 import 'pages/settings/view/feedback_form.dart';
 import 'pages/settings/view/request_permissions.dart';
+import 'pages/settings/view/request_roles.dart';
 import 'pages/settings/view/settings_page.dart';
 import 'pages/settings/view/source_page.dart';
 import 'pages/timetable/service/uni_event_provider.dart';
@@ -199,6 +200,7 @@ class _MyAppState extends State<MyApp> {
             Routes.filter: (final _) => const FilterPage(),
             Routes.newsFeed: (final _) => NewsFeedPage(),
             Routes.requestPermissions: (final _) => RequestPermissionsPage(),
+            Routes.requestRoles: (final _) => RequestRolesPage(),
             Routes.adminPanel: (final _) => const AdminPanelPage(),
             Routes.feedbackForm: (final _) => FeedbackFormPage(),
           },

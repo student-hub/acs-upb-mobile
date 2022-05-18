@@ -111,6 +111,18 @@ class _SettingsPageState extends State<SettingsPage> {
                   subtitle: Text(userPermissionString),
                 ),
                 ListTile(
+                  key: const ValueKey('ask_roles'),
+                  onTap: () {
+                    if (authProvider.isAnonymous) {
+                      AppToast.show(S.current.messageNotLoggedIn);
+                    } else {
+                      Navigator.of(context).pushNamed(Routes.requestRoles);
+                    }
+                  },
+                  title: const Text('Your user roles'),
+                  subtitle: const Text('Ask for one or more roles'),
+                ),
+                ListTile(
                   key: const ValueKey('edit_source_selection'),
                   onTap: () {
                     if (authProvider.isAnonymous) {
