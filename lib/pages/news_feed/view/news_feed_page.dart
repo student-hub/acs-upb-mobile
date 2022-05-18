@@ -64,10 +64,12 @@ class _NewsFeedPageState extends State<NewsFeedPage> {
                       subtitle: Text(_formatDate(item.createdAt)),
                       trailing: const Icon(Icons.arrow_forward_ios_outlined),
                       onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (final context) => NewsItemDetailsPage(
-                                  newsItemGuid: item.itemGuid))),
+                        context,
+                        MaterialPageRoute<Map<dynamic, dynamic>>(
+                          builder: (final context) =>
+                              NewsItemDetailsPage(newsItemGuid: item.itemGuid),
+                        ),
+                      ),
                       dense: true,
                     ))
                 .toList(),

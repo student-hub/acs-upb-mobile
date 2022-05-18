@@ -1,17 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:intl/intl.dart';
 import 'package:markdown/markdown.dart' as md;
-import 'package:oktoast/oktoast.dart';
+import 'package:provider/provider.dart';
 
 import '../../../resources/utils.dart';
-import '../../../widgets/auto_size_markdown.dart';
 import '../../../widgets/scaffold.dart';
 import '../model/news_feed_item.dart';
 import '../service/news_provider.dart';
-import 'news_feed_page.dart';
 import 'news_item_details_actions.dart';
 
 class NewsItemDetailsPage extends StatefulWidget {
@@ -29,15 +25,25 @@ class _NewsItemDetailsState extends State<NewsItemDetailsPage> {
 
   final String newsItemGuid;
 
-  String _formatDate(final String date) {
-    final DateTime dateTime = DateTime.parse(date);
-    return DateFormat('yyyy-MM-dd').format(dateTime);
+  Future<dynamic> detailsFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    detailsFuture = _getDetails();
   }
+
+  Future<NewsFeedItem> _getDetails() async {
+    final NewsProvider newsProvider =
+        Provider.of<NewsProvider>(context, listen: false);
+    return newsProvider.fetchNewsItemDetails(newsItemGuid);
+  }
+
+  String _formatDate(final String date) =>
+      DateFormat('yyyy-MM-dd').format(DateTime.parse(date));
 
   @override
   Widget build(final BuildContext context) {
-    final newsFeedProvider = Provider.of<NewsProvider>(context);
-
     return AppScaffold(
       title: const Text('Detalii'),
       body: SingleChildScrollView(
@@ -51,8 +57,7 @@ class _NewsItemDetailsState extends State<NewsItemDetailsPage> {
                 children: <Widget>[
                   Expanded(
                     child: FutureBuilder(
-                      future:
-                          newsFeedProvider.fetchNewsItemDetails(newsItemGuid),
+                      future: detailsFuture,
                       builder: (final context, final snapshot) {
                         if (snapshot.connectionState == ConnectionState.done) {
                           if (snapshot.hasData) {
