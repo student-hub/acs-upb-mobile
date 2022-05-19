@@ -16,12 +16,34 @@ class NewsProvider with ChangeNotifier {
     _authProvider = authProvider;
   }
 
+  List<String> getBookmarkedNews() =>
+      _authProvider.currentUserFromCache?.bookmarkedNews;
+
   Future<List<NewsFeedItem>> fetchNewsFeedItems({final int limit}) async {
     try {
       final CollectionReference news =
           FirebaseFirestore.instance.collection('news');
       final QuerySnapshot<Map<String, dynamic>> qSnapshot =
           limit == null ? await news.get() : await news.limit(limit).get();
+      return qSnapshot.docs.map(DatabaseNews.fromSnap).toList();
+    } catch (e) {
+      print(e);
+      AppToast.show(S.current.errorSomethingWentWrong);
+      return null;
+    }
+  }
+
+  Future<List<NewsFeedItem>> fetchFavoriteNewsFeedItems() async {
+    try {
+      final bookmarkedNews = getBookmarkedNews();
+      if (bookmarkedNews == null || bookmarkedNews.isEmpty) {
+        return [];
+      }
+      final CollectionReference news =
+          FirebaseFirestore.instance.collection('news');
+      final QuerySnapshot<Map<String, dynamic>> qSnapshot = await news
+          .where(FieldPath.documentId, whereIn: getBookmarkedNews())
+          .get();
       return qSnapshot.docs.map(DatabaseNews.fromSnap).toList();
     } catch (e) {
       print(e);
