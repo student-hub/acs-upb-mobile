@@ -99,7 +99,7 @@ class _LoginViewState extends State<LoginView> {
           fields[S.current.labelPassword],
         );
         if (result) {
-          final errorString = AppValidator.isStrongPasswor(
+          final errorString = AppValidator.isStrongPassword(
             fields[S.current.labelPassword],
           );
           if (errorString != null) {
