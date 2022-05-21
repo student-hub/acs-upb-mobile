@@ -47,17 +47,12 @@ class AdminProvider with ChangeNotifier {
       final snap =
           await _db.collection('forms').doc('permission_request_answers').get();
 
-      final List<Map<String, dynamic>> list = [];
-      final iterable = snap.data().values;
-      for (int i = 0; i < iterable.length; ++i) {
-        list.add(iterable.elementAt(i));
-      }
+      final requests = snap.data().values.toList()
+        ..sort((a, b) {
+          return b['dateSubmitted'].compareTo(a['dateSubmitted']);
+        });
 
-      list.sort((a, b) {
-        return b['dateSubmitted'].compareTo(a['dateSubmitted']);
-      });
-
-      return list.map((e) => e['addedBy']).toList();
+      return requests.map((e) => e['addedBy']).toList();
     } catch (e) {
       print(e);
       AppToast.show(S.current.errorLoadRequests);

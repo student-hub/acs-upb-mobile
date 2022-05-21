@@ -162,8 +162,7 @@ class _RequestPermissionsPageState extends State<RequestPermissionsPage> {
               padding: const EdgeInsets.only(top: 10),
               child: Container(
                   height: MediaQuery.of(context).size.height / 4,
-                  child:
-                      Image.asset('assets/illustrations/undxraw_hiring.png')),
+                  child: Image.asset('assets/illustrations/undraw_hiring.png')),
             ),
             Padding(
               padding: const EdgeInsets.all(10),
