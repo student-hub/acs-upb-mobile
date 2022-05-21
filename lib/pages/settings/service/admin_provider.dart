@@ -11,10 +11,10 @@ import 'package:flutter/material.dart';
 extension PermissionRequestExtension on PermissionRequest {
   static PermissionRequest fromSnap(DocumentSnapshot snap, String requestId) {
     final data = snap.data()[requestId];
-    final Map<String, FormQuestion> map = {};
+    final Map<String, FormQuestion> answersMap = {};
     int i = 0;
     while (data[i.toString()] != null) {
-      map[i.toString()] = FormQuestion(
+      answersMap[i.toString()] = FormQuestion(
           question: '',
           category: '',
           id: i.toString(),
@@ -23,7 +23,7 @@ extension PermissionRequestExtension on PermissionRequest {
     }
     return PermissionRequest(
       userId: data['addedBy'],
-      answers: map,
+      answers: answersMap,
       processed: data['done'],
       dateSubmitted: data['dateSubmitted'],
       accepted: data['accepted'],
@@ -54,7 +54,7 @@ class AdminProvider with ChangeNotifier {
       }
 
       list.sort((a, b) {
-        return -a['dateSubmitted'].compareTo(b['dateSubmitted']);
+        return b['dateSubmitted'].compareTo(a['dateSubmitted']);
       });
 
       return list.map((e) => e['addedBy']).toList();

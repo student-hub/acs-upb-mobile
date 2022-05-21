@@ -28,14 +28,6 @@ class _RequestPermissionsPageState extends State<RequestPermissionsPage> {
   Map<String, Map<String, String>> questionCategories = {};
   Map<String, FormQuestion> requestQuestions = {};
 
-  Future<void> _fetchUser() async {
-    final authProvider = Provider.of<AuthProvider>(context, listen: false);
-    user = await authProvider.currentUser;
-    if (mounted) {
-      setState(() {});
-    }
-  }
-
   AppDialog _requestAlreadyExistsDialog(BuildContext context) {
     return AppDialog(
       title: S.current.warningRequestExists,
@@ -58,20 +50,31 @@ class _RequestPermissionsPageState extends State<RequestPermissionsPage> {
   @override
   void initState() {
     super.initState();
-
-    Provider.of<FeedbackProvider>(context, listen: false)
-        .fetchCategories('permission_request_questions')
-        .then((categories) => setState(() => questionCategories = categories));
-
-    fetchFeedbackQuestions();
+    fetchCategories();
+    fetchQuestions();
     _fetchUser();
   }
 
-  Future<Map<String, dynamic>> fetchFeedbackQuestions() async {
+  Future<Map<String, dynamic>> fetchCategories() async {
+    await Provider.of<FeedbackProvider>(context, listen: false)
+        .fetchCategories('permission_request_questions')
+        .then((categories) => setState(() => questionCategories = categories));
+    return questionCategories;
+  }
+
+  Future<Map<String, dynamic>> fetchQuestions() async {
     await Provider.of<FeedbackProvider>(context, listen: false)
         .fetchQuestions('permission_request_questions')
         .then((questions) => setState(() => requestQuestions = questions));
     return requestQuestions;
+  }
+
+  Future<void> _fetchUser() async {
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    user = await authProvider.currentUser;
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   Future<void> _sendRequest() async {
@@ -159,7 +162,8 @@ class _RequestPermissionsPageState extends State<RequestPermissionsPage> {
               padding: const EdgeInsets.only(top: 10),
               child: Container(
                   height: MediaQuery.of(context).size.height / 4,
-                  child: Image.asset('assets/illustrations/undxraw_hiring.png')),
+                  child:
+                      Image.asset('assets/illustrations/undxraw_hiring.png')),
             ),
             Padding(
               padding: const EdgeInsets.all(10),

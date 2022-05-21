@@ -177,16 +177,15 @@ class _FeedbackQuestionFormFieldState extends State<FeedbackQuestionFormField> {
   }
 
   Widget feedbackQuestionText() {
+    final FormQuestionText question = widget.question;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(widget.question.question, style: const TextStyle(fontSize: 18)),
+        Text(question.question, style: const TextStyle(fontSize: 18)),
         const SizedBox(height: 12),
-        if ((widget.question as FormQuestionText).additionalInfo != null)
-          Text((widget.question as FormQuestionText).additionalInfo,
-              style: const TextStyle(fontSize: 12)),
-        if ((widget.question as FormQuestionText).additionalInfo != null)
-          const SizedBox(height: 12),
+        if (question.additionalInfo != null)
+          Text(question.additionalInfo, style: const TextStyle(fontSize: 12)),
+        if (question.additionalInfo != null) const SizedBox(height: 12),
         Padding(
           padding: const EdgeInsets.all(2),
           child: Column(
@@ -194,7 +193,7 @@ class _FeedbackQuestionFormFieldState extends State<FeedbackQuestionFormField> {
               TextFormField(
                 key: const Key('FeedbackText'),
                 onSaved: (value) {
-                  widget.question.answer = value;
+                  question.answer = value;
                 },
                 keyboardType: TextInputType.multiline,
                 maxLines: null,

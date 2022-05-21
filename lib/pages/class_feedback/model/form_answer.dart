@@ -8,6 +8,9 @@ class FormAnswer {
   final String questionNumber;
 
   Map<String, dynamic> toData() {
-    return {};
+    final Map<String, dynamic> data = {};
+    if (questionAnswer != null) data['answer'] = questionAnswer;
+    data['number'] = questionNumber;
+    return data;
   }
 }

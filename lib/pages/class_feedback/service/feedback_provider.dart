@@ -62,6 +62,8 @@ extension FeedbackQuestionExtension on FormQuestion {
 }
 
 class FeedbackProvider with ChangeNotifier {
+  bool userAlreadyRequestedCache;
+
   Future<bool> _addResponseByQuestion(
       FormAnswer response, String document) async {
     try {
@@ -97,6 +99,14 @@ class FeedbackProvider with ChangeNotifier {
       return null;
     }
   }
+
+  // Future<DocumentSnapshot> fetchFeedbackQuestions() async{
+  //   final DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
+  //       .collection('forms')
+  //       .doc(document)
+  //       .get();
+  //   return documentSnapshot;
+  // }
 
   // Fetch all feedback categories in the format
   // Map<categoryKey, Map<language, localizedCategoryName>>
@@ -237,8 +247,6 @@ class FeedbackProvider with ChangeNotifier {
       return null;
     }
   }
-
-  bool userAlreadyRequestedCache;
 
   Future<bool> submitRequest(PermissionRequest request) async {
     for (int i = 0; i < request.answers.length; ++i) {
