@@ -1,63 +1,58 @@
+import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/model/class_feedback_answer.dart';
+import 'package:acs_upb_mobile/pages/class_feedback/model/form_answer.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question_dropdown.dart';
-import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question_slider.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question_rating.dart';
+import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question_slider.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question_text.dart';
+import 'package:acs_upb_mobile/pages/classes/model/class.dart';
 import 'package:acs_upb_mobile/pages/people/model/person.dart';
+import 'package:acs_upb_mobile/pages/settings/model/request.dart';
 import 'package:acs_upb_mobile/resources/locale_provider.dart';
+import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:acs_upb_mobile/widgets/toast.dart';
-import 'package:acs_upb_mobile/generated/l10n.dart';
-import 'package:acs_upb_mobile/pages/classes/model/class.dart';
 
-extension ClassFeedbackAnswerExtension on FeedbackAnswer {
-  Map<String, dynamic> toData() {
-    final Map<String, dynamic> data = {};
-
-    if (questionAnswer != null) data['answer'] = questionAnswer;
-    data['dateSubmitted'] = Timestamp.now();
-    data['class'] = className;
-    data['teacher'] = teacher.name;
-    data['assistant'] = assistant.name;
-
-    return data;
-  }
-}
-
-extension FeedbackQuestionExtension on FeedbackQuestion {
-  static FeedbackQuestion fromJSON(dynamic json, String id) {
+extension FeedbackQuestionExtension on FormQuestion {
+  static FormQuestion fromJSON(dynamic json, String id) {
     if (json['type'] == 'dropdown' && json['options'] != null) {
       final List<dynamic> options = json['options'];
       final List<String> optionsString =
           options.map((e) => e[LocaleProvider.localeString] as String).toList();
-      return FeedbackQuestionDropdown(
+      return FormQuestionDropdown(
         category: json['category'],
         question: json['question'][LocaleProvider.localeString],
         id: id,
         answerOptions: optionsString,
       );
     } else if (json['type'] == 'rating') {
-      return FeedbackQuestionRating(
+      return FormQuestionRating(
         category: json['category'],
         question: json['question'][LocaleProvider.localeString],
         id: id,
       );
+    } else if (json['type'] == 'text' && json['additional_info'] != null) {
+      return FormQuestionText(
+        category: json['category'],
+        question: json['question'][LocaleProvider.localeString],
+        additionalInfo: json['additional_info'][LocaleProvider.localeString],
+        id: id,
+      );
     } else if (json['type'] == 'text') {
-      return FeedbackQuestionText(
+      return FormQuestionText(
         category: json['category'],
         question: json['question'][LocaleProvider.localeString],
         id: id,
       );
     } else if (json['type'] == 'slider') {
-      return FeedbackQuestionSlider(
+      return FormQuestionSlider(
         category: json['category'],
         question: json['question'][LocaleProvider.localeString],
         id: id,
       );
     } else {
-      return FeedbackQuestion(
+      return FormQuestion(
         category: json['category'],
         question: json['question'][LocaleProvider.localeString],
         id: id,
@@ -67,11 +62,14 @@ extension FeedbackQuestionExtension on FeedbackQuestion {
 }
 
 class FeedbackProvider with ChangeNotifier {
-  Future<bool> _addResponse(FeedbackAnswer response) async {
+  bool userAlreadyRequestedCache;
+
+  Future<bool> _addResponseByQuestion(
+      FormAnswer response, String document) async {
     try {
       await FirebaseFirestore.instance
           .collection('forms')
-          .doc('class_feedback_answers')
+          .doc(document)
           .collection(response.questionNumber)
           .add(response.toData());
       return true;
@@ -82,14 +80,14 @@ class FeedbackProvider with ChangeNotifier {
     }
   }
 
-  Future<Map<String, FeedbackQuestion>> fetchQuestions() async {
+  Future<Map<String, FormQuestion>> fetchQuestions(String document) async {
     try {
       final DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
           .collection('forms')
-          .doc('class_feedback_questions')
+          .doc(document)
           .get();
       final Map<String, dynamic> data = documentSnapshot['questions'];
-      final Map<String, FeedbackQuestion> questions = {};
+      final Map<String, FormQuestion> questions = {};
       for (final value in data.values) {
         final key = data.keys.firstWhere((element) => data[element] == value);
         questions[key] = FeedbackQuestionExtension.fromJSON(value, key);
@@ -102,13 +100,22 @@ class FeedbackProvider with ChangeNotifier {
     }
   }
 
+  // Future<DocumentSnapshot> fetchFeedbackQuestions() async{
+  //   final DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
+  //       .collection('forms')
+  //       .doc(document)
+  //       .get();
+  //   return documentSnapshot;
+  // }
+
   // Fetch all feedback categories in the format
   // Map<categoryKey, Map<language, localizedCategoryName>>
-  Future<Map<String, Map<String, String>>> fetchCategories() async {
+  Future<Map<String, Map<String, String>>> fetchCategories(
+      String document) async {
     try {
       final DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
           .collection('forms')
-          .doc('class_feedback_questions')
+          .doc(document)
           .get();
       final Map<String, dynamic> data = documentSnapshot['categories'];
       for (final key in data.keys) {
@@ -141,7 +148,7 @@ class FeedbackProvider with ChangeNotifier {
 
   Future<bool> submitFeedback(
       String uid,
-      Map<String, FeedbackQuestion> feedbackQuestions,
+      Map<String, FormQuestion> feedbackQuestions,
       Person assistant,
       Person teacher,
       String className) async {
@@ -165,7 +172,8 @@ class FeedbackProvider with ChangeNotifier {
           questionAnswer: feedbackQuestions[i.toString()].answer,
         );
 
-        responseAddedSuccessfully = await _addResponse(response);
+        responseAddedSuccessfully =
+            await _addResponseByQuestion(response, 'class_feedback_answers');
         if (!responseAddedSuccessfully) break;
       }
 
@@ -237,6 +245,47 @@ class FeedbackProvider with ChangeNotifier {
     } catch (e) {
       AppToast.show(S.current.errorSomethingWentWrong);
       return null;
+    }
+  }
+
+  Future<bool> submitRequest(PermissionRequest request) async {
+    for (int i = 0; i < request.answers.length; ++i) {
+      assert(request.answers[i.toString()].answer != null);
+    }
+
+    try {
+      DocumentReference ref;
+      ref = FirebaseFirestore.instance
+          .collection('forms')
+          .doc('permission_request_answers');
+
+      final data = request.toData();
+      await ref.set({request.userId: data}, SetOptions(merge: true));
+
+      return userAlreadyRequestedCache = true;
+    } catch (e) {
+      print(e);
+      AppToast.show(S.current.errorSomethingWentWrong);
+      return userAlreadyRequestedCache = false;
+    }
+  }
+
+  Future<bool> userAlreadyRequested(final String userId) async {
+    if (userAlreadyRequestedCache != null) return userAlreadyRequestedCache;
+
+    try {
+      final DocumentSnapshot snap = await FirebaseFirestore.instance
+          .collection('forms')
+          .doc('permission_request_answers')
+          .get();
+      if (snap.data().containsKey(userId)) {
+        return userAlreadyRequestedCache = true;
+      }
+      return userAlreadyRequestedCache = false;
+    } catch (e) {
+      print(e);
+      AppToast.show(S.current.errorSomethingWentWrong);
+      return userAlreadyRequestedCache = false;
     }
   }
 }

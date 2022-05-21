@@ -1,9 +1,10 @@
 import 'package:acs_upb_mobile/authentication/model/user.dart';
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
+import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question.dart';
+import 'package:acs_upb_mobile/pages/class_feedback/service/feedback_provider.dart';
+import 'package:acs_upb_mobile/pages/class_feedback/view/feedback_question.dart';
 import 'package:acs_upb_mobile/pages/settings/model/request.dart';
-import 'package:acs_upb_mobile/pages/settings/service/request_provider.dart';
-import 'package:acs_upb_mobile/resources/utils.dart';
 import 'package:acs_upb_mobile/widgets/button.dart';
 import 'package:acs_upb_mobile/widgets/dialog.dart';
 import 'package:acs_upb_mobile/widgets/scaffold.dart';
@@ -20,17 +21,12 @@ class RequestPermissionsPage extends StatefulWidget {
 }
 
 class _RequestPermissionsPageState extends State<RequestPermissionsPage> {
+  final formKey = GlobalKey<FormState>();
   User user;
   bool agreedToResponsibilities = false;
-  TextEditingController requestController = TextEditingController();
 
-  Future<void> _fetchUser() async {
-    final authProvider = Provider.of<AuthProvider>(context, listen: false);
-    user = await authProvider.currentUser;
-    if (mounted) {
-      setState(() {});
-    }
-  }
+  Map<String, Map<String, String>> questionCategories = {};
+  Map<String, FormQuestion> requestQuestions = {};
 
   AppDialog _requestAlreadyExistsDialog(BuildContext context) {
     return AppDialog(
@@ -45,7 +41,7 @@ class _RequestPermissionsPageState extends State<RequestPermissionsPage> {
             color: Theme.of(context).accentColor,
             width: 130,
             onTap: () async {
-              Navigator.of(context).pop();
+              await _sendRequest();
             }),
       ],
     );
@@ -54,12 +50,94 @@ class _RequestPermissionsPageState extends State<RequestPermissionsPage> {
   @override
   void initState() {
     super.initState();
+    fetchCategories();
+    fetchQuestions();
     _fetchUser();
+  }
+
+  Future<Map<String, dynamic>> fetchCategories() async {
+    await Provider.of<FeedbackProvider>(context, listen: false)
+        .fetchCategories('permission_request_questions')
+        .then((categories) => setState(() => questionCategories = categories));
+    return questionCategories;
+  }
+
+  Future<Map<String, dynamic>> fetchQuestions() async {
+    await Provider.of<FeedbackProvider>(context, listen: false)
+        .fetchQuestions('permission_request_questions')
+        .then((questions) => setState(() => requestQuestions = questions));
+    return requestQuestions;
+  }
+
+  Future<void> _fetchUser() async {
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    user = await authProvider.currentUser;
+    if (mounted) {
+      setState(() {});
+    }
+  }
+
+  Future<void> _sendRequest() async {
+    final requestProvider =
+        Provider.of<FeedbackProvider>(context, listen: false);
+    if (!agreedToResponsibilities) {
+      AppToast.show(
+          '${S.current.warningAgreeTo}${S.current.labelPermissionsConsent}.');
+      return;
+    }
+
+    setState(() {
+      formKey.currentState.save();
+    });
+
+    if (!formKey.currentState.validate()) return;
+    for (int i = 0; i < requestQuestions.length; ++i) {
+      if (requestQuestions.values.elementAt(i).answer == '') {
+        AppToast.show(S.current.warningFieldCannotBeEmpty);
+        Navigator.of(context).pop();
+        return;
+      }
+    }
+
+    final queryResult = await requestProvider.submitRequest(
+      PermissionRequest(
+        userId: user.uid,
+        answers: requestQuestions,
+      ),
+    );
+    if (queryResult) {
+      AppToast.show(S.current.messageRequestHasBeenSent);
+      Navigator.of(context).pop();
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    final requestProvider = Provider.of<RequestProvider>(context);
+    final requestProvider = Provider.of<FeedbackProvider>(context);
+    final List<Widget> children = [];
+
+    for (final category in questionCategories.keys.toList()..sort()) {
+      final List<Widget> categoryChildren = [];
+      for (final question
+          in requestQuestions.values.where((q) => q.category == category)) {
+        categoryChildren.add(
+            FeedbackQuestionFormField(question: question, formKey: formKey));
+      }
+      children.add(
+        Column(
+          children: [
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(15),
+                child: Column(
+                  children: categoryChildren,
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
 
     return AppScaffold(
         title: Text(S.current.navigationAskPermissions),
@@ -67,38 +145,14 @@ class _RequestPermissionsPageState extends State<RequestPermissionsPage> {
           AppScaffoldAction(
               text: S.current.buttonSave,
               onPressed: () async {
-                if (!agreedToResponsibilities) {
-                  AppToast.show(
-                      '${S.current.warningAgreeTo}${S.current.labelPermissionsConsent}.');
-                  return;
-                }
-
-                if (requestController.text == '') {
-                  AppToast.show(S.current.warningRequestEmpty);
-                  return;
-                }
-
-                /*
-                 * Check if there is already a request registered for the current
-                 * user.
-                 */
-                bool queryResult =
+                final bool queryResult =
                     await requestProvider.userAlreadyRequested(user.uid);
-
-                if (queryResult) {
+                if (!queryResult) {
+                  await _sendRequest();
+                } else {
                   await showDialog(
                       context: context, builder: _requestAlreadyExistsDialog);
-                }
-
-                queryResult = await requestProvider.makeRequest(
-                  Request(
-                    userId: user.uid,
-                    requestBody: requestController.text,
-                  ),
-                );
-                if (queryResult) {
-                  AppToast.show(S.current.messageRequestHasBeenSent);
-                  Navigator.of(context).pop();
+                  Navigator.pop(context);
                 }
               })
         ],
@@ -111,27 +165,11 @@ class _RequestPermissionsPageState extends State<RequestPermissionsPage> {
                   child: Image.asset('assets/illustrations/undraw_hiring.png')),
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(20, 20, 20, 8),
-              child: Text(
-                S
-                    .of(context)
-                    .messageAskPermissionToEdit(Utils.packageInfo.appName),
-                style: Theme.of(context).textTheme.headline6,
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 20),
-              child: Text(S.current.messageAnnouncedOnMail,
-                  style: Theme.of(context).textTheme.caption.apply(
-                      color: Theme.of(context).textTheme.headline5.color)),
-            ),
-            Padding(
               padding: const EdgeInsets.all(10),
-              child: TextFormField(
-                keyboardType: TextInputType.multiline,
-                minLines: 1,
-                maxLines: 10,
-                controller: requestController,
+              child: Form(
+                key: formKey,
+                child:
+                    Column(mainAxisSize: MainAxisSize.min, children: children),
               ),
             ),
             Padding(

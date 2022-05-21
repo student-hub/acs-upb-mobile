@@ -254,6 +254,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "messageWebsitePreview" : MessageLookupByLibrary.simpleMessage("Încercați să apăsați, să faceți hover sau să țineți apăsat ca să testați noul website."),
     "messageWelcomeName" : m10,
     "messageWelcomeSimple" : MessageLookupByLibrary.simpleMessage("Bine ai venit!"),
+    "messageYouAlreadyHavePermissions" : MessageLookupByLibrary.simpleMessage("Deja deții permisiuni pentru editare de date publice."),
     "messageYouCanContribute" : MessageLookupByLibrary.simpleMessage("Poți contribui la datele din aplicație, dar trebuie mai întâi să ceri permisiuni."),
     "navigationAdmin" : MessageLookupByLibrary.simpleMessage("Cereri permisiuni"),
     "navigationAskPermissions" : MessageLookupByLibrary.simpleMessage("Cere permisiuni"),

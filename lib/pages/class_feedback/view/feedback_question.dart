@@ -15,7 +15,7 @@ class FeedbackQuestionFormField extends StatefulWidget {
     this.formKey,
   });
 
-  final FeedbackQuestion question;
+  final FormQuestion question;
   final List<Map<int, bool>> answerValues;
   final GlobalKey<FormState> formKey;
 
@@ -158,7 +158,7 @@ class _FeedbackQuestionFormFieldState extends State<FeedbackQuestionFormField> {
           onSaved: (selection) {
             widget.question.answer = selection;
           },
-          items: (widget.question as FeedbackQuestionDropdown)
+          items: (widget.question as FormQuestionDropdown)
               .options
               .map(
                 (type) => DropdownMenuItem<String>(
@@ -177,16 +177,15 @@ class _FeedbackQuestionFormFieldState extends State<FeedbackQuestionFormField> {
   }
 
   Widget feedbackQuestionText() {
+    final FormQuestionText question = widget.question;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          widget.question.question,
-          style: const TextStyle(
-            fontSize: 18,
-          ),
-        ),
+        Text(question.question, style: const TextStyle(fontSize: 18)),
         const SizedBox(height: 12),
+        if (question.additionalInfo != null)
+          Text(question.additionalInfo, style: const TextStyle(fontSize: 12)),
+        if (question.additionalInfo != null) const SizedBox(height: 12),
         Padding(
           padding: const EdgeInsets.all(2),
           child: Column(
@@ -194,7 +193,7 @@ class _FeedbackQuestionFormFieldState extends State<FeedbackQuestionFormField> {
               TextFormField(
                 key: const Key('FeedbackText'),
                 onSaved: (value) {
-                  widget.question.answer = value;
+                  question.answer = value;
                 },
                 keyboardType: TextInputType.multiline,
                 maxLines: null,
@@ -209,13 +208,13 @@ class _FeedbackQuestionFormFieldState extends State<FeedbackQuestionFormField> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.question is FeedbackQuestionSlider) {
+    if (widget.question is FormQuestionSlider) {
       return feedbackQuestionSlider();
-    } else if (widget.question is FeedbackQuestionRating) {
+    } else if (widget.question is FormQuestionRating) {
       return feedbackQuestionRating();
-    } else if (widget.question is FeedbackQuestionDropdown) {
+    } else if (widget.question is FormQuestionDropdown) {
       return feedbackQuestionDropdown();
-    } else if (widget.question is FeedbackQuestionText) {
+    } else if (widget.question is FormQuestionText) {
       return feedbackQuestionText();
     } else {
       return Container();

@@ -33,7 +33,7 @@ class _RequestCardState extends State<RequestCard>
         future: adminProvider.fetchRequest(widget.requestId),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
-            final Request request = snapshot.data;
+            final PermissionRequest request = snapshot.data;
             return Padding(
               padding: const EdgeInsets.fromLTRB(12, 12, 12, 0),
               child: Card(
@@ -45,7 +45,7 @@ class _RequestCardState extends State<RequestCard>
                       _buildUserHeader(request),
                       const SizedBox(height: 10),
                       Text(
-                        request.requestBody ?? '',
+                        request.answers['0'].answer ?? '',
                         textDirection: ui.TextDirection.ltr,
                         style: Theme.of(context)
                             .textTheme
@@ -65,7 +65,7 @@ class _RequestCardState extends State<RequestCard>
         });
   }
 
-  Widget _buildUserHeader(Request request) => FutureBuilder(
+  Widget _buildUserHeader(PermissionRequest request) => FutureBuilder(
       future: Provider.of<AdminProvider>(context).fetchUserById(request.userId),
       builder: (context, snapshot) {
         User user;
@@ -124,7 +124,7 @@ class _RequestCardState extends State<RequestCard>
         ),
       );
 
-  Widget _buildButtons(bool processed, Request request) => Row(
+  Widget _buildButtons(bool processed, PermissionRequest request) => Row(
         crossAxisAlignment: CrossAxisAlignment.end,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -149,7 +149,7 @@ class _RequestCardState extends State<RequestCard>
                   onTap: () async {
                     final adminProvider =
                         Provider.of<AdminProvider>(context, listen: false);
-                    await adminProvider.denyRequest(request.id);
+                    await adminProvider.denyRequest(request.userId);
                     setState(() {
                       request
                         ..accepted = false
@@ -166,7 +166,7 @@ class _RequestCardState extends State<RequestCard>
                   onTap: () async {
                     final adminProvider =
                         Provider.of<AdminProvider>(context, listen: false);
-                    await adminProvider.acceptRequest(request.id);
+                    await adminProvider.acceptRequest(request.userId);
                     setState(() {
                       request
                         ..accepted = true
@@ -191,7 +191,7 @@ class _RequestCardState extends State<RequestCard>
                   onTap: () async {
                     final adminProvider =
                         Provider.of<AdminProvider>(context, listen: false);
-                    await adminProvider.revertRequest(request.id);
+                    await adminProvider.revertRequest(request.userId);
                     setState(() {
                       request
                         ..accepted = false

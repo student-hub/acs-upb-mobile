@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/navigation/routes.dart';
-import 'package:acs_upb_mobile/pages/settings/service/request_provider.dart';
+import 'package:acs_upb_mobile/pages/class_feedback/service/feedback_provider.dart';
 import 'package:acs_upb_mobile/pages/timetable/service/uni_event_provider.dart';
 import 'package:acs_upb_mobile/resources/locale_provider.dart';
 import 'package:acs_upb_mobile/resources/utils.dart';
@@ -100,6 +100,10 @@ class _SettingsPageState extends State<SettingsPage> {
                     } else if (isVerified != true) {
                       AppToast.show(
                           S.current.messageEmailNotVerifiedToPerformAction);
+                    } else if (authProvider
+                            .currentUserFromCache.canEditPublicInfo ||
+                        authProvider.currentUserFromCache.isAdmin) {
+                      AppToast.show(S.current.messageYouAlreadyHavePermissions);
                     } else {
                       Navigator.of(context)
                           .pushNamed(Routes.requestPermissions);
@@ -239,8 +243,8 @@ class _SettingsPageState extends State<SettingsPage> {
 
   Future<String> checkUserPermissionsString() async {
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
-    final requestProvider =
-        Provider.of<RequestProvider>(context, listen: false);
+    final feedbackProvider =
+        Provider.of<FeedbackProvider>(context, listen: false);
 
     if (authProvider.isAuthenticated && !authProvider.isAnonymous) {
       final user = await authProvider.currentUser;
@@ -250,7 +254,7 @@ class _SettingsPageState extends State<SettingsPage> {
         return S.current.settingsPermissionsEdit;
       } else if (user.canAddPublicInfo) {
         return S.current.settingsPermissionsAdd;
-      } else if (await requestProvider.userAlreadyRequested(user.uid)) {
+      } else if (await feedbackProvider.userAlreadyRequested(user.uid)) {
         return S.current.settingsPermissionsRequestSent;
       }
     }

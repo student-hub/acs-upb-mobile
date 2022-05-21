@@ -1,11 +1,11 @@
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/navigation/routes.dart';
+import 'package:acs_upb_mobile/pages/class_feedback/service/feedback_provider.dart';
 import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
 import 'package:acs_upb_mobile/pages/classes/view/classes_page.dart';
 import 'package:acs_upb_mobile/pages/filter/service/filter_provider.dart';
 import 'package:acs_upb_mobile/pages/filter/view/filter_page.dart';
-import 'package:acs_upb_mobile/pages/settings/service/request_provider.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/events/uni_event.dart';
 import 'package:acs_upb_mobile/pages/timetable/service/uni_event_provider.dart';
 import 'package:acs_upb_mobile/pages/timetable/view/date_header.dart';
@@ -151,7 +151,7 @@ class _TimetablePageState extends State<TimetablePage> {
       await Provider.of<ClassProvider>(context, listen: false)
           .fetchClassHeaders(uid: user.uid);
       await Provider.of<FilterProvider>(context, listen: false).fetchFilter();
-      await Provider.of<RequestProvider>(context, listen: false)
+      await Provider.of<FeedbackProvider>(context, listen: false)
           .userAlreadyRequested(user.uid);
 
       // Slight delay between last frame and dialog

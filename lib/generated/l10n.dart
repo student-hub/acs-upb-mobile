@@ -1,7 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-
 import 'intl/messages_all.dart';
 
 // **************************************************************************
@@ -2941,6 +2940,16 @@ class S {
     return Intl.message(
       'Report could not be sent.',
       name: 'messageReportNotSent',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You already have permissions to edit public info.`
+  String get messageYouAlreadyHavePermissions {
+    return Intl.message(
+      'You already have permissions to edit public info.',
+      name: 'messageYouAlreadyHavePermissions',
       desc: '',
       args: [],
     );

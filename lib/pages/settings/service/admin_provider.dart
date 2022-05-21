@@ -1,29 +1,34 @@
 import 'package:acs_upb_mobile/authentication/model/user.dart';
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/generated/l10n.dart';
+import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question.dart';
 import 'package:acs_upb_mobile/pages/settings/model/request.dart';
 import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-extension RequestExtension on Request {
-  static Request fromSnap(DocumentSnapshot snap) {
-    final data = snap.data();
-    return Request(
+extension PermissionRequestExtension on PermissionRequest {
+  static PermissionRequest fromSnap(DocumentSnapshot snap, String requestId) {
+    final data = snap.data()[requestId];
+    final Map<String, FormQuestion> answersMap = {};
+    int i = 0;
+    while (data[i.toString()] != null) {
+      answersMap[i.toString()] = FormQuestion(
+          question: '',
+          category: '',
+          id: i.toString(),
+          answer: data[i.toString()]);
+      i++;
+    }
+    return PermissionRequest(
       userId: data['addedBy'],
-      requestBody: data['requestBody'],
+      answers: answersMap,
       processed: data['done'],
-      type: RequestType.permissions,
       dateSubmitted: data['dateSubmitted'],
       accepted: data['accepted'],
       processedBy: data['processedBy'],
-      id: snap.id,
     );
-  }
-
-  static String getFormId(DocumentSnapshot snap) {
-    return snap.id;
   }
 }
 
@@ -37,13 +42,17 @@ class AdminProvider with ChangeNotifier {
     _authProvider = authProvider;
   }
 
-  Future<List<String>> fetchAllRequestIds() async {
+  Future<List<dynamic>> fetchAllRequestIds() async {
     try {
-      final QuerySnapshot qSnapshot = await _db
-          .collection('forms')
-          .orderBy('dateSubmitted', descending: true)
-          .get();
-      return qSnapshot.docs.map(RequestExtension.getFormId).toList();
+      final snap =
+          await _db.collection('forms').doc('permission_request_answers').get();
+
+      final requests = snap.data().values.toList()
+        ..sort((a, b) {
+          return b['dateSubmitted'].compareTo(a['dateSubmitted']);
+        });
+
+      return requests.map((e) => e['addedBy']).toList();
     } catch (e) {
       print(e);
       AppToast.show(S.current.errorLoadRequests);
@@ -51,14 +60,24 @@ class AdminProvider with ChangeNotifier {
     }
   }
 
-  Future<List<String>> fetchUnprocessedRequestIds() async {
+  Future<List<dynamic>> fetchUnprocessedRequestIds() async {
     try {
-      final QuerySnapshot qSnapshot = await _db
-          .collection('forms')
-          .where('done', isEqualTo: false)
-          .orderBy('dateSubmitted', descending: true)
-          .get();
-      return qSnapshot.docs.map(RequestExtension.getFormId).toList();
+      final snap =
+          await _db.collection('forms').doc('permission_request_answers').get();
+
+      final List<Map<String, dynamic>> list = [];
+      final iterable = snap.data().values;
+      for (int i = 0; i < iterable.length; ++i) {
+        list.add(iterable.elementAt(i));
+      }
+
+      list
+        ..retainWhere((e) => e['done'] == false)
+        ..sort((a, b) {
+          return -a['dateSubmitted'].compareTo(b['dateSubmitted']);
+        });
+
+      return list.map((e) => e['addedBy']).toList();
     } catch (e) {
       print(e);
       AppToast.show(S.current.errorLoadRequests);
@@ -66,11 +85,11 @@ class AdminProvider with ChangeNotifier {
     }
   }
 
-  Future<Request> fetchRequest(String requestId) async {
+  Future<PermissionRequest> fetchRequest(String requestId) async {
     try {
-      final DocumentSnapshot docSnapshot =
-          await _db.collection('forms').doc(requestId).get();
-      return RequestExtension.fromSnap(docSnapshot);
+      final DocumentSnapshot snap =
+          await _db.collection('forms').doc('permission_request_answers').get();
+      return PermissionRequestExtension.fromSnap(snap, requestId);
     } catch (e) {
       print(e);
       AppToast.show(S.current.errorSomethingWentWrong);
@@ -102,10 +121,10 @@ class AdminProvider with ChangeNotifier {
         final request = await fetchRequest(requestId);
         await _giveEditingPermissions(request.userId);
       }
-      await _db.collection('forms').doc(requestId).update({
-        'processedBy': _authProvider.uid,
-        'done': true,
-        'accepted': accepted
+      await _db.collection('forms').doc('permission_request_answers').update({
+        '$requestId.processedBy': _authProvider.uid,
+        '$requestId.done': true,
+        '$requestId.accepted': accepted
       });
     } catch (e) {
       print(e);
@@ -121,12 +140,16 @@ class AdminProvider with ChangeNotifier {
             .collection('users')
             .doc(request.userId)
             .update({'permissionLevel': 0});
+        await _db.collection('forms').doc('permission_request_answers').update({
+          '$requestId.processedBy': '',
+          '$requestId.done': false,
+          '$requestId.accepted': false
+        });
+      } else {
         await _db
             .collection('forms')
-            .doc(requestId)
-            .update({'processedBy': '', 'done': false, 'accepted': false});
-      } else {
-        await _db.collection('forms').doc(requestId).update({'done': false});
+            .doc('permission_request_answers')
+            .update({'$requestId.done': false});
       }
     } catch (e) {
       print(e);

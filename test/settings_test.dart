@@ -1,6 +1,8 @@
 import 'package:acs_upb_mobile/authentication/model/user.dart';
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/main.dart';
+import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question.dart';
+import 'package:acs_upb_mobile/pages/class_feedback/model/questions/question_text.dart';
 import 'package:acs_upb_mobile/pages/class_feedback/service/feedback_provider.dart';
 import 'package:acs_upb_mobile/pages/classes/model/class.dart';
 import 'package:acs_upb_mobile/pages/classes/service/class_provider.dart';
@@ -13,7 +15,6 @@ import 'package:acs_upb_mobile/pages/settings/model/request.dart';
 import 'package:acs_upb_mobile/pages/settings/service/admin_provider.dart';
 import 'package:acs_upb_mobile/pages/settings/service/issue_provider.dart';
 import 'package:acs_upb_mobile/pages/settings/view/feedback_form.dart';
-import 'package:acs_upb_mobile/pages/settings/service/request_provider.dart';
 import 'package:acs_upb_mobile/pages/settings/view/request_permissions.dart';
 import 'package:acs_upb_mobile/pages/settings/view/settings_page.dart';
 import 'package:acs_upb_mobile/pages/timetable/model/events/uni_event.dart';
@@ -38,8 +39,6 @@ class MockWebsiteProvider extends Mock implements WebsiteProvider {}
 
 class MockQuestionProvider extends Mock implements QuestionProvider {}
 
-class MockRequestProvider extends Mock implements RequestProvider {}
-
 class MockIssueProvider extends Mock implements IssueProvider {}
 
 class MockNewsProvider extends Mock implements NewsProvider {}
@@ -56,7 +55,6 @@ void main() {
   AuthProvider mockAuthProvider;
   WebsiteProvider mockWebsiteProvider;
   MockQuestionProvider mockQuestionProvider;
-  RequestProvider mockRequestProvider;
   IssueProvider mockIssueProvider;
   MockNewsProvider mockNewsProvider;
   UniEventProvider mockEventProvider;
@@ -72,7 +70,6 @@ void main() {
             create: (_) => mockWebsiteProvider),
         ChangeNotifierProvider<QuestionProvider>(
             create: (_) => mockQuestionProvider),
-        Provider<RequestProvider>(create: (_) => mockRequestProvider),
         Provider<IssueProvider>(create: (_) => mockIssueProvider),
         ChangeNotifierProvider<NewsProvider>(create: (_) => mockNewsProvider),
         ChangeNotifierProvider<FeedbackProvider>(
@@ -126,12 +123,6 @@ void main() {
       when(mockQuestionProvider.fetchQuestions(limit: anyNamed('limit')))
           .thenAnswer((_) => Future.value(<Question>[]));
 
-      mockRequestProvider = MockRequestProvider();
-      when(mockRequestProvider.makeRequest(any))
-          .thenAnswer((_) => Future.value(true));
-      when(mockRequestProvider.userAlreadyRequested(any))
-          .thenAnswer((_) => Future.value(false));
-
       mockIssueProvider = MockIssueProvider();
       when(mockIssueProvider.makeIssue(any))
           .thenAnswer((_) => Future.value(true));
@@ -160,6 +151,28 @@ void main() {
           .thenAnswer((_) => Future.value(false));
       when(mockFeedbackProvider.getClassesWithCompletedFeedback(any))
           .thenAnswer((_) => Future.value({'M1': true, 'M2': true}));
+      when(mockFeedbackProvider.submitRequest(any))
+          .thenAnswer((_) => Future.value(true));
+      when(mockFeedbackProvider.userAlreadyRequested(any))
+          .thenAnswer((_) => Future.value(false));
+      when(mockFeedbackProvider.fetchCategories(any))
+          .thenAnswer((_) => Future.value({
+                'applications': {'en': 'Applications', 'ro': 'Aplicații'},
+                'homework': {'en': 'Homework', 'ro': 'Temă'},
+                'involvement': {'en': 'Involvement', 'ro': 'Implicare'},
+                'personal': {
+                  'en': 'Personal comments',
+                  'ro': 'Comentarii personale'
+                },
+              }));
+      when(mockFeedbackProvider.fetchQuestions(any))
+          .thenAnswer((_) => Future.value({
+                '0': FormQuestionText(
+                  category: 'personal',
+                  question: 'What are the positive aspects of this class?',
+                  id: '0',
+                )
+              }));
 
       mockClassProvider = MockClassProvider();
       mockAdminProvider = MockAdminProvider();
@@ -269,14 +282,14 @@ void main() {
     });
     group('Request permissions', () {
       setUpAll(() async {
-        when(mockAuthProvider.currentUser).thenAnswer((_) =>
-            Future.value(User(uid: '0', firstName: 'John', lastName: 'Doe')));
+        when(mockAuthProvider.currentUser).thenAnswer((_) => Future.value(User(
+            uid: '0', firstName: 'John', lastName: 'Doe', permissionLevel: 0)));
         when(mockAuthProvider.isAnonymous).thenReturn(false);
       });
 
       testWidgets('Normal scenario', (WidgetTester tester) async {
         when(mockAuthProvider.currentUserFromCache).thenReturn(User(
-            uid: '0', firstName: 'John', lastName: 'Doe', permissionLevel: 4));
+            uid: '0', firstName: 'John', lastName: 'Doe', permissionLevel: 0));
         when(mockAuthProvider.isVerified).thenAnswer((_) => Future.value(true));
 
         await tester.pumpWidget(buildApp());
@@ -291,6 +304,7 @@ void main() {
         await tester.tap(find.byKey(const ValueKey('ask_permissions')));
         await tester.pumpAndSettle();
         expect(find.byType(RequestPermissionsPage), findsOneWidget);
+        await tester.pumpAndSettle();
 
         // Send a request
         await tester.enterText(
@@ -300,14 +314,16 @@ void main() {
         await tester.pumpAndSettle(const Duration(seconds: 2));
 
         // Verify the request is sent and Settings Page pops back
-        verify(mockRequestProvider.makeRequest(any));
+        verify(mockFeedbackProvider.submitRequest(any));
         expect(find.byType(SettingsPage), findsOneWidget);
       });
 
       testWidgets('User has already sent a request scenario',
           (WidgetTester tester) async {
+        when(mockAuthProvider.currentUserFromCache).thenReturn(User(
+            uid: '0', firstName: 'John', lastName: 'Doe', permissionLevel: 0));
         when(mockAuthProvider.isVerified).thenAnswer((_) => Future.value(true));
-        when(mockRequestProvider.userAlreadyRequested(any))
+        when(mockFeedbackProvider.userAlreadyRequested(any))
             .thenAnswer((_) => Future.value(true));
 
         await tester.pumpWidget(buildApp());
@@ -336,14 +352,14 @@ void main() {
         await tester.pumpAndSettle(const Duration(seconds: 2));
 
         // Verify the request is sent and Settings Page pops back
-        verify(mockRequestProvider.makeRequest(any));
+        verify(mockFeedbackProvider.submitRequest(any));
         expect(find.byType(SettingsPage), findsOneWidget);
       });
 
       testWidgets('User is anonymous scenario', (WidgetTester tester) async {
         when(mockAuthProvider.isVerified).thenAnswer((_) => Future.value(true));
         when(mockAuthProvider.isAnonymous).thenReturn(true);
-        when(mockRequestProvider.userAlreadyRequested(any))
+        when(mockFeedbackProvider.userAlreadyRequested(any))
             .thenAnswer((_) => Future.value(false));
 
         await tester.pumpWidget(buildApp());
@@ -366,7 +382,7 @@ void main() {
         when(mockAuthProvider.isVerified)
             .thenAnswer((_) => Future.value(false));
         when(mockAuthProvider.isAnonymous).thenReturn(false);
-        when(mockRequestProvider.userAlreadyRequested(any))
+        when(mockFeedbackProvider.userAlreadyRequested(any))
             .thenAnswer((_) => Future.value(false));
 
         await tester.pumpWidget(buildApp());
@@ -403,7 +419,6 @@ void main() {
         expect(find.byType(RequestPermissionsPage), findsOneWidget);
       });
     });
-
     group('Admin Panel', () {
       setUpAll(() async {
         when(mockAuthProvider.currentUser).thenAnswer((_) =>
@@ -420,8 +435,14 @@ void main() {
             uid: '0', firstName: 'John', lastName: 'Doe', permissionLevel: 3));
         when(mockAdminProvider.fetchUnprocessedRequestIds())
             .thenAnswer((_) => Future.value(['string']));
-        when(mockAdminProvider.fetchRequest('')).thenAnswer(
-            (_) => Future.value(Request(requestBody: 'body', userId: '0')));
+        when(mockAdminProvider.fetchRequest(''))
+            .thenAnswer((_) => Future.value(PermissionRequest(answers: {
+                  '0': FormQuestion(
+                    category: 'category',
+                    question: 'en',
+                    id: '0',
+                  )
+                }, userId: '0')));
 
         await tester.pumpWidget(buildApp());
         await tester.pumpAndSettle();
