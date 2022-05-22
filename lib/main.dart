@@ -33,6 +33,7 @@ import 'pages/portal/service/website_provider.dart';
 import 'pages/settings/service/admin_provider.dart';
 import 'pages/settings/service/issue_provider.dart';
 import 'pages/settings/service/request_provider.dart';
+import 'pages/settings/service/roles_provider.dart';
 import 'pages/settings/view/admin_page.dart';
 import 'pages/settings/view/feedback_form.dart';
 import 'pages/settings/view/request_permissions.dart';
@@ -89,6 +90,7 @@ Future<void> main() async {
           ChangeNotifierProvider<AuthProvider>(
               create: (final _) => authProvider),
           Provider<RequestProvider>(create: (final _) => RequestProvider()),
+          Provider<RolesProvider>(create: (final _) => RolesProvider()),
           Provider<IssueProvider>(create: (final _) => IssueProvider()),
           ChangeNotifierProvider<ClassProvider>(
               create: (final _) => classProvider),
