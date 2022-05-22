@@ -27,7 +27,7 @@ import 'pages/filter/service/filter_provider.dart';
 import 'pages/filter/view/filter_page.dart';
 import 'pages/news_feed/service/news_provider.dart';
 import 'pages/news_feed/service/old_news_provider.dart';
-import 'pages/news_feed/view/news_feed_page.dart';
+import 'pages/news_feed/view/news_navigation_bar.dart';
 import 'pages/people/service/person_provider.dart';
 import 'pages/portal/service/website_provider.dart';
 import 'pages/settings/service/admin_provider.dart';
@@ -200,7 +200,7 @@ class _MyAppState extends State<MyApp> {
             Routes.signUp: (final _) => SignUpView(),
             Routes.faq: (final _) => FaqPage(),
             Routes.filter: (final _) => const FilterPage(),
-            Routes.newsFeed: (final _) => NewsFeedPage(),
+            Routes.newsFeed: (final _) => const NewsNavigationBar(),
             Routes.requestPermissions: (final _) => RequestPermissionsPage(),
             Routes.requestRoles: (final _) => RequestRolesPage(),
             Routes.adminPanel: (final _) => const AdminPanelPage(),

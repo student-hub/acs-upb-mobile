@@ -46,6 +46,7 @@ class AppScaffold extends StatelessWidget {
     this.title,
     final List<AppScaffoldAction> actions,
     this.floatingActionButton,
+    this.appBarBottom,
     this.leading,
     this.needsToBeAuthenticated = false,
   }) : actions = actions ?? [];
@@ -53,6 +54,7 @@ class AppScaffold extends StatelessWidget {
   final Widget body;
   final Widget title;
   final Widget floatingActionButton;
+  final Widget appBarBottom;
   final List<AppScaffoldAction> actions;
   final AppScaffoldAction leading;
   final bool needsToBeAuthenticated;
@@ -139,10 +141,11 @@ class AppScaffold extends StatelessWidget {
                 actionOnTap: () => Utils.signOut(context),
               ),
         appBar: PreferredSize(
-          preferredSize: const Size.fromHeight(40),
+          preferredSize: Size.fromHeight(appBarBottom != null ? 90 : 40),
           child: AppBar(
             title: title,
             centerTitle: true,
+            bottom: appBarBottom,
             backgroundColor: Theme.of(context).primaryColor,
             toolbarOpacity: 0.8,
             leading: _widgetFromAction(leading,

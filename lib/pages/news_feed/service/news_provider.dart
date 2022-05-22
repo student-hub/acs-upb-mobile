@@ -52,6 +52,16 @@ class NewsProvider with ChangeNotifier {
     }
   }
 
+  Future<List<NewsFeedItem>> fetchPersonalNewsFeedItem() async {
+    try {
+      return [];
+    } catch (e) {
+      print(e);
+      AppToast.show(S.current.errorSomethingWentWrong);
+      return null;
+    }
+  }
+
   Future<NewsFeedItem> fetchNewsItemDetails(final String newsId) async {
     try {
       final DocumentSnapshot doc =

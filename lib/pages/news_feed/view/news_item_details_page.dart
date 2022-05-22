@@ -15,16 +15,10 @@ class NewsItemDetailsPage extends StatefulWidget {
   final String newsItemGuid;
 
   @override
-  _NewsItemDetailsState createState() =>
-      // ignore: no_logic_in_create_state
-      _NewsItemDetailsState(newsItemGuid: newsItemGuid);
+  _NewsItemDetailsState createState() => _NewsItemDetailsState();
 }
 
 class _NewsItemDetailsState extends State<NewsItemDetailsPage> {
-  _NewsItemDetailsState({@required this.newsItemGuid});
-
-  final String newsItemGuid;
-
   Future<dynamic> detailsFuture;
 
   @override
@@ -36,7 +30,7 @@ class _NewsItemDetailsState extends State<NewsItemDetailsPage> {
   Future<NewsFeedItem> _getDetails() async {
     final NewsProvider newsProvider =
         Provider.of<NewsProvider>(context, listen: false);
-    return newsProvider.fetchNewsItemDetails(newsItemGuid);
+    return newsProvider.fetchNewsItemDetails(widget.newsItemGuid);
   }
 
   String _formatDate(final String date) =>
@@ -170,5 +164,5 @@ class _NewsItemDetailsState extends State<NewsItemDetailsPage> {
       );
 
   Widget _newsDetailsActions() =>
-      NewsItemDetailsAction(newsItemGuid: newsItemGuid);
+      NewsItemDetailsAction(newsItemGuid: widget.newsItemGuid);
 }
