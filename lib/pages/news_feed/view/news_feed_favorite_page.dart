@@ -17,17 +17,29 @@ class NewsFeedFavoritePage extends StatefulWidget {
 }
 
 class _NewsFeedFavoritePageState extends State<NewsFeedFavoritePage> {
+  Future<dynamic> newsFuture;
+
+  Future<List<NewsFeedItem>> _getFavoriteNewsItems() async {
+    final NewsProvider newsProvider =
+        Provider.of<NewsProvider>(context, listen: false);
+    return newsProvider.fetchFavoriteNewsFeedItems();
+  }
+
   String _formatDate(final String date) {
     final DateTime dateTime = DateTime.parse(date);
     return DateFormat('yyyy-MM-dd').format(dateTime);
   }
 
   @override
-  Widget build(final BuildContext context) {
-    final newsFeedProvider = Provider.of<NewsProvider>(context);
+  void initState() {
+    super.initState();
+    newsFuture = _getFavoriteNewsItems();
+  }
 
+  @override
+  Widget build(final BuildContext context) {
     return FutureBuilder(
-      future: newsFeedProvider.fetchFavoriteNewsFeedItems(),
+      future: newsFuture,
       builder: (final _, final snapshot) {
         if (snapshot.connectionState != ConnectionState.done) {
           return const Center(child: CircularProgressIndicator());
@@ -48,27 +60,45 @@ class _NewsFeedFavoritePageState extends State<NewsFeedFavoritePage> {
           );
         }
 
-        return ListView(
-            children: ListTile.divideTiles(
-          context: context,
-          tiles: newsFeedItems
-              .map(
-                (final item) => ListTile(
-                  title: Text(item.title),
-                  subtitle: Text(_formatDate(item.createdAt)),
-                  trailing: const Icon(Icons.arrow_forward_ios_outlined),
-                  onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute<Map<dynamic, dynamic>>(
-                      builder: (final context) =>
-                          NewsItemDetailsPage(newsItemGuid: item.itemGuid),
-                    ),
+        return displayListViewItems(context, newsFeedItems);
+      },
+    );
+  }
+
+  Widget displayListViewItems(
+      final BuildContext context, final List<NewsFeedItem> children) {
+    return ListView.builder(
+      itemCount: children.length,
+      itemBuilder: (final BuildContext context, final int index) {
+        return Padding(
+          padding: const EdgeInsets.fromLTRB(12, 6, 12, 0),
+          child: Card(
+            child: ListTile(
+              title: Padding(
+                padding: const EdgeInsets.fromLTRB(0, 0, 0, 5),
+                child: Text(
+                  children[index].title,
+                  style: const TextStyle(
+                    fontSize: 14,
                   ),
-                  dense: true,
                 ),
-              )
-              .toList(),
-        ).toList());
+              ),
+              dense: true,
+              subtitle: Text(
+                'Author: ${children[index].source}\nDate: ${_formatDate(children[index].createdAt)}',
+                style: const TextStyle(fontSize: 12),
+              ),
+              trailing: const Icon(Icons.arrow_forward_ios),
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute<Map<dynamic, dynamic>>(
+                  builder: (final context) => NewsItemDetailsPage(
+                      newsItemGuid: children[index].itemGuid),
+                ),
+              ),
+            ),
+          ),
+        );
       },
     );
   }
