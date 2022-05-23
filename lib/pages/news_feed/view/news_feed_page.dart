@@ -60,10 +60,102 @@ class _NewsFeedPageState extends State<NewsFeedPage> {
           );
         }
 
-        return displayListViewItems(context, newsFeedItems);
+        return displayCustomListViewItems(context, newsFeedItems);
       },
     );
   }
+
+  Widget displayCustomListViewItems(
+      final BuildContext context, final List<NewsFeedItem> children) {
+    return ListView.builder(
+      itemCount: children.length,
+      itemBuilder: (final BuildContext context, final int index) {
+        final NewsFeedItem newsFeedItem = children[index];
+        return GestureDetector(
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(12, 6, 12, 0),
+            child: Card(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(12, 12, 0, 12),
+                child: Row(
+                  children: <Widget>[
+                    Expanded(
+                      flex: 6,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          _newsDetailsAuthor(author: newsFeedItem.source),
+                          _newsDetailsTitle(title: newsFeedItem.title),
+                          _newsDetailsTimestamp(
+                              createdAt: newsFeedItem.createdAt),
+                        ],
+                      ),
+                    ),
+                    const Expanded(
+                      flex: 1,
+                      child: Icon(
+                        Icons.keyboard_arrow_right,
+                        color: Colors.grey,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          onTap: () => Navigator.push(
+            context,
+            MaterialPageRoute<Map<dynamic, dynamic>>(
+              builder: (final context) =>
+                  NewsItemDetailsPage(newsItemGuid: children[index].itemGuid),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _newsDetailsAuthor({final String author}) => Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Text(
+            author,
+            style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 12,
+                color: Theme.of(context).primaryColor),
+          ),
+          const Padding(
+            padding: EdgeInsets.only(left: 4, right: 0, top: 0, bottom: 0),
+            child: Text('a postat:', style: TextStyle(fontSize: 12)),
+          ),
+        ],
+      );
+
+  Widget _newsDetailsTitle({final String title}) => Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
+              child: Text(
+                title,
+                style: const TextStyle(
+                  fontSize: 14,
+                ),
+              ),
+            ),
+          ),
+        ],
+      );
+
+  Widget _newsDetailsTimestamp({final String createdAt}) => Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Text('Posted on: ${_formatDate(createdAt)}',
+              style: const TextStyle(fontSize: 12)),
+        ],
+      );
 
   Widget displayListViewItems(
       final BuildContext context, final List<NewsFeedItem> children) {
