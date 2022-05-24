@@ -26,7 +26,7 @@ import 'pages/faq/view/faq_page.dart';
 import 'pages/filter/service/filter_provider.dart';
 import 'pages/filter/view/filter_page.dart';
 import 'pages/news_feed/service/news_provider.dart';
-import 'pages/news_feed/service/old_news_provider.dart';
+import 'pages/news_feed/view/news_create_page.dart';
 import 'pages/news_feed/view/news_navigation_bar.dart';
 import 'pages/people/service/person_provider.dart';
 import 'pages/portal/service/website_provider.dart';
@@ -98,8 +98,6 @@ Future<void> main() async {
               create: (final _) => feedbackProvider),
           ChangeNotifierProvider<PersonProvider>(
               create: (final _) => personProvider),
-          ChangeNotifierProvider<OldNewsProvider>(
-              create: (final _) => OldNewsProvider()),
           ChangeNotifierProxyProvider<AuthProvider, FilterProvider>(
             create: (final _) => FilterProvider(global: true),
             update: (final context, final authProvider, final filterProvider) {
@@ -201,6 +199,7 @@ class _MyAppState extends State<MyApp> {
             Routes.faq: (final _) => FaqPage(),
             Routes.filter: (final _) => const FilterPage(),
             Routes.newsFeed: (final _) => const NewsNavigationBar(),
+            Routes.newsCreate: (final _) => const NewsCreatePage(),
             Routes.requestPermissions: (final _) => RequestPermissionsPage(),
             Routes.requestRoles: (final _) => RequestRolesPage(),
             Routes.adminPanel: (final _) => const AdminPanelPage(),

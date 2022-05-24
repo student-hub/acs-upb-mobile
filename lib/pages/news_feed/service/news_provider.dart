@@ -76,15 +76,6 @@ class NewsProvider with ChangeNotifier {
     }
   }
 
-  bool isNewsItemBookmarked(final String newsItemGuid) {
-    final _currentUser = _authProvider.currentUserFromCache;
-    if (_currentUser.bookmarkedNews == null ||
-        _currentUser.bookmarkedNews.isEmpty) {
-      return false;
-    }
-    return _currentUser.bookmarkedNews.contains(newsItemGuid);
-  }
-
   Future<bool> bookmarkNewsItem(final String newsItemGuid) async {
     try {
       print('bookmarking news item $newsItemGuid');
@@ -127,6 +118,36 @@ class NewsProvider with ChangeNotifier {
       _errorHandler(e);
       return false;
     }
+  }
+
+  Future<bool> savePost(final Map<String, dynamic> info) async {
+    try {
+      await FirebaseFirestore.instance.collection('news').add({
+        'title': info['title'],
+        'body': info['body'],
+        'authorId': _authProvider.currentUserFromCache.uid,
+        'externalSource': '',
+        'externalSourceLink': '',
+        'relevance': '',
+        'category': 'students',
+        'createdAt': FieldValue.serverTimestamp(),
+      });
+
+      notifyListeners();
+      return true;
+    } catch (e) {
+      _errorHandler(e);
+      return false;
+    }
+  }
+
+  bool isNewsItemBookmarked(final String newsItemGuid) {
+    final _currentUser = _authProvider.currentUserFromCache;
+    if (_currentUser.bookmarkedNews == null ||
+        _currentUser.bookmarkedNews.isEmpty) {
+      return false;
+    }
+    return _currentUser.bookmarkedNews.contains(newsItemGuid);
   }
 
   void _errorHandler(final dynamic e, {bool showToast = true}) {
@@ -174,21 +195,22 @@ extension DatabaseNews on NewsFeedItem {
     final String itemGuid = snap.id;
     final String title = data['title'];
     final String body = data['body'];
-    final String source = data['source'];
-    final String type = data['type'];
-    final String createdAt = data['createdAt'].toDate().toString();
-    final String sourceLink = data['sourceLink'];
+    final String externalSource = data['externalSource'];
+    final String externalSourceLink = data['externalSourceLink'];
+    final String authorId = data['authorId'];
+    final String category = data['category'];
     final String relevance = data['relevance'];
+    final String createdAt = data['createdAt'].toDate().toString();
 
     return NewsFeedItem(
         itemGuid: itemGuid,
         title: title,
         body: body,
-        source: source,
-        createdAt: createdAt,
-        type: type,
+        externalSource: externalSource,
+        externalSourceLink: externalSourceLink,
+        authorId: authorId,
+        category: category,
         relevance: relevance,
-        sourceTags: null,
-        sourceLink: sourceLink);
+        createdAt: createdAt);
   }
 }

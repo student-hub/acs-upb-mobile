@@ -87,7 +87,7 @@ class _NewsNavigationBarState extends State<NewsNavigationBar>
           AppScaffoldAction(
             icon: Icons.add,
             tooltip: S.current.navigationSettings,
-            route: Routes.settings,
+            route: Routes.newsCreate,
           )
         ],
       ),

@@ -103,7 +103,7 @@ class _NewsItemDetailsState extends State<NewsItemDetailsPage> {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
-        _newsDetailsAuthor(author: newsFeedItem.source),
+        _newsDetailsAuthor(author: newsFeedItem.externalSource),
         _newsDetailsContent(
             content: newsFeedItem.body,
             captionColor: captionColor,

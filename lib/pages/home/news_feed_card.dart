@@ -7,6 +7,7 @@ import '../../resources/utils.dart';
 import '../../widgets/info_card.dart';
 import '../news_feed/model/news_feed_item.dart';
 import '../news_feed/service/news_provider.dart';
+import '../news_feed/view/news_item_details_page.dart';
 
 class NewsFeedCard extends StatelessWidget {
   @override
@@ -19,14 +20,22 @@ class NewsFeedCard extends StatelessWidget {
         builder: (final newsFeedItems) {
           return Column(
               children: newsFeedItems
-                  .map((final item) => ListTile(
-                        title: Text(item.title),
-                        subtitle: Text(item.createdAt),
-                        trailing: const Icon(Icons.arrow_forward_ios_outlined),
-                        contentPadding: EdgeInsets.zero,
-                        dense: true,
-                        onTap: () => Utils.launchURL(item.sourceLink),
-                      ))
+                  .map(
+                    (final item) => ListTile(
+                      title: Text(item.title),
+                      subtitle: Text(item.createdAt),
+                      trailing: const Icon(Icons.arrow_forward_ios_outlined),
+                      contentPadding: EdgeInsets.zero,
+                      dense: true,
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute<Map<dynamic, dynamic>>(
+                          builder: (final context) =>
+                              NewsItemDetailsPage(newsItemGuid: item.itemGuid),
+                        ),
+                      ),
+                    ),
+                  )
                   .toList());
         });
   }
