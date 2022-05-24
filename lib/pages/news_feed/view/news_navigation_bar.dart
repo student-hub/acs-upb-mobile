@@ -3,11 +3,11 @@ import 'package:provider/provider.dart';
 
 import '../../../authentication/service/auth_provider.dart';
 import '../../../generated/l10n.dart';
+import '../../../navigation/routes.dart';
 import '../../../widgets/scaffold.dart';
 import '../../settings/view/source_page.dart';
-import 'news_feed_favorite_page.dart';
+import '../service/news_provider.dart';
 import 'news_feed_page.dart';
-import 'news_feed_personal_page.dart';
 
 class NewsNavigationBar extends StatefulWidget {
   const NewsNavigationBar({this.tabIndex = 0});
@@ -37,10 +37,20 @@ class _NewsNavigationBarState extends State<NewsNavigationBar>
         });
       }
     });
+
+    final NewsProvider newsProvider =
+        Provider.of<NewsProvider>(context, listen: false);
+
     tabs = [
-      const NewsFeedPage(key: PageStorageKey('NewsFeed')),
-      const NewsFeedFavoritePage(key: PageStorageKey('NeqSnawsFeedFavorite')),
-      const NewsFeedPersonalPage(key: PageStorageKey('NewsFeedPersonal')),
+      NewsFeedPage(
+          fetchNewsFuture: newsProvider.fetchNewsFeedItems,
+          key: const PageStorageKey('NewsFeed')),
+      NewsFeedPage(
+          fetchNewsFuture: newsProvider.fetchFavoriteNewsFeedItems,
+          key: const PageStorageKey('NewsFeedFavorite')),
+      NewsFeedPage(
+          fetchNewsFuture: newsProvider.fetchPersonalNewsFeedItem,
+          key: const PageStorageKey('NewsFeedPersonal')),
     ];
 
     // Show "Select sources" page if user has no preference set
@@ -73,6 +83,13 @@ class _NewsNavigationBarState extends State<NewsNavigationBar>
           bucket: bucket,
         ),
         appBarBottom: newsNavigationBar(context),
+        actions: [
+          AppScaffoldAction(
+            icon: Icons.add,
+            tooltip: S.current.navigationSettings,
+            route: Routes.settings,
+          )
+        ],
       ),
     );
   }

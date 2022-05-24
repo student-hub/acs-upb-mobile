@@ -10,7 +10,9 @@ import '../service/news_provider.dart';
 import 'news_item_details_page.dart';
 
 class NewsFeedPage extends StatefulWidget {
-  const NewsFeedPage({final Key key}) : super(key: key);
+  const NewsFeedPage({this.fetchNewsFuture, final Key key}) : super(key: key);
+
+  final Future<List<NewsFeedItem>> Function({int limit}) fetchNewsFuture;
 
   @override
   _NewsFeedPageState createState() => _NewsFeedPageState();
@@ -24,16 +26,14 @@ class _NewsFeedPageState extends State<NewsFeedPage> {
     return DateFormat('yyyy-MM-dd').format(dateTime);
   }
 
-  Future<List<NewsFeedItem>> _getNewsItems() async {
-    final NewsProvider newsProvider =
-        Provider.of<NewsProvider>(context, listen: false);
-    return newsProvider.fetchNewsFeedItems();
-  }
-
   @override
   void initState() {
     super.initState();
-    newsFuture = _getNewsItems();
+    newsFuture = _getNews();
+  }
+
+  Future<List<NewsFeedItem>> _getNews() async {
+    return widget.fetchNewsFuture();
   }
 
   @override
@@ -122,12 +122,15 @@ class _NewsFeedPageState extends State<NewsFeedPage> {
             author,
             style: TextStyle(
                 fontWeight: FontWeight.bold,
-                fontSize: 12,
+                fontSize: 14,
                 color: Theme.of(context).primaryColor),
           ),
           const Padding(
             padding: EdgeInsets.only(left: 4, right: 0, top: 0, bottom: 0),
-            child: Text('a postat:', style: TextStyle(fontSize: 12)),
+            child: Text(
+              'a postat:',
+              style: TextStyle(fontSize: 14),
+            ),
           ),
         ],
       );
@@ -137,7 +140,7 @@ class _NewsFeedPageState extends State<NewsFeedPage> {
         children: [
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
+              padding: const EdgeInsets.fromLTRB(0, 4, 0, 8),
               child: Text(
                 title,
                 style: const TextStyle(

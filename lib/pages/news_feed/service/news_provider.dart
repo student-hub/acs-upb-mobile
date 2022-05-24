@@ -33,7 +33,8 @@ class NewsProvider with ChangeNotifier {
     }
   }
 
-  Future<List<NewsFeedItem>> fetchFavoriteNewsFeedItems() async {
+  Future<List<NewsFeedItem>> fetchFavoriteNewsFeedItems(
+      {final int limit}) async {
     try {
       final bookmarkedNews = getBookmarkedNews();
       if (bookmarkedNews == null || bookmarkedNews.isEmpty) {
@@ -52,7 +53,8 @@ class NewsProvider with ChangeNotifier {
     }
   }
 
-  Future<List<NewsFeedItem>> fetchPersonalNewsFeedItem() async {
+  Future<List<NewsFeedItem>> fetchPersonalNewsFeedItem(
+      {final int limit}) async {
     try {
       return [];
     } catch (e) {
