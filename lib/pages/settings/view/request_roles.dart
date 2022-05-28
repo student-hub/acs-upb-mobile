@@ -9,6 +9,7 @@ import '../../../widgets/button.dart';
 import '../../../widgets/dialog.dart';
 import '../../../widgets/scaffold.dart';
 import '../../../widgets/toast.dart';
+import '../../filter/view/filter_dropdown.dart';
 import '../model/role_request.dart';
 import '../service/roles_provider.dart';
 
@@ -22,7 +23,8 @@ class RequestRolesPage extends StatefulWidget {
 class _RequestRolesPageState extends State<RequestRolesPage> {
   User user;
   bool agreedToResponsibilities = false;
-  TextEditingController requestController = TextEditingController();
+  final requestController = TextEditingController();
+  final rolesDropdownController = FilterDropdownController();
 
   Future<void> _fetchUser() async {
     final authProvider = Provider.of<AuthProvider>(context, listen: false);

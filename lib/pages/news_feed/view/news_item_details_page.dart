@@ -42,7 +42,7 @@ class _NewsItemDetailsState extends State<NewsItemDetailsPage> {
       title: const Text('Detalii'),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(12, 12, 12, 0),
+          padding: const EdgeInsets.all(12),
           child: Card(
             child: Padding(
               padding: const EdgeInsets.all(12),
@@ -117,7 +117,12 @@ class _NewsItemDetailsState extends State<NewsItemDetailsPage> {
   Widget _newsDetailsAuthor({final String author}) => Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          Text(author, style: const TextStyle(fontWeight: FontWeight.bold)),
+          Flexible(
+            child: Text(
+              author,
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ),
           const Padding(
             padding: EdgeInsets.only(left: 4, right: 0, top: 0, bottom: 0),
             child: Text('a postat:'),
@@ -133,33 +138,39 @@ class _NewsItemDetailsState extends State<NewsItemDetailsPage> {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Expanded(
-              child: Padding(
-            padding: const EdgeInsets.only(top: 12, bottom: 12),
-            child: MarkdownBody(
-              fitContent: false,
-              onTapLink: (final text, final link, final title) =>
-                  Utils.launchURL(link),
-              /*
+            child: Padding(
+              padding: const EdgeInsets.only(top: 12, bottom: 12),
+              child: MarkdownBody(
+                fitContent: false,
+                onTapLink: (final text, final link, final title) =>
+                    Utils.launchURL(link),
+                /*
                   This is a workaround because the strings in Firebase represent
                   newlines as '\n' and Firebase replaces them with '\\n'. We need
                   to replace them back for them to display properly.
                   (See GitHub issue firebase/firebase-js-sdk#2366)
                   */
-              data: content.replaceAll('\\n', '\n'),
-              extensionSet: md.ExtensionSet(
-                  md.ExtensionSet.gitHubFlavored.blockSyntaxes, [
-                md.EmojiSyntax(),
-                ...md.ExtensionSet.gitHubFlavored.inlineSyntaxes
-              ]),
+                data: content.replaceAll('\\n', '\n'),
+                extensionSet: md.ExtensionSet(
+                  md.ExtensionSet.gitHubFlavored.blockSyntaxes,
+                  [
+                    md.EmojiSyntax(),
+                    ...md.ExtensionSet.gitHubFlavored.inlineSyntaxes
+                  ],
+                ),
+              ),
             ),
-          ))
+          ),
         ],
       );
 
   Widget _newsDetailsTimestamp({final String createdAt}) => Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          Text('Posted on: $createdAt', style: const TextStyle(fontSize: 12)),
+          Text(
+            'Posted on: $createdAt',
+            style: const TextStyle(fontSize: 12),
+          ),
         ],
       );
 

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:pref/pref.dart';
 import 'package:provider/provider.dart';
 
 import '../../../generated/l10n.dart';
 import '../../../widgets/scaffold.dart';
 import '../../../widgets/toast.dart';
 import '../service/news_provider.dart';
+import 'news_preview_create_page.dart';
 
 class NewsCreatePage extends StatefulWidget {
   const NewsCreatePage({final Key key}) : super(key: key);
@@ -63,10 +63,20 @@ class _NewsCreatePageState extends State<NewsCreatePage> {
                           'assets/illustrations/undraw_add_notes.png'),
                     ),
                   ),
-                  const Text(
+                  Row(
+                    children: <Widget>[
+                      const Text(
+                        'Configure your new post:',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
                     'Choose an appropriate title for your post. This title will be displayed in the news feed. It should be not very long, but descriptive (max. 50 chars).',
                     textAlign: TextAlign.justify,
-                    style: TextStyle(fontSize: 12),
+                    style: Theme.of(context).textTheme.caption.apply(
+                        color: Theme.of(context).textTheme.headline5.color),
                   ),
                   TextFormField(
                     decoration: const InputDecoration(
@@ -82,10 +92,11 @@ class _NewsCreatePageState extends State<NewsCreatePage> {
                     },
                   ),
                   const SizedBox(height: 40),
-                  const Text(
+                  Text(
                     'Enter the content of your post. This text will be displayed when clicked on by the user. You can use Markdown syntax to better format your post.',
                     textAlign: TextAlign.justify,
-                    style: TextStyle(fontSize: 12),
+                    style: Theme.of(context).textTheme.caption.apply(
+                        color: Theme.of(context).textTheme.headline5.color),
                   ),
                   TextFormField(
                     minLines: 1,
@@ -102,7 +113,45 @@ class _NewsCreatePageState extends State<NewsCreatePage> {
                       }
                       return null;
                     },
-                  )
+                  ),
+                  const SizedBox(height: 20),
+                  GestureDetector(
+                    child: Row(
+                      children: <Widget>[
+                        Text(
+                          'Preview post',
+                          style: Theme.of(context)
+                              .accentTextTheme
+                              .subtitle2
+                              .copyWith(color: Theme.of(context).accentColor),
+                        ),
+                      ],
+                    ),
+                    onTap: () {
+                      final title = postTitleController.text;
+                      final body = postBodyController.text;
+
+                      if (title?.isEmpty ?? true) {
+                        AppToast.show('Please enter a title');
+                        return;
+                      }
+
+                      if (body?.isEmpty ?? true) {
+                        AppToast.show('Please enter some content');
+                        return;
+                      }
+
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute<Map<dynamic, dynamic>>(
+                          builder: (final context) => NewsPreviewCreatePage(
+                            title: postTitleController.text,
+                            body: postBodyController.text,
+                          ),
+                        ),
+                      );
+                    },
+                  ),
                 ],
               ),
             )
