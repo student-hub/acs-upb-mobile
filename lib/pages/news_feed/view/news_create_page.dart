@@ -55,9 +55,18 @@ class _NewsCreatePageState extends State<NewsCreatePage> {
               key: formKey,
               child: Column(
                 children: [
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10),
+                    child: SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.25,
+                      child: Image.asset(
+                          'assets/illustrations/undraw_add_notes.png'),
+                    ),
+                  ),
                   const Text(
                     'Choose an appropriate title for your post. This title will be displayed in the news feed. It should be not very long, but descriptive (max. 50 chars).',
                     textAlign: TextAlign.justify,
+                    style: TextStyle(fontSize: 12),
                   ),
                   TextFormField(
                     decoration: const InputDecoration(
@@ -72,10 +81,11 @@ class _NewsCreatePageState extends State<NewsCreatePage> {
                       return null;
                     },
                   ),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 40),
                   const Text(
                     'Enter the content of your post. This text will be displayed when clicked on by the user. You can use Markdown syntax to better format your post.',
                     textAlign: TextAlign.justify,
+                    style: TextStyle(fontSize: 12),
                   ),
                   TextFormField(
                     minLines: 1,
