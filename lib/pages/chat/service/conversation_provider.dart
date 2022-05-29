@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:acs_upb_mobile/pages/chat/model/conversation.dart';
 import 'package:acs_upb_mobile/pages/chat/model/message.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -24,6 +26,7 @@ extension DatabaseConversation on Conversation {
 
 class ConversationProvider with ChangeNotifier {
   List<Message> _savedMessages;
+  final _flagMap = HashMap<int, bool>();
   Conversation conv;
 
   void initListOfMessages() {
@@ -44,6 +47,10 @@ class ConversationProvider with ChangeNotifier {
           entity: 'Polly',
           isFlagged: false),
     ];
+
+    for (int i = 0; i < 4; i++) {
+      _flagMap[i] = false;
+    }
   }
 
   
@@ -53,6 +60,14 @@ class ConversationProvider with ChangeNotifier {
 
   void updateListOfMessages(Message messageConv) {
     _savedMessages.insert(0, messageConv);
+  }
+
+  void flagMess(int idx, bool val) {
+    _flagMap[idx] = val;
+  }
+
+  bool isFlagged(int idx) {
+    return _flagMap[idx];
   }
 
   Future<void> flagMessage(int idx, bool isFlagged) async {

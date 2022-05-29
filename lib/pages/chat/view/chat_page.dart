@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:acs_upb_mobile/authentication/model/user.dart';
 import 'package:acs_upb_mobile/authentication/service/auth_provider.dart';
 import 'package:acs_upb_mobile/pages/chat/model/conversation.dart';
@@ -22,7 +24,7 @@ class _ChatPageState extends State<ChatPage> {
   List<ChatMessage> _messages;
   final _textController = TextEditingController();
   final FocusNode _focusNode = FocusNode();
-  int _idxMess = 2;
+  int _idxMess = 4;
   MessageRasa _futureMessage;
   Conversation conversation;
   User user;
@@ -99,6 +101,9 @@ class _ChatPageState extends State<ChatPage> {
               controller: _textController,
               onSubmitted: (value) async {
                 if (_textController.text.isNotEmpty) {
+                  setState(() {
+                    _sendButtonColor = Theme.of(context).disabledColor;
+                  });
                   await _handleMessages();
                 }
               },
@@ -125,6 +130,9 @@ class _ChatPageState extends State<ChatPage> {
               color: _sendButtonColor,
               onPressed: () async {
                 if (_textController.text.isNotEmpty) {
+                  setState(() {
+                    _sendButtonColor = Theme.of(context).disabledColor;
+                  });
                   await _handleMessages();
                 }
               },
@@ -136,9 +144,10 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   Future<void> _handleMessages() async {
-    final auxMessage =
-        await createMessage(_textController.text, user.uid, languagePref);
+    String messContent = _textController.text;
     _handleSubmitted(_textController.text);
+    final auxMessage =
+    await createMessage(messContent, user.uid, languagePref);
     setState(() {
       _futureMessage = auxMessage;
       final ChatMessage message = ChatMessage(
@@ -151,6 +160,8 @@ class _ChatPageState extends State<ChatPage> {
           content: _futureMessage.messageText,
           entity: 'Polly',
           isFlagged: false);
+      Provider.of<ConversationProvider>(context, listen: false)
+          .flagMess(_idxMess, false);
       _idxMess = _idxMess + 1;
       Provider.of<ConversationProvider>(context, listen: false)
           .updateConversation(conversation.uid, messageConv, languagePref);
@@ -170,6 +181,8 @@ class _ChatPageState extends State<ChatPage> {
         content: messageContent,
         entity: 'Human',
         isFlagged: false);
+    Provider.of<ConversationProvider>(context, listen: false)
+        .flagMess(_idxMess, false);
     Provider.of<ConversationProvider>(context, listen: false)
         .updateListOfMessages(messageConv);
     _idxMess = _idxMess + 1;
@@ -193,8 +206,6 @@ class ChatMessage extends StatefulWidget {
 }
 
 class _ChatMessage extends State<ChatMessage> {
-  bool _isFlagged = false;
-  Color _flagColor;
 
   @override
   Widget build(BuildContext context) {
@@ -226,27 +237,33 @@ class _ChatMessage extends State<ChatMessage> {
                       ),
                       GestureDetector(
                         child: Icon(Icons.flag,
-                            color:
-                                _flagColor ?? Theme.of(context).primaryColor),
+                            color: Provider.of<ConversationProvider>(context,
+                                        listen: false)
+                                    .isFlagged(widget.idx)
+                                ? Theme.of(context).errorColor
+                                : Theme.of(context).primaryColor),
                         onTap: () {
-                          _flagMessage();
+                          _flagMessage(widget.idx);
                         },
                       )
                     ])),
     );
   }
 
-  void _flagMessage() {
+  void _flagMessage(int idx) {
     setState(() {
-      if (_isFlagged) {
-        _isFlagged = false;
-        _flagColor = Theme.of(context).primaryColor;
+      if (Provider.of<ConversationProvider>(context, listen: false)
+          .isFlagged(idx)) {
+        Provider.of<ConversationProvider>(context, listen: false)
+            .flagMess(idx, false);
+        Provider.of<ConversationProvider>(context, listen: false)
+            .flagMessage(widget.idx, false);
       } else {
-        _isFlagged = true;
-        _flagColor = Theme.of(context).errorColor;
+        Provider.of<ConversationProvider>(context, listen: false)
+            .flagMess(idx, true);
+        Provider.of<ConversationProvider>(context, listen: false)
+            .flagMessage(widget.idx, true);
       }
     });
-    Provider.of<ConversationProvider>(context, listen: false)
-        .flagMessage(widget.idx, _isFlagged);
   }
 }
