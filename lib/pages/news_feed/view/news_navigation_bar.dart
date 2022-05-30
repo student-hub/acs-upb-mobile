@@ -43,14 +43,17 @@ class _NewsNavigationBarState extends State<NewsNavigationBar>
 
     tabs = [
       NewsFeedPage(
-          fetchNewsFuture: newsProvider.fetchNewsFeedItems,
-          key: const PageStorageKey('NewsFeed')),
+        fetchNewsFuture: newsProvider.fetchNewsFeedItems,
+        key: const PageStorageKey('NewsFeed'),
+      ),
       NewsFeedPage(
-          fetchNewsFuture: newsProvider.fetchFavoriteNewsFeedItems,
-          key: const PageStorageKey('NewsFeedFavorite')),
+        fetchNewsFuture: newsProvider.fetchFavoriteNewsFeedItems,
+        key: const PageStorageKey('NewsFeedFavorite'),
+      ),
       NewsFeedPage(
-          fetchNewsFuture: newsProvider.fetchPersonalNewsFeedItem,
-          key: const PageStorageKey('NewsFeedPersonal')),
+        fetchNewsFuture: newsProvider.fetchPersonalNewsFeedItem,
+        key: const PageStorageKey('NewsFeedPersonal'),
+      ),
     ];
 
     // Show "Select sources" page if user has no preference set

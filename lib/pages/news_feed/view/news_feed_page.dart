@@ -67,52 +67,55 @@ class _NewsFeedPageState extends State<NewsFeedPage> {
 
   Widget displayCustomListViewItems(
       final BuildContext context, final List<NewsFeedItem> children) {
-    return ListView.builder(
-      itemCount: children.length,
-      itemBuilder: (final BuildContext context, final int index) {
-        final NewsFeedItem newsFeedItem = children[index];
-        return GestureDetector(
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(12, 6, 12, 0),
-            child: Card(
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(12, 12, 0, 12),
-                child: Row(
-                  children: <Widget>[
-                    Expanded(
-                      flex: 6,
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: <Widget>[
-                          _newsDetailsAuthor(
-                              author: newsFeedItem.externalSource),
-                          _newsDetailsTitle(title: newsFeedItem.title),
-                          _newsDetailsTimestamp(
-                              createdAt: newsFeedItem.createdAt),
-                        ],
+    return RefreshIndicator(
+      onRefresh: _refreshNews,
+      child: ListView.builder(
+        itemCount: children.length,
+        itemBuilder: (final BuildContext context, final int index) {
+          final NewsFeedItem newsFeedItem = children[index];
+          return GestureDetector(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(12, 6, 12, 0),
+              child: Card(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(12, 12, 0, 12),
+                  child: Row(
+                    children: <Widget>[
+                      Expanded(
+                        flex: 6,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            _newsDetailsAuthor(
+                                author: newsFeedItem.externalSource),
+                            _newsDetailsTitle(title: newsFeedItem.title),
+                            _newsDetailsTimestamp(
+                                createdAt: newsFeedItem.createdAt),
+                          ],
+                        ),
                       ),
-                    ),
-                    const Expanded(
-                      flex: 1,
-                      child: Icon(
-                        Icons.keyboard_arrow_right,
-                        color: Colors.grey,
+                      const Expanded(
+                        flex: 1,
+                        child: Icon(
+                          Icons.keyboard_arrow_right,
+                          color: Colors.grey,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
-          onTap: () => Navigator.push(
-            context,
-            MaterialPageRoute<Map<dynamic, dynamic>>(
-              builder: (final context) =>
-                  NewsItemDetailsPage(newsItemGuid: children[index].itemGuid),
+            onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute<Map<dynamic, dynamic>>(
+                builder: (final context) =>
+                    NewsItemDetailsPage(newsItemGuid: children[index].itemGuid),
+              ),
             ),
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
 
@@ -160,6 +163,20 @@ class _NewsFeedPageState extends State<NewsFeedPage> {
               style: const TextStyle(fontSize: 12)),
         ],
       );
+
+  Future<void> _refreshNews() async {
+    await Future.delayed(
+      const Duration(seconds: 2),
+      () async {
+        final List<NewsFeedItem> refreshedNewsItems = await _getNews();
+        setState(
+          () {
+            newsFuture = Future.value(refreshedNewsItems);
+          },
+        );
+      },
+    );
+  }
 
   Widget displayListViewItems(
       final BuildContext context, final List<NewsFeedItem> children) {
