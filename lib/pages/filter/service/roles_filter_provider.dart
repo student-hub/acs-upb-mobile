@@ -34,8 +34,15 @@ class RolesFilterProvider with ChangeNotifier {
         levelNames.add(Map<String, String>.from(name));
       }
 
+      final localizations = <String, Map<String, String>>{};
+      final localizationsData = rolesData['localizations'];
+      localizationsData.forEach((final String key, final dynamic value) {
+        localizations[key] = Map<String, String>.from(value);
+      });
+
       final root = rolesData['root'];
       _rolesFilter = Filter(
+        localizations: localizations,
         localizedLevelNames: levelNames,
         root: FilterNodeExtension.fromMap(root, 'All'),
       );

@@ -9,13 +9,13 @@ extension RoleRequestExtension on RoleRequest {
   Map<String, dynamic> toData() {
     final Map<String, dynamic> data = {};
 
-    if (userId != null) data['addedBy'] = userId;
+    if (userId != null) data['userId'] = userId;
+    if (roleName != null) data['roleName'] = roleName;
     if (requestBody != null) data['requestBody'] = requestBody;
-    data['done'] = processed;
-    data['dateSubmitted'] = Timestamp.now();
-    data['type'] = type.toShortString();
-    data['roleName'] = roleName;
     data['accepted'] = false;
+    data['processed'] = false;
+    data['processedBy'] = null;
+    data['dateSubmitted'] = Timestamp.now();
 
     return data;
   }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import '../../../authentication/model/user.dart';
@@ -71,77 +72,112 @@ class _RequestRolesPageState extends State<RequestRolesPage> {
           text: S.current.buttonSave,
           onPressed: () async {
             print('Save the new roles');
+            if (rolesDropdownController.path == null ||
+                rolesDropdownController.path.length < 2) {
+              AppToast.show('You need to select a role.');
+              return;
+            }
 
-            final queryResult = await rolesProvider.makeRequest(RoleRequest(
-                userId: user.uid, requestBody: requestController.text));
+            if (requestController.text == '') {
+              AppToast.show(
+                  'You need to specify why you want to apply for this role.');
+              return;
+            }
+
+            if (!agreedToResponsibilities) {
+              AppToast.show('You need to agree to the responsibilities.');
+              return;
+            }
+
+            final queryResult = await rolesProvider.makeRequest(
+              RoleRequest(
+                userId: user.uid,
+                roleName: rolesDropdownController.path.join('-'),
+                requestBody: requestController.text,
+              ),
+            );
             if (queryResult) {
               AppToast.show(S.current.messageRequestHasBeenSent);
               if (!mounted) return;
               Navigator.of(context).pop();
+            } else {
+              AppToast.show('Request could not be made!');
             }
           },
         ),
       ],
-      body: ListView(
-        children: [
-          RolesFilterDropdown(
-            controller: rolesDropdownController,
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 10),
-            child: SizedBox(
+      body: Padding(
+        padding: const EdgeInsets.fromLTRB(12, 0, 12, 12),
+        child: ListView(
+          children: [
+            SizedBox(
               height: MediaQuery.of(context).size.height * 0.25,
               child: Image.asset('assets/illustrations/undraw_upgrade.png'),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(20, 20, 20, 8),
-            child: Text(
-              'Why do you want to apply for this role?',
-              style: Theme.of(context).textTheme.headline6,
+            const Text(
+              'ACS UPB Mobile encourages students to contribute in posting useful content on the platform. Roles help students post content from a specific position: on behalf of an organization, as a student representative or simply as a normal student.',
+              textAlign: TextAlign.justify,
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 20),
-            child: Text(S.current.messageAnnouncedOnMail,
-                style: Theme.of(context)
-                    .textTheme
-                    .caption
-                    .apply(color: Theme.of(context).textTheme.headline5.color)),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(10),
-            child: TextFormField(
+            const Padding(
+              padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
+              child: Text(
+                'You will receive a mail confirmation if your request is approved. ',
+              ),
+            ),
+            const Padding(
+              padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
+              child: Text(
+                'Select the role you want to apply for:',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ),
+            RolesFilterDropdown(
+              controller: rolesDropdownController,
+              leftPadding: 10,
+              textStyle: Theme.of(context)
+                  .textTheme
+                  .caption
+                  .apply(color: Theme.of(context).hintColor),
+            ),
+            const Padding(
+              padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
+              child: Text(
+                'Why do you want to apply for this role?',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ),
+            TextFormField(
               keyboardType: TextInputType.multiline,
               minLines: 1,
               maxLines: 10,
               controller: requestController,
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(10),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Checkbox(
-                  value: agreedToResponsibilities,
-                  visualDensity: VisualDensity.compact,
-                  onChanged: (final value) =>
-                      setState(() => agreedToResponsibilities = value),
-                ),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 10.25),
-                    child: Text(
-                      S.current.messageAgreePermissions,
-                      style: Theme.of(context).textTheme.subtitle1,
+            Padding(
+              padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Checkbox(
+                    value: agreedToResponsibilities,
+                    visualDensity: VisualDensity.compact,
+                    onChanged: (final value) =>
+                        setState(() => agreedToResponsibilities = value),
+                  ),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 10.25),
+                      child: Text(
+                        'I will only upload information that is correct and relevant to this role, to the best of my knowledge. I understand that posting inappropriate content or abusing this role will lead to having it permanently revoked.',
+                        style: Theme.of(context).textTheme.caption.apply(
+                            color: Theme.of(context).textTheme.headline5.color),
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

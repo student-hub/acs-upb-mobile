@@ -7,6 +7,9 @@ import '../service/roles_filter_provider.dart';
 
 class RolesFilterDropdownController {
   _RolesFilterDropdownState _dropdownTreeState;
+
+  List<String> get path =>
+      _dropdownTreeState.nodes.map((final e) => e.name).skip(1).toList();
 }
 
 class RolesFilterDropdown extends StatefulWidget {
@@ -54,14 +57,18 @@ class _RolesFilterDropdownState extends State<RolesFilterDropdown> {
                 value: nodes.length > i + 1 ? nodes[i + 1] : null,
                 items: nodes[i]
                     .children
-                    .map((final node) => DropdownMenuItem(
-                          value: node,
-                          child: Padding(
-                            padding:
-                                EdgeInsets.only(left: widget.leftPadding ?? 0),
-                            child: Text(node.localizedName(context)),
+                    .map(
+                      (final node) => DropdownMenuItem(
+                        value: node,
+                        child: Padding(
+                          padding:
+                              EdgeInsets.only(left: widget.leftPadding ?? 0),
+                          child: Text(
+                            filter.localizeFilterName(node.name, context),
                           ),
-                        ))
+                        ),
+                      ),
+                    )
                     .toList(),
                 onChanged: (final selected) => setState(
                   () {
