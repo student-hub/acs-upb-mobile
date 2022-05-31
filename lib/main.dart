@@ -24,6 +24,7 @@ import 'pages/classes/service/class_provider.dart';
 import 'pages/faq/service/faq_question_provider.dart';
 import 'pages/faq/view/faq_page.dart';
 import 'pages/filter/service/filter_provider.dart';
+import 'pages/filter/service/roles_filter_provider.dart';
 import 'pages/filter/view/filter_page.dart';
 import 'pages/news_feed/service/news_provider.dart';
 import 'pages/news_feed/view/news_create_page.dart';
@@ -92,6 +93,8 @@ Future<void> main() async {
           Provider<RequestProvider>(create: (final _) => RequestProvider()),
           Provider<RolesProvider>(create: (final _) => RolesProvider()),
           Provider<IssueProvider>(create: (final _) => IssueProvider()),
+          ChangeNotifierProvider<RolesFilterProvider>(
+              create: (final _) => RolesFilterProvider()),
           ChangeNotifierProvider<ClassProvider>(
               create: (final _) => classProvider),
           ChangeNotifierProvider<FeedbackProvider>(
