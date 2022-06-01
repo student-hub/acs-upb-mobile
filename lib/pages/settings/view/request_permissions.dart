@@ -124,9 +124,10 @@ class _RequestPermissionsPageState extends State<RequestPermissionsPage> {
             ),
             Padding(
               padding: const EdgeInsets.only(left: 20),
-              child: Text(S.current.messageAnnouncedOnMail,
-                  style: Theme.of(context).textTheme.caption.apply(
-                      color: Theme.of(context).textTheme.headline5.color)),
+              child: Text(
+                '* ${S.current.messageAnnouncedOnMail}',
+                style: TextStyle(color: Theme.of(context).hintColor),
+              ),
             ),
             Padding(
               padding: const EdgeInsets.all(10),

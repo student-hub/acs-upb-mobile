@@ -118,10 +118,11 @@ class _RequestRolesPageState extends State<RequestRolesPage> {
               'ACS UPB Mobile encourages students to contribute in posting useful content on the platform. Roles help students post content from a specific position: on behalf of an organization, as a student representative or simply as a normal student.',
               textAlign: TextAlign.justify,
             ),
-            const Padding(
-              padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
               child: Text(
-                'You will receive a mail confirmation if your request is approved. ',
+                '* You will receive a mail confirmation if your request is approved. ',
+                style: TextStyle(color: Theme.of(context).hintColor),
               ),
             ),
             const Padding(
@@ -168,8 +169,7 @@ class _RequestRolesPageState extends State<RequestRolesPage> {
                       padding: const EdgeInsets.only(top: 10.25),
                       child: Text(
                         'I will only upload information that is correct and relevant to this role, to the best of my knowledge. I understand that posting inappropriate content or abusing this role will lead to having it permanently revoked.',
-                        style: Theme.of(context).textTheme.caption.apply(
-                            color: Theme.of(context).textTheme.headline5.color),
+                        style: Theme.of(context).textTheme.subtitle1,
                       ),
                     ),
                   ),
