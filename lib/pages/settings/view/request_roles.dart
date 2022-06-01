@@ -89,10 +89,17 @@ class _RequestRolesPageState extends State<RequestRolesPage> {
               return;
             }
 
+            final roleName = rolesDropdownController.path.join('-');
+
+            final alreadyRequested = await rolesProvider
+                .userAlreadyRequestedRole(user.uid, roleName);
+
+            print('Already requested: $alreadyRequested');
+
             final queryResult = await rolesProvider.makeRequest(
               RoleRequest(
                 userId: user.uid,
-                roleName: rolesDropdownController.path.join('-'),
+                roleName: roleName,
                 requestBody: requestController.text,
               ),
             );

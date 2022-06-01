@@ -37,4 +37,23 @@ class RolesProvider {
       return false;
     }
   }
+
+  Future<bool> userAlreadyRequestedRole(
+      final String userId, final String role) async {
+    try {
+      final snap = await FirebaseFirestore.instance
+          .collection('forms')
+          .doc('role_request_answers')
+          .collection(userId)
+          .get();
+
+      final result = snap.docs.any((doc) => doc.data()['roleName'] == role);
+
+      return false;
+    } catch (e) {
+      print(e);
+      AppToast.show(S.current.errorSomethingWentWrong);
+      return false;
+    }
+  }
 }
