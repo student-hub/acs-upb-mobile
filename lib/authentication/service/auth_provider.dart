@@ -33,7 +33,8 @@ extension DatabaseUser on User {
       'class': classes,
       'bookmarkedNews': bookmarkedNews,
       'permissionLevel': permissionLevel,
-      'sources': sources
+      'sources': sources,
+      'roles': roles,
     };
   }
 }

@@ -133,7 +133,7 @@ class AdminProvider with ChangeNotifier {
           await _db.collection('forms').doc('role_request_answers').get();
       final data = docSnapshot.data().values.toList()
         ..firstWhere((final e) => e['id'] == requestId, orElse: () => null);
-      return data != null ? RoleRequestExtension.fromSnap(data) : null;
+      return data != null ? RoleRequestExtension.fromSnap(data[0]) : null;
     } catch (e) {
       print(e);
       AppToast.show(S.current.errorSomethingWentWrong);
