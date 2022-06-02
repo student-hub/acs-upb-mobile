@@ -1,16 +1,22 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
+import 'package:uuid/uuid.dart';
 
 class RoleRequest {
   RoleRequest({
     @required this.userId,
     @required this.roleName,
     @required this.requestBody,
+    this.requestId,
     this.processed = false,
     this.processedBy,
     this.dateSubmitted,
     this.accepted,
   });
+
+  /// Unique ID of the request
+  final String id = const Uuid().v4();
+  final String requestId;
 
   /// The user who created this request
   final String userId;

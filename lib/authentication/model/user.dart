@@ -7,6 +7,7 @@ class User {
       @required this.lastName,
       this.classes,
       this.sources,
+      this.roles,
       this.bookmarkedNews,
       final int permissionLevel})
       : permissionLevel = permissionLevel ?? 0;
@@ -18,6 +19,7 @@ class User {
   String firstName;
   String lastName;
   List<String> sources;
+  List<String> roles;
 
   /// Info about the user's assigned group (including degree, year of study, series etc)
   List<String> classes;
@@ -35,4 +37,5 @@ class User {
 
   List<String> get sourcesList =>
       sources ?? ['official', 'organizations', 'students'];
+  List<String> get userRoles => roles ?? [];
 }

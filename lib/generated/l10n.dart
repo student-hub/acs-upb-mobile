@@ -1995,10 +1995,10 @@ class S {
     );
   }
 
-  /// `Permission requests`
+  /// `Handle requests`
   String get navigationAdmin {
     return Intl.message(
-      'Permission requests',
+      'Handle requests',
       name: 'navigationAdmin',
       desc: '',
       args: [],

@@ -23,6 +23,7 @@ extension DatabaseUser on User {
       bookmarkedNews: List.from(data['bookmarkedNews'] ?? []),
       permissionLevel: data['permissionLevel'],
       sources: data['sources'] != null ? List.from(data['sources']) : null,
+      roles: data['roles'] != null ? List.from(data['roles']) : null,
     );
   }
 
@@ -417,10 +418,58 @@ class AuthProvider with ChangeNotifier {
     return true;
   }
 
-  Future<bool> setSourcePreferences(List<String> sources,
-      {BuildContext context}) async {
+  Future<bool> setSourcePreferences(final List<String> sources,
+      {final BuildContext context}) async {
     try {
       _currentUser.sources = sources;
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(_currentUser.uid)
+          .update(_currentUser.toData());
+
+      notifyListeners();
+      return true;
+    } catch (e) {
+      _errorHandler(e);
+      return false;
+    }
+  }
+
+  Future<bool> addNewRole(final String newRole) async {
+    try {
+      final currentRoles = _currentUser.userRoles;
+      if (currentRoles.contains(newRole)) {
+        throw Exception('Role already exists!');
+      }
+      currentRoles
+        ..add(newRole)
+        ..sort();
+
+      _currentUser.roles = currentRoles;
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(_currentUser.uid)
+          .update(_currentUser.toData());
+
+      notifyListeners();
+      return true;
+    } catch (e) {
+      _errorHandler(e);
+      return false;
+    }
+  }
+
+  Future<bool> removeRole(final String role) async {
+    try {
+      final currentRoles = _currentUser.userRoles;
+      if (!currentRoles.contains(role)) {
+        throw Exception('Role does not exist!');
+      }
+      currentRoles
+        ..remove(role)
+        ..sort();
+
+      _currentUser.roles = currentRoles;
       await FirebaseFirestore.instance
           .collection('users')
           .doc(_currentUser.uid)

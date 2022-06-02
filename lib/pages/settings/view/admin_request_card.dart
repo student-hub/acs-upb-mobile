@@ -11,17 +11,17 @@ import '../../../widgets/button.dart';
 import '../model/request.dart';
 import '../service/admin_provider.dart';
 
-class RequestCard extends StatefulWidget {
-  const RequestCard({this.requestId});
+class AdminRequestCard extends StatefulWidget {
+  const AdminRequestCard({this.requestId});
 
   @required
   final String requestId;
 
   @override
-  _RequestCardState createState() => _RequestCardState();
+  _AdminRequestCardState createState() => _AdminRequestCardState();
 }
 
-class _RequestCardState extends State<RequestCard>
+class _AdminRequestCardState extends State<AdminRequestCard>
     with AutomaticKeepAliveClientMixin {
   @override
   Widget build(final BuildContext context) {
@@ -29,49 +29,51 @@ class _RequestCardState extends State<RequestCard>
     final adminProvider = Provider.of<AdminProvider>(context);
 
     return FutureBuilder(
-        future: adminProvider.fetchRequest(widget.requestId),
-        builder: (final context, final snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            final Request request = snapshot.data;
-            return Padding(
-              padding: const EdgeInsets.fromLTRB(12, 12, 12, 0),
-              child: Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(12),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      _buildUserHeader(request),
-                      const SizedBox(height: 10),
-                      Text(
-                        request.requestBody ?? '',
-                        textDirection: ui.TextDirection.ltr,
-                        style: Theme.of(context)
-                            .textTheme
-                            .headline6
-                            .copyWith(fontSize: 14),
-                      ),
-                      const SizedBox(height: 10),
-                      _buildButtons(request.processed, request)
-                    ],
-                  ),
+      future: adminProvider.fetchRequest(widget.requestId),
+      builder: (final context, final snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          final Request request = snapshot.data;
+          return Padding(
+            padding: const EdgeInsets.fromLTRB(12, 12, 12, 0),
+            child: Card(
+              child: Padding(
+                padding: const EdgeInsets.all(12),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    _buildUserHeader(request),
+                    const SizedBox(height: 10),
+                    Text(
+                      request.requestBody ?? '',
+                      textDirection: ui.TextDirection.ltr,
+                      style: Theme.of(context)
+                          .textTheme
+                          .headline6
+                          .copyWith(fontSize: 14),
+                    ),
+                    const SizedBox(height: 10),
+                    _buildButtons(request.processed, request)
+                  ],
                 ),
               ),
-            );
-          } else {
-            return const SizedBox.shrink();
-          }
-        });
+            ),
+          );
+        } else {
+          return const SizedBox.shrink();
+        }
+      },
+    );
   }
 
   Widget _buildUserHeader(final Request request) => FutureBuilder(
-      future: Provider.of<AdminProvider>(context).fetchUserById(request.userId),
-      builder: (final context, final snapshot) {
-        User user;
-        if (snapshot.connectionState == ConnectionState.done) {
-          user = snapshot.data;
-        }
-        return Column(
+        future:
+            Provider.of<AdminProvider>(context).fetchUserById(request.userId),
+        builder: (final context, final snapshot) {
+          User user;
+          if (snapshot.connectionState == ConnectionState.done) {
+            user = snapshot.data;
+          }
+          return Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Row(
@@ -107,8 +109,10 @@ class _RequestCardState extends State<RequestCard>
                 overflow: TextOverflow.fade,
                 maxLines: 2,
               ),
-            ]);
-      });
+            ],
+          );
+        },
+      );
 
   Widget _buildAcceptedMarker(final bool accepted) => Container(
         padding: const EdgeInsets.all(5),

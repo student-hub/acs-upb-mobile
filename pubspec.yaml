@@ -146,6 +146,9 @@ dependencies:
   # Timetable widget
   timetable: ^1.0.0-alpha.5
 
+  # Used to generate random UUIDs
+  uuid: ^3.0.6
+
   # URL opener
   url_launcher: ^6.0.6
 

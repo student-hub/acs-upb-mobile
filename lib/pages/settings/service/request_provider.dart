@@ -15,7 +15,6 @@ extension RequestExtension on Request {
     if (requestBody != null) data['requestBody'] = requestBody;
     data['done'] = processed;
     data['dateSubmitted'] = Timestamp.now();
-    data['type'] = type.toShortString();
     data['accepted'] = false;
 
     return data;
