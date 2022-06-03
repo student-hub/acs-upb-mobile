@@ -225,6 +225,9 @@ class _MyAppState extends State<MyApp> {
           return;
         }
         debugPrint('Received URI: $uri');
+        setState(() {
+          _currentURI = uri;
+        });
       }, onError: (final Object err) {
         if (!mounted) {
           return;
@@ -268,8 +271,12 @@ class _MyAppState extends State<MyApp> {
           supportedLocales: S.delegate.supportedLocales,
           initialRoute: Routes.root,
           routes: {
-            Routes.root: (final _) => AppLoadingScreen(),
-            Routes.home: (final _) => const AppBottomNavigationBar(),
+            Routes.root: (final _) => AppLoadingScreen(
+                  dynamicUri: _currentURI,
+                ),
+            Routes.home: (final _) => AppBottomNavigationBar(
+                  dynamicUri: _currentURI,
+                ),
             Routes.settings: (final _) => SettingsPage(),
             Routes.sources: (final _) => SourcePage(),
             Routes.login: (final _) => LoginView(),
@@ -291,6 +298,10 @@ class _MyAppState extends State<MyApp> {
 }
 
 class AppLoadingScreen extends StatelessWidget {
+  const AppLoadingScreen({this.dynamicUri});
+
+  final Uri dynamicUri;
+
   Future<String> _setUpAndChooseStartScreen(final BuildContext context) async {
     // Make initializations if this is not a test
     if (!Platform.environment.containsKey('FLUTTER_TEST')) {
@@ -322,6 +333,17 @@ class AppLoadingScreen extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
+    if (dynamicUri != null) {
+      print('Dynamic URI: $dynamicUri');
+      Navigator.push(
+        context,
+        MaterialPageRoute<Map<dynamic, dynamic>>(
+          builder: (final context) => NewsItemDetailsPage(
+              newsItemGuid: dynamicUri.queryParameters['guid']),
+        ),
+      );
+    }
+
     return LoadingScreen(
       navigateAfterFuture: _setUpAndChooseStartScreen(context),
       image: Image.asset('assets/icons/acs_logo.png'),
