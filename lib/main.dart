@@ -1,11 +1,14 @@
+import 'dart:async';
 import 'dart:io';
 
+import 'package:acs_upb_mobile/pages/news_feed/view/news_item_details_page.dart';
+import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:easy_dynamic_theme/easy_dynamic_theme.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -13,6 +16,7 @@ import 'package:pref/pref.dart';
 import 'package:provider/provider.dart';
 import 'package:rrule/rrule.dart';
 import 'package:timetable/timetable.dart';
+import 'package:uni_links/uni_links.dart';
 
 import 'authentication/service/auth_provider.dart';
 import 'authentication/view/login_view.dart';
@@ -64,6 +68,8 @@ class MyHttpOverrides extends HttpOverrides {
       };
   }
 }
+
+bool _initialURILinkHandled = false;
 
 Future<void> main() async {
   HttpOverrides.global = MyHttpOverrides();
@@ -166,21 +172,72 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  Uri _initialURI;
+  Uri _currentURI;
+  Object _err;
+
+  StreamSubscription _streamSubscription;
+
   @override
   void initState() {
     super.initState();
-    initDynamicLinks();
+    _initURIHandler();
+    _incomingLinkHandler();
   }
 
-  Future<void> initDynamicLinks() async {
-    FirebaseDynamicLinks.instance.onLink.listen((final dynamicLinkData) {
-      print('Dynamic link');
-      print(dynamicLinkData.link.path);
-      //Navigator.pushNamed(context, dynamicLinkData.link.path);
-    }).onError((error) {
-      print('onLink error');
-      print(error.message);
-    });
+  Future<void> _initURIHandler() async {
+    if (!_initialURILinkHandled) {
+      _initialURILinkHandled = true;
+
+      try {
+        final initialURI = await getInitialUri();
+        // Use the initialURI and warn the user if it is not correct,
+        // but keep in mind it could be `null`.
+        if (initialURI != null) {
+          debugPrint("Initial URI received $initialURI");
+          if (!mounted) {
+            return;
+          }
+        } else {
+          debugPrint("Null Initial URI received");
+        }
+      } on PlatformException {
+        // Platform messages may fail, so we use a try/catch PlatformException.
+        // Handle exception by warning the user their action did not succeed
+        debugPrint("Failed to receive initial uri");
+      } on FormatException catch (err) {
+        if (!mounted) {
+          return;
+        }
+        debugPrint('Malformed Initial URI received');
+      }
+    }
+  }
+
+  /// Handle incoming links - the ones that the app will receive from the OS
+  /// while already started.
+  void _incomingLinkHandler() {
+    if (!kIsWeb) {
+      // It will handle app links while the app is already started - be it in
+      // the foreground or in the background.
+      _streamSubscription = uriLinkStream.listen((Uri uri) {
+        if (!mounted) {
+          return;
+        }
+        debugPrint('Received URI: $uri');
+      }, onError: (final Object err) {
+        if (!mounted) {
+          return;
+        }
+        debugPrint('Error occurred: $err');
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    _streamSubscription?.cancel();
+    super.dispose();
   }
 
   @override
