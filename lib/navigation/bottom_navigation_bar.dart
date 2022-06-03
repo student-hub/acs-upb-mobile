@@ -1,3 +1,4 @@
+import 'package:acs_upb_mobile/pages/news_feed/view/news_item_details_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:provider/provider.dart';
@@ -11,8 +12,9 @@ import '../pages/settings/view/source_page.dart';
 import '../pages/timetable/view/timetable_page.dart';
 
 class AppBottomNavigationBar extends StatefulWidget {
-  const AppBottomNavigationBar({this.tabIndex = 0});
+  const AppBottomNavigationBar({this.dynamicUri, this.tabIndex = 0});
 
+  final Uri dynamicUri;
   final int tabIndex;
 
   @override
@@ -64,6 +66,17 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar>
 
   @override
   Widget build(final BuildContext context) {
+    if (widget.dynamicUri != null) {
+      print('Dynamic URI: $widget.dynamicUri');
+      Navigator.push(
+        context,
+        MaterialPageRoute<Map<dynamic, dynamic>>(
+          builder: (final context) => NewsItemDetailsPage(
+              newsItemGuid: widget.dynamicUri.queryParameters['guid']),
+        ),
+      );
+    }
+
     return DefaultTabController(
       length: tabs.length,
       initialIndex: widget.tabIndex,

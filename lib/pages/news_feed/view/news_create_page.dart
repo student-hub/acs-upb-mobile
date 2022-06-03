@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../../../generated/l10n.dart';
 import '../../../widgets/scaffold.dart';
 import '../../../widgets/toast.dart';
+import '../../filter/view/relevance_picker.dart';
 import '../service/news_provider.dart';
 import 'news_preview_create_page.dart';
 
@@ -19,6 +20,7 @@ class NewsCreatePage extends StatefulWidget {
 class _NewsCreatePageState extends State<NewsCreatePage> {
   final postTitleController = TextEditingController();
   final postBodyController = TextEditingController();
+  final relevanceController = RelevanceController();
 
   final formKey = GlobalKey<FormState>();
 
@@ -115,6 +117,11 @@ class _NewsCreatePageState extends State<NewsCreatePage> {
                     },
                   ),
                   const SizedBox(height: 20),
+                  RelevanceFormField(
+                    canBePrivate: false,
+                    canBeForEveryone: true,
+                    controller: relevanceController,
+                  ),
                   GestureDetector(
                     child: Row(
                       children: <Widget>[
