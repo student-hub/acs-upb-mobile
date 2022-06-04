@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:markdown/markdown.dart' as md;
 import 'package:provider/provider.dart';
 
+import '../../../authentication/service/auth_provider.dart';
 import '../../../resources/utils.dart';
 import '../../../widgets/scaffold.dart';
 import '../model/news_feed_item.dart';
@@ -13,6 +14,7 @@ import 'news_item_details_actions.dart';
 class NewsItemDetailsPage extends StatefulWidget {
   const NewsItemDetailsPage({@required this.newsItemGuid});
   final String newsItemGuid;
+  static const String routeName = '/newsDetails';
 
   @override
   _NewsItemDetailsState createState() => _NewsItemDetailsState();
@@ -100,6 +102,10 @@ class _NewsItemDetailsState extends State<NewsItemDetailsPage> {
         captionStyle.fontSize / Theme.of(context).textTheme.bodyText1.fontSize;
     final captionColor = captionStyle.color;
 
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    final displayActions =
+        authProvider.isAuthenticated && !authProvider.isAnonymous;
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
@@ -114,7 +120,7 @@ class _NewsItemDetailsState extends State<NewsItemDetailsPage> {
             captionColor: captionColor,
             captionSizeFactor: captionSizeFactor),
         _newsDetailsTimestamp(createdAt: _formatDate(newsFeedItem.createdAt)),
-        _newsDetailsActions(),
+        displayActions ? _newsDetailsActions() : const SizedBox(),
       ],
     );
   }

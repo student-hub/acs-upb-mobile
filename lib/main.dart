@@ -198,8 +198,14 @@ class _MyAppState extends State<MyApp> {
           if (!mounted) {
             return;
           }
+          setState(() {
+            _currentURI = initialURI;
+          });
         } else {
           debugPrint("Null Initial URI received");
+          setState(() {
+            _currentURI = null;
+          });
         }
       } on PlatformException {
         // Platform messages may fail, so we use a try/catch PlatformException.
@@ -225,11 +231,17 @@ class _MyAppState extends State<MyApp> {
           return;
         }
         debugPrint('Received URI: $uri');
+        setState(() {
+          _currentURI = uri;
+        });
       }, onError: (final Object err) {
         if (!mounted) {
           return;
         }
         debugPrint('Error occurred: $err');
+        setState(() {
+          _currentURI = null;
+        });
       });
     }
   }
@@ -269,25 +281,47 @@ class _MyAppState extends State<MyApp> {
           supportedLocales: S.delegate.supportedLocales,
           initialRoute: Routes.root,
           routes: {
-            Routes.root: (final _) => AppLoadingScreen(),
-            Routes.home: (final _) => const AppBottomNavigationBar(),
-            Routes.settings: (final _) => SettingsPage(),
-            Routes.sources: (final _) => SourcePage(),
-            Routes.login: (final _) => LoginView(),
-            Routes.signUp: (final _) => SignUpView(),
-            Routes.faq: (final _) => FaqPage(),
-            Routes.filter: (final _) => const FilterPage(),
-            Routes.newsFeed: (final _) => const NewsNavigationBar(),
-            Routes.newsCreate: (final _) => const NewsCreatePage(),
-            Routes.requestPermissions: (final _) => RequestPermissionsPage(),
+            Routes.root: (final context) =>
+                initPage(context, AppLoadingScreen(), _currentURI),
+            Routes.home: (final context) =>
+                initPage(context, const AppBottomNavigationBar(), _currentURI),
+            Routes.sources: (final context) =>
+                initPage(context, SourcePage(), _currentURI),
+            Routes.login: (final context) =>
+                initPage(context, LoginView(), _currentURI),
+            Routes.signUp: (final _) =>
+                initPage(context, SignUpView(), _currentURI),
+            Routes.faq: (final _) => initPage(context, FaqPage(), _currentURI),
+            Routes.filter: (final _) =>
+                initPage(context, const FilterPage(), _currentURI),
+            Routes.newsFeed: (final _) =>
+                initPage(context, const NewsNavigationBar(), _currentURI),
+            Routes.newsCreate: (final _) =>
+                initPage(context, const NewsCreatePage(), _currentURI),
+            Routes.requestPermissions: (final _) =>
+                initPage(context, RequestPermissionsPage(), _currentURI),
             Routes.requestRoles: (final _) => RequestRolesPage(),
             Routes.adminPanel: (final _) => const AdminPanelPage(),
             Routes.feedbackForm: (final _) => FeedbackFormPage(),
+            Routes.newsDetails: (final _) => NewsItemDetailsPage(
+                newsItemGuid: _currentURI.queryParameters['guid']),
           },
           navigatorObservers: widget.navigationObservers ?? [],
         ),
       ),
     );
+  }
+
+  Widget initPage(
+      final BuildContext context, final Widget page, final Uri uri) {
+    print('Initial URI: $uri');
+    if (uri != null) {
+      //final currentRoute =
+      //    ModalRoute.of(context).print('Current route: $currentRoute');
+      //return NewsItemDetailsPage(newsItemGuid: uri.queryParameters['guid']);
+      return page;
+    }
+    return page;
   }
 }
 
