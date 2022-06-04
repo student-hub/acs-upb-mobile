@@ -22,6 +22,7 @@ class _NewsFeedPageState extends State<NewsFeedPage> {
   Future<dynamic> newsFuture;
 
   String _formatDate(final String date) {
+    return date;
     final DateTime dateTime = DateTime.parse(date);
     return DateFormat('yyyy-MM-dd').format(dateTime);
   }
@@ -159,8 +160,7 @@ class _NewsFeedPageState extends State<NewsFeedPage> {
   Widget _newsDetailsTimestamp({final String createdAt}) => Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          Text('Posted on: ${_formatDate(createdAt)}',
-              style: const TextStyle(fontSize: 12)),
+          Text('Posted on: $createdAt', style: const TextStyle(fontSize: 12)),
         ],
       );
 

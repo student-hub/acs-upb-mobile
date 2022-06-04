@@ -11,6 +11,7 @@ class NewsFeedItem {
     this.createdAt,
     this.relevance,
     this.category,
+    this.categoryRole,
   });
 
   final String itemGuid;
@@ -19,7 +20,8 @@ class NewsFeedItem {
   final String externalSource;
   final String externalSourceLink;
   final String authorId;
-  final String relevance;
+  final List<dynamic> relevance;
   final String category;
+  final String categoryRole;
   final String createdAt;
 }

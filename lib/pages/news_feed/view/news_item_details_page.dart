@@ -103,7 +103,12 @@ class _NewsItemDetailsState extends State<NewsItemDetailsPage> {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
-        _newsDetailsAuthor(author: newsFeedItem.externalSource),
+        _newsDetailsAuthor(
+          author: newsFeedItem.externalSource,
+          context: context,
+        ),
+        const SizedBox(height: 20),
+        _newsDetailsTitle(newsFeedItem.title),
         _newsDetailsContent(
             content: newsFeedItem.body,
             captionColor: captionColor,
@@ -114,18 +119,38 @@ class _NewsItemDetailsState extends State<NewsItemDetailsPage> {
     );
   }
 
-  Widget _newsDetailsAuthor({final String author}) => Row(
+  Widget _newsDetailsAuthor(
+          {final String author, final BuildContext context}) =>
+      Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Flexible(
             child: Text(
               author,
-              style: const TextStyle(fontWeight: FontWeight.bold),
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Theme.of(context).primaryColor,
+              ),
             ),
           ),
           const Padding(
             padding: EdgeInsets.only(left: 4, right: 0, top: 0, bottom: 0),
             child: Text('a postat:'),
+          ),
+        ],
+      );
+
+  Widget _newsDetailsTitle(final String title) => Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Flexible(
+            child: Text(
+              title,
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+              ),
+            ),
           ),
         ],
       );

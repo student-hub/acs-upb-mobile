@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../authentication/service/auth_provider.dart';
 import '../../../generated/l10n.dart';
 import '../../../widgets/scaffold.dart';
 import '../../../widgets/toast.dart';
+import '../../filter/view/relevance_picker.dart';
 import '../service/news_provider.dart';
 import 'news_preview_create_page.dart';
 
@@ -17,10 +19,46 @@ class NewsCreatePage extends StatefulWidget {
 }
 
 class _NewsCreatePageState extends State<NewsCreatePage> {
+  static const String defaultRole = 'student';
+  static const String organizationCategory = 'organizations';
+  static const String studentCategory = 'students';
+
   final postTitleController = TextEditingController();
   final postBodyController = TextEditingController();
+  final relevanceController = RelevanceController();
+  String roleDropdownValue = defaultRole;
+
+  final List<String> userRoles = [defaultRole];
 
   final formKey = GlobalKey<FormState>();
+
+  void _dropdownChanged(final String value) {
+    setState(() {
+      roleDropdownValue = value;
+    });
+  }
+
+  String _computeCategoryForRole(final String categoryRole) {
+    if (categoryRole.compareTo(defaultRole) == 0) {
+      return studentCategory;
+    }
+
+    final roleCategory = categoryRole.split('-')[0];
+    if (roleCategory.compareTo(organizationCategory) == 0) {
+      return organizationCategory;
+    }
+
+    return studentCategory;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    final roles = authProvider.currentUserFromCache.userRoles;
+    userRoles.addAll(roles);
+  }
 
   @override
   Widget build(final BuildContext context) {
@@ -35,6 +73,10 @@ class _NewsCreatePageState extends State<NewsCreatePage> {
             final Map<String, dynamic> info = {
               'title': postTitleController.text,
               'body': postBodyController.text,
+              'relevance': relevanceController.customRelevance ??
+                  [], //relevance is either specific, or by default for anyone
+              'categoryRole': roleDropdownValue,
+              'category': _computeCategoryForRole(roleDropdownValue),
             };
 
             if (formKey.currentState.validate()) {
@@ -115,6 +157,68 @@ class _NewsCreatePageState extends State<NewsCreatePage> {
                     },
                   ),
                   const SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: Text(
+                          'Select your role that will be displayed in the author section. Depending on the role, your post will be grouped within a source category (organizations or students).',
+                          style: Theme.of(context).textTheme.caption.apply(
+                              color:
+                                  Theme.of(context).textTheme.headline5.color),
+                          textAlign: TextAlign.justify,
+                        ),
+                      ),
+                    ],
+                  ),
+                  DropdownButton<String>(
+                    value: roleDropdownValue,
+                    iconSize: 24,
+                    iconEnabledColor: Theme.of(context).hintColor,
+                    elevation: 16,
+                    style: TextStyle(
+                      color: Theme.of(context).hintColor,
+                      fontSize: 16,
+                      fontFamily: 'Montserrat',
+                    ),
+                    underline: Container(
+                      height: 0.7,
+                      color: Theme.of(context).hintColor,
+                    ),
+                    onChanged: userRoles != null && userRoles.length > 1
+                        ? _dropdownChanged
+                        : null,
+                    isExpanded: true,
+                    items: userRoles
+                        .map<DropdownMenuItem<String>>((final String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                  ),
+                  const SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: Text(
+                          'Choose the most restrictive group that can see your post. You can select as many groups as you want (e.g. 313CA, 314CB, etc.). By selecting \'Anyone\', your post will be visible to all users.',
+                          textAlign: TextAlign.justify,
+                          style: Theme.of(context).textTheme.caption.apply(
+                              color:
+                                  Theme.of(context).textTheme.headline5.color),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  RelevanceFormField(
+                    canBePrivate: false,
+                    canBeForEveryone: true,
+                    controller: relevanceController,
+                  ),
+                  const SizedBox(height: 20),
                   GestureDetector(
                     child: Row(
                       children: <Widget>[
@@ -152,6 +256,7 @@ class _NewsCreatePageState extends State<NewsCreatePage> {
                       );
                     },
                   ),
+                  const SizedBox(height: 40),
                 ],
               ),
             )

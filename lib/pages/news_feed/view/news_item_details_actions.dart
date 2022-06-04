@@ -10,25 +10,20 @@ class NewsItemDetailsAction extends StatefulWidget {
   final String newsItemGuid;
 
   @override
-  _NewsItemDetailsActionState createState() =>
-      // ignore: no_logic_in_create_state
-      _NewsItemDetailsActionState(newsItemGuid: newsItemGuid);
+  _NewsItemDetailsActionState createState() => _NewsItemDetailsActionState();
 }
 
 class _NewsItemDetailsActionState extends State<NewsItemDetailsAction> {
-  _NewsItemDetailsActionState({@required this.newsItemGuid});
-
   bool isBookmarked = false;
-  final String newsItemGuid;
 
   Future<void> _toggleBookmark(final NewsProvider newsProvider) async {
     showToast(isBookmarked ? 'Removed from favorites' : 'Added to favorites');
     if (isBookmarked) {
-      if (await newsProvider.unbookmarkNewsItem(newsItemGuid)) {
+      if (await newsProvider.unbookmarkNewsItem(widget.newsItemGuid)) {
         setState(() => isBookmarked = false);
       }
     } else {
-      if (await newsProvider.bookmarkNewsItem(newsItemGuid)) {
+      if (await newsProvider.bookmarkNewsItem(widget.newsItemGuid)) {
         setState(() => isBookmarked = true);
       }
     }
@@ -46,7 +41,7 @@ class _NewsItemDetailsActionState extends State<NewsItemDetailsAction> {
   @override
   Widget build(final BuildContext context) {
     final newsFeedProvider = Provider.of<NewsProvider>(context);
-    isBookmarked = newsFeedProvider.isNewsItemBookmarked(newsItemGuid);
+    isBookmarked = newsFeedProvider.isNewsItemBookmarked(widget.newsItemGuid);
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [

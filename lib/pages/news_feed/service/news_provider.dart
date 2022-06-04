@@ -1,7 +1,6 @@
-// ignore_for_file: flutter_style_todos
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
+import 'package:intl/intl.dart';
 
 import '../../../authentication/service/auth_provider.dart';
 import '../../../generated/l10n.dart';
@@ -128,8 +127,9 @@ class NewsProvider with ChangeNotifier {
         'authorId': _authProvider.currentUserFromCache.uid,
         'externalSource': '',
         'externalSourceLink': '',
-        'relevance': '',
-        'category': 'students',
+        'relevance': info['relevance'],
+        'category': info['category'],
+        'categoryRole': info['categoryRole'],
         'createdAt': FieldValue.serverTimestamp(),
       });
 
@@ -199,8 +199,10 @@ extension DatabaseNews on NewsFeedItem {
     final String externalSourceLink = data['externalSourceLink'];
     final String authorId = data['authorId'];
     final String category = data['category'];
-    final String relevance = data['relevance'];
-    final String createdAt = data['createdAt'].toDate().toString();
+    final String categoryRole = data['categoryRole'];
+    final List<dynamic> relevance = data['relevance'] as List<dynamic>;
+    final String createdAt =
+        DateFormat('yyyy-MM-dd').format(data['createdAt'].toDate());
 
     return NewsFeedItem(
         itemGuid: itemGuid,
@@ -210,6 +212,7 @@ extension DatabaseNews on NewsFeedItem {
         externalSourceLink: externalSourceLink,
         authorId: authorId,
         category: category,
+        categoryRole: categoryRole,
         relevance: relevance,
         createdAt: createdAt);
   }

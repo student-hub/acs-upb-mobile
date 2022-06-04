@@ -324,6 +324,7 @@ class _WebsiteViewState extends State<WebsiteView> {
                       canBeForEveryone: true,
                       defaultPrivate: widget.website?.isPrivate ?? true,
                       controller: relevanceController,
+                      key: UniqueKey(),
                     ),
                     TextFormField(
                       controller: descriptionRoController,

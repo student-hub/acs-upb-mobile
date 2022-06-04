@@ -257,6 +257,7 @@ class _MyAppState extends State<MyApp> {
         child: MaterialApp(
           title: Utils.packageInfo.appName,
           themeMode: EasyDynamicTheme.of(context).themeMode,
+          debugShowCheckedModeBanner: false,
           theme: lightThemeData,
           darkTheme: darkThemeData,
           localizationsDelegates: [

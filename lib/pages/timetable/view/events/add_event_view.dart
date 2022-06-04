@@ -260,6 +260,7 @@ class _AddEventViewState extends State<AddEventView> {
                     canBePrivate: false,
                     canBeForEveryone: false,
                     controller: relevanceController,
+                    key: UniqueKey(),
                   ),
                   DropdownButtonFormField<UniEventType>(
                     decoration: InputDecoration(
