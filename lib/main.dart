@@ -52,6 +52,7 @@ import 'resources/remote_config.dart';
 import 'resources/theme.dart';
 import 'resources/utils.dart';
 import 'widgets/loading_screen.dart';
+import 'widgets/redirect_dynamic_link.dart';
 
 // FIXME: Our university website certificates have some issues, so we say we
 // trust them regardless.
@@ -282,29 +283,28 @@ class _MyAppState extends State<MyApp> {
           initialRoute: Routes.root,
           routes: {
             Routes.root: (final context) =>
-                initPage(context, AppLoadingScreen(), _currentURI),
+                initPage(context, AppLoadingScreen()),
             Routes.home: (final context) =>
-                initPage(context, const AppBottomNavigationBar(), _currentURI),
-            Routes.sources: (final context) =>
-                initPage(context, SourcePage(), _currentURI),
-            Routes.login: (final context) =>
-                initPage(context, LoginView(), _currentURI),
-            Routes.signUp: (final _) =>
-                initPage(context, SignUpView(), _currentURI),
-            Routes.faq: (final _) => initPage(context, FaqPage(), _currentURI),
-            Routes.filter: (final _) =>
-                initPage(context, const FilterPage(), _currentURI),
+                initPage(context, const AppBottomNavigationBar()),
+            Routes.settings: (final context) =>
+                initPage(context, SettingsPage()),
+            Routes.sources: (final context) => initPage(context, SourcePage()),
+            Routes.login: (final context) => initPage(context, LoginView()),
+            Routes.signUp: (final _) => initPage(context, SignUpView()),
+            Routes.faq: (final _) => initPage(context, FaqPage()),
+            Routes.filter: (final _) => initPage(context, const FilterPage()),
             Routes.newsFeed: (final _) =>
-                initPage(context, const NewsNavigationBar(), _currentURI),
+                initPage(context, const NewsNavigationBar()),
             Routes.newsCreate: (final _) =>
-                initPage(context, const NewsCreatePage(), _currentURI),
+                initPage(context, const NewsCreatePage()),
             Routes.requestPermissions: (final _) =>
-                initPage(context, RequestPermissionsPage(), _currentURI),
-            Routes.requestRoles: (final _) => RequestRolesPage(),
-            Routes.adminPanel: (final _) => const AdminPanelPage(),
-            Routes.feedbackForm: (final _) => FeedbackFormPage(),
-            Routes.newsDetails: (final _) => NewsItemDetailsPage(
-                newsItemGuid: _currentURI.queryParameters['guid']),
+                initPage(context, RequestPermissionsPage()),
+            Routes.requestRoles: (final _) =>
+                initPage(context, RequestRolesPage()),
+            Routes.adminPanel: (final _) =>
+                initPage(context, const AdminPanelPage()),
+            Routes.feedbackForm: (final _) =>
+                initPage(context, FeedbackFormPage()),
           },
           navigatorObservers: widget.navigationObservers ?? [],
         ),
@@ -312,16 +312,17 @@ class _MyAppState extends State<MyApp> {
     );
   }
 
-  Widget initPage(
-      final BuildContext context, final Widget page, final Uri uri) {
-    print('Initial URI: $uri');
-    if (uri != null) {
-      //final currentRoute =
-      //    ModalRoute.of(context).print('Current route: $currentRoute');
-      //return NewsItemDetailsPage(newsItemGuid: uri.queryParameters['guid']);
+  Widget initPage(final BuildContext context, final Widget page) {
+    print('[Before init page] Initial URI: $_currentURI');
+    if (_currentURI != null) {
+      final auxUri = _currentURI;
+      _currentURI = null;
+      print('Aux URI: $auxUri');
+      return RedirectDynamicLink(
+          redirectLink: auxUri, page: page, key: UniqueKey());
+    } else {
       return page;
     }
-    return page;
   }
 }
 
