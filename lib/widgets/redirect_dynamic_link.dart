@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 import '../pages/news_feed/view/news_item_details_page.dart';
 
@@ -20,7 +19,9 @@ class _RedirectDynamicLinkState extends State<RedirectDynamicLink> {
       context,
       MaterialPageRoute<Map<dynamic, dynamic>>(
         builder: (final context) => NewsItemDetailsPage(
-            newsItemGuid: widget.redirectLink.queryParameters['guid']),
+          newsItemGuid: widget
+              .redirectLink.queryParameters[NewsItemDetailsPage.uriQueryParam],
+        ),
       ),
     );
   }
@@ -28,19 +29,13 @@ class _RedirectDynamicLinkState extends State<RedirectDynamicLink> {
   @override
   void initState() {
     super.initState();
-    print('RedirectDynamicLink initState');
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (true) {
-        // condition here
-        print('Redirecting to ${widget.redirectLink}');
-        _navigateAndDisplaySelection(context);
-      }
-    });
+    WidgetsBinding.instance.addPostFrameCallback(
+      (final _) => _navigateAndDisplaySelection(context),
+    );
   }
 
   @override
   Widget build(final BuildContext context) {
-    print('RedirectDynamicLink build');
     return widget.page;
   }
 }

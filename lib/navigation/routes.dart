@@ -29,5 +29,4 @@ class Routes {
   static const String requestRoles = RequestRolesPage.routeName;
   static const String adminPanel = AdminPanelPage.routeName;
   static const String feedbackForm = FeedbackFormPage.routeName;
-  static const String newsDetails = NewsItemDetailsPage.routeName;
 }

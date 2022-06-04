@@ -40,7 +40,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
                 <!-- Accepts URIs that begin with YOUR_SCHEME://YOUR_HOST -->
-                <data android:scheme="logrckt" android:host="unilinks.example.com" />
+                <data android:scheme="acs" android:host="acs.upb.mobile.dev" />
             </intent-filter>
 
         </activity>

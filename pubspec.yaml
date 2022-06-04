@@ -128,7 +128,7 @@ dependencies:
   rxdart: ^0.27.3
 
   # Share content via the platform's share dialog
-  share_plus: ^4.0.4
+  share_plus: ^4.0.6
 
   # Support lock/mutex
   synchronized: ^3.0.0

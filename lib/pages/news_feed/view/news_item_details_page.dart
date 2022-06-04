@@ -14,7 +14,11 @@ import 'news_item_details_actions.dart';
 class NewsItemDetailsPage extends StatefulWidget {
   const NewsItemDetailsPage({@required this.newsItemGuid});
   final String newsItemGuid;
-  static const String routeName = '/newsDetails';
+
+  static const String uriScheme = 'acs';
+  static const String uriHost = 'acs.upb.mobile.dev';
+  static const String uriPath = 'news-details';
+  static const String uriQueryParam = 'guid';
 
   @override
   _NewsItemDetailsState createState() => _NewsItemDetailsState();

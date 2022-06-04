@@ -192,10 +192,7 @@ class _MyAppState extends State<MyApp> {
 
       try {
         final initialURI = await getInitialUri();
-        // Use the initialURI and warn the user if it is not correct,
-        // but keep in mind it could be `null`.
         if (initialURI != null) {
-          debugPrint("Initial URI received $initialURI");
           if (!mounted) {
             return;
           }
@@ -203,7 +200,6 @@ class _MyAppState extends State<MyApp> {
             _currentURI = initialURI;
           });
         } else {
-          debugPrint("Null Initial URI received");
           setState(() {
             _currentURI = null;
           });
@@ -221,17 +217,15 @@ class _MyAppState extends State<MyApp> {
     }
   }
 
-  /// Handle incoming links - the ones that the app will receive from the OS
-  /// while already started.
+  /// Handle incoming links - the ones that the app will receive from the OS while already started.
   void _incomingLinkHandler() {
     if (!kIsWeb) {
       // It will handle app links while the app is already started - be it in
       // the foreground or in the background.
-      _streamSubscription = uriLinkStream.listen((Uri uri) {
+      _streamSubscription = uriLinkStream.listen((final Uri uri) {
         if (!mounted) {
           return;
         }
-        debugPrint('Received URI: $uri');
         setState(() {
           _currentURI = uri;
         });
@@ -239,7 +233,6 @@ class _MyAppState extends State<MyApp> {
         if (!mounted) {
           return;
         }
-        debugPrint('Error occurred: $err');
         setState(() {
           _currentURI = null;
         });
@@ -313,13 +306,11 @@ class _MyAppState extends State<MyApp> {
   }
 
   Widget initPage(final BuildContext context, final Widget page) {
-    print('[Before init page] Initial URI: $_currentURI');
     if (_currentURI != null) {
-      final auxUri = _currentURI;
+      final redirectLink = _currentURI;
       _currentURI = null;
-      print('Aux URI: $auxUri');
       return RedirectDynamicLink(
-          redirectLink: auxUri, page: page, key: UniqueKey());
+          redirectLink: redirectLink, page: page, key: UniqueKey());
     } else {
       return page;
     }

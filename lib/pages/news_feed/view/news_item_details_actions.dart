@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:provider/provider.dart';
+import 'package:share_plus/share_plus.dart';
 
 import '../service/news_provider.dart';
+import 'news_item_details_page.dart';
 
 class NewsItemDetailsAction extends StatefulWidget {
   const NewsItemDetailsAction({@required this.newsItemGuid});
@@ -29,13 +30,10 @@ class _NewsItemDetailsActionState extends State<NewsItemDetailsAction> {
     }
   }
 
-  void _copyToClipboard(final String text) {
-    showToast('Copied content to clipboard');
-    Clipboard.setData(ClipboardData(text: text));
-  }
-
   void _shareNewsItem() {
-    print('Share news item');
+    final uri = Uri.parse(
+        '${NewsItemDetailsPage.uriScheme}://${NewsItemDetailsPage.uriHost}/${NewsItemDetailsPage.uriPath}?${NewsItemDetailsPage.uriQueryParam}=${widget.newsItemGuid}');
+    Share.share(uri.toString());
   }
 
   @override
@@ -48,10 +46,6 @@ class _NewsItemDetailsActionState extends State<NewsItemDetailsAction> {
         IconButton(
           icon: const Icon(Icons.share),
           onPressed: _shareNewsItem,
-        ),
-        IconButton(
-          icon: const Icon(Icons.copy_outlined),
-          onPressed: () => _copyToClipboard('ola'),
         ),
         if (!isBookmarked)
           IconButton(
