@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import '../../../authentication/model/user.dart';
 import '../../../generated/l10n.dart';
 import '../../../resources/theme.dart';
+import '../../../resources/utils.dart';
 import '../../../widgets/button.dart';
 import '../model/request.dart';
 import '../service/admin_provider.dart';
@@ -173,6 +174,10 @@ class _AdminRequestCardState extends State<AdminRequestCard>
                       ..accepted = true
                       ..processed = true;
                   });
+                  //   final authProvider =
+                  //       Provider.of<AuthProvider>(context, listen: false);
+                  //   await Utils.launchURL(
+                  //       'mailto:${authProvider.email}?subject=Permisiuni%20ACS%20UPB%20Mobile&body=Ai%20primit%20permisiuni%20de%20editare%20în%20ACS%20UPB%20Mobile!');
                 },
               )
             ],

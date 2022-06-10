@@ -7,6 +7,7 @@ class RoleRequest {
     @required this.userId,
     @required this.roleName,
     @required this.requestBody,
+    @required this.userEmail,
     this.requestId,
     this.processed = false,
     this.processedBy,
@@ -20,6 +21,9 @@ class RoleRequest {
 
   /// The user who created this request
   final String userId;
+
+  /// The email of the user who created this request
+  final String userEmail;
 
   /// The name of the role
   final String roleName;

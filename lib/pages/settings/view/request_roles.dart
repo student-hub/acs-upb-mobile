@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:googleapis/servicecontrol/v2.dart';
 import 'package:provider/provider.dart';
 
 import '../../../authentication/model/user.dart';
@@ -28,8 +29,10 @@ class _RequestRolesPageState extends State<RequestRolesPage> {
   final requestController = TextEditingController();
   final rolesDropdownController = RolesFilterDropdownController();
 
+  AuthProvider authProvider;
+
   Future<void> _fetchUser() async {
-    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    authProvider = Provider.of<AuthProvider>(context, listen: false);
     user = await authProvider.currentUser;
     if (mounted) {
       setState(() {});
@@ -101,6 +104,7 @@ class _RequestRolesPageState extends State<RequestRolesPage> {
                 userId: user.uid,
                 roleName: roleName,
                 requestBody: requestController.text,
+                userEmail: authProvider.email,
               ),
             );
             if (queryResult) {
