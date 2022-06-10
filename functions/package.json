@@ -14,8 +14,16 @@
   },
   "main": "src/index.js",
   "dependencies": {
+    "axios": "^0.27.2",
+    "cheerio": "^1.0.0-rc.11",
+    "fast-xml-parser": "^4.0.8",
     "firebase-admin": "^10.0.2",
-    "firebase-functions": "^3.18.1"
+    "firebase-functions": "^3.18.1",
+    "isomorphic-unfetch": "^3.1.0",
+    "parse-json": "^6.0.2",
+    "request-promise": "^4.2.6",
+    "turndown": "^7.1.1",
+    "xml2js": "^0.4.23"
   },
   "devDependencies": {
     "eslint": "^8.11.0",
