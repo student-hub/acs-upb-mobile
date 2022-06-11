@@ -31,6 +31,7 @@ import 'pages/faq/view/faq_page.dart';
 import 'pages/filter/service/filter_provider.dart';
 import 'pages/filter/service/roles_filter_provider.dart';
 import 'pages/filter/view/filter_page.dart';
+import 'pages/news_feed/service/news_notification_service.dart';
 import 'pages/news_feed/service/news_provider.dart';
 import 'pages/news_feed/view/news_create_page.dart';
 import 'pages/news_feed/view/news_navigation_bar.dart';
@@ -76,6 +77,7 @@ Future<void> main() async {
   HttpOverrides.global = MyHttpOverrides();
 
   WidgetsFlutterBinding.ensureInitialized();
+  await NewsNotificationService().init();
 
   // package_info_plus is not compatible with flutter_test
   // link to the issue: https://github.com/fluttercommunity/plus_plugins/issues/172

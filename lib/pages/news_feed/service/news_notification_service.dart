@@ -13,13 +13,11 @@ class NewsNotificationService {
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
 
-  //static final _notifications = FlutterLocalNotificationsPlugin();
-
   Future<void> init() async {
     //Initialization Settings for Android
     final AndroidInitializationSettings initializationSettingsAndroid =
         // ignore: prefer_const_constructors
-        AndroidInitializationSettings('app_icon');
+        AndroidInitializationSettings('ic_launcher');
 
     //Initialization Settings for iOS
     final IOSInitializationSettings initializationSettingsIOS =
@@ -38,52 +36,50 @@ class NewsNotificationService {
 
     await flutterLocalNotificationsPlugin.initialize(initializationSettings,
         onSelectNotification: selectNotification);
+
+    requestIOSPermissions(flutterLocalNotificationsPlugin);
   }
 
-  // void requestIOSPermissions(
-  //     final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin) {
-  //   flutterLocalNotificationsPlugin
-  //       .resolvePlatformSpecificImplementation<
-  //           IOSFlutterLocalNotificationsPlugin>()
-  //       ?.requestPermissions(
-  //         alert: true,
-  //         badge: true,
-  //         sound: true,
-  //       );
-  // }
+  void requestIOSPermissions(
+      final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin) {
+    flutterLocalNotificationsPlugin
+        .resolvePlatformSpecificImplementation<
+            IOSFlutterLocalNotificationsPlugin>()
+        ?.requestPermissions(
+          alert: true,
+          badge: true,
+          sound: true,
+        );
+  }
 
   Future<dynamic> selectNotification(final String payload) async {
     print('Notification was pressed');
     print('Notification payload: $payload');
-    // await Navigator.push(
-    //   context,
-    //   MaterialPageRoute<void>(builder: (context) => SecondScreen(payload)),
-    // );
   }
 
-  // static Future<dynamic> _notificationDetails() async {
-  //   return const NotificationDetails(
-  //     android: AndroidNotificationDetails(
-  //       'news_feed_notification_channel_id',
-  //       'News Feed Notification channel name',
-  //       'News Feed Notification channel description',
-  //       importance: Importance.max,
-  //     ),
-  //     iOS: IOSNotificationDetails(),
-  //   );
-  // }
+  static const NotificationDetails platformChannelSpecifics =
+      NotificationDetails(
+    android: AndroidNotificationDetails(
+      'news_feed_notification_channel_id',
+      'News Feed Notification channel name',
+      'News Feed Notification channel description',
+      importance: Importance.max,
+    ),
+    iOS: IOSNotificationDetails(
+      presentAlert:
+          true, // Present an alert when the notification is displayed and the application is in the foreground (only from iOS 10 onwards)
+      presentBadge:
+          true, // Present the badge number when the notification is displayed and the application is in the foreground (only from iOS 10 onwards)
+      presentSound: true,
+    ),
+  );
 
-  // static Future<dynamic> showNotification({
-  //   final int id = 0,
-  //   final String title,
-  //   final String body,
-  //   final String payload,
-  // }) async =>
-  //     _notifications.show(
-  //       id,
-  //       title,
-  //       body,
-  //       await _notificationDetails(),
-  //       payload: payload,
-  //     );
+  Future<dynamic> showNotification() async {
+    await flutterLocalNotificationsPlugin.show(
+        12345,
+        'A Notification From My Application',
+        'This notification was sent using Flutter Local Notifcations Package',
+        platformChannelSpecifics,
+        payload: 'data');
+  }
 }

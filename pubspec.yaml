@@ -75,6 +75,8 @@ dependencies:
   # Allow using feather icons (nice outlined icons)
   flutter_feather_icons: ^2.0.0+1
 
+  flutter_local_notifications: ^8.0.0
+
   # Package that allows for supporting multiple languages
   flutter_localizations:
     sdk: flutter
