@@ -60,8 +60,9 @@ dependencies:
   # Firebase products
   firebase_analytics: ^9.1.2
   firebase_auth: ^3.3.11
-  firebase_core: ^1.6.1
+  firebase_core: ^1.17.1
   firebase_dynamic_links: ^4.2.5
+  firebase_messaging: ^11.4.1
   firebase_remote_config: ^2.0.2
   firebase_storage: ^10.2.9
 

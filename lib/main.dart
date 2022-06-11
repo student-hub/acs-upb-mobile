@@ -1,11 +1,10 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:acs_upb_mobile/pages/news_feed/view/news_item_details_page.dart';
-import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:easy_dynamic_theme/easy_dynamic_theme.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -73,6 +72,40 @@ class MyHttpOverrides extends HttpOverrides {
 
 bool _initialURILinkHandled = false;
 
+Future<void> _firebaseMessagingBackgroundHandler(
+    final RemoteMessage message) async {
+  // If you're going to use other Firebase services in the background, such as Firestore,
+  // make sure you call `initializeApp` before using other Firebase services.
+  print('Handling a background message ${message.messageId}');
+}
+
+void _initFirebaseMessaging() {
+  print('Initializing Firebase Messaging');
+
+  FirebaseMessaging.instance.getToken().then((final token) {
+    print('Firebase Messaging token: $token');
+  });
+
+  FirebaseMessaging.instance
+      .getInitialMessage()
+      .then((final RemoteMessage message) {
+    if (message != null) {
+      print('[Firebase Messaging] Initial message: ${message.data}');
+    }
+  });
+
+  //foreground
+  FirebaseMessaging.onMessage.listen((final RemoteMessage message) {
+    print('[Firebase Messaging] Message received');
+    if (message.notification != null) {
+      print(
+          '[Firebase Messaging] onMessage body: ${message.notification.body}');
+      print(
+          '[Firebase Messaging] onMessage title: ${message.notification.title}');
+    }
+  });
+}
+
 Future<void> main() async {
   HttpOverrides.global = MyHttpOverrides();
 
@@ -84,6 +117,22 @@ Future<void> main() async {
   Utils.packageInfo = await PackageInfo.fromPlatform();
 
   await Firebase.initializeApp();
+
+  //FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+  final messaging = FirebaseMessaging.instance;
+  final settings = await messaging.requestPermission(
+    alert: true,
+    announcement: false,
+    badge: true,
+    carPlay: false,
+    criticalAlert: false,
+    provisional: false,
+    sound: true,
+  );
+  if (kDebugMode) {
+    print('Permission granted: ${settings.authorizationStatus}');
+  }
+  _initFirebaseMessaging();
 
   final authProvider = AuthProvider();
   final classProvider = ClassProvider();
@@ -179,7 +228,7 @@ class _MyAppState extends State<MyApp> {
   Uri _currentURI;
   Object _err;
 
-  StreamSubscription _streamSubscription;
+  StreamSubscription<dynamic> _streamSubscription;
 
   @override
   void initState() {
