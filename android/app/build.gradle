@@ -47,6 +47,7 @@ android {
         applicationId "ro.pub.acs.acs_upb_mobile"
         minSdkVersion 19
         targetSdkVersion 30
+        multiDexEnabled true
         versionCode flutterVersionCode.toInteger() + 10000
         versionName flutterVersionName
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"

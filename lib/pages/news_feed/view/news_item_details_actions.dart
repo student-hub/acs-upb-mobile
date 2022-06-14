@@ -3,7 +3,6 @@ import 'package:oktoast/oktoast.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 
-import '../service/news_notification_service.dart';
 import '../service/news_provider.dart';
 import 'news_item_details_page.dart';
 
@@ -44,12 +43,7 @@ class _NewsItemDetailsActionState extends State<NewsItemDetailsAction> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
-        IconButton(
-          icon: const Icon(Icons.share),
-          onPressed: () async {
-            await NewsNotificationService().showNotification();
-          },
-        ),
+        IconButton(icon: const Icon(Icons.share), onPressed: _shareNewsItem),
         if (!isBookmarked)
           IconButton(
             icon: const Icon(Icons.bookmark_border_outlined),

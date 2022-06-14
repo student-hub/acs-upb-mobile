@@ -8,6 +8,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -30,7 +31,6 @@ import 'pages/faq/view/faq_page.dart';
 import 'pages/filter/service/filter_provider.dart';
 import 'pages/filter/service/roles_filter_provider.dart';
 import 'pages/filter/view/filter_page.dart';
-import 'pages/news_feed/service/news_notification_service.dart';
 import 'pages/news_feed/service/news_provider.dart';
 import 'pages/news_feed/view/news_create_page.dart';
 import 'pages/news_feed/view/news_navigation_bar.dart';
@@ -71,68 +71,29 @@ class MyHttpOverrides extends HttpOverrides {
 }
 
 bool _initialURILinkHandled = false;
+final GlobalKey<NavigatorState> navigatorKey =
+    GlobalKey(debugLabel: 'Main Navigator');
 
-Future<void> _firebaseMessagingBackgroundHandler(
-    final RemoteMessage message) async {
-  // If you're going to use other Firebase services in the background, such as Firestore,
-  // make sure you call `initializeApp` before using other Firebase services.
-  print('Handling a background message ${message.messageId}');
-}
-
-void _initFirebaseMessaging() {
-  print('Initializing Firebase Messaging');
-
-  FirebaseMessaging.instance.getToken().then((final token) {
-    print('Firebase Messaging token: $token');
-  });
-
-  FirebaseMessaging.instance
-      .getInitialMessage()
-      .then((final RemoteMessage message) {
-    if (message != null) {
-      print('[Firebase Messaging] Initial message: ${message.data}');
-    }
-  });
-
-  //foreground
-  FirebaseMessaging.onMessage.listen((final RemoteMessage message) {
-    print('[Firebase Messaging] Message received');
-    if (message.notification != null) {
-      print(
-          '[Firebase Messaging] onMessage body: ${message.notification.body}');
-      print(
-          '[Firebase Messaging] onMessage title: ${message.notification.title}');
-    }
-  });
-}
+// Future<void> _firebaseMessagingBackgroundHandler(
+//     final RemoteMessage message) async {
+//   // If you're going to use other Firebase services in the background, such as Firestore,
+//   // make sure you call `initializeApp` before using other Firebase services.
+//   await Firebase.initializeApp();
+//   print('Handling a background message ${message.messageId}');
+// }
 
 Future<void> main() async {
   HttpOverrides.global = MyHttpOverrides();
 
   WidgetsFlutterBinding.ensureInitialized();
-  await NewsNotificationService().init();
+  //await NewsNotificationService().init();
 
   // package_info_plus is not compatible with flutter_test
   // link to the issue: https://github.com/fluttercommunity/plus_plugins/issues/172
   Utils.packageInfo = await PackageInfo.fromPlatform();
 
   await Firebase.initializeApp();
-
   //FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-  final messaging = FirebaseMessaging.instance;
-  final settings = await messaging.requestPermission(
-    alert: true,
-    announcement: false,
-    badge: true,
-    carPlay: false,
-    criticalAlert: false,
-    provisional: false,
-    sound: true,
-  );
-  if (kDebugMode) {
-    print('Permission granted: ${settings.authorizationStatus}');
-  }
-  _initFirebaseMessaging();
 
   final authProvider = AuthProvider();
   final classProvider = ClassProvider();
@@ -229,12 +190,101 @@ class _MyAppState extends State<MyApp> {
   Object _err;
 
   StreamSubscription<dynamic> _streamSubscription;
+  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
 
   @override
   void initState() {
     super.initState();
     _initURIHandler();
     _incomingLinkHandler();
+    _initNotifications();
+  }
+
+  Future<void> _initNotifications() async {
+    print('Initializing Firebase notifications');
+
+    //Initialization Settings for Android
+    const AndroidInitializationSettings initializationSettingsAndroid =
+        AndroidInitializationSettings('ic_launcher');
+
+    //Initialization Settings for iOS
+    const IOSInitializationSettings initializationSettingsIOS =
+        IOSInitializationSettings(
+      requestSoundPermission: false,
+      requestBadgePermission: false,
+      requestAlertPermission: false,
+    );
+
+    //InitializationSettings for initializing settings for both platforms (Android & iOS)
+    const InitializationSettings initializationSettings =
+        InitializationSettings(
+            android: initializationSettingsAndroid,
+            iOS: initializationSettingsIOS);
+
+    await flutterLocalNotificationsPlugin.initialize(initializationSettings,
+        onSelectNotification: selectNotification);
+
+    final token = await FirebaseMessaging.instance.getToken();
+    print('Firebase Messaging token: $token');
+
+    final RemoteMessage message =
+        await FirebaseMessaging.instance.getInitialMessage();
+    if (message != null) {
+      print('[Firebase Messaging] Initial message: ${message.data}');
+    }
+
+    //foreground
+    FirebaseMessaging.onMessage.listen((final RemoteMessage message) async {
+      print('[Firebase Messaging] Message received');
+      if (message.notification != null) {
+        final String title = message.notification.title;
+        final String body = message.notification.body;
+        print('[Firebase Messaging] onMessage body: $body');
+        print('[Firebase Messaging] onMessage title: $title');
+        showNotification(title, body, 'data');
+      }
+    });
+  }
+
+  Future<dynamic> selectNotification(final String payload) async {
+    print('Notification was pressed');
+    print('Notification payload: $payload');
+    await navigatorKey.currentState?.pushNamed(Routes.newsFeed);
+  }
+
+  void showNotification(
+      final String title, final String body, final String payload) {
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    if (!authProvider.isAuthenticated || authProvider.isAnonymous) {
+      return;
+    }
+
+    final sources = authProvider.currentUserFromCache.sourcesList;
+    if (!sources.contains(body)) {
+      return;
+    }
+
+    flutterLocalNotificationsPlugin.show(
+        12345,
+        title,
+        'Refresh news feed to see latest post',
+        const NotificationDetails(
+          android: AndroidNotificationDetails(
+            'news_feed_notification_channel_id',
+            'News Feed Notification channel name',
+            'News Feed Notification channel description',
+            importance: Importance.max,
+          ),
+          iOS: IOSNotificationDetails(
+            presentAlert:
+                true, // Present an alert when the notification is displayed and the application is in the foreground (only from iOS 10 onwards)
+            presentBadge:
+                true, // Present the badge number when the notification is displayed and the application is in the foreground (only from iOS 10 onwards)
+            presentSound: true,
+          ),
+        ),
+        payload: payload);
   }
 
   Future<void> _initURIHandler() async {
@@ -313,6 +363,7 @@ class _MyAppState extends State<MyApp> {
         },
         child: MaterialApp(
           title: Utils.packageInfo.appName,
+          navigatorKey: navigatorKey,
           themeMode: EasyDynamicTheme.of(context).themeMode,
           debugShowCheckedModeBanner: false,
           theme: lightThemeData,
