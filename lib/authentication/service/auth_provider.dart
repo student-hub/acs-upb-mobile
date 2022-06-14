@@ -22,6 +22,7 @@ extension DatabaseUser on User {
       classes: List.from(data['class'] ?? []),
       bookmarkedNews: List.from(data['bookmarkedNews'] ?? []),
       permissionLevel: data['permissionLevel'],
+      receiveNotifications: data['receiveNotifications'] ?? false,
       sources: data['sources'] != null ? List.from(data['sources']) : null,
       roles: data['roles'] != null ? List.from(data['roles']) : null,
     );
@@ -33,6 +34,7 @@ extension DatabaseUser on User {
       'class': classes,
       'bookmarkedNews': bookmarkedNews,
       'permissionLevel': permissionLevel,
+      'receiveNotifications': receiveNotifications,
       'sources': sources,
       'roles': roles,
     };
@@ -186,7 +188,7 @@ class AuthProvider with ChangeNotifier {
     bool result = false;
     await FirebaseAuth.instance.signInAnonymously().then((_) {
       result = true;
-    }).catchError((dynamic e) {
+    }).catchError((final dynamic e) {
       _errorHandler(e);
       result = false;
     });
@@ -423,6 +425,23 @@ class AuthProvider with ChangeNotifier {
       {final BuildContext context}) async {
     try {
       _currentUser.sources = sources;
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(_currentUser.uid)
+          .update(_currentUser.toData());
+
+      notifyListeners();
+      return true;
+    } catch (e) {
+      _errorHandler(e);
+      return false;
+    }
+  }
+
+  Future<bool> setReceiveNotifications(
+      {final bool receiveNotifications}) async {
+    try {
+      _currentUser.receiveNotifications = receiveNotifications;
       await FirebaseFirestore.instance
           .collection('users')
           .doc(_currentUser.uid)

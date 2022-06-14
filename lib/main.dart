@@ -265,6 +265,12 @@ class _MyAppState extends State<MyApp> {
       return;
     }
 
+    final receiveNotifications =
+        authProvider.currentUserFromCache.shouldReceiveNotifications;
+    if (!receiveNotifications) {
+      return;
+    }
+
     flutterLocalNotificationsPlugin.show(
         12345,
         title,

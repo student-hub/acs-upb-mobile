@@ -7,6 +7,7 @@ class User {
       @required this.lastName,
       this.classes,
       this.sources,
+      this.receiveNotifications,
       this.roles,
       this.bookmarkedNews,
       final int permissionLevel})
@@ -20,6 +21,7 @@ class User {
   String lastName;
   List<String> sources;
   List<String> roles;
+  bool receiveNotifications;
 
   /// Info about the user's assigned group (including degree, year of study, series etc)
   List<String> classes;
@@ -34,6 +36,8 @@ class User {
   bool get canEditPublicInfo => permissionLevel >= 3;
 
   bool get isAdmin => permissionLevel >= 4;
+
+  bool get shouldReceiveNotifications => receiveNotifications ?? false;
 
   List<String> get sourcesList =>
       sources ?? ['official', 'organizations', 'students'];

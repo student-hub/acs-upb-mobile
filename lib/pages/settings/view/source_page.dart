@@ -17,6 +17,7 @@ class SourcePage extends StatefulWidget {
 class _SourcePageState extends State<SourcePage> {
   AuthProvider authProvider;
   Map<String, bool> sourceSelected = {};
+  bool isSwitched = false;
 
   @override
   void initState() {
@@ -28,10 +29,11 @@ class _SourcePageState extends State<SourcePage> {
     sourceSelected['organizations'] =
         user.sources?.contains('organizations') ?? true;
     sourceSelected['students'] = user.sources?.contains('students') ?? true;
+    isSwitched = user.shouldReceiveNotifications ?? false;
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return AppScaffold(
       actions: [
         AppScaffoldAction(
@@ -41,6 +43,10 @@ class _SourcePageState extends State<SourcePage> {
               if (sourceSelected['organizations']) sources.add('organizations');
               if (sourceSelected['students']) sources.add('students');
               await authProvider.setSourcePreferences(sources);
+              await authProvider.setReceiveNotifications(
+                  receiveNotifications: isSwitched);
+
+              if (!mounted) return;
               Navigator.of(context).pop();
             })
       ],
@@ -48,65 +54,90 @@ class _SourcePageState extends State<SourcePage> {
         S.current.sectionInformationSources,
         style: const TextStyle(fontSize: 19.5),
       ),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(10),
-            child: Text('${S.current.messageSelectSource}*'),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
-            child: Row(
-              children: <Widget>[
-                Text(
-                  S.current.hintSelectSources,
-                  style: const TextStyle(fontWeight: FontWeight.bold),
-                ),
-              ],
+      body: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(10),
+              child: Text('${S.current.messageSelectSource}*'),
             ),
-          ),
-          const SizedBox(height: 10),
-          CheckboxListTile(
-            value: true,
-            onChanged: null,
-            title: Text(S.current.sourceOfficialWebPages),
-            subtitle: Text(S.current.sourceOfficialWebPagesInfo),
-            controlAffinity: ListTileControlAffinity.leading,
-          ),
-          CheckboxListTile(
-            value: sourceSelected['organizations'],
-            onChanged: (value) {
-              setState(() => sourceSelected['organizations'] = value);
-            },
-            title: Text('${S.current.sourceStudentOrganizations}*'),
-            subtitle: Text(S.current.sourceStudentOrganizationsInfo),
-            controlAffinity: ListTileControlAffinity.leading,
-          ),
-          CheckboxListTile(
-            value: sourceSelected['students'],
-            onChanged: (value) {
-              setState(() => sourceSelected['students'] = value);
-            },
-            title: Text('${S.current.sourceStudentRepresentatives}*'),
-            subtitle: Text(S.current.sourceStudentRepresentativesInfo),
-            controlAffinity: ListTileControlAffinity.leading,
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
-            child: Text(
-              '* ${S.current.infoAdditionInformationSources}',
-              style: TextStyle(color: Theme.of(context).hintColor),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: Row(
+                children: <Widget>[
+                  Flexible(
+                    child: Text(
+                      S.current.hintSelectSources,
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-          const SizedBox(height: 10),
-          Padding(
-            padding: const EdgeInsets.only(top: 10),
-            child: Container(
-                height: MediaQuery.of(context).size.height / 3,
-                child: Image.asset(
-                    'assets/illustrations/undraw_selected_options.png')),
-          ),
-        ],
+            const SizedBox(height: 10),
+            CheckboxListTile(
+              value: true,
+              onChanged: null,
+              title: Text(S.current.sourceOfficialWebPages),
+              subtitle: Text(S.current.sourceOfficialWebPagesInfo),
+              controlAffinity: ListTileControlAffinity.leading,
+            ),
+            CheckboxListTile(
+              value: sourceSelected['organizations'],
+              onChanged: (final value) {
+                setState(() => sourceSelected['organizations'] = value);
+              },
+              title: Text('${S.current.sourceStudentOrganizations}*'),
+              subtitle: Text(S.current.sourceStudentOrganizationsInfo),
+              controlAffinity: ListTileControlAffinity.leading,
+            ),
+            CheckboxListTile(
+              value: sourceSelected['students'],
+              onChanged: (final value) {
+                setState(() => sourceSelected['students'] = value);
+              },
+              title: Text('${S.current.sourceStudentRepresentatives}*'),
+              subtitle: Text(S.current.sourceStudentRepresentativesInfo),
+              controlAffinity: ListTileControlAffinity.leading,
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: Text(
+                '* ${S.current.infoAdditionInformationSources}',
+                style: TextStyle(color: Theme.of(context).hintColor),
+              ),
+            ),
+            const SizedBox(height: 10),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: Row(
+                children: <Widget>[
+                  const Text(
+                    'Receive notifications',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  Switch(
+                    value: isSwitched,
+                    onChanged: (final value) {
+                      setState(() {
+                        isSwitched = value;
+                      });
+                    },
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 10),
+            Padding(
+              padding: const EdgeInsets.only(top: 10),
+              child: Container(
+                  height: MediaQuery.of(context).size.height / 3,
+                  child: Image.asset(
+                      'assets/illustrations/undraw_selected_options.png')),
+            ),
+          ],
+        ),
       ),
     );
   }
