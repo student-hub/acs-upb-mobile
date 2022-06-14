@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' hide User;
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth show User;
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 
 import '../../generated/l10n.dart';
@@ -419,6 +420,68 @@ class AuthProvider with ChangeNotifier {
 
     AppToast.show(S.current.messageCheckEmailVerification);
     return true;
+  }
+
+  Future<bool> setMessagingTokenIfNotExist() async {
+    try {
+      final token = await FirebaseMessaging.instance.getToken();
+      await FirebaseFirestore.instance
+          .collection('fcmTokens')
+          .doc(token)
+          .set({token: token}, SetOptions(merge: true));
+      notifyListeners();
+      return true;
+    } catch (e) {
+      _errorHandler(e);
+      return false;
+    }
+  }
+
+  Future<bool> removeMessagingTokenIfExists() async {
+    try {
+      final token = await FirebaseMessaging.instance.getToken();
+      await FirebaseFirestore.instance
+          .collection('fcmTokens')
+          .doc(token)
+          .delete();
+      notifyListeners();
+      return true;
+    } catch (e) {
+      _errorHandler(e);
+      return false;
+    }
+  }
+
+  Future<bool> enableReceiveNotifications() async {
+    try {
+      _currentUser.receiveNotifications = true;
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(_currentUser.uid)
+          .update(_currentUser.toData());
+
+      notifyListeners();
+      return true;
+    } catch (e) {
+      _errorHandler(e);
+      return false;
+    }
+  }
+
+  Future<bool> disableReceiveNotifications() async {
+    try {
+      _currentUser.receiveNotifications = false;
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(_currentUser.uid)
+          .update(_currentUser.toData());
+
+      notifyListeners();
+      return true;
+    } catch (e) {
+      _errorHandler(e);
+      return false;
+    }
   }
 
   Future<bool> setSourcePreferences(final List<String> sources,
