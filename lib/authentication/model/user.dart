@@ -39,6 +39,8 @@ class User {
 
   bool get shouldReceiveNotifications => receiveNotifications ?? false;
 
+  String get displayName => '$firstName $lastName';
+
   List<String> get sourcesList =>
       sources ?? ['official', 'organizations', 'students'];
   List<String> get userRoles => roles ?? [];

@@ -428,7 +428,7 @@ class AuthProvider with ChangeNotifier {
       await FirebaseFirestore.instance
           .collection('fcmTokens')
           .doc(token)
-          .set({token: token}, SetOptions(merge: true));
+          .set({'token': token}, SetOptions(merge: true));
       notifyListeners();
       return true;
     } catch (e) {

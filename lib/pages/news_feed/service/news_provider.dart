@@ -55,7 +55,13 @@ class NewsProvider with ChangeNotifier {
   Future<List<NewsFeedItem>> fetchPersonalNewsFeedItem(
       {final int limit}) async {
     try {
-      return [];
+      final userId = _authProvider.currentUserFromCache.uid;
+      final CollectionReference news =
+          FirebaseFirestore.instance.collection('news');
+      final QuerySnapshot<Map<String, dynamic>> qSnapshot = limit == null
+          ? await news.where('userId', isEqualTo: userId).get()
+          : await news.where('userId', isEqualTo: userId).limit(limit).get();
+      return qSnapshot.docs.map(DatabaseNews.fromSnap).toList();
     } catch (e) {
       print(e);
       AppToast.show(S.current.errorSomethingWentWrong);
@@ -124,9 +130,9 @@ class NewsProvider with ChangeNotifier {
       await FirebaseFirestore.instance.collection('news').add({
         'title': info['title'],
         'body': info['body'],
-        'authorId': _authProvider.currentUserFromCache.uid,
-        'externalSource': '',
-        'externalSourceLink': '',
+        'userId': _authProvider.currentUserFromCache.uid,
+        'authorDisplayName': _authProvider.currentUserFromCache.displayName,
+        'externalLink': '',
         'relevance': info['relevance'],
         'category': info['category'],
         'categoryRole': info['categoryRole'],
@@ -195,9 +201,9 @@ extension DatabaseNews on NewsFeedItem {
     final String itemGuid = snap.id;
     final String title = data['title'];
     final String body = data['body'];
-    final String externalSource = data['externalSource'];
-    final String externalSourceLink = data['externalSourceLink'];
-    final String authorId = data['authorId'];
+    final String authorDisplayName = data['authorDisplayName'];
+    final String externalLink = data['externalLink'];
+    final String userId = data['userId'];
     final String category = data['category'];
     final String categoryRole = data['categoryRole'];
     final List<dynamic> relevance = data['relevance'] as List<dynamic>;
@@ -208,9 +214,9 @@ extension DatabaseNews on NewsFeedItem {
         itemGuid: itemGuid,
         title: title,
         body: body,
-        externalSource: externalSource,
-        externalSourceLink: externalSourceLink,
-        authorId: authorId,
+        authorDisplayName: authorDisplayName,
+        externalLink: externalLink,
+        userId: userId,
         category: category,
         categoryRole: categoryRole,
         relevance: relevance,

@@ -5,9 +5,9 @@ class NewsFeedItem {
     @required this.itemGuid,
     @required this.title,
     @required this.body,
-    this.externalSource,
-    this.externalSourceLink,
-    this.authorId,
+    this.authorDisplayName,
+    this.externalLink,
+    this.userId,
     this.createdAt,
     this.relevance,
     this.category,
@@ -17,9 +17,9 @@ class NewsFeedItem {
   final String itemGuid;
   final String title;
   final String body;
-  final String externalSource;
-  final String externalSourceLink;
-  final String authorId;
+  final String authorDisplayName;
+  final String externalLink;
+  final String userId;
   final List<dynamic> relevance;
   final String category;
   final String categoryRole;

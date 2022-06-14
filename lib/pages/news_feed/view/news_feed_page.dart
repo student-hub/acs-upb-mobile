@@ -88,7 +88,7 @@ class _NewsFeedPageState extends State<NewsFeedPage> {
                           mainAxisSize: MainAxisSize.min,
                           children: <Widget>[
                             _newsDetailsAuthor(
-                                author: newsFeedItem.externalSource),
+                                author: newsFeedItem.authorDisplayName),
                             _newsDetailsTitle(title: newsFeedItem.title),
                             _newsDetailsTimestamp(
                                 createdAt: newsFeedItem.createdAt),
@@ -198,7 +198,7 @@ class _NewsFeedPageState extends State<NewsFeedPage> {
               ),
               dense: true,
               subtitle: Text(
-                'Author: ${children[index].externalSource}\nDate: ${_formatDate(children[index].createdAt)}',
+                'Author: ${children[index].authorDisplayName}\nDate: ${_formatDate(children[index].createdAt)}',
                 style: const TextStyle(fontSize: 12),
               ),
               trailing: const Icon(Icons.arrow_forward_ios),

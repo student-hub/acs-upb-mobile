@@ -114,7 +114,7 @@ class _NewsItemDetailsState extends State<NewsItemDetailsPage> {
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
         _newsDetailsAuthor(
-          author: newsFeedItem.externalSource,
+          author: newsFeedItem.authorDisplayName,
           context: context,
         ),
         const SizedBox(height: 20),

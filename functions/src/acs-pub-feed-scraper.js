@@ -11,8 +11,9 @@ const turndownService = new TurndownService()
 
 process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = 0
 
-const EXTERNAL_SOURCE = 'acs.pub.ro';
+const AUTHOR_DISPLAY_NAME = 'acs.pub.ro';
 const SOURCE_CATEGORY = 'official';
+const CATEGORY_ROLE = 'official';
 const POST_RELEVANCE = [];
 
 const facultyFeedUrl = "https://acs.pub.ro/feed";
@@ -39,12 +40,13 @@ exports.acsFacultyScraper = functions
             }
             return { 
               title: item.title,
-              authorId: '',
+              userId: '',
               body: markdown,
-              externalSource: EXTERNAL_SOURCE,
-              externalSourceLink: item.link,
+              authorDisplayName: AUTHOR_DISPLAY_NAME,
+              externalLink: item.link,
               relevance: POST_RELEVANCE,
               category: SOURCE_CATEGORY,
+              categoryRole: CATEGORY_ROLE,
               createdAt: publishedDate
             };
         });
@@ -94,10 +96,10 @@ exports.createNewsEvent = functions
 const sendNewsNotification = async (title, body) => {
   const query = await admin.firestore()
     .collection('fcmTokens')
-    .where('agreeToReceive', '==', true)
     .get();
 
   const fcmTokens = query.docs.map((doc) => doc.data().token);
+  console.log(fcmTokens);
   if (fcmTokens.length > 0) {
     const payload = {
       notification: {
