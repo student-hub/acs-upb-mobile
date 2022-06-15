@@ -18,16 +18,19 @@ class NewsProvider with ChangeNotifier {
   List<String> getBookmarkedNews() =>
       _authProvider.currentUserFromCache?.bookmarkedNews;
 
+  List<String> getUserSources() =>
+      _authProvider.currentUserFromCache?.sourcesList;
+
+  Query filterBySource(final Query query) =>
+      query.where('category', whereIn: getUserSources());
+
   Future<List<NewsFeedItem>> fetchNewsFeedItems({final int limit}) async {
     try {
       final CollectionReference news =
           FirebaseFirestore.instance.collection('news');
       final QuerySnapshot<Map<String, dynamic>> qSnapshot = limit == null
-          ? await news.orderBy('createdAt', descending: true).get()
-          : await news
-              .orderBy('createdAt', descending: true)
-              .limit(limit)
-              .get();
+          ? await filterBySource(news).get()
+          : await filterBySource(news.limit(limit)).get();
 
       final userClasses = _authProvider.currentUserFromCache?.classes;
       return qSnapshot.docs.map(DatabaseNews.fromSnap).where((final item) {
@@ -41,7 +44,8 @@ class NewsProvider with ChangeNotifier {
         itemRelevance.removeWhere(
             (final relevanceItem) => !userClasses.contains(relevanceItem));
         return itemRelevance.isNotEmpty;
-      }).toList();
+      }).toList()
+        ..sort((final a, final b) => a.createdAt.compareTo(b.createdAt) * -1);
     } catch (e) {
       print(e);
       AppToast.show(S.current.errorSomethingWentWrong);
