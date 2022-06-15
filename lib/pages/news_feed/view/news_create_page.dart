@@ -105,6 +105,14 @@ class _NewsCreatePageState extends State<NewsCreatePage> {
               key: formKey,
               child: Column(
                 children: [
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10),
+                    child: SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.25,
+                      child: Image.asset(
+                          'assets/illustrations/undraw_add_notes.png'),
+                    ),
+                  ),
                   Row(
                     children: <Widget>[
                       const Text(
@@ -246,15 +254,7 @@ class _NewsCreatePageState extends State<NewsCreatePage> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 60),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 10),
-                    child: SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.25,
-                      child: Image.asset(
-                          'assets/illustrations/undraw_add_notes.png'),
-                    ),
-                  ),
+                  const SizedBox(height: 240),
                 ],
               ),
             )

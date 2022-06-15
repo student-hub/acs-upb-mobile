@@ -11,6 +11,9 @@ import '../model/news_feed_item.dart';
 import '../service/news_provider.dart';
 import 'news_item_details_actions.dart';
 
+const placeholderImage =
+    'https://upload.wikimedia.org/wikipedia/commons/c/cd/Portrait_Placeholder_Square.png';
+
 class NewsItemDetailsPage extends StatefulWidget {
   const NewsItemDetailsPage({@required this.newsItemGuid});
   final String newsItemGuid;
@@ -113,52 +116,68 @@ class _NewsItemDetailsState extends State<NewsItemDetailsPage> {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
-        _newsDetailsAuthor(
-          author: newsFeedItem.authorDisplayName,
-          context: context,
-        ),
+        _newsPostHeader(newsFeedItem),
         const SizedBox(height: 20),
-        _newsDetailsTitle(newsFeedItem.title),
+        _newsDetailsTitle(title: newsFeedItem.title),
         _newsDetailsContent(
             content: newsFeedItem.body,
             captionColor: captionColor,
             captionSizeFactor: captionSizeFactor),
-        _newsDetailsTimestamp(createdAt: _formatDate(newsFeedItem.createdAt)),
-        displayActions ? _newsDetailsActions() : const SizedBox(),
+        const SizedBox(height: 20),
+        displayActions ? _newsDetailsActions(newsFeedItem) : const SizedBox(),
+        const SizedBox(height: 5),
       ],
     );
   }
 
-  Widget _newsDetailsAuthor(
-          {final String author, final BuildContext context}) =>
-      Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Flexible(
-            child: Text(
-              author,
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Theme.of(context).primaryColor,
-              ),
+  Widget _newsPostHeader(final NewsFeedItem newsFeedItem) {
+    return Row(
+      children: [
+        const Padding(
+          padding: EdgeInsets.only(right: 12),
+          child: CircleAvatar(
+            maxRadius: 15,
+            backgroundImage: NetworkImage(
+              placeholderImage,
             ),
           ),
-          const Padding(
-            padding: EdgeInsets.only(left: 4, right: 0, top: 0, bottom: 0),
-            child: Text('a postat:'),
+        ),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _newsDetailsAuthor(author: newsFeedItem.authorDisplayName),
+            _newsDetailsTimestamp(createdAt: newsFeedItem.createdAt),
+          ],
+        )
+      ],
+    );
+  }
+
+  Widget _newsDetailsAuthor({final String author}) => Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Text(
+            author,
+            style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 12,
+                color: Theme.of(context).primaryColor),
           ),
         ],
       );
 
-  Widget _newsDetailsTitle(final String title) => Row(
+  Widget _newsDetailsTitle({final String title}) => Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          Flexible(
-            child: Text(
-              title,
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 16,
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(0, 4, 0, 0),
+              child: Text(
+                title,
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 14,
+                ),
               ),
             ),
           ),
@@ -174,7 +193,7 @@ class _NewsItemDetailsState extends State<NewsItemDetailsPage> {
         children: [
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.only(top: 12, bottom: 12),
+              padding: const EdgeInsets.only(top: 5, bottom: 0),
               child: MarkdownBody(
                 fitContent: false,
                 onTapLink: (final text, final link, final title) =>
@@ -209,6 +228,8 @@ class _NewsItemDetailsState extends State<NewsItemDetailsPage> {
         ],
       );
 
-  Widget _newsDetailsActions() =>
-      NewsItemDetailsAction(newsItemGuid: widget.newsItemGuid);
+  Widget _newsDetailsActions(final NewsFeedItem newsFeedItem) =>
+      NewsItemDetailsAction(
+        newsFeedItem: newsFeedItem,
+      );
 }

@@ -148,6 +148,30 @@ class NewsProvider with ChangeNotifier {
     }
   }
 
+  Future<bool> deletePost(final String newsItemGuid) async {
+    try {
+      final _currentUser = _authProvider.currentUserFromCache;
+      _currentUser.bookmarkedNews
+          .removeWhere((final item) => item == newsItemGuid);
+
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(_currentUser.uid)
+          .update(_currentUser.toData());
+
+      await FirebaseFirestore.instance
+          .collection('news')
+          .doc(newsItemGuid)
+          .delete();
+
+      notifyListeners();
+      return true;
+    } catch (e) {
+      _errorHandler(e);
+      return false;
+    }
+  }
+
   Future<bool> savePost(final Map<String, dynamic> info) async {
     try {
       await FirebaseFirestore.instance.collection('news').add({

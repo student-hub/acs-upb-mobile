@@ -8,9 +8,7 @@ import '../../../authentication/service/auth_provider.dart';
 import '../../../generated/l10n.dart';
 import '../../../resources/utils.dart';
 import '../../../widgets/error_page.dart';
-import '../../../widgets/scaffold.dart';
 import '../model/news_feed_item.dart';
-import '../service/news_provider.dart';
 import 'news_item_details_actions.dart';
 import 'news_item_details_page.dart';
 
@@ -99,37 +97,18 @@ class _NewsFeedPageState extends State<NewsFeedPage> {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
-                      Row(
-                        children: [
-                          const Padding(
-                            padding: EdgeInsets.only(right: 12),
-                            child: CircleAvatar(
-                              maxRadius: 15,
-                              backgroundImage: NetworkImage(
-                                placeholderImage,
-                              ),
-                            ),
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              _newsDetailsAuthor(
-                                  author: newsFeedItem.authorDisplayName),
-                              _newsDetailsTimestamp(
-                                  createdAt: newsFeedItem.createdAt),
-                            ],
-                          )
-                        ],
-                      ),
+                      _newsPostHeader(newsFeedItem),
                       const SizedBox(height: 10),
                       _newsDetailsTitle(title: newsFeedItem.title),
                       _newsDetailsContent(
                           content: newsFeedItem.body,
                           captionColor: captionColor,
                           captionSizeFactor: captionSizeFactor),
+                      const SizedBox(height: 20),
                       displayActions
-                          ? _newsDetailsActions(newsFeedItem.itemGuid)
+                          ? _newsDetailsActions(newsFeedItem)
                           : const SizedBox(),
+                      const SizedBox(height: 5),
                     ],
                   ),
                 ),
@@ -148,11 +127,46 @@ class _NewsFeedPageState extends State<NewsFeedPage> {
     );
   }
 
-  Widget _newsDetailsAuthor({final String author}) => Row(
+  Widget _newsPostHeader(final NewsFeedItem newsFeedItem) {
+    return Row(
+      children: [
+        const Padding(
+          padding: EdgeInsets.only(right: 12),
+          child: CircleAvatar(
+            maxRadius: 15,
+            backgroundImage: NetworkImage(
+              placeholderImage,
+            ),
+          ),
+        ),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _newsDetailsAuthor(newsFeedItem: newsFeedItem),
+            _newsDetailsTimestamp(createdAt: newsFeedItem.createdAt),
+          ],
+        )
+      ],
+    );
+  }
+
+  String _computeDisplayName({final NewsFeedItem newsFeedItem}) {
+    final categoryRole = newsFeedItem.categoryRole;
+    final parts = categoryRole.split('-');
+    if (parts[0] == 'organizations') {
+      return '${newsFeedItem.authorDisplayName} (${parts[1]})';
+    } else if (parts[0] == 'representatives') {
+      return '${newsFeedItem.authorDisplayName} (${parts[1]})';
+    } else {
+      return newsFeedItem.authorDisplayName;
+    }
+  }
+
+  Widget _newsDetailsAuthor({final NewsFeedItem newsFeedItem}) => Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Text(
-            author,
+            _computeDisplayName(newsFeedItem: newsFeedItem),
             style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 12,
@@ -220,8 +234,10 @@ class _NewsFeedPageState extends State<NewsFeedPage> {
         ],
       );
 
-  Widget _newsDetailsActions(final String newsItemGuid) =>
-      NewsItemDetailsAction(newsItemGuid: newsItemGuid);
+  Widget _newsDetailsActions(final NewsFeedItem newsFeedItem) =>
+      NewsItemDetailsAction(
+        newsFeedItem: newsFeedItem,
+      );
 
   Future<void> _refreshNews() async {
     final List<NewsFeedItem> refreshedNewsItems = await _getNews();
