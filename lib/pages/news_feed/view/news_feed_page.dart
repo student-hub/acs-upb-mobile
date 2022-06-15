@@ -1,13 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:intl/intl.dart';
+import 'package:markdown/markdown.dart' as md;
 import 'package:provider/provider.dart';
 
+import '../../../authentication/service/auth_provider.dart';
 import '../../../generated/l10n.dart';
+import '../../../resources/utils.dart';
 import '../../../widgets/error_page.dart';
 import '../../../widgets/scaffold.dart';
 import '../model/news_feed_item.dart';
 import '../service/news_provider.dart';
+import 'news_item_details_actions.dart';
 import 'news_item_details_page.dart';
+
+const placeholderImage =
+    'https://upload.wikimedia.org/wikipedia/commons/c/cd/Portrait_Placeholder_Square.png';
 
 class NewsFeedPage extends StatefulWidget {
   const NewsFeedPage({this.fetchNewsFuture, final Key key}) : super(key: key);
@@ -68,6 +76,14 @@ class _NewsFeedPageState extends State<NewsFeedPage> {
 
   Widget displayCustomListViewItems(
       final BuildContext context, final List<NewsFeedItem> children) {
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    final captionStyle = Theme.of(context).textTheme.caption;
+    final captionSizeFactor =
+        captionStyle.fontSize / Theme.of(context).textTheme.bodyText1.fontSize;
+    final captionColor = captionStyle.color;
+    final displayActions =
+        authProvider.isAuthenticated && !authProvider.isAnonymous;
+
     return RefreshIndicator(
       onRefresh: _refreshNews,
       child: ListView.builder(
@@ -76,32 +92,44 @@ class _NewsFeedPageState extends State<NewsFeedPage> {
           final NewsFeedItem newsFeedItem = children[index];
           return GestureDetector(
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(12, 6, 12, 0),
+              padding: const EdgeInsets.fromLTRB(12, 5, 12, 0),
               child: Card(
                 child: Padding(
-                  padding: const EdgeInsets.fromLTRB(12, 12, 0, 12),
-                  child: Row(
+                  padding: const EdgeInsets.fromLTRB(12, 12, 12, 0),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
-                      Expanded(
-                        flex: 6,
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: <Widget>[
-                            _newsDetailsAuthor(
-                                author: newsFeedItem.authorDisplayName),
-                            _newsDetailsTitle(title: newsFeedItem.title),
-                            _newsDetailsTimestamp(
-                                createdAt: newsFeedItem.createdAt),
-                          ],
-                        ),
+                      Row(
+                        children: [
+                          const Padding(
+                            padding: EdgeInsets.only(right: 12),
+                            child: CircleAvatar(
+                              maxRadius: 15,
+                              backgroundImage: NetworkImage(
+                                placeholderImage,
+                              ),
+                            ),
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              _newsDetailsAuthor(
+                                  author: newsFeedItem.authorDisplayName),
+                              _newsDetailsTimestamp(
+                                  createdAt: newsFeedItem.createdAt),
+                            ],
+                          )
+                        ],
                       ),
-                      const Expanded(
-                        flex: 1,
-                        child: Icon(
-                          Icons.keyboard_arrow_right,
-                          color: Colors.grey,
-                        ),
-                      ),
+                      const SizedBox(height: 10),
+                      _newsDetailsTitle(title: newsFeedItem.title),
+                      _newsDetailsContent(
+                          content: newsFeedItem.body,
+                          captionColor: captionColor,
+                          captionSizeFactor: captionSizeFactor),
+                      displayActions
+                          ? _newsDetailsActions(newsFeedItem.itemGuid)
+                          : const SizedBox(),
                     ],
                   ),
                 ),
@@ -127,15 +155,8 @@ class _NewsFeedPageState extends State<NewsFeedPage> {
             author,
             style: TextStyle(
                 fontWeight: FontWeight.bold,
-                fontSize: 14,
+                fontSize: 12,
                 color: Theme.of(context).primaryColor),
-          ),
-          const Padding(
-            padding: EdgeInsets.only(left: 4, right: 0, top: 0, bottom: 0),
-            child: Text(
-              'a postat:',
-              style: TextStyle(fontSize: 14),
-            ),
           ),
         ],
       );
@@ -145,11 +166,46 @@ class _NewsFeedPageState extends State<NewsFeedPage> {
         children: [
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(0, 4, 0, 8),
+              padding: const EdgeInsets.fromLTRB(0, 4, 0, 0),
               child: Text(
                 title,
                 style: const TextStyle(
+                  fontWeight: FontWeight.bold,
                   fontSize: 14,
+                ),
+              ),
+            ),
+          ),
+        ],
+      );
+
+  Widget _newsDetailsContent(
+          {final String content,
+          final Color captionColor,
+          final double captionSizeFactor}) =>
+      Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.only(top: 5, bottom: 0),
+              child: MarkdownBody(
+                fitContent: false,
+                onTapLink: (final text, final link, final title) =>
+                    Utils.launchURL(link),
+                /*
+                  This is a workaround because the strings in Firebase represent
+                  newlines as '\n' and Firebase replaces them with '\\n'. We need
+                  to replace them back for them to display properly.
+                  (See GitHub issue firebase/firebase-js-sdk#2366)
+                  */
+                data: content.replaceAll('\\n', '\n'),
+                extensionSet: md.ExtensionSet(
+                  md.ExtensionSet.gitHubFlavored.blockSyntaxes,
+                  [
+                    md.EmojiSyntax(),
+                    ...md.ExtensionSet.gitHubFlavored.inlineSyntaxes
+                  ],
                 ),
               ),
             ),
@@ -160,52 +216,17 @@ class _NewsFeedPageState extends State<NewsFeedPage> {
   Widget _newsDetailsTimestamp({final String createdAt}) => Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          Text('Posted on: $createdAt', style: const TextStyle(fontSize: 12)),
+          Text(createdAt, style: const TextStyle(fontSize: 12)),
         ],
       );
+
+  Widget _newsDetailsActions(final String newsItemGuid) =>
+      NewsItemDetailsAction(newsItemGuid: newsItemGuid);
 
   Future<void> _refreshNews() async {
     final List<NewsFeedItem> refreshedNewsItems = await _getNews();
     setState(() {
       newsFuture = Future.value(refreshedNewsItems);
     });
-  }
-
-  Widget displayListViewItems(
-      final BuildContext context, final List<NewsFeedItem> children) {
-    return ListView.builder(
-      itemCount: children.length,
-      itemBuilder: (final BuildContext context, final int index) {
-        return Padding(
-          padding: const EdgeInsets.fromLTRB(12, 6, 12, 0),
-          child: Card(
-            child: ListTile(
-              title: Padding(
-                padding: const EdgeInsets.fromLTRB(0, 0, 0, 5),
-                child: Text(
-                  children[index].title,
-                  style: const TextStyle(
-                    fontSize: 14,
-                  ),
-                ),
-              ),
-              dense: true,
-              subtitle: Text(
-                'Author: ${children[index].authorDisplayName}\nDate: ${_formatDate(children[index].createdAt)}',
-                style: const TextStyle(fontSize: 12),
-              ),
-              trailing: const Icon(Icons.arrow_forward_ios),
-              onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute<Map<dynamic, dynamic>>(
-                  builder: (final context) => NewsItemDetailsPage(
-                      newsItemGuid: children[index].itemGuid),
-                ),
-              ),
-            ),
-          ),
-        );
-      },
-    );
   }
 }

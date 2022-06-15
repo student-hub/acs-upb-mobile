@@ -99,7 +99,6 @@ class _NewsCreatePageState extends State<NewsCreatePage> {
       ],
       body: Container(
         child: ListView(
-          reverse: true,
           padding: const EdgeInsets.all(12),
           children: [
             Form(
@@ -184,7 +183,6 @@ class _NewsCreatePageState extends State<NewsCreatePage> {
                         color: Theme.of(context).textTheme.headline5.color),
                   ),
                   TextFormField(
-                    autofocus: true,
                     decoration: const InputDecoration(
                       hintText: 'Enter title for the post...',
                       labelText: 'Title',

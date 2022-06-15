@@ -2,6 +2,8 @@ const admin = require("firebase-admin");
 const backupFirestore = require('./firestore-backup');
 const backupStorage = require('./storage-backup');
 const acsFacultyScraper = require('./acs-pub-feed-scraper');
+const lsacBucharestScraper = require('./lsac-bucharest-feed-scraper');
+const upbScraper = require('./upb-pub-feed-scraper');
 const serviceAccount = require("../serviceAccountKey.json");
 
 admin.initializeApp({
@@ -12,4 +14,6 @@ admin.initializeApp({
 exports.backupFirestore = backupFirestore.backupFirestore;
 exports.backupStorage = backupStorage.backupStorage;
 exports.acsFacultyScraper = acsFacultyScraper.acsFacultyScraper;
+exports.upbScraper = upbScraper.upbScraper;
+exports.lsacBucharestScraper = lsacBucharestScraper.lsacBucharestScraper;
 exports.createNewsEvent = acsFacultyScraper.createNewsEvent;

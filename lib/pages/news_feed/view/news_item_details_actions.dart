@@ -43,15 +43,20 @@ class _NewsItemDetailsActionState extends State<NewsItemDetailsAction> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
-        IconButton(icon: const Icon(Icons.share), onPressed: _shareNewsItem),
+        IconButton(
+            icon: const Icon(Icons.share),
+            iconSize: 20,
+            onPressed: _shareNewsItem),
         if (!isBookmarked)
           IconButton(
             icon: const Icon(Icons.bookmark_border_outlined),
+            iconSize: 20,
             onPressed: () => _toggleBookmark(newsFeedProvider),
           )
         else
           IconButton(
             icon: const Icon(Icons.bookmark_rounded),
+            iconSize: 20,
             onPressed: () => _toggleBookmark(newsFeedProvider),
           ),
       ],
