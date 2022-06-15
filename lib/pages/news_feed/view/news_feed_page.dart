@@ -165,17 +165,10 @@ class _NewsFeedPageState extends State<NewsFeedPage> {
       );
 
   Future<void> _refreshNews() async {
-    await Future.delayed(
-      const Duration(seconds: 2),
-      () async {
-        final List<NewsFeedItem> refreshedNewsItems = await _getNews();
-        setState(
-          () {
-            newsFuture = Future.value(refreshedNewsItems);
-          },
-        );
-      },
-    );
+    final List<NewsFeedItem> refreshedNewsItems = await _getNews();
+    setState(() {
+      newsFuture = Future.value(refreshedNewsItems);
+    });
   }
 
   Widget displayListViewItems(

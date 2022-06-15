@@ -16,10 +16,11 @@ class NewsFeedCard extends StatelessWidget {
       title: S.current.navigationNewsFeed,
       showMoreButtonKey: const ValueKey('show_more_news_feed'),
       onShowMore: () => Navigator.of(context).pushNamed(Routes.newsFeed),
-      future: Provider.of<NewsProvider>(context).fetchNewsFeedItems(limit: 2),
+      future: Provider.of<NewsProvider>(context).fetchNewsFeedItems(),
       builder: (final newsFeedItems) {
         return Column(
           children: newsFeedItems
+              .sublist(0, 2)
               .map(
                 (final item) => ListTile(
                   title: Text(item.title),

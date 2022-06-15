@@ -22,9 +22,26 @@ class NewsProvider with ChangeNotifier {
     try {
       final CollectionReference news =
           FirebaseFirestore.instance.collection('news');
-      final QuerySnapshot<Map<String, dynamic>> qSnapshot =
-          limit == null ? await news.get() : await news.limit(limit).get();
-      return qSnapshot.docs.map(DatabaseNews.fromSnap).toList();
+      final QuerySnapshot<Map<String, dynamic>> qSnapshot = limit == null
+          ? await news.orderBy('createdAt', descending: true).get()
+          : await news
+              .orderBy('createdAt', descending: true)
+              .limit(limit)
+              .get();
+
+      final userClasses = _authProvider.currentUserFromCache?.classes;
+      return qSnapshot.docs.map(DatabaseNews.fromSnap).where((final item) {
+        final itemRelevance = item.relevance;
+        //if item has no relevance, it is always visible
+        if (itemRelevance == null || itemRelevance.isEmpty) {
+          return true;
+        }
+        //computes the intersection between the item's relevance and the user's classes
+        //if the intersection is empty, the item is not relevant
+        itemRelevance.removeWhere(
+            (final relevanceItem) => !userClasses.contains(relevanceItem));
+        return itemRelevance.isNotEmpty;
+      }).toList();
     } catch (e) {
       print(e);
       AppToast.show(S.current.errorSomethingWentWrong);
@@ -44,7 +61,8 @@ class NewsProvider with ChangeNotifier {
       final QuerySnapshot<Map<String, dynamic>> qSnapshot = await news
           .where(FieldPath.documentId, whereIn: getBookmarkedNews())
           .get();
-      return qSnapshot.docs.map(DatabaseNews.fromSnap).toList();
+      return qSnapshot.docs.map(DatabaseNews.fromSnap).toList()
+        ..sort((final a, final b) => a.createdAt.compareTo(b.createdAt) * -1);
     } catch (e) {
       print(e);
       AppToast.show(S.current.errorSomethingWentWrong);
@@ -61,7 +79,8 @@ class NewsProvider with ChangeNotifier {
       final QuerySnapshot<Map<String, dynamic>> qSnapshot = limit == null
           ? await news.where('userId', isEqualTo: userId).get()
           : await news.where('userId', isEqualTo: userId).limit(limit).get();
-      return qSnapshot.docs.map(DatabaseNews.fromSnap).toList();
+      return qSnapshot.docs.map(DatabaseNews.fromSnap).toList()
+        ..sort((final a, final b) => a.createdAt.compareTo(b.createdAt) * -1);
     } catch (e) {
       print(e);
       AppToast.show(S.current.errorSomethingWentWrong);
