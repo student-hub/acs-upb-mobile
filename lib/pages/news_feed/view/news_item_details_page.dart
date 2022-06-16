@@ -23,6 +23,10 @@ class NewsItemDetailsPage extends StatefulWidget {
   static const String uriPath = 'news-details';
   static const String uriQueryParam = 'guid';
 
+  static String buildUri(final String guid) {
+    return '$uriScheme://$uriHost/$uriPath?$uriQueryParam=$guid';
+  }
+
   @override
   _NewsItemDetailsState createState() => _NewsItemDetailsState();
 }

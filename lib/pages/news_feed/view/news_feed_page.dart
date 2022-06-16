@@ -101,7 +101,7 @@ class _NewsFeedPageState extends State<NewsFeedPage> {
                       const SizedBox(height: 10),
                       _newsDetailsTitle(title: newsFeedItem.title),
                       _newsDetailsContent(
-                          content: newsFeedItem.body,
+                          content: _summarizeContent(newsFeedItem),
                           captionColor: captionColor,
                           captionSizeFactor: captionSizeFactor),
                       const SizedBox(height: 20),
@@ -192,6 +192,16 @@ class _NewsFeedPageState extends State<NewsFeedPage> {
           ),
         ],
       );
+
+  String _summarizeContent(final NewsFeedItem newsFeedItem) {
+    final List<String> parts = newsFeedItem.body.split('\n');
+    if (parts.length < 2) return newsFeedItem.body;
+    final String summary = parts[0];
+    final String url = NewsItemDetailsPage.buildUri(newsFeedItem.itemGuid);
+    return summary.endsWith('.')
+        ? '$summary..[(more)]($url)'
+        : '$summary...[(more)]($url)';
+  }
 
   Widget _newsDetailsContent(
           {final String content,
