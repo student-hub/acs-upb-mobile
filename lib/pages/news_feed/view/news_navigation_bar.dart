@@ -88,7 +88,7 @@ class _NewsNavigationBarState extends State<NewsNavigationBar>
     return [
       const Tab(text: 'News'),
       const Tab(text: 'Favorites'),
-      const Tab(text: 'Published'),
+      const Tab(text: 'Authored'),
     ];
   }
 

@@ -41,14 +41,14 @@ class _SourcePageState extends State<SourcePage> {
               if (sourceSelected['organizations']) sources.add('organizations');
               if (sourceSelected['students']) sources.add('students');
               await authProvider.setSourcePreferences(sources);
-              await authProvider.setReceiveNotifications(
-                  receiveNotifications: isSwitched);
-
-              if (isSwitched) {
-                await authProvider.setMessagingTokenIfNotExist();
-              } else {
-                await authProvider.removeMessagingTokenIfExists();
-              }
+              // await authProvider.setReceiveNotifications(
+              //     receiveNotifications: isSwitched);
+              //
+              // if (isSwitched) {
+              //   await authProvider.setMessagingTokenIfNotExist();
+              // } else {
+              //   await authProvider.removeMessagingTokenIfExists();
+              // }
 
               if (!mounted) return;
               Navigator.of(context).pop();
@@ -113,16 +113,16 @@ class _SourcePageState extends State<SourcePage> {
               ),
             ),
             const SizedBox(height: 10),
-            CheckboxListTile(
-              value: isSwitched,
-              onChanged: (final value) {
-                setState(() => isSwitched = value);
-              },
-              title: const Text('Receive notifications'),
-              subtitle: const Text('when news or posts are published'),
-              controlAffinity: ListTileControlAffinity.leading,
-            ),
-            const SizedBox(height: 10),
+            // CheckboxListTile(
+            //   value: isSwitched,
+            //   onChanged: (final value) {
+            //     setState(() => isSwitched = value);
+            //   },
+            //   title: const Text('Receive notifications'),
+            //   subtitle: const Text('when news or posts are published'),
+            //   controlAffinity: ListTileControlAffinity.leading,
+            // ),
+            // const SizedBox(height: 10),
             Padding(
               padding: const EdgeInsets.only(top: 10),
               child: SizedBox(

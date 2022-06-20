@@ -39,6 +39,9 @@ class NewsProvider with ChangeNotifier {
         if (itemRelevance == null || itemRelevance.isEmpty) {
           return true;
         }
+        if (userClasses == null || userClasses.isEmpty) {
+          return true;
+        }
         //computes the intersection between the item's relevance and the user's classes
         //if the intersection is empty, the item is not relevant
         itemRelevance.removeWhere(

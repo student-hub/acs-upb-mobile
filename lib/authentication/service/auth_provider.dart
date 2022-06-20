@@ -256,6 +256,13 @@ class AuthProvider with ChangeNotifier {
       return null;
     });
     await _fetchUser();
+
+    if (_currentUser != null) {
+      if (_currentUser.receiveNotifications) {
+        await setMessagingTokenIfNotExist();
+      }
+    }
+
     return result != null;
   }
 

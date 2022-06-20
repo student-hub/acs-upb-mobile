@@ -29,6 +29,7 @@ class _SettingsPageState extends State<SettingsPage> {
   // Whether the user verified their email; this can be true, false or null if
   // the async check hasn't completed yet.
   bool isVerified;
+  bool receiveNotifications;
 
   // String describing the level of editing permissions that the user has.
   String userPermissionString = '';
@@ -36,8 +37,10 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   void initState() {
     super.initState();
-    Provider.of<AuthProvider>(context, listen: false)
-        .isVerified
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    receiveNotifications =
+        authProvider.currentUserFromCache?.receiveNotifications;
+    authProvider.isVerified
         .then((final value) => setState(() => isVerified = value));
   }
 
@@ -79,6 +82,32 @@ class _SettingsPageState extends State<SettingsPage> {
                     }
                   },
                 ),
+                if (authProvider.isAuthenticated &&
+                    !authProvider.isAnonymous) ...[
+                  categoryTitle('Notifications'),
+                  ListTile(
+                    enabled: true,
+                    title: const Text('Receive notifications'),
+                    subtitle: const Text('when news or posts are published'),
+                    trailing: Switch(
+                      value: receiveNotifications,
+                      onChanged: (final selected) {
+                        if (selected) {
+                          authProvider
+                            ..enableReceiveNotifications()
+                            ..setMessagingTokenIfNotExist();
+                        } else {
+                          authProvider
+                            ..disableReceiveNotifications()
+                            ..removeMessagingTokenIfExists();
+                        }
+                        setState(() {
+                          receiveNotifications = selected;
+                        });
+                      },
+                    ),
+                  ),
+                ],
                 categoryTitle(S.current.settingsTitleLocalization),
                 PrefDialogButton(
                   title: Text(S.current.settingsItemLanguage),
