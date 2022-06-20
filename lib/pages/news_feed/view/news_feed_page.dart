@@ -130,13 +130,12 @@ class _NewsFeedPageState extends State<NewsFeedPage> {
   Widget _newsPostHeader(final NewsFeedItem newsFeedItem) {
     return Row(
       children: [
-        const Padding(
-          padding: EdgeInsets.only(right: 12),
+        Padding(
+          padding: const EdgeInsets.only(right: 12),
           child: CircleAvatar(
             maxRadius: 15,
-            backgroundImage: NetworkImage(
-              placeholderImage,
-            ),
+            backgroundImage:
+                NetworkImage(newsFeedItem.authorAvatarUrl ?? placeholderImage),
           ),
         ),
         Column(

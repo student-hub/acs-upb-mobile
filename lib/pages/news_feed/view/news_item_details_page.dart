@@ -52,7 +52,7 @@ class _NewsItemDetailsState extends State<NewsItemDetailsPage> {
   @override
   Widget build(final BuildContext context) {
     return AppScaffold(
-      title: const Text('Detalii'),
+      title: const Text('Details'),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(12),

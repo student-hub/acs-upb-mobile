@@ -6,6 +6,7 @@ class NewsFeedItem {
     @required this.title,
     @required this.body,
     this.authorDisplayName,
+    this.authorAvatarUrl,
     this.externalLink,
     this.userId,
     this.createdAt,
@@ -18,6 +19,7 @@ class NewsFeedItem {
   final String title;
   final String body;
   final String authorDisplayName;
+  final String authorAvatarUrl;
   final String externalLink;
   final String userId;
   final List<dynamic> relevance;

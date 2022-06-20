@@ -179,6 +179,7 @@ class NewsProvider with ChangeNotifier {
         'body': info['body'],
         'userId': _authProvider.currentUserFromCache.uid,
         'authorDisplayName': _authProvider.currentUserFromCache.displayName,
+        'authorAvatarUrl': null,
         'externalLink': '',
         'relevance': info['relevance'],
         'category': info['category'],
@@ -249,6 +250,7 @@ extension DatabaseNews on NewsFeedItem {
     final String title = data['title'];
     final String body = data['body'];
     final String authorDisplayName = data['authorDisplayName'];
+    final String authorAvatarUrl = data['authorAvatarUrl'];
     final String externalLink = data['externalLink'];
     final String userId = data['userId'];
     final String category = data['category'];
@@ -262,6 +264,7 @@ extension DatabaseNews on NewsFeedItem {
         title: title,
         body: body,
         authorDisplayName: authorDisplayName,
+        authorAvatarUrl: authorAvatarUrl,
         externalLink: externalLink,
         userId: userId,
         category: category,
