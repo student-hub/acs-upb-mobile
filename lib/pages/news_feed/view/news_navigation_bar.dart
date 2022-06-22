@@ -23,38 +23,36 @@ class NewsNavigationBar extends StatefulWidget {
 
 class _NewsNavigationBarState extends State<NewsNavigationBar>
     with TickerProviderStateMixin {
-  int currentTab = 0;
-  List<Widget> tabs;
-  TabController tabController;
+  int currentEditorTab = 0;
+  int currentUserTab = 0;
+  //List<Widget> tabs;
+  TabController userTabController;
+  TabController editorTabController;
   final PageStorageBucket bucket = PageStorageBucket();
 
   @override
   void initState() {
     super.initState();
 
-    final NewsProvider newsProvider =
-        Provider.of<NewsProvider>(context, listen: false);
     final AuthProvider authProvider =
         Provider.of<AuthProvider>(context, listen: false);
 
-    final tabsCount = !authProvider.isAnonymous &&
-            authProvider.currentUserFromCache.canAddPublicInfo
-        ? 3
-        : 2;
-
-    tabController = TabController(vsync: this, length: tabsCount);
-    tabController.addListener(() {
-      if (!tabController.indexIsChanging) {
-        setState(() {
-          currentTab = tabController.index;
-        });
-      }
-    });
-
-    tabs = !authProvider.isAnonymous &&
-            authProvider.currentUserFromCache.canAddPublicInfo
-        ? getFullTabs(newsProvider)
-        : getLimitedTabs(newsProvider);
+    userTabController = TabController(vsync: this, length: 2)
+      ..addListener(() {
+        if (!userTabController.indexIsChanging) {
+          setState(() {
+            currentUserTab = userTabController.index;
+          });
+        }
+      });
+    editorTabController = TabController(vsync: this, length: 3)
+      ..addListener(() {
+        if (!editorTabController.indexIsChanging) {
+          setState(() {
+            currentEditorTab = editorTabController.index;
+          });
+        }
+      });
 
     // Show "Select sources" page if user has no preference set
     if (!authProvider.isAnonymous) {
@@ -67,7 +65,7 @@ class _NewsNavigationBarState extends State<NewsNavigationBar>
     }
   }
 
-  List<Widget> getFullTabs(final NewsProvider newsProvider) {
+  List<Widget> getEditorTabs(final NewsProvider newsProvider) {
     return [
       NewsFeedPage(
         fetchNewsFuture: newsProvider.fetchNewsFeedItems,
@@ -84,7 +82,7 @@ class _NewsNavigationBarState extends State<NewsNavigationBar>
     ];
   }
 
-  List<Widget> getFullTabsNames() {
+  List<Widget> getEditorTabsNames() {
     return [
       const Tab(text: 'News'),
       const Tab(text: 'Favorites'),
@@ -92,7 +90,7 @@ class _NewsNavigationBarState extends State<NewsNavigationBar>
     ];
   }
 
-  List<Widget> getLimitedTabs(final NewsProvider newsProvider) {
+  List<Widget> getUserTabs(final NewsProvider newsProvider) {
     return [
       NewsFeedPage(
         fetchNewsFuture: newsProvider.fetchNewsFeedItems,
@@ -105,46 +103,65 @@ class _NewsNavigationBarState extends State<NewsNavigationBar>
     ];
   }
 
-  List<Widget> getLimitedTabsNames() {
+  List<Widget> getUserTabsNames() {
     return [
       const Tab(text: 'News'),
       const Tab(text: 'Favorites'),
     ];
   }
 
+  Widget getAnonymousTab(final NewsProvider newsProvider) => NewsFeedPage(
+        fetchNewsFuture: newsProvider.fetchNewsFeedItems,
+        key: const PageStorageKey('NewsFeed'),
+      );
+
   @override
   void dispose() {
-    tabController.dispose();
+    userTabController.dispose();
+    editorTabController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(final BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context, listen: true);
-    return !authProvider.isAnonymous && authProvider.isAuthenticated
-        ? newsTabController(authProvider, context)
-        : anonymousNewsFeedPage();
+    final isUser = !authProvider.isAnonymous && authProvider.isAuthenticated;
+    if (isUser) {
+      final isEditor = authProvider.currentUserFromCache?.canEditPublicInfo;
+      return isEditor
+          ? newsTabControllerEditor(authProvider, context)
+          : newsTabControllerUser(authProvider, context);
+    } else {
+      return anonymousNewsFeedPage(context);
+    }
   }
 
-  Widget anonymousNewsFeedPage() {
+  Widget anonymousNewsFeedPage(final BuildContext context) {
+    final NewsProvider newsProvider =
+        Provider.of<NewsProvider>(context, listen: false);
     return AppScaffold(
       title: const Text('News feed'),
-      body: tabs[0],
+      body: getAnonymousTab(newsProvider),
     );
   }
 
-  Widget newsTabController(
+  Widget newsTabControllerEditor(
       final AuthProvider authProvider, final BuildContext context) {
+    final NewsProvider newsProvider =
+        Provider.of<NewsProvider>(context, listen: false);
     return DefaultTabController(
-      length: tabs.length,
+      length: 3,
       initialIndex: widget.tabIndex,
       child: AppScaffold(
         title: const Text('News feed'),
         body: PageStorage(
-          child: TabBarView(controller: tabController, children: tabs),
+          child: TabBarView(
+            controller: editorTabController,
+            children: getEditorTabs(newsProvider),
+          ),
           bucket: bucket,
         ),
-        appBarBottom: newsNavigationBar(authProvider, context),
+        appBarBottom: newsNavigationBarEditor(authProvider, context),
         actions: [
           authProvider.currentUserFromCache.canAddPublicInfo
               ? AppScaffoldAction(
@@ -165,16 +182,59 @@ class _NewsNavigationBarState extends State<NewsNavigationBar>
     );
   }
 
-  Widget newsNavigationBar(
+  Widget newsTabControllerUser(
       final AuthProvider authProvider, final BuildContext context) {
-    final tabsNames = !authProvider.isAnonymous &&
-            authProvider.currentUserFromCache.canAddPublicInfo
-        ? getFullTabsNames()
-        : getLimitedTabsNames();
+    final NewsProvider newsProvider =
+        Provider.of<NewsProvider>(context, listen: false);
+    return DefaultTabController(
+      length: 2,
+      initialIndex: widget.tabIndex,
+      child: AppScaffold(
+        title: const Text('News feed'),
+        body: PageStorage(
+          child: TabBarView(
+            controller: userTabController,
+            children: getUserTabs(newsProvider),
+          ),
+          bucket: bucket,
+        ),
+        appBarBottom: newsNavigationBarUser(authProvider, context),
+        actions: [
+          authProvider.currentUserFromCache.canAddPublicInfo
+              ? AppScaffoldAction(
+                  icon: Icons.add,
+                  tooltip: S.current.navigationSettings,
+                  route: Routes.newsCreate,
+                )
+              : AppScaffoldAction(
+                  icon: Icons.add,
+                  tooltip: S.current.navigationSettings,
+                  onPressed: () => showToast(
+                    'You need to have editing permissions to publish. Navigate to Settings and apply for these permissions!',
+                    duration: const Duration(seconds: 4),
+                  ),
+                ),
+        ],
+      ),
+    );
+  }
 
+  Widget newsNavigationBarEditor(
+      final AuthProvider authProvider, final BuildContext context) {
     return TabBar(
-      controller: tabController,
-      tabs: tabsNames,
+      controller: editorTabController,
+      tabs: getEditorTabsNames(),
+      labelColor: Colors.white,
+      unselectedLabelColor: Theme.of(context).unselectedWidgetColor,
+      indicatorColor: Colors.white,
+    );
+  }
+
+  Widget newsNavigationBarUser(
+      final AuthProvider authProvider, final BuildContext context) {
+    return TabBar(
+      controller: userTabController,
+      tabs: getUserTabsNames(),
       labelColor: Colors.white,
       unselectedLabelColor: Theme.of(context).unselectedWidgetColor,
       indicatorColor: Colors.white,

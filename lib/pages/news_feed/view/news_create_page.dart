@@ -127,7 +127,7 @@ class _NewsCreatePageState extends State<NewsCreatePage> {
                     children: [
                       Expanded(
                         child: Text(
-                          'Select your role that will be displayed in the author section. Depending on the role, your post will be grouped within a source category (organizations or students).',
+                          'Select your role that will be displayed in the author section. Depending on the role, your post will be grouped within a source category (organizations or students). If you want to get a specific role, go to Settings > Your user roles.',
                           style: Theme.of(context).textTheme.caption.apply(
                               color:
                                   Theme.of(context).textTheme.headline5.color),

@@ -28,9 +28,8 @@ class _NewsFeedPageState extends State<NewsFeedPage> {
   Future<dynamic> newsFuture;
 
   String _formatDate(final String date) {
-    return date;
-    final DateTime dateTime = DateTime.parse(date);
-    return DateFormat('yyyy-MM-dd').format(dateTime);
+    final parts = date.split(' ');
+    return parts[0];
   }
 
   @override
@@ -239,7 +238,7 @@ class _NewsFeedPageState extends State<NewsFeedPage> {
   Widget _newsDetailsTimestamp({final String createdAt}) => Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          Text(createdAt, style: const TextStyle(fontSize: 12)),
+          Text(_formatDate(createdAt), style: const TextStyle(fontSize: 12)),
         ],
       );
 

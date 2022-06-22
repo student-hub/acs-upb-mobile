@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:uuid/uuid.dart';
 
 import '../../../generated/l10n.dart';
 import '../../../resources/utils.dart';
@@ -26,7 +25,6 @@ extension RoleRequestExtension on RoleRequest {
 class RolesProvider {
   Future<bool> makeRequest(final RoleRequest roleRequest) async {
     try {
-      const uuid = Uuid();
       final ref = FirebaseFirestore.instance
           .collection('forms')
           .doc('role_request_answers');

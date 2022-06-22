@@ -260,7 +260,7 @@ extension DatabaseNews on NewsFeedItem {
     final String categoryRole = data['categoryRole'];
     final List<dynamic> relevance = data['relevance'] as List<dynamic>;
     final String createdAt =
-        DateFormat('yyyy-MM-dd').format(data['createdAt'].toDate());
+        DateFormat('yyyy-MM-dd HH:mm').format(data['createdAt'].toDate());
 
     return NewsFeedItem(
         itemGuid: itemGuid,

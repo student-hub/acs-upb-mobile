@@ -10,6 +10,11 @@ import '../news_feed/service/news_provider.dart';
 import '../news_feed/view/news_item_details_page.dart';
 
 class NewsFeedCard extends StatelessWidget {
+  String _formatDate(final String date) {
+    final parts = date.split(' ');
+    return parts[0];
+  }
+
   @override
   Widget build(final BuildContext context) {
     return InfoCard<List<NewsFeedItem>>(
@@ -24,7 +29,7 @@ class NewsFeedCard extends StatelessWidget {
               .map(
                 (final item) => ListTile(
                   title: Text(item.title),
-                  subtitle: Text('Posted on: ${item.createdAt}'),
+                  subtitle: Text('Posted on: ${_formatDate(item.createdAt)}'),
                   trailing: const Icon(Icons.arrow_forward_ios_outlined),
                   contentPadding: EdgeInsets.zero,
                   dense: true,
