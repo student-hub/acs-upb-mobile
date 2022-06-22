@@ -87,8 +87,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   categoryTitle('Notifications'),
                   ListTile(
                     enabled: true,
-                    title: const Text('Receive notifications'),
-                    subtitle: const Text('when news or posts are published'),
+                    title: const Text('News'),
                     trailing: Switch(
                       value: receiveNotifications,
                       onChanged: (final selected) {
@@ -139,18 +138,22 @@ class _SettingsPageState extends State<SettingsPage> {
                   title: Text(S.current.settingsItemEditingPermissions),
                   subtitle: Text(userPermissionString),
                 ),
-                ListTile(
-                  key: const ValueKey('ask_roles'),
-                  onTap: () {
-                    if (authProvider.isAnonymous) {
-                      AppToast.show(S.current.messageNotLoggedIn);
-                    } else {
-                      Navigator.of(context).pushNamed(Routes.requestRoles);
-                    }
-                  },
-                  title: const Text('Your user roles'),
-                  subtitle: const Text('Ask for one or more roles'),
-                ),
+                if (authProvider.isAuthenticated &&
+                    !authProvider.isAnonymous &&
+                    authProvider.currentUserFromCache.canEditPublicInfo) ...[
+                  ListTile(
+                    key: const ValueKey('ask_roles'),
+                    onTap: () {
+                      if (authProvider.isAnonymous) {
+                        AppToast.show(S.current.messageNotLoggedIn);
+                      } else {
+                        Navigator.of(context).pushNamed(Routes.requestRoles);
+                      }
+                    },
+                    title: const Text('Your user roles'),
+                    subtitle: const Text('Ask for one or more roles'),
+                  ),
+                ],
                 ListTile(
                   key: const ValueKey('edit_source_selection'),
                   onTap: () {
