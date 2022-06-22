@@ -10,6 +10,7 @@ extension RoleRequestExtension on RoleRequest {
     final Map<String, dynamic> data = {};
 
     if (userId != null) data['userId'] = userId;
+    if (userEmail != null) data['userEmail'] = userEmail;
     if (roleName != null) data['roleName'] = roleName;
     if (requestBody != null) data['requestBody'] = requestBody;
     data['id'] = id;

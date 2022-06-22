@@ -182,8 +182,8 @@ class _RoleRequestCardState extends State<RoleRequestCard>
                       ..processed = true;
                   });
 
-                  // await Utils.launchURL(
-                  //     'mailto:${roleRequest.userEmail}?subject=Permisiuni%20ACS%20UPB%20Mobile&body=Ai%20primit%20permisiuni%20de%20editare%20în%20ACS%20UPB%20Mobile!');
+                  await Utils.launchURL(
+                      'mailto:${roleRequest.userEmail}?subject=Role%20accepted%20ACS%20UPB%20Mobile&body=Ai%20primit%20rolul%20de%20${roleRequest.roleName}%20în%20ACS%20UPB%20Mobile!');
                 },
               )
             ],

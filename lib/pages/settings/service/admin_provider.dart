@@ -14,6 +14,7 @@ extension RequestExtension on Request {
     final data = snap.data();
     return Request(
       userId: data['addedBy'],
+      userEmail: data['userEmail'],
       requestBody: data['requestBody'],
       processed: data['done'],
       dateSubmitted: data['dateSubmitted'],
@@ -32,6 +33,7 @@ extension RoleRequestExtension on RoleRequest {
   static RoleRequest fromSnap(final dynamic data) {
     return RoleRequest(
       userId: data['userId'],
+      userEmail: data['userEmail'],
       roleName: data['roleName'],
       requestBody: data['requestBody'],
       processed: data['processed'],

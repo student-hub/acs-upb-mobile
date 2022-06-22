@@ -94,16 +94,21 @@ class _RequestPermissionsPageState extends State<RequestPermissionsPage> {
               }
 
               print('Sending request...');
-              queryResult = await requestProvider.makeRequest(
-                Request(
-                  userId: user.uid,
-                  requestBody: requestController.text,
-                ),
-              );
-              if (queryResult) {
-                AppToast.show(S.current.messageRequestHasBeenSent);
-                if (!mounted) return;
-                Navigator.of(context).pop();
+              if (mounted) {
+                final authProvider =
+                    Provider.of<AuthProvider>(context, listen: false);
+                queryResult = await requestProvider.makeRequest(
+                  Request(
+                    userId: user.uid,
+                    userEmail: authProvider.email,
+                    requestBody: requestController.text,
+                  ),
+                );
+                if (queryResult) {
+                  AppToast.show(S.current.messageRequestHasBeenSent);
+                  if (!mounted) return;
+                  Navigator.of(context).pop();
+                }
               }
             },
           )

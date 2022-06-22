@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../service/admin_provider.dart';
 import 'admin_request_card.dart';
-import 'role_request_card.dart';
+import 'admin_role_request_card.dart';
 
 class AdminPageRolesRequests extends StatefulWidget {
   const AdminPageRolesRequests({this.allRequests, final Key key})

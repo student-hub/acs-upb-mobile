@@ -32,7 +32,6 @@ const sendNewsNotification = async (title, body) => {
     .get();
 
   const fcmTokens = query.docs.map((doc) => doc.data().token);
-  console.log(fcmTokens);
   if (fcmTokens.length > 0) {
     const payload = {
       notification: {

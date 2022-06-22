@@ -12,6 +12,7 @@ extension RequestExtension on Request {
     final Map<String, dynamic> data = {};
 
     if (userId != null) data['addedBy'] = userId;
+    if (userEmail != null) data['userEmail'] = userEmail;
     if (requestBody != null) data['requestBody'] = requestBody;
     data['done'] = processed;
     data['dateSubmitted'] = Timestamp.now();

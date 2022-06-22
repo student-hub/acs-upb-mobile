@@ -174,10 +174,9 @@ class _AdminRequestCardState extends State<AdminRequestCard>
                       ..accepted = true
                       ..processed = true;
                   });
-                  //   final authProvider =
-                  //       Provider.of<AuthProvider>(context, listen: false);
-                  //   await Utils.launchURL(
-                  //       'mailto:${authProvider.email}?subject=Permisiuni%20ACS%20UPB%20Mobile&body=Ai%20primit%20permisiuni%20de%20editare%20în%20ACS%20UPB%20Mobile!');
+
+                  await Utils.launchURL(
+                      'mailto:${request.userEmail}?subject=Permisiuni%20ACS%20UPB%20Mobile&body=Ai%20primit%20permisiuni%20de%20editare%20în%20ACS%20UPB%20Mobile!');
                 },
               )
             ],

@@ -64,20 +64,20 @@ class _NewsItemDetailsActionState extends State<NewsItemDetailsAction> {
               await _deletePost();
             },
             icon: const Icon(Icons.delete),
-            padding: const EdgeInsets.all(5),
+            padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
             constraints: const BoxConstraints(),
           )
         ],
         IconButton(
             icon: const Icon(Icons.share),
-            padding: const EdgeInsets.all(5),
+            padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
             constraints: const BoxConstraints(),
             iconSize: 20,
             onPressed: _shareNewsItem),
         if (!isBookmarked)
           IconButton(
             icon: const Icon(Icons.bookmark_border_outlined),
-            padding: const EdgeInsets.all(5),
+            padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
             constraints: const BoxConstraints(),
             iconSize: 20,
             onPressed: () => _toggleBookmark(newsFeedProvider),
@@ -85,7 +85,7 @@ class _NewsItemDetailsActionState extends State<NewsItemDetailsAction> {
         else
           IconButton(
             icon: const Icon(Icons.bookmark_rounded),
-            padding: const EdgeInsets.all(5),
+            padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
             constraints: const BoxConstraints(),
             iconSize: 20,
             onPressed: () => _toggleBookmark(newsFeedProvider),

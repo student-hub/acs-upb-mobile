@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 class Request {
   Request(
       {@required this.userId,
+      @required this.userEmail,
       @required this.requestBody,
       this.processed = false,
       this.processedBy,
@@ -13,6 +14,9 @@ class Request {
 
   /// The user who created this request
   final String userId;
+
+  /// The email of the user who created this request
+  final String userEmail;
 
   /// The body of the request
   final String requestBody;
