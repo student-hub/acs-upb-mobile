@@ -25,7 +25,7 @@ const feedPagedArg = "/?paged=";
 exports.acsFacultyScraper = functions
   .region("europe-west3")
   .pubsub
-  .schedule('every minute')
+  .schedule('every day 00:00')
   .timeZone('Europe/Bucharest')
   .onRun(async (_) => {
     const response = await fetch(facultyFeedUrl);
