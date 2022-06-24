@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:acs_upb_mobile/pages/news_feed/view/FirebaseDynamicLinkService.dart';
 
 import '../../../authentication/service/auth_provider.dart';
 import '../model/news_feed_item.dart';
@@ -33,10 +34,13 @@ class _NewsItemDetailsActionState extends State<NewsItemDetailsAction> {
     }
   }
 
-  void _shareNewsItem() {
-    final uri = Uri.parse(
-        '${NewsItemDetailsPage.uriScheme}://${NewsItemDetailsPage.uriHost}/${NewsItemDetailsPage.uriPath}?${NewsItemDetailsPage.uriQueryParam}=${widget.newsFeedItem.itemGuid}');
-    Share.share(uri.toString());
+  Future<void> _shareNewsItem() async {
+    // final uri = Uri.parse(
+    //     '${NewsItemDetailsPage.uriScheme}://${NewsItemDetailsPage.uriHost}/${NewsItemDetailsPage.uriPath}?${NewsItemDetailsPage.uriQueryParam}=${widget.newsFeedItem.itemGuid}');
+
+    final uri = await FirebaseDynamicLinkService.createDynamicLink();
+    print('Share uri: $uri');
+    await Share.share(uri);
   }
 
   Future<void> _deletePost() async {
@@ -73,7 +77,9 @@ class _NewsItemDetailsActionState extends State<NewsItemDetailsAction> {
             padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
             constraints: const BoxConstraints(),
             iconSize: 20,
-            onPressed: _shareNewsItem),
+            onPressed: () async {
+              await _shareNewsItem();
+            }),
         if (!isBookmarked)
           IconButton(
             icon: const Icon(Icons.bookmark_border_outlined),

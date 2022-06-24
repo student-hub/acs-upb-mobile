@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:acs_upb_mobile/pages/news_feed/view/FirebaseDynamicLinkService.dart';
 import 'package:easy_dynamic_theme/easy_dynamic_theme.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -94,6 +95,8 @@ Future<void> main() async {
 
   await Firebase.initializeApp();
   //FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+
+  await FirebaseDynamicLinkService.initDynamicLink();
 
   final authProvider = AuthProvider();
   final classProvider = ClassProvider();
@@ -196,8 +199,8 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    _initURIHandler();
-    _incomingLinkHandler();
+    //_initURIHandler();
+    //_incomingLinkHandler();
     _initNotifications();
   }
 
