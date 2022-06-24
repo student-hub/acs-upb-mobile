@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../widgets/error_page.dart';
 import '../service/admin_provider.dart';
 import 'admin_request_card.dart';
 import 'admin_role_request_card.dart';
@@ -27,15 +28,21 @@ class _AdminPageRolesRequestsState extends State<AdminPageRolesRequests> {
       builder: (final context, final snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
           if (snapshot.hasData) {
-            return ListView.builder(
-              itemCount:
-                  snapshot.data?.length != null ? snapshot.data.length : 0,
-              itemBuilder: (final context, final index) {
-                return RoleRequestCard(
-                  roleRequest: snapshot.data[index],
-                );
-              },
-            );
+            if (snapshot.data.length == 0) {
+              return const ErrorPage(
+                imgPath: 'assets/illustrations/undraw_empty.png',
+                errorMessage: 'No available role requests',
+              );
+            } else {
+              return ListView.builder(
+                itemCount: snapshot.data.length,
+                itemBuilder: (final context, final index) {
+                  return RoleRequestCard(
+                    roleRequest: snapshot.data[index],
+                  );
+                },
+              );
+            }
           }
           return _requestsNotLoadedWidget();
         }
