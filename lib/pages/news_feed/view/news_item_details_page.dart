@@ -137,19 +137,18 @@ class _NewsItemDetailsState extends State<NewsItemDetailsPage> {
   Widget _newsPostHeader(final NewsFeedItem newsFeedItem) {
     return Row(
       children: [
-        const Padding(
-          padding: EdgeInsets.only(right: 12),
+        Padding(
+          padding: const EdgeInsets.only(right: 12),
           child: CircleAvatar(
             maxRadius: 15,
-            backgroundImage: NetworkImage(
-              placeholderImage,
-            ),
+            backgroundImage:
+                NetworkImage(newsFeedItem.authorAvatarUrl ?? placeholderImage),
           ),
         ),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _newsDetailsAuthor(author: newsFeedItem.authorDisplayName),
+            _newsDetailsAuthor(newsFeedItem: newsFeedItem),
             _newsDetailsTimestamp(createdAt: newsFeedItem.createdAt),
           ],
         )
@@ -157,11 +156,23 @@ class _NewsItemDetailsState extends State<NewsItemDetailsPage> {
     );
   }
 
-  Widget _newsDetailsAuthor({final String author}) => Row(
+  String _computeDisplayName({final NewsFeedItem newsFeedItem}) {
+    final categoryRole = newsFeedItem.categoryRole;
+    final parts = categoryRole.split('-');
+    if (parts[0] == 'organizations') {
+      return '${newsFeedItem.authorDisplayName} (${parts[1]})';
+    } else if (parts[0] == 'representatives') {
+      return '${newsFeedItem.authorDisplayName} (${parts[1]})';
+    } else {
+      return newsFeedItem.authorDisplayName;
+    }
+  }
+
+  Widget _newsDetailsAuthor({final NewsFeedItem newsFeedItem}) => Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Text(
-            author,
+            _computeDisplayName(newsFeedItem: newsFeedItem),
             style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 12,
@@ -225,10 +236,7 @@ class _NewsItemDetailsState extends State<NewsItemDetailsPage> {
   Widget _newsDetailsTimestamp({final String createdAt}) => Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          Text(
-            'Posted on: $createdAt',
-            style: const TextStyle(fontSize: 12),
-          ),
+          Text(_formatDate(createdAt), style: const TextStyle(fontSize: 12)),
         ],
       );
 

@@ -96,9 +96,7 @@ class _SettingsPageState extends State<SettingsPage> {
                             ..enableReceiveNotifications()
                             ..setMessagingTokenIfNotExist();
                         } else {
-                          authProvider
-                            ..disableReceiveNotifications()
-                            ..removeMessagingTokenIfExists();
+                          authProvider.disableReceiveNotifications();
                         }
                         setState(() {
                           receiveNotifications = selected;

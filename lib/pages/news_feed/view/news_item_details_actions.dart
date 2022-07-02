@@ -4,13 +4,17 @@ import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 
 import '../../../authentication/service/auth_provider.dart';
+import '../../../widgets/button.dart';
+import '../../../widgets/dialog.dart';
 import '../model/news_feed_item.dart';
 import '../service/news_provider.dart';
 import 'news_item_details_page.dart';
 
 class NewsItemDetailsAction extends StatefulWidget {
-  const NewsItemDetailsAction({@required this.newsFeedItem});
+  const NewsItemDetailsAction(
+      {@required this.newsFeedItem, this.deleteCallback});
   final NewsFeedItem newsFeedItem;
+  final Future<void> Function() deleteCallback;
 
   @override
   _NewsItemDetailsActionState createState() => _NewsItemDetailsActionState();
@@ -39,11 +43,44 @@ class _NewsItemDetailsActionState extends State<NewsItemDetailsAction> {
     Share.share(uri.toString());
   }
 
-  Future<void> _deletePost() async {
+  Future<void> _onConfirmedDeletePost() async {
     final NewsProvider newsProvider =
         Provider.of<NewsProvider>(context, listen: false);
     final result = await newsProvider.deletePost(widget.newsFeedItem.itemGuid);
     showToast(result ? 'Post successfully deleted' : 'Post failed to delete');
+    if (widget.deleteCallback != null) {
+      await widget.deleteCallback();
+    }
+  }
+
+  AppDialog _deletionConfirmationDialog(
+          {final BuildContext context, final Function onDelete}) =>
+      AppDialog(
+        icon: const Icon(Icons.delete_outlined),
+        title: 'Delete post',
+        message: 'Are you sure you want to delete this post?',
+        info: 'This action cannot be undo',
+        actions: [
+          AppButton(
+            text: 'Delete post',
+            width: 130,
+            onTap: onDelete,
+          )
+        ],
+      );
+
+  Future<void> _deletePost(final BuildContext context) async {
+    if (!mounted) return;
+    await showDialog<dynamic>(
+      context: context,
+      builder: (final context) => _deletionConfirmationDialog(
+        context: context,
+        onDelete: () async {
+          Navigator.pop(context);
+          await _onConfirmedDeletePost();
+        },
+      ),
+    );
   }
 
   @override
@@ -61,7 +98,7 @@ class _NewsItemDetailsActionState extends State<NewsItemDetailsAction> {
         if (isOwner) ...[
           IconButton(
             onPressed: () async {
-              await _deletePost();
+              await _deletePost(context);
             },
             icon: const Icon(Icons.delete),
             padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),

@@ -100,7 +100,7 @@ class AppScaffold extends StatelessWidget {
                       child: Text(
                         action.text,
                         style: const TextStyle().apply(
-                            color: Theme.of(context).primaryIconTheme.color),
+                            color: Theme.of(context).textTheme.bodyText1.color),
                       ),
                       onPressed: onPressed,
                     ),

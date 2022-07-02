@@ -245,6 +245,7 @@ class _NewsFeedPageState extends State<NewsFeedPage> {
   Widget _newsDetailsActions(final NewsFeedItem newsFeedItem) =>
       NewsItemDetailsAction(
         newsFeedItem: newsFeedItem,
+        deleteCallback: _refreshNews,
       );
 
   Future<void> _refreshNews() async {
