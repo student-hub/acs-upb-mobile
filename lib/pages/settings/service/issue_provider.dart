@@ -1,6 +1,9 @@
 import 'dart:async';
 
+import 'package:acs_upb_mobile/generated/l10n.dart';
 import 'package:acs_upb_mobile/pages/settings/model/issue.dart';
+import 'package:acs_upb_mobile/resources/utils.dart';
+import 'package:acs_upb_mobile/widgets/toast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 extension IssueExtension on Issue {
@@ -12,6 +15,7 @@ extension IssueExtension on Issue {
     }
     if (issueBody != null) data['issueBody'] = issueBody;
     if (type != null) data['type'] = type;
+    data['version'] = Utils.packageInfo.version;
 
     return data;
   }
@@ -32,6 +36,7 @@ class IssueProvider {
       return true;
     } catch (e) {
       print(e);
+      AppToast.show(S.current.errorSomethingWentWrong);
       return false;
     }
   }
