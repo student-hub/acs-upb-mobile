@@ -7,6 +7,7 @@ import '../../../authentication/service/auth_provider.dart';
 import '../../../generated/l10n.dart';
 import '../../../navigation/routes.dart';
 import '../../../widgets/scaffold.dart';
+import '../../../widgets/toast.dart';
 import '../../settings/view/source_page.dart';
 import '../service/news_provider.dart';
 import 'news_feed_page.dart';
@@ -68,14 +69,17 @@ class _NewsNavigationBarState extends State<NewsNavigationBar>
   List<Widget> getEditorTabs(final NewsProvider newsProvider) {
     return [
       NewsFeedPage(
+        newsFeedCategory: 'News',
         fetchNewsFuture: newsProvider.fetchNewsFeedItems,
         key: const PageStorageKey('NewsFeed'),
       ),
       NewsFeedPage(
+        newsFeedCategory: 'Favorites',
         fetchNewsFuture: newsProvider.fetchFavoriteNewsFeedItems,
         key: const PageStorageKey('NewsFeedFavorite'),
       ),
       NewsFeedPage(
+        newsFeedCategory: 'Authored',
         fetchNewsFuture: newsProvider.fetchPersonalNewsFeedItem,
         key: const PageStorageKey('NewsFeedPublished'),
       ),
@@ -93,10 +97,12 @@ class _NewsNavigationBarState extends State<NewsNavigationBar>
   List<Widget> getUserTabs(final NewsProvider newsProvider) {
     return [
       NewsFeedPage(
+        newsFeedCategory: 'News',
         fetchNewsFuture: newsProvider.fetchNewsFeedItems,
         key: const PageStorageKey('NewsFeed'),
       ),
       NewsFeedPage(
+        newsFeedCategory: 'Favorites',
         fetchNewsFuture: newsProvider.fetchFavoriteNewsFeedItems,
         key: const PageStorageKey('NewsFeedFavorite'),
       ),
@@ -172,9 +178,8 @@ class _NewsNavigationBarState extends State<NewsNavigationBar>
               : AppScaffoldAction(
                   icon: Icons.add,
                   tooltip: S.current.navigationSettings,
-                  onPressed: () => showToast(
+                  onPressed: () => AppToast.show(
                     'You need to have editing permissions to publish. Navigate to Settings and apply for these permissions!',
-                    duration: const Duration(seconds: 4),
                   ),
                 ),
         ],
@@ -209,9 +214,8 @@ class _NewsNavigationBarState extends State<NewsNavigationBar>
               : AppScaffoldAction(
                   icon: Icons.add,
                   tooltip: S.current.navigationSettings,
-                  onPressed: () => showToast(
+                  onPressed: () => AppToast.show(
                     'You need to have editing permissions to publish. Navigate to Settings and apply for these permissions!',
-                    duration: const Duration(seconds: 4),
                   ),
                 ),
         ],

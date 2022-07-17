@@ -16,8 +16,13 @@ const placeholderImage =
     'https://upload.wikimedia.org/wikipedia/commons/c/cd/Portrait_Placeholder_Square.png';
 
 class NewsFeedPage extends StatefulWidget {
-  const NewsFeedPage({this.fetchNewsFuture, final Key key}) : super(key: key);
+  const NewsFeedPage(
+      {@required this.newsFeedCategory,
+      @required this.fetchNewsFuture,
+      final Key key})
+      : super(key: key);
 
+  final String newsFeedCategory;
   final Future<List<NewsFeedItem>> Function({int limit}) fetchNewsFuture;
 
   @override
@@ -36,6 +41,16 @@ class _NewsFeedPageState extends State<NewsFeedPage> {
   void initState() {
     super.initState();
     newsFuture = _getNews();
+  }
+
+  String getNoNewsMessage() {
+    if (widget.newsFeedCategory == 'Favorites') {
+      return 'There are no bookmarked news!';
+    } else if (widget.newsFeedCategory == 'Authored') {
+      return 'There are no published news!';
+    } else {
+      return 'There are no available news!';
+    }
   }
 
   Future<List<NewsFeedItem>> _getNews() async {
@@ -62,7 +77,7 @@ class _NewsFeedPageState extends State<NewsFeedPage> {
         } else if (newsFeedItems.isEmpty) {
           return ErrorPage(
             imgPath: 'assets/illustrations/undraw_empty.png',
-            errorMessage: S.current.warningNoNews,
+            errorMessage: getNoNewsMessage(),
           );
         }
 
@@ -246,6 +261,8 @@ class _NewsFeedPageState extends State<NewsFeedPage> {
       NewsItemDetailsAction(
         newsFeedItem: newsFeedItem,
         deleteCallback: _refreshNews,
+        unbookmarkCallback:
+            widget.newsFeedCategory == 'Favorites' ? _refreshNews : null,
       );
 
   Future<void> _refreshNews() async {

@@ -82,22 +82,21 @@ class _RequestPermissionsPageState extends State<RequestPermissionsPage> {
                  * Check if there is already a request registered for the current
                  * user.
                  */
-              bool queryResult =
-                  await requestProvider.userAlreadyRequested(user.uid);
+              // bool queryResult =
+              //     await requestProvider.userAlreadyRequested(user.uid);
+              //
+              // if (queryResult) {
+              //   if (!mounted) return;
+              //   await showDialog<dynamic>(
+              //     context: context,
+              //     builder: _requestAlreadyExistsDialog,
+              //   );
+              // }
 
-              if (queryResult) {
-                if (!mounted) return;
-                await showDialog<dynamic>(
-                  context: context,
-                  builder: _requestAlreadyExistsDialog,
-                );
-              }
-
-              print('Sending request...');
               if (mounted) {
                 final authProvider =
                     Provider.of<AuthProvider>(context, listen: false);
-                queryResult = await requestProvider.makeRequest(
+                bool queryResult = await requestProvider.makeRequest(
                   Request(
                     userId: user.uid,
                     userEmail: authProvider.email,

@@ -6,15 +6,19 @@ import 'package:share_plus/share_plus.dart';
 import '../../../authentication/service/auth_provider.dart';
 import '../../../widgets/button.dart';
 import '../../../widgets/dialog.dart';
+import '../../../widgets/toast.dart';
 import '../model/news_feed_item.dart';
 import '../service/news_provider.dart';
 import 'news_item_details_page.dart';
 
 class NewsItemDetailsAction extends StatefulWidget {
   const NewsItemDetailsAction(
-      {@required this.newsFeedItem, this.deleteCallback});
+      {@required this.newsFeedItem,
+      this.deleteCallback,
+      this.unbookmarkCallback});
   final NewsFeedItem newsFeedItem;
   final Future<void> Function() deleteCallback;
+  final Future<void> Function() unbookmarkCallback;
 
   @override
   _NewsItemDetailsActionState createState() => _NewsItemDetailsActionState();
@@ -25,10 +29,15 @@ class _NewsItemDetailsActionState extends State<NewsItemDetailsAction> {
   bool isOwner = false;
 
   Future<void> _toggleBookmark(final NewsProvider newsProvider) async {
-    showToast(isBookmarked ? 'Removed from favorites' : 'Added to favorites');
+    AppToast.show(
+        isBookmarked ? 'Removed from favorites' : 'Added to favorites');
     if (isBookmarked) {
       if (await newsProvider.unbookmarkNewsItem(widget.newsFeedItem.itemGuid)) {
-        setState(() => isBookmarked = false);
+        if (widget.unbookmarkCallback != null) {
+          await widget.unbookmarkCallback();
+        } else {
+          setState(() => isBookmarked = false);
+        }
       }
     } else {
       if (await newsProvider.bookmarkNewsItem(widget.newsFeedItem.itemGuid)) {
@@ -47,7 +56,8 @@ class _NewsItemDetailsActionState extends State<NewsItemDetailsAction> {
     final NewsProvider newsProvider =
         Provider.of<NewsProvider>(context, listen: false);
     final result = await newsProvider.deletePost(widget.newsFeedItem.itemGuid);
-    showToast(result ? 'Post successfully deleted' : 'Post failed to delete');
+    AppToast.show(
+        result ? 'Post successfully deleted' : 'Post failed to delete');
     if (widget.deleteCallback != null) {
       await widget.deleteCallback();
     }
