@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' hide User;
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth show User;
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 
 import '../../generated/l10n.dart';
@@ -20,8 +21,11 @@ extension DatabaseUser on User {
       firstName: data['name']['first'],
       lastName: data['name']['last'],
       classes: List.from(data['class'] ?? []),
+      bookmarkedNews: List.from(data['bookmarkedNews'] ?? []),
       permissionLevel: data['permissionLevel'],
+      receiveNotifications: data['receiveNotifications'] ?? false,
       sources: data['sources'] != null ? List.from(data['sources']) : null,
+      roles: data['roles'] != null ? List.from(data['roles']) : null,
     );
   }
 
@@ -29,8 +33,11 @@ extension DatabaseUser on User {
     return {
       'name': {'first': firstName, 'last': lastName},
       'class': classes,
+      'bookmarkedNews': bookmarkedNews,
       'permissionLevel': permissionLevel,
-      'sources': sources
+      'receiveNotifications': receiveNotifications,
+      'sources': sources,
+      'roles': roles,
     };
   }
 }
@@ -182,7 +189,7 @@ class AuthProvider with ChangeNotifier {
     bool result = false;
     await FirebaseAuth.instance.signInAnonymously().then((_) {
       result = true;
-    }).catchError((dynamic e) {
+    }).catchError((final dynamic e) {
       _errorHandler(e);
       result = false;
     });
@@ -249,6 +256,13 @@ class AuthProvider with ChangeNotifier {
       return null;
     });
     await _fetchUser();
+
+    if (_currentUser != null) {
+      if (_currentUser.receiveNotifications) {
+        await setMessagingTokenIfNotExist();
+      }
+    }
+
     return result != null;
   }
 
@@ -415,10 +429,137 @@ class AuthProvider with ChangeNotifier {
     return true;
   }
 
-  Future<bool> setSourcePreferences(List<String> sources,
-      {BuildContext context}) async {
+  Future<bool> setMessagingTokenIfNotExist() async {
+    try {
+      final token = await FirebaseMessaging.instance.getToken();
+      await FirebaseFirestore.instance
+          .collection('fcmTokens')
+          .doc(token)
+          .set({'token': token}, SetOptions(merge: true));
+      notifyListeners();
+      return true;
+    } catch (e) {
+      _errorHandler(e);
+      return false;
+    }
+  }
+
+  Future<bool> removeMessagingTokenIfExists() async {
+    try {
+      final token = await FirebaseMessaging.instance.getToken();
+      await FirebaseFirestore.instance
+          .collection('fcmTokens')
+          .doc(token)
+          .delete();
+      notifyListeners();
+      return true;
+    } catch (e) {
+      _errorHandler(e);
+      return false;
+    }
+  }
+
+  Future<bool> enableReceiveNotifications() async {
+    try {
+      _currentUser.receiveNotifications = true;
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(_currentUser.uid)
+          .update(_currentUser.toData());
+
+      notifyListeners();
+      return true;
+    } catch (e) {
+      _errorHandler(e);
+      return false;
+    }
+  }
+
+  Future<bool> disableReceiveNotifications() async {
+    try {
+      _currentUser.receiveNotifications = false;
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(_currentUser.uid)
+          .update(_currentUser.toData());
+
+      notifyListeners();
+      return true;
+    } catch (e) {
+      _errorHandler(e);
+      return false;
+    }
+  }
+
+  Future<bool> setSourcePreferences(final List<String> sources,
+      {final BuildContext context}) async {
     try {
       _currentUser.sources = sources;
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(_currentUser.uid)
+          .update(_currentUser.toData());
+
+      notifyListeners();
+      return true;
+    } catch (e) {
+      _errorHandler(e);
+      return false;
+    }
+  }
+
+  Future<bool> setReceiveNotifications(
+      {final bool receiveNotifications}) async {
+    try {
+      _currentUser.receiveNotifications = receiveNotifications;
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(_currentUser.uid)
+          .update(_currentUser.toData());
+
+      notifyListeners();
+      return true;
+    } catch (e) {
+      _errorHandler(e);
+      return false;
+    }
+  }
+
+  Future<bool> addNewRole(final String newRole) async {
+    try {
+      final currentRoles = _currentUser.userRoles;
+      if (currentRoles.contains(newRole)) {
+        throw Exception('Role already exists!');
+      }
+      currentRoles
+        ..add(newRole)
+        ..sort();
+
+      _currentUser.roles = currentRoles;
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(_currentUser.uid)
+          .update(_currentUser.toData());
+
+      notifyListeners();
+      return true;
+    } catch (e) {
+      _errorHandler(e);
+      return false;
+    }
+  }
+
+  Future<bool> removeRole(final String role) async {
+    try {
+      final currentRoles = _currentUser.userRoles;
+      if (!currentRoles.contains(role)) {
+        throw Exception('Role does not exist!');
+      }
+      currentRoles
+        ..remove(role)
+        ..sort();
+
+      _currentUser.roles = currentRoles;
       await FirebaseFirestore.instance
           .collection('users')
           .doc(_currentUser.uid)

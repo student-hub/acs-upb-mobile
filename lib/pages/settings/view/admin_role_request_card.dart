@@ -7,71 +7,79 @@ import 'package:provider/provider.dart';
 import '../../../authentication/model/user.dart';
 import '../../../generated/l10n.dart';
 import '../../../resources/theme.dart';
+import '../../../resources/utils.dart';
 import '../../../widgets/button.dart';
-import '../model/request.dart';
+import '../model/role_request.dart';
 import '../service/admin_provider.dart';
 
-class RequestCard extends StatefulWidget {
-  const RequestCard({this.requestId});
+class RoleRequestCard extends StatefulWidget {
+  const RoleRequestCard({this.roleRequest});
 
   @required
-  final String requestId;
+  final RoleRequest roleRequest;
 
   @override
-  _RequestCardState createState() => _RequestCardState();
+  _RoleRequestCardState createState() => _RoleRequestCardState();
 }
 
-class _RequestCardState extends State<RequestCard>
+class _RoleRequestCardState extends State<RoleRequestCard>
     with AutomaticKeepAliveClientMixin {
   @override
   Widget build(final BuildContext context) {
     super.build(context);
-    final adminProvider = Provider.of<AdminProvider>(context);
-
-    return FutureBuilder(
-        future: adminProvider.fetchRequest(widget.requestId),
-        builder: (final context, final snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            final Request request = snapshot.data;
-            return Padding(
-              padding: const EdgeInsets.fromLTRB(12, 12, 12, 0),
-              child: Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(12),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      _buildUserHeader(request),
-                      const SizedBox(height: 10),
-                      Text(
-                        request.requestBody ?? '',
-                        textDirection: ui.TextDirection.ltr,
-                        style: Theme.of(context)
-                            .textTheme
-                            .headline6
-                            .copyWith(fontSize: 14),
-                      ),
-                      const SizedBox(height: 10),
-                      _buildButtons(request.processed, request)
-                    ],
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(12, 12, 12, 0),
+      child: Card(
+        child: Padding(
+          padding: const EdgeInsets.all(12),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              _buildUserHeader(widget.roleRequest, context),
+              const SizedBox(height: 10),
+              Row(
+                children: [
+                  const Text(
+                    'Role: ',
+                    style: TextStyle(fontWeight: FontWeight.bold),
                   ),
-                ),
+                  Text(
+                    widget.roleRequest.roleName ?? '',
+                  ),
+                ],
               ),
-            );
-          } else {
-            return const SizedBox.shrink();
-          }
-        });
+              const SizedBox(height: 10),
+              Text(
+                widget.roleRequest.requestBody ?? '',
+                textDirection: ui.TextDirection.ltr,
+                style: Theme.of(context)
+                    .textTheme
+                    .headline6
+                    .copyWith(fontSize: 14),
+              ),
+              const SizedBox(height: 10),
+              _buildButtons(widget.roleRequest.processed, widget.roleRequest),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
-  Widget _buildUserHeader(final Request request) => FutureBuilder(
-      future: Provider.of<AdminProvider>(context).fetchUserById(request.userId),
-      builder: (final context, final snapshot) {
-        User user;
-        if (snapshot.connectionState == ConnectionState.done) {
-          user = snapshot.data;
-        }
-        return Column(
+  @override
+  bool get wantKeepAlive => true;
+
+  Widget _buildUserHeader(
+          final RoleRequest request, final BuildContext context) =>
+      FutureBuilder(
+        future:
+            Provider.of<AdminProvider>(context).fetchUserById(request.userId),
+        builder: (final context, final snapshot) {
+          User user;
+          if (snapshot.connectionState == ConnectionState.done) {
+            user = snapshot.data;
+          }
+          return Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Row(
@@ -107,8 +115,10 @@ class _RequestCardState extends State<RequestCard>
                 overflow: TextOverflow.fade,
                 maxLines: 2,
               ),
-            ]);
-      });
+            ],
+          );
+        },
+      );
 
   Widget _buildAcceptedMarker(final bool accepted) => Container(
         padding: const EdgeInsets.all(5),
@@ -123,14 +133,14 @@ class _RequestCardState extends State<RequestCard>
         ),
       );
 
-  Widget _buildButtons(final bool processed, final Request request) {
+  Widget _buildButtons(final bool processed, final RoleRequest roleRequest) {
     final adminProvider = Provider.of<AdminProvider>(context, listen: false);
     return Row(
       crossAxisAlignment: CrossAxisAlignment.end,
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
-          '${DateFormat("dd-MM-yyyy").format(request.dateSubmitted?.toDate() ?? DateTime.now())}',
+          '${DateFormat("dd-MM-yyyy").format(roleRequest.dateSubmitted?.toDate() ?? DateTime.now())}',
           textDirection: ui.TextDirection.ltr,
           style: Theme.of(context)
               .textTheme
@@ -148,9 +158,10 @@ class _RequestCardState extends State<RequestCard>
                 color: Theme.of(context).secondaryButtonColor,
                 width: 100,
                 onTap: () async {
-                  await adminProvider.denyRequest(request.id);
+                  await adminProvider.denyRoleRequest(
+                      roleRequest.roleName, roleRequest.requestId);
                   setState(() {
-                    request
+                    roleRequest
                       ..accepted = false
                       ..processed = true;
                   });
@@ -163,12 +174,16 @@ class _RequestCardState extends State<RequestCard>
                 color: Theme.of(context).primaryColor,
                 width: 100,
                 onTap: () async {
-                  await adminProvider.acceptRequest(request.id);
+                  await adminProvider.acceptRoleRequest(
+                      roleRequest.roleName, roleRequest.requestId);
                   setState(() {
-                    request
+                    roleRequest
                       ..accepted = true
                       ..processed = true;
                   });
+
+                  await Utils.launchURL(
+                      'mailto:${roleRequest.userEmail}?subject=Role%20accepted%20ACS%20UPB%20Mobile&body=Ai%20primit%20rolul%20de%20${roleRequest.roleName}%20în%20ACS%20UPB%20Mobile!');
                 },
               )
             ],
@@ -182,9 +197,10 @@ class _RequestCardState extends State<RequestCard>
                 color: Theme.of(context).primaryColor,
                 width: 100,
                 onTap: () async {
-                  await adminProvider.revertRequest(request.id);
+                  await adminProvider.revertRoleRequest(
+                      roleRequest.roleName, roleRequest.requestId);
                   setState(() {
-                    request
+                    roleRequest
                       ..accepted = false
                       ..processed = false;
                   });
@@ -195,11 +211,4 @@ class _RequestCardState extends State<RequestCard>
       ],
     );
   }
-
-  @override
-  bool get wantKeepAlive => true;
-
-  @override
-  dynamic noSuchMethod(final Invocation invocation) =>
-      super.noSuchMethod(invocation);
 }

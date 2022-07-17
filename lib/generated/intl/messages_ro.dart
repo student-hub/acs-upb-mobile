@@ -258,7 +258,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "messageWelcomeName" : m10,
     "messageWelcomeSimple" : MessageLookupByLibrary.simpleMessage("Bine ai venit!"),
     "messageYouCanContribute" : MessageLookupByLibrary.simpleMessage("Poți contribui la datele din aplicație, dar trebuie mai întâi să ceri permisiuni."),
-    "navigationAdmin" : MessageLookupByLibrary.simpleMessage("Cereri permisiuni"),
+    "navigationAdmin" : MessageLookupByLibrary.simpleMessage("Gestionează cereri"),
     "navigationAskPermissions" : MessageLookupByLibrary.simpleMessage("Cere permisiuni"),
     "navigationClassFeedback" : MessageLookupByLibrary.simpleMessage("Feedback"),
     "navigationClassInfo" : MessageLookupByLibrary.simpleMessage("Informații materie"),

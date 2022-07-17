@@ -76,7 +76,7 @@ class ChipFormField<T> extends FormField<T> {
                     Expanded(
                       child: Row(
                         children: [
-                          const SizedBox(width: 12),
+                          const SizedBox(width: 0),
                           Icon(icon, color: Theme.of(context).formIconColor),
                           const SizedBox(width: 12),
                           Text(
@@ -94,7 +94,7 @@ class ChipFormField<T> extends FormField<T> {
                     const SizedBox(height: 10),
                     Row(
                       children: <Widget>[
-                        const SizedBox(width: 12),
+                        const SizedBox(width: 0),
                         Expanded(
                           child: SizedBox(
                             height: 40,

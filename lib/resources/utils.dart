@@ -48,9 +48,17 @@ class Utils {
   static const String corsProxyUrl = 'https://cors-anywhere.herokuapp.com';
 
   static Future<void> launchURL(final String url) async {
-    if (await canLaunch(url)) {
+    /*  if (await canLaunch(url)) {
       await launch(url);
     } else {
+      AppToast.show(S.current.errorCouldNotLaunchURL(url));
+    }*/
+
+    // canLaunch() returns false by default on higher versions of the Android SDK
+    // there is an issue altogether with integrating the latest version of the url_launcher package, so leave it as it is for the moment
+    try {
+      await launch(url);
+    } catch (e) {
       AppToast.show(S.current.errorCouldNotLaunchURL(url));
     }
   }

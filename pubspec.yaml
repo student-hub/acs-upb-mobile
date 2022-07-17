@@ -60,7 +60,9 @@ dependencies:
   # Firebase products
   firebase_analytics: ^9.1.2
   firebase_auth: ^3.3.11
-  firebase_core: ^1.6.1
+  firebase_core: ^1.17.1
+  firebase_dynamic_links: ^4.2.5
+  firebase_messaging: ^11.4.1
   firebase_remote_config: ^2.0.2
   firebase_storage: ^10.2.9
 
@@ -73,6 +75,8 @@ dependencies:
 
   # Allow using feather icons (nice outlined icons)
   flutter_feather_icons: ^2.0.0+1
+
+  flutter_local_notifications: ^8.0.0
 
   # Package that allows for supporting multiple languages
   flutter_localizations:
@@ -126,6 +130,9 @@ dependencies:
   # Async utilities
   rxdart: ^0.27.3
 
+  # Share content via the platform's share dialog
+  share_plus: ^4.0.6
+
   # Support lock/mutex
   synchronized: ^3.0.0
 
@@ -142,8 +149,14 @@ dependencies:
   # Timetable widget
   timetable: ^1.0.0-alpha.5
 
+  # Used for deep linking
+  uni_links: ^0.5.1
+
   # URL opener
   url_launcher: ^6.0.6
+
+  # Used to generate random UUIDs
+  uuid: ^3.0.6
 
   # Useful validators
   validators: ^3.0.0

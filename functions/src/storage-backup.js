@@ -1,9 +1,5 @@
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
-const serviceAccount = require("../serviceAccountKey.json");
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount)
-});
 
 exports.backupStorage = functions.region("europe-west3")
   .pubsub

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 
 import '../../../generated/l10n.dart';
+import '../../../resources/locale_provider.dart';
 
 /// Filter represented in the form of a tree with named levels
 ///
@@ -21,7 +22,7 @@ import '../../../generated/l10n.dart';
 ///                   /   |
 ///               331CA 332CA ...                              // Group
 class Filter {
-  Filter({this.root, this.localizedLevelNames}) {
+  Filter({this.root, this.localizedLevelNames, this.localizations}) {
     root.value = true; // root value is true by default
   }
 
@@ -34,6 +35,11 @@ class Filter {
   ///
   /// **Note:** There should be at least as many names as there are levels in the tree.
   final List<Map<String, String>> localizedLevelNames;
+
+  /// Name for each node of the tree
+  ///
+  /// **Note:** Works for as long as no two nodes share the same name
+  final Map<String, Map<String, String>> localizations;
 
   Filter clone() => Filter(
         root: root.clone(),
@@ -148,6 +154,14 @@ class Filter {
       node.value = true;
     }
     return found;
+  }
+
+  String localizeFilterName(final String name, final BuildContext context) {
+    if (!localizations.containsKey(name)) {
+      return name;
+    }
+    final value = localizations[name];
+    return value[LocaleProvider.localeString];
   }
 
   /// Set the value of node with name [nodeName] and its parents to `true`, on the [baseNode] branch

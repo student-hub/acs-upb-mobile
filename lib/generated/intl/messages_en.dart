@@ -258,7 +258,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "messageWelcomeName" : m10,
     "messageWelcomeSimple" : MessageLookupByLibrary.simpleMessage("Welcome!"),
     "messageYouCanContribute" : MessageLookupByLibrary.simpleMessage("You can contribute to the app data, but you first need to request permissions."),
-    "navigationAdmin" : MessageLookupByLibrary.simpleMessage("Permission requests"),
+    "navigationAdmin" : MessageLookupByLibrary.simpleMessage("Handle requests"),
     "navigationAskPermissions" : MessageLookupByLibrary.simpleMessage("Ask for permissions"),
     "navigationClassFeedback" : MessageLookupByLibrary.simpleMessage("Feedback"),
     "navigationClassInfo" : MessageLookupByLibrary.simpleMessage("Class information"),

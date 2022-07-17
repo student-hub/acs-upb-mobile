@@ -1,10 +1,14 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:easy_dynamic_theme/easy_dynamic_theme.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -12,6 +16,7 @@ import 'package:pref/pref.dart';
 import 'package:provider/provider.dart';
 import 'package:rrule/rrule.dart';
 import 'package:timetable/timetable.dart';
+import 'package:uni_links/uni_links.dart';
 
 import 'authentication/service/auth_provider.dart';
 import 'authentication/view/login_view.dart';
@@ -24,17 +29,21 @@ import 'pages/classes/service/class_provider.dart';
 import 'pages/faq/service/faq_question_provider.dart';
 import 'pages/faq/view/faq_page.dart';
 import 'pages/filter/service/filter_provider.dart';
+import 'pages/filter/service/roles_filter_provider.dart';
 import 'pages/filter/view/filter_page.dart';
 import 'pages/news_feed/service/news_provider.dart';
-import 'pages/news_feed/view/news_feed_page.dart';
+import 'pages/news_feed/view/news_create_page.dart';
+import 'pages/news_feed/view/news_navigation_bar.dart';
 import 'pages/people/service/person_provider.dart';
 import 'pages/portal/service/website_provider.dart';
 import 'pages/settings/service/admin_provider.dart';
 import 'pages/settings/service/issue_provider.dart';
 import 'pages/settings/service/request_provider.dart';
+import 'pages/settings/service/roles_provider.dart';
 import 'pages/settings/view/admin_page.dart';
 import 'pages/settings/view/feedback_form.dart';
 import 'pages/settings/view/request_permissions.dart';
+import 'pages/settings/view/request_roles.dart';
 import 'pages/settings/view/settings_page.dart';
 import 'pages/settings/view/source_page.dart';
 import 'pages/timetable/service/uni_event_provider.dart';
@@ -43,6 +52,7 @@ import 'resources/remote_config.dart';
 import 'resources/theme.dart';
 import 'resources/utils.dart';
 import 'widgets/loading_screen.dart';
+import 'widgets/redirect_dynamic_link.dart';
 
 // FIXME: Our university website certificates have some issues, so we say we
 // trust them regardless.
@@ -60,16 +70,30 @@ class MyHttpOverrides extends HttpOverrides {
   }
 }
 
+bool _initialURILinkHandled = false;
+final GlobalKey<NavigatorState> navigatorKey =
+    GlobalKey(debugLabel: 'Main Navigator');
+
+// Future<void> _firebaseMessagingBackgroundHandler(
+//     final RemoteMessage message) async {
+//   // If you're going to use other Firebase services in the background, such as Firestore,
+//   // make sure you call `initializeApp` before using other Firebase services.
+//   await Firebase.initializeApp();
+//   print('Handling a background message ${message.messageId}');
+// }
+
 Future<void> main() async {
   HttpOverrides.global = MyHttpOverrides();
 
   WidgetsFlutterBinding.ensureInitialized();
+  //await NewsNotificationService().init();
 
   // package_info_plus is not compatible with flutter_test
   // link to the issue: https://github.com/fluttercommunity/plus_plugins/issues/172
   Utils.packageInfo = await PackageInfo.fromPlatform();
 
   await Firebase.initializeApp();
+  //FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
   final authProvider = AuthProvider();
   final classProvider = ClassProvider();
@@ -87,19 +111,26 @@ Future<void> main() async {
           ChangeNotifierProvider<AuthProvider>(
               create: (final _) => authProvider),
           Provider<RequestProvider>(create: (final _) => RequestProvider()),
+          Provider<RolesProvider>(create: (final _) => RolesProvider()),
           Provider<IssueProvider>(create: (final _) => IssueProvider()),
+          ChangeNotifierProvider<RolesFilterProvider>(
+              create: (final _) => RolesFilterProvider()),
           ChangeNotifierProvider<ClassProvider>(
               create: (final _) => classProvider),
           ChangeNotifierProvider<FeedbackProvider>(
               create: (final _) => feedbackProvider),
           ChangeNotifierProvider<PersonProvider>(
               create: (final _) => personProvider),
-          ChangeNotifierProvider<NewsProvider>(
-              create: (final _) => NewsProvider()),
           ChangeNotifierProxyProvider<AuthProvider, FilterProvider>(
             create: (final _) => FilterProvider(global: true),
             update: (final context, final authProvider, final filterProvider) {
               return filterProvider..updateAuth(authProvider);
+            },
+          ),
+          ChangeNotifierProxyProvider<AuthProvider, NewsProvider>(
+            create: (final _) => NewsProvider(),
+            update: (final context, final authProvider, final newsProvider) {
+              return newsProvider..updateAuth(authProvider);
             },
           ),
           ChangeNotifierProxyProvider<AuthProvider, FaqQuestionProvider>(
@@ -154,6 +185,174 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  Uri _initialURI;
+  Uri _currentURI;
+  Object _err;
+
+  StreamSubscription<dynamic> _streamSubscription;
+  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
+
+  @override
+  void initState() {
+    super.initState();
+    _initURIHandler();
+    _incomingLinkHandler();
+    _initNotifications();
+  }
+
+  Future<void> _initNotifications() async {
+    print('Initializing Firebase notifications');
+
+    //Initialization Settings for Android
+    const AndroidInitializationSettings initializationSettingsAndroid =
+        AndroidInitializationSettings('ic_launcher');
+
+    //Initialization Settings for iOS
+    const IOSInitializationSettings initializationSettingsIOS =
+        IOSInitializationSettings(
+      requestSoundPermission: false,
+      requestBadgePermission: false,
+      requestAlertPermission: false,
+    );
+
+    //InitializationSettings for initializing settings for both platforms (Android & iOS)
+    const InitializationSettings initializationSettings =
+        InitializationSettings(
+            android: initializationSettingsAndroid,
+            iOS: initializationSettingsIOS);
+
+    await flutterLocalNotificationsPlugin.initialize(initializationSettings,
+        onSelectNotification: selectNotification);
+
+    final token = await FirebaseMessaging.instance.getToken();
+    print('Firebase Messaging token: $token');
+
+    final RemoteMessage message =
+        await FirebaseMessaging.instance.getInitialMessage();
+    if (message != null) {
+      print('[Firebase Messaging] Initial message: ${message.data}');
+    }
+
+    //foreground
+    FirebaseMessaging.onMessage.listen((final RemoteMessage message) async {
+      print('[Firebase Messaging] Message received');
+      if (message.notification != null) {
+        final String title = message.notification.title;
+        final String body = message.notification.body;
+        print('[Firebase Messaging] onMessage body: $body');
+        print('[Firebase Messaging] onMessage title: $title');
+        showNotification(title, body, 'data');
+      }
+    });
+  }
+
+  Future<dynamic> selectNotification(final String payload) async {
+    print('Notification was pressed');
+    print('Notification payload: $payload');
+    await navigatorKey.currentState?.pushNamed(Routes.newsFeed);
+  }
+
+  void showNotification(
+      final String title, final String body, final String payload) {
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    if (!authProvider.isAuthenticated || authProvider.isAnonymous) {
+      return;
+    }
+
+    final sources = authProvider.currentUserFromCache.sourcesList;
+    if (!sources.contains(body)) {
+      return;
+    }
+
+    final receiveNotifications =
+        authProvider.currentUserFromCache.shouldReceiveNotifications;
+    if (!receiveNotifications) {
+      return;
+    }
+
+    flutterLocalNotificationsPlugin.show(
+        12345,
+        title,
+        'Refresh news feed to see latest post',
+        const NotificationDetails(
+          android: AndroidNotificationDetails(
+            'news_feed_notification_channel_id',
+            'News Feed Notification channel name',
+            'News Feed Notification channel description',
+            importance: Importance.max,
+          ),
+          iOS: IOSNotificationDetails(
+            presentAlert:
+                true, // Present an alert when the notification is displayed and the application is in the foreground (only from iOS 10 onwards)
+            presentBadge:
+                true, // Present the badge number when the notification is displayed and the application is in the foreground (only from iOS 10 onwards)
+            presentSound: true,
+          ),
+        ),
+        payload: payload);
+  }
+
+  Future<void> _initURIHandler() async {
+    if (!_initialURILinkHandled) {
+      _initialURILinkHandled = true;
+
+      try {
+        final initialURI = await getInitialUri();
+        if (initialURI != null) {
+          if (!mounted) {
+            return;
+          }
+          setState(() {
+            _currentURI = initialURI;
+          });
+        } else {
+          setState(() {
+            _currentURI = null;
+          });
+        }
+      } on PlatformException {
+        // Platform messages may fail, so we use a try/catch PlatformException.
+        // Handle exception by warning the user their action did not succeed
+        debugPrint("Failed to receive initial uri");
+      } on FormatException catch (err) {
+        if (!mounted) {
+          return;
+        }
+        debugPrint('Malformed Initial URI received');
+      }
+    }
+  }
+
+  /// Handle incoming links - the ones that the app will receive from the OS while already started.
+  void _incomingLinkHandler() {
+    if (!kIsWeb) {
+      // It will handle app links while the app is already started - be it in
+      // the foreground or in the background.
+      _streamSubscription = uriLinkStream.listen((final Uri uri) {
+        if (!mounted) {
+          return;
+        }
+        setState(() {
+          _currentURI = uri;
+        });
+      }, onError: (final Object err) {
+        if (!mounted) {
+          return;
+        }
+        setState(() {
+          _currentURI = null;
+        });
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    _streamSubscription?.cancel();
+    super.dispose();
+  }
+
   @override
   Widget build(final BuildContext context) {
     return OKToast(
@@ -170,7 +369,9 @@ class _MyAppState extends State<MyApp> {
         },
         child: MaterialApp(
           title: Utils.packageInfo.appName,
+          navigatorKey: navigatorKey,
           themeMode: EasyDynamicTheme.of(context).themeMode,
+          debugShowCheckedModeBanner: false,
           theme: lightThemeData,
           darkTheme: darkThemeData,
           localizationsDelegates: [
@@ -182,23 +383,45 @@ class _MyAppState extends State<MyApp> {
           supportedLocales: S.delegate.supportedLocales,
           initialRoute: Routes.root,
           routes: {
-            Routes.root: (final _) => AppLoadingScreen(),
-            Routes.home: (final _) => const AppBottomNavigationBar(),
-            Routes.settings: (final _) => SettingsPage(),
-            Routes.sources: (final _) => SourcePage(),
-            Routes.login: (final _) => LoginView(),
-            Routes.signUp: (final _) => SignUpView(),
-            Routes.faq: (final _) => FaqPage(),
-            Routes.filter: (final _) => const FilterPage(),
-            Routes.newsFeed: (final _) => NewsFeedPage(),
-            Routes.requestPermissions: (final _) => RequestPermissionsPage(),
-            Routes.adminPanel: (final _) => const AdminPanelPage(),
-            Routes.feedbackForm: (final _) => FeedbackFormPage(),
+            Routes.root: (final context) =>
+                initPage(context, AppLoadingScreen()),
+            Routes.home: (final context) =>
+                initPage(context, const AppBottomNavigationBar()),
+            Routes.settings: (final context) =>
+                initPage(context, SettingsPage()),
+            Routes.sources: (final context) => initPage(context, SourcePage()),
+            Routes.login: (final context) => initPage(context, LoginView()),
+            Routes.signUp: (final _) => initPage(context, SignUpView()),
+            Routes.faq: (final _) => initPage(context, FaqPage()),
+            Routes.filter: (final _) => initPage(context, const FilterPage()),
+            Routes.newsFeed: (final _) =>
+                initPage(context, const NewsNavigationBar()),
+            Routes.newsCreate: (final _) =>
+                initPage(context, const NewsCreatePage()),
+            Routes.requestPermissions: (final _) =>
+                initPage(context, RequestPermissionsPage()),
+            Routes.requestRoles: (final _) =>
+                initPage(context, RequestRolesPage()),
+            Routes.adminPanel: (final _) =>
+                initPage(context, const AdminPanelPage()),
+            Routes.feedbackForm: (final _) =>
+                initPage(context, FeedbackFormPage()),
           },
           navigatorObservers: widget.navigationObservers ?? [],
         ),
       ),
     );
+  }
+
+  Widget initPage(final BuildContext context, final Widget page) {
+    if (_currentURI != null) {
+      final redirectLink = _currentURI;
+      _currentURI = null;
+      return RedirectDynamicLink(
+          redirectLink: redirectLink, page: page, key: UniqueKey());
+    } else {
+      return page;
+    }
   }
 }
 

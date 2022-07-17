@@ -29,6 +29,7 @@ class _SettingsPageState extends State<SettingsPage> {
   // Whether the user verified their email; this can be true, false or null if
   // the async check hasn't completed yet.
   bool isVerified;
+  bool receiveNotifications;
 
   // String describing the level of editing permissions that the user has.
   String userPermissionString = '';
@@ -36,8 +37,10 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   void initState() {
     super.initState();
-    Provider.of<AuthProvider>(context, listen: false)
-        .isVerified
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    receiveNotifications =
+        authProvider.currentUserFromCache?.receiveNotifications;
+    authProvider.isVerified
         .then((final value) => setState(() => isVerified = value));
   }
 
@@ -79,6 +82,29 @@ class _SettingsPageState extends State<SettingsPage> {
                     }
                   },
                 ),
+                if (authProvider.isAuthenticated &&
+                    !authProvider.isAnonymous) ...[
+                  categoryTitle('Notifications'),
+                  ListTile(
+                    enabled: true,
+                    title: const Text('News'),
+                    trailing: Switch(
+                      value: receiveNotifications,
+                      onChanged: (final selected) {
+                        if (selected) {
+                          authProvider
+                            ..enableReceiveNotifications()
+                            ..setMessagingTokenIfNotExist();
+                        } else {
+                          authProvider.disableReceiveNotifications();
+                        }
+                        setState(() {
+                          receiveNotifications = selected;
+                        });
+                      },
+                    ),
+                  ),
+                ],
                 categoryTitle(S.current.settingsTitleLocalization),
                 PrefDialogButton(
                   title: Text(S.current.settingsItemLanguage),
@@ -110,6 +136,22 @@ class _SettingsPageState extends State<SettingsPage> {
                   title: Text(S.current.settingsItemEditingPermissions),
                   subtitle: Text(userPermissionString),
                 ),
+                if (authProvider.isAuthenticated &&
+                    !authProvider.isAnonymous &&
+                    authProvider.currentUserFromCache.canEditPublicInfo) ...[
+                  ListTile(
+                    key: const ValueKey('ask_roles'),
+                    onTap: () {
+                      if (authProvider.isAnonymous) {
+                        AppToast.show(S.current.messageNotLoggedIn);
+                      } else {
+                        Navigator.of(context).pushNamed(Routes.requestRoles);
+                      }
+                    },
+                    title: const Text('Your user roles'),
+                    subtitle: const Text('Ask for one or more roles'),
+                  ),
+                ],
                 ListTile(
                   key: const ValueKey('edit_source_selection'),
                   onTap: () {

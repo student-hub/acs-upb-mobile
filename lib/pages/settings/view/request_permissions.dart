@@ -65,37 +65,41 @@ class _RequestPermissionsPageState extends State<RequestPermissionsPage> {
         title: Text(S.current.navigationAskPermissions),
         actions: [
           AppScaffoldAction(
-              text: S.current.buttonSave,
-              onPressed: () async {
-                if (!agreedToResponsibilities) {
-                  AppToast.show(
-                      '${S.current.warningAgreeTo}${S.current.labelPermissionsConsent}.');
-                  return;
-                }
+            text: S.current.buttonSave,
+            onPressed: () async {
+              if (!agreedToResponsibilities) {
+                AppToast.show(
+                    '${S.current.warningAgreeTo}${S.current.labelPermissionsConsent}.');
+                return;
+              }
 
-                if (requestController.text == '') {
-                  AppToast.show(S.current.warningRequestEmpty);
-                  return;
-                }
+              if (requestController.text == '') {
+                AppToast.show(S.current.warningRequestEmpty);
+                return;
+              }
 
-                /*
+              /*
                  * Check if there is already a request registered for the current
                  * user.
                  */
-                bool queryResult =
-                    await requestProvider.userAlreadyRequested(user.uid);
+              // bool queryResult =
+              //     await requestProvider.userAlreadyRequested(user.uid);
+              //
+              // if (queryResult) {
+              //   if (!mounted) return;
+              //   await showDialog<dynamic>(
+              //     context: context,
+              //     builder: _requestAlreadyExistsDialog,
+              //   );
+              // }
 
-                if (queryResult) {
-                  if (!mounted) return;
-                  await showDialog<dynamic>(
-                    context: context,
-                    builder: _requestAlreadyExistsDialog,
-                  );
-                }
-
-                queryResult = await requestProvider.makeRequest(
+              if (mounted) {
+                final authProvider =
+                    Provider.of<AuthProvider>(context, listen: false);
+                bool queryResult = await requestProvider.makeRequest(
                   Request(
                     userId: user.uid,
+                    userEmail: authProvider.email,
                     requestBody: requestController.text,
                   ),
                 );
@@ -104,7 +108,9 @@ class _RequestPermissionsPageState extends State<RequestPermissionsPage> {
                   if (!mounted) return;
                   Navigator.of(context).pop();
                 }
-              })
+              }
+            },
+          )
         ],
         body: ListView(
           children: [
@@ -124,9 +130,10 @@ class _RequestPermissionsPageState extends State<RequestPermissionsPage> {
             ),
             Padding(
               padding: const EdgeInsets.only(left: 20),
-              child: Text(S.current.messageAnnouncedOnMail,
-                  style: Theme.of(context).textTheme.caption.apply(
-                      color: Theme.of(context).textTheme.headline5.color)),
+              child: Text(
+                '* ${S.current.messageAnnouncedOnMail}',
+                style: TextStyle(color: Theme.of(context).hintColor),
+              ),
             ),
             Padding(
               padding: const EdgeInsets.all(10),

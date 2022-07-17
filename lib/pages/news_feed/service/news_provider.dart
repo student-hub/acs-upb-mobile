@@ -1,71 +1,278 @@
-import 'dart:math';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
-import 'package:web_scraper/web_scraper.dart';
+import 'package:intl/intl.dart';
 
+import '../../../authentication/service/auth_provider.dart';
 import '../../../generated/l10n.dart';
-import '../../../resources/utils.dart';
 import '../../../widgets/toast.dart';
 import '../model/news_feed_item.dart';
 
 class NewsProvider with ChangeNotifier {
-  static const _textSelector = 'title';
-  static const _attributesSelector = 'attributes';
-  static const _hrefSelector = 'href';
+  AuthProvider _authProvider;
+
+  // ignore: prefer_final_parameters, use_setters_to_change_properties
+  void updateAuth(AuthProvider authProvider) {
+    _authProvider = authProvider;
+  }
+
+  List<String> getBookmarkedNews() =>
+      _authProvider.currentUserFromCache?.bookmarkedNews;
+
+  List<String> getUserSources() =>
+      _authProvider.currentUserFromCache?.sourcesList;
+
+  Query filterBySource(final Query query) =>
+      query.where('category', whereIn: getUserSources());
 
   Future<List<NewsFeedItem>> fetchNewsFeedItems({final int limit}) async {
     try {
-      // The internet is a scary place. CORS (cross origin resource sharing)
-      // prevents websites from accessing resources outside the server that
-      // hosts it. Unless the server we access returns a special header, letting
-      // the browser know that it's ok to access its resources from somewhere
-      // else. In our case we can't modify the acs.pub.ro server to return this
-      // header, so we need to use a proxy. This proxy makes the request for us
-      // and returns the needed header and the content. Utils.wrapUrlWithCORS
-      // prepends the URL of the proxy to the wanted URL so that any request
-      // will go through the proxy. This is needed only for the web version,
-      // as CORS is a web browser thing.
-      // See more: https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS
-      const url = kIsWeb ? Utils.corsProxyUrl : 'https://acs.pub.ro';
-      const path =
-          kIsWeb ? '/https://acs.pub.ro/topic/noutati' : '/topic/noutati';
-      final webScraper = WebScraper(url);
-      final bool scrapeSuccess = await webScraper.loadWebPage(path);
+      final CollectionReference news =
+          FirebaseFirestore.instance.collection('news');
+      final QuerySnapshot<Map<String, dynamic>> qSnapshot = limit == null
+          ? await filterBySource(news).get()
+          : await filterBySource(news.limit(limit)).get();
 
-      if (scrapeSuccess) {
-        return _extractFromWebScraper(webScraper, limit);
-      }
+      final userClasses = _authProvider.currentUserFromCache?.classes;
+      return qSnapshot.docs.map(DatabaseNews.fromSnap).where((final item) {
+        final itemRelevance = item.relevance;
+        //if item has no relevance, it is always visible
+        if (itemRelevance == null || itemRelevance.isEmpty) {
+          return true;
+        }
+        if (userClasses == null || userClasses.isEmpty) {
+          return true;
+        }
+        //computes the intersection between the item's relevance and the user's classes
+        //if the intersection is empty, the item is not relevant
+        itemRelevance.removeWhere(
+            (final relevanceItem) => !userClasses.contains(relevanceItem));
+        return itemRelevance.isNotEmpty;
+      }).toList()
+        ..sort((final a, final b) => a.createdAt.compareTo(b.createdAt) * -1);
     } catch (e) {
-      // Ignore "no internet" error
-      if (!e.message.contains('Failed host lookup')) {
-        print(e);
-        AppToast.show(S.current.errorSomethingWentWrong);
-      }
+      print(e);
+      AppToast.show(S.current.errorSomethingWentWrong);
+      return null;
     }
-
-    return null;
   }
 
-  static Iterable<NewsFeedItem> _extractFromWebScraper(
-      final WebScraper webScraper, final int wantedLimit) {
-    final List<Map<String, dynamic>> dates =
-        webScraper.getElement('div.event > ul > li > div.time', []);
-    final List<Map<String, dynamic>> events =
-        webScraper.getElement('div.event > ul > li > h3 > a', ['href']);
-
-    final List<NewsFeedItem> newsFeed = [];
-    var limit = min(dates.length, events.length);
-    if (wantedLimit != null) {
-      limit = min(limit, wantedLimit);
+  Future<List<NewsFeedItem>> fetchFavoriteNewsFeedItems(
+      {final int limit}) async {
+    try {
+      final bookmarkedNews = getBookmarkedNews();
+      if (bookmarkedNews == null || bookmarkedNews.isEmpty) {
+        return [];
+      }
+      final CollectionReference news =
+          FirebaseFirestore.instance.collection('news');
+      final QuerySnapshot<Map<String, dynamic>> qSnapshot = await news
+          .where(FieldPath.documentId, whereIn: getBookmarkedNews())
+          .get();
+      return qSnapshot.docs.map(DatabaseNews.fromSnap).toList()
+        ..sort((final a, final b) => a.createdAt.compareTo(b.createdAt) * -1);
+    } catch (e) {
+      print(e);
+      AppToast.show(S.current.errorSomethingWentWrong);
+      return null;
     }
+  }
 
-    for (var i = 0; i < limit; ++i) {
-      final date = dates[i][_textSelector];
-      final title = events[i][_textSelector];
-      final link = events[i][_attributesSelector][_hrefSelector];
-      newsFeed.add(NewsFeedItem(date, title, link));
+  Future<List<NewsFeedItem>> fetchPersonalNewsFeedItem(
+      {final int limit}) async {
+    try {
+      final userId = _authProvider.currentUserFromCache.uid;
+      final CollectionReference news =
+          FirebaseFirestore.instance.collection('news');
+      final QuerySnapshot<Map<String, dynamic>> qSnapshot = limit == null
+          ? await news.where('userId', isEqualTo: userId).get()
+          : await news.where('userId', isEqualTo: userId).limit(limit).get();
+      return qSnapshot.docs.map(DatabaseNews.fromSnap).toList()
+        ..sort((final a, final b) => a.createdAt.compareTo(b.createdAt) * -1);
+    } catch (e) {
+      print(e);
+      AppToast.show(S.current.errorSomethingWentWrong);
+      return null;
     }
+  }
 
-    return newsFeed;
+  Future<NewsFeedItem> fetchNewsItemDetails(final String newsId) async {
+    try {
+      final DocumentSnapshot doc =
+          await FirebaseFirestore.instance.collection('news').doc(newsId).get();
+      return DatabaseNews.fromSnap(doc);
+    } catch (e) {
+      print(e);
+      AppToast.show(S.current.errorSomethingWentWrong);
+      return null;
+    }
+  }
+
+  Future<bool> bookmarkNewsItem(final String newsItemGuid) async {
+    try {
+      print('bookmarking news item $newsItemGuid');
+      final _currentUser = _authProvider.currentUserFromCache;
+
+      if (_currentUser.bookmarkedNews.contains(newsItemGuid)) {
+        throw Exception('News item already bookmarked');
+      }
+
+      _currentUser.bookmarkedNews.add(newsItemGuid);
+
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(_currentUser.uid)
+          .update(_currentUser.toData());
+
+      notifyListeners();
+      return true;
+    } catch (e) {
+      _errorHandler(e);
+      return false;
+    }
+  }
+
+  Future<bool> unbookmarkNewsItem(final String newsItemGuid) async {
+    try {
+      print('un-bookmarking news item $newsItemGuid');
+      final _currentUser = _authProvider.currentUserFromCache;
+      _currentUser.bookmarkedNews
+          .removeWhere((final item) => item == newsItemGuid);
+
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(_currentUser.uid)
+          .update(_currentUser.toData());
+
+      notifyListeners();
+      return true;
+    } catch (e) {
+      _errorHandler(e);
+      return false;
+    }
+  }
+
+  Future<bool> deletePost(final String newsItemGuid) async {
+    try {
+      final _currentUser = _authProvider.currentUserFromCache;
+      _currentUser.bookmarkedNews
+          .removeWhere((final item) => item == newsItemGuid);
+
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(_currentUser.uid)
+          .update(_currentUser.toData());
+
+      await FirebaseFirestore.instance
+          .collection('news')
+          .doc(newsItemGuid)
+          .delete();
+
+      notifyListeners();
+      return true;
+    } catch (e) {
+      _errorHandler(e);
+      return false;
+    }
+  }
+
+  Future<bool> savePost(final Map<String, dynamic> info) async {
+    try {
+      await FirebaseFirestore.instance.collection('news').add({
+        'title': info['title'],
+        'body': info['body'],
+        'userId': _authProvider.currentUserFromCache.uid,
+        'authorDisplayName': _authProvider.currentUserFromCache.displayName,
+        'authorAvatarUrl': null,
+        'externalLink': '',
+        'relevance': info['relevance'],
+        'category': info['category'],
+        'categoryRole': info['categoryRole'],
+        'createdAt': FieldValue.serverTimestamp(),
+      });
+
+      notifyListeners();
+      return true;
+    } catch (e) {
+      _errorHandler(e);
+      return false;
+    }
+  }
+
+  bool isNewsItemBookmarked(final String newsItemGuid) {
+    final _currentUser = _authProvider.currentUserFromCache;
+    if (_currentUser.bookmarkedNews == null ||
+        _currentUser.bookmarkedNews.isEmpty) {
+      return false;
+    }
+    return _currentUser.bookmarkedNews.contains(newsItemGuid);
+  }
+
+  void _errorHandler(final dynamic e, {bool showToast = true}) {
+    try {
+      print('${e.message} code: ${e.code}');
+      if (showToast) {
+        switch (e.code) {
+          case 'invalid-email':
+          case 'invalid-credential':
+            AppToast.show(S.current.errorInvalidEmail);
+            break;
+          case 'wrong-password':
+            AppToast.show(S.current.errorIncorrectPassword);
+            break;
+          case 'user-not-found':
+            AppToast.show(S.current.errorEmailNotFound);
+            break;
+          case 'user-disabled':
+            AppToast.show(S.current.errorAccountDisabled);
+            break;
+          case 'too-many-requests':
+            AppToast.show(
+                '${S.current.errorTooManyRequests} ${S.current.warningTryAgainLater}');
+            break;
+          case 'email-already-in-use':
+            AppToast.show(S.current.errorEmailInUse);
+            break;
+          default:
+            AppToast.show(e.message);
+        }
+      }
+    } catch (_) {
+      // Unknown exception
+      print(e);
+      AppToast.show(S.current.errorSomethingWentWrong);
+    }
+  }
+}
+
+extension DatabaseNews on NewsFeedItem {
+  static NewsFeedItem fromSnap(
+      final DocumentSnapshot<Map<String, dynamic>> snap) {
+    final data = snap.data();
+
+    final String itemGuid = snap.id;
+    final String title = data['title'];
+    final String body = data['body'];
+    final String authorDisplayName = data['authorDisplayName'];
+    final String authorAvatarUrl = data['authorAvatarUrl'];
+    final String externalLink = data['externalLink'];
+    final String userId = data['userId'];
+    final String category = data['category'];
+    final String categoryRole = data['categoryRole'];
+    final List<dynamic> relevance = data['relevance'] as List<dynamic>;
+    final String createdAt =
+        DateFormat('yyyy-MM-dd HH:mm').format(data['createdAt'].toDate());
+
+    return NewsFeedItem(
+        itemGuid: itemGuid,
+        title: title,
+        body: body,
+        authorDisplayName: authorDisplayName,
+        authorAvatarUrl: authorAvatarUrl,
+        externalLink: externalLink,
+        userId: userId,
+        category: category,
+        categoryRole: categoryRole,
+        relevance: relevance,
+        createdAt: createdAt);
   }
 }
