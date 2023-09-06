@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:acs_upb_mobile/pages/feed/service/post_provider.dart';
 import 'package:easy_dynamic_theme/easy_dynamic_theme.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -131,6 +132,12 @@ Future<void> main() async {
             create: (final _) => NewsProvider(),
             update: (final context, final authProvider, final newsProvider) {
               return newsProvider..updateAuth(authProvider);
+            },
+          ),
+          ChangeNotifierProxyProvider<AuthProvider, PostProvider>(
+            create: (final _) => PostProvider(),
+            update: (final context, final authProvider, final postProvider) {
+              return postProvider..updateAuth(authProvider);
             },
           ),
           ChangeNotifierProxyProvider<AuthProvider, FaqQuestionProvider>(

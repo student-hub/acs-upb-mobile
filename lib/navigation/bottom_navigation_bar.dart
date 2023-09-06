@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 
 import '../authentication/service/auth_provider.dart';
 import '../generated/l10n.dart';
+import '../pages/feed/view/feed_page.dart';
 import '../pages/home/home_page.dart';
 import '../pages/people/view/people_page.dart';
 import '../pages/portal/view/portal_page.dart';
@@ -29,7 +30,7 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar>
   @override
   void initState() {
     super.initState();
-    tabController = TabController(vsync: this, length: 4);
+    tabController = TabController(vsync: this, length: 5);
     tabController.addListener(() {
       if (!tabController.indexIsChanging) {
         setState(() {
@@ -39,6 +40,7 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar>
     });
     tabs = [
       HomePage(key: const PageStorageKey('Home'), tabController: tabController),
+      const FeedPage(key: PageStorageKey('Feed')),
       const TimetablePage(), // Cannot preserve state with PageStorageKey
       const PortalPage(key: PageStorageKey('Portal')),
       const PeoplePage(key: PageStorageKey('People')),
@@ -91,6 +93,13 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar>
                       ),
                       Tab(
                         icon: currentTab == 1
+                            ? const Icon(Icons.feed)
+                            : const Icon(Icons.feed_outlined),
+                        text: S.current.navigationFeed,
+                        iconMargin: EdgeInsets.zero,
+                      ),
+                      Tab(
+                        icon: currentTab == 2
                             ? const Icon(Icons.calendar_today)
                             : const Icon(Icons.calendar_today_outlined),
                         text: S.current.navigationTimetable,
@@ -102,7 +111,7 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar>
                         iconMargin: EdgeInsets.zero,
                       ),
                       Tab(
-                        icon: currentTab == 3
+                        icon: currentTab == 4
                             ? const Icon(Icons.people)
                             : const Icon(Icons.people_outlined),
                         text: S.current.navigationPeople,

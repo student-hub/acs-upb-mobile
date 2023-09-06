@@ -1,6 +1,7 @@
 import '../authentication/view/login_view.dart';
 import '../authentication/view/sign_up_view.dart';
 import '../pages/faq/view/faq_page.dart';
+import '../pages/feed/view/feed_page.dart';
 import '../pages/filter/view/filter_page.dart';
 import '../pages/news_feed/view/news_create_page.dart';
 import '../pages/news_feed/view/news_item_details_page.dart';
@@ -29,4 +30,5 @@ class Routes {
   static const String requestRoles = RequestRolesPage.routeName;
   static const String adminPanel = AdminPanelPage.routeName;
   static const String feedbackForm = FeedbackFormPage.routeName;
+  static const String feed = FeedPage.routeName;
 }

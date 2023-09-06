@@ -17,16 +17,17 @@ extension DatabaseUser on User {
   static User fromSnap(final DocumentSnapshot<Map<String, dynamic>> snap) {
     final data = snap.data();
     return User(
-      uid: snap.id,
-      firstName: data['name']['first'],
-      lastName: data['name']['last'],
-      classes: List.from(data['class'] ?? []),
-      bookmarkedNews: List.from(data['bookmarkedNews'] ?? []),
-      permissionLevel: data['permissionLevel'],
-      receiveNotifications: data['receiveNotifications'] ?? false,
-      sources: data['sources'] != null ? List.from(data['sources']) : null,
-      roles: data['roles'] != null ? List.from(data['roles']) : null,
-    );
+        uid: snap.id,
+        firstName: data['name']['first'],
+        lastName: data['name']['last'],
+        classes: List.from(data['class'] ?? []),
+        bookmarkedNews: List.from(data['bookmarkedNews'] ?? []),
+        permissionLevel: data['permissionLevel'],
+        receiveNotifications: data['receiveNotifications'] ?? false,
+        sources: data['sources'] != null ? List.from(data['sources']) : null,
+        roles: data['roles'] != null ? List.from(data['roles']) : null,
+        rankProgressionPoints: data['rankProgressionPoints'] ?? 0,
+        badges: List.from(data['badges'] ?? []));
   }
 
   Map<String, dynamic> toData() {
@@ -38,6 +39,8 @@ extension DatabaseUser on User {
       'receiveNotifications': receiveNotifications,
       'sources': sources,
       'roles': roles,
+      'rankProgressionPoints': rankProgressionPoints,
+      'badges': badges
     };
   }
 }

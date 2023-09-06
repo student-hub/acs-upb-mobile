@@ -10,6 +10,8 @@ class User {
       this.receiveNotifications,
       this.roles,
       this.bookmarkedNews,
+      this.badges,
+      this.rankProgressionPoints,
       final int permissionLevel})
       : permissionLevel = permissionLevel ?? 0;
 
@@ -28,6 +30,12 @@ class User {
 
   /// News items that were bookmarked by the user
   List<String> bookmarkedNews;
+
+  /// Badges aquired by the user
+  List<String> badges;
+
+  /// Rank progression points
+  int rankProgressionPoints;
 
   int permissionLevel;
 
